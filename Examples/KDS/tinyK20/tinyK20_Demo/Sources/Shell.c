@@ -13,7 +13,9 @@
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "KIN1.h"
-#include "I2CSPY1.h"
+#if PL_CONFIG_HAS_I2C_SPY
+  #include "I2CSPY1.h"
+#endif
 //#include "MMA1.h"
 #include "CDC1.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
@@ -31,7 +33,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   FAT1_ParseCommand,
   KIN1_ParseCommand,
   TmDt1_ParseCommand,
+#if PL_CONFIG_HAS_I2C_SPY
   I2CSPY1_ParseCommand,
+#endif
 //  MMA1_ParseCommand,
 #if PL_CONFIG_HAS_1_WIRE
 #if DS1_PARSE_COMMAND_ENABLED

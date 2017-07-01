@@ -40,7 +40,6 @@
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "WAIT1.h"
-#include "KSDK1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd3.h"
@@ -53,6 +52,10 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "XF1.h"
+#include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -229,6 +229,6 @@ void APP_Run(void) {
     /*lint +e527 */
   }
 #endif
-  FRTOS1_vTaskStartScheduler();
+  vTaskStartScheduler();
 }
 

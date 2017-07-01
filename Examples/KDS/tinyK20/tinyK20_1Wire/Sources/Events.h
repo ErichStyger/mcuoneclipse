@@ -43,17 +43,15 @@
 #include "BitIoLdd4.h"
 #include "Inhr3.h"
 #include "BitIoLdd5.h"
-#include "TU1.h"
-#include "OutputRB1.h"
 #include "InputRB1.h"
-#include "TimeRB1.h"
-#include "ProgramRB1.h"
 #include "Inhr2.h"
 #include "BitIoLdd3.h"
 #include "KIN1.h"
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd6.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,20 +73,6 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void DS1_OnError(OW1_Error error);
-/*
-** ===================================================================
-**     Event       :  DS1_OnError (module Events)
-**
-**     Component   :  DS1 [DS18B20]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * error           - 
-**     Returns     : Nothing
-** ===================================================================
-*/
 void DS1_OnTemperatureGet(uint8_t sensor_index, int32_t temperature);
 /*
 ** ===================================================================

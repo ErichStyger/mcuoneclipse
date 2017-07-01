@@ -37,6 +37,8 @@
 #include "MCUC1.h"
 #include "KIN1.h"
 #include "UTIL1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

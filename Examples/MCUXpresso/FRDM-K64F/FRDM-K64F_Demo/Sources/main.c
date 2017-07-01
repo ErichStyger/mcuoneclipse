@@ -126,11 +126,18 @@
 #include "Application.h"
 
 #include "PORT_PDD.h"
+#include "gcov_support.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
+#if GCOV_DO_COVERAGE
+  gcov_init();
+  if (!gcov_check()) {
+    for(;;) {} /* failed to use file system!?! */
+  }
+#endif
   /* Write your local variable definition here */
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();

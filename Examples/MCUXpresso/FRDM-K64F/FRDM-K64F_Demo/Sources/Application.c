@@ -42,6 +42,8 @@
   #include "MidiMusic.h"
 #endif
 
+#include "gcov_support.h"
+
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
 
@@ -245,14 +247,15 @@ int TestMiniIni(void) {
 
   return 0;
 }
-
 #endif
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_ACCELEROMETER
   int16_t xmg, ymg;
 #endif
-
+#if GCOV_DO_COVERAGE
+  bool writeCoverage = FALSE;
+#endif
   (void)pvParameters; /* parameter not used */
 #if 0 && PL_HAS_MINI_INI
   TestMiniIni();
@@ -268,7 +271,15 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_KEYS
     KEY1_ScanKeys();
 #endif
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(100/portTICK_RATE_MS);
+#if GCOV_DO_COVERAGE
+    if (writeCoverage) {
+      portDISABLE_ALL_INTERRUPTS();
+      gcov_write();
+      portENABLE_ALL_INTERRUPTS();
+      //vTaskEndScheduler();
+    }
+#endif
   }
 }
 
@@ -283,10 +294,14 @@ void APP_Start(void) {
   MM_Init();
 #endif
   SHELL_Init();
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
+#if GCOV_DO_COVERAGE
+      configMINIMAL_STACK_SIZE+4000, /* task stack size */
+#else
       configMINIMAL_STACK_SIZE+500, /* task stack size */
+#endif
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
@@ -302,5 +317,11 @@ void APP_Start(void) {
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
     for(;;); /* failure! */
   }
-  FRTOS1_vTaskStartScheduler();
+#if GCOV_DO_COVERAGE
+  //gcov_write();
+#endif
+  vTaskStartScheduler();
+#if GCOV_DO_COVERAGE
+  gcov_write();
+#endif
 }

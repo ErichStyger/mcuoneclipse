@@ -63,13 +63,6 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
-#include "GI2C1.h"
-#include "I2CSPY1.h"
-#include "I2C1.h"
-#include "SDA1.h"
-#include "BitIoLdd3.h"
-#include "SCL1.h"
-#include "BitIoLdd4.h"
 #include "OW1.h"
 #include "DQ1.h"
 #include "BitIoLdd5.h"
@@ -77,6 +70,8 @@
 #include "DbgRd1.h"
 #include "BitIoLdd6.h"
 #include "DS1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {

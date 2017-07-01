@@ -40,17 +40,15 @@
 #include "BitIoLdd4.h"
 #include "Inhr3.h"
 #include "BitIoLdd5.h"
-#include "TU1.h"
-#include "OutputRB1.h"
 #include "InputRB1.h"
-#include "TimeRB1.h"
-#include "ProgramRB1.h"
 #include "Inhr2.h"
 #include "BitIoLdd3.h"
 #include "KIN1.h"
 #include "UTIL1.h"
 #include "CS1.h"
 #include "DS1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd6.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -66,13 +64,11 @@ static void Test(void) {
   if (res!=ERR_OK) {
     for(;;){}
   }
-  while(OW1_isBusy()) {   /* wait */  }
   WAIT1_Waitms(1);
   res = OW1_SendByte(0x33);
   if (res!=ERR_OK) {
     for(;;){}
   }
-  while(OW1_isBusy()) {   /* wait */  }
  // WAIT1_Waitms(1);
 
   res = OW1_Receive(1);
@@ -128,25 +124,10 @@ static void Test2(void) {
   bool res;
 
   OW1_SendReset();
-  while(OW1_isBusy()) {
-     /* wait */
-   }
   OW1_SendByte(RC_READ_ROM);
-  while(OW1_isBusy()) {
-     /* wait */
-   }
   OW1_Receive(8);
-  while(OW1_isBusy()) {
-     /* wait */
-   }
   OW1_SendByte(0xFF);
-  while(OW1_isBusy()) {
-     /* wait */
-   }
   //OW1_ProgramEvent(EV_READ_ROM);
-  while(OW1_isBusy()) {
-     /* wait */
-   }
 
    WAIT1_Waitms(5);
    res = DS1_ReadRom(0);
