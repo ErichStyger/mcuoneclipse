@@ -37,7 +37,11 @@
 //
 // Bootloader configuration options
 //
-
+#define BL_CONFIG_SCUART  (0)
+#define BL_CONFIG_I2C     (0)
+#define BL_CONFIG_DSPI    (0)
+#define BL_CONFIG_USB_HID (1)
+#define BL_CONFIG_USB_MSC (0)
 //! @name Peripheral configuration macros
 //@{
 
