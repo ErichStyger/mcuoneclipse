@@ -60,7 +60,7 @@ MEMORY
 {
   m_interrupts          (RX)  : ORIGIN = 0x0000a000, LENGTH = 0x00000400
   m_flash_config        (RX)  : ORIGIN = 0x0000a400, LENGTH = 0x00000010
-  m_text                (RX)  : ORIGIN = 0x0000a410, LENGTH = 0x0007FBF0
+  m_text                (RX)  : ORIGIN = 0x0000a410, LENGTH = 0x0007FBF0-0xa000
   m_data                (RW)  : ORIGIN = 0x1FFF0000, LENGTH = 0x00020000
 }
 

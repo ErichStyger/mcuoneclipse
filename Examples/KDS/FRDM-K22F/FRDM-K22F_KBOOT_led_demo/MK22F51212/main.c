@@ -58,8 +58,7 @@ static PORT_Type *led_port[LED_COUNT] = { PORTA, PORTA, PORTD };
 static GPIO_Type *led_gpio[LED_COUNT] = { GPIOA, GPIOA, GPIOD };
 #endif // FREEDOM
 
-static void init_hardware(void)
-{
+static void init_hardware(void) {
     SIM->SCGC5 |= (SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK | SIM_SCGC5_PORTD_MASK |
                    SIM_SCGC5_PORTE_MASK);
 
@@ -75,8 +74,9 @@ static void init_hardware(void)
     }
 }
 
-static void led_toggle(uint32_t leds)
+static void led_toggle(uint32_t led)
 {
+#if 0
     uint8_t i = 0;
     // led OFF
     for (i = 0; i < LED_COUNT; i++)
@@ -85,6 +85,13 @@ static void led_toggle(uint32_t leds)
     }
     // led ON
     led_gpio[leds]->PDOR &= (uint32_t) ~(1 << led_offset[leds]);
+#else
+    led_gpio[led]->PTOR |= (uint32_t) (1 << led_offset[led]);
+#endif
+}
+
+static void led_off(uint32_t led) {
+    led_gpio[led]->PSOR |= (uint32_t) (1 << led_offset[led]);
 }
 
 void delay(void)
@@ -103,16 +110,24 @@ int main(void)
     // Note: for ROM development, use this version of delay function,
     // Which is in order to test if the VTCOR is correct.
     milliseconds_delay_init();
-    uint32_t leds = 0;
+    uint32_t leds;
+
+    led_off(0);
+    led_off(1);
+    led_off(2);
+  //  leds = 0; /* red */
+  //  leds = 1; /* green */
+    leds = 2; /* blue */
     while (1)
     {
         led_toggle(leds);
         milliseconds_delay(DELAY_1MS);
-
+#if 0
         ++leds;
         if (leds == LED_COUNT)
         {
             leds = 0;
         }
+#endif
     }
 }

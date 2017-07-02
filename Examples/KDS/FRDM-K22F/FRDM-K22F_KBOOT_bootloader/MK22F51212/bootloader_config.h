@@ -105,7 +105,7 @@
 
 // The bootloader will check this address for the application vector table upon startup.
 #if !defined(BL_APP_VECTOR_TABLE_ADDRESS)
-#define BL_APP_VECTOR_TABLE_ADDRESS 0xa000
+#define BL_APP_VECTOR_TABLE_ADDRESS 0xb000
 #endif
 
 /* Serial Port Info */
