@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
     <ModificationStamp>9</ModificationStamp>
-    <Date>2017-06-30</Date>
+    <Date>2017-07-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -6241,7 +6241,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.541</BeanVersion>
+    <BeanVersion>01.546</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -7659,6 +7659,24 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>16</Value>
         <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapBaseSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__HeapBase</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapLimitSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__HeapLimit</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapSizeSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__heap_size</Value>
       </ItemState>
     </Properties>
     <Methods>
