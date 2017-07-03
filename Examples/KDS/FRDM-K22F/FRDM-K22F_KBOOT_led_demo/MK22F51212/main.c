@@ -48,7 +48,11 @@ static GPIO_Type *led_gpio[LED_COUNT] = { GPIOD, GPIOD, GPIOD, GPIOD };
 #if defined(FREEDOM)
 #define LED1_OFFSET 1
 #define LED2_OFFSET 2
+#if 0
 #define LED3_OFFSET 5
+#else
+#define LED3_OFFSET 7
+#endif
 
 #define DELAY_1MS (1000)
 #define LED_COUNT 3
