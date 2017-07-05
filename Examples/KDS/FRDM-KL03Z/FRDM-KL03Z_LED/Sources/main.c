@@ -37,11 +37,28 @@
 #include "MCUC1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
 #include "gpio1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+void NMI_Handler(void) {
+	/* SW3/PTB5 is on NMI pin */
+	int i;
+
+	LED1_Off();
+	LED2_Off();
+	LED3_Off();
+    for(i=0;i<10;i++) {
+    	LED1_Neg();
+		WAIT1_Waitms(50);
+	}
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -55,8 +72,17 @@ int main(void)
 
   /* Write your code here */
   for(;;) {
-	  LED1_Neg();
+	  LED1_On();
 	  WAIT1_Waitms(100);
+	  LED1_Off();
+
+	  LED2_On();
+	  WAIT1_Waitms(100);
+	  LED2_Off();
+
+	  LED3_On();
+	  WAIT1_Waitms(100);
+	  LED3_Off();
   }
   /* For example: for(;;) { } */
 

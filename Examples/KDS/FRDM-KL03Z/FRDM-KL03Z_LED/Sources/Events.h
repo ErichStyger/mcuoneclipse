@@ -38,6 +38,10 @@
 #include "MCUC1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
 #include "gpio1.h"
 
 #ifdef __cplusplus
