@@ -37,7 +37,7 @@
  * Description   : bus pal main function
  *
  *END**************************************************************************/
-int main()
+int main(void)
 {
     init_hardware();
 

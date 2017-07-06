@@ -98,11 +98,11 @@ __isr_vector:
     .size    __isr_vector, . - __isr_vector
 
 /* Flash Configuration */
-    .section .FlashConfig, "a"
-    .long 0xFFFFFFFF
-    .long 0xFFFFFFFF
-    .long 0xFFFFFFFF
-    .long 0xFFFF3DFE
+  //  .section .FlashConfig, "a"
+  //  .long 0xFFFFFFFF
+  //  .long 0xFFFFFFFF
+  //  .long 0xFFFFFFFF
+  //  .long 0xFFFF3DFE
 
     .text
     .thumb

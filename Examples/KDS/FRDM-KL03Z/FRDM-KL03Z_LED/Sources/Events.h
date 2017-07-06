@@ -42,6 +42,13 @@
 #include "LEDpin2.h"
 #include "LED3.h"
 #include "LEDpin3.h"
+#include "KIN1.h"
+#include "UTIL1.h"
+#include "GI2C1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "SCL1.h"
+#include "MMA1.h"
 #include "gpio1.h"
 
 #ifdef __cplusplus

@@ -44,7 +44,7 @@
 #define BL_CONFIG_SCUART (1)
 #endif
 #if !defined(BL_CONFIG_I2C)
-#define BL_CONFIG_I2C (0)
+#define BL_CONFIG_I2C (1)
 #endif
 #if !defined(BL_CONFIG_DSPI)
 #define BL_CONFIG_DSPI (0)
@@ -55,7 +55,9 @@
 #if !defined(BL_CONFIG_USB_MSC)
 #define BL_CONFIG_USB_MSC (0)
 #endif
-
+#if !defined(BL_TARGET_FLASH)
+#define BL_TARGET_FLASH (1)
+#endif
 //@}
 
 #if !defined(BL_TARGET_FLASH) && !defined(BL_TARGET_RAM)
@@ -100,7 +102,7 @@
 
 // The bootloader will check this address for the application vector table upon startup.
 #if !defined(BL_APP_VECTOR_TABLE_ADDRESS)
-#define BL_APP_VECTOR_TABLE_ADDRESS 0xb000
+#define BL_APP_VECTOR_TABLE_ADDRESS 0xc000
 #endif
 
 /* Serial Port Info */

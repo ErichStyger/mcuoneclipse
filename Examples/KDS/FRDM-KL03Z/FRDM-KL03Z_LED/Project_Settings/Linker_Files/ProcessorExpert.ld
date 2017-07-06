@@ -31,7 +31,7 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x50;
 /* Specify the memory areas */
 MEMORY {
   m_interrupts          (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000100
-  m_bootloader_config   (RX)  : ORIGIN = 0x000003C0, LENGTH = 0x40    /* ROM Bootloader configuration */
+  m_bootloader_config   (RX)  : ORIGIN = 0x000003C0, LENGTH = 0x20    /* ROM Bootloader configuration */
   m_flash_config        (RX)  : ORIGIN = 0x00000400, LENGTH = 0x00000010
   m_interrupts_ram      (RW)  : ORIGIN = 0x1FFFFE00, LENGTH = 0x00000100
   m_text                (RX)  : ORIGIN = 0x00000410, LENGTH = 0x00007BF0
