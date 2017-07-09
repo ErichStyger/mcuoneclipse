@@ -68,6 +68,7 @@ void NMI_Handler(void) {
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+int16_t x, y, z;
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -78,6 +79,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  MMA1_Enable();
   for(;;) {
 	  LED1_On();
 	  WAIT1_Waitms(100);
@@ -90,7 +92,9 @@ int main(void)
 	  LED3_On();
 	  WAIT1_Waitms(100);
 	  LED3_Off();
-
+      x = MMA1_GetXmg();
+      y = MMA1_GetYmg();
+      z = MMA1_GetZmg();
 	 // KIN1_SoftwareReset();
   }
   /* For example: for(;;) { } */

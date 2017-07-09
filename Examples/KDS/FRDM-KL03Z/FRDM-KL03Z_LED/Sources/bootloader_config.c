@@ -38,26 +38,6 @@
 
 #include <stdint.h>
 
-#if 0 /* UHK version */
-// Typedefs:
-
-    typedef struct {
-        uint32_t tag;                          // Magic number to verify bootloader configuration is valid. Must be set to 'kcfg'.
-        uint32_t reserved[3];
-        uint8_t enabledPeripherals;            // Bitfield of peripherals to enable.
-                                               // bit 0 - LPUART, bit 1 - I2C, bit 2 - SPI, bit 3 - CAN, bit 4 - USB
-        uint8_t i2cSlaveAddress;               // If not 0xFF, used as the 7-bit I2C slave address.
-                                               // If 0xFF, defaults to 0x10 for I2C slave address.
-        uint16_t peripheralDetectionTimeoutMs; // Timeout in milliseconds for active peripheral detection.
-                                               // If 0xFFFF, defaults to 5 seconds.
-        uint16_t reserved2[2];
-        uint32_t reserved3;
-        uint8_t clockFlags;   // The flags in the clockFlags configuration field are enabled if the corresponding bit is cleared (0).
-                              // bit 0 - HighSpeed Enable high speed mode (i.e., 48 MHz).
-        uint8_t clockDivider; // Inverted value of the divider to use for core and bus clocks when in high speed mode.
-    } bootloader_config_t;
-#else
-
 /*!
 * @brief Defines the structure to set the Bootloader Configuration Area
 *
@@ -104,28 +84,8 @@ typedef struct BootloaderConfiguration
                         //! bit 0 - HighSpeed Enable high speed mode (i.e., 48 MHz).
     uint8_t clockDivider; //!< [1d:1d] Inverted value of the divider to use for
                           //! core and bus clocks when in high speed mode.
-#if 0
-    uint8_t bootFlags; //!< [1e:1e] If bit 0 is cleared, then Kinetis bootloader
-                       //! will jump to either Quad SPI Flash or internal flash
-                       //! image depending on FOPT BOOTSRC_SEL bits.
-                       //! If the bit is set, then Kinetis bootloader will prepare
-                       //! for host communication over serial peripherals.
-    uint8_t pad0; //!< [1f:1f] Reserved, set to 0xFF
-    uint32_t mmcauConfigPointer; //!< [20:23] A pointer to the MMCAU configuration
-                                 //! structure in memory.
-    uint32_t keyBlobPointer; //!< [24:27]Holds a pointer value to the key blob
-                             //! array used to configure OTFAD
-    uint8_t pad1; //!< [28:28] reserved
-    uint8_t canConfig1; //!< [29:29] ClkSel[1], PropSeg[3], SpeedIndex[4]
-    uint16_t canConfig2; //!< [2a:2b] Pdiv[8], Pseg1[3], Pseg2[3],  rjw[2]
-    uint16_t canTxId; //!< [2c:2d] txId
-    uint16_t canRxId; //!< [2e:2f] rxId
-    uint32_t qspi_config_block_pointer; //!< [30:33] A pointer to the QSPI config
-                                        //! block in internal flash array.
-    uint32_t reserved[3]; //!<[34:3f] reserved
-#endif
 } bootloader_config_t;
-#endif
+
 /*
 * Warning: To enable bootloader configuration, User still needs two extra steps :
 *
@@ -176,22 +136,8 @@ typedef struct BootloaderConfiguration
 
 #define ENABLE_BCA     (1)
 
-#if 1
-#if 1 || BOOTLOADER_CONFIG
 /* Bootlader configuration area */
-#if defined(__IAR_SYSTEMS_ICC__)
-/* Pragma to place the Bootloader Configuration Array on correct location
-* defined in linker file. */
-#pragma language = extended
-#pragma location = "BootloaderConfig"
-__root const bootloader_config_t BootloaderConfig @"BootloaderConfig" =
-#elif defined(__GNUC__)
 __attribute__((section(".BootloaderConfig"))) const bootloader_config_t BootloaderConfig =
-#elif defined(__CC_ARM)
-__attribute__((section("BootloaderConfig"))) const bootloader_config_t BootloaderConfig __attribute__((used)) =
-#else
-#error Unsupported compiler!
-#endif
     {
 #if ENABLE_BCA
         .tag = 0x6766636B, //!< Magic Number
@@ -213,34 +159,7 @@ __attribute__((section("BootloaderConfig"))) const bootloader_config_t Bootloade
         //.clockFlags = 0xFF, //!< Disable High speed mode
         //.clockDivider = 0xFF, //!< Use clock divider(0)
 		.clockDivider = 0x1, //!< Use clock divider(0)
-#if 0
-        .bootFlags = 0xFF, //!< Enable communication with host
-		.pad0 = 0xFF,
-        .mmcauConfigPointer = 0x00000000, //!< MMCAU configuration is available
-        .keyBlobPointer = 0x00000000, //!< Key blob is available
-		.pad1 = 0xFF,
-        .canConfig1 = 0xF0, //!< Use user-defined canConfig1
-        .canConfig2 = 0xFFFF, //!< Use default canConfig2
-        .canTxId = 0x0000, //!< Use user-defined CAN TX ID
-        .canRxId = 0x0000, //!< Use user-defined CAN RX ID
-        .qspi_config_block_pointer = 0x00000000, //!< QSPI configuration is available
-#endif
     };
-#endif
-
-#else /* UHK version */
-
-__attribute__((used, section(".BootloaderConfig"))) const bootloader_config_t BootloaderConfig = {
-    .tag = 0x6766636B,                    // Magic Number
-    .enabledPeripherals = 0xE2,           // Enabled Peripheral: I2C
-    .i2cSlaveAddress = 0x10,              // Use user-defined I2C address
-    .peripheralDetectionTimeoutMs = 3000/*300*//*0xFFFF*/,  // Use user-defined timeout (ms)
-    .clockFlags = 0xFF,                   // Disable High speed mode
-    .clockDivider = 0xFF,                 // Use clock divider (0)
-};
-
-
-#endif
 
 /* 16 bytes at address 0x400 */
 __attribute__((used, section(".FlashConfig"))) const uint32_t FOPTConfig[4] = {
