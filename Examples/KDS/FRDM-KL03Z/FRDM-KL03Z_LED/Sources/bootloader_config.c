@@ -1,10 +1,11 @@
-/* KBOOT ROM Bootloader configuration for FRDM-KL03Z Board */
+/* bootloader_config.c
+ * KBOOT ROM Bootloader configuration for FRDM-KL03Z Board
+ */
 
 #include <stdint.h>
 
-#define ENABLE_BCA     (0)
+#define ENABLE_BCA     (1)
   /*!< 1: define Bootloader Configuration Area mit magic number to use it from ROM bootloader; 0: use default setting (no BCA) */
-
 
 typedef struct BootloaderConfiguration
 {
@@ -50,11 +51,11 @@ typedef struct BootloaderConfiguration
 #define ENABLE_PERIPHERAL_UART     (1<<0)
 #define ENABLE_PERIPHERAL_I2C      (1<<1)
 #define ENABLE_PERIPHERAL_SPI  	   (1<<2)
-#define ENABLE_PERIPHERAL_CAN      (1<<3)
-#define ENABLE_PERIPHERAL_USB_HID  (1<<4)
-#define ENABLE_PERIPHERAL_USB_MSC  (1<<7)
+#define ENABLE_PERIPHERAL_CAN      (1<<3) /* not supported for KL03! */
+#define ENABLE_PERIPHERAL_USB_HID  (1<<4) /* not supported for KL03! */
+#define ENABLE_PERIPHERAL_USB_MSC  (1<<7) /* not supported for KL03! */
 
-/* Bootloader configuration area */
+/* Bootloader configuration area, needs to be at address 0x3C0! */
 __attribute__((section(".BootloaderConfig"))) const bootloader_config_t BootloaderConfig =
     {
 #if ENABLE_BCA
@@ -65,18 +66,14 @@ __attribute__((section(".BootloaderConfig"))) const bootloader_config_t Bootload
         .crcStartAddress = 0xFFFFFFFF, //!< Disable CRC check
         .crcByteCount = 0xFFFFFFFF, //!< Disable CRC check
         .crcExpectedValue = 0xFFFFFFFF, //!< Disable CRC check
-        .enabledPeripherals = 0xFF /*0xE2*/, /*ENABLE_PERIPHERAL_I2C, *///ENABLE_PERIPHERAL_UART|ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_SPI|ENABLE_PERIPHERAL_CAN|ENABLE_PERIPHERAL_USB_HID|ENABLE_PERIPHERAL_USB_MSC, //!< Enabled Peripheral: UART I2C SPI CAN USB-HID
+        .enabledPeripherals = ENABLE_PERIPHERAL_UART, //ENABLE_PERIPHERAL_UART|ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_SPI, //!< Enabled Peripheral: UART I2C SPI CAN USB-HID
         .i2cSlaveAddress = 0x10, //!< Use default I2C address(0x10)
-        //.i2cSlaveAddress = 0xFF, //!< Use default I2C address(0x10)
-        //.peripheralDetectionTimeoutMs = /*2000*/0xFFFF, //!< Use user-defined timeout(ms)
         .peripheralDetectionTimeoutMs = 5000, //!< Use user-defined timeout(ms)
         .usbVid = 0xFFFF, //!< Use default Vendor ID(0x15A2)
         .usbPid = 0xFFFF, //!< Use default Product ID(0x0073)
         .usbStringsPointer = 0xFFFFFFFF, //!< Use default USB String
-        .clockFlags = 0xFE /*0xFE*/, //!< 0 bit cleared: Enable High speed mode
-        //.clockFlags = 0xFF, //!< Disable High speed mode
-        //.clockDivider = 0xFF, //!< Use clock divider(0)
-		.clockDivider = 0xff /*0x1*//*0xFF*/, //!< Use clock divider(0)
+        .clockFlags = 0xFE, //!< 0 bit cleared: Enable High speed mode. NOTE: Enabling high speed mode makes UART connection worse, requires pull-up on UART RX line!
+		.clockDivider = 0xff, //!< Use clock divider(0)
     };
 
 /* 16 bytes at address 0x400 */

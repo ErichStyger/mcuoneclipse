@@ -17,7 +17,7 @@ C:\nxp\NXP_Kinetis_Bootloader_2_0_0\bin\Tools\blhost\win\blhost --port COM6 -d g
 with a all the bootloader features enabled, it needs more than 64KByte of FLASH!
 MK22F51212\bootloader_config.h can be used to reduce it (e.g. only to support UART),then the bootloader fits below 0x7FFF, with -O3 below 26 KByte..
 
-Set application start address withi BL_APP_VECTOR_TABLE_ADDRESS (bootloader_config.h)
+Set application start address with BL_APP_VECTOR_TABLE_ADDRESS (bootloader_config.h)
 
 blhost usage:
 C:\nxp\NXP_Kinetis_Bootloader_2_0_0\bin\Tools\blhost\win\blhost.exe -p COM6 -- get-property 1
