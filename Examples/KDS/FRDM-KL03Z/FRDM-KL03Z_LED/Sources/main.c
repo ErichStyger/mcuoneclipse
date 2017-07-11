@@ -98,13 +98,13 @@ int main(void)
 	  //WAIT1_Waitms(100);
 	  //LED1_Off();
 
-	  //LED2_On();
-	  //WAIT1_Waitms(100);
-	  //LED2_Off();
-
-	  LED3_On();
+	  LED2_On();
 	  WAIT1_Waitms(100);
-	  LED3_Off();
+	  LED2_Off();
+
+	  //LED3_On();
+	  //WAIT1_Waitms(100);
+	  //LED3_Off();
 	  WAIT1_Waitms(500);
       x = MMA1_GetXmg();
      // y = MMA1_GetYmg();

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define ENABLE_BCA     (1)
+#define ENABLE_BCA     (0)
   /*!< 1: define Bootloader Configuration Area mit magic number to use it from ROM bootloader; 0: use default setting (no BCA) */
 
 
