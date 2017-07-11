@@ -1,52 +1,11 @@
-/*
-* Copyright (c) 2013 - 15, Freescale Semiconductor, Inc.
-* All rights reserved
-*
-* Redistribution and use in source and binary forms, with or without modification,
-*are permitted provided that the following conditions are met :
-*
-* o Redistributions of source code must retain the above copyright notice, this list
-*   of conditions and the following disclaimer.
-*
-* o Redistributions in binary form must reproduce the above copyright notice, this
-*   list of conditions and the following disclaimer in the documentation and / or
-*   other materials provided with the distribution.
-*
-* o Neither the name of Freescale Semiconductor, Inc. nor the names of its
-*   contributors may be used to endorse or promote products derived from this
-*   software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-*LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-* ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-/*!
-* @brief Device specific configuration file for Kinetis bootloader
-*
-* Provides a bootloader configuration structure and a global variable that
-* contains
-* the system bootloader configuration data.
-*/
+/* KBOOT ROM Bootloader configuration for FRDM-KL03Z Board */
 
 #include <stdint.h>
 
-/*!
-* @brief Defines the structure to set the Bootloader Configuration Area
-*
-* This type of variable is used to set the Bootloader Configuration Area
-* of the chip.
-*
-* Warning: some configuration may not work on the devices that donot support 
-* corresponding feature.
-*/
+#define ENABLE_BCA     (1)
+  /*!< 1: define Bootloader Configuration Area mit magic number to use it from ROM bootloader; 0: use default setting (no BCA) */
+
+
 typedef struct BootloaderConfiguration
 {
     uint32_t tag; //!< [00:03] Magic number to verify bootloader configuration is
@@ -86,45 +45,6 @@ typedef struct BootloaderConfiguration
                           //! core and bus clocks when in high speed mode.
 } bootloader_config_t;
 
-/*
-* Warning: To enable bootloader configuration, User still needs two extra steps :
-*
-*   Step1 : Enable BOOTLOADER_CONFIG.
-*   Example : #define BOOTLOADER_CONFIG 1
-*
-*   Step2 : Add configuration of the section "BootloaderConfig" to your
-*   linker configuration file.
-*   Example(IAR) :
-*       define symbol __application_startaddress = 0; // User-defined
-*       define symbol m_bootloader_config_start = __application_startaddress + 0x3C0;
-*       define symbol m_bootloader_config_end = __application_startaddress + 0x3FF;
-*       define region m_bootloader_config_region = mem:[from m_bootloader_config_start to m_bootloader_config_end];
-*       place in m_bootloader_config_region{ section BootloaderConfig };
-*
-*   Example(Keil) :
-*       #define __application_startaddress = 0 // User-defined
-*       #define m_bootloader_config_start      __application_startaddress + 0x3C0
-*       #define m_bootloader_config_size       0x00000040
-*
-*       LR_m_bootloader_config m_bootloader_config_start m_bootloader_config_size{
-*         ER_m_bootloader_config m_bootloader_config_start m_bootloader_config_size{ ; load address = execution address
-*           * (BootloaderConfig)
-*         }
-*       }
-*
-*   Example(ARM - GCC) :
-*       MEMORY
-*       {
-*           m_bootloader_config(RX) : ORIGIN = 0x000003C0, LENGTH = 0x00000040
-*       }
-*       .bootloader_config :
-*       {
-*           . = ALIGN(4);
-*           KEEP(*(.BootloaderConfig)) // Bootloader Configuration Area (BCA)
-*           . = ALIGN(4);
-*       } > m_bootloader_config
-*
-*/
 
 /* bits for enabledPeripherals */
 #define ENABLE_PERIPHERAL_UART     (1<<0)
@@ -134,9 +54,7 @@ typedef struct BootloaderConfiguration
 #define ENABLE_PERIPHERAL_USB_HID  (1<<4)
 #define ENABLE_PERIPHERAL_USB_MSC  (1<<7)
 
-#define ENABLE_BCA     (1)
-
-/* Bootlader configuration area */
+/* Bootloader configuration area */
 __attribute__((section(".BootloaderConfig"))) const bootloader_config_t BootloaderConfig =
     {
 #if ENABLE_BCA
@@ -147,7 +65,7 @@ __attribute__((section(".BootloaderConfig"))) const bootloader_config_t Bootload
         .crcStartAddress = 0xFFFFFFFF, //!< Disable CRC check
         .crcByteCount = 0xFFFFFFFF, //!< Disable CRC check
         .crcExpectedValue = 0xFFFFFFFF, //!< Disable CRC check
-        .enabledPeripherals = ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_UART, //ENABLE_PERIPHERAL_UART|ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_SPI|ENABLE_PERIPHERAL_CAN|ENABLE_PERIPHERAL_USB_HID|ENABLE_PERIPHERAL_USB_MSC, //!< Enabled Peripheral: UART I2C SPI CAN USB-HID
+        .enabledPeripherals = 0xFF /*0xE2*/, /*ENABLE_PERIPHERAL_I2C, *///ENABLE_PERIPHERAL_UART|ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_SPI|ENABLE_PERIPHERAL_CAN|ENABLE_PERIPHERAL_USB_HID|ENABLE_PERIPHERAL_USB_MSC, //!< Enabled Peripheral: UART I2C SPI CAN USB-HID
         .i2cSlaveAddress = 0x10, //!< Use default I2C address(0x10)
         //.i2cSlaveAddress = 0xFF, //!< Use default I2C address(0x10)
         //.peripheralDetectionTimeoutMs = /*2000*/0xFFFF, //!< Use user-defined timeout(ms)
@@ -155,10 +73,10 @@ __attribute__((section(".BootloaderConfig"))) const bootloader_config_t Bootload
         .usbVid = 0xFFFF, //!< Use default Vendor ID(0x15A2)
         .usbPid = 0xFFFF, //!< Use default Product ID(0x0073)
         .usbStringsPointer = 0xFFFFFFFF, //!< Use default USB String
-        .clockFlags = 0xFE, //!< 0 bit cleared: Enable High speed mode
+        .clockFlags = 0xFE /*0xFE*/, //!< 0 bit cleared: Enable High speed mode
         //.clockFlags = 0xFF, //!< Disable High speed mode
         //.clockDivider = 0xFF, //!< Use clock divider(0)
-		.clockDivider = 0x1, //!< Use clock divider(0)
+		.clockDivider = 0xff /*0x1*//*0xFF*/, //!< Use clock divider(0)
     };
 
 /* 16 bytes at address 0x400 */

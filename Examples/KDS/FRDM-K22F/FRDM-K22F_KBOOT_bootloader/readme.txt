@@ -5,17 +5,19 @@ This is a standalone port of the Kinetis Bootloader (KBOOT) for the FRDM-K22F.
 To connect to the bootloader, use the KinetisFlashTool with
 - USB+HID, VID 0x15A2, PID 0x0073
 - UART over OpenSDA, 57600 Baud
+- I2C1: SCL PTC10, SDA PTC11 (BL_ENABLE_PINMUX_I2C1)
+
 To enter bootloader mode:
 - reset (after 5 seconds it will boot application if present
 - press SW3 during power-on (SW3 is outermost push button near the target USB port)
 
 
+C:\nxp\NXP_Kinetis_Bootloader_2_0_0\bin\Tools\blhost\win\blhost --port COM6 -d get-property 2
+
 with a all the bootloader features enabled, it needs more than 64KByte of FLASH!
 MK22F51212\bootloader_config.h can be used to reduce it (e.g. only to support UART),then the bootloader fits below 0x7FFF, with -O3 below 26 KByte..
 
 Set application start address withi BL_APP_VECTOR_TABLE_ADDRESS (bootloader_config.h)
-
-
 
 blhost usage:
 C:\nxp\NXP_Kinetis_Bootloader_2_0_0\bin\Tools\blhost\win\blhost.exe -p COM6 -- get-property 1

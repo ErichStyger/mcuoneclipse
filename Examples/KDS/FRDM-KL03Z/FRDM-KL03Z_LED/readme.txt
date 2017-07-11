@@ -17,8 +17,8 @@ PTA6 SPI0_MISO
 PTA7 SPI0_MOSI
 
 I2C bootloader connection is through:
-PTB3: SCL (yellow, top postion on header)
-PTB4: SDA
+PTB3: SCL (yellow wire, top postion on header)
+PTB4: SDA (green wire, second position on header)
 
 K22:
 PTD3: SDA
