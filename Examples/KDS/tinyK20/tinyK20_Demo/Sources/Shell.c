@@ -57,6 +57,7 @@ static CLS1_ConstStdIOType RTT_Stdio = {
 };
 #endif
 
+#if PL_HAS_SD_CARD
 static void SDTask(void *pvParameters) {
   bool cardMounted = FALSE;
   static FAT1_FATFS fileSystemObject;
@@ -68,6 +69,7 @@ static void SDTask(void *pvParameters) {
     FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
+#endif
 
 typedef struct {
   CLS1_ConstStdIOType *stdio;
@@ -97,11 +99,13 @@ static void ShellTask(void *pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
-  if (FRTOS1_xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+#if PL_HAS_SD_CARD
+  if (xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#endif
 }
 
