@@ -43,6 +43,39 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "CS1.h"
+#include "Q4CRight.h"
+#include "C11.h"
+#include "BitIoLdd2.h"
+#include "C21.h"
+#include "BitIoLdd3.h"
+#include "Q4CLeft.h"
+#include "C12.h"
+#include "BitIoLdd4.h"
+#include "C23.h"
+#include "BitIoLdd5.h"
+#include "QuadInt.h"
+#include "TimerIntLdd1.h"
+#include "TU_QuadInt.h"
+#include "TUMotor.h"
+#include "DIRR.h"
+#include "BitIoLdd7.h"
+#include "DIRL.h"
+#include "BitIoLdd6.h"
+#include "PWMR.h"
+#include "PwmLdd4.h"
+#include "PWML.h"
+#include "PwmLdd3.h"
+#include "RNET1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd10.h"
+#include "CSN1.h"
+#include "BitIoLdd11.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
+#include "RTT1.h"
+#include "SYS1.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -119,6 +152,42 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+/*
+** ===================================================================
+**     Event       :  QuadInt_OnInterrupt (module Events)
+**
+**     Component   :  QuadInt [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void QuadInt_OnInterrupt(void);
+
+void SM1_OnRxCharExt(SM1_TComData Chr);
+/*
+** ===================================================================
+**     Event       :  SM1_OnRxCharExt (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The parameter of the event contains the last received
+**         character. If an input buffer is used, the character is also
+**         inserted into the buffer.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         Chr             - The last received character
 **     Returns     : Nothing
 ** ===================================================================
 */

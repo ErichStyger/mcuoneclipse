@@ -54,18 +54,6 @@
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-static void RunRomBootloader(void) {
-	uint32_t runBootloaderAddress;
-	void (*runBootloader)(void *arg);
-
-	/* Read the function address from the ROM API tree. */
-	runBootloaderAddress = **(uint32_t **)(0x1c00001c);
-	runBootloader = (void (*)(void * arg))runBootloaderAddress;
-
-	/* Start the bootloader. */
-	runBootloader(NULL);
-}
-
 void NMI_Handler(void) {
 	/* SW3/PTB5 is on NMI pin */
 	int i;

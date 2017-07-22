@@ -7,7 +7,7 @@
 **     Version     : Component 01.157, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
+**     Date/Time   : 2017-07-02, 12:33, # CodeGen: 45
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -2640,6 +2640,7 @@ void UTIL1_randomSetSeed(unsigned int seed)
 **         ---             - remapped value
 ** ===================================================================
 */
+#ifndef __HIWARE__ /* HIWARE compiler does not support 64bit data types */
 int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, int64_t out_max)
 {
   if ((in_max - in_min) > (out_max - out_min)) {
@@ -2648,6 +2649,7 @@ int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, 
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
   }
 }
+#endif
 
 /* END UTIL1. */
 

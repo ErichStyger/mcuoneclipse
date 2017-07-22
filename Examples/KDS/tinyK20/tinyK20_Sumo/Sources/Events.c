@@ -143,6 +143,49 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   for(;;) {}
 }
 
+/*
+** ===================================================================
+**     Event       :  QuadInt_OnInterrupt (module Events)
+**
+**     Component   :  QuadInt [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void QuadInt_OnInterrupt(void)
+{
+  Q4CRight_Sample();
+  Q4CLeft_Sample();
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnRxCharExt (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The parameter of the event contains the last received
+**         character. If an input buffer is used, the character is also
+**         inserted into the buffer.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         Chr             - The last received character
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SM1_OnRxCharExt(SM1_TComData Chr)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

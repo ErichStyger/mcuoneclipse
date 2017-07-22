@@ -3,6 +3,7 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define ENABLE_BCA     (1)
   /*!< 1: define Bootloader Configuration Area mit magic number to use it from ROM bootloader; 0: use default setting (no BCA) */
@@ -84,3 +85,15 @@ __attribute__((used, section(".FlashConfig"))) const uint32_t FOPTConfig[4] = {
  // 0xFFFF3DFE // boot from FLASH
   0xFFFFBDFE   // boot from ROM, means this will kick in the bootloader by default
 };
+
+void RunRomBootloader(void) {
+	uint32_t runBootloaderAddress;
+	void (*runBootloader)(void *arg);
+
+	/* Read the function address from the ROM API tree. */
+	runBootloaderAddress = **(uint32_t **)(0x1c00001c);
+	runBootloader = (void (*)(void * arg))runBootloaderAddress;
+
+	/* Start the bootloader. */
+	runBootloader(NULL);
+}

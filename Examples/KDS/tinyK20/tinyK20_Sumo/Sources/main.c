@@ -40,12 +40,46 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "CS1.h"
+#include "Q4CRight.h"
+#include "C11.h"
+#include "BitIoLdd2.h"
+#include "C21.h"
+#include "BitIoLdd3.h"
+#include "Q4CLeft.h"
+#include "C12.h"
+#include "BitIoLdd4.h"
+#include "C23.h"
+#include "BitIoLdd5.h"
+#include "QuadInt.h"
+#include "TimerIntLdd1.h"
+#include "TU_QuadInt.h"
+#include "TUMotor.h"
+#include "DIRR.h"
+#include "BitIoLdd7.h"
+#include "DIRL.h"
+#include "BitIoLdd6.h"
+#include "PWMR.h"
+#include "PwmLdd4.h"
+#include "PWML.h"
+#include "PwmLdd3.h"
+#include "RNET1.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd10.h"
+#include "CSN1.h"
+#include "BitIoLdd11.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
+#include "RTT1.h"
+#include "SYS1.h"
+#include "HF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -59,7 +93,7 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
-
+  APP_Start();
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START

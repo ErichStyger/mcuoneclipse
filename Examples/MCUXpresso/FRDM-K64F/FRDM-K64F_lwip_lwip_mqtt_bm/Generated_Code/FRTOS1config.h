@@ -61,5 +61,19 @@
    /*!< 1: Makes sure uxTopUsedPriority is present (needed for OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
 #endif
 
+#ifndef configLINKER_HEAP_BASE_SYMBOL
+  #define configLINKER_HEAP_BASE_SYMBOL           _pvHeapStart
+    /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib) */
+#endif
+
+#ifndef configLINKER_HEAP_LIMIT_SYMBOL
+  #define configLINKER_HEAP_LIMIT_SYMBOL          _pvHeapLimit
+    /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib) */
+#endif
+
+#ifndef configLINKER_HEAP_SIZE_SYMBOL
+  #define configLINKER_HEAP_SIZE_SYMBOL           HEAP_SIZE
+    /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib) */
+#endif
 
 #endif /* __FRTOS1_CONFIG_H */
