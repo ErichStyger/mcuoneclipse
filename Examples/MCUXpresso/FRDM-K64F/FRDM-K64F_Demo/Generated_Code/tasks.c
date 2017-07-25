@@ -5005,7 +5005,6 @@ when performing module tests). */
 	#include "tasks_test_access_functions.h"
 #endif
 
-
 #if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1)
 
 	#include "freertos_tasks_c_additions.h"

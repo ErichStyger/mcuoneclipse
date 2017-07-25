@@ -2,10 +2,8 @@
  * test.c
  *
  *  Created on: 16.10.2015
- *      Author: tastyger
+ *      Author: Erich Styger
  */
-
-
 
 int i;
 

@@ -52,7 +52,7 @@ extern const uint8_t FreeRTOSDebugConfig[];
 //
 #if defined(__GNUC__)
 const uint8_t FreeRTOSDebugConfig[] __attribute__((section(".rodata"))) =
-                #elif defined(__CC_ARM)
+#elif defined(__CC_ARM)
 const uint8_t FreeRTOSDebugConfig[] __attribute__((used)) =
 #elif defined(__IAR_SYSTEMS_ICC__)
 #pragma required=FreeRTOSDebugConfig
