@@ -1,0 +1,1 @@
+This folder contains common robotic files used by multiple robot projects.
