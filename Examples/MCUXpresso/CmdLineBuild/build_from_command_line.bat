@@ -9,7 +9,6 @@ SET IDE=C:\nxp\MCUXpressoIDE_10.0.2_411\ide\mcuxpressoidec.exe
 
 ECHO Extending PATH if not already present
 ECHO %PATH%|findstr /i /c:"%TOOLCHAIN_PATH:"=%">nul || set PATH=%PATH%;%TOOLCHAIN_PATH%
-SET PATH=%PATH%;%TOOLCHAIN_PATH%
 
 ECHO Launching Eclipse IDE
 "%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -build frdmk64f_rtos_examples_freertos_event
