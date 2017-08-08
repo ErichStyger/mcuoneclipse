@@ -49,6 +49,7 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
+#include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -134,7 +135,7 @@ static void Shell(void) {
   }
 }
 
-static void Test(void) {
+static void TestTask(void *args) {
   static int position=0;
   static unsigned char buff[64], ch='\0';
   for(;;) {
@@ -149,7 +150,7 @@ static void Test(void) {
     }
     CLS1_SendStr("Hello World \r\n", CLS1_GetStdio()->stdOut);
     LED1_On();
-    WAIT1_Waitms(1000);
+    WAIT1_WaitOSms(1000);
   } /* for */
 }
 
@@ -171,8 +172,22 @@ int main(void)
   }
 #elif 0
   ReadText();
-#elif 1
-  Test();
+#elif 0
+  TestTask(); /* no RTOS */
+#elif 1 /* use RTOS task */
+  if (xTaskCreate(
+      TestTask,  /* pointer to the task */
+        "Test", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY+2,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  vTaskStartScheduler(); /* start RTOS */
 #elif 1
   Shell();
 #endif
