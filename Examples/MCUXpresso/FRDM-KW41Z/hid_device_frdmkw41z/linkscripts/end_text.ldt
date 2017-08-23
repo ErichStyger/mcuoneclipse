@@ -1,0 +1,20 @@
+
+    _etext = .;
+        
+/********************************************************************************************/
+
+__VECTOR_TABLE = ABSOLUTE(.);
+
+ .interrupts_ram :
+  {
+    . = ALIGN(4);
+    __VECTOR_RAM__ = .;
+    __interrupts_ram_start__ = .;
+    *(.m_interrupts_ram)
+    . += ((48*4));
+    . = ALIGN(4);
+    __interrupts_ram_end__ = .;
+  } > SRAM
+  __VECTOR_RAM = __VECTOR_RAM__;
+  __RAM_VECTOR_TABLE_SIZE_BYTES = (__interrupts_ram_end__ - __interrupts_ram_start__);
+/********************************************************************************************/
