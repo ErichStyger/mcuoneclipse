@@ -1,0 +1,28 @@
+FreeRTOS_for_Kinetis_SDK_v2.0
+
+Original package is available at freertos.org. Supported version can be found in Kinetis
+SDK Release notes document. Folder structure of the FreeRTOS in SDK is reduced to keep only necessary
+Kinetis related files.
+
+Directory structure:
+--------------------
+Original FreeRTOS folder structure
+    FreeRTOS
+      ├ FreeRTOS
+      │  ├ Demo
+      │  ├ License
+      │  └ Source
+      └ FreeRTOS-Plus
+         ├ Demo
+         └ Source
+
+SDK FreeRTOS folder structure
+    freertos
+      ├ template_application
+      ├ License
+      └ Source
+
+Configuration:
+--------------
+Each FreeRTOS application contains application dependent configuration file FreeRTOSConfig.h based
+on template from: http://www.freertos.org/a00110.html
