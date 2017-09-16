@@ -50,7 +50,7 @@
 #define BOARD_UART_IRQ_HANDLER UART1_RX_TX_IRQHandler
 
 #ifndef BOARD_DEBUG_UART_BAUDRATE
-#define BOARD_DEBUG_UART_BAUDRATE 115200
+#define BOARD_DEBUG_UART_BAUDRATE 38400
 #endif /* BOARD_DEBUG_UART_BAUDRATE */
 
 /*! @brief The bubble level demo information */

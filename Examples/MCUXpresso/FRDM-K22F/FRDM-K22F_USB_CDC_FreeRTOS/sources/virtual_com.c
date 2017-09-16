@@ -81,7 +81,6 @@ extern usb_device_endpoint_struct_t g_UsbDeviceCdcVcomDicEndpoints[];
 extern usb_device_class_struct_t g_UsbDeviceCdcVcomConfig;
 /* Data structure of virtual com device */
 static usb_cdc_vcom_struct_t s_cdcVcom;
-static char const *s_appName = "app task";
 
 /* Line codinig of cdc device */
 static uint8_t s_lineCoding[LINE_CODING_SIZE] = {
@@ -732,6 +731,25 @@ void APPTask(void *handle)
     }
 }
 
+static void UartTask(void *pvParams) {
+  int i=0;
+  (void)pvParams;
+  //static uint8_t rxBuffer[64];
+  int ch;
+
+  for(;;) {
+    ch = DbgConsole_Getchar();
+    if (ch!=-1) {
+      DbgConsole_Printf("Rx: ");
+      DbgConsole_Putchar(ch);
+      DbgConsole_Printf("\r\n");
+    }
+    DbgConsole_Printf("Hello %i\r\n", i);
+    i++;
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
+}
+
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
 #else
@@ -743,7 +761,7 @@ void main(void)
     BOARD_InitDebugConsole();
 
     if (xTaskCreate(APPTask,                         /* pointer to the task                      */
-                    s_appName,                       /* task name for kernel awareness debugging */
+                    "AppTask",                       /* task name for kernel awareness debugging */
                     5000L / sizeof(portSTACK_TYPE),  /* task stack size                          */
                     &s_cdcVcom,                      /* optional task startup argument           */
                     4,                               /* initial priority                         */
@@ -757,6 +775,23 @@ void main(void)
         return;
 #endif
     }
+
+    if (xTaskCreate(UartTask,                         /* pointer to the task                      */
+                    "UartTask",                       /* task name for kernel awareness debugging */
+                    1024L / sizeof(portSTACK_TYPE),  /* task stack size                          */
+                    NULL,                      /* optional task startup argument           */
+                    4,                               /* initial priority                         */
+                    NULL /* optional task handle to create           */
+                    ) != pdPASS)
+    {
+        usb_echo("app task create failed!\r\n");
+#if (defined(__CC_ARM) || defined(__GNUC__))
+        return 1;
+#else
+        return;
+#endif
+    }
+
 
     vTaskStartScheduler();
 
