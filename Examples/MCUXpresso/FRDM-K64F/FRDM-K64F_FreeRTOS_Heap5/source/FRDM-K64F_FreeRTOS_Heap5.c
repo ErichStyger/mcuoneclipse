@@ -44,17 +44,22 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-static uint8_t heap_sram_lower[8*1024];
-static uint8_t heap_sram_upper[16*1024];
+static __attribute__ ((used,section(".noinit.$SRAM_LOWER_Heap5"))) uint8_t heap_sram_lower[50*1024]; /* placed in in no_init section inside SRAM_LOWER */
+static __attribute__ ((used,section(".noinit_Heap5"))) uint8_t heap_sram_upper[128*1024]; /* placed in in no_init section inside SRAM_UPPER */
 
 static HeapRegion_t xHeapRegions[] =
 {
-  { &heap_sram_lower[0], sizeof(heap_sram_lower) },// << Defines a block of 0x10000 bytes starting at address 0x80000000
-  { &heap_sram_upper[0], sizeof(heap_sram_upper)},// << Defines a block of 0xa0000 bytes starting at address of 0x90000000
-  { NULL, 0 }              //  << Terminates the array.
+  { &heap_sram_lower[0], sizeof(heap_sram_lower) },
+  { &heap_sram_upper[0], sizeof(heap_sram_upper)},
+  { NULL, 0 } //  << Terminates the array.
 };
 
 void MainTask(void *pv) {
+  int i;
+
+  for(i=0;i<15;i++) {
+    (void)pvPortMalloc(10*1024); /* allocate some dummy memory blocks */
+  }
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(500));
   }
