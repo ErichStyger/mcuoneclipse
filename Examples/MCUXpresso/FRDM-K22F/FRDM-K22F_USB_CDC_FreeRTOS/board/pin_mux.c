@@ -68,6 +68,11 @@ void BOARD_InitPins(void) {
 
   PORT_SetPinMux(PORTE, PIN0_IDX, kPORT_MuxAlt3);            /* PORTE0 (pin 1) is configured as UART1_TX */
   PORT_SetPinMux(PORTE, PIN1_IDX, kPORT_MuxAlt3);            /* PORTE1 (pin 2) is configured as UART1_RX */
+#if 1
+  CLOCK_EnableClock(kCLOCK_PortD);
+  PORT_SetPinMux(PORTD, 3, kPORT_MuxAlt3);            /* PORTD3 is UART2_Tx */
+  PORT_SetPinMux(PORTD, 2, kPORT_MuxAlt3);            /* PORTD2 is UART2_Rx */
+#endif
   SIM->SOPT5 = ((SIM->SOPT5 &
     (~(SIM_SOPT5_UART1TXSRC_MASK)))                          /* Mask bits to zero which are setting */
       | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX)       /* UART 1 transmit data source select: UART1_TX pin */

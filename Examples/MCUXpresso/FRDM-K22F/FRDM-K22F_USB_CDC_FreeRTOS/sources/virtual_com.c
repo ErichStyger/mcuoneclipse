@@ -731,13 +731,54 @@ void APPTask(void *handle)
     }
 }
 
+#include "fsl_uart.h"
+
+uint8_t txbuff[] = "Uart polling example\r\n";
+uint8_t rxbuff[20] = {0};
+
+static void InitUART(void) {
+  uart_config_t config;
+  /*
+   * config.baudRate_Bps = 38400;
+   * config.parityMode = kUART_ParityDisabled;
+   * config.stopBitCount = kUART_OneStopBit;
+   * config.txFifoWatermark = 0;
+   * config.rxFifoWatermark = 1;
+   * config.enableTx = false;
+   * config.enableRx = false;
+   */
+  UART_GetDefaultConfig(&config);
+  config.baudRate_Bps = 38400;
+  config.enableTx = true;
+  config.enableRx = true;
+
+  UART_Init(UART2, &config, CLOCK_GetFreq(SYS_CLK)/2);
+}
+
 static void UartTask(void *pvParams) {
   int i=0;
   (void)pvParams;
   //static uint8_t rxBuffer[64];
   int ch;
+  uint8_t data;
+  status_t status;
 
+  UART_WriteBlocking(UART2, txbuff, sizeof(txbuff)-1);
+  DbgConsole_Printf("Hello world\r\n");
   for(;;) {
+#if 1
+    status = UART_ReadBlocking(UART2, &data, 1);
+    if (status==kStatus_Success) {
+      DbgConsole_Printf("Rx UART2: ");
+      DbgConsole_Putchar(data);
+      DbgConsole_Printf("\r\n");
+    } else {
+      /* error, reset flags */
+      DbgConsole_Printf("ERROR\r\n");
+      UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag);
+    }
+#endif
+#if 0
     ch = DbgConsole_Getchar();
     if (ch!=-1) {
       DbgConsole_Printf("Rx: ");
@@ -745,10 +786,13 @@ static void UartTask(void *pvParams) {
       DbgConsole_Printf("\r\n");
     }
     DbgConsole_Printf("Hello %i\r\n", i);
+#endif
     i++;
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
+
+
 
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
@@ -759,6 +803,8 @@ void main(void)
     BOARD_InitPins();
     BOARD_BootClockHSRUN();
     BOARD_InitDebugConsole();
+
+    InitUART();
 
     if (xTaskCreate(APPTask,                         /* pointer to the task                      */
                     "AppTask",                       /* task name for kernel awareness debugging */
