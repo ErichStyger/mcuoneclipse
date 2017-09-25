@@ -1036,6 +1036,9 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
         /* If use RX ring buffer, receive data to ring buffer. */
         if (handle->rxRingBuffer)
         {
+#if 1 /* endif */
+            count = handle->rxDataSizeAll-handle->rxDataSize;
+#endif
             while (count--)
             {
                 /* If RX ring buffer is full, trigger callback to notify over run. */
@@ -1062,7 +1065,11 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
                 }
 
                 /* Read data. */
+#if 0
                 handle->rxRingBuffer[handle->rxRingBufferHead] = base->D;
+#else /* << EST */
+                handle->rxRingBuffer[handle->rxRingBufferHead] = handle->rxData[-1]; /*! \todo */
+#endif
 
                 /* Increase handle->rxRingBufferHead. */
                 if (handle->rxRingBufferHead + 1U == handle->rxRingBufferSize)
@@ -1078,7 +1085,7 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
 
         else if (!handle->rxDataSize)
         {
-            /* Disable RX interrupt/overrun interrupt/fram error interrupt */
+            /* Disable RX interrupt/overrun interrupt/frame error interrupt */
             UART_DisableInterrupts(base, kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable |
                                              kUART_FramingErrorInterruptEnable);
 

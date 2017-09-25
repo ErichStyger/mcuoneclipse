@@ -736,45 +736,120 @@ void APPTask(void *handle)
 uint8_t txbuff[] = "Uart polling example\r\n";
 uint8_t rxbuff[20] = {0};
 
-static void InitUART(void) {
-  uart_config_t config;
-  /*
-   * config.baudRate_Bps = 38400;
-   * config.parityMode = kUART_ParityDisabled;
-   * config.stopBitCount = kUART_OneStopBit;
-   * config.txFifoWatermark = 0;
-   * config.rxFifoWatermark = 1;
-   * config.enableTx = false;
-   * config.enableRx = false;
-   */
-  UART_GetDefaultConfig(&config);
-  config.baudRate_Bps = 38400;
-  config.enableTx = true;
-  config.enableRx = true;
+static uint8_t rxRingBuffer[64]; /* ring buffer for rx data */
 
-  UART_Init(UART2, &config, CLOCK_GetFreq(SYS_CLK)/2);
+static volatile bool rxBufferEmpty = true;
+static volatile bool txBufferFull = false;
+static volatile bool txOnGoing = false;
+static volatile bool rxOnGoing = false;
+
+static uart_config_t user_config; /* user configuration */
+static uart_handle_t g_uartHandle; /* UART device handle struct */
+
+static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t status, void *userData) {
+  static unsigned int nofRxOverrunErrors = 0;
+  static unsigned int nofRxRingBufferOverrunErrors = 0;
+
+  (void)userData; /* not used */
+  if (status==kStatus_UART_RxHardwareOverrun) {
+    nofRxOverrunErrors++;
+    UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag); /* clear error */
+  }
+  if (status==kStatus_UART_TxIdle) { /* hardware finished Tx */
+      txBufferFull = false; /* indicate that Tx buffer is ready for new data */
+      txOnGoing = false; /* reset Tx flag */
+  }
+  if (status==kStatus_UART_RxIdle)   { /* hardware finished Rx */
+      rxBufferEmpty = false; /* indicate that we have someting in the Rx buffer */
+      rxOnGoing = false; /* reset Rx flag */
+  }
+  if (status==kStatus_UART_RxRingBufferOverrun) {
+    nofRxRingBufferOverrunErrors++;
+  }
+}
+
+static void InitUART(void) {
+  rxBufferEmpty = true;
+  txBufferFull = false;
+  txOnGoing = false;
+  rxOnGoing = false;
+ /*
+   * user_config.baudRate_Bps = 38400;
+   * user_config.parityMode = kUART_ParityDisabled;
+   * user_config.stopBitCount = kUART_OneStopBit;
+   * user_config.txFifoWatermark = 0;
+   * user_config.rxFifoWatermark = 1;
+   * user_config.enableTx = false;
+   * user_config.enableRx = false;
+   */
+  UART_GetDefaultConfig(&user_config);
+  user_config.baudRate_Bps = 38400;
+  user_config.enableTx = true;
+  user_config.enableRx = true;
+
+  UART_Init(UART2, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
+  UART_TransferCreateHandle(UART2, &g_uartHandle, UART_UserCallback, NULL);
+  UART_TransferStartRingBuffer(UART2, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
 }
 
 static void UartTask(void *pvParams) {
-  int i=0;
-  (void)pvParams;
-  //static uint8_t rxBuffer[64];
-  int ch;
-  uint8_t data;
+  int i=0; /* counter */
+ // uint8_t data;
   status_t status;
+  size_t receivedBytes;
 
-  UART_WriteBlocking(UART2, txbuff, sizeof(txbuff)-1);
-  DbgConsole_Printf("Hello world\r\n");
+  (void)pvParams; /* not used parameter */
+  DbgConsole_Printf("Starting UartTask\r\n");
+
+  /* local receive buffer */
+  uart_transfer_t rxTransfer; /* buffer descriptor */
+  uint8_t rxBuf[32]; /* buffer memory */
+
+  /* setup ring buffer */
+//  UART_TransferCreateHandle(UART2, &g_uartHandle, UART_UserCallback, NULL);
+ // UART_TransferStartRingBuffer(UART2, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
+
+  /* setup local rx buffer */
+  rxTransfer.data = rxBuf;
+  rxTransfer.dataSize = sizeof(rxBuf);
   for(;;) {
 #if 1
-    status = UART_ReadBlocking(UART2, &data, 1);
-    if (status==kStatus_Success) {
+    /* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
+    if ((!rxOnGoing) && rxBufferEmpty) { /* receive new data into buffer */
+        rxOnGoing = true;
+        status = UART_TransferReceiveNonBlocking(UART1, &g_uartHandle, &rxTransfer, &receivedBytes);
+        if (status==kStatus_Success && receivedBytes>0) {
+          DbgConsole_Printf("Rx from UART2, %d bytes: ", receivedBytes);
+          for(i=0;i<receivedBytes;i++) {
+            DbgConsole_Putchar(rxTransfer.data[i]);
+          }
+          DbgConsole_Printf("\r\n");
+        }
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
+#endif
+#if 0
+    rxBufferIdx = 0;
+    do {
+      status = UART_ReadBlocking(UART2, &rxBuffer[rxBufferIdx], 1);
+      if (status!=kStatus_Success) {
+        UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag);
+        //break;
+      } else {
+        rxBufferIdx++;
+      }
+    } while(rxBufferIdx<sizeof(rxBuffer)-1);
+    rxBuffer[rxBufferIdx] = '\0'; /* terminate */
+    if (rxBufferIdx>0) {
       DbgConsole_Printf("Rx UART2: ");
-      DbgConsole_Putchar(data);
+      for(i=0;i<rxBufferIdx;i++) {
+        DbgConsole_Putchar(rxBuffer[i]);
+      }
       DbgConsole_Printf("\r\n");
-    } else {
+    }
+    if (status!=kStatus_Success) {
       /* error, reset flags */
-      DbgConsole_Printf("ERROR\r\n");
+      DbgConsole_Printf("ERROR, status %d\r\n", status);
       UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag);
     }
 #endif
@@ -788,7 +863,7 @@ static void UartTask(void *pvParams) {
     DbgConsole_Printf("Hello %i\r\n", i);
 #endif
     i++;
-    vTaskDelay(pdMS_TO_TICKS(10));
+    //vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -826,7 +901,7 @@ void main(void)
                     "UartTask",                       /* task name for kernel awareness debugging */
                     1024L / sizeof(portSTACK_TYPE),  /* task stack size                          */
                     NULL,                      /* optional task startup argument           */
-                    4,                               /* initial priority                         */
+                    5,                               /* initial priority                         */
                     NULL /* optional task handle to create           */
                     ) != pdPASS)
     {
