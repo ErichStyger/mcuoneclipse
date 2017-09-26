@@ -736,6 +736,8 @@ void APPTask(void *handle)
 uint8_t txbuff[] = "Uart polling example\r\n";
 uint8_t rxbuff[20] = {0};
 
+#define UART_USED    UART2
+
 static uint8_t rxRingBuffer[64]; /* ring buffer for rx data */
 
 static volatile bool rxBufferEmpty = true;
@@ -753,18 +755,19 @@ static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t s
   (void)userData; /* not used */
   if (status==kStatus_UART_RxHardwareOverrun) {
     nofRxOverrunErrors++;
-    UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag); /* clear error */
+    UART_ClearStatusFlags(UART_USED, kUART_RxOverrunFlag); /* clear error */
   }
   if (status==kStatus_UART_TxIdle) { /* hardware finished Tx */
       txBufferFull = false; /* indicate that Tx buffer is ready for new data */
       txOnGoing = false; /* reset Tx flag */
   }
   if (status==kStatus_UART_RxIdle)   { /* hardware finished Rx */
-      rxBufferEmpty = false; /* indicate that we have someting in the Rx buffer */
+      rxBufferEmpty = false; /* indicate that we have something in the Rx buffer */
       rxOnGoing = false; /* reset Rx flag */
   }
-  if (status==kStatus_UART_RxRingBufferOverrun) {
+  if (status==kStatus_UART_RxRingBufferOverrun) { /* overrun of ring buffer */
     nofRxRingBufferOverrunErrors++;
+    UART_TransferAbortReceive(UART_USED, handle); /* abort the current transfer */
   }
 }
 
@@ -787,16 +790,16 @@ static void InitUART(void) {
   user_config.enableTx = true;
   user_config.enableRx = true;
 
-  UART_Init(UART2, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
-  UART_TransferCreateHandle(UART2, &g_uartHandle, UART_UserCallback, NULL);
-  UART_TransferStartRingBuffer(UART2, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
+  UART_Init(UART_USED, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
+  UART_TransferCreateHandle(UART_USED, &g_uartHandle, UART_UserCallback, NULL);
+  //UART_TransferStartRingBuffer(UART_USED, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
 }
 
 static void UartTask(void *pvParams) {
   int i=0; /* counter */
  // uint8_t data;
   status_t status;
-  size_t receivedBytes;
+  uint32_t receivedBytes;
 
   (void)pvParams; /* not used parameter */
   DbgConsole_Printf("Starting UartTask\r\n");
@@ -805,69 +808,44 @@ static void UartTask(void *pvParams) {
   uart_transfer_t rxTransfer; /* buffer descriptor */
   uint8_t rxBuf[32]; /* buffer memory */
 
-  /* setup ring buffer */
-//  UART_TransferCreateHandle(UART2, &g_uartHandle, UART_UserCallback, NULL);
- // UART_TransferStartRingBuffer(UART2, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
-
   /* setup local rx buffer */
   rxTransfer.data = rxBuf;
   rxTransfer.dataSize = sizeof(rxBuf);
   for(;;) {
 #if 1
     /* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
-    if ((!rxOnGoing) && rxBufferEmpty) { /* receive new data into buffer */
-        rxOnGoing = true;
-        status = UART_TransferReceiveNonBlocking(UART1, &g_uartHandle, &rxTransfer, &receivedBytes);
-        if (status==kStatus_Success && receivedBytes>0) {
-          DbgConsole_Printf("Rx from UART2, %d bytes: ", receivedBytes);
-          for(i=0;i<receivedBytes;i++) {
+  //  status = UART_TransferGetReceiveCount(UART_USED, &g_uartHandle, &receivedBytes);
+  //  if (status==kStatus_Success && receivedBytes>0) {
+      if ((!rxOnGoing) && rxBufferEmpty) { /* receive new data into buffer */
+          rxOnGoing = true;
+          status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts! */
+          while(rxOnGoing) {
+            vTaskDelay(pdMS_TO_TICKS(2));/* wait */ /* call back should be called from UART ISR with kStatus_UART_RxIdle to reset flag */
+          }
+#if 0
+          if (status==kStatus_Success && receivedBytes>0) {
+            DbgConsole_Printf("Rx from UART, %d bytes: ", receivedBytes);
+            for(i=0;i<receivedBytes;i++) {
+              DbgConsole_Putchar(rxTransfer.data[i]);
+            }
+            DbgConsole_Printf("\r\n");
+          }
+#else
+          DbgConsole_Printf("Rx from UART, %d bytes: ", rxTransfer.dataSize);
+          for(i=0;i<rxTransfer.dataSize;i++) {
             DbgConsole_Putchar(rxTransfer.data[i]);
           }
           DbgConsole_Printf("\r\n");
-        }
-    }
-    vTaskDelay(pdMS_TO_TICKS(100));
+          rxBufferEmpty = true; /* ready to get new data */
 #endif
-#if 0
-    rxBufferIdx = 0;
-    do {
-      status = UART_ReadBlocking(UART2, &rxBuffer[rxBufferIdx], 1);
-      if (status!=kStatus_Success) {
-        UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag);
-        //break;
-      } else {
-        rxBufferIdx++;
       }
-    } while(rxBufferIdx<sizeof(rxBuffer)-1);
-    rxBuffer[rxBufferIdx] = '\0'; /* terminate */
-    if (rxBufferIdx>0) {
-      DbgConsole_Printf("Rx UART2: ");
-      for(i=0;i<rxBufferIdx;i++) {
-        DbgConsole_Putchar(rxBuffer[i]);
-      }
-      DbgConsole_Printf("\r\n");
-    }
-    if (status!=kStatus_Success) {
-      /* error, reset flags */
-      DbgConsole_Printf("ERROR, status %d\r\n", status);
-      UART_ClearStatusFlags(UART2, kUART_RxOverrunFlag);
-    }
-#endif
-#if 0
-    ch = DbgConsole_Getchar();
-    if (ch!=-1) {
-      DbgConsole_Printf("Rx: ");
-      DbgConsole_Putchar(ch);
-      DbgConsole_Printf("\r\n");
-    }
-    DbgConsole_Printf("Hello %i\r\n", i);
+   // }
+    vTaskDelay(pdMS_TO_TICKS(10));
 #endif
     i++;
     //vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
-
-
 
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
@@ -912,10 +890,7 @@ void main(void)
         return;
 #endif
     }
-
-
     vTaskStartScheduler();
-
 #if (defined(__CC_ARM) || defined(__GNUC__))
     return 1;
 #endif
