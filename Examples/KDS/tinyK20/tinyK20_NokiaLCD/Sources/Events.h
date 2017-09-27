@@ -53,6 +53,8 @@
 #include "LEDpin1.h"
 #include "BitIoLdd6.h"
 #include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd8.h"
 #include "LCD_LED.h"
 #include "LEDpin2.h"
 #include "BitIoLdd7.h"

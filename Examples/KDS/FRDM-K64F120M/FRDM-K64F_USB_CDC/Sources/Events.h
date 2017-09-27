@@ -54,6 +54,7 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "TMOUT1.h"
 
 #ifdef __cplusplus
 extern "C" {

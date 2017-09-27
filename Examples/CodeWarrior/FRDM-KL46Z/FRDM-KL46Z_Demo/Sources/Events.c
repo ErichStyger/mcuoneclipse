@@ -195,7 +195,7 @@ void EVNT1_AppHandleEvent(uint8_t event)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_PRESSED);
@@ -219,7 +219,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_RELEASED);
@@ -244,7 +244,7 @@ void KEY1_OnKeyReleased(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleasedLong(byte keys)
+void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
   if (keys&1) {
     EVNT1_SetEvent(EVNT1_KEY1_LONG_RELEASED);
@@ -252,6 +252,26 @@ void KEY1_OnKeyReleasedLong(byte keys)
   if (keys&2) {
     EVNT1_SetEvent(EVNT1_KEY3_LONG_RELEASED);
   }
+}
+
+/*
+** ===================================================================
+**     Event       :  KEY1_OnKeyPressedLong (module Events)
+**
+**     Component   :  KEY1 [Key]
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

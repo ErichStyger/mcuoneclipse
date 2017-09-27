@@ -35,7 +35,6 @@
 #include "IO_Map.h"
 #include "CLS1.h"
 #include "CS1.h"
-#include "KSDK1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
@@ -59,6 +58,9 @@
 #include "Tx1.h"
 #include "Rx1.h"
 #include "USB0.h"
+#include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd2.h"
 
 #ifdef __cplusplus
 extern "C" {

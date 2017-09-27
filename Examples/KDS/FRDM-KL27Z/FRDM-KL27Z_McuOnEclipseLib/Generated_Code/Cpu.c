@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-17, 09:59, # CodeGen: 196
+**     Date/Time   : 2017-06-01, 11:55, # CodeGen: 223
 **     Abstract    :
 **
 **     Settings    :
@@ -285,11 +285,7 @@
 #include "Output1.h"
 #include "OW1.h"
 #include "DQ1.h"
-#include "Timer1.h"
-#include "OutputRB1.h"
 #include "InputRB1.h"
-#include "TimeRB1.h"
-#include "ProgramRB1.h"
 #include "DbgRd1.h"
 #include "DS1.h"
 #include "PE_Types.h"
@@ -539,16 +535,8 @@ void PE_low_level_init(void)
   SPI1_Init();
   /* ### SDK_BitIO "DQ1" init code ... */
   /* Write code here ... */
-  /* ### SDK_Timer "Timer1" init code ... */
-  /* Write code here ... */
-  /* ### RingBuffer "OutputRB1" init code ... */
-  OutputRB1_Init();
   /* ### RingBuffer "InputRB1" init code ... */
   InputRB1_Init();
-  /* ### RingBuffer "TimeRB1" init code ... */
-  TimeRB1_Init();
-  /* ### RingBuffer "ProgramRB1" init code ... */
-  ProgramRB1_Init();
   /* ### SDK_BitIO "DbgRd1" init code ... */
   /* Write code here ... */
   /* ### OneWire "OW1" init code ... */

@@ -39,7 +39,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.317951903" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.127725474" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" value="true" valueType="boolean"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.792741906" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/tinyK20_Bootloader}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.846084196" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
+							<builder buildPath="${workspace_loc:/tinyK20_Bootloader}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.846084196" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.76749356" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.1237413304" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs.1622559833" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.defs"/>
@@ -106,9 +106,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.2088906442.603674604" name="usb_lib.c" rcbsApplicability="disable" resourcePath="USBStack/INC/usb_lib.c" toolsToInvoke="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.1134038067">
-						<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962.1134038067" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.1076029962"/>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="flash_algo/TARGET_Freescale/flash/src/flash_security_bypass.c|flash_algo/TARGET_Freescale/flash/src/flash_read_resource.c|flash_algo/TARGET_Freescale/flash/src/flash_read_once.c|flash_algo/TARGET_Freescale/flash/src/flash_program_once.c|flash_algo/TARGET_Freescale/flash/src/flash_get_security_state.c|flash_algo/TARGET_Freescale/flash/src/flash_get_property.c|flash_algo/TARGET_Freescale/flash/src/flash_erase_all_unsecure.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl43.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl27.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl03.c|flash_algo/TARGET_Freescale/flash/src/flash_densities_kl_series.c|flash_algo/TARGET_Freescale/flash/src/flash_is_protected.c|flash_algo/TARGET_Freescale/flash/src/flash_is_execute_only.c|USBStack/SRC/usbd_core_cdc.c|USBStack/SRC/usbd_core_hid.c|USBStack/SRC/usbd_cdc_acm.c|USBStack/SRC/usbd_hid.c|bootloader/Common/src/RTX_Config.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

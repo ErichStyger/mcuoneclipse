@@ -56,6 +56,8 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd3.h"
 
 #ifdef __cplusplus
 extern "C" {

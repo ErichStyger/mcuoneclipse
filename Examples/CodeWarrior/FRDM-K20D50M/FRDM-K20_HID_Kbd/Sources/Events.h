@@ -49,6 +49,7 @@
 #include "HIDK1.h"
 #include "Tx2.h"
 #include "CS1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

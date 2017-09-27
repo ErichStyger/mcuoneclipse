@@ -48,7 +48,7 @@
 #include "RTOSSWI1.h"
 #include "TickCntr1.h"
 #include "CS1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 
 
 void TI1_OnInterrupt(void);

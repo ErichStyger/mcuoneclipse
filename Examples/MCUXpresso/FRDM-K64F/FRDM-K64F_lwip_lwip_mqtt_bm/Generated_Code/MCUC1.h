@@ -7,7 +7,7 @@
 **     Version     : Component 01.008, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-27, 08:20, # CodeGen: 19
+**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
 **     Abstract    :
 **
 **     Settings    :
@@ -60,6 +60,10 @@
 
 /* MODULE MCUC1. */
 #include "MCUC1config.h" /* include configuration header file */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
   #ifndef __IASMARM__ /* not including standard header files if using IAR assembler */
@@ -151,12 +155,15 @@
   typedef unsigned long int       uint32;
 #endif
 
-/* Include inherited components */
 
 
 
 
 /* END MCUC1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __MCUC1_H */

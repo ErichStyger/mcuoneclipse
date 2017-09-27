@@ -13,7 +13,9 @@
 #include "FAT1.h"
 #include "TmDt1.h"
 #include "KIN1.h"
-#include "I2CSPY1.h"
+#if PL_CONFIG_HAS_I2C_SPY
+  #include "I2CSPY1.h"
+#endif
 //#include "MMA1.h"
 #include "CDC1.h"
 #if PL_CONFIG_HAS_SEGGER_RTT
@@ -31,7 +33,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   FAT1_ParseCommand,
   KIN1_ParseCommand,
   TmDt1_ParseCommand,
+#if PL_CONFIG_HAS_I2C_SPY
   I2CSPY1_ParseCommand,
+#endif
 //  MMA1_ParseCommand,
 #if PL_CONFIG_HAS_1_WIRE
 #if DS1_PARSE_COMMAND_ENABLED
@@ -53,6 +57,7 @@ static CLS1_ConstStdIOType RTT_Stdio = {
 };
 #endif
 
+#if PL_HAS_SD_CARD
 static void SDTask(void *pvParameters) {
   bool cardMounted = FALSE;
   static FAT1_FATFS fileSystemObject;
@@ -64,6 +69,7 @@ static void SDTask(void *pvParameters) {
     FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
+#endif
 
 typedef struct {
   CLS1_ConstStdIOType *stdio;
@@ -93,11 +99,13 @@ static void ShellTask(void *pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
-  if (FRTOS1_xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+#if PL_HAS_SD_CARD
+  if (xTaskCreate(SDTask, "SDCard", configMINIMAL_STACK_SIZE+100, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#endif
 }
 

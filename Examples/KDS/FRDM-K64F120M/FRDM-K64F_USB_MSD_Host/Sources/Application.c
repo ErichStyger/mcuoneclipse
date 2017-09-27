@@ -10,6 +10,6 @@
 void APP_Run(void) {
   HOST_Init();
   SHELL_Init();
-  FRTOS1_vTaskStartScheduler();
+  vTaskStartScheduler();
 }
 

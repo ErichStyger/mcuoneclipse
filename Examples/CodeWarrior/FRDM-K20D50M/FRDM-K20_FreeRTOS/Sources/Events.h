@@ -46,6 +46,8 @@
 #include "WAIT1.h"
 #include "TO1.h"
 #include "TU1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT0(void);
@@ -64,7 +66,7 @@ void Cpu_OnNMIINT0(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -45,7 +45,6 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
-#include "KSDK1.h"
 #include "CS1.h"
 #include "CLS1.h"
 #include "AS1.h"
@@ -53,6 +52,8 @@
 #include "GI2C1.h"
 #include "MMA1.h"
 #include "CI2C1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -29,6 +29,8 @@
 #include "Tx2.h"
 #include "WAIT1.h"
 #include "SW1.h"
+#include "CS1.h"
+#include "MCUC1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
 #include "LED2.h"

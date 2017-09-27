@@ -1,0 +1,34 @@
+-fff  // Fold Filenames flag
+// Include standard GNU options
+co-gcc.lnt
+
+//co-gnu.lnt
+//gcc-include-path.lnt
+//size-options.lnt
+
+// Include paths used
+-i%PROJ_PATH%\Includes
+-i%PROJ_PATH%\Sources
+-i%PROJ_PATH%\Generated_Code
+-i%PROJ_PATH%\..\INTRO_RoboLib
+-i%PROJ_PATH%\Project_Settings\Startup_Code
+-i"C:\Freescale\KDS_3.0.0\eclipse\ProcessorExpert/lib/Kinetis/pdd/inc"
+-i"C:\Freescale\KDS_3.0.0\eclipse\ProcessorExpert/lib/Kinetis/iofiles"
+
+//-w0 // no messages except fatal
+//-w1 // errors only
+-w2 // error and warnings
+//-w3 // error, warnings and information messages (default)
+//-w4 // all messages
+
+// project defines
+-d__INTRO_ZUMO_K22__
+-dPL_BOARD_IS_ROBO
+
+// inhibit messages for Processor Expert libraries
+//-elib(19, 10)
+//-e766
++libh(Events.h, Cpu.h)
+// other warning inhibition
+-efile(537,*.h) // repeated include file
+-efile(793,*.c) // [793] ANSI/ISO limit of 31 significant characters in external identifier 'x' exceeded

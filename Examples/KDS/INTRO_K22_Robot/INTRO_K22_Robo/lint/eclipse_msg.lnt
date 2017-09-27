@@ -1,0 +1,14 @@
+// Configure PC-lint messages so they show up in the Eclipse 'Problems' view
+-hF1
++ffn
+// Normally my format is defined as follows:
+//-"format=%(\q%f\q %l %C%) %t %n: %m"
+// For eclipse-usage, the GCC error format is necessary,
+// since we have only the default eclipse error parser available.
+-"format=%(%f:%l:%C:%) %t: [%n] %m"
+// Enable warning 831 if you are interested.
+-frl
+// Do not break lines
+-width(0) 
+// And make sure no foreign includes change the format
++flm

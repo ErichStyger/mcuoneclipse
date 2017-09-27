@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.546, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-30, 08:43, # CodeGen: 34
+**     Date/Time   : 2017-07-02, 13:10, # CodeGen: 51
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -31,8 +31,7 @@
 **            Heap Indication Constant                     : no
 **            Task C Additions                             : no
 **            Record Stack High Address                    : yes
-**          Segger System Viewer Trace                     : Enabled
-**            Segger System Viewer                         : SYS1
+**          Segger System Viewer Trace                     : Disabled
 **          Percepio Trace                                 : Disabled
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
@@ -41,7 +40,7 @@
 **          Scheduler                                      : Settings for the scheduler
 **            ColdFire V1                                  : Disabled
 **            ColdFire V2                                  : Disabled
-**            ARM (Kinetis)                                : Enabled
+**            ARM Cortex-M                                 : Enabled
 **              ARM Family                                 : Cortex-M4F
 **              Max SysCall Interrupt Priority             : 5
 **              RTOS Interrupt Priority                    : 15
@@ -79,9 +78,12 @@
 **          Timers                                         : Disabled
 **          Memory                                         : Settings for the memory and heap allocation
 **            Dynamic Allocation                           : Enabled
-**              Heap Size                                  : 40960
 **              Application allocated Heap                 : no
-**              Memory Allocation Scheme                   : Scheme 4: merge free blocks
+**              Heap Size                                  : 40960
+**              Linker Heap Base Symbol                    : _pvHeapStart
+**              Linker Heap Limit Symbol                   : _pvHeapLimit
+**              Linker Heap Size Symbol                    : HEAP_SIZE
+**              Memory Allocation Scheme                   : Scheme 6: newlib
 **            Static Allocation                            : Disabled
 **            User Memory Section                          : Disabled
 **          RTOS Adaptor                                   : Configures the RTOS adapter settings
@@ -260,7 +262,6 @@
 
 /* Include inherited components */
 #include "MCUC1.h"
-#include "SYS1.h"
 #include "CLS1.h"
 #include "UTIL1.h"
 

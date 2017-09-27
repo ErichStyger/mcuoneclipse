@@ -37,9 +37,13 @@ int main(void)
 {
 
     /* Write your code here */
+    int j;
 
     /* This for loop should be replaced. By default this loop allows a single stepping. */
     for (;;) {
+      if (j!=0) {
+        i = 10;
+      }
         i++;
     }
     /* Never leave main */

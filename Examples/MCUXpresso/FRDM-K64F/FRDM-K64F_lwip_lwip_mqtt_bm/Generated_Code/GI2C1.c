@@ -4,10 +4,10 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.033, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.035, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 17:36, # CodeGen: 37
+**     Date/Time   : 2017-06-17, 12:08, # CodeGen: 42
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -32,6 +32,8 @@
 **         ReadBlock         - uint8_t GI2C1_ReadBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags...
 **         ReadAddress       - uint8_t GI2C1_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
 **         WriteAddress      - uint8_t GI2C1_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
+**         ReadByte          - uint8_t GI2C1_ReadByte(uint8_t i2cAddr, uint8_t *data);
+**         WriteByte         - uint8_t GI2C1_WriteByte(uint8_t i2cAddr, uint8_t data);
 **         ReadByteAddress8  - uint8_t GI2C1_ReadByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t *data);
 **         WriteByteAddress8 - uint8_t GI2C1_WriteByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t data);
 **         ReadWordAddress8  - uint8_t GI2C1_ReadWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t...
@@ -547,6 +549,43 @@ uint8_t GI2C1_ProbeACK(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags,
     break; /* break for(;;) */
   } /* for(;;) */
   return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  GI2C1_ReadByte (component GenericI2C)
+**     Description :
+**         Read a byte from the device. This writes (S+i2cAddr+0),
+**         (Sr+i2cAddr+1),(data+P)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         i2cAddr         - I2C Address of device
+**       * data            - Pointer to read buffer (single byte)
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t GI2C1_ReadByte(uint8_t i2cAddr, uint8_t *data)
+{
+  return GI2C1_ReadAddress(i2cAddr, NULL, 0, data, 1);
+}
+
+/*
+** ===================================================================
+**     Method      :  GI2C1_WriteByte (component GenericI2C)
+**     Description :
+**         Write a byte to the device: (S+i2cAddr+0).(data+P)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         i2cAddr         - I2C address of device
+**         data            - Data value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t GI2C1_WriteByte(uint8_t i2cAddr, uint8_t data)
+{
+  return GI2C1_WriteAddress(i2cAddr, NULL, 0, &data, 1);
 }
 
 /* END GI2C1. */

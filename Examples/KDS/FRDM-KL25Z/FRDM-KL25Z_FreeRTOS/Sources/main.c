@@ -57,18 +57,13 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-int i;
-
-static void Test(void) {
-  i++;
-}
-
 #if 1
 static void Task1(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
-    LEDR_Neg();
-    FRTOS1_vTaskDelay(pdMS_TO_TICKS(100));
+    LEDG_Neg();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    //vTaskEndScheduler();
   }
 }
 #else
@@ -83,11 +78,10 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-  Test();
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         Task1,  /* pointer to the task */
         "Task1", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
@@ -100,6 +94,12 @@ int main(void)
     /*lint +e527 */
   }
   vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below too */
+  /* only get here after calling vTaskEndScheduler() */
+  LEDG_Off();
+  for(;;) {
+    LEDR_Neg();
+    WAIT1_Waitms(100);
+  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

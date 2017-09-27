@@ -1,0 +1,28 @@
+/**
+@page rtos_log RTOS Change Log
+
+@section FreeRTOS FreeRTOS for KSDK
+Current version is FreeRTOS 9.0.0. Original package is available at freertos.org.
+
+  - 9.0.0_rev2
+    - New Features:
+      - Enable MCUXpresso thread aware debugging. Add freertos_tasks_c_additions.h and configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H and configFRTOS_MEMORY_SCHEME macros.
+  - 9.0.0_rev1
+    - New Features:
+      - Enable -flto optimization in GCC by adding __attribute__((used)) for vTaskSwitchContext.
+      - Enable KDS Task Aware Debugger. Apply FreeRTOS patch to enable configRECORD_STACK_HIGH_ADDRESS macro. Modified files are task.c and FreeRTOS.h.
+  - 9.0.0_rev0
+    - New Features:
+      - Example freertos_sem_static.
+      - Static allocation support RTOS driver wrappers.
+    - Other changes:
+      - Tickless idle rework. Support for different timers is in separated files (fsl_tickless_systick.c, fsl_tickless_lptmr.c).
+      - Remove configuration option configSYSTICK_USE_LOW_POWER_TIMER. Low power timer is now selected by linking of apropriate file fsl_tickless_lptmr.c.
+      - Remove configOVERRIDE_DEFAULT_TICK_CONFIGURATION in RVDS port. Use of __attribute__((weak)) is preffered solution. Not same as _week!
+  - 8.2.3
+    - New Features:
+      - Tickles idle mode support.
+      - Add template application for Kinetis Expert (KEx) tool (template_application).
+    - Other changes:
+      - Folder structure reduction. Keep only Kinetis related parts.
+*/

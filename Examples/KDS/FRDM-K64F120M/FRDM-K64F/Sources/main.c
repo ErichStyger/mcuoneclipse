@@ -37,7 +37,7 @@ extern const int my_var;
 static const int *const __attribute__((used)) keepMe  = &my_var;
 const uint8_t *p;// = &keepMe;
 
-#if 0
+#if 0 /* some fun with the preprocessor :-) */
 const char New[] =    "ch";
 #define r(a,b)        #b " " #a
 #define d(a,b,c,d,e)  c##b##d \

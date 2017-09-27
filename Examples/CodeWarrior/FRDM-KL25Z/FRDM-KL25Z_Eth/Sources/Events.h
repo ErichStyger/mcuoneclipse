@@ -58,12 +58,14 @@
 #include "BitIoLdd5.h"
 #include "CS1.h"
 #include "MINI1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -141,7 +143,7 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 /* ===================================================================*/
 void SD1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
-void SD1_OnActivate(byte mode);
+void SD1_OnActivate(uint8_t mode);
 /*
 ** ===================================================================
 **     Event       :  SD1_OnActivate (module Events)
@@ -156,7 +158,7 @@ void SD1_OnActivate(byte mode);
 ** ===================================================================
 */
 
-void SD1_OnDeactivate(byte mode);
+void SD1_OnDeactivate(uint8_t mode);
 /*
 ** ===================================================================
 **     Event       :  SD1_OnDeactivate (module Events)

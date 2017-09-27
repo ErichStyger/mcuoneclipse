@@ -149,7 +149,7 @@ static void Play(MIDI_SongNr song, MIDI_MusicTrack *tracks, unsigned int nofTrac
       if (nofFinished==nofTracks) { /* all finished */
         return;
       }
-      vTaskDelay(1/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(1));
       itemNo++;
     } /* for: playing song */
     if (flags&MIDI_SONG_BIT_STOP) {

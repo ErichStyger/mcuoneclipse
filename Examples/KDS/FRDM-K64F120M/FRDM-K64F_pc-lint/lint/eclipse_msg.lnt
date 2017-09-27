@@ -5,7 +5,8 @@
 //-"format=%(\q%f\q %l %C%) %t %n: %m"
 // For eclipse-usage, the GCC error format is necessary,
 // since we have only the default eclipse error parser available.
--"format=%(%f:%l:%C:%) %t: [%n] %m"
+//-"format=%(%f:%l:%C:%) %t: [%n] %m"
+-"format=%(%f:%l:%C:%) %t: %n: %m"
 // Enable warning 831 if you are interested.
 -frl
 // Do not break lines

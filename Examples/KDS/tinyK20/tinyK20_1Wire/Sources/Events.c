@@ -56,24 +56,6 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  DS1_OnError (module Events)
-**
-**     Component   :  DS1 [DS18B20]
-**     Description :
-**         
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**       * error           - 
-**     Returns     : Nothing
-** ===================================================================
-*/
-void DS1_OnError(OW1_Error error)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
 **     Event       :  DS1_OnTemperatureGet (module Events)
 **
 **     Component   :  DS1 [DS18B20]

@@ -43,6 +43,9 @@
 #include "BitIoLdd3.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
+#include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

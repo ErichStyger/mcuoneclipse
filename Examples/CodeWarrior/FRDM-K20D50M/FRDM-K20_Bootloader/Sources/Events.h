@@ -49,6 +49,8 @@
 #include "BitIoLdd2.h"
 #include "HF1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,7 +72,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void S19_OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dataBufSize, void *data);
+void S19_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *dataBuf, uint8_t dataBufSize, void *data);
 /*
 ** ===================================================================
 **     Event       :  S19_OnSRecord (module Events)

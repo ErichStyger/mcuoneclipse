@@ -34,6 +34,8 @@
 #include "UTIL1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd4.h"
 #include "RF1.h"
 #include "CE1.h"
 #include "BitIoLdd1.h"

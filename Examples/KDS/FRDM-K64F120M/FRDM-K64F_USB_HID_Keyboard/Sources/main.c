@@ -48,7 +48,7 @@
 #include "BitIoLdd3.h"
 #include "SW2.h"
 #include "BitIoLdd4.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "HF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

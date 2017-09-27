@@ -1,0 +1,13 @@
+/* *** USER.LDT */
+/********************************************************************************************/
+_RAM_START_ = (0x1FFF8000);
+_RAM_END_ = (0x20017FFF);
+FREESCALE_PROD_DATA_BASE_ADDR = ((0x0007FFFF) - ( 2 * 1024 ) + 1);
+        NV_STORAGE_SECTOR_SIZE = ( 2 * 1024 );
+        NV_STORAGE_MAX_SECTORS = (4);
+        NV_STORAGE_START_ADDRESS = ((0x0007FFFF) - ( 2 * 1024 ) + 1) - 1;
+        NV_STORAGE_END_ADDRESS = NV_STORAGE_START_ADDRESS - (NV_STORAGE_MAX_SECTORS * NV_STORAGE_SECTOR_SIZE) + 1;
+__RAM_VECTOR_TABLE_SIZE = ((48*4));
+__BOOT_STACK_ADDRESS = ((((((0x20017FFF)) - (384)) - 1) - (0) - 0x4) - 1)-0x0F;
+__dummy_start = 0x1FFFFFFB;
+/********************************************************************************************/

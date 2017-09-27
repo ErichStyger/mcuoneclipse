@@ -35,7 +35,6 @@
 #include "IO_Map.h"
 #include "KIN1.h"
 #include "UTIL1.h"
-#include "KSDK1.h"
 #include "WAIT1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
@@ -62,6 +61,7 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -6,10 +6,10 @@
 SET PROJ_PATH=%1
 
 @rem Path to lint-nt.exe (NO SPACES!!!)
-SET LINT_EXE=C:\Freescale\lint\lint-nt.exe
+SET LINT_EXE=C:\nxp\lint\lint-nt.exe
 
 @rem Path to my lint configuration files
-SET LOCAL_LNT_FILES=C:\Freescale\lint\lnt
+SET LOCAL_LNT_FILES=C:\nxp\lint\lnt
 
 @rem Path to my local lint folder inside the project with the lint files
 SET PROJ_LINT_PATH=%PROJ_PATH%\lint

@@ -133,7 +133,7 @@ static const LedFont_FontDesc LedFont_FontTable [] = {
 void LedFont_ScrollText(char *text, bool scrollOnce, bool waitForFinish) {
   INT8U err;
   
-  UTIL1_strcpy(LedFont_Text, sizeof(LedFont_Text), text);
+  UTIL1_strcpy((unsigned char*)LedFont_Text, sizeof(LedFont_Text), (unsigned char*)text);
   LedFont_ScrollOnce = scrollOnce;
   while (!(OSFlagQuery(LedFont_Flags, &err)&LEDFONT_FLAG_READY)) {
     (void)OSTimeDlyHMSM(0,0,0,100); /* wait task to be ready */
