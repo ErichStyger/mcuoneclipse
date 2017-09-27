@@ -736,9 +736,10 @@ void APPTask(void *handle)
 uint8_t txbuff[] = "Uart polling example\r\n";
 uint8_t rxbuff[20] = {0};
 
+/*! \todo move them off the global scope */
 #define UART_USED    UART2
 
-static uint8_t rxRingBuffer[64]; /* ring buffer for rx data */
+static uint8_t rxRingBuffer[128]; /* ring buffer for rx data */
 
 static volatile bool rxBufferEmpty = true;
 static volatile bool txBufferFull = false;
@@ -792,7 +793,7 @@ static void InitUART(void) {
 
   UART_Init(UART_USED, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
   UART_TransferCreateHandle(UART_USED, &g_uartHandle, UART_UserCallback, NULL);
-  //UART_TransferStartRingBuffer(UART_USED, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
+  UART_TransferStartRingBuffer(UART_USED, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
 }
 
 static void UartTask(void *pvParams) {
@@ -806,44 +807,36 @@ static void UartTask(void *pvParams) {
 
   /* local receive buffer */
   uart_transfer_t rxTransfer; /* buffer descriptor */
-  uint8_t rxBuf[32]; /* buffer memory */
+  uint8_t rxBuf; /* buffer memory, single character */
 
   /* setup local rx buffer */
-  rxTransfer.data = rxBuf;
-  rxTransfer.dataSize = sizeof(rxBuf);
+  rxTransfer.data = &rxBuf;
+  rxTransfer.dataSize = sizeof(rxBuf); /* this is the number of bytes we want to receive (one only) in one transaction. Not that we only get a notification from the lower layer if we receive all this bytes. */
   for(;;) {
-#if 1
-    /* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
-  //  status = UART_TransferGetReceiveCount(UART_USED, &g_uartHandle, &receivedBytes);
-  //  if (status==kStatus_Success && receivedBytes>0) {
-      if ((!rxOnGoing) && rxBufferEmpty) { /* receive new data into buffer */
-          rxOnGoing = true;
-          status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts! */
-          while(rxOnGoing) {
-            vTaskDelay(pdMS_TO_TICKS(2));/* wait */ /* call back should be called from UART ISR with kStatus_UART_RxIdle to reset flag */
-          }
-#if 0
-          if (status==kStatus_Success && receivedBytes>0) {
-            DbgConsole_Printf("Rx from UART, %d bytes: ", receivedBytes);
-            for(i=0;i<receivedBytes;i++) {
-              DbgConsole_Putchar(rxTransfer.data[i]);
-            }
-            DbgConsole_Printf("\r\n");
-          }
-#else
-          DbgConsole_Printf("Rx from UART, %d bytes: ", rxTransfer.dataSize);
+    if (!rxOnGoing) { /* call UART_TransferReceiveNonBlocking() only if there is no other transfer pending */
+       if (rxBufferEmpty) { /* start new transfer and receive new data into buffer */
+        rxOnGoing = true;
+        /* get first byte */
+        status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts and triggers receiving data */
+      //  while(rxOnGoing) { /* poll until we have received something */
+      //    vTaskDelay(pdMS_TO_TICKS(2)); /* wait */ /* call back should be called from UART ISR with kStatus_UART_RxIdle to reset flag */
+      //  }
+       } else { /* get the data from previous transfer which has been placed in rxTransfer buffer */
+         receivedBytes = rxTransfer.dataSize; /* must be one byte, as buffer size was one */
+       }
+       while (receivedBytes>0) { /* get all the bytes from the buffer */
+         /* print the data received */
           for(i=0;i<rxTransfer.dataSize;i++) {
+//            DbgConsole_Printf(",(%d) %c", rxTransfer.data[i], (int)rxTransfer.data[i]);
             DbgConsole_Putchar(rxTransfer.data[i]);
           }
-          DbgConsole_Printf("\r\n");
           rxBufferEmpty = true; /* ready to get new data */
-#endif
-      }
-   // }
-    vTaskDelay(pdMS_TO_TICKS(10));
-#endif
+          /* get next byte, start new transaction */
+          status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes);
+        }
+    }
     i++;
-    //vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
