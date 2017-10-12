@@ -47,6 +47,12 @@
 #include "BitIoLdd1.h"
 #include "OpenSDA.h"
 #include "ASerialLdd2.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
 
 #ifdef __cplusplus
 extern "C" {

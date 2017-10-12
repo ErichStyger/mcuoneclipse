@@ -62,8 +62,9 @@ static const char *gps_msg[] =
     "$PUBX,04,164738.00,220917,492457.99,1967,18,-633593,-72.537,21*2E"
 };
 
-static uint8_t buf[64];
+static uint8_t gpsTxBuf[128];
 static uint8_t gpsRxBuf[128];
+static uint8_t uartBuf[128];
 
 static void SendToBothUART(const unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut); /* send to shell */
@@ -71,33 +72,35 @@ static void SendToBothUART(const unsigned char *msg) {
 }
 
 void APP_Run(void) {
-  int j=0, i = 0;
+  int txCtnr=0;
   int txCntr = 0;
+  int gpsMsgIndex = 0;
   size_t len;
 
+  CLS1_SendStr("\n-------------------------\nGPS Emulation\n-------------------------\n", CLS1_GetStdio()->stdOut);
   for(;;) {
     len = UTIL1_strlen((const char*)gpsRxBuf);
     if (CLS1_ReadLine(gpsRxBuf, gpsRxBuf+len, sizeof(gpsRxBuf), &GPS_stdio)) {
       LED2_On();
-      XF1_xsprintf(buf, "GPS %x #%i ", txCntr);
-      CLS1_SendStr(buf, GPS_stdio.stdOut);
-      CLS1_SendStr(gpsRxBuf, GPS_stdio.stdOut);
-      CLS1_SendStr("\n", GPS_stdio.stdOut);
+      /* send what we have received from the GPS to the console */
+      XF1_xsprintf(uartBuf, "GPS Rx #%i ", txCntr++);
+      UTIL1_strcat(uartBuf, sizeof(uartBuf), gpsRxBuf);
+      CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
       LED2_Off();
     }
+#if 1
     /* new message */
     LED1_On();
-    XF1_xsprintf(buf, "GPS Tx #%i ", i);
-    i++;
-    SendToBothUART(buf);
-    SendToBothUART(gps_msg[j]);
-    j++;
-    if (j==sizeof(gps_msg)/sizeof(gps_msg[0])) { /* go through ring buffer of messages */
-      j = 0; /* restart index */
+    XF1_xsprintf(gpsTxBuf, "GPS Tx #%i ", txCtnr++);
+    UTIL1_strcat(gpsTxBuf, sizeof(gpsTxBuf), gps_msg[gpsMsgIndex]);
+    SendToBothUART(gpsTxBuf);
+    gpsMsgIndex++;
+    if (gpsMsgIndex==sizeof(gps_msg)/sizeof(gps_msg[0])) { /* go through ring buffer of messages */
+      gpsMsgIndex = 0; /* restart index */
     }
     SendToBothUART("\r\n");
     LED1_Off();
-
+#endif
     WAIT1_Waitms(1000);
   }
 }

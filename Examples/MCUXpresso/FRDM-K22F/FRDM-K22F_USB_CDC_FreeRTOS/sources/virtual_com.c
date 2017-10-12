@@ -58,6 +58,7 @@
 #endif
 #include "fsl_common.h"
 #include "pin_mux.h"
+#include "Gateway.h"
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
@@ -731,115 +732,6 @@ void APPTask(void *handle)
     }
 }
 
-#include "fsl_uart.h"
-
-uint8_t txbuff[] = "Uart polling example\r\n";
-uint8_t rxbuff[20] = {0};
-
-/*! \todo move them off the global scope */
-#define UART_USED    UART2
-
-static uint8_t rxRingBuffer[128]; /* ring buffer for rx data */
-
-static volatile bool rxBufferEmpty = true;
-static volatile bool txBufferFull = false;
-static volatile bool txOnGoing = false;
-static volatile bool rxOnGoing = false;
-
-static uart_config_t user_config; /* user configuration */
-static uart_handle_t g_uartHandle; /* UART device handle struct */
-
-static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t status, void *userData) {
-  static unsigned int nofRxOverrunErrors = 0;
-  static unsigned int nofRxRingBufferOverrunErrors = 0;
-
-  (void)userData; /* not used */
-  if (status==kStatus_UART_RxHardwareOverrun) {
-    nofRxOverrunErrors++;
-    UART_ClearStatusFlags(UART_USED, kUART_RxOverrunFlag); /* clear error */
-  }
-  if (status==kStatus_UART_TxIdle) { /* hardware finished Tx */
-      txBufferFull = false; /* indicate that Tx buffer is ready for new data */
-      txOnGoing = false; /* reset Tx flag */
-  }
-  if (status==kStatus_UART_RxIdle)   { /* hardware finished Rx */
-      rxBufferEmpty = false; /* indicate that we have something in the Rx buffer */
-      rxOnGoing = false; /* reset Rx flag */
-  }
-  if (status==kStatus_UART_RxRingBufferOverrun) { /* overrun of ring buffer */
-    nofRxRingBufferOverrunErrors++;
-    UART_TransferAbortReceive(UART_USED, handle); /* abort the current transfer */
-  }
-}
-
-static void InitUART(void) {
-  rxBufferEmpty = true;
-  txBufferFull = false;
-  txOnGoing = false;
-  rxOnGoing = false;
- /*
-   * user_config.baudRate_Bps = 38400;
-   * user_config.parityMode = kUART_ParityDisabled;
-   * user_config.stopBitCount = kUART_OneStopBit;
-   * user_config.txFifoWatermark = 0;
-   * user_config.rxFifoWatermark = 1;
-   * user_config.enableTx = false;
-   * user_config.enableRx = false;
-   */
-  UART_GetDefaultConfig(&user_config);
-  user_config.baudRate_Bps = 38400;
-  user_config.enableTx = true;
-  user_config.enableRx = true;
-
-  UART_Init(UART_USED, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
-  UART_TransferCreateHandle(UART_USED, &g_uartHandle, UART_UserCallback, NULL);
-  UART_TransferStartRingBuffer(UART_USED, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
-}
-
-static void UartTask(void *pvParams) {
-  int i=0; /* counter */
- // uint8_t data;
-  status_t status;
-  uint32_t receivedBytes;
-
-  (void)pvParams; /* not used parameter */
-  DbgConsole_Printf("Starting UartTask\r\n");
-
-  /* local receive buffer */
-  uart_transfer_t rxTransfer; /* buffer descriptor */
-  uint8_t rxBuf; /* buffer memory, single character */
-
-  /* setup local rx buffer */
-  rxTransfer.data = &rxBuf;
-  rxTransfer.dataSize = sizeof(rxBuf); /* this is the number of bytes we want to receive (one only) in one transaction. Not that we only get a notification from the lower layer if we receive all this bytes. */
-  for(;;) {
-    if (!rxOnGoing) { /* call UART_TransferReceiveNonBlocking() only if there is no other transfer pending */
-       if (rxBufferEmpty) { /* start new transfer and receive new data into buffer */
-        rxOnGoing = true;
-        /* get first byte */
-        status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts and triggers receiving data */
-      //  while(rxOnGoing) { /* poll until we have received something */
-      //    vTaskDelay(pdMS_TO_TICKS(2)); /* wait */ /* call back should be called from UART ISR with kStatus_UART_RxIdle to reset flag */
-      //  }
-       } else { /* get the data from previous transfer which has been placed in rxTransfer buffer */
-         receivedBytes = rxTransfer.dataSize; /* must be one byte, as buffer size was one */
-       }
-       while (receivedBytes>0) { /* get all the bytes from the buffer */
-         /* print the data received */
-          for(i=0;i<rxTransfer.dataSize;i++) {
-//            DbgConsole_Printf(",(%d) %c", rxTransfer.data[i], (int)rxTransfer.data[i]);
-            DbgConsole_Putchar(rxTransfer.data[i]);
-          }
-          rxBufferEmpty = true; /* ready to get new data */
-          /* get next byte, start new transaction */
-          status = UART_TransferReceiveNonBlocking(UART_USED, &g_uartHandle, &rxTransfer, &receivedBytes);
-        }
-    }
-    i++;
-    vTaskDelay(pdMS_TO_TICKS(500));
-  }
-}
-
 #if defined(__CC_ARM) || defined(__GNUC__)
 int main(void)
 #else
@@ -850,7 +742,7 @@ void main(void)
     BOARD_BootClockHSRUN();
     BOARD_InitDebugConsole();
 
-    InitUART();
+    GW_Init();
 
     if (xTaskCreate(APPTask,                         /* pointer to the task                      */
                     "AppTask",                       /* task name for kernel awareness debugging */
@@ -868,21 +760,6 @@ void main(void)
 #endif
     }
 
-    if (xTaskCreate(UartTask,                         /* pointer to the task                      */
-                    "UartTask",                       /* task name for kernel awareness debugging */
-                    1024L / sizeof(portSTACK_TYPE),  /* task stack size                          */
-                    NULL,                      /* optional task startup argument           */
-                    5,                               /* initial priority                         */
-                    NULL /* optional task handle to create           */
-                    ) != pdPASS)
-    {
-        usb_echo("app task create failed!\r\n");
-#if (defined(__CC_ARM) || defined(__GNUC__))
-        return 1;
-#else
-        return;
-#endif
-    }
     vTaskStartScheduler();
 #if (defined(__CC_ARM) || defined(__GNUC__))
     return 1;
