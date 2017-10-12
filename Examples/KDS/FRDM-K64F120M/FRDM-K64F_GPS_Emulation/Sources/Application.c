@@ -10,6 +10,8 @@
 #include "WAIT1.h"
 #include "CLS1.h"
 #include "LED1.h"
+#include "LED2.h"
+#include "LED3.h"
 #include "GPS.h"
 #include "CLS1.h"
 
@@ -61,6 +63,7 @@ static const char *gps_msg[] =
 };
 
 static uint8_t buf[64];
+static uint8_t gpsRxBuf[128];
 
 static void SendToBothUART(const unsigned char *msg) {
   CLS1_SendStr(msg, CLS1_GetStdio()->stdOut); /* send to shell */
@@ -69,24 +72,32 @@ static void SendToBothUART(const unsigned char *msg) {
 
 void APP_Run(void) {
   int j=0, i = 0;
+  int txCntr = 0;
+  size_t len;
 
   for(;;) {
+    len = UTIL1_strlen((const char*)gpsRxBuf);
+    if (CLS1_ReadLine(gpsRxBuf, gpsRxBuf+len, sizeof(gpsRxBuf), &GPS_stdio)) {
+      LED2_On();
+      XF1_xsprintf(buf, "GPS %x #%i ", txCntr);
+      CLS1_SendStr(buf, GPS_stdio.stdOut);
+      CLS1_SendStr(gpsRxBuf, GPS_stdio.stdOut);
+      CLS1_SendStr("\n", GPS_stdio.stdOut);
+      LED2_Off();
+    }
+    /* new message */
+    LED1_On();
     XF1_xsprintf(buf, "GPS Tx #%i ", i);
     i++;
     SendToBothUART(buf);
-
-    WAIT1_Waitms(100);
     SendToBothUART(gps_msg[j]);
-    WAIT1_Waitms(100);
     j++;
     if (j==sizeof(gps_msg)/sizeof(gps_msg[0])) { /* go through ring buffer of messages */
       j = 0; /* restart index */
     }
     SendToBothUART("\r\n");
-    LED1_Neg();
+    LED1_Off();
+
     WAIT1_Waitms(1000);
   }
 }
-
-
-
