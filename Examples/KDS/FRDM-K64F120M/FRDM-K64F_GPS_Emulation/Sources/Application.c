@@ -76,31 +76,44 @@ void APP_Run(void) {
   int txCntr = 0;
   int gpsMsgIndex = 0;
   size_t len;
+  uint32_t countMs = 0;
 
-  CLS1_SendStr("\n-------------------------\nGPS Emulation\n-------------------------\n", CLS1_GetStdio()->stdOut);
+  gpsRxBuf[0] = '\0'; /* initialize array */
+  CLS1_SendStr("\n-------------------------\nGPS Emulation on FRDM-K64F\n-------------------------\n", CLS1_GetStdio()->stdOut);
   for(;;) {
+    /* check if we have received a new message line, terminated by \n from the microcontroller */
     len = UTIL1_strlen((const char*)gpsRxBuf);
     if (CLS1_ReadLine(gpsRxBuf, gpsRxBuf+len, sizeof(gpsRxBuf), &GPS_stdio)) {
-      LED2_On();
-      /* send what we have received from the GPS to the console */
-      XF1_xsprintf(uartBuf, "GPS Rx #%i ", txCntr++);
-      UTIL1_strcat(uartBuf, sizeof(uartBuf), gpsRxBuf);
-      CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
-      LED2_Off();
+      if (gpsRxBuf[0]=='\n' && gpsRxBuf[1]=='\0') {
+        gpsRxBuf[0] = '\0'; /* empty buffer */
+      } else if (gpsRxBuf[0]!='\0') {
+        LED2_On();
+        /* send what we have received from the GPS to the console */
+        UTIL1_strcpy(uartBuf, sizeof(uartBuf), "GPS Rx #");
+        UTIL1_strcatNum32u(uartBuf, sizeof(uartBuf), txCntr++);
+        UTIL1_strcat(uartBuf, sizeof(uartBuf), ": ");
+        UTIL1_strcat(uartBuf, sizeof(uartBuf), gpsRxBuf);
+        CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
+        LED2_Off();
+        gpsRxBuf[0] = '\0'; /* empty buffer */
+      }
     }
 #if 1
-    /* new message */
-    LED1_On();
-    XF1_xsprintf(gpsTxBuf, "GPS Tx #%i ", txCtnr++);
-    UTIL1_strcat(gpsTxBuf, sizeof(gpsTxBuf), gps_msg[gpsMsgIndex]);
-    SendToBothUART(gpsTxBuf);
-    gpsMsgIndex++;
-    if (gpsMsgIndex==sizeof(gps_msg)/sizeof(gps_msg[0])) { /* go through ring buffer of messages */
-      gpsMsgIndex = 0; /* restart index */
+    if ((countMs%1000)==0) {
+      /* send new message as GPS device */
+      LED1_On();
+      XF1_xsprintf(gpsTxBuf, "GPS Tx #%i ", txCtnr++);
+      UTIL1_strcat(gpsTxBuf, sizeof(gpsTxBuf), gps_msg[gpsMsgIndex]);
+      SendToBothUART(gpsTxBuf);
+      gpsMsgIndex++;
+      if (gpsMsgIndex==sizeof(gps_msg)/sizeof(gps_msg[0])) { /* iterate ring buffer of messages */
+        gpsMsgIndex = 0; /* restart index */
+      }
+      SendToBothUART("\r\n");
+      LED1_Off();
     }
-    SendToBothUART("\r\n");
-    LED1_Off();
 #endif
-    WAIT1_Waitms(1000);
+    WAIT1_Waitms(50);
+    countMs += 50;
   }
 }

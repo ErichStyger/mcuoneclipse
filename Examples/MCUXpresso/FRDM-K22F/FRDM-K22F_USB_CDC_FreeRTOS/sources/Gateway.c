@@ -10,10 +10,11 @@
 #include "task.h"
 #include "fsl_uart.h"
 #include "fsl_debug_console.h"
+#include "McuUtility.h"
 
 #define UART_USED    UART2  /* UART for GPS */
-#define UART_USE_RX  (1) /* 1 to enable Rx emulation (Rx from microcontorller) */
-#define UART_USE_TX  (0) /* 1 to enable Tx emulation (Tx to microcontroller) */
+#define UART_ENABLE_GPS_RX  (1) /* 1 to enable Rx emulation (Rx from GPS) */
+#define UART_ENABLE_GPS_TX  (1) /* 1 to enable Tx emulation (Tx to GPS) */
 
 static uint8_t rxRingBuffer[512]; /* ring buffer for rx data */
 
@@ -26,8 +27,7 @@ typedef struct {
   int nofRxRingBufferOverrunErrors;
 } UART_UserDataDesc;
 
-static UART_UserDataDesc UART_UserData;
-
+static UART_UserDataDesc UART_UserData; /* user data structure, used for status */
 static uart_config_t user_config; /* user configuration */
 static uart_handle_t g_uartHandle; /* UART device handle struct */
 
@@ -35,7 +35,7 @@ static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t s
   UART_UserDataDesc *data = (UART_UserDataDesc*)userData;
 
   if (userData==NULL) {
-    return; /* something really wrong here? */
+    return; /* something is really wrong here? */
   }
   if (status==kStatus_UART_RxHardwareOverrun) {
     data->nofRxOverrunErrors++;
@@ -86,9 +86,10 @@ static void InitUART(UART_UserDataDesc *data) {
 static void UartTask(void *pvParams) {
   status_t status;
   uint32_t receivedBytes;
+  uint32_t counterMs = 0;
 
   (void)pvParams; /* not used parameter */
-  DbgConsole_Printf("Starting UartTask\r\n");
+  DbgConsole_Printf("------------------------\nStarting UartTask\n------------------------\n");
 
   /* local receive buffer */
   uart_transfer_t rxTransfer; /* buffer descriptor for Rx data from the UART */
@@ -105,7 +106,7 @@ static void UartTask(void *pvParams) {
   txTransfer.dataSize = sizeof(txBuf);
 
   for(;;) {
-#if UART_USE_RX
+#if UART_ENABLE_GPS_RX
     if (!UART_UserData.rxOnGoing) { /* call UART_TransferReceiveNonBlocking() only if there is no other transfer pending */
       /* check if we have something already in the Rx buffer */
       if (UART_UserData.rxBufferEmpty) {
@@ -133,15 +134,22 @@ static void UartTask(void *pvParams) {
       }
    }
 #endif
-#if UART_USE_TX
-    if (!UART_UserData.rxOnGoing) {
-      /* send data to the GPS UART */
-      strcpy((char*)txTransfer.data, "hello to GPS\r\n");
-      UART_UserData.txOnGoing = true; /* flag will be reset by callback */
-      UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+#if UART_ENABLE_GPS_TX
+    if ((counterMs%1000)==0) { /* every second */
+      if (!UART_UserData.txOnGoing) {
+        /* send data to the GPS UART */
+        DbgConsole_Printf("Tx to GPS...\n");
+        McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
+        /* setup transfer */
+        txTransfer.data = &txBuf[0];
+        txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
+        UART_UserData.txOnGoing = true; /* flag will be reset by callback */
+        UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+      }
     }
 #endif
     vTaskDelay(pdMS_TO_TICKS(50));
+    counterMs += 50;
   } /* for */
 }
 
