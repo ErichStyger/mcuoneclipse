@@ -55,18 +55,40 @@ static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t s
   }
 }
 
-static void InitUART(uart_handle_t *sdkHandle, UART_MyDeviceDesc *userData) {
+static void UART_ChangeBaudRate(UART_MyDeviceDesc *device, uint32_t baudrate) {
+  status_t res;
+  uint32_t mask;
+
+  /* abort any ongoing transfers */
+  mask = UART_GetEnabledInterrupts(device->uart);
+
+  UART_DisableInterrupts(device->uart, kUART_AllInterruptsEnable); /* disable all UART interrupts */
+  UART_TransferAbortReceive(device->uart, device->sdk_handle);
+  UART_TransferAbortSend(device->uart, device->sdk_handle);
+  device->rxBufferEmpty = true;
+  device->txBufferFull = false;
+  device->txOnGoing = false;
+  device->rxOnGoing = false;
+
+  res = UART_SetBaudRate(device->uart, baudrate*2, CLOCK_GetFreq(SYS_CLK)); /*!!!!! Why baudrate*2???? */
+  if (res!=kStatus_Success) {
+    DbgConsole_Printf("Failed setting new baud rate %d!\n", baudrate);
+  }
+  UART_EnableInterrupts(device->uart, mask); /* restore interrupts */
+}
+
+static void InitUART(uart_handle_t *sdkHandle, UART_MyDeviceDesc *device) {
   uart_config_t config; /* user configuration */
 
   /* initialize user data descriptor */
-  userData->uart = UART2;
-  userData->sdk_handle = sdkHandle;
-  userData->rxBufferEmpty = true;
-  userData->txBufferFull = false;
-  userData->txOnGoing = false;
-  userData->rxOnGoing = false;
-  userData->nofRxOverrunErrors = 0;
-  userData->nofRxRingBufferOverrunErrors = 0;
+  device->uart = UART2;
+  device->sdk_handle = sdkHandle;
+  device->rxBufferEmpty = true;
+  device->txBufferFull = false;
+  device->txOnGoing = false;
+  device->rxOnGoing = false;
+  device->nofRxOverrunErrors = 0;
+  device->nofRxRingBufferOverrunErrors = 0;
 
   /* configure the UART */
   UART_GetDefaultConfig(&config); /* get default config */
@@ -83,10 +105,10 @@ static void InitUART(uart_handle_t *sdkHandle, UART_MyDeviceDesc *userData) {
   config.baudRate_Bps = 38400;
   config.enableTx = true;
   config.enableRx = true;
-  UART_Init(userData->uart, &config, CLOCK_GetFreq(SYS_CLK)/2);
+  UART_Init(device->uart, &config, CLOCK_GetFreq(SYS_CLK)/2); /* really not clear to me why I have to divide the clock here??? */
 
-  UART_TransferCreateHandle(userData->uart, userData->sdk_handle, UART_UserCallback, userData);
-  UART_TransferStartRingBuffer(userData->uart, userData->sdk_handle, rxRingBuffer, sizeof(rxRingBuffer));
+  UART_TransferCreateHandle(device->uart, device->sdk_handle, UART_UserCallback, device);
+  UART_TransferStartRingBuffer(device->uart, device->sdk_handle, rxRingBuffer, sizeof(rxRingBuffer));
 }
 
 static void UartSendStr(UART_MyDeviceDesc *device, uart_transfer_t *txTransfer, uint8_t *txBuf, size_t txBufSize, const uint8_t *str) {
@@ -132,14 +154,14 @@ static void UartTask(void *pvParams) {
         /* buffer is empty: start new transfer and receive new data into buffer */
         myDevice.rxOnGoing = true;
         /* start transaction for a single byte */
-         status = UART_TransferReceiveNonBlocking(myDevice.uart, myDevice.sdk_handle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts and triggers receiving data */
-         if (status==kStatus_UART_RxBusy) {
-           UART_TransferAbortReceive(myDevice.uart, myDevice.sdk_handle); /* abort the current transfer */
-           myDevice.rxOnGoing = FALSE;
-         }
+        status = UART_TransferReceiveNonBlocking(myDevice.uart, myDevice.sdk_handle, &rxTransfer, &receivedBytes); /* this enables the UART interrupts and triggers receiving data */
+        if (status==kStatus_UART_RxBusy) {
+          UART_TransferAbortReceive(myDevice.uart, myDevice.sdk_handle); /* abort the current transfer */
+          myDevice.rxOnGoing = FALSE;
+        }
       } else {
-         /* rxBuffer is full. Get the number of bytes stored in the transfer buffer */
-         receivedBytes = rxTransfer.dataSize;
+        /* rxBuffer is full. Get the number of bytes stored in the transfer buffer */
+        receivedBytes = rxTransfer.dataSize;
       }
       while (receivedBytes>0) { /* handle the received data, if any */
         /* print the data received to the debug console */
@@ -157,37 +179,26 @@ static void UartTask(void *pvParams) {
     if ((counterMs%1000)==0) { /* every second */
       if (!myDevice.txOnGoing) {
         switchBaudCntr++;
-#if 0
-        if (switchBaudCntr==10) {
-          /* send data to the GPS UART */
-           DbgConsole_Printf("Tx to GPS...\n");
-           McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"baud 34800\n");
-           /* setup transfer */
-           txTransfer.data = &txBuf[0];
-           txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
-           myDevice.txOnGoing = true; /* flag will be reset by callback */
-           UART_TransferSendNonBlocking(myDevice.uart, &g_uartHandle, &txTransfer);
+        if (switchBaudCntr==10) { /* every 10 seconds */
+          DbgConsole_Printf("Send change to 38400...\n");
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 38400\n");
+          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
+          UART_ChangeBaudRate(&myDevice, 38400);
+          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"38400\n");
         } else if (switchBaudCntr==20) {
-          /* send data to the GPS UART */
-           DbgConsole_Printf("Tx to GPS...\n");
-           McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
-           /* setup transfer */
-           txTransfer.data = &txBuf[0];
-           txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
-           myDevice.txOnGoing = true; /* flag will be reset by callback */
-           UART_TransferSendNonBlocking(myDevice.uart, &g_uartHandle, &txTransfer);
-           switchBaudCntr = 0; /* reset */
+          DbgConsole_Printf("Send change to 115200...\n");
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
+          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
+          UART_ChangeBaudRate(&myDevice, 115200);
+          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"115200\n");
+
+          switchBaudCntr = 0; /* reset */
         } else {
-#endif
-          /* send data to the GPS UART */
-          DbgConsole_Printf("Tx to GPS...\n");
-          McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
-          /* setup transfer */
-          txTransfer.data = &txBuf[0];
-          txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
-          myDevice.txOnGoing = true; /* flag will be reset by callback */
-          UART_TransferSendNonBlocking(myDevice.uart, myDevice.sdk_handle, &txTransfer);
- //       }
+          DbgConsole_Printf("Send hello.\n");
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
+        }
       }
     }
 #endif

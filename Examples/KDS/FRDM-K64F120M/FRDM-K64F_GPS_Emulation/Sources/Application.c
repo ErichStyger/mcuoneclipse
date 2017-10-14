@@ -15,6 +15,8 @@
 #include "GPS.h"
 #include "CLS1.h"
 
+#define SUPPORT_SWITCH_BAUD   (1)
+
 static bool GPSUART_KeyPressed(void) {
   return GPS_GetCharsInRxBuf()!=0;
 }
@@ -71,6 +73,16 @@ static void SendToBothUART(const unsigned char *msg) {
   CLS1_SendStr(msg, GPS_stdio.stdOut); /* send to as emulated GPS UART */
 }
 
+#if SUPPORT_SWITCH_BAUD
+static void SwitchBaud(uint8_t mode) {
+  GPS_Disable(); /* disable device */
+  GPS_ClearRxBuf();
+  GPS_ClearTxBuf();
+  (void)GPS_SetBaudRateMode(mode);
+  GPS_Enable(); /* re-enable device */
+}
+#endif
+
 void APP_Run(void) {
   int txCtnr=0;
   int txCntr = 0;
@@ -80,6 +92,7 @@ void APP_Run(void) {
 
   gpsRxBuf[0] = '\0'; /* initialize array */
   CLS1_SendStr("\n-------------------------\nGPS Emulation on FRDM-K64F\n-------------------------\n", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr("default\n", GPS_stdio.stdOut); /* send to as emulated GPS UART */
   for(;;) {
     /* check if we have received a new message line, terminated by \n from the microcontroller */
     len = UTIL1_strlen((const char*)gpsRxBuf);
@@ -95,14 +108,18 @@ void APP_Run(void) {
         UTIL1_strcat(uartBuf, sizeof(uartBuf), gpsRxBuf);
         CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
         LED2_Off();
-        gpsRxBuf[0] = '\0'; /* empty buffer */
-        if (UTIL1_strcmp(gpsRxBuf, "baud 38400")==0) {
+#if SUPPORT_SWITCH_BAUD
+        if (UTIL1_strcmp(gpsRxBuf, "baud 38400\n")==0) {
           CLS1_SendStr("*** Switching to 38400!\n", CLS1_GetStdio()->stdOut);
-          (void)GPS_SetBaudRateMode(GPS_BM_38400BAUD);
-        } else if (UTIL1_strcmp(gpsRxBuf, "baud 115200")==0) {
+          WAIT1_Waitms(50); /* give some time to send the above string */
+          SwitchBaud(GPS_BM_38400BAUD);
+        } else if (UTIL1_strcmp(gpsRxBuf, "baud 115200\n")==0) {
           CLS1_SendStr("*** Switching to 115200!\n", CLS1_GetStdio()->stdOut);
-          (void)GPS_SetBaudRateMode(GPS_BM_115200BAUD);
+          WAIT1_Waitms(50); /* give some time to send the above string */
+          SwitchBaud(GPS_BM_115200BAUD);
         }
+#endif
+        gpsRxBuf[0] = '\0'; /* empty buffer */
       }
     }
 #if 1
