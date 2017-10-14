@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_GPS_Emulation</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>17</ModificationStamp>
+    <ModificationStamp>18</ModificationStamp>
     <Date>2017-09-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -16310,7 +16310,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>38400 baud</Value>
-        <RuntimeSetting>0</RuntimeSetting>
+        <RuntimeSetting>2</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
         <ReqDevPrescSlow>-1</ReqDevPrescSlow>
@@ -16340,7 +16340,9 @@
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
-        <List lines_count="0" />
+        <List lines_count="1">
+          <Line>115200 baud</Line>
+        </List>
         <UnitText>baud</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
         <ControlledTimingCfgFromPropertySymbol>BdRate</ControlledTimingCfgFromPropertySymbol>
@@ -16940,7 +16942,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <Value>init:38400 baud;prec:1.5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
-              <RuntimeSetting>0</RuntimeSetting>
+              <RuntimeSetting>2</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
               <ReqDevPrescSlow>-1</ReqDevPrescSlow>
@@ -16970,7 +16972,9 @@
               <PrecInProc>true</PrecInProc>
               <LowLimit />
               <HighLimit />
-              <List lines_count="0" />
+              <List lines_count="1">
+                <Line>115200 baud</Line>
+              </List>
               <UnitText>baud</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
             </ItemState>
@@ -17477,10 +17481,10 @@
               <ReadOnly>true</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
-              <Value>false</Value>
+              <Index>0</Index>
+              <Value>true</Value>
               <LastSelection>false</LastSelection>
-              <LastUserSel>never</LastUserSel>
+              <LastUserSel>always</LastUserSel>
               <UsrMethodName>SelectBaudRate</UsrMethodName>
             </ItemState>
             <ItemState>
@@ -18058,10 +18062,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
         <UsrMethodName>SetBaudRateMode</UsrMethodName>
       </ItemState>
       <ItemState>

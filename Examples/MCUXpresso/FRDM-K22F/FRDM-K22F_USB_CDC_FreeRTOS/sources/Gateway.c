@@ -19,6 +19,8 @@
 static uint8_t rxRingBuffer[512]; /* ring buffer for rx data */
 
 typedef struct {
+  UART_Type *uart;
+  uart_handle_t g_uartHandle;
   bool rxBufferEmpty;
   bool txBufferFull;
   bool txOnGoing;
@@ -28,7 +30,6 @@ typedef struct {
 } UART_UserDataDesc;
 
 static UART_UserDataDesc UART_UserData; /* user data structure, used for status */
-static uart_config_t user_config; /* user configuration */
 static uart_handle_t g_uartHandle; /* UART device handle struct */
 
 static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t status, void *userData) {
@@ -57,36 +58,53 @@ static void UART_UserCallback(UART_Type *base, uart_handle_t *handle, status_t s
   }
 }
 
-static void InitUART(UART_UserDataDesc *data) {
-  data->rxBufferEmpty = true;
-  data->txBufferFull = false;
-  data->txOnGoing = false;
-  data->rxOnGoing = false;
-  data->nofRxOverrunErrors = 0;
-  data->nofRxRingBufferOverrunErrors = 0;
- /*
-   * user_config.baudRate_Bps = 38400;
-   * user_config.parityMode = kUART_ParityDisabled;
-   * user_config.stopBitCount = kUART_OneStopBit;
-   * user_config.txFifoWatermark = 0;
-   * user_config.rxFifoWatermark = 1;
-   * user_config.enableTx = false;
-   * user_config.enableRx = false;
-   */
-  UART_GetDefaultConfig(&user_config);
-  user_config.baudRate_Bps = 38400;
-  user_config.enableTx = true;
-  user_config.enableRx = true;
+static void InitUART(UART_UserDataDesc *userData) {
+  uart_config_t config; /* user configuration */
 
-  UART_Init(UART_USED, &user_config, CLOCK_GetFreq(SYS_CLK)/2);
-  UART_TransferCreateHandle(UART_USED, &g_uartHandle, UART_UserCallback, &UART_UserData);
-  UART_TransferStartRingBuffer(UART_USED, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
+  /* initialize user data descriptor */
+  userData->uart = UART_USED;
+  userData->rxBufferEmpty = true;
+  userData->txBufferFull = false;
+  userData->txOnGoing = false;
+  userData->rxOnGoing = false;
+  userData->nofRxOverrunErrors = 0;
+  userData->nofRxRingBufferOverrunErrors = 0;
+
+  /* configure the UART */
+  UART_GetDefaultConfig(&config); /* get default config */
+  /* default config has the following values:
+   * config.baudRate_Bps = 38400;
+   * config.parityMode = kUART_ParityDisabled;
+   * config.stopBitCount = kUART_OneStopBit;
+   * config.txFifoWatermark = 0;
+   * config.rxFifoWatermark = 1;
+   * config.enableTx = false;
+   * config.enableRx = false;
+   */
+  /* overwrite config with our special values */
+  config.baudRate_Bps = 38400;
+  config.enableTx = true;
+  config.enableRx = true;
+  UART_Init(userData->uart, &config, CLOCK_GetFreq(SYS_CLK)/2);
+
+  UART_TransferCreateHandle(userData->uart, &g_uartHandle, UART_UserCallback, userData);
+  UART_TransferStartRingBuffer(userData->uart, &g_uartHandle, rxRingBuffer, sizeof(rxRingBuffer));
+}
+
+static void UartSendStr(UART_UserDataDesc *userData, uart_transfer_t *txTransfer, uint8_t *txBuf, size_t txBufSize, const uint8_t *str) {
+  McuUtility_strcpy(txBuf, txBufSize, str); /* copy string into buffer */
+  /* setup transfer descriptor */
+  txTransfer->data = txBuf; /* pointer to data */
+  txTransfer->dataSize = McuUtility_strlen((char*)txBuf); /* number of bytes */
+  UART_UserData.txOnGoing = true; /* flag will be reset by callback */
+  UART_TransferSendNonBlocking(userData->uart, &g_uartHandle, txTransfer);
 }
 
 static void UartTask(void *pvParams) {
   status_t status;
   uint32_t receivedBytes;
   uint32_t counterMs = 0;
+  uint32_t switchBaudCntr = 0;
 
   (void)pvParams; /* not used parameter */
   DbgConsole_Printf("------------------------\nStarting UartTask\n------------------------\n");
@@ -137,14 +155,38 @@ static void UartTask(void *pvParams) {
 #if UART_ENABLE_GPS_TX
     if ((counterMs%1000)==0) { /* every second */
       if (!UART_UserData.txOnGoing) {
-        /* send data to the GPS UART */
-        DbgConsole_Printf("Tx to GPS...\n");
-        McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
-        /* setup transfer */
-        txTransfer.data = &txBuf[0];
-        txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
-        UART_UserData.txOnGoing = true; /* flag will be reset by callback */
-        UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+        switchBaudCntr++;
+#if 0
+        if (switchBaudCntr==10) {
+          /* send data to the GPS UART */
+           DbgConsole_Printf("Tx to GPS...\n");
+           McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"baud 34800\n");
+           /* setup transfer */
+           txTransfer.data = &txBuf[0];
+           txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
+           UART_UserData.txOnGoing = true; /* flag will be reset by callback */
+           UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+        } else if (switchBaudCntr==20) {
+          /* send data to the GPS UART */
+           DbgConsole_Printf("Tx to GPS...\n");
+           McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
+           /* setup transfer */
+           txTransfer.data = &txBuf[0];
+           txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
+           UART_UserData.txOnGoing = true; /* flag will be reset by callback */
+           UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+           switchBaudCntr = 0; /* reset */
+        } else {
+#endif
+          /* send data to the GPS UART */
+          DbgConsole_Printf("Tx to GPS...\n");
+          McuUtility_strcpy(txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
+          /* setup transfer */
+          txTransfer.data = &txBuf[0];
+          txTransfer.dataSize = McuUtility_strlen((char*)txBuf);
+          UART_UserData.txOnGoing = true; /* flag will be reset by callback */
+          UART_TransferSendNonBlocking(UART_USED, &g_uartHandle, &txTransfer);
+ //       }
       }
     }
 #endif

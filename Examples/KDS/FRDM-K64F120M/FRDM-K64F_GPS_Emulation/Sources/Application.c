@@ -96,6 +96,13 @@ void APP_Run(void) {
         CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
         LED2_Off();
         gpsRxBuf[0] = '\0'; /* empty buffer */
+        if (UTIL1_strcmp(gpsRxBuf, "baud 38400")==0) {
+          CLS1_SendStr("*** Switching to 38400!\n", CLS1_GetStdio()->stdOut);
+          (void)GPS_SetBaudRateMode(GPS_BM_38400BAUD);
+        } else if (UTIL1_strcmp(gpsRxBuf, "baud 115200")==0) {
+          CLS1_SendStr("*** Switching to 115200!\n", CLS1_GetStdio()->stdOut);
+          (void)GPS_SetBaudRateMode(GPS_BM_115200BAUD);
+        }
       }
     }
 #if 1
