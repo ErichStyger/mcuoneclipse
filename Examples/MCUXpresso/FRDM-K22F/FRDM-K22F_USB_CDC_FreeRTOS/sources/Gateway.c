@@ -11,9 +11,12 @@
 #include "fsl_uart.h"
 #include "fsl_debug_console.h"
 #include "McuUtility.h"
+#include "MsgQueue.h"
 
-#define UART_ENABLE_GPS_RX  (1) /* 1 to enable Rx emulation (Rx from GPS) */
-#define UART_ENABLE_GPS_TX  (1) /* 1 to enable Tx emulation (Tx to GPS) */
+#define GATEWAY_ENABLE_GPS_RX      (1) /* 1 to enable Rx from GPS */
+#define GATEWAY_ENABLE_GPS_TX      (1) /* 1 to enable Tx to GPS) */
+#define GATEWAY_ENABLE_CDC_TO_GPS  (1 && GATEWAY_ENABLE_GPS_TX) /* 1 to enable data forwarding from USB CDC to GPS */
+#define GATEWAY_ENABLE_GPS_TO_CDC  (1 && GATEWAY_ENABLE_GPS_RX) /* 1 to enable data forwarding from GPS to USB CDC */
 
 static uint8_t rxRingBuffer[512]; /* ring buffer for rx data */
 
@@ -147,7 +150,7 @@ static void UartTask(void *pvParams) {
 
   InitUART(&sdkUartHandle, &myDevice);
   for(;;) {
-#if UART_ENABLE_GPS_RX
+#if GATEWAY_ENABLE_GPS_RX
     if (!myDevice.rxOnGoing) { /* call UART_TransferReceiveNonBlocking() only if there is no other transfer pending */
       /* check if we have something already in the Rx buffer */
       if (myDevice.rxBufferEmpty) {
@@ -167,6 +170,9 @@ static void UartTask(void *pvParams) {
         /* print the data received to the debug console */
         for(int i=0;i<rxTransfer.dataSize;i++) {
           DbgConsole_Putchar(rxTransfer.data[i]);
+#if GATEWAY_ENABLE_GPS_TO_CDC
+          MSG_SendCharUart2Usb(rxTransfer.data[i]); /* forward to USB CDC */
+#endif
         }
         /* initiate a new transfer */
         myDevice.rxBufferEmpty = true; /* ready to get new data */
@@ -175,7 +181,7 @@ static void UartTask(void *pvParams) {
       }
    }
 #endif
-#if UART_ENABLE_GPS_TX
+#if GATEWAY_ENABLE_GPS_TX
     if ((counterMs%1000)==0) { /* every second */
       if (!myDevice.txOnGoing) {
         switchBaudCntr++;
@@ -194,13 +200,34 @@ static void UartTask(void *pvParams) {
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 115200);
-
-          switchBaudCntr = 0; /* reset */
+          //switchBaudCntr = 0; /* reset */
         } else {
           DbgConsole_Printf("Send hello message: \"hello to the GPS\"\n");
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
         }
       }
+    }
+#endif
+#if GATEWAY_ENABLE_CDC_TO_GPS
+    /* get data from USB CDC queue and forward to UART/GPS */
+    if (!myDevice.txOnGoing && MSG_NofElementsUsb2Uart()>0) {
+      int i;
+      unsigned char ch;
+      uint8_t localBuf[sizeof(txBuf)]; /* shall not be larger than txBuf, otherwise we will loose data */
+
+      i = 0;
+      localBuf[0] = '\0';
+      while(i<sizeof(localBuf)-1) {
+        ch = MSG_GetCharUsb2Uart();
+        localBuf[i] = ch;
+        i++;
+        if (ch=='\0') { /* no element any more in queue */
+          break;
+        }
+      }
+      localBuf[sizeof(localBuf)-1] = '\0'; /* in any case, add a zero byte at the end */
+      /* here localBuf always is properly zero terminated */
+      UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), localBuf);
     }
 #endif
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -209,6 +236,7 @@ static void UartTask(void *pvParams) {
 }
 
 void GW_Init(void) {
+  MSG_Init();
   if (xTaskCreate(UartTask,                         /* pointer to the task                      */
                   "UartTask",                       /* task name for kernel awareness debugging */
                   1024L/sizeof(portSTACK_TYPE),  /* task stack size                          */

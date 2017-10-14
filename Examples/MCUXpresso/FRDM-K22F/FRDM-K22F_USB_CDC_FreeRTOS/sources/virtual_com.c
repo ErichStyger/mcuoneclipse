@@ -58,7 +58,10 @@
 #endif
 #include "fsl_common.h"
 #include "pin_mux.h"
+
 #include "Gateway.h"
+#include "MsgQueue.h"
+
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
@@ -639,7 +642,7 @@ void USB_DeviceTask(void *handle)
  *
  * @return None.
  */
-void APPTask(void *handle)
+void UsbTask(void *handle)
 {
     usb_status_t error = kStatus_USB_Error;
 
@@ -662,6 +665,7 @@ void APPTask(void *handle)
     }
 #endif
 
+    MSG_SendStringUsb2Uart((uint8_t*)"Test message from USB CDC to Gateway and USB CDC!\n");
     while (1)
     {
         if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
@@ -744,8 +748,8 @@ void main(void)
 
     GW_Init();
 
-    if (xTaskCreate(APPTask,                         /* pointer to the task                      */
-                    "AppTask",                       /* task name for kernel awareness debugging */
+    if (xTaskCreate(UsbTask,                         /* pointer to the task                      */
+                    "UsbTask",                       /* task name for kernel awareness debugging */
                     5000L / sizeof(portSTACK_TYPE),  /* task stack size                          */
                     &s_cdcVcom,                      /* optional task startup argument           */
                     4,                               /* initial priority                         */
