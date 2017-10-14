@@ -181,7 +181,7 @@ static void UartTask(void *pvParams) {
       }
    }
 #endif
-#if GATEWAY_ENABLE_GPS_TX
+#if 0 && GATEWAY_ENABLE_GPS_TX
     if ((counterMs%1000)==0) { /* every second */
       if (!myDevice.txOnGoing) {
         switchBaudCntr++;
@@ -196,7 +196,7 @@ static void UartTask(void *pvParams) {
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 38400);
         } else if (switchBaudCntr==30) {
-          DbgConsole_Printf("Request change to 115200...\n");
+          c
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 115200);
@@ -211,23 +211,11 @@ static void UartTask(void *pvParams) {
 #if GATEWAY_ENABLE_CDC_TO_GPS
     /* get data from USB CDC queue and forward to UART/GPS */
     if (!myDevice.txOnGoing && MSG_NofElementsUsb2Uart()>0) {
-      int i;
-      unsigned char ch;
       uint8_t localBuf[sizeof(txBuf)]; /* shall not be larger than txBuf, otherwise we will loose data */
 
-      i = 0;
-      localBuf[0] = '\0';
-      while(i<sizeof(localBuf)-1) {
-        ch = MSG_GetCharUsb2Uart();
-        localBuf[i] = ch;
-        i++;
-        if (ch=='\0') { /* no element any more in queue */
-          break;
-        }
-      }
-      localBuf[sizeof(localBuf)-1] = '\0'; /* in any case, add a zero byte at the end */
-      /* here localBuf always is properly zero terminated */
-      UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), localBuf);
+      MSG_GetStringUsb2Uart(localBuf, sizeof(localBuf));
+      UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), localBuf); /* send to GPS */
+      DbgConsole_Printf("%s", localBuf); /* copy on debug console */
     }
 #endif
     vTaskDelay(pdMS_TO_TICKS(50));

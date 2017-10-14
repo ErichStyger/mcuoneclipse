@@ -9,6 +9,21 @@
 #ifndef MSG_QUEUE_C_
 #define MSG_QUEUE_C_
 
+#include <stdlib.h> /* for size_t */
+/*!
+ * \brief Get a string from the Uart2Usb queue into a buffer
+ * \param buf Pointer to buffer
+ * \param bufSize Size of buffer in bytes
+ */
+void MSG_GetStringUart2Usb(unsigned char *buf, size_t bufSize);
+
+/*!
+ * \brief Get a string from the Usb2Uart queue into a buffer
+ * \param buf Pointer to buffer
+ * \param bufSize Size of buffer in bytes
+ */
+void MSG_GetStringUsb2Uart(unsigned char *buf, size_t bufSize);
+
 /*!
  * \brief Sends a string to the Uart2Usb queue. Note that if the queue is full, it will block.
  * \param str Pointer to the string.

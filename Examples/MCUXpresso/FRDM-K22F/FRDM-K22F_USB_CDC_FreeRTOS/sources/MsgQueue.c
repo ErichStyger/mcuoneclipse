@@ -73,6 +73,32 @@ unsigned short MSG_NofElementsUsb2Uart(void) {
   return (unsigned short)uxQueueMessagesWaiting(MSG_Usb2UartQueue);
 }
 
+static void getString(unsigned char *buf, size_t bufSize, unsigned char(*getChar)(void)) {
+  int i;
+  unsigned char ch;
+
+  i = 0;
+  buf[0] = '\0';
+  while(i<bufSize-1) {
+    ch = getChar();
+    buf[i] = ch;
+    i++;
+    if (ch=='\0') { /* no element any more in queue */
+      break;
+    }
+  }
+  buf[bufSize-1] = '\0'; /* in any case, add a zero byte at the end */
+
+}
+
+void MSG_GetStringUart2Usb(unsigned char *buf, size_t bufSize) {
+  getString(buf, bufSize, MSG_GetCharUart2Usb);
+}
+
+void MSG_GetStringUsb2Uart(unsigned char *buf, size_t bufSize) {
+  getString(buf, bufSize, MSG_GetCharUsb2Uart);
+}
+
 void MSG_Deinit(void) {
   vQueueDelete(MSG_Uart2UsbQueue);
   vQueueDelete(MSG_Usb2UartQueue);

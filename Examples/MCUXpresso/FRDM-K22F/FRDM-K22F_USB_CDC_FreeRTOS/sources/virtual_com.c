@@ -61,6 +61,7 @@
 
 #include "Gateway.h"
 #include "MsgQueue.h"
+#include "McuUtility.h"
 
 /*******************************************************************************
 * Definitions
@@ -109,9 +110,7 @@ static uint8_t s_countryCode[COMM_FEATURE_DATA_SIZE] = {(COUNTRY_SETTING >> 0U) 
 USB_DATA_ALIGNMENT static usb_cdc_acm_info_t s_usbCdcAcmInfo = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0, 0, 0, 0, 0};
 /* Data buffer for receiving and sending*/
 USB_DATA_ALIGNMENT static uint8_t s_currRecvBuf[DATA_BUFF_SIZE];
-USB_DATA_ALIGNMENT static uint8_t s_currSendBuf[DATA_BUFF_SIZE];
-volatile static uint32_t s_recvSize = 0;
-volatile static uint32_t s_sendSize = 0;
+volatile static uint32_t s_recvSize = 0; /* updated by USB stack!!!! */
 
 /* USB device class information */
 static usb_device_class_config_struct_t s_cdcAcmConfig[1] = {{
@@ -151,6 +150,7 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
     usb_cdc_acm_info_t *acmInfo = &s_usbCdcAcmInfo;
     usb_device_cdc_acm_request_param_struct_t *acmReqParam;
     usb_device_endpoint_callback_message_struct_t *epCbParam;
+
     acmReqParam = (usb_device_cdc_acm_request_param_struct_t *)param;
     epCbParam = (usb_device_endpoint_callback_message_struct_t *)param;
     switch (event)
@@ -642,12 +642,13 @@ void USB_DeviceTask(void *handle)
  *
  * @return None.
  */
-void UsbTask(void *handle)
-{
-    usb_status_t error = kStatus_USB_Error;
+void UsbTask(void *handle) {
+   USB_DATA_ALIGNMENT static uint8_t s_currSendBuf[DATA_BUFF_SIZE];
+   uint32_t s_sendSize = 0;
+   usb_status_t error = kStatus_USB_Error;
+   bool needAcmSend;
 
     USB_DeviceApplicationInit();
-
 #if USB_DEVICE_CONFIG_USE_TASK
     if (s_cdcVcom.deviceHandle)
     {
@@ -665,33 +666,41 @@ void UsbTask(void *handle)
     }
 #endif
 
-    MSG_SendStringUsb2Uart((uint8_t*)"Test message from USB CDC to Gateway and USB CDC!\n");
-    while (1)
-    {
-        if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
-        {
+    MSG_SendStringUsb2Uart((uint8_t*)"Test message from USB CDC to Gateway and GPS!\n");
+    while (1) {
+        if ((s_cdcVcom.attach==1) && (s_cdcVcom.startTransactions==1)) { /* have a connection */
             /* User Code */
-            if ((0 != s_recvSize) && (0xFFFFFFFF != s_recvSize))
-            {
+            needAcmSend = FALSE;
+            if ((s_recvSize != 0) && (s_recvSize != 0xFFFFFFFF)) {
                 int32_t i;
 
+                needAcmSend = TRUE;
                 /* Copy Buffer to Send Buff */
                 for (i = 0; i < s_recvSize; i++)
                 {
-                    s_currSendBuf[s_sendSize++] = s_currRecvBuf[i];
+#if 1 /* forward incoming characters to gateway */
+                    MSG_SendCharUsb2Uart(s_currRecvBuf[i]);
+#endif
+                    //s_currSendBuf[s_sendSize++] = s_currRecvBuf[i];
+
                 }
                 s_recvSize = 0;
             }
+#if 1
+            if (MSG_NofElementsUart2Usb()>0) { /* avoid blocking for the timeout, as otherwise we will not be able to keep up with the USB protocol */
+              MSG_GetStringUart2Usb(s_currSendBuf, sizeof(s_currSendBuf)); /* get data from queue */
+              s_sendSize = McuUtility_strlen((char*)s_currSendBuf);
+            } else {
+              s_sendSize = 0;
+            }
+#endif
 
-            if (s_sendSize)
-            {
+            if (s_sendSize!=0 || needAcmSend) {
                 uint32_t size = s_sendSize;
                 s_sendSize = 0;
 
-                error =
-                    USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, s_currSendBuf, size);
-                if (error != kStatus_USB_Success)
-                {
+                error = USB_DeviceCdcAcmSend(s_cdcVcom.cdcAcmHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, s_currSendBuf, size);
+                if (error != kStatus_USB_Success) {
                     /* Failure to send Data Handling code here */
                 }
             }
@@ -732,7 +741,12 @@ void UsbTask(void *handle)
                 usb_echo("Exit  lowpower\r\n");
             }
 #endif
-        }
+        } else {
+          /* no usb device enumerated: consume from the buffer so we do not stall too much */
+          unsigned char buf[32];
+
+          MSG_GetStringUart2Usb(buf, sizeof(buf)); /* get data from queue, will not use it */
+       }
     }
 }
 
