@@ -9,16 +9,16 @@
 <stringAttribute key="com.nxp.mcuxpresso.segger.halt.target" value="-halt"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.if" value="SWD"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-noir"/>
-<intAttribute key="com.nxp.mcuxpresso.segger.port" value="2342"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.port" value="2339"/>
 <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="false;GDBServer/RTOSPlugin_FreeRTOS"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.scriptfile" value=""/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
-<intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2340"/>
-<intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2341"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2337"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2338"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.verify" value="-vd"/>
 <stringAttribute key="disconnect" value="Run"/>
 <stringAttribute key="launch.config.handler" value="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler"/>
@@ -33,8 +33,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
-<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2342"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
+<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2339"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
@@ -55,13 +54,7 @@
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Release\FRDM-K22F_USB_CDC_FreeRTOS.axf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-K22F_USB_CDC_FreeRTOS"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value=""/>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/FRDM-K22F_USB_CDC_FreeRTOS"/>
-</listAttribute>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="4"/>
-</listAttribute>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.release.1338413011"/>
 <mapAttribute key="org.eclipse.debug.core.preferred_launchers">
 <mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.segger.dsfLaunchDelegate"/>
 </mapAttribute>
