@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_GPS_Emulation</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>19</ModificationStamp>
+    <ModificationStamp>20</ModificationStamp>
     <Date>2017-09-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -16309,7 +16309,7 @@
         <ItemSymbol>_BdRate</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>38400 baud</Value>
+        <Value>9600 baud</Value>
         <RuntimeSetting>2</RuntimeSetting>
         <ReqDevPrescHigh>-1</ReqDevPrescHigh>
         <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -16335,12 +16335,13 @@
         <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
         <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
         <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-        <InitValue>38400 baud</InitValue>
+        <InitValue>9600 baud</InitValue>
         <Precision>1.5</Precision>
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
-        <List lines_count="1">
+        <List lines_count="2">
+          <Line>38400 baud</Line>
           <Line>115200 baud</Line>
         </List>
         <UnitText>baud</UnitText>
@@ -16967,12 +16968,13 @@
               <ReqSrcClkPrescSpeedMode5>-1</ReqSrcClkPrescSpeedMode5>
               <ReqSrcClkPrescSpeedMode6>-1</ReqSrcClkPrescSpeedMode6>
               <ReqSrcClkPrescSpeedMode7>-1</ReqSrcClkPrescSpeedMode7>
-              <InitValue>38400 baud</InitValue>
+              <InitValue>9600 baud</InitValue>
               <Precision>1.5</Precision>
               <PrecInProc>true</PrecInProc>
               <LowLimit />
               <HighLimit />
-              <List lines_count="1">
+              <List lines_count="2">
+                <Line>38400 baud</Line>
                 <Line>115200 baud</Line>
               </List>
               <UnitText>baud</UnitText>

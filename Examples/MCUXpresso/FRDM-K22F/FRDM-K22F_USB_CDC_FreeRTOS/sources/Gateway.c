@@ -102,7 +102,7 @@ static void InitUART(uart_handle_t *sdkHandle, UART_MyDeviceDesc *device) {
    * config.enableRx = false;
    */
   /* overwrite config with our special values */
-  config.baudRate_Bps = 38400;
+  config.baudRate_Bps = 9600; /* default and initial baud rate */
   config.enableTx = true;
   config.enableRx = true;
   UART_Init(device->uart, &config, CLOCK_GetFreq(SYS_CLK)/2); /* really not clear to me why I have to divide the clock here??? */
@@ -180,23 +180,24 @@ static void UartTask(void *pvParams) {
       if (!myDevice.txOnGoing) {
         switchBaudCntr++;
         if (switchBaudCntr==10) { /* every 10 seconds */
-          DbgConsole_Printf("Send change to 38400...\n");
+          DbgConsole_Printf("Request change to 9600...\n");
+          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 9600\n");
+          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some time to allow UART to send out data */
+          UART_ChangeBaudRate(&myDevice, 9600); /* now change my own baud rate */
+        } else if (switchBaudCntr==20) {
+          DbgConsole_Printf("Request change to 38400...\n");
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 38400\n");
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 38400);
-          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
-          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"38400\n");
-        } else if (switchBaudCntr==20) {
-          DbgConsole_Printf("Send change to 115200...\n");
+        } else if (switchBaudCntr==30) {
+          DbgConsole_Printf("Request change to 115200...\n");
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 115200);
-          vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
-          UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"115200\n");
 
           switchBaudCntr = 0; /* reset */
         } else {
-          DbgConsole_Printf("Send hello.\n");
+          DbgConsole_Printf("Send hello message: \"hello to the GPS\"\n");
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"hello to the GPS\n");
         }
       }

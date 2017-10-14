@@ -15,7 +15,8 @@
 #include "GPS.h"
 #include "CLS1.h"
 
-#define SUPPORT_SWITCH_BAUD   (1)
+#define SUPPORT_SWITCH_BAUD       (1)
+#define SUPPORT_TX_GPS_MESSAGES   (1)
 
 static bool GPSUART_KeyPressed(void) {
   return GPS_GetCharsInRxBuf()!=0;
@@ -24,7 +25,6 @@ static bool GPSUART_KeyPressed(void) {
 static void GPSUART_SendChar(uint8_t ch) {
   uint8_t res;
   int timeoutMs = 5;
-
 
   do {
     res = GPS_SendChar((uint8_t)ch);  /* Send char */
@@ -109,7 +109,11 @@ void APP_Run(void) {
         CLS1_SendStr(uartBuf, CLS1_GetStdio()->stdOut);
         LED2_Off();
 #if SUPPORT_SWITCH_BAUD
-        if (UTIL1_strcmp(gpsRxBuf, "baud 38400\n")==0) {
+        if (UTIL1_strcmp(gpsRxBuf, "baud 9600\n")==0) {
+          CLS1_SendStr("*** Switching to 9600!\n", CLS1_GetStdio()->stdOut);
+          WAIT1_Waitms(50); /* give some time to send the above string */
+          SwitchBaud(GPS_BM_9600BAUD);
+        } else if (UTIL1_strcmp(gpsRxBuf, "baud 38400\n")==0) {
           CLS1_SendStr("*** Switching to 38400!\n", CLS1_GetStdio()->stdOut);
           WAIT1_Waitms(50); /* give some time to send the above string */
           SwitchBaud(GPS_BM_38400BAUD);
@@ -122,7 +126,7 @@ void APP_Run(void) {
         gpsRxBuf[0] = '\0'; /* empty buffer */
       }
     }
-#if 1
+#if SUPPORT_TX_GPS_MESSAGES
     if ((countMs%1000)==0) {
       /* send new message as GPS device */
       LED1_On();
