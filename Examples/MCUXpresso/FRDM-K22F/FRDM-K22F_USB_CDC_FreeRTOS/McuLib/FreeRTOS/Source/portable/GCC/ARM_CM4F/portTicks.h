@@ -110,7 +110,7 @@ portLONG uxGetTickCounterValue(void);
 
 #define FREERTOS_HWTC_FREQ_HZ            configTICK_RATE_HZ
 
-#if configUSE_TRACE_HOOKS /* using Percepio Trace */
+#if configUSE_PERCEPIO_TRACE_HOOKS /* using Percepio Trace */
 #if (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_PROCESSOR_EXPERT)
   /* tick information for Percepio Trace */
 
@@ -143,7 +143,7 @@ portLONG uxGetTickCounterValue(void);
   #define TRC_IRQ_PRIORITY_ORDER      0  /* 0: lower IRQ prios mean higher priority, 1: otherwise */
   #define TRC_HWTC_FREQ_HZ            FREERTOS_HWTC_FREQ_HZ
 #endif
-#endif /* configUSE_TRACE_HOOKS */
+#endif /* configUSE_PERCEPIO_TRACE_HOOKS */
 
 #ifdef __cplusplus
 }

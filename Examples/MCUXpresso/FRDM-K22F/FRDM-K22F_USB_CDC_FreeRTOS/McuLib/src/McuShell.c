@@ -7,7 +7,7 @@
 **     Version     : Component 01.095, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-19, 11:54, # CodeGen: 186
+**     Date/Time   : 2017-09-25, 20:33, # CodeGen: 237
 **     Abstract    :
 **
 **     Settings    :
@@ -128,6 +128,7 @@ uint8_t McuShell_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* defa
 
 #if McuShell_CONFIG_USE_MUTEX
   #include "FreeRTOS.h"
+  #include "task.h"
   #include "semphr.h"
 #endif
 

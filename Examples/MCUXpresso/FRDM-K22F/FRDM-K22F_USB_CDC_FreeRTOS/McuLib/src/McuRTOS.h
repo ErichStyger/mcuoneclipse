@@ -7,7 +7,7 @@
 **     Version     : Component 01.549, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-08-18, 14:15, # CodeGen: 228
+**     Date/Time   : 2017-10-16, 18:32, # CodeGen: 238
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -74,7 +74,10 @@
 **            Cleanup Resources                            : yes
 **            TaskExitError Handler                        : no
 **          Ticks                                          : Settings for the periodic tick timer
-**            Tickless Idle Mode                           : Disabled
+**            Tickless Idle Mode                           : Enabled
+**              Stopped Timer Compensation                 : 45
+**              Expected Idle Time (Ticks) before Sleep    : 2
+**              Idle Decision Hook                         : Disabled
 **            Tick Rate (Hz)                               : 100
 **            Use 16bit ticks                              : no
 **            non-LDD Tick                                 : Disabled
@@ -283,6 +286,10 @@
 #include "event_groups.h"              /* event group API */
 #include "timers.h"                    /* timer module API */
 #include <stddef.h>                    /* for size_t type */
+
+#if configUSE_PERCEPIO_TRACE_HOOKS
+  #include "McuPercepio.h" /* Interface to Percpio Trace */
+#endif
 
 /* Macro for shell support */
 #define McuRTOS_PARSE_COMMAND_ENABLED        (configUSE_SHELL) /* set to 1 if method ParseCommand() is present, 0 otherwise */

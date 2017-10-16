@@ -7,7 +7,7 @@
 **     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 07:35, # CodeGen: 172
+**     Date/Time   : 2017-10-16, 18:32, # CodeGen: 238
 **     Abstract    :
 **
 **     Settings    :
@@ -338,7 +338,7 @@ static void putCharIntoBufMaxLen(void *arg, char c) {
   }
 }
 
-static int xsnprintf(char *buf, size_t max_len, const char *fmt, va_list args) {
+int xsnprintf(char *buf, size_t max_len, const char *fmt, va_list args) {
   int res = -1;
   StrOutBuffer out;
 
@@ -480,7 +480,7 @@ static void putCharIntoBuf(void *arg, char c) {
   *(*s)++ = c;
 }
 
-static int xsprintf(char *buf, const char *fmt, va_list args) {
+int xsprintf(char *buf, const char *fmt, va_list args) {
   int res;
 
   res = (int)McuXFormat_xvformat(putCharIntoBuf, (void *)&buf, fmt, args);

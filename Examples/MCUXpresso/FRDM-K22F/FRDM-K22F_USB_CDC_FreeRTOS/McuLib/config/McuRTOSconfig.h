@@ -104,5 +104,21 @@
    /*!< 1: enable Shell and command line support; 0: disabled */
 #endif
 
+/*-----------------------------------------------------------
+ * FreeRTOS Trace hook support
+ *----------------------------------------------------------- */
+#ifndef configUSE_PERCEPIO_TRACE_HOOKS
+  #define configUSE_PERCEPIO_TRACE_HOOKS          0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#endif
+#define configUSE_TRACE_HOOKS                     configUSE_PERCEPIO_TRACE_HOOKS /* legacy configUSE_TRACE_HOOKS should not be used any more */
+
+#ifndef configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+#endif
+
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_PERCEPIO_TRACE_HOOKS
+  #error "only one trace method can be active!"
+#endif
+/*----------------------------------------------------------- */
 
 #endif /* __McuRTOS_CONFIG_H */

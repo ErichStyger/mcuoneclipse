@@ -7,7 +7,7 @@
 **     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 07:35, # CodeGen: 172
+**     Date/Time   : 2017-10-16, 18:32, # CodeGen: 238
 **     Abstract    :
 **
 **     Settings    :
@@ -77,6 +77,10 @@
 #else
   #define McuXFormat_PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
+
+/* low level functions */
+int xsnprintf(char *buf, size_t max_len, const char *fmt, va_list args);
+int xsprintf(char *buf, const char *fmt, va_list args);
 
 
 unsigned McuXFormat_xformat(void (*outchar)(void *,char), void *arg, const char * fmt, ...) McuXFormat_PRINTF_ATTRIBUTE(3,4);
