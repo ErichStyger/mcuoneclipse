@@ -62,6 +62,8 @@
 #include "Gateway.h"
 #include "MsgQueue.h"
 #include "McuUtility.h"
+#include "McuSystemView.h"
+#include "McuRTT.h"
 
 /*******************************************************************************
 * Definitions
@@ -747,6 +749,7 @@ void UsbTask(void *handle) {
 
           MSG_GetStringUart2Usb(buf, sizeof(buf)); /* get data from queue, will not use it */
        }
+       vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -760,7 +763,19 @@ void main(void)
     BOARD_BootClockHSRUN();
     BOARD_InitDebugConsole();
 
-    GW_Init();
+    /* initialize McuLib modules */
+    McuRTT_Init(); /* initialize SEGGER RTT */
+  #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer Trace */
+    McuSystemView_Init();
+  #elif configUSE_PERCEPIO_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
+    vTraceInitTraceData();
+    if (uiTraceStart()==0) {
+      for(;;){} /* error starting trace recorder. Not setup for enough queues/tasks/etc? */
+    }
+  #endif
+
+
+    GW_Init(); /* initialize gateway module */
 
     if (xTaskCreate(UsbTask,                         /* pointer to the task                      */
                     "UsbTask",                       /* task name for kernel awareness debugging */
