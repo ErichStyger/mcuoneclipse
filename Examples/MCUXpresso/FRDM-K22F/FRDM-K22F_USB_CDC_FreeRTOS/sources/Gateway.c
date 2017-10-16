@@ -181,7 +181,7 @@ static void UartTask(void *pvParams) {
       }
    }
 #endif
-#if 0 && GATEWAY_ENABLE_GPS_TX
+#if GATEWAY_ENABLE_GPS_TX
     if ((counterMs%1000)==0) { /* every second */
       if (!myDevice.txOnGoing) {
         switchBaudCntr++;
@@ -196,7 +196,6 @@ static void UartTask(void *pvParams) {
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 38400);
         } else if (switchBaudCntr==30) {
-          c
           UartSendStr(&myDevice, &txTransfer, txBuf, sizeof(txBuf), (uint8_t*)"baud 115200\n");
           vTaskDelay(pdMS_TO_TICKS(50)); /* wait some to allow UART to send out data */
           UART_ChangeBaudRate(&myDevice, 115200);

@@ -674,11 +674,11 @@ void UsbTask(void *handle) {
             if ((s_recvSize != 0) && (s_recvSize != 0xFFFFFFFF)) {
                 int32_t i;
 
-                needAcmSend = TRUE;
+                needAcmSend = TRUE;  /* need to know if I have to send a acm packet */
                 /* Copy Buffer to Send Buff */
                 for (i = 0; i < s_recvSize; i++)
                 {
-#if 1 /* forward incoming characters to gateway */
+#if 1 /* << EST: forward incoming characters to gateway */
                     MSG_SendCharUsb2Uart(s_currRecvBuf[i]);
 #endif
                     //s_currSendBuf[s_sendSize++] = s_currRecvBuf[i];
@@ -686,7 +686,7 @@ void UsbTask(void *handle) {
                 }
                 s_recvSize = 0;
             }
-#if 1
+#if 1 /* << EST */
             if (MSG_NofElementsUart2Usb()>0) { /* avoid blocking for the timeout, as otherwise we will not be able to keep up with the USB protocol */
               MSG_GetStringUart2Usb(s_currSendBuf, sizeof(s_currSendBuf)); /* get data from queue */
               s_sendSize = McuUtility_strlen((char*)s_currSendBuf);
