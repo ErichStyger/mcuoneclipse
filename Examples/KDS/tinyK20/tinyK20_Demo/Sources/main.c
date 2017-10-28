@@ -83,9 +83,12 @@ uint8_t data[] = {0x28, 0x87, 0x99, 0x37, 0x09, 0x00, 0x00};
 
 static void delay(void) {
     __asm (
-        "mov r1, 0x1    \n"
+        "mov r0, #0xf00  \n" /* build address 0xfe5 */
+        "add r0, #0xe5   \n"
+        "blx r0          \n" /* jump to code disabling the watchdog at 0xfe5 */
+        "mov r1, #0x2    \n"
       "Loop1:            \n"
-        "mov r0, 0x20 \n"
+        "mov r0, #0x20   \n"
       "Loop2:            \n"
         "subs r0, #1     \n"
         "nop             \n"
@@ -97,7 +100,7 @@ static void delay(void) {
         /* jump to startup code */
         "mov r0, #0x600  \n" /* _startup is at 0x625 */
         "add r0, #0x25   \n" /* 0x25 because of thumb bit */
-        "blx r0          \n" /* jump! */
+        "bx  r0          \n" /* jump! */
 #else
         "bx lr           \n"
 #endif
@@ -106,7 +109,10 @@ static void delay(void) {
 }
 
 static const uint8_t delay_code[] = {
-    0x4F,0xF0,0x01,0x01,  /* mov.w r1, #1       */
+    0x4F,0xF4,0x70,0x60,  /* mov.w r0, #0xf00   */
+    0x00,0xf1,0xe5,0x00,  /* add.w r0, #0xe5    */
+    0x80,0x47,            /* blx r0             */
+    0x4F,0xF0,0x02,0x01,  /* mov.w r1, #2       */
     0x4f,0xf4,0x20,0x00,  /* mov.w r0, #0x20    */
     0x01,0x38,            /* subs 50, #1        */
     0x00,0xBF,            /* nop                */
@@ -117,8 +123,8 @@ static const uint8_t delay_code[] = {
 #if 1
     /* jump to startup code */
     0x4f,0xf4,0xc0,0x60,  /* move.w 50, #0x600  */
-    0x00,0xf1,0x25,       /* add.w r0, #0x25    */
-    0x00,0x80,0x47,       /* blx r0             */
+    0x00,0xf1,0x25,0x00,  /* add.w r0, #0x25    */
+    0x00,0x47,            /* bx r0              */
 #else
     0x70,0x47             /* bx lr              */
 #endif
@@ -138,7 +144,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-#if 0
+#if 1
   f =  (void(*)(void))(&delay_code[0]);
   f();
   delay();
