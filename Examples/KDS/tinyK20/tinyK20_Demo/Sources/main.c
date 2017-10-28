@@ -81,6 +81,52 @@
 uint8_t crc;
 uint8_t data[] = {0x28, 0x87, 0x99, 0x37, 0x09, 0x00, 0x00};
 
+static void delay(void) {
+    __asm (
+        "mov r1, 0x1    \n"
+      "Loop1:            \n"
+        "mov r0, 0x20 \n"
+      "Loop2:            \n"
+        "subs r0, #1     \n"
+        "nop             \n"
+        "cmp r0, #0      \n"
+        "bgt Loop2       \n"
+        "subs r1, #1     \n"
+        "bgt Loop1       \n"
+#if 1
+        /* jump to startup code */
+        "mov r0, #0x600  \n" /* _startup is at 0x625 */
+        "add r0, #0x25   \n" /* 0x25 because of thumb bit */
+        "blx r0          \n" /* jump! */
+#else
+        "bx lr           \n"
+#endif
+        "nop \n" /* make sure things are properly aligned */
+        );
+}
+
+static const uint8_t delay_code[] = {
+    0x4F,0xF0,0x01,0x01,  /* mov.w r1, #1       */
+    0x4f,0xf4,0x20,0x00,  /* mov.w r0, #0x20    */
+    0x01,0x38,            /* subs 50, #1        */
+    0x00,0xBF,            /* nop                */
+    0x00,0x28,            /* cmp r0, #0         */
+    0x3F,0xF7,0xFB,0xAF,  /* bgt.w Loop2        */
+    0x01,0x39,            /* subs r1, #1        */
+    0x3F,0xF7,0xF6,0xAF,  /* bgt.w Loop1        */
+#if 1
+    /* jump to startup code */
+    0x4f,0xf4,0xc0,0x60,  /* move.w 50, #0x600  */
+    0x00,0xf1,0x25,       /* add.w r0, #0x25    */
+    0x00,0x80,0x47,       /* blx r0             */
+#else
+    0x70,0x47             /* bx lr              */
+#endif
+    0x00,0xBF,            /* nop                */
+};
+
+void (*f)(void);
+
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
@@ -92,8 +138,13 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  crc = OW1_CalcCRC(&data[0], sizeof(data));
+#if 0
+  f =  (void(*)(void))(&delay_code[0]);
+  f();
+  delay();
 
+  crc = OW1_CalcCRC(&data[0], sizeof(data));
+#endif
   for(i=0;i<15;i++) { /* blink to indicate power up */
     LED1_Neg();
     WAIT1_Waitms(20);
