@@ -83,7 +83,7 @@ uint8_t data[] = {0x28, 0x87, 0x99, 0x37, 0x09, 0x00, 0x00};
 
 static void delay(void) {
     __asm (
-        "mov r0, #0xf00  \n" /* build address 0xfe5 */
+        "mov r0, #0xf00  \n" /* watchdog disable code at 0xfe5 */
         "add r0, #0xe5   \n"
         "blx r0          \n" /* jump to code disabling the watchdog at 0xfe5 */
         "mov r1, #0x2    \n"

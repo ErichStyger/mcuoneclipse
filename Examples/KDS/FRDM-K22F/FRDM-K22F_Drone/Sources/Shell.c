@@ -169,7 +169,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   static unsigned char localConsole_buf[48];
 #if PL_HAS_RSTDIO
   static unsigned char radio_cmd_buf[48];
-  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdioRx();
+  CLS1_ConstStdIOType *ioRemote = RSTDIO_GetStdio();
 #endif
 #if PL_HAS_SEGGER_RTT
   static unsigned char rtt_cmd_buf[48];
