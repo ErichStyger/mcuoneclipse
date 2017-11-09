@@ -63,6 +63,10 @@
 #include "RTT1.h"
 #include "SYS1.h"
 
+#if CONFIG_USE_COVERAGE
+  #include "gcov_init.h"
+#endif
+
 #if CONFIG_USE_DHCP
   #include "app_dhcp.h"
 #endif
@@ -820,6 +824,9 @@ static void APP_Run(void) {
   if (xTaskCreate(AppTask, "App", 8000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#if CONFIG_USE_COVERAGE
+  __gcov_flush();
+#endif
   vTaskStartScheduler();
 #else
   StartNetworkInterface();

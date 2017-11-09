@@ -47,6 +47,12 @@
 #include "fsl_device_registers.h"
 #include "pin_mux.h"
 #include "clock_config.h"
+
+#define DO_COVERAGE   (0)
+
+#if DO_COVERAGE
+  #include "gcov_init.h"
+#endif
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -413,6 +419,9 @@ static void stack_init(void *arg)
 			PRINTF("Client is NOT connected yet\r\n");
 		}
 	    sys_msleep(1000);
+#if 1 && DO_COVERAGE
+	    __gcov_flush();
+#endif
 //   	vTaskDelay(pdMS_TO_TICKS(1000));
     }
 
@@ -439,8 +448,7 @@ static void stack_init(void *arg)
 /*!
  * @brief Main function
  */
-int main(void)
-{
+int main(void) {
     SYSMPU_Type *base = SYSMPU;
     BOARD_InitPins();
     BOARD_BootClockRUN();
@@ -448,10 +456,13 @@ int main(void)
     /* Disable SYSMPU. */
     base->CESR &= ~SYSMPU_CESR_VLD_MASK;
 
+#if DO_COVERAGE
+    gcov_static_init();
+#endif
     /* Initialize lwIP from thread */
-    if(sys_thread_new("main", stack_init, NULL, INIT_THREAD_STACKSIZE, INIT_THREAD_PRIO) == NULL)
+    if(sys_thread_new("main", stack_init, NULL, INIT_THREAD_STACKSIZE+2000, INIT_THREAD_PRIO) == NULL) {
         LWIP_ASSERT("main(): Task creation failed.", 0);
-
+    }
     vTaskStartScheduler();
 
     /* Will not get here unless a task calls vTaskEndScheduler ()*/

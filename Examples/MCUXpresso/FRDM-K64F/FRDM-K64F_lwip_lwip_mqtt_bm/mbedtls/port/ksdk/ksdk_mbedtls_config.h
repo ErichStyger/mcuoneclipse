@@ -2669,7 +2669,13 @@ void *pvPortCalloc(size_t num, size_t size); /*Calloc for HEAP3.*/
 //#define MBEDTLS_PLATFORM_FREE_MACRO            free /**< Default free macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_EXIT_MACRO            exit /**< Default exit macro to use, can be undefined */
 //#define MBEDTLS_PLATFORM_FPRINTF_MACRO      fprintf /**< Default fprintf macro to use, can be undefined */
+
+#if 1
+unsigned CLS1_printf(const char *fmt, ...);
+#define MBEDTLS_PLATFORM_PRINTF_MACRO      CLS1_printf
+#else
 #define MBEDTLS_PLATFORM_PRINTF_MACRO        PRINTF /**< Default printf macro to use, can be undefined */
+#endif
 /* Note: your snprintf must correclty zero-terminate the buffer! */
 //#define MBEDTLS_PLATFORM_SNPRINTF_MACRO    snprintf /**< Default snprintf macro to use, can be undefined */
 

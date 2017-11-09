@@ -44,6 +44,7 @@
 #include "UTIL1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "RTT1.h"
 #if CPU_INIT_CONFIG
   #include "Init_Config.h"
 #endif
