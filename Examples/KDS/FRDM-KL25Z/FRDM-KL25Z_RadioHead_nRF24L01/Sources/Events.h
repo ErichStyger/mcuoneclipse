@@ -44,7 +44,6 @@
 #include "KIN1.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
-#include "KSDK1.h"
 #include "CE.h"
 #include "BitIoLdd3.h"
 #include "SS.h"
@@ -60,6 +59,8 @@
 #include "BitIoLdd7.h"
 #include "EInt1.h"
 #include "ExtIntLdd1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
