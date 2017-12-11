@@ -69,7 +69,6 @@
 #include "TMOUT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
-#include "PTRC1.h"
 
 void KEY2_OnKeyPressed(uint8_t keys);
 /*

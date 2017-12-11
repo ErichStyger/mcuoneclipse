@@ -33,6 +33,17 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd1.h"
+#include "LCD1.h"
+#include "MCUC1.h"
+#include "GI2C1.h"
+#include "WAIT1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd3.h"
+#include "SCL1.h"
+#include "BitIoLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {

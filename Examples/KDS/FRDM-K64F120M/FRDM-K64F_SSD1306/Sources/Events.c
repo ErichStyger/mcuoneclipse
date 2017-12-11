@@ -58,9 +58,9 @@ void Cpu_OnNMI(void)
 
 /*
 ** ===================================================================
-**     Event       :  CI2C1_OnReceiveData (module Events)
+**     Event       :  I2C1_OnReceiveData (module Events)
 **
-**     Component   :  CI2C1 [InternalI2C]
+**     Component   :  I2C1 [InternalI2C]
 **     Description :
 **         This event is invoked when I2C finishes the reception of the
 **         data successfully. This event is not available for the SLAVE
@@ -70,16 +70,16 @@ void Cpu_OnNMI(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void CI2C1_OnReceiveData(void)
+void I2C1_OnReceiveData(void)
 {
   /* Write your code here ... */
 }
 
 /*
 ** ===================================================================
-**     Event       :  CI2C1_OnTransmitData (module Events)
+**     Event       :  I2C1_OnTransmitData (module Events)
 **
-**     Component   :  CI2C1 [InternalI2C]
+**     Component   :  I2C1 [InternalI2C]
 **     Description :
 **         This event is invoked when I2C finishes the transmission of
 **         the data successfully. This event is not available for the
@@ -89,7 +89,7 @@ void CI2C1_OnReceiveData(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void CI2C1_OnTransmitData(void)
+void I2C1_OnTransmitData(void)
 {
   /* Write your code here ... */
 }

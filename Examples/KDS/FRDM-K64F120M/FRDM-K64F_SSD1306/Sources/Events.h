@@ -46,14 +46,18 @@
 #include "MCUC1.h"
 #include "GI2C1.h"
 #include "I2C1.h"
-#include "SDA1.h"
-#include "BitIoLdd4.h"
-#include "SCL1.h"
-#include "BitIoLdd5.h"
-#include "CI2C1.h"
 #include "IntI2cLdd1.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
+#include "LCD1.h"
+#include "RESpin1.h"
+#include "BitIoLdd6.h"
+#include "KIN1.h"
+#include "FDisp1.h"
+#include "Helv8.h"
+#include "Helv10.h"
+#include "Helv12.h"
+#include "GDisp1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,9 +81,9 @@ void Cpu_OnNMI(void);
 
 /*
 ** ===================================================================
-**     Event       :  CI2C1_OnReceiveData (module Events)
+**     Event       :  I2C1_OnReceiveData (module Events)
 **
-**     Component   :  CI2C1 [InternalI2C]
+**     Component   :  I2C1 [InternalI2C]
 **     Description :
 **         This event is invoked when I2C finishes the reception of the
 **         data successfully. This event is not available for the SLAVE
@@ -89,13 +93,13 @@ void Cpu_OnNMI(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void CI2C1_OnReceiveData(void);
+void I2C1_OnReceiveData(void);
 
 /*
 ** ===================================================================
-**     Event       :  CI2C1_OnTransmitData (module Events)
+**     Event       :  I2C1_OnTransmitData (module Events)
 **
-**     Component   :  CI2C1 [InternalI2C]
+**     Component   :  I2C1 [InternalI2C]
 **     Description :
 **         This event is invoked when I2C finishes the transmission of
 **         the data successfully. This event is not available for the
@@ -105,7 +109,7 @@ void CI2C1_OnReceiveData(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-void CI2C1_OnTransmitData(void);
+void I2C1_OnTransmitData(void);
 
 /* END Events */
 

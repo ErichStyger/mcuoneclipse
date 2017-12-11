@@ -30,6 +30,17 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd1.h"
+#include "LCD1.h"
+#include "MCUC1.h"
+#include "GI2C1.h"
+#include "WAIT1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd3.h"
+#include "SCL1.h"
+#include "BitIoLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

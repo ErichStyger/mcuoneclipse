@@ -19,7 +19,7 @@
 #define SSD1306_I2C_ADDR  (0x78>>1) /* 0b0111100x */
 //#define SSD1306_I2C_ADDR  (0x7A>>1) /* 0b011101x */
 
-#define SSD1306_HAS_RST  (0) /* if we h ave a reset line to the display */
+#define SSD1306_HAS_RST  (0) /* if we have a reset line to the display */
 
 void SSD1306_Init(void);
 void SSD1306_Clear(void);
