@@ -60,13 +60,6 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
-#include "OW1.h"
-#include "DQ1.h"
-#include "BitIoLdd5.h"
-#include "InputRB1.h"
-#include "DbgRd1.h"
-#include "BitIoLdd6.h"
-#include "DS1.h"
 #include "TGT_SWD_OE.h"
 #include "BitIoLdd8.h"
 /* Including shared modules, which are used for whole project */
@@ -76,62 +69,6 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-
-/*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-uint8_t crc;
-uint8_t data[] = {0x28, 0x87, 0x99, 0x37, 0x09, 0x00, 0x00};
-
-static void delay(void) {
-    __asm (
-        "mov r0, #0xf00  \n" /* watchdog disable code at 0xfe5 */
-        "add r0, #0xe5   \n"
-        "blx r0          \n" /* jump to code disabling the watchdog at 0xfe5 */
-        "mov r1, #0x2    \n"
-      "Loop1:            \n"
-        "mov r0, #0x20   \n"
-      "Loop2:            \n"
-        "subs r0, #1     \n"
-        "nop             \n"
-        "cmp r0, #0      \n"
-        "bgt Loop2       \n"
-        "subs r1, #1     \n"
-        "bgt Loop1       \n"
-#if 1
-        /* jump to startup code */
-        "mov r0, #0x600  \n" /* _startup is at 0x625 */
-        "add r0, #0x25   \n" /* 0x25 because of thumb bit */
-        "bx  r0          \n" /* jump! */
-#else
-        "bx lr           \n"
-#endif
-        "nop \n" /* make sure things are properly aligned */
-        );
-}
-
-static const uint8_t delay_code[] = {
-    0x4F,0xF4,0x70,0x60,  /* mov.w r0, #0xf00   */
-    0x00,0xf1,0xe5,0x00,  /* add.w r0, #0xe5    */
-    0x80,0x47,            /* blx r0             */
-    0x4F,0xF0,0x02,0x01,  /* mov.w r1, #2       */
-    0x4f,0xf4,0x20,0x00,  /* mov.w r0, #0x20    */
-    0x01,0x38,            /* subs 50, #1        */
-    0x00,0xBF,            /* nop                */
-    0x00,0x28,            /* cmp r0, #0         */
-    0x3F,0xF7,0xFB,0xAF,  /* bgt.w Loop2        */
-    0x01,0x39,            /* subs r1, #1        */
-    0x3F,0xF7,0xF6,0xAF,  /* bgt.w Loop1        */
-#if 1
-    /* jump to startup code */
-    0x4f,0xf4,0xc0,0x60,  /* move.w 50, #0x600  */
-    0x00,0xf1,0x25,0x00,  /* add.w r0, #0x25    */
-    0x00,0x47,            /* bx r0              */
-#else
-    0x70,0x47             /* bx lr              */
-#endif
-    0x00,0xBF,            /* nop                */
-};
-
-void (*f)(void);
 
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -144,13 +81,6 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-#if 1
-  f =  (void(*)(void))(&delay_code[0]);
-  f();
-  delay();
-
-  crc = OW1_CalcCRC(&data[0], sizeof(data));
-#endif
   for(i=0;i<15;i++) { /* blink to indicate power up */
     LED1_Neg();
     WAIT1_Waitms(20);

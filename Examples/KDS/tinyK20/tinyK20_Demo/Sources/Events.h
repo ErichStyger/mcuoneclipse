@@ -63,13 +63,6 @@
 #include "RTT1.h"
 #include "XF1.h"
 #include "MCUC1.h"
-#include "OW1.h"
-#include "DQ1.h"
-#include "BitIoLdd5.h"
-#include "InputRB1.h"
-#include "DbgRd1.h"
-#include "BitIoLdd6.h"
-#include "DS1.h"
 #include "TGT_SWD_OE.h"
 #include "BitIoLdd8.h"
 
