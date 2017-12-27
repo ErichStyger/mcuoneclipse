@@ -44,6 +44,12 @@
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
+#include "RTT1.h"
+#include "WAIT1.h"
+#include "CLS1.h"
+#include "CS1.h"
+#include "XF1.h"
+#include "PTRC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -123,7 +129,7 @@ int main(void)
       "Main", /* task name for kernel awareness debugging */
       100, /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY,  /* initial priority */
+      tskIDLE_PRIORITY+2,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
     ) != pdPASS) {
     /*lint -e527 */
@@ -135,7 +141,7 @@ int main(void)
       "Led", /* task name for kernel awareness debugging */
       100, /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY,  /* initial priority */
+      tskIDLE_PRIORITY+1,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
     ) != pdPASS) {
     /*lint -e527 */
