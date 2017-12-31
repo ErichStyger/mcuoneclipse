@@ -32,12 +32,23 @@
 #include "Events.h"
 #include "WDog1.h"
 #include "WatchDogLdd1.h"
+#include "FRTOS1.h"
+#include "RTOSCNTRLDD1.h"
+#include "MCUC1.h"
+#include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+static void MainTask(void *pvParameters) {
+  (void)pvParameters; /* parameter not used */
+  for(;;) {
+    vTaskDelay(100/portTICK_RATE_MS);
+  }
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -51,6 +62,19 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+  if (xTaskCreate(
+      MainTask,  /* pointer to the task */
+      "Main", /* task name for kernel awareness debugging */
+      configMINIMAL_STACK_SIZE+500, /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY,  /* initial priority */
+      (xTaskHandle*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+  /*lint -e527 */
+     for(;;){} /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  vTaskStartScheduler();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

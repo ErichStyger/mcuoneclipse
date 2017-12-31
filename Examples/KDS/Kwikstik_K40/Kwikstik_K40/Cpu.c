@@ -2248,6 +2248,7 @@ void PE_low_level_init(void)
                 PORT_PCR_MUX(0x07)
                ));
         /* Initialization of the RCM module */
+#if 0 /* causes hard fault */
   /* RCM_RPFW: RSTFLTSEL=0 */
   RCM_RPFW &= (uint8_t)~(uint8_t)(RCM_RPFW_RSTFLTSEL(0x1F));
   /* RCM_RPFC: RSTFLTSS=0,RSTFLTSRW=0 */
@@ -2255,6 +2256,7 @@ void PE_low_level_init(void)
                RCM_RPFC_RSTFLTSS_MASK |
                RCM_RPFC_RSTFLTSRW(0x03)
               );
+#endif
         /* Initialization of the FTFL_FlashConfig module */
   /* SIM_SCGC7: MPU=1 */
   SIM_SCGC7 |= SIM_SCGC7_MPU_MASK;

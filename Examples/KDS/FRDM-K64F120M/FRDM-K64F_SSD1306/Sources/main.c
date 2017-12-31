@@ -47,8 +47,6 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "LCD1.h"
-#include "RESpin1.h"
-#include "BitIoLdd6.h"
 #include "KIN1.h"
 #include "FDisp1.h"
 #include "Helv8.h"
@@ -187,11 +185,11 @@ int main(void)
     GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_BLUE);
     x = 2; y = 2;
 
-    FDisp1_WriteString("Hello Helv8", GDisp1_COLOR_BLUE, &x, &y, Helv8_GetFont());
+    FDisp1_WriteString((uint8_t*)"Hello Helv8", GDisp1_COLOR_BLUE, &x, &y, Helv8_GetFont());
     x = 2; y+= Helv8_GetBoxHeight();
-    FDisp1_WriteString("Hello Helv10", GDisp1_COLOR_BLUE, &x, &y, Helv10_GetFont());
+    FDisp1_WriteString((uint8_t*)"Hello Helv10", GDisp1_COLOR_BLUE, &x, &y, Helv10_GetFont());
     x = 2; y+= Helv10_GetBoxHeight();
-    FDisp1_WriteString("Hello Helv12", GDisp1_COLOR_BLUE, &x, &y, Helv12_GetFont());
+    FDisp1_WriteString((uint8_t*)"Hello Helv12", GDisp1_COLOR_BLUE, &x, &y, Helv12_GetFont());
     GDisp1_UpdateFull();
     for(i=0; i<=255; i++) {
       LCD1_SetContrast(i); /* hmm? */
