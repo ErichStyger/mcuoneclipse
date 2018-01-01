@@ -3,7 +3,7 @@ readme.txt
 Project demonstrating using the Arduino Motor Shield R3.
 
 Toolchain: 
-- CodeWarrior for MCU10.3
+- CodeWarrior for MCU10.7
 
 Components:
 - FreeRTOS

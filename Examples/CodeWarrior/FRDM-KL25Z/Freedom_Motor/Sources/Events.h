@@ -40,6 +40,8 @@
 #include "FRTOS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "PWMA.h"
 #include "TU2.h"
 #include "BrakeA.h"
@@ -63,7 +65,7 @@ void Cpu_OnNMIINT(void);
 */
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

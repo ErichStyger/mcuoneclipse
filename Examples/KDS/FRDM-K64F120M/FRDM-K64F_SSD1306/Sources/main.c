@@ -141,12 +141,12 @@ int main(void)
   /* Write your local variable definition here */
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-  WAIT1_Waitms(500); /* delay for power up of display */
+  WAIT1_Waitms(1000); /* delay for power up of display */
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
 
-  Matrix();
+  //Matrix();
 
   /* Write your code here */
   //SSD1306_Init();

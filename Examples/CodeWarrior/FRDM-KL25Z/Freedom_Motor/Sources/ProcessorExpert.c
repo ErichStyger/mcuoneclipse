@@ -36,6 +36,8 @@
 #include "FRTOS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "PWMA.h"
 #include "TU2.h"
 #include "BrakeA.h"
