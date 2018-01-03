@@ -69,6 +69,8 @@
 #include "PWM0B.h"
 #include "BitIoLdd12.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {

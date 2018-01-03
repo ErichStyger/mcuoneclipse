@@ -29,6 +29,7 @@
 #include "TmDt1.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "FRTOS1.h"
 #include "SPI2.h"
 #include "Clock1.h"
 #include "BitIoLdd1.h"
@@ -55,6 +56,8 @@
 #include "GI2C1.h"
 #include "I2C3.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
 #include "PE_LDD.h"
@@ -95,7 +98,7 @@ void Cpu_OnNMIINT(void);
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)
@@ -110,7 +113,7 @@ void EVNT1_AppHandleEvent(byte event);
 ** ===================================================================
 */
 
-void S191_OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dataBufSize, void *data);
+void S191_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *dataBuf, uint8_t dataBufSize, void *data);
 /*
 ** ===================================================================
 **     Event       :  S191_OnSRecord (module Events)

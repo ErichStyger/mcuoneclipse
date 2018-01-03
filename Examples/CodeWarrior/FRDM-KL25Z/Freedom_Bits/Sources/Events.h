@@ -29,7 +29,7 @@
 #include "BLUE.h"
 #include "WAIT1.h"
 #include "GPIO1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "SW2.h"
 #include "PE_LDD.h"
 

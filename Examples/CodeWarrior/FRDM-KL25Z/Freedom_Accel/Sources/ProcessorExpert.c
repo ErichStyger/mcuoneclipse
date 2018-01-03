@@ -34,6 +34,7 @@
 #include "FMSTR1.h"
 #include "FMSTR_UART1.h"
 #include "WAIT1.h"
+#include "MCUC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

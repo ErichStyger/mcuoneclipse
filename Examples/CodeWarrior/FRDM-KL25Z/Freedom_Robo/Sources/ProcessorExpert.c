@@ -70,6 +70,8 @@
 #include "C26.h"
 #include "BitIoLdd28.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "LEDR.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"

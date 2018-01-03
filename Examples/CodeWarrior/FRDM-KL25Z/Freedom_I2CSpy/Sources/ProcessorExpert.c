@@ -38,6 +38,9 @@
 #include "CS1.h"
 #include "MCUC1.h"
 #include "XF1.h"
+#include "LED1.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
 #include "TMOUT1.h"
 #include "RTC1.h"
 #include "AD1.h"
@@ -65,7 +68,6 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  CLS1_SendStr((uint8_t*)test, CLS1_GetStdio());
   APP_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

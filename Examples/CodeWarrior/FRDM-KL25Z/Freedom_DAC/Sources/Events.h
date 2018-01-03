@@ -24,6 +24,8 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "DA1.h"
+#include "Inhr1.h"
+#include "DMA1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);

@@ -29,7 +29,7 @@
 #include "SCEpin1.h"
 #include "D_Cpin1.h"
 #include "SM1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);

@@ -20,6 +20,8 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "DA1.h"
+#include "Inhr1.h"
+#include "DMA1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

@@ -40,7 +40,7 @@
 #include "SM1.h"
 #include "SMasterLdd1.h"
 #include "UTIL1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "PE_LDD.h"
 
 void Cpu_OnNMIINT(void);

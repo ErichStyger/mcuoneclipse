@@ -62,7 +62,8 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #include "Platform.h"
 /*
@@ -102,7 +103,7 @@ void Cpu_OnNMIINT(void);
 void Cpu_OnLLSWakeUpINT(void);
 
 #if PL_HAS_RTOS
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 #endif
 /*
 ** ===================================================================

@@ -25,7 +25,7 @@
 #include "SCEpin1.h"
 #include "D_Cpin1.h"
 #include "SM1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -45,10 +45,10 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write some text */
-  PDC1_WriteLineStr(1, "Hello World");
-  PDC1_WriteLineStr(2, "from the");
-  PDC1_WriteLineStr(3, "KL25Z Freedom");
-  PDC1_WriteLineStr(4, "Board!");
+  PDC1_WriteLineStr(1, (uint8_t*)"Hello World");
+  PDC1_WriteLineStr(2, (uint8_t*)"from the");
+  PDC1_WriteLineStr(3, (uint8_t*)"KL25Z Freedom");
+  PDC1_WriteLineStr(4, (uint8_t*)"Board!");
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START

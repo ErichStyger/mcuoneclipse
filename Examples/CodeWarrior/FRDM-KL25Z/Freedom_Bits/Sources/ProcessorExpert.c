@@ -25,7 +25,7 @@
 #include "BLUE.h"
 #include "WAIT1.h"
 #include "GPIO1.h"
-#include "KSDK1.h"
+#include "MCUC1.h"
 #include "SW2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

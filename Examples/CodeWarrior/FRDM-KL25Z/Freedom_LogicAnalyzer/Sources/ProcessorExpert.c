@@ -33,6 +33,7 @@
 #include "DMA1.h"
 #include "DMACH1.h"
 #include "TU1.h"
+#include "MCUC1.h"
 #include "PWM1.h"
 #include "PwmLdd1.h"
 /* Including shared modules, which are used for whole project */

@@ -25,6 +25,7 @@
 #include "TmDt1.h"
 #include "SD1.h"
 #include "SS1.h"
+#include "FRTOS1.h"
 #include "SPI2.h"
 #include "Clock1.h"
 #include "BitIoLdd1.h"
@@ -51,6 +52,8 @@
 #include "GI2C1.h"
 #include "I2C3.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "SM1.h"
 #include "TMOUT1.h"
 /* Including shared modules, which are used for whole project */

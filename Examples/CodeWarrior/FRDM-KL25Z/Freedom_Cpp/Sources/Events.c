@@ -75,7 +75,7 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void EVNT1_AppHandleEvent(byte event)
+void EVNT1_AppHandleEvent(uint8_t event)
 {
   (void)event; /* only to avoid compiler warning about unused variable */
   /* Write your code here ... */
@@ -101,7 +101,7 @@ void EVNT1_AppHandleEvent(byte event)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void S191_OnSRecord(byte *returnCode, byte type, dword addr, byte *dataBuf, byte dataBufSize, void *data)
+void S191_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *dataBuf, uint8_t dataBufSize, void *data)
 {
   /* Write your code here ... */
 }

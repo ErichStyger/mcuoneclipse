@@ -46,6 +46,7 @@
 #include "BitIoLdd12.h"
 #include "DB71.h"
 #include "BitIoLdd13.h"
+#include "MCUC1.h"
 #include "UTIL1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
