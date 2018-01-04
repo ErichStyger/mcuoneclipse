@@ -101,6 +101,8 @@
 #include "BitIoLdd21.h"
 #include "RefCnt.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 #include "Platform.h"
 
 #ifdef __cplusplus
@@ -123,7 +125,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -247,6 +249,32 @@ void SMAC1_OnInterrupt(void);
 **     Component   :  TRSVR1 [MC13192]
 **     Description :
 **         Event raised in case of transceiver interrupt.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TRSVR1_DataIndication(void);
+/*
+** ===================================================================
+**     Event       :  TRSVR1_DataIndication (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event in case a data packet has been received.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void TRSVR1_ResetIndication(void);
+/*
+** ===================================================================
+**     Event       :  TRSVR1_ResetIndication (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event in case of transceiver reset.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

@@ -80,7 +80,7 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -244,6 +244,38 @@ void TU_US_OnChannel0(LDD_TUserData *UserDataPtr)
 ** ===================================================================
 */
 void SMAC1_OnInterrupt(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  TRSVR1_DataIndication (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event in case a data packet has been received.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TRSVR1_DataIndication(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  TRSVR1_ResetIndication (module Events)
+**
+**     Component   :  TRSVR1 [MC13192]
+**     Description :
+**         Event in case of transceiver reset.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TRSVR1_ResetIndication(void)
 {
   /* Write your code here ... */
 }
