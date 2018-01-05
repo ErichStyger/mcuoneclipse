@@ -134,25 +134,48 @@ static void Matrix(void) {
   }
 }
 
-/*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-int main(void)
-/*lint -restore Enable MISRA rule (6.3) checking. */
-{
-  /* Write your local variable definition here */
-
-  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-  WAIT1_Waitms(1000); /* delay for power up of display */
-  PE_low_level_init();
-  /*** End of Processor Expert internal initialization.                    ***/
-
-
+static void RunLCD(void) {
   //Matrix();
 
-  /* Write your code here */
-  //SSD1306_Init();
-  LCD1_Clear();
-  SSD1306_PrintString("hello World!");
+  GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
+  GDisp1_DrawBox(0, 0, 64, 8, 1, GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
+  GDisp1_DrawBox(0, 8, 64, 8, 1, GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
+  GDisp1_DrawBox(0, 16, 64, 8, 1, GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
+  GDisp1_DrawBox(0, 24, 64, 8, 1, GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
+
+
+//  GDisp1_UpdateFull();
+//  GDisp1_DrawBox(0, 0, 64, 5, 1, GDisp1_COLOR_BLUE);
+//  GDisp1_DrawHLine(0,0,15,GDisp1_COLOR_BLUE);
+//  GDisp1_UpdateFull();
+
+  GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
+  GDisp1_UpdateFull();
+  GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
+
   GDisp1_Clear();
+  GDisp1_UpdateFull();
+
+
+
+  LED2_On();
+
+  LCD1_Clear();
+  LCD1_PrintString("hello World!\n");
+  LCD1_PrintString("this is on a 2nd line\n");
+  LCD1_PrintString("this is on a 3rd line\n");
+
+  GDisp1_Clear();
+  GDisp1_UpdateFull();
+
+  GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_BLACK);
+  GDisp1_UpdateFull();
+  GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_BLUE);
   GDisp1_UpdateFull();
 
   GDisp1_Clear();
@@ -176,6 +199,7 @@ int main(void)
     int i;
     FDisp1_PixelDim x, y;
 
+    LED2_Neg();
     //GDisp1_Clear();
     /* clear display */
     GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
@@ -191,14 +215,6 @@ int main(void)
     x = 2; y+= Helv10_GetBoxHeight();
     FDisp1_WriteString((uint8_t*)"Hello Helv12", GDisp1_COLOR_BLUE, &x, &y, Helv12_GetFont());
     GDisp1_UpdateFull();
-    for(i=0; i<=255; i++) {
-      LCD1_SetContrast(i); /* hmm? */
-      WAIT1_Waitms(10);
-    }
-    LCD1_DisplayOn(FALSE);
-    LCD1_DisplayOn(TRUE);
-    LCD1_DisplayInvert(TRUE);
-    LCD1_DisplayInvert(FALSE);
   }
 
   GDisp1_DrawBox(2, 2, 20, 8, 1, GDisp1_COLOR_WHITE);
@@ -211,6 +227,21 @@ int main(void)
     }
     GDisp1_UpdateFull();
   }
+}
+
+/*lint -save  -e970 Disable MISRA rule (6.3) checking. */
+int main(void)
+/*lint -restore Enable MISRA rule (6.3) checking. */
+{
+  /* Write your local variable definition here */
+
+  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+  PE_low_level_init();
+  /*** End of Processor Expert internal initialization.                    ***/
+  LED1_On();
+  WAIT1_Waitms(10);
+  LED1_Off();
+  RunLCD();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
