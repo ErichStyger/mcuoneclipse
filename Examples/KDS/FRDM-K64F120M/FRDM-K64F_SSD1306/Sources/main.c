@@ -136,6 +136,10 @@ static void Matrix(void) {
 
 static void RunLCD(void) {
   //Matrix();
+  LCD1_Clear();
+  LCD1_PrintString("hello World!\n");
+  LCD1_PrintString("this is on a 2nd line\n");
+  LCD1_PrintString("this is on a 3rd line\n");
 
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
   GDisp1_DrawBox(0, 0, 64, 8, 1, GDisp1_COLOR_BLUE);
@@ -147,30 +151,9 @@ static void RunLCD(void) {
   GDisp1_DrawBox(0, 24, 64, 8, 1, GDisp1_COLOR_BLUE);
   GDisp1_UpdateFull();
 
-
-//  GDisp1_UpdateFull();
-//  GDisp1_DrawBox(0, 0, 64, 5, 1, GDisp1_COLOR_BLUE);
-//  GDisp1_DrawHLine(0,0,15,GDisp1_COLOR_BLUE);
-//  GDisp1_UpdateFull();
-
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLUE);
-  GDisp1_UpdateFull();
-
-  GDisp1_Clear();
-  GDisp1_UpdateFull();
-
-
-
-  LED2_On();
-
-  LCD1_Clear();
-  LCD1_PrintString("hello World!\n");
-  LCD1_PrintString("this is on a 2nd line\n");
-  LCD1_PrintString("this is on a 3rd line\n");
-
-  GDisp1_Clear();
   GDisp1_UpdateFull();
 
   GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_BLACK);
