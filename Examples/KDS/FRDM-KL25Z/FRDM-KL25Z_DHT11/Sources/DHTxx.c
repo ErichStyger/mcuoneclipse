@@ -107,7 +107,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
    * byte 5: checksum, the sum of byte 1 + 2 + 3 + 4
    */
   /* test CRC */
-  if (buffer[0]+buffer[1]+buffer[2]+buffer[3]!=buffer[4]) {
+  if ((uint8_t)(buffer[0]+buffer[1]+buffer[2]+buffer[3])!=buffer[4]) {
     return DHTxx_BAD_CRC;
   }
   /* store data values for caller */
