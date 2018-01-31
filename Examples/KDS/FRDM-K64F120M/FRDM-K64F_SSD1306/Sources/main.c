@@ -47,6 +47,8 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "LCD1.h"
+#include "RESpin1.h"
+#include "BitIoLdd6.h"
 #include "KIN1.h"
 #include "FDisp1.h"
 #include "Helv8.h"
@@ -61,7 +63,24 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "SSD1306.h"
+
+static uint8_t len = 3;
+
+int TestDynamicArray(void) {
+  int32_t array[len];
+  int32_t array2[4*len];
+  int32_t i, sum = 0;
+
+  for(i=0;i<sizeof(array)/sizeof(array[0]);i++) {
+    array[i] = i;
+    sum++;
+  }
+  for(i=0;i<sizeof(array2)/sizeof(array2[0]);i++) {
+    array2[i] =  i;
+    sum++;
+  }
+  return sum;
+}
 
 static void Matrix(void) {
   int x,y;
@@ -136,11 +155,16 @@ static void Matrix(void) {
 
 static void RunLCD(void) {
   //Matrix();
-  LCD1_Clear();
-  LCD1_PrintString("hello World!\n");
-  LCD1_PrintString("this is on a 2nd line\n");
-  LCD1_PrintString("this is on a 3rd line\n");
+  //LCD1_Clear();
+  //LCD1_PrintString("hello World!\n");
+  //LCD1_PrintString("this is on a 2nd line\n");
+  //LCD1_PrintString("this is on a 3rd line\n");
+  GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
+  GDisp1_UpdateFull();
+  GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLUE);
+  GDisp1_UpdateFull();
 
+  GDisp1_Clear();
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
   GDisp1_DrawBox(0, 0, 64, 8, 1, GDisp1_COLOR_BLUE);
   GDisp1_UpdateFull();
@@ -183,7 +207,7 @@ static void RunLCD(void) {
     FDisp1_PixelDim x, y;
 
     LED2_Neg();
-    //GDisp1_Clear();
+    GDisp1_Clear();
     /* clear display */
     GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
     GDisp1_UpdateFull();
@@ -221,6 +245,7 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+  TestDynamicArray();
   LED1_On();
   WAIT1_Waitms(10);
   LED1_Off();

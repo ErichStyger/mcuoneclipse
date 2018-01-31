@@ -50,6 +50,8 @@
 #include "WAIT1.h"
 #include "UTIL1.h"
 #include "LCD1.h"
+#include "RESpin1.h"
+#include "BitIoLdd6.h"
 #include "KIN1.h"
 #include "FDisp1.h"
 #include "Helv8.h"
@@ -76,38 +78,6 @@ extern "C" {
 /* ===================================================================*/
 void Cpu_OnNMI(void);
 
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnReceiveData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C1_OnReceiveData(void);
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnTransmitData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C1_OnTransmitData(void);
 
 void GI2C1_OnRequestBus(void);
 /*
@@ -149,6 +119,38 @@ void GI2C1_OnError(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnReceiveData (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when I2C finishes the reception of the
+**         data successfully. This event is not available for the SLAVE
+**         mode and if both RecvChar and RecvBlock are disabled. This
+**         event is enabled only if interrupts/events are enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnReceiveData(void);
+
+/*
+** ===================================================================
+**     Event       :  I2C1_OnTransmitData (module Events)
+**
+**     Component   :  I2C1 [InternalI2C]
+**     Description :
+**         This event is invoked when I2C finishes the transmission of
+**         the data successfully. This event is not available for the
+**         SLAVE mode and if both SendChar and SendBlock are disabled.
+**         This event is enabled only if interrupts/events are enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void I2C1_OnTransmitData(void);
 
 /* END Events */
 

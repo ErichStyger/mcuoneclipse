@@ -751,7 +751,7 @@ void LEDFRAME_Init(void) {
   if (xTaskCreate(
         LedFrameTask,  /* pointer to the task */
         "LedFrame", /* task name for kernel awareness debugging */
-        (600/4), /* task stack size */
+        (500/sizeof(StackType_t)), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
         &LedFrameTaskHandle /* task handle to create */

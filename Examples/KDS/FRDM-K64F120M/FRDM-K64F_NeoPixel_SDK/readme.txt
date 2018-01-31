@@ -11,3 +11,8 @@ See the following articles for details:
 
 The project root contains a test file (S19, Motorola S-Record). It is driving three pixels: one in green, one in red and one in blue.
 This file can be used to test your hardware. Output of the signal is on PTD.
+
+
+TWANG Game:
+https://github.com/Critters/TWANG
+https://hackaday.com/2018/01/24/diy-dungeon-crawler-game-plays-on-single-led-strip/
