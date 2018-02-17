@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : tinyK22_Demo      */
 /*##                                   */
-/*##     Processor : MK22FN512VDC12    */
+/*##     Processor : MK22FN512VLH12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2017-12-07, 07:33, # CodeGen: 0 */
+/*##     Date/Time : 2018-02-17, 18:04, # CodeGen: 1 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

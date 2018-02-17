@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : tinyK22_Demo
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLH12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2017-12-07, 07:33, # CodeGen: 0
@@ -34,6 +34,16 @@
 #include "FRTOS1.h"
 #include "MCUC1.h"
 #include "UTIL1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "WAIT1.h"
+#include "RTT1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "CS1.h"
+#include "KIN1.h"
+#include "SYS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -42,6 +52,8 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -54,6 +66,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  APP_Run();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

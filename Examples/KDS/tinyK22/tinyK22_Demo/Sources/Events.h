@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.h
 **     Project     : tinyK22_Demo
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLH12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -37,6 +37,16 @@
 #include "FRTOS1.h"
 #include "MCUC1.h"
 #include "UTIL1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "WAIT1.h"
+#include "RTT1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "CS1.h"
+#include "KIN1.h"
+#include "SYS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -113,6 +123,23 @@ void FRTOS1_vApplicationIdleHook(void);
 **         If enabled, this hook will be called when the RTOS is idle.
 **         This might be a good place to go into low power mode.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+**     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
+**
+**     Component   :  FRTOS1 [FreeRTOS]
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */
