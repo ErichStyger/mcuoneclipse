@@ -40,6 +40,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   Data_SetInput();
   WAIT1_Waitus(50);
   if(Data_GetVal()==0) {
+    ExitCritical(); /* re-enabling interrupts */
     return DHTxx_NO_PULLUP;
   }
   /* send start signal */
@@ -50,6 +51,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   WAIT1_Waitus(50);
   /* check for acknowledge signal */
   if (Data_GetVal()!=0) { /* signal must be pulled low by the sensor */
+    ExitCritical(); /* re-enabling interrupts */
     return DHTxx_NO_ACK_0;
   }
   /* wait max 100 us for the ack signal from the sensor */
@@ -57,6 +59,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   while(Data_GetVal()==0) { /* wait until signal goes up */
     WAIT1_Waitus(5);
     if (--cntr==0) {
+      ExitCritical(); /* re-enabling interrupts */
       return DHTxx_NO_ACK_1; /* signal should be up for the ACK here */
     }
   }
@@ -65,6 +68,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
   while(Data_GetVal()!=0) { /* wait until signal goes down */
     WAIT1_Waitus(5);
     if (--cntr==0) {
+      ExitCritical(); /* re-enabling interrupts */
       return DHTxx_NO_ACK_0; /* signal should be down to zero again here */
     }
   }
@@ -77,6 +81,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
     while(Data_GetVal()==0) {
       WAIT1_Waitus(5);
       if (--cntr==0) {
+        ExitCritical(); /* re-enabling interrupts */
         return DHTxx_NO_DATA_0;
       }
     }
@@ -84,6 +89,7 @@ DHTxx_ErrorCode DHTxx_Read(uint16_t *temperatureCentigrade, uint16_t *humidityCe
     while(Data_GetVal()!=0) {
       WAIT1_Waitus(5);
       if (--cntr==0) {
+        ExitCritical(); /* re-enabling interrupts */
         return DHTxx_NO_DATA_1;
       }
     }
