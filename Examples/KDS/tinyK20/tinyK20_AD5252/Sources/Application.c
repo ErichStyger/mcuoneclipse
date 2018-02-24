@@ -61,8 +61,8 @@ static void ADCTask(void *pv) {
       for(;;){}
     }
     val8u = val16u>>8;
-//    CLS1_SendNum8u(val8u, CLS1_GetStdio()->stdOut);
-//    CLS1_SendStr("\r\n", CLS1_GetStdio()->stdOut);
+    CLS1_SendNum8u(val8u, CLS1_GetStdio()->stdOut);
+    CLS1_SendStr("\r\n", CLS1_GetStdio()->stdOut);
 #if 1
     if (AD5141_WriteRDACReg(val8u)!=ERR_OK) {
       CLS1_SendStr("FAILED writing AD5141!\r\n", CLS1_GetStdio()->stdOut);
