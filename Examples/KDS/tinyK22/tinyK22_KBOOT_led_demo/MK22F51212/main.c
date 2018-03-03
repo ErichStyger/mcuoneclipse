@@ -31,36 +31,12 @@
 #include "fsl_device_registers.h"
 #include "milliseconds_delay.h"
 
-#if defined(TOWER)
-#define LED1_OFFSET 4
-#define LED2_OFFSET 5
-#define LED3_OFFSET 6
-#define LED4_OFFSET 7
+#define LED_COUNT 1 /* number of LEDs */
 
-#define DELAY_1MS (1000)
-#define LED_COUNT 4
-
-static uint8_t led_offset[LED_COUNT] = { LED1_OFFSET, LED2_OFFSET, LED3_OFFSET, LED4_OFFSET };
-static PORT_Type *led_port[LED_COUNT] = { PORTD, PORTD, PORTD, PORTD };
-static GPIO_Type *led_gpio[LED_COUNT] = { GPIOD, GPIOD, GPIOD, GPIOD };
-#endif // TOWER
-
-#if defined(FREEDOM)
-#define LED1_OFFSET 1
-#define LED2_OFFSET 2
-#if 0
-#define LED3_OFFSET 5
-#else
-#define LED3_OFFSET 7
-#endif
-
-#define DELAY_1MS (1000)
-#define LED_COUNT 3
-
-static uint8_t led_offset[LED_COUNT] = { LED1_OFFSET, LED2_OFFSET, LED3_OFFSET };
-static PORT_Type *led_port[LED_COUNT] = { PORTA, PORTA, PORTD };
-static GPIO_Type *led_gpio[LED_COUNT] = { GPIOA, GPIOA, GPIOD };
-#endif // FREEDOM
+/* LED is on PTC2 */
+static const uint8_t led_offset[LED_COUNT] = { 2 };
+static PORT_Type *const led_port[LED_COUNT] = { PORTC };
+static GPIO_Type *const led_gpio[LED_COUNT] = { GPIOC };
 
 static void init_hardware(void) {
     SIM->SCGC5 |= (SIM_SCGC5_PORTA_MASK | SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTC_MASK | SIM_SCGC5_PORTD_MASK |
@@ -69,8 +45,7 @@ static void init_hardware(void) {
     SIM->SOPT2 |= SIM_SOPT2_PLLFLLSEL_MASK; // set PLLFLLSEL to select the PLL for this clock source
 
     uint8_t i;
-    for (i = 0; i < LED_COUNT; i++)
-    {
+    for (i = 0; i < LED_COUNT; i++) {
         // Enable the LED pins GPIO
         led_port[i]->PCR[led_offset[i]] = PORT_PCR_MUX(1);
         // Set ports to outputs
@@ -80,58 +55,30 @@ static void init_hardware(void) {
 
 static void led_toggle(uint32_t led)
 {
-#if 0
-    uint8_t i = 0;
-    // led OFF
-    for (i = 0; i < LED_COUNT; i++)
-    {
-        led_gpio[i]->PDOR |= (uint32_t)(1 << led_offset[i]);
-    }
-    // led ON
-    led_gpio[leds]->PDOR &= (uint32_t) ~(1 << led_offset[leds]);
-#else
     led_gpio[led]->PTOR |= (uint32_t) (1 << led_offset[led]);
-#endif
 }
 
 static void led_off(uint32_t led) {
     led_gpio[led]->PSOR |= (uint32_t) (1 << led_offset[led]);
 }
 
-void delay(void)
-{
+void delay(void) {
     volatile uint32_t delayTicks = 2000000;
 
-    while (delayTicks--)
-    {
+    while (delayTicks--) {
         __ASM("nop");
     }
 }
 
-int main(void)
-{
+int main(void) {
     init_hardware();
     // Note: for ROM development, use this version of delay function,
     // Which is in order to test if the VTCOR is correct.
     milliseconds_delay_init();
-    uint32_t leds;
-
     led_off(0);
-    led_off(1);
-    led_off(2);
-  //  leds = 0; /* red */
-  //  leds = 1; /* green */
-    leds = 2; /* blue */
     while (1)
     {
-        led_toggle(leds);
-        milliseconds_delay(DELAY_1MS);
-#if 0
-        ++leds;
-        if (leds == LED_COUNT)
-        {
-            leds = 0;
-        }
-#endif
+        led_toggle(0);
+        milliseconds_delay(500);
     }
 }

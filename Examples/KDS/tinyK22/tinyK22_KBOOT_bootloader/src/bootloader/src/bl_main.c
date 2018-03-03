@@ -298,7 +298,9 @@ static peripheral_descriptor_t const *get_active_peripheral(void)
         {
             assert(peripheral->controlInterface->init);
 
+#if DEBUG && !DEBUG_PRINT_DISABLE
             debug_printf("Initing %s\r\n", get_peripheral_name(peripheral->typeMask));
+#endif
             peripheral->controlInterface->init(peripheral, peripheral->packetInterface->byteReceivedCallback);
         }
     }

@@ -102,7 +102,7 @@
 //! is treated as a 32-bit little endian value.
 #define FOUR_CHAR_CODE(a, b, c, d) (((d) << 24) | ((c) << 16) | ((b) << 8) | ((a)))
 
-#if (defined(DEBUG) || defined(_DEBUG)) && !defined(DEBUG_PRINT_DISABLE)
+#if ((defined(DEBUG) && DEBUG==1) || defined(_DEBUG)) && !defined(DEBUG_PRINT_DISABLE)
 static inline void debug_printf(const char *format, ...);
 
 //! @brief Debug print utility.

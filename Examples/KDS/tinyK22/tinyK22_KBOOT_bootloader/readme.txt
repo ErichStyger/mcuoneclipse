@@ -8,8 +8,8 @@ To connect to the bootloader, use the KinetisFlashTool with
 - I2C1: SCL PTC10, SDA PTC11 (BL_ENABLE_PINMUX_I2C1)
 
 To enter bootloader mode:
-- reset (after 5 seconds it will boot application if present
-- press SW3 during power-on (SW3 is outermost push button near the target USB port)
+- reset (after 5 seconds it will boot application if applicatin is present
+- press bootloader pin (SW3 on FRDM-K22F) during power-on (SW3 is outermost push button near the target USB port)
 
 
 C:\nxp\NXP_Kinetis_Bootloader_2_0_0\bin\Tools\blhost\win\blhost --port COM6 -d get-property 2

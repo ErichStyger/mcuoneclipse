@@ -46,12 +46,10 @@
 #define BOOT_PIN_ALT_MODE 1
 #endif
 
-#ifdef FREEDOM
 #define BOOT_PIN_NUMBER 17
 #define BOOT_PIN_PORT PORTB
 #define BOOT_PIN_GPIO GPIOB
 #define BOOT_PIN_ALT_MODE 1
-#endif
 
 #define BOOT_PIN_DEBOUNCE_READ_COUNT 500
 

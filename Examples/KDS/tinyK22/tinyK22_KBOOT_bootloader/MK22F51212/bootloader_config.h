@@ -41,10 +41,10 @@
 //@{
 
 #if !defined(BL_CONFIG_SCUART)
-#define BL_CONFIG_SCUART (1)
+#define BL_CONFIG_SCUART (0)
 #endif
 #if !defined(BL_CONFIG_I2C)
-#define BL_CONFIG_I2C (1)
+#define BL_CONFIG_I2C (0)
 #endif
 #if !defined(BL_CONFIG_DSPI)
 #define BL_CONFIG_DSPI (0)
