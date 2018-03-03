@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>tinyK22_KBOOT_led_demo</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>com.freescale.processorexpert.core.expertprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>com.freescale.processorexpert.core.expertprojectnature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+	</natures>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-2-ECLIPSE_HOME%7D/NXP_Kinetis_Bootloader_2_0_0/apps/led_demo/MK22F51212</value>
+		</variable>
+		<variable>
+			<name>copy_PARENT1</name>
+			<value>$%7BPARENT-1-copy_PARENT%7D</value>
+		</variable>
+		<variable>
+			<name>copy_PARENT12</name>
+			<value>$%7BPARENT-2-copy_PARENT1%7D</value>
+		</variable>
+	</variableList>
+</projectDescription>
