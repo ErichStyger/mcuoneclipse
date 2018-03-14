@@ -292,9 +292,9 @@ __isr_vector:
 //__bootloaderConfigurationArea ; 0x3c0
 //    .long     'kcfg'        // [00:03] tag - Tag value used to validate the bootloader configuration data. Must be set to 'kcfg'
         .long     0x6766636b
-        .long     0xFFFFFFFF    // [04:07] crcStartAddress
-        .long     0xFFFFFFFF    // [08:0b] crcByteCount
-        .long     0xFFFFFFFF    // [0c:0f] crcExpectedValue
+        .long     0x0000C400    // [04:07] crcStartAddress
+        .long     0x00000C00    // [08:0b] crcByteCount
+        .long     0x52E406B8    // [0c:0f] crcExpectedValue
         .byte     0xFF          // [10:10] enabledPeripherals
         .byte     0xFF          // [11:11] i2cSlaveAddress
         .short    5000          // [12:13] peripheralDetectionTimeoutMs - Timeout in milliseconds for peripheral detection before jumping to application code

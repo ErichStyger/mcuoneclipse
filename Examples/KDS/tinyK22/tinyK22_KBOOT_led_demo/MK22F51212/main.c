@@ -79,6 +79,6 @@ int main(void) {
     while (1)
     {
         led_toggle(0);
-        milliseconds_delay(500);
+        milliseconds_delay(1);
     }
 }
