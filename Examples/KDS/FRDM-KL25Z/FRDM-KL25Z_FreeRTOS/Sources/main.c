@@ -74,10 +74,16 @@ static void Task1(void *pvParameters) {
 #endif
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
-int main(void)
+void main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
+  uint8_t buf[16];
+
+  UTIL1_NumFloatToStr(buf, sizeof(buf), -1.00072527, 3);
+  UTIL1_NumFloatToStr(buf, sizeof(buf), -0.00072527, 3);
+  UTIL1_NumFloatToStr(buf, sizeof(buf), -0.00172527, 3);
+
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
