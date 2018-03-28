@@ -4,15 +4,15 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.084, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-12-10, 10:35, # CodeGen: 179
+**     Date/Time   : 2018-03-28, 08:58, # CodeGen: 225
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : RTT1
-**          Version                                        : V5.10u
+**          Version                                        : V6.22c
 **          Number of Up Channels                          : 3
 **          Number of Down Channels                        : 3
 **          Max Blocked Interrupt Level                    : 3
@@ -29,6 +29,9 @@
 **            Printf Buffer Size                           : 64
 **          SDK                                            : MCUC1
 **          Shell                                          : CLS1
+**          Source Folders                                 : 
+**            Source Folder                                : 
+**            Config Folder                                : 
 **     Contents    :
 **         Read             - int RTT1_Read(unsigned BufferIndex, const char* pBuffer, unsigned NumBytes);
 **         Write            - int RTT1_Write(unsigned BufferIndex, char* pBuffer, unsigned BufferSize);
@@ -51,7 +54,7 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-**     * (c) Copyright Segger, 2016
+**     * (c) Copyright Segger, 2018
 **      * http      : www.segger.com
 **      * See separate Segger licensing terms.
 **      *

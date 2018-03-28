@@ -7,7 +7,7 @@
 **     Version     : Component 01.111, Driver 01.08, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-07-07, 11:18, # CodeGen: 165
+**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
 **     Abstract    :
 **         This component "SPIMaster_LDD" implements MASTER part of synchronous
 **         serial master-slave communication.

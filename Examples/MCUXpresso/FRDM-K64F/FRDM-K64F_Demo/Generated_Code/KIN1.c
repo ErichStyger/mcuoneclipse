@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-01-06, 12:32, # CodeGen: 222
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,6 @@
 **         UIDGet                 - uint8_t KIN1_UIDGet(KIN1_UID *uid);
 **         UIDSame                - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
 **         UIDtoString            - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
-**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **         GetKinetisFamilyString - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
 **         GetPC                  - void* KIN1_GetPC(void);
 **         GetSP                  - void* KIN1_GetSP(void);
@@ -32,6 +31,7 @@
 **         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
 **         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
 **         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
+**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **
 **     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -74,11 +74,16 @@
 /* MODULE KIN1. */
 
 #include "KIN1.h"
-#include <stddef.h> /* for size_t */
-#if MCUC1_CONFIG_NXP_SDK_USED
+#include "UTIL1.h" /* various utility functions */
+#if MCUC1_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_sim.h" /* system integration module */
+#elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_1_3
+  #include "Cpu.h" /* include CPU related interfaces and defines */
+#elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+  /* include device specific header file for CMSIS inside "KIN1config.h" */
 #endif
 
+#if MCUC1_CONFIG_CPU_IS_KINETIS
 #if MCUC1_CONFIG_CORTEX_M==4
 static const unsigned char *KinetisM4FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
@@ -106,29 +111,36 @@ static const unsigned char *KinetisM0FamilyStrings[] =
   (const unsigned char *)"Reserved"       /* 0111 */
 };
 #endif
+#endif
 
+#if KIN1_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const CLS1_StdIOType *io)
 {
+#if MCUC1_CONFIG_CPU_IS_KINETIS
   uint8_t buf[1+(16*5)+1+1]; /* "{0xAA,...0xBB}" */
   uint8_t res;
   KIN1_UID uid;
+#endif
 
   CLS1_SendStatusStr((unsigned char*)"KIN1", (unsigned char*)"\r\n", io->stdOut);
+#if MCUC1_CONFIG_CPU_IS_KINETIS
   res = KIN1_UIDGet(&uid);
   if (res==ERR_OK) {
     res = KIN1_UIDtoString(&uid, buf, sizeof(buf));
   }
   if (res!=ERR_OK) {
-    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR");
   }
   CLS1_SendStatusStr((unsigned char*)"  UID", buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-
+#endif
   CLS1_SendStatusStr((unsigned char*)"  Family", (uint8_t*)KIN1_GetKinetisFamilyString(), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
 }
+#endif
 
+#if KIN1_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintHelp(const CLS1_StdIOType *io)
 {
   CLS1_SendHelpStr((unsigned char*)"KIN1", (unsigned char*)"Group of KIN1 commands\r\n", io->stdOut);
@@ -136,6 +148,7 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io)
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;
 }
+#endif
 
 /*
 ** ===================================================================
@@ -153,10 +166,12 @@ void KIN1_SoftwareReset(void)
      To write to this register, you must write 0x5FA to the VECTKEY field, otherwise the processor ignores the write.
      SYSRESETREQ will cause a system reset asynchronously, so need to wait afterwards.
    */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
 #if MCUC1_CONFIG_PEX_SDK_USED
   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
 #else
   SCB->AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
+#endif
 #endif
   for(;;) {
     /* wait until reset */
@@ -182,7 +197,8 @@ void KIN1_SoftwareReset(void)
  */
 uint8_t KIN1_UIDGet(KIN1_UID *uid)
 {
-#if MCUC1_CONFIG_NXP_SDK_USED
+#if MCUC1_CONFIG_CPU_IS_KINETIS
+#if MCUC1_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
   int i, j;
 
@@ -265,6 +281,10 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
 #endif
 #endif /* SDK V2.0 */
   return ERR_OK;
+#else
+  (void)uid; /* not used */
+  return ERR_FAILED;
+#endif
 }
 
 /*
@@ -350,6 +370,7 @@ uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize)
 **         ---             - Error code
 ** ===================================================================
 */
+#if KIN1_CONFIG_PARSE_COMMAND_ENABLED
 uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io)
 {
   uint8_t res = ERR_OK;
@@ -370,6 +391,7 @@ uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
   }
   return res;
 }
+#endif
 
 /*
 ** ===================================================================
@@ -383,23 +405,24 @@ uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 */
 KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
 {
+#if MCUC1_CONFIG_CPU_IS_KINETIS
 #if MCUC1_CONFIG_CORTEX_M==0
   #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
     val = (SIM_SDID>>28)&0x3; /* bits 30..28 */
-    if (val>=0 && val<=(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
       return KinetisM0FamilyStrings[val];
     } else {
-      return (KIN1_ConstCharPtr)"M0 Family Id out of bounds!";
+      return (KIN1_ConstCharPtr)"M0 Family ID out of bounds!";
     }
   #elif defined(SIM_SRSID_FAMID) /* MKE02Z4 defines this, hopefully all other KE too... */
-    return "KE0x Family"; /* 0000 only KE0x supported */
+    return (KIN1_ConstCharPtr)"KE0x Family"; /* 0000 only KE0x supported */
   #elif defined(SIM_SDID_FAMID)
     int32_t val;
 
     val = ((SIM->SDID)>>28)&0xF; /* bits 31..28 */
-    if (val>=0 && val<=(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM0FamilyStrings)/sizeof(KinetisM0FamilyStrings[0]))) {
       return KinetisM0FamilyStrings[val];
     } else {
       return (KIN1_ConstCharPtr)"M0 Family ID out of bounds!";
@@ -409,19 +432,36 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     return (KIN1_ConstCharPtr)"ERROR";
   #endif
 #elif MCUC1_CONFIG_CORTEX_M==4
-  int32_t val;
+  #ifdef SIM_SDID /* normal Kinetis define this */
+    int32_t val;
 
-  val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
-  if (val>=0 && val<=(sizeof(KinetisM4FamilyStrings)/sizeof(KinetisM4FamilyStrings[0]))) {
-    return KinetisM4FamilyStrings[val];
-  } else {
-    return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";
-  }
+    val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM4FamilyStrings)/sizeof(KinetisM4FamilyStrings[0]))) {
+      return KinetisM4FamilyStrings[val];
+    } else {
+      return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";
+    }
+  #elif defined(SIM_SDID_FAMID)
+    int32_t val;
+
+    val = ((SIM->SDID)>>4)&0x3; /* bits 6..4 */
+    if (val>=0 && val<=(int32_t)(sizeof(KinetisM4FamilyStrings)/sizeof(KinetisM4FamilyStrings[0]))) {
+      return KinetisM4FamilyStrings[val];
+    } else {
+      return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";
+    }
+  #else
+    #error "Unknown architecture!"
+    return (KIN1_ConstCharPtr)"ERROR";
+  #endif
 #elif MCUC1_CONFIG_CORTEX_M==7
   return (KIN1_ConstCharPtr)"Cortex-M7";
 #else
   #error "Unknown architecture!"
   return (KIN1_ConstCharPtr)"ERROR";
+#endif
+#else
+  return (KIN1_ConstCharPtr)"NOT KINETIS";
 #endif
 }
 

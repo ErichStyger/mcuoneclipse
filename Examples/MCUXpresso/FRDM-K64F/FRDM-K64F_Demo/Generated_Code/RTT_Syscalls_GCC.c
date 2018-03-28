@@ -41,12 +41,13 @@ int _write(int file, char *ptr, int len);
 *   including stdout.
 *   Write data via RTT.
 */
-#if 0
+#if 0 /* << EST : not implementing it, as it might conflict with semihosting I/O */
 int _write(int file, char *ptr, int len) {
   (void) file;  /* Not used, avoid warning */
   SEGGER_RTT_Write(0, ptr, len);
   return len;
 }
 #endif
+
 /****** End Of File *************************************************/
 

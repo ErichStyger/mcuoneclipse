@@ -4,20 +4,21 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.079, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-03-28, 09:38, # CodeGen: 226
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
 **          Component name                                 : WAIT1
+**          SDK                                            : MCUC1
 **          Use Cycle Counter                              : Enabled
 **            Cortex Tools                                 : KIN1
-**          SDK                                            : MCUC1
 **          Manual Clock Values                            : Disabled
 **          Delay100usFunction                             : Delay100US
-**          RTOS                                           : Disabled
+**          RTOS                                           : Enabled
+**            RTOS                                         : FRTOS1
 **          Watchdog                                       : Disabled
 **     Contents    :
 **         Wait10Cycles   - void WAIT1_Wait10Cycles(void);
@@ -83,14 +84,19 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-__attribute__((naked, no_instrument_function)) void WAIT1_Wait10Cycles(void)
+#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+  __attribute__((naked))
+#else
+  __attribute__((naked, no_instrument_function))
+#endif
+void WAIT1_Wait10Cycles(void)
 {
   /* This function will wait 10 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
   /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
   /* Compiler is GNUC */
   __asm (
-   /* bl Wai10Cycles() to here: [4] */
+   /* bl Wait10Cycles() to here: [4] */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -108,7 +114,14 @@ __attribute__((naked, no_instrument_function)) void WAIT1_Wait10Cycles(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-__attribute__((naked, no_instrument_function)) void WAIT1_Wait100Cycles(void)
+#ifdef __GNUC__
+#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+  __attribute__((naked))
+#else
+  __attribute__((naked, no_instrument_function))
+#endif
+#endif
+void WAIT1_Wait100Cycles(void)
 {
   /* This function will spend 100 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
@@ -283,6 +296,8 @@ void WAIT1_Init(void)
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
   /* init cycle counter */
   KIN1_InitCycleCounter();
+  KIN1_ResetCycleCounter();
+  KIN1_EnableCycleCounter();
 #endif
 }
 

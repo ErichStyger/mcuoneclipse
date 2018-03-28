@@ -42,8 +42,6 @@
   #include "MidiMusic.h"
 #endif
 
-#include "gcov_support.h"
-
 static xTimerHandle timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
 
@@ -86,7 +84,7 @@ void APP_OnKeyReleasedLong(uint8_t keys) {
     CLS1_SendStr((uint8_t*)"MIDI Music: skip and play next title.\r\n", CLS1_GetStdio()->stdOut);
     MM_StopPlaying();
     vTaskDelay(pdMS_TO_TICKS(500));
-    MM_IncreaseSongNumber(); /* next song */
+    MM_NextSongNumber(); /* next song */
     MM_PlayMusic(-1);
     vTaskDelay(pdMS_TO_TICKS(500));
 #endif
@@ -247,15 +245,14 @@ int TestMiniIni(void) {
 
   return 0;
 }
+
 #endif
 
 static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_ACCELEROMETER
   int16_t xmg, ymg;
 #endif
-#if GCOV_DO_COVERAGE
-  bool writeCoverage = FALSE;
-#endif
+
   (void)pvParameters; /* parameter not used */
 #if 0 && PL_HAS_MINI_INI
   TestMiniIni();
@@ -271,15 +268,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_KEYS
     KEY1_ScanKeys();
 #endif
-    vTaskDelay(100/portTICK_RATE_MS);
-#if GCOV_DO_COVERAGE
-    if (writeCoverage) {
-      portDISABLE_ALL_INTERRUPTS();
-      gcov_write();
-      portENABLE_ALL_INTERRUPTS();
-      //vTaskEndScheduler();
-    }
-#endif
+    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
   }
 }
 
@@ -294,14 +283,10 @@ void APP_Start(void) {
   MM_Init();
 #endif
   SHELL_Init();
-  if (xTaskCreate(
+  if (FRTOS1_xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
-#if GCOV_DO_COVERAGE
-      configMINIMAL_STACK_SIZE+4000, /* task stack size */
-#else
       configMINIMAL_STACK_SIZE+500, /* task stack size */
-#endif
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
       (xTaskHandle*)NULL /* optional task handle to create */
@@ -317,11 +302,5 @@ void APP_Start(void) {
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
     for(;;); /* failure! */
   }
-#if GCOV_DO_COVERAGE
-  //gcov_write();
-#endif
-  vTaskStartScheduler();
-#if GCOV_DO_COVERAGE
-  gcov_write();
-#endif
+  FRTOS1_vTaskStartScheduler();
 }

@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-03-28, 09:38, # CodeGen: 226
 **     Abstract    :
 **
 **     Settings    :
@@ -162,6 +162,8 @@ void Components_Init(void)
   /* ### CriticalSection "CS1" init code ... */
   /* ### Asynchro serial "AS1" init code ... */
   AS1_Init();
+  /* ### FreeRTOS "FRTOS1" init code ... */
+  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### KinetisTools "KIN1" init code ... */
   WAIT1_Init();
   /* ### XFormat "XF1" init code ... */
@@ -181,11 +183,6 @@ void Components_Init(void)
   LED3_Init(); /* initialize LED driver */
   /* ### HardFault "HF1" init code ... */
   HF1_Init();
-  /* ### SeggerRTT "RTT1" init code ... */
-  RTT1_Init();
-  /* ### PercepioTrace "PTRC1" init code ... */
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
   /* ### TimerInt_LDD "TimerIntLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)TimerIntLdd1_Init(NULL);
   /* ### TimerInt "TI1" init code ... */
@@ -225,6 +222,8 @@ void Components_Init(void)
   /* ### RingBuffer "Rx1" init code ... */
   Rx1_Init();
   (void)USB1_Init();
+  /* ### SeggerRTT "RTT1" init code ... */
+  RTT1_Init();
   /* ### SeggerSystemView "SYS1" init code ... */
   SYS1_Init();
   /* ### BitIO_LDD "BitIoLdd17" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
@@ -259,6 +258,7 @@ void Components_Init(void)
   (void)BitIoLdd30_Init(NULL);
   /* ### BitIO_LDD "BitIoLdd29" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd29_Init(NULL);
+  /* ### PercepioTrace "PTRC1" init code ... */
 }
 #endif /* CPU_COMPONENTS_INIT */
 

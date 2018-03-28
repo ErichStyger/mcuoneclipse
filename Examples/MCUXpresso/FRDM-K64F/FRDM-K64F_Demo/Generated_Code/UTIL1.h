@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.148, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.158, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-07, 08:19, # CodeGen: 190
+**     Date/Time   : 2018-03-28, 08:58, # CodeGen: 225
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -76,10 +76,15 @@
 **         SetValue16LE            - void UTIL1_SetValue16LE(uint16_t data, uint8_t *dataP);
 **         SetValue24LE            - void UTIL1_SetValue24LE(uint32_t data, uint8_t *dataP);
 **         SetValue32LE            - void UTIL1_SetValue32LE(uint32_t data, uint8_t *dataP);
+**         map                     - int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min,...
+**         map64                   - int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t...
+**         constrain               - int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
+**         random                  - int32_t UTIL1_random(int32_t min, int32_t max);
+**         randomSetSeed           - void UTIL1_randomSetSeed(unsigned int seed);
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
-**     * Copyright (c) 2014-2017, Erich Styger
+**     * Copyright (c) 2014-2018, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -129,14 +134,14 @@
 #include <stddef.h> /* for size_t */
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
   UTIL1_SEP_NUM_TYPE_UINT8, /* uint8_t number type */
   UTIL1_SEP_NUM_TYPE_UINT8_HEX_NO_PREFIX /* uint8_t hex number type, no 0x prefix */
 } UTIL1_SeparatedNumberType;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 void UTIL1_strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src);
 /*
@@ -1230,6 +1235,90 @@ void UTIL1_Init(void);
 **         Driver Initialization
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_map (component Utility)
+**     Description :
+**         Maps a value from one range to another
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - value to be mapped
+**         in_min          - input range minimum value
+**         in_max          - input range maximum value
+**         out_min         - output range maximum value
+**         out_max         - 
+**     Returns     :
+**         ---             - remapped value
+** ===================================================================
+*/
+
+int32_t UTIL1_constrain(int32_t val, int32_t min, int32_t max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_constrain (component Utility)
+**     Description :
+**         Makes sure that a given input value is inside a given range.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         val             - input value
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - the constrained value
+** ===================================================================
+*/
+
+int32_t UTIL1_random(int32_t min, int32_t max);
+/*
+** ===================================================================
+**     Method      :  UTIL1_random (component Utility)
+**     Description :
+**         Provides a random value. You have to call intialize the
+**         random number generator with randomSetSeed() first!
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         min             - range minimum value
+**         max             - range maximum value
+**     Returns     :
+**         ---             - random value between min and max
+** ===================================================================
+*/
+
+void UTIL1_randomSetSeed(unsigned int seed);
+/*
+** ===================================================================
+**     Method      :  UTIL1_randomSetSeed (component Utility)
+**     Description :
+**         Sets a seed for the random number generator
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         seed            - seed to be used for random number
+**                           generator
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+#ifdef __GNUC__ /* HIWARE compiler does not support 64bit data types */
+int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, int64_t out_max);
+#endif
+/*
+** ===================================================================
+**     Method      :  UTIL1_map64 (component Utility)
+**     Description :
+**         Maps a value from one range to another, using 64bit math
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - value to be mapped
+**         in_min          - input range minimum value
+**         in_max          - input range maximum value
+**         out_min         - output range maximum value
+**         out_max         - 
+**     Returns     :
+**         ---             - remapped value
 ** ===================================================================
 */
 

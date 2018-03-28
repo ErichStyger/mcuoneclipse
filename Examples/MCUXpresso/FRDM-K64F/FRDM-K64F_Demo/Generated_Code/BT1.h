@@ -7,7 +7,7 @@
 **     Version     : Component 01.053, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-09-19, 15:15, # CodeGen: 175
+**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
 **     Abstract    :
 **          Driver for e-Gizmo Bluetooth module
 **     Settings    :
@@ -152,7 +152,7 @@ typedef enum {
 
 typedef const unsigned char *BT1_TConstStringPtr; /* type for constant string pointer */
 
-#define BT1_MAX_AT_CMD_SIZE                         (sizeof("AT+VERSION?\r\n"))  /* longest AT command */
+#define BT1_MAX_AT_CMD_SIZE                         (sizeof("AT+NAME=LongestPossibleName\r\n"))  /* longest AT command */
 #define BT1_MAX_RESPONSE_SIZE                       42  /* maximum response size, e.g. "+NAME:abcdef\r\nOK\r\n" */
 #define BT1_MAX_ERR_RESPONSE_SIZE                   (sizeof("ERROR:(32)\r\n"))  /* max size of error response */
 #define BT1_MAX_DEVICE_NAME_SIZE                    31  /* device name can be up to 31 characters */

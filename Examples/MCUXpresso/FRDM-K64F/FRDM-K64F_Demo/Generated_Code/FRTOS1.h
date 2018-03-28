@@ -4,15 +4,15 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.529, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.552, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-03-28, 08:58, # CodeGen: 225
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V9.0.0
+**          RTOS Version                                   : V10.0.0
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -22,13 +22,18 @@
 **          Classic CodeWarrior                            : no
 **          Disabled Interrupts in Startup                 : yes
 **          configASSERT                                   : yes
-**          Enable GDB Debug Helper                        : no
 **          Application Task Tags                          : no
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
+**          Debug Helpers                                  : 
+**            Enable GDB Debug Helper                      : no
+**            Enable LinkTimeOptimizer Helper              : no
+**            uxTopUsedPriority                            : no
+**            Heap Indication Constant                     : no
+**            Task C Additions                             : no
+**            Record Stack High Address                    : yes
 **          Segger System Viewer Trace                     : Disabled
-**          Percepio Trace                                 : Enabled
-**            Percepio FreeRTOS+Trace                      : PTRC1
+**          Percepio Trace                                 : Disabled
 **          Generate Runtime Statistics                    : Enabled
 **            Use Tick Counter                             : yes
 **            LDD                                          : Disabled
@@ -36,7 +41,7 @@
 **          Scheduler                                      : Settings for the scheduler
 **            ColdFire V1                                  : Disabled
 **            ColdFire V2                                  : Disabled
-**            ARM (Kinetis)                                : Enabled
+**            ARM Cortex-M                                 : Enabled
 **              ARM Family                                 : Cortex-M4F
 **              Max SysCall Interrupt Priority             : 5
 **              RTOS Interrupt Priority                    : 15
@@ -54,7 +59,6 @@
 **            Idle should yield                            : yes
 **            Task Name Length                             : 12
 **            Minimal Stack Size                           : 400
-**            Record Stack High Address                    : yes
 **            Maximum Priorities                           : 6
 **            Maximum Coroutine Priorities                 : 2
 **            Stackoverflow checking method                : Method 1
@@ -79,8 +83,11 @@
 **            Use Daemon Task Startup Hook                 : no
 **          Memory                                         : Settings for the memory and heap allocation
 **            Dynamic Allocation                           : Enabled
-**              Heap Size                                  : 20000
 **              Application allocated Heap                 : no
+**              Heap Size                                  : 20000
+**              Linker Heap Base Symbol                    : __HeapBase
+**              Linker Heap Limit Symbol                   : __HeapLimit
+**              Linker Heap Size Symbol                    : __heap_size
 **              Memory Allocation Scheme                   : Scheme 2: no merge
 **            Static Allocation                            : Disabled
 **            User Memory Section                          : Disabled
@@ -208,7 +215,7 @@
 **         Init                                 - void FRTOS1_Init(void);
 **         Deinit                               - void FRTOS1_Deinit(void);
 **
-**     * FreeRTOS (c) Copyright 2003-2016 Richard Barry, http: www.FreeRTOS.org
+**     * FreeRTOS (c) Copyright 2003-2017 Richard Barry, http: www.FreeRTOS.org
 **      * See separate FreeRTOS licensing terms.
 **      *
 **      * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2017
@@ -254,13 +261,12 @@
 
 /* MODULE FRTOS1. */
 #include "MCUC1.h" /* SDK and API used */
+#include "FreeRTOSConfig.h"
 #include "FRTOS1config.h" /* configuration */
 
-/* Include inherited components */
-#include "MCUC1.h"
-#include "PTRC1.h"
-#include "CLS1.h"
-#include "UTIL1.h"
+#if configUSE_SHELL
+  #include "CLS1.h"
+#endif
 
 /* other includes needed */
 #include "FreeRTOS.h"
@@ -270,8 +276,12 @@
 #include "timers.h"                    /* timer module API */
 #include <stddef.h>                    /* for size_t type */
 
+#if configUSE_PERCEPIO_TRACE_HOOKS
+  #include "McuPercepio.h" /* Interface to Percepio Trace */
+#endif
+
 /* Macro for shell support */
-#define FRTOS1_PARSE_COMMAND_ENABLED         1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define FRTOS1_PARSE_COMMAND_ENABLED         (configUSE_SHELL) /* set to 1 if method ParseCommand() is present, 0 otherwise */
 #define FRTOS1_GENERATE_PEX_RTOS_MACROS      1  /* set to 1 to generate the RTOS macros PEX_RTOS_INIT() and PEX_RTOS_START() */
 
 /* Macros used by Processor Expert */
@@ -1687,6 +1697,7 @@ extern "C" {
 ** ===================================================================
 */
 
+#if configUSE_SHELL
 uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
@@ -1703,6 +1714,7 @@ uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
 **         ---             - Error code
 ** ===================================================================
 */
+#endif
 
 void FRTOS1_Init(void);
 /*

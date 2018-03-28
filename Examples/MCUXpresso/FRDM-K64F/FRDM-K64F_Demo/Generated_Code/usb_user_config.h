@@ -55,18 +55,18 @@
 #define LONG_SEND_TRANSACTION       /* support to send large data pkts */
 #define LONG_RECEIVE_TRANSACTION    /* support to receive large data pkts */
 #ifndef _MC9S08JS16_H
-#define USB_OUT_PKT_SIZE 32			/* Define the maximum data length received from the host */
+  #define USB_OUT_PKT_SIZE 32			/* Define the maximum data length received from the host */
 #else
-#define USB_OUT_PKT_SIZE 16			/* Define the maximum data length received from the host */
+  #define USB_OUT_PKT_SIZE 16			/* Define the maximum data length received from the host */
 #endif
 
 /* User Defined MACRO to set number of Timer Objects */
 #define MAX_TIMER_OBJECTS		   5
 
 #if MAX_TIMER_OBJECTS
-/* When Enabled Timer Callback is invoked with an argument */
-#define TIMER_CALLBACK_ARG
-#undef TIMER_CALLBACK_ARG
+  /* When Enabled Timer Callback is invoked with an argument */
+  #define TIMER_CALLBACK_ARG
+  #undef TIMER_CALLBACK_ARG
 #endif
 
 #if 0 /* << EST */

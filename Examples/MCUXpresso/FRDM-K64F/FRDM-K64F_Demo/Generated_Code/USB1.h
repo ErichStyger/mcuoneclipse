@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FSL_USB_Stack
-**     Version     : Component 01.045, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-12-10, 10:35, # CodeGen: 179
+**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
 **     Abstract    :
 **         This component implements a wrapper to the FSL USB Stack.
 **     Settings    :
@@ -19,7 +19,9 @@
 **            CDCDevice                                    : FSL_USB_CDC_Device
 **          CDC Host                                       : Disabled
 **          HID Keyboard Device                            : Disabled
+**          HID Joystick Device                            : Disabled
 **          HID Mouse Device                               : Disabled
+**          MSD Device                                     : Disabled
 **          MSD Host                                       : Disabled
 **          DATA_BUFF_SIZE                                 : 64
 **          Initialization                                 : 
@@ -87,11 +89,11 @@
 
 #include <stddef.h> /* for size_t */
 
-/* Interfaces/wrappers to the CDC device class, needed by FSShell: */
-#define USB1_SendString(str)   CDC1_SendString(str)
-#define USB1_RecvChar(chr)     CDC1_GetChar(chr)
-#define USB1_SendChar(chr)     CDC1_SendChar(chr)
-#define USB1_GetCharsInRxBuf() CDC1_GetCharsInRxBuf()
+/* Interfaces/wrappers to the CDC device class, needed for Shell if using default serial/connection to USB (CDC): */
+#define USB1_SendString      CDC1_SendString
+#define USB1_RecvChar        CDC1_GetChar
+#define USB1_SendChar        CDC1_SendChar
+#define USB1_GetCharsInRxBuf CDC1_GetCharsInRxBuf
 
 #include "Cpu.h"
 

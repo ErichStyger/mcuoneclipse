@@ -4,18 +4,27 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PercepioTrace
-**     Version     : Component 01.127, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.136, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-03-20, 13:00, # CodeGen: 224
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
-**          RTOS+Trace Version                             : V3.1.1
-**          Recorder Mode                                  : Snapshot
+**          RTOS+Trace Version                             : V3.3.0
+**          Recorder Mode                                  : Streaming
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 16
+**          Events Creation                                : 
+**            Include OS Tick events                       : no
+**            Include ready events                         : yes
+**            Include memory manager events                : yes
+**            Include ISR tracing                          : yes
+**            Include object delete events                 : yes
+**            Include user events                          : yes
+**            Include pend function call events            : no
+**            Include event group events                   : no
 **          Snapshot Mode                                  : 
 **            Snapshot trace enable method                 : TRC_START
 **            Recorder store mode                          : Ring Buffer
@@ -36,19 +45,16 @@
 **              Number of mutex                            : 4
 **              Number of timer                            : 2
 **              Number of event groups                     : 2
+**              Number of stream buffers                   : 3
+**              Number of message buffers                  : 3
 **              Name length for ISR                        : 10
 **              Name length for queue                      : 15
 **              Name length for semaphore                  : 15
 **              Name length for mutex                      : 15
 **              Name length for timer                      : 15
 **              Name length for event group                : 15
-**            Events Creation                              : 
-**              Include OS Tick events                     : no
-**              Include ready events                       : yes
-**              Include memory manager events              : no
-**              Include ISR tracing                        : yes
-**              Include object delete events               : yes
-**              Include user events                        : yes
+**              Name length for stream buffer              : 15
+**              Name length for message buffer             : 15
 **            Heap Size below 16M                          : no
 **            Float support                                : no
 **            Use implicit IFE rules                       : yes
@@ -56,7 +62,7 @@
 **          Streaming Mode                                 : 
 **            Segger RTT                                   : Enabled
 **              Segger RTT                                 : RTT1
-**            Streaming trace enable method                : TRC_START
+**            Streaming trace enable method                : TRC_START_AWAIT_HOST
 **            Up Buffer Index                              : 2
 **            Up Buffer Size                               : 1024
 **            Down Buffer Index                            : 2
@@ -65,7 +71,7 @@
 **            Symbol Max Length                            : 24
 **            Object Data Slots                            : 20
 **            Ctrl Task Priority                           : 1
-**            Ctrl Task Stack Size                         : configMINIMAL_STACK_SIZE
+**            Ctrl Task Stack Size                         : configMINIMAL_STACK_SIZE+100
 **            Ctrl Task Delay                              : ((10 * configTICK_RATE_HZ) / 1000)
 **          Source Folders                                 : Disabled
 **          System                                         : 
@@ -77,7 +83,7 @@
 **         vTraceStop                - void PTRC1_vTraceStop(void);
 **         vTraceClear               - void PTRC1_vTraceClear(void);
 **         uiTraceGetTraceBufferSize - dword PTRC1_uiTraceGetTraceBufferSize(void);
-**         vTraceGetTraceBuffer      - void* PTRC1_vTraceGetTraceBuffer(void);
+**         xTraceGetTraceBuffer      - void* PTRC1_xTraceGetTraceBuffer(void);
 **         xTraceRegisterString      - traceString PTRC1_xTraceRegisterString(const char* name);
 **         vTracePrint               - void PTRC1_vTracePrint(traceString chn, const char* str);
 **         vTracePrintF              - void PTRC1_vTracePrintF(traceLabel eventLabel, char *formatStr, ...);
@@ -173,12 +179,12 @@
 ** ===================================================================
 */
 
-#define PTRC1_vTraceGetTraceBuffer() \
-  vTraceGetTraceBuffer()
+#define PTRC1_xTraceGetTraceBuffer() \
+  xTraceGetTraceBuffer()
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceGetTraceBuffer (component PercepioTrace)
+**     Method      :  PTRC1_xTraceGetTraceBuffer (component PercepioTrace)
 **     Description :
 **         Return a pointer to the recorder data structure. Use this
 **         together with uiTraceGetTraceBufferSize if you wish to

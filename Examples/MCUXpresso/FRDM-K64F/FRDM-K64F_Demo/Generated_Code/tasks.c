@@ -1,71 +1,30 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.0.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software. If you wish to use our Amazon
+ * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 /* Standard includes. */
 #include <stdlib.h>
@@ -80,7 +39,7 @@ task.h is included from an application file. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
-#include "StackMacros.h"
+#include "stack_macros.h"
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS == 1 ) )
 #include "UTIL1.h" /* interface to utility because used for safe string routines */ /* << EST */
@@ -142,7 +101,7 @@ that if portUSING_MPU_WRAPPERS is 1 then a protected task can be created with
 a statically allocated stack and a dynamically allocated TCB.
 !!!NOTE!!! If the definition of tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE is
 changed then the definition of StaticTask_t must also be updated. */
-#define tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE   ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+#define tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE	( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 #define tskDYNAMICALLY_ALLOCATED_STACK_AND_TCB 		( ( uint8_t ) 0 )
 #define tskSTATICALLY_ALLOCATED_STACK_ONLY 			( ( uint8_t ) 1 )
 #define tskSTATICALLY_ALLOCATED_STACK_AND_TCB		( ( uint8_t ) 2 )
@@ -170,6 +129,12 @@ set then don't fill the stack so there is no unnecessary dependency on memset. *
  */
 #ifdef portREMOVE_STATIC_QUALIFIER
 	#define static
+#endif
+
+/* The name allocated to the Idle task.  This can be overridden by defining
+configIDLE_TASK_NAME in FreeRTOSConfig.h. */
+#ifndef configIDLE_TASK_NAME
+	#define configIDLE_TASK_NAME "IDLE"
 #endif
 
 #if ( configUSE_PORT_OPTIMISED_TASK_SELECTION == 0 )
@@ -403,31 +368,80 @@ which static variables must be declared volatile. */
 PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
 
 /* Lists for ready and blocked tasks. --------------------*/
-PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList1;						/*< Delayed tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList2;						/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;				/*< Points to the delayed task list currently being used. */
-PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;		/*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+  PRIVILEGED_DATA /*static*/ List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+  PRIVILEGED_DATA /*static*/ List_t xDelayedTaskList1;            /*< Delayed tasks. */
+  PRIVILEGED_DATA /*static*/ List_t xDelayedTaskList2;            /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+  PRIVILEGED_DATA /*static*/ List_t * volatile pxDelayedTaskList;       /*< Points to the delayed task list currently being used. */
+  PRIVILEGED_DATA /*static*/ List_t * volatile pxOverflowDelayedTaskList;   /*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+  PRIVILEGED_DATA /*static*/ List_t xPendingReadyList;            /*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#else
+ PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+  PRIVILEGED_DATA static List_t xDelayedTaskList1;						/*< Delayed tasks. */
+  PRIVILEGED_DATA static List_t xDelayedTaskList2;						/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+  PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;				/*< Points to the delayed task list currently being used. */
+  PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;		/*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+  PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#endif
 
 #if( INCLUDE_vTaskDelete == 1 )
 
-	PRIVILEGED_DATA static List_t xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+	PRIVILEGED_DATA /*static*/ List_t xTasksWaitingTermination;				/*< Tasks that have been deleted - but their memory not yet freed. */
+#else
+  PRIVILEGED_DATA static List_t xTasksWaitingTermination;       /*< Tasks that have been deleted - but their memory not yet freed. */
+#endif
 	PRIVILEGED_DATA static volatile UBaseType_t uxDeletedTasksWaitingCleanUp = ( UBaseType_t ) 0U;
 
 #endif
 
 #if ( INCLUDE_vTaskSuspend == 1 )
-
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+  PRIVILEGED_DATA /*static*/ List_t xSuspendedTaskList;         /*< Tasks that are currently suspended. */
+#else
 	PRIVILEGED_DATA static List_t xSuspendedTaskList;					/*< Tasks that are currently suspended. */
-
+#endif
 #endif
 
 /* Other file private variables. --------------------------------*/
-PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
-PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) 0U;
-PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
-PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+	PRIVILEGED_DATA /*static*/ volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
+#else
+  PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks  = ( UBaseType_t ) 0U;
+#endif
+PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) configINITIAL_TICK_COUNT;
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+  PRIVILEGED_DATA /*static*/ volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
+  PRIVILEGED_DATA /*static*/ volatile BaseType_t xSchedulerRunning    = pdFALSE;
+#else
+  PRIVILEGED_DATA static volatile UBaseType_t uxTopReadyPriority 		= tskIDLE_PRIORITY;
+  PRIVILEGED_DATA static volatile BaseType_t xSchedulerRunning 		= pdFALSE;
+#endif
 PRIVILEGED_DATA static volatile UBaseType_t uxPendedTicks 			= ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile BaseType_t xYieldPending 			= pdFALSE;
 PRIVILEGED_DATA static volatile BaseType_t xNumOfOverflows 			= ( BaseType_t ) 0;
@@ -736,7 +750,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 #endif /* ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) */
 /*-----------------------------------------------------------*/
 
-#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) )
+#if( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
 	BaseType_t xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition, TaskHandle_t *pxCreatedTask )
 	{
@@ -757,10 +771,14 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 				/* Store the stack location in the TCB. */
 				pxNewTCB->pxStack = pxTaskDefinition->puxStackBuffer;
 
+				#if( configSUPPORT_STATIC_ALLOCATION == 1 )
+				{
         /* Tasks can be created statically or dynamically, so note
         this task had a statically allocated stack in case it is
         later deleted.  The TCB was allocated dynamically. */
         pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_ONLY;
+				}
+				#endif
 
 				prvInitialiseNewTask(	pxTaskDefinition->pvTaskCode,
 										pxTaskDefinition->pcName,
@@ -785,7 +803,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 	BaseType_t xTaskCreate(	TaskFunction_t pxTaskCode,
 							const char * const pcName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
-							const uint16_t usStackDepth,
+							const configSTACK_DEPTH_TYPE usStackDepth,
 							void * const pvParameters,
 							UBaseType_t uxPriority,
 							TaskHandle_t * const pxCreatedTask )
@@ -1719,6 +1737,17 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 			}
 			traceMOVED_TASK_TO_SUSPENDED_LIST(pxTCB); /* << EST */
 			vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xStateListItem ) );
+
+			#if( configUSE_TASK_NOTIFICATIONS == 1 )
+			{
+				if( pxTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+				{
+					/* The task was blocked to wait for a notification, but is
+					now suspended, so no notification was received. */
+					pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
+		}
+			}
+			#endif
 		}
 		taskEXIT_CRITICAL();
 
@@ -1960,7 +1989,7 @@ BaseType_t xReturn;
 		address of the RAM then create the idle task. */
 		vApplicationGetIdleTaskMemory( &pxIdleTaskTCBBuffer, &pxIdleTaskStackBuffer, &ulIdleTaskStackSize );
 		xIdleTaskHandle = xTaskCreateStatic(	prvIdleTask,
-												"IDLE",
+												configIDLE_TASK_NAME,
 												ulIdleTaskStackSize,
 												( void * ) NULL, /*lint !e961.  The cast is not redundant for all compilers. */
 												( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),
@@ -1980,7 +2009,8 @@ BaseType_t xReturn;
 	{
 		/* The Idle task is being created using dynamically allocated RAM. */
 		xReturn = xTaskCreate(	prvIdleTask,
-								"IDLE", configMINIMAL_STACK_SIZE,
+								configIDLE_TASK_NAME,
+								configMINIMAL_STACK_SIZE,
 								( void * ) NULL,
 								( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),
 								&xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
@@ -2074,7 +2104,7 @@ void vTaskEndScheduler( void )
 	xSchedulerRunning = pdFALSE;
 	vPortEndScheduler();
 }
-#endif
+#endif /* << EST */
 /*----------------------------------------------------------*/
 
 void vTaskSuspendAll( void )
@@ -2563,7 +2593,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 	BaseType_t xTaskAbortDelay( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB = ( TCB_t * ) xTask;
-	BaseType_t xReturn = pdFALSE;
+	BaseType_t xReturn;
 
 		configASSERT( pxTCB );
 
@@ -2573,6 +2603,8 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 			it is actually in the Blocked state. */
 			if( eTaskGetState( xTask ) == eBlocked )
 			{
+				xReturn = pdPASS;
+
 				/* Remove the reference to the task from the blocked list.  An
 				interrupt won't touch the xStateListItem because the
 				scheduler is suspended. */
@@ -2621,7 +2653,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				xReturn = pdFAIL;
 			}
 		}
 		(void)xTaskResumeAll();
@@ -3147,6 +3179,18 @@ TCB_t *pxUnblockedTCB;
 void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
 {
 	configASSERT( pxTimeOut );
+	taskENTER_CRITICAL();
+	{
+	pxTimeOut->xOverflowCount = xNumOfOverflows;
+	pxTimeOut->xTimeOnEntering = xTickCount;
+}
+	taskEXIT_CRITICAL();
+}
+/*-----------------------------------------------------------*/
+
+void vTaskInternalSetTimeOutState( TimeOut_t * const pxTimeOut )
+{
+	/* For internal use only as it does not use a critical section. */
 	pxTimeOut->xOverflowCount = xNumOfOverflows;
 	pxTimeOut->xTimeOnEntering = xTickCount;
 }
@@ -3163,6 +3207,7 @@ BaseType_t xReturn;
 	{
 		/* Minor optimisation.  The tick count cannot change in this block. */
 		const TickType_t xConstTickCount = xTickCount;
+		const TickType_t xElapsedTime = xConstTickCount - pxTimeOut->xTimeOnEntering;
 
 		#if( INCLUDE_xTaskAbortDelay == 1 )
 			if( pxCurrentTCB->ucDelayAborted != pdFALSE )
@@ -3195,15 +3240,16 @@ BaseType_t xReturn;
 			was called. */
 			xReturn = pdTRUE;
 		}
-		else if( ( ( TickType_t ) ( xConstTickCount - pxTimeOut->xTimeOnEntering ) ) < *pxTicksToWait ) /*lint !e961 Explicit casting is only redundant with some compilers, whereas others require it to prevent integer conversion errors. */
+		else if( xElapsedTime < *pxTicksToWait ) /*lint !e961 Explicit casting is only redundant with some compilers, whereas others require it to prevent integer conversion errors. */
 		{
 			/* Not a genuine timeout. Adjust parameters for time remaining. */
-			*pxTicksToWait -= ( xConstTickCount - pxTimeOut->xTimeOnEntering );
-			vTaskSetTimeOutState( pxTimeOut );
+			*pxTicksToWait -= xElapsedTime;
+			vTaskInternalSetTimeOutState( pxTimeOut );
 			xReturn = pdFALSE;
 		}
 		else
 		{
+			*pxTicksToWait = 0;
 			xReturn = pdTRUE;
 		}
 	}
@@ -3275,6 +3321,11 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 
 	/** THIS IS THE RTOS IDLE TASK - WHICH IS CREATED AUTOMATICALLY WHEN THE
 	SCHEDULER IS STARTED. **/
+
+	/* In case a task that has a secure context deletes itself, in which case
+	the idle task is responsible for deleting the task's secure context, if
+	any. */
+	portTASK_CALLS_SECURE_FUNCTIONS();
 
 	for( ;; )
 	{
@@ -3355,6 +3406,11 @@ static portTASK_FUNCTION( prvIdleTask, pvParameters )
 					be used. */
 					configASSERT( xNextTaskUnblockTime >= xTickCount );
 					xExpectedIdleTime = prvGetExpectedIdleTime();
+
+					/* Define the following macro to set xExpectedIdleTime to 0
+					if the application does not want
+					portSUPPRESS_TICKS_AND_SLEEP() to be called. */
+					configPRE_SUPPRESS_TICKS_AND_SLEEP_PROCESSING( xExpectedIdleTime );
 
 					if( xExpectedIdleTime >= configEXPECTED_IDLE_TIME_BEFORE_SLEEP )
 					{
@@ -3513,22 +3569,12 @@ static void prvCheckTasksWaitingTermination( void )
 
 	#if ( INCLUDE_vTaskDelete == 1 )
 	{
-		BaseType_t xListIsEmpty;
+		TCB_t *pxTCB;
 
-		/* ucTasksDeleted is used to prevent vTaskSuspendAll() being called
-		too often in the idle task. */
+		/* uxDeletedTasksWaitingCleanUp is used to prevent vTaskSuspendAll()
+		being called too often in the idle task. */
 		while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 		{
-			vTaskSuspendAll();
-			{
-				xListIsEmpty = listLIST_IS_EMPTY( &xTasksWaitingTermination );
-			}
-			( void ) xTaskResumeAll();
-
-			if( xListIsEmpty == pdFALSE )
-			{
-				TCB_t *pxTCB;
-
 				taskENTER_CRITICAL();
 				{
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
@@ -3540,11 +3586,6 @@ static void prvCheckTasksWaitingTermination( void )
 
 				prvDeleteTCB( pxTCB );
 			}
-			else
-			{
-				mtCOVERAGE_TEST_MARKER();
-			}
-		}
 	}
 	#endif /* INCLUDE_vTaskDelete */
 }
@@ -3565,55 +3606,62 @@ static void prvCheckTasksWaitingTermination( void )
 		pxTaskStatus->pxStackBase = pxTCB->pxStack;
 		pxTaskStatus->xTaskNumber = pxTCB->uxTCBNumber;
 
-		#if ( INCLUDE_vTaskSuspend == 1 )
-		{
-			/* If the task is in the suspended list then there is a chance it is
-			actually just blocked indefinitely - so really it should be reported as
-			being in the Blocked state. */
-			if( pxTaskStatus->eCurrentState == eSuspended )
-			{
-				vTaskSuspendAll();
-				{
-					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
-					{
-						pxTaskStatus->eCurrentState = eBlocked;
-					}
-				}
-				(void)xTaskResumeAll();
-			}
-		}
-		#endif /* INCLUDE_vTaskSuspend */
-
 		#if ( configUSE_MUTEXES == 1 )
 		{
 			pxTaskStatus->uxBasePriority = pxTCB->uxBasePriority;
 		}
 		#else
-		{
+			{
 			pxTaskStatus->uxBasePriority = 0;
 		}
 		#endif
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
-		{
+				{
 			pxTaskStatus->ulRunTimeCounter = pxTCB->ulRunTimeCounter;
 		}
 		#else
-		{
+					{
 			pxTaskStatus->ulRunTimeCounter = 0;
-		}
+					}
 		#endif
 
-		/* Obtaining the task state is a little fiddly, so is only done if the value
-		of eState passed into this function is eInvalid - otherwise the state is
-		just set to whatever is passed in. */
+		/* Obtaining the task state is a little fiddly, so is only done if the
+		value of eState passed into this function is eInvalid - otherwise the
+		state is just set to whatever is passed in. */
 		if( eState != eInvalid )
 		{
-			pxTaskStatus->eCurrentState = eState;
+			if( pxTCB == pxCurrentTCB )
+		{
+				pxTaskStatus->eCurrentState = eRunning;
+		}
+			else
+		{
+				pxTaskStatus->eCurrentState = eState;
+
+				#if ( INCLUDE_vTaskSuspend == 1 )
+				{
+					/* If the task is in the suspended list then there is a
+					chance it is actually just blocked indefinitely - so really
+					it should be reported as being in the Blocked state. */
+					if( eState == eSuspended )
+					{
+						vTaskSuspendAll();
+						{
+							if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
+		{
+								pxTaskStatus->eCurrentState = eBlocked;
+							}
+						}
+						( void ) xTaskResumeAll();
+					}
+		}
+				#endif /* INCLUDE_vTaskSuspend */
+		}
 		}
 		else
 		{
-			pxTaskStatus->eCurrentState = eTaskGetState( xTask );
+			pxTaskStatus->eCurrentState = eTaskGetState( pxTCB );
 		}
 
 		/* Obtaining the stack space takes some time, so the xGetFreeStackSpace
@@ -3776,7 +3824,7 @@ static void prvCheckTasksWaitingTermination( void )
 			{
 				/* Neither the stack nor the TCB were allocated dynamically, so
 				nothing needs to be freed. */
-				configASSERT( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB	)
+				configASSERT( pxTCB->ucStaticallyAllocated == tskSTATICALLY_ALLOCATED_STACK_AND_TCB	);
 				mtCOVERAGE_TEST_MARKER();
 			}
 		}
@@ -3857,25 +3905,27 @@ TCB_t *pxTCB;
 
 #if ( configUSE_MUTEXES == 1 )
 
-	void vTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
+	BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
 	{
-	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+	TCB_t * const pxMutexHolderTCB = ( TCB_t * ) pxMutexHolder;
+	BaseType_t xReturn = pdFALSE;
 
 		/* If the mutex was given back by an interrupt while the queue was
-		locked then the mutex holder might now be NULL. */
+		locked then the mutex holder might now be NULL.  _RB_ Is this still
+		needed as interrupts can no longer use mutexes? */
 		if( pxMutexHolder != NULL )
 		{
 			/* If the holder of the mutex has a priority below the priority of
 			the task attempting to obtain the mutex then it will temporarily
 			inherit the priority of the task attempting to obtain the mutex. */
-			if( pxTCB->uxPriority < pxCurrentTCB->uxPriority )
+			if( pxMutexHolderTCB->uxPriority < pxCurrentTCB->uxPriority )
 			{
 				/* Adjust the mutex holder state to account for its new
 				priority.  Only reset the event list item value if the value is
 				not	being used for anything else. */
-				if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
+				if( ( listGET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 				{
-					listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+					listSET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
 				}
 				else
 				{
@@ -3884,11 +3934,11 @@ TCB_t *pxTCB;
 
 				/* If the task being modified is in the ready state it will need
 				to be moved into a new list. */
-				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxTCB->uxPriority ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
+				if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ pxMutexHolderTCB->uxPriority ] ), &( pxMutexHolderTCB->xStateListItem ) ) != pdFALSE )
 				{
-					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
+					if( uxListRemove( &( pxMutexHolderTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
-						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
+						taskRESET_READY_PRIORITY( pxMutexHolderTCB->uxPriority );
 					}
 					else
 					{
@@ -3896,30 +3946,49 @@ TCB_t *pxTCB;
 					}
 
 					/* Inherit the priority before being moved into the new list. */
-					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
+					pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
-					prvReAddTaskToReadyList( pxTCB );
+					prvReAddTaskToReadyList( pxMutexHolderTCB );
 #else
-					prvAddTaskToReadyList( pxTCB );
+					prvAddTaskToReadyList( pxMutexHolderTCB );
 #endif
 				}
 				else
 				{
 					/* Just inherit the priority. */
-					pxTCB->uxPriority = pxCurrentTCB->uxPriority;
+					pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
 				}
 
-				traceTASK_PRIORITY_INHERIT( pxTCB, pxCurrentTCB->uxPriority );
+				traceTASK_PRIORITY_INHERIT( pxMutexHolderTCB, pxCurrentTCB->uxPriority );
+
+				/* Inheritance occurred. */
+				xReturn = pdTRUE;
 			}
 			else
 			{
-				mtCOVERAGE_TEST_MARKER();
+				if( pxMutexHolderTCB->uxBasePriority < pxCurrentTCB->uxPriority )
+		{
+					/* The base priority of the mutex holder is lower than the
+					priority of the task attempting to take the mutex, but the
+					current priority of the mutex holder is not lower than the
+					priority of the task attempting to take the mutex.
+					Therefore the mutex holder must have already inherited a
+					priority, but inheritance would have occurred if that had
+					not been the case. */
+					xReturn = pdTRUE;
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
 			}
 		}
 		else
 		{
 			mtCOVERAGE_TEST_MARKER();
 		}
+
+		return xReturn;
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -4005,6 +4074,108 @@ TCB_t *pxTCB;
 		}
 
 		return xReturn;
+	}
+
+#endif /* configUSE_MUTEXES */
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_MUTEXES == 1 )
+
+	void vTaskPriorityDisinheritAfterTimeout( TaskHandle_t const pxMutexHolder, UBaseType_t uxHighestPriorityWaitingTask )
+	{
+	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+	UBaseType_t uxPriorityUsedOnEntry, uxPriorityToUse;
+	const UBaseType_t uxOnlyOneMutexHeld = ( UBaseType_t ) 1;
+
+		if( pxMutexHolder != NULL )
+		{
+			/* If pxMutexHolder is not NULL then the holder must hold at least
+			one mutex. */
+			configASSERT( pxTCB->uxMutexesHeld );
+
+			/* Determine the priority to which the priority of the task that
+			holds the mutex should be set.  This will be the greater of the
+			holding task's base priority and the priority of the highest
+			priority task that is waiting to obtain the mutex. */
+			if( pxTCB->uxBasePriority < uxHighestPriorityWaitingTask )
+			{
+				uxPriorityToUse = uxHighestPriorityWaitingTask;
+			}
+			else
+			{
+				uxPriorityToUse = pxTCB->uxBasePriority;
+			}
+
+			/* Does the priority need to change? */
+			if( pxTCB->uxPriority != uxPriorityToUse )
+			{
+				/* Only disinherit if no other mutexes are held.  This is a
+				simplification in the priority inheritance implementation.  If
+				the task that holds the mutex is also holding other mutexes then
+				the other mutexes may have caused the priority inheritance. */
+				if( pxTCB->uxMutexesHeld == uxOnlyOneMutexHeld )
+				{
+					/* If a task has timed out because it already holds the
+					mutex it was trying to obtain then it cannot of inherited
+					its own priority. */
+					configASSERT( pxTCB != pxCurrentTCB );
+
+					/* Disinherit the priority, remembering the previous
+					priority to facilitate determining the subject task's
+					state. */
+					traceTASK_PRIORITY_DISINHERIT( pxTCB, pxTCB->uxBasePriority );
+					uxPriorityUsedOnEntry = pxTCB->uxPriority;
+					pxTCB->uxPriority = uxPriorityToUse;
+
+					/* Only reset the event list item value if the value is not
+					being used for anything else. */
+					if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
+					{
+						listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriorityToUse ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
+
+					/* If the running task is not the task that holds the mutex
+					then the task that holds the mutex could be in either the
+					Ready, Blocked or Suspended states.  Only remove the task
+					from its current state list if it is in the Ready state as
+					the task's priority is going to change and there is one
+					Ready list per priority. */
+					if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
+	{
+						if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
+						{
+							taskRESET_READY_PRIORITY( pxTCB->uxPriority );
+						}
+						else
+						{
+							mtCOVERAGE_TEST_MARKER();
+						}
+
+						prvAddTaskToReadyList( pxTCB );
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
+				}
+				else
+				{
+					mtCOVERAGE_TEST_MARKER();
+				}
+			}
+			else
+			{
+				mtCOVERAGE_TEST_MARKER();
+			}
+		}
+		else
+		{
+			mtCOVERAGE_TEST_MARKER();
+		}
 	}
 
 #endif /* configUSE_MUTEXES */
@@ -4509,7 +4680,7 @@ TickType_t uxReturn;
 			blocked state (because a notification was already pending) or the
 			task unblocked because of a notification.  Otherwise the task
 			unblocked because of a timeout. */
-			if( pxCurrentTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+			if( pxCurrentTCB->ucNotifyState != taskNOTIFICATION_RECEIVED )
 			{
 				/* A notification was not received. */
 				xReturn = pdFALSE;
@@ -5005,11 +5176,12 @@ when performing module tests). */
 	#include "tasks_test_access_functions.h"
 #endif
 
-#if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1)
+
+#if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1) /* << EST test on trace */
 
 	#include "freertos_tasks_c_additions.h"
 
-#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
+#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT /* << EST test on addition */
 static void freertos_tasks_c_additions_init( void )
 	{
 		#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT

@@ -4,17 +4,17 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.097, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-07, 08:19, # CodeGen: 190
+**     Date/Time   : 2018-03-28, 08:58, # CodeGen: 225
 **     Abstract    :
-**
+**         Module implementing a command line shell.
 **     Settings    :
 **          Component name                                 : CLS1
 **          Echo                                           : no
 **          Prompt                                         : "CMD> "
-**          Project Name                                   : FRDM-K64F
+**          Project Name                                   : FRDM-K64F Demo
 **          Silent Mode Prefix                             : #
 **          Buffer Size                                    : 48
 **          Blocking Send                                  : Enabled
@@ -64,10 +64,11 @@
 **         ReadChar                     - void CLS1_ReadChar(uint8_t *c);
 **         SendChar                     - void CLS1_SendChar(uint8_t ch);
 **         KeyPressed                   - bool CLS1_KeyPressed(void);
+**         SendCharFct                  - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
 **         Init                         - void CLS1_Init(void);
 **         Deinit                       - void CLS1_Deinit(void);
 **
-**     * Copyright (c) 2014-2016, Erich Styger
+**     * Copyright (c) 2014-2018, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -98,7 +99,7 @@
 ** @file CLS1.h
 ** @version 01.00
 ** @brief
-**
+**         Module implementing a command line shell.
 */         
 /*!
 **  @addtogroup CLS1_module CLS1 module documentation
@@ -152,7 +153,7 @@
   typedef const CLS1_ParseCommandCallback CLS1_ConstParseCommandCallback; /* Callback for parsing a shell command */
 #endif
 
-#define CLS1_DEFAULT_SHELL_BUFFER_SIZE  48  /* default buffer size for shell command parsing */
+#define CLS1_DEFAULT_SHELL_BUFFER_SIZE  CLS1_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  /* default buffer size for shell command parsing */
 
 /* Include inherited components */
 #include "WAIT1.h"
@@ -183,13 +184,13 @@
 /* settings for local echo */
 #define CLS1_ECHO_ENABLED  0           /* 1: enabled, 0: disabled */
 
-#define CLS1_DEFAULT_SERIAL  1 /* If set to 1, then the shell implements its own StdIO which is returned by CLS1_GetStdio(); */
+#define CLS1_DEFAULT_SERIAL  CLS1_CONFIG_DEFAULT_SERIAL /* If set to 1, then the shell implements its own StdIO which is returned by CLS1_GetStdio(); */
+
 extern uint8_t CLS1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 
 #if CLS1_DEFAULT_SERIAL
   extern CLS1_ConstStdIOType CLS1_stdio; /* default standard I/O */
 #endif
-
 
 #define CLS1_DASH_LINE "--------------------------------------------------------------"
 /* predefined commands */
@@ -700,6 +701,21 @@ unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
 **         fmt             - printf style format string
 **     Returns     :
 **         ---             - number of characters written
+** ===================================================================
+*/
+
+void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
+/*
+** ===================================================================
+**     Method      :  CLS1_SendCharFct (component Shell)
+**     Description :
+**         Method to send a character using a standard I/O handle.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         ch              - character to be sent
+**       * fct             - Function pointer to output function: takes
+**                           a byte to write and returns error code.
+**     Returns     : Nothing
 ** ===================================================================
 */
 

@@ -8,13 +8,19 @@
 #ifndef __MCUC1_CONFIG_H
 #define __MCUC1_CONFIG_H
 
-/* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core */
+/* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core.
+   Otherwise CPU Family is set automatically by Processor Expert: detected: Kinetis (supported: "Kinetis", "HCS08")
+*/
 #define MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M    (1 || defined(__CORTEX_M))
   /*!< 1: ARM Cortex-M family, 0 otherwise */
 #define MCUC1_CONFIG_CPU_IS_KINETIS         (1 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
   /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #define MCUC1_CONFIG_CPU_IS_LPC             (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
   /*!< 1: NXP LPC CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_STM32           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: STM32 ARM Cortex CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_HCS08           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: HCS08 CPU family, 0: otherwise */
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #define MCUC1_CONFIG_CORTEX_M      (4)
@@ -38,8 +44,19 @@
 
 /* specify the SDK and API used */
 #ifndef MCUC1_CONFIG_SDK_VERSION_USED
+#if MCUC1_CONFIG_CPU_IS_STM32
+  #define MCUC1_CONFIG_SDK_VERSION_USED  MCUC1_CONFIG_SDK_GENERIC
+    /*!< identify the version of SDK/API used. For STM32 we are using a generic SDK (actually the CubeMX one) */
+#else
   #define MCUC1_CONFIG_SDK_VERSION_USED  MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
     /*!< identify the version of SDK/API used */
+#endif
+#endif
+
+/* Configuration macro if FreeRTOS is used */
+#ifndef MCUC1_CONFIG_SDK_USE_FREERTOS
+  #define MCUC1_CONFIG_SDK_USE_FREERTOS           (1)
+    /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
 #endif
 
 /* special macro to identify a set of SDKs used */

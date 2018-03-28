@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-07, 08:19, # CodeGen: 190
+**     Date/Time   : 2017-09-11, 17:40, # CodeGen: 218
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,6 @@
 **         UIDGet                 - uint8_t KIN1_UIDGet(KIN1_UID *uid);
 **         UIDSame                - bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
 **         UIDtoString            - uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
-**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **         GetKinetisFamilyString - KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
 **         GetPC                  - void* KIN1_GetPC(void);
 **         GetSP                  - void* KIN1_GetSP(void);
@@ -32,6 +31,7 @@
 **         EnableCycleCounter     - void KIN1_EnableCycleCounter(void);
 **         DisableCycleCounter    - void KIN1_DisableCycleCounter(void);
 **         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
+**         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **
 **     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
@@ -78,10 +78,10 @@
 #include "MCUC1.h" /* SDK and API used */
 #include "KIN1config.h" /* configuration */
 
-/* Include inherited components */
-#include "MCUC1.h"
-#include "UTIL1.h"
-#include "CLS1.h"
+#include <stddef.h> /* for size_t */
+#if KIN1_CONFIG_PARSE_COMMAND_ENABLED
+  #include "CLS1.h" /* Command line shell */
+#endif
 
 
 #ifndef __BWUserType_KIN1_ConstCharPtr
@@ -125,6 +125,7 @@ typedef enum {
 extern "C" {
 #endif
 
+#if KIN1_CONFIG_PARSE_COMMAND_ENABLED
 uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
@@ -142,6 +143,7 @@ uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 **         ---             - Error code
 ** ===================================================================
 */
+#endif
 
 void KIN1_SoftwareReset(void);
 /*

@@ -19,11 +19,11 @@
 ** @brief
 **         Main module.
 **         This module contains user's application code.
-*/
+*/         
 /*!
 **  @addtogroup ProcessorExpert_module ProcessorExpert module documentation
 **  @{
-*/
+*/         
 /* MODULE ProcessorExpert */
 
 
@@ -56,12 +56,12 @@
 #include "GI2C1.h"
 #include "I2C.h"
 #include "FAT1.h"
+#include "MINI1.h"
 #include "TmDt1.h"
 #include "FATM1.h"
 #include "SS1.h"
 #include "CD2.h"
 #include "SM2.h"
-#include "MINI1.h"
 #include "TMOUT1.h"
 #include "KEY1.h"
 #include "Inhr1.h"
@@ -126,18 +126,11 @@
 #include "Application.h"
 
 #include "PORT_PDD.h"
-#include "gcov_support.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-#if GCOV_DO_COVERAGE
-  gcov_init();
-  if (!gcov_check()) {
-    for(;;) {} /* failed to use file system!?! */
-  }
-#endif
   /* Write your local variable definition here */
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();

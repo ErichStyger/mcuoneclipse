@@ -1,9 +1,9 @@
 /*********************************************************************
-*               SEGGER MICROCONTROLLER GmbH & Co. KG                 *
-*       Solutions for real time microcontroller applications         *
+*                SEGGER Microcontroller GmbH & Co. KG                *
+*                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2015 - 2016  SEGGER Microcontroller GmbH & Co. KG        *
+*       (c) 2015 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -15,36 +15,50 @@
 *                                                                    *
 * All rights reserved.                                               *
 *                                                                    *
-* * This software may in its unmodified form be freely redistributed *
-*   in source form.                                                  *
-* * The source code may be modified, provided the source code        *
-*   retains the above copyright notice, this list of conditions and  *
-*   the following disclaimer.                                        *
-* * Modified versions of this software in source or linkable form    *
-*   may not be distributed without prior consent of SEGGER.          *
+* SEGGER strongly recommends to not make any changes                 *
+* to or modify the source code of this software in order to stay     *
+* compatible with the RTT protocol and J-Link.                       *
 *                                                                    *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS "AS IS" AND     *
-* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  *
-* THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A        *
-* PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL               *
-* SEGGER Microcontroller BE LIABLE FOR ANY DIRECT, INDIRECT,         *
-* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES           *
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS    *
-* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS            *
-* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,       *
-* WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING          *
-* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS *
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.       *
+* Redistribution and use in source and binary forms, with or         *
+* without modification, are permitted provided that the following    *
+* conditions are met:                                                *
+*                                                                    *
+* o Redistributions of source code must retain the above copyright   *
+*   notice, this list of conditions and the following disclaimer.    *
+*                                                                    *
+* o Redistributions in binary form must reproduce the above          *
+*   copyright notice, this list of conditions and the following      *
+*   disclaimer in the documentation and/or other materials provided  *
+*   with the distribution.                                           *
+*                                                                    *
+* o Neither the name of SEGGER Microcontroller GmbH & Co. KG         *
+*   nor the names of its contributors may be used to endorse or      *
+*   promote products derived from this software without specific     *
+*   prior written permission.                                        *
+*                                                                    *
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND             *
+* CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,        *
+* INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF           *
+* MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE           *
+* DISCLAIMED. IN NO EVENT SHALL SEGGER Microcontroller BE LIABLE FOR *
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR           *
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  *
+* OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;    *
+* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF      *
+* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT          *
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  *
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH   *
+* DAMAGE.                                                            *
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: V2.40                                    *
+*       SystemView version: V2.52a                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 File    : SEGGER_SYSVIEW.h
 Purpose : System visualization API.
-Revision: $Rev: 3807 $
+Revision: $Rev: 5497 $
 */
 
 #ifndef SEGGER_SYSVIEW_H
@@ -228,49 +242,49 @@ void SEGGER_SYSVIEW_SendSysDesc                   (const char* sSysDesc);
 *
 *       Event recording functions
 */
-void SEGGER_SYSVIEW_RecordVoid                    (unsigned EventId);
-void SEGGER_SYSVIEW_RecordU32                     (unsigned EventId, U32 Para0);
-void SEGGER_SYSVIEW_RecordU32x2                   (unsigned EventId, U32 Para0, U32 Para1);
-void SEGGER_SYSVIEW_RecordU32x3                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2);
-void SEGGER_SYSVIEW_RecordU32x4                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3);
-void SEGGER_SYSVIEW_RecordU32x5                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4);
-void SEGGER_SYSVIEW_RecordU32x6                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5);
-void SEGGER_SYSVIEW_RecordU32x7                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6);
-void SEGGER_SYSVIEW_RecordU32x8                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7);
-void SEGGER_SYSVIEW_RecordU32x9                   (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7, U32 Para8);
-void SEGGER_SYSVIEW_RecordU32x10                  (unsigned EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7, U32 Para8, U32 Para9);
-void SEGGER_SYSVIEW_RecordString                  (unsigned EventId, const char* pString);
+void SEGGER_SYSVIEW_RecordVoid                    (unsigned int EventId);
+void SEGGER_SYSVIEW_RecordU32                     (unsigned int EventId, U32 Para0);
+void SEGGER_SYSVIEW_RecordU32x2                   (unsigned int EventId, U32 Para0, U32 Para1);
+void SEGGER_SYSVIEW_RecordU32x3                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2);
+void SEGGER_SYSVIEW_RecordU32x4                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3);
+void SEGGER_SYSVIEW_RecordU32x5                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4);
+void SEGGER_SYSVIEW_RecordU32x6                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5);
+void SEGGER_SYSVIEW_RecordU32x7                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6);
+void SEGGER_SYSVIEW_RecordU32x8                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7);
+void SEGGER_SYSVIEW_RecordU32x9                   (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7, U32 Para8);
+void SEGGER_SYSVIEW_RecordU32x10                  (unsigned int EventId, U32 Para0, U32 Para1, U32 Para2, U32 Para3, U32 Para4, U32 Para5, U32 Para6, U32 Para7, U32 Para8, U32 Para9);
+void SEGGER_SYSVIEW_RecordString                  (unsigned int EventId, const char* pString);
 void SEGGER_SYSVIEW_RecordSystime                 (void);
 void SEGGER_SYSVIEW_RecordEnterISR                (void);
 void SEGGER_SYSVIEW_RecordExitISR                 (void);
 void SEGGER_SYSVIEW_RecordExitISRToScheduler      (void);
 void SEGGER_SYSVIEW_RecordEnterTimer              (U32 TimerId);
 void SEGGER_SYSVIEW_RecordExitTimer               (void);
-void SEGGER_SYSVIEW_RecordEndCall                 (unsigned EventID);
-void SEGGER_SYSVIEW_RecordEndCallU32              (unsigned EventID, U32 Para0);
+void SEGGER_SYSVIEW_RecordEndCall                 (unsigned int EventID);
+void SEGGER_SYSVIEW_RecordEndCallU32              (unsigned int EventID, U32 Para0);
 
 void SEGGER_SYSVIEW_OnIdle                        (void);
-void SEGGER_SYSVIEW_OnTaskCreate                  (unsigned TaskId);
-void SEGGER_SYSVIEW_OnTaskTerminate               (unsigned TaskId);
-void SEGGER_SYSVIEW_OnTaskStartExec               (unsigned TaskId);
+void SEGGER_SYSVIEW_OnTaskCreate                  (U32 TaskId);
+void SEGGER_SYSVIEW_OnTaskTerminate               (U32 TaskId);
+void SEGGER_SYSVIEW_OnTaskStartExec               (U32 TaskId);
 void SEGGER_SYSVIEW_OnTaskStopExec                (void);
-void SEGGER_SYSVIEW_OnTaskStartReady              (unsigned TaskId);
-void SEGGER_SYSVIEW_OnTaskStopReady               (unsigned TaskId, unsigned Cause);
-void SEGGER_SYSVIEW_OnUserStart                   (unsigned UserId);       // Start of user defined event (such as a subroutine to profile)
-void SEGGER_SYSVIEW_OnUserStop                    (unsigned UserId);       // Start of user defined event
+void SEGGER_SYSVIEW_OnTaskStartReady              (U32 TaskId);
+void SEGGER_SYSVIEW_OnTaskStopReady               (U32 TaskId, unsigned int Cause);
+void SEGGER_SYSVIEW_OnUserStart                   (unsigned int UserId);       // Start of user defined event (such as a subroutine to profile)
+void SEGGER_SYSVIEW_OnUserStop                    (unsigned int UserId);       // Start of user defined event
 
 void SEGGER_SYSVIEW_NameResource                  (U32 ResourceId, const char* sName);
 
-int  SEGGER_SYSVIEW_SendPacket                    (U8* pPacket, U8* pPayloadEnd, unsigned EventId);
+int  SEGGER_SYSVIEW_SendPacket                    (U8* pPacket, U8* pPayloadEnd, unsigned int EventId);
 
 /*********************************************************************
 *
 *       Event parameter encoding functions
 */
-U8*  SEGGER_SYSVIEW_EncodeU32                     (U8* pPayload, unsigned Value);
-U8*  SEGGER_SYSVIEW_EncodeData                    (U8* pPayload, const char* pSrc, unsigned Len);
-U8*  SEGGER_SYSVIEW_EncodeString                  (U8* pPayload, const char* s, unsigned MaxLen);
-U8*  SEGGER_SYSVIEW_EncodeId                      (U8* pPayload, unsigned Id);
+U8*  SEGGER_SYSVIEW_EncodeU32                     (U8* pPayload, U32 Value);
+U8*  SEGGER_SYSVIEW_EncodeData                    (U8* pPayload, const char* pSrc, unsigned int Len);
+U8*  SEGGER_SYSVIEW_EncodeString                  (U8* pPayload, const char* s, unsigned int MaxLen);
+U8*  SEGGER_SYSVIEW_EncodeId                      (U8* pPayload, U32 Id);
 U32  SEGGER_SYSVIEW_ShrinkId                      (U32 Id);
 
 

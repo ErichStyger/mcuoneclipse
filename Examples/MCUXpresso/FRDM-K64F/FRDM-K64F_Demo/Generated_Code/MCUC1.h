@@ -7,7 +7,7 @@
 **     Version     : Component 01.008, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-07, 08:19, # CodeGen: 190
+**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
 **     Abstract    :
 **
 **     Settings    :
@@ -61,6 +61,10 @@
 /* MODULE MCUC1. */
 #include "MCUC1config.h" /* include configuration header file */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
   #ifndef __IASMARM__ /* not including standard header files if using IAR assembler */
   /* Include shared modules, which are used for whole project */
@@ -77,7 +81,7 @@
     #include <stdbool.h> /* bool, true, false, ... */
   #endif
 
-  /* booloean values */
+  /* boolean values */
   #ifndef FALSE
     #define  FALSE  0x00u
   #endif
@@ -151,12 +155,15 @@
   typedef unsigned long int       uint32;
 #endif
 
-/* Include inherited components */
 
 
 
 
 /* END MCUC1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __MCUC1_H */

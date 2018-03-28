@@ -4,20 +4,21 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.079, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-03-28, 09:38, # CodeGen: 226
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
 **          Component name                                 : WAIT1
+**          SDK                                            : MCUC1
 **          Use Cycle Counter                              : Enabled
 **            Cortex Tools                                 : KIN1
-**          SDK                                            : MCUC1
 **          Manual Clock Values                            : Disabled
 **          Delay100usFunction                             : Delay100US
-**          RTOS                                           : Disabled
+**          RTOS                                           : Enabled
+**            RTOS                                         : FRTOS1
 **          Watchdog                                       : Disabled
 **     Contents    :
 **         Wait10Cycles   - void WAIT1_Wait10Cycles(void);
@@ -76,15 +77,13 @@
 #include "MCUC1.h" /* SDK and API used */
 #include "WAIT1config.h" /* configuration */
 
-/* Include inherited components */
-#include "KIN1.h"
-#include "MCUC1.h"
-
 /* other includes needed */
-/* include RTOS header files */
-#include "FreeRTOS.h" /* for vTaskDelay() */
-#include "task.h"
-
+#if WAIT1_CONFIG_USE_RTOS_WAIT
+  /* include RTOS header files */
+  #include "FRTOS1.h"
+  #include "FreeRTOS.h" /* for vTaskDelay() */
+  #include "task.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,7 +99,6 @@ extern "C" {
 #define WAIT1_NofCyclesMs(ms, hz)  ((ms)*((hz)/1000)) /* calculates the needed cycles based on bus clock frequency */
 #define WAIT1_NofCyclesUs(us, hz)  ((us)*(((hz)/1000)/1000)) /* calculates the needed cycles based on bus clock frequency */
 #define WAIT1_NofCyclesNs(ns, hz)  (((ns)*(((hz)/1000)/1000))/1000) /* calculates the needed cycles based on bus clock frequency */
-
 
 #define WAIT1_WAIT_C(cycles) \
      ( (cycles)<=10 ? \
@@ -204,8 +202,11 @@ void WAIT1_Waitms(uint16_t ms);
 ** ===================================================================
 */
 
-#define WAIT1_WaitOSms(ms) \
-  vTaskDelay(ms/portTICK_PERIOD_MS)
+#if WAIT1_CONFIG_USE_RTOS_WAIT
+  #define WAIT1_WaitOSms(ms) vTaskDelay(pdMS_TO_TICKS(ms)) /* use FreeRTOS API */
+#else
+  #define WAIT1_WaitOSms(ms)  WAIT1_Waitms(ms) /* use normal wait */
+#endif
 /*
 ** ===================================================================
 **     Method      :  WAIT1_WaitOSms (component Wait)
@@ -216,10 +217,6 @@ void WAIT1_Waitms(uint16_t ms);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-#ifdef __cplusplus
-}  /* extern "C" */
-#endif
 
 void WAIT1_WaitLongCycles(uint32_t cycles);
 /*
@@ -257,6 +254,10 @@ void WAIT1_DeInit(void);
 */
 
 /* END WAIT1. */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif
 /* ifndef __WAIT1_H */

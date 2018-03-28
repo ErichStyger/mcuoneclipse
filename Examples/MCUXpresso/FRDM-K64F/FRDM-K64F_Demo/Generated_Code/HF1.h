@@ -4,23 +4,22 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : HardFault
-**     Version     : Component 01.018, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-16, 08:00, # CodeGen: 187
+**     Date/Time   : 2017-08-16, 16:26, # CodeGen: 217
 **     Abstract    :
 **          Component to simplify hard faults for ARM/Kinetis.
 **     Settings    :
 **          Component name                                 : HF1
 **          SDK                                            : MCUC1
-**          Disabling write buffer                         : no
+**          Disable write buffer                           : no
 **     Contents    :
 **         HardFaultHandler - void HF1_HardFaultHandler(void);
 **         Deinit           - void HF1_Deinit(void);
 **         Init             - void HF1_Init(void);
 **
-**     * Copyright : (c) Copyright Mario Viara, 2013-2016, https://github.com/MarioViara/xprintfc
-**      * Adopted for Processor Expert: Erich Styger
+**     * Copyright (c) 2014-2017, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

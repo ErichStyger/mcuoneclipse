@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.198, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.203, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-10-25, 10:00, # CodeGen: 176
+**     Date/Time   : 2017-12-09, 15:57, # CodeGen: 219
 **     Abstract    :
 **
 **     Settings    :
@@ -85,6 +85,9 @@
 **         f_expand          - FRESULT FAT1_f_expand(FIL* fp, FSIZE_t fsz, BYTE opt);
 **         f_findfirst       - FRESULT FAT1_f_findfirst(DIR* dp, FILINFO* fno, const TCHAR* path, const...
 **         f_findnext        - FRESULT FAT1_f_findnext(DIR* dp, FILINFO* fno);
+**         f_opendir         - FRESULT FAT1_f_opendir(DIR* dp, const TCHAR* path);
+**         f_readdir         - FRESULT FAT1_f_readdir(DIR *dj, FILINFO *fno);
+**         f_closedir        - FRESULT FAT1_f_closedir(DIR* dp);
 **         get_fattime       - uint32_t FAT1_get_fattime(void);
 **         ParseCommand      - uint8_t FAT1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         CheckCardPresence - uint8_t FAT1_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS...
@@ -105,7 +108,7 @@
 **         Deinit            - uint8_t FAT1_Deinit(void);
 **         Init              - uint8_t FAT1_Init(void);
 **
-**     Copyright (c) 2014-2016, Erich Styger
+**     Copyright (c) 2014-2017,  Erich Styger
 **     Web: http://mcuoneclipse.com/
 **     SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **     Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -352,7 +355,7 @@ static uint8_t PrintDir(const uint8_t *dirPathPtr, const CLS1_StdIOType *io) {
   CLS1_SendStr((unsigned char*)"Directory of ", io->stdOut);
   CLS1_SendStr(dirPathPtr, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-  fres = FAT1_opendir(&dir, (char*)dirPathPtr);
+  fres = FAT1_f_opendir(&dir, (const TCHAR*)dirPathPtr);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"opendir failed", fres, io);
     return ERR_FAULT;
@@ -440,7 +443,7 @@ static uint8_t PrintDir(const uint8_t *dirPathPtr, const CLS1_StdIOType *io) {
   CLS1_SendStr((unsigned char*)" Dir(s)", io->stdOut);
 #if !FAT1_FS_READONLY
   /* number of free bytes */
-  fres = FAT1_getfree((char*)dirPathPtr, &p1, &fs);
+  fres = FAT1_getfree((const TCHAR*)dirPathPtr, &p1, &fs);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"getfree failed", fres, io);
   } else {
@@ -452,6 +455,7 @@ static uint8_t PrintDir(const uint8_t *dirPathPtr, const CLS1_StdIOType *io) {
     CLS1_SendStr((unsigned char*)" KBytes free", io->stdOut);
   }
 #endif
+  (void)FAT1_f_closedir(&dir); /* close directory */
   io->stdOut('\r');
   io->stdOut('\n');
   return ERR_OK;
@@ -476,7 +480,7 @@ static uint8_t DirCmd(const unsigned char *cmd, const CLS1_ConstStdIOType *io) {
   } else { /* use current directory */
 #if FAT1_FS_RPATH >= 2
     FAT1_FRESULT fres;
-    fres = FAT1_getcwd((char*)FAT1_PTR_NAMEBUF(fileName), FAT1_SIZE_NAMEBUF(fileName));
+    fres = FAT1_getcwd((TCHAR*)FAT1_PTR_NAMEBUF(fileName), FAT1_SIZE_NAMEBUF(fileName));
     if(fres!=FR_OK) {
       FatFsFResultMsg((unsigned char*)"getcwd failed", fres, io);
       res = ERR_FAILED;
@@ -664,7 +668,7 @@ static uint8_t CdCmd(const unsigned char *cmd, const CLS1_ConstStdIOType *io) {
 #if FAT1_FS_RPATH >= 2
     FAT1_FRESULT fres;
 
-    fres = FAT1_getcwd((char*)FAT1_PTR_NAMEBUF(fileName), FAT1_SIZE_NAMEBUF(fileName));
+    fres = FAT1_getcwd((TCHAR*)FAT1_PTR_NAMEBUF(fileName), FAT1_SIZE_NAMEBUF(fileName));
     if(fres!=FR_OK) {
       FatFsFResultMsg((unsigned char*)"getcwd failed", fres, io);
       res = ERR_FAILED;
@@ -1934,14 +1938,15 @@ uint8_t FAT1_CopyFile(const uint8_t*srcFileName, const uint8_t *dstFileName, con
     return ERR_FAILED;
   }
   /* open source file */
-  fres = FAT1_open(&fsrc, (char*)srcFileName, FA_OPEN_EXISTING | FA_READ);
+  fres = FAT1_open(&fsrc, (const TCHAR*)srcFileName, FA_OPEN_EXISTING | FA_READ);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"open source file failed", fres, io);
     return ERR_FAILED;
   }
   /* create destination file */
-  fres = FAT1_open(&fdst, (char*)dstFileName, FA_CREATE_ALWAYS | FA_WRITE);
+  fres = FAT1_open(&fdst, (const TCHAR*)dstFileName, FA_CREATE_ALWAYS | FA_WRITE);
   if (fres != FR_OK) {
+    (void)FAT1_close(&fsrc); /* close the source file which we have open */
     FatFsFResultMsg((unsigned char*)"open destination file failed", fres, io);
     return ERR_FAILED;
   }
@@ -2015,7 +2020,7 @@ uint8_t FAT1_DeleteFile(const uint8_t *fileName, const CLS1_StdIOType *io)
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  fres = FAT1_unlink((char*)fileName);
+  fres = FAT1_unlink((const TCHAR*)fileName);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"unlink failed", fres, io);
     return ERR_FAILED;
@@ -2045,7 +2050,7 @@ uint8_t FAT1_CreateFile(const uint8_t *fileName, const CLS1_StdIOType *io)
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  fres = FAT1_open(&fp, (char*)fileName, FA_CREATE_NEW);
+  fres = FAT1_open(&fp, (const TCHAR*)fileName, FA_CREATE_NEW);
   if (fres != FR_OK) {
     FatFsFResultMsg((unsigned char*)"creating new file failed", fres, io);
     return ERR_FAILED;
@@ -2209,7 +2214,7 @@ uint8_t FAT1_MakeDirectory(const uint8_t *dirName, const CLS1_StdIOType *io)
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  fres = FAT1_mkdir((char*)dirName);
+  fres = FAT1_mkdir((const TCHAR*)dirName);
   if(fres!=FR_OK) {
     FatFsFResultMsg((unsigned char*)"mkdir failed", fres, io);
     return ERR_FAILED;
@@ -2235,7 +2240,7 @@ uint8_t FAT1_ChangeDirectory(const uint8_t *dirName, const CLS1_StdIOType *io)
 #if FAT1_FS_RPATH > 0
   FAT1_FRESULT fres;
 
-  if ((fres=FAT1_chdir((char*)dirName)) != FR_OK) {
+  if ((fres=FAT1_chdir((const TCHAR*)dirName)) != FR_OK) {
     FatFsFResultMsg((unsigned char*)"chdir failed", fres, io);
     return ERR_FAILED;
   }
@@ -2277,7 +2282,7 @@ uint8_t FAT1_RenameFile(const uint8_t *srcFileName, const uint8_t *dstFileName, 
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  fres = FAT1_rename((char*)srcFileName, (char*)dstFileName);
+  fres = FAT1_rename((const TCHAR*)srcFileName, (const TCHAR*)dstFileName);
   if(fres!=FR_OK) {
     FatFsFResultMsg((unsigned char*)"rename failed", fres, io);
     return ERR_FAILED;
@@ -2638,7 +2643,7 @@ uint8_t FAT1_Benchmark(const CLS1_StdIOType *io)
 
   CLS1_SendStr((const unsigned char*)"Create benchmark file...\r\n", io->stdOut);
   (void)TmDt1_GetTime(&startTime);
-  if (FAT1_open(&fp, "./bench.txt", FA_CREATE_ALWAYS|FA_WRITE)!=FR_OK) {
+  if (FAT1_open(&fp, (const TCHAR*)"./bench.txt", FA_CREATE_ALWAYS|FA_WRITE)!=FR_OK) {
     CLS1_SendStr((const unsigned char*)"*** Failed opening benchmark file!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2661,7 +2666,7 @@ uint8_t FAT1_Benchmark(const CLS1_StdIOType *io)
   /* read benchmark */
   CLS1_SendStr((const unsigned char*)"Read 100kB benchmark file...\r\n", io->stdOut);
   (void)TmDt1_GetTime(&startTime);
-  if (FAT1_open(&fp, "./bench.txt", FA_READ)!=FR_OK) {
+  if (FAT1_open(&fp, (const TCHAR*)"./bench.txt", FA_READ)!=FR_OK) {
     CLS1_SendStr((const unsigned char*)"*** Failed opening benchmark file!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2797,6 +2802,65 @@ FRESULT FAT1_f_findfirst(DIR* dp, FILINFO* fno, const TCHAR* path, const TCHAR* 
 */
 /*
 FRESULT FAT1_f_findnext(DIR* dp, FILINFO* fno)
+{
+  *** method is implemented as macro in the header file
+}
+*/
+
+/*
+** ===================================================================
+**     Method      :  FAT1_f_opendir (component FAT_FileSystem)
+**     Description :
+**         Open a directory
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dp              - Pointer to the open directory object
+**         path            - path of directory
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*
+FRESULT FAT1_f_opendir(DIR* dp, const TCHAR* path)
+{
+  *** method is implemented as macro in the header file
+}
+*/
+
+/*
+** ===================================================================
+**     Method      :  FAT1_f_closedir (component FAT_FileSystem)
+**     Description :
+**         Close a directory
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dp              - Pointer to the open directory object
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*
+FRESULT FAT1_f_closedir(DIR* dp)
+{
+  *** method is implemented as macro in the header file
+}
+*/
+
+/*
+** ===================================================================
+**     Method      :  FAT1_f_readdir (component FAT_FileSystem)
+**     Description :
+**         Read a directory item
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dir             - Pointer to the open directory object
+**         fno             - Pointer to the file information structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+/*
+FRESULT FAT1_f_readdir(DIR *dj, FILINFO *fno)
 {
   *** method is implemented as macro in the header file
 }

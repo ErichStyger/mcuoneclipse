@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Trigger
-**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.065, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-12-10, 11:52, # CodeGen: 180
+**     Date/Time   : 2018-03-20, 12:58, # CodeGen: 223
 **     Abstract    :
 **
 This component implements triggers.
@@ -27,7 +27,7 @@ Triggers are callbacks with a time when they should be executed.
 **         AnyTriggerPending - bool TRG1_AnyTriggerPending(void);
 **         TriggerPending    - bool TRG1_TriggerPending(uint8_t trigger);
 **
-**     * Copyright (c) 2013-2016, Erich Styger
+**     * Copyright (c) 2013-2018, Erich Styger
 **      * Web:         https://mcuoneclipse.com
 **      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

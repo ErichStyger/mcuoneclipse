@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.198, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.203, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-09-19, 15:15, # CodeGen: 175
+**     Date/Time   : 2017-08-01, 10:20, # CodeGen: 216
 **     Abstract    :
 **
 **     Settings    :
@@ -85,6 +85,9 @@
 **         f_expand          - FRESULT FAT1_f_expand(FIL* fp, FSIZE_t fsz, BYTE opt);
 **         f_findfirst       - FRESULT FAT1_f_findfirst(DIR* dp, FILINFO* fno, const TCHAR* path, const...
 **         f_findnext        - FRESULT FAT1_f_findnext(DIR* dp, FILINFO* fno);
+**         f_opendir         - FRESULT FAT1_f_opendir(DIR* dp, const TCHAR* path);
+**         f_readdir         - FRESULT FAT1_f_readdir(DIR *dj, FILINFO *fno);
+**         f_closedir        - FRESULT FAT1_f_closedir(DIR* dp);
 **         get_fattime       - uint32_t FAT1_get_fattime(void);
 **         ParseCommand      - uint8_t FAT1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         CheckCardPresence - uint8_t FAT1_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS...
@@ -105,7 +108,7 @@
 **         Deinit            - uint8_t FAT1_Deinit(void);
 **         Init              - uint8_t FAT1_Init(void);
 **
-**     Copyright (c) 2014-2016, Erich Styger
+**     Copyright (c) 2014-2017,  Erich Styger
 **     Web: http://mcuoneclipse.com/
 **     SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **     Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -1201,6 +1204,53 @@ uint8_t FAT1_CreateFile(const uint8_t *fileName, const CLS1_StdIOType *io);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         dp              - Pointer to the open directory object
+**         fno             - Pointer to the file information structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+#define FAT1_f_opendir(dp, path) \
+  f_opendir(dp, path)
+/*
+** ===================================================================
+**     Method      :  FAT1_f_opendir (component FAT_FileSystem)
+**     Description :
+**         Open a directory
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dp              - Pointer to the open directory object
+**         path            - path of directory
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+#define FAT1_f_closedir(dp) \
+  f_closedir(dp)
+/*
+** ===================================================================
+**     Method      :  FAT1_f_closedir (component FAT_FileSystem)
+**     Description :
+**         Close a directory
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dp              - Pointer to the open directory object
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+#define FAT1_f_readdir(dj, fno) \
+  f_readdir(dj, fno)
+/*
+** ===================================================================
+**     Method      :  FAT1_f_readdir (component FAT_FileSystem)
+**     Description :
+**         Read a directory item
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         dir             - Pointer to the open directory object
 **         fno             - Pointer to the file information structure
 **     Returns     :
 **         ---             - Error code

@@ -4,10 +4,10 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RingBuffer
-**     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-12-10, 10:35, # CodeGen: 179
+**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
 **     Abstract    :
 **         This component implements a ring buffer for different integer data type.
 **     Settings    :
@@ -20,9 +20,11 @@
 **     Contents    :
 **         Clear           - void Tx1_Clear(void);
 **         Put             - uint8_t Tx1_Put(Tx1_ElementType elem);
-**         Putn            - uint8_t Tx1_Putn(Tx1_ElementType *elem, Tx1_BufSizeType nof);
 **         Get             - uint8_t Tx1_Get(Tx1_ElementType *elemP);
 **         Peek            - uint8_t Tx1_Peek(Tx1_BufSizeType index, Tx1_ElementType *elemP);
+**         Update          - uint8_t Tx1_Update(Tx1_BufSizeType index, Tx1_ElementType *elemP);
+**         Putn            - uint8_t Tx1_Putn(Tx1_ElementType *elem, Tx1_BufSizeType nof);
+**         Getn            - uint8_t Tx1_Getn(Tx1_ElementType *buf, Tx1_BufSizeType nof);
 **         Compare         - uint8_t Tx1_Compare(Tx1_BufSizeType index, Tx1_ElementType *elemP,...
 **         Delete          - uint8_t Tx1_Delete(void);
 **         NofElements     - Tx1_BufSizeType Tx1_NofElements(void);
@@ -30,14 +32,32 @@
 **         Deinit          - void Tx1_Deinit(void);
 **         Init            - void Tx1_Init(void);
 **
-**     License   :  Open Source (LGPL)
-**     Copyright : (c) Copyright Erich Styger, 2014-2015, all rights reserved.
-**     Web: http://www.mcuoneclipse.com
-**     This an open source software of an embedded component for Processor Expert.
-**     This is a free software and is opened for education,  research  and commercial developments under license policy of following terms:
-**     * This is a free software and there is NO WARRANTY.
-**     * No restriction on use. You can use, modify and redistribute it for personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.
-**     * Redistributions of source code must retain the above copyright notice.
+**     * Copyright (c) 2014-2017, Erich Styger
+**      * Web:         https://mcuoneclipse.com
+**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**      * All rights reserved.
+**      *
+**      * Redistribution and use in source and binary forms, with or without modification,
+**      * are permitted provided that the following conditions are met:
+**      *
+**      * - Redistributions of source code must retain the above copyright notice, this list
+**      *   of conditions and the following disclaimer.
+**      *
+**      * - Redistributions in binary form must reproduce the above copyright notice, this
+**      *   list of conditions and the following disclaimer in the documentation and/or
+**      *   other materials provided with the distribution.
+**      *
+**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file Tx1.c
@@ -157,6 +177,34 @@ uint8_t Tx1_Get(Tx1_ElementType *elemP)
     }
   }
   Tx1_EXIT_CRITICAL();
+  return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  Tx1_Getn (component RingBuffer)
+**     Description :
+**         Get a number elements into a buffer.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * buf             - Pointer to buffer where to store the
+**                           elements
+**         nof             - number of elements
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t Tx1_Getn(Tx1_ElementType *buf, Tx1_BufSizeType nof)
+{
+  uint8_t res = ERR_OK;
+
+  while(nof>0) {
+    res = Tx1_Get(buf);
+    if (res!=ERR_OK) {
+      break;
+    }
+    buf++; nof--;
+  }
   return res;
 }
 
@@ -335,6 +383,40 @@ uint8_t Tx1_Delete(void)
     if (Tx1_outIdx==Tx1_CONFIG_BUF_SIZE) {
       Tx1_outIdx = 0;
     }
+  }
+  Tx1_EXIT_CRITICAL();
+  return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  Tx1_Update (component RingBuffer)
+**     Description :
+**         Updates the data of an element.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         index           - Index of element. 0 peeks the top
+**                           element, 1 the next, and so on.
+**       * elemP           - Pointer to where to store the received
+**                           element
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t Tx1_Update(Tx1_BufSizeType index, Tx1_ElementType *elemP)
+{
+  uint8_t res = ERR_OK;
+  int idx; /* index inside ring buffer */
+  Tx1_DEFINE_CRITICAL();
+
+  Tx1_ENTER_CRITICAL();
+  if (index>=Tx1_CONFIG_BUF_SIZE) {
+    res = ERR_OVERFLOW; /* asking for an element outside of ring buffer size */
+  } else if (index<Tx1_inSize) {
+    idx = (Tx1_outIdx+index)%Tx1_CONFIG_BUF_SIZE;
+    Tx1_buffer[idx] = *elemP; /* replace element */
+  } else { /* asking for an element which does not exist */
+    res = ERR_RXEMPTY;
   }
   Tx1_EXIT_CRITICAL();
   return res;
