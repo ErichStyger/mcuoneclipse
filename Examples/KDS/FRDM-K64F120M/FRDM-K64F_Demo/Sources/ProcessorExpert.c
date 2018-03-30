@@ -127,6 +127,20 @@
 
 #include "PORT_PDD.h"
 
+static void test(void) {
+  uint8_t buf[32];
+  float Lat = 34.123456;
+  float Lon = 35.567891;
+  int strlLength;
+
+  strlLength = XF1_xsprintf(buf,"GPS = %2.7f, %2.7f\r\n",Lat,Lon);
+  buf[0] = '\0';
+  strlLength = XF1_xsnprintf(buf, sizeof(buf),"GPS = %2.7f, %2.7f\r\n",Lat,Lon);
+  //The result is:
+  //s = "GPS = 34, 35"
+
+}
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -135,7 +149,7 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-
+  test();
 #if PL_HAS_SD_CARD
   /* SD card detection: PTE6 with pull-down! */
   PORT_PDD_SetPinPullSelect(PORTE_BASE_PTR, 6, PORT_PDD_PULL_DOWN);
