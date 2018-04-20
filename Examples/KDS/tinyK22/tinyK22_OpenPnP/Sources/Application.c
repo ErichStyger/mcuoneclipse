@@ -9,6 +9,7 @@
 #include "Shell.h"
 #include "LED1.h"
 #include "Feeder.h"
+#include "Pressure.h"
 
 static void AppTask(void *param) {
   (void)param;
@@ -18,10 +19,10 @@ static void AppTask(void *param) {
   } /* for */
 }
 
-
 void APP_Run(void) {
   SHELL_Init();
   FEED_Init();
+  PRESSURE_Init();
   if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }

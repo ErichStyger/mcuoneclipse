@@ -7,6 +7,7 @@
 
 #include "CLS1.h"
 #include "UTIL1.h"
+#include "Feeder.h"
 
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"feeder", (unsigned char*)"Group of feeder commands\r\n", io->stdOut);
@@ -15,7 +16,8 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
 }
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  CLS1_SendStatusStr((unsigned char*)"  feeder", (unsigned char*)"tbd\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"feeder", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"tbd\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -31,14 +33,10 @@ uint8_t FEED_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
   {
     *handled = TRUE;
     res = PrintStatus(io);
-//  } else if (UTIL1_strcmp((char*)cmd, "feed reset") == 0) {
-//    *handled = TRUE;
-    //KIN1_SoftwareReset(); /* will perform RESET and does NOT return here! */
   }
   return res;
 }
 
-
 void FEED_Init(void) {
-
+  /* nothing needed */
 }

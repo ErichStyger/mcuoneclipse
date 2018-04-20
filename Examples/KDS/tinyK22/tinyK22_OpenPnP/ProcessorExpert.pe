@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK22_OpenPnP</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>8</ModificationStamp>
+    <ModificationStamp>10</ModificationStamp>
     <Date>2018-04-17</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -15199,7 +15199,7 @@
         <ItemSymbol>QueuesGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>QueueRegistrySize</ItemSymbol>
@@ -15377,7 +15377,7 @@
         <ItemSymbol>RTOSAdaptorGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>MemoryAllocationGroup</ItemSymbol>
@@ -19003,16 +19003,16 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
+        <Index>2</Index>
+        <EnumSymbVal>SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>DownBufferMode</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>SEGGER_RTT_MODE_NO_BLOCK_SKIP</EnumSymbVal>
+        <Index>2</Index>
+        <EnumSymbVal>SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>BlockingSend</ItemSymbol>
@@ -19391,7 +19391,7 @@
         <ItemSymbol>ProjectNameStr</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>tinyK22 Demo</Value>
+        <Value>tinyK22 OpenPnP</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SilentModePrefixChar</ItemSymbol>
@@ -19538,8 +19538,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Serial</ItemSymbol>
