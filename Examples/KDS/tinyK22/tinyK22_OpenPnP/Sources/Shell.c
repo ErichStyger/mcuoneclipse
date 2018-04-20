@@ -28,8 +28,8 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_HAS_I2C_SPY
   I2CSPY1_ParseCommand,
 #endif
-  FEED_ParseCommand,
   PRESSURE_ParseCommand,
+  FEED_ParseCommand,
   NULL /* sentinel */
 };
 

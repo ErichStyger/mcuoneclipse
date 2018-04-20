@@ -13,16 +13,17 @@
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"feeder", (unsigned char*)"Group of feeder commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  send <cmd>", (unsigned char*)"send command to the feeder with <addr>, supported commands:\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD        : one step forward\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV        : one step backward\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> STEP <n>mm : set feeder step (4 or 12mm)\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"STS <addr> OK         : ??????\r\n", io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"feeder", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  send <cmd>", (unsigned char*)"send command to the feeder with <addr>, supported commands:\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD        : one step forward\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV        : one step backward\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"", (unsigned char*)"CMD <addr> STEP <n>mm : set feeder step (4 or 12mm)\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"", (unsigned char*)"STS <addr> OK         : ??????\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"tbd\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -30,6 +31,9 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
   uint8_t res;
   uint16_t snt;
   size_t len;
+  static unsigned char recvBuf[64];
+  char ch;
+  int timeoutMs = 1000;
 
   len = UTIL1_strlen(cmd);
   res = AS2_SendBlock((char*)cmd, len, &snt);
@@ -44,6 +48,27 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
    * ERR -6 Unknown command
    * ERR -6 Invalid Stepsize (n*2mm)
    */
+  recvBuf[0] = '\0';
+  for(;;) { /* breaks */
+    res = AS2_RecvChar(&ch);
+    if (res==ERR_RXEMPTY) {
+      vTaskDelay(pdMS_TO_TICKS(10));
+      timeoutMs -= 10;
+      if (timeoutMs<=0) { /* timeout! */
+        break;
+      }
+    }
+  }
+  if (timeoutMs<=0) {
+    CLS1_SendStr("TIMEOUT, failed get response from feeder: '", io->stdErr);
+    CLS1_SendStr(cmd, io->stdErr);
+    CLS1_SendStr("', received: '", io->stdErr);
+    CLS1_SendStr(recvBuf, io->stdErr);
+    CLS1_SendStr("'\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  /* here everything was working fine. Print 'ok' message so it can be parsed by OpenPnP Regular Expression */
+  CLS1_SendStr("ok\r\nok\r\nok\r\n", io->stdOut);
   return ERR_OK;
 }
 

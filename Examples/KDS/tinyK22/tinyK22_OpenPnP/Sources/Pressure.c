@@ -16,8 +16,8 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
 }
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"pressure", (unsigned char*)"Group of pressure sensor commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"pressure", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"tbd\r\n", io->stdOut);
   return ERR_OK;
 }
 
