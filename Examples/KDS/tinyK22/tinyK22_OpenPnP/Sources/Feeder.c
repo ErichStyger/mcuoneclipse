@@ -14,10 +14,11 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"feeder", (unsigned char*)"Group of feeder commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  send <cmd>", (unsigned char*)"send command to the feeder with <addr>, supported commands:\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD        : one step forward\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV        : one step backward\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> STEP <n>mm : set feeder step (4 or 12mm)\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"STS <addr> OK         : ??????\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD          : one step forward\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV          : one step backward\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> CNT          : used to count the number of feeders\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> SET STEP <n> : set feeder step (mm) (4 or 12)\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> STS          : get status\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -50,11 +51,17 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
    */
   recvBuf[0] = '\0';
   for(;;) { /* breaks */
+    ch = '\0';
     res = AS2_RecvChar(&ch);
     if (res==ERR_RXEMPTY) {
       vTaskDelay(pdMS_TO_TICKS(10));
       timeoutMs -= 10;
       if (timeoutMs<=0) { /* timeout! */
+        break;
+      }
+    } else { /* received character */
+      UTIL1_chcat(recvBuf, sizeof(recvBuf), ch);
+      if (ch=='\n') { /* end of transmission */
         break;
       }
     }
@@ -67,6 +74,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
     CLS1_SendStr("'\r\n", io->stdErr);
     return ERR_FAILED;
   }
+  /* \todo handle 'ok' response or 'error' response' */
   /* here everything was working fine. Print 'ok' message so it can be parsed by OpenPnP Regular Expression */
   CLS1_SendStr("ok\r\nok\r\nok\r\n", io->stdOut);
   return ERR_OK;

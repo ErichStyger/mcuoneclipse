@@ -54,6 +54,12 @@
 #include "TMOUT1.h"
 #include "AS2.h"
 #include "ASerialLdd2.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd2.h"
+#include "SCL1.h"
+#include "BitIoLdd3.h"
+#include "GI2C1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
