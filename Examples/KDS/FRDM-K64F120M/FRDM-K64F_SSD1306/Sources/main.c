@@ -43,12 +43,18 @@
 #include "MCUC1.h"
 #include "GI2C1.h"
 #include "I2C1.h"
-#include "IntI2cLdd1.h"
+#include "SDA1.h"
+#include "BitIoLdd4.h"
+#include "SCL1.h"
+#include "BitIoLdd5.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
-#include "LCD1.h"
+#include "LCD1_China.h"
 #include "RESpin1.h"
 #include "BitIoLdd6.h"
+#include "LCD1_Adafruit.h"
+#include "RESpin2.h"
+#include "BitIoLdd7.h"
 #include "KIN1.h"
 #include "FDisp1.h"
 #include "Helv8.h"
@@ -155,10 +161,10 @@ static void Matrix(void) {
 
 static void RunLCD(void) {
   //Matrix();
-  //LCD1_Clear();
-  //LCD1_PrintString("hello World!\n");
-  //LCD1_PrintString("this is on a 2nd line\n");
-  //LCD1_PrintString("this is on a 3rd line\n");
+  //LCD1_China_Clear();
+  //LCD1_China_PrintString("hello World!\n");
+  //LCD1_China_PrintString("this is on a 2nd line\n");
+  //LCD1_China_PrintString("this is on a 3rd line\n");
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
   GDisp1_DrawFilledBox(0,0,GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLUE);

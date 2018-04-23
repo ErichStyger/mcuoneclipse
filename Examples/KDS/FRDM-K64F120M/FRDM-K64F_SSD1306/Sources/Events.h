@@ -46,12 +46,18 @@
 #include "MCUC1.h"
 #include "GI2C1.h"
 #include "I2C1.h"
-#include "IntI2cLdd1.h"
+#include "SDA1.h"
+#include "BitIoLdd4.h"
+#include "SCL1.h"
+#include "BitIoLdd5.h"
 #include "WAIT1.h"
 #include "UTIL1.h"
-#include "LCD1.h"
+#include "LCD1_China.h"
 #include "RESpin1.h"
 #include "BitIoLdd6.h"
+#include "LCD1_Adafruit.h"
+#include "RESpin2.h"
+#include "BitIoLdd7.h"
 #include "KIN1.h"
 #include "FDisp1.h"
 #include "Helv8.h"
@@ -119,38 +125,6 @@ void GI2C1_OnError(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnReceiveData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the reception of the
-**         data successfully. This event is not available for the SLAVE
-**         mode and if both RecvChar and RecvBlock are disabled. This
-**         event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C1_OnReceiveData(void);
-
-/*
-** ===================================================================
-**     Event       :  I2C1_OnTransmitData (module Events)
-**
-**     Component   :  I2C1 [InternalI2C]
-**     Description :
-**         This event is invoked when I2C finishes the transmission of
-**         the data successfully. This event is not available for the
-**         SLAVE mode and if both SendChar and SendBlock are disabled.
-**         This event is enabled only if interrupts/events are enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void I2C1_OnTransmitData(void);
 
 /* END Events */
 

@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_SSD1306</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>60</ModificationStamp>
+    <ModificationStamp>64</ModificationStamp>
     <Date>2017-11-24</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -4247,9 +4247,9 @@
       <ItemId6>17</ItemId6>
       <Value6>true</Value6>
       <ItemId7>18</ItemId7>
-      <Value7>false</Value7>
+      <Value7>true</Value7>
       <ItemId8>23</ItemId8>
-      <Value8>true</Value8>
+      <Value8>false</Value8>
       <ItemId9>25</ItemId9>
       <Value9>true</Value9>
       <ItemId10>27</ItemId10>
@@ -4271,7 +4271,7 @@
       <ItemId18>46</ItemId18>
       <Value18>false</Value18>
       <ItemId19>47</ItemId19>
-      <Value19>false</Value19>
+      <Value19>true</Value19>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -18805,13 +18805,13 @@
     <BeanType>GenericSWI2C</BeanType>
     <Name>I2C1</Name>
     <CompNumb>18</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>GenericSWI2C</IconName>
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.021</BeanVersion>
+    <BeanVersion>01.023</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19066,7 +19066,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19077,7 +19077,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19099,7 +19099,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SetInput</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19110,7 +19110,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SetOutput</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19165,7 +19165,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19181,13 +19181,13 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
                     <Value>false</Value>
                     <LastSelection>false</LastSelection>
-                    <LastUserSel>never</LastUserSel>
+                    <LastUserSel>no</LastUserSel>
                     <UsrMethodName>ConnectPin</UsrMethodName>
                   </ItemState>
                   <ItemState>
@@ -19197,7 +19197,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19663,7 +19663,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19674,7 +19674,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19696,7 +19696,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SetInput</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19707,7 +19707,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SetOutput</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19762,7 +19762,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -19778,13 +19778,13 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
                     <Value>false</Value>
                     <LastSelection>false</LastSelection>
-                    <LastUserSel>never</LastUserSel>
+                    <LastUserSel>no</LastUserSel>
                     <UsrMethodName>ConnectPin</UsrMethodName>
                   </ItemState>
                   <ItemState>
@@ -19794,7 +19794,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -20056,6 +20056,15 @@
         <Index>0</Index>
         <Value>true</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>TimeoutCntrVal</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>8191</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>HEX</Base>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -20285,7 +20294,7 @@
     <BeanType>InternalI2C</BeanType>
     <Name>I2C1</Name>
     <CompNumb>23</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>I2C</IconName>
     <UserFolderName />
@@ -20619,7 +20628,7 @@
               <ItemSymbol>InternalFreq</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>init:60 MHz;prec:5%;RTS:none;clksrc_presc[SpeedMode0]Auto select;clksrc_presc[SpeedMode1]Auto select;clksrc_presc[SpeedMode2]Auto select;clksrc_presc[SpeedMode3]Auto select;clksrc_presc[SpeedMode4]Auto select;clksrc_presc[SpeedMode5]Auto select;clksrc_presc[SpeedMode6]Auto select;clksrc_presc[SpeedMode7]Auto select</Value>
+              <Value>60 MHz</Value>
               <RuntimeSetting>0</RuntimeSetting>
               <ReqDevPrescHigh>-1</ReqDevPrescHigh>
               <ReqDevPrescLow>-1</ReqDevPrescLow>
@@ -20674,7 +20683,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SCLfreq</ItemSymbol>
-              <Value>416.667 kHz</Value>
+              <Value>?</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SclOutputFrequency</ItemSymbol>
@@ -20683,15 +20692,15 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SDAhold</ItemSymbol>
-              <Value>0.417 us</Value>
+              <Value>?</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SCLStartHold</ItemSymbol>
-              <Value>1.167 us</Value>
+              <Value>?</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SCLStopHold</ItemSymbol>
-              <Value>1.217 us</Value>
+              <Value>?</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>SMBusGrp</ItemSymbol>
@@ -22204,11 +22213,11 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SCLfreq</ItemSymbol>
-        <Value>416.667 kHz</Value>
+        <Value>?</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SDAhold</ItemSymbol>
-        <Value>0.417 us</Value>
+        <Value>?</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>56F803xGrp5</ItemSymbol>
@@ -23795,7 +23804,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.157</BeanVersion>
+    <BeanVersion>01.158</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24711,7 +24720,7 @@
         <ItemSymbol>Display</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LCD1</Value>
+        <Value>LCD1_China</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>WatchdogEnabled</ItemSymbol>
@@ -25807,7 +25816,7 @@
   <Bean>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <BeanType>SSD1306</BeanType>
-    <Name>LCD1</Name>
+    <Name>LCD1_China</Name>
     <CompNumb>41</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -25822,7 +25831,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LCD1</Value>
+        <Value>LCD1_China</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>displayType</ItemSymbol>
@@ -26890,7 +26899,7 @@
         <ItemSymbol>OnGetLCDName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LCD1_OnGetLCD</Value>
+        <Value>LCD1_China_OnGetLCD</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnGiveLCD</ItemSymbol>
@@ -26906,7 +26915,7 @@
         <ItemSymbol>OnGiveLCDName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>LCD1_OnGiveLCD</Value>
+        <Value>LCD1_China_OnGiveLCD</Value>
       </ItemState>
     </Events>
   </Bean>
@@ -26915,7 +26924,7 @@
     <BeanType>SSD1306</BeanType>
     <Name>LCD1_Adafruit</Name>
     <CompNumb>47</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>SSD1306</IconName>
     <UserFolderName />
@@ -27049,7 +27058,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>61</Value>
+        <Value>60</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -27307,7 +27316,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>Deinit</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -27318,7 +27327,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetDir</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -27406,7 +27415,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>NegVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -27422,13 +27431,13 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
                     <Value>false</Value>
                     <LastSelection>false</LastSelection>
-                    <LastUserSel>never</LastUserSel>
+                    <LastUserSel>no</LastUserSel>
                     <UsrMethodName>ConnectPin</UsrMethodName>
                   </ItemState>
                   <ItemState>
@@ -27438,7 +27447,7 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>GetRawVal</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
@@ -27776,7 +27785,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>UpdateFull</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -27787,7 +27796,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>UpdateRegion</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
