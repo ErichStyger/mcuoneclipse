@@ -40,10 +40,31 @@ uint8_t PRESSURE_ParseCommand(const unsigned char* cmd, bool *handled, const CLS
   return res;
 }
 
+static void AppTask(void *param) {
+  unsigned char ch = 'A';
+  uint8_t res;
+
+  (void)param;
+  for(;;) {
+    if (xQueueSendToBack(SQUEUE_Queue, &ch, pdMS_TO_TICKS(100))!=pdPASS) {
+      /*for(;;){}*/ /* ups? */ /* loosing character */
+    }
+    vTaskDelay(pdMS_TO_TICKS(10));
+    res = xQueueReceive(SQUEUE_Queue, &ch, pdMS_TO_TICKS(100));
+    if (res==errQUEUE_EMPTY) {
+      /*for(;;){}*/ /* ups? */ /* loosing character */
+    }
+    vTaskDelay(pdMS_TO_TICKS(10));
+  } /* for */
+}
+
 void PRESSURE_Init(void) {
   SQUEUE_Queue = xQueueCreate(SQUEUE_LENGTH, SQUEUE_ITEM_SIZE);
   if (SQUEUE_Queue==NULL) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(SQUEUE_Queue, "queue");
+  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
 }
