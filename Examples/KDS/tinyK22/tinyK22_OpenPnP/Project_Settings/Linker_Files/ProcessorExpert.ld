@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : tinyK22_OpenPnP   */
 /*##                                   */
-/*##     Processor : MK22FN512VDC12    */
+/*##     Processor : MK22FN512VLH12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2018-04-17, 19:27, # CodeGen: 0 */
+/*##     Date/Time : 2018-04-24, 14:41, # CodeGen: 11 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

@@ -129,7 +129,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
       }
     }
   }
-#if 0 /* \todo disabled for now */
+#if 1
   if (timeoutMs<=0) {
     CLS1_SendStr("TIMEOUT, failed get response from feeder: '", io->stdErr);
     CLS1_SendStr(cmd, io->stdErr);

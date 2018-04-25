@@ -1,6 +1,6 @@
 /** ###################################################################
  **     Filename    : USB0_Init.h
- **     Processor   : MK22FN512DC12
+ **     Processor   : MK22FN512LH12
  **     Abstract    :
  **          This file implements the USB0 module initialization
  **          according to the Peripheral Initialization settings, and

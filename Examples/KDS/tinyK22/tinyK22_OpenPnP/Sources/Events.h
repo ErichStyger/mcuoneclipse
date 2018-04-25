@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.h
 **     Project     : tinyK22_OpenPnP
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLH12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
@@ -47,7 +47,7 @@
 #include "XF1.h"
 #include "CS1.h"
 #include "KIN1.h"
-#include "SYS1.h"
+#include "PTRC1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "USB1.h"
@@ -57,12 +57,6 @@
 #include "TMOUT1.h"
 #include "AS2.h"
 #include "ASerialLdd2.h"
-#include "I2C1.h"
-#include "SDA1.h"
-#include "BitIoLdd2.h"
-#include "SCL1.h"
-#include "BitIoLdd3.h"
-#include "GI2C1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -311,6 +305,20 @@ void AS2_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS2_OnFreeTxBuf(void);
+
+void PTRC1_OnTraceWrap(void);
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 
