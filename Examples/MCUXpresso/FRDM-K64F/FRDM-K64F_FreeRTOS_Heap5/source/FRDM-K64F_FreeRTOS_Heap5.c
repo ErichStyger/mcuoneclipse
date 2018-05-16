@@ -44,8 +44,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-static __attribute__ ((used,section(".noinit.$SRAM_LOWER_Heap5"))) uint8_t heap_sram_lower[50*1024]; /* placed in in no_init section inside SRAM_LOWER */
-static __attribute__ ((used,section(".noinit_Heap5"))) uint8_t heap_sram_upper[128*1024]; /* placed in in no_init section inside SRAM_UPPER */
+static __attribute__ ((used,section(".noinit.$SRAM_LOWER_Heap5"))) uint8_t heap_sram_lower[64*1024]; /* placed in in no_init section inside SRAM_LOWER */
+static __attribute__ ((used,section(".noinit_Heap5"))) uint8_t heap_sram_upper[64*1024]; /* placed in in no_init section inside SRAM_UPPER */
 
 static HeapRegion_t xHeapRegions[] =
 {
