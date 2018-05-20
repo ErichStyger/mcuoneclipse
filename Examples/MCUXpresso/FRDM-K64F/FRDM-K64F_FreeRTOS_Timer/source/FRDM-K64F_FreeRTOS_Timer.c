@@ -55,6 +55,8 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
+    GPIO_PortClear(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* turn on LED */
+    GPIO_PortSet(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* turn off LED */
     PRINTF("Hello World\n");
 
     /* Force the counter to be placed into memory. */
