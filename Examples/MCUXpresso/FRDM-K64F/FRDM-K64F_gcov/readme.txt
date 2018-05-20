@@ -10,10 +10,11 @@ It has confirmed working with the following libraries:
 - newlib-nano (semihosting)
 
 It does *not* work currently with:
-- redlib (semihosting) (crash in gcov_init(), as there is no list of constructor function pointers?). But file I/O works.
+- redlib (semihosting) (fails in gcov_init(), as there is no list of constructor function pointers?). But file I/O works.
 - redlib (semihost-mb) (dito)
+additionally, redlib seems not to implement the needed coverarage routines (would need standalone implementation)
 
-Which gcov implemenation is used is configured in gcov_support.h
+Which gcov implementation is used is configured in gcov_support.h
 
 See:
 - https://mcuoneclipse.com/2017/06/18/adding-gnu-coverage-tools-to-eclipse/

@@ -34,6 +34,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#if GCOV_USE_TCOV
+  #include "tcov.h"
+#endif
+
+
 void __gcov_flush(void); /* internal gcov function to write data */
 
 int gcov_check(void) {
@@ -55,7 +60,7 @@ int gcov_check(void) {
 
 void gcov_write(void) {
 #if GCOV_USE_TCOV
-    tcov_print_all(); /* print coverage information */
+  tcov_print_all(); /* print coverage information */
 #elif GCOV_USE_GCOV_EMBEDDED
   void gcov_exit(void);
 

@@ -40,21 +40,31 @@
  * Add --coverage to the source files which shall be tested.
  * Add --coverage to the linker flags
  *  */
-#define GCOV_USE_STANDARD_GCOV_LIB     (1 && GCOV_DO_COVERAGE)
+#define GCOV_USE_STANDARD_GCOV_LIB     (0 && GCOV_DO_COVERAGE)
   /*<! 1: using standard gcov library inside newlib/newlib nano; 0: using custom gcov library */
 
 
-/* tcov is a tiny coverage implementation, see gcov/tcov directory */
+/* tcov is a tiny coverage implementation, see gcov/tcov directory. It writes the internal coverage info to the console.
+ * Add --coverage to the source files which shall be tested.
+ * Do *not* add --coverage to the linker flags as tcov implements its own library
+ *  */
 #define GCOV_USE_TCOV                  (0 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: to enable tiny coverage module (do *not* add --coverage to the linker flags!); 0: to disable it */
 
-/* gcov is another tiny implementation of gcov, which implements the GNU gcov outside the library */
-#define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
-  /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
-#define GCOV_USE_GCOV_EMBEDDED         (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+/* gcov is another tiny implementation of gcov, which implements the GNU gcov outside the library
+ * Add --coverage to the source files which shall be tested.
+ * Do *not* add --coverage to the linker flags as tcov implements its own library
+ *  */
+#define GCOV_USE_GCOV_EMBEDDED         (1 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use libgcov-embedded port (do *not* add --coverage to the linker flags!); 0: to disable it */
 #define GCOV_EMBEDDED_FILE_IO          (0 && GCOV_USE_GCOV_EMBEDDED)
   /*!< 1: use semihosting file I/O, 0: use gdb commands */
+
+/* EXPERIMENTAL ONLY */
+#define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
+  /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
+
+
 
 #if GCOV_USE_GCOV_EMBEDDED
   #define ENABLE_LIBGCOV_PORT  (1)
