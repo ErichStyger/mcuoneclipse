@@ -11,7 +11,7 @@
   #error "ENABLE_LIBGCOV_PORT must be defined and set to 0 or 1"
 #endif
 
-#ifdef ENABLE_LIBGCOV_PORT
+#if ENABLE_LIBGCOV_PORT
 
 #include <stdio.h>
 #include <stddef.h>

@@ -71,7 +71,9 @@ static void TestCoverage(int i) {
  */
 int main(void) {
 #if GCOV_DO_COVERAGE
-    gcov_init();
+  #if !defined(__REDLIB__)
+    gcov_init(); /* do *not* call this for redlib as it does not implement constructors! */
+  #endif
     if (!gcov_check()) {
       printf("WARNING: writing coverage does not work! Wrong library used?\n");
     }
@@ -89,8 +91,8 @@ int main(void) {
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     TestCoverage(3);
-#if GCOV_USE_TCOV
-    gcov_write();
+#if GCOV_DO_COVERAGE
+    gcov_write(); /* write coverage files */
 #endif
     while(1) {
         i++ ;
