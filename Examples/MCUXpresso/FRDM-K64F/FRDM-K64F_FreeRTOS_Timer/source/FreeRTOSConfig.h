@@ -143,4 +143,10 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
 
+/* Do not include if processing assembly file */
+#if (!defined(__IAR_SYSTEMS_ASM__) && !defined(__ASSEMBLER__))
+#   include "fsl_device_registers.h"
+#   include "SEGGER_SYSVIEW_FreeRTOS.h"
+#endif
+
 #endif /* FREERTOS_CONFIG_H */

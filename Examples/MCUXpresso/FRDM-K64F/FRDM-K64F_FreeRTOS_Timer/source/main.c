@@ -44,6 +44,57 @@
 #include "task.h"
 #include "timers.h"
 
+#define USE_SEGGER_SYSVIEW  (1)
+
+#if USE_SEGGER_SYSVIEW
+
+#include "SEGGER_SYSVIEW.h"
+#include "SEGGER_RTT.h"
+
+#define SYSVIEW_DEVICE_NAME "FRDMK64F Cortex-M4"
+#define SYSVIEW_RAM_BASE (0x1FFF0000)
+
+extern SEGGER_RTT_CB _SEGGER_RTT;
+extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
+
+/* The application name to be displayed in SystemViewer */
+#ifndef SYSVIEW_APP_NAME
+#define SYSVIEW_APP_NAME "SDK System view example"
+#endif
+
+/* The target device name */
+#ifndef SYSVIEW_DEVICE_NAME
+#define SYSVIEW_DEVICE_NAME "Generic Cortex device"
+#endif
+
+/* Frequency of the timestamp. Must match SEGGER_SYSVIEW_GET_TIMESTAMP in SEGGER_SYSVIEW_Conf.h */
+#define SYSVIEW_TIMESTAMP_FREQ (configCPU_CLOCK_HZ)
+
+/* System Frequency. SystemcoreClock is used in most CMSIS compatible projects. */
+#define SYSVIEW_CPU_FREQ configCPU_CLOCK_HZ
+
+/* The lowest RAM address used for IDs (pointers) */
+#ifndef SYSVIEW_RAM_BASE
+#define SYSVIEW_RAM_BASE 0x20000000
+#endif
+
+/*!
+ * @brief System View callback
+ */
+static void _cbSendSystemDesc(void)
+{
+    SEGGER_SYSVIEW_SendSysDesc("N=" SYSVIEW_APP_NAME ",D=" SYSVIEW_DEVICE_NAME ",O=FreeRTOS");
+    SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
+}
+
+void SEGGER_SYSVIEW_Conf(void)
+{
+    SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
+    SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
+}
+
+#endif
+
 /* TODO: insert other definitions and declarations here. */
 
 static uint32_t cycleCntCounter = 0;
@@ -119,7 +170,6 @@ static void AppTask(void *param) {
 	}
 }
 
-
 /*
  * @brief   Application entry point.
  */
@@ -130,6 +180,10 @@ int main(void) {
     BOARD_InitBootPeripherals();
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
+
+#if USE_SEGGER_SYSVIEW
+    SEGGER_SYSVIEW_Conf();
+#endif
 
     GPIO_PortClear(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* turn on LED */
     GPIO_PortSet(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* turn off LED */
