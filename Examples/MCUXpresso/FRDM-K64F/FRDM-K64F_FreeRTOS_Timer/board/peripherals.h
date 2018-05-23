@@ -12,6 +12,8 @@
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_port.h"
+#include "fsl_clock.h"
+#include "fsl_ftm.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -25,6 +27,19 @@ extern "C" {
 #define GPIO_1_GPIO GPIOB
 /* Alias for GPIOE peripheral */
 #define GPIO_2_GPIO GPIOE
+/* Definition of peripheral ID */
+#define FTM_1_PERIPHERAL FTM0
+/* Definition of the clock source frequency */
+#define FTM_1_CLOCK_SOURCE CLOCK_GetFreq(kCLOCK_BusClk)
+/* FTM_1 interrupt vector ID (number). */
+#define FTM_1_IRQN FTM0_IRQn
+/* FTM_1 interrupt handler identifier. */
+#define FTM_1_IRQHANDLER FTM0_IRQHandler
+
+/***********************************************************************************************************************
+ * Global variables
+ **********************************************************************************************************************/
+extern const ftm_config_t FTM_1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

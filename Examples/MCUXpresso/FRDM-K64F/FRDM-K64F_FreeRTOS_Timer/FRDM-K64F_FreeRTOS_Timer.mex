@@ -70,6 +70,11 @@
                         <pin_feature name="gpio_init_state" value="true"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="GPIOA" signal="GPIO, 4" pin_num="38" pin_signal="PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -199,6 +204,16 @@
                   <data type="Version">2.2.1</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="FTM Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.ftm" description="Unsupported version of the FTM Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="compatible">
+                  <data type="Version">2.0.2</data>
+               </feature>
+            </dependency>
          </dependencies>
          <peripherals_profile>
             <processor_version>4.0.0</processor_version>
@@ -207,7 +222,13 @@
             <functional_group name="BOARD_InitPeripherals" uuid="d9465a2f-999b-4ea5-b758-9fb506a5fc2a" called_from_default_init="true" id_prefix="" core="core0">
                <description></description>
                <options/>
-               <dependencies/>
+               <dependencies>
+                  <dependency resourceType="ClockOutput" resourceId="Bus_clock" description="Bus clock is inactive." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
                <instances>
                   <instance name="GPIO_1" type="gpio" type_id="gpio_f970a92e447fa4793838db25a2947ed7" mode="GPIO" peripheral="GPIOB" enabled="true">
                      <config_set name="fsl_gpio" quick_selection="QS_GPIO_1">
@@ -227,6 +248,54 @@
                            <setting name="enable_priority" value="false"/>
                            <setting name="enable_custom_name" value="false"/>
                         </struct>
+                     </config_set>
+                  </instance>
+                  <instance name="FTM_1" type="ftm" type_id="ftm_5e037045c21cf6f361184c371dbbbab2" mode="EdgeAligned" peripheral="FTM0" enabled="true">
+                     <config_set name="ftm_main_config">
+                        <struct name="ftm_config">
+                           <setting name="clockSource" value="kFTM_SystemClock"/>
+                           <setting name="clockSourceFreq" value="GetFreq"/>
+                           <setting name="prescale" value="kFTM_Prescale_Divide_1"/>
+                           <setting name="timerFrequency" value="10000"/>
+                           <setting name="bdmMode" value="kFTM_BdmMode_0"/>
+                           <set name="pwmSyncMode">
+                              <selected>
+                                 <id>kFTM_SoftwareTrigger</id>
+                              </selected>
+                           </set>
+                           <set name="reloadPoints">
+                              <selected/>
+                           </set>
+                           <setting name="faultMode" value="kFTM_Fault_Disable"/>
+                           <setting name="faultFilterValue" value="0"/>
+                           <setting name="deadTimePrescale" value="kFTM_Deadtime_Prescale_1"/>
+                           <setting name="deadTimeValue" value="0"/>
+                           <set name="extTriggers">
+                              <selected/>
+                           </set>
+                           <set name="chnlInitState">
+                              <selected/>
+                           </set>
+                           <set name="chnlPolarity">
+                              <selected/>
+                           </set>
+                           <setting name="useGlobalTimeBase" value="false"/>
+                        </struct>
+                        <set name="timer_interrupts">
+                           <selected>
+                              <id>kFTM_TimeOverflowInterruptEnable</id>
+                           </selected>
+                        </set>
+                        <setting name="enable_irq" value="false"/>
+                        <struct name="ftm_interrupt">
+                           <setting name="IRQn" value="FTM0_IRQn"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                        <setting name="EnableTimerInInit" value="true"/>
+                     </config_set>
+                     <config_set name="ftm_edge_aligned_mode">
+                        <array name="ftm_edge_aligned_channels_config"/>
                      </config_set>
                   </instance>
                </instances>

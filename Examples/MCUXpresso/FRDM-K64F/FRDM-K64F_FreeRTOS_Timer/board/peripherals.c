@@ -89,6 +89,69 @@ void GPIO_2_init(void) {
 }
 
 /***********************************************************************************************************************
+ * FTM_1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FTM_1'
+- type: 'ftm'
+- mode: 'EdgeAligned'
+- type_id: 'ftm_5e037045c21cf6f361184c371dbbbab2'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FTM0'
+- config_sets:
+  - ftm_main_config:
+    - ftm_config:
+      - clockSource: 'kFTM_SystemClock'
+      - clockSourceFreq: 'GetFreq'
+      - prescale: 'kFTM_Prescale_Divide_1'
+      - timerFrequency: '10000'
+      - bdmMode: 'kFTM_BdmMode_0'
+      - pwmSyncMode: 'kFTM_SoftwareTrigger'
+      - reloadPoints: ''
+      - faultMode: 'kFTM_Fault_Disable'
+      - faultFilterValue: '0'
+      - deadTimePrescale: 'kFTM_Deadtime_Prescale_1'
+      - deadTimeValue: '0'
+      - extTriggers: ''
+      - chnlInitState: ''
+      - chnlPolarity: ''
+      - useGlobalTimeBase: 'false'
+    - timer_interrupts: 'kFTM_TimeOverflowInterruptEnable'
+    - enable_irq: 'false'
+    - ftm_interrupt:
+      - IRQn: 'FTM0_IRQn'
+      - enable_priority: 'false'
+      - enable_custom_name: 'false'
+    - EnableTimerInInit: 'true'
+  - ftm_edge_aligned_mode:
+    - ftm_edge_aligned_channels_config: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const ftm_config_t FTM_1_config = {
+  .prescale = kFTM_Prescale_Divide_1,
+  .bdmMode = kFTM_BdmMode_0,
+  .pwmSyncMode = kFTM_SoftwareTrigger,
+  .reloadPoints = 0,
+  .faultMode = kFTM_Fault_Disable,
+  .faultFilterValue = 0,
+  .deadTimePrescale = kFTM_Deadtime_Prescale_1,
+  .deadTimeValue = 0,
+  .extTriggers = 0,
+  .chnlInitState = 0,
+  .chnlPolarity = 0,
+  .useGlobalTimeBase = false
+};
+
+void FTM_1_init(void) {
+  FTM_Init(FTM_1_PERIPHERAL, &FTM_1_config);
+  FTM_SetTimerPeriod(FTM_1_PERIPHERAL, ((FTM_1_CLOCK_SOURCE/ (1U << (FTM_1_PERIPHERAL->SC & FTM_SC_PS_MASK))) / 10000) + 1);
+  FTM_EnableInterrupts(FTM_1_PERIPHERAL, kFTM_TimeOverflowInterruptEnable);
+  FTM_StartTimer(FTM_1_PERIPHERAL, kFTM_SystemClock);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -96,6 +159,7 @@ void BOARD_InitPeripherals(void)
   /* Initialize components */
   GPIO_1_init();
   GPIO_2_init();
+  FTM_1_init();
 }
 
 /***********************************************************************************************************************

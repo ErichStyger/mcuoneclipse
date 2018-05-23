@@ -37,11 +37,16 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
+void AppConfigureTimerForRuntimeStats(void);
+uint32_t AppGetRuntimeCounterValueFromISR(void);
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() AppConfigureTimerForRuntimeStats()
+#define portGET_RUN_TIME_COUNTER_VALUE() AppGetRuntimeCounterValueFromISR()
 
+#define configRECORD_STACK_HIGH_ADDRESS        (1)
 #define configUSE_PREEMPTION                    1
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
-#define configTICK_RATE_HZ                      ((TickType_t)200)
+#define configTICK_RATE_HZ                      ((TickType_t)1000)
 #define configMAX_PRIORITIES                    5
 #define configMINIMAL_STACK_SIZE                ((unsigned short)90)
 #define configMAX_TASK_NAME_LEN                 20
@@ -74,7 +79,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
 /* Run time and task stats gathering related definitions. */
-#define configGENERATE_RUN_TIME_STATS           0
+#define configGENERATE_RUN_TIME_STATS           1
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
