@@ -88,6 +88,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
   uint16_t snt;
   size_t len;
   static unsigned char recvBuf[64];
+  static unsigned char sendBuf[64];
   static FEED_CmdDesc txCommand, rxCommand;
   char ch;
   int timeoutMs = 1000;
@@ -99,8 +100,10 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
     CLS1_SendStr("'\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  len = UTIL1_strlen(cmd);
-  res = AS2_SendBlock((char*)cmd, len, &snt);
+  UTIL1_strcpy(sendBuf, sizeof(sendBuf), cmd);
+  UTIL1_chcat(sendBuf, sizeof(sendBuf), '\n');
+  len = UTIL1_strlen(sendBuf);
+  res = AS2_SendBlock((char*)sendBuf, len, &snt);
   if (res!=ERR_OK || len!=snt) {
     CLS1_SendStr("Failed to send command to feeder: '", io->stdErr);
     CLS1_SendStr(cmd, io->stdErr);
@@ -172,6 +175,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
 uint8_t FEED_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io)
 {
   uint8_t res = ERR_OK;
+  uint8_t buf[48];
 
   /* from OpenPnP the following commands are sent:
    * 'Feed'      => M800
