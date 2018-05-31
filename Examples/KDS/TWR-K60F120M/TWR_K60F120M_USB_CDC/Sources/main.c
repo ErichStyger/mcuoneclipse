@@ -167,8 +167,22 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
+  LED1_Neg();
+  WAIT1_Waitms(200);
+  LED2_Neg();
+  WAIT1_Waitms(200);
+  LED3_Neg();
+  WAIT1_Waitms(200);
+  LED4_Neg();
+  WAIT1_Waitms(200);
+
+#if USE_FREERTOS
+  if (FRTOS1_xTaskCreate(MainTask, "Main", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+#else
+  CDC_Run();
+#endif
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

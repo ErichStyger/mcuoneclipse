@@ -8,3 +8,4 @@ for more details.
 
 NOTE:
 Due a silicon bug, the Cpu.c needs a manual modification. See above blog post!
+To use the on-board SWD/JTAG connector with an external probe, you have to power the board through the Elevator!
