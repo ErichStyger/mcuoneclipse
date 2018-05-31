@@ -10,34 +10,39 @@
 #include "Feeder.h"
 #include "AS2.h" /* UART to feeder */
 
+static uint32_t FEED_nofErrors = 0; /* error counter */
+
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"feeder", (unsigned char*)"Group of feeder commands\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  send <cmd>", (unsigned char*)"send command to the feeder with <addr>, supported commands:\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD          : one step forward\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV          : one step backward\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD <n> mm   : <n> mm step forward (<n> must be multiple of 2)\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV <n> mm   : <n> mm step backward (<n> must be multiple of 2)\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> CNT          : used to count the number of feeders\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> SET STEP <n> : set feeder step (mm) (4 or 12)\r\n", io->stdOut);
-//  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> STS          : get status\r\n", io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t errorStr[16];
+
   CLS1_SendStatusStr((unsigned char*)"feeder", (unsigned char*)"\r\n", io->stdOut);
-  CLS1_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"tbd\r\n", io->stdOut);
+  UTIL1_Num32sToStr(errorStr, sizeof(errorStr), FEED_nofErrors);
+  UTIL1_strcat(errorStr, sizeof(errorStr), "\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  errors", (unsigned char*)errorStr, io->stdOut);
   return ERR_OK;
 }
 
 typedef struct {
   unsigned char cmd[sizeof("CMD")];
   int32_t id; /* device ID/address */
-  unsigned char op[sizeof("SET STEP 12")];
+  unsigned char op[sizeof("FWD 12 12 mm")];
   unsigned char reply[64]; /* response string */
 } FEED_CmdDesc;
 
 static uint8_t ParseCommand(const unsigned char *cmd, FEED_CmdDesc *command) {
   uint8_t res;
   const unsigned char *p;
+  int32_t num;
 
   /* init descriptor */
   command->cmd[0] = '\0';
@@ -47,39 +52,52 @@ static uint8_t ParseCommand(const unsigned char *cmd, FEED_CmdDesc *command) {
   if (UTIL1_strncmp(cmd, "CMD ", sizeof("CMD ")-1)!=0) {
     /* no match, store it as error string */
     UTIL1_strcpy(command->reply, sizeof(command->reply), cmd);
-    return ERR_OK;
+    return ERR_FAILED;
   } else {
     UTIL1_strcpy(command->cmd, sizeof(command->cmd), "CMD");
    }
   p = cmd+sizeof("CMD ")-1;
-  res = UTIL1_xatoi(&p, &command->id);
+  res = UTIL1_xatoi(&p, &command->id); /* store feeder ID */
   if (res!=ERR_OK) {
     return ERR_FAILED;
   }
-  if (UTIL1_strncmp(p, " FWD", sizeof(" FWD")-1)==0) {
-    UTIL1_strcpy(command->op, sizeof(command->op), "FWD");
-    p += sizeof(" FWD")-1;
-  } else if (UTIL1_strncmp(p, " REV", sizeof(" REV")-1)==0) {
-    UTIL1_strcpy(command->op, sizeof(command->op), "REV");
-    p += sizeof(" REV")-1;
-  } else if (UTIL1_strncmp(p, " CNT", sizeof(" CNT")-1)==0) {
-    UTIL1_strcpy(command->op, sizeof(command->op), "CNT");
-    p += sizeof(" CNT")-1;
-  } else if (UTIL1_strncmp(p, " SET STEP ", sizeof(" SET STEP ")-1)==0) {
-    int32_t num;
-
-    UTIL1_strcpy(command->op, sizeof(command->op), "SET STEP ");
-    p += sizeof(" SET STEP ")-1;
+  /* now check for the command */
+  if (UTIL1_strncmp(p, " FWD ", sizeof(" FWD ")-1)==0) {
+    UTIL1_strcpy(command->op, sizeof(command->op), "FWD ");
+    p += sizeof(" FWD ")-1;
     res = UTIL1_xatoi(&p, &num); /* parse number... */
     if (res!=ERR_OK) {
       return ERR_FAILED;
     }
     UTIL1_strcatNum32s(command->op, sizeof(command->op), num); /* ... and add it again */
+    if (UTIL1_strncmp(p, " mm", sizeof("mm")-1)==0) {
+      UTIL1_strcat(command->op, sizeof(command->op), " mm");
+      p += sizeof(" mm"-1);
+    } else {
+      return ERR_FAILED; /* wrong command */
+    }
+  } else if (UTIL1_strncmp(p, " REV ", sizeof(" REV ")-1)==0) {
+    UTIL1_strcpy(command->op, sizeof(command->op), "REV ");
+    p += sizeof(" REV ")-1;
+    res = UTIL1_xatoi(&p, &num); /* parse number... */
+    if (res!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    UTIL1_strcatNum32s(command->op, sizeof(command->op), num); /* ... and add it again */
+    if (UTIL1_strncmp(p, " mm", sizeof("mm")-1)==0) {
+      UTIL1_strcat(command->op, sizeof(command->op), "mm");
+      p += sizeof(" mm"-1);
+    } else {
+      return ERR_FAILED; /* wrong command */
+    }
+  } else if (UTIL1_strncmp(p, " CNT", sizeof(" CNT")-1)==0) {
+    UTIL1_strcpy(command->op, sizeof(command->op), "CNT");
+    p += sizeof(" CNT")-1;
   }
   if (*p==' ') {
     p++; /* skip space */
   }
-  UTIL1_strcpy(command->reply, sizeof(command->reply), p); /* copy rest of message */
+  UTIL1_strcpy(command->reply, sizeof(command->reply), p); /* copy rest of message as reply part */
   return ERR_OK;
 }
 
@@ -113,7 +131,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
   /* check response from Feeder. Possible responses are (with the address as the feeder number:
    * ERR -6 Invalid number format
    * ERR -6 Unknown command
-   * ERR -6 Invalid Stepsize (n*2mm)
+   * ERR -6 Invalid Stepsize
    */
   recvBuf[0] = '\0';
   for(;;) { /* breaks */
@@ -145,9 +163,11 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
   /* dummy response for testing only */
   UTIL1_strcpy(recvBuf, sizeof(recvBuf), "CMD -3 FWD ok");
 #endif
+  CLS1_SendStr("Received: ", io->stdOut); /* write response to console */
+  CLS1_SendStr(recvBuf, io->stdOut); /* write response to console */
   res = ParseCommand(recvBuf, &rxCommand);
   if (res!=ERR_OK) {
-    CLS1_SendStr("Failed parsing RX command: '", io->stdErr);
+    CLS1_SendStr("Failed parsing RX command, have received: '", io->stdErr);
     CLS1_SendStr(recvBuf, io->stdErr);
     CLS1_SendStr("'\r\n", io->stdErr);
     return ERR_FAILED;
@@ -158,7 +178,7 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
    */
   if (   UTIL1_strcmp(txCommand.cmd, rxCommand.cmd)==0 /* same command */
       && UTIL1_strcmp(txCommand.op, rxCommand.op)==0 /* same op */
-      && UTIL1_strcmp(rxCommand.reply, "ok")==0 /* reply was 'ok' */
+      && UTIL1_strcmp(rxCommand.reply, "ok\r\n")==0 /* reply was 'ok' */
      )
   {
     /* here everything was working fine. Print 'ok' message so it can be parsed by OpenPnP Regular Expression */
@@ -166,9 +186,10 @@ static uint8_t FEED_SendCommand(const unsigned char *cmd, const CLS1_StdIOType *
     return ERR_OK;
   }
   /* here we are in an error case: the response is not what we expected. So we throw an error */
-  CLS1_SendStr("not expected response from feeder: '", io->stdErr);
+  FEED_nofErrors++;
+  CLS1_SendStr("Bad response from feeder: ", io->stdErr);
   CLS1_SendStr(recvBuf, io->stdErr);
-  CLS1_SendStr("'\r\n", io->stdErr);
+  CLS1_SendStr("\r\n", io->stdErr);
   return ERR_FAILED;
 }
 
@@ -197,5 +218,5 @@ uint8_t FEED_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 }
 
 void FEED_Init(void) {
-  /* nothing needed */
+  FEED_nofErrors = 0;
 }
