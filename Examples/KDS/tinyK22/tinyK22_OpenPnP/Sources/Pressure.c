@@ -64,7 +64,7 @@ void PRESSURE_Init(void) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(SQUEUE_Queue, "queue");
-  if (xTaskCreate(AppTask, "App", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
 }
