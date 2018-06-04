@@ -19,6 +19,9 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> FWD <n> mm   : <n> mm step forward (<n> must be multiple of 2)\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> REV <n> mm   : <n> mm step backward (<n> must be multiple of 2)\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"CMD <addr> CNT          : used to count the number of feeders\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"M codes:", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"M850 <addr> <n> mm     : Performs a feed operation on <addr> with <n> mm\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"", (unsigned char*)"M851 <addr> <n> mm     : Performs a post-pick operation on <addr> with <n> mm\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -197,6 +200,8 @@ uint8_t FEED_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 {
   uint8_t res = ERR_OK;
   uint8_t buf[48];
+  const unsigned char *p;
+  int32_t addr, mm;
 
   /* from OpenPnP the following commands are sent:
    * 'Feed'      => M800
@@ -213,6 +218,22 @@ uint8_t FEED_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
   } else if (UTIL1_strncmp((char*)cmd, "feeder send ", sizeof("feeder send ")-1)==0) {
     *handled = TRUE;
     return FEED_SendCommand(cmd+sizeof("feeder send ")-1, io);
+  } else if (UTIL1_strncmp((char*)cmd, "M850 ", sizeof("M850 ")-1)==0) { /* feed operation: "M850 <addr> <n> mm  */
+    *handled = TRUE;
+
+    p = cmd + sizeof("M850 ")-1;
+    res = UTIL1_xatoi(&p, &addr);
+    if (res==ERR_OK) {
+      res = UTIL1_xatoi(&p, &mm);
+      if (res==ERR_OK) {
+        UTIL1_strcpy(buf, sizeof(buf), "CMD ");
+        UTIL1_strcatNum32s(buf, sizeof(buf), addr);
+        UTIL1_strcat(buf, sizeof(buf), " FWD ");
+        UTIL1_strcatNum32s(buf, sizeof(buf), mm);
+        UTIL1_strcat(buf, sizeof(buf), " mm");
+        return FEED_SendCommand(buf, io);
+      }
+    }
   }
   return res;
 }
