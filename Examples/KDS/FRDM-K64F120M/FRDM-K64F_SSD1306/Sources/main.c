@@ -70,26 +70,6 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-#include "circle.inc" /* image data */
-
-static uint8_t len = 3;
-
-int TestDynamicArray(void) {
-  int32_t array[len];
-  int32_t array2[4*len];
-  int32_t i, sum = 0;
-
-  for(i=0;i<sizeof(array)/sizeof(array[0]);i++) {
-    array[i] = i;
-    sum++;
-  }
-  for(i=0;i<sizeof(array2)/sizeof(array2[0]);i++) {
-    array2[i] =  i;
-    sum++;
-  }
-  return sum;
-}
-
 static void Matrix(void) {
   int x,y;
   int r;
@@ -162,7 +142,47 @@ static void Matrix(void) {
   }
 }
 
+
+/* monochrome image (24x16 pixels)
+ * 0: pixel set
+ * 1: pixel clear
+ * Bytes are from left-to-right and top-to-bottom, Bits in Big-Endian order
+ *  */
+typedef struct {
+    const uint8_t *data;
+    uint16_t width;
+    uint16_t height;
+    uint8_t dataSize;
+    } tImage;
+#include "square.inc"
+#include "Circle.inc"
+
+static void ShowMonoImage(void) {
+    TIMAGE image;
+
+    image.width = square.width;
+    image.height = square.height;
+    image.name = "";
+    image.size = image.width*image.height;
+    image.pixmap = square.data;
+
+    GDisp1_Clear();
+    GDisp1_DrawMonoBitmap(0, 0, &image, GDisp1_COLOR_BLACK, GDisp1_COLOR_WHITE);
+    GDisp1_UpdateFull();
+
+    image.width = Circle.width;
+    image.height = Circle.height;
+    image.name = "";
+    image.size = image.width*image.height;
+    image.pixmap = Circle.data;
+
+    GDisp1_Clear();
+    GDisp1_DrawMonoBitmap(0, 0, &image, GDisp1_COLOR_BLACK, GDisp1_COLOR_WHITE);
+    GDisp1_UpdateFull();
+}
+
 static void RunLCD(void) {
+  ShowMonoImage();
   //Matrix();
   //LCD1_China_Clear();
   //LCD1_China_PrintString("hello World!\n");
@@ -206,18 +226,6 @@ static void RunLCD(void) {
   GDisp1_ClrPixel(1, 1);
   GDisp1_ClrPixel(2, 2);
   GDisp1_UpdateFull();
-  {
-  TIMAGE image;
-
-  image.width = (Circle[0]<<8)|Circle[1];
-  image.height = (Circle[2]<<8)|Circle[3];
-  image.name = "";
-  image.size = image.width*image.height;
-  image.pixmap = &Circle[6];
-
-  GDisp1_DrawMonoBitmap(0, 0, &image, GDisp1_COLOR_BLACK, GDisp1_COLOR_WHITE);
-  GDisp1_UpdateFull();
-  }
 
   GDisp1_DrawHLine(0,0,15,GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
@@ -265,7 +273,6 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
-  TestDynamicArray();
   LED1_On();
   WAIT1_Waitms(10);
   LED1_Off();

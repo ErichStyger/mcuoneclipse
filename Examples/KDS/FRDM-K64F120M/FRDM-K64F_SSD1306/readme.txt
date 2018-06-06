@@ -7,3 +7,7 @@ Adafruit 1.3" 128x64 OLED Display: (note: the project contains a pre-configured 
 - I2C Address 0x3D (60d)
 - 1000 us delay time between transactions
 - disable block transfer
+
+
+Monochrome Date generated with 
+http://www.riuson.com/lcd-image-converter
