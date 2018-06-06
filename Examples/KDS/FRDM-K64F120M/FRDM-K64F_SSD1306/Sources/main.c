@@ -70,6 +70,8 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+#include "circle.inc" /* image data */
+
 static uint8_t len = 3;
 
 int TestDynamicArray(void) {
@@ -106,6 +108,7 @@ static void Matrix(void) {
   GDisp1_UpdateFull();
   GDisp1_SetPixel(GDisp1_GetWidth()-1,GDisp1_GetHeight()-1);
   GDisp1_UpdateFull();
+
 
   //GDisp1_DrawLine(0,0,GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, GDisp1_COLOR_BLUE);
   //GDisp1_UpdateFull();
@@ -203,7 +206,18 @@ static void RunLCD(void) {
   GDisp1_ClrPixel(1, 1);
   GDisp1_ClrPixel(2, 2);
   GDisp1_UpdateFull();
+  {
+  TIMAGE image;
 
+  image.width = (Circle[0]<<8)|Circle[1];
+  image.height = (Circle[2]<<8)|Circle[3];
+  image.name = "";
+  image.size = image.width*image.height;
+  image.pixmap = &Circle[6];
+
+  GDisp1_DrawMonoBitmap(0, 0, &image, GDisp1_COLOR_BLACK, GDisp1_COLOR_WHITE);
+  GDisp1_UpdateFull();
+  }
 
   GDisp1_DrawHLine(0,0,15,GDisp1_COLOR_BLACK);
   GDisp1_UpdateFull();
