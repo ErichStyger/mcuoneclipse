@@ -59,6 +59,9 @@ void reason(int r) {
 
 long int LLL = 5;
 
+char *b[20];
+int *pp[5];
+
 int main(void) {
   /* Write your code here */
   /* semihosting tests */
@@ -67,6 +70,7 @@ int main(void) {
   i = *p;
   LLL+=5;
 
+  LLL = sizeof(*b);
   //reason(0x7d);
   printf("hello world!\r\n");
   fprintf(stdout, "Stdout output: %d\r\n", i);
