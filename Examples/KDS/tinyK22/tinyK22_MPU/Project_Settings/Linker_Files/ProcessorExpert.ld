@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2018-06-25, 07:43, # CodeGen: 0 */
+/*##     Date/Time : 2018-06-25, 11:48, # CodeGen: 5 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -165,6 +165,7 @@ SECTIONS
      . = ALIGN(4);
      ___m_data_20000000_RAMStart = .;
      *(.m_data_20000000) /* This is an User defined section */
+     *(privileged_data)
      ___m_data_20000000_RAMEnd = .;
      . = ALIGN(4);
   } > m_data_20000000
