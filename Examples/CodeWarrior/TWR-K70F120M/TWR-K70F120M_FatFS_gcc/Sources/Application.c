@@ -26,7 +26,7 @@ void APP_Run(void) {
   SHELL_Init();
   if (FRTOS1_xTaskCreate(
         Task1,  /* pointer to the task */
-        (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
+        (char *)"Task1", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

@@ -47,18 +47,21 @@
 #include "LEDpin4.h"
 #include "BitIoLdd4.h"
 #include "FRTOS1.h"
+#include "RTOSTICKLDD1.h"
 #include "UTIL1.h"
 #include "WAIT1.h"
 #include "CLS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "XF1.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
