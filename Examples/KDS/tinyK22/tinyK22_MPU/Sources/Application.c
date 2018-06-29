@@ -43,6 +43,15 @@ static void AppTask(void *param) {
   } /* for */
 }
 
+static void RestrictedTask(void *param) {
+  (void)param;
+  for(;;) {
+    LED1_Neg();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  } /* for */
+}
+
+
 #define CLK_GATE_REG_OFFSET_SHIFT 16U
 #define CLK_GATE_REG_OFFSET_MASK 0xFFFF0000U
 #define CLK_GATE_BIT_SHIFT_SHIFT 0U
@@ -108,10 +117,49 @@ static void TestMPU(void) {
   for(;;) {}
 }
 
+/* Declare the stack that will be used by the task.  The stack alignment must
+match its size and be a power of 2, so if 128 words are reserved for the stack
+then it must be aligned to ( 128 * 4 ) bytes.  This example used GCC syntax. */
+static portSTACK_TYPE xTaskStack[ 128 ] __attribute__((aligned(128*4)));
+
+/* Declare an array that will be accessed by the task.  The task should only
+be able to read from the array, and not write to it. */
+char cReadOnlyArray[ 512 ] __attribute__((aligned(512)));
+#define mainREAD_ONLY_ALIGN_SIZE  512
+
+/* Fill in a TaskParameters_t structure to define the task - this is the
+structure passed to the xTaskCreateRestricted() function. */
+static const TaskParameters_t xTaskDefinition =
+{
+    RestrictedTask,   /* pvTaskCode */
+    "A task",        /* pcName */
+    128,             /* usStackDepth - defined in words, not bytes. */
+    NULL,            /* pvParameters */
+    1 /*  | portPRIVILEGE_BIT*/,               /* uxPriority - priority 1, start in User mode. */
+    xTaskStack,      /* puxStackBuffer - the array to use as the task stack. */
+
+    /* xRegions - In this case only one of the three user definable regions is
+    actually used.  The parameters are used to set the region to read only. */
+    {
+        /* Base address   Length                    Parameters */
+        { cReadOnlyArray, mainREAD_ONLY_ALIGN_SIZE, portMPU_REGION_READ_ONLY },
+        { 0,            0,                        0                        },
+        { 0,            0,                        0                        },
+    }
+};
+/* see portNUM_CONFIGURABLE_REGIONS for the number of regions */
+
+
 void APP_Run(void) {
   TestMPU();
-#if 0
+#if 1
+  /* Privileged task: */
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+  /* restricted task: */
+
+  if (xTaskCreateRestricted(&xTaskDefinition, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
 #endif
