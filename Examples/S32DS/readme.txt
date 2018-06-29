@@ -1,0 +1,1 @@
+This folder contains examples with the NXP S32 Design Studio.
