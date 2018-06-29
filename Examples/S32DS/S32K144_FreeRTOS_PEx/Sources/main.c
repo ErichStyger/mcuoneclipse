@@ -29,6 +29,12 @@
   volatile int exit_code = 0;
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+static void AppTask(void *param) {
+	(void)param;
+	for(;;) {
+	  vTaskDelay(pdMS_TO_TICKS(1000));
+	} /* for */
+}
 
 /*!
   \brief The main function for the project.
@@ -46,8 +52,10 @@ int main(void)
   #endif
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  /* For example: for(;;) { } */
+  if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+  vTaskStartScheduler();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
