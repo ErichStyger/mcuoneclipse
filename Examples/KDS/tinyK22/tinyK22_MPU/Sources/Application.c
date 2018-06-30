@@ -52,6 +52,7 @@ static void RestrictedTask(void *param) {
 }
 
 
+#if configUSE_MPU_SUPPORT
 #define CLK_GATE_REG_OFFSET_SHIFT 16U
 #define CLK_GATE_REG_OFFSET_MASK 0xFFFF0000U
 #define CLK_GATE_BIT_SHIFT_SHIFT 0U
@@ -148,17 +149,20 @@ static const TaskParameters_t xTaskDefinition =
     }
 };
 /* see portNUM_CONFIGURABLE_REGIONS for the number of regions */
-
+#endif
 
 void APP_Run(void) {
+#if configUSE_MPU_SUPPORT
   TestMPU();
+#endif
 #if 1
   /* Privileged task: */
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
+#endif
+#if configUSE_MPU_SUPPORT
   /* restricted task: */
-
   if (xTaskCreateRestricted(&xTaskDefinition, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }

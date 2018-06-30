@@ -5,12 +5,16 @@
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-06-25, 07:43, # CodeGen: 0
+**     Date/Time   : 2018-06-30, 10:33, # CodeGen: 15
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
 **     Contents    :
-**         Cpu_OnNMI - void Cpu_OnNMI(void);
+**         FRTOS1_vApplicationStackOverflowHook - void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char...
+**         FRTOS1_vApplicationTickHook          - void FRTOS1_vApplicationTickHook(void);
+**         FRTOS1_vApplicationIdleHook          - void FRTOS1_vApplicationIdleHook(void);
+**         FRTOS1_vApplicationMallocFailedHook  - void FRTOS1_vApplicationMallocFailedHook(void);
+**         Cpu_OnNMI                            - void Cpu_OnNMI(void);
 **
 ** ###################################################################*/
 /*!
@@ -40,27 +44,7 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Event       :  Cpu_OnNMI (module Events)
-**
-**     Component   :  Cpu [MK22FN512DC12]
-*/
-/*!
-**     @brief
-**         This event is called when the Non maskable interrupt had
-**         occurred. This event is automatically enabled when the [NMI
-**         interrupt] property is set to 'Enabled'.
-*/
-/* ===================================================================*/
-void Cpu_OnNMI(void)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
+INFO: empty Drivers\common\GeneralDamage.inc file
 **     Description :
 **         if enabled, this hook will be called in case of a stack
 **         overflow.
@@ -68,7 +52,7 @@ void Cpu_OnNMI(void)
 **         NAME            - DESCRIPTION
 **         pxTask          - Task handle
 **       * pcTaskName      - Pointer to task name
-**     Returns     : Nothing
+INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
 void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
@@ -86,14 +70,12 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 
 /*
 ** ===================================================================
-**     Event       :  FRTOS1_vApplicationTickHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
+INFO: empty Drivers\common\GeneralDamage.inc file
 **     Description :
 **         If enabled, this hook will be called by the RTOS for every
 **         tick increment.
-**     Parameters  : None
-**     Returns     : Nothing
+INFO: empty Drivers\common\GeneralParametersNone.inc file
+INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
 void FRTOS1_vApplicationTickHook(void)
@@ -104,14 +86,12 @@ void FRTOS1_vApplicationTickHook(void)
 
 /*
 ** ===================================================================
-**     Event       :  FRTOS1_vApplicationIdleHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
+INFO: empty Drivers\common\GeneralDamage.inc file
 **     Description :
 **         If enabled, this hook will be called when the RTOS is idle.
 **         This might be a good place to go into low power mode.
-**     Parameters  : None
-**     Returns     : Nothing
+INFO: empty Drivers\common\GeneralParametersNone.inc file
+INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
 void FRTOS1_vApplicationIdleHook(void)
@@ -123,14 +103,12 @@ void FRTOS1_vApplicationIdleHook(void)
 
 /*
 ** ===================================================================
-**     Event       :  FRTOS1_vApplicationMallocFailedHook (module Events)
-**
-**     Component   :  FRTOS1 [FreeRTOS]
+INFO: empty Drivers\common\GeneralDamage.inc file
 **     Description :
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
-**     Parameters  : None
-**     Returns     : Nothing
+INFO: empty Drivers\common\GeneralParametersNone.inc file
+INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
 void FRTOS1_vApplicationMallocFailedHook(void)
@@ -143,6 +121,24 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Event       :  Cpu_OnNMI (module Events)
+**
+**     Component   :  Cpu [MK22FN512DC12]
+*/
+/*!
+**     @brief
+**         This event is called when the Non maskable interrupt had
+**         occurred. This event is automatically enabled when the [NMI
+**         interrupt] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnNMI(void)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */
