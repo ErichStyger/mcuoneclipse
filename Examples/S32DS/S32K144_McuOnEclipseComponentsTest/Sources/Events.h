@@ -12,4 +12,40 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
+void FRTOS1_vApplicationTickHook(void);
+/*
+** ===================================================================
+INFO: empty Drivers\common\GeneralDamage.inc file
+**     Description :
+**         If enabled, this hook will be called by the RTOS for every
+**         tick increment.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vApplicationIdleHook(void);
+/*
+** ===================================================================
+INFO: empty Drivers\common\GeneralDamage.inc file
+**     Description :
+**         If enabled, this hook will be called when the RTOS is idle.
+**         This might be a good place to go into low power mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vApplicationMallocFailedHook(void);
+/*
+** ===================================================================
+INFO: empty Drivers\common\GeneralDamage.inc file
+**     Description :
+**         If enabled, the RTOS will call this hook in case memory
+**         allocation failed.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 

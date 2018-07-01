@@ -29,6 +29,54 @@
   volatile int exit_code = 0;
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "pins_driver.h"
+#include "Events.h"
+#include "Events.c"
+
+static void AppTask(void *param) {
+  (void)param;
+  for(;;) {
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  } /* for */
+}
+
+
+static void Components_Init(void) {
+  #define CPU_INIT_MCUONECLIPSE_DRIVERS
+  /* IMPORTANT: copy the content from Cpu.c! */
+/*------------------------------------------------------------------*/
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  /* ### McuLibConfig "MCUC1" init code ... */
+  MCUC1_Init();
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  CS1_Init(); /* ### CriticalSection "CS1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  XF1_Init(); /* ### XFormat "XF1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  CLS1_Init(); /* ### Shell "CLS1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  RTT1_Init(); /* ### SeggerRTT "RTT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  SYS1_Init(); /* ### SeggerSystemView "SYS1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  RNG1_Init(); /* ### RingBuffer "RNG1" init code ... */
+#endif
+/*------------------------------------------------------------------*/
+}
 
 /*!
   \brief The main function for the project.
@@ -47,6 +95,13 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  Components_Init();
+
+  if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error! probably out of memory */
+  }
+  vTaskStartScheduler();
+
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
