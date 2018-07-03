@@ -69,7 +69,7 @@
  *          multiple nonOadjacent memory areas
  */
 #ifndef configFRTOS_MEMORY_SCHEME
-#define configFRTOS_MEMORY_SCHEME 3 /* thread safe malloc */
+#define configFRTOS_MEMORY_SCHEME 5 /* thread safe malloc */
 #endif
 
 #if ((configFRTOS_MEMORY_SCHEME > 5) || (configFRTOS_MEMORY_SCHEME < 1))

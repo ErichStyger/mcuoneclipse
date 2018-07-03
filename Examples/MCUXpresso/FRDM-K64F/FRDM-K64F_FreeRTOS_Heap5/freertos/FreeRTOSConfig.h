@@ -184,4 +184,8 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
 
+/* Tasks.c additions (e.g. Thread Aware Debug capability) */
+#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
+
+
 #endif /* FREERTOS_CONFIG_H */
