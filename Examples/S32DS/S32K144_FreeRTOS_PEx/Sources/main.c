@@ -26,9 +26,10 @@
 /* Including necessary module. Cpu.h contains other modules needed for compiling.*/
 #include "Cpu.h"
 
-  volatile int exit_code = 0;
-
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Events.h"
+#include "Events.c" /* need to include the .c file! */
+
 static void AppTask(void *param) {
 	(void)param;
 	for(;;) {
@@ -46,15 +47,13 @@ static void Components_Init(void) {
   MCUC1_Init();
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
-     or Processor Expert startup code. So we don't call it here again. */
-  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
-#endif
-#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  XF1_Init(); /* ### XFormat "XF1" init code ... */
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  XF1_Init(); /* ### XFormat "XF1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   CS1_Init(); /* ### CriticalSection "CS1" init code ... */
@@ -65,9 +64,22 @@ static void Components_Init(void) {
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   RTT1_Init(); /* ### SeggerRTT "RTT1" init code ... */
 #endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  SYS1_Init(); /* ### SeggerSystemView "SYS1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
+#endif
 /*------------------------------------------------------------------*/
 }
 
+#if configUSE_TICKLESS_IDLE_DECISION_HOOK
+BaseType_t xEnterTicklessIdle(void) {
+  return pdTRUE; /* yes, enter tickless idle mode */
+}
+#endif
 
 /*!
   \brief The main function for the project.
@@ -106,11 +118,8 @@ int main(void)
   /*** End of RTOS startup code.  ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
   for(;;) {
-    if(exit_code != 0) {
-      break;
-    }
+    __asm volatile("nop");
   }
-  return exit_code;
   /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
