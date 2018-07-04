@@ -153,5 +153,6 @@ standard names. */
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
+#define configRECORD_STACK_HIGH_ADDRESS           (1)
 
 #endif /* FREERTOS_CONFIG_H */
