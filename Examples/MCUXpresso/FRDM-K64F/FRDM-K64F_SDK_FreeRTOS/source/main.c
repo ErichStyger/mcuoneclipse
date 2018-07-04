@@ -50,6 +50,7 @@
 
 #include "pin_mux.h"
 #include "clock_config.h"
+#include "FreeRTOS_Timers.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -126,8 +127,9 @@ int main(void)
     BOARD_InitDebugConsole();
 
     SEGGER_SYSVIEW_Conf();
+    FreeRTOS_Timers_Init();
 
-    if (xTaskCreate(first_task, "first_task", configMINIMAL_STACK_SIZE, NULL, FIRST_TASK_PRIORITY, NULL) != pdPASS)
+    if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, FIRST_TASK_PRIORITY, NULL) != pdPASS)
     {
         PRINTF("Task creation failed!.\r\n");
         while (1)
@@ -144,7 +146,7 @@ int main(void)
  */
 static void first_task(void *pvParameters)
 {
-    if (xTaskCreate(second_task, "second_task", configMINIMAL_STACK_SIZE, NULL, SECOND_TASK_PRIORITY, NULL) != pdPASS)
+    if (xTaskCreate(second_task, "second_task", 500/sizeof(StackType_t), NULL, SECOND_TASK_PRIORITY, NULL) != pdPASS)
     {
         PRINTF("Task creation failed!.\r\n");
         vTaskSuspend(NULL);
@@ -163,17 +165,15 @@ static void first_task(void *pvParameters)
 /*!
  * @brief Second task, lower priority.
  */
-static void second_task(void *pvParameters)
-{
-    while (1)
-    {
+static void second_task(void *pvParameters) {
+    while (1) {
         /* dummy code, notify HOST when int16 underflow */
-        for (uint16_t j = (uint16_t)-1;; j--)
-        {
+        for (uint16_t j = (uint16_t)-1;; j--) {
             if (j == 0)
             {
                 SEGGER_SYSVIEW_Warn("second task int underflow");
             }
+            vTaskDelay(pdMS_TO_TICKS(5));
             __NOP();
         }
     }

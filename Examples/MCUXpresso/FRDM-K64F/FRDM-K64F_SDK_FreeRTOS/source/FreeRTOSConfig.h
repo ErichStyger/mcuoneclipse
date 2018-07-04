@@ -152,4 +152,6 @@ standard names. */
 #   include "SEGGER_SYSVIEW_FreeRTOS.h"
 #endif
 
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
+
 #endif /* FREERTOS_CONFIG_H */

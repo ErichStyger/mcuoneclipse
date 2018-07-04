@@ -207,7 +207,7 @@ int main(void) {
     if (xTaskCreate(
     	AppTask,  /* pointer to the task */
         "App", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE+20, /* task stack size */
+		300/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
