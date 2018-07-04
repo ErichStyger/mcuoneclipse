@@ -22,21 +22,11 @@ extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 #define SYSVIEW_APP_NAME "SDK System view example"
 #endif
 
-/* The target device name */
-#ifndef SYSVIEW_DEVICE_NAME
-#define SYSVIEW_DEVICE_NAME "Generic Cortex device"
-#endif
-
 /* Frequency of the timestamp. Must match SEGGER_SYSVIEW_GET_TIMESTAMP in SEGGER_SYSVIEW_Conf.h */
 #define SYSVIEW_TIMESTAMP_FREQ (configCPU_CLOCK_HZ)
 
 /* System Frequency. SystemcoreClock is used in most CMSIS compatible projects. */
 #define SYSVIEW_CPU_FREQ configCPU_CLOCK_HZ
-
-/* The lowest RAM address used for IDs (pointers) */
-#ifndef SYSVIEW_RAM_BASE
-#define SYSVIEW_RAM_BASE 0x20000000
-#endif
 
 /*!
  * @brief Apply only for M0plus core. M4/M3 uses cycle counter.
