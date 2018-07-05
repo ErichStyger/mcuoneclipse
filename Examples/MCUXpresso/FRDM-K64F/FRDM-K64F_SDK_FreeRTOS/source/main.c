@@ -96,6 +96,7 @@ int main(void) {
     SysView_Init();
     FreeRTOS_Timers_Init();
 
+    PRINTF("Execution timer: %s\n\rTime: %u ticks %2.5f milliseconds\n\rDONE\n\r", "1 day", 86400, 86.4);
     if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, 4, NULL) != pdPASS)  {
         PRINTF("Task creation failed!.\r\n");
         for(;;){}

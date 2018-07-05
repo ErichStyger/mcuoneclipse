@@ -9,6 +9,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
+#include "board.h"
+#include "peripherals.h"
+#include "pin_mux.h"
 
 #define USE_SEGGER_SYSVIEW  (0)
 /* configuration items for timers in FreeRTOSConfig.h
@@ -25,7 +28,7 @@ static void vTimerCallback1SecExpired(TimerHandle_t pxTimer) {
 #if USE_SEGGER_SYSVIEW
 	SEGGER_SYSVIEW_PrintfTarget("1 Sec Timer (ID %d) expired", (int)pvTimerGetTimerID(pxTimer));
 #endif
- //   GPIO_PortToggle(BOARD_INITPINS_LED_RED_GPIO, 1<<BOARD_INITPINS_LED_RED_PIN); /* toggle red LED */
+    GPIO_PortToggle(BOARD_INITPINS_LED_RED_GPIO, 1<<BOARD_INITPINS_LED_RED_PIN); /* toggle red LED */
     debugTimer1Sec = !debugTimer1Sec;
 }
 
@@ -34,7 +37,7 @@ static void vTimerCallback5SecExpired(TimerHandle_t pxTimer) {
 #if USE_SEGGER_SYSVIEW
 	SEGGER_SYSVIEW_PrintfTarget("5 Sec Timer (ID %d) expired", (int)pvTimerGetTimerID(pxTimer));
 #endif
-//    GPIO_PortSet(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* turn off green LED */
+    GPIO_PortSet(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* turn off green LED */
     debugTimer5Sec = 0;
 }
 
@@ -76,7 +79,6 @@ static void AppTask(void *param) {
     }
     debugTimer1Sec = 1;
 	for(;;) {
-#if 0
 		if (!GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) { /* pin LOW ==> SW03 push button pressed */
 			GPIO_PortClear(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* Turn green LED on */
 			debugTimer5Sec = 1;
@@ -87,12 +89,10 @@ static void AppTask(void *param) {
 		      for(;;); /* failure! */
 		    }
 		}
-#endif
-	    //GPIO_PortToggle(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* toggle blue LED */
+	    GPIO_PortToggle(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* toggle blue LED */
 		vTaskDelay(pdMS_TO_TICKS(50));
 	}
 }
-
 
 void FreeRTOS_Timers_Init(void) {
     if (xTaskCreate(
