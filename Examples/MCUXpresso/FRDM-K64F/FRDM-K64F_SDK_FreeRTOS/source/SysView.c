@@ -5,12 +5,13 @@
  *      Author: Erich Styger
  */
 
-
+#include "App_Config.h"
 #include "SysView.h"
 #include "SEGGER_RTT.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 #define SYSVIEW_DEVICE_NAME "FRDMK64F Cortex-M4"
 #define SYSVIEW_RAM_BASE (0x1FFF0000)
 
@@ -47,3 +48,4 @@ void SysView_Init(void) {
     SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, &SYSVIEW_X_OS_TraceAPI, _cbSendSystemDesc);
     SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
 }
+#endif /* APP_CONFIG_USE_SEGGER_SYSTEMVIEW */

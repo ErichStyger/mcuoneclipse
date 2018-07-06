@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "App_Config.h"
 #include "FreeRTOS_Timers.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -13,7 +14,6 @@
 #include "peripherals.h"
 #include "pin_mux.h"
 
-#define USE_SEGGER_SYSVIEW  (0)
 /* configuration items for timers in FreeRTOSConfig.h
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               (configMAX_PRIORITIES - 1)
@@ -25,7 +25,7 @@
 static int debugTimer1Sec, debugTimer5Sec;
 
 static void vTimerCallback1SecExpired(TimerHandle_t pxTimer) {
-#if USE_SEGGER_SYSVIEW
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SEGGER_SYSVIEW_PrintfTarget("1 Sec Timer (ID %d) expired", (int)pvTimerGetTimerID(pxTimer));
 #endif
     GPIO_PortToggle(BOARD_INITPINS_LED_RED_GPIO, 1<<BOARD_INITPINS_LED_RED_PIN); /* toggle red LED */
@@ -34,14 +34,14 @@ static void vTimerCallback1SecExpired(TimerHandle_t pxTimer) {
 
 static void vTimerCallback5SecExpired(TimerHandle_t pxTimer) {
 	/* this timer callback turns off the green LED */
-#if USE_SEGGER_SYSVIEW
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SEGGER_SYSVIEW_PrintfTarget("5 Sec Timer (ID %d) expired", (int)pvTimerGetTimerID(pxTimer));
 #endif
     GPIO_PortSet(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* turn off green LED */
     debugTimer5Sec = 0;
 }
 
-static void AppTask(void *param) {
+static void TimersTask(void *param) {
 	TimerHandle_t timerHndl1Sec, timerHndl5SecTimeout;
 
 	(void)param; /* not used */
@@ -54,7 +54,7 @@ static void AppTask(void *param) {
     if (timerHndl1Sec==NULL) {
       for(;;); /* failure! */
     }
-#if USE_SEGGER_SYSVIEW
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
     SEGGER_SYSVIEW_PrintfTarget("Start of 1 Second Timer");
 #endif
     if (xTimerStart(timerHndl1Sec, 0)!=pdPASS) {
@@ -71,7 +71,7 @@ static void AppTask(void *param) {
     if (timerHndl5SecTimeout==NULL) {
       for(;;); /* failure! */
     }
-#if USE_SEGGER_SYSVIEW
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
     SEGGER_SYSVIEW_PrintfTarget("Start of 5 Second Timer");
 #endif
     if (xTimerStart(timerHndl1Sec, 0)!=pdPASS) {
@@ -82,7 +82,7 @@ static void AppTask(void *param) {
 		if (!GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) { /* pin LOW ==> SW03 push button pressed */
 			GPIO_PortClear(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* Turn green LED on */
 			debugTimer5Sec = 1;
-#if USE_SEGGER_SYSVIEW
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 		    SEGGER_SYSVIEW_PrintfTarget("Reset of 5 Second Timer");
 #endif
 		    if (xTimerReset(timerHndl5SecTimeout, 0)!=pdPASS) { /* start timer to turn off LED after 5 seconds */
@@ -96,8 +96,8 @@ static void AppTask(void *param) {
 
 void FreeRTOS_Timers_Init(void) {
     if (xTaskCreate(
-    	AppTask,  /* pointer to the task */
-        "App", /* task name for kernel awareness debugging */
+    		TimersTask,  /* pointer to the task */
+        "Timers", /* task name for kernel awareness debugging */
 		500/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */

@@ -40,7 +40,6 @@
 #include "timers.h"
 #include "semphr.h"
 
-/* Freescale includes. */
 #include "fsl_device_registers.h"
 #include "fsl_debug_console.h"
 #include "board.h"
@@ -50,6 +49,8 @@
 #include "FreeRTOS_Timers.h"
 #include "SysView.h"
 #include "fsl_ftm.h"
+#include "App_Config.h"
+#include "InterProcessComm.h"
 
 /*!
  * @brief Second task, lower priority.
@@ -59,7 +60,9 @@ static void second_task(void *pvParameters) {
         /* dummy code, notify HOST when int16 underflow */
         for (uint16_t j = (uint16_t)-1;; j--) {
             if (j == 0) {
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
                 SEGGER_SYSVIEW_Warn("second task int underflow");
+#endif
             }
             vTaskDelay(pdMS_TO_TICKS(5));
             __NOP();
@@ -77,7 +80,9 @@ static void first_task(void *pvParameters) {
     }
     /* dummy code, print counter and delay */
     for (int counter = 0;; counter++) {
+#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
         SEGGER_SYSVIEW_PrintfTarget("first task counter: %d ", counter++);
+#endif
         vTaskDelay(100);
     }
 }
@@ -113,21 +118,23 @@ void BOARD_InitBootPeripherals(void);
  * @brief Main function
  */
 int main(void) {
-    /* Init board hardware. */
-    BOARD_InitPins();
-    BOARD_BootClockRUN();
-    BOARD_InitDebugConsole();
-    BOARD_InitBootPeripherals();
+	/* Init board hardware. */
+	BOARD_InitPins();
+	BOARD_BootClockRUN();
+	BOARD_InitDebugConsole();
+	BOARD_InitBootPeripherals();
 
-    SysView_Init();
-    FreeRTOS_Timers_Init();
+	#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
+	SysView_Init();
+	#endif
+	FreeRTOS_Timers_Init();
+	IPC_Init();
 
-    PRINTF("Execution timer: %s\n\rTime: %u ticks %2.5f milliseconds\n\rDONE\n\r", "1 day", 86400, 86.4);
-    if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, 4, NULL) != pdPASS)  {
-        PRINTF("Task creation failed!.\r\n");
-        for(;;){}
-    }
-    vTaskStartScheduler();
-    for(;;){}
+	if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS)  {
+		PRINTF("Task creation failed!.\r\n");
+		for(;;){}
+	}
+	vTaskStartScheduler();
+	for(;;){}
 }
 
