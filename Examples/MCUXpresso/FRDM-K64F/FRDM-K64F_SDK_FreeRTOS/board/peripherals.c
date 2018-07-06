@@ -130,7 +130,7 @@ instance:
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const ftm_config_t FTM_1_config = {
-  .prescale = kFTM_Prescale_Divide_1,
+  .prescale = kFTM_Prescale_Divide_8,//kFTM_Prescale_Divide_4, //
   .bdmMode = kFTM_BdmMode_0,
   .pwmSyncMode = kFTM_SoftwareTrigger,
   .reloadPoints = 0,

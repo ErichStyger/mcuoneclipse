@@ -49,7 +49,7 @@
 #include "clock_config.h"
 #include "FreeRTOS_Timers.h"
 #include "SysView.h"
-
+#include "fsl_ftm.h"
 
 /*!
  * @brief Second task, lower priority.
@@ -67,7 +67,6 @@ static void second_task(void *pvParameters) {
     }
 }
 
-
 /*!
  * @brief First task, higher priority.
  */
@@ -83,6 +82,32 @@ static void first_task(void *pvParameters) {
     }
 }
 
+uint32_t RTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
+void FTM0_IRQHandler(void) {
+  /* Clear interrupt flag.*/
+  FTM_ClearStatusFlags(FTM0, kFTM_TimeOverflowFlag);
+  RTOS_RunTimeCounter++; /* increment runtime counter */
+}
+
+void RTOS_AppConfigureTimerForRuntimeStats(void) {
+  RTOS_RunTimeCounter = 0;
+  EnableIRQ(FTM0_IRQn);
+}
+
+uint32_t RTOS_AppGetRuntimeCounterValueFromISR(void) {
+#if configGENERATE_RUN_TIME_STATS
+  #if configGENERATE_RUN_TIME_STATS_USE_TICKS
+  return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
+  #else /* using timer counter */
+  return RTOS_RunTimeCounter;
+  #endif
+#else
+  return 0; /* dummy value */
+#endif
+}
+
+
+void BOARD_InitBootPeripherals(void);
 
 /*!
  * @brief Main function
@@ -92,6 +117,7 @@ int main(void) {
     BOARD_InitPins();
     BOARD_BootClockRUN();
     BOARD_InitDebugConsole();
+    BOARD_InitBootPeripherals();
 
     SysView_Init();
     FreeRTOS_Timers_Init();
