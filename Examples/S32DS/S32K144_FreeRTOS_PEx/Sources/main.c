@@ -90,6 +90,7 @@ BaseType_t xEnterTicklessIdle(void) {
 int main(void)
 {
   /* Write your local variable definition here */
+  int exit_code = 0;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   #ifdef PEX_RTOS_INIT
@@ -99,6 +100,7 @@ int main(void)
   CLOCK_SYS_Init(g_clockManConfigsArr, CLOCK_MANAGER_CONFIG_CNT, g_clockManCallbacksArr, CLOCK_MANAGER_CALLBACK_CNT);
   CLOCK_SYS_UpdateConfiguration(0U, CLOCK_MANAGER_POLICY_FORCIBLE);
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
+
   PINS_DRV_SetPinsDirection(PTD,  (1<<0U) | (1<<15U) | (1<<16U)); /* set as output */
   PINS_DRV_SetPins(PTD, (1<<0U) | (1<<15U) | (1<<16U)); /* all off */
   PINS_DRV_ClearPins(PTD, (1<<15U));
@@ -118,8 +120,11 @@ int main(void)
   /*** End of RTOS startup code.  ***/
   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
   for(;;) {
-    __asm volatile("nop");
+    if(exit_code != 0) {
+      break;
+    }
   }
+  return exit_code;
   /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 

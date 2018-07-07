@@ -50,6 +50,9 @@ static void Components_Init(void) {
   MCUC1_Init();
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   CS1_Init(); /* ### CriticalSection "CS1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
@@ -74,6 +77,21 @@ static void Components_Init(void) {
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   RNG1_Init(); /* ### RingBuffer "RNG1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  SDA1_Init(); /* ### SDK_BitIO "SDA1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  SCL1_Init(); /* ### SDK_BitIO "SCL1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  I2C1_Init(); /* ### GenericSWI2C "I2C1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  GI2C1_Init(); /* ### GenericI2C "GI2C1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LCD1_Init(); /* ### SSD1306 "LCD1" init code ... */
 #endif
 /*------------------------------------------------------------------*/
 }
