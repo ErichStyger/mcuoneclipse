@@ -40,11 +40,11 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION                    1
-#define configUSE_TICKLESS_IDLE                 0
+#define configUSE_TICKLESS_IDLE                 1  /* \todo 09 Enable tickless idle mode */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
 #define configTICK_RATE_HZ                      ((TickType_t)200)
 #define configMAX_PRIORITIES                    10
-#define configMINIMAL_STACK_SIZE                ((unsigned short)200) /* \todo 03 reduce IDLE stack size */
+#define configMINIMAL_STACK_SIZE                ((unsigned short)200) /* \todo 04 reduce IDLE stack size => ~40 */
 #define configMAX_TASK_NAME_LEN                 20
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
@@ -53,7 +53,7 @@
 #define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_COUNTING_SEMAPHORES           0
 #define configUSE_ALTERNATIVE_API               0 /* Deprecated! */
-#define configQUEUE_REGISTRY_SIZE               3 /* \todo 02 Set a queue size (3 is a good number for our application */
+#define configQUEUE_REGISTRY_SIZE               3 /* \todo 02 Set a queue size (3 is a good number for our application) */
 #define configUSE_QUEUE_SETS                    0
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
@@ -62,14 +62,14 @@
 #define configUSE_APPLICATION_TASK_TAG          0
 
 /* Used memory allocation (heap_x.c) */
-#define configFRTOS_MEMORY_SCHEME               1   /* \todo 05 change memory scheme */
+#define configFRTOS_MEMORY_SCHEME               4   /* \todo 07 change memory scheme to 1 (allocation only) */
 /* Tasks.c additions (e.g. Thread Aware Debug capability) */
 #define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1
 
 /* Memory allocation related definitions. */
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
-#define configTOTAL_HEAP_SIZE                   ((size_t)(32 * 1024)) /* \todo xxx reduce heap size needed */
+#define configTOTAL_HEAP_SIZE                   ((size_t)(32 * 1024))
 #define configAPPLICATION_ALLOCATED_HEAP        0
 
 /* Hook function related definitions. */
@@ -80,7 +80,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
 /* Run time and task stats gathering related definitions. */
-#define configGENERATE_RUN_TIME_STATS           1
+#define configGENERATE_RUN_TIME_STATS           1  /* \todo 08 enable runtime statistics */
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
@@ -91,8 +91,8 @@
 /* Software timer related definitions. */
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               (configMAX_PRIORITIES - 1)
-#define configTIMER_QUEUE_LENGTH                10  /* \todo 06 reduce Timer queue length */
-#define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE * 2) /* \todo 04 reduce TmrSvc stack size */
+#define configTIMER_QUEUE_LENGTH                10  /* \todo 06 reduce Timer queue length => ~3 */
+#define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE * 2) /* \todo 05 reduce TmrSvc stack size: => ~150 */
 
 /* Define to trap errors during development. */
 #if 1 /* \todo 01 disable assert to reduce code size */
@@ -157,7 +157,7 @@ standard names. */
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
-#define configRECORD_STACK_HIGH_ADDRESS           (0)    /* \todo 03 Enable stack low address listed in TCB for better debugging */
+#define configRECORD_STACK_HIGH_ADDRESS           (1)    /* \todo 03 Enable stack low address listed in TCB for better debugging */
 
 extern void RTOS_AppConfigureTimerForRuntimeStats(void);
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   RTOS_AppConfigureTimerForRuntimeStats()

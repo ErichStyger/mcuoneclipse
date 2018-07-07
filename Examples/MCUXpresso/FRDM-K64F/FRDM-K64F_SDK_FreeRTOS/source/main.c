@@ -56,35 +56,34 @@
  * @brief Second task, lower priority.
  */
 static void second_task(void *pvParameters) {
-    while (1) {
-        /* dummy code, notify HOST when int16 underflow */
-        for (uint16_t j = (uint16_t)-1;; j--) {
-            if (j == 0) {
+  for(;;) {
+      for (uint16_t j = (uint16_t)-1;; j--) {
+          if (j == 0) {
 #if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
-                SEGGER_SYSVIEW_Warn("second task int underflow");
+              SEGGER_SYSVIEW_Warn("second task int underflow");
 #endif
-            }
-            vTaskDelay(pdMS_TO_TICKS(5));
-            __NOP();
-        }
-    }
+          }
+          vTaskDelay(pdMS_TO_TICKS(5));
+          __NOP();
+      }
+  }
 }
 
 /*!
  * @brief First task, higher priority.
  */
 static void first_task(void *pvParameters) {
-    if (xTaskCreate(second_task, "second_task", 500/sizeof(StackType_t), NULL, 3, NULL) != pdPASS) {
-        PRINTF("Task creation failed!.\r\n");
-        vTaskSuspend(NULL);
-    }
-    /* dummy code, print counter and delay */
-    for (int counter = 0;; counter++) {
+  if (xTaskCreate(second_task, "second_task", 500/sizeof(StackType_t), NULL, 3, NULL) != pdPASS) {
+      PRINTF("Task creation failed!.\r\n");
+      vTaskSuspend(NULL);
+  }
+  /* dummy code, print counter and delay */
+  for (int counter = 0;; counter++) {
 #if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
-        SEGGER_SYSVIEW_PrintfTarget("first task counter: %d ", counter++);
+      SEGGER_SYSVIEW_PrintfTarget("first task counter: %d ", counter++);
 #endif
-        vTaskDelay(100);
-    }
+      vTaskDelay(pdMS_TO_TICKS(100));
+  }
 }
 
 uint32_t RTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */

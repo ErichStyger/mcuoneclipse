@@ -28,8 +28,8 @@ static void vTimerCallback1SecExpired(TimerHandle_t pxTimer) {
 #if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SEGGER_SYSVIEW_PrintfTarget("1 Sec Timer (ID %d) expired", (int)pvTimerGetTimerID(pxTimer));
 #endif
-    GPIO_PortToggle(BOARD_INITPINS_LED_RED_GPIO, 1<<BOARD_INITPINS_LED_RED_PIN); /* toggle red LED */
-    debugTimer1Sec = !debugTimer1Sec;
+  GPIO_PortToggle(BOARD_INITPINS_LED_RED_GPIO, 1<<BOARD_INITPINS_LED_RED_PIN); /* toggle red LED */
+  debugTimer1Sec = !debugTimer1Sec;
 }
 
 static void vTimerCallback5SecExpired(TimerHandle_t pxTimer) {
@@ -80,6 +80,9 @@ static void TimersTask(void *param) {
     debugTimer1Sec = 1;
 	for(;;) {
 		if (!GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) { /* pin LOW ==> SW03 push button pressed */
+		  while(!GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) {
+		    /* wait until push button is released */
+		  }
 			GPIO_PortClear(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* Turn green LED on */
 			debugTimer5Sec = 1;
 #if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
@@ -89,7 +92,7 @@ static void TimersTask(void *param) {
 		      for(;;); /* failure! */
 		    }
 		}
-	    GPIO_PortToggle(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* toggle blue LED */
+	  GPIO_PortToggle(BOARD_INITPINS_LED_BLUE_GPIO, 1<<BOARD_INITPINS_LED_BLUE_PIN); /* toggle blue LED */
 		vTaskDelay(pdMS_TO_TICKS(50));
 	}
 }

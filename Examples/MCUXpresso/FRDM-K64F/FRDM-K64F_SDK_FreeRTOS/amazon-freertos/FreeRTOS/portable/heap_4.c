@@ -1,6 +1,6 @@
 /* << EST */
 #include "FreeRTOSConfig.h"
-#if !defined(configFRTOS_MEMORY_SCHEME) || (configUSE_HEAP_SCHEME==4 && configSUPPORT_DYNAMIC_ALLOCATION==1)
+#if !defined(configFRTOS_MEMORY_SCHEME) || (configFRTOS_MEMORY_SCHEME==4 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
  * FreeRTOS Kernel V10.0.0
