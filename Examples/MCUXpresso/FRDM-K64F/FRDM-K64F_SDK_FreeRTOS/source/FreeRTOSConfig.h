@@ -40,9 +40,9 @@
  *----------------------------------------------------------*/
 
 #define configUSE_PREEMPTION                    1
-#define configUSE_TICKLESS_IDLE                 1  /* \todo 09 Enable tickless idle mode */
+#define configUSE_TICKLESS_IDLE                 0  /* \todo 10 Enable tickless idle mode */
 #define configCPU_CLOCK_HZ                      (SystemCoreClock)
-#define configTICK_RATE_HZ                      ((TickType_t)200)
+#define configTICK_RATE_HZ                      ((TickType_t)1000) /* \todo 09 Reduce tick rate to 200 Hz */
 #define configMAX_PRIORITIES                    10
 #define configMINIMAL_STACK_SIZE                ((unsigned short)200) /* \todo 04 reduce IDLE stack size => ~40 */
 #define configMAX_TASK_NAME_LEN                 20
@@ -53,7 +53,7 @@
 #define configUSE_RECURSIVE_MUTEXES             0
 #define configUSE_COUNTING_SEMAPHORES           0
 #define configUSE_ALTERNATIVE_API               0 /* Deprecated! */
-#define configQUEUE_REGISTRY_SIZE               3 /* \todo 02 Set a queue size (3 is a good number for our application) */
+#define configQUEUE_REGISTRY_SIZE               0 /* \todo 02 Set a queue size (3 is a good number for our application) */
 #define configUSE_QUEUE_SETS                    0
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
@@ -80,7 +80,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
 /* Run time and task stats gathering related definitions. */
-#define configGENERATE_RUN_TIME_STATS           1  /* \todo 08 enable runtime statistics */
+#define configGENERATE_RUN_TIME_STATS           0  /* \todo 08 enable runtime statistics */
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 
@@ -157,7 +157,7 @@ standard names. */
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
-#define configRECORD_STACK_HIGH_ADDRESS           (1)    /* \todo 03 Enable stack low address listed in TCB for better debugging */
+#define configRECORD_STACK_HIGH_ADDRESS           (0)    /* \todo 03 Enable stack low address listed in TCB for better debugging */
 
 extern void RTOS_AppConfigureTimerForRuntimeStats(void);
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   RTOS_AppConfigureTimerForRuntimeStats()

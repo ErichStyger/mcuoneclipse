@@ -57,15 +57,14 @@
  */
 static void second_task(void *pvParameters) {
   for(;;) {
-      for (uint16_t j = (uint16_t)-1;; j--) {
-          if (j == 0) {
-#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
-              SEGGER_SYSVIEW_Warn("second task int underflow");
-#endif
-          }
-          vTaskDelay(pdMS_TO_TICKS(5));
-          __NOP();
+    if (GPIO_PinRead(BOARD_INITPINS_SW3_GPIO, BOARD_INITPINS_SW3_PIN)) { /* pin HIGH ==> SW03 push button not pressed */
+      vTaskDelay(pdMS_TO_TICKS(50));
+    } else {
+      for(int i=0; i<20; i++) {
+        GPIO_PortToggle(BOARD_INITPINS_LED_GREEN_GPIO, 1<<BOARD_INITPINS_LED_GREEN_PIN); /* toggle green LED on */
+        vTaskDelay(pdMS_TO_TICKS(5));
       }
+    }
   }
 }
 

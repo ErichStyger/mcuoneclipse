@@ -39,7 +39,7 @@
 #include <stdint.h>
 
 #if (configUSE_TRACE_FACILITY == 0)
-#error "configUSE_TRACE_FACILITY must be enabled"
+//#error "configUSE_TRACE_FACILITY must be enabled"
 #endif
 
 #define FREERTOS_DEBUG_CONFIG_MAJOR_VERSION 1
