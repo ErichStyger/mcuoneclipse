@@ -57,12 +57,30 @@ static void Components_Init(void) {
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   LCD1_Init(); /* ### SSD1306 "LCD1" init code ... */
 #endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDpin1_Init(); /* ### SDK_BitIO "LEDpin1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDR_Init(); /* ### LED "LEDR" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDpin2_Init(); /* ### SDK_BitIO "LEDpin2" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDG_Init(); /* ### LED "LEDG" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDpin3_Init(); /* ### SDK_BitIO "LEDpin3" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  LEDB_Init(); /* ### LED "LEDB" init code ... */
+#endif
   /*------------------------------------------------------------------*/
 }
 
 static void TestLCD(void) {
   for(;;) {
-
+    LCD1_Clear();
   }
 }
 
@@ -83,7 +101,19 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  CLOCK_SYS_Init(g_clockManConfigsArr, CLOCK_MANAGER_CONFIG_CNT, g_clockManCallbacksArr, CLOCK_MANAGER_CALLBACK_CNT);
+  CLOCK_SYS_UpdateConfiguration(0U, CLOCK_MANAGER_POLICY_FORCIBLE);
+  PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
+
   Components_Init();
+
+  LEDR_On();
+  LEDR_Off();
+  LEDG_On();
+  LEDG_Off();
+  LEDB_On();
+  LEDB_Off();
+
   TestLCD();
   /* For example: for(;;) { } */
 
