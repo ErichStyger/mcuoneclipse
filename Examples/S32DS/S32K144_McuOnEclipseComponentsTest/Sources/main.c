@@ -46,8 +46,7 @@ static void Components_Init(void) {
   /* IMPORTANT: copy the content from Cpu.c! */
 /*------------------------------------------------------------------*/
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  /* ### McuLibConfig "MCUC1" init code ... */
-  MCUC1_Init();
+  MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
@@ -92,6 +91,14 @@ static void Components_Init(void) {
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   LCD1_Init(); /* ### SSD1306 "LCD1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  GFONT1_Init(); /* ### GFont "GFONT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+#if GDisp1_CONFIG_CLEAR_DISPLAY_IN_INIT || GDisp1_CONFIG_USE_MUTEX
+  GDisp1_Init(); /* ### GDisplay "GDisp1" init code ... */
+#endif
 #endif
 /*------------------------------------------------------------------*/
 }

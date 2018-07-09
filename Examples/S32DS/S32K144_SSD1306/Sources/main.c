@@ -40,6 +40,9 @@ static void Components_Init(void) {
   MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  GFONT1_Init(); /* ### GFont "GFONT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
@@ -56,6 +59,12 @@ static void Components_Init(void) {
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   LCD1_Init(); /* ### SSD1306 "LCD1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  GDisp1_Init(); /* ### GDisplay "GDisp1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  FDisp1_Init(); /* ### FontDisplay "FDisp1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   LEDpin1_Init(); /* ### SDK_BitIO "LEDpin1" init code ... */
@@ -79,8 +88,15 @@ static void Components_Init(void) {
 }
 
 static void TestLCD(void) {
+  FDisp1_PixelDim x, y;
   for(;;) {
-    LCD1_Clear();
+    GDisp1_Clear();
+    GDisp1_DrawBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_WHITE);
+    x = 2; y = 2;
+    FDisp1_WriteString((uint8_t*)"hello world", GDisp1_COLOR_WHITE, &x, &y, GFONT1_GetFont());
+    GDisp1_DrawBox(20, 20, 20, 40, 1, GDisp1_COLOR_WHITE);
+    GDisp1_DrawCircle(40, 40, 15, GDisp1_COLOR_WHITE);
+    GDisp1_UpdateFull();
   }
 }
 
