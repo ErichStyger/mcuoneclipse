@@ -102,13 +102,13 @@ static void Test(void) {
   NEO_TransferPixels();
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x050000);
   NEO_TransferPixels();
-  FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  vTaskDelay(500/portTICK_RATE_MS);
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x000500);
   NEO_TransferPixels();
   FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), 0x000005);
   NEO_TransferPixels();
-  FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+  vTaskDelay(500/portTICK_RATE_MS);
 }
 #endif
 
@@ -117,9 +117,9 @@ static void NeoTask(void* pvParameters) {
   #define DIMM 0x50
   (void)pvParameters; /* parameter not used */
 
-  Test();
+  //Test();
   //MATRIX_Test();
-  FRTOS1_vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
+  vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
   //UpdateFromRTC(); /* get and sync the RTC */
   TmDt1_SyncWithExternalRTC();
   for(;;) {
@@ -184,7 +184,7 @@ static void NeoTask(void* pvParameters) {
 //    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, FALSE, TRUE, TRUE);
 #endif
     //LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    vTaskDelay(1000/portTICK_RATE_MS);
     //NEO_TransferPixels();
   }
 }
@@ -219,7 +219,7 @@ void APP_Run(void) {
   if (FRTOS1_xTaskCreate(
         NeoTask,  /* pointer to the task */
         "Neo", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        500/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */

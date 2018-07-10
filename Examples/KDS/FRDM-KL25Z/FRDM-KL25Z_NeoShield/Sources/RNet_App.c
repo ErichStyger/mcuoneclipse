@@ -36,7 +36,11 @@ uint8_t RNETA_SendIdValuePairMessage(uint8_t msgType, uint16_t id, uint32_t valu
 }
 
 static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *data, RNWK_ShortAddrType srcAddr, bool *handled, RPHY_PacketDesc *packet) {
+#if PL_HAS_LED_FRAME
   uint32_t val;
+#else
+  (void)srcAddr; /* not used */
+#endif
   uint16_t id;
 
   (void)size;
@@ -45,26 +49,46 @@ static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *
     case RAPP_MSG_TYPE_REQUEST_SET_VALUE:
       id = UTIL1_GetValue16LE(data); /* extract 16bit ID (little endian) */
       if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BRIGHTNESS) {
+#if PL_HAS_LED_FRAME
         val = UTIL1_GetValue32LE(&data[2]);
         LEDFRAME_SetBrightnessPercent(val);
         *handled = TRUE;
+#else
+        *handled = FALSE;
+#endif
        }
       break;
 
     case RAPP_MSG_TYPE_QUERY_VALUE:
       id = UTIL1_GetValue16LE(data); /* extract 16bit ID (little endian) */
       if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BRIGHTNESS) { /* send back data */
+#if PL_HAS_LED_FRAME
         RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetBrightnessPercent(), srcAddr, RPHY_PACKET_FLAGS_NONE);
         *handled = TRUE;
+#else
+        *handled = FALSE;
+#endif
       } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_RED) { /* send back data */
+#if PL_HAS_LED_FRAME
         RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorRedValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
         *handled = TRUE;
+#else
+        *handled = FALSE;
+#endif
       } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_GREEN) { /* send back data */
+#if PL_HAS_LED_FRAME
         RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorGreenValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
         *handled = TRUE;
+#else
+        *handled = FALSE;
+#endif
       } else if (id==RAPP_MSG_TYPE_DATA_ID_NEO_BLUE) { /* send back data */
+#if PL_HAS_LED_FRAME
         RNETA_SendIdValuePairMessage(RAPP_MSG_TYPE_QUERY_VALUE_RESPONSE, id, LEDFRAME_GetColorBlueValue(), srcAddr, RPHY_PACKET_FLAGS_NONE);
         *handled = TRUE;
+#else
+        *handled = FALSE;
+#endif
       }
       break;
 

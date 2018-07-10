@@ -18,7 +18,6 @@
 #define LCUBE_NOF_DEMOS            6  /* number of demos */
 
 static uint8_t LCUBE_Demo = 0;
-static bool LCUBE_DemoRunning = FALSE;
 static uint8_t LCUBE_DemoBrightness = 0x5;
 static uint32_t LCUBE_DelayMs = 500;
 static struct {
@@ -59,6 +58,7 @@ static uint8_t LCUBE_FillFaceRGB(uint8_t face, uint8_t red, uint8_t green, uint8
       LCUBE_SetPixelRGB(face, xPos, yPos, red, green, blue);
     }
   }
+  return ERR_OK;
 }
 
 static void FillFaces(void) {
@@ -80,7 +80,7 @@ static bool fade(uint8_t *redNow, uint8_t *greenNow, uint8_t *blueNow, uint8_t r
 }
 
 static void FillBottomUp(uint8_t red, uint8_t green, uint8_t blue) {
-  int i, x, y, face, j;
+  int i, x, y, face;
   uint8_t r,g,b;
   bool done;
 
@@ -118,7 +118,7 @@ static void FillBottomUp(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 static void FillRightAround(uint8_t red, uint8_t green, uint8_t blue) {
-  int i, x, y, face, j;
+  int x, y, face;
   uint8_t r,g,b;
   bool done;
 
@@ -156,7 +156,7 @@ static void FillRightAround(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 static void GreenTopBlueBottom(void) {
-  int i, x, y, face;
+  int i, x, y;
   uint8_t green = LCUBE_DemoBrightness, red = 0, blue = 0;
   uint8_t r,g,b;
   bool done;
@@ -225,27 +225,27 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((unsigned char*)"cube", (const unsigned char*)"\r\n", io->stdOut);
 
   UTIL1_Num8uToStr(buf, sizeof(buf), LCUBE_Demo);
-  UTIL1_strcat(buf, sizeof(buf), "\r\n");
-  CLS1_SendStatusStr("  demo", buf, io->stdOut);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  demo", buf, io->stdOut);
 
   UTIL1_Num8uToStr(buf, sizeof(buf), LCUBE_DemoBrightness);
-  UTIL1_strcat(buf, sizeof(buf), "\r\n");
-  CLS1_SendStatusStr("  brightness", buf, io->stdOut);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  brightness", buf, io->stdOut);
 
   UTIL1_Num32uToStr(buf, sizeof(buf), LCUBE_DelayMs);
-  UTIL1_strcat(buf, sizeof(buf), " ms\r\n");
-  CLS1_SendStatusStr("  delay", buf, io->stdOut);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" ms\r\n");
+  CLS1_SendStatusStr((unsigned char*)"  delay", buf, io->stdOut);
 
   for(i=0;i<LCUBE_NOF_CUBE_FACE;i++) {
     UTIL1_Num32sToStr(buf, sizeof(buf), i);
-    UTIL1_strcat(buf, sizeof(buf), ": 0x");
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)": 0x");
     UTIL1_strcatNum8Hex(buf, sizeof(buf), LCUBE_Faces[i].red);
-    UTIL1_strcat(buf, sizeof(buf), " 0x");
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" 0x");
     UTIL1_strcatNum8Hex(buf, sizeof(buf), LCUBE_Faces[i].green);
-    UTIL1_strcat(buf, sizeof(buf), " 0x");
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" 0x");
     UTIL1_strcatNum8Hex(buf, sizeof(buf), LCUBE_Faces[i].blue);
-    UTIL1_strcat(buf, sizeof(buf), "\r\n");
-    CLS1_SendStatusStr("  face", buf, io->stdOut);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  face", buf, io->stdOut);
   }
 
   return ERR_OK;
@@ -258,6 +258,7 @@ uint8_t LCUBE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "cube help")==0) {
     CLS1_SendHelpStr((unsigned char*)"cube", (const unsigned char*)"Group of cube commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  demo <number>", (const unsigned char*)"Set demo\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"0: do nothing\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"1: clear all\r\n", io->stdOut);
@@ -265,7 +266,7 @@ uint8_t LCUBE_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
     CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"3: lava\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"4: green blue\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"", (const unsigned char*)"5: around\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  brightness <number>", (const unsigned char*)"Set brightness\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  brightness <number>", (const unsigned char*)"Set brightness (0-255)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  delay <number>", (const unsigned char*)"Set delay (ms)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  face <face> <rgb>", (const unsigned char*)"Set face color\r\n", io->stdOut);
     *handled = TRUE;
@@ -325,10 +326,10 @@ void LCUBE_Init(void) {
   LCUBE_Demo = 1;
   LCUBE_DemoBrightness = 0x5;
   LCUBE_DelayMs = 500;
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         CubeTask,  /* pointer to the task */
         "Cube", /* task name for kernel awareness debugging */
-        configMINIMAL_STACK_SIZE, /* task stack size */
+        700/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
