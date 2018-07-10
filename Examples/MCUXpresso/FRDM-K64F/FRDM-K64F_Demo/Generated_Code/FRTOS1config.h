@@ -70,7 +70,7 @@
 #endif
 
 #ifndef configLTO_HELPER
-  #define configLTO_HELPER                        (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
+  #define configLTO_HELPER                        (1 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
    /*!< 1: enable special GNU Link Time Optimizer (-lto) debug helper code; 0: disabled */
 #endif
 

@@ -493,8 +493,10 @@ static void vPortEnableVFP( void )
 		"	bx r14						"
 	);
 #else
-	static volatile int *const cpasr_ptr = (volatile int*)0xE000ED88;
-	*cpasr_ptr = *cpasr_ptr | (0xf << 20);
+#define CPACR_REG_MEM   ((volatile int*)0xE000ED88)
+	//static volatile int *const cpasr_ptr = (volatile int*)0xE000ED88;
+	//*cpasr_ptr = *cpasr_ptr | (0xf << 20);
+	*CPACR_REG_MEM |= (0xf<<20);
 #endif
 }
 /*-----------------------------------------------------------*/
