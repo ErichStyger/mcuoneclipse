@@ -67,6 +67,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_SW3_PIN 4U     /*!<@brief PORTA pin index: 4 */
                                       /* @} */
 
+/*! @name PORTC6 (number 78), SW2
+  @{ */
+#define BOARD_INITPINS_SW2_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_INITPINS_SW2_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_INITPINS_SW2_PIN 6U     /*!<@brief PORTC pin index: 6 */
+                                      /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

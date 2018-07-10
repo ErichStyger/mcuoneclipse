@@ -18,6 +18,9 @@
       <pins name="Pins" version="4.1" enabled="true" update_project_code="true">
          <pins_profile>
             <processor_version>4.0.0</processor_version>
+            <pin_labels>
+               <pin_label pin_num="78" pin_signal="CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK" label="SW2" identifier="SW2"/>
+            </pin_labels>
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
@@ -71,6 +74,11 @@
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIOA" signal="GPIO, 4" pin_num="38" pin_signal="PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIOC" signal="GPIO, 6" pin_num="78" pin_signal="CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
