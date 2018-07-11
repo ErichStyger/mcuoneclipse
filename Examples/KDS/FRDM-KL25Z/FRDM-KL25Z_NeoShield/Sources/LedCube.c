@@ -18,8 +18,8 @@
 #define LCUBE_NOF_DEMOS            6  /* number of demos */
 
 static uint8_t LCUBE_Demo = 0;
-static uint8_t LCUBE_DemoBrightness = 0x5;
-static uint32_t LCUBE_DelayMs = 500;
+static uint8_t LCUBE_DemoBrightness = 0xff;
+static uint32_t LCUBE_DelayMs = 5;
 static struct {
   uint8_t red, green, blue;
 } LCUBE_Faces[LCUBE_NOF_CUBE_FACE];
@@ -95,7 +95,7 @@ static void FillBottomUp(uint8_t red, uint8_t green, uint8_t blue) {
         }
       }
       NEO_TransferPixels();
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
     } while(!done);
   }
   /* fill top pixels */
@@ -112,7 +112,7 @@ static void FillBottomUp(uint8_t red, uint8_t green, uint8_t blue) {
         LCUBE_SetPixelRGB(4, 7-i, y, r, g, b);
       }
       NEO_TransferPixels();
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
     } while(!done);
   } /* for */
 }
@@ -149,7 +149,7 @@ static void FillRightAround(uint8_t red, uint8_t green, uint8_t blue) {
         } /* switch */
 #endif
         NEO_TransferPixels();
-        FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+        vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
       } while(!done);
     }
   }
@@ -165,7 +165,7 @@ static void GreenTopBlueBottom(void) {
     LCUBE_FillFaceRGB(i, 0, 0, LCUBE_DemoBrightness); /* fill all faces with blue */
   }
   NEO_TransferPixels();
-  FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+  vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
   /* fill top pixels with green */
   for(i=0;i<4;i++) {
     (void)LCUBE_GetPixelRGB(4, i, i, &r, &g, &b); /* get current color */
@@ -180,41 +180,66 @@ static void GreenTopBlueBottom(void) {
         LCUBE_SetPixelRGB(4, 7-i, y, r, g, b);
       }
       NEO_TransferPixels();
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
     } while(!done);
   }
 }
 
 static void CubeTask(void* pvParameters) {
+  uint8_t currDemo = -1;
   (void)pvParameters; /* parameter not used */
   for(;;) {
     /* max LCUBE_NOF_DEMOS */
     if (LCUBE_Demo==0) {
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"0: no demo", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
       /* doing nothing */
     } else if (LCUBE_Demo==1) { /* clear all */
       NEO_ClearAllPixel();
       NEO_TransferPixels();
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"1: clear all", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
     } else if (LCUBE_Demo==2) { /* fill faces */
       FillFaces();
       NEO_TransferPixels();
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"2: filled faces", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
     } else if (LCUBE_Demo==3) { /* lava lamp */
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"3: lava lamp", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
       FillBottomUp(LCUBE_DemoBrightness, 0x00, 0x00);
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
 
       FillBottomUp(0x00, LCUBE_DemoBrightness, 0x00);
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
 
       FillBottomUp(0x00, 0x00, LCUBE_DemoBrightness);
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
     } else if (LCUBE_Demo==4) { /* Sara: green top with blue bottom */
-      GreenTopBlueBottom();
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"4: green/blue", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
+     GreenTopBlueBottom();
     } else if (LCUBE_Demo==5) {
+      if (currDemo!=LCUBE_Demo) {
+        CLS1_SendStr((unsigned char*)"5: going around", CLS1_GetStdio()->stdOut);
+        currDemo = LCUBE_Demo;
+      }
       FillRightAround(0x00, 0x00, LCUBE_DemoBrightness);
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
       FillRightAround(LCUBE_DemoBrightness, 0x00, 0x00);
-      FRTOS1_vTaskDelay(LCUBE_DelayMs/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(LCUBE_DelayMs));
     }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -323,9 +348,9 @@ void LCUBE_Init(void) {
     LCUBE_Faces[i].green = 0;
     LCUBE_Faces[i].blue = 0;
   }
-  LCUBE_Demo = 1;
-  LCUBE_DemoBrightness = 0x5;
-  LCUBE_DelayMs = 500;
+  LCUBE_Demo = 3;
+  LCUBE_DemoBrightness = 0xff;
+  LCUBE_DelayMs = 5;
   if (xTaskCreate(
         CubeTask,  /* pointer to the task */
         "Cube", /* task name for kernel awareness debugging */
