@@ -1839,6 +1839,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 	prvTraceStoreEvent1(PSF_EVENT_MUTEX_CREATE_FAILED, 0);
 #endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_9_0_0) */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a message is sent to a queue */	/* CS IS NEW ! */
 #undef traceQUEUE_SEND
 #define traceQUEUE_SEND( pxQueue ) \
@@ -1858,7 +1859,9 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE, (uint32_t)pxQueue); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a message failed to be sent to a queue (timeout) */
 #undef traceQUEUE_SEND_FAILED
 #define traceQUEUE_SEND_FAILED( pxQueue ) \
@@ -1878,7 +1881,9 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE_FAILED, (uint32_t)pxQueue); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when the task is blocked due to a send operation on a full queue */
 #undef traceBLOCKING_ON_QUEUE_SEND
 #define traceBLOCKING_ON_QUEUE_SEND( pxQueue ) \
@@ -1898,6 +1903,7 @@ uint32_t prvIsNewTCB(void* pNewTCB);
 					prvTraceStoreEvent1(PSF_EVENT_MUTEX_GIVE_BLOCK, (uint32_t)pxQueue); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
 /**************************************************************************/
 /* Makes sure xQueueGiveFromISR also has a xCopyPosition parameter        */
@@ -1922,6 +1928,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 /**************************************************************************/
 
 /* Called when a message is sent from interrupt context, e.g., using xQueueSendFromISR */
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 #undef traceQUEUE_SEND_FROM_ISR
 #define traceQUEUE_SEND_FROM_ISR( pxQueue ) \
 	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
@@ -1935,7 +1942,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting + 1); \
 			break; \
 	}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a message send from interrupt context fails (since the queue was full) */
 #undef traceQUEUE_SEND_FROM_ISR_FAILED
 #define traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue ) \
@@ -1950,7 +1959,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 			prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_GIVE_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
 			break; \
 	}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a message is received from a queue */
 #undef traceQUEUE_RECEIVE
 #define traceQUEUE_RECEIVE( pxQueue ) \
@@ -1979,7 +1990,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 						prvTraceStoreEvent2(PSF_EVENT_MUTEX_TAKE, (uint32_t)pxQueue, xTicksToWait); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a receive operation on a queue fails (timeout) */
 #undef traceQUEUE_RECEIVE_FAILED
 #define traceQUEUE_RECEIVE_FAILED( pxQueue ) \
@@ -1999,7 +2012,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 					prvTraceStoreEvent2(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_FAILED : PSF_EVENT_MUTEX_TAKE_FAILED, (uint32_t)pxQueue, xTicksToWait); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when the task is blocked due to a receive operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_RECEIVE
 #define traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue ) \
@@ -2019,8 +2034,10 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 					prvTraceStoreEvent2(isQueueReceiveHookActuallyPeek ? PSF_EVENT_MUTEX_PEEK_BLOCK : PSF_EVENT_MUTEX_TAKE_BLOCK, (uint32_t)pxQueue, xTicksToWait); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
 #if (TRC_CFG_FREERTOS_VERSION > TRC_FREERTOS_VERSION_9_0_1)
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a peek operation on a queue fails (timeout) */
 #undef traceQUEUE_PEEK_FAILED
 #define traceQUEUE_PEEK_FAILED( pxQueue ) \
@@ -2040,7 +2057,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 					prvTraceStoreEvent2(PSF_EVENT_MUTEX_PEEK_FAILED, (uint32_t)pxQueue, xTicksToWait); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when the task is blocked due to a peek operation on an empty queue */
 #undef traceBLOCKING_ON_QUEUE_PEEK
 #define traceBLOCKING_ON_QUEUE_PEEK( pxQueue ) \
@@ -2060,10 +2079,12 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 					prvTraceStoreEvent2(PSF_EVENT_MUTEX_PEEK_BLOCK, (uint32_t)pxQueue, xTicksToWait); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
 #endif /* (TRC_CFG_FREERTOS_VERSION > TRC_FREERTOS_VERSION_9_0_1) */
 
 /* Called when a message is received in interrupt context, e.g., using xQueueReceiveFromISR */
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 #undef traceQUEUE_RECEIVE_FROM_ISR
 #define traceQUEUE_RECEIVE_FROM_ISR( pxQueue ) \
 	if (TRACE_GET_OBJECT_FILTER(QUEUE, pxQueue) & CurrentFilterMask) \
@@ -2077,7 +2098,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_TAKE_FROMISR, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting - 1); \
 				break; \
 		}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called when a message receive from interrupt context fails (since the queue was empty) */
 #undef traceQUEUE_RECEIVE_FROM_ISR_FAILED
 #define traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue ) \
@@ -2092,7 +2115,9 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 				prvTraceStoreEvent2(PSF_EVENT_SEMAPHORE_TAKE_FROMISR_FAILED, (uint32_t)pxQueue, pxQueue->uxMessagesWaiting); \
 				break; \
 		}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
+#if TRC_CFG_INCLUDE_QUEUE_EVENTS /* << EST */
 /* Called on xQueuePeek */
 #undef traceQUEUE_PEEK
 #define traceQUEUE_PEEK( pxQueue ) \
@@ -2112,6 +2137,7 @@ BaseType_t MyWrapper(__a, __b, const BaseType_t xCopyPosition)
 					prvTraceStoreEvent1(PSF_EVENT_MUTEX_PEEK, (uint32_t)pxQueue); \
 					break; \
 			}
+#endif /* TRC_CFG_INCLUDE_QUEUE_EVENTS */ /* << EST */
 
 /* Called in vTaskPrioritySet */
 #undef traceTASK_PRIORITY_SET

@@ -20,7 +20,7 @@ extern void _start(void);
 extern void __libc_init_array();
 extern void main();
 #endif
-extern char __SP_INIT[];
+extern uint32_t __SP_INIT;
 
 extern void __init_registers();
 extern void __init_hardware();
@@ -194,7 +194,7 @@ void __iar_program_start()
 
 __attribute__((naked)) void __thumb_startup(void)
 {
-int addr = (int)__SP_INIT;
+int addr = (int)(&__SP_INIT);
 
     /* setup the stack before we attempt anything else
        skip stack setup if __SP_INIT is 0

@@ -1,9 +1,9 @@
 /*********************************************************************
-*                SEGGER Microcontroller GmbH & Co. KG                *
+*                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2014 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
+*            (c) 1995 - 2018 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -31,7 +31,7 @@
 *   disclaimer in the documentation and/or other materials provided  *
 *   with the distribution.                                           *
 *                                                                    *
-* o Neither the name of SEGGER Microcontroller GmbH & Co. KG         *
+* o Neither the name of SEGGER Microcontroller GmbH         *
 *   nor the names of its contributors may be used to endorse or      *
 *   promote products derived from this software without specific     *
 *   prior written permission.                                        *
@@ -52,15 +52,15 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.22c                                           *
+*       RTT version: 6.32b                                           *
 *                                                                    *
 **********************************************************************
 ---------------------------END-OF-HEADER------------------------------
 File    : SEGGER_RTT_Conf.h
-Purpose : Implementation of SEGGER real-time transfer (RTT) which 
-          allows real-time communication on targets which support 
+Purpose : Implementation of SEGGER real-time transfer (RTT) which
+          allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 7859 $
+Revision: $Rev: 9599 $
 
 */
 
@@ -79,6 +79,7 @@ Revision: $Rev: 7859 $
 */
 /* << EST: Additional setting to check for FreeRTOS: need to use FreeRTOS with proper BASEPRI mask to create critical sections */
 #include "MCUC1.h" /* SDK and API used */
+#include "RTT1config.h" /* configuration */
 
 #if MCUC1_CONFIG_SDK_USE_FREERTOS
   #include "portmacro.h" /* include FreeRTOS port header file for critical section handling */
@@ -101,7 +102,6 @@ Revision: $Rev: 7859 $
 #define SEGGER_RTT_PRINTF_BUFFER_SIZE             (64)    // Size of buffer for RTT printf to bulk-send chars via RTT     (Default: 64)
 #define SEGGER_RTT_MODE_DEFAULT                   SEGGER_RTT_MODE_NO_BLOCK_SKIP // Mode for pre-initialized terminal channel (buffer 0)
 
-#define USE_RTT_ASM                               (0)     // Use assembler version of SEGGER_RTT.c when 1 
 /*********************************************************************
 *
 *       RTT memcpy configuration
@@ -141,7 +141,7 @@ Revision: $Rev: 7859 $
 
 /*********************************************************************
 *
-*       RTT lock configuration for SEGGER Embedded Studio, 
+*       RTT lock configuration for SEGGER Embedded Studio,
 *       Rowley CrossStudio and GCC
 */
 #if (defined __SES_ARM) || (defined __CROSSWORKS_ARM) || (defined __GNUC__)
@@ -218,7 +218,7 @@ Revision: $Rev: 7859 $
                                                 );                             \
                             }
   #else
-    #define SEGGER_RTT_LOCK()  
+    #define SEGGER_RTT_LOCK()
     #define SEGGER_RTT_UNLOCK()
   #endif
 #endif
@@ -229,24 +229,24 @@ Revision: $Rev: 7859 $
 */
 #ifdef __ICCARM__
   #if (defined (__ARM6M__) && (__CORE__ == __ARM6M__))
-    #define SEGGER_RTT_LOCK() {                                                 \
-                                    unsigned int LockState;                     \
-                                    LockState = __get_PRIMASK();                \
-                                    __set_PRIMASK(1);                           
-                                    
-    #define SEGGER_RTT_UNLOCK() __set_PRIMASK(LockState);                       \
-                                  }
+    #define SEGGER_RTT_LOCK()   {                                                                   \
+                                  unsigned int LockState;                                           \
+                                  LockState = __get_PRIMASK();                                      \
+                                  __set_PRIMASK(1);
+
+    #define SEGGER_RTT_UNLOCK()   __set_PRIMASK(LockState);                                         \
+                                }
   #elif ((defined (__ARM7EM__) && (__CORE__ == __ARM7EM__)) || (defined (__ARM7M__) && (__CORE__ == __ARM7M__)))
     #ifndef   SEGGER_RTT_MAX_INTERRUPT_PRIORITY
       #define SEGGER_RTT_MAX_INTERRUPT_PRIORITY   (0x20)
     #endif
-    #define SEGGER_RTT_LOCK() {                                                 \
-                                    unsigned int LockState;                     \
-                                    LockState = __get_BASEPRI();                \
+    #define SEGGER_RTT_LOCK()   {                                                                   \
+                                  unsigned int LockState;                                           \
+                                  LockState = __get_BASEPRI();                                      \
                                   __set_BASEPRI(SEGGER_RTT_MAX_INTERRUPT_PRIORITY);
-                                    
-    #define SEGGER_RTT_UNLOCK() __set_BASEPRI(LockState);                       \
-                                  }  
+
+    #define SEGGER_RTT_UNLOCK()   __set_BASEPRI(LockState);                                         \
+                                }
   #endif
 #endif
 

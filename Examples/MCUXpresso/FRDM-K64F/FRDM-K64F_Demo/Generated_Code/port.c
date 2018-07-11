@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.0.0
+ * FreeRTOS Kernel V10.0.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -10,8 +10,7 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software. If you wish to use our Amazon
- * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -387,7 +386,7 @@ StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxC
   *pxTopOfStack = portINITIAL_EXEC_RETURN;
 #endif
 #if configUSE_MPU_SUPPORT
-  pxTopOfStack -= 9;  /* R11, R10, R9, R8, R7, R6, R5 and R4 plus priviledge level */
+  pxTopOfStack -= 9;  /* R11, R10, R9, R8, R7, R6, R5 and R4 plus privilege level */
   if (xRunPrivileged == pdTRUE) {
     *pxTopOfStack = portINITIAL_CONTROL_IF_PRIVILEGED;
   } else {
@@ -732,34 +731,22 @@ void vPortStopTickTimer(void) {
 }
 /*-----------------------------------------------------------*/
 #if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
-#if (configCOMPILER==configCOMPILER_ARM_GCC)
-/* added noinline attribute to prevent the GNU linker to optimize the following function. That symbol is required for the FreeRTOS GDB thread awareness by Segger */
-void __attribute__ ((noinline, used)) vPortEnableVFP(void) {
-  /* The FPU enable bits are in the CPACR. */
-  __asm volatile (
-    "  ldr.w r0, =0xE000ED88  \n" /* CAPCR, 0xE000ED88 */
-    "  ldr r1, [r0]           \n" /* read CAPR */
-    "  orr r1, r1, #(0xf<<20) \n" /* enable CP10 and CP11 coprocessors */
-    "  str r1, [r0]           \n" /* store to new value back */
-    : /* no output */
-    : /* no input */
-    : "r0","r1" /* clobber */
-  );
-}
-#elif (configCOMPILER==configCOMPILER_ARM_KEIL)
-__asm void vPortEnableVFP(void) {
-	PRESERVE8
+void vPortEnableVFP(void) {
+#if 1 /* configLTO_HELPER: using implementation in C which is portable */
+  #define CPACR_REG_MEM   ((volatile int*)0xE000ED88)  /* location of the CPACR register */
 
-	/* The FPU enable bits are in the CPACR. */
-	ldr.w r0, =0xE000ED88
-	ldr	r1, [r0]
-	/* Enable CP10 and CP11 coprocessors, then save back. */
-	orr	r1, r1, #(0xf<<20)
-	str r1, [r0]
-	bx	r14
-	nop
+  *CPACR_REG_MEM |= (0xf<<20); /* Enable CP10 and CP11 coprocessors */
+#else /* below is the original assembly code which fails with -flto because of the constant load  */
+  __asm volatile
+  (
+    " ldr.w r0, =0xE000ED88   \n" /* The FPU enable bits are in the CPACR. */
+    " ldr r1, [r0]        \n"
+    " orr r1, r1, #( 0xf << 20 )  \n" /* Enable CP10 and CP11 coprocessors, then save back. */
+    " str r1, [r0]        \n"
+    " bx r14            "
+  );
+#endif
 }
-#endif /* GNU or Keil */
 #endif /* M4/M7 */
 /*-----------------------------------------------------------*/
 /*
@@ -1110,7 +1097,15 @@ void vPortStartFirstTask(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   __asm volatile (
+#if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
+    " mov r0, #0xE0000000  \n" /* build the constant 0xE000ED08. First load the upper 16 bits */
+    " mov r1, #0xED00      \n" /* next load part of the lower 16 bit */
+    " orr r0, r1           \n" /* and or it into R0. Now we have 0xE000ED00 in R0 */
+    " mov r1, #0x08        \n" /* next load the lowest 8 bit */
+    " orr r0, r1           \n" /* and or it into R0. Now we have 0xE000ED08 in R0 */
+#else
     " ldr r0, =0xE000ED08 \n" /* Use the NVIC offset register to locate the stack. */
+#endif
     " ldr r0, [r0]        \n" /* load address of vector table */
     " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */

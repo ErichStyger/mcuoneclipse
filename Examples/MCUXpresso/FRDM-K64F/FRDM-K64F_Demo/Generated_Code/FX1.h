@@ -6,18 +6,14 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FXOS8700CQ
 **     Version     : Component 01.031, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **         Implements a Driver for the MMA8451 accelerometer from Freescale.
 **     Settings    :
 **          Component Name                                 : FX1
 **          Slave Address                                  : 1D
 **          I2C Bus                                        : GI2C1
-**          Wait                                           : WAIT1
-**          SDK                                            : MCUC1
-**          Temperature offset                             : 10
 **          Constant Offsets                               : Enabled
 **            X offset                                     : 0
 **            Y offset                                     : 0
@@ -62,32 +58,32 @@
 **         Init                - uint8_t FX1_Init(void);
 **         Deinit              - uint8_t FX1_Deinit(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2017, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file FX1.h
@@ -166,7 +162,8 @@ extern "C" {
 uint8_t FX1_GetRaw8XYZ(uint8_t *xyz);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetRaw8XYZ (component FXOS8700CQ)
+**     Method      :  GetRaw8XYZ (component FXOS8700CQ)
+**
 **     Description :
 **         Returns in an array the x, y and z accelerometer as 8bit
 **         values.
@@ -183,7 +180,8 @@ uint8_t FX1_GetRaw8XYZ(uint8_t *xyz);
 uint8_t FX1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_Deinit (component FXOS8700CQ)
+**     Method      :  Deinit (component FXOS8700CQ)
+**
 **     Description :
 **         Counterpart to Init() method.
 **     Parameters  : None
@@ -195,7 +193,8 @@ uint8_t FX1_Deinit(void);
 uint8_t FX1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_Init (component FXOS8700CQ)
+**     Method      :  Init (component FXOS8700CQ)
+**
 **     Description :
 **         Initializes the device driver
 **     Parameters  : None
@@ -207,7 +206,8 @@ uint8_t FX1_Init(void);
 void FX1_CalibrateX1g(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_CalibrateX1g (component FXOS8700CQ)
+**     Method      :  CalibrateX1g (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         Y and Z sensors have 0 g, and the X sensor has 1 g.
@@ -219,7 +219,8 @@ void FX1_CalibrateX1g(void);
 void FX1_CalibrateY1g(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_CalibrateY1g (component FXOS8700CQ)
+**     Method      :  CalibrateY1g (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         X and Z sensors have 0 g, and the Y sensor has 1 g.
@@ -231,7 +232,8 @@ void FX1_CalibrateY1g(void);
 void FX1_CalibrateZ1g(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_CalibrateZ1g (component FXOS8700CQ)
+**     Method      :  CalibrateZ1g (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         X and Y sensors have 0 g, and the Z sensor has 1 g.
@@ -243,7 +245,8 @@ void FX1_CalibrateZ1g(void);
 int16_t FX1_GetXmg(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetXmg (component FXOS8700CQ)
+**     Method      :  GetXmg (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the X value in mg
 **     Parameters  : None
@@ -255,7 +258,8 @@ int16_t FX1_GetXmg(void);
 int16_t FX1_GetYmg(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetYmg (component FXOS8700CQ)
+**     Method      :  GetYmg (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the Y value in mg
 **     Parameters  : None
@@ -267,7 +271,8 @@ int16_t FX1_GetYmg(void);
 int16_t FX1_GetZmg(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetZmg (component FXOS8700CQ)
+**     Method      :  GetZmg (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the Z value in mg
 **     Parameters  : None
@@ -279,7 +284,8 @@ int16_t FX1_GetZmg(void);
 uint16_t FX1_MeasureGetRawX(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_MeasureGetRawX (component FXOS8700CQ)
+**     Method      :  MeasureGetRawX (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a measurement on X channel and returns the raw
 **         value.
@@ -292,7 +298,8 @@ uint16_t FX1_MeasureGetRawX(void);
 uint16_t FX1_MeasureGetRawY(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_MeasureGetRawY (component FXOS8700CQ)
+**     Method      :  MeasureGetRawY (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a measurement on Y channel and returns the raw
 **         value.
@@ -305,7 +312,8 @@ uint16_t FX1_MeasureGetRawY(void);
 uint16_t FX1_MeasureGetRawZ(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_MeasureGetRawZ (component FXOS8700CQ)
+**     Method      :  MeasureGetRawZ (component FXOS8700CQ)
+**
 **     Description :
 **         Performs a measurement on Z channel and returns the raw
 **         value.
@@ -318,7 +326,8 @@ uint16_t FX1_MeasureGetRawZ(void);
 int16_t FX1_GetXOffset(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetXOffset (component FXOS8700CQ)
+**     Method      :  GetXOffset (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the offset applied to the X value.
 **     Parameters  : None
@@ -330,7 +339,8 @@ int16_t FX1_GetXOffset(void);
 int16_t FX1_GetYOffset(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetYOffset (component FXOS8700CQ)
+**     Method      :  GetYOffset (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the offset applied to the Y value.
 **     Parameters  : None
@@ -342,7 +352,8 @@ int16_t FX1_GetYOffset(void);
 int16_t FX1_GetZOffset(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetZOffset (component FXOS8700CQ)
+**     Method      :  GetZOffset (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the offset applied to the Z value.
 **     Parameters  : None
@@ -354,7 +365,8 @@ int16_t FX1_GetZOffset(void);
 int16_t FX1_GetX1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetX1gValue (component FXOS8700CQ)
+**     Method      :  GetX1gValue (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the value for 1g for channel  X.
 **     Parameters  : None
@@ -366,7 +378,8 @@ int16_t FX1_GetX1gValue(void);
 int16_t FX1_GetY1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetY1gValue (component FXOS8700CQ)
+**     Method      :  GetY1gValue (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the value for 1g for channel  Y.
 **     Parameters  : None
@@ -378,7 +391,8 @@ int16_t FX1_GetY1gValue(void);
 int16_t FX1_GetZ1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetZ1gValue (component FXOS8700CQ)
+**     Method      :  GetZ1gValue (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the value for 1g for channel  Z.
 **     Parameters  : None
@@ -390,7 +404,8 @@ int16_t FX1_GetZ1gValue(void);
 int16_t FX1_GetX(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetX (component FXOS8700CQ)
+**     Method      :  GetX (component FXOS8700CQ)
+**
 **     Description :
 **         Retrieves the value for the X axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -404,7 +419,8 @@ int16_t FX1_GetX(void);
 int16_t FX1_GetY(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetY (component FXOS8700CQ)
+**     Method      :  GetY (component FXOS8700CQ)
+**
 **     Description :
 **         Retrieves the value for the Y axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -418,7 +434,8 @@ int16_t FX1_GetY(void);
 int16_t FX1_GetZ(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetZ (component FXOS8700CQ)
+**     Method      :  GetZ (component FXOS8700CQ)
+**
 **     Description :
 **         Retrieves the value for the Z axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -432,7 +449,8 @@ int16_t FX1_GetZ(void);
 uint8_t FX1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  FX1_ParseCommand (component FXOS8700CQ)
+**     Method      :  ParseCommand (component FXOS8700CQ)
+**
 **     Description :
 **         Shell Command Line parser. This method is enabled/disabled
 **         depending on if you have the Shell enabled/disabled in the
@@ -451,7 +469,8 @@ uint8_t FX1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
 uint8_t FX1_SetFastMode(bool on);
 /*
 ** ===================================================================
-**     Method      :  FX1_SetFastMode (component FXOS8700CQ)
+**     Method      :  SetFastMode (component FXOS8700CQ)
+**
 **     Description :
 **         Turns the F_READ (Fast Read Mode) on or off
 **     Parameters  :
@@ -465,7 +484,8 @@ uint8_t FX1_SetFastMode(bool on);
 uint8_t FX1_Enable(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_Enable (component FXOS8700CQ)
+**     Method      :  Enable (component FXOS8700CQ)
+**
 **     Description :
 **         Enables the device with setting the ACTIVE bit in the CTRL
 **         register 1
@@ -478,7 +498,8 @@ uint8_t FX1_Enable(void);
 uint8_t FX1_Disable(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_Disable (component FXOS8700CQ)
+**     Method      :  Disable (component FXOS8700CQ)
+**
 **     Description :
 **         Disables the device with clearing the ACTIVE bit in the CTRL
 **         register 1
@@ -491,7 +512,8 @@ uint8_t FX1_Disable(void);
 uint8_t FX1_isEnabled(bool *isEnabled);
 /*
 ** ===================================================================
-**     Method      :  FX1_isEnabled (component FXOS8700CQ)
+**     Method      :  isEnabled (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the status of the the ACTIVE bit in the CTRL
 **         register 1
@@ -508,7 +530,8 @@ uint8_t FX1_isEnabled(bool *isEnabled);
 uint8_t FX1_WhoAmI(uint8_t *value);
 /*
 ** ===================================================================
-**     Method      :  FX1_WhoAmI (component FXOS8700CQ)
+**     Method      :  WhoAmI (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the value of the WHO_AM_I (0x0D) register
 **     Parameters  :
@@ -522,7 +545,8 @@ uint8_t FX1_WhoAmI(uint8_t *value);
 uint8_t FX1_GetTemperature(int8_t *temperature);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetTemperature (component FXOS8700CQ)
+**     Method      :  GetTemperature (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the temperature of the die as signed 8bit values in
 **         degree Celsius
@@ -538,7 +562,8 @@ uint8_t FX1_GetTemperature(int8_t *temperature);
 uint8_t FX1_GetMagX(int16_t *value);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetMagX (component FXOS8700CQ)
+**     Method      :  GetMagX (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the X magnetometer value.
 **     Parameters  :
@@ -552,7 +577,8 @@ uint8_t FX1_GetMagX(int16_t *value);
 uint8_t FX1_GetMagY(int16_t *value);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetMagY (component FXOS8700CQ)
+**     Method      :  GetMagY (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the Y magnetometer value.
 **     Parameters  :
@@ -566,7 +592,8 @@ uint8_t FX1_GetMagY(int16_t *value);
 uint8_t FX1_GetMagZ(int16_t *value);
 /*
 ** ===================================================================
-**     Method      :  FX1_GetMagZ (component FXOS8700CQ)
+**     Method      :  GetMagZ (component FXOS8700CQ)
+**
 **     Description :
 **         Returns the Z magnetometer value.
 **     Parameters  :
@@ -580,7 +607,8 @@ uint8_t FX1_GetMagZ(int16_t *value);
 uint8_t FX1_MagneticSensorReset(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_MagneticSensorReset (component FXOS8700CQ)
+**     Method      :  MagneticSensorReset (component FXOS8700CQ)
+**
 **     Description :
 **         Initiates a magnetic sensor reset cycle that will restore
 **         correct operation after exposure to an excessive magnetic
@@ -595,7 +623,8 @@ uint8_t FX1_MagneticSensorReset(void);
 uint8_t FX1_ReadReg8(uint8_t addr, uint8_t *val);
 /*
 ** ===================================================================
-**     Method      :  FX1_ReadReg8 (component FXOS8700CQ)
+**     Method      :  ReadReg8 (component FXOS8700CQ)
+**
 **     Description :
 **         Reads an 8bit device register
 **     Parameters  :
@@ -610,7 +639,8 @@ uint8_t FX1_ReadReg8(uint8_t addr, uint8_t *val);
 uint8_t FX1_WriteReg8(uint8_t addr, uint8_t val);
 /*
 ** ===================================================================
-**     Method      :  FX1_WriteReg8 (component FXOS8700CQ)
+**     Method      :  WriteReg8 (component FXOS8700CQ)
+**
 **     Description :
 **         Write an 8bit device register
 **     Parameters  :
@@ -625,7 +655,8 @@ uint8_t FX1_WriteReg8(uint8_t addr, uint8_t val);
 uint8_t FX1_SwReset(void);
 /*
 ** ===================================================================
-**     Method      :  FX1_SwReset (component FXOS8700CQ)
+**     Method      :  SwReset (component FXOS8700CQ)
+**
 **     Description :
 **         Perform a software reset using the rst bit in the CTRL
 **         register 2
@@ -645,12 +676,4 @@ uint8_t FX1_SwReset(void);
 /* ifndef __FX1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

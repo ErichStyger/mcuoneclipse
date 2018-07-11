@@ -39,6 +39,11 @@
     /*!< Size of the write buffer size which defines the maximum block size which can be sent */
 #endif
 
+#if !defined(GI2C1_CONFIG_SUPPORT_STOP_NO_START)
+  #define GI2C1_CONFIG_SUPPORT_STOP_NO_START      (0)
+    /*!< 1: send a STOP condition without sending a new START condition. Currently only supported for the GenericSWI2C component. 0: send a STOP for every START */
+#endif
+
 /* configuration of function names used for low level I2C functions */
 #include "I2C.h" /* interface of low level I2C driver */
 #define GI2C1_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE  (0)

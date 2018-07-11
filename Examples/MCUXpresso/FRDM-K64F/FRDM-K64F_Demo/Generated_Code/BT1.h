@@ -5,9 +5,8 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Bluetooth_EGBT
 **     Version     : Component 01.053, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **          Driver for e-Gizmo Bluetooth module
 **     Settings    :
@@ -46,32 +45,32 @@
 **         StdIOReadChar             - void BT1_StdIOReadChar(byte *c);
 **         StdIOSendChar             - void BT1_StdIOSendChar(byte ch);
 **
-**     * Copyright (c) 2013-2016, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2016, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file BT1.h
@@ -171,7 +170,8 @@ extern uint8_t BT1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* defaul
 BT1_TEnumErrors BT1_GetLastError(void);
 /*
 ** ===================================================================
-**     Method      :  BT1_GetLastError (component Bluetooth_EGBT)
+**     Method      :  GetLastError (component Bluetooth_EGBT)
+**
 **     Description :
 **         Returns the last error reported by the device.
 **     Parameters  : None
@@ -183,7 +183,8 @@ BT1_TEnumErrors BT1_GetLastError(void);
 BT1_TConstStringPtr BT1_GetErrorString(BT1_TEnumErrors errorNo);
 /*
 ** ===================================================================
-**     Method      :  BT1_GetErrorString (component Bluetooth_EGBT)
+**     Method      :  GetErrorString (component Bluetooth_EGBT)
+**
 **     Description :
 **         Returns for a given error code the error string describing
 **         the problem.
@@ -198,7 +199,8 @@ BT1_TConstStringPtr BT1_GetErrorString(BT1_TEnumErrors errorNo);
 void BT1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  BT1_Init (component Bluetooth_EGBT)
+**     Method      :  Init (component Bluetooth_EGBT)
+**
 **     Description :
 **         Initializes the module
 **     Parameters  : None
@@ -209,7 +211,8 @@ void BT1_Init(void);
 void BT1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  BT1_Deinit (component Bluetooth_EGBT)
+**     Method      :  Deinit (component Bluetooth_EGBT)
+**
 **     Description :
 **         Deinitializes the module
 **     Parameters  : None
@@ -220,7 +223,8 @@ void BT1_Deinit(void);
 byte BT1_btTestUART(void);
 /*
 ** ===================================================================
-**     Method      :  BT1_btTestUART (component Bluetooth_EGBT)
+**     Method      :  btTestUART (component Bluetooth_EGBT)
+**
 **     Description :
 **         Tests the UAR connection with AT
 **     Parameters  : None
@@ -232,7 +236,8 @@ byte BT1_btTestUART(void);
 byte BT1_StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedResponse);
 /*
 ** ===================================================================
-**     Method      :  BT1_StdCmd (component Bluetooth_EGBT)
+**     Method      :  StdCmd (component Bluetooth_EGBT)
+**
 **     Description :
 **         Send standard command: "<cmd>\r
 **         " ==> "<expectedResponse>"
@@ -251,7 +256,8 @@ byte BT1_StdCmd(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedResponse
 byte BT1_StdOKCmd(byte *cmd);
 /*
 ** ===================================================================
-**     Method      :  BT1_StdOKCmd (component Bluetooth_EGBT)
+**     Method      :  StdOKCmd (component Bluetooth_EGBT)
+**
 **     Description :
 **         Send standard command: "<cmd>\r
 **         " ==> "OK\r
@@ -267,7 +273,8 @@ byte BT1_StdOKCmd(byte *cmd);
 byte BT1_QueryString(byte *cmd, byte *expectedResponse, byte *string, size_t stringSize);
 /*
 ** ===================================================================
-**     Method      :  BT1_QueryString (component Bluetooth_EGBT)
+**     Method      :  QueryString (component Bluetooth_EGBT)
+**
 **     Description :
 **         get string from device: "<cmd>\r
 **         " ==> "<response><string>\r
@@ -289,7 +296,8 @@ byte BT1_QueryString(byte *cmd, byte *expectedResponse, byte *string, size_t str
 byte BT1_btQueryFirmwareVersionStr(byte *buf, size_t bufSize);
 /*
 ** ===================================================================
-**     Method      :  BT1_btQueryFirmwareVersionStr (component Bluetooth_EGBT)
+**     Method      :  btQueryFirmwareVersionStr (component Bluetooth_EGBT)
+**
 **     Description :
 **         Queries the firmware version
 **     Parameters  :
@@ -304,7 +312,8 @@ byte BT1_btQueryFirmwareVersionStr(byte *buf, size_t bufSize);
 byte BT1_btSetDeviceName(byte *name);
 /*
 ** ===================================================================
-**     Method      :  BT1_btSetDeviceName (component Bluetooth_EGBT)
+**     Method      :  btSetDeviceName (component Bluetooth_EGBT)
+**
 **     Description :
 **         Sets the device name
 **     Parameters  :
@@ -318,7 +327,8 @@ byte BT1_btSetDeviceName(byte *name);
 byte BT1_btSetPairingPasskey(byte *pwd);
 /*
 ** ===================================================================
-**     Method      :  BT1_btSetPairingPasskey (component Bluetooth_EGBT)
+**     Method      :  btSetPairingPasskey (component Bluetooth_EGBT)
+**
 **     Description :
 **         Sets the pairing passkey
 **     Parameters  :
@@ -332,7 +342,8 @@ byte BT1_btSetPairingPasskey(byte *pwd);
 byte BT1_SendATCommand(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedTailStr);
 /*
 ** ===================================================================
-**     Method      :  BT1_SendATCommand (component Bluetooth_EGBT)
+**     Method      :  SendATCommand (component Bluetooth_EGBT)
+**
 **     Description :
 **         Sends an AT command string (with the AT in it) to the module.
 **     Parameters  :
@@ -356,7 +367,8 @@ byte BT1_SendATCommand(byte *cmd, byte *rxBuf, size_t rxBufSize, byte *expectedT
 byte BT1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  BT1_ParseCommand (component Bluetooth_EGBT)
+**     Method      :  ParseCommand (component Bluetooth_EGBT)
+**
 **     Description :
 **         Shell Command Line parser. Method is only available if Shell
 **         is enabled in the component properties.
@@ -375,7 +387,8 @@ byte BT1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOT
   Serial1_RecvChar(chP)
 /*
 ** ===================================================================
-**     Method      :  BT1_RecvChar (component Bluetooth_EGBT)
+**     Method      :  RecvChar (component Bluetooth_EGBT)
+**
 **     Description :
 **         Receives a character from the Bluetooth serial bridge
 **     Parameters  :
@@ -390,7 +403,8 @@ byte BT1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOT
   Serial1_SendChar(ch)
 /*
 ** ===================================================================
-**     Method      :  BT1_SendChar (component Bluetooth_EGBT)
+**     Method      :  SendChar (component Bluetooth_EGBT)
+**
 **     Description :
 **         Sends a character to the Bluetooth serial bridge
 **     Parameters  :
@@ -405,7 +419,8 @@ byte BT1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOT
   Serial1_GetCharsInRxBuf()
 /*
 ** ===================================================================
-**     Method      :  BT1_GetCharsInRxBuf (component Bluetooth_EGBT)
+**     Method      :  GetCharsInRxBuf (component Bluetooth_EGBT)
+**
 **     Description :
 **         Returns the numbers of character in the receiver buffer.
 **     Parameters  : None
@@ -417,7 +432,8 @@ byte BT1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOT
 bool BT1_StdIOKeyPressed(void);
 /*
 ** ===================================================================
-**     Method      :  BT1_StdIOKeyPressed (component Bluetooth_EGBT)
+**     Method      :  StdIOKeyPressed (component Bluetooth_EGBT)
+**
 **     Description :
 **         StdIO handler for Shell
 **     Parameters  : None
@@ -430,7 +446,8 @@ bool BT1_StdIOKeyPressed(void);
 void BT1_StdIOReadChar(byte *c);
 /*
 ** ===================================================================
-**     Method      :  BT1_StdIOReadChar (component Bluetooth_EGBT)
+**     Method      :  StdIOReadChar (component Bluetooth_EGBT)
+**
 **     Description :
 **         StdIO Handler for reading a character. It reads a zero byte
 **         if there is no character.
@@ -444,7 +461,8 @@ void BT1_StdIOReadChar(byte *c);
 void BT1_StdIOSendChar(byte ch);
 /*
 ** ===================================================================
-**     Method      :  BT1_StdIOSendChar (component Bluetooth_EGBT)
+**     Method      :  StdIOSendChar (component Bluetooth_EGBT)
+**
 **     Description :
 **         StdIO handler to sends a character 
 **     Parameters  :
@@ -457,7 +475,8 @@ void BT1_StdIOSendChar(byte ch);
 byte BT1_btSetBaud(dword baud);
 /*
 ** ===================================================================
-**     Method      :  BT1_btSetBaud (component Bluetooth_EGBT)
+**     Method      :  btSetBaud (component Bluetooth_EGBT)
+**
 **     Description :
 **         Sets the baud rate of the device.
 **     Parameters  :
@@ -475,12 +494,4 @@ byte BT1_btSetBaud(dword baud);
 /* ifndef __BT1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

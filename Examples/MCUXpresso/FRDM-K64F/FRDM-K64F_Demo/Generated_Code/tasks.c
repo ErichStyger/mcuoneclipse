@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.0.0
+ * FreeRTOS Kernel V10.0.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -10,8 +10,7 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software. If you wish to use our Amazon
- * FreeRTOS name, please do so in a fair use way that does not cause confusion.
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -118,6 +117,7 @@ set then don't fill the stack so there is no unnecessary dependency on memset. *
 /*
  * Macros used by vListTask to indicate which state a task is in.
  */
+#define tskRUNNING_CHAR		( 'X' )
 #define tskBLOCKED_CHAR		( 'B' )
 #define tskREADY_CHAR		( 'R' )
 #define tskDELETED_CHAR		( 'D' )
@@ -414,7 +414,9 @@ PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
    */
   PRIVILEGED_DATA /*static*/ List_t xSuspendedTaskList;         /*< Tasks that are currently suspended. */
 #else
+
 	PRIVILEGED_DATA static List_t xSuspendedTaskList;					/*< Tasks that are currently suspended. */
+
 #endif
 #endif
 
@@ -721,8 +723,8 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 			not static allocation is being used. */
 			pxNewTCB = ( TCB_t * ) pxTaskDefinition->pxTaskBuffer;
 
-				/* Store the stack location in the TCB. */
-				pxNewTCB->pxStack = pxTaskDefinition->puxStackBuffer;
+			/* Store the stack location in the TCB. */
+			pxNewTCB->pxStack = pxTaskDefinition->puxStackBuffer;
 
 			#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 )
 			{
@@ -732,17 +734,17 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 			}
 			#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 
-				prvInitialiseNewTask(	pxTaskDefinition->pvTaskCode,
-										pxTaskDefinition->pcName,
-										( uint32_t ) pxTaskDefinition->usStackDepth,
-										pxTaskDefinition->pvParameters,
-										pxTaskDefinition->uxPriority,
-										pxCreatedTask, pxNewTCB,
-										pxTaskDefinition->xRegions );
+			prvInitialiseNewTask(	pxTaskDefinition->pvTaskCode,
+									pxTaskDefinition->pcName,
+									( uint32_t ) pxTaskDefinition->usStackDepth,
+									pxTaskDefinition->pvParameters,
+									pxTaskDefinition->uxPriority,
+									pxCreatedTask, pxNewTCB,
+									pxTaskDefinition->xRegions );
 
-				prvAddNewTaskToReadyList( pxNewTCB );
-				xReturn = pdPASS;
-			}
+			prvAddNewTaskToReadyList( pxNewTCB );
+			xReturn = pdPASS;
+		}
 
 		return xReturn;
 	}
@@ -773,10 +775,10 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 				#if( configSUPPORT_STATIC_ALLOCATION == 1 )
 				{
-        /* Tasks can be created statically or dynamically, so note
-        this task had a statically allocated stack in case it is
-        later deleted.  The TCB was allocated dynamically. */
-        pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_ONLY;
+					/* Tasks can be created statically or dynamically, so note
+					this task had a statically allocated stack in case it is
+					later deleted.  The TCB was allocated dynamically. */
+					pxNewTCB->ucStaticallyAllocated = tskSTATICALLY_ALLOCATED_STACK_ONLY;
 				}
 				#endif
 
@@ -1072,7 +1074,7 @@ UBaseType_t x;
 	/* Initialize the TCB stack to look as if the task was already running,
 	but had been interrupted by the scheduler.  The return address is set
 	to the start of the task function. Once the stack has been initialised
-	the	top of stack variable is updated. */
+	the top of stack variable is updated. */
 	#if( portUSING_MPU_WRAPPERS == 1 )
 	{
 		pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters, xRunPrivileged );
@@ -1745,7 +1747,7 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 					/* The task was blocked to wait for a notification, but is
 					now suspended, so no notification was received. */
 					pxTCB->ucNotifyState = taskNOT_WAITING_NOTIFICATION;
-		}
+				}
 			}
 			#endif
 		}
@@ -2656,7 +2658,7 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 				xReturn = pdFAIL;
 			}
 		}
-		(void)xTaskResumeAll();
+		( void ) xTaskResumeAll();
 
 		return xReturn;
 	}
@@ -3181,9 +3183,9 @@ void vTaskSetTimeOutState( TimeOut_t * const pxTimeOut )
 	configASSERT( pxTimeOut );
 	taskENTER_CRITICAL();
 	{
-	pxTimeOut->xOverflowCount = xNumOfOverflows;
-	pxTimeOut->xTimeOnEntering = xTickCount;
-}
+		pxTimeOut->xOverflowCount = xNumOfOverflows;
+		pxTimeOut->xTimeOnEntering = xTickCount;
+	}
 	taskEXIT_CRITICAL();
 }
 /*-----------------------------------------------------------*/
@@ -3575,17 +3577,17 @@ static void prvCheckTasksWaitingTermination( void )
 		being called too often in the idle task. */
 		while( uxDeletedTasksWaitingCleanUp > ( UBaseType_t ) 0U )
 		{
-				taskENTER_CRITICAL();
-				{
-					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
-					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
-					--uxCurrentNumberOfTasks;
-					--uxDeletedTasksWaitingCleanUp;
-				}
-				taskEXIT_CRITICAL();
-
-				prvDeleteTCB( pxTCB );
+			taskENTER_CRITICAL();
+			{
+				pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
+				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
+				--uxCurrentNumberOfTasks;
+				--uxDeletedTasksWaitingCleanUp;
 			}
+			taskEXIT_CRITICAL();
+
+			prvDeleteTCB( pxTCB );
+		}
 	}
 	#endif /* INCLUDE_vTaskDelete */
 }
@@ -3611,19 +3613,19 @@ static void prvCheckTasksWaitingTermination( void )
 			pxTaskStatus->uxBasePriority = pxTCB->uxBasePriority;
 		}
 		#else
-			{
+		{
 			pxTaskStatus->uxBasePriority = 0;
 		}
 		#endif
 
 		#if ( configGENERATE_RUN_TIME_STATS == 1 )
-				{
+		{
 			pxTaskStatus->ulRunTimeCounter = pxTCB->ulRunTimeCounter;
 		}
 		#else
-					{
+		{
 			pxTaskStatus->ulRunTimeCounter = 0;
-					}
+		}
 		#endif
 
 		/* Obtaining the task state is a little fiddly, so is only done if the
@@ -3632,11 +3634,11 @@ static void prvCheckTasksWaitingTermination( void )
 		if( eState != eInvalid )
 		{
 			if( pxTCB == pxCurrentTCB )
-		{
+			{
 				pxTaskStatus->eCurrentState = eRunning;
-		}
+			}
 			else
-		{
+			{
 				pxTaskStatus->eCurrentState = eState;
 
 				#if ( INCLUDE_vTaskSuspend == 1 )
@@ -3649,15 +3651,15 @@ static void prvCheckTasksWaitingTermination( void )
 						vTaskSuspendAll();
 						{
 							if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) != NULL )
-		{
+							{
 								pxTaskStatus->eCurrentState = eBlocked;
 							}
 						}
 						( void ) xTaskResumeAll();
 					}
-		}
+				}
 				#endif /* INCLUDE_vTaskSuspend */
-		}
+			}
 		}
 		else
 		{
@@ -3922,7 +3924,7 @@ TCB_t *pxTCB;
 			{
 				/* Adjust the mutex holder state to account for its new
 				priority.  Only reset the event list item value if the value is
-				not	being used for anything else. */
+				not being used for anything else. */
 				if( ( listGET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 				{
 					listSET_LIST_ITEM_VALUE( &( pxMutexHolderTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) pxCurrentTCB->uxPriority ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
@@ -3967,7 +3969,7 @@ TCB_t *pxTCB;
 			else
 			{
 				if( pxMutexHolderTCB->uxBasePriority < pxCurrentTCB->uxPriority )
-		{
+				{
 					/* The base priority of the mutex holder is lower than the
 					priority of the task attempting to take the mutex, but the
 					current priority of the mutex holder is not lower than the
@@ -4008,7 +4010,6 @@ TCB_t *pxTCB;
 			interrupt, and if a mutex is given by the holding task then it must
 			be the running state task. */
 			configASSERT( pxTCB == pxCurrentTCB );
-
 			configASSERT( pxTCB->uxMutexesHeld );
 			( pxTCB->uxMutexesHeld )--;
 
@@ -4022,8 +4023,8 @@ TCB_t *pxTCB;
 					/* A task can only have an inherited priority if it holds
 					the mutex.  If the mutex is held by a task then it cannot be
 					given from an interrupt, and if a mutex is given by the
-					holding	task then it must be the running state task.  Remove
-					the	holding task from the ready	list. */
+					holding task then it must be the running state task.  Remove
+					the holding task from the ready list. */
 					if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 					{
 						taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -4132,11 +4133,11 @@ TCB_t *pxTCB;
 					if( ( listGET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ) ) & taskEVENT_LIST_ITEM_VALUE_IN_USE ) == 0UL )
 					{
 						listSET_LIST_ITEM_VALUE( &( pxTCB->xEventListItem ), ( TickType_t ) configMAX_PRIORITIES - ( TickType_t ) uxPriorityToUse ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
-		}
-		else
-		{
-			mtCOVERAGE_TEST_MARKER();
-		}
+					}
+					else
+					{
+						mtCOVERAGE_TEST_MARKER();
+					}
 
 					/* If the running task is not the task that holds the mutex
 					then the task that holds the mutex could be in either the
@@ -4145,7 +4146,7 @@ TCB_t *pxTCB;
 					the task's priority is going to change and there is one
 					Ready list per priority. */
 					if( listIS_CONTAINED_WITHIN( &( pxReadyTasksLists[ uxPriorityUsedOnEntry ] ), &( pxTCB->xStateListItem ) ) != pdFALSE )
-	{
+					{
 						if( uxListRemove( &( pxTCB->xStateListItem ) ) == ( UBaseType_t ) 0 )
 						{
 							taskRESET_READY_PRIORITY( pxTCB->uxPriority );
@@ -4268,7 +4269,6 @@ TCB_t *pxTCB;
 	}
 #endif /* << EST not used */
 #endif /* ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) */
-
 /*-----------------------------------------------------------*/
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) && ( configUSE_STATS_FORMATTING_FUNCTIONS > 0 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
@@ -4326,6 +4326,9 @@ TCB_t *pxTCB;
 			{
 				switch( pxTaskStatusArray[ x ].eCurrentState )
 				{
+					case eRunning:		cStatus = tskRUNNING_CHAR;
+										break;
+
 					case eReady:		cStatus = tskREADY_CHAR;
 										break;
 

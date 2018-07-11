@@ -4,21 +4,19 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.074, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-12, 12:42, # CodeGen: 199
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
 **          Component name                                 : LED2
-**          SDK                                            : MCUC1
 **          Turned On with initialization                  : no
 **          HW Interface                                   : 
-**            Anode on port side, HIGH is ON               : no
 **            On/Off                                       : Enabled
 **              Pin                                        : LEDpin
 **            PWM                                          : Disabled
+**            High Value means ON                          : no
 **          Shell                                          : Enabled
 **            Shell                                        : CLS1
 **            Utility                                      : UTIL1
@@ -33,32 +31,32 @@
 **         Deinit       - void LED2_Deinit(void);
 **         Init         - void LED2_Init(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file LED2.h
@@ -95,7 +93,8 @@
 #define LED2_On() LEDpin2_ClrVal()
 /*
 ** ===================================================================
-**     Method      :  LED2_On (component LED)
+**     Method      :  On (component LED)
+**
 **     Description :
 **         This turns the LED on.
 **     Parameters  : None
@@ -106,7 +105,8 @@
 #define LED2_Off() LEDpin2_SetVal()
 /*
 ** ===================================================================
-**     Method      :  LED2_Off (component LED)
+**     Method      :  Off (component LED)
+**
 **     Description :
 **         This turns the LED off.
 **     Parameters  : None
@@ -117,7 +117,8 @@
 #define LED2_Neg() LEDpin2_NegVal()
 /*
 ** ===================================================================
-**     Method      :  LED2_Neg (component LED)
+**     Method      :  Neg (component LED)
+**
 **     Description :
 **         This negates/toggles the LED
 **     Parameters  : None
@@ -128,7 +129,8 @@
 #define LED2_Get() (!(LEDpin2_GetVal()))
 /*
 ** ===================================================================
-**     Method      :  LED2_Get (component LED)
+**     Method      :  Get (component LED)
+**
 **     Description :
 **         This returns logical 1 in case the LED is on, 0 otherwise.
 **     Parameters  : None
@@ -140,7 +142,8 @@
 void LED2_Init(void);
 /*
 ** ===================================================================
-**     Method      :  LED2_Init (component LED)
+**     Method      :  Init (component LED)
+**
 **     Description :
 **         Performs the LED driver initialization.
 **     Parameters  : None
@@ -151,7 +154,8 @@ void LED2_Init(void);
 #define LED2_Put(val)  ((val) ? LED2_On() : LED2_Off())
 /*
 ** ===================================================================
-**     Method      :  LED2_Put (component LED)
+**     Method      :  Put (component LED)
+**
 **     Description :
 **         Turns the LED on or off.
 **     Parameters  :
@@ -165,7 +169,8 @@ void LED2_Init(void);
 void LED2_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  LED2_Deinit (component LED)
+**     Method      :  Deinit (component LED)
+**
 **     Description :
 **         Deinitializes the driver
 **     Parameters  : None
@@ -176,7 +181,8 @@ void LED2_Deinit(void);
 uint8_t LED2_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  LED2_ParseCommand (component LED)
+**     Method      :  ParseCommand (component LED)
+**
 **     Description :
 **         Shell Command Line parser. This method is enabled/disabled
 **         depending on if you have the Shell enabled/disabled in the
@@ -195,7 +201,8 @@ uint8_t LED2_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
 void LED2_SetRatio16(uint16_t ratio);
 /*
 ** ===================================================================
-**     Method      :  LED2_SetRatio16 (component LED)
+**     Method      :  SetRatio16 (component LED)
+**
 **     Description :
 **         Method to specify the duty cycle. If using a PWM pin, this
 **         means the duty cycle is set. For On/off pins, values smaller
@@ -214,12 +221,4 @@ void LED2_SetRatio16(uint16_t ratio);
 /* ifndef __LED2_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

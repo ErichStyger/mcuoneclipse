@@ -5,9 +5,8 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
 **     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **         minIni is a programmer’s library to read and write ini files in embedded systems.
 **     Settings    :
@@ -33,10 +32,10 @@
 **         ini_getkey     - int MINI1_ini_getkey(const mTCHAR *Section, int idx, mTCHAR *Buffer, int...
 **         ini_browse     - int MINI1_ini_browse(INI_CALLBACK Callback, const void *UserData, const TCHAR...
 **
-**     (c) Copyright 2008-2012, CompuPhase;
-**     http      : www.compuphase.com
-**     Processor Expert port: Erich Styger, 2014-2017, http://www.mcuoneclipse.com
-**     License: See miniIni_LICENSE.txt and minIni_NOTICE.txt
+** (c) Copyright 2008-2012, CompuPhase;
+** http      : www.compuphase.com
+** Processor Expert port: Erich Styger, 2014-2017, http://www.mcuoneclipse.com
+** License: See miniIni_LICENSE.txt and minIni_NOTICE.txt
 ** ###################################################################*/
 /*!
 ** @file MINI1.h
@@ -72,7 +71,8 @@
   ini_getkey(Section, idx, Buffer, BufferSize, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_getkey (component minIni)
+**     Method      :  ini_getkey (component minIni)
+**
 **     Description :
 **         Return the key inside a section
 **     Parameters  :
@@ -97,7 +97,8 @@
   ini_getbool(Section, Key, DefValue, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_getbool (component minIni)
+**     Method      :  ini_getbool (component minIni)
+**
 **     Description :
 **         Return a boolean key.  A true boolean is found if one of the
 **         following is matched:
@@ -127,7 +128,8 @@
   ini_gets(Section, Key, DefValue, Buffer, BufferSize, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_gets (component minIni)
+**     Method      :  ini_gets (component minIni)
+**
 **     Description :
 **         Return the string for a given section and key.
 **     Parameters  :
@@ -153,7 +155,8 @@
   ini_getl(Section, Key, DefValue, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_getl (component minIni)
+**     Method      :  ini_getl (component minIni)
+**
 **     Description :
 **         Return the long integral value for a given section and key.
 **     Parameters  :
@@ -175,7 +178,8 @@
   ini_getsection(idx, Buffer, BufferSize, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_getsection (component minIni)
+**     Method      :  ini_getsection (component minIni)
+**
 **     Description :
 **         Return the key inside a section
 **     Parameters  :
@@ -197,7 +201,8 @@
   ini_getf(Section, Key, DefValue, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_getf (component minIni)
+**     Method      :  ini_getf (component minIni)
+**
 **     Description :
 **         Return the long integral value for a given section and key.
 **         Only enabled if 'Use Real' is enabled in properties.
@@ -220,7 +225,8 @@
   ini_putl(Section, Key, Value, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_putl (component minIni)
+**     Method      :  ini_putl (component minIni)
+**
 **     Description :
 **         Writes a long integral value for a given section and key.
 **         Method is only enabled if 'Read only' is set to  'no' in the
@@ -242,7 +248,8 @@
    ini_puts(Section, Key, Value, Filename);
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_puts (component minIni)
+**     Method      :  ini_puts (component minIni)
+**
 **     Description :
 **         Writes a string value for a given section and key. Method is
 **         only enabled if 'Read only' is set to  'no' in the
@@ -265,7 +272,8 @@
   ini_putf(Section, Key, Value, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_putf (component minIni)
+**     Method      :  ini_putf (component minIni)
+**
 **     Description :
 **         Writes a long float value for a given section and key.
 **         Method is only enabled if 'Read only' is set to  'no' in the
@@ -287,7 +295,8 @@
   ini_browse(Callback, UserData, Filename)
 /*
 ** ===================================================================
-**     Method      :  MINI1_ini_browse (component minIni)
+**     Method      :  ini_browse (component minIni)
+**
 **     Description :
 **         Function to browse the ini file. With this function the file
 **         is opened only once.
@@ -312,12 +321,4 @@
 /* ifndef __MINI1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

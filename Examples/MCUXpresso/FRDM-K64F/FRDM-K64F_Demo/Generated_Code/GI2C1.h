@@ -4,16 +4,14 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-03-20, 12:58, # CodeGen: 223
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
 **          Component name                                 : GI2C1
 **          Wait                                           : WAIT1
-**          SDK                                            : MCUC1
 **          Support STOP_NOSTART                           : no
 **          Write Buffer Size                              : 16
 **          non-LDD I2C                                    : Disabled
@@ -45,32 +43,32 @@
 **         Deinit            - void GI2C1_Deinit(void);
 **         Init              - void GI2C1_Init(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file GI2C1.h
@@ -120,7 +118,8 @@ void I2C_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
 void GI2C1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_Init (component GenericI2C)
+**     Method      :  Init (component GenericI2C)
+**
 **     Description :
 **         Initializes the driver.
 **     Parameters  : None
@@ -131,7 +130,8 @@ void GI2C1_Init(void);
 void GI2C1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_Deinit (component GenericI2C)
+**     Method      :  Deinit (component GenericI2C)
+**
 **     Description :
 **         Deinitializes the driver.
 **     Parameters  : None
@@ -142,7 +142,8 @@ void GI2C1_Deinit(void);
 uint8_t GI2C1_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReadAddress (component GenericI2C)
+**     Method      :  ReadAddress (component GenericI2C)
+**
 **     Description :
 **         Read from the device. This writes (S+i2cAddr+0), (memAddr),
 **         (Sr+i2cAddr+1), (data)...(data+P)
@@ -161,7 +162,8 @@ uint8_t GI2C1_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize
 uint8_t GI2C1_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_WriteAddress (component GenericI2C)
+**     Method      :  WriteAddress (component GenericI2C)
+**
 **     Description :
 **         Write to the device: (S+i2cAddr+0), (memAddr), (data)...
 **         (data+P)
@@ -180,7 +182,8 @@ uint8_t GI2C1_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSiz
 void* GI2C1_GetSemaphore(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_GetSemaphore (component GenericI2C)
+**     Method      :  GetSemaphore (component GenericI2C)
+**
 **     Description :
 **         Returns the currently allocated semaphore.
 **     Parameters  : None
@@ -192,7 +195,8 @@ void* GI2C1_GetSemaphore(void);
 uint8_t GI2C1_ReadBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReadBlock (component GenericI2C)
+**     Method      :  ReadBlock (component GenericI2C)
+**
 **     Description :
 **         Read from the device a block.
 **     Parameters  :
@@ -208,7 +212,8 @@ uint8_t GI2C1_ReadBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags
 uint8_t GI2C1_WriteBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_WriteBlock (component GenericI2C)
+**     Method      :  WriteBlock (component GenericI2C)
+**
 **     Description :
 **         Write a block to the device.
 **     Parameters  :
@@ -224,7 +229,8 @@ uint8_t GI2C1_WriteBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flag
 void GI2C1_RequestBus(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_RequestBus (component GenericI2C)
+**     Method      :  RequestBus (component GenericI2C)
+**
 **     Description :
 **         Starts a critical section for accessing the bus.
 **     Parameters  : None
@@ -235,7 +241,8 @@ void GI2C1_RequestBus(void);
 void GI2C1_ReleaseBus(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReleaseBus (component GenericI2C)
+**     Method      :  ReleaseBus (component GenericI2C)
+**
 **     Description :
 **         Finishes a critical section for accessing the bus.
 **     Parameters  : None
@@ -246,7 +253,8 @@ void GI2C1_ReleaseBus(void);
 uint8_t GI2C1_SelectSlave(uint8_t i2cAddr);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_SelectSlave (component GenericI2C)
+**     Method      :  SelectSlave (component GenericI2C)
+**
 **     Description :
 **         Selects the slave device on the bus. Method might use a
 **         semaphore to protect bus access.
@@ -261,7 +269,8 @@ uint8_t GI2C1_SelectSlave(uint8_t i2cAddr);
 uint8_t GI2C1_UnselectSlave(void);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_UnselectSlave (component GenericI2C)
+**     Method      :  UnselectSlave (component GenericI2C)
+**
 **     Description :
 **         Unselects the device. Method will release a used a semaphore.
 **     Parameters  : None
@@ -273,7 +282,8 @@ uint8_t GI2C1_UnselectSlave(void);
 uint8_t GI2C1_ReadByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t *data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReadByteAddress8 (component GenericI2C)
+**     Method      :  ReadByteAddress8 (component GenericI2C)
+**
 **     Description :
 **         Read a byte from the device using an 8bit memory address.
 **         This writes (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)..
@@ -291,7 +301,8 @@ uint8_t GI2C1_ReadByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t *data);
 uint8_t GI2C1_WriteByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_WriteByteAddress8 (component GenericI2C)
+**     Method      :  WriteByteAddress8 (component GenericI2C)
+**
 **     Description :
 **         Write a byte to the device using an 8bit memory address:
 **         (S+i2cAddr+0), (memAddr), (data)...(data+P)
@@ -308,7 +319,8 @@ uint8_t GI2C1_WriteByteAddress8(uint8_t i2cAddr, uint8_t memAddr, uint8_t data);
 uint8_t GI2C1_ScanDevice(uint8_t i2cAddr);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ScanDevice (component GenericI2C)
+**     Method      :  ScanDevice (component GenericI2C)
+**
 **     Description :
 **         Checks if a device responds on the bus with an ACK.
 **     Parameters  :
@@ -322,7 +334,8 @@ uint8_t GI2C1_ScanDevice(uint8_t i2cAddr);
 uint8_t GI2C1_ProbeACK(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags, uint16_t WaitTimeUS);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ProbeACK (component GenericI2C)
+**     Method      :  ProbeACK (component GenericI2C)
+**
 **     Description :
 **         Accesses the bus to check if the device responds with an ACK
 **         (ACK polling).
@@ -341,7 +354,8 @@ uint8_t GI2C1_ProbeACK(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags,
 uint8_t GI2C1_ReadWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t *data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReadWordAddress8 (component GenericI2C)
+**     Method      :  ReadWordAddress8 (component GenericI2C)
+**
 **     Description :
 **         Read a word from the device using an 8bit memory address.
 **         This writes (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)..
@@ -359,7 +373,8 @@ uint8_t GI2C1_ReadWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t *data)
 uint8_t GI2C1_WriteWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_WriteWordAddress8 (component GenericI2C)
+**     Method      :  WriteWordAddress8 (component GenericI2C)
+**
 **     Description :
 **         Write a word to the device using an 8bit memory address:
 **         (S+i2cAddr+0), (memAddr), (data)...(data+P)
@@ -376,7 +391,8 @@ uint8_t GI2C1_WriteWordAddress8(uint8_t i2cAddr, uint8_t memAddr, uint16_t data)
 uint8_t GI2C1_ReadByte(uint8_t i2cAddr, uint8_t *data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_ReadByte (component GenericI2C)
+**     Method      :  ReadByte (component GenericI2C)
+**
 **     Description :
 **         Read a byte from the device. This writes (S+i2cAddr+0),
 **         (Sr+i2cAddr+1),(data+P)
@@ -392,7 +408,8 @@ uint8_t GI2C1_ReadByte(uint8_t i2cAddr, uint8_t *data);
 uint8_t GI2C1_WriteByte(uint8_t i2cAddr, uint8_t data);
 /*
 ** ===================================================================
-**     Method      :  GI2C1_WriteByte (component GenericI2C)
+**     Method      :  WriteByte (component GenericI2C)
+**
 **     Description :
 **         Write a byte to the device: (S+i2cAddr+0).(data+P)
 **     Parameters  :
@@ -414,12 +431,4 @@ uint8_t GI2C1_WriteByte(uint8_t i2cAddr, uint8_t data);
 /* ifndef __GI2C1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

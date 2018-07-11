@@ -5,15 +5,13 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FSL_USB_CDC_Device
 **     Version     : Component 01.094, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-02-07, 08:19, # CodeGen: 190
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : CDC1
 **          Shell                                          : CLS1
-**          SDK                                            : MCUC1
 **          CPU                                            : Kinetis K64F
 **          CDC Settings                                   : Enabled
 **            .inf ClassGuid                               : 4D36E978-E325-11CE-BFC1-08002BE10318
@@ -65,12 +63,12 @@
 **         Deinit              - uint8_t CDC1_Deinit(void);
 **         Init                - uint8_t CDC1_Init(void);
 **
-**     * Copyright : USB Stack sources (c) Copyright Freescale, all rights reserved, 2013-2017
-**      * Adopted for Processor Expert: Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
+** * Copyright : USB Stack sources (c) Copyright Freescale, all rights reserved, 2013-2017
+**  * Adopted for Processor Expert: Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
 ** ###################################################################*/
 /*!
 ** @file CDC1.h
@@ -127,7 +125,8 @@ extern uint8_t CDC1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* defau
   Tx1_NofFreeElements()
 /*
 ** ===================================================================
-**     Method      :  CDC1_GetFreeInTxBuf (component FSL_USB_CDC_Device)
+**     Method      :  GetFreeInTxBuf (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns the number of free character in the send buffer
 **     Parameters  : None
@@ -140,7 +139,8 @@ extern uint8_t CDC1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* defau
 uint8_t CDC1_RecvChar(CDC1_TComData *Chr);
 /*
 ** ===================================================================
-**     Method      :  CDC1_RecvChar (component FSL_USB_CDC_Device)
+**     Method      :  RecvChar (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Receives a character from the USB interface. Function is
 **         blocking if there is no character in the input buffer.
@@ -157,7 +157,8 @@ uint8_t CDC1_RecvChar(CDC1_TComData *Chr);
 uint8_t CDC1_SendChar(CDC1_TComData Chr);
 /*
 ** ===================================================================
-**     Method      :  CDC1_SendChar (component FSL_USB_CDC_Device)
+**     Method      :  SendChar (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Method to send a character to the USB interface. Method is
 **         non-blocking: If the output buffer is full, it tries to send
@@ -177,7 +178,8 @@ uint8_t CDC1_SendChar(CDC1_TComData Chr);
   Tx1_NofElements()
 /*
 ** ===================================================================
-**     Method      :  CDC1_GetCharsInTxBuf (component FSL_USB_CDC_Device)
+**     Method      :  GetCharsInTxBuf (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns the number of character in the send buffer
 **     Parameters  : None
@@ -189,7 +191,8 @@ uint8_t CDC1_SendChar(CDC1_TComData Chr);
 uint16_t CDC1_GetCharsInRxBuf(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_GetCharsInRxBuf (component FSL_USB_CDC_Device)
+**     Method      :  GetCharsInRxBuf (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns the number of character in the receive buffer
 **     Parameters  : None
@@ -201,7 +204,8 @@ uint16_t CDC1_GetCharsInRxBuf(void);
 uint8_t CDC1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_Init (component FSL_USB_CDC_Device)
+**     Method      :  Init (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Initializes the driver
 **     Parameters  : None
@@ -213,7 +217,8 @@ uint8_t CDC1_Init(void);
 uint8_t CDC1_App_Task(uint8_t *txBuf, size_t txBufSize);
 /*
 ** ===================================================================
-**     Method      :  CDC1_App_Task (component FSL_USB_CDC_Device)
+**     Method      :  App_Task (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Application task to be called periodically from the main
 **         task.
@@ -237,7 +242,8 @@ uint8_t CDC1_App_Task(uint8_t *txBuf, size_t txBufSize);
 uint8_t CDC1_SendString(CDC1_TComData *Chr);
 /*
 ** ===================================================================
-**     Method      :  CDC1_SendString (component FSL_USB_CDC_Device)
+**     Method      :  SendString (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Method to send a string to the USB interface. Method is
 **         non-blocking: if string cannot be sent, it will be lost. If
@@ -257,7 +263,8 @@ uint8_t CDC1_SendString(CDC1_TComData *Chr);
 
 /*
 ** ===================================================================
-**     Method      :  CDC1_GetChar (component FSL_USB_CDC_Device)
+**     Method      :  GetChar (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Receives a character from the USB interface. Function is not
 **         blocking if there is no character in the input buffer.
@@ -274,7 +281,8 @@ uint8_t CDC1_SendString(CDC1_TComData *Chr);
 uint8_t CDC1_PutBufferChecked(uint8_t *buf, size_t bufSize);
 /*
 ** ===================================================================
-**     Method      :  CDC1_PutBufferChecked (component FSL_USB_CDC_Device)
+**     Method      :  PutBufferChecked (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Puts a data block into the output buffer, but does not send
 **         it. If there is not enough size available, then ERR_TXFULL
@@ -292,7 +300,8 @@ uint8_t CDC1_PutBufferChecked(uint8_t *buf, size_t bufSize);
 void CDC1_App_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
 /*
 ** ===================================================================
-**     Method      :  CDC1_App_Callback (component FSL_USB_CDC_Device)
+**     Method      :  App_Callback (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Method to handle class callbacks from USB
 **     Parameters  :
@@ -307,7 +316,8 @@ void CDC1_App_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
 void CDC1_Notify_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
 /*
 ** ===================================================================
-**     Method      :  CDC1_Notify_Callback (component FSL_USB_CDC_Device)
+**     Method      :  Notify_Callback (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Method to handle PSTN Sub Class callbacks
 **     Parameters  :
@@ -323,7 +333,8 @@ void CDC1_Notify_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
     Rx1_Clear()
 /*
 ** ===================================================================
-**     Method      :  CDC1_ClearRxBuffer (component FSL_USB_CDC_Device)
+**     Method      :  ClearRxBuffer (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Clears the receiver buffer content
 **     Parameters  : None
@@ -335,7 +346,8 @@ void CDC1_Notify_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
     Tx1_Clear()
 /*
 ** ===================================================================
-**     Method      :  CDC1_ClearTxBuffer (component FSL_USB_CDC_Device)
+**     Method      :  ClearTxBuffer (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Clears the transmit buffer content
 **     Parameters  : None
@@ -349,7 +361,6 @@ void CDC1_RunUsbEngine(void);
 **     Method      :  CDC1_RunUsbEngine (component FSL_USB_CDC_Device)
 **
 **     Description :
-**         Runs the USB polling engine
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
@@ -357,7 +368,8 @@ void CDC1_RunUsbEngine(void);
 uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize);
 /*
 ** ===================================================================
-**     Method      :  CDC1_SendBlock (component FSL_USB_CDC_Device)
+**     Method      :  SendBlock (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Method to send a data block to the USB interface. Method is
 **         non-blocking: if data cannot be sent, it will be lost. If
@@ -379,7 +391,6 @@ uint8_t CDC1_SendDataBlock(uint8_t *data, uint16_t dataSize);
 **     Method      :  CDC1_SendDataBlock (component FSL_USB_CDC_Device)
 **
 **     Description :
-**         Sends a USB data block
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
@@ -387,7 +398,8 @@ uint8_t CDC1_SendDataBlock(uint8_t *data, uint16_t dataSize);
 uint8_t CDC1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_Deinit (component FSL_USB_CDC_Device)
+**     Method      :  Deinit (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Deinitializes the driver
 **     Parameters  : None
@@ -399,7 +411,8 @@ uint8_t CDC1_Deinit(void);
 bool CDC1_StdIOKeyPressed(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_StdIOKeyPressed (component FSL_USB_CDC_Device)
+**     Method      :  StdIOKeyPressed (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         StdIO handler for Shell
 **     Parameters  : None
@@ -412,7 +425,8 @@ bool CDC1_StdIOKeyPressed(void);
 void CDC1_StdIOReadChar(uint8_t *c);
 /*
 ** ===================================================================
-**     Method      :  CDC1_StdIOReadChar (component FSL_USB_CDC_Device)
+**     Method      :  StdIOReadChar (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         StdIO Handler for reading a character. It returns a zero
 **         byte if there is no character.
@@ -427,7 +441,8 @@ void CDC1_StdIOReadChar(uint8_t *c);
 void CDC1_StdIOSendChar(uint8_t ch);
 /*
 ** ===================================================================
-**     Method      :  CDC1_StdIOSendChar (component FSL_USB_CDC_Device)
+**     Method      :  StdIOSendChar (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         StdIO handler to sends a character.
 **     Parameters  :
@@ -440,7 +455,8 @@ void CDC1_StdIOSendChar(uint8_t ch);
 bool CDC1_ApplicationStarted(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_ApplicationStarted (component FSL_USB_CDC_Device)
+**     Method      :  ApplicationStarted (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns true if the CDC application has been started. 
 **     Parameters  : None
@@ -452,7 +468,8 @@ bool CDC1_ApplicationStarted(void);
 bool CDC1_TransactionsStarted(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_TransactionsStarted (component FSL_USB_CDC_Device)
+**     Method      :  TransactionsStarted (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns true if USB transactions  have been started.
 **     Parameters  : None
@@ -464,7 +481,8 @@ bool CDC1_TransactionsStarted(void);
 CLS1_ConstStdIOTypePtr CDC1_GetStdio(void);
 /*
 ** ===================================================================
-**     Method      :  CDC1_GetStdio (component FSL_USB_CDC_Device)
+**     Method      :  GetStdio (component FSL_USB_CDC_Device)
+**
 **     Description :
 **         Returns a pointer to the standard I/O
 **     Parameters  : None
@@ -479,12 +497,4 @@ CLS1_ConstStdIOTypePtr CDC1_GetStdio(void);
 /* ifndef __CDC1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

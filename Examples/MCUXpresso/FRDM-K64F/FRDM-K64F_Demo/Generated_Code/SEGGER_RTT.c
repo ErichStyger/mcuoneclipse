@@ -1,9 +1,9 @@
 /*********************************************************************
-*                SEGGER Microcontroller GmbH & Co. KG                *
+*                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*       (c) 2014 - 2017  SEGGER Microcontroller GmbH & Co. KG        *
+*            (c) 1995 - 2018 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -31,7 +31,7 @@
 *   disclaimer in the documentation and/or other materials provided  *
 *   with the distribution.                                           *
 *                                                                    *
-* o Neither the name of SEGGER Microcontroller GmbH & Co. KG         *
+* o Neither the name of SEGGER Microcontroller GmbH         *
 *   nor the names of its contributors may be used to endorse or      *
 *   promote products derived from this software without specific     *
 *   prior written permission.                                        *
@@ -52,7 +52,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       RTT version: 6.22c                                           *
+*       RTT version: 6.32b                                           *
 *                                                                    *
 **********************************************************************
 ---------------------------END-OF-HEADER------------------------------
@@ -60,7 +60,7 @@ File    : SEGGER_RTT.c
 Purpose : Implementation of SEGGER real-time transfer (RTT) which
           allows real-time communication on targets which support
           debugger memory accesses while the CPU is running.
-Revision: $Rev: 6852 $
+Revision: $Rev: 10887 $
 
 Additional information:
           Type "int" is assumed to be 32-bits in size
@@ -842,9 +842,9 @@ unsigned SEGGER_RTT_WriteSkipNoLock(unsigned BufferIndex, const void* pBuffer, u
           *pDst++ = *pData++;
         } while (--Rem);
         pDst = pRing->pBuffer;
-        do {
+        while (NumBytes--) {
           *pDst++ = *pData++;
-        } while (--NumBytes);
+        };
         pRing->WrOff = WrOff;
 #else
         SEGGER_RTT_MEMCPY(pRing->pBuffer + WrOff, pData, Rem);
@@ -1290,6 +1290,27 @@ unsigned SEGGER_RTT_HasData(unsigned BufferIndex) {
 
 /*********************************************************************
 *
+*       SEGGER_RTT_HasDataUp
+*
+*  Function description
+*    Check if there is data remaining to be sent in the given buffer.
+*
+*  Return value:
+*  ==0:  No data
+*  !=0:  Data in buffer
+*
+*/
+unsigned SEGGER_RTT_HasDataUp(unsigned BufferIndex) {
+  SEGGER_RTT_BUFFER_UP* pRing;
+  unsigned                v;
+
+  pRing = &_SEGGER_RTT.aUp[BufferIndex];
+  v = pRing->RdOff;
+  return pRing->WrOff - v;
+}
+
+/*********************************************************************
+*
 *       SEGGER_RTT_AllocDownBuffer
 *
 *  Function description
@@ -1632,7 +1653,7 @@ int SEGGER_RTT_SetTerminal (char TerminalId) {
   INIT();
   //
   r = 0;
-  ac[0] = 0xFFU;
+  ac[0] = 0xFFu;
   if ((unsigned char)TerminalId < (unsigned char)sizeof(_aTerminalId)) { // We only support a certain number of channels
     ac[1] = _aTerminalId[(unsigned char)TerminalId];
     pRing = &_SEGGER_RTT.aUp[0];    // Buffer 0 is always reserved for terminal I/O, so we can use index 0 here, fixed
@@ -1748,6 +1769,7 @@ int SEGGER_RTT_TerminalOut (char TerminalId, const char* s) {
   return Status;
 }
 
+#if 1 /* << EST: extra function */
 unsigned int SEGGER_RTT_GetUpBufferFreeSize(unsigned int bufferIndex) { /* << EST */
   unsigned int avail;
 
@@ -1757,6 +1779,6 @@ unsigned int SEGGER_RTT_GetUpBufferFreeSize(unsigned int bufferIndex) { /* << ES
   SEGGER_RTT_UNLOCK();
   return avail;
 }
-
+#endif
 /*************************** End of file ****************************/
 

@@ -5,9 +5,8 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SD_Card
 **     Version     : Component 01.184, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-12, 07:52, # CodeGen: 214
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **         Implements interface to SD card for FatFs
 **     Settings    :
@@ -27,6 +26,7 @@
 **                LDD HW SPI                               : SM2
 **              non-LDD HW SPI                             : Disabled
 **            SPI Read/Write Macros                        : Disabled
+**            Activate SPI bus                             : no
 **            Slave Select                                 : Enabled
 **              LDD SS                                     : Enabled
 **                Slave Select Pin                         : LDDSS
@@ -37,7 +37,7 @@
 **              LDD CD                                     : Enabled
 **                Card detection pin                       : LDDCDI
 **              non-LDD CD                                 : Disabled
-**            Report 'Card present' if no Card detection pin: yes
+**            Report 'Card present' if no Card detection pin : yes
 **            Write protection                             : Disabled
 **          System                                         : 
 **            Wait                                         : WAIT1
@@ -58,32 +58,32 @@
 **         Deinit           - uint8_t FATM1_Deinit(void* unused);
 **         Init             - uint8_t FATM1_Init(void* unused);
 **
-**     * Copyright (c) 2012-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2012-2017, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file FATM1.h
@@ -209,7 +209,8 @@ DRESULT FATM1_disk_ioctl (
 uint8_t FATM1_Init(void* unused);
 /*
 ** ===================================================================
-**     Method      :  FATM1_Init (component SD_Card)
+**     Method      :  Init (component SD_Card)
+**
 **     Description :
 **         Initializes the driver
 **     Parameters  :
@@ -223,7 +224,8 @@ uint8_t FATM1_Init(void* unused);
 void FATM1_Activate(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_Activate (component SD_Card)
+**     Method      :  Activate (component SD_Card)
+**
 **     Description :
 **         If multiple devices are used on the same SPI bus, then the
 **         device needs to be activated. That way, the different SPI
@@ -236,7 +238,8 @@ void FATM1_Activate(void);
 void FATM1_Deactivate(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_Deactivate (component SD_Card)
+**     Method      :  Deactivate (component SD_Card)
+**
 **     Description :
 **         Removes/deactivates the card from the bus
 **     Parameters  : None
@@ -249,7 +252,8 @@ void FATM1_Deactivate(void);
 
 /*
 ** ===================================================================
-**     Method      :  FATM1_isWriteProtected (component SD_Card)
+**     Method      :  isWriteProtected (component SD_Card)
+**
 **     Description :
 **         Determines if the card is write protected. Note that this is
 **         an indicator only, as it is still possible to write to the
@@ -264,7 +268,8 @@ void FATM1_Deactivate(void);
 uint8_t FATM1_WaitReady(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_WaitReady (component SD_Card)
+**     Method      :  WaitReady (component SD_Card)
+**
 **     Description :
 **         Wait until the card is ready
 **     Parameters  : None
@@ -278,7 +283,8 @@ uint8_t FATM1_WaitReady(void);
 bool FATM1_ReceiveDataBlock(uint8_t *data, uint16_t nofBytes);
 /*
 ** ===================================================================
-**     Method      :  FATM1_ReceiveDataBlock (component SD_Card)
+**     Method      :  ReceiveDataBlock (component SD_Card)
+**
 **     Description :
 **         Retrieve a data block from the device
 **     Parameters  :
@@ -295,7 +301,8 @@ bool FATM1_ReceiveDataBlock(uint8_t *data, uint16_t nofBytes);
 uint8_t FATM1_SendCmd(uint8_t cmd, uint32_t arg);
 /*
 ** ===================================================================
-**     Method      :  FATM1_SendCmd (component SD_Card)
+**     Method      :  SendCmd (component SD_Card)
+**
 **     Description :
 **         Sends a command to the device and returns the response
 **     Parameters  :
@@ -313,7 +320,6 @@ uint8_t FATM1_ReceiveByte(void);
 **     Method      :  FATM1_ReceiveByte (component SD_Card)
 **
 **     Description :
-**         Receives a byte from the SPI bus
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
@@ -323,7 +329,8 @@ uint8_t FATM1_ReceiveByte(void);
 
 /*
 ** ===================================================================
-**     Method      :  FATM1_CardPresent (component SD_Card)
+**     Method      :  CardPresent (component SD_Card)
+**
 **     Description :
 **         Returns true in case a card is present. If there is no card
 **         detection pin, then this routine will always return true.
@@ -337,7 +344,8 @@ uint8_t FATM1_ReceiveByte(void);
 bool FATM1_SendDataBlock(uint8_t *data, uint8_t token, uint16_t nofBytes);
 /*
 ** ===================================================================
-**     Method      :  FATM1_SendDataBlock (component SD_Card)
+**     Method      :  SendDataBlock (component SD_Card)
+**
 **     Description :
 **         Send a data block to the device
 **     Parameters  :
@@ -355,7 +363,8 @@ bool FATM1_SendDataBlock(uint8_t *data, uint8_t token, uint16_t nofBytes);
 void FATM1_SetFastMode(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_SetFastMode (component SD_Card)
+**     Method      :  SetFastMode (component SD_Card)
+**
 **     Description :
 **         Switches to fast mode SPI communication speed.
 **     Parameters  : None
@@ -366,7 +375,8 @@ void FATM1_SetFastMode(void);
 void FATM1_InitCommChannel(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_InitCommChannel (component SD_Card)
+**     Method      :  InitCommChannel (component SD_Card)
+**
 **     Description :
 **         Method to initialize the communication channel. This is
 **         needed if the bus to the SD card is shared with other
@@ -379,7 +389,8 @@ void FATM1_InitCommChannel(void);
 uint8_t FATM1_Deinit(void* unused);
 /*
 ** ===================================================================
-**     Method      :  FATM1_Deinit (component SD_Card)
+**     Method      :  Deinit (component SD_Card)
+**
 **     Description :
 **         Driver deinitialization routine.
 **     Parameters  :
@@ -395,7 +406,8 @@ void SM2_OnBlockReceived(LDD_TUserData *UserDataPtr);
 void FATM1_SetSlowMode(void);
 /*
 ** ===================================================================
-**     Method      :  FATM1_SetSlowMode (component SD_Card)
+**     Method      :  SetSlowMode (component SD_Card)
+**
 **     Description :
 **         Switches to slow mode SPI communication speed.
 **     Parameters  : None
@@ -409,12 +421,4 @@ void FATM1_SetSlowMode(void);
 /* ifndef __FATM1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

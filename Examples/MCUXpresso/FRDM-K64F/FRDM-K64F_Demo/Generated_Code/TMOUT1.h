@@ -5,9 +5,8 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Timeout
 **     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-12-10, 11:52, # CodeGen: 180
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **
 The module implements timeout functionality. With this implementation,
@@ -15,8 +14,6 @@ it is possible to wait for a given time, and the time is counted by
 a periodic interrupt.
 **     Settings    :
 **          Component name                                 : TMOUT1
-**          SDK                                            : MCUC1
-**          Critical Section                               : CS1
 **          Maximum counters                               : 1
 **          Counter tick period (ms)                       : 10
 **          RTOS                                           : Disabled
@@ -29,32 +26,32 @@ a periodic interrupt.
 **         AddTick        - void TMOUT1_AddTick(void);
 **         Init           - void TMOUT1_Init(void);
 **
-**     * Copyright (c) 2011-2016, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2011-2016, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file TMOUT1.h
@@ -99,7 +96,8 @@ a periodic interrupt.
 TMOUT1_CounterHandle TMOUT1_GetCounter(TMOUT1_CounterType nofTicks);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_GetCounter (component Timeout)
+**     Method      :  GetCounter (component Timeout)
+**
 **     Description :
 **         Initializes a new timeout counter and returns the handle to
 **         it. At the end, use LeaveCounter() to free up the resource.
@@ -116,7 +114,8 @@ TMOUT1_CounterHandle TMOUT1_GetCounter(TMOUT1_CounterType nofTicks);
 void TMOUT1_LeaveCounter(TMOUT1_CounterHandle handle);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_LeaveCounter (component Timeout)
+**     Method      :  LeaveCounter (component Timeout)
+**
 **     Description :
 **         To be called to return the counter. Note that a counter
 **         always should be returned so it can be reused.
@@ -130,7 +129,8 @@ void TMOUT1_LeaveCounter(TMOUT1_CounterHandle handle);
 bool TMOUT1_CounterExpired(TMOUT1_CounterHandle handle);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_CounterExpired (component Timeout)
+**     Method      :  CounterExpired (component Timeout)
+**
 **     Description :
 **         Returns true if the timeout counter has been expired
 **     Parameters  :
@@ -146,7 +146,8 @@ bool TMOUT1_CounterExpired(TMOUT1_CounterHandle handle);
 void TMOUT1_AddTick(void);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_AddTick (component Timeout)
+**     Method      :  AddTick (component Timeout)
+**
 **     Description :
 **         Method to be called from a periodic timer or interrupt. It
 **         will decrement all current counters by one down to zero.
@@ -158,7 +159,8 @@ void TMOUT1_AddTick(void);
 void TMOUT1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_Init (component Timeout)
+**     Method      :  Init (component Timeout)
+**
 **     Description :
 **         Initialization of the driver
 **     Parameters  : None
@@ -169,7 +171,8 @@ void TMOUT1_Init(void);
 TMOUT1_CounterType TMOUT1_Value(TMOUT1_CounterHandle handle);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_Value (component Timeout)
+**     Method      :  Value (component Timeout)
+**
 **     Description :
 **         Return the current value of the counter (in ticks)
 **     Parameters  :
@@ -183,7 +186,8 @@ TMOUT1_CounterType TMOUT1_Value(TMOUT1_CounterHandle handle);
 TMOUT1_CounterType TMOUT1_SetCounter(TMOUT1_CounterHandle handle, TMOUT1_CounterType nofTicks);
 /*
 ** ===================================================================
-**     Method      :  TMOUT1_SetCounter (component Timeout)
+**     Method      :  SetCounter (component Timeout)
+**
 **     Description :
 **         Sets the counter to a new value and returns the value just
 **         prior to the call.
@@ -205,12 +209,4 @@ TMOUT1_CounterType TMOUT1_SetCounter(TMOUT1_CounterHandle handle, TMOUT1_Counter
 /* ifndef __TMOUT1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

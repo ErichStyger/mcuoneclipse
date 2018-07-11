@@ -4,10 +4,9 @@
 **     Project     : ProcessorExpert
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.097, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.098, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-03-28, 08:58, # CodeGen: 225
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -25,14 +24,13 @@
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
 **          Multi Command                                  : Disabled
-**          History                                        : no
-**          Mutex                                          : no
-**          SDK                                            : MCUC1
+**          Utility                                        : UTIL1
 **          Default Serial                                 : Enabled
 **            Console Interface                            : AS1
-**          Utility                                        : UTIL1
-**          XFormat                                        : XF1
+**          Semaphore                                      : no
 **          Critical Section                               : CS1
+**          History                                        : no
+**          Kinetis SDK                                    : MCUC1
 **     Contents    :
 **         PrintPrompt                  - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
 **         SendNum8u                    - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
@@ -68,32 +66,32 @@
 **         Init                         - void CLS1_Init(void);
 **         Deinit                       - void CLS1_Deinit(void);
 **
-**     * Copyright (c) 2014-2018, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2014-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file CLS1.h
@@ -204,7 +202,8 @@ extern "C" {
 void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendStr (component Shell)
+**     Method      :  SendStr (component Shell)
+**
 **     Description :
 **         Prints a string using an I/O function
 **     Parameters  :
@@ -219,7 +218,8 @@ void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
 uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ParseCommand (component Shell)
+**     Method      :  ParseCommand (component Shell)
+**
 **     Description :
 **         Parses a shell command. Use 'help' to get a list of
 **         supported commands.
@@ -241,7 +241,8 @@ uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
 void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum32s (component Shell)
+**     Method      :  SendNum32s (component Shell)
+**
 **     Description :
 **         Sends a 32bit signed number to the given I/O
 **     Parameters  :
@@ -255,7 +256,8 @@ void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum16s (component Shell)
+**     Method      :  SendNum16s (component Shell)
+**
 **     Description :
 **         Sends a 16bit signed number to the given I/O
 **     Parameters  :
@@ -269,7 +271,8 @@ void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_PrintPrompt (component Shell)
+**     Method      :  PrintPrompt (component Shell)
+**
 **     Description :
 **         Prints the prompt to the stdOut channel
 **     Parameters  :
@@ -282,7 +285,8 @@ void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
 bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstStdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ReadLine (component Shell)
+**     Method      :  ReadLine (component Shell)
+**
 **     Description :
 **         Reads a line from stdIn and returns TRUE if we have a line,
 **         FALSE otherwise.
@@ -302,7 +306,8 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
 uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_PrintStatus (component Shell)
+**     Method      :  PrintStatus (component Shell)
+**
 **     Description :
 **         Prints various available system status information
 **     Parameters  :
@@ -316,7 +321,8 @@ uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
 void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_PrintCommandFailed (component Shell)
+**     Method      :  PrintCommandFailed (component Shell)
+**
 **     Description :
 **         Prints a standard message for failed or unknown commands
 **     Parameters  :
@@ -330,7 +336,8 @@ void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
 uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ParseWithCommandTable (component Shell)
+**     Method      :  ParseWithCommandTable (component Shell)
+**
 **     Description :
 **         Parses a shell command. It handles first the internal
 **         commands and will call the provided callback.
@@ -349,7 +356,8 @@ uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, 
 CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_GetStdio (component Shell)
+**     Method      :  GetStdio (component Shell)
+**
 **     Description :
 **         Returns the default stdio channel. This method is only
 **         available if a shell is enabled in the component properties.
@@ -362,7 +370,8 @@ CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
 void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum32u (component Shell)
+**     Method      :  SendNum32u (component Shell)
+**
 **     Description :
 **         Sends a 32bit unsigned number to the given I/O
 **     Parameters  :
@@ -376,7 +385,8 @@ void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum16u (component Shell)
+**     Method      :  SendNum16u (component Shell)
+**
 **     Description :
 **         Sends a 16bit unsigned number to the given I/O
 **     Parameters  :
@@ -390,7 +400,8 @@ void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum8u (component Shell)
+**     Method      :  SendNum8u (component Shell)
+**
 **     Description :
 **         Sends an 8bit unsigned number to the given I/O
 **     Parameters  :
@@ -404,7 +415,8 @@ void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendNum8s (component Shell)
+**     Method      :  SendNum8s (component Shell)
+**
 **     Description :
 **         Sends an 8bit signed number to the given I/O
 **     Parameters  :
@@ -418,7 +430,8 @@ void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
 void CLS1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_Init (component Shell)
+**     Method      :  Init (component Shell)
+**
 **     Description :
 **         Initializes the module, especially creates the mutex
 **         semaphore if an RTOS is used.
@@ -430,7 +443,8 @@ void CLS1_Init(void);
 void CLS1_RequestSerial(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_RequestSerial (component Shell)
+**     Method      :  RequestSerial (component Shell)
+**
 **     Description :
 **         Used to get mutual access to the shell console. Only has an
 **         effect if using an RTOS with semaphore for the console
@@ -443,7 +457,8 @@ void CLS1_RequestSerial(void);
 void CLS1_ReleaseSerial(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ReleaseSerial (component Shell)
+**     Method      :  ReleaseSerial (component Shell)
+**
 **     Description :
 **         Used to release mutual access to the shell console. Only has
 **         an effect if using an RTOS with semaphore for the console
@@ -456,7 +471,8 @@ void CLS1_ReleaseSerial(void);
 void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendHelpStr (component Shell)
+**     Method      :  SendHelpStr (component Shell)
+**
 **     Description :
 **         Prints a string using an I/O function, formated for the
 **         'help' command
@@ -472,7 +488,8 @@ void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, CLS1_StdIO_
 void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendStatusStr (component Shell)
+**     Method      :  SendStatusStr (component Shell)
+**
 **     Description :
 **         Prints a status string using an I/O function, formated for
 **         the 'status' command
@@ -488,7 +505,8 @@ void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, CLS1_S
 void CLS1_ReadChar(uint8_t *c);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ReadChar (component Shell)
+**     Method      :  ReadChar (component Shell)
+**
 **     Description :
 **         Reads a character (blocking)
 **     Parameters  :
@@ -502,7 +520,8 @@ void CLS1_ReadChar(uint8_t *c);
 void CLS1_SendChar(uint8_t ch);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendChar (component Shell)
+**     Method      :  SendChar (component Shell)
+**
 **     Description :
 **         Sends a character (blocking)
 **     Parameters  :
@@ -515,7 +534,8 @@ void CLS1_SendChar(uint8_t ch);
 bool CLS1_KeyPressed(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_KeyPressed (component Shell)
+**     Method      :  KeyPressed (component Shell)
+**
 **     Description :
 **         Checks if a key has been pressed (a character is present in
 **         the input buffer)
@@ -528,7 +548,8 @@ bool CLS1_KeyPressed(void);
 void CLS1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_Deinit (component Shell)
+**     Method      :  Deinit (component Shell)
+**
 **     Description :
 **         De-Initializes the module, especially frees the mutex
 **         semaphore if an RTOS is used.
@@ -540,7 +561,8 @@ void CLS1_Deinit(void);
 void* CLS1_GetSemaphore(void);
 /*
 ** ===================================================================
-**     Method      :  CLS1_GetSemaphore (component Shell)
+**     Method      :  GetSemaphore (component Shell)
+**
 **     Description :
 **         Return the semaphore of the shell.
 **     Parameters  : None
@@ -553,7 +575,8 @@ void* CLS1_GetSemaphore(void);
 uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback);
 /*
 ** ===================================================================
-**     Method      :  CLS1_ReadAndParseWithCommandTable (component Shell)
+**     Method      :  ReadAndParseWithCommandTable (component Shell)
+**
 **     Description :
 **         Reads characters from the default input channel and appends
 **         it to the buffer. Once a new line has been detected, the
@@ -579,7 +602,8 @@ uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, CL
 uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parserTable);
 /*
 ** ===================================================================
-**     Method      :  CLS1_IterateTable (component Shell)
+**     Method      :  IterateTable (component Shell)
+**
 **     Description :
 **         Parses a shell command. It handles first the internal
 **         commands and will call the provided callback.
@@ -601,7 +625,8 @@ uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
 uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SetStdio (component Shell)
+**     Method      :  SetStdio (component Shell)
+**
 **     Description :
 **         Sets an StdIO structure which is returned by GetStdio()
 **     Parameters  :
@@ -615,7 +640,8 @@ uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
 void CLS1_SendData(const uint8_t *data, uint16_t dataSize, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendData (component Shell)
+**     Method      :  SendData (component Shell)
+**
 **     Description :
 **         Sends data using an I/O function. Unlike SendStr(), with
 **         this method it is possible to send binary data, including
@@ -632,7 +658,8 @@ void CLS1_SendData(const uint8_t *data, uint16_t dataSize, CLS1_StdIO_OutErr_Fct
 bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, bool *isPrev);
 /*
 ** ===================================================================
-**     Method      :  CLS1_IsHistoryCharacter (component Shell)
+**     Method      :  IsHistoryCharacter (component Shell)
+**
 **     Description :
 **         Returns TRUE if character is a history character
 **     Parameters  :
@@ -651,7 +678,8 @@ bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, bool
 void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendCh (component Shell)
+**     Method      :  SendCh (component Shell)
+**
 **     Description :
 **         Prints a character using an I/O function
 **     Parameters  :
@@ -665,7 +693,8 @@ void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
 unsigned CLS1_printf(const char *fmt, ...);
 /*
 ** ===================================================================
-**     Method      :  CLS1_printf (component Shell)
+**     Method      :  printf (component Shell)
+**
 **     Description :
 **         Printf() style function using XFormat component, using the
 **         shell default I/O handler.
@@ -683,7 +712,6 @@ void CLS1_printfPutChar(void *arg, char c);
 **     Method      :  CLS1_printfPutChar (component Shell)
 **
 **     Description :
-**         Helper routine for printf
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
@@ -691,7 +719,8 @@ void CLS1_printfPutChar(void *arg, char c);
 unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
 /*
 ** ===================================================================
-**     Method      :  CLS1_printfIO (component Shell)
+**     Method      :  printfIO (component Shell)
+**
 **     Description :
 **         Printf() style function using XFormat component, using a
 **         custom I/O handler.
@@ -707,7 +736,8 @@ unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
 void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
 /*
 ** ===================================================================
-**     Method      :  CLS1_SendCharFct (component Shell)
+**     Method      :  SendCharFct (component Shell)
+**
 **     Description :
 **         Method to send a character using a standard I/O handle.
 **     Parameters  :
@@ -729,12 +759,4 @@ void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
 /* ifndef __CLS1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

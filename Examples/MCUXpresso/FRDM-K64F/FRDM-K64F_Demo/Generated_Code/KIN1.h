@@ -5,15 +5,14 @@
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
 **     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-09-11, 17:40, # CodeGen: 218
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : KIN1
-**          SDK                                            : MCUC1
 **          Utility                                        : UTIL1
+**          SDK                                            : MCUC1
 **          Shell                                          : Enabled
 **            Shell                                        : CLS1
 **     Contents    :
@@ -33,32 +32,32 @@
 **         GetCycleCounter        - uint32_t KIN1_GetCycleCounter(void);
 **         ParseCommand           - uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const...
 **
-**     * Copyright (c) 2014-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2014-2017, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file KIN1.h
@@ -129,7 +128,8 @@ extern "C" {
 uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  KIN1_ParseCommand (component KinetisTools)
+**     Method      :  ParseCommand (component KinetisTools)
+**
 **     Description :
 **         Shell Command Line parser. Method is only available if Shell
 **         is enabled in the component properties.
@@ -148,7 +148,8 @@ uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 void KIN1_SoftwareReset(void);
 /*
 ** ===================================================================
-**     Method      :  KIN1_SoftwareReset (component KinetisTools)
+**     Method      :  SoftwareReset (component KinetisTools)
+**
 **     Description :
 **         Performs a reset of the device
 **     Parameters  : None
@@ -159,7 +160,8 @@ void KIN1_SoftwareReset(void);
 uint8_t KIN1_UIDGet(KIN1_UID *uid);
 /*
 ** ===================================================================
-**     Method      :  KIN1_UIDGet (component KinetisTools)
+**     Method      :  UIDGet (component KinetisTools)
+**
 **     Description :
 **         Return the 128bit UID of the device
 **     Parameters  :
@@ -173,7 +175,8 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid);
 bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
 /*
 ** ===================================================================
-**     Method      :  KIN1_UIDSame (component KinetisTools)
+**     Method      :  UIDSame (component KinetisTools)
+**
 **     Description :
 **         Compares two UID
 **     Parameters  :
@@ -188,7 +191,8 @@ bool KIN1_UIDSame(const KIN1_UID *src, const KIN1_UID *dst);
 uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
 /*
 ** ===================================================================
-**     Method      :  KIN1_UIDtoString (component KinetisTools)
+**     Method      :  UIDtoString (component KinetisTools)
+**
 **     Description :
 **         Returns the value of the UID as string
 **     Parameters  :
@@ -204,7 +208,8 @@ uint8_t KIN1_UIDtoString(const KIN1_UID *uid, uint8_t *buf, size_t bufSize);
 KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
 /*
 ** ===================================================================
-**     Method      :  KIN1_GetKinetisFamilyString (component KinetisTools)
+**     Method      :  GetKinetisFamilyString (component KinetisTools)
+**
 **     Description :
 **         Determines the Kinetis Familiy based on SIM_SDID register
 **     Parameters  : None
@@ -216,7 +221,8 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void);
 void* KIN1_GetPC(void);
 /*
 ** ===================================================================
-**     Method      :  KIN1_GetPC (component KinetisTools)
+**     Method      :  GetPC (component KinetisTools)
+**
 **     Description :
 **         returns the program counter
 **     Parameters  : None
@@ -228,7 +234,8 @@ void* KIN1_GetPC(void);
 void* KIN1_GetSP(void);
 /*
 ** ===================================================================
-**     Method      :  KIN1_GetSP (component KinetisTools)
+**     Method      :  GetSP (component KinetisTools)
+**
 **     Description :
 **         returns the stack pointer
 **     Parameters  : None
@@ -240,7 +247,8 @@ void* KIN1_GetSP(void);
 void KIN1_SetPSP(void *setval);
 /*
 ** ===================================================================
-**     Method      :  KIN1_SetPSP (component KinetisTools)
+**     Method      :  SetPSP (component KinetisTools)
+**
 **     Description :
 **         sets the process stack pointer
 **     Parameters  :
@@ -253,7 +261,8 @@ void KIN1_SetPSP(void *setval);
 void KIN1_SetLR(uint32_t setval);
 /*
 ** ===================================================================
-**     Method      :  KIN1_SetLR (component KinetisTools)
+**     Method      :  SetLR (component KinetisTools)
+**
 **     Description :
 **         Sets the link register
 **     Parameters  :
@@ -269,7 +278,8 @@ void KIN1_SetLR(uint32_t setval);
   /*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
 /*
 ** ===================================================================
-**     Method      :  KIN1_InitCycleCounter (component KinetisTools)
+**     Method      :  InitCycleCounter (component KinetisTools)
+**
 **     Description :
 **         Initializes the cycle counter, available if the core has a
 **         DWT (Data Watchpoint and Trace) unit, usually present on
@@ -286,7 +296,8 @@ void KIN1_SetLR(uint32_t setval);
   /*!< Reset cycle counter */
 /*
 ** ===================================================================
-**     Method      :  KIN1_ResetCycleCounter (component KinetisTools)
+**     Method      :  ResetCycleCounter (component KinetisTools)
+**
 **     Description :
 **         Reset the cycle counter (set it to zero)
 **     Parameters  : None
@@ -301,7 +312,8 @@ void KIN1_SetLR(uint32_t setval);
   /*!< Enable cycle counter */
 /*
 ** ===================================================================
-**     Method      :  KIN1_EnableCycleCounter (component KinetisTools)
+**     Method      :  EnableCycleCounter (component KinetisTools)
+**
 **     Description :
 **         Enables counting the cycles.
 **     Parameters  : None
@@ -316,7 +328,8 @@ void KIN1_SetLR(uint32_t setval);
   /*!< Disable cycle counter */
 /*
 ** ===================================================================
-**     Method      :  KIN1_DisableCycleCounter (component KinetisTools)
+**     Method      :  DisableCycleCounter (component KinetisTools)
+**
 **     Description :
 **         Disables the cycle counter.
 **     Parameters  : None
@@ -331,7 +344,8 @@ void KIN1_SetLR(uint32_t setval);
   /*!< Read cycle counter register */
 /*
 ** ===================================================================
-**     Method      :  KIN1_GetCycleCounter (component KinetisTools)
+**     Method      :  GetCycleCounter (component KinetisTools)
+**
 **     Description :
 **         Return the current cycle counter value
 **     Parameters  : None
@@ -351,12 +365,4 @@ void KIN1_SetLR(uint32_t setval);
 /* ifndef __KIN1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

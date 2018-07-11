@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-03-28, 09:38, # CodeGen: 226
+**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
@@ -158,29 +158,27 @@ void Common_Init(void)
 #if CPU_COMPONENTS_INIT
 void Components_Init(void)
 {
-  /* ### McuLibConfig "MCUC1" init code ... */
-  /* ### CriticalSection "CS1" init code ... */
+  MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
+  CS1_Init(); /* ### CriticalSection "CS1" init code ... */
   /* ### Asynchro serial "AS1" init code ... */
   AS1_Init();
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
   /* ### KinetisTools "KIN1" init code ... */
-  WAIT1_Init();
-  /* ### XFormat "XF1" init code ... */
-  /* ### Shell "CLS1" init code ... */
-  CLS1_Init(); /* initialize shell */
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+  XF1_Init(); /* ### XFormat "XF1" init code ... */
+  CLS1_Init(); /* ### Shell "CLS1" init code ... */
   /* ### BitIO_LDD "BitIoLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd1_Init(NULL);
-  /* ### LED "LED1" init code ... */
-  LED1_Init(); /* initialize LED driver */
+  LED1_Init(); /* ### LED "LED1" init code ... */
   /* ### BitIO_LDD "BitIoLdd2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd2_Init(NULL);
-  /* ### LED "LED2" init code ... */
-  LED2_Init(); /* initialize LED driver */
+  LED2_Init(); /* ### LED "LED2" init code ... */
   /* ### BitIO_LDD "BitIoLdd3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd3_Init(NULL);
-  /* ### LED "LED3" init code ... */
-  LED3_Init(); /* initialize LED driver */
+  LED3_Init(); /* ### LED "LED3" init code ... */
   /* ### HardFault "HF1" init code ... */
   HF1_Init();
   /* ### TimerInt_LDD "TimerIntLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
@@ -190,8 +188,7 @@ void Components_Init(void)
   Serial1_Init();
   /* ### Bluetooth_EGBT "BT1" init code ... */
   BT1_Init();
-  /* ### GenericI2C "GI2C1" init code ... */
-  GI2C1_Init();
+  GI2C1_Init(); /* ### GenericI2C "GI2C1" init code ... */
   /* ### FXOS8700CQ "FX1" init code ... */
   /* Write code here ... */
   /* ### GenericTimeDate "TmDt1" init code ... */
@@ -217,15 +214,11 @@ void Components_Init(void)
   (void)BitIoLdd9_Init(NULL);
   /* ### Key "KEY1" init code ... */
   KEY1_Init();
-  /* ### RingBuffer "Tx1" init code ... */
-  Tx1_Init();
-  /* ### RingBuffer "Rx1" init code ... */
-  Rx1_Init();
+  Tx1_Init(); /* ### RingBuffer "Tx1" init code ... */
+  Rx1_Init(); /* ### RingBuffer "Rx1" init code ... */
   (void)USB1_Init();
-  /* ### SeggerRTT "RTT1" init code ... */
-  RTT1_Init();
-  /* ### SeggerSystemView "SYS1" init code ... */
-  SYS1_Init();
+  RTT1_Init(); /* ### SeggerRTT "RTT1" init code ... */
+  SYS1_Init(); /* ### SeggerSystemView "SYS1" init code ... */
   /* ### BitIO_LDD "BitIoLdd17" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd17_Init(NULL);
   /* ### BitIO_LDD "BitIoLdd16" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
