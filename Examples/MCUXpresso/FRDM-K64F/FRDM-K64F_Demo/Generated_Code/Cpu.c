@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 11:42, # CodeGen: 3
+**     Date/Time   : 2018-07-11, 19:00, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -251,7 +251,6 @@ void Components_Init(void)
   (void)BitIoLdd30_Init(NULL);
   /* ### BitIO_LDD "BitIoLdd29" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)BitIoLdd29_Init(NULL);
-  /* ### PercepioTrace "PTRC1" init code ... */
 }
 #endif /* CPU_COMPONENTS_INIT */
 
