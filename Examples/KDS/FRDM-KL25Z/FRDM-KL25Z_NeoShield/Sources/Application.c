@@ -216,7 +216,7 @@ void APP_Run(void) {
 #elif PL_HAS_LED_FRAME
   LEDFRAME_Init();
 #elif PL_HAS_NEO_PIXEL
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         NeoTask,  /* pointer to the task */
         "Neo", /* task name for kernel awareness debugging */
         500/sizeof(StackType_t), /* task stack size */
