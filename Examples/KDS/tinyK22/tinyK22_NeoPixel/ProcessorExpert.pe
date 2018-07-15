@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK22_NeoPixel</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>15</ModificationStamp>
+    <ModificationStamp>19</ModificationStamp>
     <Date>2018-07-14</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -15935,16 +15935,16 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Debug</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>GroupArbitrationFeatureGroup</ItemSymbol>
@@ -16117,7 +16117,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelTransferCompleteInterruptGrp0</ItemSymbol>
@@ -16321,7 +16321,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelTransferCompleteInterruptVectorISRHandle1</ItemSymbol>
-        <Value />
+        <Value>DMA1_INT_DMA1_TransferComplete_ISR</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -16367,7 +16367,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelErrorInterruptVectorISRHandle1</ItemSymbol>
-        <Value />
+        <Value>DMA1_INT_DMA_Error_TransferError_ISR</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -16499,7 +16499,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelTransferCompleteInterruptVectorISRHandle2</ItemSymbol>
-        <Value />
+        <Value>DMA1_INT_DMA2_TransferComplete_ISR</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -16545,7 +16545,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticChannelErrorInterruptVectorISRHandle2</ItemSymbol>
-        <Value />
+        <Value>DMA1_INT_DMA_Error_TransferError_ISR</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -17034,8 +17034,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>TransferCompleteIntGrp</ItemSymbol>
@@ -17539,10 +17539,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>EnableRequest</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -17550,10 +17550,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>DisableRequest</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -28513,7 +28513,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
       </ItemState>
       <ItemState>
@@ -28666,7 +28665,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
       </ItemState>
       <ItemState>
@@ -28819,7 +28817,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
       </ItemState>
       <ItemState>
@@ -28972,7 +28969,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
       </ItemState>
       <ItemState>
@@ -29125,7 +29121,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
       </ItemState>
       <ItemState>
@@ -29278,7 +29273,6 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>true</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
       </ItemState>
       <ItemState>
@@ -29324,7 +29318,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput16FeatureCondGroup</ItemSymbol>
@@ -29347,7 +29342,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable16FeatureCondGroup</ItemSymbol>
@@ -29433,7 +29429,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable16FeatureCondGroup</ItemSymbol>
@@ -29478,7 +29475,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput17FeatureCondGroup</ItemSymbol>
@@ -29501,7 +29499,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable17FeatureCondGroup</ItemSymbol>
@@ -29587,7 +29586,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable17FeatureCondGroup</ItemSymbol>
@@ -29632,7 +29632,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput18FeatureCondGroup</ItemSymbol>
@@ -29655,7 +29656,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable18FeatureCondGroup</ItemSymbol>
@@ -29741,7 +29743,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable18FeatureCondGroup</ItemSymbol>
@@ -29786,7 +29789,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput19FeatureCondGroup</ItemSymbol>
@@ -29809,7 +29813,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable19FeatureCondGroup</ItemSymbol>
@@ -29895,7 +29900,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PassiveFilterEnable19FeatureCondGroup</ItemSymbol>
@@ -29942,7 +29948,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput20FeatureCondGroup</ItemSymbol>
@@ -29967,7 +29974,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable20FeatureCondGroup</ItemSymbol>
@@ -29982,7 +29990,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable20FeatureCondGroup</ItemSymbol>
@@ -29997,7 +30006,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect20FeatureCondGroup</ItemSymbol>
@@ -30012,7 +30022,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>up</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable20FeatureCondGroup</ItemSymbol>
@@ -30027,7 +30038,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>slow</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable20FeatureCondGroup</ItemSymbol>
@@ -30042,7 +30054,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration20FeatureCondGroup</ItemSymbol>
@@ -30057,7 +30070,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter20FeatureCondGroup</ItemSymbol>
@@ -30088,7 +30102,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>enable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock20FeatureCondGroup</ItemSymbol>
@@ -30103,7 +30118,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn21FeatureCondGroup</ItemSymbol>
@@ -30126,7 +30142,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput21FeatureCondGroup</ItemSymbol>
@@ -30151,7 +30168,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable21FeatureCondGroup</ItemSymbol>
@@ -30166,7 +30184,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable21FeatureCondGroup</ItemSymbol>
@@ -30181,7 +30200,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect21FeatureCondGroup</ItemSymbol>
@@ -30196,7 +30216,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable21FeatureCondGroup</ItemSymbol>
@@ -30211,7 +30232,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable21FeatureCondGroup</ItemSymbol>
@@ -30226,7 +30248,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration21FeatureCondGroup</ItemSymbol>
@@ -30241,7 +30264,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter21FeatureCondGroup</ItemSymbol>
@@ -30272,7 +30296,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock21FeatureCondGroup</ItemSymbol>
@@ -30287,7 +30312,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn22FeatureCondGroup</ItemSymbol>
@@ -30310,7 +30336,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput22FeatureCondGroup</ItemSymbol>
@@ -30335,7 +30362,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable22FeatureCondGroup</ItemSymbol>
@@ -30350,7 +30378,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable22FeatureCondGroup</ItemSymbol>
@@ -30365,7 +30394,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect22FeatureCondGroup</ItemSymbol>
@@ -30380,7 +30410,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable22FeatureCondGroup</ItemSymbol>
@@ -30395,7 +30426,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable22FeatureCondGroup</ItemSymbol>
@@ -30410,7 +30442,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration22FeatureCondGroup</ItemSymbol>
@@ -30425,7 +30458,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter22FeatureCondGroup</ItemSymbol>
@@ -30456,7 +30490,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock22FeatureCondGroup</ItemSymbol>
@@ -30471,7 +30506,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn23FeatureCondGroup</ItemSymbol>
@@ -30494,7 +30530,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput23FeatureCondGroup</ItemSymbol>
@@ -30519,7 +30556,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable23FeatureCondGroup</ItemSymbol>
@@ -30534,7 +30572,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable23FeatureCondGroup</ItemSymbol>
@@ -30549,7 +30588,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect23FeatureCondGroup</ItemSymbol>
@@ -30564,7 +30604,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable23FeatureCondGroup</ItemSymbol>
@@ -30579,7 +30620,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable23FeatureCondGroup</ItemSymbol>
@@ -30594,7 +30636,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration23FeatureCondGroup</ItemSymbol>
@@ -30609,7 +30652,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter23FeatureCondGroup</ItemSymbol>
@@ -30640,7 +30684,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock23FeatureCondGroup</ItemSymbol>
@@ -30655,7 +30700,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn24FeatureCondGroup</ItemSymbol>
@@ -30678,7 +30724,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput24FeatureCondGroup</ItemSymbol>
@@ -30703,7 +30750,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable24FeatureCondGroup</ItemSymbol>
@@ -30718,7 +30766,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable24FeatureCondGroup</ItemSymbol>
@@ -30733,7 +30782,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect24FeatureCondGroup</ItemSymbol>
@@ -30748,7 +30798,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable24FeatureCondGroup</ItemSymbol>
@@ -30763,7 +30814,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable24FeatureCondGroup</ItemSymbol>
@@ -30778,7 +30830,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration24FeatureCondGroup</ItemSymbol>
@@ -30793,7 +30846,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter24FeatureCondGroup</ItemSymbol>
@@ -30824,7 +30878,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock24FeatureCondGroup</ItemSymbol>
@@ -30839,7 +30894,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn25FeatureCondGroup</ItemSymbol>
@@ -30862,7 +30918,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput25FeatureCondGroup</ItemSymbol>
@@ -30887,7 +30944,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable25FeatureCondGroup</ItemSymbol>
@@ -30902,7 +30960,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable25FeatureCondGroup</ItemSymbol>
@@ -30917,7 +30976,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect25FeatureCondGroup</ItemSymbol>
@@ -30932,7 +30992,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable25FeatureCondGroup</ItemSymbol>
@@ -30947,7 +31008,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable25FeatureCondGroup</ItemSymbol>
@@ -30962,7 +31024,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration25FeatureCondGroup</ItemSymbol>
@@ -30977,7 +31040,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter25FeatureCondGroup</ItemSymbol>
@@ -31008,7 +31072,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock25FeatureCondGroup</ItemSymbol>
@@ -31023,7 +31088,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn26FeatureCondGroup</ItemSymbol>
@@ -31046,7 +31112,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput26FeatureCondGroup</ItemSymbol>
@@ -31071,7 +31138,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable26FeatureCondGroup</ItemSymbol>
@@ -31086,7 +31154,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable26FeatureCondGroup</ItemSymbol>
@@ -31101,7 +31170,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect26FeatureCondGroup</ItemSymbol>
@@ -31116,7 +31186,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>down</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable26FeatureCondGroup</ItemSymbol>
@@ -31131,7 +31202,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>fast</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable26FeatureCondGroup</ItemSymbol>
@@ -31146,7 +31218,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>low</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration26FeatureCondGroup</ItemSymbol>
@@ -31161,7 +31234,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter26FeatureCondGroup</ItemSymbol>
@@ -31192,7 +31266,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock26FeatureCondGroup</ItemSymbol>
@@ -31207,7 +31282,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn27FeatureCondGroup</ItemSymbol>
@@ -31230,7 +31306,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput27FeatureCondGroup</ItemSymbol>
@@ -31255,7 +31332,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable27FeatureCondGroup</ItemSymbol>
@@ -31270,7 +31348,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable27FeatureCondGroup</ItemSymbol>
@@ -31285,7 +31364,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect27FeatureCondGroup</ItemSymbol>
@@ -31300,7 +31380,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable27FeatureCondGroup</ItemSymbol>
@@ -31315,7 +31396,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable27FeatureCondGroup</ItemSymbol>
@@ -31330,7 +31412,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration27FeatureCondGroup</ItemSymbol>
@@ -31345,7 +31428,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter27FeatureCondGroup</ItemSymbol>
@@ -31376,7 +31460,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock27FeatureCondGroup</ItemSymbol>
@@ -31391,7 +31476,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn28FeatureCondGroup</ItemSymbol>
@@ -31414,7 +31500,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput28FeatureCondGroup</ItemSymbol>
@@ -31439,7 +31526,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable28FeatureCondGroup</ItemSymbol>
@@ -31454,7 +31542,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable28FeatureCondGroup</ItemSymbol>
@@ -31469,7 +31558,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect28FeatureCondGroup</ItemSymbol>
@@ -31484,7 +31574,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable28FeatureCondGroup</ItemSymbol>
@@ -31499,7 +31590,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable28FeatureCondGroup</ItemSymbol>
@@ -31514,7 +31606,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>InterruptConfiguration28FeatureCondGroup</ItemSymbol>
@@ -31529,7 +31622,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DigitalFilter28FeatureCondGroup</ItemSymbol>
@@ -31560,7 +31654,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>Lock28FeatureCondGroup</ItemSymbol>
@@ -31575,7 +31670,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>noInit</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinEn29FeatureCondGroup</ItemSymbol>
@@ -31596,7 +31692,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput29FeatureCondGroup</ItemSymbol>
@@ -31619,7 +31716,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>OpenDrainEnable29FeatureCondGroup</ItemSymbol>
@@ -31753,7 +31851,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput30FeatureCondGroup</ItemSymbol>
@@ -31778,7 +31877,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable30FeatureCondGroup</ItemSymbol>
@@ -31793,7 +31893,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect30FeatureCondGroup</ItemSymbol>
@@ -31808,7 +31909,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>up</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>SlewRateEnable30FeatureCondGroup</ItemSymbol>
@@ -31823,7 +31925,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>1</Index>
-        <EnumSymbVal>slow</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>DriveStrengthEnable30FeatureCondGroup</ItemSymbol>
@@ -31894,7 +31997,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>disabled</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PinInput31FeatureCondGroup</ItemSymbol>
@@ -31919,7 +32023,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullEnable31FeatureCondGroup</ItemSymbol>
@@ -31934,7 +32039,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>2</Index>
-        <EnumSymbVal>disable</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>PullSelect31FeatureCondGroup</ItemSymbol>
@@ -31998,7 +32104,7 @@
         <ItemSymbol>PinsGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>PinGrp0FeatureCondGroup</ItemSymbol>
@@ -32010,14 +32116,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>PTD0/LLWU_P12/SPI0_PCS0/UART2_RTS_b/FTM3_CH0/FBa_ALE/FBa_CS1_b/FBa_TS_b/LPUART0_RTS_b</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32036,14 +32142,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FBa_CS0_b/LPUART0_CTS_b</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32062,14 +32168,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin2</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FBa_AD4/LPUART0_RX/I2C0_SCL</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32088,14 +32194,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin3</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FBa_AD3/LPUART0_TX/I2C0_SDA</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32114,14 +32220,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin4</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FBa_AD2/EWM_IN/SPI1_PCS0</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32140,14 +32246,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin5</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FBa_AD1/EWM_OUT_b/SPI1_SCK</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32166,14 +32272,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin6</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FBa_AD0/FTM0_FLT0/SPI1_SOUT</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32192,14 +32298,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>Pin7</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -32913,7 +33019,8 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>0</Index>
-        <EnumSymbVal>0</EnumSymbVal>
+        <EnumSymbVal />
+        <Value />
       </ItemState>
       <ItemState>
         <ItemSymbol>IntPortPExPriorityFeatureGroup</ItemSymbol>
