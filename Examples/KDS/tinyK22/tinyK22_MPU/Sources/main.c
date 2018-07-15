@@ -32,7 +32,6 @@
 #include "Events.h"
 #include "Pins1.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "UTIL1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
@@ -41,6 +40,8 @@
 #include "MCUC1.h"
 #include "KIN1.h"
 #include "CS1.h"
+#include "TI1.h"
+#include "TU1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

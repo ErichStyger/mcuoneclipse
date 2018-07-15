@@ -17,16 +17,45 @@
 #include "WAIT1.h"
 
 /* 48 MHz, WS2812(S) */
-#define FTM_CH0_TICKS 100*18  /* 0.35 us */
-#define FTM_CH1_TICKS 100*36  /* 0.9 us */
-#define FTM_OVL_TICKS 100*(54+6)  /* 1.25 us  */
+#define FTM_CH0_TICKS 500*18  /* 0.35 us */
+#define FTM_CH1_TICKS 500*36  /* 0.9 us */
+#define FTM_CH2_TICKS 600*36  /* 0.9 us */
+#define FTM_OVL_TICKS 800*(54+6)  /* 1.25 us  */
+
+void FTM0_Interrupt(void) {
+  if ((FTM_PDD_GetOverflowInterruptFlag(FTM0_BASE_PTR)) != 0U) { /* Is the overflow interrupt flag pending? */
+    FTM_PDD_ClearOverflowInterruptFlag(FTM0_BASE_PTR); /* Clear flag */
+  }
+  if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 0)) {
+    FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 0);
+  }
+  if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 1)) {
+    FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 1);
+  }
+  if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 2)) {
+    FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 2);
+  }
+}
 
 static void InitTimer(void) {
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, 0); /* init timer status and control register */
+  FTM_PDD_SelectPrescalerSource(FTM0_BASE_PTR, FTM_PDD_DISABLED); /* disable timer */
+  FTM_PDD_SetPrescaler(FTM0_BASE_PTR, FTM_PDD_DIVIDE_8); /* \todo slow prescaler */
   FTM_PDD_InitializeCounter(FTM0_BASE_PTR); /* reset timer counter */
   FTM_PDD_WriteModuloReg(FTM0_BASE_PTR, FTM_OVL_TICKS); /* set overflow to 1.25 us */
+
+  FTM_PDD_WriteChannelControlReg(FTM0_BASE_PTR, 0, FTM_CnSC_MSA_MASK); /* channel control register: (MSB MSA) set to 01 (Output compare) */
+  FTM_PDD_WriteChannelControlReg(FTM0_BASE_PTR, 1, FTM_CnSC_MSA_MASK); /* channel control register: (MSB MSA) set to 01 (Output compare) */
+  FTM_PDD_WriteChannelControlReg(FTM0_BASE_PTR, 2, FTM_CnSC_MSA_MASK); /* channel control register: (MSB MSA) set to 01 (Output compare) */
+
   FTM_PDD_WriteChannelValueReg(FTM0_BASE_PTR, 0, FTM_CH0_TICKS); /* channel 0 match at 0.4 us */
   FTM_PDD_WriteChannelValueReg(FTM0_BASE_PTR, 1, FTM_CH1_TICKS); /* channel 1 match at 0.8 us */
+  FTM_PDD_WriteChannelValueReg(FTM0_BASE_PTR, 2, FTM_CH2_TICKS); /* channel 3 match at 1.25 us */
+
+  FTM_PDD_EnableOverflowInterrupt(FTM0_BASE_PTR);
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 0);
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 1);
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 2);
 }
 
 static void StartTimer(void) {
@@ -39,7 +68,6 @@ static void StopTimer(void) {
 }
 
 static void InitDMA(void) {
-  InitTimer(); /* timer setup */
   /* setup address modulo: we are not using it as we stream out the data once and then latch it */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
   DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
@@ -120,6 +148,7 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
 #if 0
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, FTM_PDD_ReadStatusControlReg(FTM0_BASE_PTR)|FTM_SC_DMA_MASK);
 #endif
+  FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 2);
   FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 1);
   FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 0);
 
@@ -166,5 +195,7 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
 }
 
 void PIXDMA_Init(void) {
-  InitDMA();
+  InitTimer(); /* timer setup */
+//  InitDMA();
+  StartTimer();
 }

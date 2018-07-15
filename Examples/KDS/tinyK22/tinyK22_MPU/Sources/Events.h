@@ -39,7 +39,6 @@
 #include "IO_Map.h"
 #include "Pins1.h"
 #include "FRTOS1.h"
-#include "RTOSCNTRLDD1.h"
 #include "UTIL1.h"
 #include "LED1.h"
 #include "LEDpin1.h"
@@ -48,6 +47,8 @@
 #include "MCUC1.h"
 #include "KIN1.h"
 #include "CS1.h"
+#include "TI1.h"
+#include "TU1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -119,6 +120,26 @@ INFO: empty Drivers\common\GeneralReturnNothing.inc file
 /* ===================================================================*/
 void Cpu_OnNMI(void);
 
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt_LDD]
+*/
+/*!
+**     @brief
+**         Called if periodic event occur. Component and OnInterrupt
+**         event must be enabled. See [SetEventMask] and [GetEventMask]
+**         methods. This event is available only if a [Interrupt
+**         service/event] is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer passed as
+**                           the parameter of Init method.
+*/
+/* ===================================================================*/
+void TI1_OnInterrupt(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

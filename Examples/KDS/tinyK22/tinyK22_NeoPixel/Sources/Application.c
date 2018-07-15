@@ -25,8 +25,10 @@ static void NeoTask(void* pvParameters) {
 //    NEO_SetPixelRGB(0, 5, 0x40, 0x20, 0x80);
 //    NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
 //    NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
-//    NEO_TransferPixels();
+
+    //NEO_TransferPixels();
     vTaskDelay(1000/portTICK_RATE_MS);
+    LED1_Neg();
   }
 }
 
