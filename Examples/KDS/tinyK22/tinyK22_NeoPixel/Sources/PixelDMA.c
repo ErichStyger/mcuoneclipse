@@ -17,10 +17,10 @@
 #include "WAIT1.h"
 
 /* 48 MHz, WS2812(S) */
-#define FTM_CH0_TICKS 500*18  /* 0.35 us */
-#define FTM_CH1_TICKS 500*36  /* 0.9 us */
-#define FTM_CH2_TICKS 600*36  /* 0.9 us */
-#define FTM_OVL_TICKS 800*(54+6)  /* 1.25 us  */
+#define FTM_CH0_TICKS 0x100 /*18*/  /* 0.35 us */
+#define FTM_CH1_TICKS 0x500 /*36*/  /* 0.9 us */
+#define FTM_CH2_TICKS 0x800  /* 0.9 us */
+#define FTM_OVL_TICKS 0x1000 /*(54+6)*/  /* 1.25 us  */
 
 void FTM0_Interrupt(void) {
   if ((FTM_PDD_GetOverflowInterruptFlag(FTM0_BASE_PTR)) != 0U) { /* Is the overflow interrupt flag pending? */
@@ -28,19 +28,22 @@ void FTM0_Interrupt(void) {
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 0)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 0);
+    GPIOD_PDOR ^= (1<<1);
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 1)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 1);
+    GPIOD_PDOR ^= (1<<2);
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 2)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 2);
+    GPIOD_PDOR ^= (1<<3);
   }
 }
 
 static void InitTimer(void) {
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, 0); /* init timer status and control register */
   FTM_PDD_SelectPrescalerSource(FTM0_BASE_PTR, FTM_PDD_DISABLED); /* disable timer */
-  FTM_PDD_SetPrescaler(FTM0_BASE_PTR, FTM_PDD_DIVIDE_8); /* \todo slow prescaler */
+  FTM_PDD_SetPrescaler(FTM0_BASE_PTR, FTM_PDD_DIVIDE_2); /* \todo slow prescaler */
   FTM_PDD_InitializeCounter(FTM0_BASE_PTR); /* reset timer counter */
   FTM_PDD_WriteModuloReg(FTM0_BASE_PTR, FTM_OVL_TICKS); /* set overflow to 1.25 us */
 
@@ -53,10 +56,11 @@ static void InitTimer(void) {
   FTM_PDD_WriteChannelValueReg(FTM0_BASE_PTR, 2, FTM_CH2_TICKS); /* channel 3 match at 1.25 us */
 #if 0
   FTM_PDD_EnableOverflowInterrupt(FTM0_BASE_PTR);
+#endif
+  /* both the DMA and the Interrupt enable flag needs to be turned on to generate DMA transfer requests */
   FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 0);
   FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 1);
   FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 2);
-#endif
 }
 
 static void StartTimer(void) {
@@ -83,20 +87,23 @@ static void InitDMA(void) {
     DMA_BASE_PTR->TCD[i].CSR = 0;
     DMA_BASE_PTR->TCD[i].BITER_ELINKNO = 1;
   }
-  //DMA_BASE_PTR->TCD[0].CITER_ELINKNO = 1;
-  //DMA_BASE_PTR->TCD[0].BITER_ELINKNO = 1;
+  /* enable minor loop mapping. CITER and BITER will set the number of requests (which are the number of bytes) */
+  DMA_PDD_EnableMinorLoopMapping(DMA_BASE_PTR, PDD_ENABLE);
+  /* one byte for each transfer request: */
+  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1); /* set number of bytes for each transfer request */
+  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* set number of bytes for each transfer request  */
+  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 1); /* set number of bytes for each transfer request  */
 
   /* setup address modulo: we are not using it as we stream out the data once and then latch it */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
-  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer disabled */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer disabled */
+  DMA_PDD_SetSourceAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* circular buffer disabled */
   /* the 'set all bits' and 'clear all bits' DMA events will use a single value, so no address increment.
    * But for the data we will increment the source address counter
    */
-  /* address increment is on by default on the K22? */
-  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 0);
-  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 0);
-  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 0);
+  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 0); /* zero address increment */
+  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1); /* increment by 1 */
+  DMA_PDD_SetSourceAddressOffset(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 0); /* zero address increment */
   /* we transfer one byte every time */
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
   DMA_PDD_SetSourceDataTransferSize(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_8_BIT); /* Transfer size from source is 8bit */
@@ -138,6 +145,7 @@ static void InitDMA(void) {
   DMAMUX_PDD_SetChannelSource(DMAMUX_BASE_PTR, 0, 20); /* kDmaRequestMux0FTM0Channel0 */
   DMAMUX_PDD_SetChannelSource(DMAMUX_BASE_PTR, 1, 21); /* kDmaRequestMux0FTM0Channel1 */
   DMAMUX_PDD_SetChannelSource(DMAMUX_BASE_PTR, 2, 22); /* kDmaRequestMux0FTM0Channel2 */
+
   DMAMUX_PDD_EnableChannel(DMAMUX_BASE_PTR, 0, PDD_ENABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX_BASE_PTR, 1, PDD_ENABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX_BASE_PTR, 2, PDD_ENABLE);
@@ -164,15 +172,17 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
   DMA_PDD_ClearDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_2);
   /* set DMA source addresses */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&OneValue); /* set source address */
-
-  //DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&OneValue); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, dataAddress); /* set source address */
   DMA_PDD_SetSourceAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&OneValue); /* set source address */
 
   /* set byte count addresses */
-  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, 1 /*nofBytes*/); /* set number of bytes to transfer */
-  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, 1 /*nofBytes*/); /* set number of bytes to transfer */
-  DMA_PDD_SetByteCount32(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, 1 /* nofBytes*/); /* set number of bytes to transfer */
+  DMA_PDD_SetCurrentMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, nofBytes);
+  DMA_PDD_SetCurrentMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofBytes);
+  DMA_PDD_SetCurrentMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofBytes);
+
+  DMA_PDD_SetBeginningMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, nofBytes);
+  DMA_PDD_SetBeginningMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, nofBytes);
+  DMA_PDD_SetBeginningMajorLoopCount15(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, nofBytes);
 
   /* reset TPM counter */
   FTM_PDD_InitializeCounter(FTM0_BASE_PTR); /* reset timer counter */
@@ -193,11 +203,13 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
 #if 0
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, FTM_PDD_ReadStatusControlReg(FTM0_BASE_PTR)|FTM_SC_DMA_MASK);
 #endif
+
+  /* enable DMA request in the FTM timer  channels */
   FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 0);
   FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 1);
   FTM_PDD_EnableChannelDma(FTM0_BASE_PTR, 2);
 
-#if 1 /* debug mode */
+#if 0 /* debug mode: triggering manual DMA requests to verify functionality */
   int cntr = 0;
   for (;;) {
     if (cntr==10) {
@@ -227,12 +239,12 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
   StartTimer();
 
   isTimeout = FALSE;
-  handle = TMOUT1_GetCounter(800/TMOUT1_TICK_PERIOD_MS); /* \todo */
+  handle = TMOUT1_GetCounter(100/TMOUT1_TICK_PERIOD_MS);
   for(;;) {
     /* wait until transfer is complete */
     if (TMOUT1_CounterExpired(handle)) {
       isTimeout = TRUE;
-//      break; /* leave loop */
+      break; /* leave loop */
     }
     done0 = DMA_PDD_GetDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_0);
     done1 = DMA_PDD_GetDoneFlag(DMA_BASE_PTR, DMA_PDD_CHANNEL_1);
@@ -245,7 +257,7 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
   TMOUT1_LeaveCounter(handle);
   WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
 
-  /* disable DMA-Muxing: necessary, otherwise DMA events on TPM0 channel 0 might be still latched.
+  /* disable DMA-Muxing: necessary, otherwise DMA events on FTM0 channel 0 might be still latched.
    * Will enable muxing for next transfer */
   DMAMUX_PDD_EnableChannel(DMAMUX_BASE_PTR, 0, PDD_DISABLE);
   DMAMUX_PDD_EnableChannel(DMAMUX_BASE_PTR, 1, PDD_DISABLE);
@@ -254,11 +266,10 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
   /* disable peripheral DMA */
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, FTM_PDD_ReadStatusControlReg(FTM0_BASE_PTR)&(~FTM_SC_DMA_MASK));
 #endif
-  FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 1);
   FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 0);
-
+  FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 1);
+  FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 2);
   StopTimer(); /* stop TPM */
-
   if (isTimeout) {
     return ERR_BUSY;
   }
