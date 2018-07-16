@@ -17,7 +17,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="TWR-K60F120M_FatFS" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.CWDLocator;" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.394131836" isPrebuildInvalidatingBuild="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug">
+				<configuration artifactName="TWR-K60F120M_FatFS" buildArtefactType="org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.cross.arm.gnu.buildArtefactType.application" buildReferences="true" buildReferencingConfigurations="false" description="" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser;com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.CWDLocator;" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.394131836" isPrebuildInvalidatingBuild="false" isVersionInfoProjSpecific="false" name="FLASH" parent="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug" produceBuildErrorsWithMissingReferences="true">
 					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.394131836." name="/" resourcePath="">
 						<toolChain errorParsers="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug.118574345" name="ARM Ltd Windows GCC (G++ Lite)" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug">
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.892457183" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.debugging.level.max" valueType="enumerated"/>
@@ -61,7 +61,7 @@
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.enable.lstfilename.1940204245" name="Enable Assembler Listing" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.compiler.option.misc.enable.lstfilename" value="false" valueType="boolean"/>
 							</tool>
 							<tool errorParsers="org.eclipse.cdt.core.GLDErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.1162162391" name="ARM Ltd Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug">
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags.905827663" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags" value="-n" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags.905827663" name="Other flags" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.otherflags" value="-n -u _printf_float" valueType="string"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostart.1873179527" name="Do not use standard start files (-nostartfiles)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.nostart" value="false" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.gcsections.437575909" name="Remove unused sections (-Xlinker --gc-sections)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.gcsections" value="true" valueType="boolean"/>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths.2004013848" name="Library search path (-L)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.paths" valueType="libPaths">
@@ -69,6 +69,63 @@
 									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/lib/armv7e-m&quot;"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.scriptfile.1564334804" name="Script file (-T)" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.scriptfile" value="${ProjDirPath}/Project_Settings/Linker_Files/ProcessorExpert.ld" valueType="string"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.linkorder.857402951" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.linkorder" valueType="stringList">
+									<listOptionValue builtIn="false" value="Generated_Code/AS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/ASerialLdd1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/BitIoLdd1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/BitIoLdd2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/BitIoLdd3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/BitIoLdd4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/BitIoLdd6.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/CD1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/CLS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/CS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Cpu.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FAT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FATM1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FRTOS1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/HF1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LEDpin4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/MCUC1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/PE_LDD.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SDHC1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TMOUT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/TmDt1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/UTIL1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/Vectors.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/WAIT1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/XF1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/croutine.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/event_groups.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/ff.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_2.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_3.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_4.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_5.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/heap_useNewlib.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/list.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/mpu_wrappers.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/port.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/portasm.s"/>
+									<listOptionValue builtIn="false" value="Generated_Code/queue.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/stream_buffer.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/tasks.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/timers.c"/>
+									<listOptionValue builtIn="false" value="Project_Settings/Startup_Code/__arm_end.c"/>
+									<listOptionValue builtIn="false" value="Project_Settings/Startup_Code/__arm_start.c"/>
+									<listOptionValue builtIn="false" value="Sources/Application.c"/>
+									<listOptionValue builtIn="false" value="Sources/Events.c"/>
+									<listOptionValue builtIn="false" value="Sources/ProcessorExpert.c"/>
+									<listOptionValue builtIn="false" value="Sources/Shell.c"/>
+								</option>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.input.439932728" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -128,5 +185,9 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.pathentry"/>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="FLASH">
+			<resource resourceType="PROJECT" workspacePath="/TWR-K60F120M_FatFS"/>
+		</configuration>
+	</storageModule>
 </cproject>
