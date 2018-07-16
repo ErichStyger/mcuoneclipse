@@ -16,11 +16,16 @@
 #include "TMOUT1.h"
 #include "WAIT1.h"
 
-/* 48 MHz, WS2812(S) */
-#define FTM_CH0_TICKS 0x100 /*18*/  /* 0.35 us */
-#define FTM_CH1_TICKS 0x500 /*36*/  /* 0.9 us */
-#define FTM_CH2_TICKS 0x800  /* 0.9 us */
-#define FTM_OVL_TICKS 0x1000 /*(54+6)*/  /* 1.25 us  */
+/* WS2812(S) timing:
+ * 0.35us for a 0
+ * 0.90us for a 1
+ * 1.25us Period
+ * See https://mcuoneclipse.com/2015/08/05/tutorial-adafruit-ws2812b-neopixels-with-the-freescale-frdm-k64f-board-part-5-dma/
+ * */
+#define FTM_CH0_TICKS 0x10 /* go high, start bit */
+#define FTM_CH1_TICKS 0x25 /* data bit, go low for 0, stay high for 1 */
+#define FTM_CH2_TICKS 0x45 /* end of 1 bit, go low */
+#define FTM_OVL_TICKS 0x4A /* end of 1.25 us cycle for a 0 or 1 bit */
 
 void FTM0_Interrupt(void) {
   if ((FTM_PDD_GetOverflowInterruptFlag(FTM0_BASE_PTR)) != 0U) { /* Is the overflow interrupt flag pending? */
@@ -28,22 +33,22 @@ void FTM0_Interrupt(void) {
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 0)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 0);
-    GPIOD_PDOR ^= (1<<1);
+//    GPIOD_PDOR ^= (1<<1);
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 1)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 1);
-    GPIOD_PDOR ^= (1<<2);
+//    GPIOD_PDOR ^= (1<<2);
   }
   if (FTM_PDD_GetChannelInterruptFlag(FTM0_BASE_PTR, 2)) {
     FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 2);
-    GPIOD_PDOR ^= (1<<3);
+//    GPIOD_PDOR ^= (1<<3);
   }
 }
 
 static void InitTimer(void) {
   FTM_PDD_WriteStatusControlReg(FTM0_BASE_PTR, 0); /* init timer status and control register */
   FTM_PDD_SelectPrescalerSource(FTM0_BASE_PTR, FTM_PDD_DISABLED); /* disable timer */
-  FTM_PDD_SetPrescaler(FTM0_BASE_PTR, FTM_PDD_DIVIDE_2); /* \todo slow prescaler */
+  FTM_PDD_SetPrescaler(FTM0_BASE_PTR, FTM_PDD_DIVIDE_1); /* \todo slow prescaler */
   FTM_PDD_InitializeCounter(FTM0_BASE_PTR); /* reset timer counter */
   FTM_PDD_WriteModuloReg(FTM0_BASE_PTR, FTM_OVL_TICKS); /* set overflow to 1.25 us */
 
@@ -65,11 +70,20 @@ static void InitTimer(void) {
 
 static void StartTimer(void) {
   FTM_PDD_InitializeCounter(FTM0_BASE_PTR); /* reset timer counter */
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 0);
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 1);
+  FTM_PDD_EnableChannelInterrupt(FTM0_BASE_PTR, 2);
   FTM_PDD_SelectPrescalerSource(FTM0_BASE_PTR, FTM_PDD_SYSTEM); /* enable timer so I can reset the value below */
 }
 
 static void StopTimer(void) {
   FTM_PDD_SelectPrescalerSource(FTM0_BASE_PTR, FTM_PDD_DISABLED); /* disable timer */
+  FTM_PDD_DisableChannelInterrupt(FTM0_BASE_PTR, 0);
+  FTM_PDD_DisableChannelInterrupt(FTM0_BASE_PTR, 1);
+  FTM_PDD_DisableChannelInterrupt(FTM0_BASE_PTR, 2);
+  FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 0);
+  FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 1);
+  FTM_PDD_ClearChannelInterruptFlag(FTM0_BASE_PTR, 2);
 }
 
 static void InitDMA(void) {
@@ -254,6 +268,7 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
     }
     WAIT1_WaitOSms(1); /* give back some time */
   }
+  StopTimer(); /* stop TPM */
   TMOUT1_LeaveCounter(handle);
   WAIT1_Waitus(50); /* latch, low for at least 50 us (40x1.25us) */
 
@@ -269,7 +284,6 @@ uint8_t PIXDMA_Transfer(uint32_t dataAddress, size_t nofBytes) {
   FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 0);
   FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 1);
   FTM_PDD_DisableChannelDma(FTM0_BASE_PTR, 2);
-  StopTimer(); /* stop TPM */
   if (isTimeout) {
     return ERR_BUSY;
   }
