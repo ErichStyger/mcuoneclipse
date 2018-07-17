@@ -7,8 +7,8 @@ Added
 XIP_EXTERNAL_FLASH
 to the preprocessor settings for the compiler
 - added SDRAM_MPU_INIT
-- added flash region (start:  0a60000000, size: 0a400000 , Driver  'MIMXRT1050-EVK_S26KS512S.cfa).
-- SRAM Data TCM just after flasch (first RAM is used for stack and memory)  
+- added flash region (start:  0x60000000, size: 0a400000 , Driver  'MIMXRT1050-EVK_S26KS512S.cfa).
+- SRAM Data TCM just after flash (first RAM is used for stack and memory)  
 
 
 For a project configured to XIP from hyper flash, a define XIP_EXTERNAL_FLASH shou1d a1so be created. This define is used to se1ect some c1ock setup for the flash and change its MPU cacheab1e properties. Current1y, the SDK does not specify this defne for new projects.
