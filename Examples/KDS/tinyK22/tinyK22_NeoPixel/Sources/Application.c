@@ -13,20 +13,35 @@
 #include "NeoPixel.h"
 
 static void NeoTask(void* pvParameters) {
+  int val = 0;
+  int inc = 1;
   (void)pvParameters; /* parameter not used */
-
+  NEO_ClearAllPixel();
    for(;;) {
-    NEO_ClearAllPixel();
-    NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
-    NEO_SetPixelRGB(0, 1, 0x00, 0xFF, 0x00);
-    NEO_SetPixelRGB(0, 2, 0x00, 0x00, 0xff);
+     if (val==0xff) {
+       inc = -1;
+     } else if (val==0) {
+       inc = 1;
+     }
+     val += inc;
+     NEO_SetPixelRGB(0, 0, val, 0x00, 0x00);
+     NEO_SetPixelRGB(0, 1, 0x00, val, 0x00);
+     NEO_SetPixelRGB(0, 2, 0x00, 0x00, val);
+     NEO_SetPixelRGB(0, 3, 0x00, 0x00, val);
+     NEO_SetPixelRGB(0, 4, 0x00, 0x00, val);
+     NEO_SetPixelRGB(0, 5, 0x00, 0x00, val);
+     NEO_SetPixelRGB(0, 6, 0x00, 0x00, val);
+     NEO_SetPixelRGB(0, 7, 0x00, 0x00, val);
+//    NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
+//    NEO_SetPixelRGB(0, 1, 0x00, 0xFF, 0x00);
+//    NEO_SetPixelRGB(0, 2, 0x00, 0x00, 0xff);
 //    NEO_SetPixelRGB(0, 3, 0x40, 0x50, 0x80);
 //    NEO_SetPixelRGB(0, 4, 0x60, 0x00, 0xA0);
 //    NEO_SetPixelRGB(0, 5, 0x40, 0x20, 0x80);
 //    NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
 //    NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
 
-    vTaskDelay(1000/portTICK_RATE_MS);
+    vTaskDelay(5/portTICK_RATE_MS);
     NEO_TransferPixels();
     LED1_Neg();
   }
