@@ -109,6 +109,8 @@ int main(void)
   PINS_DRV_TogglePins(PTD, (1<<15U));
   Components_Init();
 
+  *((int*)0) = 0; /* causes hard fault */
+
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
