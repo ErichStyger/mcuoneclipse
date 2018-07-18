@@ -1,4 +1,4 @@
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void FreeRTOS_vOnPreSleepProcessing(portTickType expectedIdleTicks);
 /*
 ** ===================================================================
 INFO: empty Drivers\common\GeneralDamage.inc file

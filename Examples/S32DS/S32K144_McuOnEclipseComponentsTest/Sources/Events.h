@@ -1,4 +1,4 @@
-void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
+void FreeRTOS_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 INFO: empty Drivers\common\GeneralDamage.inc file
@@ -12,7 +12,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
-void FRTOS1_vApplicationTickHook(void);
+void FreeRTOS_vApplicationTickHook(void);
 /*
 ** ===================================================================
 INFO: empty Drivers\common\GeneralDamage.inc file
@@ -24,7 +24,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationIdleHook(void);
+void FreeRTOS_vApplicationIdleHook(void);
 /*
 ** ===================================================================
 INFO: empty Drivers\common\GeneralDamage.inc file
@@ -36,7 +36,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationMallocFailedHook(void);
+void FreeRTOS_vApplicationMallocFailedHook(void);
 /*
 ** ===================================================================
 INFO: empty Drivers\common\GeneralDamage.inc file

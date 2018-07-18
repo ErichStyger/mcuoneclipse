@@ -11,7 +11,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 INFO: empty Drivers\common\GeneralReturnNothing.inc file
 ** ===================================================================
 */
-void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
+void FreeRTOS_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -33,7 +33,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationTickHook(void)
+void FreeRTOS_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   /* Write your code here ... */
@@ -49,7 +49,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationIdleHook(void)
+void FreeRTOS_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
@@ -66,7 +66,7 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vApplicationMallocFailedHook(void)
+void FreeRTOS_vApplicationMallocFailedHook(void)
 {
   /* Called if a call to pvPortMalloc() fails because there is insufficient
      free memory available in the FreeRTOS heap.  pvPortMalloc() is called

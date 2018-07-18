@@ -29,6 +29,8 @@
   volatile int exit_code = 0;
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+//#include "FreeRTOS.h"
+//#include "task.h"
 //#include "Events.h"
 //#include "Events.c"
 

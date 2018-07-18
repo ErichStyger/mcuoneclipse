@@ -3,7 +3,7 @@
   <Header>
     <Name>S32K144_FreeRTOS_PEx</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>11</ModificationStamp>
+    <ModificationStamp>13</ModificationStamp>
     <Date>2018-06-29</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1743-0713</PEversion>
@@ -34,7 +34,7 @@
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
     <UserInterface>CLASSIC</UserInterface>
-    <GenerateCodeBeforeBuild>true</GenerateCodeBeforeBuild>
+    <GenerateCodeBeforeBuild>false</GenerateCodeBeforeBuild>
     <SaveProjectBeforeGeneration>true</SaveProjectBeforeGeneration>
     <GenerateCodeGenLog>false</GenerateCodeGenLog>
     <DontWriteGeneratedModules lines_count="0" />
@@ -14819,7 +14819,7 @@
   <Bean>
     <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
     <BeanType>FreeRTOS</BeanType>
-    <Name>FRTOS1</Name>
+    <Name>FreeRTOS</Name>
     <CompNumb>5</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -14827,14 +14827,14 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.555</BeanVersion>
+    <BeanVersion>01.557</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1</Value>
+        <Value>FreeRTOS</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
@@ -14891,8 +14891,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOSSrcFolderName</ItemSymbol>
@@ -14935,8 +14935,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>configCPU_CLOCK_HZ</ItemSymbol>
@@ -15015,13 +15015,7 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>DebugHelpersGrop</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>EnableGDBDebugHelper</ItemSymbol>
+        <ItemSymbol>EnableLTODebugHelper</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -15029,7 +15023,13 @@
         <Value>false</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>EnableLTODebugHelper</ItemSymbol>
+        <ItemSymbol>DebugHelpersGrop</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableGDBDebugHelper</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -17179,7 +17179,7 @@
         <ItemSymbol>vApplicationStackOverflowHookName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vApplicationStackOverflowHook</Value>
+        <Value>FreeRTOS_vApplicationStackOverflowHook</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vApplicationTickHook</ItemSymbol>
@@ -17195,7 +17195,7 @@
         <ItemSymbol>vApplicationTickHookName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vApplicationTickHook</Value>
+        <Value>FreeRTOS_vApplicationTickHook</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vApplicationIdleHook</ItemSymbol>
@@ -17211,7 +17211,7 @@
         <ItemSymbol>vApplicationIdleHookName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vApplicationIdleHook</Value>
+        <Value>FreeRTOS_vApplicationIdleHook</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vApplicationMallocFailedHook</ItemSymbol>
@@ -17227,7 +17227,7 @@
         <ItemSymbol>vApplicationMallocFailedHookName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vApplicationMallocFailedHook</Value>
+        <Value>FreeRTOS_vApplicationMallocFailedHook</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPreSleepProcessing</ItemSymbol>
@@ -17243,7 +17243,7 @@
         <ItemSymbol>vOnPreSleepProcessingName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vOnPreSleepProcessing</Value>
+        <Value>FreeRTOS_vOnPreSleepProcessing</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessing</ItemSymbol>
@@ -17259,7 +17259,7 @@
         <ItemSymbol>vOnPostSleepProcessingName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1_vOnPostSleepProcessing</Value>
+        <Value>FreeRTOS_vOnPostSleepProcessing</Value>
       </ItemState>
     </Events>
   </Bean>
@@ -18774,7 +18774,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.082</BeanVersion>
+    <BeanVersion>01.083</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
