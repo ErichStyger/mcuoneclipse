@@ -60,12 +60,12 @@
 #endif
 #define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
 #define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
-#define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */
-#define configUSE_IDLE_HOOK_NAME                  vApplicationIdleHook
-#define configUSE_TICK_HOOK                       0 /* 1: use Tick hook; 0: no Tick hook */
-#define configUSE_TICK_HOOK_NAME                  vApplicationTickHook
-#define configUSE_MALLOC_FAILED_HOOK              0 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
-#define configUSE_MALLOC_FAILED_HOOK_NAME         vApplicationMallocFailedHook
+#define configUSE_IDLE_HOOK                       1 /* 1: use Idle hook; 0: no Idle hook */
+#define configUSE_IDLE_HOOK_NAME                  FreeRTOS_vApplicationIdleHook
+#define configUSE_TICK_HOOK                       1 /* 1: use Tick hook; 0: no Tick hook */
+#define configUSE_TICK_HOOK_NAME                  FreeRTOS_vApplicationTickHook
+#define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#define configUSE_MALLOC_FAILED_HOOK_NAME         FreeRTOS_vApplicationMallocFailedHook
 #define configTICK_RATE_HZ                        (100) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
@@ -88,16 +88,16 @@
 #define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
-#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#define configUSE_HEAP_SCHEME                     1 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
 #define configFRTOS_MEMORY_SCHEME                 configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
-#define configTOTAL_HEAP_SIZE                     (2048) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     (4096) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
-#define configSUPPORT_DYNAMIC_ALLOCATION          1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
-#define configSUPPORT_STATIC_ALLOCATION           0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#define configSUPPORT_DYNAMIC_ALLOCATION          0 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
+#define configSUPPORT_STATIC_ALLOCATION           1 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
 #define configUSE_NEWLIB_REENTRANT                (configUSE_HEAP_SCHEME==6) /* 1: a newlib reent structure will be allocated for each task; 0: no such reentr structure used */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
@@ -108,8 +108,8 @@
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
 #define configUSE_CO_ROUTINES                     0
 #define configUSE_MUTEXES                         1
-#define configCHECK_FOR_STACK_OVERFLOW            0 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */  
-#define configCHECK_FOR_STACK_OVERFLOW_NAME       vApplicationStackOverflowHook
+#define configCHECK_FOR_STACK_OVERFLOW            1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
+#define configCHECK_FOR_STACK_OVERFLOW_NAME       FreeRTOS_vApplicationStackOverflowHook
 #define configUSE_RECURSIVE_MUTEXES               1
 #define configQUEUE_REGISTRY_SIZE                 5
 #define configUSE_QUEUE_SETS                      0
@@ -130,12 +130,12 @@
 #define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          0 /* set to 1 to enable software timers */
-#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U)
-#define configTIMER_QUEUE_LENGTH                  10U /* size of queue for the timer task */
-#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE)
-#define INCLUDE_xEventGroupSetBitFromISR          0 /* 1: function is included; 0: do not include function */
-#define INCLUDE_xTimerPendFunctionCall            0 /* 1: function is included; 0: do not include function */
+#define configUSE_TIMERS                          1 /* 1: enable software timers; 0: software timers disabled */
+#define configTIMER_TASK_PRIORITY                 2 /* e.g. (configMAX_PRIORITIES-1U) */
+#define configTIMER_QUEUE_LENGTH                  10 /* size of queue for the timer task */
+#define configTIMER_TASK_STACK_DEPTH              150 /* e.g. (configMINIMAL_STACK_SIZE) */
+#define INCLUDE_xEventGroupSetBitFromISR          1 /* 1: function is included; 0: do not include function */
+#define INCLUDE_xTimerPendFunctionCall            1 /* 1: function is included; 0: do not include function */
 #define configUSE_DAEMON_TASK_STARTUP_HOOK        0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even

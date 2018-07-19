@@ -6,7 +6,7 @@
 **     Component   : FreeRTOS
 **     Version     : Component 01.558, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-18, 18:51, # CodeGen: 31
+**     Date/Time   : 2018-07-19, 14:57, # CodeGen: 39
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -82,13 +82,16 @@
 **          Semaphores and Mutexes                         : Settings for Mutex and Semaphore
 **            Use Mutexes                                  : yes
 **            Use Recursive Mutexes                        : yes
-**          Timers                                         : Disabled
+**          Timers                                         : Enabled
+**            Priority                                     : 2
+**            Queue Length                                 : 10
+**            Stack Depth                                  : 150
+**            Use Daemon Task Startup Hook                 : no
 **          Memory                                         : Settings for the memory and heap allocation
-**            Dynamic Allocation                           : Enabled
-**              Heap Size                                  : 2048
-**              Application allocated Heap                 : no
-**              Memory Allocation Scheme                   : Scheme 4: merge free blocks
-**            Static Allocation                            : Disabled
+**            Dynamic Allocation                           : Disabled
+**            Static Allocation                            : Enabled
+**              Default vApplicationGetIdleTaskMemory()    : yes
+**              Default vApplicationGetTimerTaskMemory()   : yes
 **            User Memory Section                          : Disabled
 **          RTOS Adaptor                                   : Configures the RTOS adapter settings
 **            Memory allocation                            : Configures how memory is allocated and deallocated.

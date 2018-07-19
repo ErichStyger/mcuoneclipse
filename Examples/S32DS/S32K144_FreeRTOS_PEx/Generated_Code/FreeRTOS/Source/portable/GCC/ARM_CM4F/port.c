@@ -429,6 +429,8 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 #if configUSE_TICKLESS_IDLE == 1
 void FreeRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
 
+void FreeRTOS_vOnPostSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
+
 #if (configCOMPILER==configCOMPILER_ARM_GCC) || (configCOMPILER==configCOMPILER_ARM_KEIL)
 __attribute__((weak))
 #endif
@@ -529,6 +531,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     /* ----------------------------------------------------------------------------
      * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
+    FreeRTOS_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is
      * accounted for as best it can be, but using the tickless mode will
      * inevitably result in some tiny drift of the time maintained by the

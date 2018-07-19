@@ -58,10 +58,6 @@
 #endif
 
 
-
-////////////////////////////////////////////////////////////
-
-
 /* Configuration macro if FreeRTOS is used */
 #ifndef MCUC1_CONFIG_SDK_USE_FREERTOS
   #define MCUC1_CONFIG_SDK_USE_FREERTOS           (0)

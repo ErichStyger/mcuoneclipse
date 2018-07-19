@@ -83,6 +83,11 @@ BaseType_t xEnterTicklessIdle(void) {
 }
 #endif
 
+#if configSUPPORT_STATIC_ALLOCATION
+static StackType_t AppTaskStack[500];
+StaticTask_t AppTaskTCB;
+#endif
+
 /*!
   \brief The main function for the project.
   \details The startup initialization sequence is the following:
@@ -109,11 +114,14 @@ int main(void)
   PINS_DRV_TogglePins(PTD, (1<<15U));
   Components_Init();
 
-  *((int*)0) = 0; /* causes hard fault */
-
+//  *((int*)0) = 0; /* test code to raise a hard fault */
+#if configSUPPORT_STATIC_ALLOCATION
+  (void)xTaskCreateStatic(AppTask, "App", sizeof(AppTaskStack)/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, AppTaskStack, &AppTaskTCB);
+#else
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
+#endif
   vTaskStartScheduler();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
