@@ -40,13 +40,15 @@
 #include "board.h"
 #include "fsl_gpio.h"
 #include "clock_config.h"
+
+#include "uncannyEyes.h"
+#include "GDisp1.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define APP_ELCDIF LCDIF
 
-#define APP_IMG_HEIGHT 272
-#define APP_IMG_WIDTH 480
 #define APP_HSW 41
 #define APP_HFP 4
 #define APP_HBP 8
@@ -78,9 +80,9 @@ void BOARD_EnableLcdInterrupt(void);
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-static volatile bool s_frameDone = false;
+volatile bool s_frameDone = false;
 
-AT_NONCACHEABLE_SECTION_ALIGN(static uint32_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH], FRAME_BUFFER_ALIGN);
+AT_NONCACHEABLE_SECTION_ALIGN(uint32_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH], FRAME_BUFFER_ALIGN);
 
 /*******************************************************************************
  * Code
@@ -99,8 +101,7 @@ void BOARD_EnableLcdInterrupt(void)
 }
 
 /* Initialize the LCD_DISP. */
-void BOARD_InitLcd(void)
-{
+void BOARD_InitLcd(void) {
     volatile uint32_t i = 0x100U;
 
     gpio_pin_config_t config = {
@@ -123,8 +124,7 @@ void BOARD_InitLcd(void)
     GPIO_PinInit(LCD_BL_GPIO, LCD_BL_GPIO_PIN, &config);
 }
 
-void BOARD_InitLcdifPixelClock(void)
-{
+void BOARD_InitLcdifPixelClock(void) {
     /*
      * The desired output frame rate is 60Hz. So the pixel clock frequency is:
      * (480 + 41 + 4 + 18) * (272 + 10 + 4 + 2) * 60 = 9.2M.
@@ -157,8 +157,7 @@ void BOARD_InitLcdifPixelClock(void)
 }
 
 
-void APP_LCDIF_IRQHandler(void)
-{
+void APP_LCDIF_IRQHandler(void) {
     uint32_t intStatus;
 
     intStatus = ELCDIF_GetInterruptStatus(APP_ELCDIF);
@@ -176,8 +175,7 @@ void APP_LCDIF_IRQHandler(void)
 #endif
 }
 
-void APP_ELCDIF_Init(void)
-{
+void APP_ELCDIF_Init(void) {
     const elcdif_rgb_mode_config_t config = {
         .panelWidth = APP_IMG_WIDTH,
         .panelHeight = APP_IMG_HEIGHT,
@@ -196,8 +194,7 @@ void APP_ELCDIF_Init(void)
     ELCDIF_RgbModeInit(APP_ELCDIF, &config);
 }
 
-void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH])
-{
+void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH]) {
     /* Background color. */
     static const uint32_t bgColor = 0U;
     /* Foreground color. */
@@ -215,7 +212,7 @@ void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH])
     static int8_t incX = 1;
     static int8_t incY = 1;
 
-    /* Change color in next forame or not. */
+    /* Change color in next frame or not. */
     static bool changeColor = false;
 
     uint32_t i, j;
@@ -279,6 +276,13 @@ void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH])
     }
 }
 
+static void AppTask(void *p) {
+	for(;;) {
+		//vTaskDelay(pdMS_TO_TICKS(100));
+    	EYES_Run();
+	}
+}
+
 /*!
  * @brief Main function
  */
@@ -296,6 +300,8 @@ int main(void)
 
     PRINTF("LCDIF RGB example start...\r\n");
 
+    EYES_Init();
+
     APP_ELCDIF_Init();
 
     BOARD_EnableLcdInterrupt();
@@ -303,17 +309,58 @@ int main(void)
     /* Clear the frame buffer. */
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
 
-    APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
+   // APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
 
     ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
     ELCDIF_RgbModeStart(APP_ELCDIF);
 
+    GDisp1_UpdateFull(); /* show black screen */
+
+    xTaskCreate(/* The function that implements the task. */
+                AppTask,
+                /* Text name for the task, just to help debugging. */
+                "App",
+                /* The size (in words) of the stack that should be created
+                for the task. */
+                configMINIMAL_STACK_SIZE + 200,
+                /* A parameter that can be passed into the task.  Not used
+                in this simple demo. */
+                NULL,
+                /* The priority to assign to the task.  tskIDLE_PRIORITY
+                (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1
+                is the highest priority. */
+                1,
+                /* Used to obtain a handle to the created task.  Not used in
+                this simple demo, so set to NULL. */
+                NULL);
+
+    vTaskStartScheduler();
+
+#if 0
     while (1)
     {
-        frameBufferIndex ^= 1U;
+      //  frameBufferIndex ^= 1U;
 
-        APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
+        int x,y;
+        for(x=0,y=0;x<50;x++,y++) {
+        	GDisp1_PutPixel(x, y, 0xff);
+        }
+        GDisp1_UpdateFull();
+        for(x=0,y=0;x<50;x++,y++) {
+        	GDisp1_PutPixel(x, y, 0xff00);
+        }
+        GDisp1_UpdateFull();
 
+        //ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[frameBufferIndex]);
+
+//        s_frameDone = false;
+        /* Wait for previous frame complete. */
+//        while (!s_frameDone)
+//        {
+//        }
+    }
+#elif 0
+    for(;;) {
         ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[frameBufferIndex]);
 
         s_frameDone = false;
@@ -321,5 +368,59 @@ int main(void)
         while (!s_frameDone)
         {
         }
+
     }
+#else
+    for(;;) {
+    	EYES_Run();
+    }
+#endif
 }
+
+void vApplicationTickHook(void)
+{
+	extern uint32_t msCntr;
+	msCntr++;
+}
+
+/*!
+ * @brief Malloc failed hook.
+ */
+void vApplicationMallocFailedHook(void)
+{
+    /* The malloc failed hook is enabled by setting
+    configUSE_MALLOC_FAILED_HOOK to 1 in FreeRTOSConfig.h.
+
+    Called if a call to pvPortMalloc() fails because there is insufficient
+    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+    internally by FreeRTOS API functions that create tasks, queues, software
+    timers, and semaphores.  The size of the FreeRTOS heap is set by the
+    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+    for (;;)
+        ;
+}
+
+/*!
+ * @brief Stack overflow hook.
+ */
+void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
+{
+    (void)pcTaskName;
+    (void)xTask;
+
+    /* Run time stack overflow checking is performed if
+    configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+    function is called if a stack overflow is detected.  pxCurrentTCB can be
+    inspected in the debugger if the task name passed into this function is
+    corrupt. */
+    for (;;)
+        ;
+}
+
+/*!
+ * @brief Idle hook.
+ */
+void vApplicationIdleHook(void)
+{
+}
+
