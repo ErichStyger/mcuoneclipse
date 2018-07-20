@@ -8,8 +8,10 @@
 #include "GDisp1.h"
 #include <stdint.h>
 #include "fsl_elcdif.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
-uint32_t msCntr; /* \todo */
+uint32_t msCntr;
 
 static uint32_t frameBufferIndex = 0;
 
@@ -20,22 +22,21 @@ void GDisp1_PutPixel(unsigned int x, unsigned int y, uint16_t color) {
 	tmp = y;
 	y = x;
 	x = tmp;
-	x += 50; /* x is is from top to ethernet connecter */
-
+//	x += 50; /* x is is from top to ethernet connecter */
 	s_frameBuffer[frameBufferIndex][x][y] = color;
-
-#if 1 /* draw right eye */
+#if 0
+    /* right eye */
 	y += 200; /* y is from left to right (ethernet to power plug */
-#endif
 	s_frameBuffer[frameBufferIndex][x][y] = color;
+#endif
 }
 
 void GDisp1_UpdateFull(void) {
     ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[frameBufferIndex]);
     s_frameDone = false;
     /* Wait for previous frame complete. */
-    while (!s_frameDone)
-    {
+    while (!s_frameDone) {
+    	vTaskDelay(pdMS_TO_TICKS(1)); /* wait */
     }
     frameBufferIndex ^= 1U;
 }

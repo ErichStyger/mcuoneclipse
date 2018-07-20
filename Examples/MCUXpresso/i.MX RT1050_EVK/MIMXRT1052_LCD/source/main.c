@@ -277,6 +277,17 @@ void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH]) {
 }
 
 static void AppTask(void *p) {
+    /* Clear the frame buffer. */
+    memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
+
+   // APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
+
+    ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
+    ELCDIF_RgbModeStart(APP_ELCDIF);
+    GDisp1_UpdateFull(); /* show black screen */
+
+    EYES_ShowLogo();
+
 	for(;;) {
 		//vTaskDelay(pdMS_TO_TICKS(100));
     	EYES_Run();
@@ -305,16 +316,6 @@ int main(void)
     APP_ELCDIF_Init();
 
     BOARD_EnableLcdInterrupt();
-
-    /* Clear the frame buffer. */
-    memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
-
-   // APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
-
-    ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
-    ELCDIF_RgbModeStart(APP_ELCDIF);
-
-    GDisp1_UpdateFull(); /* show black screen */
 
     xTaskCreate(/* The function that implements the task. */
                 AppTask,

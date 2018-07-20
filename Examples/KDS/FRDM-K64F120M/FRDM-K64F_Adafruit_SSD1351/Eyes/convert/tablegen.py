@@ -98,7 +98,7 @@ for y in range(im.size[1]):
 # OPEN AND VALIDATE UPPER EYELID THRESHOLD MAP -----------------------------
 
 try:    filename = sys.argv[3]
-except: filename = "upper.png"
+except: filename = "upper_left.png"
 im = Image.open(filename)
 if (im.size[0] != 128) or (im.size[1] != 128):
 	sys.stderr.write("Image size must match screen size")
@@ -127,7 +127,7 @@ for y in range(im.size[1]):
 # OPEN AND VALIDATE LOWER EYELID THRESHOLD MAP -----------------------------
 
 try:    filename = sys.argv[4]
-except: filename = "lower.png"
+except: filename = "lower_left.png"
 im     = Image.open(filename)
 if (im.size[0] != 128) or (im.size[1] != 128):
 	sys.stderr.write("Image size must match screen size")

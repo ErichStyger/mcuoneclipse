@@ -8,7 +8,7 @@
 #ifndef SOURCES_UNCANNYEYES_H_
 #define SOURCES_UNCANNYEYES_H_
 
-
+void EYES_ShowLogo(void);
 void EYES_Run(void);
 void EYES_Init(void);
 
