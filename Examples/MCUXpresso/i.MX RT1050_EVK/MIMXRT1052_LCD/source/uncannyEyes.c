@@ -28,12 +28,13 @@
 
 // Enable ONE of these #includes -- HUGE graphics tables for various eyes:
 #include "defaultEye.h"        // Standard human-ish hazel eye
-#include "logo.h"
+//#include "logo.h"
 //#include "noScleraEye.h"       // Large iris, no sclera
 //#include "dragonEye.h"         // Slit pupil fiery dragon/demon eye
 //#include "goatEye.h"           // Horizontal pupil goat/Krampus eye
-// Then tweak settings below, e.g. change IRIS_MIN/MAX or disable TRACKING.
+//#include "newtEye.h"
 
+// Then tweak settings below, e.g. change IRIS_MIN/MAX or disable TRACKING.
 #if 1
 // INPUT CONFIG (for eye motion -- enable or comment out as needed) --------
 //#define JOYSTICK_X_PIN A0 // Analog pin for eye horiz pos (else auto)
