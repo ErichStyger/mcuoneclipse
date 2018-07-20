@@ -82,7 +82,7 @@ void BOARD_EnableLcdInterrupt(void);
  ******************************************************************************/
 volatile bool s_frameDone = false;
 
-AT_NONCACHEABLE_SECTION_ALIGN(uint32_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH], FRAME_BUFFER_ALIGN);
+AT_NONCACHEABLE_SECTION_ALIGN(uint16_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH], FRAME_BUFFER_ALIGN);
 
 /*******************************************************************************
  * Code
@@ -187,7 +187,7 @@ void APP_ELCDIF_Init(void) {
         .vbp = APP_VBP,
         .polarityFlags = APP_POL_FLAGS,
         .bufferAddr = (uint32_t)s_frameBuffer[0],
-        .pixelFormat = kELCDIF_PixelFormatXRGB8888,
+        .pixelFormat = kELCDIF_PixelFormatRGB565, //kELCDIF_PixelFormatXRGB8888,
         .dataBus = APP_LCDIF_DATA_BUS,
     };
 
@@ -322,7 +322,7 @@ int main(void)
                 "App",
                 /* The size (in words) of the stack that should be created
                 for the task. */
-                configMINIMAL_STACK_SIZE + 200,
+                configMINIMAL_STACK_SIZE + 800,
                 /* A parameter that can be passed into the task.  Not used
                 in this simple demo. */
                 NULL,

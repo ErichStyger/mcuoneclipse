@@ -92,7 +92,7 @@ static int32_t random(int32_t min, int32_t max) {
 
 static uint32_t micros(void) {
   extern uint32_t msCntr;
-  return msCntr*10;
+  return msCntr*1000;
 }
 
 // Probably don't need to edit any config below this line, -----------------
@@ -156,24 +156,18 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
           p = sclera[scleraY][scleraX];                 // Pixel = sclera
         }
       }
-      // SPI FIFO technique from Paul Stoffregen's ILI9341_t3 library:
-      //while(KINETISK_SPI0.SR & 0xC000); // Wait for space in FIFO
-      //KINETISK_SPI0.PUSHR = p | SPI_PUSHR_CTAS(1) | SPI_PUSHR_CONT;
       {
         uint16_t val;
-
+#if 0
         val = (p<<8)|((p>>8)&0xff); /* swap */
+#else
+        val = p;
+#endif
         GDisp1_PutPixel(screenX, screenY, val);
       }
     }
   }
   GDisp1_UpdateFull();
-
-  //KINETISK_SPI0.SR |= SPI_SR_TCF;         // Clear transfer flag
-  //while((KINETISK_SPI0.SR & 0xF000) ||    // Wait for SPI FIFO to drain
-  //     !(KINETISK_SPI0.SR & SPI_SR_TCF)); // Wait for last bit out
-  //digitalWrite(eye[e].cs, HIGH);          // Deselect
-  //SPI.endTransaction();
 }
 
 
@@ -422,8 +416,11 @@ void split( // Subdivides motion path into two sub-paths w/randimization
     int16_t v;         // Interim value
     while((dt = (micros() - startTime)) < duration) {
       v = startValue + (((endValue - startValue) * dt) / duration);
-      if(v < IRIS_MIN)      v = IRIS_MIN; // Clip just in case
-      else if(v > IRIS_MAX) v = IRIS_MAX;
+      if(v < IRIS_MIN)     {
+    	  v = IRIS_MIN; // Clip just in case
+      } else if(v > IRIS_MAX) {
+    	v = IRIS_MAX;
+      }
       frame(v);        // Draw frame w/interim iris scale value
     }
   }
@@ -456,5 +453,5 @@ void EYES_Run(void) {
 
 void EYES_Init(void) {
   //srand((int32_t)KIN1_GetCycleCounter()); /* seed for random number generator */ /* \todo */
-  srand(0);
+  srand(0x459457);
 }
