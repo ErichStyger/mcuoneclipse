@@ -52,6 +52,32 @@
 #define AUTOBLINK        1 // If enabled, eyes blink autonomously
 #endif
 
+typedef struct {
+	uint16_t width, height;
+	const uint16_t *image;
+} EyeImageDesc;
+typedef struct {
+	uint16_t width, height;
+	const uint8_t *upper, *lower;
+} EyeScreenDesc;
+
+
+typedef struct {
+	EyeImageDesc sclera;
+	EyeScreenDesc screen;
+	EyeImageDesc irisMap;
+	EyeImageDesc iris;
+} EyeDesc;
+
+static const EyeDesc eyes[] = {
+  {
+	.sclera.width = SCLERA_WIDTH, .sclera.height=SCLERA_HEIGHT, .sclera.image = &sclera[0][0],
+    .screen.width = SCREEN_WIDTH, .screen.height = SCREEN_HEIGHT, .screen.upper = &upper[0][0], .screen.lower = &lower[0][0],
+	.irisMap.width = IRIS_MAP_WIDTH, .irisMap.height=IRIS_MAP_HEIGHT, .irisMap.image = &iris[0][0],
+	.iris.width = IRIS_WIDTH, .iris.height=IRIS_HEIGHT, .iris.image = &polar[0][0],
+  }
+};
+
 // DISPLAY HARDWARE CONFIG -------------------------------------------------
 #if EYES_USE_INTERACTIVE_IRIS
 uint16_t GetAmbilightValue(void) {
@@ -135,21 +161,22 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
   int16_t  irisX, irisY;
   uint16_t p, a;
   uint32_t d;
+  const EyeDesc *currEye = &eyes[0];
 
   scleraXsave = scleraX; // Save initial X value to reset on each line
-  irisY       = scleraY - (SCLERA_HEIGHT - IRIS_HEIGHT) / 2;
-  for(screenY=0; screenY<SCREEN_HEIGHT; screenY++, scleraY++, irisY++) {
+  irisY       = scleraY - (currEye->sclera.height - currEye->iris.height) / 2;
+  for(screenY=0; screenY<currEye->screen.height; screenY++, scleraY++, irisY++) {
     scleraX = scleraXsave;
-    irisX   = scleraXsave - (SCLERA_WIDTH - IRIS_WIDTH) / 2;
-    for(screenX=0; screenX<SCREEN_WIDTH; screenX++, scleraX++, irisX++) {
+    irisX   = scleraXsave - (currEye->sclera.width - currEye->iris.width) / 2;
+    for(screenX=0; screenX<currEye->screen.width; screenX++, scleraX++, irisX++) {
       bool eyeLidCovered = FALSE;
       if (e==0) {
-		  if ((lower[screenY][screenX] <= lT) || (upper[screenY][screenX] <= uT)) {
+		  if ((currEye->screen.lower[screenY*currEye->screen.width + screenX] <= lT) || (currEye->screen.upper[screenY*currEye->screen.width + screenX] <= uT)) {
 			  p = 0;
 			  eyeLidCovered = TRUE;
 		  }
       } else if (e==1) {
-    	  if ((lower[screenY][SCREEN_WIDTH-screenX-1] <= lT) || (upper[screenY][SCREEN_WIDTH-screenX-1] <= uT)) {
+    	  if ((currEye->screen.lower[screenY*currEye->screen.width + currEye->screen.width-screenX-1] <= lT) || (currEye->screen.upper[screenY*currEye->screen.width + currEye->screen.width-screenX-1] <= uT)) {
     		  p = 0;
     		  eyeLidCovered = TRUE;
     	  }
@@ -161,16 +188,16 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
       } else
 #endif
     if (!eyeLidCovered) {
-    	  if((irisY < 0) || (irisY >= IRIS_HEIGHT) || (irisX < 0) || (irisX >= IRIS_WIDTH)) { // In sclera
-			p = sclera[scleraY][scleraX];
+    	  if((irisY < 0) || (irisY >= currEye->iris.height) || (irisX < 0) || (irisX >= currEye->iris.width)) { // In sclera
+			p = currEye->sclera.image[scleraY*currEye->sclera.width + scleraX];
 		  } else {                                          // Maybe iris...
 			p = polar[irisY][irisX];                        // Polar angle/dist
 			d = (iScale * (p & 0x7F)) / 128;                // Distance (Y)
-			if(d < IRIS_MAP_HEIGHT) {                       // Within iris area
-			  a = (IRIS_MAP_WIDTH * (p >> 7)) / 512;        // Angle (X)
+			if(d < currEye->irisMap.height) {                       // Within iris area
+			  a = (currEye->sclera.width * (p >> 7)) / 512;        // Angle (X)
 			  p = iris[d][a];                               // Pixel = iris
 			} else {                                        // Not in iris
-			  p = sclera[scleraY][scleraX];                 // Pixel = sclera
+			  p = currEye->sclera.image[scleraY*currEye->sclera.width + scleraX];                 // Pixel = sclera
 			}
 		  }
 		}
@@ -202,7 +229,6 @@ const uint8_t ease[] = { // Ease in/out curve for eye movements 3*t^2-2*t^3
 static uint32_t timeOfLastBlink = 0L, timeToNextBlink = 0L;
 #endif
 
-#if 1
 void frame( // Process motion for a single frame of left or right eye
   uint16_t        iScale) {     // Iris scale (0-1023) passed in
 //  static uint32_t frames   = 0; // Used in frame rate calculation
@@ -406,7 +432,6 @@ void frame( // Process motion for a single frame of left or right eye
 	  eyeIndex = 0; // Cycle through eyes, 1 per call
   }
 }
-#endif
 
 // AUTONOMOUS IRIS SCALING (if no photocell or dial) -----------------------
 
