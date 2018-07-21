@@ -297,10 +297,7 @@ static void AppTask(void *p) {
 /*!
  * @brief Main function
  */
-int main(void)
-{
-    uint32_t frameBufferIndex = 0;
-
+int main(void) {
     BOARD_ConfigMPU();
     BOARD_InitPins();
     BOARD_InitSemcPins();
