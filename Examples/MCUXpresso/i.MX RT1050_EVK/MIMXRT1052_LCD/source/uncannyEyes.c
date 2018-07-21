@@ -29,10 +29,10 @@
 // Enable ONE of these #includes -- HUGE graphics tables for various eyes:
 #include "defaultEye.h"        // Standard human-ish hazel eye
 //#include "logo.h"
-//#include "noScleraEye.h"       // Large iris, no sclera
-//#include "dragonEye.h"         // Slit pupil fiery dragon/demon eye
-//#include "goatEye.h"           // Horizontal pupil goat/Krampus eye
-//#include "newtEye.h"
+#include "noScleraEye.h"       // Large iris, no sclera
+#include "dragonEye.h"        // Slit pupil fiery dragon/demon eye
+#include "goatEye.h"           // Horizontal pupil goat/Krampus eye
+#include "newtEye.h"
 
 // Then tweak settings below, e.g. change IRIS_MIN/MAX or disable TRACKING.
 #if 1
@@ -44,8 +44,6 @@
 #define TRACKING          // If enabled, eyelid tracks pupil
 #define EYES_USE_INTERACTIVE_IRIS    0  /* 1: scale iris depending on value (e.g. ambilight level); 0: do not scale iris */
 #define IRIS_SMOOTH   1    // If enabled, filter input from GetIrisValue()
-#define IRIS_MIN      120 // Clip lower analogRead() range from GetIrisValue()
-#define IRIS_MAX      720 // Clip upper "
 //#define WINK_L_PIN      0 // Pin for LEFT eye wink button
 //#define BLINK_PIN       1 // Pin for blink button (BOTH eyes)
 //#define WINK_R_PIN      2 // Pin for RIGHT eye wink button
@@ -61,36 +59,74 @@ typedef struct {
 	const uint8_t *upper, *lower;
 } EyeScreenDesc;
 
-
 typedef struct {
+	unsigned int irisMin, irisMax;
 	EyeImageDesc sclera;
 	EyeScreenDesc screen;
-	EyeImageDesc irisMap;
-	EyeImageDesc iris;
+	struct {
+		uint16_t width, height;
+		const uint16_t *iris;
+	} irisMap;
+	struct {
+		uint16_t width, height;
+		const uint16_t *polar;
+	} iris;
 } EyeDesc;
 
 static const EyeDesc eyes[] = {
   {
-	.sclera.width = SCLERA_WIDTH, .sclera.height=SCLERA_HEIGHT, .sclera.image = &sclera[0][0],
-    .screen.width = SCREEN_WIDTH, .screen.height = SCREEN_HEIGHT, .screen.upper = &upper[0][0], .screen.lower = &lower[0][0],
-	.irisMap.width = IRIS_MAP_WIDTH, .irisMap.height=IRIS_MAP_HEIGHT, .irisMap.image = &iris[0][0],
-	.iris.width = IRIS_WIDTH, .iris.height=IRIS_HEIGHT, .iris.image = &polar[0][0],
-  }
+    .irisMin=120, .irisMax = 700,
+	.sclera.width = DEFAULT_SCLERA_WIDTH, .sclera.height=DEFAULT_SCLERA_HEIGHT, .sclera.image = &default_sclera[0][0],
+    .screen.width = DEFAULT_SCREEN_WIDTH, .screen.height = DEFAULT_SCREEN_HEIGHT, .screen.upper = &default_upper[0][0], .screen.lower = &default_lower[0][0],
+	.irisMap.width = DEFAULT_IRIS_MAP_WIDTH, .irisMap.height=DEFAULT_IRIS_MAP_HEIGHT, .irisMap.iris = &default_iris[0][0],
+	.iris.width = DEFAULT_IRIS_WIDTH, .iris.height=DEFAULT_IRIS_HEIGHT, .iris.polar = &default_polar[0][0],
+  },
+  {
+    .irisMin=120, .irisMax = 250,
+	.sclera.width = DRAGON_SCLERA_WIDTH, .sclera.height=DRAGON_SCLERA_HEIGHT, .sclera.image = &dragon_sclera[0][0],
+    .screen.width = DRAGON_SCREEN_WIDTH, .screen.height = DRAGON_SCREEN_HEIGHT, .screen.upper = &dragon_upper[0][0], .screen.lower = &dragon_lower[0][0],
+	.irisMap.width = DRAGON_IRIS_MAP_WIDTH, .irisMap.height=DRAGON_IRIS_MAP_HEIGHT, .irisMap.iris = &dragon_iris[0][0],
+	.iris.width = DRAGON_IRIS_WIDTH, .iris.height=DRAGON_IRIS_HEIGHT, .iris.polar = &dragon_polar[0][0],
+  },
+  {
+    .irisMin=120, .irisMax = 400,
+	.sclera.width = GOAT_SCLERA_WIDTH, .sclera.height=GOAT_SCLERA_HEIGHT, .sclera.image = &goat_sclera[0][0],
+    .screen.width = GOAT_SCREEN_WIDTH, .screen.height = GOAT_SCREEN_HEIGHT, .screen.upper = &goat_upper[0][0], .screen.lower = &goat_lower[0][0],
+	.irisMap.width = GOAT_IRIS_MAP_WIDTH, .irisMap.height=GOAT_IRIS_MAP_HEIGHT, .irisMap.iris = &goat_iris[0][0],
+	.iris.width = GOAT_IRIS_WIDTH, .iris.height=GOAT_IRIS_HEIGHT, .iris.polar = &goat_polar[0][0],
+  },
+  {
+    .irisMin=120, .irisMax = 300,
+	.sclera.width = NOSCLERA_SCLERA_WIDTH, .sclera.height=NOSCLERA_SCLERA_HEIGHT, .sclera.image = &nosclera_sclera[0][0],
+    .screen.width = NOSCLERA_SCREEN_WIDTH, .screen.height = NOSCLERA_SCREEN_HEIGHT, .screen.upper = &nosclera_upper[0][0], .screen.lower = &nosclera_lower[0][0],
+	.irisMap.width = NOSCLERA_IRIS_MAP_WIDTH, .irisMap.height=NOSCLERA_IRIS_MAP_HEIGHT, .irisMap.iris = &nosclera_iris[0][0],
+	.iris.width = NOSCLERA_IRIS_WIDTH, .iris.height=NOSCLERA_IRIS_HEIGHT, .iris.polar = &nosclera_polar[0][0],
+  },
+  {
+    .irisMin=120, .irisMax = 500,
+	.sclera.width = NEWT_SCLERA_WIDTH, .sclera.height=NEWT_SCLERA_HEIGHT, .sclera.image = &newt_sclera[0][0],
+    .screen.width = NEWT_SCREEN_WIDTH, .screen.height = NEWT_SCREEN_HEIGHT, .screen.upper = &newt_upper[0][0], .screen.lower = &newt_lower[0][0],
+	.irisMap.width = NEWT_IRIS_MAP_WIDTH, .irisMap.height=NEWT_IRIS_MAP_HEIGHT, .irisMap.iris = &newt_iris[0][0],
+	.iris.width = NEWT_IRIS_WIDTH, .iris.height=NEWT_IRIS_HEIGHT, .iris.polar = &newt_polar[0][0],
+  },
 };
+#define NOF_EYES  (sizeof(eyes)/sizeof(eyes[0]))
+static int currEyeIndex = 0;
+static const EyeDesc *currEye = &eyes[0];
 
 // DISPLAY HARDWARE CONFIG -------------------------------------------------
 #if EYES_USE_INTERACTIVE_IRIS
-uint16_t GetAmbilightValue(void) {
+static uint16_t GetAmbilightValue(void) {
   /* try to keep it between IRIS_MIN and IRIS_MAX */
   return 512;  /* // e.g. dial/photocell reading */
 }
 #endif
 
-bool Blink(void) {
+static bool Blink(void) {
   return FALSE; /* state of a blink signal/pin */
 }
 
-bool Wink(int eye) {
+static bool Wink(int eye) {
   return FALSE;
 }
 
@@ -107,7 +143,7 @@ static int32_t constrain(int32_t val, int32_t min, int32_t max) {
   return val;
 }
 
-int32_t random_between(int32_t min, int32_t max) {
+static int32_t random_between(int32_t min, int32_t max) {
   return rand()%(max-min+1)+min;
 }
 
@@ -143,13 +179,13 @@ struct {
   eyeBlink    blink;   // Current blink state
 } eye[] = { // OK to comment out one of these for single-eye display:
   //displayType(SELECT_L_PIN,DISPLAY_DC,0),SELECT_L_PIN,{WINK_L_PIN,NOBLINK},
-    {.posOffsetX=250, .posOffsetY=40, {NOBLINK, 0, 0}}, /* first eye */
-    {.posOffsetX=80,  .posOffsetY=40, {NOBLINK, 0, 0}}  /* second eye */
+    {.posOffsetX=260, .posOffsetY=60, {NOBLINK, 0, 0}}, /* left eye */
+    {.posOffsetX=90,  .posOffsetY=60, {NOBLINK, 0, 0}}  /* right eye */
 };
 #define NUM_EYES (sizeof(eye) / sizeof(eye[0]))
 
 // EYE-RENDERING FUNCTION --------------------------------------------------
-void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
+static void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
   uint8_t  e,       // Eye array index; 0 or 1 for left/right
   uint32_t iScale,  // Scale factor for iris
   uint8_t  scleraX, // First pixel X offset into sclera image
@@ -161,7 +197,6 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
   int16_t  irisX, irisY;
   uint16_t p, a;
   uint32_t d;
-  const EyeDesc *currEye = &eyes[0];
 
   scleraXsave = scleraX; // Save initial X value to reset on each line
   irisY       = scleraY - (currEye->sclera.height - currEye->iris.height) / 2;
@@ -181,21 +216,15 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
     		  eyeLidCovered = TRUE;
     	  }
       }
-#if 0
-      if((lower[screenY][screenX] <= lT) || (upper[screenY][screenX] <= uT))
-      {             // Covered by eyelid
-        p = 0;
-      } else
-#endif
-    if (!eyeLidCovered) {
+      if (!eyeLidCovered) {
     	  if((irisY < 0) || (irisY >= currEye->iris.height) || (irisX < 0) || (irisX >= currEye->iris.width)) { // In sclera
 			p = currEye->sclera.image[scleraY*currEye->sclera.width + scleraX];
 		  } else {                                          // Maybe iris...
-			p = polar[irisY][irisX];                        // Polar angle/dist
+			p = currEye->iris.polar[irisY*currEye->iris.width + irisX];                        // Polar angle/dist
 			d = (iScale * (p & 0x7F)) / 128;                // Distance (Y)
-			if(d < currEye->irisMap.height) {                       // Within iris area
-			  a = (currEye->sclera.width * (p >> 7)) / 512;        // Angle (X)
-			  p = iris[d][a];                               // Pixel = iris
+			if(d < currEye->irisMap.height) {               // Within iris area
+			  a = (currEye->sclera.width * (p >> 7)) / 512; // Angle (X)
+			  p = currEye->irisMap.iris[d*currEye->irisMap.width + a];                               // Pixel = iris
 			} else {                                        // Not in iris
 			  p = currEye->sclera.image[scleraY*currEye->sclera.width + scleraX];                 // Pixel = sclera
 			}
@@ -207,7 +236,7 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
 }
 
 // EYE ANIMATION -----------------------------------------------------------
-const uint8_t ease[] = { // Ease in/out curve for eye movements 3*t^2-2*t^3
+static const uint8_t ease[] = { // Ease in/out curve for eye movements 3*t^2-2*t^3
     0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  2,  2,  2,  3,   // T
     3,  3,  4,  4,  4,  5,  5,  6,  6,  7,  7,  8,  9,  9, 10, 10,   // h
    11, 12, 12, 13, 14, 15, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23,   // x
@@ -229,7 +258,7 @@ const uint8_t ease[] = { // Ease in/out curve for eye movements 3*t^2-2*t^3
 static uint32_t timeOfLastBlink = 0L, timeToNextBlink = 0L;
 #endif
 
-void frame( // Process motion for a single frame of left or right eye
+static void frame( // Process motion for a single frame of left or right eye
   uint16_t        iScale) {     // Iris scale (0-1023) passed in
 //  static uint32_t frames   = 0; // Used in frame rate calculation
   static uint8_t  eyeIndex = 0; // eye[] array counter
@@ -359,13 +388,13 @@ void frame( // Process motion for a single frame of left or right eye
   // Process motion, blinking and iris scale into renderable values
 
   // Iris scaling: remap from 0-1023 input to iris map height pixel units
-  iScale = ((IRIS_MAP_HEIGHT + 1) * 1024) /
-           (1024 - (iScale * (IRIS_MAP_HEIGHT - 1) / IRIS_MAP_HEIGHT));
+  iScale = ((currEye->irisMap.height + 1) * 1024) /
+           (1024 - (iScale * (currEye->irisMap.height - 1) / currEye->irisMap.height));
 
   // Scale eye X/Y positions (0-1023) to pixel units used by drawEye()
   #define SCLERA_BORDER  128  /* outside border of the sclera which is not used for eye coordingates */
-  eyeX = map(eyeX, 0, 1023, 0, SCLERA_WIDTH  - SCLERA_BORDER);
-  eyeY = map(eyeY, 0, 1023, 0, SCLERA_HEIGHT - SCLERA_BORDER);
+  eyeX = map(eyeX, 0, 1023, 0, currEye->sclera.width  - SCLERA_BORDER);
+  eyeY = map(eyeY, 0, 1023, 0, currEye->sclera.height - SCLERA_BORDER);
 #if 0
   if(eyeIndex == 1) {
 	  eyeX = (SCLERA_WIDTH - SCLERA_BORDER) - eyeX; // Mirrored display
@@ -378,8 +407,8 @@ void frame( // Process motion for a single frame of left or right eye
   if(NUM_EYES > 1) {
 	  eyeX += 4;
   }
-  if(eyeX > (SCLERA_WIDTH - SCLERA_BORDER)) {
-	  eyeX = (SCLERA_WIDTH - SCLERA_BORDER);
+  if(eyeX > (currEye->sclera.width - SCLERA_BORDER)) {
+	  eyeX = (currEye->sclera.width - SCLERA_BORDER);
   }
 
   // Eyelids are rendered using a brightness threshold image.  This same
@@ -390,14 +419,13 @@ void frame( // Process motion for a single frame of left or right eye
   static uint8_t uThreshold = 128;
   uint8_t        lThreshold, n;
 #ifdef TRACKING
-  int16_t sampleX = SCLERA_WIDTH  / 2 - (eyeX / 2), // Reduce X influence
-          sampleY = SCLERA_HEIGHT / 2 - (eyeY + IRIS_HEIGHT / 4);
+  int16_t sampleX = currEye->sclera.width  / 2 - (eyeX / 2), // Reduce X influence
+          sampleY = currEye->sclera.height / 2 - (eyeY + currEye->iris.height / 4);
   // Eyelid is slightly asymmetrical, so two readings are taken, averaged
   if(sampleY < 0) {
 	  n = 0;
   }  else {
-	  n = (upper[sampleY][sampleX] +
-          upper[sampleY][SCREEN_WIDTH - 1 - sampleX]) / 2;
+	  n = (currEye->screen.upper[sampleY*currEye->screen.width + sampleX] + currEye->screen.upper[sampleY*currEye->screen.width + (currEye->screen.width - 1 - sampleX)]) / 2;
   }
   uThreshold = (uThreshold * 3 + n) / 4; // Filter/soften motion
   // Lower eyelid doesn't track the same way, but seems to be pulled upward
@@ -439,8 +467,6 @@ void frame( // Process motion for a single frame of left or right eye
 // Autonomous iris motion uses a fractal behavior to similate both the major
 // reaction of the eye plus the continuous smaller adjustments that occur.
 
-static uint16_t oldIris = (IRIS_MIN + IRIS_MAX) / 2, newIris;
-
 void split( // Subdivides motion path into two sub-paths w/randimization
   int16_t  startValue, // Iris scale value (IRIS_MIN to IRIS_MAX) at start
   int16_t  endValue,   // Iris scale value at end
@@ -460,10 +486,10 @@ void split( // Subdivides motion path into two sub-paths w/randimization
     int16_t v;         // Interim value
     while((dt = (micros() - startTime)) < duration) {
       v = startValue + (((endValue - startValue) * dt) / duration);
-      if(v < IRIS_MIN)     {
-    	  v = IRIS_MIN; // Clip just in case
-      } else if(v > IRIS_MAX) {
-    	v = IRIS_MAX;
+      if(v < currEye->irisMin)     {
+    	  v = currEye->irisMin; // Clip just in case
+      } else if(v > currEye->irisMax) {
+    	v = currEye->irisMax;
       }
       frame(v);        // Draw frame w/interim iris scale value
     }
@@ -502,28 +528,40 @@ void EYES_ShowLogo(void) {
 }
 
 // MAIN LOOP -- runs continuously after setup() ----------------------------
+static uint16_t oldIris[NOF_EYES];
 
 void EYES_Run(void) {
 #if EYES_USE_INTERACTIVE_IRIS
   uint16_t v;
 
   v = GetAmbilightValue();
-  v = map(v, 0, 1023, IRIS_MIN, IRIS_MAX); // Scale to iris range
+  v = map(v, 0, 1023, currEye->irisMin, currEye->irisMax); // Scale to iris range
  #if IRIS_SMOOTH // Filter input (gradual motion)
-  static uint16_t irisValue = (IRIS_MIN + IRIS_MAX) / 2;
+  static uint16_t irisValue = (currEye->irisMin + currEye->irisMax) / 2;
   irisValue = ((irisValue * 15) + v) / 16;
   frame(irisValue);
  #else // Unfiltered (immediate motion)
   frame(v);
  #endif /* IRIS_SMOOTH */
 #else  // Autonomous iris scaling -- invoke recursive function
-  newIris = random(IRIS_MIN, IRIS_MAX);
-  split(oldIris, newIris, micros(), 10000000L, IRIS_MAX - IRIS_MIN);
-  oldIris = newIris;
+  uint16_t newIris;
+
+  newIris = random(currEye->irisMin, currEye->irisMax);
+  split(oldIris[currEyeIndex], newIris, micros(), 10000000L, currEye->irisMax - currEye->irisMin);
+  oldIris[currEyeIndex] = newIris;
+  currEyeIndex++;
+  if (currEyeIndex>=NOF_EYES) {
+	  currEyeIndex = 0;
+  }
+  currEye = &eyes[currEyeIndex];
 #endif /* EYES_USE_INTERACTIVE_IRIS */
 }
 
 void EYES_Init(void) {
   //srand((int32_t)KIN1_GetCycleCounter()); /* seed for random number generator */ /* \todo */
+  for(int i=0; i<NOF_EYES; i++) {
+	  oldIris[i] = (eyes[i].irisMin + eyes[i].irisMax) / 2;
+  }
+  currEyeIndex = 0;
   srand(0x459457);
 }

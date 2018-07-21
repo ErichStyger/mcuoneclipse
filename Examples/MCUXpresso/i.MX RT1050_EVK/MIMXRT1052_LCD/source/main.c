@@ -334,52 +334,14 @@ int main(void)
                 /* Used to obtain a handle to the created task.  Not used in
                 this simple demo, so set to NULL. */
                 NULL);
-
     vTaskStartScheduler();
 
-#if 0
-    while (1)
-    {
-      //  frameBufferIndex ^= 1U;
-
-        int x,y;
-        for(x=0,y=0;x<50;x++,y++) {
-        	GDisp1_PutPixel(x, y, 0xff);
-        }
-        GDisp1_UpdateFull();
-        for(x=0,y=0;x<50;x++,y++) {
-        	GDisp1_PutPixel(x, y, 0xff00);
-        }
-        GDisp1_UpdateFull();
-
-        //ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[frameBufferIndex]);
-
-//        s_frameDone = false;
-        /* Wait for previous frame complete. */
-//        while (!s_frameDone)
-//        {
-//        }
-    }
-#elif 0
-    for(;;) {
-        ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[frameBufferIndex]);
-
-        s_frameDone = false;
-        /* Wait for previous frame complete. */
-        while (!s_frameDone)
-        {
-        }
-
-    }
-#else
     for(;;) {
     	EYES_Run();
     }
-#endif
 }
 
-void vApplicationTickHook(void)
-{
+void vApplicationTickHook(void) {
 	extern uint32_t msCntr;
 	msCntr++;
 }
@@ -387,12 +349,8 @@ void vApplicationTickHook(void)
 /*!
  * @brief Malloc failed hook.
  */
-void vApplicationMallocFailedHook(void)
-{
-    /* The malloc failed hook is enabled by setting
-    configUSE_MALLOC_FAILED_HOOK to 1 in FreeRTOSConfig.h.
-
-    Called if a call to pvPortMalloc() fails because there is insufficient
+void vApplicationMallocFailedHook(void) {
+   /*  Called if a call to pvPortMalloc() fails because there is insufficient
     free memory available in the FreeRTOS heap.  pvPortMalloc() is called
     internally by FreeRTOS API functions that create tasks, queues, software
     timers, and semaphores.  The size of the FreeRTOS heap is set by the
@@ -421,7 +379,6 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
 /*!
  * @brief Idle hook.
  */
-void vApplicationIdleHook(void)
-{
+void vApplicationIdleHook(void) {
 }
 
