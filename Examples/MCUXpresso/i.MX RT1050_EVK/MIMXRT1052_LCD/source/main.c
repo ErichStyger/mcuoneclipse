@@ -306,12 +306,9 @@ int main(void) {
     BOARD_InitDebugConsole();
     BOARD_InitLcd();
 
-    PRINTF("LCDIF RGB example start...\r\n");
-
+    PRINTF("Uncanny Eyes example start...\r\n");
     EYES_Init();
-
     APP_ELCDIF_Init();
-
     BOARD_EnableLcdInterrupt();
 
     xTaskCreate(/* The function that implements the task. */

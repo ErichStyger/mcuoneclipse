@@ -74,7 +74,7 @@ static void Components_Init(void) {
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   /* PEX_RTOS_INIT() is a macro should already have been called either from main()
      or Processor Expert startup code. So we don't call it here again. */
-  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FreeRTOS" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   RNG1_Init(); /* ### RingBuffer "RNG1" init code ... */
@@ -98,9 +98,21 @@ static void Components_Init(void) {
   GFONT1_Init(); /* ### GFont "GFONT1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-#if GDisp1_CONFIG_CLEAR_DISPLAY_IN_INIT || GDisp1_CONFIG_USE_MUTEX
   GDisp1_Init(); /* ### GDisplay "GDisp1" init code ... */
 #endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  FDisp1_Init(); /* ### FontDisplay "FDisp1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  HF1_Init(); /* ### HardFault "HF1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+#if MMA1_CONFIG_INIT_DRIVER_IN_STARTUP
+  MMA1_Init(); /* ### MMA8451Q "MMA1" init code ... */
+#endif
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  KIN1_Init(); /* ### KinetisTools "KIN1" init code ... */
 #endif
 /*------------------------------------------------------------------*/
 }
