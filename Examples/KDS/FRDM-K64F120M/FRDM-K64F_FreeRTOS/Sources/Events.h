@@ -147,6 +147,36 @@ void PTRC1_OnTraceWrap(void);
 ** ===================================================================
 */
 
+void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+INFO: empty Drivers\common\GeneralDamage.inc file
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(portTickType expectedIdleTicks);
+/*
+** ===================================================================
+INFO: empty Drivers\common\GeneralDamage.inc file
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

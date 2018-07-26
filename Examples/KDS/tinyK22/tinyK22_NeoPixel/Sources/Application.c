@@ -13,17 +13,32 @@
 #include "NeoPixel.h"
 
 static void NeoTask(void* pvParameters) {
-  int val = 0;
+  int i, cntr, val = 0;
   int inc = 1;
   (void)pvParameters; /* parameter not used */
   NEO_ClearAllPixel();
-   for(;;) {
+  cntr = 0;
+  for(;;) {
      if (val==0xff) {
        inc = -1;
-     } else if (val==0) {
+      } else if (val==0) {
        inc = 1;
      }
      val += inc;
+     for(i=0;i<NEO_NOF_PIXEL;i++) {
+       if (cntr<2*0xff) {
+         NEO_SetPixelRGB(0, i, val, 0x00, 0x00);
+       } else if (cntr<=4*0xff) {
+         NEO_SetPixelRGB(0, i, 0x00, val, 0x00);
+       } else {
+         NEO_SetPixelRGB(0, i, 0x00, 0x00, val);
+       }
+     }
+     cntr++;
+     if (cntr>6*0xff) {
+       cntr = 0;
+     }
+#if 0
      NEO_SetPixelRGB(0, 0, val, 0x00, 0x00);
      NEO_SetPixelRGB(0, 1, 0x00, val, 0x00);
      NEO_SetPixelRGB(0, 2, 0x00, 0x00, val);
@@ -40,7 +55,7 @@ static void NeoTask(void* pvParameters) {
 //    NEO_SetPixelRGB(0, 5, 0x40, 0x20, 0x80);
 //    NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
 //    NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
-
+#endif
     vTaskDelay(5/portTICK_RATE_MS);
     NEO_TransferPixels();
     LED1_Neg();
