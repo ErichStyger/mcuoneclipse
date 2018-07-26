@@ -73,11 +73,6 @@
 #endif
 
 /*******************************************************************************
- * Prototypes
- ******************************************************************************/
-void BOARD_EnableLcdInterrupt(void);
-
-/*******************************************************************************
  * Variables
  ******************************************************************************/
 volatile bool s_frameDone = false;
@@ -87,44 +82,51 @@ AT_NONCACHEABLE_SECTION_ALIGN(uint16_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_
 /*******************************************************************************
  * Code
  ******************************************************************************/
-extern void APP_LCDIF_IRQHandler(void);
+static void APP_LCDIF_IRQHandler(void) {
+    uint32_t intStatus;
 
-void LCDIF_IRQHandler(void)
-{
+    intStatus = ELCDIF_GetInterruptStatus(APP_ELCDIF);
+
+    ELCDIF_ClearInterruptStatus(APP_ELCDIF, intStatus);
+
+    if (intStatus & kELCDIF_CurFrameDone) {
+        s_frameDone = true;
+    }
+/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
+  exception return operation might vector to incorrect interrupt */
+#if defined __CORTEX_M && (__CORTEX_M == 4U)
+    __DSB();
+#endif
+}
+
+void LCDIF_IRQHandler(void) {
     APP_LCDIF_IRQHandler();
 }
 
 /* Enable interrupt. */
-void BOARD_EnableLcdInterrupt(void)
-{
+static void BOARD_EnableLcdInterrupt(void) {
     EnableIRQ(LCDIF_IRQn);
 }
 
 /* Initialize the LCD_DISP. */
-void BOARD_InitLcd(void) {
+static void BOARD_InitLcd(void) {
     volatile uint32_t i = 0x100U;
 
     gpio_pin_config_t config = {
         kGPIO_DigitalOutput, 0,
     };
-
     /* Reset the LCD. */
     GPIO_PinInit(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, &config);
-
     GPIO_PinWrite(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, 0);
-
-    while (i--)
-    {
+    while (i--)    {
     }
-
     GPIO_PinWrite(LCD_DISP_GPIO, LCD_DISP_GPIO_PIN, 1);
-
     /* Backlight. */
     config.outputLogic = 1;
     GPIO_PinInit(LCD_BL_GPIO, LCD_BL_GPIO_PIN, &config);
 }
 
-void BOARD_InitLcdifPixelClock(void) {
+static void BOARD_InitLcdifPixelClock(void) {
     /*
      * The desired output frame rate is 60Hz. So the pixel clock frequency is:
      * (480 + 41 + 4 + 18) * (272 + 10 + 4 + 2) * 60 = 9.2M.
@@ -140,7 +142,6 @@ void BOARD_InitLcdifPixelClock(void) {
     };
 
     CLOCK_InitVideoPll(&config);
-
     /*
      * 000 derive clock from PLL2
      * 001 derive clock from PLL3 PFD3
@@ -150,32 +151,11 @@ void BOARD_InitLcdifPixelClock(void) {
      * 101 derive clock from PLL3 PFD1
      */
     CLOCK_SetMux(kCLOCK_LcdifPreMux, 2);
-
     CLOCK_SetDiv(kCLOCK_LcdifPreDiv, 4);
-
     CLOCK_SetDiv(kCLOCK_LcdifDiv, 1);
 }
 
-
-void APP_LCDIF_IRQHandler(void) {
-    uint32_t intStatus;
-
-    intStatus = ELCDIF_GetInterruptStatus(APP_ELCDIF);
-
-    ELCDIF_ClearInterruptStatus(APP_ELCDIF, intStatus);
-
-    if (intStatus & kELCDIF_CurFrameDone)
-    {
-        s_frameDone = true;
-    }
-/* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
-  exception return operation might vector to incorrect interrupt */
-#if defined __CORTEX_M && (__CORTEX_M == 4U)
-    __DSB();
-#endif
-}
-
-void APP_ELCDIF_Init(void) {
+static void APP_ELCDIF_Init(void) {
     const elcdif_rgb_mode_config_t config = {
         .panelWidth = APP_IMG_WIDTH,
         .panelHeight = APP_IMG_HEIGHT,
@@ -194,100 +174,13 @@ void APP_ELCDIF_Init(void) {
     ELCDIF_RgbModeInit(APP_ELCDIF, &config);
 }
 
-void APP_FillFrameBuffer(uint32_t frameBuffer[APP_IMG_HEIGHT][APP_IMG_WIDTH]) {
-    /* Background color. */
-    static const uint32_t bgColor = 0U;
-    /* Foreground color. */
-    static uint8_t fgColorIndex = 0U;
-    static const uint32_t fgColorTable[] = {0x000000FFU, 0x0000FF00U, 0x0000FFFFU, 0x00FF0000U,
-                                            0x00FF00FFU, 0x00FFFF00U, 0x00FFFFFFU};
-    uint32_t fgColor = fgColorTable[fgColorIndex];
-
-    /* Position of the foreground rectangle. */
-    static uint16_t upperLeftX = 0U;
-    static uint16_t upperLeftY = 0U;
-    static uint16_t lowerRightX = (APP_IMG_WIDTH - 1U) / 2U;
-    static uint16_t lowerRightY = (APP_IMG_HEIGHT - 1U) / 2U;
-
-    static int8_t incX = 1;
-    static int8_t incY = 1;
-
-    /* Change color in next frame or not. */
-    static bool changeColor = false;
-
-    uint32_t i, j;
-
-    /* Background color. */
-    for (i = 0; i < APP_IMG_HEIGHT; i++)
-    {
-        for (j = 0; j < APP_IMG_WIDTH; j++)
-        {
-            frameBuffer[i][j] = bgColor;
-        }
-    }
-
-    /* Foreground color. */
-    for (i = upperLeftY; i < lowerRightY; i++)
-    {
-        for (j = upperLeftX; j < lowerRightX; j++)
-        {
-            frameBuffer[i][j] = fgColor;
-        }
-    }
-
-    /* Update the format: color and rectangle position. */
-    upperLeftX += incX;
-    upperLeftY += incY;
-    lowerRightX += incX;
-    lowerRightY += incY;
-
-    changeColor = false;
-
-    if (0U == upperLeftX)
-    {
-        incX = 1;
-        changeColor = true;
-    }
-    else if (APP_IMG_WIDTH - 1 == lowerRightX)
-    {
-        incX = -1;
-        changeColor = true;
-    }
-
-    if (0U == upperLeftY)
-    {
-        incY = 1;
-        changeColor = true;
-    }
-    else if (APP_IMG_HEIGHT - 1 == lowerRightY)
-    {
-        incY = -1;
-        changeColor = true;
-    }
-
-    if (changeColor)
-    {
-        fgColorIndex++;
-
-        if (ARRAY_SIZE(fgColorTable) == fgColorIndex)
-        {
-            fgColorIndex = 0U;
-        }
-    }
-}
-
 static void AppTask(void *p) {
     /* Clear the frame buffer. */
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
-
-   // APP_FillFrameBuffer(s_frameBuffer[frameBufferIndex]);
-
     ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
     ELCDIF_RgbModeStart(APP_ELCDIF);
     GDisp1_UpdateFull(); /* show black screen */
-
     EYES_ShowLogo();
-
 	for(;;) {
 		//vTaskDelay(pdMS_TO_TICKS(100));
     	EYES_Run();
@@ -310,7 +203,6 @@ int main(void) {
     EYES_Init();
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
-
     xTaskCreate(/* The function that implements the task. */
                 AppTask,
                 /* Text name for the task, just to help debugging. */
@@ -329,8 +221,10 @@ int main(void) {
                 this simple demo, so set to NULL. */
                 NULL);
     vTaskStartScheduler();
-
+#if 0
     for(;;) {
     	EYES_Run();
     }
+#endif
+    for(;;) {}
 }

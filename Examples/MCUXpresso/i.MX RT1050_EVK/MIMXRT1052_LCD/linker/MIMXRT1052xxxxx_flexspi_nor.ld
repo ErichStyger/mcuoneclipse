@@ -98,8 +98,8 @@ SECTIONS
         __bss_section_table = .;
         LONG(    ADDR(.bss));
         LONG(  SIZEOF(.bss));
-        LONG(    ADDR(.bss_non_cache));
-        LONG(  SIZEOF(.bss_non_cache));        
+       /* LONG(    ADDR(.bss_non_cache));*/
+       /* LONG(  SIZEOF(.bss_non_cache));*/        
         LONG(    ADDR(.bss_RAM2));
         LONG(  SIZEOF(.bss_RAM2));
         LONG(    ADDR(.bss_RAM3));
