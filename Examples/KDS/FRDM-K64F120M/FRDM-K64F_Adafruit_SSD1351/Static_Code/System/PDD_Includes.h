@@ -1,6 +1,6 @@
 /** ###################################################################
 **      Filename    : PDD_Includes.h
-**      Processor   : MK64FN1M0VLQ12
+**      Processor   : MK64FN1M0VLL12
 **      Version     : 1.0
 ** 
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
