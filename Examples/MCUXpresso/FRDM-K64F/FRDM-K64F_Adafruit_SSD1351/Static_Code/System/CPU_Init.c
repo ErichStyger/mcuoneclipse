@@ -324,7 +324,11 @@ PEX_ENTRYPOINT_FUNCTION_TYPE PEX_ENTRYPOINT_FUNCTION()
     #if defined(__IAR_SYSTEMS_ICC__)
   SCB_VTOR = (uint32_t)(&__vector_table); /* Set the interrupt vector table position */
     #elif defined(__CWCC__) | defined(__GNUC__) | defined(__CC_ARM)
+#if 0
   SCB_VTOR = (uint32_t)(&__vect_table); /* Set the interrupt vector table position */
+#else /* version using the name of the SDK vector table */
+  SCB_VTOR = (uint32_t)(&g_pfnVectors); /* Set the interrupt vector table position */
+#endif
     #endif
   #endif
   /* Disable the WDOG module */
