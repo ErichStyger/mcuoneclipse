@@ -35,6 +35,7 @@ void APP_Run(void) {
   uint16_t xyz[3];
   uint8_t gScale;
   bool isEnabled;
+  unsigned char ch;
   
   CLS1_SendStr((unsigned char*)"------------------------\r\nFRDM-KL25Z Accel\r\n------------------------\r\n", CLS1_GetStdio()->stdOut);
   LED1_On();
@@ -52,30 +53,61 @@ void APP_Run(void) {
   }
   res = MMA1_isEnabled(&isEnabled);
   if(isEnabled) { /* have to disable device to set the g scale range! */
+    CLS1_SendStr((unsigned char*)"Device is enabled, disable it before applying settings...\r\n", CLS1_GetStdio()->stdOut);
     res = MMA1_Disable();
     if (res!=ERR_OK) {
       CLS1_SendStr((unsigned char*)"FAILED disabling device\r\n", CLS1_GetStdio()->stdErr);
       for(;;) {} /* error? */
     }
-    res = MMA1_SetScaleRangeG(ACCEL_G_MODE); /* set to g scale */
-    if (res!=ERR_OK) {
-      CLS1_SendStr((unsigned char*)"FAILED setting range\r\n", CLS1_GetStdio()->stdErr);
-      for(;;) {} /* error? */
-    }
-    res = MMA1_GetScaleRangeG(&gScale); /* read back the value to check it */
-    if (res!=ERR_OK || gScale!=ACCEL_G_MODE) {
-      CLS1_SendStr((unsigned char*)"FAILED reading range\r\n", CLS1_GetStdio()->stdErr);
-     for(;;) {} /* error? */
-    }
-    res = MMA1_Enable(); /* re-enable device again */
-    if (res!=ERR_OK) {
-     CLS1_SendStr((unsigned char*)"FAILED enabling device\r\n", CLS1_GetStdio()->stdErr);
-     for(;;) {} /* error? */
-    }
   }
-  //MMA1_CalibrateX1g();
-  //MMA1_CalibrateY1g();
+  CLS1_printfIO(CLS1_GetStdio(), (unsigned char*)"Setting G mode to %d g.\r\n", ACCEL_G_MODE);
+  res = MMA1_SetScaleRangeG(ACCEL_G_MODE); /* set to g scale */
+  if (res!=ERR_OK) {
+    CLS1_SendStr((unsigned char*)"FAILED setting range\r\n", CLS1_GetStdio()->stdErr);
+    for(;;) {} /* error? */
+  }
+  res = MMA1_GetScaleRangeG(&gScale); /* read back the value to check it */
+  if (res!=ERR_OK || gScale!=ACCEL_G_MODE) {
+    CLS1_SendStr((unsigned char*)"FAILED reading range\r\n", CLS1_GetStdio()->stdErr);
+   for(;;) {} /* error? */
+  }
+  CLS1_SendStr((unsigned char*)"Enable device.\r\n", CLS1_GetStdio()->stdOut);
+  res = MMA1_Enable(); /* re-enable device again */
+  if (res!=ERR_OK) {
+   CLS1_SendStr((unsigned char*)"FAILED enabling device\r\n", CLS1_GetStdio()->stdErr);
+   for(;;) {} /* error? */
+  }
+  CLS1_SendStr((unsigned char*)"X axis calibration (1g for X): place the board with the USB connector pointing to the sky and press a key...\r\n", CLS1_GetStdio()->stdOut);
+  do {
+    WAIT1_Waitms(50);
+  } while(!CLS1_KeyPressed());
+  do {
+    WAIT1_Waitms(50);
+    CLS1_ReadChar(&ch); /* empty input buffer */
+  } while(ch!='\0');
+  MMA1_CalibrateX1g();
+
+  CLS1_SendStr((unsigned char*)"Y axis calibration (1g for Y): place the board with the right arduino rows down and press a key...\r\n", CLS1_GetStdio()->stdOut);
+  do {
+    WAIT1_Waitms(50);
+  } while(!CLS1_KeyPressed());
+  do {
+    WAIT1_Waitms(50);
+    CLS1_ReadChar(&ch); /* empty input buffer */
+  } while(ch!='\0');
+  MMA1_CalibrateY1g();
+
+  CLS1_SendStr((unsigned char*)"Z axis calibration (1g for Z): place the board flat on a table and press a key...\r\n", CLS1_GetStdio()->stdOut);
+  do {
+    WAIT1_Waitms(50);
+  } while(!CLS1_KeyPressed());
+  do {
+    WAIT1_Waitms(50);
+    CLS1_ReadChar(&ch); /* empty input buffer */
+  } while(ch!='\0');
   MMA1_CalibrateZ1g();  /* for this, place the board flat */
+
+  CLS1_SendStr((unsigned char*)"done!\r\n", CLS1_GetStdio()->stdOut);
   while (res==ERR_OK) {
     xyz[0] = MMA1_GetX();
     xyz[1] = MMA1_GetY();
