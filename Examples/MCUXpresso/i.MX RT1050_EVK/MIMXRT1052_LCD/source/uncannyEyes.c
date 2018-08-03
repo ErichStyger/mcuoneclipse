@@ -20,6 +20,7 @@
 #define TRUE 1
 #define FALSE 0
 #include "GDisp1.h"  // Display interface
+#include <stdio.h>
 
 // If using a SINGLE EYE, you might want this next line enabled, which
 // uses a simpler "football-shaped" eye that's left/right symmetrical.
@@ -147,7 +148,7 @@ static int32_t random_between(int32_t min, int32_t max) {
   return rand()%(max-min+1)+min;
 }
 
-static int32_t random(int32_t min, int32_t max) {
+static int32_t random_constrained(int32_t min, int32_t max) {
   int32_t val;
 
   val = random_between(min, max);
@@ -183,6 +184,7 @@ struct {
     {.posOffsetX=90,  .posOffsetY=60, {NOBLINK, 0, 0}}  /* right eye */
 };
 #define NUM_EYES (sizeof(eye) / sizeof(eye[0]))
+
 
 // EYE-RENDERING FUNCTION --------------------------------------------------
 static void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
@@ -302,7 +304,7 @@ static void frame( // Process motion for a single frame of left or right eye
   if(eyeInMotion) {                       // Currently moving?
     if(dt >= eyeMoveDuration) {           // Time up?  Destination reached.
       eyeInMotion      = FALSE;           // Stop moving
-      eyeMoveDuration  = random(0, 3000000); // 0-3 sec stop
+      eyeMoveDuration  = random_constrained(0, 3000000); // 0-3 sec stop
       eyeMoveStartTime = t;               // Save initial time of stop
       eyeX = eyeOldX = eyeNewX;           // Save position
       eyeY = eyeOldY = eyeNewY;
@@ -318,12 +320,12 @@ static void frame( // Process motion for a single frame of left or right eye
       int16_t  dx, dy;
       uint32_t d;
       do {                                // Pick new dest in circle
-        eyeNewX = random(0, 1024);
-        eyeNewY = random(0, 1024);
+        eyeNewX = random_constrained(0, 1024);
+        eyeNewY = random_constrained(0, 1024);
         dx      = (eyeNewX * 2) - 1023;
         dy      = (eyeNewY * 2) - 1023;
       } while((d = (dx * dx + dy * dy)) > (1023 * 1023)); // Keep trying
-      eyeMoveDuration  = random(72000, 144000); // ~1/14 - ~1/7 sec
+      eyeMoveDuration  = random_constrained(72000, 144000); // ~1/14 - ~1/7 sec
       eyeMoveStartTime = t;               // Save initial time of move
       eyeInMotion      = TRUE;            // Start move on next frame
     }
@@ -335,7 +337,7 @@ static void frame( // Process motion for a single frame of left or right eye
   // and durations are random (within ranges).
   if((t - timeOfLastBlink) >= timeToNextBlink) { // Start new blink?
     timeOfLastBlink = t;
-    uint32_t blinkDuration = random(36000, 72000); // ~1/28 - ~1/14 sec
+    uint32_t blinkDuration = random_constrained(36000, 72000); // ~1/28 - ~1/14 sec
     // Set up durations for both eyes (if not already winking)
     for(uint8_t e=0; e<NUM_EYES; e++) {
       if(eye[e].blink.state == NOBLINK) {
@@ -344,7 +346,7 @@ static void frame( // Process motion for a single frame of left or right eye
         eye[e].blink.duration  = blinkDuration;
       }
     }
-    timeToNextBlink = blinkDuration * 3 + random(0, 4000000);
+    timeToNextBlink = blinkDuration * 3 + random_constrained(0, 4000000);
   }
 #endif
   if(eye[eyeIndex].blink.state) { // Eye currently blinking?
@@ -370,7 +372,7 @@ static void frame( // Process motion for a single frame of left or right eye
     if (Blink()) {
     //if (digitalRead(BLINK_PIN) == LOW) {
       // Manually-initiated blinks have random durations like auto-blink
-      uint32_t blinkDuration = random(36000, 72000);
+      uint32_t blinkDuration = random_constrained(36000, 72000);
       for(uint8_t e=0; e<NUM_EYES; e++) {
         if(eye[e].blink.state == NOBLINK) {
           eye[e].blink.state     = ENBLINK;
@@ -382,7 +384,7 @@ static void frame( // Process motion for a single frame of left or right eye
     //} else if(digitalRead(eye[eyeIndex].blink.pin) == LOW) { // Wink!
       eye[eyeIndex].blink.state     = ENBLINK;
       eye[eyeIndex].blink.startTime = t;
-      eye[eyeIndex].blink.duration  = random(45000, 90000);
+      eye[eyeIndex].blink.duration  = random_constrained(45000, 90000);
     }
   }
   // Process motion, blinking and iris scale into renderable values
@@ -477,7 +479,7 @@ void split( // Subdivides motion path into two sub-paths w/randimization
   if(range >= 8) {     // Limit subdvision count, because recursion
     range    /= 2;     // Split range & time in half for subdivision,
     duration /= 2;     // then pick random center point within range:
-    int16_t  midValue = (startValue + endValue - range) / 2 + random(0, range);
+    int16_t  midValue = (startValue + endValue - range) / 2 + random_constrained(0, range);
     uint32_t midTime  = startTime + duration;
     split(startValue, midValue, startTime, duration, range); // First half
     split(midValue  , endValue, midTime  , duration, range); // Second half
@@ -546,7 +548,7 @@ void EYES_Run(void) {
 #else  // Autonomous iris scaling -- invoke recursive function
   uint16_t newIris;
 
-  newIris = random(currEye->irisMin, currEye->irisMax);
+  newIris = random_constrained(currEye->irisMin, currEye->irisMax);
   split(oldIris[currEyeIndex], newIris, micros(), 10000000L, currEye->irisMax - currEye->irisMin);
   oldIris[currEyeIndex] = newIris;
   currEyeIndex++;

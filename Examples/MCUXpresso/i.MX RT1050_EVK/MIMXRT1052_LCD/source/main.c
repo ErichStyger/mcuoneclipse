@@ -45,6 +45,11 @@
 #include "GDisp1.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "lv.h"
+#include "lvgl.h"
+#include <stdio.h>
+#include "gui.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -174,17 +179,55 @@ static void APP_ELCDIF_Init(void) {
     ELCDIF_RgbModeInit(APP_ELCDIF, &config);
 }
 
+static lv_res_t my_click_action(struct _lv_obj_t * obj) {
+  return LV_RES_INV;
+}
+
+static void lvgl_test(void) {
+  /*Add a button*/
+  lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
+  lv_obj_set_pos(btn1, 2, 2);                                    /*Adjust the position*/
+  lv_obj_set_size(btn1, 96, 30);
+  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, my_click_action);   /*Assign a callback for clicking*/
+
+  /*Add text*/
+  lv_obj_t * label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
+  lv_label_set_text(label, "Click");
+}
+
+void lv_tutorial_hello_world(void) {
+    /*Create a Label on the currently active screen*/
+    lv_obj_t *label1 =  lv_label_create(lv_scr_act(), NULL);
+
+    /*Modify the Label's text*/
+    lv_label_set_text(label1, "Hello world!");
+
+    /* Align the Label to the center
+     * NULL means align on parent (which is the screen now)
+     * 0, 0 at the end means an x, y offset after alignment*/
+    lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
+}
+
 static void AppTask(void *p) {
     /* Clear the frame buffer. */
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
     ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
     ELCDIF_RgbModeStart(APP_ELCDIF);
+#if 1
+   // lv_tutorial_hello_world();
+    GUI_Run();
+    for(;;) {
+    	LV_Task(); /* call this every 1-20 ms */
+    }
+#else
+
     GDisp1_UpdateFull(); /* show black screen */
     EYES_ShowLogo();
 	for(;;) {
 		//vTaskDelay(pdMS_TO_TICKS(100));
     	EYES_Run();
 	}
+#endif
 }
 
 /*!
@@ -199,10 +242,11 @@ int main(void) {
     BOARD_InitDebugConsole();
     BOARD_InitLcd();
 
-    PRINTF("Uncanny Eyes example start...\r\n");
     EYES_Init();
+    LV_Init();
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
+    printf("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
                 AppTask,
                 /* Text name for the task, just to help debugging. */

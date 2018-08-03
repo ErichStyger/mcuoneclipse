@@ -7,7 +7,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
-
+#include "lvgl.h"
 /*
 ** ===================================================================
 **     Event       :  McuRTOS_vApplicationStackOverflowHook (module Events)
@@ -77,6 +77,7 @@ void McuRTOS_vApplicationTickHook(void)
   /* Called for every RTOS tick. */
 	extern uint32_t msCntr;
 	msCntr++;
+	lv_tick_inc(1);
 }
 
 /*
