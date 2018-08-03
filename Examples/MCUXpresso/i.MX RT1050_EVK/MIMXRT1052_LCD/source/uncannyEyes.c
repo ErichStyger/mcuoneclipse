@@ -13,7 +13,8 @@
 // Inspired by David Boccabella's (Marcwolf) hybrid servo/OLED eye concept.
 // Ported by Erich Styger (https://mcuoneclipse.com/) to Processor Expert and Kinetis
 //--------------------------------------------------------------------------
-
+#include "Platform.h"
+#if PL_CONFIG_EYE_DEMO
 #include <stdlib.h> /* for rand() */
 #include <stdint.h>
 #include <stdbool.h>
@@ -567,3 +568,4 @@ void EYES_Init(void) {
   currEyeIndex = 0;
   srand(0x459457);
 }
+#endif /* PL_CONFIG_EYE_DEMO */

@@ -85,9 +85,12 @@
 									<listOptionValue builtIn="false" value="__USE_CMSIS"/>
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="__NEWLIB__"/>
+									<listOptionValue builtIn="false" value="FSL_RTOS_BM"/>
+									<listOptionValue builtIn="false" value="SDK_OS_BAREMETAL"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.912503622" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.include.paths.1917609433" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../board"/>
 									<listOptionValue builtIn="false" value="../freertos/include"/>
 									<listOptionValue builtIn="false" value="../freertos/portable"/>
@@ -96,15 +99,15 @@
 									<listOptionValue builtIn="false" value="../McuOnEclipse/src"/>
 									<listOptionValue builtIn="false" value="../source"/>
 									<listOptionValue builtIn="false" value="../"/>
-									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../startup"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../xip"/>
 									<listOptionValue builtIn="false" value="../board/src"/>
 									<listOptionValue builtIn="false" value="../source/lv"/>
+									<listOptionValue builtIn="false" value="../touchpanel"/>
 								</option>
-								<option id="gnu.c.compiler.option.include.files.1036312523" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false"/>
+								<option id="gnu.c.compiler.option.include.files.1036312523" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.120467006" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.optimization.flags.1106529107" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.816367576" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.default" valueType="enumerated"/>
@@ -139,15 +142,24 @@
 								<option id="com.crt.advproject.gas.arch.1737594337" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm7" valueType="enumerated"/>
 								<option id="gnu.both.asm.option.flags.crt.1435777378" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__NEWLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.1048128855" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../board"/>
+									<listOptionValue builtIn="false" value="../freertos/include"/>
+									<listOptionValue builtIn="false" value="../freertos/portable"/>
+									<listOptionValue builtIn="false" value="../FreeRTOS/portable/GCC/ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="../McuOnEclipse/config"/>
+									<listOptionValue builtIn="false" value="../McuOnEclipse/src"/>
 									<listOptionValue builtIn="false" value="../source"/>
 									<listOptionValue builtIn="false" value="../"/>
-									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../CMSIS"/>
 									<listOptionValue builtIn="false" value="../startup"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../xip"/>
 									<listOptionValue builtIn="false" value="../board/src"/>
+									<listOptionValue builtIn="false" value="../source/lv"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.2.1_795_pex/ide/tools/lib/gcc/arm-none-eabi/7.2.1/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.2.1_795_pex/ide/tools/lib/gcc/arm-none-eabi/7.2.1/include-fixed"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.2.1_795_pex/ide/tools/arm-none-eabi/include"/>
 								</option>
 								<option id="gnu.both.asm.option.warnings.nowarn.413724214" name="Suppress warnings (-W)" superClass="gnu.both.asm.option.warnings.nowarn" useByScannerDiscovery="false"/>
 								<option id="gnu.both.asm.option.version.1186165796" name="Announce version (-v)" superClass="gnu.both.asm.option.version" useByScannerDiscovery="false"/>
@@ -249,7 +261,7 @@
 								<option id="com.crt.advproject.link.gcc.nanofloat.619688380" name="Enable printf float " superClass="com.crt.advproject.link.gcc.nanofloat" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.nanofloat.scanf.1651845730" name="Enable scanf float " superClass="com.crt.advproject.link.gcc.nanofloat.scanf" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.toram.786864749" name="Link application to RAM" superClass="com.crt.advproject.link.toram" useByScannerDiscovery="false"/>
-								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.281077622" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" value="Default" valueType="enumerated"/>
+								<option defaultValue="com.crt.advproject.heapAndStack.mcuXpressoStyle" id="com.crt.advproject.link.memory.heapAndStack.style.281077622" name="Heap and Stack placement" superClass="com.crt.advproject.link.memory.heapAndStack.style" useByScannerDiscovery="false" value="com.crt.advproject.heapAndStack.mcuXpressoStyle" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.stackOffset.1032252295" name="Stack offset" superClass="com.crt.advproject.link.stackOffset" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.multicore.slave.1591886396" name="Multicore configuration" superClass="com.crt.advproject.link.gcc.multicore.slave" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.multicore.master.978839627" name="Multicore master" superClass="com.crt.advproject.link.gcc.multicore.master" useByScannerDiscovery="false"/>
@@ -268,10 +280,11 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipse"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="linker"/>
 						<entry excluding="Uncanny_Eyes" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="touchpanel"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="xip"/>
 					</sourceEntries>
@@ -437,5 +450,6 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_MIMXRT1051xxxxx</sdkName>
 		<sdkVersion>2.3.0</sdkVersion>
+		<sdkComponents>nullmiddleware.baremetal.MIMXRT1052;platform.drivers.lpi2c.MIMXRT1052;platform.drivers.common.MIMXRT1052;</sdkComponents>
 	</storageModule>
 </cproject>

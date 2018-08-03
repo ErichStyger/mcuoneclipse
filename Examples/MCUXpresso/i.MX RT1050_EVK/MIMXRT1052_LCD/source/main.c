@@ -31,7 +31,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+#include "Platform.h"
 #include "fsl_common.h"
 #include "fsl_elcdif.h"
 #include "fsl_debug_console.h"
@@ -41,7 +41,10 @@
 #include "fsl_gpio.h"
 #include "clock_config.h"
 
-#include "uncannyEyes.h"
+#if PL_CONFIG_EYE_DEMO
+  #include "uncannyEyes.h"
+#endif
+
 #include "GDisp1.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -49,6 +52,7 @@
 #include "lvgl.h"
 #include <stdio.h>
 #include "gui.h"
+#include "touch.h"
 
 /*******************************************************************************
  * Definitions
@@ -179,35 +183,6 @@ static void APP_ELCDIF_Init(void) {
     ELCDIF_RgbModeInit(APP_ELCDIF, &config);
 }
 
-static lv_res_t my_click_action(struct _lv_obj_t * obj) {
-  return LV_RES_INV;
-}
-
-static void lvgl_test(void) {
-  /*Add a button*/
-  lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
-  lv_obj_set_pos(btn1, 2, 2);                                    /*Adjust the position*/
-  lv_obj_set_size(btn1, 96, 30);
-  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, my_click_action);   /*Assign a callback for clicking*/
-
-  /*Add text*/
-  lv_obj_t * label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
-  lv_label_set_text(label, "Click");
-}
-
-void lv_tutorial_hello_world(void) {
-    /*Create a Label on the currently active screen*/
-    lv_obj_t *label1 =  lv_label_create(lv_scr_act(), NULL);
-
-    /*Modify the Label's text*/
-    lv_label_set_text(label1, "Hello world!");
-
-    /* Align the Label to the center
-     * NULL means align on parent (which is the screen now)
-     * 0, 0 at the end means an x, y offset after alignment*/
-    lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
-}
-
 static void AppTask(void *p) {
     /* Clear the frame buffer. */
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
@@ -217,7 +192,9 @@ static void AppTask(void *p) {
    // lv_tutorial_hello_world();
     GUI_Run();
     for(;;) {
+    	TOUCH_Poll();
     	LV_Task(); /* call this every 1-20 ms */
+		vTaskDelay(pdMS_TO_TICKS(10));
     }
 #else
 
@@ -236,13 +213,17 @@ static void AppTask(void *p) {
 int main(void) {
     BOARD_ConfigMPU();
     BOARD_InitPins();
+    BOARD_InitI2C1Pins();
     BOARD_InitSemcPins();
     BOARD_BootClockRUN();
     BOARD_InitLcdifPixelClock();
     BOARD_InitDebugConsole();
     BOARD_InitLcd();
+    TOUCH_Init();
 
+#if PL_CONFIG_EYE_DEMO
     EYES_Init();
+#endif
     LV_Init();
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
