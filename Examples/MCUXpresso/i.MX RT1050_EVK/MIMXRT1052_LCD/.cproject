@@ -266,8 +266,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.330127579.2007106800" name="/" resourcePath="FreeRTOS">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1972428956" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1012397022" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1489885001"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1052808484" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1349477464"/>
+							<tool id="com.crt.advproject.gas.exe.debug.983162830" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1983874513"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1783433697" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1356206406"/>
+							<tool id="com.crt.advproject.link.exe.debug.1489672789" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.2083881730"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipse"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
