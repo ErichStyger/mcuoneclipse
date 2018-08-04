@@ -48,3 +48,6 @@ Set SDK in McuLibConfig:
   and use the FreeRTOSHooks.c instead
   
   
+  Note: for the LCD the following define has to be present in the compiler settings:
+  APP_LCDIF_DATA_BUS=kELCDIF_DataBus16Bit
+  
