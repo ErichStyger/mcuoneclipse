@@ -134,7 +134,7 @@
 							<tool id="com.crt.advproject.gas.exe.debug.1983874513" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug">
 								<option id="com.crt.advproject.gas.thumb.1074127487" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.1083458212" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm7" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.1281765982" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false"/>
+								<option id="gnu.both.asm.option.flags.crt.1281765982" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__REDLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.1021416311" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../board"/>
@@ -264,15 +264,6 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.330127579.2007106800" name="/" resourcePath="FreeRTOS">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1972428956" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1012397022" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1489885001"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1052808484" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1349477464"/>
-							<tool id="com.crt.advproject.gas.exe.debug.983162830" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1983874513"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1783433697" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1356206406"/>
-							<tool id="com.crt.advproject.link.exe.debug.1489672789" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.2083881730"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -444,4 +435,5 @@
 		<sdkName>SDK_2.x_EVKB-IMXRT1050</sdkName>
 		<sdkVersion>2.4.0</sdkVersion>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
 </cproject>
