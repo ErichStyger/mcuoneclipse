@@ -8,7 +8,7 @@ https://mcuoneclipse.com/2018/07/21/adding-a-rocktech-capacitive-touch-lcd-to-th
 
 GUI:
 https://littlevgl.com/
-
+https://github.com/littlevgl
 
 FreeRTOS notes:
 - delete old freeRTOS

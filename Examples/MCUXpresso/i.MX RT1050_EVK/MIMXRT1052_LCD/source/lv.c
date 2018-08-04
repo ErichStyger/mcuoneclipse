@@ -8,6 +8,7 @@
 #include "lv.h"
 #include "lvgl.h"
 #include "GDisp1.h"
+#include "touch.h"
 
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
@@ -100,11 +101,18 @@ static void ex_mem_fill(lv_color_t * dest, uint32_t length, lv_color_t color)
  * Return false if no more data read; true for ready again */
 static bool ex_tp_read(lv_indev_data_t * data)
 {
-    /* Read your touchpad */
-    /* data->state = LV_INDEV_STATE_REL or LV_INDEV_STATE_PR */
-    /* data->point.x = tp_x; */
-    /* data->point.y = tp_y; */
+    /* Read the touchpad */
+	int x=0, y=0, res;
+	bool pressed;
 
+	res = TOUCH_Poll(&pressed, &x, &y);
+	if (res==1 && pressed) {
+		data->state = LV_INDEV_STATE_PR;
+	} else {
+		data->state = LV_INDEV_STATE_REL;
+	}
+	data->point.x = x;
+	data->point.y = y;
     return false;   /*false: no more data to read because we are no buffering*/
 }
 
@@ -141,7 +149,7 @@ void LV_Init(void) {
   /*Finally register the driver*/
   lv_disp_drv_register(&disp_drv);
 
-#if 0
+#if 1
   /*************************
    * Input device interface
    *************************/

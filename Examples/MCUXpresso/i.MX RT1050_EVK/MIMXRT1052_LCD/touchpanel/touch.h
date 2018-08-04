@@ -8,7 +8,9 @@
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
-int TOUCH_Poll(void);
+#include <stdbool.h>
+
+int TOUCH_Poll(bool *pressed, int *x, int *y);
 void TOUCH_Deinit(void);
 void TOUCH_Init(void);
 

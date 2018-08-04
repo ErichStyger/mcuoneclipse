@@ -52,23 +52,16 @@ void TOUCH_Deinit(void) {
     LPI2C_MasterDeinit(BOARD_TOUCH_I2C);
 }
 
-int TOUCH_Poll(void) {
+int TOUCH_Poll(bool *pressed, int *x, int *y) {
     touch_event_t touch_event;
-    int touch_x;
-    int touch_y;
-//    GUI_PID_STATE pid_state;
+    int touch_x, touch_y;
 
-    if (kStatus_Success != FT5406_RT_GetSingleTouch(&touchHandle, &touch_event, &touch_x, &touch_y))
-    {
+    if (kStatus_Success != FT5406_RT_GetSingleTouch(&touchHandle, &touch_event, &touch_x, &touch_y)) {
         return 0;
-    }
-    else if (touch_event != kTouch_Reserved)
-    {
- //       pid_state.x = touch_y;
- //       pid_state.y = touch_x;
- //       pid_state.Pressed = ((touch_event == kTouch_Down) || (touch_event == kTouch_Contact));
- //       pid_state.Layer = 0;
- //       GUI_TOUCH_StoreStateEx(&pid_state);
+    } else if (touch_event != kTouch_Reserved) {
+    	*pressed = (touch_event == kTouch_Down) || (touch_event == kTouch_Contact);
+    	*x = touch_y;
+    	*y = touch_x;
         return 1;
     }
     return 0;

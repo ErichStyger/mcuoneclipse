@@ -192,7 +192,6 @@ static void AppTask(void *p) {
    // lv_tutorial_hello_world();
     GUI_Run();
     for(;;) {
-    	TOUCH_Poll();
     	LV_Task(); /* call this every 1-20 ms */
 		vTaskDelay(pdMS_TO_TICKS(10));
     }
