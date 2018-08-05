@@ -17,18 +17,11 @@ static uint32_t frameBufferIndex = 0;
 
 void GDisp1_PutPixel(unsigned int x, unsigned int y, uint16_t color) {
 	int tmp;
-  /* left eye */
 	/* swap to rotate */
 	tmp = y;
 	y = x;
 	x = tmp;
-//	x += 50; /* x is is from top to ethernet connecter */
 	s_frameBuffer[frameBufferIndex][x][y] = color;
-#if 0
-    /* right eye */
-	y += 200; /* y is from left to right (ethernet to power plug */
-	s_frameBuffer[frameBufferIndex][x][y] = color;
-#endif
 }
 
 void GDisp1_UpdateFull(void) {

@@ -179,7 +179,6 @@ static void APP_ELCDIF_Init(void) {
         .pixelFormat = kELCDIF_PixelFormatRGB565, //kELCDIF_PixelFormatXRGB8888,
         .dataBus = APP_LCDIF_DATA_BUS,
     };
-
     ELCDIF_RgbModeInit(APP_ELCDIF, &config);
 }
 
@@ -188,20 +187,19 @@ static void AppTask(void *p) {
     memset(s_frameBuffer, 0, sizeof(s_frameBuffer));
     ELCDIF_EnableInterrupts(APP_ELCDIF, kELCDIF_CurFrameDoneInterruptEnable);
     ELCDIF_RgbModeStart(APP_ELCDIF);
-#if 1
-   // lv_tutorial_hello_world();
-    GUI_Run();
-    for(;;) {
-    	LV_Task(); /* call this every 1-20 ms */
-		vTaskDelay(pdMS_TO_TICKS(10));
-    }
-#else
-
+#if PL_CONFIG_EYE_DEMO
+    EYES_Init();
     GDisp1_UpdateFull(); /* show black screen */
     EYES_ShowLogo();
 	for(;;) {
 		//vTaskDelay(pdMS_TO_TICKS(100));
     	EYES_Run();
+	}
+#else
+	vTaskDelay(pdMS_TO_TICKS(100));
+	GUI_Init();
+    for(;;) {
+		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 #endif
 }
@@ -219,14 +217,9 @@ int main(void) {
     BOARD_InitDebugConsole();
     BOARD_InitLcd();
     TOUCH_Init();
-
-#if PL_CONFIG_EYE_DEMO
-    EYES_Init();
-#endif
-    LV_Init();
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
-    printf("LCD example start...\r\n");
+//    PRINTF("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
                 AppTask,
                 /* Text name for the task, just to help debugging. */
@@ -245,10 +238,5 @@ int main(void) {
                 this simple demo, so set to NULL. */
                 NULL);
     vTaskStartScheduler();
-#if 0
-    for(;;) {
-    	EYES_Run();
-    }
-#endif
-    for(;;) {}
+    for(;;) {} /* should never get here */
 }

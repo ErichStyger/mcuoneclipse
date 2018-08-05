@@ -27,7 +27,6 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
             color_p++;
         }
     }
-
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
@@ -98,8 +97,7 @@ static void ex_mem_fill(lv_color_t * dest, uint32_t length, lv_color_t color)
 
 /* Read the touchpad and store it in 'data'
  * Return false if no more data read; true for ready again */
-static bool ex_tp_read(lv_indev_data_t * data)
-{
+static bool ex_tp_read(lv_indev_data_t * data) {
     /* Read the touchpad */
 	int x=0, y=0, res;
 	bool pressed;
@@ -115,13 +113,6 @@ static bool ex_tp_read(lv_indev_data_t * data)
     return false;   /*false: no more data to read because we are no buffering*/
 }
 
-void my_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
-    /*TODO Copy 'color_p' to the specified area*/
-
-    /*Call 'lv_fluh_ready()' when ready*/
-    lv_flush_ready();
-}
-
 void LV_Task(void) {
   /* Periodically call this function.
    * The timing is not critical but should be between 1..10 ms */
@@ -135,7 +126,6 @@ void LV_Init(void) {
 
   /*Set up the functions to access to your display*/
   disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
-
   disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
   disp_drv.disp_map = ex_disp_map;                /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
 
@@ -148,7 +138,6 @@ void LV_Init(void) {
   /*Finally register the driver*/
   lv_disp_drv_register(&disp_drv);
 
-#if 1
   /*************************
    * Input device interface
    *************************/
@@ -159,6 +148,5 @@ void LV_Init(void) {
   indev_drv.type = LV_INDEV_TYPE_POINTER;         /*The touchpad is pointer type device*/
   indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
   lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
-#endif
 }
 

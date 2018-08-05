@@ -7,13 +7,15 @@
 #include "gui.h"
 #include "lv.h"
 #include "lvgl.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /**
  * Called when a button is released
  * @param btn pointer to the released button
  * @return LV_RES_OK because the object is not deleted in this function
  */
-static  lv_res_t btn_rel_action(lv_obj_t * btn) {
+static lv_res_t btn_rel_action(lv_obj_t * btn) {
     /*Increase the button width*/
 #if 0
     lv_coord_t width = lv_obj_get_width(btn);
@@ -27,7 +29,7 @@ static  lv_res_t btn_rel_action(lv_obj_t * btn) {
  * @param ddlist pointer to the drop down list
  * @return LV_RES_OK because the object is not deleted in this function
  */
-static  lv_res_t ddlist_action(lv_obj_t * ddlist) {
+static lv_res_t ddlist_action(lv_obj_t * ddlist) {
     uint16_t opt = lv_ddlist_get_selected(ddlist);      /*Get the id of selected option*/
 
     lv_obj_t * slider = lv_obj_get_free_ptr(ddlist);      /*Get the saved slider*/
@@ -145,8 +147,67 @@ static void lv_tutorial_hello_world(void) {
     lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
-void GUI_Run(void) {
-	lv_tutorial_objects();
+typedef enum {
+	GUI_ID_ROOT_MENU,
+	GUI_ID_TEST,
+} GUI_ID_e;
+
+static GUI_ID_e currGui = GUI_ID_ROOT_MENU;
+
+static lv_obj_t *mainMenuScr = NULL; /* main menu screen */
+
+static void CreateMainMenuScreen(void) {
+	mainMenuScr = lv_obj_create(NULL, NULL);
+	lv_scr_load(mainMenuScr);       						    /*Load the screen*/
+
+	/*Create 2 buttons*/
+	lv_obj_t * btn1 = lv_btn_create(mainMenuScr, NULL);         /*Create a button on the screen*/
+	lv_btn_set_fit(btn1, true, true);                   /*Enable to automatically set the size according to the content*/
+	lv_obj_set_pos(btn1, 20, 10);              		    /*Set the position of the button*/
+
+	lv_obj_t *btn2 = lv_btn_create(mainMenuScr, btn1);         /*Copy the first button*/
+	lv_obj_set_pos(btn2, 20, 100);                 	    /*Set the position of the button*/
+
+	/*Add labels to the buttons*/
+	lv_obj_t *label1 = lv_label_create(btn1, NULL);	/*Create a label on the first button*/
+	lv_label_set_text(label1, "Button 1");          	/*Set the text of the label*/
+
+	lv_obj_t *label2 = lv_label_create(btn2, NULL);  	/*Create a label on the second button*/
+	lv_label_set_text(label2, "Button 2");            	/*Set the text of the label*/
+
+	///*Delete the second label*/
+	//lv_obj_del(label2);
+}
+
+static void GuiTask(void *p) {
+	//lv_tutorial_objects();
 	//lv_tutorial_hello_world();
 	//lvgl_test();
+	currGui = GUI_ID_ROOT_MENU;
+	CreateMainMenuScreen();
+	for(;;) {
+		LV_Task(); /* call this every 1-20 ms */
+		vTaskDelay(pdMS_TO_TICKS(10));
+	}
+}
+
+void GUI_Init(void) {
+	LV_Init(); /* initialize GUI library */
+	xTaskCreate(/* The function that implements the task. */
+                GuiTask,
+                /* Text name for the task, just to help debugging. */
+                "gui",
+                /* The size (in words) of the stack that should be created
+                for the task. */
+                configMINIMAL_STACK_SIZE + 800,
+                /* A parameter that can be passed into the task.  Not used
+                in this simple demo. */
+                NULL,
+                /* The priority to assign to the task.  tskIDLE_PRIORITY
+                (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1
+                is the highest priority. */
+                1,
+                /* Used to obtain a handle to the created task.  Not used in
+                this simple demo, so set to NULL. */
+                NULL);
 }
