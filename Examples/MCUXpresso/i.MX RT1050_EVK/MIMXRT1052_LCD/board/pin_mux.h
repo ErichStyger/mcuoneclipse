@@ -215,6 +215,14 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BACKLIGHT_CTL_LABEL          "USB_HOST_PWR/BACKLIGHT_CTL"   /*!< Label */
 #define BOARD_INITPINS_BACKLIGHT_CTL_NAME                        "BACKLIGHT_CTL"   /*!< Identifier name */
 
+/* GPIO_AD_B0_09 (coord F14), JTAG_TDI/J21[5]/ENET_RST/J22[5] */
+#define BOARD_INITPINS_LED_GPIO                                            GPIO1   /*!< GPIO device name: GPIO1 */
+#define BOARD_INITPINS_LED_PORT                                            GPIO1   /*!< PORT device name: GPIO1 */
+#define BOARD_INITPINS_LED_GPIO_PIN                                           9U   /*!< GPIO1 pin index: 9 */
+#define BOARD_INITPINS_LED_PIN_NAME                                GPIO_AD_B0_09   /*!< Pin name */
+#define BOARD_INITPINS_LED_LABEL               "JTAG_TDI/J21[5]/ENET_RST/J22[5]"   /*!< Label */
+#define BOARD_INITPINS_LED_NAME                                            "LED"   /*!< Identifier name */
+
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

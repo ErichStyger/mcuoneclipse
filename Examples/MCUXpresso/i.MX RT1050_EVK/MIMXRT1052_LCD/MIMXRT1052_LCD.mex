@@ -19,6 +19,9 @@
          <pins_profile>
             <processor_version>4.0.0</processor_version>
             <power_domains/>
+            <pin_labels>
+               <pin_label pin_num="F14" pin_signal="GPIO_AD_B0_09" label="JTAG_TDI/J21[5]/ENET_RST/J22[5]" identifier="LED"/>
+            </pin_labels>
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
@@ -351,6 +354,12 @@
                         <pin_feature name="speed" value="MHZ_100"/>
                         <pin_feature name="drive_strength" value="R0_6"/>
                         <pin_feature name="slew_rate" value="Slow"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09">
+                     <pin_features>
+                        <pin_feature name="pull_up_down_config" value="Pull_Down_100K_Ohm"/>
+                        <pin_feature name="pull_keeper_select" value="Keeper"/>
                      </pin_features>
                   </pin>
                </pins>

@@ -201,13 +201,22 @@ static void AppTask(void *p) {
 	vTaskDelay(pdMS_TO_TICKS(100));
 	GUI_Init();
     for(;;) {
-		vTaskDelay(pdMS_TO_TICKS(10));
+    	GPIO_PortToggle(BOARD_INITPINS_LED_GPIO, 1<<BOARD_INITPINS_LED_GPIO_PIN); /* toggle LED */
+    	vTaskDelay(pdMS_TO_TICKS(500));
 	}
 #else
     for(;;) {
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 #endif
+}
+
+static void BOARD_Init_LED(void) {
+    gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 1, kGPIO_NoIntmode};
+
+    GPIO_PinInit(BOARD_INITPINS_LED_GPIO, BOARD_INITPINS_LED_GPIO_PIN, &led_config);
+    //GPIO_PinWrite(BOARD_INITPINS_LED_GPIO, BOARD_INITPINS_LED_GPIO_PIN, 0U);
+    //GPIO_PinWrite(BOARD_INITPINS_LED_GPIO, BOARD_INITPINS_LED_GPIO_PIN, 1U);
 }
 
 /*!
@@ -227,6 +236,7 @@ int main(void) {
 #endif
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
+    BOARD_Init_LED();
 
 //    PRINTF("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
