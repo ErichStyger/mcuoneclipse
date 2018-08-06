@@ -9,6 +9,7 @@
 #include "lvgl.h" /* interface to GUI library */
 #include "sysmon/sysmon.h" /* system monitor */
 #include "demo/demo.h" /* LittlevGL demo */
+#include "gui_hw.h"
 
 static lv_obj_t *win = NULL;
 
@@ -21,7 +22,7 @@ static lv_res_t Btn_SysMon_click_action(struct _lv_obj_t * obj) {
 	/* delete main menu window and all its objects */
 	lv_obj_del(win);
 	win = NULL;
-	/* create system monitor */
+	/* create system monitor gui */
 	sysmon_create();
 	return LV_RES_INV;
 }
@@ -31,15 +32,28 @@ static lv_res_t Btn_SysMon_click_action(struct _lv_obj_t * obj) {
  * @param btn pointer to the close button
  * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
-static lv_res_t Btn_Demo_click_action(struct _lv_obj_t * obj) {
+static lv_res_t Btn_Demo_click_action(struct _lv_obj_t *obj) {
 	/* delete main menu window and all its objects */
 	lv_obj_del(win);
 	win = NULL;
-	/* create system monitor */
+	/* create demo gui */
 	demo_create();
 	return LV_RES_INV;
 }
 
+/**
+ * Called when the Hardware button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_Hardware_click_action(struct _lv_obj_t *obj) {
+	/* delete main menu window and all its objects */
+	lv_obj_del(win);
+	win = NULL;
+	/* create hardware gui */
+	gui_hw_create();
+	return LV_RES_INV;
+}
 
 void GUI_MainMenu_Create(void) {
 	lv_obj_t *label;
@@ -64,4 +78,10 @@ void GUI_MainMenu_Create(void) {
 	lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, Btn_Demo_click_action);   /*Assign a callback for clicking*/
 	label = lv_label_create(btn2, NULL);                  /*Put on 'btn1'*/
 	lv_label_set_text(label, "Demo");
+
+    /* Create Hardware menu buttons */
+	lv_obj_t *btn3 = lv_btn_create(win, NULL);             /*Add to the active window */
+	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, Btn_Hardware_click_action);   /*Assign a callback for clicking*/
+	label = lv_label_create(btn3, NULL);                  /*Put on 'btn1'*/
+	lv_label_set_text(label, "Hardware");
 }
