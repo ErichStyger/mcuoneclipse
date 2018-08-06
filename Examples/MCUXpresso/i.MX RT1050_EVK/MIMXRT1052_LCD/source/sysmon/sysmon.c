@@ -20,64 +20,29 @@
 #define REFR_TIME           500
 
 /**********************
- *  STATIC PROTOTYPES
- **********************/
-static void sysmon_task(void * param);
-static lv_res_t win_close_action(lv_obj_t * btn);
-
-/**********************
  *  STATIC VARIABLES
  **********************/
-static lv_obj_t * win;
-static lv_obj_t * chart;
+static lv_obj_t *win;
+static lv_obj_t *chart;
 static lv_chart_series_t * cpu_ser;
 static lv_chart_series_t * mem_ser;
 static lv_obj_t * info_label;
 static lv_task_t * refr_task;
 
 /**
- * Initialize the system monitor
+ * Called when the window's close button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
-void sysmon_create(void) {
-    refr_task = lv_task_create(sysmon_task, REFR_TIME, LV_TASK_PRIO_LOW, NULL);
+static lv_res_t win_close_action(lv_obj_t * btn) {
+    lv_obj_del(win);
+    win = NULL;
 
-    win = lv_win_create(lv_scr_act(), NULL);
-    lv_win_set_title(win, "System Monitor");
-    lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
-
-    /*Make the window content responsive*/
-    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
-
-    /*Create a chart with two data lines*/
-    chart = lv_chart_create(win, NULL);
-    lv_obj_set_size(chart, LV_HOR_RES / 2, LV_VER_RES / 2);
-    lv_obj_set_pos(chart, LV_DPI / 10, LV_DPI / 10);
-    lv_chart_set_point_count(chart, CHART_POINT_NUM);
-    lv_chart_set_range(chart, 0, 100);
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
-    lv_chart_set_series_width(chart, 4);
-    cpu_ser =  lv_chart_add_series(chart, LV_COLOR_RED);
-    mem_ser =  lv_chart_add_series(chart, LV_COLOR_BLUE);
-
-    /*Set the data series to zero*/
-    uint16_t i;
-    for(i = 0; i < CHART_POINT_NUM; i++) {
-        lv_chart_set_next(chart, cpu_ser, 0);
-        lv_chart_set_next(chart, mem_ser, 0);
-    }
-
-    /*Create a label for the details of Memory and CPU usage*/
-    info_label = lv_label_create(win, NULL);
-    lv_label_set_recolor(info_label, true);
-    lv_obj_align(info_label, chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI / 4, 0);
-
-    /*Refresh the chart and label manually at first*/
-    sysmon_task(NULL);
+    lv_task_del(refr_task);
+    refr_task = NULL;
+    GUI_MainMenu_Create();
+    return LV_RES_INV;
 }
-
-/**********************
- *   STATIC FUNCTIONS
- **********************/
 
 /**
  * Called periodically to monitor the CPU and memory usage.
@@ -144,17 +109,42 @@ static void sysmon_task(void * param) {
 }
 
 /**
- * Called when the window's close button is clicked
- * @param btn pointer to the close button
- * @return LV_ACTION_RES_INV because the window is deleted in the function
+ * Initialize the system monitor
  */
-static lv_res_t win_close_action(lv_obj_t * btn) {
-    lv_obj_del(win);
-    win = NULL;
+void sysmon_create(void) {
+    refr_task = lv_task_create(sysmon_task, REFR_TIME, LV_TASK_PRIO_LOW, NULL);
 
-    lv_task_del(refr_task);
-    refr_task = NULL;
-    GUI_MainMenu_Create();
-    return LV_RES_INV;
+    win = lv_win_create(lv_scr_act(), NULL);
+    lv_win_set_title(win, "System Monitor");
+    lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
+
+    /*Make the window content responsive*/
+    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
+
+    /*Create a chart with two data lines*/
+    chart = lv_chart_create(win, NULL);
+    lv_obj_set_size(chart, LV_HOR_RES / 2, LV_VER_RES / 2);
+    lv_obj_set_pos(chart, LV_DPI / 10, LV_DPI / 10);
+    lv_chart_set_point_count(chart, CHART_POINT_NUM);
+    lv_chart_set_range(chart, 0, 100);
+    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
+    lv_chart_set_series_width(chart, 4);
+    cpu_ser =  lv_chart_add_series(chart, LV_COLOR_RED);
+    mem_ser =  lv_chart_add_series(chart, LV_COLOR_BLUE);
+
+    /*Set the data series to zero*/
+    uint16_t i;
+    for(i = 0; i < CHART_POINT_NUM; i++) {
+        lv_chart_set_next(chart, cpu_ser, 0);
+        lv_chart_set_next(chart, mem_ser, 0);
+    }
+
+    /*Create a label for the details of Memory and CPU usage*/
+    info_label = lv_label_create(win, NULL);
+    lv_label_set_recolor(info_label, true);
+    lv_obj_align(info_label, chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI / 4, 0);
+
+    /*Refresh the chart and label manually at first*/
+    sysmon_task(NULL);
 }
 

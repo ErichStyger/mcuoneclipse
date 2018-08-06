@@ -7,15 +7,9 @@
  *      INCLUDES
  *********************/
 #include "demo.h"
-#if 1//USE_LV_DEMO
+#include "gui_mainmenu.h"
 
-/*********************
- *      DEFINES
- *********************/
-
-/**********************
- *      TYPEDEFS
- **********************/
+#define LV_DEMO_WALLPAPER  (1)
 
 /**********************
  *  STATIC PROTOTYPES
@@ -25,6 +19,7 @@ static lv_res_t keyboard_open_close(lv_obj_t * ta);
 static lv_res_t keyboard_hide_action(lv_obj_t * keyboard);
 static void list_create(lv_obj_t *parent);
 static void chart_create(lv_obj_t *parent);
+static void exit_create(lv_obj_t *parent);
 static lv_res_t slider_action(lv_obj_t *slider);
 static lv_res_t list_btn_action(lv_obj_t *slider);
 #if LV_DEMO_SLIDE_SHOW
@@ -34,6 +29,7 @@ static void tab_switcher(void * tv);
 /**********************
  *  STATIC VARIABLES
  **********************/
+static lv_obj_t *tv; /* main view, a tab view */
 static lv_obj_t *chart;
 static lv_obj_t *ta;
 static lv_obj_t *kb;
@@ -45,10 +41,6 @@ static lv_style_t style_kb_pr;
 #if LV_DEMO_WALLPAPER
 LV_IMG_DECLARE(img_bubble_pattern);
 #endif
-
-/**********************
- *      MACROS
- **********************/
 
 /**********************
  *   GLOBAL FUNCTIONS
@@ -86,7 +78,7 @@ void demo_create(void)
     style_tv_btn_pr.body.border.width = 0;
     style_tv_btn_pr.text.color = LV_COLOR_GRAY;
 
-    lv_obj_t *tv = lv_tabview_create(lv_scr_act(), NULL);
+    tv = lv_tabview_create(lv_scr_act(), NULL);
 
 #if LV_DEMO_WALLPAPER
     lv_obj_set_parent(wp, ((lv_tabview_ext_t *) tv->ext_attr)->content);
@@ -96,6 +88,7 @@ void demo_create(void)
     lv_obj_t *tab1 = lv_tabview_add_tab(tv, "Write");
     lv_obj_t *tab2 = lv_tabview_add_tab(tv, "List");
     lv_obj_t *tab3 = lv_tabview_add_tab(tv, "Chart");
+    lv_obj_t *tab4 = lv_tabview_add_tab(tv, "Exit");
 
 #if LV_DEMO_WALLPAPER == 0
     /*Blue bg instead of wallpaper*/
@@ -111,6 +104,7 @@ void demo_create(void)
     write_create(tab1);
     list_create(tab2);
     chart_create(tab3);
+    exit_create(tab4);
 
 #if LV_DEMO_SLIDE_SHOW
 	lv_task_create(tab_switcher, 3000, LV_TASK_PRIO_MID, tv);
@@ -336,6 +330,30 @@ static void chart_create(lv_obj_t *parent)
 }
 
 /**
+ * Called when the SysMon button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_Exit_click_action(struct _lv_obj_t *obj) {
+	/* delete main menu window and all its objects */
+	lv_obj_del(tv);
+	tv = NULL;
+	kb = NULL; /* this object is only initialized in keyboard_open_close if kb != NULL */
+	GUI_MainMenu_Create();
+	return LV_RES_INV;
+}
+
+
+static void exit_create(lv_obj_t *parent) {
+	lv_obj_t *label;
+
+	lv_obj_t *btn = lv_btn_create(parent, NULL);             /*Add to the active window */
+	lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, Btn_Exit_click_action);   /*Assign a callback for clicking*/
+	label = lv_label_create(btn, NULL);                  /*Put on 'btn'*/
+	lv_label_set_text(label, "Exit Demo");
+}
+
+/**
  * Called when a new value on the slider on the Chart tab is set
  * @param slider pointer to the slider
  * @return LV_RES_OK because the slider is not deleted in the function
@@ -376,5 +394,3 @@ static void tab_switcher(void * tv)
 }
 #endif
 
-
-#endif  /*USE_LV_DEMO*/

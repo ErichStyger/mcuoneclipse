@@ -358,9 +358,6 @@ void lv_tutorial_image(void)
 }
 
 
-
-
-
 static lv_res_t my_click_action(struct _lv_obj_t * obj) {
   return LV_RES_INV;
 }
@@ -390,38 +387,6 @@ static void lv_tutorial_hello_world(void) {
     lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
-typedef enum {
-	GUI_ID_ROOT_MENU,
-	GUI_ID_TEST,
-} GUI_ID_e;
-
-static GUI_ID_e currGui = GUI_ID_ROOT_MENU;
-
-static lv_obj_t *mainMenuScr = NULL; /* main menu screen */
-
-static void CreateMainMenuScreen(void) {
-	mainMenuScr = lv_obj_create(NULL, NULL);
-	lv_scr_load(mainMenuScr);       						    /*Load the screen*/
-
-	/*Create 2 buttons*/
-	lv_obj_t * btn1 = lv_btn_create(mainMenuScr, NULL);         /*Create a button on the screen*/
-	lv_btn_set_fit(btn1, true, true);                   /*Enable to automatically set the size according to the content*/
-	lv_obj_set_pos(btn1, 20, 10);              		    /*Set the position of the button*/
-
-	lv_obj_t *btn2 = lv_btn_create(mainMenuScr, btn1);         /*Copy the first button*/
-	lv_obj_set_pos(btn2, 20, 100);                 	    /*Set the position of the button*/
-
-	/*Add labels to the buttons*/
-	lv_obj_t *label1 = lv_label_create(btn1, NULL);	/*Create a label on the first button*/
-	lv_label_set_text(label1, "Button 1");          	/*Set the text of the label*/
-
-	lv_obj_t *label2 = lv_label_create(btn2, NULL);  	/*Create a label on the second button*/
-	lv_label_set_text(label2, "Button 2");            	/*Set the text of the label*/
-
-	///*Delete the second label*/
-	//lv_obj_del(label2);
-}
-
 static void GuiTask(void *p) {
 	//lv_tutorial_objects();
 	//lv_tutorial_hello_world();
@@ -430,11 +395,8 @@ static void GuiTask(void *p) {
 	//lv_tutorial_responsive();
 	//lv_tutorial_styles();
 	//lv_tutorial_image();
-	currGui = GUI_ID_ROOT_MENU;
-	//CreateMainMenuScreen();
-	//demo_create();
+
 	GUI_MainMenu_Create();
-	//sysmon_create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
 		vTaskDelay(pdMS_TO_TICKS(10));
