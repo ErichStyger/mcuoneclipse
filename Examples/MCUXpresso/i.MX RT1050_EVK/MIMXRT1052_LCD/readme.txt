@@ -40,7 +40,6 @@ Set SDK in McuLibConfig:
 
     #define configUSE_SHELL                         (0)
   
-  
   remove any existing hooks 
   vApplicationMallocFailedHook
   vApplicationStackOverflowHook

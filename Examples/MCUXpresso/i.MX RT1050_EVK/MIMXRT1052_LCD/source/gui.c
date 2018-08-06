@@ -10,6 +10,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "demo/demo.h"
+#include "sysmon/sysmon.h"
+
 /**
  * Called when a button is released
  * @param btn pointer to the released button
@@ -118,6 +121,246 @@ void lv_tutorial_objects(void) {
     lv_chart_set_next(chart, dl2, 505);
 }
 
+#if USE_LV_ANIMATION
+lv_style_t btn3_style;
+
+void lv_tutorial_animations(void)
+{
+    lv_obj_t *label;
+
+
+    /*Create a button the demonstrate built-in animations*/
+    lv_obj_t *btn1;
+    btn1 = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(btn1, 10 , 10 );     /*Set a position. It will be the animation's destination*/
+    lv_obj_set_size(btn1, 80 , 50 );
+
+    label = lv_label_create(btn1, NULL);
+    lv_label_set_text(label, "Float");
+
+    /* Float in the button using a built-in function
+     * Delay the animation with 2000 ms and float in 300 ms. NULL means no end callback*/
+    lv_obj_animate(btn1, LV_ANIM_FLOAT_TOP | LV_ANIM_IN, 300, 2000, NULL);
+
+    /*Create a button to demonstrate user defined animations*/
+    lv_obj_t *btn2;
+    btn2 = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(btn2, 10 , 80 );     /*Set a position. It will be the animation's destination*/
+    lv_obj_set_size(btn2, 80 , 50 );
+
+    label = lv_label_create(btn2, NULL);
+    lv_label_set_text(label, "Move");
+
+    /*Create an animation to move the button continuously left to right*/
+    lv_anim_t a;
+    a.var = btn2;
+    a.start = lv_obj_get_x(btn2);
+    a.end = a.start + (100 );
+    a.fp = (lv_anim_fp_t)lv_obj_set_x;
+    a.path = lv_anim_path_linear;
+    a.end_cb = NULL;
+    a.act_time = -1000;                         /*Negative number to set a delay*/
+    a.time = 400;                               /*Animate in 400 ms*/
+    a.playback = 1;                             /*Make the animation backward too when it's ready*/
+    a.playback_pause = 0;                       /*Wait before playback*/
+    a.repeat = 1;                               /*Repeat the animation*/
+    a.repeat_pause = 500;                       /*Wait before repeat*/
+    lv_anim_create(&a);
+
+    /*Create a button to demonstrate the style animations*/
+    lv_obj_t *btn3;
+    btn3 = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(btn3, 10 , 150 );     /*Set a position. It will be the animation's destination*/
+    lv_obj_set_size(btn3, 80 , 50 );
+
+    label = lv_label_create(btn3, NULL);
+    lv_label_set_text(label, "Style");
+
+    /*Create a unique style for the button*/
+    lv_style_copy(&btn3_style, lv_btn_get_style(btn3, LV_BTN_STYLE_REL));
+    lv_btn_set_style(btn3, LV_BTN_STATE_REL, &btn3_style);
+
+    /*Animate the new style*/
+    lv_style_anim_t sa;
+    sa.style_anim = &btn3_style;            /*This style will be animated*/
+    sa.style_start = &lv_style_btn_rel;     /*Style in the beginning (can be 'style_anim' as well)*/
+    sa.style_end = &lv_style_pretty;        /*Style at the and (can be 'style_anim' as well)*/
+    sa.act_time = -500;                     /*These parameters are the same as with the normal animation*/
+    sa.time = 1000;
+    sa.playback = 1;
+    sa.playback_pause = 500;
+    sa.repeat = 1;
+    sa.repeat_pause = 500;
+    sa.end_cb = NULL;
+    lv_style_anim_create(&sa);
+}
+#endif /* USE_LV_ANIMATION */
+
+void lv_tutorial_responsive(void)
+{
+    lv_obj_t *label;
+
+
+    /*LV_DPI*/
+    lv_obj_t *btn1;
+    btn1 = lv_btn_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(btn1, LV_DPI / 10, LV_DPI / 10);     /*Use LV_DPI to set the position*/
+    lv_obj_set_size(btn1, LV_DPI, LV_DPI / 2);          /*Use LVDOI to set the size*/
+
+    label = lv_label_create(btn1, NULL);
+    lv_label_set_text(label, "LV_DPI");
+
+    /*ALIGN*/
+    lv_obj_t *btn2;
+    btn2 = lv_btn_create(lv_scr_act(), btn1);
+    lv_obj_align(btn2, btn1, LV_ALIGN_OUT_RIGHT_MID, LV_DPI / 4, 0);
+
+    label = lv_label_create(btn2, NULL);
+    lv_label_set_text(label, "Align");
+
+    /*AUTO FIT*/
+    lv_obj_t *btn3;
+    btn3 = lv_btn_create(lv_scr_act(), btn1);
+    lv_btn_set_fit(btn3, true, true);
+
+    label = lv_label_create(btn3, NULL);
+    lv_label_set_text(label, "Fit");
+
+    lv_obj_align(btn3, btn1, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 4);   /*Align when already resized because of the label*/
+
+    /*LAYOUT*/
+    lv_obj_t *btn4;
+    btn4 = lv_btn_create(lv_scr_act(), btn1);
+    lv_btn_set_fit(btn4, true, true);           /*Enable fit too*/
+    lv_btn_set_layout(btn4, LV_LAYOUT_COL_R);   /*Right aligned column layout*/
+
+    label = lv_label_create(btn4, NULL);
+    lv_label_set_text(label, "First");
+
+    label = lv_label_create(btn4, NULL);
+    lv_label_set_text(label, "Second");
+
+    label = lv_label_create(btn4, NULL);
+    lv_label_set_text(label, "Third");
+
+    lv_obj_align(btn4, btn2, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 4);   /*Align when already resized because of the label*/
+
+}
+
+void lv_tutorial_styles(void)
+{
+
+    /****************************************
+     * BASE OBJECT + LABEL WITH DEFAULT STYLE
+     ****************************************/
+    /*Create a simple objects*/
+    lv_obj_t * obj1;
+    obj1 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_pos(obj1, 10, 10);
+
+    /*Add a label to the object*/
+    lv_obj_t * label;
+    label = lv_label_create(obj1, NULL);
+    lv_label_set_text(label, "Default");
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    /****************************************
+     * BASE OBJECT WITH 'PRETTY COLOR' STYLE
+     ****************************************/
+    /*Create a simple objects*/
+    lv_obj_t * obj2;
+    obj2 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_align(obj2, obj1, LV_ALIGN_OUT_RIGHT_MID, 20, 0);    /*Align next to the previous object*/
+    lv_obj_set_style(obj2, &lv_style_pretty);                   /*Set built in style*/
+
+    /* Add a label to the object.
+     * Labels by default inherit the parent's style */
+    label = lv_label_create(obj2, NULL);
+    lv_label_set_text(label, "Pretty\nstyle");
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    /*****************************
+     * BASE OBJECT WITH NEW STYLE
+     *****************************/
+    /* Create a new style */
+    static lv_style_t style_new;                         /*Styles can't be local variables*/
+    lv_style_copy(&style_new, &lv_style_pretty);         /*Copy a built-in style as a starting point*/
+    style_new.body.radius = LV_RADIUS_CIRCLE;            /*Fully round corners*/
+    style_new.body.main_color = LV_COLOR_WHITE;          /*White main color*/
+    style_new.body.grad_color = LV_COLOR_BLUE;           /*Blue gradient color*/
+    style_new.body.shadow.color = LV_COLOR_SILVER;       /*Light gray shadow color*/
+    style_new.body.shadow.width = 8;                     /*8 px shadow*/
+    style_new.body.border.width = 2;                     /*2 px border width*/
+    style_new.text.color = LV_COLOR_RED;                 /*Red text color */
+    style_new.text.letter_space = 10;                    /*10 px letter space*/
+
+    /*Create a base object and apply the new style*/
+    lv_obj_t * obj3;
+    obj3 = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_align(obj3, obj2, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
+    lv_obj_set_style(obj3, &style_new);
+
+    /* Add a label to the object.
+     * Labels by default inherit the parent's style */
+    label = lv_label_create(obj3, NULL);
+    lv_label_set_text(label, "New\nstyle");
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+
+
+    /************************
+     * CREATE A STYLED BAR
+     ***********************/
+    /* Create a bar background style */
+    static lv_style_t style_bar_bg;
+    lv_style_copy(&style_bar_bg, &lv_style_pretty);
+    style_bar_bg.body.radius = 3;
+    style_bar_bg.body.empty = 1;                            /*Empty (not filled)*/
+    style_bar_bg.body.border.color = LV_COLOR_GRAY;         /*Gray border color*/
+    style_bar_bg.body.border.width = 6;                     /*2 px border width*/
+    style_bar_bg.body.border.opa = LV_OPA_COVER;
+
+    /* Create a bar indicator style */
+    static lv_style_t style_bar_indic;
+    lv_style_copy(&style_bar_indic, &lv_style_pretty);
+    style_bar_indic.body.radius = 3;
+    style_bar_indic.body.main_color = LV_COLOR_GRAY;          /*White main color*/
+    style_bar_indic.body.grad_color = LV_COLOR_GRAY;           /*Blue gradient color*/
+    style_bar_indic.body.border.width = 0;                     /*2 px border width*/
+    style_bar_indic.body.padding.hor = 8;
+    style_bar_indic.body.padding.ver = 8;
+
+    /*Create a bar and apply the styles*/
+    lv_obj_t * bar = lv_bar_create(lv_scr_act(), NULL);
+    lv_bar_set_style(bar, LV_BAR_STYLE_BG, &style_bar_bg);
+    lv_bar_set_style(bar, LV_BAR_STYLE_INDIC, &style_bar_indic);
+    lv_bar_set_value(bar, 70);
+    lv_obj_set_size(bar, 200, 30);
+    lv_obj_align(bar, obj1, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);
+}
+
+/*Declare the "source code image" which is stored in the flash*/
+LV_IMG_DECLARE(red_flower);
+void lv_tutorial_image(void)
+{
+    /*************************
+     * IMAGE FROM SOURCE CODE
+     *************************/
+
+    lv_obj_t * img_src = lv_img_create(lv_scr_act(), NULL); /*Crate an image object*/
+    lv_img_set_src(img_src, &red_flower);  /*Set the created file as image (a red fl  ower)*/
+    lv_obj_set_pos(img_src, 10, 10);      /*Set the positions*/
+    lv_obj_set_drag(img_src, true);
+
+    lv_obj_t * img_symbol = lv_img_create(lv_scr_act(), NULL);
+    lv_img_set_src(img_symbol, SYMBOL_OK);
+    lv_obj_set_drag(img_symbol, true);
+    lv_obj_align(img_symbol, img_src, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);     /*Align next to the source image*/
+}
+
+
+
+
+
 static lv_res_t my_click_action(struct _lv_obj_t * obj) {
   return LV_RES_INV;
 }
@@ -183,8 +426,14 @@ static void GuiTask(void *p) {
 	//lv_tutorial_objects();
 	//lv_tutorial_hello_world();
 	//lvgl_test();
+	//lv_tutorial_animations();
+	//lv_tutorial_responsive();
+	//lv_tutorial_styles();
+	//lv_tutorial_image();
 	currGui = GUI_ID_ROOT_MENU;
-	CreateMainMenuScreen();
+	//CreateMainMenuScreen();
+	//demo_create();
+	sysmon_create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
 		vTaskDelay(pdMS_TO_TICKS(10));

@@ -41,18 +41,20 @@
 #include "fsl_gpio.h"
 #include "clock_config.h"
 
+#include "GDisp1.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
 #if PL_CONFIG_EYE_DEMO
   #include "uncannyEyes.h"
 #endif
 
-#include "GDisp1.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "lv.h"
-#include "lvgl.h"
-#include <stdio.h>
-#include "gui.h"
-#include "touch.h"
+#if PL_CONFIG_USE_GUI
+  #include "lv.h"
+  #include "lvgl.h"
+  #include "gui.h"
+  #include "touch.h"
+#endif
 
 /*******************************************************************************
  * Definitions
@@ -195,9 +197,13 @@ static void AppTask(void *p) {
 		//vTaskDelay(pdMS_TO_TICKS(100));
     	EYES_Run();
 	}
-#else
+#elif PL_CONFIG_USE_GUI
 	vTaskDelay(pdMS_TO_TICKS(100));
 	GUI_Init();
+    for(;;) {
+		vTaskDelay(pdMS_TO_TICKS(10));
+	}
+#else
     for(;;) {
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
@@ -216,9 +222,12 @@ int main(void) {
     BOARD_InitLcdifPixelClock();
     BOARD_InitDebugConsole();
     BOARD_InitLcd();
+#if PL_CONFIG_USE_GUI
     TOUCH_Init();
+#endif
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
+
 //    PRINTF("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
                 AppTask,
