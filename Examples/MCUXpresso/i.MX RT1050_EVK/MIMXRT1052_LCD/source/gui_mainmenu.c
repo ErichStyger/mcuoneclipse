@@ -31,12 +31,12 @@ void GUI_MainMenu_Create(void) {
     lv_win_set_title(win, "Main Menu");
 
     /*Make the window content responsive*/
-    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
+    lv_win_set_layout(win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
 
     /* Create SysMon menu buttons */
 	lv_obj_t *btn1 = lv_btn_create(win, NULL);             /*Add to the active window */
-	lv_obj_set_pos(btn1, 5, 5);                                    /*Adjust the position*/
-	lv_obj_set_size(btn1, 96, 30);
+	//lv_obj_set_pos(btn1, 5, 5);                                    /*Adjust the position*/
+	//lv_obj_set_size(btn1, 96, 30);
 	lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_SysMon_click_action);   /*Assign a callback for clicking*/
 	lv_obj_t *label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
 	lv_label_set_text(label, "SysMon");
