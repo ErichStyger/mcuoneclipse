@@ -10,36 +10,13 @@
 extern "C" {
 #endif
 
-/*********************
- *      INCLUDES
- *********************/
-//#include "../../../lv_ex_conf.h"
-#if 1 //USE_LV_DEMO
-    
 #include "lvgl.h"
     
-/*********************
- *      DEFINES
- *********************/
-
-/**********************
- *      TYPEDEFS
- **********************/
-
-/**********************
- * GLOBAL PROTOTYPES
- **********************/
 
 /**
  * Initialize the system monitor
  */
 void sysmon_create(void);
-
-/**********************
- *      MACROS
- **********************/
-
-#endif /*USE_LV_SYSMON*/
 
 #ifdef __cplusplus
 } /* extern "C" */

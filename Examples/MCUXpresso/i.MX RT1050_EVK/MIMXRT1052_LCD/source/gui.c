@@ -12,6 +12,7 @@
 
 #include "demo/demo.h"
 #include "sysmon/sysmon.h"
+#include "gui_mainmenu.h"
 
 /**
  * Called when a button is released
@@ -244,7 +245,6 @@ void lv_tutorial_responsive(void)
     lv_label_set_text(label, "Third");
 
     lv_obj_align(btn4, btn2, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 4);   /*Align when already resized because of the label*/
-
 }
 
 void lv_tutorial_styles(void)
@@ -433,7 +433,8 @@ static void GuiTask(void *p) {
 	currGui = GUI_ID_ROOT_MENU;
 	//CreateMainMenuScreen();
 	//demo_create();
-	sysmon_create();
+	GUI_MainMenu_Create();
+	//sysmon_create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
 		vTaskDelay(pdMS_TO_TICKS(10));

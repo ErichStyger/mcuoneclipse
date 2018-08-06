@@ -7,10 +7,9 @@
  *      INCLUDES
  *********************/
 #include "sysmon.h"
-#if 1//USE_LV_SYSMON
-
 #include <stdio.h>
-
+#include "FreeRTOS.h"
+#include "gui_mainmenu.h"
 
 /*********************
  *      DEFINES
@@ -18,11 +17,7 @@
 #define CPU_LABEL_COLOR     "FF0000"
 #define MEM_LABEL_COLOR     "0000FF"
 #define CHART_POINT_NUM     100
-#define REFR_TIME    500
-
-/**********************
- *      TYPEDEFS
- **********************/
+#define REFR_TIME           500
 
 /**********************
  *  STATIC PROTOTYPES
@@ -40,22 +35,14 @@ static lv_chart_series_t * mem_ser;
 static lv_obj_t * info_label;
 static lv_task_t * refr_task;
 
-/**********************
- *      MACROS
- **********************/
-
-/**********************
- *   GLOBAL FUNCTIONS
- **********************/
-
 /**
  * Initialize the system monitor
  */
-void sysmon_create(void)
-{
+void sysmon_create(void) {
     refr_task = lv_task_create(sysmon_task, REFR_TIME, LV_TASK_PRIO_LOW, NULL);
 
     win = lv_win_create(lv_scr_act(), NULL);
+    lv_win_set_title(win, "System Monitor");
     lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
 
     /*Make the window content responsive*/
@@ -96,17 +83,21 @@ void sysmon_create(void)
  * Called periodically to monitor the CPU and memory usage.
  * @param param unused
  */
-static void sysmon_task(void * param)
-{
+static void sysmon_task(void * param) {
     /*Get CPU and memory information */
     uint8_t cpu_busy;
     cpu_busy = 100 - lv_task_get_idle();
 
-    uint8_t mem_used_pct = 0;
-#if  LV_MEM_CUSTOM == 0
+    uint8_t mem_used_pct = 0; /* used percentage */
+#if  LV_MEM_CUSTOM == 0 /* built-in memory manager */
     lv_mem_monitor_t mem_mon;
     lv_mem_monitor(&mem_mon);
     mem_used_pct = mem_mon.used_pct;
+#else /* FreerRTOS */
+  #if configSUPPORT_DYNAMIC_ALLOCATION && configUSE_HEAP_SCHEME!=3 /* wrapper to malloc() does not have xPortGetFreeHeapSize() */
+    size_t freeHeapSize = xPortGetFreeHeapSize();
+  #endif
+    mem_used_pct = (configTOTAL_HEAP_SIZE-freeHeapSize) / (configTOTAL_HEAP_SIZE/100);
 #endif
 
     /*Add the CPU and memory data to the chart*/
@@ -114,47 +105,56 @@ static void sysmon_task(void * param)
     lv_chart_set_next(chart, mem_ser, mem_used_pct);
 
     /*Refresh the and windows*/
-    char buf_long[256];
-    sprintf(buf_long, "%s%s CPU: %d %%%s\n\n",
+    char buf_long[128];
+    snprintf(buf_long, sizeof(buf_long), "%s%s CPU: %d%%%s\n\n",
             LV_TXT_COLOR_CMD,
             CPU_LABEL_COLOR,
             cpu_busy,
             LV_TXT_COLOR_CMD);
-
-#if LV_MEM_CUSTOM == 0
-    sprintf(buf_long, "%s"LV_TXT_COLOR_CMD"%s MEMORY: %d %%"LV_TXT_COLOR_CMD"\n"
+#if LV_MEM_CUSTOM == 0 /* built-in memory manager */
+    snprintf(buf_long, sizeof(buf_long), "%s"LV_TXT_COLOR_CMD"%s MEMORY: %d%%"LV_TXT_COLOR_CMD"\n"
                       "Total: %d bytes\n"
                       "Used: %d bytes\n"
                       "Free: %d bytes\n"
-                      "Frag: %d %%",
+                      "Frag: %d%%",
                       buf_long,
                       MEM_LABEL_COLOR,
                       mem_used_pct,
                       (int)mem_mon.total_size,
                       (int)mem_mon.total_size - mem_mon.free_size, mem_mon.free_size, mem_mon.frag_pct);
 
+#elif 1 /* FreeRTOS */
+    snprintf(buf_long, sizeof(buf_long), "%s"LV_TXT_COLOR_CMD"%s MEMORY: %d%%"LV_TXT_COLOR_CMD"\n"
+                      "Total: %d bytes\n"
+                      "Used: %d bytes\n"
+                      "Free: %d bytes\n",
+                      buf_long,
+                      MEM_LABEL_COLOR,
+					  mem_used_pct, /* percentage used */
+					  configTOTAL_HEAP_SIZE, /* total */
+                      configTOTAL_HEAP_SIZE-freeHeapSize, /* used */
+					  freeHeapSize /* free */
+					  );
 #else
     sprintf(buf_long, "%s"LV_TXT_COLOR_CMD"%s MEMORY: N/A"LV_TXT_COLOR_CMD,
             buf_long,
             MEM_LABEL_COLOR);
 #endif
     lv_label_set_text(info_label, buf_long);
-
 }
 
 /**
  * Called when the window's close button is clicked
  * @param btn pointer to the close button
- * @return LV_ACTION_RES_INV because the button is deleted in the function
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
-static lv_res_t win_close_action(lv_obj_t * btn)
-{
+static lv_res_t win_close_action(lv_obj_t * btn) {
     lv_obj_del(win);
     win = NULL;
 
     lv_task_del(refr_task);
     refr_task = NULL;
+    GUI_MainMenu_Create();
     return LV_RES_INV;
 }
 
-#endif /*USE_LV_SYMON*/
