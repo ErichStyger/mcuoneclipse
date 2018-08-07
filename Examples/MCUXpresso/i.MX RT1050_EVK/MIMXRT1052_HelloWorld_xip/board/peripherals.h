@@ -1,9 +1,11 @@
 /*
+ * The Clear BSD License
  * Copyright 2017-2018 NXP
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * are permitted (subject to the limitations in the disclaimer below) provided
+ *  that the following conditions are met:
  *
  * o Redistributions of source code must retain the above copyright notice, this list
  *   of conditions and the following disclaimer.
@@ -12,10 +14,11 @@
  *   list of conditions and the following disclaimer in the documentation and/or
  *   other materials provided with the distribution.
  *
- * o Neither the name of NXP Semiconductor, Inc. nor the names of its
+ * o Neither the name of the copyright holder nor the names of its
  *   contributors may be used to endorse or promote products derived from this
  *   software without specific prior written permission.
  *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -28,29 +31,24 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * @file    peripherals.h
- * @brief   Peripherals initialization header file.
- */
- 
-/* This is a template for board specific configuration created by MCUXpresso IDE Project Wizard.*/
-
 #ifndef _PERIPHERALS_H_
 #define _PERIPHERALS_H_
 
 #if defined(__cplusplus)
 extern "C" {
-#endif /* __cplusplus */
-
-/**
- * @brief 	Initialize peripherals specific settings.
- */
+#endif /*_cplusplus. */
+       /*******************************************************************************
+        * BOARD_InitBootPeripherals function
+        ******************************************************************************/
 void BOARD_InitBootPeripherals(void);
+
+/*******************************************************************************
+ * BOARD_InitConfigMPU function
+ ******************************************************************************/
+void BOARD_ConfigMPU(void);
 
 #if defined(__cplusplus)
 }
-#endif /* __cplusplus */
+#endif /*_cplusplus. */
 
 #endif /* _PERIPHERALS_H_ */
-
-

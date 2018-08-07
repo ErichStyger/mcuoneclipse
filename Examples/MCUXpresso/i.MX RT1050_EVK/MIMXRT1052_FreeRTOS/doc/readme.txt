@@ -19,15 +19,15 @@ Other hook types used for RTOS and resource statistics are also demonstrated in 
 
 Toolchain supported
 ===================
-- IAR embedded Workbench 8.11.2
-- Keil MDK 5.23
-- GCC ARM Embedded 2016-5.4-q3
-- MCUXpresso10.1.0
+- Keil MDK 5.24a
+- IAR embedded Workbench 8.22.2
+- GCC ARM Embedded 7-2017-q4-major
+- MCUXpresso10.2.0
 
 Hardware requirements
 =====================
 - Mini/micro USB cable
-- EVK-MIMXRT1050 board
+- EVKB-IMXRT1050 board
 - Personal Computer
 
 Board settings
