@@ -9,9 +9,16 @@
 #include "gui_mainmenu.h"
 #include "lvgl.h"
 #include "LED.h"
+#include "accel/accel.h"
+#include <stdio.h>
 
 static lv_obj_t *win;
 static lv_obj_t *led;
+static lv_obj_t *accel_label;
+#define CHART_POINT_NUM     100
+static lv_obj_t *accel_chart;
+static lv_chart_series_t *x_ser, *y_ser, *z_ser;
+
 static lv_task_t *refr_task;
 #define REFR_TIME   (100)
 
@@ -34,23 +41,62 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
  * Called periodically to monitor the LED.
  * @param param unused
  */
-static void led_task(void *param) {
+#define ACCEL_MIN_VAL  -2048
+#define ACCEL_MAX_VAL   2048
+#define X_LABEL_COLOR     "FF0000"
+#define Y_LABEL_COLOR     "00FF00"
+#define Z_LABEL_COLOR     "0000FF"
+
+static void refresh_task(void *param) {
+	int x, y, z;
+
     if (LED_IsOn()) {
       lv_led_on(led);
     } else {
-        lv_led_off(led);
+      lv_led_off(led);
+    }
+    if (ACCEL_GetAccelData(&x, &y, &z)==0) {
+    	char buf[64];
+    	if (x>ACCEL_MAX_VAL) {
+    		x = ACCEL_MAX_VAL;
+    	}
+    	if (y>ACCEL_MAX_VAL) {
+    		y = ACCEL_MAX_VAL;
+    	}
+    	if (z>ACCEL_MAX_VAL) {
+    		z = ACCEL_MAX_VAL;
+    	}
+    	if (x<ACCEL_MIN_VAL) {
+    		x = ACCEL_MIN_VAL;
+    	}
+    	if (y<ACCEL_MIN_VAL) {
+    		y = ACCEL_MIN_VAL;
+    	}
+    	if (z<ACCEL_MIN_VAL) {
+    		z = ACCEL_MIN_VAL;
+    	}
+        /*Add the CPU and memory data to the chart*/
+        lv_chart_set_next(accel_chart, x_ser, x);
+        lv_chart_set_next(accel_chart, y_ser, y);
+        lv_chart_set_next(accel_chart, z_ser, z);
+
+    	snprintf(buf, sizeof(buf), "%s%s x: %6d%s\n%s%s y: %6d%s\n%s%s z:%6d%s",
+    			LV_TXT_COLOR_CMD, X_LABEL_COLOR, x, LV_TXT_COLOR_CMD,
+				LV_TXT_COLOR_CMD, Y_LABEL_COLOR, y, LV_TXT_COLOR_CMD,
+				LV_TXT_COLOR_CMD, Z_LABEL_COLOR, z, LV_TXT_COLOR_CMD);
+        lv_label_set_text(accel_label, buf);
     }
 }
 
 void gui_hw_create(void) {
-    refr_task = lv_task_create(led_task, REFR_TIME, LV_TASK_PRIO_LOW, NULL);
+    refr_task = lv_task_create(refresh_task, REFR_TIME, LV_TASK_PRIO_LOW, NULL);
 
     win = lv_win_create(lv_scr_act(), NULL);
     lv_win_set_title(win, "Hardware");
     lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
 
     /* Make the window content responsive */
-    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
+//    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 
     /* Create a style for the LED */
     static lv_style_t style_led;
@@ -64,18 +110,46 @@ void gui_hw_create(void) {
     style_led.body.shadow.color = LV_COLOR_MAKE(0xb5, 0x0f, 0x04);
     style_led.body.shadow.width = 10;
 
-    /*Create a LED and switch it ON*/
+    /* Create a LED */
     led  = lv_led_create(win, NULL);
     lv_obj_set_style(led, &style_led);
-    lv_obj_align(led, NULL, LV_ALIGN_IN_TOP_MID, 40, 40);
-    if (LED_IsOn()) {
-      lv_led_on(led);
-    } else {
-        lv_led_off(led);
-    }
+    //lv_obj_align(led, win, LV_ALIGN_IN_TOP_LEFT, 20, 20);
+    lv_obj_set_pos(led, 10, 10);
+
     /* Create label next to the LED */
-    lv_obj_t *label = lv_label_create(lv_scr_act(), NULL);
+    lv_obj_t *label = lv_label_create(win, NULL);
     lv_label_set_text(label, "LED");
-    lv_obj_align(label, led, LV_ALIGN_OUT_LEFT_MID, -40, 0);
+    lv_obj_align(label, led, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+
+    /*Create a chart with three data lines*/
+    accel_chart = lv_chart_create(win, NULL);
+    lv_obj_set_size(accel_chart, LV_HOR_RES / 2, LV_VER_RES / 2);
+
+//    lv_obj_align(accel_chart, led, LV_ALIGN_OUT_TOP_RIGHT, 20, 20);
+    //lv_obj_set_pos(accel_chart, LV_DPI / 10, LV_DPI / 10);
+    lv_obj_set_pos(accel_chart, 70, 10);
+
+    lv_chart_set_point_count(accel_chart, CHART_POINT_NUM);
+    lv_chart_set_range(accel_chart, ACCEL_MIN_VAL, ACCEL_MAX_VAL);
+    lv_chart_set_type(accel_chart, LV_CHART_TYPE_LINE);
+    lv_chart_set_series_width(accel_chart, 3);
+    x_ser =  lv_chart_add_series(accel_chart, LV_COLOR_RED);
+    y_ser =  lv_chart_add_series(accel_chart, LV_COLOR_GREEN);
+    z_ser =  lv_chart_add_series(accel_chart, LV_COLOR_BLUE);
+
+    /* Set the data series to zero */
+    uint16_t i;
+    for(i = 0; i < CHART_POINT_NUM; i++) {
+        lv_chart_set_next(accel_chart, x_ser, 0);
+        lv_chart_set_next(accel_chart, y_ser, 0);
+        lv_chart_set_next(accel_chart, z_ser, 0);
+    }
+    /* label for accel/compass values: */
+    accel_label = lv_label_create(win, NULL);
+    lv_label_set_recolor(accel_label, true);
+    lv_obj_align(accel_label, accel_chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI / 5, 0);
+
+    /*Refresh the chart and label manually at first*/
+    refresh_task(NULL);
 }
 

@@ -49,6 +49,7 @@
   #include "uncannyEyes.h"
 #endif
 #include "LED.h"
+#include "accel/accel.h"
 
 #if PL_CONFIG_USE_GUI
   #include "lv.h"
@@ -217,19 +218,27 @@ static void AppTask(void *p) {
  */
 int main(void) {
     BOARD_ConfigMPU();
-    BOARD_InitPins();
-    BOARD_InitI2C1Pins();
+    BOARD_InitPins();  /* general pins */
+    BOARD_InitI2C1Pins(); /* I2C pins for touch and accel/compass */
     BOARD_InitSemcPins();
     BOARD_BootClockRUN();
-    BOARD_InitLcdifPixelClock();
     BOARD_InitDebugConsole();
+
+    BOARD_InitLcdifPixelClock();
     BOARD_InitLcd();
-#if PL_CONFIG_USE_GUI
+#if PL_CONFIG_USE_TOUCH
     TOUCH_Init();
 #endif
     APP_ELCDIF_Init();
     BOARD_EnableLcdInterrupt();
     LED_Init();
+#if PL_CONFIG_USE_ACCEL
+    if (ACCEL_Init()!=0) {
+    	for(;;) {
+    		/* failed */
+    	}
+    }
+#endif
 
 //    PRINTF("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
