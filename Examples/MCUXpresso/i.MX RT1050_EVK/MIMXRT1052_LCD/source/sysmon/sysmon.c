@@ -3,9 +3,8 @@
  *
  */
 
-/*********************
- *      INCLUDES
- *********************/
+#include "Platform.h"
+#if PL_CONFIG_USE_GUI_SYSMON
 #include "sysmon.h"
 #include <stdio.h>
 #include "FreeRTOS.h"
@@ -147,4 +146,4 @@ void sysmon_create(void) {
     /*Refresh the chart and label manually at first*/
     sysmon_task(NULL);
 }
-
+#endif /* PL_CONFIG_USE_GUI_SYSMON */

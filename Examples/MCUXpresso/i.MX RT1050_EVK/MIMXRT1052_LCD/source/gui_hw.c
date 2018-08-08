@@ -5,6 +5,8 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
+#if PL_CONFIG_USE_GUI_HARDWARE
 #include "gui_hw.h"
 #include "gui_mainmenu.h"
 #include "lvgl.h"
@@ -14,11 +16,17 @@
 
 static lv_obj_t *win;
 static lv_obj_t *led;
-static lv_obj_t *accel_label;
-#define CHART_POINT_NUM     100
-static lv_obj_t *accel_chart;
-static lv_chart_series_t *x_ser, *y_ser, *z_ser;
-
+#if PL_CONFIG_USE_ACCEL
+	static lv_obj_t *accel_label;
+	#define CHART_POINT_NUM     100
+	static lv_obj_t *accel_chart;
+	static lv_chart_series_t *x_ser, *y_ser, *z_ser;
+	#define ACCEL_MIN_VAL  -2048
+	#define ACCEL_MAX_VAL   2048
+	#define X_LABEL_COLOR     "FF0000"
+	#define Y_LABEL_COLOR     "00FF00"
+	#define Z_LABEL_COLOR     "0000FF"
+#endif
 static lv_task_t *refr_task;
 #define REFR_TIME   (100)
 
@@ -41,21 +49,16 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
  * Called periodically to monitor the LED.
  * @param param unused
  */
-#define ACCEL_MIN_VAL  -2048
-#define ACCEL_MAX_VAL   2048
-#define X_LABEL_COLOR     "FF0000"
-#define Y_LABEL_COLOR     "00FF00"
-#define Z_LABEL_COLOR     "0000FF"
-
 static void refresh_task(void *param) {
-	int x, y, z;
-
     if (LED_IsOn()) {
       lv_led_on(led);
     } else {
       lv_led_off(led);
     }
-    if (ACCEL_GetAccelData(&x, &y, &z)==0) {
+#if PL_CONFIG_USE_ACCEL
+	int x, y, z;
+
+	if (ACCEL_GetAccelData(&x, &y, &z)==0) {
     	char buf[64];
     	if (x>ACCEL_MAX_VAL) {
     		x = ACCEL_MAX_VAL;
@@ -86,6 +89,7 @@ static void refresh_task(void *param) {
 				LV_TXT_COLOR_CMD, Z_LABEL_COLOR, z, LV_TXT_COLOR_CMD);
         lv_label_set_text(accel_label, buf);
     }
+#endif
 }
 
 void gui_hw_create(void) {
@@ -121,6 +125,7 @@ void gui_hw_create(void) {
     lv_label_set_text(label, "LED");
     lv_obj_align(label, led, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
 
+#if PL_CONFIG_USE_ACCEL
     /*Create a chart with three data lines*/
     accel_chart = lv_chart_create(win, NULL);
     lv_obj_set_size(accel_chart, LV_HOR_RES / 2, LV_VER_RES / 2);
@@ -148,8 +153,8 @@ void gui_hw_create(void) {
     accel_label = lv_label_create(win, NULL);
     lv_label_set_recolor(accel_label, true);
     lv_obj_align(accel_label, accel_chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI / 5, 0);
-
+#endif
     /*Refresh the chart and label manually at first*/
     refresh_task(NULL);
 }
-
+#endif /* PL_CONFIG_USE_GUI_HARDWARE */

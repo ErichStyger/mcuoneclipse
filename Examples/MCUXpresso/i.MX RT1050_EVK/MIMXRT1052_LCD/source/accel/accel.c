@@ -5,11 +5,13 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "accel.h"
 #include "fsl_fxos.h"
 #include "fsl_lpi2c.h"
 #include "fsl_debug_console.h"
 
+#if PL_CONFIG_USE_ACCEL
 /* @Brief Board accelerator sensor configuration */
 #define BOARD_ACCEL_I2C_BASEADDR LPI2C1
 /* Select USB1 PLL (480 MHz) as LPI2C's clock source */
@@ -286,3 +288,4 @@ int ACCEL_Init(void) {
     }
     return 0;
 }
+#endif /* PL_CONFIG_USE_ACCEL */
