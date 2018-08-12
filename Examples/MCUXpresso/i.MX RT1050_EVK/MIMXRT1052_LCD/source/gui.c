@@ -9,6 +9,7 @@
 #include "lvgl/lvgl.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "LED.h"
 
 #include "demo/demo.h"
 #include "sysmon/sysmon.h"
@@ -125,8 +126,7 @@ void lv_tutorial_objects(void) {
 #if USE_LV_ANIMATION
 lv_style_t btn3_style;
 
-void lv_tutorial_animations(void)
-{
+void lv_tutorial_animations(void) {
     lv_obj_t *label;
 
 
@@ -197,8 +197,7 @@ void lv_tutorial_animations(void)
 }
 #endif /* USE_LV_ANIMATION */
 
-void lv_tutorial_responsive(void)
-{
+void lv_tutorial_responsive(void) {
     lv_obj_t *label;
 
 
@@ -247,9 +246,7 @@ void lv_tutorial_responsive(void)
     lv_obj_align(btn4, btn2, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 4);   /*Align when already resized because of the label*/
 }
 
-void lv_tutorial_styles(void)
-{
-
+static void lv_tutorial_styles(void) {
     /****************************************
      * BASE OBJECT + LABEL WITH DEFAULT STYLE
      ****************************************/
@@ -338,43 +335,37 @@ void lv_tutorial_styles(void)
     lv_obj_align(bar, obj1, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);
 }
 
-/*Declare the "source code image" which is stored in the flash*/
-LV_IMG_DECLARE(red_flower);
-void lv_tutorial_image(void)
-{
-    /*************************
-     * IMAGE FROM SOURCE CODE
-     *************************/
+extern const lv_img_t red_flower;
+void show_image(void) {
+    lv_obj_t *img_src = lv_img_create(lv_scr_act(), NULL); /* Crate an image object */
+    lv_img_set_src(img_src, &red_flower);  /* Set the created file as image (a red flower) */
+    lv_obj_set_pos(img_src, 10, 10);      /* Set the positions */
+    lv_obj_set_drag(img_src, true);       /* Make the image dragable */
 
-    lv_obj_t * img_src = lv_img_create(lv_scr_act(), NULL); /*Crate an image object*/
-    lv_img_set_src(img_src, &red_flower);  /*Set the created file as image (a red fl  ower)*/
-    lv_obj_set_pos(img_src, 10, 10);      /*Set the positions*/
-    lv_obj_set_drag(img_src, true);
-
-    lv_obj_t * img_symbol = lv_img_create(lv_scr_act(), NULL);
-    lv_img_set_src(img_symbol, SYMBOL_OK);
-    lv_obj_set_drag(img_symbol, true);
-    lv_obj_align(img_symbol, img_src, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);     /*Align next to the source image*/
+    lv_obj_t *img_symbol = lv_img_create(lv_scr_act(), NULL); /* create symbol */
+    lv_img_set_src(img_symbol, SYMBOL_OK); /* use 'checkmark' as symbol */
+    lv_obj_set_drag(img_symbol, true); /* make the symbol dragable */
+    lv_obj_align(img_symbol, img_src, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 20);     /* Align next to the source image */
 }
 
-
 static lv_res_t my_click_action(struct _lv_obj_t * obj) {
+  LED_Toggle();
   return LV_RES_INV;
 }
 
-static void lvgl_test(void) {
+void click_button(void) {
   /*Add a button*/
-  lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
+  lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);           /*Add to the active screen*/
   lv_obj_set_pos(btn1, 2, 2);                                    /*Adjust the position*/
-  lv_obj_set_size(btn1, 96, 30);
+  lv_obj_set_size(btn1, 96, 30);                                 /* set size of button */
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, my_click_action);   /*Assign a callback for clicking*/
 
   /*Add text*/
-  lv_obj_t * label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
+  lv_obj_t *label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
   lv_label_set_text(label, "Click");
 }
 
-static void lv_tutorial_hello_world(void) {
+void hello_world(void) {
     /*Create a Label on the currently active screen*/
     lv_obj_t *label1 =  lv_label_create(lv_scr_act(), NULL);
 
@@ -389,12 +380,12 @@ static void lv_tutorial_hello_world(void) {
 
 static void GuiTask(void *p) {
 	//lv_tutorial_objects();
-	//lv_tutorial_hello_world();
-	//lvgl_test();
+	//hello_world();
+	//click_button();
 	//lv_tutorial_animations();
 	//lv_tutorial_responsive();
 	//lv_tutorial_styles();
-	//lv_tutorial_image();
+	//show_image();
 
 	GUI_MainMenu_Create();
 	for(;;) {

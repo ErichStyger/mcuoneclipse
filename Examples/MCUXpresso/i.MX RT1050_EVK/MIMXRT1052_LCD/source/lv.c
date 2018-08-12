@@ -6,9 +6,9 @@
  */
 #include "Platform.h"
 #if PL_CONFIG_USE_GUI
+#include "lcd.h"
 #include "lv.h"
 #include "lvgl/lvgl.h"
-#include "GDisp1.h"
 #include "touch.h"
 
 /* Flush the content of the internal buffer the specific area on the display
@@ -17,14 +17,12 @@
  * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
 static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-
     int32_t x;
     int32_t y;
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display. For example: */
-            /* put_px(x, y, *color_p)*/
-            GDisp1_PutPixel(x, y, color_p->full);
+            /* Put a pixel to the display. */
+        	LCD_WritePixel(x, y, color_p->full);
             color_p++;
         }
     }
@@ -32,7 +30,6 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
 }
-
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
@@ -43,14 +40,12 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display. For example: */
-            /* put_px(x, y, *color_p)*/
-        	GDisp1_PutPixel(x, y, color_p->full);
+            /* Put a pixel to the display.*/
+        	LCD_WritePixel(x, y, color_p->full);
             color_p++;
         }
     }
 }
-
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
@@ -61,9 +56,8 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display. For example: */
-            /* put_px(x, y, *color)*/
-        	GDisp1_PutPixel(x, y, color.full);
+            /* Put a pixel to the display.*/
+        	LCD_WritePixel(x, y, color.full);
         }
     }
 }
@@ -124,7 +118,6 @@ void LV_Init(void) {
   lv_disp_drv_t disp_drv;
 
   lv_init();
-
   /*Set up the functions to access to your display*/
   disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
   disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/

@@ -11,6 +11,8 @@
 #define LCD_DISPLAY_HEIGHT 		(272)
 #define LCD_DISPLAY_WIDTH 		(480)
 
+void LCD_WritePixel(int x, int y, int color);
+
 void LCD_SetPixel(int idx, int x, int y, int color);
 
 void LCD_SwitchDisplayBuffer(int idx);

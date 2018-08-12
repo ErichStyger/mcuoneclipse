@@ -77,6 +77,10 @@ void LCD_SetPixel(int idx, int x, int y, int color) {
 #endif
 }
 
+void LCD_WritePixel(int x, int y, int color) {
+	s_frameBuffer[0][y][x] = color;
+}
+
 
 static void APP_LCDIF_IRQHandler(void) {
     uint32_t intStatus;
