@@ -16,15 +16,14 @@
 #include "FDisp1.h"
 #include "uncannyEyes.h"
 
-
-void APP_Run(void) {
+static void TestDisplay(void) {
   FDisp1_PixelDim x, y;
-
-  LCD1_Init();
-  LCD1_Clear();
 #if 1
-  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, LCD1_COLOR_WHITE);
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, LCD1_COLOR_RED);
   GDisp1_UpdateFull();
+  GDisp1_Clear();
+  GDisp1_UpdateFull();
+#if 0
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, LCD1_COLOR_RED);
   GDisp1_UpdateFull();
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, LCD1_COLOR_GREEN);
@@ -34,7 +33,8 @@ void APP_Run(void) {
 
   GDisp1_Clear();
   GDisp1_UpdateFull();
-
+#endif
+#if 0
   GDisp1_DrawFilledBox(0, 0, 128, 128, LCD1_COLOR_RED);
   GDisp1_UpdateFull();
   GDisp1_DrawFilledBox(0, 0, 50, 10, LCD1_COLOR_YELLOW);
@@ -65,7 +65,7 @@ void APP_Run(void) {
   x = 0; y = 0;
   FDisp1_WriteString((uint8_t *)"Landscape180", LCD1_COLOR_WHITE, &x, &y, Helv14_GetFont());
   GDisp1_UpdateFull();
-
+#endif
 #if 0
   LCD1_OpenWindow(0, 0, (LCD1_PixelDim)(LCD1_GetWidth()-1), (LCD1_PixelDim)(LCD1_GetHeight()-1)); /* window for whole display */
   for(i=0;i<500;i++) {
@@ -73,6 +73,7 @@ void APP_Run(void) {
   }
   LCD1_CloseWindow();
 #endif
+#if 0
   LCD1_Clear();
   LCD1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT);
   GDisp1_DrawLine(0, 0, 10, 50, LCD1_COLOR_RED);
@@ -110,10 +111,37 @@ void APP_Run(void) {
   x = 0; y = 0;
   FDisp1_WriteString((uint8_t *)"Hello", LCD1_COLOR_GREEN, &x, &y, Helv14_GetFont());
   GDisp1_UpdateFull();
+#endif
+}
+
+uint32_t testValue = 0;
+
+void APP_Run(void) {
+  int i;
+
+  LCD1_Init();
+  LCD1_Clear();
+
+  testValue = 0;
+  for(i=0;i<1024;i++) {
+  //  TestDisplay();
+    testValue++;
+    LED1_Neg();
+  }
 
   EYES_Init();
+
+  int cntr = 0;
+  testValue = 1;
   for(;;) {
-    EYES_Run();
+	cntr++;
+	if (testValue>0 && cntr>10) {
+		testValue = 0;
+	    WAIT1_Waitms(100);
+	    testValue = 1;
+	    cntr = 0;
+	}
+ //   EYES_Run();
     LED1_Neg();
     WAIT1_Waitms(100);
     LED2_Neg();

@@ -4,7 +4,8 @@
  *  Created on: 02.08.2018
  *      Author: Erich Styger
  */
-
+#include "Platform.h"
+#if PL_CONFIG_USE_GUI
 #include "lv.h"
 #include "lvgl.h"
 #include "GDisp1.h"
@@ -150,3 +151,4 @@ void LV_Init(void) {
   lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 }
 
+#endif /* PL_CONFIG_USE_GUI */

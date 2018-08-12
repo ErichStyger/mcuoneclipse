@@ -2,7 +2,7 @@
  * lv.h
  *
  *  Created on: 02.08.2018
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #ifndef SOURCES_LV_H_

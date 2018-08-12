@@ -157,7 +157,7 @@ standard names. */
 #endif
 
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION   (1)
-#define configRECORD_STACK_HIGH_ADDRESS           (0)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
+#define configRECORD_STACK_HIGH_ADDRESS           (1)    /* \todo 03 Enable stack low address listed in TCB for better debugging (0 ==> 1) */
 
 extern void RTOS_AppConfigureTimerForRuntimeStats(void);
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   RTOS_AppConfigureTimerForRuntimeStats()

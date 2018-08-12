@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 #include "Platform.h"
+#if PL_CONFIG_USE_GUI
 #include "gui_mainmenu.h" /* own interface */
 #include "lvgl.h" /* interface to GUI library */
 #include "sysmon/sysmon.h" /* system monitor */
@@ -97,3 +98,5 @@ void GUI_MainMenu_Create(void) {
 	lv_label_set_text(label, "Hardware");
 #endif
 }
+
+#endif /* PL_CONFIG_USE_GUI */

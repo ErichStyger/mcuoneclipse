@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GFont
-**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:51, # CodeGen: 8
+**     Date/Time   : 2018-08-10, 06:48, # CodeGen: 19
 **     Abstract    :
 **          Driver for graphical fonts
 **     Settings    :

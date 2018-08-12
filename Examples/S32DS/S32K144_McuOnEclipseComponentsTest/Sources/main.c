@@ -51,6 +51,21 @@ static void Components_Init(void) {
   MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  Clock1_Init(); /* ### SDK_BitIO "Clock1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  Input1_Init(); /* ### SDK_BitIO "Input1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  Output1_Init(); /* ### SDK_BitIO "Output1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  SPI1_Init(); /* ### GenericSWSPI "SPI1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
@@ -61,9 +76,6 @@ static void Components_Init(void) {
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   CLS1_Init(); /* ### Shell "CLS1" init code ... */
-#endif
-#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   RTT1_Init(); /* ### SeggerRTT "RTT1" init code ... */
@@ -113,6 +125,12 @@ static void Components_Init(void) {
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   KIN1_Init(); /* ### KinetisTools "KIN1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  CE1_Init(); /* ### SDK_BitIO "CE1" init code ... */
+#endif
+#ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+  CSN1_Init(); /* ### SDK_BitIO "CSN1" init code ... */
 #endif
 /*------------------------------------------------------------------*/
 }

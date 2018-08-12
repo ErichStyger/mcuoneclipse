@@ -11,13 +11,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define APP_IMG_HEIGHT 272
-#define APP_IMG_WIDTH 480
-#define APP_ELCDIF LCDIF
-
-extern uint16_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH];
-extern volatile bool s_frameDone;
-
 void GDisp1_PutPixel(unsigned int x, unsigned int y, uint16_t color);
 
 void GDisp1_UpdateFull(void);

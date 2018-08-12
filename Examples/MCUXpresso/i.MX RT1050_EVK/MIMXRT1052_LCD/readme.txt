@@ -3,8 +3,11 @@ readme.txt
 
 Example project for the i.MX RT1050 (1052) EVK using the LCD.
 
+NOTE: The LED only blinks on the EVKB, not on the original EVK(A)!
+
 See
 https://mcuoneclipse.com/2018/07/21/adding-a-rocktech-capacitive-touch-lcd-to-the-nxp-i-mx-rt1052-evk/
+https://mcuoneclipse.com/2018/08/04/i-mx-rt1050-evk-vs-evkb/
 
 GUI:
 https://littlevgl.com/

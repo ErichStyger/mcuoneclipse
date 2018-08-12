@@ -12,10 +12,10 @@
 #include "fsl_elcdif.h"
 #include "fsl_gpio.h"
 #include <string.h> /* for memset() */
-
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#define APP_ELCDIF   LCDIF
 
 #define APP_HSW 41
 #define APP_HFP 4
@@ -43,20 +43,46 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-volatile bool s_frameDone = false;
+static volatile bool s_frameDone = false;
 
-AT_NONCACHEABLE_SECTION_ALIGN(uint16_t s_frameBuffer[2][APP_IMG_HEIGHT][APP_IMG_WIDTH], FRAME_BUFFER_ALIGN);
+#if PL_CONFIG_USE_LCD_DOUBLE_BUFFER
+  #define LCD_NOF_BUFFERS (2)
+#else
+  #define LCD_NOF_BUFFERS (1)
+#endif
+
+static AT_NONCACHEABLE_SECTION_ALIGN(uint16_t s_frameBuffer[LCD_NOF_BUFFERS][LCD_DISPLAY_HEIGHT][LCD_DISPLAY_WIDTH], FRAME_BUFFER_ALIGN);
 
 /*******************************************************************************
  * Code
  ******************************************************************************/
+void LCD_SwitchDisplayBuffer(int idx) {
+#if PL_CONFIG_USE_LCD_DOUBLE_BUFFER
+    ELCDIF_SetNextBufferAddr(APP_ELCDIF, (uint32_t)s_frameBuffer[idx]);
+    s_frameDone = false;
+    /* Wait for previous frame complete. */
+    while (!s_frameDone) {
+    	vTaskDelay(pdMS_TO_TICKS(1)); /* wait */
+    }
+#else
+    s_frameDone = false;
+#endif
+}
+
+void LCD_SetPixel(int idx, int x, int y, int color) {
+#if PL_CONFIG_USE_LCD_DOUBLE_BUFFER
+	s_frameBuffer[idx][x][y] = color;
+#else
+	s_frameBuffer[0][x][y] = color;
+#endif
+}
+
+
 static void APP_LCDIF_IRQHandler(void) {
     uint32_t intStatus;
 
     intStatus = ELCDIF_GetInterruptStatus(APP_ELCDIF);
-
     ELCDIF_ClearInterruptStatus(APP_ELCDIF, intStatus);
-
     if (intStatus & kELCDIF_CurFrameDone) {
         s_frameDone = true;
     }
@@ -125,8 +151,8 @@ static void BOARD_InitLcdifPixelClock(void) {
 
 static void APP_ELCDIF_Init(void) {
     const elcdif_rgb_mode_config_t config = {
-        .panelWidth = APP_IMG_WIDTH,
-        .panelHeight = APP_IMG_HEIGHT,
+        .panelWidth = LCD_DISPLAY_WIDTH,
+        .panelHeight = LCD_DISPLAY_HEIGHT,
         .hsw = APP_HSW,
         .hfp = APP_HFP,
         .hbp = APP_HBP,

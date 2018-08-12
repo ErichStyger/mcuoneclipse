@@ -110,7 +110,6 @@ int main(void) {
     	}
     }
 #endif
-
 //    PRINTF("LCD example start...\r\n");
     xTaskCreate(/* The function that implements the task. */
                 AppTask,

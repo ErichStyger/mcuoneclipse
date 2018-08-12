@@ -19,7 +19,9 @@
 #define PL_CONFIG_USE_GUI_DEMO  	(1 && PL_CONFIG_USE_GUI) /* GUI Demo */
 #define PL_CONFIG_USE_GUI_HARDWARE  (1 && PL_CONFIG_USE_GUI) /* Hardware Demo */
 
-#define PL_CONFIG_EYE_DEMO   		(0 && PL_CONFIG_USE_LCD) /* blinky eyes demo */
+#define PL_CONFIG_EYE_DEMO   		(0 && PL_CONFIG_USE_LCD && !PL_CONFIG_USE_GUI) /* blinky eyes demo */
+
+#define PL_CONFIG_USE_LCD_DOUBLE_BUFFER  (0)
 
 #if PL_CONFIG_EYE_DEMO && PL_CONFIG_USE_GUI
   #error "only one or the other option is supported right now"

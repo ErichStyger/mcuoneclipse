@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "lvgl.h"
@@ -72,12 +73,18 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if PL_CONFIG_EYE_DEMO
+uint32_t msCntr;
+#endif
 void McuRTOS_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-	extern uint32_t msCntr;
+#if	PL_CONFIG_EYE_DEMO
 	msCntr++;
+#endif
+#if PL_CONFIG_USE_GUI
 	lv_tick_inc(1);
+#endif
 }
 
 /*

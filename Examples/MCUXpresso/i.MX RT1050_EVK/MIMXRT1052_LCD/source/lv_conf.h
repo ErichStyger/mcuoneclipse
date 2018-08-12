@@ -26,10 +26,10 @@
 /*===================
    Graphical settings
  *===================*/
-#include "GDisp1.h"
+#include "lcd.h" /* for display dimensions */
 /* Horizontal and vertical resolution of the library.*/
-#define LV_HOR_RES          (APP_IMG_WIDTH)
-#define LV_VER_RES          (APP_IMG_HEIGHT)
+#define LV_HOR_RES          (LCD_DISPLAY_WIDTH)
+#define LV_VER_RES          (LCD_DISPLAY_HEIGHT)
 #define LV_DPI              100
 
 /* Size of VDB (Virtual Display Buffer: the internal graphics buffer).
@@ -77,7 +77,7 @@
 #define USE_LV_GROUP            1               /*1: Enable object groups (for keyboards)*/
 #define USE_LV_GPU              0               /*1: Enable GPU interface*/
 #define USE_LV_REAL_DRAW        1               /*1: Enable function which draw directly to the frame buffer instead of VDB (required if LV_VDB_SIZE = 0)*/
-#define USE_LV_FILESYSTEM       1               /*1: Enable file system (required by images*/
+#define USE_LV_FILESYSTEM       0               /*1: Enable file system (required by images*/
 
 /*Compiler settings*/
 #define LV_ATTRIBUTE_TICK_INC                 /* Define a custom attribute to `lv_tick_inc` function */
@@ -109,10 +109,10 @@
 #define USE_LV_FONT_DEJAVU_10_CYRILLIC     0
 #define USE_LV_FONT_SYMBOL_10              0
 
-#define USE_LV_FONT_DEJAVU_20              4
+#define USE_LV_FONT_DEJAVU_20              1
 #define USE_LV_FONT_DEJAVU_20_LATIN_SUP    0
 #define USE_LV_FONT_DEJAVU_20_CYRILLIC     0
-#define USE_LV_FONT_SYMBOL_20              4
+#define USE_LV_FONT_SYMBOL_20              1
 
 #define USE_LV_FONT_DEJAVU_30              0
 #define USE_LV_FONT_DEJAVU_30_LATIN_SUP    0

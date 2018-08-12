@@ -78,4 +78,17 @@ void FreeRTOS_vApplicationMallocFailedHook(void)
   for(;;) {}
 }
 
+/*
+** ===================================================================
+**     Description :
+**         Called in case of an interrupt from the transcevier
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void RF1_OnInterrupt(void)
+{
+  /* write your code here */
+}
+
 

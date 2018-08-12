@@ -48,4 +48,14 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 ** ===================================================================
 */
 
+void RF1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Description :
+**         Called in case of an interrupt from the transcevier
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 

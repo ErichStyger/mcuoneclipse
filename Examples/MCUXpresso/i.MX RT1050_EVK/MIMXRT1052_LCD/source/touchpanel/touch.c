@@ -5,7 +5,8 @@
  *      Author: Erich Styger
  */
 
-
+#include "Platform.h"
+#if PL_CONFIG_USE_TOUCH
 #include "touch.h"
 #include "fsl_lpi2c.h"
 #include "fsl_ft5406_rt.h"
@@ -66,4 +67,4 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
     }
     return 0;
 }
-
+#endif /* PL_CONFIG_USE_TOUCH */
