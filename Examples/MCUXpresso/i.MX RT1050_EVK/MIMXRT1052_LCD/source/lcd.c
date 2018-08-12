@@ -71,9 +71,9 @@ void LCD_SwitchDisplayBuffer(int idx) {
 
 void LCD_SetPixel(int idx, int x, int y, int color) {
 #if PL_CONFIG_USE_LCD_DOUBLE_BUFFER
-	s_frameBuffer[idx][x][y] = color;
+	s_frameBuffer[idx][y][x] = color;
 #else
-	s_frameBuffer[0][x][y] = color;
+	s_frameBuffer[0][y][x] = color;
 #endif
 }
 

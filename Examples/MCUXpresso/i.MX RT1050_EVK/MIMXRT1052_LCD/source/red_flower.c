@@ -5,10 +5,10 @@
  *      Author: Erich Styger Local
  */
 
+#include <lvgl/lv_draw/lv_draw.h>
 #include <stdint.h>
 #include "lv_conf.h"
 //#include "lv_ex_conf.h"
-#include "lv/lv_draw/lv_draw.h"
 
 static const uint8_t red_flower_pixel_map[] = {
 

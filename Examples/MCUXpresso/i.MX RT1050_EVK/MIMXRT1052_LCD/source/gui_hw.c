@@ -9,7 +9,7 @@
 #if PL_CONFIG_USE_GUI_HARDWARE
 #include "gui_hw.h"
 #include "gui_mainmenu.h"
-#include "lvgl.h"
+#include "lvgl/lvgl.h"
 #include "LED.h"
 #include "accel/accel.h"
 #include <stdio.h>

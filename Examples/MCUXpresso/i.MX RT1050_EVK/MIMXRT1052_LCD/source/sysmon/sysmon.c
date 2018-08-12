@@ -6,6 +6,7 @@
 #include "Platform.h"
 #if PL_CONFIG_USE_GUI_SYSMON
 #include "sysmon.h"
+#include "lvgl/lvgl.h"
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "gui_mainmenu.h"

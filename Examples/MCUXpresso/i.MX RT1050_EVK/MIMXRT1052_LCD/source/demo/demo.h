@@ -9,7 +9,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "lvgl.h"
 
 /**
  * Create a demo application

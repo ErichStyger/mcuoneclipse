@@ -8,6 +8,7 @@
  *********************/
 #include "demo.h"
 #include "gui_mainmenu.h"
+#include "lvgl/lvgl.h"
 
 #define LV_DEMO_WALLPAPER  (1)
 

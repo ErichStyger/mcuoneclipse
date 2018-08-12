@@ -8,7 +8,7 @@
 #include "Platform.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "lvgl.h"
+#include "lvgl/lvgl.h"
 /*
 ** ===================================================================
 **     Event       :  McuRTOS_vApplicationStackOverflowHook (module Events)

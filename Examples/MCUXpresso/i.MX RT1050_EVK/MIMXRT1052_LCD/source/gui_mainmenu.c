@@ -7,7 +7,7 @@
 #include "Platform.h"
 #if PL_CONFIG_USE_GUI
 #include "gui_mainmenu.h" /* own interface */
-#include "lvgl.h" /* interface to GUI library */
+#include "lvgl/lvgl.h" /* interface to GUI library */
 #include "sysmon/sysmon.h" /* system monitor */
 #include "demo/demo.h" /* LittlevGL demo */
 #include "gui_hw.h"

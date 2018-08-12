@@ -6,7 +6,7 @@
  */
 #include "gui.h"
 #include "lv.h"
-#include "lvgl.h"
+#include "lvgl/lvgl.h"
 #include "FreeRTOS.h"
 #include "task.h"
 

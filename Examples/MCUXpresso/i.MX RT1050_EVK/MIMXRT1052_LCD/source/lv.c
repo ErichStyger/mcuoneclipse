@@ -7,7 +7,7 @@
 #include "Platform.h"
 #if PL_CONFIG_USE_GUI
 #include "lv.h"
-#include "lvgl.h"
+#include "lvgl/lvgl.h"
 #include "GDisp1.h"
 #include "touch.h"
 

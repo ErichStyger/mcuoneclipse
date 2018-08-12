@@ -50,9 +50,9 @@
   #include "accel/accel.h"
 #endif
 #if PL_CONFIG_USE_GUI
-  #include "lv.h"
-  #include "lvgl.h"
   #include "gui.h"
+#endif
+#if PL_CONFIG_USE_TOUCH
   #include "touch.h"
 #endif
 #if PL_CONFIG_EYE_DEMO

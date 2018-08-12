@@ -10,9 +10,6 @@
 extern "C" {
 #endif
 
-#include "lvgl.h"
-    
-
 /**
  * Initialize the system monitor
  */

@@ -19,8 +19,8 @@
 #define LV_MEM_AUTO_DEFRAG  1               /*Automatically defrag on free*/
 #else       /*LV_MEM_CUSTOM*/
 #define LV_MEM_CUSTOM_INCLUDE "FreeRTOS.h"   /*Header for the dynamic memory function*/
-#define LV_MEM_CUSTOM_ALLOC   pvPortMalloc       /*Wrapper to malloc*/
-#define LV_MEM_CUSTOM_FREE    vPortFree         /*Wrapper to free*/
+#define LV_MEM_CUSTOM_ALLOC   pvPortMalloc   /*Wrapper to malloc*/
+#define LV_MEM_CUSTOM_FREE    vPortFree      /*Wrapper to free*/
 #endif     /*LV_MEM_CUSTOM*/
 
 /*===================
