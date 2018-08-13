@@ -30,7 +30,8 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
           color_p++;
         }
     }
-    GDisp1_UpdateFull();
+    //GDisp1_UpdateFull();
+    GDisp1_UpdateRegion(x1, y1, x2, y1);
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
@@ -46,7 +47,7 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display.*/
-          GDisp1_PutPixel(x, y, color_p->full);
+            GDisp1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
@@ -121,6 +122,31 @@ void LV_Task(void) {
   lv_task_handler();
 }
 
+static uint32_t last_key(void) {
+  return '\0';
+}
+
+static bool key_pressed(void) {
+  return FALSE;
+}
+
+/*
+ * To use a keyboard:
+    USE_LV_GROUP has to be enabled in lv_conf.h
+    An object group has to be created: lv_group_create() and objects have to be added: lv_group_add_obj()
+    The created group has to be assigned to an input device: lv_indev_set_group(my_indev, group1);
+    Use LV_GROUP_KEY_... to navigate among the objects in the group
+ */
+static bool keyboard_read(lv_indev_data_t *data)  {
+  data->key = last_key();
+  if(key_pressed()) {
+    data->state = LV_INDEV_STATE_PR;
+  } else {
+    data->state = LV_INDEV_STATE_REL;
+  }
+  return false;   /*No buffering so no more data read*/
+}
+
 void LV_Init(void) {
   lv_disp_drv_t disp_drv;
 
@@ -149,6 +175,11 @@ void LV_Init(void) {
   indev_drv.type = LV_INDEV_TYPE_POINTER;         /*The touchpad is pointer type device*/
   indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
   lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
+#else /* keyboard input */
+  lv_indev_drv_t indev_drv;                       /*Descriptor of an input device driver*/
+  lv_indev_drv_init(&indev_drv);                  /*Basic initialization*/
+  indev_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_drv.read = keyboard_read;
 #endif
 }
 

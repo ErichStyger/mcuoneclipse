@@ -95,8 +95,8 @@ static void GUI_MainMenu_Create(void) {
 static void GuiTask(void *p) {
   LCD1_Init();
   LCD1_Clear();
-  GDisp1_DrawBox(0, 0, 50, 20, 1, GDisp1_COLOR_RED);
-  GDisp1_UpdateFull();
+  //GDisp1_DrawBox(0, 0, 50, 20, 1, GDisp1_COLOR_RED);
+  //GDisp1_UpdateFull();
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
@@ -106,6 +106,7 @@ static void GuiTask(void *p) {
 
 void GUI_Init(void) {
 	LV_Init(); /* initialize GUI library */
+	lv_theme_set_current(lv_theme_night_init(128, NULL));
   if (xTaskCreate(GuiTask, "gui", 1200/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
