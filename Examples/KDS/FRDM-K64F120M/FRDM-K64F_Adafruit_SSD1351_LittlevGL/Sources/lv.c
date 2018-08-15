@@ -8,6 +8,13 @@
 #include "lv.h"
 #include "lvgl/lvgl.h"
 #include "GDisp1.h"
+#include "RNG1.h"
+
+static lv_indev_t *inputDevicePtr;
+
+lv_indev_t * LV_GetInputDevice(void) {
+  return inputDevicePtr;
+}
 
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
@@ -21,11 +28,11 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. */
           GDisp1_PixelColor color;
-#if LCD1_CONFIG_USE_RAM_BUFFER
+//#if LCD1_CONFIG_USE_RAM_BUFFER
           color = ((color_p->full&0xff)<<8) | ((color_p->full&0xff00)>>8); /* swap bytes */
-#else
-          color = color_p->full;
-#endif
+//#else
+//          color = color_p->full;
+//#endif
           GDisp1_PutPixel(x, y, color);
           color_p++;
         }
@@ -47,10 +54,17 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display.*/
-            GDisp1_PutPixel(x, y, color_p->full);
+            GDisp1_PixelColor color;
+  #if LCD1_CONFIG_USE_RAM_BUFFER
+            color = ((color_p->full&0xff)<<8) | ((color_p->full&0xff00)>>8); /* swap bytes */
+  #else
+            color = color_p->full;
+  #endif
+            GDisp1_PutPixel(x, y, color);
             color_p++;
         }
     }
+    GDisp1_UpdateRegion(x1, y1, x2, y1);
 }
 
 /* Write a pixel array (called 'map') to the a specific area on the display
@@ -63,9 +77,16 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display.*/
-          GDisp1_PutPixel(x, y, color.full);
+          GDisp1_PixelColor col;
+  #if LCD1_CONFIG_USE_RAM_BUFFER
+            col = ((color.full&0xff)<<8) | ((color.full&0xff00)>>8); /* swap bytes */
+  #else
+            col = color.full;
+  #endif
+          GDisp1_PutPixel(x, y, col);
         }
     }
+    GDisp1_UpdateRegion(x1, y1, x2, y1);
 }
 
 #if USE_LV_GPU
@@ -122,14 +143,6 @@ void LV_Task(void) {
   lv_task_handler();
 }
 
-static uint32_t last_key(void) {
-  return '\0';
-}
-
-static bool key_pressed(void) {
-  return FALSE;
-}
-
 /*
  * To use a keyboard:
     USE_LV_GROUP has to be enabled in lv_conf.h
@@ -138,13 +151,33 @@ static bool key_pressed(void) {
     Use LV_GROUP_KEY_... to navigate among the objects in the group
  */
 static bool keyboard_read(lv_indev_data_t *data)  {
-  data->key = last_key();
-  if(key_pressed()) {
+  uint16_t keyData;
+
+  if (RNG1_NofElements()==0) {
+    return false; /* no data present */
+  }
+  if (RNG1_Get(&keyData)!=ERR_OK) {
+    return false; /* something was wrong? */
+  }
+  if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED)) {
+    data->key = LV_GROUP_KEY_NEXT;
+    data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_RELEASED)) {
+    data->key = LV_GROUP_KEY_NEXT;
+    data->state = LV_INDEV_STATE_REL;
+  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED_LONG)) {
+    data->key = LV_GROUP_KEY_ENTER;
+    data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED)) {
+    data->key = LV_GROUP_KEY_PREV;
+    data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED_LONG)) {
+    data->key = LV_GROUP_KEY_ESC;
     data->state = LV_INDEV_STATE_PR;
   } else {
-    data->state = LV_INDEV_STATE_REL;
+    return false; /* error? */
   }
-  return false;   /*No buffering so no more data read*/
+  return RNG1_NofElements()==0;   /* return true if we have more data */
 }
 
 void LV_Init(void) {
@@ -164,22 +197,19 @@ void LV_Init(void) {
 
   /*Finally register the driver*/
   lv_disp_drv_register(&disp_drv);
-#if 0
+
   /*************************
    * Input device interface
    *************************/
-  /*Add a touchpad in the example*/
-  /*touchpad_init();*/                            /*Initialize your touchpad*/
   lv_indev_drv_t indev_drv;                       /*Descriptor of an input device driver*/
   lv_indev_drv_init(&indev_drv);                  /*Basic initialization*/
+#if 0 /* touch pad */
   indev_drv.type = LV_INDEV_TYPE_POINTER;         /*The touchpad is pointer type device*/
   indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
-  lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 #else /* keyboard input */
-  lv_indev_drv_t indev_drv;                       /*Descriptor of an input device driver*/
-  lv_indev_drv_init(&indev_drv);                  /*Basic initialization*/
   indev_drv.type = LV_INDEV_TYPE_KEYPAD;
   indev_drv.read = keyboard_read;
 #endif
+  inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 }
 

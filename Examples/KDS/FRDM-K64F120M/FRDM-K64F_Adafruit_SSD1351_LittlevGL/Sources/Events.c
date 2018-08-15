@@ -38,6 +38,8 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "lvgl/lvgl.h"
+#include "RNG1.h"
+#include "lv.h"
 
 /*
 ** ===================================================================
@@ -176,6 +178,7 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   lv_tick_inc(1);
+  TRG1_AddTick();
 }
 
 /*
@@ -213,6 +216,103 @@ void FRTOS1_vApplicationMallocFailedHook(void)
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
   for(;;) {}
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(uint8_t keys)
+{
+  uint16_t buttonInfo;
+
+  if (keys&1) {
+    buttonInfo = LV_BUTTON_SW3 | LV_MASK_PRESSED;
+    RNG1_Put(buttonInfo);
+  } else if (keys&2) {
+    buttonInfo = LV_BUTTON_SW2 | LV_MASK_PRESSED;
+    RNG1_Put(buttonInfo);
+  }
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(uint8_t keys)
+{
+  uint16_t buttonInfo;
+
+  if (keys&1) {
+    buttonInfo = LV_BUTTON_SW3 | LV_MASK_RELEASED;
+    RNG1_Put(buttonInfo);
+  } else if (keys&2) {
+    buttonInfo = LV_BUTTON_SW2 | LV_MASK_RELEASED;
+    RNG1_Put(buttonInfo);
+  }
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  uint16_t buttonInfo;
+
+  if (keys&1) {
+    buttonInfo = LV_BUTTON_SW3 | LV_MASK_PRESSED_LONG;
+    RNG1_Put(buttonInfo);
+  } else if (keys&2) {
+    buttonInfo = LV_BUTTON_SW2 | LV_MASK_PRESSED_LONG;
+    RNG1_Put(buttonInfo);
+  }
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleasedLong(uint8_t keys)
+{
+  uint16_t buttonInfo;
+
+  if (keys&1) {
+    buttonInfo = LV_BUTTON_SW3 | LV_MASK_RELEASED_LONG;
+  } else if (keys&2) {
+    buttonInfo = LV_BUTTON_SW2 | LV_MASK_RELEASED_LONG;
+    RNG1_Put(buttonInfo);
+  }
 }
 
 /* END Events */

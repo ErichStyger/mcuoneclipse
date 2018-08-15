@@ -11,6 +11,7 @@
 #include "task.h"
 #include "LCD1.h"
 #include "GDisp1.h"
+#include "KEY1.h"
 
 static lv_obj_t *win = NULL;
 
@@ -36,7 +37,6 @@ static void GUI_MainMenu_Create(void) {
   lv_obj_t *label;
 
 #if 0
-
   static lv_style_t style1;
   lv_style_copy(&style1, &lv_style_plain);    /*Copy a built-in style to initialize the new style*/
   style1.body.main_color = LV_COLOR_RED;
@@ -60,6 +60,9 @@ static void GUI_MainMenu_Create(void) {
 #endif
 
 #if 1
+  lv_group_t *group = lv_group_create(); /* create group */
+  lv_indev_set_group(LV_GetInputDevice(), group); /* assign group to input device */
+
   /* create window */
   win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(win, "Main Menu");
@@ -75,6 +78,7 @@ static void GUI_MainMenu_Create(void) {
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_SysMon_click_action);   /*Assign a callback for clicking*/
   label = lv_label_create(btn1, NULL);                  /*Put on 'btn1'*/
   lv_label_set_text(label, "SysMon");
+  lv_group_add_obj(group, btn1);
 
   /* Create Demo menu buttons */
   lv_obj_t *btn2 = lv_btn_create(win, NULL);             /*Add to the active window */
@@ -82,6 +86,7 @@ static void GUI_MainMenu_Create(void) {
   lv_obj_set_size(btn2, 64, 18);
   label = lv_label_create(btn2, NULL);                  /*Put on 'btn1'*/
   lv_label_set_text(label, "Demo");
+  lv_group_add_obj(group, btn2);
 
     /* Create Hardware menu buttons */
   lv_obj_t *btn3 = lv_btn_create(win, NULL);             /*Add to the active window */
@@ -89,6 +94,7 @@ static void GUI_MainMenu_Create(void) {
   lv_obj_set_size(btn3, 64, 18);
   label = lv_label_create(btn3, NULL);                  /*Put on 'btn1'*/
   lv_label_set_text(label, "Hardware");
+  lv_group_add_obj(group, btn3);
 #endif
 }
 
@@ -100,6 +106,7 @@ static void GuiTask(void *p) {
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
+		KEY1_ScanKeys();
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }
