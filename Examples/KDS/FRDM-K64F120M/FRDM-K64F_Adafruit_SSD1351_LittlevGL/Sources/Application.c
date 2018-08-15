@@ -19,7 +19,7 @@ void APP_Run(void) {
   GUI_Init();
   vTaskStartScheduler();
   for(;;) {
-
+    /* should not get here! */
   }
 }
 

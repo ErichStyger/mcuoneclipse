@@ -101,8 +101,16 @@ static void GUI_MainMenu_Create(void) {
 static void GuiTask(void *p) {
   LCD1_Init();
   LCD1_Clear();
-  //GDisp1_DrawBox(0, 0, 50, 20, 1, GDisp1_COLOR_RED);
-  //GDisp1_UpdateFull();
+ // for(;;) {
+    GDisp1_Clear();
+    GDisp1_UpdateFull();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_RED);
+    GDisp1_UpdateFull();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    GDisp1_UpdateFull();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_BLUE);
+    GDisp1_UpdateFull();
+ // }
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */

@@ -28,17 +28,10 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. */
-          GDisp1_PixelColor color;
-//#if LCD1_CONFIG_USE_RAM_BUFFER
-          color = ((color_p->full&0xff)<<8) | ((color_p->full&0xff00)>>8); /* swap bytes */
-//#else
-//          color = color_p->full;
-//#endif
-          GDisp1_PutPixel(x, y, color);
+          GDisp1_PutPixel(x, y, color_p->full);
           color_p++;
         }
     }
-    //GDisp1_UpdateFull();
     GDisp1_UpdateRegion(x1, y1, x2, y1);
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
@@ -55,13 +48,7 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display.*/
-            GDisp1_PixelColor color;
-  #if LCD1_CONFIG_USE_RAM_BUFFER
-            color = ((color_p->full&0xff)<<8) | ((color_p->full&0xff00)>>8); /* swap bytes */
-  #else
-            color = color_p->full;
-  #endif
-            GDisp1_PutPixel(x, y, color);
+            GDisp1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
@@ -77,14 +64,8 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display.*/
-          GDisp1_PixelColor col;
-  #if LCD1_CONFIG_USE_RAM_BUFFER
-            col = ((color.full&0xff)<<8) | ((color.full&0xff00)>>8); /* swap bytes */
-  #else
-            col = color.full;
-  #endif
-          GDisp1_PutPixel(x, y, col);
+          /* Put a pixel to the display.*/
+          GDisp1_PutPixel(x, y, color.full);
         }
     }
     GDisp1_UpdateRegion(x1, y1, x2, y1);
