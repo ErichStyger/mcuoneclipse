@@ -9,6 +9,7 @@
 #include "lvgl/lvgl.h"
 #include "GDisp1.h"
 #include "RNG1.h"
+#include <string.h> /* for memset() */
 
 static lv_indev_t *inputDevicePtr;
 
@@ -153,11 +154,13 @@ void LV_Task(void) {
 static bool keyboard_read(lv_indev_data_t *data)  {
   uint16_t keyData;
 
+  memset(data, 0, sizeof(lv_indev_data_t)); /* initialize all fields */
+  data->state = LV_INDEV_STATE_REL; /* by default, not pressed */
   if (RNG1_NofElements()==0) {
     return false; /* no data present */
   }
   if (RNG1_Get(&keyData)!=ERR_OK) {
-    return false; /* something was wrong? */
+    return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
   if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED)) {
     data->key = LV_GROUP_KEY_NEXT;
@@ -168,16 +171,25 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   } else if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ENTER;
     data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_RELEASED_LONG)) {
+    data->key = LV_GROUP_KEY_ENTER;
+    data->state = LV_INDEV_STATE_REL;
   } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED)) {
     data->key = LV_GROUP_KEY_PREV;
     data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_RELEASED)) {
+    data->key = LV_GROUP_KEY_PREV;
+    data->state = LV_INDEV_STATE_REL;
   } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ESC;
     data->state = LV_INDEV_STATE_PR;
+  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_RELEASED_LONG)) {
+    data->key = LV_GROUP_KEY_ESC;
+    data->state = LV_INDEV_STATE_REL;
   } else {
-    return false; /* error? */
+    return false; /* error case? */
   }
-  return RNG1_NofElements()==0;   /* return true if we have more data */
+  return RNG1_NofElements()!=0;   /* return true if we have more data */
 }
 
 void LV_Init(void) {
