@@ -129,32 +129,30 @@ static void GuiTask(void *p) {
 #endif
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_RED);
     x = y = 0;
-    FDisp1_WriteString("Hello", GDisp1_COLOR_WHITE, &x, &y, GFont1_GetFont());
-    GDisp1_UpdateFull();
-
-#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
-    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
-#endif
-    GDisp1_Clear();
-    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
-    x = y = 0;
-    FDisp1_WriteString("landscape180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+    FDisp1_WriteString("Landscape", GDisp1_COLOR_WHITE, &x, &y, GFont1_GetFont());
     GDisp1_UpdateFull();
 
 #if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
     GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT);
 #endif
-    GDisp1_Clear();
-    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_BLUE);
     x = y = 0;
     FDisp1_WriteString("Portrait", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
     GDisp1_UpdateFull();
 
 #if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
+#endif
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    x = y = 0;
+    FDisp1_WriteString("landscape180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+    GDisp1_UpdateFull();
+
+
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
     GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT180);
 #endif
-    GDisp1_Clear();
-    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_YELLOW);
     x = y = 0;
     FDisp1_WriteString("portrait180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
     GDisp1_UpdateFull();
