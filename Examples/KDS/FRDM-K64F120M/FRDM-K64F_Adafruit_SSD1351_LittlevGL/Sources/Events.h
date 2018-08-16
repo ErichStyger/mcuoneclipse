@@ -65,6 +65,8 @@
 #include "TRG1.h"
 #include "CS1.h"
 #include "RNG1.h"
+#include "GFont1.h"
+#include "FDisp1.h"
 #include "MCUC1.h"
 
 #ifdef __cplusplus

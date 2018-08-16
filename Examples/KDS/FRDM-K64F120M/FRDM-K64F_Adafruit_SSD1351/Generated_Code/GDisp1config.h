@@ -20,7 +20,7 @@
 #include GDisp1_CONFIG_DISPLAY_HEADER_FILE  /* include LCD interface */
 
 #ifndef GDisp1_CONFIG_USE_WINDOW_CAPABILITY
-  #define GDisp1_CONFIG_USE_WINDOW_CAPABILITY  (1)
+  #define GDisp1_CONFIG_USE_WINDOW_CAPABILITY  (0)
     /*!< 1: Use display window capability; 0: No display window capability */
 #endif
 
@@ -34,7 +34,7 @@
 #endif
 
 #ifndef GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
-  #define GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE  (1)
+  #define GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE  (0)
     /*!< 1: Use display memory write; 0: Do not use display memory write */
 #endif
 

@@ -98,18 +98,75 @@ static void GUI_MainMenu_Create(void) {
 #endif
 }
 
+#include "GFont1.h"
+#include "FDisp1.h"
+
+static void TextIt(void) {
+  FDisp1_PixelDim x, y;
+  const char *text = "default";
+
+  x = y = 0;
+  switch(GDisp1_GetDisplayOrientation()) {
+    case LCD1_CONFIG_ORIENTATION_PORTRAIT: text = "portrait"; break;
+    case LCD1_CONFIG_ORIENTATION_PORTRAIT180: text = "portrait180"; break;
+    case LCD1_CONFIG_ORIENTATION_LANDSCAPE: text = "landscape"; break;
+    case LCD1_CONFIG_ORIENTATION_LANDSCAPE180: text = "landscape180"; break;
+  }
+  FDisp1_WriteString((unsigned char*)text, GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+}
+
 static void GuiTask(void *p) {
+  FDisp1_PixelDim x, y;
+
   LCD1_Init();
   LCD1_Clear();
  // for(;;) {
     GDisp1_Clear();
     GDisp1_UpdateFull();
+
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE);
+#endif
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_RED);
-    GDisp1_UpdateRegion(0, 0, 50, 20);
+    x = y = 0;
+    FDisp1_WriteString("Hello", GDisp1_COLOR_WHITE, &x, &y, GFont1_GetFont());
+    GDisp1_UpdateFull();
+
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
+#endif
+    GDisp1_Clear();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    x = y = 0;
+    FDisp1_WriteString("landscape180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+    GDisp1_UpdateFull();
+
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT);
+#endif
+    GDisp1_Clear();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    x = y = 0;
+    FDisp1_WriteString("Portrait", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+    GDisp1_UpdateFull();
+
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT180);
+#endif
+    GDisp1_Clear();
+    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
+    x = y = 0;
+    FDisp1_WriteString("portrait180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
+    GDisp1_UpdateFull();
+
+
+    //GDisp1_UpdateRegion(0, 0, 50, 20);
     GDisp1_UpdateFull();
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
     GDisp1_UpdateFull();
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_BLUE);
+    GDisp1_UpdateFull();
+    TextIt();
     GDisp1_UpdateFull();
  // }
 	GUI_MainMenu_Create();

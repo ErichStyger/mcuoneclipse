@@ -6,7 +6,7 @@
 **     Component   : SSD1351
 **     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-16, 07:53, # CodeGen: 149
+**     Date/Time   : 2018-08-16, 08:00, # CodeGen: 150
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -20,10 +20,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          Bytes in x direction                           : yes
 **          MSB first                                      : no
 **          Bits per pixel                                 : 16
-**          Window capability                              : yes
-**          Display Memory Write                           : yes
+**          Window capability                              : no
+**          Display Memory Write                           : no
 **          Display Memory Read                            : no
-**          Use RAM Buffer                                 : no
+**          Use RAM Buffer                                 : yes
 **          Clear display in init                          : no
 **          Initialize on Init                             : no
 **          HW                                             : 
