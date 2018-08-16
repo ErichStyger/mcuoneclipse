@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1351
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-08-16, 07:53, # CodeGen: 149
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -20,10 +20,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          Bytes in x direction                           : yes
 **          MSB first                                      : no
 **          Bits per pixel                                 : 16
-**          Window capability                              : no
-**          Display Memory Write                           : no
+**          Window capability                              : yes
+**          Display Memory Write                           : yes
 **          Display Memory Read                            : no
-**          Use RAM Buffer                                 : yes
+**          Use RAM Buffer                                 : no
 **          Clear display in init                          : no
 **          Initialize on Init                             : no
 **          HW                                             : 
@@ -58,13 +58,15 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         Clear                 - void LCD1_Clear(void);
 **         UpdateFull            - void LCD1_UpdateFull(void);
 **         UpdateRegion          - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
-**         Init                  - void LCD1_Init(void);
 **         InitCommChannel       - void LCD1_InitCommChannel(void);
 **         GetLCD                - void LCD1_GetLCD(void);
 **         GiveLCD               - void LCD1_GiveLCD(void);
 **         OnDataReceived        - void LCD1_OnDataReceived(void);
+**         PutPixel              - void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
+**         GetPixel              - LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
+**         Init                  - void LCD1_Init(void);
 **
-** * Copyright (c) 2014-2017, Erich Styger
+** * Copyright (c) 2014-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -107,8 +109,9 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 
 #include "LCD1.h"
 
-LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
-
+#if LCD1_CONFIG_USE_RAM_BUFFER
+  LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
+#endif
 /*
 - RESET is low active
 - D_C high is data, low is command
@@ -217,8 +220,8 @@ LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_CO
 #define REMAP_COLUMNS_LEFT_TO_RIGHT     (0)     /* column numbering from left to right */
 #define REMAP_COLUMNS_RIGHT_TO_LEFT     (1<<1)  /* column numbering from right to left */
 
-#define REMAP_ORDER_ABC                 (0) /* color oreder is red-green-blue */
-#define REMAP_ORDER_CBA                 (1<<2) /* color order is blue-green-red */
+#define REMAP_ORDER_ABC                 (0)     /* color oreder is red-green-blue */
+#define REMAP_ORDER_CBA                 (1<<2)  /* color order is blue-green-red */
 
 #define REMAP_SCAN_UP_TO_DOWN           (0)
 #define REMAP_SCAN_DOWN_TO_UP           (1<<4)
@@ -226,7 +229,7 @@ LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_CO
 #define REMAP_COM_SPLIT_ODD_EVEN_DIS    (0)
 #define REMAP_COM_SPLIT_ODD_EVEN_EN     (1<<5)
 
-#define REMAP_COLOR_RGB565              (1<<6) /* 5 bits for red, 6 for green and 5 for blue */
+#define REMAP_COLOR_RGB565              (1<<6) /* 65k colors, 5 bits for red, 6 for green and 5 for blue */
 #define LCD1_SPI_Enable()                   (void)SM1_Enable(SM1_DeviceData)
 #define LCD1_SPI_Disable()                  (void)SM1_Disable(SM1_DeviceData)
 #define LCD1_SPI_SetShiftClockPolarity(val) /* not needed for LDD */
@@ -307,6 +310,11 @@ void LCD1_WriteDataWordRepeated(uint16_t data, size_t nof)
 {
   DATA_MODE();
   CS_LOW();
+
+#if MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN
+ /* swap bytes */
+  data = (data<<8)|(data>>8);
+#endif
   while(nof>0) {
     LCD1_SPI_WRITE_BLOCK((uint8_t*)&data, sizeof(data));
     nof--;
@@ -335,7 +343,15 @@ void LCD1_WriteDataBlock(uint8_t *data, size_t dataSize)
 {
   DATA_MODE();
   CS_LOW();
+#if 0
   LCD1_SPI_WRITE_BLOCK(data, dataSize);
+#else
+  while(dataSize>0) {
+    LCD1_SPI_WRITE(*data);
+    dataSize--;
+    data++;
+  }
+#endif
 #if LCD1_CONFIG_USE_SPI_API!=LCD1_CONFIG_SPI_API_SW
   /* for HW SPI, have to delay as transaction still might be going on! */
   WAIT1_Waitus(LCD1_CONFIG_HWSPI_DELAY_US);
@@ -381,9 +397,11 @@ void LCD1_WriteCommand(uint8_t cmd)
 */
 void LCD1_WriteDataWord(uint16_t data)
 {
+  /* writes the data to the bus, most significant byte first */
   DATA_MODE();                         /* DC high */
   CS_LOW();                            /* CS low */
-  LCD1_SPI_WRITE_BLOCK((uint8_t*)&data, sizeof(data)); /* write data */
+  LCD1_SPI_WRITE(data>>8);             /* high byte */
+  LCD1_SPI_WRITE(data);                /* low byte */
 #if LCD1_CONFIG_USE_SPI_API!=LCD1_CONFIG_SPI_API_SW
   /* for HW SPI, have to delay as transaction still might be going on! */
   WAIT1_Waitus(LCD1_CONFIG_HWSPI_DELAY_US);
@@ -417,7 +435,6 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
   if ((y0 >= LCD1_GetHeight()) || (y1 >= LCD1_GetHeight())) {
     return;
   }
-
 #if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
   switch(currentOrientation) {
     default:
@@ -457,10 +474,10 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
 #endif
   /* Set Window */
   LCD1_WriteCommand(OLED_CMD_SET_COLUMN); /* set column command */
-  LCD1_WriteDataWord(c1<<8|c0);        /* start and end column */
+  LCD1_WriteDataWord(c0<<8|c1);        /* start and end column */
 
   LCD1_WriteCommand(OLED_CMD_SET_ROW); /* set row start address command */
-  LCD1_WriteDataWord(r1<<8|r0);        /* start and end row */
+  LCD1_WriteDataWord(r0<<8|r1);        /* start and end row */
 
   LCD1_WriteCommand(OLED_CMD_WRITERAM); /* now activate writing to RAM */
 }
@@ -528,12 +545,16 @@ void LCD1_UpdateFull(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
 void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_PixelDim h)
 {
-  implemented as macro in LCD1.h
+#if LCD1_CONFIG_USE_RAM_BUFFER
+  LCD1_OpenWindow(x, y, x+w-1, y+w-1);  /* window for region */
+  LCD1_WriteDataBlock((uint8_t*)(&LCD1_DisplayBuf[x][y]), w*h*sizeof(LCD1_DisplayBuf[0][0]));
+  LCD1_CloseWindow();
+#else
+  /* nothing needed in direct display mode (not using RAM buffer) */
+#endif
 }
-*/
 
 /*
 ** ===================================================================
@@ -583,9 +604,9 @@ LCD1_DisplayOrientation LCD1_GetDisplayOrientation(void)
 **     Method      :  SetDisplayOrientation (component SSD1351)
 **
 **     Description :
-**         Sets the display orienation. If you enable this method, then
-**         the orientation of the display can be changed at runtime.
-**         However, this requires additional ressources.
+**         Sets the display orientation. If you enable this method,
+**         then the orientation of the display can be changed at
+**         runtime. However, this requires additional resources.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         newOrientation  - new orientation to
@@ -598,12 +619,10 @@ void LCD1_SetDisplayOrientation(LCD1_DisplayOrientation newOrientation)
 #if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
   uint8_t remap;
   currentOrientation = newOrientation;
-  #if LCD1_HW_HEIGHT==96 /* special settings needed for Hexiwear 96x96 display */
-    #define REMAP_BASE_VALUES           (REMAP_COLOR_RGB565 | REMAP_COM_SPLIT_ODD_EVEN_EN | REMAP_SCAN_UP_TO_DOWN | REMAP_ORDER_ABC)
-  //#elif LCD1_CONFIG_USE_RAM_BUFFER /* need to care about little/big endian order of data */
-  //  #define REMAP_BASE_VALUES           (REMAP_COLOR_RGB565 | REMAP_COM_SPLIT_ODD_EVEN_EN | REMAP_SCAN_UP_TO_DOWN | REMAP_ORDER_ABC)
-  #else
+  #if MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN
     #define REMAP_BASE_VALUES           (REMAP_COLOR_RGB565 | REMAP_COM_SPLIT_ODD_EVEN_EN | REMAP_SCAN_UP_TO_DOWN | REMAP_ORDER_CBA)
+  #else
+    #define REMAP_BASE_VALUES           (REMAP_COLOR_RGB565 | REMAP_COM_SPLIT_ODD_EVEN_EN | REMAP_SCAN_UP_TO_DOWN | REMAP_ORDER_ABC)
   #endif
 
   switch(currentOrientation) {
@@ -817,7 +836,7 @@ void LCD1_Init(void)
     /* 0xB1 */ OLED_ACC_TO_CMD_YES,     DATA_BYTE,
     /* 0xAE */ OLED_CMD_DISPLAYOFF,     CMD_BYTE,
     /* 0xB3 */ OLED_CMD_SET_OSC_FREQ_AND_CLOCKDIV, CMD_BYTE,
-               0xF1,                    DATA_BYTE,
+               0xF1,                    DATA_BYTE, /* 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16) */
     /* 0xCA */ OLED_CMD_SET_MUX_RATIO,  CMD_BYTE,
                (LCD1_HW_WIDTH-1), DATA_BYTE,
     /* 0x15 */ OLED_CMD_SET_COLUMN,     CMD_BYTE,
@@ -906,6 +925,61 @@ void LCD1_Init(void)
 void LCD1_OnDataReceived(void)
 {
   LCD1_DataReceivedFlag = TRUE;
+}
+
+/*
+** ===================================================================
+**     Method      :  PutPixel (component SSD1351)
+**
+**     Description :
+**         Writes a pixel to the display memory buffer
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - 
+**         color           - pixel color
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color)
+{
+#if LCD1_CONFIG_USE_RAM_BUFFER
+  #if MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN
+  LCD1_DisplayBuf[y][x] = (color<<8)|(color>>8);
+  #else
+  LCD1_DisplayBuf[y][x] = color;
+  #endif
+#endif
+}
+
+/*
+** ===================================================================
+**     Method      :  GetPixel (component SSD1351)
+**
+**     Description :
+**         Returns a pixel from the memory buffer
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - y coordinate
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y)
+{
+#if LCD1_CONFIG_USE_RAM_BUFFER
+  #if MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN
+  LCD1_PixelColor pix;
+
+  pix = LCD1_DisplayBuf[y][x];
+  return (pix<<8)|(pix>>8);
+  #else
+  return LCD1_DisplayBuf[y][x];
+  #endif
+#else
+  return 0; /* no buffer! */
+#endif
 }
 
 /* END LCD1. */

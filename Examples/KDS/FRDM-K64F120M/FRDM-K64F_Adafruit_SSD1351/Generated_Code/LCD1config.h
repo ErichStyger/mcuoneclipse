@@ -58,7 +58,7 @@
 #endif
 
 #ifndef LCD1_CONFIG_USE_RAM_BUFFER
-  #define LCD1_CONFIG_USE_RAM_BUFFER    (1)
+  #define LCD1_CONFIG_USE_RAM_BUFFER    (0)
   /*!< 1: Use RAM Buffer for display memory; 0: Do not use RAM buffer (write directly to display) */
 #endif
 

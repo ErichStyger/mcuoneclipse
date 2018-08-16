@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.200, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.201, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-08-16, 07:53, # CodeGen: 149
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -135,26 +135,7 @@ static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-
 */
 void GDisp1_Clear(void)
 {
-  uint8_t *p = (uint8_t*)(&LCD1_DisplayBuf[0][0]); /* first element in display buffer */
-
-  while (p<((uint8_t*)LCD1_DisplayBuf)+sizeof(LCD1_DisplayBuf)) {
- #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
-    *p++ = (uint8_t)(  (GDisp1_COLOR_PIXEL_CLR<<7)
-                  | (GDisp1_COLOR_PIXEL_CLR<<6)
-                  | (GDisp1_COLOR_PIXEL_CLR<<5)
-                  | (GDisp1_COLOR_PIXEL_CLR<<4)
-                  | (GDisp1_COLOR_PIXEL_CLR<<3)
-                  | (GDisp1_COLOR_PIXEL_CLR<<2)
-                  | (GDisp1_COLOR_PIXEL_CLR<<1)
-                  |  GDisp1_COLOR_PIXEL_CLR
-                 );
- #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-    *((uint16_t*)p) = GDisp1_COLOR_WHITE;
-    p += 2;
- #else
-    *p++ = GDisp1_COLOR_WHITE;
- #endif
-  }
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_WHITE);
 }
 
 /*
@@ -172,9 +153,6 @@ void GDisp1_Clear(void)
 */
 void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 {
-  if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
-    return;
-  }
 #if GDisp1_CONFIG_USE_MUTEX
   GDisp1_GetDisplay();
 #endif
@@ -185,7 +163,8 @@ void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 #elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
   GDisp1_CONFIG_FCT_NAME_SETPIXEL(x, y);
 #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_BLACK;
+  //GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_BLACK;
+  LCD1_PutPixel(x, y, GDisp1_COLOR_BLACK);
 #else
   GDisp1_BUF_BYTE(x,y) |= GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
 #endif
@@ -209,9 +188,6 @@ void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 */
 void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 {
-  if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
-    return;
-  }
 #if GDisp1_CONFIG_USE_MUTEX
   GDisp1_GetDisplay();
 #endif
@@ -222,7 +198,8 @@ void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 #elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
   LCD1_ClrPixel(x, y);
 #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_WHITE;
+  //GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_WHITE;
+  LCD1_PutPixel(x, y, GDisp1_COLOR_WHITE);
 #else
   GDisp1_BUF_BYTE(x,y) &= ~GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
 #endif
@@ -269,9 +246,6 @@ void GDisp1_UpdateFull(void)
 #endif
 void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor color)
 {
-  if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
-    return;
-  }
 #if GDisp1_CONFIG_USE_MUTEX
   GDisp1_GetDisplay();
 #endif
@@ -289,8 +263,8 @@ void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor col
   } else {
     GDisp1_ClrPixel(x,y);
   }
- #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = color;
+ //#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
+ // GDisp1_BUF_WORD(x,y) = color;
  #else /* multi-bit display */
   LCD1_PutPixel(x, y, color);
  #endif
@@ -330,11 +304,6 @@ void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim 
   GDisp1_PixelDim d_width = GDisp1_GetWidth();
   GDisp1_PixelDim d_height = GDisp1_GetHeight();
 
-  if (   width==0 || height==0
-      || x>=d_width || y>=d_height
-     ) {
-    return; /* nothing to do */
-  }
   if (x+width>d_width) { /* value out of range */
     if (x>=d_width) {
       return;                          /* completely outside of display */

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.200, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.201, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-08-16, 07:53, # CodeGen: 149
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -153,30 +153,6 @@ typedef LCD1_DisplayOrientation GDisp1_DisplayOrientation;
 #define GDisp1_ORIENTATION_PORTRAIT180  LCD1_ORIENTATION_PORTRAIT180
 #define GDisp1_ORIENTATION_LANDSCAPE    LCD1_ORIENTATION_LANDSCAPE
 #define GDisp1_ORIENTATION_LANDSCAPE180 LCD1_ORIENTATION_LANDSCAPE180
-
-
-/* Landscape */
-
-#define GDisp1_BUF_WORD(x,y)  /* how to access a byte in the display buf[][] */ \
-  LCD1_DisplayBuf[y][x]
-
-#if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
-  #define GDisp1_BUF_BYTE_PIXEL_MASK(x,y)  /* pixel mask for an individual bit inside a display buffer byte */ \
-    (1<<GDisp1_BUF_BYTE_PIXEL_BIT_NO(x,y))
-  #define GDisp1_BUF_BYTE_GET_PIXEL(x,y)  /* extract a pixel */ \
-    ((GDisp1_BUF_BYTE(x,y)&GDisp1_BUF_BYTE_PIXEL_MASK(x,y))>>GDisp1_BUF_BYTE_PIXEL_BIT_NO(x,y))
-#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==8
-  #define GDisp1_BUF_BYTE_PIXEL_MASK(x,y)  /* pixel mask for an individual bit inside a display buffer byte */ \
-    0xff
-  #define GDisp1_BUF_BYTE_GET_PIXEL(x,y)  /* extract a pixel */ \
-    GDisp1_BUF_BYTE(x,y)
-#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  /* no byte access used */
-#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==24
-  /* Neopixels, no byte access used */
-#else
-  #error "not supported"
-#endif
 
 void GDisp1_Clear(void);
 /*
@@ -517,7 +493,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetDisplayOrientation() GDisp1_ORIENTATION_LANDSCAPE
+#define GDisp1_GetDisplayOrientation LCD1_GetDisplayOrientation
 /*
 ** ===================================================================
 **     Method      :  GetDisplayOrientation (component GDisplay)
@@ -530,7 +506,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetWidth LCD1_GetLongerSide
+#define GDisp1_GetWidth LCD1_GetWidth
 /*
 ** ===================================================================
 **     Method      :  GetWidth (component GDisplay)
@@ -543,7 +519,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetHeight LCD1_GetShorterSide
+#define GDisp1_GetHeight LCD1_GetHeight
 /*
 ** ===================================================================
 **     Method      :  GetHeight (component GDisplay)

@@ -158,10 +158,10 @@ void drawEye( // Renders one eye.  Inputs must be pre-clipped & valid.
       //while(KINETISK_SPI0.SR & 0xC000); // Wait for space in FIFO
       //KINETISK_SPI0.PUSHR = p | SPI_PUSHR_CTAS(1) | SPI_PUSHR_CONT;
       {
-        uint16_t val;
+        //uint16_t val;
 
-        val = (p<<8)|((p>>8)&0xff); /* swap */
-        GDisp1_PutPixel(screenX, screenY, val);
+        //val = (p<<8)|((p>>8)&0xff); /* swap */
+        GDisp1_PutPixel(screenX, screenY, p);
       }
     }
   }

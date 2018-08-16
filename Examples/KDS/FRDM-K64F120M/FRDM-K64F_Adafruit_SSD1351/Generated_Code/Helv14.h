@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GFont
-**     Version     : Component 01.129, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-08-15, 21:04, # CodeGen: 148
 **     Abstract    :
 **          Driver for graphical fonts
 **     Settings    :

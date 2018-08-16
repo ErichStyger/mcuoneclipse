@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1351
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-08-16, 07:53, # CodeGen: 149
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -20,10 +20,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          Bytes in x direction                           : yes
 **          MSB first                                      : no
 **          Bits per pixel                                 : 16
-**          Window capability                              : no
-**          Display Memory Write                           : no
+**          Window capability                              : yes
+**          Display Memory Write                           : yes
 **          Display Memory Read                            : no
-**          Use RAM Buffer                                 : yes
+**          Use RAM Buffer                                 : no
 **          Clear display in init                          : no
 **          Initialize on Init                             : no
 **          HW                                             : 
@@ -58,13 +58,15 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         Clear                 - void LCD1_Clear(void);
 **         UpdateFull            - void LCD1_UpdateFull(void);
 **         UpdateRegion          - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
-**         Init                  - void LCD1_Init(void);
 **         InitCommChannel       - void LCD1_InitCommChannel(void);
 **         GetLCD                - void LCD1_GetLCD(void);
 **         GiveLCD               - void LCD1_GiveLCD(void);
 **         OnDataReceived        - void LCD1_OnDataReceived(void);
+**         PutPixel              - void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
+**         GetPixel              - LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
+**         Init                  - void LCD1_Init(void);
 **
-** * Copyright (c) 2014-2017, Erich Styger
+** * Copyright (c) 2014-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -130,53 +132,31 @@ typedef uint16_t LCD1_PixelColor;      /* type to hold color information */
 typedef uint16_t LCD1_PixelDim;        /* one word is enough to describe an x/y position */
 typedef uint32_t LCD1_PixelCount;      /* need a 32bit type to hold the number of pixels on the display. */
 
-extern LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
+#if LCD1_CONFIG_USE_RAM_BUFFER
+  extern LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
+#endif
 
 /* Predefined colors and pixel values. The display is using words for a pixel/color. Using 16bits for color (65k: 5:red + 6:green + 5:blue */
-#if LCD1_CONFIG_USE_RAM_BUFFER  /* && is Little endian! */
-  /* if using RAM buffer, we use an array of 16bit entries. Because for ARM, the data is little endian, we need to swap the bits */
-  #define LCD1_COLOR_RED            0b0000000011111000
-  #define LCD1_COLOR_BRIGHT_RED     0b1110001111111000
-  #define LCD1_COLOR_DARK_RED       0b0000000010011000
+#define LCD1_COLOR_RED            0b1111100000000000
+#define LCD1_COLOR_BRIGHT_RED     0b1111100011100011
+#define LCD1_COLOR_DARK_RED       0b1001100000000000
 
-  #define LCD1_COLOR_GREEN          0b1110000000000111
-  #define LCD1_COLOR_DARK_GREEN     0b0110000000000011
-  #define LCD1_COLOR_BRIGHT_GREEN   0b1111001110011111
+#define LCD1_COLOR_GREEN          0b0000011111100000
+#define LCD1_COLOR_DARK_GREEN     0b0000001101100000
+#define LCD1_COLOR_BRIGHT_GREEN   0b1001111111110011
 
-  #define LCD1_COLOR_BLUE           0b0001111100000000
-  #define LCD1_COLOR_BRIGHT_BLUE    0b1101111111011110
-  #define LCD1_COLOR_DARK_BLUE      0b0001001100000000
+#define LCD1_COLOR_BLUE           0b0000000000011111
+#define LCD1_COLOR_BRIGHT_BLUE    0b1101111011011111
+#define LCD1_COLOR_DARK_BLUE      0b0000000000010011
 
-  #define LCD1_COLOR_YELLOW         0b1110000011111111
-  #define LCD1_COLOR_BRIGHT_YELLOW  0b1100110011111111
-  #define LCD1_COLOR_ORANGE         0b1100011011111100
+#define LCD1_COLOR_YELLOW         0b1111111111100000
+#define LCD1_COLOR_BRIGHT_YELLOW  0b1111111111001100
+#define LCD1_COLOR_ORANGE         0b1111110011000110
 
-  #define LCD1_COLOR_WHITE          0b1111111111111111
-  #define LCD1_COLOR_BLACK          0b0000000000000000
-  #define LCD1_COLOR_GREY           0b1110011100111000
-  #define LCD1_COLOR_BRIGHT_GREY    0b1110111101111011
-#else
-  #define LCD1_COLOR_RED            0b1111100000000000
-  #define LCD1_COLOR_BRIGHT_RED     0b1111100011100011
-  #define LCD1_COLOR_DARK_RED       0b1001100000000000
-
-  #define LCD1_COLOR_GREEN          0b0000011111100000
-  #define LCD1_COLOR_DARK_GREEN     0b0000001101100000
-  #define LCD1_COLOR_BRIGHT_GREEN   0b1001111111110011
-
-  #define LCD1_COLOR_BLUE           0b0000000000011111
-  #define LCD1_COLOR_BRIGHT_BLUE    0b1101111011011111
-  #define LCD1_COLOR_DARK_BLUE      0b0000000000010011
-
-  #define LCD1_COLOR_YELLOW         0b1111111111100000
-  #define LCD1_COLOR_BRIGHT_YELLOW  0b1111111111001100
-  #define LCD1_COLOR_ORANGE         0b1111110011000110
-
-  #define LCD1_COLOR_WHITE          0b1111111111111111
-  #define LCD1_COLOR_BLACK          0b0000000000000000
-  #define LCD1_COLOR_GREY           0b0011100011100111
-  #define LCD1_COLOR_BRIGHT_GREY    0b0111101111101111
-#endif
+#define LCD1_COLOR_WHITE          0b1111111111111111
+#define LCD1_COLOR_BLACK          0b0000000000000000
+#define LCD1_COLOR_GREY           0b0011100011100111
+#define LCD1_COLOR_BRIGHT_GREY    0b0111101111101111
 
 #define LCD1_PIXEL_ON  LCD1_COLOR_WHITE /* value of a pixel if it is 'on' */
 #define LCD1_PIXEL_OFF LCD1_COLOR_BLACK /* value of a pixel if it is 'off' */
@@ -200,6 +180,7 @@ typedef enum {
 
 #define LCD1_ReadPixel(data)  \
   0 /* with the serial interface it is NOT possible to read from display memory */
+
 
 
 
@@ -240,10 +221,7 @@ void LCD1_UpdateFull(void);
 ** ===================================================================
 */
 
-/* implemented as macro
 void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_PixelDim h);
-*/
-#define LCD1_UpdateRegion(x,y,w,h) /* nothing to do, as this display type does not require a refresh */
 /*
 ** ===================================================================
 **     Method      :  UpdateRegion (component SSD1351)
@@ -324,9 +302,9 @@ void LCD1_SetDisplayOrientation(LCD1_DisplayOrientation newOrientation);
 **     Method      :  SetDisplayOrientation (component SSD1351)
 **
 **     Description :
-**         Sets the display orienation. If you enable this method, then
-**         the orientation of the display can be changed at runtime.
-**         However, this requires additional ressources.
+**         Sets the display orientation. If you enable this method,
+**         then the orientation of the display can be changed at
+**         runtime. However, this requires additional resources.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         newOrientation  - new orientation to
@@ -514,6 +492,38 @@ void LCD1_WriteDataWordRepeated(uint16_t data, size_t nof);
 **         data            - data to write
 **         nof             - How many times the data word shall be sent
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
+/*
+** ===================================================================
+**     Method      :  PutPixel (component SSD1351)
+**
+**     Description :
+**         Writes a pixel to the display memory buffer
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - 
+**         color           - pixel color
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
+/*
+** ===================================================================
+**     Method      :  GetPixel (component SSD1351)
+**
+**     Description :
+**         Returns a pixel from the memory buffer
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - y coordinate
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

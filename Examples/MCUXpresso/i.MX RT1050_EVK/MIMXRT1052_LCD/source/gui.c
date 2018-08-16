@@ -386,7 +386,6 @@ static void GuiTask(void *p) {
 	//lv_tutorial_responsive();
 	//lv_tutorial_styles();
 	//show_image();
-
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */

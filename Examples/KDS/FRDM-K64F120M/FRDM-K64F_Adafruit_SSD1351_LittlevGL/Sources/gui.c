@@ -105,6 +105,7 @@ static void GuiTask(void *p) {
     GDisp1_Clear();
     GDisp1_UpdateFull();
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_RED);
+    GDisp1_UpdateRegion(0, 0, 50, 20);
     GDisp1_UpdateFull();
     GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
     GDisp1_UpdateFull();
