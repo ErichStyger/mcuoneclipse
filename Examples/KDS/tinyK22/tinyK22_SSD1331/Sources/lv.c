@@ -22,8 +22,7 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
-            /* put_px(x, y, *color_p)*/
-            LCD1_DrawPixel(x, y, color_p->full);
+            LCD1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
@@ -32,7 +31,6 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
 }
-
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
@@ -45,12 +43,11 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
             /* put_px(x, y, *color_p)*/
-            LCD1_DrawPixel(x, y, color_p->full);
+          LCD1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
 }
-
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
@@ -63,7 +60,7 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
             /* put_px(x, y, *color)*/
-            LCD1_DrawPixel(x, y, color.full);
+          LCD1_PutPixel(x, y, color.full);
         }
     }
 }

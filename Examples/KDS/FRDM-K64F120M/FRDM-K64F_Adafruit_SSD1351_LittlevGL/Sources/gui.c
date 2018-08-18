@@ -33,6 +33,11 @@ static lv_res_t Btn_Hardware_click_action(struct _lv_obj_t *obj) {
  return LV_RES_OK;
 }
 
+/* style modification callback for the focus of an element */
+static void style_mod_cb(lv_style_t *style) {
+  style->line.color.full = 0x7f00;
+}
+
 static void GUI_MainMenu_Create(void) {
   lv_obj_t *label;
 
@@ -62,6 +67,9 @@ static void GUI_MainMenu_Create(void) {
 #if 1
   lv_group_t *group = lv_group_create(); /* create group */
   lv_indev_set_group(LV_GetInputDevice(), group); /* assign group to input device */
+
+  /* change the default focus style which is an orangish thing */
+  lv_group_set_style_mod_cb(group, style_mod_cb);
 
   /* create window */
   win = lv_win_create(lv_scr_act(), NULL);
@@ -101,22 +109,8 @@ static void GUI_MainMenu_Create(void) {
 #include "GFont1.h"
 #include "FDisp1.h"
 
-static void TextIt(void) {
-  FDisp1_PixelDim x, y;
-  const char *text = "default";
-
-  x = y = 0;
-  switch(GDisp1_GetDisplayOrientation()) {
-    case LCD1_CONFIG_ORIENTATION_PORTRAIT: text = "portrait"; break;
-    case LCD1_CONFIG_ORIENTATION_PORTRAIT180: text = "portrait180"; break;
-    case LCD1_CONFIG_ORIENTATION_LANDSCAPE: text = "landscape"; break;
-    case LCD1_CONFIG_ORIENTATION_LANDSCAPE180: text = "landscape180"; break;
-  }
-  FDisp1_WriteString((unsigned char*)text, GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
-}
-
 static void GuiTask(void *p) {
-  FDisp1_PixelDim x, y;
+  FDisp1_PixelDim x, y, w, h;
 
   LCD1_Init();
   LCD1_Clear();
@@ -124,6 +118,15 @@ static void GuiTask(void *p) {
     GDisp1_Clear();
     GDisp1_UpdateFull();
 
+#if 1
+//    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
+    x = 20; y = 10;
+    w = 50; h = 20;
+    GDisp1_DrawFilledBox(x, y, w, h, GDisp1_COLOR_RED);
+    GDisp1_UpdateRegion(x, y, w, h);
+#endif
+
+#if 0
 #if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
     GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE);
 #endif
@@ -157,16 +160,8 @@ static void GuiTask(void *p) {
     FDisp1_WriteString("portrait180", GDisp1_COLOR_BLACK, &x, &y, GFont1_GetFont());
     GDisp1_UpdateFull();
 
-
-    //GDisp1_UpdateRegion(0, 0, 50, 20);
-    GDisp1_UpdateFull();
-    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_GREEN);
-    GDisp1_UpdateFull();
-    GDisp1_DrawFilledBox(0, 0, 50, 20, GDisp1_COLOR_BLUE);
-    GDisp1_UpdateFull();
-    TextIt();
-    GDisp1_UpdateFull();
  // }
+#endif
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
@@ -178,6 +173,12 @@ static void GuiTask(void *p) {
 void GUI_Init(void) {
 	LV_Init(); /* initialize GUI library */
 	lv_theme_set_current(lv_theme_night_init(128, NULL));
+  //lv_theme_set_current(lv_theme_alien_init(128, NULL));
+  //lv_theme_set_current(lv_theme_default_init(128, NULL));
+  //lv_theme_set_current(lv_theme_material_init(128, NULL));
+  //lv_theme_set_current(lv_theme_mono_init(128, NULL));
+  //lv_theme_set_current(lv_theme_zen_init(128, NULL));
+
   if (xTaskCreate(GuiTask, "gui", 1200/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }

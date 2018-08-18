@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.201, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.202, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-16, 08:00, # CodeGen: 150
+**     Date/Time   : 2018-08-17, 16:57, # CodeGen: 151
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -41,7 +41,7 @@
 **         Deinit                - void GDisp1_Deinit(void);
 **         Init                  - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

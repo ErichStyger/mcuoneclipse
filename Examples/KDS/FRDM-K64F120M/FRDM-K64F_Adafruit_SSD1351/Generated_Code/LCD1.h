@@ -6,7 +6,7 @@
 **     Component   : SSD1351
 **     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-16, 08:00, # CodeGen: 150
+**     Date/Time   : 2018-08-17, 16:57, # CodeGen: 151
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -180,9 +180,6 @@ typedef enum {
 
 #define LCD1_ReadPixel(data)  \
   0 /* with the serial interface it is NOT possible to read from display memory */
-
-
-
 
 void LCD1_Clear(void);
 /*

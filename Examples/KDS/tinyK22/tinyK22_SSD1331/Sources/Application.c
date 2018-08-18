@@ -24,7 +24,7 @@ static void lvgl_test(void) {
   /*Add a button*/
   lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
   lv_obj_set_pos(btn1, 2, 2);                                    /*Adjust the position*/
-  lv_obj_set_size(btn1, 96, 30);
+  lv_obj_set_size(btn1, 60, 25);
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, my_click_action);   /*Assign a callback for clicking*/
 
   /*Add text*/
@@ -32,8 +32,7 @@ static void lvgl_test(void) {
   lv_label_set_text(label, "Click");
 }
 
-void lv_tutorial_hello_world(void)
-{
+void lv_tutorial_hello_world(void) {
     /*Create a Label on the currently active screen*/
     lv_obj_t * label1 =  lv_label_create(lv_scr_act(), NULL);
 
@@ -46,34 +45,64 @@ void lv_tutorial_hello_world(void)
     lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
-
 void APP_Run(void) {
   int x, y;
+  FDisp1_PixelDim fx, fy;
 
-  LV_Init();
+  GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE);
+  GDisp1_Clear();
+  GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_RED);
+  fx = fy = 0;
+  FDisp1_WriteString("landscape", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
+  GDisp1_UpdateFull();
+
+  GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
+  GDisp1_Clear();
+  GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_GREEN);
+  fx = fy = 0;
+  FDisp1_WriteString("landscape180", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
+  GDisp1_UpdateFull();
+
+  GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT);
+  GDisp1_Clear();
+  GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_BLUE);
+  fx = fy = 0;
+  FDisp1_WriteString("portrait", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
+  GDisp1_UpdateFull();
+
+  GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT180);
+  GDisp1_Clear();
+  GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_YELLOW);
+  fx = fy = 0;
+  FDisp1_WriteString("portrait180", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
+  GDisp1_UpdateFull();
+
+  for(;;) {
+    LED1_Neg();
+    WAIT1_Waitms(100);
+  }
+
+  LV_Init(); /* initialize GUI library */
 
  // LCD1_Init();
  // LCD1_Off();
  // LCD1_On();
 
+  lvgl_test();
   for(;;) {
     LED1_Neg();
-    LV_Task();
     WAIT1_Waitms(5);
 
-    lvgl_test();
     LV_Task();
     WAIT1_Waitms(5);
-
 
     lv_tutorial_hello_world();
     LV_Task();
     WAIT1_Waitms(5);
-
   }
 
 
-#if 1
+#if 0
   for(y=0; y<96; y++) {
     for(x=0; x<64; x++) {
       LCD1_DrawPixel(x, y, LCD1_COLOR_WHITE);
@@ -94,20 +123,6 @@ void APP_Run(void) {
     }
   }
 #endif
-  GDisp1_DrawFilledBox(0, 0, 10, 20, GDisp1_COLOR_BLUE);
-  GDisp1_DrawLine(10, 10, 50, 20, GDisp1_COLOR_RED);
-  GDisp1_DrawBox(0,0, GDisp1_GetWidth(), GDisp1_GetHeight(), 1, GDisp1_COLOR_GREEN);
-
-  FDisp1_PixelDim fx, fy;
-  fx = fy = 0;
-  FDisp1_WriteString("hello", GDisp1_COLOR_ORANGE, &fx, &fy, GFont1_GetFont());
-
-  GDisp1_UpdateFull();
-
-  for(;;) {
-    LED1_Neg();
-    WAIT1_Waitms(100);
-  }
 }
 
 

@@ -32,8 +32,7 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
           color_p++;
         }
     }
-    //GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-    GDisp1_UpdateFull();
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
@@ -53,7 +52,7 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
             color_p++;
         }
     }
-    GDisp1_UpdateRegion(x1, y1, x2, y1);
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 /* Write a pixel array (called 'map') to the a specific area on the display
@@ -69,7 +68,7 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
           GDisp1_PutPixel(x, y, color.full);
         }
     }
-    GDisp1_UpdateRegion(x1, y1, x2, y1);
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 #if USE_LV_GPU

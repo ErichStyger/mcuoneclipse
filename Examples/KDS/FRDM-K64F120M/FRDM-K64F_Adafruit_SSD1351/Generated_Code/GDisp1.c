@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.201, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.202, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-16, 08:00, # CodeGen: 150
+**     Date/Time   : 2018-08-17, 16:57, # CodeGen: 151
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -41,7 +41,7 @@
 **         Deinit                - void GDisp1_Deinit(void);
 **         Init                  - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -135,26 +135,7 @@ static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-
 */
 void GDisp1_Clear(void)
 {
-  uint8_t *p = (uint8_t*)(&LCD1_DisplayBuf[0][0]); /* first element in display buffer */
-
-  while (p<((uint8_t*)LCD1_DisplayBuf)+sizeof(LCD1_DisplayBuf)) {
- #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
-    *p++ = (uint8_t)(  (GDisp1_COLOR_PIXEL_CLR<<7)
-                  | (GDisp1_COLOR_PIXEL_CLR<<6)
-                  | (GDisp1_COLOR_PIXEL_CLR<<5)
-                  | (GDisp1_COLOR_PIXEL_CLR<<4)
-                  | (GDisp1_COLOR_PIXEL_CLR<<3)
-                  | (GDisp1_COLOR_PIXEL_CLR<<2)
-                  | (GDisp1_COLOR_PIXEL_CLR<<1)
-                  |  GDisp1_COLOR_PIXEL_CLR
-                 );
- #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-    *((uint16_t*)p) = GDisp1_COLOR_WHITE;
-    p += 2;
- #else
-    *p++ = GDisp1_COLOR_WHITE;
- #endif
-  }
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_WHITE);
 }
 
 /*
@@ -185,7 +166,6 @@ void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
 #elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
   GDisp1_CONFIG_FCT_NAME_SETPIXEL(x, y);
 #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  //GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_BLACK;
   LCD1_PutPixel(x, y, GDisp1_COLOR_BLACK);
 #else
   GDisp1_BUF_BYTE(x,y) |= GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
