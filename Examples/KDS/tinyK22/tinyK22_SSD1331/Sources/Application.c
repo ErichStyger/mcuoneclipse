@@ -22,9 +22,9 @@ static lv_res_t my_click_action(struct _lv_obj_t * obj) {
 
 static void lvgl_test(void) {
   /*Add a button*/
-  lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
+  lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
   lv_obj_set_pos(btn1, 2, 2);                                    /*Adjust the position*/
-  lv_obj_set_size(btn1, 60, 25);
+  lv_obj_set_size(btn1, 60, 20);
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, my_click_action);   /*Assign a callback for clicking*/
 
   /*Add text*/
@@ -45,10 +45,12 @@ void lv_tutorial_hello_world(void) {
     lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
-void APP_Run(void) {
+static void LCD_Test(void) {
   int x, y;
   FDisp1_PixelDim fx, fy;
 
+  // LCD1_Off();
+  // LCD1_On();
   GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE);
   GDisp1_Clear();
   GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_RED);
@@ -76,53 +78,18 @@ void APP_Run(void) {
   fx = fy = 0;
   FDisp1_WriteString("portrait180", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
   GDisp1_UpdateFull();
-
-  for(;;) {
-    LED1_Neg();
-    WAIT1_Waitms(100);
-  }
-
-  LV_Init(); /* initialize GUI library */
-
- // LCD1_Init();
- // LCD1_Off();
- // LCD1_On();
-
-  lvgl_test();
-  for(;;) {
-    LED1_Neg();
-    WAIT1_Waitms(5);
-
-    LV_Task();
-    WAIT1_Waitms(5);
-
-    lv_tutorial_hello_world();
-    LV_Task();
-    WAIT1_Waitms(5);
-  }
-
-
-#if 0
-  for(y=0; y<96; y++) {
-    for(x=0; x<64; x++) {
-      LCD1_DrawPixel(x, y, LCD1_COLOR_WHITE);
-    }
-  }
-#if 0
-  for(y=0; y<20; y++) {
-    for(x=0; x<50; x++) {
-      LCD1_DrawPixel(x, y, LCD1_COLOR_BLUE);
-    }
-  }
-#endif
-#endif
-#if 0
-  for(y=0; y<64; y++) {
-    for(x=0; x<96; x++) {
-      LCD1_DrawPixel(y, x, LCD1_COLOR_BLACK);
-    }
-  }
-#endif
 }
 
-
+void APP_Run(void) {
+  // LCD_Test();
+  LV_Init(); /* initialize GUI library */
+  lvgl_test(); /* create test GUI */
+  for(;;) {
+    LED1_Neg();
+    LV_Task();
+    WAIT1_Waitms(5);
+ //   lv_tutorial_hello_world();
+ //   LV_Task();
+ //   WAIT1_Waitms(5);
+  }
+}

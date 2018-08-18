@@ -7,7 +7,7 @@
 
 #include "lv.h"
 #include "lvgl.h"
-#include "LCD1.h"
+#include "GDisp1.h"
 
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
@@ -22,11 +22,11 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
     for(y = y1; y <= y2; y++) {
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
-            LCD1_PutPixel(x, y, color_p->full);
+            GDisp1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
-
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
     /* IMPORTANT!!!
      * Inform the graphics library that you are ready with the flushing*/
     lv_flush_ready();
@@ -43,10 +43,11 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
             /* put_px(x, y, *color_p)*/
-          LCD1_PutPixel(x, y, color_p->full);
+            GDisp1_PutPixel(x, y, color_p->full);
             color_p++;
         }
     }
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 /* Write a pixel array (called 'map') to the a specific area on the display
@@ -60,9 +61,10 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
         for(x = x1; x <= x2; x++) {
             /* Put a pixel to the display. For example: */
             /* put_px(x, y, *color)*/
-          LCD1_PutPixel(x, y, color.full);
+            GDisp1_PutPixel(x, y, color.full);
         }
     }
+    GDisp1_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 #if USE_LV_GPU
@@ -101,15 +103,7 @@ static bool ex_tp_read(lv_indev_data_t * data)
     /* data->state = LV_INDEV_STATE_REL or LV_INDEV_STATE_PR */
     /* data->point.x = tp_x; */
     /* data->point.y = tp_y; */
-
     return false;   /*false: no more data to read because we are no buffering*/
-}
-
-void my_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
-    /*TODO Copy 'color_p' to the specified area*/
-
-    /*Call 'lv_fluh_ready()' when ready*/
-    lv_flush_ready();
 }
 
 void LV_Task(void) {
