@@ -35,7 +35,25 @@ static lv_res_t Btn_Hardware_click_action(struct _lv_obj_t *obj) {
 
 /* style modification callback for the focus of an element */
 static void style_mod_cb(lv_style_t *style) {
-  style->line.color.full = 0x7f00;
+#if LV_COLOR_DEPTH != 1
+    /*Make the style to be a little bit orange*/
+    style->body.border.opa = LV_OPA_COVER;
+    style->body.border.color = LV_COLOR_ORANGE;
+
+    /*If not empty or has border then emphasis the border*/
+    if(style->body.empty == 0 || style->body.border.width != 0) style->body.border.width = LV_DPI / 50;
+
+    style->body.main_color = lv_color_mix(style->body.main_color, LV_COLOR_ORANGE, LV_OPA_70);
+    style->body.grad_color = lv_color_mix(style->body.grad_color, LV_COLOR_ORANGE, LV_OPA_70);
+    style->body.shadow.color = lv_color_mix(style->body.shadow.color, LV_COLOR_ORANGE, LV_OPA_60);
+
+    style->text.color = lv_color_mix(style->text.color, LV_COLOR_ORANGE, LV_OPA_70);
+#else
+    style->body.border.opa = LV_OPA_COVER;
+    style->body.border.color = LV_COLOR_BLACK;
+    style->body.border.width = 3;
+
+#endif
 }
 
 static void GUI_MainMenu_Create(void) {
