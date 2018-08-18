@@ -45,6 +45,7 @@ void lv_tutorial_hello_world(void) {
     lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
 }
 
+#if 0
 static void LCD_Test(void) {
   int x, y;
   FDisp1_PixelDim fx, fy;
@@ -78,10 +79,16 @@ static void LCD_Test(void) {
   fx = fy = 0;
   FDisp1_WriteString("portrait180", GDisp1_COLOR_WHITE, &fx, &fy, GFont1_GetFont());
   GDisp1_UpdateFull();
+  GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE); /* get back to landscape, as this is what we use for LittlevGL */
 }
+#endif
 
 void APP_Run(void) {
-  // LCD_Test();
+  //LCD_Test();
+  GDisp1_Clear();
+  GDisp1_DrawFilledBox(0, 0, 60, 20, GDisp1_COLOR_RED);
+  GDisp1_UpdateFull();
+
   LV_Init(); /* initialize GUI library */
   lvgl_test(); /* create test GUI */
   for(;;) {

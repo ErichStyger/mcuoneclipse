@@ -30,8 +30,9 @@
  *===================*/
 
 /* Horizontal and vertical resolution of the library.*/
-#define LV_HOR_RES          (96)
-#define LV_VER_RES          (64)
+#include "GDisp1.h"
+#define LV_HOR_RES          /*(96)*/ (GDisp1_GetWidth())
+#define LV_VER_RES          /*(64)*/ (GDisp1_GetHeight())
 #define LV_DPI              100
 
 /* Size of VDB (Virtual Display Buffer: the internal graphics buffer).
