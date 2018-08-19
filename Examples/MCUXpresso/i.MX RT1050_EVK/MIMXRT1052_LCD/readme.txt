@@ -1,8 +1,5 @@
 readme.txt
 ----------
-EVKB: MIMXRT1050-EVK_S26KS512S.cfx
-Embedded Artists: MIMXRT1050-EcoXiP_ATXP032.cfx
-
 Example project for the i.MX RT1050 (1052) EVK using the LCD.
 
 NOTE: The LED only blinks on the EVKB, not on the original EVK(A)!
