@@ -246,7 +246,7 @@ void lv_tutorial_responsive(void) {
     lv_obj_align(btn4, btn2, LV_ALIGN_OUT_BOTTOM_MID, 0, LV_DPI / 4);   /*Align when already resized because of the label*/
 }
 
-static void lv_tutorial_styles(void) {
+void lv_tutorial_styles(void) {
     /****************************************
      * BASE OBJECT + LABEL WITH DEFAULT STYLE
      ****************************************/

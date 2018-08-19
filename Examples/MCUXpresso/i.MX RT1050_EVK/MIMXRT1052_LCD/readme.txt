@@ -1,5 +1,7 @@
 readme.txt
 ----------
+EVKB: MIMXRT1050-EVK_S26KS512S.cfx
+Embedded Artists: MIMXRT1050-EcoXiP_ATXP032.cfx
 
 Example project for the i.MX RT1050 (1052) EVK using the LCD.
 
@@ -9,72 +11,18 @@ See
 https://mcuoneclipse.com/2018/07/21/adding-a-rocktech-capacitive-touch-lcd-to-the-nxp-i-mx-rt1052-evk/
 https://mcuoneclipse.com/2018/08/04/i-mx-rt1050-evk-vs-evkb/
 
-GUI:
-https://littlevgl.com/
-https://github.com/littlevgl
 
-FreeRTOS notes:
-- delete old freeRTOS
-- delete Debug Folder
-- copy McuOnEclipse FreeRTOS
-- disable exclude from build
-- get rid of Source directory structure
-- ../FreeRTOS/portable/GCC/ARM_CM4F
-  to includes
-  
-  set core to M7
-  #define McuLib_CONFIG_CORTEX_M      (7)
-  
-- Add
-  McuOnEclipse
-    src
-    config
- - copy McuLib.c/.h and config
- - copy McuRTOS.c/.h and config
- - copy McuUtility.c/.h and config
- - copy FreeRTOSconfig.h, remove original one
-  and add config to includes
-   ../McuOnEclipse/config
-   ../McuOnEclipse/src
-   and disable 'exclude from build'
-   
-Set SDK in McuLibConfig:
-  #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
-    #define configUSE_SHELL                         (0)
-  
-  remove any existing hooks 
-  vApplicationMallocFailedHook
-  vApplicationStackOverflowHook
-  vApplicationIdleHook
-  and use the FreeRTOSHooks.c instead
-  
-  
-  Note: for the LCD the following define has to be present in the compiler settings:
-  APP_LCDIF_DATA_BUS=kELCDIF_DataBus16Bit
-  
-  
-old
-SDK_OS_BAREMETAL
-FSL_RTOS_BM
-  
-  
-  
-CPU_MIMXRT1052CVL5B
-CPU_MIMXRT1052CVL5B_cm7
-SKIP_SYSCLK_INIT
-CPU_MIMXRT1052DVL6B
-SDK_DEBUGCONSOLE=1
-PRINTF_FLOAT_ENABLE=0
-SCANF_FLOAT_ENABLE=0
-PRINTF_ADVANCED_ENABLE=0
-SCANF_ADVANCED_ENABLE=0
-XIP_EXTERNAL_FLASH=1
-XIP_BOOT_HEADER_ENABLE=1
-XIP_BOOT_HEADER_DCD_ENABLE=1
-APP_LCDIF_DATA_BUS=kELCDIF_DataBus16Bit
-CR_INTEGER_PRINTF
-__MCUXPRESSO
-__USE_CMSIS
-DEBUG
-  
+-------------------------------
+ISSUES
+-------------------------------
+
+FreeRTOS thread awareness does not work with LinkServer (workaround: use non-stop mode):
+Error in final launch sequence
+Failed to execute MI command:
+-target-select extended-remote | crt_emu_cm_redlink -msg-port=54548 -g -mi -2 -pMIMXRT1052xxxxB -vendor=NXP --no-packed -reset= -ProbeHandle=1 -CoreIndex=0 -cache=disable -x "C:/Users/Erich Styger/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/i.MX RT1050_EVK/MIMXRT1052_LCD/Debug" --flash-dir "C:/Users/Erich Styger/mcuxpresso/01/.mcuxpressoide_packages_support/MIMXRT1052xxxxB_support/Flash" --telnet 3333
+Error message from debugger back end:
+Remote communication error.  Target disconnected.: Success.
+
+
+FreeRTOS thread awareness does *not* work with P&E. Workaround: use -kernel=none in the Server parameters
