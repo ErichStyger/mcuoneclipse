@@ -16,8 +16,7 @@
 #include "FDisp1.h"
 #include "uncannyEyes.h"
 
-static void TestDisplay(void) {
-  FDisp1_PixelDim x, y;
+void TestDisplay(void) {
 #if 1
   GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth()-1, GDisp1_GetHeight()-1, LCD1_COLOR_RED);
   GDisp1_UpdateFull();
@@ -35,6 +34,8 @@ static void TestDisplay(void) {
   GDisp1_UpdateFull();
 #endif
 #if 0
+  FDisp1_PixelDim x, y;
+
   GDisp1_DrawFilledBox(0, 0, 128, 128, LCD1_COLOR_RED);
   GDisp1_UpdateFull();
   GDisp1_DrawFilledBox(0, 0, 50, 10, LCD1_COLOR_YELLOW);
@@ -141,7 +142,7 @@ void APP_Run(void) {
 	    testValue = 1;
 	    cntr = 0;
 	}
- //   EYES_Run();
+    EYES_Run();
     LED1_Neg();
     WAIT1_Waitms(100);
     LED2_Neg();

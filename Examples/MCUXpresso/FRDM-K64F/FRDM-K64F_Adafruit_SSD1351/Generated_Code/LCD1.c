@@ -243,8 +243,6 @@ void LCD1_SPI_WRITE(unsigned char data) {
   while(LCD1_CONFIG_SPI_API_FCT_NAME_CHECK_TX()!=0) {} /* wait until everything is sent */
   WAIT1_Waitus(LCD1_CONFIG_HWSPI_DELAY_US);
 #elif LCD1_CONFIG_USE_SPI_API==LCD1_CONFIG_SPI_API_HW_LDD
-  unsigned char dummy;
-
   LCD1_DataReceivedFlag = FALSE;
   (void)LCD1_CONFIG_SPI_API_FCT_NAME_SEND_BLOCK(LCD1_CONFIG_SPI_API_DEVICE_HANDLE, &data, sizeof(data));
   while(!LCD1_DataReceivedFlag){}
@@ -443,15 +441,15 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
   c0 = x0+OLED_COLUMN_OFFSET; c1 = x1+OLED_COLUMN_OFFSET;
   r0 = y0+OLED_ROW_OFFSET; r1 = y1+OLED_ROW_OFFSET;
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT180
-  /* Portrait mode, rotated 180° */
+  /* Portrait mode, rotated 180ï¿½ */
   c0 = x0+OLED_COLUMN_OFFSET; c1 = x1+OLED_COLUMN_OFFSET;
   r0 = LCD1_HW_HEIGHT-1-y1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-y0+OLED_ROW_OFFSET;
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE
-  /* Landscape mode, rotated right 90° */
+  /* Landscape mode, rotated right 90ï¿½ */
   c0 = LCD1_HW_WIDTH-1-y1+OLED_COLUMN_OFFSET; c1 = LCD1_HW_WIDTH-1-y0+OLED_COLUMN_OFFSET;
   r0 = x0+OLED_ROW_OFFSET; r1 = x1+OLED_ROW_OFFSET;
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE180
-  /* Landscape mode, rotated left 90° */
+  /* Landscape mode, rotated left 90ï¿½ */
   c0 = y0+OLED_COLUMN_OFFSET; c1 = y1+OLED_COLUMN_OFFSET;
   r0 = LCD1_HW_HEIGHT-1-x1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-x0+OLED_ROW_OFFSET;
 #endif
@@ -477,16 +475,8 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
 */
 void LCD1_Clear(void)
 {
-  LCD1_PixelCount i;
-
   LCD1_OpenWindow(0, 0, (LCD1_PixelDim)(LCD1_GetWidth()-1), (LCD1_PixelDim)(LCD1_GetHeight()-1)); /* window for whole display */
-#if 0
-  for (i=0; i<(LCD1_WIDTH*LCD1_HEIGHT); i++) { /* for all display pixels */
-    LCD1_WriteDataWord(LCD1_PIXEL_OFF); /* clear it */
-  }
-#else
   LCD1_WriteDataWordRepeated(LCD1_PIXEL_OFF, LCD1_WIDTH*LCD1_HEIGHT);
-#endif
   LCD1_CloseWindow();
 }
 
@@ -570,11 +560,11 @@ LCD1_DisplayOrientation LCD1_GetDisplayOrientation(void)
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT
   return LCD1_ORIENTATION_PORTRAIT;    /* Portrait mode */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT180
-  return LCD1_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180° */
+  return LCD1_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180ï¿½ */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE
-  return LCD1_ORIENTATION_LANDSCAPE;   /* Landscape mode, rotated right 90° */
+  return LCD1_ORIENTATION_LANDSCAPE;   /* Landscape mode, rotated right 90ï¿½ */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE180
-  return LCD1_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90° */
+  return LCD1_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90ï¿½ */
 #endif
 }
 
@@ -811,57 +801,56 @@ void LCD1_Init(void)
   #define DATA_BYTE  (0)
 
   static const init_cmd_t seq[] = {
-    /* 0xFD */ OLED_CMD_SET_CMD_LOCK,   CMD_BYTE,
-    /* 0x12 */ OLED_UNLOCK,             DATA_BYTE,
-    /* 0xFD */ OLED_CMD_SET_CMD_LOCK,   CMD_BYTE,
-    /* 0xB1 */ OLED_ACC_TO_CMD_YES,     DATA_BYTE,
-    /* 0xAE */ OLED_CMD_DISPLAYOFF,     CMD_BYTE,
-    /* 0xB3 */ OLED_CMD_SET_OSC_FREQ_AND_CLOCKDIV, CMD_BYTE,
-               0xF1,                    DATA_BYTE,
-    /* 0xCA */ OLED_CMD_SET_MUX_RATIO,  CMD_BYTE,
-               (LCD1_HW_WIDTH-1), DATA_BYTE,
-    /* 0x15 */ OLED_CMD_SET_COLUMN,     CMD_BYTE,
-               0x00,                    DATA_BYTE,
-               (LCD1_HW_WIDTH-1), DATA_BYTE,
-    /* 0x75 */ OLED_CMD_SET_ROW,       CMD_BYTE,
-               0x00,                   DATA_BYTE,
-               (LCD1_HW_HEIGHT-1),DATA_BYTE,
-    /* 0xA1 */ OLED_CMD_STARTLINE,     CMD_BYTE,
+    /* 0xFD */ {OLED_CMD_SET_CMD_LOCK,   CMD_BYTE},
+    /* 0x12 */ {OLED_UNLOCK,             DATA_BYTE},
+    /* 0xFD */ {OLED_CMD_SET_CMD_LOCK,   CMD_BYTE},
+    /* 0xB1 */ {OLED_ACC_TO_CMD_YES,     DATA_BYTE},
+    /* 0xAE */ {OLED_CMD_DISPLAYOFF,     CMD_BYTE},
+    /* 0xB3 */ {OLED_CMD_SET_OSC_FREQ_AND_CLOCKDIV, CMD_BYTE},
+               {0xF1,                    DATA_BYTE}, /* 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16) */
+    /* 0xCA */ {OLED_CMD_SET_MUX_RATIO,  CMD_BYTE},
+               {(LCD1_HW_WIDTH-1), DATA_BYTE},
+    /* 0x15 */ {OLED_CMD_SET_COLUMN,     CMD_BYTE},
+               {0x00,                    DATA_BYTE},
+               {(LCD1_HW_WIDTH-1), DATA_BYTE},
+    /* 0x75 */ {OLED_CMD_SET_ROW,       CMD_BYTE},
+               {0x00,                   DATA_BYTE},
+               {(LCD1_HW_HEIGHT-1),DATA_BYTE},
+    /* 0xA1 */ {OLED_CMD_STARTLINE,     CMD_BYTE},
          #if LCD1_HW_HEIGHT==96
-               0x80, DATA_BYTE,
+               {0x80, DATA_BYTE},
          #else
-               0x00,                   DATA_BYTE,
+               {0x00,                   DATA_BYTE},
          #endif
-    /* 0xA2 */ OLED_CMD_DISPLAYOFFSET, CMD_BYTE,
+    /* 0xA2 */ {OLED_CMD_DISPLAYOFFSET, CMD_BYTE},
          #if LCD1_HW_HEIGHT==96
-               LCD1_HW_HEIGHT, DATA_BYTE,
+               {LCD1_HW_HEIGHT, DATA_BYTE},
          #else
-               0x00,                   DATA_BYTE,
+               {0x00,                   DATA_BYTE},
          #endif
-    /* 0xB5 */ OLED_CMD_SETGPIO,       CMD_BYTE,
-               0x00,                   DATA_BYTE, /* disable GPIO pins */
-    /* 0xAB */ OLED_CMD_FUNCTIONSELECT, CMD_BYTE,
-               0x01,                   DATA_BYTE, /* enable internal Vdd regulator (diode drop) */
-
-    OLED_CMD_PRECHARGE,     CMD_BYTE,
-    0x32,                   CMD_BYTE,
-    OLED_CMD_VCOMH,         CMD_BYTE,
-    0x05,                   CMD_BYTE,
-    OLED_CMD_NORMALDISPLAY, CMD_BYTE,
-    OLED_CMD_CONTRASTABC,   CMD_BYTE,
-    0x8A,                   DATA_BYTE, /* 0xC8 */
-    0x51,                   DATA_BYTE, /* 0x80 */
-    0x8A,                   DATA_BYTE, /* 0xC8 */
-    OLED_CMD_CONTRASTMASTER, CMD_BYTE,
-    0xCF,                   DATA_BYTE, /* 0x0F */
-    OLED_CMD_SETVSL,        CMD_BYTE,
-    0xA0,                   DATA_BYTE,
-    0xB5,                   DATA_BYTE,
-    0x55,                   DATA_BYTE,
-    OLED_CMD_PRECHARGE2,    CMD_BYTE,
-    0x01,                   DATA_BYTE,
-    OLED_CMD_DISPLAYON,     CMD_BYTE
-    };
+    /* 0xB5 */ {OLED_CMD_SETGPIO,       CMD_BYTE},
+               {0x00,                   DATA_BYTE}, /* disable GPIO pins */
+    /* 0xAB */ {OLED_CMD_FUNCTIONSELECT, CMD_BYTE},
+               {0x01,                   DATA_BYTE}, /* enable internal Vdd regulator (diode drop) */
+               {OLED_CMD_PRECHARGE,     CMD_BYTE},
+               {0x32,                   CMD_BYTE},
+               {OLED_CMD_VCOMH,         CMD_BYTE},
+               {0x05,                   CMD_BYTE},
+               {OLED_CMD_NORMALDISPLAY, CMD_BYTE},
+               {OLED_CMD_CONTRASTABC,   CMD_BYTE},
+               {0x8A,                   DATA_BYTE}, /* 0xC8 */
+               {0x51,                   DATA_BYTE}, /* 0x80 */
+               {0x8A,                   DATA_BYTE}, /* 0xC8 */
+               {OLED_CMD_CONTRASTMASTER, CMD_BYTE},
+               {0xCF,                   DATA_BYTE}, /* 0x0F */
+               {OLED_CMD_SETVSL,        CMD_BYTE},
+               {0xA0,                   DATA_BYTE},
+               {0xB5,                   DATA_BYTE},
+               {0x55,                   DATA_BYTE},
+               {OLED_CMD_PRECHARGE2,    CMD_BYTE},
+               {0x01,                   DATA_BYTE},
+               {OLED_CMD_DISPLAYON,     CMD_BYTE}
+               };
   int i;
 
   POWER_OFF();
@@ -872,7 +861,7 @@ void LCD1_Init(void)
   WAIT1_Waitms(1);
   POWER_ON();
 
-  for (int i=0;i<sizeof(seq)/sizeof(init_cmd_t);i++) {
+  for (i=0;i<sizeof(seq)/sizeof(init_cmd_t);i++) {
     if (seq[i].type==CMD_BYTE) {
       LCD1_WriteCommand(seq[i].cmd);
     } else {
@@ -882,11 +871,11 @@ void LCD1_Init(void)
 #if LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT
   LCD1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT); /* Portrait mode */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT180
-  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180° */
+  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180ï¿½ */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE
-  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90° */
+  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90ï¿½ */
 #elif LCD1_CONFIG_FIXED_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE180
-  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90° */
+  LCD1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90ï¿½ */
 #endif
 #if LCD1_CONFIG_CLEAR_DISPLAY_IN_INIT
   LCD1_Clear();
