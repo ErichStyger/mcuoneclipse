@@ -12,7 +12,7 @@
 #define PL_CONFIG_USE_I2C    	(1) /* having I2C available: need to turn this on for accelerometer and touch on LCD */
 #define PL_CONFIG_USE_GUI    	(1 && PL_CONFIG_USE_LCD) /* if using GUI on LCD */
 #define PL_CONFIG_USE_TOUCH  	(1 && PL_CONFIG_USE_LCD && PL_CONFIG_USE_I2C) /* if using touch sensor on LCD */
-#define PL_CONFIG_USE_ACCEL  	(1 && PL_CONFIG_USE_I2C) /* accelerometer demo */
+#define PL_CONFIG_USE_ACCEL  	(0 && PL_CONFIG_USE_I2C) /* accelerometer demo */
 
 /* GUI Demos */
 #define PL_CONFIG_USE_GUI_SYSMON 	(1 && PL_CONFIG_USE_GUI) /* SysMon Demo */
