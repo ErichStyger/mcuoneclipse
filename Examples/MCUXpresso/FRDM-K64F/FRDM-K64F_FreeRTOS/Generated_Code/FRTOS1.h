@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.556, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.558, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2018-08-19, 17:51, # CodeGen: 49
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -251,13 +251,14 @@
 **  @{
 */         
 
+
 #ifndef __FRTOS1_H
 #define __FRTOS1_H
 
 /* MODULE FRTOS1. */
 #include "MCUC1.h" /* SDK and API used */
 #include "FreeRTOSConfig.h"
-#include "FRTOS1config.h" /* configuration */
+#include "FRTOS1config.h" /* configuration file for component */
 
 #if configUSE_SHELL
   #include "McuShell.h"

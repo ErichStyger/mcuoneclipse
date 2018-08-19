@@ -32,6 +32,9 @@
 #define MCUC1_CONFIG_FPU_USED      (1 || (defined(__FPU_USED) && (__FPU_USED)==1))
   /*!< 1: using floating point unit, 0: otherwise */
 
+/* macro for little and big endianess. ARM is little endian */
+#define MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN   (MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+
 /* Identifiers used to identify the SDK */
 #define MCUC1_CONFIG_SDK_GENERIC             0
   /*!< using a generic API/SDK */
@@ -56,6 +59,7 @@
     /*!< identify the version of SDK/API used */
 #endif
 #endif
+
 
 /* Configuration macro if FreeRTOS is used */
 #ifndef MCUC1_CONFIG_SDK_USE_FREERTOS

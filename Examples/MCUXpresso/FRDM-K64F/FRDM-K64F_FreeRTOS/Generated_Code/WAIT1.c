@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2018-08-19, 17:51, # CodeGen: 49
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -27,7 +27,7 @@
 **         Init           - void WAIT1_Init(void);
 **         DeInit         - void WAIT1_DeInit(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

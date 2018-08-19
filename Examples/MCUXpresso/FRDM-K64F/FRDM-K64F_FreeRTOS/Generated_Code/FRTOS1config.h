@@ -81,7 +81,7 @@
 
 #ifndef configUSE_TOP_USED_PRIORITY
   #define configUSE_TOP_USED_PRIORITY             (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
-   /*!< 1: Makes sure uxTopUsedPriority is present (needed for OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
+   /*!< 1: Makes sure uxTopUsedPriority is present (needed for SEGGER and OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
 #endif
 
 #ifndef configLINKER_HEAP_BASE_SYMBOL
