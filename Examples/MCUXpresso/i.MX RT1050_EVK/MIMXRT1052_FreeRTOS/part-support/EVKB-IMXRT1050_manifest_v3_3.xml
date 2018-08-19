@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.3" api_version="2.0.0" configuration="e595a1d03ed138dd63cf53b6f09e4481" id="SDK_2.x_EVKB-IMXRT1050" name="SDK version 2.4.0 package for EVKB-IMXRT1050 board" brief="This is SDK version 2.4.0 manifest file. It describes the content of the SDK version 2.4.0 package for EVKB-IMXRT1050 board and additional settings for tools that support SDK version 2.4.0">
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.3" api_version="2.0.0" configuration="0efbadbcef5aa9dde2fcee736a5e3b9e" id="SDK_2.x_EVKB-IMXRT1050" name="SDK version 2.4.2 package for EVKB-IMXRT1050 board" brief="This is SDK version 2.4.2 manifest file. It describes the content of the SDK version 2.4.2 package for EVKB-IMXRT1050 board and additional settings for tools that support SDK version 2.4.2">
     <defines>
-        <define name="CPU_$|package|" value=""/>
         <define name="CPU_$|package|_$|core|" value=""/>
+        <define name="CPU_$|package|" value=""/>
     </defines>
-    <ksdk id="KSDK240" name="KSDK240" version="2.4.0" revision="7b2dc35bfb8 2018-06-05"/>
+    <ksdk id="KSDK242" name="KSDK242" version="2.4.2" revision="3c928c3fb69 2018-08-02"/>
     <compilers>
         <compiler type="gcc" id="compiler_gcc" name="gcc"/>
     </compilers>
@@ -85,39 +85,33 @@ ${run}
         </toolchain>
     </toolchains>
     <boards>
-        <board package="MIMXRT1052DVL6B" type="kit" id="evkbimxrt1050_agm01" name="EVKB-IMXRT1050-AGM01" full_name="EVKB-IMXRT1050 with AGM01" href="http://www.nxp.com/FRDM-STBC-AGM01" version="1.0.0">
-            <description>
-Sensor Toolbox Development Platform for FXAS21002C and FXOS8700C 9-Axis Solution
-        </description>
+        <board package="MIMXRT1052DVL6B" id="evkbimxrt1050" name="EVKB-IMXRT1050" href="https://www.nxp.com/mimxrt1050-evk" version="1.0.0">
+            <description>IMXRT1050-EVKB: EVK Development Platform for i.MX MIMXRT1052 and MIMXRT1051 MCUs</description>
             <image path="docs/images" type="image">
-                <files mask="EVKB-IMXRT1050-AGM01.gif"/>
+                <files mask="EVKB-IMXRT1050.gif"/>
             </image>
             <metadataSet>
-                <metadata key="vendor" value="NXP"/>
                 <metadata key="html">
                     <specific>
                         <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-Demonstration Custom Kit (FRDM-STBC-AGM01 Sensor Shield Development Board with EVKB-IMXRT1050 Board):
-&lt;ul&gt;
-&lt;li&gt;Enables quick and easy visualization of 9-Axis (3 Axis Gyroscope + 6-Axis E-compass) sensor data and results.&lt;/li&gt;
-&lt;/ul&gt;
+The NXP IMXRT1050-EVKB is a development board for the i.MX MIMXRT1052 and MIMXRT1051 600 MHz 32-bit ARM® Cortex®-M7 MCUs
         </content>
                     </specific>
                 </metadata>
             </metadataSet>
             <memory flash_size_kb="65536" ram_size_kb="32768">
-                <memoryBlock addr="60000000" size="04000000" type="ExtFlash" access="RO" id="BOARD_FLASH_evkbimxrt1050_agm01" name="BOARD_FLASH"/>
-                <memoryBlock addr="80000000" size="02000000" type="RAM" access="RW" id="BOARD_SDRAM_evkbimxrt1050_agm01" name="BOARD_SDRAM"/>
+                <memoryBlock addr="60000000" size="04000000" type="ExtFlash" access="RO" id="BOARD_FLASH_evkbimxrt1050" name="BOARD_FLASH"/>
+                <memoryBlock addr="80000000" size="02000000" type="RAM" access="RW" id="BOARD_SDRAM_evkbimxrt1050" name="BOARD_SDRAM"/>
             </memory>
             <debug_configurations>
                 <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
                     <drivers>
-                        <driver id_refs="BOARD_FLASH_evkbimxrt1050_agm01">
+                        <driver id_refs="BOARD_FLASH_evkbimxrt1050">
                             <driverBinary path="devices/MIMXRT1052/mcuxpresso" type="binary">
 <files mask="MIMXRT1050-EVK_S26KS512S.cfx"/>
                             </driverBinary>
                         </driver>
-                        <driver id_refs="BOARD_FLASH_evkbimxrt1050_agm01">
+                        <driver id_refs="BOARD_FLASH_evkbimxrt1050">
                             <driverBinary path="devices/MIMXRT1052/mcuxpresso" type="binary">
 <files mask="MIMXRT1050-EVK_IS25WP064A.cfx"/>
                             </driverBinary>
@@ -164,33 +158,39 @@ The USB Type-C shield board combined with a Kinetis Power Delivery SDK allows a 
                 </debug_configuration>
             </debug_configurations>
         </board>
-        <board package="MIMXRT1052DVL6B" id="evkbimxrt1050" name="EVKB-IMXRT1050" href="https://www.nxp.com/mimxrt1050-evk" version="1.0.0">
-            <description>IMXRT1050-EVKB: EVK Development Platform for i.MX MIMXRT1052 and MIMXRT1051 MCUs</description>
+        <board package="MIMXRT1052DVL6B" type="kit" id="evkbimxrt1050_agm01" name="EVKB-IMXRT1050-AGM01" full_name="EVKB-IMXRT1050 with AGM01" href="http://www.nxp.com/FRDM-STBC-AGM01" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for FXAS21002C and FXOS8700C 9-Axis Solution
+        </description>
             <image path="docs/images" type="image">
-                <files mask="EVKB-IMXRT1050.gif"/>
+                <files mask="EVKB-IMXRT1050-AGM01.gif"/>
             </image>
             <metadataSet>
+                <metadata key="vendor" value="NXP"/>
                 <metadata key="html">
                     <specific>
                         <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-The NXP IMXRT1050-EVKB is a development board for the i.MX MIMXRT1052 and MIMXRT1051 600 MHz 32-bit ARM® Cortex®-M7 MCUs
+Demonstration Custom Kit (FRDM-STBC-AGM01 Sensor Shield Development Board with EVKB-IMXRT1050 Board):
+&lt;ul&gt;
+&lt;li&gt;Enables quick and easy visualization of 9-Axis (3 Axis Gyroscope + 6-Axis E-compass) sensor data and results.&lt;/li&gt;
+&lt;/ul&gt;
         </content>
                     </specific>
                 </metadata>
             </metadataSet>
             <memory flash_size_kb="65536" ram_size_kb="32768">
-                <memoryBlock addr="60000000" size="04000000" type="ExtFlash" access="RO" id="BOARD_FLASH_evkbimxrt1050" name="BOARD_FLASH"/>
-                <memoryBlock addr="80000000" size="02000000" type="RAM" access="RW" id="BOARD_SDRAM_evkbimxrt1050" name="BOARD_SDRAM"/>
+                <memoryBlock addr="60000000" size="04000000" type="ExtFlash" access="RO" id="BOARD_FLASH_evkbimxrt1050_agm01" name="BOARD_FLASH"/>
+                <memoryBlock addr="80000000" size="02000000" type="RAM" access="RW" id="BOARD_SDRAM_evkbimxrt1050_agm01" name="BOARD_SDRAM"/>
             </memory>
             <debug_configurations>
                 <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
                     <drivers>
-                        <driver id_refs="BOARD_FLASH_evkbimxrt1050">
+                        <driver id_refs="BOARD_FLASH_evkbimxrt1050_agm01">
                             <driverBinary path="devices/MIMXRT1052/mcuxpresso" type="binary">
 <files mask="MIMXRT1050-EVK_S26KS512S.cfx"/>
                             </driverBinary>
                         </driver>
-                        <driver id_refs="BOARD_FLASH_evkbimxrt1050">
+                        <driver id_refs="BOARD_FLASH_evkbimxrt1050_agm01">
                             <driverBinary path="devices/MIMXRT1052/mcuxpresso" type="binary">
 <files mask="MIMXRT1050-EVK_IS25WP064A.cfx"/>
                             </driverBinary>
