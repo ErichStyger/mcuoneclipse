@@ -138,4 +138,6 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 #define xPortSysTickHandler SysTick_Handler
 
+#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+
 #endif /* FREERTOS_CONFIG_H */
