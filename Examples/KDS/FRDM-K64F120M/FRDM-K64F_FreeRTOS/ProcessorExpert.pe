@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K64F_FreeRTOS</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>26</ModificationStamp>
+    <ModificationStamp>31</ModificationStamp>
     <Date>2017-03-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -4225,7 +4225,7 @@
       <ItemId7>21</ItemId7>
       <Value7>true</Value7>
       <ItemId8>22</ItemId8>
-      <Value8>false</Value8>
+      <Value8>true</Value8>
       <ItemId9>24</ItemId9>
       <Value9>true</Value9>
       <ItemId10>25</ItemId10>
@@ -4237,7 +4237,7 @@
       <ItemId13>28</ItemId13>
       <Value13>true</Value13>
       <ItemId14>29</ItemId14>
-      <Value14>true</Value14>
+      <Value14>false</Value14>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -16154,8 +16154,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SeggerSystemViewer</ItemSymbol>
@@ -17516,8 +17516,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>xEnterTicklessIdleFctName</ItemSymbol>
@@ -17657,7 +17657,7 @@
         <ItemSymbol>MemoryGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>DynamicAllocation</ItemSymbol>
@@ -19342,8 +19342,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
+        <Expanded>true</Expanded>
+        <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
       </ItemState>
       <ItemState>
@@ -22969,7 +22969,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SetTerminal</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -22980,7 +22980,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>TerminalOut</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -22991,7 +22991,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConfigUpBuffer</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -23002,7 +23002,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConfigDownBuffer</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -23101,7 +23101,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -24191,13 +24191,13 @@
     <BeanType>SeggerSystemView</BeanType>
     <Name>SYS1</Name>
     <CompNumb>22</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>SeggerSystemView</IconName>
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.059</BeanVersion>
+    <BeanVersion>01.060</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24210,19 +24210,19 @@
         <ItemSymbol>SystemViewVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V2.52a</Value>
+        <Value>V2.52b</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SysViewAppName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>"Demo Application"</Value>
+        <Value>"FRDM-K64F Demo"</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SysViewDeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>"Cortex"</Value>
+        <Value>"MK64FN1M"</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SysViewRamBase</ItemSymbol>
@@ -24309,7 +24309,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1024</Value>
+        <Value>4096</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -24533,7 +24533,7 @@
     <BeanType>PercepioTrace</BeanType>
     <Name>PTRC1</Name>
     <CompNumb>29</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>irc</IconName>
     <UserFolderName />
