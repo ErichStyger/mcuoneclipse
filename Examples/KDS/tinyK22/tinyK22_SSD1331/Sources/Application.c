@@ -20,6 +20,14 @@ static lv_res_t my_click_action(struct _lv_obj_t * obj) {
   return LV_RES_INV;
 }
 
+extern const lv_img_t default_sclera;
+
+static void do_image(void) {
+  lv_obj_t *img1 = lv_img_create(lv_scr_act(), NULL); /*Crate an image object*/
+  lv_img_set_src(img1, &default_sclera);
+  lv_obj_set_pos(img1, 0, 0);      /*Set the positions*/
+}
+
 static void lvgl_test(void) {
   /*Add a button*/
   lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);             /*Add to the active screen*/
@@ -90,7 +98,8 @@ void APP_Run(void) {
   GDisp1_UpdateFull();
 
   LV_Init(); /* initialize GUI library */
-  lvgl_test(); /* create test GUI */
+  //lvgl_test(); /* create test GUI */
+  do_image();
   for(;;) {
     LED1_Neg();
     LV_Task();
