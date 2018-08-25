@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.3" api_version="2.0.0" configuration="9625afe78d677592947485e8059c0a60" id="SDK_2.x_FRDM-K64F" name="SDK version 2.4.2 package for FRDM-K64F board" brief="This is SDK version 2.4.2 manifest file. It describes the content of the SDK version 2.4.2 package for FRDM-K64F board and additional settings for tools that support SDK version 2.4.2">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <externalDefinitions>
+        <definition extID="twrk64f120m"/>
+        <definition extID="hexiwear"/>
+    </externalDefinitions>
+    <ksdk id="KSDK242" name="KSDK242" version="2.4.2" revision="3c928c3fb69 2018-08-02"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="1.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="" variants="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="" variants="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="" variants="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="" variants="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="" variants="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="" variants="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="10.2.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MK64FN1M0VLL12" type="kit" id="frdmk64f_mult2b" name="FRDM-K64F-MULT2B" full_name="FRDM-K64F with MULT2B" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/freedom-development-boards/frdm-fxs-mult2-b-freedom-development-platform-for-nxp-sensors-with-bluetooth.:FRDM-FXS-MULT2-B" version="1.0.0">
+            <description>
+FRDM-FXS-MULT2-B: FRDM-FXS-MULT2-B: Freedom Development Platform for NXP® Sensors with Bluetooth®
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K64F-MULT2B.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The FRDM-FXS-MULT2-B is a sensor expansion board enabling NXP® Sensor Fusion using the MMA8652FC 3-axis accelerometer, FXLS8471Q 3-axis accelerometer, MAG3110 3-axis magnetometer, FXAS21002C 3-axis gyroscope, MPL3115A2 pressure sensor, FXOS8700CQ 3-axis accelerometer plus a 3 axis magnetometer and the MMA9553L sensing platform. The FRDM-FXS-MULT2-B offers 12-axis sensing, wireless communication via Bluetooth and the compatible Android™ app, the NXP Sensor Fusion Toolbox. The board is also supported by the ISSDK.
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+        </board>
+        <board package="MK64FN1M0VLL12" type="kit" id="frdmk64f_agm01" name="FRDM-K64F-AGM01" href="http://www.nxp.com/FRDM-STBC-AGM01" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for FXAS21002C and FXOS8700C 9-Axis Solution
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K64F-AGM01.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+Demonstration Kits (FRDMSTBC-AGM01 Sensor Shield Development Board with FRDM-K64F Board):
+&lt;ul&gt;
+&lt;li&gt;Enables an ‘Out of the box’ Sensor Fusion demo using the NXP Sensor Toolbox Ecosystem.&lt;/li&gt;
+&lt;li&gt;Enables quick and easy visualization of 9-Axis (3 Axis Gyroscope + 6-Axis E-compass) sensor data and results.&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+        </board>
+        <board package="MK64FN1M0VLL12" type="kit" id="frdmk64f_agm04" name="FRDM-K64F-AGM04" href="http://www.nxp.com/products/software-and-tools/software-development-tools/sensor-toolbox-development-platform-for-mma8652-fxas21002-and-mag3110-9-axis-solution:AGM04-SOLUTION" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for MMA8652, FXAS21002, and MAG3110 9-Axis Solution 
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K64F-AGM04.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+This is your ecosystem for the NXP MMA8652 accelerometer, FXAS21002 gyro, and MAG3110 magnetometer providing a 9-axis solution. This includes Demo Kit, Sensor Shield Development Board and Breakout Board. Each of these boards is supported by NXP Software: Sensor Toolbox – CE and ISSDK.
+&lt;ul&gt;
+&lt;li&gt;The Demo Kit (FRDM-K64F-AGM04) enables a demonstration using ISSDK and Sensor Toolbox – CE.&lt;/li&gt;
+&lt;li&gt;The Sensor Shield Development Board (FRDM-STBC-AGM04) enables evaluation and development. The Sensor Shield Development board is compatible with most NXP Freedom development boards.&lt;/li&gt;
+&lt;li&gt;The Breakout Board (BRKT-STBC-AGM04) enables prototyping of your sensor designs.&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+        </board>
+        <board package="MK64FN1M0VLL12" id="frdmk64f" name="FRDM-K64F" href="http://www.nxp.com/frdm-k64f" version="1.0.0">
+            <description>
+FRDM-K64F: Freedom Development Platform for Kinetis K64, K63, and K24 MCUs
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K64F.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The Freedom-K64F is an ultra-low-cost development platform for Kinetis K64, K63, and K24 MCUs
+&lt;ul&gt;
+&lt;li&gt;Form-factor compatible with the Arduino R3 pin layout&lt;/li&gt;
+&lt;li&gt;Peripherals enable rapid prototyping, including a 6-axis digital accelerometer and magnetometer to create full eCompass capabilities, a tri-colored LED and 2 user push-buttons for direct interaction, a microSD card slot, and connectivity using onboard Ethernet port and headers for use with Bluetooth® and 2.4 GHz radio add-on modules&lt;/li&gt;
+&lt;li&gt;OpenSDAv2, the NXP open source hardware embedded serial and debug adapter running an open source bootloader, offers options for serial communication, flash programming, and run-control debugging&lt;/li&gt;
+&lt;ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+        </board>
+        <board package="MK64FN1M0VLL12" type="kit" id="frdmk64f_om13588" name="FRDM-K64F-OM13588" href="http://www.nxp.com/products/interfaces/usb-interfaces/usb-type-c-shield-board-for-kinetis-freedom-board:OM13588" version="1.0.0">
+            <description>
+USB Type-C Shield Board for Kinetis Freedom Board
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K64F-OM13588.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The USB Type-C shield board combined with a Kinetis Power Delivery SDK allows a system designer to tether a USB Type-C connector to any Kinetis development platform.
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+        </board>
+    </boards>
+    <devices>
+        <device id="MK64FN1M0xxx12" name="MK64F12" full_name="MK64FN1M0xxx12" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>
+K64_120: Kinetis® K64-120 MHz, 256KB SRAM Microcontrollers (MCUs) based on ARM® Cortex®-M4 Core
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="USB_KHCI_COUNT" value="1"/>
+                <metadata key="USB_KHCI_Controller_number" value="1"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The Kinetis K series MCU portfolio offers the broadest selection of pin, peripheral- and software-compatible MCU families based on the ARM® Cortex®-M4 core. The Kinetis K64 120 MHz MCUs feature:
+&lt;ul&gt;
+&lt;li&gt;IEEE® 1588 Ethernet MCUs&lt;/li&gt;
+&lt;li&gt;Optimization for applications requiring large memory densities and low-power processing efficiency&lt;/li&gt;
+&lt;li&gt;Crystal-less USB design for reduced system cost and board space&lt;/li&gt;
+&lt;li&gt;The comprehensive enablement and scalability of the Kinetis portfolio&lt;/li&gt;
+&lt;ul&gt;  
+        </content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="vendor.device.type" value="Kinetis"/>
+                <metadata key="vendor.device.family" value="K6x"/>
+            </metadataSet>
+            <core fpu="true" type="cm4" id="core0_MK64FN1M0xxx12" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00100000" type="Flash" access="RO" id="PROGRAM_FLASH_MK64FN1M0xxx12" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00030000" type="RAM" access="RW" id="SRAM_UPPER_MK64FN1M0xxx12" name="SRAM_UPPER"/>
+                <memoryBlock addr="1FFF0000" size="00010000" type="RAM" access="RW" id="SRAM_LOWER_MK64FN1M0xxx12" name="SRAM_LOWER"/>
+                <memoryBlock addr="14000000" size="00001000" type="RAM" access="RW" id="FLEX_RAM_MK64FN1M0xxx12" name="FLEX_RAM"/>
+            </memory>
+            <total_memory flash_size_kb="1024" ram_size_kb="256"/>
+            <package id="MK64FN1M0VDC12" name="MK64FN1M0VDC12"/>
+            <package id="MK64FN1M0VLL12" name="MK64FN1M0VLL12"/>
+            <package id="MK64FN1M0VLQ12" name="MK64FN1M0VLQ12"/>
+            <package id="MK64FN1M0VMD12" name="MK64FN1M0VMD12"/>
+            <package id="MK64FN1M0CAJ12" name="MK64FN1M0CAJ12"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmk64f"/>
+                <evaluation_board name="frdmk64f_agm04"/>
+                <evaluation_board name="frdmk64f_om13588"/>
+                <evaluation_board name="frdmk64f_mult2b"/>
+                <evaluation_board name="frdmk64f_agm01"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD*,JTAG" id="internal.wiretype.release.MK64FN1M0xxx12" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.MK64FN1M0xxx12" name="internal.has_swo"/>
+                        <params value="kinetisconnect.scp" id="internal.connect.script.debug.mcuxpresso.MK64FN1M0xxx12" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MK64FN1M0xxx12">
+                            <driverBinary path="devices/MK64F12/mcuxpresso" type="binary">
+<files mask="FTFE_4K.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="8"/>
+                <linker property="data_align" value="8"/>
+                <linker property="bss_align" value="8"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="8"/>
+                <linker property="data_align" value="8"/>
+                <linker property="bss_align" value="8"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MK64FN1M0xxx12" id="platform.devices.MK64F12_debugger.MK64F12" name="MK64F12_debugger" version="1.0.0">
+            <source path="devices/MK64F12" type="xml">
+                <files mask="MK64F12.xml"/>
+            </source>
+        </component>
+        <component user_visible="true" type="debugger" devices="MK64FN1M0xxx12" id="platform.devices.MK64F12_flash.MK64F12" name="MK64F12_flash" version="1.0.0">
+            <source path="devices/MK64F12/mcuxpresso" type="binary" toolchain="mcuxpresso">
+                <files mask="FTFE_4K.cfx"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
