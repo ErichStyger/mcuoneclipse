@@ -15,6 +15,7 @@
 #include "Helv14.h"
 #include "FDisp1.h"
 #include "uncannyEyes.h"
+#include <math.h>
 
 static void SpeedTest(void) {
   int i;
@@ -128,6 +129,7 @@ void APP_Run(void) {
   FDisp1_WriteString("Hello", LCD1_COLOR_GREEN, &x, &y, Helv14_GetFont());
   GDisp1_UpdateFull();
 
+  float f = sin(f+1);
   EYES_Init();
   for(;;) {
     EYES_Run();

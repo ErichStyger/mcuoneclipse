@@ -58,6 +58,7 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
 #define USE_HEAP_INDICATOR  1
 #if configUSE_HEAP_SCHEME == 5
 static uint8_t heapRegion1[1000];
