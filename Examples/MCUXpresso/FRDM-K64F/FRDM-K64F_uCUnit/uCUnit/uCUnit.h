@@ -148,7 +148,7 @@
 /**
  * Verbose Mode.
  * UCUNIT_MODE_SILENT: Checks are performed silently.
- * UCUNIT_MODE_NORMAL: Only checks that fail are displayes
+ * UCUNIT_MODE_NORMAL: Only checks that fail are displayed
  * UCUNIT_MODE_VERBOSE: Passed and failed checks are displayed
  */
 //#define UCUNIT_MODE_NORMAL
@@ -194,7 +194,7 @@
 /*****************************************************************************/
 
 /* Variables for simple statistics */
-static int ucunit_checks_failed = 0; /* Numer of failed checks */
+static int ucunit_checks_failed = 0; /* Number of failed checks */
 static int ucunit_checks_passed = 0; /* Number of passed checks */
 
 static int ucunit_testcases_failed = 0; /* Number of failed test cases */
