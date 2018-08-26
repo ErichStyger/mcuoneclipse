@@ -42,7 +42,7 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-
+#include "uCUnit.h"
 /*
  * @brief   Application entry point.
  */
