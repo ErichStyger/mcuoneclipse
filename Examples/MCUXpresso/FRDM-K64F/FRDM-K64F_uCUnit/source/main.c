@@ -42,7 +42,7 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-#include "uCUnit.h"
+#include "Application.h"
 /*
  * @brief   Application entry point.
  */
@@ -55,7 +55,8 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
+    PRINTF("\nExample using uCUnit tests.\n");
+    APP_Run(); /* run unit tests */
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;

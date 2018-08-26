@@ -37,13 +37,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "System.h"
+#include "fsl_debug_console.h"
 
 void System_exit(int val) {
 	for(;;) {
 		/* we don't do a shutdown with exit(), as this is will affect debugging.
 		 * Instead, we stay here in an endless loop.
 		 */
-		__asm("nop"); /* burning some cpy cycles here */
+		__asm("nop"); /* burning some CPU cycles here */
 	}
 	// exit(val);
 }
@@ -52,7 +53,7 @@ void System_exit(int val) {
 void System_Init(void)
 {
 
-	printf("Init of hardware finished.\n");
+	PRINTF("Init of hardware finished.\n");
 }
 
 /* Stub: Shutdown your hardware here */
@@ -60,7 +61,7 @@ void System_Shutdown(void)
 {
 
 	/* asm("\tSTOP"); */
-	printf("System shutdown.\n");
+	PRINTF("System shutdown.\n");
 	System_exit(0);
 }
 
@@ -69,7 +70,7 @@ void System_Recover(void)
 {
 	/* Stub: Recover the hardware */
 	/* asm("\tRESET"); */
-	printf("System reset.\n");
+	PRINTF("System reset.\n");
 	System_exit(0);
 }
 
@@ -86,17 +87,17 @@ void System_Safestate(void)
 
 	/* Put processor into idle state */
 	/* asm("\tIDLE"); */
-	printf("System safe state.\n");
+	PRINTF("System safe state.\n");
 	System_exit(0);
 }
 
 /* Stub: Transmit a string to the host/debugger/simulator */
 void System_WriteString(char * msg)
 {
-	printf(msg);
+	PRINTF(msg);
 }
 
 void System_WriteInt(int n)
 {
-	printf("%d", n);
+	PRINTF("%d", n);
 }
