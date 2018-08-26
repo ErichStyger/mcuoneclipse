@@ -4,7 +4,6 @@
  *  Created on: 25.08.2018
  *      Author: Erich Styger
  */
-
 #include "Application.h"
 #include "uCUnit.h"
 #include "fsl_debug_console.h"
@@ -28,7 +27,6 @@ char *endOfString(char *str) {
 	return str;
 }
 
-
 typedef enum {
 	Unknown,  /* first, generic item */
 	Hydrogen, /* H */
@@ -49,14 +47,13 @@ Chem_t crazyScientist(Chem_t a, Chem_t b) {
 	return Unknown;
 }
 
-
 void APP_Run(void) {
 	Chem_t res;
 	int i;
 	char *str;
 	UCUNIT_Init(); /* initialize framework */
 
-	UCUNIT_TestcaseBegin("Cracy Scientist");
+	UCUNIT_TestcaseBegin("crazy Scientist");
 	res = crazyScientist(Oxygen, Oxygen);
     UCUNIT_CheckIsEqual(res, Oxygen2);
     UCUNIT_CheckIsEqual(Unknown, crazyScientist(Water, Helium));
