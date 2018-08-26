@@ -11,6 +11,7 @@
 
 int checkedDivide(int a, int b) {
 	if (b==0) {
+		UCUNIT_Tracepoint(0); /* mark trace point */
 		PRINTF("division by zero is not defined!\n");
 		return 0;
 	}
@@ -65,10 +66,10 @@ void APP_Run(void) {
 	UCUNIT_TestcaseEnd();
 
 	UCUNIT_TestcaseBegin("Checked Divide");
-	UCUNIT_CheckIsEqual(200/5, checkedDivide(200,5));
-	for(i=0;i<16;i++) {
-		UCUNIT_CheckIsEqual(1024/i, checkedDivide(1024,i));
-	}
+	UCUNIT_CheckIsEqual(100/5, checkedDivide(100,5));
+	UCUNIT_ResetTracepointCoverage(); /* start tracking */
+	UCUNIT_CheckIsEqual(0, checkedDivide(1024,0));
+	UCUNIT_CheckTracepointCoverage(0); /* check coverage of point 0 */
 	UCUNIT_TestcaseEnd();
 
 	UCUNIT_TestcaseBegin("Strings");
