@@ -6,7 +6,7 @@
 **     Component   : STM32CubeI2C
 **     Version     : Component 01.004, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2018-08-27, 17:24, # CodeGen: 349
 **     Abstract    :
 **         Driver for STM32CubMX HAL I2C library
 **     Settings    :
@@ -68,6 +68,9 @@
 /* MODULE McuSTM32HALI2C. */
 #include "McuSTM32HALI2C.h"
 #include "McuWait.h" /* waiting routines */
+
+#include "McuLib.h" /* SDK and API used */
+#if McuLib_CONFIG_CPU_IS_STM32 /* only for STM32 */
 
 static uint8_t McuSTM32HALI2C_slaveAddr;             /* destination slave address, this is the shifted (8bit) address  */
 static I2C_HandleTypeDef *McuSTM32HALI2C_device;     /* device handle */
@@ -464,6 +467,7 @@ uint8_t McuSTM32HALI2C_SetDeviceHandle(I2C_HandleTypeDef *handle)
 }
 
 /* END McuSTM32HALI2C. */
+#endif /* McuLib_CONFIG_CPU_IS_STM32 */ /* only for STM32 */
 
 /*!
 ** @}

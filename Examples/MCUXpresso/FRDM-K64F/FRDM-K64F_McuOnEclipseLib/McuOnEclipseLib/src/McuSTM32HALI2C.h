@@ -6,7 +6,7 @@
 **     Component   : STM32CubeI2C
 **     Version     : Component 01.004, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2018-08-27, 17:24, # CodeGen: 349
 **     Abstract    :
 **         Driver for STM32CubMX HAL I2C library
 **     Settings    :
@@ -70,6 +70,8 @@
 
 /* MODULE McuSTM32HALI2C. */
 #include "McuLib.h" /* SDK and API used */
+#if McuLib_CONFIG_CPU_IS_STM32 /* only for STM32 */
+
 #include "McuSTM32HALI2Cconfig.h" /* configuration */
 
 
@@ -427,6 +429,7 @@ uint8_t McuSTM32HALI2C_SetDeviceHandle(I2C_HandleTypeDef *handle);
 */
 
 /* END McuSTM32HALI2C. */
+#endif /* McuLib_CONFIG_CPU_IS_STM32 */ /* only for STM32 */
 
 #endif
 /* ifndef __McuSTM32HALI2C_H */

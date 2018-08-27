@@ -40,14 +40,13 @@
 #include "MK64F12.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-
+#include "Application.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -56,7 +55,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 
     PRINTF("Hello World\n");
-
+    APP_Run();
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */

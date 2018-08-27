@@ -33,3 +33,4 @@ https://github.com/ErichStyger/McuOnEclipseLibrary
 	cpu
 	cortex
 	SDK McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+- add Init code

@@ -265,19 +265,18 @@
 							<tool id="com.crt.advproject.tool.debug.debug.617455814" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.1073930256.1737921374" name="/" resourcePath="drivers">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.925339803" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1584031828" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.109466143"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1990653603" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.634632384"/>
-							<tool id="com.crt.advproject.gas.exe.debug.286052453" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.527205599"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1772425259" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1093005737"/>
-							<tool id="com.crt.advproject.link.exe.debug.533579985" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.513476568"/>
-							<tool id="com.crt.advproject.tool.debug.debug.306633455" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.617455814"/>
-						</toolChain>
-					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1073930256.1915078876" name="McuSTM32HALI2C.c" rcbsApplicability="disable" resourcePath="McuOnEclipseLib/src/McuSTM32HALI2C.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.634632384.215207266">
+						<tool id="com.crt.advproject.gcc.exe.debug.634632384.215207266" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.634632384"/>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.365893858" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1851699723" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.439834553" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/McuUSB.c|src/McuSTM32HALI2C.c|src/McuTimeDate.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuLED.c|src/McuGenericSWSPI.c|src/McuGenericSWI2C.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
+						<entry excluding="src/McuUSB.c|src/McuTimeDate.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuLED.c|src/McuGenericSWSPI.c|src/McuGenericSWI2C.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
