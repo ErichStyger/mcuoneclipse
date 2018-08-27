@@ -68,7 +68,7 @@
 #if !defined (__SEMIHOST_HARDFAULT_DISABLE)
 
 __attribute__((naked))
-void HardFault_Handler(void){
+void HardFault_Handler_other(void){
     __asm(  ".syntax unified\n"
         // Check which stack is in use
             "MOVS   R0, #4  \n"
