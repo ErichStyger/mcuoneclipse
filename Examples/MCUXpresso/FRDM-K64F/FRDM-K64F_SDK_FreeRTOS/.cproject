@@ -260,15 +260,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.691241596.737618402" name="/" resourcePath="amazon-freertos">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1955831474" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.809407779" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1017612991"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1968604343" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.640525026"/>
-							<tool id="com.crt.advproject.gas.exe.debug.1792123779" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.721258784"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1173803651" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.723658574"/>
-							<tool id="com.crt.advproject.link.exe.debug.886911158" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.951918107"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="amazon-freertos"/>
@@ -401,7 +392,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_FRDM-K64F</sdkName>
 		<sdkExample>frdmk64f_freertos_segger_sysview</sdkExample>
-		<sdkVersion>2.4.0</sdkVersion>
+		<sdkVersion>2.4.2</sdkVersion>
 		<sdkComponents>platform.drivers.flash.MK64F12;platform.drivers.gpio.MK64F12;platform.Include_common.MK64F12;platform.Include_core_cm4.MK64F12;platform.devices.MK64F12_CMSIS.MK64F12;platform.drivers.clock.MK64F12;platform.drivers.common.MK64F12;platform.utilities.debug_console.MK64F12;platform.drivers.uart.MK64F12;platform.drivers.port.MK64F12;platform.drivers.smc.MK64F12;platform.devices.MK64F12_startup.MK64F12;platform.utilities.assert.MK64F12;middleware.freertos.MK64F12;middleware.freertos.heap.heap_4.MK64F12;frdmk64f_freertos_segger_sysview;platform.drivers.ftm.MK64F12;</sdkComponents>
 		<boardId>frdmk64f</boardId>
 		<package>MK64FN1M0VLL12</package>

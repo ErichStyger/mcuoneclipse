@@ -91,6 +91,13 @@ extern const uint8_t FreeRTOSDebugConfig[];
  * linked, and the #pragma placed immediately before the symbol definition.
  * The IAR supplied examples violate both "rules", so this is a best guess.
  */
+
+#if 1
+  /* FreeRTOS prior 10.1.0 used tskTaskControlBlock instead of TaskControlBlock_t */
+  #define tskTaskControlBlock TaskControlBlock_t
+#endif
+
+
 #if defined(__GNUC__)
 const uint8_t FreeRTOSDebugConfig[] __attribute__((section(".rodata"))) =
 #elif defined(__CC_ARM)
