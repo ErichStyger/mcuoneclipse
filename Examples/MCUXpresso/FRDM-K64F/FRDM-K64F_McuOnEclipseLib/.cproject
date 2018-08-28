@@ -265,18 +265,18 @@
 							<tool id="com.crt.advproject.tool.debug.debug.617455814" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.1073930256.1915078876" name="McuSTM32HALI2C.c" rcbsApplicability="disable" resourcePath="McuOnEclipseLib/src/McuSTM32HALI2C.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.634632384.215207266">
-						<tool id="com.crt.advproject.gcc.exe.debug.634632384.215207266" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.634632384"/>
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.365893858" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1851699723" name="Resource Custom Build Step Input Type">
+					<fileInfo id="com.crt.advproject.config.exe.debug.1073930256.1496440599" name="McuGenericSWI2C.c" rcbsApplicability="disable" resourcePath="McuOnEclipseLib/src/McuGenericSWI2C.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.634632384.826962717">
+						<tool id="com.crt.advproject.gcc.exe.debug.634632384.826962717" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.634632384"/>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1600195907" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.170622484" name="Resource Custom Build Step Input Type">
 								<additionalInput kind="additionalinputdependency" paths=""/>
 							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.439834553" name="Resource Custom Build Step Output Type"/>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.505761688" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/McuUSB.c|src/McuTimeDate.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuLED.c|src/McuGenericSWSPI.c|src/McuGenericSWI2C.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
+						<entry excluding="src/McuUSB.c|src/McuTimeDate.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuGenericSWSPI.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>

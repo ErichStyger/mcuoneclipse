@@ -54,6 +54,9 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
+    /* configuration tool inititialization */
+    BOARD_InitLEDs();
+
     PRINTF("Hello World\n");
     APP_Run();
     /* Force the counter to be placed into memory. */

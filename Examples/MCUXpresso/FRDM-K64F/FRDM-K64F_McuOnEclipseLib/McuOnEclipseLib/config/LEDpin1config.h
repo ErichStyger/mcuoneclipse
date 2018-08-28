@@ -8,17 +8,17 @@
 #define __LEDpin1_CONFIG_H
 
 #ifndef LEDpin1_CONFIG_PORT_NAME
-  #define LEDpin1_CONFIG_PORT_NAME       PORTA
+  #define LEDpin1_CONFIG_PORT_NAME       PORTB
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef LEDpin1_CONFIG_GPIO_NAME
-  #define LEDpin1_CONFIG_GPIO_NAME       GPIOA
+  #define LEDpin1_CONFIG_GPIO_NAME       GPIOB
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef LEDpin1_CONFIG_PIN_NUMBER
-  #define LEDpin1_CONFIG_PIN_NUMBER      0u
+  #define LEDpin1_CONFIG_PIN_NUMBER      22u
     /*!< number of pin, type unsigned integer */
 #endif
 
