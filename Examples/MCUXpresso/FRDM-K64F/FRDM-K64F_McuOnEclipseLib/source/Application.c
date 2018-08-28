@@ -15,11 +15,15 @@
 #include "McuRTOS.h"
 #include "McuWait.h"
 #include "McuUtility.h"
+#include "McuHardFault.h"
+#include "McuArmTools.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
 #include "McuLED.h"
 #include "McuGenericI2C.h"
 #include "McuGenericSWI2C.h"
+#include "McuSSD1306.h"
+#include "McuTimeDate.h"
 
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS 100
@@ -51,9 +55,13 @@ void APP_Run(void) {
   McuRTOS_Init();
   McuWait_Init();
   McuUtility_Init();
-  McuLED_Init();
+  McuHardFault_Init();
+  McuArmTools_Init();
+  McuLED_Init(); /* initializes as well the LED pin */
   McuGenericI2C_Init();
-  McuGenericSWI2C_Init();
+  McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
+  McuSSD1306_Init();
+  McuTimeDate_Init();
 
   if (xTaskCreate(
 	  AppTask,  /* pointer to the task */

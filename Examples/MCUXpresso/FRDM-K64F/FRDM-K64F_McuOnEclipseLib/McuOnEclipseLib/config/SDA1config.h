@@ -8,17 +8,17 @@
 #define __SDA1_CONFIG_H
 
 #ifndef SDA1_CONFIG_PORT_NAME
-  #define SDA1_CONFIG_PORT_NAME       PORTA
+  #define SDA1_CONFIG_PORT_NAME       PORTE
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef SDA1_CONFIG_GPIO_NAME
-  #define SDA1_CONFIG_GPIO_NAME       GPIOA
+  #define SDA1_CONFIG_GPIO_NAME       GPIOE
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef SDA1_CONFIG_PIN_NUMBER
-  #define SDA1_CONFIG_PIN_NUMBER      0u
+  #define SDA1_CONFIG_PIN_NUMBER      25u
     /*!< number of pin, type unsigned integer */
 #endif
 
@@ -42,7 +42,7 @@
 #endif
 
 #ifndef SDA1_CONFIG_DO_PIN_MUXING
-  #define SDA1_CONFIG_DO_PIN_MUXING  0
+  #define SDA1_CONFIG_DO_PIN_MUXING  1
   /*!< 1: perform pin muxing in Init(), 0: do not do pin muxing */
 #endif
 
