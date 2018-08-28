@@ -28,6 +28,10 @@ static void vTimerCallback(xTimerHandle pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
 }
 
+void McuGenericI2C_OnError(void) {
+	/* I2C error hook */  /* disable with McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT */
+}
+
 static void AppTask(void *param) {
 	(void)param;
 	for(;;) {
