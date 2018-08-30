@@ -5,7 +5,6 @@
  *      Author: Erich Styger
  */
 
-
 #include "Application.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -24,6 +23,9 @@
 #include "McuGenericSWI2C.h"
 #include "McuSSD1306.h"
 #include "McuTimeDate.h"
+#include "McuCriticalSection.h"
+#include "McuXFormat.h"
+#include "McuTrigger.h"
 
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS 100
@@ -46,13 +48,16 @@ static void AppTask(void *param) {
 
 void APP_Run(void) {
   /* initialize components */
+  McuRTOS_Init();
+  McuCriticalSection_Init();
   McuRTT_Init();
 #if configUSE_PERCEPIO_TRACE_HOOKS
   //McuPercepio_Init();
 #elif configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
-  McuRTOS_Init();
+  McuXFormat_Init();
+  McuTrigger_Init();
   McuWait_Init();
   McuUtility_Init();
   McuHardFault_Init();
@@ -60,7 +65,7 @@ void APP_Run(void) {
   McuLED_Init(); /* initializes as well the LED pin */
   McuGenericI2C_Init();
   McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
-  McuSSD1306_Init();
+  //McuSSD1306_Init(); /* requires display on the I2C bus! */
   McuTimeDate_Init();
 
   if (xTaskCreate(

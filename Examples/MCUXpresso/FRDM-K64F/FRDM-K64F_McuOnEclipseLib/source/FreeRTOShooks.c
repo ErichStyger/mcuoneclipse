@@ -8,6 +8,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "McuTimeDate.h"
+#include "McuTrigger.h"
 
 /*
 ** ===================================================================
@@ -77,6 +78,7 @@ void McuRTOS_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   McuTimeDate_AddTick();
+  McuTrigger_AddTick();
 }
 
 /*
