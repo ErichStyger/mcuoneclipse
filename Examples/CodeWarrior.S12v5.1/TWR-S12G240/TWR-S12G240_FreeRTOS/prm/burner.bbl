@@ -1,0 +1,107 @@
+/* logical s-record file */
+OPENFILE "%ABS_FILE%.s19"
+format=motorola
+busWidth=1
+origin=0
+len=0x1000000
+destination=0
+SRECORD=Sx
+SENDBYTE 1 "%ABS_FILE%"
+CLOSE
+
+/* physical s-record file */
+OPENFILE "%ABS_FILE%.phy"
+format = motorola
+busWidth = 1
+len = 0x4000
+
+/* logical non banked flash at $4000 and $C000 to physical */
+
+origin = 0x004000
+destination = 0x034000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x00C000
+destination = 0x03C000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+/* logical banked flash, PPAGES 0x01 - 0x0F */
+
+origin = 0x018000
+destination = 0x004000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x028000
+destination = 0x008000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x038000
+destination = 0x00C000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x048000
+destination = 0x010000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x058000
+destination = 0x014000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x068000
+destination = 0x018000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x078000
+destination = 0x01C000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x088000
+destination = 0x020000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x098000
+destination = 0x24000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0A8000
+destination = 0x288000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0B8000
+destination = 0x2C000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0C8000
+destination = 0x030000
+len = 0x1400
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0D8000
+destination = 0x034000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0E8000
+destination = 0x038000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+origin = 0x0F8000
+destination = 0x03C000
+len = 0x4000
+SENDBYTE 1 "%ABS_FILE%"
+
+CLOSE
