@@ -71,7 +71,9 @@ static void TestCoverage(int i) {
  */
 int main(void) {
 #if GCOV_DO_COVERAGE
-  #if !defined(__REDLIB__)
+  #if defined(__REDLIB__)
+    #error "gcov not supported with RedLib"
+  #else
     gcov_init(); /* do *not* call this for redlib as it does not implement constructors! */
   #endif
     if (!gcov_check()) {
