@@ -113,7 +113,7 @@
 #define configUSE_TRACE_HOOKS                     configUSE_PERCEPIO_TRACE_HOOKS /* legacy configUSE_TRACE_HOOKS should not be used any more */
 
 #ifndef configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
-  #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+  #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    1 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #endif
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_PERCEPIO_TRACE_HOOKS
