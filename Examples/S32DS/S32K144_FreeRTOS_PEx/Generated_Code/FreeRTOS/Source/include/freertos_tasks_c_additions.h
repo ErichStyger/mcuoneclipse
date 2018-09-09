@@ -77,6 +77,11 @@ extern "C" {
  */
 extern const uint8_t FreeRTOSDebugConfig[];
 
+#if 1
+  /* FreeRTOS prior 10.1.0 used tskTaskControlBlock instead of TaskControlBlock_t */
+  #define tskTaskControlBlock TaskControlBlock_t
+#endif
+
 /* NOTES!!
  * IAR documentation is confusing. It suggests the data must be statically
  * linked, and the #pragma placed immediately before the symbol definition.

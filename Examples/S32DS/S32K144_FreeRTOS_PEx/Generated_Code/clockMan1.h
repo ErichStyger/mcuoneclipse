@@ -7,7 +7,7 @@
 **     Version     : Component SDK_S32K14x_09, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K14x_09
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-06-30, 20:21, # CodeGen: 15
+**     Date/Time   : 2018-09-08, 18:53, # CodeGen: 42
 **     Contents    :
 **         CLOCK_SYS_Init                    - status_t CLOCK_SYS_Init(clock_manager_user_config_t const **...
 **         CLOCK_SYS_UpdateConfiguration     - status_t CLOCK_SYS_UpdateConfiguration(uint8_t...
@@ -93,7 +93,7 @@ extern clock_manager_user_config_t const *g_clockManConfigsArr[];
 extern peripheral_clock_config_t peripheralClockConfig0[];
 
 /*! @brief Count of peripheral clock user configurations */
-#define NUM_OF_PERIPHERAL_CLOCKS_0 5U
+#define NUM_OF_PERIPHERAL_CLOCKS_0 8U
 
 
 /*! @brief Count of user Callbacks */

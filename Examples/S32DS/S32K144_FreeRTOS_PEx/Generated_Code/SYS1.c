@@ -4,14 +4,14 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerSystemView
-**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.060, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 14:16, # CodeGen: 20
+**     Date/Time   : 2018-09-08, 18:53, # CodeGen: 42
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
 **          Component name                                 : SYS1
-**          Version                                        : V2.52a
+**          Version                                        : V2.52b
 **          Application Name                               : "Demo Application"
 **          Device Name                                    : "Cortex"
 **          RAM Base                                       : 0x20000000

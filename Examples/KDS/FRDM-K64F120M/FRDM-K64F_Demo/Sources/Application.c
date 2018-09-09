@@ -302,5 +302,5 @@ void APP_Start(void) {
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
     for(;;); /* failure! */
   }
-  FRTOS1_vTaskStartScheduler();
-}
+  vTaskStartScheduler();
+ }
