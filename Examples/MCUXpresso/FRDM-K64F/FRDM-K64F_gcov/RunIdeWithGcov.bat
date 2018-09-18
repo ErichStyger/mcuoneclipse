@@ -1,7 +1,7 @@
 # Batch file to check and copy the needed tools for gcov/gprof to be used in an Eclipse IDE
 # Example for using MCUXpresso IDE
-SET TOOLCHAIN_PATH=C:\nxp\MCUXpressoIDE_10.2.0_759\ide\tools\bin
-SET IDE=C:\nxp\MCUXpressoIDE_10.2.0_759\ide\mcuxpressoide.exe
+SET TOOLCHAIN_PATH=C:\nxp\MCUXpressoIDE_10.2.1_795\ide\tools\bin
+SET IDE=C:\nxp\MCUXpressoIDE_10.2.1_795\ide\mcuxpressoide.exe
 
 ECHO checking gcov/gprof dependencies on binutils
 IF NOT EXIST "%TOOLCHAIN_PATH%\gcov.exe"      COPY "%TOOLCHAIN_PATH%\arm-none-eabi-gcov.exe"      "%TOOLCHAIN_PATH%\gcov.exe"

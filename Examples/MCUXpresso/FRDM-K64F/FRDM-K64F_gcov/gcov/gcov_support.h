@@ -40,7 +40,7 @@
  * Add --coverage to the source files which shall be tested.
  * Add --coverage to the linker flags
  *  */
-#define GCOV_USE_STANDARD_GCOV_LIB     (0 && GCOV_DO_COVERAGE)
+#define GCOV_USE_STANDARD_GCOV_LIB     (1 && GCOV_DO_COVERAGE)
   /*<! 1: using standard gcov library inside newlib/newlib nano; 0: using custom gcov library */
 
 
