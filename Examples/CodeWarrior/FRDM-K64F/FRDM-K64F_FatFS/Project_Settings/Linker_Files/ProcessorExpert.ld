@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : FRDM-K64F_FatFS   */
 /*##                                   */
-/*##     Processor : MK64FN1M0VLQ12    */
+/*##     Processor : MK64FN1M0VLL12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2018-09-23, 10:32, # CodeGen: 1 */
+/*##     Date/Time : 2018-09-23, 11:36, # CodeGen: 13 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
