@@ -15,9 +15,10 @@
 #define PL_CONFIG_USE_ACCEL  	(0 && PL_CONFIG_USE_I2C) /* accelerometer demo */
 
 /* GUI Demos */
-#define PL_CONFIG_USE_GUI_SYSMON 	(1 && PL_CONFIG_USE_GUI) /* SysMon Demo */
-#define PL_CONFIG_USE_GUI_DEMO  	(1 && PL_CONFIG_USE_GUI) /* GUI Demo */
-#define PL_CONFIG_USE_GUI_HARDWARE  (1 && PL_CONFIG_USE_GUI) /* Hardware Demo */
+#define PL_CONFIG_USE_GUI_SYSMON 	(0 && PL_CONFIG_USE_GUI) /* SysMon Demo */
+#define PL_CONFIG_USE_GUI_DEMO  	(0 && PL_CONFIG_USE_GUI) /* GUI Demo */
+#define PL_CONFIG_USE_GUI_HARDWARE  (0 && PL_CONFIG_USE_GUI) /* Hardware Demo */
+#define PL_CONFIG_USE_GUI_ANIMATION (1 && PL_CONFIG_USE_GUI) /* Animation Demo */
 
 #define PL_CONFIG_EYE_DEMO   		(0 && PL_CONFIG_USE_LCD && !PL_CONFIG_USE_GUI) /* blinky eyes demo */
 

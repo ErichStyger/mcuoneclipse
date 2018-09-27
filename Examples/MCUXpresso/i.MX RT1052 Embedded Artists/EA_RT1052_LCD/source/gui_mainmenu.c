@@ -11,6 +11,7 @@
 #include "sysmon/sysmon.h" /* system monitor */
 #include "demo/demo.h" /* LittlevGL demo */
 #include "gui_hw.h"
+#include "gui_anim.h"
 
 static lv_obj_t *win = NULL;
 
@@ -62,6 +63,22 @@ static lv_res_t Btn_Hardware_click_action(struct _lv_obj_t *obj) {
 }
 #endif
 
+#if PL_CONFIG_USE_GUI_ANIMATION
+/**
+ * Called when the Hardware button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_Animation_click_action(struct _lv_obj_t *obj) {
+	/* delete main menu window and all its objects */
+	lv_obj_del(win);
+	win = NULL;
+	/* create hardware gui */
+	gui_anim_create();
+	return LV_RES_INV;
+}
+#endif
+
 void GUI_MainMenu_Create(void) {
 	lv_obj_t *label;
 
@@ -96,6 +113,14 @@ void GUI_MainMenu_Create(void) {
 	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, Btn_Hardware_click_action);   /*Assign a callback for clicking*/
 	label = lv_label_create(btn3, NULL);                  /*Put on 'btn1'*/
 	lv_label_set_text(label, "Hardware");
+#endif
+
+#if	PL_CONFIG_USE_GUI_ANIMATION
+    /* Create Hardware menu buttons */
+	lv_obj_t *btn4 = lv_btn_create(win, NULL);             /*Add to the active window */
+	lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, Btn_Animation_click_action);   /*Assign a callback for clicking*/
+	label = lv_label_create(btn4, NULL);                  /*Put on 'btn1'*/
+	lv_label_set_text(label, "Animation");
 #endif
 }
 
