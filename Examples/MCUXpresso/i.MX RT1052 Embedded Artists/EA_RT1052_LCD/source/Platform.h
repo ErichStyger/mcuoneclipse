@@ -22,7 +22,7 @@
 
 #define PL_CONFIG_EYE_DEMO   		(0 && PL_CONFIG_USE_LCD && !PL_CONFIG_USE_GUI) /* blinky eyes demo */
 
-#define PL_CONFIG_USE_LCD_DOUBLE_BUFFER  (0)
+#define PL_CONFIG_USE_LCD_DOUBLE_BUFFER  (1)  /* 1: use a double buffer and swap it for the LCD device. Uses more memory. 0: do not use double buffer for display */
 
 #if PL_CONFIG_EYE_DEMO && PL_CONFIG_USE_GUI
   #error "only one or the other option is supported right now"

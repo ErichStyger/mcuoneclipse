@@ -13,3 +13,8 @@ ISSUES
 -------------------------------
 
 Debugging is only supported with LPC-Link2 (P&E and Segger not supported yet).
+
+In case of problems with LPC-Link2 (DAP access error):
+- disconnect probe and board (power)
+- power board first
+- then power probe
