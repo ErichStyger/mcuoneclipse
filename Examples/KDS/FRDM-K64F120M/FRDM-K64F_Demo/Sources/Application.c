@@ -248,7 +248,7 @@ int TestMiniIni(void) {
 
 #endif
 
-static portTASK_FUNCTION(MainTask, pvParameters) {
+static void MainTask(void *pvParameters) {
 #if PL_HAS_ACCELEROMETER
   int16_t xmg, ymg;
 #endif
@@ -268,7 +268,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
 #if PL_HAS_KEYS
     KEY1_ScanKeys();
 #endif
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(100/portTICK_RATE_MS);
   }
 }
 

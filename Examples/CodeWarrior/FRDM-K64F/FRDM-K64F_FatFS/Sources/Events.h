@@ -57,11 +57,10 @@
 #include "XF1.h"
 #include "FAT1.h"
 #include "FATM1.h"
-#include "SS1.h"
-#include "CD2.h"
+#include "SS2.h"
+#include "CD3.h"
 #include "TMOUT1.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
+#include "SM2.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -187,6 +186,22 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+/*
+** ===================================================================
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM2_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

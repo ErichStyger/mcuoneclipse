@@ -210,6 +210,25 @@ void AS1_OnFreeTxBuf(void)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM2_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus
