@@ -401,12 +401,16 @@ void BOARD_ConfigMPU(void)
     MPU->RBAR = ARM_MPU_RBAR(7, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
 #endif
-#if 0 /* << EST */
+#if 1 /* << EST */
     /* Region 8 setting, set last 2MB of SDRAM can't be accessed by cache, global variables which are not expected to be
      * accessed by cache can be put here */
     /* Memory with Normal type, not shareable, non-cacheable */
     MPU->RBAR = ARM_MPU_RBAR(8, 0x81E00000U);
+#if 0
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_2MB);
+#else /* cachable */
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_2MB);
+#endif
 #endif
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);

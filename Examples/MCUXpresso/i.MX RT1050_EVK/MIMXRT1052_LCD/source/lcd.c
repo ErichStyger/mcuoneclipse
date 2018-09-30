@@ -12,6 +12,9 @@
 #include "fsl_elcdif.h"
 #include "fsl_gpio.h"
 #include <string.h> /* for memset() */
+#include "FreeRTOS.h"
+#include "task.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/

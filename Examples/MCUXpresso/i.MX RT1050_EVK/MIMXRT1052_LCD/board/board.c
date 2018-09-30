@@ -366,7 +366,18 @@ void BOARD_ConfigMPU(void)
 #if defined(XIP_EXTERNAL_FLASH) && (XIP_EXTERNAL_FLASH == 1)
     /* Setting Memory with Normal type, not shareable, outer/inner write back. */
     MPU->RBAR = ARM_MPU_RBAR(2, 0x60000000U);
+#if 1 /* << EST: see https://community.nxp.com/community/mcuxpresso/mcuxpresso-ide/blog/2017/12/07/overview-of-using-the-mimxrt1050-evk-with-mcuxpresso-ide */
+    /*
+     * Note: Mn SDK versions .4. and .4.40, the External Flash is confgured as TeadWrite:
+    MPU->RBAR = ARM_MPU_RBAR(2, 0x60000000U)r;     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_512MB)r;
+
+    This is not ideal - it is suggested that ARM_MPU_AP_RO is a more appropriate setng for the fash region. This will be corrected in a future SDK release.
+     *
+     */
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_RO, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_512MB);
+#else
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_512MB);
+#endif
 #else
     /* Setting Memory with Device type, not shareable, non-cacheable. */
     MPU->RBAR = ARM_MPU_RBAR(2, 0x60000000U);
@@ -401,12 +412,22 @@ void BOARD_ConfigMPU(void)
     MPU->RBAR = ARM_MPU_RBAR(7, 0x80000000U);
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_32MB);
 #endif
-#if 0 /* << EST */
+#if 1 /* << EST */
+    /*
+     * Note: in SDK version 2.4.x the 32MB SDRAM region is confgured so the last 2MB will not be cached:
+    MPU->RBAR = ARM_MPU_RBAR(8, 0x81E00000U)r;     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_2MB)r;
+If a project is created with the SDRAM as the irst RAM region then the stack will automatcally be located at the end of this region i.e. within this uncached region of memory. Since uncached SDRAM will see hugely degraded performance, this situaton should be avoided! Please refer to the MCUXpresso IDE User Guide Secton 16.10 Xodioying heap/stack placement for details on controlling stack placement, alternatvely the MPU setngs can of course be changed etc.
+     */
+
     /* Region 8 setting, set last 2MB of SDRAM can't be accessed by cache, global variables which are not expected to be
      * accessed by cache can be put here */
     /* Memory with Normal type, not shareable, non-cacheable */
     MPU->RBAR = ARM_MPU_RBAR(8, 0x81E00000U);
+#if 0
     MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 1, 0, 0, 0, 0, ARM_MPU_REGION_SIZE_2MB);
+#else /* cachable */
+    MPU->RASR = ARM_MPU_RASR(0, ARM_MPU_AP_FULL, 0, 0, 1, 1, 0, ARM_MPU_REGION_SIZE_2MB);
+#endif
 #endif
     /* Enable MPU */
     ARM_MPU_Enable(MPU_CTRL_PRIVDEFENA_Msk);

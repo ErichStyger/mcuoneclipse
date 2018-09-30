@@ -5,6 +5,7 @@ Example project for the i.MX RT1050 (1052) EVK using the LCD.
 NOTE: The LED only blinks on the EVKB, not on the original EVK(A)!
 
 See
+https://community.nxp.com/community/mcuxpresso/mcuxpresso-ide/blog/2017/12/07/overview-of-using-the-mimxrt1050-evk-with-mcuxpresso-ide
 https://mcuoneclipse.com/2018/07/21/adding-a-rocktech-capacitive-touch-lcd-to-the-nxp-i-mx-rt1052-evk/
 https://mcuoneclipse.com/2018/08/04/i-mx-rt1050-evk-vs-evkb/
 
@@ -23,3 +24,8 @@ Remote communication error.  Target disconnected.: Success.
 
 
 FreeRTOS thread awareness does *not* work with P&E. Workaround: use -kernel=none in the Server parameters
+
+
+In the Debugger launch configuration, use the RT1050_Debug_Connect.scp connection script.
+Place the script into <install dir>/ide/bin/Scripts
+

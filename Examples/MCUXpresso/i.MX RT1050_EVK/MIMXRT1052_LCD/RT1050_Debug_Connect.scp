@@ -1,0 +1,15 @@
+  10 rem ---------------------------------
+  20 print "RT1050 Connect Script"
+  30 rem ---------------------------------
+  40 rem probelist
+  50 p% = probefirstfound
+  60 rem probeopenbyindex p%
+  70 wireswdconnect p%
+  80 selectprobecore p% 0
+  90 cminitapdp this
+ 100 cmhalt this
+ 110 cmwatchset this 0 0x60000000 RW
+ 120 cmsysresetreq this
+ 130 cmwatchclear this 0
+ 140 rem ---------------------------------
+ 150 end

@@ -11,6 +11,7 @@
 #include "sysmon/sysmon.h" /* system monitor */
 #include "demo/demo.h" /* LittlevGL demo */
 #include "gui_hw.h"
+#include "gui_anim.h"
 
 static lv_obj_t *win = NULL;
 
