@@ -1,6 +1,6 @@
 /** ###################################################################
 **      Filename    : Peripherals_Init.h
-**      Processor   : MK22FN512VDC12
+**      Processor   : MK22FN512VLH12
 **      Version     : 1.0
 ** 
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 

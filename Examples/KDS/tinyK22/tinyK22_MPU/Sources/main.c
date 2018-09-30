@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : tinyK22_MPU
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLH12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2018-06-25, 07:43, # CodeGen: 0
