@@ -3,8 +3,8 @@
   <Header>
     <Name>FRDM-K64F_FatFS</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>31</ModificationStamp>
-    <Date>2018-09-29</Date>
+    <ModificationStamp>36</ModificationStamp>
+    <Date>2018-09-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>68</ProjectCompNumb>
+    <ProjectCompNumb>70</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -66,13 +66,6 @@
     <UserFolderName>SD</UserFolderName>
     <NodeName>SPI_LDD</NodeName>
     <CompNumb>57</CompNumb>
-    <FolderType>Beans</FolderType>
-    <ExpandedAll>true</ExpandedAll>
-  </UserFolder>
-  <UserFolder>
-    <UserFolderName />
-    <NodeName>Referenced_Components</NodeName>
-    <CompNumb>65</CompNumb>
     <FolderType>Beans</FolderType>
     <ExpandedAll>true</ExpandedAll>
   </UserFolder>
@@ -3950,7 +3943,7 @@
   <Configuration>
     <CompNumb>3</CompNumb>
     <NodeName>SDHC</NodeName>
-    <CnfgEnabled>false</CnfgEnabled>
+    <CnfgEnabled>true</CnfgEnabled>
     <TargetCPU>41</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -4188,7 +4181,7 @@
   <Configuration>
     <CompNumb>67</CompNumb>
     <NodeName>SPI_LDD</NodeName>
-    <CnfgEnabled>true</CnfgEnabled>
+    <CnfgEnabled>false</CnfgEnabled>
     <TargetCPU>41</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -4197,13 +4190,13 @@
     <BoolList_BeanConfig>
       <Count>22</Count>
       <ItemId0>58</ItemId0>
-      <Value0>false</Value0>
+      <Value0>true</Value0>
       <ItemId1>64</ItemId1>
-      <Value1>false</Value1>
+      <Value1>true</Value1>
       <ItemId2>49</ItemId2>
-      <Value2>true</Value2>
+      <Value2>false</Value2>
       <ItemId3>52</ItemId3>
-      <Value3>true</Value3>
+      <Value3>false</Value3>
       <ItemId4>37</ItemId4>
       <Value4>true</Value4>
       <ItemId5>34</ItemId5>
@@ -27914,7 +27907,7 @@
     <BeanType>FatFsMemSDHC</BeanType>
     <Name>FATM1</Name>
     <CompNumb>34</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>FatFsMemSDHC</IconName>
     <UserFolderName>SDHC</UserFolderName>
@@ -27982,7 +27975,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>1</Index>
               <Expanded>true</Expanded>
             </ItemState>
             <ItemState>
@@ -28119,7 +28112,7 @@
             <ItemState>
               <ItemSymbol>PinsGroup</ItemSymbol>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>0</Index>
+              <Index>1</Index>
               <Expanded>true</Expanded>
             </ItemState>
             <ItemState>
@@ -28169,7 +28162,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>PinDAT1Group</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
+              <ReadOnly>true</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>true</Value>
@@ -28190,7 +28183,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>PinDAT2Group</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
+              <ReadOnly>true</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>true</Value>
@@ -28211,7 +28204,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>PinDAT3Group</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
+              <ReadOnly>true</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Value>true</Value>
@@ -29185,13 +29178,13 @@
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>ConnectPin</ItemSymbol>
-                    <ReadOnly>true</ReadOnly>
+                    <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
                     <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
                     <Index>1</Index>
                     <Value>false</Value>
                     <LastSelection>false</LastSelection>
-                    <LastUserSel>never</LastUserSel>
+                    <LastUserSel>no</LastUserSel>
                     <UsrMethodName>ConnectPin</UsrMethodName>
                   </ItemState>
                   <ItemState>
@@ -29780,7 +29773,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Value</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -31349,7 +31342,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31452,7 +31445,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31555,7 +31548,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31658,7 +31651,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>1</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31761,7 +31754,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>2</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31864,7 +31857,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>2</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -31967,7 +31960,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>2</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -32070,7 +32063,7 @@
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-              <Index>2</Index>
+              <Index>0</Index>
               <EnumSymbVal>0</EnumSymbVal>
             </ItemState>
             <ItemState>
@@ -32770,7 +32763,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>SetConfiguration</ItemSymbol>
-              <ReadOnly>false</ReadOnly>
+              <ReadOnly>true</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
               <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
               <Index>1</Index>
@@ -34405,14 +34398,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOS</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>FRTOS1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -34653,7 +34646,7 @@
     <BeanType>SPIMaster_LDD</BeanType>
     <Name>SM2</Name>
     <CompNumb>64</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>PHONE_LDD</IconName>
     <UserFolderName>SPI_LDD</UserFolderName>
@@ -35580,11 +35573,11 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Deinit</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
         <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>Deinit</UsrMethodName>
@@ -35635,7 +35628,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>SendBlock</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -35646,7 +35639,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ReceiveBlock</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -35833,13 +35826,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConnectPin</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
       </ItemState>
     </Methods>
@@ -35868,7 +35861,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceived</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
@@ -35904,7 +35897,7 @@
     <BeanType>SD_Card</BeanType>
     <Name>FATM1</Name>
     <CompNumb>58</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>SD_Card</IconName>
     <UserFolderName>SPI_LDD</UserFolderName>
@@ -36925,14 +36918,14 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTOS</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>FRTOS1</Value>
       </ItemState>
     </Properties>
     <Methods>

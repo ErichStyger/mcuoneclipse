@@ -5,15 +5,13 @@
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-09-23, 10:31, # CodeGen: 0
+**     Date/Time   : 2018-09-28, 17:11, # CodeGen: 0
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
-**     Settings    :
 **     Contents    :
 **         Cpu_OnNMI - void Cpu_OnNMI(void);
 **
-** 
 ** ###################################################################*/
 /*!
 ** @file Events.h
@@ -35,32 +33,34 @@
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
-#include "WAIT1.h"
-#include "LED1.h"
-#include "LEDpin1.h"
-#include "BitIoLdd1.h"
-#include "LED2.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
-#include "LED3.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "MCUC1.h"
-#include "UTIL1.h"
-#include "CS1.h"
-#include "HF1.h"
+#include "Pins1.h"
 #include "FRTOS1.h"
-#include "TmDt1.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
-#include "CLS1.h"
-#include "XF1.h"
 #include "FAT1.h"
+#include "TmDt1.h"
 #include "FATM1.h"
 #include "SDHC1.h"
-#include "CD1.h"
+#include "CD3.h"
+#include "BitIoLdd1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd2.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd3.h"
+#include "LED3.h"
+#include "LEDpin3.h"
 #include "BitIoLdd4.h"
+#include "HF1.h"
+#include "UTIL1.h"
+#include "CLS1.h"
+#include "CS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
 #include "TMOUT1.h"
+#include "WAIT1.h"
+#include "MCUC1.h"
+#include "XF1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,6 +68,9 @@ extern "C" {
 
 /*
 ** ===================================================================
+**     Event       :  Cpu_OnNMI (module Events)
+**
+**     Component   :  Cpu [MK64FN1M0LQ12]
 */
 /*!
 **     @brief
@@ -126,81 +129,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-/*
-** ===================================================================
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnError(void);
-
-/*
-** ===================================================================
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnTxChar(void);
-
-/*
-** ===================================================================
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFullRxBuf(void);
-
-/*
-** ===================================================================
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFreeTxBuf(void);
-
-/*
-** ===================================================================
-*/
-/*!
-**     @brief
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. This event is
-**         available only if the SendBlock method is enabled.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer is passed
-**                           as the parameter of Init method. 
-*/
-/* ===================================================================*/
 /* END Events */
 
 #ifdef __cplusplus
@@ -211,4 +139,12 @@ void AS1_OnFreeTxBuf(void);
 /* ifndef __Events_H*/
 /*!
 ** @}
+*/
+/*
+** ###################################################################
+**
+**     This file was created by Processor Expert 10.5 [05.21]
+**     for the Freescale Kinetis series of microcontrollers.
+**
+** ###################################################################
 */

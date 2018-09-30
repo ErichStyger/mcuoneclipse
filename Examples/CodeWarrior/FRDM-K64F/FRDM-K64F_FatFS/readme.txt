@@ -3,13 +3,15 @@ readme.txt
 Project for CodeWarrior for MCU 10.x using the SD card on the FRDM-K64F board.
 The project includes a Shell which communicates to the OpenSDA UART (USB CDC) with 38400 baud.
 
+The project offers three different ways to communicate with the SD card:
+- SPI (Syncromaster)
+- SPI_LDD (SPIMaster_LDD)
+- SDHC (FatFsMemSDHC)
+
 NOTE:
-Somehow this project does not run CodeWarrior (tried with CW for MCU10.7 and 11.0.
-It gives an error when mounting the SD card:
-CMD> ERROR: mount failed: (1) A hard error occurred in the low level disk I/O layer
-The same project runs fine with KDS 3.2.0, so I suspect this might be a compiler issue?
+for SDHC to work on the K64F the MPU has to be turned OFF!
+The latest SDHC component has a setting to turn it off (in the Init()), otherwise add the following to your application:
 
-Using SPI access works fine too.
-
-
-
+#if 1 // FATM1_CONFIG_DISABLE_MPU
+  MPU_CESR = 0; /* K64F has memory protection unit, disable it! */
+#endif

@@ -1,10 +1,10 @@
 /* ###################################################################
-**     Filename    : main.h
+**     Filename    : main.c
 **     Project     : FRDM-K64F_FatFS
 **     Processor   : MK64FN1M0VLL12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-09-23, 10:31, # CodeGen: 0
+**     Date/Time   : 2018-09-28, 17:11, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -12,10 +12,9 @@
 **     Contents    :
 **         No public methods
 **
-** 
 ** ###################################################################*/
 /*!
-** @file main.h
+** @file main.c
 ** @version 01.01
 ** @brief
 **         Main module.
@@ -31,32 +30,34 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
-#include "WAIT1.h"
-#include "LED1.h"
-#include "LEDpin1.h"
-#include "BitIoLdd1.h"
-#include "LED2.h"
-#include "LEDpin2.h"
-#include "BitIoLdd2.h"
-#include "LED3.h"
-#include "LEDpin3.h"
-#include "BitIoLdd3.h"
-#include "MCUC1.h"
-#include "UTIL1.h"
-#include "CS1.h"
-#include "HF1.h"
+#include "Pins1.h"
 #include "FRTOS1.h"
-#include "TmDt1.h"
-#include "AS1.h"
-#include "ASerialLdd1.h"
-#include "CLS1.h"
-#include "XF1.h"
 #include "FAT1.h"
+#include "TmDt1.h"
 #include "FATM1.h"
 #include "SDHC1.h"
-#include "CD1.h"
+#include "CD3.h"
+#include "BitIoLdd1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd2.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd3.h"
+#include "LED3.h"
+#include "LEDpin3.h"
 #include "BitIoLdd4.h"
+#include "HF1.h"
+#include "UTIL1.h"
+#include "CLS1.h"
+#include "CS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
 #include "TMOUT1.h"
+#include "WAIT1.h"
+#include "MCUC1.h"
+#include "XF1.h"
+#include "KIN1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -64,10 +65,8 @@
 #include "IO_Map.h"
 #include "PDD_Includes.h"
 #include "Init_Config.h"
-
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -79,6 +78,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  MPU_CESR = 0; /* K64F has memory protection unit, disable it! */
   APP_Run();
   /* For example: for(;;) { } */
 
@@ -96,4 +96,12 @@ int main(void)
 /* END main */
 /*!
 ** @}
+*/
+/*
+** ###################################################################
+**
+**     This file was created by Processor Expert 10.5 [05.21]
+**     for the Freescale Kinetis series of microcontrollers.
+**
+** ###################################################################
 */
