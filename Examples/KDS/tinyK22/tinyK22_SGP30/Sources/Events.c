@@ -93,6 +93,7 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
+  TmDt1_AddTick();
   /* Write your code here ... */
 }
 
@@ -220,6 +221,50 @@ void AS1_OnFullRxBuf(void)
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockReceived (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer. This method is available only if
+**         the ReceiveBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
 }

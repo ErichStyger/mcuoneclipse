@@ -10,6 +10,7 @@
 #include "Shell.h"
 #include "CLS1.h"
 #include "KIN1.h"
+#include "TmDt1.h"
 #if PL_CONFIG_HAS_I2C_SPY
   #include "I2CSPY1.h"
 #endif
@@ -18,6 +19,12 @@
 #endif
 #if PL_CONFIG_HAS_SEGGER_RTT
   #include "RTT1.h"
+#endif
+#if PL_CONFIG_HAS_TSL2561
+  #include "TSL1.h"
+#endif
+#if PL_CONFIG_HAS_RTC_DS3231
+  #include "RTC1.h"
 #endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
@@ -28,12 +35,19 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_HAS_I2C_SPY
   I2CSPY1_ParseCommand,
 #endif
+#if PL_CONFIG_HAS_TSL2561
+  TSL1_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_RTC_DS3231
+  RTC1_ParseCommand,
+#endif
+  TmDt1_ParseCommand,
   NULL /* sentinel */
 };
 
 #define SHELL_CONFIG_HAS_SHELL_UART  (1) /* use AsynchroSerial, V1 uses the Bluetooth on the UART */
-#define SHELL_CONFIG_HAS_SHELL_RTT   (0) /* use SEGGER RTT */
-#define SHELL_CONFIG_HAS_SHELL_CDC   (0) /* use USB CDC */
+#define SHELL_CONFIG_HAS_SHELL_RTT   (1 && PL_CONFIG_HAS_SEGGER_RTT) /* use SEGGER RTT */
+#define SHELL_CONFIG_HAS_SHELL_CDC   (1 && PL_CONFIG_HAS_USB_CDC) /* use USB CDC */
 
 #if SHELL_CONFIG_HAS_SHELL_UART
  /* ******************************************************************
@@ -89,7 +103,7 @@ static void ShellTask(void *pvParameters) {
   int i;
 
   (void)pvParameters; /* not used */
-  (void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
+  //(void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)CLS1_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);

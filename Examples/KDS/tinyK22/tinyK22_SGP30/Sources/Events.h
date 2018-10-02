@@ -49,6 +49,26 @@
 #include "XF1.h"
 #include "AS1.h"
 #include "ASerialLdd2.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "TMOUT1.h"
+#include "TSL1.h"
+#include "GI2C1.h"
+#include "CI2C2.h"
+#include "RTC1.h"
+#include "TmDt1.h"
+#include "MMA1.h"
+#include "LCD1.h"
+#include "SCEpin1.h"
+#include "BitIoLdd2.h"
+#include "RESpin1.h"
+#include "BitIoLdd3.h"
+#include "D_Cpin1.h"
+#include "BitIoLdd4.h"
+#include "GDisp1.h"
+#include "SM1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -192,6 +212,44 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockReceived (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer. This method is available only if
+**         the ReceiveBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

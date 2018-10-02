@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : main.c
 **     Project     : tinyK22_SSD1331
-**     Processor   : MK22FN512VDC12
+**     Processor   : MK22FN512VLH12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
 **     Date/Time   : 2018-07-30, 20:45, # CodeGen: 0
@@ -34,9 +34,6 @@
 #include "SM1.h"
 #include "WAIT1.h"
 #include "MCUC1.h"
-#include "LED1.h"
-#include "LEDpin1.h"
-#include "BitIoLdd7.h"
 #include "LCD1.h"
 #include "SCEpin1.h"
 #include "BitIoLdd8.h"

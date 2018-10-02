@@ -6,11 +6,11 @@
 /*##                                   */
 /*##     Project   : tinyK22_SSD1331   */
 /*##                                   */
-/*##     Processor : MK22FN512VDC12    */
+/*##     Processor : MK22FN512VLH12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2018-08-18, 11:56, # CodeGen: 82 */
+/*##     Date/Time : 2018-10-01, 18:25, # CodeGen: 115 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
