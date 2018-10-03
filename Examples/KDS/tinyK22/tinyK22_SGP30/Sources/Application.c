@@ -31,6 +31,9 @@ static void SensorTask(void *pv) {
 #endif
 #if PL_CONFIG_HAS_TSL2561
   uint8_t res;
+  uint16_t tvoc, co2;
+  uint16_t TVOC_base, eCO2_base;
+  int cntr = 0;
 
   CLS1_SendStr("Enabling TLS2561 sensor.\r\n", CLS1_GetStdio()->stdOut);
   TSL1_Init();
@@ -58,12 +61,28 @@ static void SensorTask(void *pv) {
   }
 #endif
 #if PL_CONFIG_HAS_SGP30
-  CLS1_SendStr("Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
+   CLS1_SendStr("Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
    SGP30_Init();
 #endif
 
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(500));
+    res = SGP30_IAQmeasure(&tvoc, &co2);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("Failed SGP30_IAQmeasure()!\r\n", CLS1_GetStdio()->stdErr);
+    } else {
+      CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
+    }
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    cntr++;
+    if (cntr==30) {
+      cntr = 0;
+      res = SGP30_GetIAQBaseline(&TVOC_base, &eCO2_base);
+      if (res!=ERR_OK) {
+        CLS1_SendStr("Failed SGP30_GetIAQBaseline()!\r\n", CLS1_GetStdio()->stdErr);
+      } else {
+        CLS1_printfIO(CLS1_GetStdio(), "*** Baseline TVOC: 0x%4x, eCO2 0x%4x\n", TVOC_base, eCO2_base);
+      }
+    }
   }
 }
 

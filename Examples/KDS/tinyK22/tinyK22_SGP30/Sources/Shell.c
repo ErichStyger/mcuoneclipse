@@ -87,14 +87,14 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
+#if SHELL_CONFIG_HAS_SHELL_UART
+  {&UART_stdio, UART_DefaultShellBuffer, sizeof(UART_DefaultShellBuffer)},
+#endif
 #if SHELL_CONFIG_HAS_SHELL_RTT
   {&RTT1_stdio, RTT1_DefaultShellBuffer, sizeof(RTT1_DefaultShellBuffer)},
 #endif
 #if SHELL_CONFIG_HAS_SHELL_CDC
   {&CDC1_stdio, CDC1_DefaultShellBuffer, sizeof(CDC1_DefaultShellBuffer)},
-#endif
-#if SHELL_CONFIG_HAS_SHELL_UART
-  {&UART_stdio, UART_DefaultShellBuffer, sizeof(UART_DefaultShellBuffer)},
 #endif
 };
 
