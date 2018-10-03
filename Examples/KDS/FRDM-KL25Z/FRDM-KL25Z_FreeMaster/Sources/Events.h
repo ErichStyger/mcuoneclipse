@@ -34,7 +34,21 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "FMSTR1.h"
-#include "UART0.h"
+#include "FMSTR_UART1.h"
+#include "LED1.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED2.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED3.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "GI2C1.h"
+#include "I2C2.h"
+#include "MMA1.h"
+#include "MCUC1.h"
+#include "WAIT1.h"
 
 #ifdef __cplusplus
 extern "C" {

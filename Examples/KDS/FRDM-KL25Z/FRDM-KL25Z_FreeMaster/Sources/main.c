@@ -31,7 +31,21 @@
 #include "Cpu.h"
 #include "Events.h"
 #include "FMSTR1.h"
-#include "UART0.h"
+#include "FMSTR_UART1.h"
+#include "LED1.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED2.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED3.h"
+#include "LEDpin4.h"
+#include "BitIoLdd4.h"
+#include "GI2C1.h"
+#include "I2C2.h"
+#include "MMA1.h"
+#include "MCUC1.h"
+#include "WAIT1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -50,6 +64,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
+  APP_Run();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
