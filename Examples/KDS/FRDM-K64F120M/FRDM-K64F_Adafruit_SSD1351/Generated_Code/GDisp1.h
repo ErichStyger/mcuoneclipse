@@ -6,7 +6,7 @@
 **     Component   : GDisplay
 **     Version     : Component 01.202, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-17, 16:57, # CodeGen: 151
+**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -530,7 +530,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetWidth LCD1_GetLongerSide
+#define GDisp1_GetWidth LCD1_GetWidth
 /*
 ** ===================================================================
 **     Method      :  GetWidth (component GDisplay)
@@ -543,7 +543,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetHeight LCD1_GetShorterSide
+#define GDisp1_GetHeight LCD1_GetHeight
 /*
 ** ===================================================================
 **     Method      :  GetHeight (component GDisplay)

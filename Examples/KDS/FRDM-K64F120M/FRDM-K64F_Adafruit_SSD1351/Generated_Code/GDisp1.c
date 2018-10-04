@@ -6,7 +6,7 @@
 **     Component   : GDisplay
 **     Version     : Component 01.202, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-17, 16:57, # CodeGen: 151
+**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -163,10 +163,8 @@ void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
   GDisp1_CONFIG_FCT_NAME_OPENWINDOW(x, y, x, y); /* set up a one pixel window */
   GDisp1_CONFIG_FCT_NAME_WRITEPIXEL(GDisp1_COLOR_BLACK); /* store pixel with color information */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
-#elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
-  GDisp1_CONFIG_FCT_NAME_SETPIXEL(x, y);
 #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  LCD1_PutPixel(x, y, GDisp1_COLOR_BLACK);
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, GDisp1_COLOR_BLACK);
 #else
   GDisp1_BUF_BYTE(x,y) |= GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
 #endif
@@ -200,12 +198,9 @@ void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
   GDisp1_CONFIG_FCT_NAME_OPENWINDOW(x, y, x, y); /* set up a one pixel window */
   GDisp1_CONFIG_FCT_NAME_WRITEPIXEL(GDisp1_COLOR_WHITE); /* store pixel with color information */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
-#elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
-  LCD1_ClrPixel(x, y);
 #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  //GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_WHITE;
-  LCD1_PutPixel(x, y, GDisp1_COLOR_WHITE);
-#else
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, GDisp1_COLOR_WHITE);
+#else /* do memory buffer operation */
   GDisp1_BUF_BYTE(x,y) &= ~GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
 #endif
 #if GDisp1_CONFIG_USE_MUTEX
@@ -271,10 +266,8 @@ void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor col
   } else {
     GDisp1_ClrPixel(x,y);
   }
- //#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
- // GDisp1_BUF_WORD(x,y) = color;
  #else /* multi-bit display */
-  LCD1_PutPixel(x, y, color);
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, color);
  #endif
 #endif
 #if GDisp1_CONFIG_USE_MUTEX

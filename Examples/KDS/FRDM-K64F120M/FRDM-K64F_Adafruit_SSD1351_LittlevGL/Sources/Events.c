@@ -61,23 +61,6 @@ void Cpu_OnNMI(void)
 
 /*
 ** ===================================================================
-**     Event       :  SM1_OnTxChar (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-volatile uint8_t SM1_TxSentFlag;
-void SM1_OnTxChar(void)
-{
-  SM1_TxSentFlag = TRUE;
-}
-
-/*
-** ===================================================================
 **     Event       :  SM1_OnBlockSent (module Events)
 **
 **     Component   :  SM1 [SPIMaster_LDD]
@@ -96,26 +79,6 @@ void SM1_OnTxChar(void)
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
   LCD1_OnDataReceived();
-}
-
-/*
-** ===================================================================
-**     Event       :  TI1_OnInterrupt (module Events)
-**
-**     Component   :  TI1 [TimerInt]
-**     Description :
-**         When a timer interrupt occurs this event is called (only
-**         when the component is enabled - <Enable> and the events are
-**         enabled - <EnableEvent>). This event is enabled only if a
-**         <interrupt service/event> is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-uint32_t msCntr = 0;
-void TI1_OnInterrupt(void)
-{
-  msCntr++;
 }
 
 /*
@@ -155,7 +118,7 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  lv_tick_inc(1);
+  lv_tick_inc(portTICK_PERIOD_MS);
   TRG1_AddTick();
 }
 

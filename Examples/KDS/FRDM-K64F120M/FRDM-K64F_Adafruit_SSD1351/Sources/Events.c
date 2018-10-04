@@ -67,10 +67,10 @@ void Cpu_OnNMI(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-volatile uint8_t SM1_TxSentFlag;
+//volatile uint8_t SM1_TxSentFlag;
 void SM1_OnTxChar(void)
 {
-  SM1_TxSentFlag = TRUE;
+  //SM1_TxSentFlag = TRUE;
 }
 
 /*

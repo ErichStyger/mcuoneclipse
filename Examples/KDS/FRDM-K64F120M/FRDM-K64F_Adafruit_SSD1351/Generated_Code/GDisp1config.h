@@ -29,8 +29,7 @@
   #define GDisp1_CONFIG_FCT_NAME_WRITEPIXEL     LCD1_WritePixel
   #define GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW    LCD1_CloseWindow
 #else
-  #define GDisp1_CONFIG_FCT_NAME_SETPIXEL       LCD1_SetPixel
-  #define GDisp1_CONFIG_FCT_NAME_CLRPIXEL       LCD1_ClrPixel
+  #define GDisp1_CONFIG_FCT_NAME_PUTPIXEL       LCD1_PutPixel
 #endif
 
 #ifndef GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE

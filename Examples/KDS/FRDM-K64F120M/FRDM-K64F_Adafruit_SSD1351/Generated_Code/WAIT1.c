@@ -6,7 +6,7 @@
 **     Component   : Wait
 **     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -80,10 +80,12 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+#ifdef __GNUC__
+  #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   __attribute__((naked))
-#else
+  #else
   __attribute__((naked, no_instrument_function))
+  #endif
 #endif
 void WAIT1_Wait10Cycles(void)
 {
