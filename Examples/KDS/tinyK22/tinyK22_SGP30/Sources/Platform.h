@@ -14,7 +14,7 @@
 #define PL_CONFIG_HAS_TSL2561     (1) /* ambient light sensor */
 #define PL_CONFIG_HAS_SGP30       (1) /* air quality sensor */
 #define PL_CONFIG_HAS_RTC_DS3231  (1)
-#define PL_CONFIG_HAS_GUI         (0)
-#define PL_CONFIG_HAS_KEYS        (0)
+#define PL_CONFIG_HAS_GUI         (1)
+#define PL_CONFIG_HAS_KEYS        (1)
 
 #endif /* SOURCES_PLATFORM_H_ */

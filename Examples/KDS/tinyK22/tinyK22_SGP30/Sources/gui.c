@@ -13,7 +13,9 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "LCD1.h"
+#if 0
 #include "GDisp1.h"
+#endif
 #if PL_CONFIG_HAS_KEYS
   #include "KEY1.h"
 #endif
@@ -129,19 +131,21 @@ static void GUI_MainMenu_Create(void) {
 #endif
 }
 
+#if 0
 #include "GFont1.h"
 #include "FDisp1.h"
+#endif
 
 static void GuiTask(void *p) {
-  FDisp1_PixelDim x, y, w, h;
+  // FDisp1_PixelDim x, y, w, h;
 
   LCD1_Init();
-  LCD1_Clear();
+//  LCD1_Clear();
  // for(;;) {
-    GDisp1_Clear();
-    GDisp1_UpdateFull();
+//  GDisp1_Clear();
+//  GDisp1_UpdateFull();
 
-#if 1
+#if 0
 //    GDisp1_SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE180);
     x = 20; y = 10;
     w = 50; h = 20;
@@ -188,7 +192,9 @@ static void GuiTask(void *p) {
 	GUI_MainMenu_Create();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */
+#if PL_CONFIG_HAS_KEYS
 		KEY1_ScanKeys();
+#endif
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }

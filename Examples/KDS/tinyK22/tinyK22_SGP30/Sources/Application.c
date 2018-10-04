@@ -12,6 +12,8 @@
 #include "LED1.h"
 #include "Shell.h"
 #include "CLS1.h"
+#include "TRG1.h"
+#include "TMOUT1.h"
 #if PL_CONFIG_HAS_TSL2561
   #include "TSL1.h"
 #endif
@@ -24,6 +26,32 @@
 #if PL_CONFIG_HAS_SGP30
   #include "SGP30.h"
 #endif
+#if PL_CONFIG_HAS_GUI
+  #include "lvgl/lvgl.h"
+  #include "lv.h"
+  #include "gui.h"
+#endif
+
+#define APP_PERIODIC_TIMER_PERIOD_MS   10
+#if TmDt1_TICK_TIME_MS!=APP_PERIODIC_TIMER_PERIOD_MS
+  #error "Software RTC tick time has to match timer time"
+#endif
+#if TRG1_CONFIG_TICK_PERIOD_MS!=APP_PERIODIC_TIMER_PERIOD_MS
+  #error "Trigger tick time has to match timer time"
+#endif
+#if TMOUT1_TICK_PERIOD_MS!=APP_PERIODIC_TIMER_PERIOD_MS
+  #error "Timeout tick time has to match timer time"
+#endif
+static xTimerHandle timerHndl;
+
+static void vTimerCallbackExpired(xTimerHandle pxTimer) {
+#if PL_CONFIG_HAS_GUI
+  lv_tick_inc(APP_PERIODIC_TIMER_PERIOD_MS);
+#endif
+  TRG1_AddTick();
+  TMOUT1_AddTick();
+  TmDt1_AddTick();
+}
 
 static void SensorTask(void *pv) {
 #if PL_CONFIG_HAS_RTC_DS3231
@@ -96,6 +124,9 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   SHELL_Init();
+#if PL_CONFIG_HAS_GUI
+  GUI_Init();
+#endif
   if (xTaskCreate(
         SensorTask,  /* pointer to the task */
         "Sensor", /* task name for kernel awareness debugging */
@@ -119,6 +150,15 @@ void APP_Run(void) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
+  }
+  timerHndl = xTimerCreate(
+        "timer1Sec", /* name */
+        pdMS_TO_TICKS(APP_PERIODIC_TIMER_PERIOD_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackExpired); /* callback */
+  if (timerHndl==NULL) {
+    for(;;); /* failure! */
   }
   vTaskStartScheduler();
   for(;;) {

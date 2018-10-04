@@ -144,28 +144,28 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   if (RNG1_Get(&keyData)!=ERR_OK) {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
-  if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED)) {
+  if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED)) {
     data->key = LV_GROUP_KEY_NEXT;
     data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_RELEASED)) {
+  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_RELEASED)) {
     data->key = LV_GROUP_KEY_NEXT;
     data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_PRESSED_LONG)) {
+  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ENTER;
     data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW3|LV_MASK_RELEASED_LONG)) {
+  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_RELEASED_LONG)) {
     data->key = LV_GROUP_KEY_ENTER;
     data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED)) {
+  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED)) {
     data->key = LV_GROUP_KEY_PREV;
     data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_RELEASED)) {
+  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_RELEASED)) {
     data->key = LV_GROUP_KEY_PREV;
     data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_PRESSED_LONG)) {
+  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ESC;
     data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW2|LV_MASK_RELEASED_LONG)) {
+  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_RELEASED_LONG)) {
     data->key = LV_GROUP_KEY_ESC;
     data->state = LV_INDEV_STATE_REL;
   } else {

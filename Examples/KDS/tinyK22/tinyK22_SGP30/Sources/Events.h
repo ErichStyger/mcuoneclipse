@@ -67,8 +67,13 @@
 #include "BitIoLdd3.h"
 #include "D_Cpin1.h"
 #include "BitIoLdd4.h"
-#include "GDisp1.h"
 #include "SM1.h"
+#include "RNG1.h"
+#include "TRG1.h"
+#include "GDisp1.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -139,82 +144,6 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnError (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when a channel error (not the error
-**         returned by a given method) occurs. The errors can be read
-**         using <GetError> method.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnError(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnRxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a correct character is received.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled and either the <Receiver>
-**         property is enabled or the <SCI output mode> property (if
-**         supported) is set to Single-wire mode.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnRxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnTxChar (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after a character is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnTxChar(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFullRxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called when the input buffer is full;
-**         i.e. after reception of the last character 
-**         that was successfully placed into input buffer.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFullRxBuf(void);
-
-/*
-** ===================================================================
-**     Event       :  AS1_OnFreeTxBuf (module Events)
-**
-**     Component   :  AS1 [AsynchroSerial]
-**     Description :
-**         This event is called after the last character in output
-**         buffer is transmitted.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void AS1_OnFreeTxBuf(void);
-
-/*
-** ===================================================================
 **     Event       :  SM1_OnBlockSent (module Events)
 **
 **     Component   :  SM1 [SPIMaster_LDD]
@@ -232,24 +161,59 @@ void AS1_OnFreeTxBuf(void);
 /* ===================================================================*/
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
-**     Event       :  SM1_OnBlockReceived (module Events)
-**
-**     Component   :  SM1 [SPIMaster_LDD]
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
 */
-/*!
-**     @brief
-**         This event is called when the requested number of data is
-**         moved to the input buffer. This method is available only if
-**         the ReceiveBlock method is enabled.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. The pointer is passed
-**                           as the parameter of Init method. 
+
+void KEY1_OnKeyReleased(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
 */
-/* ===================================================================*/
-void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 
