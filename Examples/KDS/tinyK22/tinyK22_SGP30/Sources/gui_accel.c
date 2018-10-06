@@ -37,7 +37,6 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
     win = NULL;
     lv_task_del(refr_task);
     refr_task = NULL;
-    //GUI_MainMenuCreate();
     return LV_RES_INV;
 }
 
@@ -80,7 +79,7 @@ static void refresh_task(void *param) {
     LV_TXT_COLOR_CMD, X_LABEL_COLOR, x, LV_TXT_COLOR_CMD,
     LV_TXT_COLOR_CMD, Y_LABEL_COLOR, y, LV_TXT_COLOR_CMD,
     LV_TXT_COLOR_CMD, Z_LABEL_COLOR, z, LV_TXT_COLOR_CMD);
-    lv_label_set_text(accel_label, buf);
+  lv_label_set_text(accel_label, buf);
 }
 
 void GUI_ACCEL_Create(void) {
@@ -116,13 +115,10 @@ void GUI_ACCEL_Create(void) {
         lv_chart_set_next(accel_chart, y_ser, 0);
         lv_chart_set_next(accel_chart, z_ser, 0);
     }
-    /* label for accel values: */
+    /* label for values: */
     accel_label = lv_label_create(win, NULL);
     lv_label_set_recolor(accel_label, true);
     lv_obj_align(accel_label, accel_chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI/5, 0);
-
- //   lv_win_focus(win, closeBtn, 0);
-    //lv_group_set_focus_cb();
 
     /* Refresh the chart and label manually at first */
     refresh_task(NULL);

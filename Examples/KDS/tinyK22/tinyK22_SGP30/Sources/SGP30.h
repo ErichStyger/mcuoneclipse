@@ -22,7 +22,6 @@
 #define SGP30_CRC8_INIT        0xFF    ///< Init value for CRC
 #define SGP30_WORD_LEN          2      ///< 2 bytes per word
 
-
 /* Commands the sensor to take a single eCO2/VOC measurement. */
 uint8_t SGP30_IAQmeasure(uint16_t *pTVOC, uint16_t *pCO2);
 

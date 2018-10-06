@@ -153,6 +153,4 @@ uint8_t SGP30_Init(void) {
   return res;
 }
 
-
-
 #endif /* PL_CONFIG_HAS_SGP30 */

@@ -126,7 +126,7 @@ static void SensorTask(void *pv) {
     } else {
       CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
     }
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(5000));
     cntr++;
     if (cntr==30) {
       cntr = 0;
