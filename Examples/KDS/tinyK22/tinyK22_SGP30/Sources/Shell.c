@@ -26,6 +26,9 @@
 #if PL_CONFIG_HAS_RTC_DS3231
   #include "RTC1.h"
 #endif
+#if PL_CONFIG_HAS_MMA8451
+  #include "MMA1.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -40,6 +43,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_RTC_DS3231
   RTC1_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_MMA8451
+  MMA1_ParseCommand,
 #endif
   TmDt1_ParseCommand,
   NULL /* sentinel */

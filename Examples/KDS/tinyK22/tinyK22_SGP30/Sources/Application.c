@@ -5,15 +5,24 @@
  *      Author: Erich Styger
  */
 
-#include "Platform.h"
+#include <CLS1.h>
+#include <FreeRTOS.h>
+#include <lvgl/lv_hal/lv_hal_tick.h>
+#include <LED1.h>
+#include <portmacro.h>
+#include <projdefs.h>
+#include <PE_Error.h>
+#include <Platform.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <Shell.h>
+#include <task.h>
+#include <timers.h>
+#include <TMOUT1.h>
+#include <TRG1.h>
+#include <TRG1config.h>
 #include "Application.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "LED1.h"
-#include "Shell.h"
-#include "CLS1.h"
-#include "TRG1.h"
-#include "TMOUT1.h"
+
 #if PL_CONFIG_HAS_TSL2561
   #include "TSL1.h"
 #endif
@@ -25,6 +34,9 @@
 #endif
 #if PL_CONFIG_HAS_SGP30
   #include "SGP30.h"
+#endif
+#if PL_CONFIG_HAS_MMA8451
+  #include "MMA1.h"
 #endif
 #if PL_CONFIG_HAS_GUI
   #include "lvgl/lvgl.h"
@@ -54,7 +66,9 @@ static void vTimerCallbackExpired(xTimerHandle pxTimer) {
 }
 
 static void SensorTask(void *pv) {
+  vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
 #if PL_CONFIG_HAS_RTC_DS3231
+  CLS1_SendStr("Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
   TmDt1_Init(); /* get time/date from external RTC */
 #endif
 #if PL_CONFIG_HAS_TSL2561
@@ -92,7 +106,19 @@ static void SensorTask(void *pv) {
    CLS1_SendStr("Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
    SGP30_Init();
 #endif
+#if PL_CONFIG_HAS_MMA8451
+   bool isEnabled = FALSE;
 
+   res = MMA1_isEnabled(&isEnabled);
+   if (res!=ERR_OK) {
+     CLS1_SendStr("ERROR: Cannot access MMA8541!\r\n", CLS1_GetStdio()->stdErr);
+   } else if (!isEnabled) {
+     CLS1_SendStr("Enabling MMA8541 sensor.\r\n", CLS1_GetStdio()->stdOut);
+     if (MMA1_Enable()!=ERR_OK) {
+       CLS1_SendStr("ERROR: Failed enabling MMA8541!\r\n", CLS1_GetStdio()->stdErr);
+     }
+   }
+#endif
   for(;;) {
     res = SGP30_IAQmeasure(&tvoc, &co2);
     if (res!=ERR_OK) {
@@ -130,7 +156,7 @@ void APP_Run(void) {
   if (xTaskCreate(
         SensorTask,  /* pointer to the task */
         "Sensor", /* task name for kernel awareness debugging */
-        500/sizeof(StackType_t), /* task stack size */
+        600/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
@@ -152,13 +178,16 @@ void APP_Run(void) {
     /*lint +e527 */
   }
   timerHndl = xTimerCreate(
-        "timer1Sec", /* name */
+        "timer", /* name */
         pdMS_TO_TICKS(APP_PERIODIC_TIMER_PERIOD_MS), /* period/time */
         pdTRUE, /* auto reload */
         (void*)0, /* timer ID */
         vTimerCallbackExpired); /* callback */
   if (timerHndl==NULL) {
     for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndl, 0)!=pdPASS) { /* start the timer */
+    for(;;); /* failure!?! */
   }
   vTaskStartScheduler();
   for(;;) {

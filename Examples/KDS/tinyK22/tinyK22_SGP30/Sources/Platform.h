@@ -16,5 +16,7 @@
 #define PL_CONFIG_HAS_RTC_DS3231  (1)
 #define PL_CONFIG_HAS_GUI         (1)
 #define PL_CONFIG_HAS_KEYS        (1)
+#define PL_CONFIG_HAS_GUI_KEY_NAV (1 && PL_CONFIG_HAS_GUI && PL_CONFIG_HAS_KEYS) /* GUI touchless navigation */
+#define PL_CONFIG_HAS_MMA8451     (1)
 
 #endif /* SOURCES_PLATFORM_H_ */

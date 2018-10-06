@@ -265,6 +265,10 @@ lv_res_t lv_obj_del(lv_obj_t * obj)
 {
     lv_obj_invalidate(obj);
     
+    /*Delete from the group*/
+ #if USE_LV_GROUP
+    if(obj->group_p != NULL) lv_group_remove_obj(obj);
+ #endif
     /*Recursively delete the children*/
     lv_obj_t * i;
     lv_obj_t * i_next;
@@ -284,10 +288,6 @@ lv_res_t lv_obj_del(lv_obj_t * obj)
     lv_anim_del(obj, NULL);
 #endif
     
-    /*Delete from the group*/
- #if USE_LV_GROUP
-    if(obj->group_p != NULL) lv_group_remove_obj(obj);
- #endif
 
     /* Reset all input devices if
      * the currently pressed object is deleted*/

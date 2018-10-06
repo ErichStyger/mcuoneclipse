@@ -247,6 +247,7 @@ void KEY1_OnKeyReleasedLong(uint8_t keys)
 
   if (keys&1) {
     buttonInfo = LV_BUTTON_SW0 | LV_MASK_RELEASED_LONG;
+    RNG1_Put(buttonInfo);
   } else if (keys&2) {
     buttonInfo = LV_BUTTON_SW1 | LV_MASK_RELEASED_LONG;
     RNG1_Put(buttonInfo);

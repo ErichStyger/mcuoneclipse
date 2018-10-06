@@ -74,6 +74,7 @@
 #include "KEY1.h"
 #include "Inhr1.h"
 #include "BitIoLdd8.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {
