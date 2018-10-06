@@ -8,7 +8,6 @@
 #include "Platform.h"
 #if PL_CONFIG_HAS_MMA8451
 #include "gui_accel.h"
-#include "gui_mainmenu.h"
 #include "lvgl/lvgl.h"
 #include "MMA1.h"
 #include "XF1.h"
@@ -33,11 +32,12 @@ static lv_task_t *refr_task;
  * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
 static lv_res_t win_close_action(lv_obj_t *btn) {
-    lv_obj_del(win);
-    win = NULL;
-    lv_task_del(refr_task);
-    refr_task = NULL;
-    return LV_RES_INV;
+  lv_group_focus_freeze(GUI_GetGroup(), false);
+  lv_obj_del(win);
+  win = NULL;
+  lv_task_del(refr_task);
+  refr_task = NULL;
+  return LV_RES_INV;
 }
 
 /**
@@ -90,6 +90,8 @@ void GUI_ACCEL_Create(void) {
     lv_win_set_title(win, "Accelerometer");
     closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
     GUI_AddObjToGroup(closeBtn);
+    lv_group_focus_obj(closeBtn);
+    lv_group_focus_freeze(GUI_GetGroup(), true); /* otherwise the items of the underlying view are still active */
     /* Make the window content responsive */
     lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 
