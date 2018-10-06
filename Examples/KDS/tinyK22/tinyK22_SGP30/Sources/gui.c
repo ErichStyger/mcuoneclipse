@@ -252,6 +252,7 @@ void GUI_Init(void) {
   //lv_theme_set_current(lv_theme_material_init(128, NULL));
   //lv_theme_set_current(lv_theme_mono_init(128, NULL));
   //lv_theme_set_current(lv_theme_zen_init(128, NULL));
+  //lv_theme_set_current(lv_theme_nemo_init(128, NULL));
 
 	//lv_theme_t *th = lv_theme_get_current();
 	/* change default button style */

@@ -178,6 +178,7 @@ void LV_Init(void) {
   lv_disp_drv_t disp_drv;
 
   lv_init();
+  lv_disp_drv_init(&disp_drv);
   /*Set up the functions to access to your display*/
   disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
   disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
