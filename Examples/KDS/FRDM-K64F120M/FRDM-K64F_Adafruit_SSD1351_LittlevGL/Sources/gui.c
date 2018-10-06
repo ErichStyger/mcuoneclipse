@@ -83,7 +83,7 @@ static void GUI_MainMenu_Create(void) {
 #endif
 
 #if 1
-  lv_group_t *group = lv_group_create(); /* create group */
+  lv_group_t *group = lv_group_create(); /* create group for touchless navigation */
   lv_indev_set_group(LV_GetInputDevice(), group); /* assign group to input device */
 
   /* change the default focus style which is an orangish thing */
