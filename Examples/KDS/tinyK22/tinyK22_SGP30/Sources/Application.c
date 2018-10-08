@@ -22,7 +22,9 @@
 #include <TRG1.h>
 #include <TRG1config.h>
 #include "Application.h"
-
+#if PL_CONFIG_HAS_SHT31
+  #include "SHT31.h"
+#endif
 #if PL_CONFIG_HAS_TSL2561
   #include "TSL1.h"
 #endif
@@ -68,8 +70,12 @@ static void vTimerCallbackExpired(xTimerHandle pxTimer) {
 static void SensorTask(void *pv) {
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
 #if PL_CONFIG_HAS_RTC_DS3231
-  CLS1_SendStr("Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((uint8_t*)"Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
   TmDt1_Init(); /* get time/date from external RTC */
+#endif
+#if PL_CONFIG_HAS_SHT31
+  CLS1_SendStr((uint8_t*)"Initializing SHT31.\r\n", CLS1_GetStdio()->stdOut);
+  SHT31_Init();
 #endif
 #if PL_CONFIG_HAS_TSL2561
   uint8_t res;
@@ -77,7 +83,7 @@ static void SensorTask(void *pv) {
   uint16_t TVOC_base, eCO2_base;
   int cntr = 0;
 
-  CLS1_SendStr("Enabling TLS2561 sensor.\r\n", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((uint8_t*)"Enabling TLS2561 sensor.\r\n", CLS1_GetStdio()->stdOut);
   TSL1_Init();
 
   res = TSL1_Disable();
@@ -103,7 +109,7 @@ static void SensorTask(void *pv) {
   }
 #endif
 #if PL_CONFIG_HAS_SGP30
-   CLS1_SendStr("Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
+   CLS1_SendStr((uint8_t*)"Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
    SGP30_Init();
 #endif
 #if PL_CONFIG_HAS_MMA8451
@@ -111,18 +117,18 @@ static void SensorTask(void *pv) {
 
    res = MMA1_isEnabled(&isEnabled);
    if (res!=ERR_OK) {
-     CLS1_SendStr("ERROR: Cannot access MMA8541!\r\n", CLS1_GetStdio()->stdErr);
+     CLS1_SendStr((uint8_t*)"ERROR: Cannot access MMA8541!\r\n", CLS1_GetStdio()->stdErr);
    } else if (!isEnabled) {
-     CLS1_SendStr("Enabling MMA8541 sensor.\r\n", CLS1_GetStdio()->stdOut);
+     CLS1_SendStr((uint8_t*)"Enabling MMA8541 sensor.\r\n", CLS1_GetStdio()->stdOut);
      if (MMA1_Enable()!=ERR_OK) {
-       CLS1_SendStr("ERROR: Failed enabling MMA8541!\r\n", CLS1_GetStdio()->stdErr);
+       CLS1_SendStr((uint8_t*)"ERROR: Failed enabling MMA8541!\r\n", CLS1_GetStdio()->stdErr);
      }
    }
 #endif
   for(;;) {
     res = SGP30_IAQmeasure(&tvoc, &co2);
     if (res!=ERR_OK) {
-      CLS1_SendStr("Failed SGP30_IAQmeasure()!\r\n", CLS1_GetStdio()->stdErr);
+      CLS1_SendStr((uint8_t*)"Failed SGP30_IAQmeasure()!\r\n", CLS1_GetStdio()->stdErr);
     } else {
       CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
     }
@@ -132,7 +138,7 @@ static void SensorTask(void *pv) {
       cntr = 0;
       res = SGP30_GetIAQBaseline(&TVOC_base, &eCO2_base);
       if (res!=ERR_OK) {
-        CLS1_SendStr("Failed SGP30_GetIAQBaseline()!\r\n", CLS1_GetStdio()->stdErr);
+        CLS1_SendStr((uint8_t*)"Failed SGP30_GetIAQBaseline()!\r\n", CLS1_GetStdio()->stdErr);
       } else {
         CLS1_printfIO(CLS1_GetStdio(), "*** Baseline TVOC: 0x%4x, eCO2 0x%4x\n", TVOC_base, eCO2_base);
       }

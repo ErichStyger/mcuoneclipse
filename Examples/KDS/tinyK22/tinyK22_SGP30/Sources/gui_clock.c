@@ -37,19 +37,19 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
  * @param param unused
  */
 static void refresh_task(void *param) {
-  char buf[32];
+  unsigned char buf[32];
   TIMEREC time;
   DATEREC date;
 
   if (TmDt1_GetTimeDate(&time, &date)==ERR_OK) {
-    XF1_xsnprintf(buf, sizeof(buf), "%02d:%02d:%02d", time.Hour, time.Min, time.Sec);
-    lv_label_set_text(clock_label_time, buf);
-    XF1_xsnprintf(buf, sizeof(buf), "%02d.%02d.%04d", date.Day, date.Month, date.Year);
-    lv_label_set_text(clock_label_date, buf);
+    XF1_xsnprintf((char*)buf, sizeof(buf), (char*)"%02d:%02d:%02d", time.Hour, time.Min, time.Sec);
+    lv_label_set_text(clock_label_time, (char*)buf);
+    XF1_xsnprintf((char*)buf, sizeof(buf), (char*)"%02d.%02d.%04d", date.Day, date.Month, date.Year);
+    lv_label_set_text(clock_label_date, (char*)buf);
   } else {
-    UTIL1_strcpy(buf, sizeof(buf), "failed!");
-    lv_label_set_text(clock_label_time, buf);
-    lv_label_set_text(clock_label_date, buf);
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"failed!");
+    lv_label_set_text(clock_label_time, (char*)buf);
+    lv_label_set_text(clock_label_date, (char*)buf);
   }
 }
 

@@ -46,7 +46,6 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
  */
 static void refresh_task(void *param) {
 	int16_t x, y, z;
-	uint8_t res;
   char buf[64];
 
 	x = MMA1_GetXmg();
