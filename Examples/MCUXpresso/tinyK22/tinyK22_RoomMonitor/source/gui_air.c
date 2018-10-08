@@ -51,7 +51,8 @@ static void refresh_task(void *param) {
 	  voc = co2 = 0; /* error case */
 	}
 	c_co2 = co2/3; /* scale into chart range */
-	if (c_voc>AIR_CHART_MAX_VALUE) {;
+	c_voc = voc;
+	if (c_voc>AIR_CHART_MAX_VALUE) {
 	  c_voc = AIR_CHART_MAX_VALUE;
 	}
 	if (c_co2>AIR_CHART_MAX_VALUE) {

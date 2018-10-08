@@ -334,7 +334,6 @@ uint8_t TSL1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 {
 #if TSL1_CONFIG_PARSE_COMMAND_ENABLED
   uint8_t res = ERR_OK;
-  uint8_t buf[32];
 
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
     || UTIL1_strcmp((char*)cmd, "TSL1 help") == 0)

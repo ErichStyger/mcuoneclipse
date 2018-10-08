@@ -59,10 +59,9 @@ static lv_res_t Btn_Clock_click_action(struct _lv_obj_t *obj) {
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
-	lv_obj_t *label;
 
   /* create window */
-	gui_win = lv_win_create(lv_scr_act(), NULL);
+  gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
 
   /* Make the window content responsive */
