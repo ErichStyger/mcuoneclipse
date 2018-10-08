@@ -7,7 +7,7 @@
 
 #include "Platform.h"
 #if PL_CONFIG_HAS_SGP30
-#include "gui_accel.h"
+#include "gui_air.h"
 #include "lvgl/lvgl.h"
 #include "SGP30.h"
 #include "XF1.h"

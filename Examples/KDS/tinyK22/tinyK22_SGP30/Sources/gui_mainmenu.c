@@ -16,6 +16,9 @@
 #if PL_CONFIG_HAS_SGP30
   #include "gui_air.h"
 #endif
+#if PL_CONFIG_HAS_TSL2561
+  #include "gui_ambient.h"
+#endif
 #if PL_CONFIG_HAS_RTC_DS3231
   #include "gui_clock.h"
 #endif
@@ -40,6 +43,18 @@ static lv_res_t Btn_Accel_click_action(struct _lv_obj_t *obj) {
  */
 static lv_res_t Btn_Air_click_action(struct _lv_obj_t *obj) {
   GUI_AIR_Create();
+  return LV_RES_OK;
+}
+#endif
+
+#if PL_CONFIG_HAS_TSL2561
+/**
+ * Called when the Ambient button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_Ambient_click_action(struct _lv_obj_t *obj) {
+  GUI_AMBIENT_Create();
   return LV_RES_OK;
 }
 #endif
@@ -79,6 +94,10 @@ void GUI_MainMenuCreate(void) {
 #endif
 #if PL_CONFIG_HAS_SGP30
   obj = lv_list_add(list1, SYMBOL_DIRECTORY, "Air", Btn_Air_click_action);
+  GUI_AddObjToGroup(obj);
+#endif
+#if PL_CONFIG_HAS_TSL2561
+  obj = lv_list_add(list1, SYMBOL_CLOSE, "Ambient", Btn_Ambient_click_action);
   GUI_AddObjToGroup(obj);
 #endif
 #if PL_CONFIG_HAS_RTC_DS3231
