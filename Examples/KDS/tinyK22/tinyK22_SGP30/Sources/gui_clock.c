@@ -75,7 +75,7 @@ void GUI_CLOCK_Create(void) {
     lv_obj_set_style(clock_label_time, &style_txt);
 
     lv_label_set_text(clock_label_time, "12:15:01");
-    lv_obj_align(clock_label_time, win, LV_ALIGN_CENTER, 0, 10);
+    lv_obj_align(clock_label_time, win, LV_ALIGN_CENTER, 0, 0);
 
     clock_label_date = lv_label_create(win, NULL);
     lv_label_set_text(clock_label_date, "15.10.2018");
