@@ -92,6 +92,7 @@ extern void SystemInit(void);
 // automatically take precedence over these weak definitions
 //*****************************************************************************
      void ResetISR(void);
+#if 0 /* << EST */
 WEAK void NMI_Handler(void);
 WEAK void HardFault_Handler(void);
 WEAK void MemManage_Handler(void);
@@ -263,7 +264,7 @@ void Reserved86_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void FTM3_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void DAC1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void ADC1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-
+#endif
 //*****************************************************************************
 // The entry point for the application.
 // __main() is the entry point for Redlib based applications
@@ -287,6 +288,7 @@ extern void _vStackTop(void);
 // This relies on the linker script to place at correct location in memory.
 //*****************************************************************************
 extern void (* const g_pfnVectors[])(void);
+#if 0
 extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
 __attribute__ ((used, section(".isr_vector")))
@@ -385,6 +387,7 @@ void (* const g_pfnVectors[])(void) = {
     DAC1_IRQHandler,            // 88: DAC1 interrupt
     ADC1_IRQHandler,            // 89: ADC1 interrupt
 }; /* End of g_pfnVectors */
+#endif
 
 //*****************************************************************************
 // Functions to carry out the initialization of RW and BSS data sections. These
@@ -426,6 +429,8 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
+void __init_hardware(void); /* prototype of Processor Expert hardware initialization function */
+
 __attribute__ ((section(".after_vectors.reset")))
 void ResetISR(void) {
 
@@ -435,7 +440,8 @@ void ResetISR(void) {
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
     SystemInit();
-
+#elif 1
+    __init_hardware(); /* all Processor Expert CPU initialization code */
 #else
     // Disable Watchdog
     //  Write 0xC520 to watchdog unlock register
@@ -529,6 +535,7 @@ void ResetISR(void) {
 	}
 }
 
+#if 0 /* << EST */
 //*****************************************************************************
 // Default core exception handlers. Override the ones here by defining your own
 // handler routines in your application code.
@@ -878,7 +885,7 @@ WEAK void DAC1_IRQHandler(void)
 WEAK void ADC1_IRQHandler(void)
 {   ADC1_DriverIRQHandler();
 }
-
+#endif
 //*****************************************************************************
 
 #if defined (DEBUG)
