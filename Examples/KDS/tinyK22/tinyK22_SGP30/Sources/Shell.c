@@ -29,6 +29,9 @@
 #if PL_CONFIG_HAS_MMA8451
   #include "MMA1.h"
 #endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  #include "WS2812B/NeoPixel.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -46,6 +49,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_MMA8451
   MMA1_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  NEO_ParseCommand,
 #endif
   TmDt1_ParseCommand,
   NULL /* sentinel */
@@ -109,6 +115,7 @@ static void ShellTask(void *pvParameters) {
   int i;
 
   (void)pvParameters; /* not used */
+  /* \todo */
   //(void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
   for(;;) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {

@@ -40,6 +40,9 @@
 #if PL_CONFIG_HAS_MMA8451
   #include "MMA1.h"
 #endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  #include "WS2812B/NeoApp.h"
+#endif
 #if PL_CONFIG_HAS_GUI
   #include "lvgl/lvgl.h"
   #include "lv.h"
@@ -158,6 +161,9 @@ void APP_Run(void) {
   SHELL_Init();
 #if PL_CONFIG_HAS_GUI
   GUI_Init();
+#endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  NEOA_Init();
 #endif
   if (xTaskCreate(
         SensorTask,  /* pointer to the task */

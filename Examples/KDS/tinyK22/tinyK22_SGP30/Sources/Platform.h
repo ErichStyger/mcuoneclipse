@@ -20,4 +20,6 @@
 #define PL_CONFIG_HAS_MMA8451     (1)
 #define PL_CONFIG_HAS_SHT31       (1) /* temperature/humidity */
 
+#define PL_CONFIG_HAS_NEO_PIXEL   (1)
+
 #endif /* SOURCES_PLATFORM_H_ */
