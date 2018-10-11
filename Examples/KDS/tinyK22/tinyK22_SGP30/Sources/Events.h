@@ -226,6 +226,34 @@ void KEY1_OnKeyReleasedLong(uint8_t keys);
 ** ===================================================================
 */
 
+void SD1_OnActivate(uint8_t mode);
+/*
+** ===================================================================
+**     Description :
+**         Event called when Activate() method is called. This gives an
+**         opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void SD1_OnDeactivate(uint8_t mode);
+/*
+** ===================================================================
+**     Description :
+**         Event called when Deactivate() method is called. This gives
+**         an opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

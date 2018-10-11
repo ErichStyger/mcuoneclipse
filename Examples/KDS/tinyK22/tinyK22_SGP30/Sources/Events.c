@@ -40,6 +40,10 @@ extern "C" {
 #include "Platform.h"
 #include "RNG1.h"
 #include "lv.h"
+#if PL_CONFIG_HAS_SPI
+  #include "SPI.h"
+#endif
+
 /*
 ** ===================================================================
 **     Event       :  Cpu_OnNMI (module Events)
@@ -256,6 +260,48 @@ void KEY1_OnKeyReleasedLong(uint8_t keys)
     RNG1_Put(buttonInfo);
   }
 }
+
+/*
+** ===================================================================
+**     Description :
+**         Event called when Activate() method is called. This gives an
+**         opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnActivate(uint8_t mode)
+{
+  (void)mode;
+#if PL_CONFIG_HAS_SPI
+  SPI_OnSPIActivate(SPI_BAUD_INDEX_SD_FAST);
+#endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called when Deactivate() method is called. This gives
+**         an opportunity to the application to synchronize access to a
+**         shared bus.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         mode            - 0: slow mode, 1: fast mode
+**     Returns     : Nothing
+** ===================================================================
+*/
+void SD1_OnDeactivate(uint8_t mode)
+{
+#if PL_HAS_SPI
+  SPI_OnSPIDeactivate((SPI_BaudIndex)mode);
+#else
+  (void)mode;
+#endif
+}
+
 
 /* END Events */
 

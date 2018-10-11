@@ -43,6 +43,9 @@
 #if PL_CONFIG_HAS_NEO_PIXEL
   #include "WS2812B/NeoApp.h"
 #endif
+#if PL_CONFIG_HAS_SPI
+  #include "SPI.h"
+#endif
 #if PL_CONFIG_HAS_GUI
   #include "lvgl/lvgl.h"
   #include "lv.h"
@@ -159,6 +162,9 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   SHELL_Init();
+#if PL_CONFIG_HAS_SPI
+  SPI_Init();
+#endif
 #if PL_CONFIG_HAS_GUI
   GUI_Init();
 #endif
