@@ -168,7 +168,7 @@ void APP_Run(void) {
   if (xTaskCreate(
         SensorTask,  /* pointer to the task */
         "Sensor", /* task name for kernel awareness debugging */
-        600/sizeof(StackType_t), /* task stack size */
+        700/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */

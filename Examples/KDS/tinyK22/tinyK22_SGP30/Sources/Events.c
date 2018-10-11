@@ -37,6 +37,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Platform.h"
 #include "RNG1.h"
 #include "lv.h"
 /*
@@ -153,7 +154,9 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
+#if PL_CONFIG_HAS_SSD1351 && !PL_CONFIG_HAS_SD_CARD
   LCD1_OnDataReceived();
+#endif
 }
 
 /*
@@ -252,162 +255,6 @@ void KEY1_OnKeyReleasedLong(uint8_t keys)
     buttonInfo = LV_BUTTON_SW1 | LV_MASK_RELEASED_LONG;
     RNG1_Put(buttonInfo);
   }
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH3_OnComplete (module Events)
-**
-**     Component   :  DMACH3 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. You can use GetTransferCompleteStatus() in
-**         order to distinguish "Full complete" and "Half complete"
-**         case. See SetEventMask() and GetEventMask() methods.
-**         [Note:] If Half complete is enabled and interrupts are
-**         disabled or your code doesn't handle OnComplete event before
-**         all data are transferred by DMA peripheral, OnComplete event
-**         will be invoked only once and GetTransferCompleteStatus()
-**         called from this event will always return TRUE = "Full
-**         complete".
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH3_OnComplete(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH3_OnError (module Events)
-**
-**     Component   :  DMACH3 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called when error in channel settings is detected. See
-**         SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH3_OnError(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH2_OnComplete (module Events)
-**
-**     Component   :  DMACH2 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. You can use GetTransferCompleteStatus() in
-**         order to distinguish "Full complete" and "Half complete"
-**         case. See SetEventMask() and GetEventMask() methods.
-**         [Note:] If Half complete is enabled and interrupts are
-**         disabled or your code doesn't handle OnComplete event before
-**         all data are transferred by DMA peripheral, OnComplete event
-**         will be invoked only once and GetTransferCompleteStatus()
-**         called from this event will always return TRUE = "Full
-**         complete".
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH2_OnComplete(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH2_OnError (module Events)
-**
-**     Component   :  DMACH2 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called when error in channel settings is detected. See
-**         SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH2_OnError(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH1_OnComplete (module Events)
-**
-**     Component   :  DMACH1 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called at the end of a DMA transfer. If the Half complete
-**         property in initialization section is enabled, this event is
-**         also called when current major iteration count reaches the
-**         halfway point. You can use GetTransferCompleteStatus() in
-**         order to distinguish "Full complete" and "Half complete"
-**         case. See SetEventMask() and GetEventMask() methods.
-**         [Note:] If Half complete is enabled and interrupts are
-**         disabled or your code doesn't handle OnComplete event before
-**         all data are transferred by DMA peripheral, OnComplete event
-**         will be invoked only once and GetTransferCompleteStatus()
-**         called from this event will always return TRUE = "Full
-**         complete".
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH1_OnComplete(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
-}
-
-/*
-** ===================================================================
-**     Event       :  DMACH1_OnError (module Events)
-**
-**     Component   :  DMACH1 [DMAChannel_LDD]
-*/
-/*!
-**     @brief
-**         Called when error in channel settings is detected. See
-**         SetEventMask() and GetEventMask() methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void DMACH1_OnError(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
 }
 
 /* END Events */

@@ -6,7 +6,7 @@
  */
 
 #include "Platform.h"
-#if PL_CONFIG_HAS_RTC_DS3231
+#if PL_CONFIG_HAS_RTC_DS3231 && PL_CONFIG_HAS_GUI
 #include "gui_clock.h"
 #include "lvgl/lvgl.h"
 #include "TmDt1.h"

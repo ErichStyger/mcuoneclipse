@@ -6,7 +6,7 @@
  */
 
 #include "Platform.h"
-#if PL_CONFIG_HAS_MMA8451
+#if PL_CONFIG_HAS_MMA8451 && PL_CONFIG_HAS_GUI
 #include "gui_accel.h"
 #include "lvgl/lvgl.h"
 #include "MMA1.h"

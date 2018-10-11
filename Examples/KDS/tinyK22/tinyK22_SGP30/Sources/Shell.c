@@ -32,6 +32,10 @@
 #if PL_CONFIG_HAS_NEO_PIXEL
   #include "WS2812B/NeoPixel.h"
 #endif
+#if PL_CONFIG_HAS_SD_CARD
+  #include "FAT1.h"
+  #include "PORT_PDD.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -54,6 +58,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   NEO_ParseCommand,
 #endif
   TmDt1_ParseCommand,
+#if PL_CONFIG_HAS_SD_CARD
+  FAT1_ParseCommand,
+#endif
   NULL /* sentinel */
 };
 
@@ -112,12 +119,29 @@ static const SHELL_IODesc ios[] =
 
 
 static void ShellTask(void *pvParameters) {
+#if PL_CONFIG_HAS_SD_CARD
+  bool cardMounted = FALSE;
+  static FAT1_FATFS fileSystemObject;
+#endif
   int i;
 
   (void)pvParameters; /* not used */
   /* \todo */
   //(void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
+#if PL_CONFIG_HAS_SD_CARD
+  /* pull up card detect pin PTD7: the card shorts to GND if the card is *not* inserted, so the pin is HIGH active. */
+  PORT_PDD_SetPinPullSelect(PORTD_BASE_PTR, 7, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTD_BASE_PTR, 7, PORT_PDD_PULL_ENABLE);
+  FAT1_Init();
+#endif
+  for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    ios[i].buf[0] = '\0';
+  }
   for(;;) {
+#if PL_CONFIG_HAS_SD_CARD
+    /* mount card */
+    (void)FAT1_CheckCardPresence(&cardMounted, "0" /* drive */, &fileSystemObject, CLS1_GetStdio());
+#endif
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)CLS1_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
@@ -127,7 +151,7 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   CLS1_SetStdio(ios[0].stdio); /* using the first one as the default channel */
-  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+800, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

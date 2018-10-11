@@ -6,7 +6,7 @@
  */
 
 #include "Platform.h"
-#if PL_CONFIG_HAS_TSL2561
+#if PL_CONFIG_HAS_TSL2561 && PL_CONFIG_HAS_GUI
 #include "gui_accel.h"
 #include "lvgl/lvgl.h"
 #include "TSL1.h"

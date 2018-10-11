@@ -29,6 +29,7 @@ uint8_t SGP30_IAQmeasure(uint16_t *pTVOC, uint16_t *pCO2);
 uint8_t SGP30_GetIAQBaseline(uint16_t *pTVOCbase, uint16_t *pCO2base);
 
 
+/* driver initialization */
 uint8_t SGP30_Init(void);
 
 
