@@ -10,6 +10,7 @@
 #if PL_CONFIG_HAS_NEO_PIXEL
 #include "NeoApp.h"
 #include "NeoPixel.h"
+#include "NeoLine.h"
 #include "FRTOS1.h"
 #include "LED1.h"
 #include "PixelDMA.h"
@@ -21,6 +22,11 @@ static void NeoTask(void* pvParameters) {
   NEO_ClearAllPixel();
   cntr = 0;
   for(;;) {
+#if 1
+    NEOL_PixelTrail(0x10, 0x00, 0x00, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(0x00, 0x10, 0x00, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(0x00, 0x00, 0x10, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+#elif 0
      if (val==0xff) {
        inc = -1;
       } else if (val==0) {
@@ -40,7 +46,7 @@ static void NeoTask(void* pvParameters) {
      if (cntr>6*0xff) {
        cntr = 0;
      }
-#if 0
+#elif 0
      NEO_SetPixelRGB(0, 0, val, 0x00, 0x00);
      NEO_SetPixelRGB(0, 1, 0x00, val, 0x00);
      NEO_SetPixelRGB(0, 2, 0x00, 0x00, val);
