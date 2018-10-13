@@ -254,6 +254,26 @@ void SD1_OnDeactivate(uint8_t mode);
 ** ===================================================================
 */
 
+void LCD1_OnGetLCD(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called in the event of GetLCD() method called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_OnGiveLCD(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called in the event of GiveLCD() method called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

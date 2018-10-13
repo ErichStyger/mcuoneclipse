@@ -158,7 +158,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 /* ===================================================================*/
 void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-#if PL_CONFIG_HAS_SSD1351 && !PL_CONFIG_HAS_SD_CARD
+#if PL_CONFIG_HAS_SSD1351 //&& !PL_CONFIG_HAS_SD_CARD
   LCD1_OnDataReceived();
 #endif
 }
@@ -295,13 +295,43 @@ void SD1_OnActivate(uint8_t mode)
 */
 void SD1_OnDeactivate(uint8_t mode)
 {
-#if PL_HAS_SPI
+#if PL_CONFIG_HAS_SPI
   SPI_OnSPIDeactivate((SPI_BaudIndex)mode);
 #else
   (void)mode;
 #endif
 }
 
+
+/*
+** ===================================================================
+**     Description :
+**         Event called in the event of GetLCD() method called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_OnGetLCD(void)
+{
+#if PL_CONFIG_HAS_SPI
+  SPI_OnSPIActivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called in the event of GiveLCD() method called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_OnGiveLCD(void)
+{
+#if PL_CONFIG_HAS_SPI
+  SPI_OnSPIDeactivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
 
 /* END Events */
 

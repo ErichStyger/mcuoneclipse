@@ -260,7 +260,7 @@ void GUI_Init(void) {
  // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
  // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "gui", 1500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 1700/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }

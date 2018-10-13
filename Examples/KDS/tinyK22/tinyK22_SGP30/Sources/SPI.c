@@ -17,6 +17,7 @@ void SPI_OnSPIActivate(SPI_BaudIndex idx) {
   (void)idx;
   (void)xSemaphoreTakeRecursive(spiSem, portMAX_DELAY);
   //SM1_SetBaudRateMode(index);
+  SM1_SelectConfiguration(SM1_DeviceData, 0, idx);
 }
 
 void SPI_OnSPIDeactivate(SPI_BaudIndex idx) {

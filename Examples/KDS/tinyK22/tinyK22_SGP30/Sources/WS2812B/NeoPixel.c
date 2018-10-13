@@ -16,9 +16,11 @@
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
-#define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
+#define NEO_NOF_BITS_PIXEL  (8*NEOC_USE_NOF_COLOR)  /* 24 bits for RGB, 32 for RGBW */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
-/* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for all the RGB bits. The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24]. */
+/* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for all the RGB bits, 32bytes for RGBW.
+ * The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24] for RGB, at transmitBuf[32] for RGBW.
+ * */
 static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL];
 
 static const uint8_t gamma8[] = {
@@ -62,9 +64,73 @@ uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *rgb
   return res;
 }
 
-uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t rgb) {
-  return NEO_SetPixelRGB(lane, pos, (rgb>>16)&0xff, (rgb>>8)&0xff, rgb&0xff);
+/* sets the color of an individual pixel */
+uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color) {
+  NEO_PixelIdxT idx;
+  int i;
+#if NEOC_USE_NOF_COLOR==3 /* RGB */
+  uint8_t red, green, blue;
+
+  red = (color>>16)&0xff;
+  green = (color>>8)&0xff;
+  blue = color&0xff;
+#else
+  uint8_t red, green, blue, white;
+
+  red   = (color>>24)&0xff;
+  green = (color>>16)&0xff;
+  blue  = (color>>8)&0xff;
+  white = color&0xff;
+#endif
+
+  if (lane>=NEO_NOF_LANES || pos>=NEO_NOF_LEDS_IN_LANE) {
+    return ERR_RANGE; /* error, out of range */
+  }
+  idx = pos*NEO_NOF_BITS_PIXEL; /* find index in array: Y==0 is at index 0, Y==1 is at index 24, and so on */
+  /* green */
+  for(i=0;i<8;i++) {
+    if (green&0x80) {
+      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
+    } else {
+      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
+    }
+    green <<= 1; /* next bit */
+    idx++;
+  }
+  /* red */
+  for(i=0;i<8;i++) {
+    if (red&0x80) {
+      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
+    } else {
+      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
+    }
+    red <<= 1; /* next bit */
+    idx++;
+  }
+  /* blue */
+  for(i=0;i<8;i++) {
+    if (blue&0x80) {
+      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
+    } else {
+      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
+    }
+    blue <<= 1; /* next bit */
+    idx++;
+#if NEOC_USE_NOF_COLOR==4 /* RGBW */
+    /* white */
+    for(i=0;i<8;i++) {
+      if (white&0x80) {
+        transmitBuf[idx] |= (VAL1<<lane); /* set bit */
+      } else {
+        transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
+      }
+      white <<= 1; /* next bit */
+      idx++;
+#endif
+  }
+  return ERR_OK;
 }
+
 
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue) {

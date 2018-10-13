@@ -132,7 +132,7 @@ static void ShellTask(void *pvParameters) {
   /* pull up card detect pin PTD7: the card shorts to GND if the card is *not* inserted, so the pin is HIGH active. */
   PORT_PDD_SetPinPullSelect(PORTD_BASE_PTR, 7, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTD_BASE_PTR, 7, PORT_PDD_PULL_ENABLE);
-  FAT1_Init();
+  FAT1_Init(); /* not needed, will be initialized when a card insertion is detected */
 #endif
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
