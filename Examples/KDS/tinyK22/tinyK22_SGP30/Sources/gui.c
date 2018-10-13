@@ -226,14 +226,17 @@ void GUI_RemoveObjFromGroup(lv_obj_t * obj) {
 
 #endif /* PL_CONFIG_HAS_GUI_KEY_NAV */
 
+#include "GDisp1.h"
 static void GuiTask(void *p) {
   vTaskDelay(pdMS_TO_TICKS(200)); /* give hardware time to power up */
   LCD1_Init();
 
+//  GDisp1_DrawBox(0, 0, 50, 20, 2, GDisp1_COLOR_RED);
+//  GDisp1_UpdateFull();
+
 #if PL_CONFIG_HAS_GUI_KEY_NAV
   GUI_CreateGroup();
 #endif
-
   GUI_MainMenuCreate();
 	for(;;) {
 		LV_Task(); /* call this every 1-20 ms */

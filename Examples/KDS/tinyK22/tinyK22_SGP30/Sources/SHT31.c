@@ -11,6 +11,7 @@
 
 #include "Platform.h"
 #if PL_CONFIG_HAS_SHT31
+#include "SHT31.h"
 #include "GI2C1.h"
 #include "WAIT1.h"
 
@@ -99,7 +100,6 @@ uint8_t SHT31_Reset(void) {
   return SHT31_WriteCommand(SHT31_SOFTRESET);
 }
 
-#if 1
 uint8_t SHT31_ReadTempHum(float *temperature, float *humidity) {
   double stemp, shum;
   uint16_t ST, SRH;
@@ -136,7 +136,55 @@ uint8_t SHT31_ReadTempHum(float *temperature, float *humidity) {
 
   return ERR_OK;
 }
-#endif
+
+#if SHT31_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[32];
+  float temperature, humidity;
+
+  CLS1_SendStatusStr((unsigned char*)"SHT31", (unsigned char*)"\r\n", io->stdOut);
+
+  if(SHT31_ReadTempHum(&temperature, &humidity)==ERR_OK) {
+    UTIL1_NumFloatToStr(buf, sizeof(buf), temperature, 2);
+    UTIL1_strcat(buf, sizeof(buf), "°C\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  temp", buf, io->stdOut);
+
+    UTIL1_NumFloatToStr(buf, sizeof(buf), humidity, 2);
+    UTIL1_strcat(buf, sizeof(buf), " RH\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  humidity", buf, io->stdOut);
+  } else {
+    CLS1_SendStatusStr("  ERROR:", (unsigned char*)"  *** ERROR reading sensor values\r\n", io->stdOut);
+  }
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"SHT31", (unsigned char*)"Group of SHT31 commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+#endif /* SHT31_CONFIG_PARSE_COMMAND_ENABLED */
+
+
+#if SHT31_CONFIG_PARSE_COMMAND_ENABLED
+uint8_t SHT31_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
+    || UTIL1_strcmp((char*)cmd, "SHT31 help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0)
+             || (UTIL1_strcmp((char*)cmd, "SHT31 status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  }
+  return res;
+}
+#endif /* SHT31_CONFIG_PARSE_COMMAND_ENABLED */
 
 void SHT31_Init(void) {
   uint16_t status;

@@ -36,6 +36,12 @@
   #include "FAT1.h"
   #include "PORT_PDD.h"
 #endif
+#if PL_CONFIG_HAS_SHT31
+  #include "SHT31.h"
+#endif
+#if PL_CONFIG_HAS_SGP30
+  #include "SGP30.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -60,6 +66,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
   TmDt1_ParseCommand,
 #if PL_CONFIG_HAS_SD_CARD
   FAT1_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_SHT31
+  SHT31_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_SGP30
+  SGP30_ParseCommand,
 #endif
   NULL /* sentinel */
 };

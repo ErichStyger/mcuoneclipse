@@ -10,6 +10,7 @@
 #include "SGP30.h"
 #include "GI2C1.h"
 #include <math.h> /* for exp() */
+#include "UTIL1.h"
 
 /* Code based on Adafruit's implementation on https://github.com/adafruit/Adafruit_SGP30 */
 
@@ -135,6 +136,57 @@ static uint8_t SGP30_InitDevice(void) {
   }
   return SGP30_IAQinit();
 }
+
+#if SGP30_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint16_t TVOC, CO2;
+  uint8_t buf[32];
+
+  CLS1_SendStatusStr((unsigned char*)"SGP30", (unsigned char*)"\r\n", io->stdOut);
+
+  if(SGP30_IAQmeasure(&TVOC, &CO2)==ERR_OK) {
+    UTIL1_Num16uToStrFormatted(buf, sizeof(buf), TVOC, ' ', 5);
+    UTIL1_strcat(buf, sizeof(buf), " ppb\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  TVOC", buf, io->stdOut);
+
+    UTIL1_Num16uToStrFormatted(buf, sizeof(buf), CO2, ' ', 5);
+    UTIL1_strcat(buf, sizeof(buf), " ppm\r\n");
+    CLS1_SendStatusStr((unsigned char*)"  eCO2", buf, io->stdOut);
+  } else {
+    CLS1_SendStatusStr("  ERROR:", (unsigned char*)"  *** ERROR reading sensor values\r\n", io->stdOut);
+  }
+
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"SGP30", (unsigned char*)"Group of SGP30 commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+#endif /* SGP30_CONFIG_PARSE_COMMAND_ENABLED */
+
+
+#if SGP30_CONFIG_PARSE_COMMAND_ENABLED
+uint8_t SGP30_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
+    || UTIL1_strcmp((char*)cmd, "SGP30 help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0)
+             || (UTIL1_strcmp((char*)cmd, "SGP30 status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  }
+  return res;
+}
+#endif /* SGP30_CONFIG_PARSE_COMMAND_ENABLED */
+
 
 uint8_t SGP30_Init(void) {
   uint8_t res;

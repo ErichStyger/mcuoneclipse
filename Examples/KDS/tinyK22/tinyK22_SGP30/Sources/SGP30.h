@@ -28,6 +28,13 @@ uint8_t SGP30_IAQmeasure(uint16_t *pTVOC, uint16_t *pCO2);
 /* Request baseline calibration values for both CO2 and TVOC IAQ calculations. */
 uint8_t SGP30_GetIAQBaseline(uint16_t *pTVOCbase, uint16_t *pCO2base);
 
+#define SGP30_CONFIG_PARSE_COMMAND_ENABLED  (1)
+
+#if SGP30_CONFIG_PARSE_COMMAND_ENABLED
+  #include "CLS1.h"
+  uint8_t SGP30_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
+#endif
+
 
 /* driver initialization */
 uint8_t SGP30_Init(void);

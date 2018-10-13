@@ -9,6 +9,13 @@
 #define SOURCES_SHT31_H_
 
 
+#define SHT31_CONFIG_PARSE_COMMAND_ENABLED  (1)
+
+#if SHT31_CONFIG_PARSE_COMMAND_ENABLED
+  #include "CLS1.h"
+  uint8_t SHT31_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
+#endif
+
 void SHT31_Init(void);
 
 

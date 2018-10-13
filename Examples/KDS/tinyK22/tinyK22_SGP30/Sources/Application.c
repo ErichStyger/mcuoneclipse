@@ -136,7 +136,7 @@ static void SensorTask(void *pv) {
     if (res!=ERR_OK) {
       CLS1_SendStr((uint8_t*)"Failed SGP30_IAQmeasure()!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
+     // CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
     }
     vTaskDelay(pdMS_TO_TICKS(5000));
     cntr++;
