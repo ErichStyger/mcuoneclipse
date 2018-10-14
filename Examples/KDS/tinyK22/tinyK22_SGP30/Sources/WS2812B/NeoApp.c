@@ -18,14 +18,29 @@
 static void NeoTask(void* pvParameters) {
   int i, cntr, val = 0;
   int inc = 1;
+  int red, green, blue;
+
+  red = 0xff;
+  green = 0;
+  blue = 0;
+
   (void)pvParameters; /* parameter not used */
   NEO_ClearAllPixel();
   cntr = 0;
   for(;;) {
+//    NEO_SetPixelColor(0, 0, NEO_MAKE_COLOR_RGBW(0xff,0x00,0x00,0x00));
+//    NEO_SetPixelColor(0, 1, NEO_MAKE_COLOR_RGBW(0x00,0xff,0x00,0x00));
+//    NEO_SetPixelColor(0, 2, NEO_MAKE_COLOR_RGBW(0x00,0x00,0xff,0x00));
+//    NEO_SetPixelColor(0, 3, NEO_MAKE_COLOR_RGBW(0x00,0x00,0x00,0xff));
+//    NEO_SetPixelColor(0, 4, NEO_MAKE_COLOR_RGBW(0xff,0xff,0xff,0xff));
+//    NEO_SetPixelColor(0, 5, NEO_MAKE_COLOR_RGBW(0xff,0x00,0x00,0x00));
+//    NEO_SetPixelColor(0, 6, NEO_MAKE_COLOR_RGBW(0x00,0xff,0x00,0x00));
+//    NEO_SetPixelColor(0, 7, NEO_MAKE_COLOR_RGBW(0x00,0x00,0xff,0x00));
 #if 1
-    NEOL_PixelTrail(0x10, 0x00, 0x00, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-    NEOL_PixelTrail(0x00, 0x10, 0x00, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-    NEOL_PixelTrail(0x00, 0x00, 0x10, 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x10, 0x00, 0x00), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x00, 0x10, 0x00), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x00, 0x00, 0x10), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
+    NEOL_PixelTrail(NEO_MAKE_COLOR_RGBW(0x00, 0x00, 0x00, 0x10), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
 #elif 0
      if (val==0xff) {
        inc = -1;

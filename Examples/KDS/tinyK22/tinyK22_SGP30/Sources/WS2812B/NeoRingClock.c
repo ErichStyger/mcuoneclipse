@@ -34,14 +34,14 @@
 #define CLOCK_DIMM_HMS_MARKS     1  /* >=1, dimming divisor for hour, minute and seconds dots */
 #define CLOCK_MULTI_HOUR_MARKS   1  /* 1 or 0 */
 
-#define CLOCK_RGB_HOURLY_MARKS (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS)
+#define CLOCK_RGB_HOURLY_MARKS  NEO_MAKE_COLOR_RGB((0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS), (0xff/CLOCK_DIMM_HOURLY_MARKS))
 
-#define CLOCK_RGB_HOUR_DOT_M1   0x00, (0xff/(CLOCK_DIMM_HMS_MARKS*8)), 0x00
+#define CLOCK_RGB_HOUR_DOT_M1   NEO_MAKE_COLOR_RGB(0x00, (0xff/(CLOCK_DIMM_HMS_MARKS*8)), 0x00)
 #define CLOCK_RGB_HOUR_DOT      0x00, (0xff/CLOCK_DIMM_HMS_MARKS), 0x00
-#define CLOCK_RGB_HOUR_DOT_P1   0x00, (0xff/(CLOCK_DIMM_HMS_MARKS*8)), 0x00
+#define CLOCK_RGB_HOUR_DOT_P1   NEO_MAKE_COLOR_RGB(0x00, (0xff/(CLOCK_DIMM_HMS_MARKS*8)), 0x00)
 
 #define CLOCK_RGB_MINUTE_DOT    0x00, 0x00, (0xff/CLOCK_DIMM_HMS_MARKS)
-#define CLOCK_RGB_SECOND_DOT    (0xff/CLOCK_DIMM_HMS_MARKS), 0x00, (0xff/CLOCK_DIMM_HMS_MARKS)
+#define CLOCK_RGB_SECOND_DOT    NEO_MAKE_COLOR_RGB((0xff/CLOCK_DIMM_HMS_MARKS), 0x00, (0xff/CLOCK_DIMM_HMS_MARKS))
 
 static void CLOCK_Clear(void) {
   NEO_PixelIdxT i;
@@ -66,7 +66,7 @@ static void CLOCK_DrawClockGround(void) {
   pixel = CLOCK_RING_12_PIXEL_FIRST;
 #endif
   for (i=0;i<CLOCK_NOF_HOUR_MARKS;i++) {
-    NEO_SetPixelRGB(0, pixel, CLOCK_RGB_HOURLY_MARKS);
+    NEO_SetPixelColor(0, pixel, CLOCK_RGB_HOURLY_MARKS);
 #if CLOCK_HAS_RING_60 /* marks only on outer ring */
     pixel += CLOCK_RING_60_NOF_PIXEL/CLOCK_NOF_HOUR_MARKS; /* one mark every hour */
 #elif CLOCK_HAS_RING_24
@@ -94,16 +94,16 @@ static void AddHour(uint8_t hour, uint8_t minute, NEO_PixelIdxT ringFirstPixel, 
   pixel = ringFirstPixel+((ringNofPixel*hour)/12); /* hour base */
   pixel += ((ringNofPixel*minute)/60/12); /* add minute offset */
 #if CLOCK_MULTI_HOUR_MARKS
-  NEO_SetPixelRGB(0, pixel, red, green, blue);
+  NEO_SetPixelColor(0, pixel, NEO_MAKE_COLOR_RGB(red, green, blue));
   if (pixel==ringFirstPixel) {
-    NEO_SetPixelRGB(0, pixel+1, CLOCK_RGB_HOUR_DOT_P1);
-    NEO_SetPixelRGB(0, ringLastPixel, CLOCK_RGB_HOUR_DOT_M1);
+    NEO_SetPixelColor(0, pixel+1, CLOCK_RGB_HOUR_DOT_P1);
+    NEO_SetPixelColor(0, ringLastPixel, CLOCK_RGB_HOUR_DOT_M1);
   } else if (pixel==ringLastPixel) {
-    NEO_SetPixelRGB(0, ringFirstPixel, CLOCK_RGB_HOUR_DOT_P1);
-    NEO_SetPixelRGB(0, pixel-1, CLOCK_RGB_HOUR_DOT_M1);
+    NEO_SetPixelColor(0, ringFirstPixel, CLOCK_RGB_HOUR_DOT_P1);
+    NEO_SetPixelColor(0, pixel-1, CLOCK_RGB_HOUR_DOT_M1);
   } else {
-    NEO_SetPixelRGB(0, pixel+1, CLOCK_RGB_HOUR_DOT_P1);
-    NEO_SetPixelRGB(0, pixel-1, CLOCK_RGB_HOUR_DOT_M1);
+    NEO_SetPixelColor(0, pixel+1, CLOCK_RGB_HOUR_DOT_P1);
+    NEO_SetPixelColor(0, pixel-1, CLOCK_RGB_HOUR_DOT_M1);
   }
 #else
   NEO_SetPixelRGB(pixel, red, green, blue);
@@ -144,7 +144,7 @@ static void AddMinute(uint8_t minute, NEO_PixelIdxT ringFirstPixel, NEO_PixelIdx
   }
 
   pixel = ringFirstPixel+((ringNofPixel*minute)/60);
-  NEO_SetPixelRGB(0, pixel, red, green, blue);
+  NEO_SetPixelColor(0, pixel, NEO_MAKE_COLOR_RGB(red, green, blue));
 }
 
 static void CLOCK_AddMinute(uint8_t minute) {
@@ -181,7 +181,7 @@ static void CLOCK_AddSecond(uint8_t sec) {
   ringNofPixel = CLOCK_RING_12_NOF_PIXEL;
 #endif
   pixel = ringFirstPixel+((ringNofPixel*sec)/60);
-  NEO_SetPixelRGB(0, pixel, CLOCK_RGB_SECOND_DOT);
+  NEO_SetPixelColor(0, pixel, CLOCK_RGB_SECOND_DOT);
 }
 
 void CLOCK_SetTime(uint8_t hour, uint8_t min, uint8_t second) {
@@ -211,6 +211,6 @@ void CLOCK_Update(void) {
 
 void CLOCK_Init(void) {
   CLOCK_Clear();
-  (void)NEOL_PixelTrail(0x00, 0x00, 0xFF, CLOCK_IDX_START_PIXEL, CLOCK_IDX_END_PIXEL,  8, 25, 25);
+  (void)NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x00, 0x00, 0xFF), CLOCK_IDX_START_PIXEL, CLOCK_IDX_END_PIXEL, 8, 25, 25);
 }
 

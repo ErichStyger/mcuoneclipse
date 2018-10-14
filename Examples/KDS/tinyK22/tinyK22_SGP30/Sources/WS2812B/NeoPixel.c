@@ -56,14 +56,6 @@ uint32_t NEO_GammaCorrect24(uint32_t rgb) {
   return rgb;
 }
 
-uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *rgb) {
-  uint8_t res, r,g,b;
-
-  res = NEO_GetPixelRGB(column, row, &r, &g, &b);
-  *rgb = (r<<16)|(g<<8)|b;
-  return res;
-}
-
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color) {
   NEO_PixelIdxT idx;
@@ -116,68 +108,39 @@ uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color)
     }
     blue <<= 1; /* next bit */
     idx++;
-#if NEOC_USE_NOF_COLOR==4 /* RGBW */
-    /* white */
-    for(i=0;i<8;i++) {
-      if (white&0x80) {
-        transmitBuf[idx] |= (VAL1<<lane); /* set bit */
-      } else {
-        transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
-      }
-      white <<= 1; /* next bit */
-      idx++;
-#endif
   }
+#if NEOC_USE_NOF_COLOR==4 /* RGBW */
+  /* white */
+  for(i=0;i<8;i++) {
+    if (white&0x80) {
+      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
+    } else {
+      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
+    }
+    white <<= 1; /* next bit */
+    idx++;
+  }
+#endif
   return ERR_OK;
 }
 
 
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue) {
-  NEO_PixelIdxT idx;
-  int i;
-
-  if (lane>=NEO_NOF_LANES || pos>=NEO_NOF_LEDS_IN_LANE) {
-    return ERR_RANGE; /* error, out of range */
-  }
-  idx = pos*NEO_NOF_BITS_PIXEL; /* find index in array: Y==0 is at index 0, Y==1 is at index 24, and so on */
-  /* green */
-  for(i=0;i<8;i++) {
-    if (green&0x80) {
-      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
-    } else {
-      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
-    }
-    green <<= 1; /* next bit */
-    idx++;
-  }
-  /* red */
-  for(i=0;i<8;i++) {
-    if (red&0x80) {
-      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
-    } else {
-      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
-    }
-    red <<= 1; /* next bit */
-    idx++;
-  }
-  /* blue */
-  for(i=0;i<8;i++) {
-    if (blue&0x80) {
-      transmitBuf[idx] |= (VAL1<<lane); /* set bit */
-    } else {
-      transmitBuf[idx] &= ~(VAL1<<lane); /* clear bit */
-    }
-    blue <<= 1; /* next bit */
-    idx++;
-  }
-  return ERR_OK;
+#if NEOC_USE_NOF_COLOR==3 /* RGB */
+  return NEO_SetPixelColor(lane, pos, (red<<16)|(green<<8)|blue);
+#else
+  return NEO_SetPixelColor(lane, pos, (red<<24)|(green<<16)|(blue<<8));
+#endif
 }
 
 /* returns the color of an individual pixel */
-uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, uint8_t *greenP, uint8_t *blueP) {
+uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, NEO_Color *colorP) {
   NEO_PixelIdxT idx;
   uint8_t red, green, blue;
+#if NEOC_USE_NOF_COLOR==4 /* RGBW */
+  uint8_t white;
+#endif
   int i;
 
   if (lane>=NEO_NOF_LANES || pos>=NEO_NOF_LEDS_IN_LANE) {
@@ -209,44 +172,50 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, ui
     }
     idx++; /* next bit */
   }
-  *redP = red;
-  *greenP = green;
-  *blueP = blue;
+#if NEOC_USE_NOF_COLOR==4 /* RGBW */
+  /* white */
+  for(i=0;i<8;i++) {
+    white <<= 1;
+    if (transmitBuf[idx]&(VAL1<<lane)) {
+      white |= 1;
+    }
+    idx++; /* next bit */
+  }
+  *colorP = NEO_MAKE_COLOR_RGBW(red, green, blue, white);
+#else
+  *colorP = NEO_MAKE_COLOR_RGB(red, green, blue);
+#endif
   return ERR_OK;
 }
 
 /* binary OR the color of an individual pixel */
-uint8_t NEO_OrPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue) {
-  uint8_t r, g, b;
+uint8_t NEO_OrPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color) {
+  NEO_Color c;
 
   if (x>=NEO_NOF_LANES || y>=NEO_NOF_LEDS_IN_LANE) {
     return ERR_RANGE; /* error, out of range */
   }
-  NEO_GetPixelRGB(x, y, &r, &g, &b);
-  r |= red;
-  b |= blue;
-  g |= blue;
-  NEO_SetPixelRGB(x, y, red, green, blue);
+  NEO_GetPixelColor(x, y, &c);
+  color |= c;
+  NEO_SetPixelColor(x, y, color);
   return ERR_OK;
 }
 
 /* binary XOR the color of an individual pixel */
-uint8_t NEO_XorPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue) {
-  uint8_t r, g, b;
+uint8_t NEO_XorPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color) {
+  NEO_Color c;
 
-  if (lane>=NEO_NOF_LANES || pos>=NEO_NOF_LEDS_IN_LANE) {
+  if (x>=NEO_NOF_LANES || y>=NEO_NOF_LEDS_IN_LANE) {
     return ERR_RANGE; /* error, out of range */
   }
-  NEO_GetPixelRGB(lane, pos, &r, &g, &b);
-  r ^= red;
-  b ^= blue;
-  g ^= blue;
-  NEO_SetPixelRGB(lane, pos, red, green, blue);
+  NEO_GetPixelColor(x, y, &c);
+  color ^= c;
+  NEO_SetPixelColor(x, y, color);
   return ERR_OK;
 }
 
 uint8_t NEO_ClearPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos) {
-  return NEO_SetPixelRGB(lane, pos, 0, 0, 0);
+  return NEO_SetPixelColor(lane, pos, 0);
 }
 
 GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t percent) {
@@ -262,20 +231,34 @@ GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t
   return rgbColor;
 }
 
-
 uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t percent) {
   uint8_t red, green, blue;
   uint32_t dRed, dGreen, dBlue;
+#if NEOC_USE_NOF_COLOR==4
+  uint8_t white;
+  uint32_t dWhite;
+#endif
   uint8_t res;
+  NEO_Color color;
 
-  res = NEO_GetPixelRGB(lane, pos, &red, &green, &blue);
+  res = NEO_GetPixelColor(lane, pos, &color);
   if (res != ERR_OK) {
     return res;
   }
+  red = NEO_GET_COLOR_RED(color);
+  green = NEO_GET_COLOR_GREEN(color);
+  blue = NEO_GET_COLOR_BLUE(color);
   dRed = ((uint32_t)red*(100-percent))/100;
   dGreen = ((uint32_t)green*(100-percent))/100;
   dBlue = ((uint32_t)blue*(100-percent))/100;
-  return NEO_SetPixelRGB(lane, pos, (uint8_t)dRed, (uint8_t)dGreen, (uint8_t)dBlue);
+#if NEOC_USE_NOF_COLOR==4
+  white = NEO_GET_COLOR_WHITE(color);
+  dWhite = ((uint32_t)white*(100-percent))/100;
+  color = NEO_MAKE_COLOR_RGBW(dRed, dGreen, dBlue, dWhite);
+#else
+  color = NEO_MAKE_COLOR_RGB(dRed, dGreen, dBlue);
+#endif
+  return NEO_SetPixelColor(lane, pos, color);
 }
 
 uint8_t NEO_ClearAllPixel(void) {

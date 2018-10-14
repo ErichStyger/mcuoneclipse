@@ -16,6 +16,26 @@
 #define NEO_NOF_LEDS_IN_LANE    NEOC_NOF_LEDS_IN_LANE /* number of LEDS in each lane */
 #define NEO_NOF_PIXEL           NEOC_NOF_PIXEL /* total number of pixels */
 
+typedef uint32_t NEO_Color;
+#if NEOC_USE_NOF_COLOR==4
+  #define NEO_MAKE_COLOR_RGB(r,g,b)     (((r)<<24)|((g)<<16)|((b)<<8))
+  #define NEO_MAKE_COLOR_RGBW(r,g,b,w)  (((r)<<24)|((g)<<16)|((b)<<8)|(w))
+#else /* 3 */
+  #define NEO_MAKE_COLOR_RGB(r,g,b)     (((r)<<16)|((g)<<8)|(b))
+  #define NEO_MAKE_COLOR_RGBW(r,g,b,w)  (((r)<<16)|((g)<<8)|(b))
+#endif
+
+#if NEOC_USE_NOF_COLOR==4
+  #define NEO_GET_COLOR_RED(color)     (((color)>>24)&0xff)
+  #define NEO_GET_COLOR_GREEN(color)   (((color)>>16)&0xff)
+  #define NEO_GET_COLOR_BLUE(color)    (((color)>>8)&0xff)
+  #define NEO_GET_COLOR_WHITE(color)   ((color)&0xff)
+#else
+  #define NEO_GET_COLOR_RED(color)     (((color)>>16)&0xff)
+  #define NEO_GET_COLOR_GREEN(color)   (((color)>>8)&0xff)
+  #define NEO_GET_COLOR_BLUE(color)    ((color)&0xff)
+#endif
+
 #define NEO_PIXEL_FIRST         (0) /* index of first pixel */
 #if (NEOC_NOF_LANES>8)
   #error "can only handle up to 8 bits"
@@ -34,16 +54,11 @@ uint8_t NEO_ClearPixel(NEO_PixelIdxT x, NEO_PixelIdxT y);
 uint8_t NEO_ClearAllPixel(void);
 
 uint8_t NEO_SetAllPixelColor(uint32_t rgb);
-uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t rgb);
-uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t *rgb);
+uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, NEO_Color color);
+uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, NEO_Color *color);
 
-uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
-
-uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, uint8_t *greenP, uint8_t *blueP);
-
-uint8_t NEO_OrPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
-
-uint8_t NEO_XorPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
+uint8_t NEO_OrPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color);
+uint8_t NEO_XorPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color);
 
 GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t percent);
 

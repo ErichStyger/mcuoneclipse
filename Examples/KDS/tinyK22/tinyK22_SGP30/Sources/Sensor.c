@@ -26,21 +26,36 @@
 
 #if PL_CONFIG_HAS_SHT31
 static float temperature, humidity;
+static SemaphoreHandle_t sht31sem;
 
 float SENSOR_GetTemperature(void) {
-  return temperature;
+  float val;
+
+  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  val = temperature;
+  (void)xSemaphoreGiveRecursive(sht31sem);
+  return val;
 }
 
 float SENSOR_GetHumidity(void) {
-  return humidity;
+  float val;
+
+  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  val = humidity;
+  (void)xSemaphoreGiveRecursive(sht31sem);
+  return val;
 }
 
 static void SENSOR_SetHumidity(float h) {
+  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
   humidity = h;
+  (void)xSemaphoreGiveRecursive(sht31sem);
 }
 
 static void SENSOR_SetTemperature(float t) {
+  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
   temperature = t;
+  (void)xSemaphoreGiveRecursive(sht31sem);
 }
 
 static void SHT31Task(void *pv) {
@@ -161,5 +176,10 @@ void SENSOR_Init(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+  sht31sem = xSemaphoreCreateRecursiveMutex();
+  if (sht31sem==NULL) { /* creation failed? */
+    for(;;);
+  }
+  vQueueAddToRegistry(sht31sem, "sht31Sem");
 #endif
 }
