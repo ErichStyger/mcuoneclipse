@@ -9,7 +9,7 @@
 #if PL_CONFIG_HAS_SHT31 && PL_CONFIG_HAS_GUI
 #include "gui_tempHum.h"
 #include "lvgl/lvgl.h"
-#include "SHT31.h"
+#include "Sensor.h"
 #include "XF1.h"
 #include "gui.h"
 
@@ -48,9 +48,8 @@ static void refresh_task(void *param) {
   int16_t chart_tvalue;
   int16_t chart_hvalue;
 
-  if(SHT31_ReadTempHum(&temperature, &humidity)!=ERR_OK) {
-    temperature = humidity = 0; /* error case */
-  }
+  temperature = SENSOR_GetTemperature();
+  humidity = SENSOR_GetHumidity();
   chart_tvalue = temperature;
   if (chart_tvalue>CHART_MAX_VALUE) {
     chart_tvalue = CHART_MAX_VALUE;

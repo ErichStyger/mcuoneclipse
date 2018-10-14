@@ -91,7 +91,6 @@ uint8_t SHT31_ReadStatus(uint16_t *status) {
   return res;
 }
 
-
 uint8_t SHT31_Heater(bool on) {
   return SHT31_WriteCommand(on?SHT31_HEATEREN:SHT31_HEATERDIS);
 }
@@ -109,7 +108,7 @@ uint8_t SHT31_ReadTempHum(float *temperature, float *humidity) {
 
   cmd[0] = SHT31_MEAS_HIGHREP>>8;
   cmd[1] = SHT31_MEAS_HIGHREP&0xff;
-  res = GI2C1_ReadAddressWait(SHT31_I2C_ADDR, cmd, sizeof(cmd), 500, readbuffer, sizeof(readbuffer));
+  res = GI2C1_ReadAddressWait(SHT31_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
   if (res!=ERR_OK) {
     return res;
   }
