@@ -1,5 +1,5 @@
 /*
- * gui_hw.h
+ * gui_accel.h
  *
  *  Created on: 06.08.2018
  *      Author: Erich Styger

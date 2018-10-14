@@ -22,6 +22,9 @@
 #if PL_CONFIG_HAS_RTC_DS3231
   #include "gui_clock.h"
 #endif
+#if PL_CONFIG_HAS_SHT31
+  #include "SHT31.h"
+#endif
 
 #if PL_CONFIG_HAS_MMA8451
 /**
@@ -71,6 +74,19 @@ static lv_res_t Btn_Clock_click_action(struct _lv_obj_t *obj) {
 }
 #endif
 
+#if PL_CONFIG_HAS_SHT31
+/**
+ * Called when the Temp/Hum button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_TempHum_click_action(struct _lv_obj_t *obj) {
+  GUI_TEMPHUM_Create();
+  return LV_RES_OK;
+}
+#endif
+
+
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -102,6 +118,10 @@ void GUI_MainMenuCreate(void) {
 #endif
 #if PL_CONFIG_HAS_RTC_DS3231
   obj = lv_list_add(list1, SYMBOL_CLOSE, "Clock", Btn_Clock_click_action);
+  GUI_AddObjToGroup(obj);
+#endif
+#if PL_CONFIG_HAS_SHT31
+  obj = lv_list_add(list1, SYMBOL_CLOSE, "Temp/Hum", Btn_TempHum_click_action);
   GUI_AddObjToGroup(obj);
 #endif
 }

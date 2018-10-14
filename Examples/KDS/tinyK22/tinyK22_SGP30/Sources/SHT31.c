@@ -118,7 +118,7 @@ uint8_t SHT31_ReadTempHum(float *temperature, float *humidity) {
     return ERR_CRC;
   }
 
-  SRH = (readbuffer[3])|readbuffer[4];
+  SRH = (readbuffer[3]<<8)|readbuffer[4];
   if (readbuffer[5] != SHT31_GenerateCRC(readbuffer+3, 2)) {
     return ERR_CRC;
   }
@@ -187,12 +187,6 @@ uint8_t SHT31_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_S
 #endif /* SHT31_CONFIG_PARSE_COMMAND_ENABLED */
 
 void SHT31_Init(void) {
-  uint16_t status;
-  uint8_t res;
-  float temp, hum;
-
-  res = SHT31_ReadStatus(&status);
-  res = SHT31_ReadTempHum(&temp, &hum);
 }
 
 #endif /* PL_CONFIG_HAS_SHT31 */

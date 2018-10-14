@@ -19,7 +19,7 @@
 #define PL_CONFIG_HAS_GUI         (1 && PL_CONFIG_HAS_SSD1351)
 #define PL_CONFIG_HAS_KEYS        (1)
 #define PL_CONFIG_HAS_GUI_KEY_NAV (1 && PL_CONFIG_HAS_GUI && PL_CONFIG_HAS_KEYS) /* GUI touchless navigation */
-#define PL_CONFIG_HAS_MMA8451     (1)
+#define PL_CONFIG_HAS_MMA8451     (0) /* accelerometer */
 #define PL_CONFIG_HAS_SHT31       (1) /* temperature/humidity */
 #define PL_CONFIG_HAS_SPI         (1)
 #define PL_CONFIG_HAS_SD_CARD     (1 && PL_CONFIG_HAS_SPI)
