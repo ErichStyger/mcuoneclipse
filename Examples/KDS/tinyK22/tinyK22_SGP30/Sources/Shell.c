@@ -42,6 +42,9 @@
 #if PL_CONFIG_HAS_SGP30
   #include "SGP30.h"
 #endif
+#if PL_CONFIG_HAS_SSD1351
+  #include "LCD1.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -72,6 +75,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_SGP30
   SGP30_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_SSD1351
+  LCD1_ParseCommand,
 #endif
   NULL /* sentinel */
 };
@@ -163,7 +169,7 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   CLS1_SetStdio(ios[0].stdio); /* using the first one as the default channel */
-  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+800, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+800, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
