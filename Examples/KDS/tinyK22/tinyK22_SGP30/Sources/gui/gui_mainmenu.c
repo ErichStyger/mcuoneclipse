@@ -23,7 +23,7 @@
   #include "gui_clock.h"
 #endif
 #if PL_CONFIG_HAS_SHT31
-  #include "SHT31.h"
+  #include "gui_tempHum.h"
 #endif
 
 #if PL_CONFIG_HAS_MMA8451

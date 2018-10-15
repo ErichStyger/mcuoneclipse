@@ -39,7 +39,7 @@ extern "C" {
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Platform.h"
 #include "RNG1.h"
-#include "lv.h"
+#include "gui/lv.h"
 #if PL_CONFIG_HAS_SPI
   #include "SPI.h"
 #endif

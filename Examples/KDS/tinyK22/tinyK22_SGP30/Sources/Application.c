@@ -22,9 +22,8 @@
   #include "SPI.h"
 #endif
 #if PL_CONFIG_HAS_GUI
-  #include "lvgl/lvgl.h"
-  #include "lv.h"
-  #include "gui.h"
+  #include "gui/lvgl/lvgl.h"
+  #include "gui/gui.h"
 #endif
 
 #define APP_PERIODIC_TIMER_PERIOD_MS   10
