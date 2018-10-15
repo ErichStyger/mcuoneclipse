@@ -50,13 +50,23 @@ uint32_t getAbsoluteHumidity(float temperature, float humidity) {
 uint8_t SGP30_IAQmeasure(uint16_t *pTVOC, uint16_t *pCO2) {
   uint8_t res;
   uint8_t cmd[2];
-  uint16_t reply[2];
+  uint8_t reply[2*(2+1)]; /* two 16bit values with 1 byte CRC each */
 
+  /* measure_air_quality */
   cmd[0] = 0x20;
   cmd[1] = 0x08;
   res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 12, (uint8_t*)reply, sizeof(reply));
-  *pCO2 = reply[0];
-  *pTVOC = reply[1];
+  if (res!=ERR_OK) {
+    return res;
+  }
+  if (SGP30_GenerateCRC(reply, 2)!=reply[2]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  if (SGP30_GenerateCRC(reply+3, 2)!=reply[5]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  *pCO2 = (reply[0]<<8)|reply[1];
+  *pTVOC = (reply[3]<<8)|reply[4];
   return res;
 }
 
@@ -64,13 +74,23 @@ uint8_t SGP30_IAQmeasure(uint16_t *pTVOC, uint16_t *pCO2) {
 uint8_t SGP30_GetIAQBaseline(uint16_t *pTVOCbase, uint16_t *pCO2base) {
   uint8_t res;
   uint8_t cmd[2];
-  uint16_t reply[2];
+  uint8_t reply[2*(2+1)]; /* two 16bit values with 1 byte CRC each */
 
+  /* Get_baseline */
   cmd[0] = 0x20;
   cmd[1] = 0x15;
   res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, (uint8_t*)reply, sizeof(reply));
-  *pTVOCbase = reply[0];
-  *pCO2base = reply[1];
+  if (res!=ERR_OK) {
+    return res;
+  }
+  if (SGP30_GenerateCRC(reply, 2)!=reply[2]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  if (SGP30_GenerateCRC(reply+3, 2)!=reply[5]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  *pTVOCbase = (reply[0]<<8)|reply[1];
+  *pCO2base = (reply[3]<<8)|reply[4];
   return res;
 }
 
@@ -85,7 +105,7 @@ uint8_t SGP30_SetIAQBaseline(uint16_t TVOCbase, uint16_t CO2base) {
   cmd[4] = SGP30_GenerateCRC(cmd+2, 2);
   cmd[5] = CO2base>>8;
   cmd[6] = CO2base&0xff;
-  cmd[7] = SGP30_GenerateCRC(cmd+5, 2);;
+  cmd[7] = SGP30_GenerateCRC(cmd+5, 2);
   return GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 0, NULL, 0);
 }
 
@@ -114,35 +134,97 @@ static uint8_t SGP30_IAQinit(void) {
   return GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, NULL, 0);
  }
 
-static uint8_t SGP30_InitDevice(void) {
-  uint16_t featureSet;
+uint8_t SGP30_ReadFeatureSet(uint16_t *featureSet) {
+  uint8_t buf[3]; /* 2 bytes for data plus 1 for CRC */
   uint8_t cmd[2];
   uint8_t res;
 
-  cmd[0] = 0x36;
-  cmd[1] = 0x82;
-  res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, (uint8_t*)serialNumber, sizeof(serialNumber));
-  if (res!=ERR_OK) {
-    return res;
-  }
   cmd[0] = 0x20;
   cmd[1] = 0x2F;
-  res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, (uint8_t*)&featureSet, sizeof(featureSet));
+  res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, buf, sizeof(buf));
   if (res!=ERR_OK) {
-    return res;
+    return res; /* failed */
+  }
+  if (SGP30_GenerateCRC(buf, 2)!=buf[2]) {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  *featureSet = (buf[0]<<8)|buf[1]; /* build 16bit feature set value */
+  return res;
+}
+
+uint8_t SGP30_ReadSerialNumber(uint8_t serial[6]) {
+  uint8_t buf[3*(2+1)]; /* 3 words with 2 bytes of data and 1 byte for CRC */
+  uint8_t cmd[2];
+  uint8_t res;
+
+  cmd[0] = 0x20;
+  cmd[1] = 0x2F;
+  res = GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, buf, sizeof(buf));
+  if (res!=ERR_OK) {
+    return res; /* failed */
+  }
+  if (   SGP30_GenerateCRC(buf, 2)!=buf[2] /* CRC for first word */
+      || SGP30_GenerateCRC(buf+3, 2)!=buf[5] /* CRC for second word */
+      || SGP30_GenerateCRC(buf+6, 2)!=buf[8] /* CRC for third word */
+     )
+  {
+    return ERR_CRC; /* wrong CRC? */
+  }
+  /* build serial number */
+  serial[0] = buf[0];
+  serial[1] = buf[1];
+  serial[2] = buf[3];
+  serial[3] = buf[4];
+  serial[4] = buf[6];
+  serial[5] = buf[7];
+  return res;
+}
+
+static uint8_t SGP30_InitDevice(void) {
+  uint16_t featureSet;
+  uint8_t res;
+
+  res = SGP30_ReadFeatureSet(&featureSet);
+  if (res!=ERR_OK) {
+    return res; /* failed */
   }
   if (featureSet!=SGP30_FEATURESET) {
-    return ERR_FAILED;
+    return ERR_FAILED; /* wrong device? */
   }
   return SGP30_IAQinit();
 }
 
 #if SGP30_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint16_t featureSet;
+  uint8_t serial[6];
   uint16_t TVOC, CO2;
   uint8_t buf[32];
+  uint8_t res;
 
   CLS1_SendStatusStr((unsigned char*)"SGP30", (unsigned char*)"\r\n", io->stdOut);
+  res = SGP30_ReadFeatureSet(&featureSet);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNum16Hex(buf, sizeof(buf), featureSet);
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr("  featureset", buf, io->stdOut);
+
+  res = SGP30_ReadSerialNumber(serial);
+  if (res==ERR_OK) {
+    int i;
+    buf[0] = '\0';
+    for(i=0; i<sizeof(serial); i++) {
+      UTIL1_strcatNum8Hex(buf, sizeof(buf), serial[i]);
+    }
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr("  serial", buf, io->stdOut);
 
   if(SGP30_IAQmeasure(&TVOC, &CO2)==ERR_OK) {
     UTIL1_Num16uToStrFormatted(buf, sizeof(buf), TVOC, ' ', 5);
