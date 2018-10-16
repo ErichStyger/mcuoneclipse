@@ -467,7 +467,7 @@
         <ItemSymbol>FLLGrp0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>FLLEnblCLKMode0</ItemSymbol>
@@ -16508,7 +16508,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>TotalHeapSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>16384</Value>
@@ -16516,19 +16516,19 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>LinkerHeapBaseSymbolName</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>__HeapBase</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LinkerHeapLimitSymbolName</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>__HeapLimit</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LinkerHeapSizeSymbolName</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>__heap_size</Value>
       </ItemState>
@@ -16537,8 +16537,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>3</Index>
-        <EnumSymbVal>Scheme4</EnumSymbVal>
+        <Index>5</Index>
+        <EnumSymbVal>Scheme6</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticAllocation</ItemSymbol>
@@ -24926,7 +24926,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerInputFreq</ItemSymbol>
-              <Value>unknown</Value>
+              <Value>120 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerClockFraction</ItemSymbol>
@@ -24956,7 +24956,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ModuleClockFreq</ItemSymbol>
-              <Value>unknown</Value>
+              <Value>48 MHz</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>PullUpDownGrp</ItemSymbol>

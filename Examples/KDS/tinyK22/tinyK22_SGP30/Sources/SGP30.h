@@ -13,11 +13,7 @@
 
 #define SGP30_I2C_ADDRESS   (0x58)  ///< 7bit I2C address of the device
 
-#if MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN
-  #define SGP30_FEATURESET       0x2000  ///< The required set for this library
-#else
-  #define SGP30_FEATURESET       0x0020  ///< The required set for this library
-#endif
+#define SGP30_FEATURESET       0x0020  ///< The required set for this library
 #define SGP30_CRC8_POLYNOMIAL  0x31    ///< Seed for SGP30's CRC polynomial
 #define SGP30_CRC8_INIT        0xFF    ///< Init value for CRC
 #define SGP30_WORD_LEN          2      ///< 2 bytes per word
