@@ -85,17 +85,17 @@
 #endif
 
 #ifndef configLINKER_HEAP_BASE_SYMBOL
-  #define configLINKER_HEAP_BASE_SYMBOL           __HeapBase
+  #define configLINKER_HEAP_BASE_SYMBOL           _pvHeapStart /*__HeapBase*/
     /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib) */
 #endif
 
 #ifndef configLINKER_HEAP_LIMIT_SYMBOL
-  #define configLINKER_HEAP_LIMIT_SYMBOL          __HeapLimit
+  #define configLINKER_HEAP_LIMIT_SYMBOL          _pvHeapLimit /*__HeapLimit*/
     /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib) */
 #endif
 
 #ifndef configLINKER_HEAP_SIZE_SYMBOL
-  #define configLINKER_HEAP_SIZE_SYMBOL           __heap_size
+  #define configLINKER_HEAP_SIZE_SYMBOL           _HeapSize/*__heap_size*/
     /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib) */
 #endif
 
