@@ -182,7 +182,12 @@ static void app_task(void *param) {
   } /* for */
 }
 
+#include "PORT_PDD.h"
+
 void APP_Run(void) {
+  /* need pull-up on UART Rx pin (PTC3) */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
 #if PL_CONFIG_HAS_SHELL
   SHELL_Init();
 #endif

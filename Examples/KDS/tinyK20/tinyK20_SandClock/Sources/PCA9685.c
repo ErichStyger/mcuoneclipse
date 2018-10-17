@@ -10,6 +10,7 @@
 #include "PCA9685.h"
 #include "GI2C1.h"
 #include "PE_Error.h"
+#include "FRTOS1.h"
 #include <math.h> /* for floor() function */
 
 static uint8_t PCA9685_I2C_Addr = 0b1000000; /* default address */

@@ -15,6 +15,7 @@
 #if PL_USE_HW_RTC
   #include "RTC1.h"
 #endif
+#include "PORT_PDD.h"
 
 static FAT1_FATFS fileSystemObject;
 
@@ -114,7 +115,11 @@ static void led_task(void *param) {
 }
 
 void APP_Run(void) {
-//  DiskTest();
+  /* need pull-up on UART Rx pin (PTC3) */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
+
+  //  DiskTest();
 #if PL_USE_HW_RTC
   //(void)RTC1_Enable(RTC1_DeviceData); /* already enabled by default */
 #endif

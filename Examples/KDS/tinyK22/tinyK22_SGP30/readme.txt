@@ -12,3 +12,4 @@ Open Points:
 - Add Raspy
 - Add Sound/Buzzer/MP3
 - SSD1351 flicker with 3.3V supply (==> 5V supply)
+- Add Presentation Counter functionality (Ervin)

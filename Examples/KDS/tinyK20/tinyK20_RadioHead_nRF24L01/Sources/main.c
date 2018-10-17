@@ -60,6 +60,7 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "application.h"
+#include "PORT_PDD.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -73,6 +74,9 @@ int main(void)
 
   /* Write your code here */
   /* For example: for(;;) { } */
+  /* need pull-up on UART Rx pin (PTC3) */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
   setup();
   LED1_On();
   for(;;) {

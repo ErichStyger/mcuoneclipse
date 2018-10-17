@@ -57,7 +57,7 @@ static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_SEGGER_RTT
     (void)CLS1_ReadAndParseWithCommandTable(rtt_buf, sizeof(rtt_buf), &RTT_Stdio, CmdParserTable);
 #endif
-    FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 

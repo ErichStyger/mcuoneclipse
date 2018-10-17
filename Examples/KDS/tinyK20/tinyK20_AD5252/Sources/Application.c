@@ -85,7 +85,13 @@ static void ADCTask(void *pv) {
   }
 }
 
+#include "PORT_PDD.h"
+
 void APP_Run(void) {
+  /* need pull-up on UART Rx pin (PTC3) */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
+
   SHELL_Init();
   WAIT1_Waitms(500); /* give hardware time to power up */
   AD5252_Init();

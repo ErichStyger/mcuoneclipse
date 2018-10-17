@@ -14,6 +14,7 @@
 #include "LED1.h"
 #include "Plotclock.h"
 #include "TmDt1.h"
+#include "PORT_PDD.h"
 
 static void AppTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
@@ -32,6 +33,10 @@ static void AppTask(void *pvParameters) {
 }
 
 void APP_Start(void) {
+  /* need pull-up on UART Rx pin (PTC3) */
+  PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
+  PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
+
   SERVO_Init();
   PCA9685_Init();
   SHELL_Init();
