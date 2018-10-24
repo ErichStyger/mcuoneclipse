@@ -231,6 +231,20 @@ GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t
   return rgbColor;
 }
 
+/* Set the color percent to 0..100% of the actual values */
+NEO_Color NEO_SetColorPercent(NEO_Color color, uint8_t percent) {
+  uint8_t red, green, blue;
+
+  red = (color>>16)&0xff;
+  green = (color>>8)&0xff;
+  blue = color&0xff;
+  red = ((uint32_t)red*percent)/100;
+  green = ((uint32_t)green*percent)/100;
+  blue = ((uint32_t)blue*percent)/100;
+  color = (red<<16)|(green<<8)|blue;
+  return color;
+}
+
 uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t percent) {
   uint8_t red, green, blue;
   uint32_t dRed, dGreen, dBlue;

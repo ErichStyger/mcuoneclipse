@@ -37,6 +37,10 @@
 #include "FRTOS1.h"
 #include "VL1swi.h"
 #include "TickCntr1.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "LED4.h"
+#include "LEDpin4.h"
 #include "UTIL1.h"
 #include "MCUC1.h"
 /* Include shared modules, which are used for whole project */

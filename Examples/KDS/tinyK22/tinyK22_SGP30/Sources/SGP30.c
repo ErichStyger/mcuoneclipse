@@ -89,8 +89,8 @@ uint8_t SGP30_GetIAQBaseline(uint16_t *pTVOCbase, uint16_t *pCO2base) {
   if (SGP30_GenerateCRC(reply+3, 2)!=reply[5]) {
     return ERR_CRC; /* wrong CRC? */
   }
-  *pTVOCbase = (reply[0]<<8)|reply[1];
-  *pCO2base = (reply[3]<<8)|reply[4];
+  *pCO2base  = (reply[0]<<8)|reply[1];
+  *pTVOCbase = (reply[3]<<8)|reply[4];
   return res;
 }
 
@@ -122,6 +122,7 @@ uint8_t SGP30_SetHumidity(uint32_t abs_humidity) {
   cmd[2] = ah_scaled>>8;
   cmd[3] = ah_scaled&0xff;
   cmd[4] = SGP30_GenerateCRC(cmd+2, 2);
+  /* \todo Wrong data sheet? Do not have to wait???? */
   return GI2C1_ReadAddressWait(SGP30_I2C_ADDRESS, cmd, sizeof(cmd), 10, NULL, 0);
 }
 

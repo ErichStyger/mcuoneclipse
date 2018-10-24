@@ -15,73 +15,101 @@
 #include "LED1.h"
 #include "PixelDMA.h"
 
+#define WIDTH_PIXELS (3*8)
+
+static void SetPixel(int x, int y, uint32_t color) {
+  /* 0, 0 is left upper corner */
+  /* single lane, 3x64 modules from left to right */
+  int pos;
+
+  pos = ((x/8)*64) /* position in tile */
+       + (x%8) /* position in row */
+       + (y)*8; /* add y offset */
+  NEO_SetPixelColor(0, pos, color);
+}
+
+static void Layer(int layer, uint32_t color) {
+  int y, x;
+
+  y = layer;
+  for(x=0;x<WIDTH_PIXELS;x++) {
+    SetPixel(x, y, color);
+  }
+}
+
+static int32_t Rainbow(int32_t numOfSteps, int32_t step) {
+    float r = 0.0;
+    float g = 0.0;
+    float b = 0.0;
+    float h = (double)step / numOfSteps;
+    int i = (int32_t)(h * 6);
+    float f = h * 6.0 - i;
+    float q = 1 - f;
+
+    switch (i % 6)
+    {
+        case 0:
+            r = 1;
+            g = f;
+            b = 0;
+            break;
+        case 1:
+            r = q;
+            g = 1;
+            b = 0;
+            break;
+        case 2:
+            r = 0;
+            g = 1;
+            b = f;
+            break;
+        case 3:
+            r = 0;
+            g = q;
+            b = 1;
+            break;
+        case 4:
+            r = f;
+            g = 0;
+            b = 1;
+            break;
+        case 5:
+            r = 1;
+            g = 0;
+            b = q;
+            break;
+    }
+    r *= 255;
+    g *= 255;
+    b *= 255;
+    return (((int)r)<<16)|(((int)g)<<8)+(int)b;
+   // return "#" + ((Int32)(r * 255)).ToString("X2") + ((Int32)(g * 255)).ToString("X2") + ((Int32)(b * 255)).ToString("X2");
+}
+
+
+
 static void NeoTask(void* pvParameters) {
   int i, cntr, val = 0;
   int inc = 1;
   int red, green, blue;
-
-  red = 0xff;
-  green = 0;
-  blue = 0;
+  NEO_Color color;
 
   (void)pvParameters; /* parameter not used */
-  NEO_ClearAllPixel();
   cntr = 0;
-  for(;;) {
-//    NEO_SetPixelColor(0, 0, NEO_MAKE_COLOR_RGBW(0xff,0x00,0x00,0x00));
-//    NEO_SetPixelColor(0, 1, NEO_MAKE_COLOR_RGBW(0x00,0xff,0x00,0x00));
-//    NEO_SetPixelColor(0, 2, NEO_MAKE_COLOR_RGBW(0x00,0x00,0xff,0x00));
-//    NEO_SetPixelColor(0, 3, NEO_MAKE_COLOR_RGBW(0x00,0x00,0x00,0xff));
-//    NEO_SetPixelColor(0, 4, NEO_MAKE_COLOR_RGBW(0xff,0xff,0xff,0xff));
-//    NEO_SetPixelColor(0, 5, NEO_MAKE_COLOR_RGBW(0xff,0x00,0x00,0x00));
-//    NEO_SetPixelColor(0, 6, NEO_MAKE_COLOR_RGBW(0x00,0xff,0x00,0x00));
-//    NEO_SetPixelColor(0, 7, NEO_MAKE_COLOR_RGBW(0x00,0x00,0xff,0x00));
-#if 1
-    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x10, 0x00, 0x00), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x00, 0x10, 0x00), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-    NEOL_PixelTrail(NEO_MAKE_COLOR_RGB(0x00, 0x00, 0x10), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-    NEOL_PixelTrail(NEO_MAKE_COLOR_RGBW(0x00, 0x00, 0x00, 0x10), 0, NEOC_NOF_PIXEL-1, 2, 50, 100);
-#elif 0
-     if (val==0xff) {
-       inc = -1;
-      } else if (val==0) {
-       inc = 1;
-     }
-     val += inc;
-     for(i=0;i<NEO_NOF_PIXEL;i++) {
-       if (cntr<2*0xff) {
-         NEO_SetPixelRGB(0, i, val, 0x00, 0x00);
-       } else if (cntr<=4*0xff) {
-         NEO_SetPixelRGB(0, i, 0x00, val, 0x00);
-       } else {
-         NEO_SetPixelRGB(0, i, 0x00, 0x00, val);
-       }
-     }
-     cntr++;
-     if (cntr>6*0xff) {
-       cntr = 0;
-     }
-#elif 0
-     NEO_SetPixelRGB(0, 0, val, 0x00, 0x00);
-     NEO_SetPixelRGB(0, 1, 0x00, val, 0x00);
-     NEO_SetPixelRGB(0, 2, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 3, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 4, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 5, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 6, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 7, 0x00, 0x00, val);
-//    NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
-//    NEO_SetPixelRGB(0, 1, 0x00, 0xFF, 0x00);
-//    NEO_SetPixelRGB(0, 2, 0x00, 0x00, 0xff);
-//    NEO_SetPixelRGB(0, 3, 0x40, 0x50, 0x80);
-//    NEO_SetPixelRGB(0, 4, 0x60, 0x00, 0xA0);
-//    NEO_SetPixelRGB(0, 5, 0x40, 0x20, 0x80);
-//    NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
-//    NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
-#endif
-    vTaskDelay(pdMS_TO_TICKS(10));
-    NEO_TransferPixels();
-    LED1_Neg();
+
+   for(;;) {
+      int row;
+      int32_t color;
+
+      for(int colorStep=0; colorStep<512; colorStep++) {
+        for(row=0; row<8; row++) {
+          color = Rainbow(512,colorStep);
+          color = NEO_SetColorPercent(color, 5); /* reduce brightness */
+          Layer(row, color);
+        }
+        NEO_TransferPixels();
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
   }
 }
 

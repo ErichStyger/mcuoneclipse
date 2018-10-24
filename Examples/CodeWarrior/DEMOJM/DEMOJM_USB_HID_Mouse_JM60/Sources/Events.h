@@ -36,6 +36,10 @@
 #include "LEDpin1.h"
 #include "LED2.h"
 #include "LEDpin2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "LED4.h"
+#include "LEDpin4.h"
 
 
 /*
