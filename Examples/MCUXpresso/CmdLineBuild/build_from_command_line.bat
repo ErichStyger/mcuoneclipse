@@ -15,11 +15,14 @@ ECHO %PATH%|findstr /i /c:"%TOOLCHAIN_PATH:"=%">nul || set PATH=%PATH%;%TOOLCHAI
 
 ECHO Launching Eclipse IDE
 
-@REM normal build (but rebuilds all?)
-REM "%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -build MyProject
+@REM -build on project: normal build, does a (re-)build of all targets (Release, Debug): the fact that it does a full build sounds lika an issue in Eclipse CDT 9.4.3?
+"%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -build MyProject
 
-@REM build (does a build of all targets)
-"%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -build MyProject/Debug
+@REM - build on a build target: only builds the target, this works properly with CDT 9.4.3
+@REM "%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -build MyProject/Debug
 
-@REM cleanbuild of Debug only: this does a 'clean' only
+@REM -cleanbuild on project: this does a 'clean' on each build target followed by a build
+@REM "%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -cleanBuild MyProject
+
+@REM -cleanbuild on a build target: this does a 'clean' only on the build target, no build
 @REM "%IDE%" -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "c:\tmp\wsp" -cleanBuild MyProject/Debug
