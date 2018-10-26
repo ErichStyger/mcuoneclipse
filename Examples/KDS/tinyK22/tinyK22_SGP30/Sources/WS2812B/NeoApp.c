@@ -46,8 +46,7 @@ static int32_t Rainbow(int32_t numOfSteps, int32_t step) {
     float f = h * 6.0 - i;
     float q = 1 - f;
 
-    switch (i % 6)
-    {
+    switch (i % 6)  {
         case 0:
             r = 1;
             g = f;
@@ -83,16 +82,14 @@ static int32_t Rainbow(int32_t numOfSteps, int32_t step) {
     g *= 255;
     b *= 255;
     return (((int)r)<<16)|(((int)g)<<8)+(int)b;
-   // return "#" + ((Int32)(r * 255)).ToString("X2") + ((Int32)(g * 255)).ToString("X2") + ((Int32)(b * 255)).ToString("X2");
 }
-
-
 
 static void NeoTask(void* pvParameters) {
   int i, cntr, val = 0;
   int inc = 1;
   int red, green, blue;
   NEO_Color color;
+  uint8_t rowStartStep[8] = {0, 20, 50, 70, 90, 130, 150, 170};
 
   (void)pvParameters; /* parameter not used */
   cntr = 0;
@@ -101,15 +98,14 @@ static void NeoTask(void* pvParameters) {
       int row;
       int32_t color;
 
-      for(int colorStep=0; colorStep<512; colorStep++) {
         for(row=0; row<8; row++) {
-          color = Rainbow(512,colorStep);
-          color = NEO_SetColorPercent(color, 5); /* reduce brightness */
+          color = Rainbow(256,rowStartStep[row]);
+          rowStartStep[row]++;
+          color = NEO_SetColorPercent(color, 10); /* reduce brightness */
           Layer(row, color);
         }
         NEO_TransferPixels();
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
+        vTaskDelay(pdMS_TO_TICKS(30));
   }
 }
 

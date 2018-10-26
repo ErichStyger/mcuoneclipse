@@ -130,13 +130,13 @@ static void SensorTask(void *pv) {
    }
 #endif
   for(;;) {
+#if PL_CONFIG_HAS_SGP30
     res = SGP30_IAQmeasure(&tvoc, &co2);
     if (res!=ERR_OK) {
       CLS1_SendStr((uint8_t*)"Failed SGP30_IAQmeasure()!\r\n", CLS1_GetStdio()->stdErr);
     } else {
      // CLS1_printfIO(CLS1_GetStdio(), "TVOC %5d ppb, eCO2 %5d ppm\n", tvoc, co2);
     }
-    vTaskDelay(pdMS_TO_TICKS(5000));
     cntr++;
     if (cntr==30) {
       cntr = 0;
@@ -147,6 +147,8 @@ static void SensorTask(void *pv) {
         CLS1_printfIO(CLS1_GetStdio(), "*** Baseline TVOC: 0x%4x, eCO2 0x%4x\n", TVOC_base, eCO2_base);
       }
     }
+#endif
+    vTaskDelay(pdMS_TO_TICKS(5000));
   }
 }
 

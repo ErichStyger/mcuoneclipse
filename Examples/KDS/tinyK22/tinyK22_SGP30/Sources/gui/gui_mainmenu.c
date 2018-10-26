@@ -25,6 +25,9 @@
 #if PL_CONFIG_HAS_SHT31
   #include "gui_tempHum.h"
 #endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  #include "gui_neopixel.h"
+#endif
 
 #if PL_CONFIG_HAS_MMA8451
 /**
@@ -86,7 +89,17 @@ static lv_res_t Btn_TempHum_click_action(struct _lv_obj_t *obj) {
 }
 #endif
 
-
+#if PL_CONFIG_HAS_NEO_PIXEL
+/**
+ * Called when the Neopixel button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static lv_res_t Btn_NeoPixel_click_action(struct _lv_obj_t *obj) {
+  GUI_NEO_Create();
+  return LV_RES_OK;
+}
+#endif
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -122,6 +135,10 @@ void GUI_MainMenuCreate(void) {
 #endif
 #if PL_CONFIG_HAS_SHT31
   obj = lv_list_add(list1, SYMBOL_CLOSE, "Temp/Hum", Btn_TempHum_click_action);
+  GUI_AddObjToGroup(obj);
+#endif
+#if PL_CONFIG_HAS_NEO_PIXEL
+  obj = lv_list_add(list1, SYMBOL_CLOSE, "NeoPixel", Btn_NeoPixel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
 }

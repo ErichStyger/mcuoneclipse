@@ -51,6 +51,8 @@
 #include "LEDB.h"
 #include "LEDpin3.h"
 #include "BitIoLdd3.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
