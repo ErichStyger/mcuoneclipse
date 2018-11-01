@@ -192,29 +192,29 @@ typedef enum  {
 // Commands sent to the PICC.
 typedef enum  {
   // The commands used by the PCD to manage communication with several PICCs (ISO 14443-3, Type A, section 6.4)
-  PICC_CMD_REQA     = 0x26,   // REQuest command, Type A. Invites PICCs in state IDLE to go to READY and prepare for anticollision or selection. 7 bit frame.
-  PICC_CMD_WUPA     = 0x52,   // Wake-UP command, Type A. Invites PICCs in state IDLE and HALT to go to READY(*) and prepare for anticollision or selection. 7 bit frame.
-  PICC_CMD_CT       = 0x88,   // Cascade Tag. Not really a command, but used during anti collision.
-  PICC_CMD_SEL_CL1    = 0x93,   // Anti collision/Select, Cascade Level 1
-  PICC_CMD_SEL_CL2    = 0x95,   // Anti collision/Select, Cascade Level 2
-  PICC_CMD_SEL_CL3    = 0x97,   // Anti collision/Select, Cascade Level 3
-  PICC_CMD_HLTA     = 0x50,   // HaLT command, Type A. Instructs an ACTIVE PICC to go to state HALT.
-  PICC_CMD_RATS           = 0xE0,     // Request command for Answer To Reset.
+  MFRC522_PICC_CMD_REQA     = 0x26,   // REQuest command, Type A. Invites PICCs in state IDLE to go to READY and prepare for anticollision or selection. 7 bit frame.
+  MFRC522_PICC_CMD_WUPA     = 0x52,   // Wake-UP command, Type A. Invites PICCs in state IDLE and HALT to go to READY(*) and prepare for anticollision or selection. 7 bit frame.
+  MFRC522_PICC_CMD_CT       = 0x88,   // Cascade Tag. Not really a command, but used during anti collision.
+  MFRC522_PICC_CMD_SEL_CL1    = 0x93,   // Anti collision/Select, Cascade Level 1
+  MFRC522_PICC_CMD_SEL_CL2    = 0x95,   // Anti collision/Select, Cascade Level 2
+  MFRC522_PICC_CMD_SEL_CL3    = 0x97,   // Anti collision/Select, Cascade Level 3
+  MFRC522_PICC_CMD_HLTA     = 0x50,   // HaLT command, Type A. Instructs an ACTIVE PICC to go to state HALT.
+  MFRC522_PICC_CMD_RATS           = 0xE0,     // Request command for Answer To Reset.
   // The commands used for MIFARE Classic (from http://www.mouser.com/ds/2/302/MF1S503x-89574.pdf, Section 9)
   // Use PCD_MFAuthent to authenticate access to a sector, then use these commands to read/write/modify the blocks on the sector.
   // The read/write commands can also be used for MIFARE Ultralight.
-  PICC_CMD_MF_AUTH_KEY_A  = 0x60,   // Perform authentication with Key A
-  PICC_CMD_MF_AUTH_KEY_B  = 0x61,   // Perform authentication with Key B
-  PICC_CMD_MF_READ    = 0x30,   // Reads one 16 byte block from the authenticated sector of the PICC. Also used for MIFARE Ultralight.
-  PICC_CMD_MF_WRITE   = 0xA0,   // Writes one 16 byte block to the authenticated sector of the PICC. Called "COMPATIBILITY WRITE" for MIFARE Ultralight.
-  PICC_CMD_MF_DECREMENT = 0xC0,   // Decrements the contents of a block and stores the result in the internal data register.
-  PICC_CMD_MF_INCREMENT = 0xC1,   // Increments the contents of a block and stores the result in the internal data register.
-  PICC_CMD_MF_RESTORE   = 0xC2,   // Reads the contents of a block into the internal data register.
-  PICC_CMD_MF_TRANSFER  = 0xB0,   // Writes the contents of the internal data register to a block.
+  MFRC522_PICC_CMD_MF_AUTH_KEY_A  = 0x60,   // Perform authentication with Key A
+  MFRC522_PICC_CMD_MF_AUTH_KEY_B  = 0x61,   // Perform authentication with Key B
+  MFRC522_PICC_CMD_MF_READ    = 0x30,   // Reads one 16 byte block from the authenticated sector of the PICC. Also used for MIFARE Ultralight.
+  MFRC522_PICC_CMD_MF_WRITE   = 0xA0,   // Writes one 16 byte block to the authenticated sector of the PICC. Called "COMPATIBILITY WRITE" for MIFARE Ultralight.
+  MFRC522_PICC_CMD_MF_DECREMENT = 0xC0,   // Decrements the contents of a block and stores the result in the internal data register.
+  MFRC522_PICC_CMD_MF_INCREMENT = 0xC1,   // Increments the contents of a block and stores the result in the internal data register.
+  MFRC522_PICC_CMD_MF_RESTORE   = 0xC2,   // Reads the contents of a block into the internal data register.
+  MFRC522_PICC_CMD_MF_TRANSFER  = 0xB0,   // Writes the contents of the internal data register to a block.
   // The commands used for MIFARE Ultralight (from http://www.nxp.com/documents/data_sheet/MF0ICU1.pdf, Section 8.6)
   // The PICC_CMD_MF_READ and PICC_CMD_MF_WRITE can also be used for MIFARE Ultralight.
-  PICC_CMD_UL_WRITE   = 0xA2    // Writes one 4 byte page to the PICC.
-} PICC_Command;
+  MFRC522_PICC_CMD_UL_WRITE   = 0xA2    // Writes one 4 byte page to the PICC.
+} MFRC522_PICC_Command;
 
 
 #if 0
@@ -262,17 +262,18 @@ public:
 		STATUS_MIFARE_NACK		= 0xff	// A MIFARE PICC responded with NAK.
 	} MFRC522_StatusCode;
 
+  #define MFRC522_UID_MAX_NOF_BYTES   (10)
 	// A struct used for passing the UID of a PICC.
 	typedef struct {
 		uint8_t		size;			// Number of bytes in the UID. 4, 7 or 10.
-		uint8_t		uidByte[10];
+		uint8_t		uidByte[MFRC522_UID_MAX_NOF_BYTES];
 		uint8_t		sak;			// The SAK (Select acknowledge) byte returned from the PICC after successful selection.
 	} Uid;
 
 	// A struct used for passing a MIFARE Crypto1 key
 	typedef struct {
 	  uint8_t		keyByte[MF_KEY_SIZE];
-	} MIFARE_Key;
+	} MFRC522_MIFARE_Key;
 #if 0
 	
 	// Member variables
@@ -389,25 +390,45 @@ protected:
 
 Uid *MFRC522_GetUid(void);
 
+bool MFRC522_MIFARE_SetUid(uint8_t *newUid, uint8_t uidSize, bool logErrors);
+bool MFRC522_MIFARE_UnbrickUidSector(bool logErrors);
+MFRC522_StatusCode MFRC522_PCD_NTAG216_AUTH(uint8_t* passWord, uint8_t pACK[]); //Authenticate with 32bit password
+MFRC522_StatusCode MFRC522_PCD_Authenticate(uint8_t command,   ///< PICC_CMD_MF_AUTH_KEY_A or PICC_CMD_MF_AUTH_KEY_B
+                      uint8_t blockAddr,  ///< The block number. See numbering in the comments in the .h file.
+                      MFRC522_MIFARE_Key *key,  ///< Pointer to the Crypteo1 key to use (6 bytes)
+                      Uid *uid      ///< Pointer to Uid struct. The first 4 bytes of the UID is used.
+                      );
+MFRC522_StatusCode MFRC522_MIFARE_Ultralight_Write( uint8_t page,    ///< The page (2-15) to write to.
+    uint8_t *buffer, ///< The 4 bytes to write to the PICC
+    uint8_t bufferSize ///< Buffer size, must be at least 4 bytes. Exactly 4 bytes are written.
+                          );
+
 bool MFRC522_PCD_PerformSelfTest(void);
 
 void MFRC522_PCD_SoftPowerDown(void);
 
 void MFRC522_PCD_SoftPowerUp(void);
+MFRC522_StatusCode MFRC522_MIFARE_TwoStepHelper(uint8_t command, ///< The command to use
+                          uint8_t blockAddr,  ///< The block (0-0xff) number.
+                          int32_t data    ///< The data to transfer in step 2
+                          ) ;
 
 void MFRC522_PICC_DumpDetailsToSerial(Uid *uid  ///< Pointer to Uid struct returned from a successful PICC_Select().
                   );
 void MFRC522_PICC_DumpMifareClassicToSerial(  Uid *uid,     ///< Pointer to Uid struct returned from a successful PICC_Select().
                         PICC_Type piccType, ///< One of the PICC_Type enums.
-                        MIFARE_Key *key   ///< Key A used for all sectors.
+                        MFRC522_MIFARE_Key *key   ///< Key A used for all sectors.
                       );
 void MFRC522_PICC_DumpDetailsToSerial(Uid *uid  ///< Pointer to Uid struct returned from a successful PICC_Select().
                   );
 void MFRC522_PICC_DumpMifareUltralightToSerial(void);
 void MFRC522_PICC_DumpMifareClassicSectorToSerial(Uid *uid,     ///< Pointer to Uid struct returned from a successful PICC_Select().
-                          MIFARE_Key *key,  ///< Key A for the sector.
+    MFRC522_MIFARE_Key *key,  ///< Key A for the sector.
                           uint8_t sector      ///< The sector to dump, 0..39.
                           );
+void MFRC522_PICC_DumpToSerial(Uid *uid ///< Pointer to Uid struct returned from a successful PICC_Select().
+                );
+
 MFRC522_StatusCode MFRC522_MIFARE_Write(  uint8_t blockAddr, ///< MIFARE Classic: The block (0-0xff) number. MIFARE Ultralight: The page (2-15) to write to.
     uint8_t *buffer,  ///< The 16 bytes to write to the PICC
     uint8_t bufferSize  ///< Buffer size, must be at least 16 bytes. Exactly 16 bytes are written.
@@ -423,7 +444,7 @@ const unsigned char *MFRC522_GetStatusCodeName(MFRC522_StatusCode code  ///< One
 void MFRC522_PCD_StopCrypto1(void);
 MFRC522_StatusCode MFRC522_PCD_Authenticate(uint8_t command,   ///< PICC_CMD_MF_AUTH_KEY_A or PICC_CMD_MF_AUTH_KEY_B
                       uint8_t blockAddr,  ///< The block number. See numbering in the comments in the .h file.
-                      MIFARE_Key *key,  ///< Pointer to the Crypteo1 key to use (6 bytes)
+                      MFRC522_MIFARE_Key *key,  ///< Pointer to the Crypteo1 key to use (6 bytes)
                       Uid *uid      ///< Pointer to Uid struct. The first 4 bytes of the UID is used.
                       );
 MFRC522_StatusCode MFRC522_MIFARE_Read( uint8_t blockAddr,  ///< MIFARE Classic: The block (0-0xff) number. MIFARE Ultralight: The first page to return data from.
@@ -433,13 +454,13 @@ MFRC522_StatusCode MFRC522_MIFARE_Read( uint8_t blockAddr,  ///< MIFARE Classic:
 
 MFRC522_StatusCode MFRC522_PICC_HaltA(void);
 
-PICC_Type PICC_GetType(uint8_t sak    ///< The SAK byte returned from PICC_Select().
+PICC_Type MFRC522_PICC_GetType(uint8_t sak    ///< The SAK byte returned from PICC_Select().
                     );
-const unsigned char *PICC_GetTypeName(PICC_Type piccType  ///< One of the PICC_Type enums.
+const unsigned char *MFRC522_PICC_GetTypeName(PICC_Type piccType  ///< One of the PICC_Type enums.
                           ) ;
 
 
-MFRC522_StatusCode PCD_TransceiveData(  uint8_t *sendData,   ///< Pointer to the data to transfer to the FIFO.
+MFRC522_StatusCode MFRC522_PCD_TransceiveData(  uint8_t *sendData,   ///< Pointer to the data to transfer to the FIFO.
     uint8_t sendLen,   ///< Number of bytes to transfer to the FIFO.
     uint8_t *backData,   ///< nullptr or pointer to buffer if data should be read back after executing the command.
     uint8_t *backLen,    ///< In: Max number of bytes to write to *backData. Out: The number of bytes returned.
@@ -448,7 +469,7 @@ MFRC522_StatusCode PCD_TransceiveData(  uint8_t *sendData,   ///< Pointer to the
     bool checkCRC   ///< In: True => The last two bytes of the response is assumed to be a CRC_A that must be validated.
 );
 
-MFRC522_StatusCode PCD_CommunicateWithPICC( uint8_t command,    ///< The command to execute. One of the PCD_Command enums.
+MFRC522_StatusCode MFRC522_PCD_CommunicateWithPICC( uint8_t command,    ///< The command to execute. One of the PCD_Command enums.
     uint8_t waitIRq,    ///< The bits in the ComIrqReg register that signals successful completion of the command.
     uint8_t *sendData,    ///< Pointer to the data to transfer to the FIFO.
     uint8_t sendLen,    ///< Number of bytes to transfer to the FIFO.
@@ -459,20 +480,20 @@ MFRC522_StatusCode PCD_CommunicateWithPICC( uint8_t command,    ///< The command
     bool checkCRC   ///< In: True => The last two bytes of the response is assumed to be a CRC_A that must be validated.
                    ) ;
 
-bool PICC_IsNewCardPresent(void);
+bool MFRC522_PICC_IsNewCardPresent(void);
 
-bool PICC_ReadCardSerial(void);
+bool MFRC522_PICC_ReadCardSerial(void);
 
-uint8_t PCD_GetAntennaGain(void);
+uint8_t MFRC522_PCD_GetAntennaGain(void);
 
-void PCD_SetAntennaGain(uint8_t mask);
+void MFRC522_PCD_SetAntennaGain(uint8_t mask);
 
-void PCD_AntennaOn(void);
+void MFRC522_PCD_AntennaOn(void);
 
-void PCD_AntennaOff(void);
+void MFRC522_PCD_AntennaOff(void);
 
-void PCD_Reset(void);
+void MFRC522_PCD_Reset(void);
 
-void PCD_Init(void);
+void MFRC522_PCD_Init(void);
 
 #endif
