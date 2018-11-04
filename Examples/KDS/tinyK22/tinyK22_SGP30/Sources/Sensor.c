@@ -76,13 +76,16 @@ static void SHT31Task(void *pv) {
 
 
 static void SensorTask(void *pv) {
+#if PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561
+  uint8_t res;
+#endif
+
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
 #if PL_CONFIG_HAS_RTC_DS3231
   CLS1_SendStr((uint8_t*)"Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
   TmDt1_Init(); /* get time/date from external RTC */
 #endif
 #if PL_CONFIG_HAS_TSL2561
-  uint8_t res;
   uint16_t tvoc, co2;
   uint16_t TVOC_base, eCO2_base;
   int cntr = 0;
