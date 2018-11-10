@@ -22,6 +22,9 @@
 #if PL_CONFIG_HAS_MMA8451
   #include "MMA1.h"
 #endif
+#if PL_CONFIG_HAS_AMG8833
+  #include "AMG8833.h"
+#endif
 #include "TmDt1.h"
 
 #if PL_CONFIG_HAS_SHT31
@@ -74,6 +77,9 @@ static void SHT31Task(void *pv) {
 }
 #endif
 
+#if PL_CONFIG_HAS_AMG8833
+static float AMGBuf[AMG88xx_PIXEL_ARRAY_SIZE];
+#endif
 
 static void SensorTask(void *pv) {
 #if PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561
@@ -81,6 +87,11 @@ static void SensorTask(void *pv) {
 #endif
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
+#if PL_CONFIG_HAS_AMG8833
+  if (AMG_Init()!=ERR_OK) {
+    CLS1_SendStr((uint8_t*)"Failed initializing AMG8833!\r\n", CLS1_GetStdio()->stdErr);
+  }
+#endif
 #if PL_CONFIG_HAS_RTC_DS3231
   CLS1_SendStr((uint8_t*)"Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
   TmDt1_Init(); /* get time/date from external RTC */
@@ -133,6 +144,12 @@ static void SensorTask(void *pv) {
    }
 #endif
   for(;;) {
+#if PL_CONFIG_HAS_AMG8833
+    /* max 10 Hz */
+    if (AMG88xx_readPixels(AMGBuf, sizeof(AMGBuf)/sizeof(AMGBuf[0]))!=ERR_OK) {
+      CLS1_SendStr((uint8_t*)"Failed AMG88xx_readPixels()!\r\n", CLS1_GetStdio()->stdErr);
+    }
+#endif
 #if PL_CONFIG_HAS_SGP30
     res = SGP30_IAQmeasure(&tvoc, &co2);
     if (res!=ERR_OK) {
