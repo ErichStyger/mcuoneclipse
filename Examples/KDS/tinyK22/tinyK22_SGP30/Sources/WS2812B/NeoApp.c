@@ -17,11 +17,18 @@
 #if PL_CONFIG_HAS_MMA8451
   #include "MMA1.h"
 #endif
+#if PL_CONFIG_HAS_TSL2561
+  #include "TSL1.h"
+#endif
 
 #define WIDTH_PIXELS (3*8)  /* 3 8x8 tiles */
 #define HEIGHT_PIXELS (8)   /* 1 tile */
 #define PIXEL_NOF_X   (24)
 #define PIXEL_NOF_Y   (8)
+
+static uint8_t NEOA_LightLevel = 1; /* default 1% */
+static bool NEOA_isAutoLightLevel = TRUE;
+static bool NEOA_useGammaCorrection = TRUE;
 
 static void SetPixel(int x, int y, uint32_t color) {
   /* 0, 0 is left upper corner */
@@ -135,15 +142,25 @@ static uint8_t area[PIXEL_NOF_X+2][PIXEL_NOF_Y+2]; /* area with one pixel virtua
 
 static void DrawArea(void) {
   int x, y;
+  NEO_Color level;
+
+  if (NEOA_useGammaCorrection) {
+    level = NEO_GammaCorrect8(NEOA_LightLevel);
+    if (level==0) {
+      level = 1; /* have minimal light level */
+    }
+  } else {
+    level = NEOA_LightLevel;
+  }
 
   for(x=1;x<AREA_NOF_X-1;x++) { /* start inside border */
     for(y=1;y<AREA_NOF_Y-1;y++) {
-      if (area[x][y]==0) { /* clear */
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,1));
-      } else if (area[x][y]==1) { /* set */
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,2,0));
+      if (area[x][y]==0) { /* clear pixel area */
+        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,level));
+      } else if (area[x][y]==1) { /* set pixel area */
+        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,level,0));
       } else if (area[x][y]==0xff) {
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(3,0,0)); /* border, obstacle */
+        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,0)); /* border, obstacle area */
       }
     }
   }
@@ -417,8 +434,8 @@ static void ApplyGravity(int gx, int gy) {
     } /* for */
   } else if (gx==-1 && gy==0) { /* left */
     /* scan from top to down */
-    for(y=1;y<AREA_NOF_Y-1;y++) {
-      for(x=1;x<AREA_NOF_X-1;x++) {
+    for(x=1;x<AREA_NOF_X-1;x++) {
+      for(y=1;y<AREA_NOF_Y-1;y++) {
         if (area[x][y]==1) { /* we have an item */
           matrix[0][0] = &area[x+1][y-1];
           matrix[0][1] = &area[x+1][y];
@@ -461,13 +478,52 @@ static void NeoTask(void* pvParameters) {
   int16_t xmg, ymg, zmg;
 #endif
   int xg = 0, yg = 1;
+#if PL_CONFIG_HAS_TSL2561
+  uint32_t lux;
+  NEOA_isAutoLightLevel = TRUE;
+  TickType_t tickCnt, lastLightMeasurementTickCnt = 0;
+  int new_light_level;
+#else
+  NEOA_isAutoLightLevel = FALSE;
+#endif
 
   (void)pvParameters; /* parameter not used */
-  InitHourGlass(1);
+  InitHourGlass(64);
+  NEOA_LightLevel = 50;
+#if PL_CONFIG_HAS_TSL2561
+  new_light_level = NEOA_LightLevel;
+#endif
   for(;;) {
     DrawArea();
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(200));
+#if PL_CONFIG_HAS_TSL2561
+    tickCnt = xTaskGetTickCount();
+    if (NEOA_isAutoLightLevel && tickCnt-lastLightMeasurementTickCnt > pdMS_TO_TICKS(1000)) { /* every 2 seconds */
+      lastLightMeasurementTickCnt = tickCnt;
+      if (TSL1_GetLux(&lux)==ERR_OK) {
+        /* 1 lux is pretty dark, 50 is rather dark, 200 is about office light */
+        if (NEOA_useGammaCorrection) {
+          new_light_level = lux;
+        } else {
+          new_light_level = lux/16 - 5; /* scale down with an offset */
+        }
+        if (new_light_level>100) {
+          new_light_level = 100;
+        } else if (new_light_level < 1) {
+          new_light_level = 1;
+        }
+      }
+    } /* if */
+    /* gradually adopt the light level */
+    if (NEOA_isAutoLightLevel) {
+      if (new_light_level>NEOA_LightLevel) {
+        NEOA_LightLevel++;
+      } else if (new_light_level<NEOA_LightLevel) {
+        NEOA_LightLevel--;
+      }
+    }
+#endif
 #if PL_CONFIG_HAS_MMA8451
     xmg = MMA1_GetXmg();
     ymg = MMA1_GetYmg();
@@ -491,6 +547,71 @@ static void NeoTask(void* pvParameters) {
   }
 }
 #endif
+
+#if NEOA_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintStatus(const CLS1_StdIOType *io) {
+  uint8_t buf[32];
+  uint8_t res;
+
+  CLS1_SendStatusStr((unsigned char*)"neoa", (unsigned char*)"\r\n", io->stdOut);
+  UTIL1_Num8uToStr(buf, sizeof(buf), NEOA_LightLevel);
+  UTIL1_strcat(buf, sizeof(buf), NEOA_isAutoLightLevel ? " (auto)\r\n": " (fix)\r\n");
+  CLS1_SendStatusStr("  lightlevel", buf, io->stdOut);
+  UTIL1_strcpy(buf, sizeof(buf), NEOA_useGammaCorrection ? "on\r\n": "off\r\n");
+  CLS1_SendStatusStr("  gamma", buf, io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io) {
+  CLS1_SendHelpStr((unsigned char*)"neoa", (unsigned char*)"Group of neoa commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  lightlevel <val>|auto", (unsigned char*)"Set light level (0..255) or use auto level\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  gamma on|off", (unsigned char*)"Usage of gamma correction\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+#endif /* NEOA_CONFIG_PARSE_COMMAND_ENABLED */
+
+
+#if NEOA_CONFIG_PARSE_COMMAND_ENABLED
+uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  uint8_t res = ERR_OK;
+  const unsigned char *p;
+
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
+    || UTIL1_strcmp((char*)cmd, "neoa help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0)
+             || (UTIL1_strcmp((char*)cmd, "neoa status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  } else if (UTIL1_strcmp((char*)cmd, "neoa lightlevel auto")==0) {
+    NEOA_isAutoLightLevel = TRUE;
+    *handled = TRUE;
+    res = ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "neoa lightlevel ", sizeof("neoa lightlevel ")-1)==0) {
+    int32_t level;
+
+    p = cmd + sizeof("neoa lightlevel ")-1;
+    res = UTIL1_xatoi(&p, &level);
+    if (res==ERR_OK) {
+      if (level<0) {
+        level = 0;
+      } else if (level>0xff) {
+        level = 0xff;
+      }
+      NEOA_isAutoLightLevel = FALSE;
+      NEOA_LightLevel = level;
+    }
+    *handled = TRUE;
+  }
+  return res;
+}
+#endif /* NEOA_CONFIG_PARSE_COMMAND_ENABLED */
+
 
 
 void NEOA_Init(void) {

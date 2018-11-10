@@ -31,7 +31,6 @@ uint8_t SGP30_GetIAQBaseline(uint16_t *pTVOCbase, uint16_t *pCO2base);
   uint8_t SGP30_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 #endif
 
-
 /* driver initialization */
 uint8_t SGP30_Init(void);
 
