@@ -85,6 +85,7 @@
 #include "SS1.h"
 #include "CD1.h"
 #include "MINI1.h"
+#include "SYS1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -269,6 +270,52 @@ void LCD1_OnGiveLCD(void);
 ** ===================================================================
 **     Description :
 **         Event called in the event of GiveLCD() method called.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GDisp1_OnGetDisplay(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called from GetDisplay() method. This callback is
+**         useful if you want to share the communication to the display
+**         (e.g. SPI) with other peripherals, as this gives you a
+**         chance to protect the access to it.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GDisp1_OnGiveDisplay(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called from GetDisplay() method. This callback is
+**         useful if you want to share the communication to the display
+**         (e.g. SPI) with other peripherals, as this gives you a
+**         chance to protect the access to it.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_OnGetBus(void);
+/*
+** ===================================================================
+**     Description :
+**         Called for SPI bus sharing
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_OnGiveBus(void);
+/*
+** ===================================================================
+**     Description :
+**         Used for SPI bus sharing
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

@@ -383,25 +383,41 @@ uint8_t AMG88xx_readThermistor(float *value) {
   return res;
 }
 
+void AMG88xx_FlipHorizontal(float buf[AMG88xx_PIXEL_ROWS][AMG88xx_PIXEL_COLS]) {
+  int x, y;
+  float tmp;
+
+  for(y=0;y<AMG88xx_PIXEL_ROWS;y++) {
+    for(x=0;x<AMG88xx_PIXEL_COLS/2;x++) {
+      tmp = buf[y][x];
+      buf[y][x] = buf[y][AMG88xx_PIXEL_COLS-1-x];
+      buf[y][AMG88xx_PIXEL_COLS-1-x] = tmp;
+    }
+  }
+}
+
 /**************************************************************************/
 /*!
     @brief  Read Infrared sensor values
     @param  buf the array to place the pixels in
-    @param  size Optionsl number of bytes to read (up to 64). Default is 64 bytes.
-    @return up to 64 bytes of pixel data in buf
+    @param  size number of bytes to read (up to 64). Default is 64 bytes.
+    @return has to be 64 bytes of pixel data in buf
 */
 /**************************************************************************/
-uint8_t AMG88xx_readPixels(float *buf, uint8_t size) {
+uint8_t AMG88xx_readPixels(float *buf, uint8_t nofPixels) {
   uint16_t recast;
   float converted;
   uint8_t res;
   static uint8_t rawArray[AMG88xx_PIXEL_ARRAY_SIZE << 1]; /* to save stack space, makes it non-reentrant! */
 
+  if (nofPixels!=AMG88xx_PIXEL_ARRAY_SIZE) {
+    return ERR_OVERFLOW;
+  }
   res = AMG88xx_read(AMG88xx_PIXEL_OFFSET, rawArray, sizeof(rawArray));
   if (res!=ERR_OK) {
     return res;
   }
-  for(int i=0; i<size; i++){
+  for(int i=0; i<nofPixels; i++){
     uint8_t pos = i << 1;
     recast = ((uint16_t)rawArray[pos + 1] << 8) | ((uint16_t)rawArray[pos]);
     converted = AMG88xx_signedMag12ToFloat(recast) * AMG88xx_PIXEL_TEMP_CONVERSION;

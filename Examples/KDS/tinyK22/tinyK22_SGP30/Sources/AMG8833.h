@@ -14,6 +14,8 @@
 #define AMG88xx_PIXEL_ROWS              (8)
 #define AMG88xx_PIXEL_ARRAY_SIZE        (AMG88xx_PIXEL_COLS*AMG88xx_PIXEL_ROWS)
 
+void AMG88xx_FlipHorizontal(float buf[AMG88xx_PIXEL_ROWS][AMG88xx_PIXEL_COLS]);
+
 uint8_t AMG88xx_readPixels(float *buf, uint8_t size);
 
 uint8_t AMG_Init(void);

@@ -333,6 +333,72 @@ void LCD1_OnGiveLCD(void)
 #endif
 }
 
+/*
+** ===================================================================
+**     Description :
+**         Event called from GetDisplay() method. This callback is
+**         useful if you want to share the communication to the display
+**         (e.g. SPI) with other peripherals, as this gives you a
+**         chance to protect the access to it.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GDisp1_OnGetDisplay(void)
+{
+#if PL_CONFIG_HAS_SPI
+  //SPI_OnSPIActivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called from GetDisplay() method. This callback is
+**         useful if you want to share the communication to the display
+**         (e.g. SPI) with other peripherals, as this gives you a
+**         chance to protect the access to it.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GDisp1_OnGiveDisplay(void)
+{
+#if PL_CONFIG_HAS_SPI
+ // SPI_OnSPIDeactivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Called for SPI bus sharing
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_OnGetBus(void)
+{
+#if PL_CONFIG_HAS_SPI
+  SPI_OnSPIActivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Used for SPI bus sharing
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_OnGiveBus(void)
+{
+#if PL_CONFIG_HAS_SPI
+  SPI_OnSPIDeactivate(SPI_BAUD_INDEX_SSD1351);
+#endif
+}
+
 /* END Events */
 
 #ifdef __cplusplus

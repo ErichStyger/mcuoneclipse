@@ -563,15 +563,17 @@ static void NeoTask(void* pvParameters) {
 //high range of the sensor (this will be red on the screen)
 #define MAXTEMP 30
 
-static float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
+static float pixels[AMG88xx_PIXEL_ROWS][AMG88xx_PIXEL_COLS];
 
 #define INTERPOLATED_LED_COLS 8
 #define INTERPOLATED_LED_ROWS 8
 static float dest_2d_LED[INTERPOLATED_LED_ROWS * INTERPOLATED_LED_COLS];
 
 #if PL_CONFIG_HAS_SSD1351 && !PL_CONFIG_HAS_GUI
-#define INTERPOLATED_LCD_COLS 64
-#define INTERPOLATED_LCD_ROWS 64
+#define INTERPOLATED_LCD_IMAGE_SIZE   (128)  /* square size */
+#define INTERPOLATED_LCD_BLOCK_SIZE   (4)
+#define INTERPOLATED_LCD_COLS         (INTERPOLATED_LCD_IMAGE_SIZE/INTERPOLATED_LCD_BLOCK_SIZE)
+#define INTERPOLATED_LCD_ROWS         (INTERPOLATED_LCD_IMAGE_SIZE/INTERPOLATED_LCD_BLOCK_SIZE)
 static float dest_2d_LCD[INTERPOLATED_LCD_ROWS * INTERPOLATED_LCD_COLS];
 #endif
 
@@ -590,7 +592,7 @@ static void drawpixelsLED(float *p, uint8_t rows, uint8_t cols, uint8_t boxWidth
       uint8_t colorIndex = UTIL1_map(colorTemp, MINTEMP, MAXTEMP, 0, 255);
       colorIndex = UTIL1_constrain(colorIndex, 0, 255);
       //draw the pixels!
-      SetPixel(7-x, y, NEO_MAKE_COLOR_RGB((colorIndex*15/100), 0, (255-colorIndex)*15/100));
+      SetPixel(x, y, NEO_MAKE_COLOR_RGB((colorIndex*15/100), 0, (255-colorIndex)*15/100));
     }
   }
 }
@@ -660,26 +662,21 @@ static void NeoTask(void* pvParameters) {
   LCD1_Init();
   GDisp1_Clear();
   GDisp1_UpdateFull();
-  GDisp1_DrawFilledBox(0,0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_BLACK);
-  GDisp1_UpdateFull();
 #endif
   for(;;) {
     /* max 10 Hz */
-    if (AMG88xx_readPixels(pixels, sizeof(pixels)/sizeof(pixels[0]))!=ERR_OK) {
+    if (AMG88xx_readPixels((float*)pixels, AMG88xx_PIXEL_ROWS*AMG88xx_PIXEL_COLS)!=ERR_OK) {
       CLS1_SendStr((uint8_t*)"Failed AMG88xx_readPixels()!\r\n", CLS1_GetStdio()->stdErr);
     } else {
-      uint16_t boxsize;
-
+      AMG88xx_FlipHorizontal(pixels);
       /* draw image on 8x8 LEDs */
-      interpolate_image(pixels, AMG88xx_PIXEL_ROWS, AMG88xx_PIXEL_COLS, dest_2d_LED, INTERPOLATED_LED_ROWS, INTERPOLATED_LED_COLS);
-      boxsize = 1; //min(tft.width() / INTERPOLATED_COLS, tft.height() / INTERPOLATED_COLS);
-      drawpixelsLED(dest_2d_LED, INTERPOLATED_LED_ROWS, INTERPOLATED_LED_COLS, boxsize, boxsize);
-
-#if PL_CONFIG_HAS_SSD1351 && !PL_CONFIG_HAS_GUI
+      //interpolate_image((float*)pixels, AMG88xx_PIXEL_ROWS, AMG88xx_PIXEL_COLS, dest_2d_LED, INTERPOLATED_LED_ROWS, INTERPOLATED_LED_COLS);
+      //drawpixelsLED(dest_2d_LED, INTERPOLATED_LED_ROWS, INTERPOLATED_LED_COLS, 1, 1);
+      drawpixelsLED((float*)pixels, AMG88xx_PIXEL_ROWS, AMG88xx_PIXEL_COLS, 1, 1);
+#if 1 && PL_CONFIG_HAS_SSD1351 && !PL_CONFIG_HAS_GUI
       /* draw image on LCD */
-      boxsize = 2;
-      interpolate_image(pixels, AMG88xx_PIXEL_ROWS, AMG88xx_PIXEL_COLS, dest_2d_LCD, INTERPOLATED_LCD_ROWS, INTERPOLATED_LCD_COLS);
-      drawpixelsLCD(dest_2d_LCD, INTERPOLATED_LCD_ROWS, INTERPOLATED_LCD_COLS, boxsize, boxsize);
+      interpolate_image((float*)pixels, AMG88xx_PIXEL_ROWS, AMG88xx_PIXEL_COLS, dest_2d_LCD, INTERPOLATED_LCD_ROWS, INTERPOLATED_LCD_COLS);
+      drawpixelsLCD(dest_2d_LCD, INTERPOLATED_LCD_ROWS, INTERPOLATED_LCD_COLS, INTERPOLATED_LCD_BLOCK_SIZE, INTERPOLATED_LCD_BLOCK_SIZE);
 #endif
     }
     NEO_TransferPixels();
