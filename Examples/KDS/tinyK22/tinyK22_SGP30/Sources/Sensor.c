@@ -87,7 +87,7 @@ static void SensorTask(void *pv) {
 #endif
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
-#if PL_CONFIG_HAS_AMG8833
+#if 0 && PL_CONFIG_HAS_AMG8833
   if (AMG_Init()!=ERR_OK) {
     CLS1_SendStr((uint8_t*)"Failed initializing AMG8833!\r\n", CLS1_GetStdio()->stdErr);
   }
@@ -144,7 +144,7 @@ static void SensorTask(void *pv) {
    }
 #endif
   for(;;) {
-#if PL_CONFIG_HAS_AMG8833
+#if 0 && PL_CONFIG_HAS_AMG8833
     /* max 10 Hz */
     if (AMG88xx_readPixels(AMGBuf, sizeof(AMGBuf)/sizeof(AMGBuf[0]))!=ERR_OK) {
       CLS1_SendStr((uint8_t*)"Failed AMG88xx_readPixels()!\r\n", CLS1_GetStdio()->stdErr);
