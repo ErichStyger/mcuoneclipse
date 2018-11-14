@@ -6,18 +6,8 @@
 /* If __STDC__ is not defined, don't use function prototypes, void, or
  * const.
  */
-#define USE_FATFS (1) /* << EST */
-#define USE_CONSOLE (1) /* << EST */
 
-#if USE_CONSOLE
-  #include "CLS1.h"
-  #define   printf   CLS1_printf
-  #undef putchar
-  #define   putchar  CLS1_SendChar
-
-  extern char *CLS1_fgets(char *buf, int bufSize, void *channel);
-  #define fgets      CLS1_fgets
-#endif
+#include "zork_config.h" /* << EST */
 
 #ifdef __STDC__
 #define P(x) x

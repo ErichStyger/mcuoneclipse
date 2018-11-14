@@ -21,8 +21,7 @@ void savegm_()
     prsvec_1.prswon = FALSE_;
 /* 						!DISABLE GAME. */
 /* Note: save file format is different for PDP vs. non-PDP versions */
-
-    if ((e = fopen("dsave.dat", BINWRITE)) == NULL)
+    if ((e = fopen(SAVEFILE, BINWRITE)) == NULL)
 	goto L100;
 
     gttime_(&i); 
@@ -113,7 +112,7 @@ void rstrgm_()
 /* 						!DISABLE GAME. */
 /* Note: save file format is different for PDP vs. non-PDP versions */
 
-    if ((e = fopen("dsave.dat", BINREAD)) == NULL)
+    if ((e = fopen(SAVEFILE, BINREAD)) == NULL)
 	goto L100;
 
 #define do_uio(i, zbuf, cbytes) \

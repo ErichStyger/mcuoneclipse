@@ -17,59 +17,6 @@
 
 extern void srand P((unsigned int));
 
-#if USE_FATFS
-  #include "FAT1.h"
-
-  #define FILE FIL
-  extern int FatFsGetc(FIL *f);
-  extern int FatFsFtell(FIL *f);
-  extern int FatFsFClose(FIL *f);
-  extern int FatFsFSeek(FIL *f, int pos, int option);
-  extern FIL *FatFsFOpen(char *path, char *option);
-  #undef getc
-  #define getc(file)            FatFsGetc(file)
-  #define ftell(f)              FatFsFtell(f)
-  #define fseek(f, pos, option) FatFsFSeek(f, pos, option)
-  #define fclose(f)             FatFsFClose(f)
-  #define fopen(path, option)   FatFsFOpen(path, option)
-
-  static FIL fatFileStruct;
-  int FatFsGetc(FIL *f) {
-    unsigned char ch;
-    int nofRead;
-    FRESULT res;
-
-    res = FAT1_read(f, &ch, 1, &nofRead);
-    if (nofRead!=1 || res!=FR_OK) {
-      return -1;
-    }
-    return ch;
-  }
-
-  int FatFsFtell(FIL *f) {
-    return FAT1_f_tell(f);
-  }
-
-  int FatFsFClose(FIL *f) {
-    return FAT1_close(f)==FR_OK;
-  }
-
-  int FatFsFSeek(FIL *f, int pos, int option) {
-    if (FAT1_lseek(f, pos)!=FR_OK) {
-      return EOF; /* failure */
-    }
-    return 0;
-  }
-
-  FIL *FatFsFOpen(char *path, char *options) {
-    if (FAT1_open(&fatFileStruct, path, FA_OPEN_ALWAYS|FA_READ) == FR_OK) {
-      return &fatFileStruct;
-    }
-    return NULL;
-  }
-
-
-#endif
 FILE *dbfile;
 
 

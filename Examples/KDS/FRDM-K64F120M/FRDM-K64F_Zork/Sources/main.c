@@ -68,9 +68,8 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
-void zork_main(void);
-static FAT1_FATFS fileSystemObject;
-static FIL fp;
+
+#include "Zork/zork_config.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -83,21 +82,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  CLS1_SendStr("Welcome to ZORK!\r\n", CLS1_GetStdio()->stdOut);
-
-  if (FAT1_Init()!=ERR_OK) { /* initialize FAT driver */
-    for(;;){}
-  }
-  if (FAT1_mount(&fileSystemObject, "0", 1) != FR_OK) { /* mount file system */
-    for(;;){}
-  }
-  if (FAT1_open(&fp, "./dtextc.dat", FA_OPEN_ALWAYS|FA_READ)!=FR_OK) {
-     for(;;){}
-  }
-  if (FAT1_close(&fp)!=FR_OK) {
-    for(;;){}
-  }
-   zork_main();
+  zork_config();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

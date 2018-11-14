@@ -12,21 +12,6 @@
 #define SEEK_SET (0)
 #endif
 
-#if USE_FATFS
-  #include "FAT1.h"
-  #define FILE FIL
-  extern int FatFsGetc(FIL *f);
-  extern int FatFsFtell(FIL *f);
-  extern int FatFsFClose(FIL *f);
-  extern int FatFsFSeek(FIL *f, int pos, int option);
-  #undef getc
-  #define getc(file)            FatFsGetc(file)
-  #define ftell(f)              FatFsFtell(f)
-  #define fseek(f, pos, option) FatFsFSeek(f, pos, option)
-  #define fclose(f)             FatFsFClose(f)
-
-#endif
-
 extern FILE *dbfile;
 
 static void rspsb2nl_ P((integer, integer, integer, logical));
