@@ -69,7 +69,8 @@ typedef struct {
 extern const tVectorTable __vector_table;
 extern const tVectorTable __vect_table;
 #else
-extern const tVectorTable __vect_table;
+//extern const tVectorTable __vect_table;
+extern const tVectorTable g_pfnVectors;
 #endif
 
 /*

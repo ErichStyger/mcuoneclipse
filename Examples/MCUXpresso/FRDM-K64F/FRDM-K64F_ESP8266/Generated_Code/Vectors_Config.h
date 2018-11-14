@@ -75,11 +75,21 @@
 extern "C" {
 #endif
 
+#if 1 /* needed by SDK startup */
+extern void _vStackTop(void);
+extern void ResetISR(void);
+#endif
+
 #define PEX_VECTOR_TABLE                                   0x01U     /* Vector table is managed by PEx */ 
 
 /* Vector                 Address                                  No.  Pri  Name                           Description */
+#if 0 /* original Processor Expert code */
 #define VECTOR_SP_MAIN    &__SP_INIT                            /* 0x00 -    ivINT_Initial_Stack_Pointer    used by PE */
 #define VECTOR_1          (tIsrFunc)&__thumb_startup            /* 0x01 -    ivINT_Initial_Program_Counter  used by PE */
+#else /* needed by SDK startup */
+#define VECTOR_SP_MAIN    &_vStackTop                           /* 0x00 -    ivINT_Initial_Stack_Pointer    used by PE */
+#define VECTOR_1          (tIsrFunc)&ResetISR                   /* 0x01 -    ivINT_Initial_Program_Counter  used by PE */
+#endif
 #define VECTOR_2          (tIsrFunc)&Cpu_INT_NMIInterrupt       /* 0x02 -2   ivINT_NMI                      used by PE */
 #define VECTOR_3          (tIsrFunc)&UnhandledInterrupt         /* 0x03 -1   ivINT_Hard_Fault               unused by PE */
 #define VECTOR_4          (tIsrFunc)&UnhandledInterrupt         /* 0x04 -    ivINT_Mem_Manage_Fault         unused by PE */
