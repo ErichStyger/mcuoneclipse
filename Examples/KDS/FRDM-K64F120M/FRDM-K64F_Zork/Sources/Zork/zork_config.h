@@ -1,14 +1,20 @@
 /*
  * zork_config.h
  *
- *  Created on: 13.11.2018
  *      Author: Erich Styger  */
 
 
 /* this header file needs to be included in vars.h */
 
-#define USE_FATFS (1) /* << EST */
-#define USE_CONSOLE (1) /* << EST */
+/* configuration makros: */
+#define USE_FATFS         (0) /* using FatFS with SD card */
+#define USE_SEMIHOSTING   (1) /* using semihosting with the debug probe for file I/O */
+#define USE_CONSOLE       (1) /* required, using Console input/output */
+#define USE_MCURSES       (0) /* use mcurses */
+
+#if (USE_FATFS+USE_SEMIHOSTING > 1)
+  #error "only one can be active"
+#endif
 
 #if USE_CONSOLE
   #include "CLS1.h"
@@ -23,7 +29,19 @@
   #define fgets      CLS1_fgets
 #endif
 
-#if USE_FATFS
+#if USE_SEMIHOSTING
+  /* if using semihosting, use the following linker settings
+   * -specs=nano.specs -specs=rdimon.specs
+   * (do *not* use -specs=nosys.specs)
+   */
+  #define BINREAD "rb"
+  #define BINWRITE "wb"
+  /* using relative path inside the project to load and store files: */
+  #define TEXTFILE ".\\Sources\\Zork\\dtextc.dat"
+  #define SAVEFILE ".\\Sources\\Zork\\dsave.dat"
+#elif USE_FATFS
+  #define BINREAD "rb"
+  #define BINWRITE "wb"
   #define TEXTFILE "./dtextc.dat"
   #define SAVEFILE "./dsave.dat"
 
@@ -47,5 +65,7 @@
   #define fread(buf, size, nof, file)   FatFsFRead(buf, size, nof, file)
   #define fwrite(buf, size, nof, file)  FatFsFWrite(buf, size, nof, file)
 #endif
+
+void _exit(int i);
 
 void zork_config(void);

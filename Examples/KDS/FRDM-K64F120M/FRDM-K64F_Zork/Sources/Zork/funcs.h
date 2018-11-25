@@ -22,7 +22,7 @@
  * __STDC__ is defined we can use "rb".  Otherwise, assume that we
  * had better use "r" or fopen will fail.
  */
-
+#if !defined(BINREAD) /* << EST */
 #ifdef unix
 #define BINREAD "r"
 #define BINWRITE "w"
@@ -35,6 +35,7 @@
 #define BINWRITE "w"
 #endif /* ! __STDC__ */
 #endif /* ! unix */
+#endif
 
 typedef int integer;
 typedef int logical;
