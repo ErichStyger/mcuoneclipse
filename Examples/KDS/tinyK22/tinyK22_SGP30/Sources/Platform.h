@@ -23,12 +23,12 @@
 #define PL_CONFIG_HAS_SHT31       (0) /* temperature/humidity */
 #define PL_CONFIG_HAS_SD_CARD     (0 && PL_CONFIG_HAS_SPI)
 #define PL_CONFIG_HAS_NEO_PIXEL   (1) /* WS2812B */
-#define PL_CONFIG_HAS_AMG8833     (1) /* thermal sensor */
+#define PL_CONFIG_HAS_AMG8833     (0) /* thermal sensor */
 
 /* NEO Applications, only one can be active! */
-#define PL_CONFIG_HAS_NEO_SHADOW_BOX    (0 & PL_CONFIG_HAS_NEO_PIXEL)
+#define PL_CONFIG_HAS_NEO_SHADOW_BOX    (1 & PL_CONFIG_HAS_NEO_PIXEL)
 #define PL_CONFIG_HAS_NEO_HOUR_GLASS    (0 & PL_CONFIG_HAS_NEO_PIXEL)
-#define PL_CONFIG_HAS_NEO_THERMAL_CAM   (1 & PL_CONFIG_HAS_NEO_PIXEL)
+#define PL_CONFIG_HAS_NEO_THERMAL_CAM   (0 & PL_CONFIG_HAS_NEO_PIXEL)
 
 #if ((PL_CONFIG_HAS_NEO_SHADOW_BOX + PL_CONFIG_HAS_NEO_HOUR_GLASS + PL_CONFIG_HAS_NEO_THERMAL_CAM)>1)
   #error "only one configuration can be active!"
