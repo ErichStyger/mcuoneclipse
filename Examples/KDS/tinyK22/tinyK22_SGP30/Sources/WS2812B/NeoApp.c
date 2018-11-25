@@ -35,8 +35,15 @@
 #define PIXEL_NOF_Y   (8)
 
 static uint8_t NEOA_LightLevel = 1; /* default 1% */
+#if PL_CONFIG_HAS_TSL2561
 static bool NEOA_isAutoLightLevel = TRUE;
+#endif
 static bool NEOA_useGammaCorrection = TRUE;
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+static bool NEOA_LightBoxUseRainbow = TRUE;
+#define NEOA_NOF_LIGHTBOX_ROWS    (8) /* number of rows in light box */
+static uint8_t NEOA_LightBoxRowBrightness[NEOA_NOF_LIGHTBOX_ROWS] = {40, 40, 30, 20, 10, 10, 5, 3};
+#endif
 
 static void SetPixel(int x, int y, uint32_t color) {
   /* 0, 0 is left upper corner */
@@ -117,20 +124,25 @@ static void NeoTask(void* pvParameters) {
 
   (void)pvParameters; /* parameter not used */
   cntr = 0;
-
-   for(;;) {
-      int row;
-      int32_t color;
-
-        for(row=0; row<8; row++) {
-          color = Rainbow(256,rowStartStep[row]);
-          rowStartStep[row]++;
-          color = NEO_SetColorPercent(color, 10); /* reduce brightness */
-          Layer(row, color);
-        }
-        NEO_TransferPixels();
-        vTaskDelay(pdMS_TO_TICKS(30));
+  for(i=0; i<sizeof(NEOA_LightBoxRowBrightness)/sizeof(NEOA_LightBoxRowBrightness[0]);i++) {
+    NEOA_LightBoxRowBrightness[i] = 10; /* default */
   }
+
+  for(;;) {
+    int row;
+    int32_t color;
+
+    if (NEOA_LightBoxUseRainbow) {
+      for(row=0; row<8; row++) {
+        color = Rainbow(256,rowStartStep[row]);
+        rowStartStep[row]++;
+        color = NEO_SetColorPercent(color, NEOA_LightBoxRowBrightness[row]); /* reduce brightness */
+        Layer(row, color);
+      }
+    }
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(30));
+  } /* for */
 }
 #endif
 
@@ -687,13 +699,27 @@ static void NeoTask(void* pvParameters) {
 
 #if NEOA_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[48];
   uint8_t res;
 
   CLS1_SendStatusStr((unsigned char*)"neoa", (unsigned char*)"\r\n", io->stdOut);
+#if PL_CONFIG_HAS_TSL2561
   UTIL1_Num8uToStr(buf, sizeof(buf), NEOA_LightLevel);
   UTIL1_strcat(buf, sizeof(buf), NEOA_isAutoLightLevel ? " (auto)\r\n": " (fix)\r\n");
   CLS1_SendStatusStr("  lightlevel", buf, io->stdOut);
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  UTIL1_strcpy(buf, sizeof(buf), NEOA_LightBoxUseRainbow ? "rainbow: on\r\n": "rainbow: off\r\n");
+  CLS1_SendStatusStr("  lightbox", buf, io->stdOut);
+  buf[0] = 0;
+  UTIL1_strcpy(buf, sizeof(buf), "brigtness: ");
+  for(int i=0; i<NEOA_NOF_LIGHTBOX_ROWS;i++) {
+    UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_LightBoxRowBrightness[i]);
+    UTIL1_strcat(buf, sizeof(buf), "% ");
+  }
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr("", buf, io->stdOut);
+#endif
   UTIL1_strcpy(buf, sizeof(buf), NEOA_useGammaCorrection ? "on\r\n": "off\r\n");
   CLS1_SendStatusStr("  gamma", buf, io->stdOut);
   return ERR_OK;
@@ -701,7 +727,13 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"neoa", (unsigned char*)"Group of neoa commands\r\n", io->stdOut);
+#if PL_CONFIG_HAS_TSL2561
   CLS1_SendHelpStr((unsigned char*)"  lightlevel <val>|auto", (unsigned char*)"Set light level (0..255) or use auto level\r\n", io->stdOut);
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  CLS1_SendHelpStr((unsigned char*)"  lightbox rainbow (on|off)", (unsigned char*)"Use rainbow colors for lightbox\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  lightbox brightness <n> <%>", (unsigned char*)"Set row brigness percent\r\n", io->stdOut);
+#endif
   CLS1_SendHelpStr((unsigned char*)"  gamma on|off", (unsigned char*)"Usage of gamma correction\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;
@@ -725,6 +757,7 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
   {
     *handled = TRUE;
     res = PrintStatus(io);
+#if PL_CONFIG_HAS_TSL2561
   } else if (UTIL1_strcmp((char*)cmd, "neoa lightlevel auto")==0) {
     NEOA_isAutoLightLevel = TRUE;
     *handled = TRUE;
@@ -744,6 +777,43 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
       NEOA_LightLevel = level;
     }
     *handled = TRUE;
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  } else if (UTIL1_strcmp((char*)cmd, "neoa lightbox rainbow on")==0) {
+    NEOA_LightBoxUseRainbow = TRUE;
+   *handled = TRUE;
+   res = ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "neoa lightbox rainbow off")==0) {
+    NEOA_LightBoxUseRainbow = FALSE;
+   *handled = TRUE;
+   res = ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "neoa lightbox brightness ", sizeof("neoa lightbox brightness ")-1)==0) {
+    int32_t level, row;
+
+    p = cmd + sizeof("neoa lightbox brightness ")-1;
+    res = UTIL1_xatoi(&p, &row);
+    if (res==ERR_OK) {
+      if (row<0) {
+        row = 0;
+        res = ERR_RANGE;
+      } else if (row>=NEOA_NOF_LIGHTBOX_ROWS-1) {
+        row = NEOA_NOF_LIGHTBOX_ROWS-1;
+        res = ERR_RANGE;
+      }
+      res = UTIL1_xatoi(&p, &level);
+      if (res==ERR_OK) {
+        if (level<0) {
+          level = 0;
+          res = ERR_RANGE;
+        } else if (level>100) {
+          level = 100;
+          res = ERR_RANGE;
+        }
+        NEOA_LightBoxRowBrightness[row] = level;
+      }
+    }
+    *handled = TRUE;
+#endif
   }
   return res;
 }
