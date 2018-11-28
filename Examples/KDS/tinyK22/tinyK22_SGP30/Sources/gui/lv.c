@@ -145,10 +145,10 @@ static bool keyboard_read(lv_indev_data_t *data)  {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
   if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED)) {
-    data->key = LV_GROUP_KEY_NEXT;
+    data->key = LV_GROUP_KEY_NEXT; //LV_GROUP_KEY_NEXT;
     data->state = LV_INDEV_STATE_PR;
   } else if (keyData==(LV_BUTTON_SW0|LV_MASK_RELEASED)) {
-    data->key = LV_GROUP_KEY_NEXT;
+    data->key = LV_GROUP_KEY_NEXT; //LV_GROUP_KEY_NEXT;
     data->state = LV_INDEV_STATE_REL;
   } else if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ENTER;
@@ -157,10 +157,10 @@ static bool keyboard_read(lv_indev_data_t *data)  {
     data->key = LV_GROUP_KEY_ENTER;
     data->state = LV_INDEV_STATE_REL;
   } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED)) {
-    data->key = LV_GROUP_KEY_PREV;
+    data->key = LV_GROUP_KEY_PREV; //LV_GROUP_KEY_PREV;
     data->state = LV_INDEV_STATE_PR;
   } else if (keyData==(LV_BUTTON_SW1|LV_MASK_RELEASED)) {
-    data->key = LV_GROUP_KEY_PREV;
+    data->key = LV_GROUP_KEY_PREV; //LV_GROUP_KEY_PREV;
     data->state = LV_INDEV_STATE_REL;
   } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED_LONG)) {
     data->key = LV_GROUP_KEY_ESC;

@@ -101,6 +101,51 @@ static lv_res_t Btn_NeoPixel_click_action(struct _lv_obj_t *obj) {
 }
 #endif
 
+
+static lv_obj_t *win;
+
+static lv_res_t win_close_action(lv_obj_t *btn) {
+ // lv_group_focus_freeze(GUI_GetGroup(), false);
+  lv_obj_del(win);
+  win = NULL;
+  return LV_RES_INV;
+}
+
+/*Called when a button is clicked*/
+static lv_res_t mbox_apply_action(lv_obj_t * mbox, const char * txt)
+{
+    //printf("Mbox button: %s\n", txt);
+    return LV_RES_OK; /*Return OK if the message box is not deleted*/
+}
+
+static lv_res_t Btn_About_click_action2(struct _lv_obj_t *obj) {
+  /* create message box: */
+  lv_obj_t * mbox1 = lv_mbox_create(lv_scr_act(), NULL);
+  /* set message box text: */
+  lv_mbox_set_text(mbox1, "Default message box\n" "with buttons");                    /*Set the text*/
+  /*Add two buttons*/
+  static const char *btns[] ={"\221Apply", "\221Close", ""}; /*Button description. '\221' lv_btnm like control char*/
+  lv_mbox_add_btns(mbox1, btns, mbox_apply_action);
+  lv_obj_set_width(mbox1, 120);
+  lv_obj_align(mbox1, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 70); /*Align to the corner*/
+  GUI_CreateGroup();
+  GUI_AddObjToGroup(mbox1);
+  lv_group_focus_obj(mbox1);
+}
+
+static lv_res_t Btn_About_click_action(struct _lv_obj_t *obj) {
+  lv_obj_t *closeBtn;
+
+  win = lv_win_create(lv_scr_act(), NULL);
+  lv_win_set_title(win, "About");
+  closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
+  GUI_CreateGroup();
+  GUI_AddObjToGroup(closeBtn);
+  //lv_group_focus_obj(closeBtn);
+  //lv_group_focus_freeze(GUI_GetGroup(), true); /* otherwise the items of the underlying view are still active */
+  return LV_RES_OK;
+}
+
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
 
@@ -141,6 +186,10 @@ void GUI_MainMenuCreate(void) {
   obj = lv_list_add(list1, SYMBOL_CLOSE, "NeoPixel", Btn_NeoPixel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
+  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action2);
+  GUI_AddObjToGroup(obj);
+  obj = lv_list_add(list1, SYMBOL_PLUS, "Test", NULL);
+  GUI_AddObjToGroup(obj);
 }
 
 #endif /* PL_CONFIG_HAS_GUI */

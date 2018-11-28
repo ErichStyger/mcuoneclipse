@@ -80,7 +80,7 @@ lv_obj_t * lv_arc_create(lv_obj_t * par, const lv_obj_t * copy)
         /*Set the default styles*/
         lv_theme_t * th = lv_theme_get_current();
         if(th) {
-            lv_arc_set_style(new_arc, LV_ARC_STYLE_MAIN, th->preload);
+            lv_arc_set_style(new_arc, LV_ARC_STYLE_MAIN, th->arc);
         } else {
             lv_arc_set_style(new_arc, LV_ARC_STYLE_MAIN, &lv_style_plain_color);
         }
@@ -184,16 +184,18 @@ uint16_t lv_arc_get_angle_end(lv_obj_t * arc)
  *  */
 lv_style_t * lv_arc_get_style(const lv_obj_t * arc, lv_arc_style_t type)
 {
+    lv_style_t * style = NULL;
 
     switch(type) {
         case LV_ARC_STYLE_MAIN:
-            return lv_obj_get_style(arc);
+            style = lv_obj_get_style(arc);
+            break;
         default:
-            return NULL;
+            style = NULL;
+            break;
     }
 
-    /*To avoid warning*/
-    return NULL;
+    return style;
 }
 
 /*=====================

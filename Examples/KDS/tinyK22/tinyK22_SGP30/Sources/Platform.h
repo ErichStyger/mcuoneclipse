@@ -16,13 +16,13 @@
 #define PL_CONFIG_HAS_RTC_DS3231  (0)
 #define PL_CONFIG_HAS_SPI         (1)
 #define PL_CONFIG_HAS_SSD1351     (1 && PL_CONFIG_HAS_SPI)
-#define PL_CONFIG_HAS_GUI         (0 && PL_CONFIG_HAS_SSD1351)
-#define PL_CONFIG_HAS_KEYS        (0)
-#define PL_CONFIG_HAS_GUI_KEY_NAV (0 && PL_CONFIG_HAS_GUI && PL_CONFIG_HAS_KEYS) /* GUI touchless navigation */
+#define PL_CONFIG_HAS_GUI         (1 && PL_CONFIG_HAS_SSD1351)
+#define PL_CONFIG_HAS_KEYS        (1)
+#define PL_CONFIG_HAS_GUI_KEY_NAV (1 && PL_CONFIG_HAS_GUI && PL_CONFIG_HAS_KEYS) /* GUI touchless navigation */
 #define PL_CONFIG_HAS_MMA8451     (0) /* accelerometer */
 #define PL_CONFIG_HAS_SHT31       (0) /* temperature/humidity */
 #define PL_CONFIG_HAS_SD_CARD     (0 && PL_CONFIG_HAS_SPI)
-#define PL_CONFIG_HAS_NEO_PIXEL   (1) /* WS2812B */
+#define PL_CONFIG_HAS_NEO_PIXEL   (0) /* WS2812B */
 #define PL_CONFIG_HAS_AMG8833     (0) /* thermal sensor */
 
 /* NEO Applications, only one can be active! */
