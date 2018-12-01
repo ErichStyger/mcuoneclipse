@@ -126,6 +126,31 @@ void LV_Task(void) {
   lv_task_handler();
 }
 
+/* called for push button events from Events.c */
+void LV_ButtonEvent(uint8_t keys, uint16_t eventMask) {
+  uint16_t buttonInfo;
+
+  if (keys&(1<<0)) {
+    buttonInfo = LV_BUTTON_RIGHT | eventMask;
+    RNG1_Put(buttonInfo);
+  } else if (keys&(1<<1)) {
+    buttonInfo = LV_BUTTON_CENTER | eventMask;
+    RNG1_Put(buttonInfo);
+  } else if (keys&(1<<2)) {
+    buttonInfo = LV_BUTTON_DOWN | eventMask;
+    RNG1_Put(buttonInfo);
+  } else if (keys&(1<<3)) {
+    buttonInfo = LV_BUTTON_LEFT | eventMask;
+    RNG1_Put(buttonInfo);
+  } else if (keys&(1<<4)) {
+    buttonInfo = LV_BUTTON_UP | eventMask;
+    RNG1_Put(buttonInfo);
+  } else if (keys&(1<<5)) {
+    buttonInfo = LV_BUTTON_NEXT | eventMask;
+    RNG1_Put(buttonInfo);
+  }
+}
+
 /*
  * To use a keyboard:
     USE_LV_GROUP has to be enabled in lv_conf.h
@@ -144,31 +169,95 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   if (RNG1_Get(&keyData)!=ERR_OK) {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
-  if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED)) {
-    data->key = LV_GROUP_KEY_NEXT; //LV_GROUP_KEY_NEXT;
+  if (keyData&(LV_MASK_PRESSED|LV_MASK_PRESSED_LONG)) {
     data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_RELEASED)) {
-    data->key = LV_GROUP_KEY_NEXT; //LV_GROUP_KEY_NEXT;
+  } else if (keyData&(LV_MASK_RELEASED|LV_MASK_RELEASED_LONG)) {
     data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_PRESSED_LONG)) {
+  }
+  switch(keyData&0xff) {
+  case LV_BUTTON_LEFT:
+    data->key = LV_GROUP_KEY_LEFT;
+    break;
+  case LV_BUTTON_RIGHT:
+    data->key = LV_GROUP_KEY_RIGHT;
+    break;
+  case LV_BUTTON_UP:
+    data->key = LV_GROUP_KEY_UP;
+    break;
+  case LV_BUTTON_DOWN:
+    data->key = LV_GROUP_KEY_DOWN;
+    break;
+  case LV_BUTTON_CENTER:
     data->key = LV_GROUP_KEY_ENTER;
-    data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW0|LV_MASK_RELEASED_LONG)) {
-    data->key = LV_GROUP_KEY_ENTER;
-    data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED)) {
-    data->key = LV_GROUP_KEY_PREV; //LV_GROUP_KEY_PREV;
-    data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_RELEASED)) {
-    data->key = LV_GROUP_KEY_PREV; //LV_GROUP_KEY_PREV;
-    data->state = LV_INDEV_STATE_REL;
-  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_PRESSED_LONG)) {
-    data->key = LV_GROUP_KEY_ESC;
-    data->state = LV_INDEV_STATE_PR;
-  } else if (keyData==(LV_BUTTON_SW1|LV_MASK_RELEASED_LONG)) {
-    data->key = LV_GROUP_KEY_ESC;
-    data->state = LV_INDEV_STATE_REL;
-  } else {
+    break;
+  case LV_BUTTON_NEXT:
+    data->key = LV_GROUP_KEY_NEXT;
+    break;
+  default:
+    return false; /* error case? */
+  }
+  return RNG1_NofElements()!=0;   /* return true if we have more data */
+}
+
+static bool encoder_read(lv_indev_data_t *data){
+  uint16_t keyData;
+
+  memset(data, 0, sizeof(lv_indev_data_t)); /* initialize all fields */
+  data->state = LV_INDEV_STATE_REL; /* by default, not pressed */
+  if (RNG1_NofElements()==0) {
+    return false; /* no data present */
+  }
+  if (RNG1_Get(&keyData)!=ERR_OK) {
+    return false; /* we had data in the buffer, but now not anymore? something went wrong! */
+  }
+  data->state = LV_INDEV_STATE_REL;
+  switch(keyData&0xff) {
+  case LV_BUTTON_LEFT:
+    data->enc_diff = -1;
+    break;
+  case LV_BUTTON_RIGHT:
+    data->enc_diff = 1;
+    break;
+  case LV_BUTTON_UP:
+    data->enc_diff = 1;
+    break;
+  case LV_BUTTON_DOWN:
+    data->enc_diff = -1;
+    break;
+  case LV_BUTTON_CENTER:
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->state = LV_INDEV_STATE_REL;
+      data->enc_diff = 1;
+    } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+      data->state = LV_INDEV_STATE_PR;
+      data->enc_diff = 0;
+    } else {
+      data->state = LV_INDEV_STATE_REL;
+      data->enc_diff = 0;
+    }
+    break;
+  case LV_BUTTON_NEXT:
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->state = LV_INDEV_STATE_REL;
+      data->enc_diff = 1;
+    } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+      data->state = LV_INDEV_STATE_PR;
+      data->enc_diff = 0;
+    } else {
+      data->state = LV_INDEV_STATE_REL;
+      data->enc_diff = 0;
+    }
+    break;
+  case LV_BUTTON_PREV:
+    if (keyData&(LV_MASK_PRESSED_LONG)) {
+      data->state = LV_INDEV_STATE_PR;
+      data->enc_diff = 0;
+    } else {
+      data->state = LV_INDEV_STATE_REL;
+      data->enc_diff = -1;
+    }
+    break;
+  default:
     return false; /* error case? */
   }
   return RNG1_NofElements()!=0;   /* return true if we have more data */
@@ -201,6 +290,9 @@ void LV_Init(void) {
 #if 0 /* touch pad */
   indev_drv.type = LV_INDEV_TYPE_POINTER;         /*The touchpad is pointer type device*/
   indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
+#elif 1
+  indev_drv.type = LV_INDEV_TYPE_ENCODER;
+  indev_drv.read = encoder_read;
 #else /* keyboard input */
   indev_drv.type = LV_INDEV_TYPE_KEYPAD;
   indev_drv.read = keyboard_read;

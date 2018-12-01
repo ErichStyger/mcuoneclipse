@@ -10,6 +10,7 @@
 #include "gui.h"
 #include "lvgl/lvgl.h" /* interface to GUI library */
 #include "lv.h"
+#include "UTIL1.h"
 #if PL_CONFIG_HAS_MMA8451
   #include "gui_accel.h"
 #endif
@@ -103,58 +104,72 @@ static lv_res_t Btn_NeoPixel_click_action(struct _lv_obj_t *obj) {
 
 
 static lv_obj_t *win;
-
-static lv_res_t win_close_action(lv_obj_t *btn) {
- // lv_group_focus_freeze(GUI_GetGroup(), false);
-  lv_obj_del(win);
-  win = NULL;
-  return LV_RES_INV;
-}
+static lv_obj_t *mbox1;
 
 /*Called when a button is clicked*/
-static lv_res_t mbox_apply_action(lv_obj_t * mbox, const char * txt)
-{
+static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char * txt) {
     //printf("Mbox button: %s\n", txt);
-    return LV_RES_OK; /*Return OK if the message box is not deleted*/
+  if (txt!=NULL) {
+    if (UTIL1_strcmp(txt, "Apply")==0) {
+      return LV_RES_OK; /* keep message box */
+    } else if (UTIL1_strcmp(txt, "Close")==0) {
+      GUI_GroupPull();
+      lv_obj_del(mbox1);
+      mbox1 = NULL;
+      return LV_RES_INV; /* delete message box */
+    }
+  }
+  return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
-static lv_res_t Btn_About_click_action2(struct _lv_obj_t *obj) {
+static lv_res_t Btn_About_click_action(struct _lv_obj_t *obj) {
   /* create message box: */
-  lv_obj_t * mbox1 = lv_mbox_create(lv_scr_act(), NULL);
+  mbox1 = lv_mbox_create(lv_scr_act(), NULL);
   /* set message box text: */
-  lv_mbox_set_text(mbox1, "Default message box\n" "with buttons");                    /*Set the text*/
+  lv_mbox_set_text(mbox1, "About");                    /*Set the text*/
   /*Add two buttons*/
   static const char *btns[] ={"\221Apply", "\221Close", ""}; /*Button description. '\221' lv_btnm like control char*/
   lv_mbox_add_btns(mbox1, btns, mbox_apply_action);
   lv_obj_set_width(mbox1, 120);
   lv_obj_align(mbox1, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 70); /*Align to the corner*/
-  GUI_CreateGroup();
+  GUI_GroupPush();
   GUI_AddObjToGroup(mbox1);
   lv_group_focus_obj(mbox1);
 }
 
-static lv_res_t Btn_About_click_action(struct _lv_obj_t *obj) {
-  lv_obj_t *closeBtn;
+static lv_res_t btn_click_action(lv_obj_t * btn) {
+    uint8_t id = lv_obj_get_free_num(btn);
 
-  win = lv_win_create(lv_scr_act(), NULL);
-  lv_win_set_title(win, "About");
-  closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
-  GUI_CreateGroup();
-  GUI_AddObjToGroup(closeBtn);
-  //lv_group_focus_obj(closeBtn);
-  //lv_group_focus_freeze(GUI_GetGroup(), true); /* otherwise the items of the underlying view are still active */
-  return LV_RES_OK;
+   // printf("Button %d is released\n", id);
+    return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
 
+  GUI_GroupPush();
   /* create window */
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
 
   /* Make the window content responsive */
   lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
+
+  /*Create a normal button*/
+  lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);
+  lv_obj_set_pos(btn1, 2, 25);
+//  lv_cont_set_fit(btn1, true, true); /*Enable resizing horizontally and vertically*/
+//  lv_obj_align(btn1, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+  lv_obj_t *label = lv_label_create(btn1, NULL);
+  lv_label_set_text(label, "Test");
+
+  lv_obj_set_free_num(btn1, 1);   /*Set a unique number for the button*/
+  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, btn_click_action);
+
+  /*Add a label to the button*/
+ // label = lv_label_create(btn1, NULL);
+  //lv_label_set_text(label, "Normal");
+  GUI_AddObjToGroup(btn1);
 
   /* create list of objects */
   lv_obj_t *list1;
@@ -186,7 +201,7 @@ void GUI_MainMenuCreate(void) {
   obj = lv_list_add(list1, SYMBOL_CLOSE, "NeoPixel", Btn_NeoPixel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
-  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action2);
+  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action);
   GUI_AddObjToGroup(obj);
   obj = lv_list_add(list1, SYMBOL_PLUS, "Test", NULL);
   GUI_AddObjToGroup(obj);

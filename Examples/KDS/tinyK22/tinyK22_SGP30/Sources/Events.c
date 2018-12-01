@@ -176,17 +176,8 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 */
 void KEY1_OnKeyPressed(uint8_t keys)
 {
-  uint16_t buttonInfo;
-
-  if (keys&1) {
-    buttonInfo = LV_BUTTON_SW0 | LV_MASK_PRESSED;
-    RNG1_Put(buttonInfo);
-  } else if (keys&2) {
-    buttonInfo = LV_BUTTON_SW1 | LV_MASK_PRESSED;
-    RNG1_Put(buttonInfo);
-  }
+  LV_ButtonEvent(keys, LV_MASK_PRESSED);
 }
-
 /*
 ** ===================================================================
 **     Description :
@@ -200,15 +191,7 @@ void KEY1_OnKeyPressed(uint8_t keys)
 */
 void KEY1_OnKeyReleased(uint8_t keys)
 {
-  uint16_t buttonInfo;
-
-  if (keys&1) {
-    buttonInfo = LV_BUTTON_SW0 | LV_MASK_RELEASED;
-    RNG1_Put(buttonInfo);
-  } else if (keys&2) {
-    buttonInfo = LV_BUTTON_SW1 | LV_MASK_RELEASED;
-    RNG1_Put(buttonInfo);
-  }
+  LV_ButtonEvent(keys, LV_MASK_RELEASED);
 }
 
 /*
@@ -225,15 +208,7 @@ void KEY1_OnKeyReleased(uint8_t keys)
 */
 void KEY1_OnKeyPressedLong(uint8_t keys)
 {
-  uint16_t buttonInfo;
-
-  if (keys&1) {
-    buttonInfo = LV_BUTTON_SW0 | LV_MASK_PRESSED_LONG;
-    RNG1_Put(buttonInfo);
-  } else if (keys&2) {
-    buttonInfo = LV_BUTTON_SW1 | LV_MASK_PRESSED_LONG;
-    RNG1_Put(buttonInfo);
-  }
+  LV_ButtonEvent(keys, LV_MASK_PRESSED_LONG);
 }
 
 /*
@@ -250,15 +225,7 @@ void KEY1_OnKeyPressedLong(uint8_t keys)
 */
 void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
-  uint16_t buttonInfo;
-
-  if (keys&1) {
-    buttonInfo = LV_BUTTON_SW0 | LV_MASK_RELEASED_LONG;
-    RNG1_Put(buttonInfo);
-  } else if (keys&2) {
-    buttonInfo = LV_BUTTON_SW1 | LV_MASK_RELEASED_LONG;
-    RNG1_Put(buttonInfo);
-  }
+  LV_ButtonEvent(keys, LV_MASK_RELEASED_LONG);
 }
 
 /*

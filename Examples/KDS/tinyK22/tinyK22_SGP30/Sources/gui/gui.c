@@ -19,7 +19,13 @@
 #include "gui_mainmenu.h"
 
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-static lv_group_t *gui_group; /* group for touchless navigation */
+#define GUI_GROUP_NOF_IN_STACK   4
+typedef struct {
+  lv_group_t *stack[GUI_GROUP_NOF_IN_STACK]; /* stack of GUI groups */
+  uint8_t sp; /* stack pointer, points to next free element */
+} GUI_Group_t;
+
+static GUI_Group_t groups;
 
 /* style modification callback for the focus of an element */
 static void style_mod_cb(lv_style_t *style) {
@@ -43,31 +49,42 @@ static void style_mod_cb(lv_style_t *style) {
 #endif
 }
 
-void GUI_DeleteGroup(void) {
-  lv_group_del(gui_group);
-  gui_group = NULL;
+void GUI_AddObjToGroup(lv_obj_t *obj) {
+  lv_group_add_obj(GUI_GroupPeek(), obj);
 }
 
-void GUI_CreateGroup(void) {
-  if (gui_group!=NULL) {
-    GUI_DeleteGroup();
+void GUI_RemoveObjFromGroup_(lv_obj_t *obj) {
+  lv_group_remove_obj(obj);
+}
+
+lv_group_t *GUI_GroupPeek(void) {
+  if (groups.sp == 0) {
+    return NULL;
   }
-  gui_group = lv_group_create(); /* create group for touchless navigation */
+  return groups.stack[groups.sp-1];
+}
+
+void GUI_GroupPull(void) {
+  if (groups.sp == 0) {
+    return;
+  }
+  lv_group_del(groups.stack[groups.sp-1]);
+  groups.sp--;
+  lv_indev_set_group(LV_GetInputDevice(), groups.stack[groups.sp-1]); /* assign group to input device */
+}
+
+void GUI_GroupPush(void) {
+  lv_group_t *gui_group;
+
+  if (groups.sp >= GUI_GROUP_NOF_IN_STACK) {
+    return;
+  }
+  gui_group = lv_group_create();
   lv_indev_set_group(LV_GetInputDevice(), gui_group); /* assign group to input device */
   /* change the default focus style which is an orangish thing */
   lv_group_set_style_mod_cb(gui_group, style_mod_cb);
-}
-
-lv_group_t *GUI_GetGroup(void) {
-  return gui_group;
-}
-
-void GUI_AddObjToGroup(lv_obj_t * obj) {
-  lv_group_add_obj(gui_group, obj);
-}
-
-void GUI_RemoveObjFromGroup(lv_obj_t * obj) {
-  lv_group_remove_obj(obj);
+  groups.stack[groups.sp] = gui_group;
+  groups.sp++;
 }
 
 #endif /* PL_CONFIG_HAS_GUI_KEY_NAV */
@@ -81,7 +98,7 @@ static void GuiTask(void *p) {
 //  GDisp1_UpdateFull();
 
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-  GUI_CreateGroup();
+  //GUI_CreateGroup();
 #endif
   GUI_MainMenuCreate();
 	for(;;) {
@@ -112,5 +129,8 @@ void GUI_Init(void) {
   if (xTaskCreate(GuiTask, "Gui", 1700/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
+#if PL_CONFIG_HAS_GUI_KEY_NAV
+  groups.sp = 0;
+#endif
 }
 #endif /* PL_CONFIG_HAS_GUI */
