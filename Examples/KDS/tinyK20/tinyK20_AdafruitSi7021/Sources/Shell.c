@@ -8,10 +8,12 @@
 #include "Platform.h"
 #include "Shell.h"
 #include "CLS1.h"
+#include "Si7021.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+  SI7021_ParseCommand,
   NULL /* sentinel */
 };
 

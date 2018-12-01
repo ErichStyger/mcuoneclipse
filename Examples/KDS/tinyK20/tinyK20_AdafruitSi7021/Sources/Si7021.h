@@ -9,6 +9,10 @@
 #define SOURCES_SI7021_H_
 
 #include <stdint.h>
+#include "CLS1.h"
+
+uint8_t SI7021_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
+
 
 uint8_t SI7021_ReadTemperatureHold(float *temperature);
 

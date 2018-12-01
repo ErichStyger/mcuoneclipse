@@ -43,11 +43,17 @@
 #include "MCUC1.h"
 #include "TGT_SWD_OE.h"
 #include "BitIoLdd2.h"
-#include "CI2C1.h"
+#include "I2C1.h"
+#include "SDA1.h"
+#include "BitIoLdd3.h"
+#include "SCL1.h"
+#include "BitIoLdd4.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "CLS1.h"
 #include "XF1.h"
+#include "RTT1.h"
+#include "PTC.h"
 #include "GI2C1.h"
 
 #ifdef __cplusplus

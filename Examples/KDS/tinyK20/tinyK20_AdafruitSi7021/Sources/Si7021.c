@@ -9,6 +9,7 @@
 #include "Si7021.h"
 #include "GI2C1.h"
 #include "WAIT1.h"
+#include "UTIL1.h"
 
 #define SI7021_DEFAULT_ADDRESS  0x40
 
@@ -143,12 +144,103 @@ uint8_t SI7021_GetFirmware(uint8_t *fw) {
   return ERR_OK;
 }
 
-
 uint8_t SI7021_Reset(void) {
   uint8_t res;
 
   res = GI2C1_WriteByte(SI7021_DEFAULT_ADDRESS, SI7021_RESET_CMD);
   WAIT1_WaitOSms(50);
+  return ERR_OK;
+}
+
+static uint8_t SI7021_PrintStatus(CLS1_ConstStdIOType *io) {
+  uint8_t res, fw, buf[48];
+  uint32_t sna, snb;
+  SI7021_DeviceID id;
+  float f, h;
+
+  CLS1_SendStatusStr((const unsigned char*)"SI7021", (const unsigned char*)"\r\n", io->stdOut);
+  res = SI7021_GetSerialBytes(&sna, &snb);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNum32Hex(buf, sizeof(buf), sna);
+    UTIL1_strcatNum32Hex(buf, sizeof(buf), snb);
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  S/N", buf, io->stdOut);
+
+  res = SI7021_GetFirmware(&fw);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    if (fw==0xff) {
+      UTIL1_strcat(buf, sizeof(buf), "V1.0\r\n");
+    } else if (fw==0x20) {
+      UTIL1_strcat(buf, sizeof(buf), "V2.0\r\n");
+    } else {
+      UTIL1_strcat(buf, sizeof(buf), "????\r\n");
+   }
+   } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Firmware", buf, io->stdOut);
+
+  res = SI7021_GetDeviceID(&id);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    switch(id) {
+      case SI7021_DEVICE_IDE_SI7013:
+        UTIL1_strcat(buf, sizeof(buf), "SI7013\r\n");
+        break;
+      case SI7021_DEVICE_IDE_SI7020:
+        UTIL1_strcat(buf, sizeof(buf), "SI7020\r\n");
+        break;
+      case SI7021_DEVICE_IDE_SI7021:
+        UTIL1_strcat(buf, sizeof(buf), "SI7021\r\n");
+       break;
+      case SI7021_DEVICE_ID_ENGINEERING_SAMPLE:
+        UTIL1_strcat(buf, sizeof(buf), "Engineering Sample\r\n");
+        break;
+      default:
+        break;
+    }
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Device ID", buf, io->stdOut);
+
+  res = SI7021_ReadTemperatureHold(&f);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNumFloat(buf, sizeof(buf), f, 2);
+    UTIL1_strcat(buf, sizeof(buf), "°C\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Temperature", buf, io->stdOut);
+
+  res = SI7021_ReadHumidityHold(&f);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNumFloat(buf, sizeof(buf), f, 2);
+    UTIL1_strcat(buf, sizeof(buf), "%\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Humidity", buf, io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t SI7021_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "SI7021 help")==0) {
+    CLS1_SendHelpStr((unsigned char*)"SI7021", (const unsigned char*)"Group of CLS1 commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "SI7021 status")==0) {
+    *handled = TRUE;
+    return SI7021_PrintStatus(io);
+  }
   return ERR_OK;
 }
 

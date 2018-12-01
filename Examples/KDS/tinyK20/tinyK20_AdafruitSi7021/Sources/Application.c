@@ -23,7 +23,7 @@ void APP_Run(void) {
   /* initialization */
   SI7021_Init();
   SHELL_Init();
-
+#if 1
   res = SI7021_GetSerialBytes(&sna, &snb);
   if (res!=ERR_OK) {
     CLS1_SendStr("Failed SI7021_GetSerialBytes().\r\n", CLS1_GetStdio()->stdErr);
@@ -49,6 +49,7 @@ void APP_Run(void) {
     CLS1_SendStr("Failed SI7021_ReadHumidity().\r\n", CLS1_GetStdio()->stdErr);
     for(;;){}
   }
+#endif
   for(;;) {
     LED1_Neg();
     SHELL_Parse();
