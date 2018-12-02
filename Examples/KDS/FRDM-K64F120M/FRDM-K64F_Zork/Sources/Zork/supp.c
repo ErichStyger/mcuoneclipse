@@ -37,7 +37,23 @@ void exit_()
 }
 
 /* Get time in hours, minutes and seconds */
+#if 1
+#include "TmDt1.h"
 
+void itime_(hrptr, minptr, secptr)
+integer *hrptr;
+integer *minptr;
+integer *secptr;
+{
+	TIMEREC time;
+
+	TmDt1_GetTime(&time);
+	*hrptr = time.Hour;
+	*minptr = time.Min;
+	*secptr = time.Sec;
+}
+
+#else
 void itime_(hrptr, minptr, secptr)
 integer *hrptr;
 integer *minptr;
@@ -53,6 +69,7 @@ integer *secptr;
 	*minptr = tmptr->tm_min;
 	*secptr = tmptr->tm_sec;
 }
+#endif
 /* Random number generator */
 
 integer rnd_(maxval)

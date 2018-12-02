@@ -60,6 +60,7 @@
 #include "TI1.h"
 #include "TimerIntLdd1.h"
 #include "TU1.h"
+#include "FRTOS1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -68,8 +69,10 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Zork/zork_config.h"
+#include "Shell.h"
+#include "Zork.h"
 
+extern void initialise_monitor_handles(void); /* prototype */
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -81,7 +84,11 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  zork_config();
+  //printf("hello world!\r\n");
+  //initialise_monitor_handles(); /* initialize handles */
+  ZORK_Init();
+  SHELL_Init();
+  vTaskStartScheduler();
   /* For example: for(;;) { } */
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

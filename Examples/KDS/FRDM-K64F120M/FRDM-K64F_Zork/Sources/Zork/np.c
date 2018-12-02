@@ -15,31 +15,6 @@ extern int system P((const char *));
 
 static logical lex_ P((char *, integer *, integer *, logical));
 
-#if USE_CONSOLE
-
-char *CLS1_fgets(char *buf, int bufSize, void *channel) {
-  bool foundLine;
-  size_t len;
-
-  *buf = '\0';
-  for(;;) {
-    len = UTIL1_strlen((const char*)buf);
-    foundLine = CLS1_ReadLine(buf, buf+len, bufSize-len, CLS1_GetStdio());
-    if (foundLine) {
-      len = UTIL1_strlen((const char*)buf); /* length of buffer string */
-      if (len==1 && (buf[0]=='\n' || buf[0]=='\r')) { /* eat preceding newline characters */
-        buf[0] = '\0';
-      } else if (buf[len-1]=='\n' || buf[len-1]=='\r') { /* line end: parse command */
-        buf[len-1] = '\n'; /* it expects \n */
-        return buf;
-      }
-    }
-  }
-  return NULL; /* failed */
-}
-
-#endif
-
 void rdline_(buffer, who)
 char *buffer;
 integer who;
