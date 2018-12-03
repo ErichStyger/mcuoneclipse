@@ -63,9 +63,9 @@
 
 /* MODULE Cpu. */
 
+#include <Sources/Events.h>
 #include "FreeRTOS.h" /* FreeRTOS interface */
 #include "Cpu.h"
-#include "Events.h"
 #include "Init_Config.h"
 
 #ifdef __cplusplus

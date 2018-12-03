@@ -6,11 +6,11 @@
  */
 
 #include <stdio.h>
-#include "Zork.h"
+#include <Sources/Shell.h>
+#include <Sources/Zork/zork_config.h>
+#include <Sources/Zork.h>
 #include "FRTOS1.h"
-#include "Shell.h"
 #include "UTIL1.h"
-#include "Zork/zork_config.h"
 
 TaskHandle_t ZorkTaskHandle = NULL;
 

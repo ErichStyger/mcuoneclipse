@@ -86,7 +86,7 @@
 
 /* MODULE TI1. */
 
-#include "Events.h"
+#include <Sources/Events.h>
 #include "TI1.h"
 
 #ifdef __cplusplus

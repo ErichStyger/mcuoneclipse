@@ -48,13 +48,13 @@
 */         
 
 /* MODULE CPU_Init.c */
+#include <Sources/Events.h>
 #include "PE_Types.h"
 #include "MK64F12.h"
 #include "Init_Config.h"
 #include "Peripherals_Init.h"
 #include "CPU_Init.h"
 #include "Vectors_Config.h"
-#include "Events.h"
 
 #ifdef __cplusplus
 extern "C" {

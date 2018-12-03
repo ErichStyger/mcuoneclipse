@@ -48,6 +48,7 @@
 
 /* MODULE Vectors_Config.h */
   
+#include <Sources/Events.h>
 #include "Cpu.h"
 #include "Pins1.h"
 #include "LED1.h"
@@ -80,7 +81,6 @@
 #include "TimerIntLdd1.h"
 #include "TU1.h"
 #include "FRTOS1.h"
-#include "Events.h"
 
 #ifdef __cplusplus
 extern "C" {
