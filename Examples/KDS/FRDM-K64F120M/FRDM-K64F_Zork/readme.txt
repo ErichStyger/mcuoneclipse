@@ -1,9 +1,8 @@
 readme.txt
 ----------
+See https://mcuoneclipse.com/2018/12/02/playing-zork-with-freertos-on-arm-in-three-different-ways/
 
-Adopted from
-readme.txt
-----------
+Background:
 https://hackaday.com/2018/11/08/put-an-itsybitsy-zork-in-your-pocket/
 https://github.com/devshane/zork
 

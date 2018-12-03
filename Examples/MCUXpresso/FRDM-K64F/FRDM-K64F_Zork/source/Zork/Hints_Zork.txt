@@ -1,0 +1,38 @@
+zork
+----
+- Note: Robot only (needs >128 KByte of Flash and >64 KByte of RAM)
+- Add Zork folder to Sources/Zork
+  - add include path to the compiler includes settings: ../Sources/Zork
+- FreeRTOS component: enable 'use User memory section' ==> Memory in second bank
+- Memory size is wrong in PEx: we have 128 KByte :-)
+  a) In the CPU component, Build Options, disabe generation of linker file
+  b) extend the two 32KByte RAM blocks to 64 KByte in the linker file (Project Settings > Linker_Files)
+  m_data      (RW) : ORIGIN = 0x1fff0000, LENGTH = 0x10000
+  m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x10000
+  c) additionally, change the heap size to
+  __heap_size = 0x5000;   
+
+- semihosting:
+   a) In the linker setting for the project (Cross ARM C++ Linker > Miscellaneous),
+   replace '-specs=nosys.specs' with '-specs=rdimon.specs'
+   b) In the launch configuration, enable Semihosting (launch configuration, Startup Tab)
+   See: https://mcuoneclipse.com/2015/05/27/semihosting-for-kinetis-design-studio-v3-0-0-and-gnu-arm-embedded-launchpad/
+
+- init and start the game:
+  zork_config(); /* initializes the game */
+  run_zork_game(); /* run the game, does not return while it is running */
+
+  
+Hints:
+  - dedicated task to run Zork?
+  - add a new PL_CONFIG macro for the feature
+  - Shell command to start the game
+  - suspend/resume tasks?
+  - overwrite/replace _exit(): the game exits that way. Think about what task is doing the _exit, and how you can gracefully exit.
+
+ 
+ NOTE:
+ Instead of using semihosting, it is possible to use and load the game data from FLASH.
+ In that case, the data is stored in the file 'dtextc.c'.
+ To use the FLASH based data/file, enable USE_FLASH_FILE.
+ Keep in mind that currently the save/restore game commands are not implemented if loading data from FLASH. 
