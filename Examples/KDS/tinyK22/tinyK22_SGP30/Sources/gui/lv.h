@@ -22,8 +22,8 @@
 #define LV_BUTTON_LEFT    (3)
 #define LV_BUTTON_RIGHT   (4)
 #define LV_BUTTON_CENTER  (5)
-#define LV_BUTTON_NEXT    (6)
-#define LV_BUTTON_PREV    (7)
+//#define LV_BUTTON_NEXT    (6)
+//#define LV_BUTTON_PREV    (7)
 
 lv_indev_t *LV_GetInputDevice(void);
 

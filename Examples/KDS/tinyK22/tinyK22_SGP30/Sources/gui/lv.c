@@ -145,9 +145,9 @@ void LV_ButtonEvent(uint8_t keys, uint16_t eventMask) {
   } else if (keys&(1<<4)) {
     buttonInfo = LV_BUTTON_UP | eventMask;
     RNG1_Put(buttonInfo);
-  } else if (keys&(1<<5)) {
-    buttonInfo = LV_BUTTON_NEXT | eventMask;
-    RNG1_Put(buttonInfo);
+ // } else if (keys&(1<<5)) {
+ //   buttonInfo = LV_BUTTON_NEXT | eventMask;
+ //   RNG1_Put(buttonInfo);
   }
 }
 
@@ -190,9 +190,9 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   case LV_BUTTON_CENTER:
     data->key = LV_GROUP_KEY_ENTER;
     break;
-  case LV_BUTTON_NEXT:
-    data->key = LV_GROUP_KEY_NEXT;
-    break;
+ // case LV_BUTTON_NEXT:
+ //   data->key = LV_GROUP_KEY_NEXT;
+ //   break;
   default:
     return false; /* error case? */
   }
@@ -236,6 +236,7 @@ static bool encoder_read(lv_indev_data_t *data){
       data->enc_diff = 0;
     }
     break;
+#if 0
   case LV_BUTTON_NEXT:
     if (keyData&(LV_MASK_PRESSED)) {
       data->state = LV_INDEV_STATE_REL;
@@ -257,6 +258,7 @@ static bool encoder_read(lv_indev_data_t *data){
       data->enc_diff = -1;
     }
     break;
+#endif
   default:
     return false; /* error case? */
   }
