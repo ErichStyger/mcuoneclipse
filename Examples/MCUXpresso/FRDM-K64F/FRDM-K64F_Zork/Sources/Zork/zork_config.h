@@ -39,9 +39,15 @@
    */
   #define BINREAD "rb"
   #define BINWRITE "wb"
-  /* using relative path inside the project to load and store files: */
+#if 0
+  /* Kinetis Design Studio IDE: using relative path inside the project to load and store files: */
   #define TEXTFILE ".\\Sources\\Zork\\dtextc.dat"
   #define SAVEFILE ".\\Sources\\Zork\\dsave.dat"
+#else
+  /* MCUXpresso IDE: using absolute path to the files inside the project: */
+  #define TEXTFILE "P:\\MCUXpresso\\FRDM-K64F\\FRDM-K64F_Zork\\Sources\\Zork\\dtextc.dat"
+  #define SAVEFILE "P:\\MCUXpresso\\FRDM-K64F\\FRDM-K64F_Zork\\Sources\\Zork\\dsave.dat"
+#endif
 #elif USE_FLASH_FILE
   #define TEXTFILE "dtextc.dat"
   #define SAVEFILE "dsave.dat"

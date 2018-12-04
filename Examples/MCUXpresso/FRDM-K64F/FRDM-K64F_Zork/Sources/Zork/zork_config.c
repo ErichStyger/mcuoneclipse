@@ -22,6 +22,18 @@
 /* saving is done in dverb2.c */
 /* note: some output code is in supp.c */
 
+char *GetDataDirectory(void) {
+	/* return the directory for the data file */
+#if USE_FATFS
+	return ".//";
+#else
+	const char *thisSourceFile = __FILE__;
+	//UTIL1_strcat
+
+	return NULL;
+#endif
+}
+
 #if USE_CONSOLE
 char *CLS1_fgets(char *buf, int bufSize, void *channel) {
   bool foundLine;

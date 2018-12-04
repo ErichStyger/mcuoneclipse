@@ -78,7 +78,7 @@ static int test(void) {
 	  FILE *file = NULL;
 
 //	  file = fopen ("c:\\tmp\\test.txt", "w");
-	  file = fopen (".\\test.txt", "w");
+	  file = fopen ("test.txt", "w"); /* note: for MCUXPresso IDE it the semihosting current directory is the one of the IDE, e.g. C:\nxp\MCUXpressoIDE_10.2.1_795\ide */
 	  if (file!=NULL) {
 	    fputs("hello world with file I/O\r\n", file);
 	    (void)fwrite("hello\r\n", sizeof("hello\r\n")-1, 1, file);
