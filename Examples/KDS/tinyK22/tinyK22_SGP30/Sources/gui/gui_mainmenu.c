@@ -102,7 +102,6 @@ static lv_res_t Btn_NeoPixel_click_action(struct _lv_obj_t *obj) {
 }
 #endif
 
-
 static lv_obj_t *win;
 static lv_obj_t *mbox1;
 
@@ -155,6 +154,7 @@ void GUI_MainMenuCreate(void) {
   /* Make the window content responsive */
   lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
 
+#if 0
   /*Create a normal button*/
   lv_obj_t * btn1 = lv_btn_create(lv_scr_act(), NULL);
   lv_obj_set_pos(btn1, 2, 25);
@@ -162,7 +162,6 @@ void GUI_MainMenuCreate(void) {
 //  lv_obj_align(btn1, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   lv_obj_t *label = lv_label_create(btn1, NULL);
   lv_label_set_text(label, "Test");
-
   lv_obj_set_free_num(btn1, 1);   /*Set a unique number for the button*/
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, btn_click_action);
 
@@ -170,6 +169,7 @@ void GUI_MainMenuCreate(void) {
  // label = lv_label_create(btn1, NULL);
   //lv_label_set_text(label, "Normal");
   GUI_AddObjToGroup(btn1);
+#endif
 
   /* create list of objects */
   lv_obj_t *list1;
@@ -177,6 +177,9 @@ void GUI_MainMenuCreate(void) {
 
   list1 = lv_list_create(gui_win, NULL);
   /*Add list elements*/
+
+//  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action);
+//  GUI_AddObjToGroup(obj);
 #if PL_CONFIG_HAS_MMA8451
   obj = lv_list_add(list1, SYMBOL_FILE, "Accel", Btn_Accel_click_action);
   GUI_AddObjToGroup(obj);
@@ -201,10 +204,7 @@ void GUI_MainMenuCreate(void) {
   obj = lv_list_add(list1, SYMBOL_CLOSE, "NeoPixel", Btn_NeoPixel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
-  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action);
-  GUI_AddObjToGroup(obj);
-  obj = lv_list_add(list1, SYMBOL_PLUS, "Test", NULL);
-  GUI_AddObjToGroup(obj);
+  lv_obj_set_size(list1, 64, 100); /* fixed size */
 }
 
 #endif /* PL_CONFIG_HAS_GUI */

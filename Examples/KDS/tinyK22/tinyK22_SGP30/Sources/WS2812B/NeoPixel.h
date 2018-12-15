@@ -60,6 +60,9 @@ uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, NEO_Color *colo
 uint8_t NEO_OrPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color);
 uint8_t NEO_XorPixelColor(NEO_PixelIdxT x, NEO_PixelIdxT y, NEO_Color color);
 
+/* Set the color value scaled from 0..255 of the actual values */
+NEO_Color NEO_SetColorValueScale(NEO_Color color, uint8_t value);
+
 /* Set the color percent to 0..100% of the actual values */
 NEO_Color NEO_SetColorPercent(NEO_Color color, uint8_t percent);
 

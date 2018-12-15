@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_Remote</Name>
     <SavedBy>Erich Styger</SavedBy>
-    <ModificationStamp>57</ModificationStamp>
+    <ModificationStamp>59</ModificationStamp>
     <Date>2016-03-25</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>253</ProjectCompNumb>
+    <ProjectCompNumb>261</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -5735,8 +5735,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SeggerSystemViewer</ItemSymbol>
@@ -14580,7 +14580,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.060</BeanVersion>
+    <BeanVersion>01.061</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14664,6 +14664,22 @@
         <Value>false</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>EventsGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>QueueEventsEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>RTTChannelGroup</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -14723,7 +14739,7 @@
     <Methods>
       <ItemState>
         <ItemSymbol>OnUserStart</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -14734,7 +14750,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>OnUserStop</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -14899,7 +14915,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -15157,7 +15173,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.158</BeanVersion>
+    <BeanVersion>01.159</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

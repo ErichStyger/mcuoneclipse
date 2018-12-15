@@ -24,8 +24,8 @@ static lv_task_t *refr_task;
  * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
 static lv_res_t win_close_action(lv_obj_t *btn) {
-  lv_group_focus_freeze(GUI_GetGroup(), false);
-  lv_obj_del(win);
+  GUI_GroupPull();
+ lv_obj_del(win);
   win = NULL;
   lv_task_del(refr_task);
   refr_task = NULL;
@@ -60,9 +60,10 @@ void GUI_CLOCK_Create(void) {
     win = lv_win_create(lv_scr_act(), NULL);
     lv_win_set_title(win, "Clock");
     closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
+    GUI_GroupPush();
     GUI_AddObjToGroup(closeBtn);
     lv_group_focus_obj(closeBtn);
-    lv_group_focus_freeze(GUI_GetGroup(), true); /* otherwise the items of the underlying view are still active */
+
     /* Make the window content responsive */
    // lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 

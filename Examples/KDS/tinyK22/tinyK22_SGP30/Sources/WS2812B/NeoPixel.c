@@ -50,7 +50,10 @@ static const uint8_t gamma8[] = {
 };
 
 uint8_t NEO_GammaCorrect8(uint8_t color) {
-  return gamma8[color];
+  if (color<sizeof(gamma8)) {
+    return gamma8[color];
+  }
+  return 0; /* error case */
 }
 
 uint32_t NEO_GammaCorrect24(uint32_t rgb) {
@@ -236,6 +239,20 @@ GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t
   blue = ((uint32_t)blue*percent)/100;
   rgbColor = (red<<16)|(green<<8)|blue;
   return rgbColor;
+}
+
+/* Set the color value scaled from 0..255 of the actual values */
+NEO_Color NEO_SetColorValueScale(NEO_Color color, uint8_t value) {
+  uint8_t red, green, blue;
+
+  red = (color>>16)&0xff;
+  green = (color>>8)&0xff;
+  blue = color&0xff;
+  red = ((uint32_t)red*value)/255;
+  green = ((uint32_t)green*value)/255;
+  blue = ((uint32_t)blue*value)/255;
+  color = (red<<16)|(green<<8)|blue;
+  return color;
 }
 
 /* Set the color percent to 0..100% of the actual values */

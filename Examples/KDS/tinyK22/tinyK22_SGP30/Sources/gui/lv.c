@@ -11,6 +11,7 @@
 #include "GDisp1.h"
 #include "RNG1.h"
 #include <string.h> /* for memset() */
+#include "CLS1.h"
 
 static lv_indev_t *inputDevicePtr;
 
@@ -131,24 +132,21 @@ void LV_ButtonEvent(uint8_t keys, uint16_t eventMask) {
   uint16_t buttonInfo;
 
   if (keys&(1<<0)) {
-    buttonInfo = LV_BUTTON_RIGHT | eventMask;
+    buttonInfo = LV_BUTTON_CENTER | eventMask;
     RNG1_Put(buttonInfo);
   } else if (keys&(1<<1)) {
-    buttonInfo = LV_BUTTON_CENTER | eventMask;
+    buttonInfo = LV_BUTTON_RIGHT | eventMask;
     RNG1_Put(buttonInfo);
   } else if (keys&(1<<2)) {
     buttonInfo = LV_BUTTON_DOWN | eventMask;
     RNG1_Put(buttonInfo);
   } else if (keys&(1<<3)) {
-    buttonInfo = LV_BUTTON_LEFT | eventMask;
-    RNG1_Put(buttonInfo);
-  } else if (keys&(1<<4)) {
     buttonInfo = LV_BUTTON_UP | eventMask;
     RNG1_Put(buttonInfo);
- // } else if (keys&(1<<5)) {
- //   buttonInfo = LV_BUTTON_NEXT | eventMask;
- //   RNG1_Put(buttonInfo);
-  }
+  } else if (keys&(1<<4)) {
+    buttonInfo = LV_BUTTON_LEFT | eventMask;
+    RNG1_Put(buttonInfo);
+   }
 }
 
 /*
@@ -213,27 +211,54 @@ static bool encoder_read(lv_indev_data_t *data){
   data->state = LV_INDEV_STATE_REL;
   switch(keyData&0xff) {
   case LV_BUTTON_LEFT:
-    data->enc_diff = -1;
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->enc_diff = -1;
+      CLS1_SendStr("left pressed\r\n", CLS1_GetStdio()->stdOut);
+    } else {
+      data->enc_diff = 0;
+      CLS1_SendStr("left released\r\n", CLS1_GetStdio()->stdOut);
+    }
     break;
   case LV_BUTTON_RIGHT:
-    data->enc_diff = 1;
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->enc_diff = 1;
+      CLS1_SendStr("right pressed\r\n", CLS1_GetStdio()->stdOut);
+    } else {
+      data->enc_diff = 0;
+      CLS1_SendStr("right released\r\n", CLS1_GetStdio()->stdOut);
+    }
     break;
   case LV_BUTTON_UP:
-    data->enc_diff = 1;
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->enc_diff = -1;
+      CLS1_SendStr("up pressed\r\n", CLS1_GetStdio()->stdOut);
+    } else {
+      data->enc_diff = 0;
+      CLS1_SendStr("up released\r\n", CLS1_GetStdio()->stdOut);
+    }
     break;
   case LV_BUTTON_DOWN:
-    data->enc_diff = -1;
+    if (keyData&(LV_MASK_PRESSED)) {
+      data->enc_diff = 1;
+      CLS1_SendStr("down pressed\r\n", CLS1_GetStdio()->stdOut);
+    } else {
+      data->enc_diff = 0;
+      CLS1_SendStr("down released\r\n", CLS1_GetStdio()->stdOut);
+    }
     break;
   case LV_BUTTON_CENTER:
     if (keyData&(LV_MASK_PRESSED)) {
       data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = 1;
+      data->enc_diff = 0;
+      CLS1_SendStr("center pressed\r\n", CLS1_GetStdio()->stdOut);
     } else if (keyData&(LV_MASK_PRESSED_LONG)) {
       data->state = LV_INDEV_STATE_PR;
       data->enc_diff = 0;
+      CLS1_SendStr("center long pressed\r\n", CLS1_GetStdio()->stdOut);
     } else {
       data->state = LV_INDEV_STATE_REL;
       data->enc_diff = 0;
+      CLS1_SendStr("center released\r\n", CLS1_GetStdio()->stdOut);
     }
     break;
 #if 0
@@ -261,7 +286,7 @@ static bool encoder_read(lv_indev_data_t *data){
 #endif
   default:
     return false; /* error case? */
-  }
+  } /* switch */
   return RNG1_NofElements()!=0;   /* return true if we have more data */
 }
 
