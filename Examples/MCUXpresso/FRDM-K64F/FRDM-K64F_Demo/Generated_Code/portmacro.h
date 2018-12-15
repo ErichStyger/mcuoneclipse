@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -35,6 +35,8 @@ extern "C" {
 
 #include "FreeRTOSConfig.h"
 #include "projdefs.h" /* for pdFALSE, pdTRUE */
+
+void vPortStopTickTimer(void);
 /*-----------------------------------------------------------
  * Port specific definitions.
  *
@@ -94,6 +96,13 @@ typedef portSTACK_TYPE StackType_t;
 #else
   typedef uint32_t TickType_t;
   #define portMAX_DELAY      (TickType_t)0xffffffff
+
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2) || configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  not need to be guarded with a critical section. */
+  #define portTICK_TYPE_IS_ATOMIC 1
+#endif /* 32bit architecture */
+
 #endif
 
 #if configUSE_MPU_SUPPORT
@@ -320,7 +329,7 @@ void vPortYieldHandler(void);
 #endif
 
 /* Prototypes for interrupt service handlers */
-#if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
   void SVC_Handler(void); /* SVC interrupt handler */
   void PendSV_Handler(void); /* PendSV interrupt handler */
   void SysTick_Handler(void); /* Systick interrupt handler */
@@ -427,8 +436,8 @@ void prvTaskExitError(void);
   /* handler to catch task exit errors */
 
 #if !configGENERATE_RUN_TIME_STATS_USE_TICKS
-  extern void FRTOS1_AppConfigureTimerForRuntimeStats(void);
-  extern uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
+  extern void McuRTOS_AppConfigureTimerForRuntimeStats(void);
+  extern uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
 #endif
 
 #ifdef __cplusplus

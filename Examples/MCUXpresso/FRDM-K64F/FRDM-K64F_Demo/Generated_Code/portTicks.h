@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -39,15 +39,12 @@ extern "C" {
  *  That way the a module can interface this wrapper header file instead
  *  of one of the standard FreeRTOS header files.
  */
-#include "MCUC1.h" /* include SDK and API used */
+#include "McuLib.h" /* include SDK and API used */
 
-#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
-  #include "Cpu.h" /* include CPU module because of dependency to CPU clock rate */
-#endif
 #include "FreeRTOSConfig.h"
 #include "portmacro.h"
 
-#if !MCUC1_CONFIG_PEX_SDK_USED
+#if !McuLib_CONFIG_PEX_SDK_USED
   extern uint32_t SystemCoreClock; /* in Kinetis SDK, this contains the system core clock speed */
 #endif
 

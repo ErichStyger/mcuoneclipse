@@ -142,8 +142,8 @@ char * sbrk(int incr) {
 //! Synonym for sbrk.
 char * _sbrk(int incr) { return sbrk(incr); };
 
-void __malloc_lock()     {       vTaskSuspendAll(); };
-void __malloc_unlock()   { (void)xTaskResumeAll();  };
+void __malloc_lock(struct _reent *p)     {       vTaskSuspendAll(); };
+void __malloc_unlock(struct _reent *p)   { (void)xTaskResumeAll();  };
 
 // newlib also requires implementing locks for the application's environment memory space,
 // accessed by newlib's setenv() and getenv() functions.
