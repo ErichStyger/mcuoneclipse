@@ -42,7 +42,8 @@
 
 /* TODO: insert other definitions and declarations here. */
 #include "Application.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 /*
  * @brief   Application entry point.
  */
@@ -51,7 +52,6 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
-
     printf("FreeRTOS on K22FX512\n");
     APP_Run();
     return 0 ;

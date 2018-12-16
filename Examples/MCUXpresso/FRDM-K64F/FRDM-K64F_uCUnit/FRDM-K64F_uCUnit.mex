@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MK64FN1M0xxx12" version="1.4" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4.xsd" uuid="a6b27699-c5ac-48e6-a874-762fc3101600" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MK64FN1M0xxx12" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="a6b27699-c5ac-48e6-a874-762fc3101600" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK64FN1M0xxx12</processor>
       <package>MK64FN1M0VLL12</package>
@@ -15,9 +15,13 @@
       <generate_extended_information>false</generate_extended_information>
    </preferences>
    <tools>
-      <pins name="Pins" version="4.1" enabled="true" update_project_code="true">
+      <pins name="Pins" version="5.0" enabled="true" update_project_code="true">
+         <generated_project_files>
+            <file path="board/pin_mux.c" update_enabled="true"/>
+            <file path="board/pin_mux.h" update_enabled="true"/>
+         </generated_project_files>
          <pins_profile>
-            <processor_version>4.0.0</processor_version>
+            <processor_version>5.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="90" pin_signal="PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b" label="J1[2]" identifier="TMR_1588_0"/>
                <pin_label pin_num="91" pin_signal="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" label="J1[4]" identifier="TMR_1588_1"/>
@@ -123,7 +127,7 @@
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <callFromInitBoot>true</callFromInitBoot>
                   <prefix>BOARD_</prefix>
@@ -140,7 +144,7 @@
                <pins/>
             </function>
             <function name="BOARD_InitButtons">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -202,7 +206,7 @@
                </pins>
             </function>
             <function name="BOARD_InitLEDs">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -265,7 +269,7 @@
                </pins>
             </function>
             <function name="BOARD_InitDEBUG_UART">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <callFromInitBoot>true</callFromInitBoot>
                   <prefix>BOARD_</prefix>
@@ -314,7 +318,7 @@
                </pins>
             </function>
             <function name="BOARD_InitOSC">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -359,7 +363,7 @@
                </pins>
             </function>
             <function name="BOARD_InitACCEL">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -434,7 +438,7 @@
                </pins>
             </function>
             <function name="BOARD_InitENET">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -562,7 +566,7 @@
                </pins>
             </function>
             <function name="BOARD_InitSDHC">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -665,7 +669,7 @@
                </pins>
             </function>
             <function name="BOARD_InitUSB">
-               <description>Configures pin routing and optionally pin electrical features.&amp;lt;br/&amp;gt;</description>
+               <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
@@ -690,9 +694,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="4.1" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="5.0" enabled="true" update_project_code="true">
+         <generated_project_files>
+            <file path="board/clock_config.c" update_enabled="true"/>
+            <file path="board/clock_config.h" update_enabled="true"/>
+         </generated_project_files>
          <clocks_profile>
-            <processor_version>4.0.0</processor_version>
+            <processor_version>5.0.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN">
@@ -768,7 +776,7 @@
             </clock_configuration>
          </clock_configurations>
       </clocks>
-      <periphs name="Peripherals" version="4.1" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
          <dependencies>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="GPIO Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
@@ -776,7 +784,7 @@
                </feature>
             </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Unsupported version of the GPIO Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="compatible">
+               <feature name="version" evaluation="equivalent">
                   <data type="Version">2.2.1</data>
                </feature>
             </dependency>
@@ -786,7 +794,7 @@
                </feature>
             </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.uart" description="Unsupported version of the UART Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="compatible">
+               <feature name="version" evaluation="equivalent">
                   <data type="Version">2.1.5</data>
                </feature>
             </dependency>
@@ -796,13 +804,17 @@
                </feature>
             </dependency>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.i2c" description="Unsupported version of the I2C Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="compatible">
+               <feature name="version" evaluation="equivalent">
                   <data type="Version">2.0.5</data>
                </feature>
             </dependency>
          </dependencies>
+         <generated_project_files>
+            <file path="board/peripherals.c" update_enabled="true"/>
+            <file path="board/peripherals.h" update_enabled="true"/>
+         </generated_project_files>
          <peripherals_profile>
-            <processor_version>4.0.0</processor_version>
+            <processor_version>5.0.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="9feb8e74-d3f3-4105-8803-eed642f1c807" called_from_default_init="true" id_prefix="" core="core0">

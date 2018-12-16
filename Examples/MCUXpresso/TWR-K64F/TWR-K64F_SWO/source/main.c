@@ -102,11 +102,6 @@ void SWO_PrintString(const char *s, uint8_t portNumber) {
   }
 }
 
-
-#define CPU_CORE_FREQUENCY_HZ 120000000 /* CPU core frequency in Hz */
-
-
-
 /*
  * @brief   Application entry point.
  */
@@ -119,11 +114,11 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    SWO_Init(0x1, SystemCoreClock/*CPU_CORE_FREQUENCY_HZ*/);
-
-    SWO_PrintString("hello world with SWO\r\n", 0);
-
-    PRINTF("Hello World\n");
+#if 1 /* for LPC-Link2, disable the following code */
+    SWO_Init(0x1, SystemCoreClock);
+    SWO_PrintString("SWO Hello World with directly writing to ITM\r\n", 0); /* directly write to ITM */
+#endif
+    PRINTF("Hello World with SWO and printf()\n"); /* using printf() style */
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
