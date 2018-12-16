@@ -15907,7 +15907,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.558</BeanVersion>
+    <BeanVersion>01.565</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15920,7 +15920,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V10.0.1</Value>
+        <Value>V10.1.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDK</ItemSymbol>
@@ -16176,6 +16176,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>PTRC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CustomFreeRTOSConfig</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>/* #include "CustomFreeRTOSSettings.h */</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CollectRuntimeStatisticsGroup</ItemSymbol>
@@ -19438,7 +19444,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.158</BeanVersion>
+    <BeanVersion>01.159</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22681,7 +22687,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.086</BeanVersion>
+    <BeanVersion>01.087</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24197,7 +24203,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.059</BeanVersion>
+    <BeanVersion>01.065</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24210,7 +24216,7 @@
         <ItemSymbol>SystemViewVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V2.52a</Value>
+        <Value>V2.52b</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SysViewAppName</ItemSymbol>
@@ -24279,6 +24285,38 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EventsGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>QueueEventsEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ISREventsEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StreamBufferEventsEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>RTTChannelGroup</ItemSymbol>

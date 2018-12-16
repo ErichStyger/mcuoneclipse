@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.086, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2018-12-16, 09:24, # CodeGen: 50
 **     Abstract    :
 **
 **     Settings    :

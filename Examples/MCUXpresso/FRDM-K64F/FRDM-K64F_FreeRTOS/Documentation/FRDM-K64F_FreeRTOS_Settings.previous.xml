@@ -111,9 +111,9 @@
       <Application_Task_Tags v="no" />
       <Thread_Local_Storage_Pointers v="0" />
       <Use_Trace_Facility v="yes" />
+      <LinkTimeOptimizer_Helper v="yes" />
       <group name="Debug Helpers">
         <Enable_GDB_Debug_Helper v="no" />
-        <Enable_LinkTimeOptimizer_Helper v="yes" />
         <uxTopUsedPriority v="no" />
         <Heap_Indication_Constant v="no" />
         <Task_C_Additions v="yes" />
@@ -410,8 +410,8 @@
       <ParseCommand v="don&amp;apos;t generate code" />
       <AppConfigureTimerForRuntimeStats v="generate code" />
       <AppGetRuntimeCounterValueFromISR v="generate code" />
-      <Init v="generate code" />
       <Deinit v="generate code" />
+      <Init v="generate code" />
     </Methods>
     <Events>
       <Event_module_name v="Events" />
@@ -439,7 +439,8 @@
       <Config_Files_Folder v="" />
     </Properties>
     <Methods>
-      <EmptySection_DummyValue />
+      <Init v="generate code" />
+      <Deinit v="generate code" />
     </Methods>
     <Events>
       <EmptySection_DummyValue />
@@ -809,10 +810,11 @@
     <Enabled v="Y" />
     <Properties>
       <Component_name v="RTT1" />
-      <Version v="V6.22c" />
+      <Version v="V6.32b" />
       <Number_of_Up_Channels v="2" />
       <Number_of_Down_Channels v="2" />
       <Max_Blocked_Interrupt_Level v="3" />
+      <Syscalls v="no" />
       <boolgroup name="Channel 0" v="Enabled">
         <Name v="&amp;quot;Terminal&amp;quot;" />
         <Up_Buffer_Size__Tx_ v="512" />
@@ -967,6 +969,8 @@
       <CriticalVariable v="generate code" />
       <EnterCritical v="generate code" />
       <ExitCritical v="generate code" />
+      <Deinit v="generate code" />
+      <Init v="generate code" />
     </Methods>
     <Events>
       <EmptySection_DummyValue />
@@ -986,6 +990,8 @@
       <xformat v="generate code" />
       <xsprintf v="generate code" />
       <xsnprintf v="generate code" />
+      <Deinit v="generate code" />
+      <Init v="generate code" />
     </Methods>
     <Events>
       <EmptySection_DummyValue />
@@ -1033,6 +1039,7 @@
       <ErrorfTarget v="generate code" />
       <EnableEvents v="generate code" />
       <DisableEvents v="generate code" />
+      <Deinit v="generate code" />
       <Init v="generate code" />
     </Methods>
     <Events>
@@ -1056,6 +1063,7 @@
         <Include_user_events v="yes" />
         <Include_pend_function_call_events v="no" />
         <Include_event_group_events v="no" />
+        <Include_queue_events v="yes" />
       </group>
       <group name="Snapshot Mode">
         <Snapshot_trace_enable_method v="TRC_START" />

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.158, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.159, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2018-12-16, 09:24, # CodeGen: 50
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -2607,8 +2607,8 @@ void UTIL1_Init(void)
 **         x               - value to be mapped
 **         in_min          - input range minimum value
 **         in_max          - input range maximum value
-**         out_min         - output range maximum value
-**         out_max         - 
+**         out_min         - output range minimum value
+**         out_max         - output range maximum value
 **     Returns     :
 **         ---             - remapped value
 ** ===================================================================

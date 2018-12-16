@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -156,13 +156,6 @@ void vPortEndScheduler( void ) PRIVILEGED_FUNCTION;
 	struct xMEMORY_REGION;
 	void vPortStoreTaskMPUSettings( xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION * const xRegions, StackType_t *pxBottomOfStack, uint32_t ulStackDepth ) PRIVILEGED_FUNCTION;
 #endif
-
-/* << EST
- * Tick Timer management routines:
- */
-void vPortInitTickTimer(void);
-void vPortStartTickTimer(void);
-void vPortStopTickTimer(void);
 
 #ifdef __cplusplus
 }

@@ -121,7 +121,7 @@
 							<tool id="com.crt.advproject.gas.exe.debug.1238406623" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug">
 								<option id="com.crt.advproject.gas.thumb.761310258" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.986108717" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm4" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.2054965077" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false"/>
+								<option id="gnu.both.asm.option.flags.crt.2054965077" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__REDLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.619478252" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../board"/>
 									<listOptionValue builtIn="false" value="../source"/>

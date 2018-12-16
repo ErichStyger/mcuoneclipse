@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -626,7 +626,9 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     portENTER_CRITICAL();
     {
       ENABLE_TICK_COUNTER();
-      vTaskStepTick(ulCompleteTickPeriods);
+      if (ulCompleteTickPeriods>0) {
+        vTaskStepTick(ulCompleteTickPeriods);
+      }
 #if configSYSTICK_USE_LOW_POWER_TIMER
       /* The compare register of the LPTMR should not be modified when the
        * timer is running, so wait for the next tick interrupt to change it.
@@ -662,7 +664,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 }
 #endif /* #if configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
-void vPortInitTickTimer(void) {
+static void vPortInitTickTimer(void) {
 #if configUSE_TICKLESS_IDLE == 1
 {
 #if TICK_NOF_BITS==32
@@ -722,7 +724,7 @@ void vPortInitTickTimer(void) {
   ENABLE_TICK_COUNTER(); /* let it run */
 }
 /*-----------------------------------------------------------*/
-void vPortStartTickTimer(void) {
+static void vPortStartTickTimer(void) {
   ENABLE_TICK_COUNTER();
 }
 /*-----------------------------------------------------------*/
