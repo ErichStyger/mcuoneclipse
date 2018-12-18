@@ -31,6 +31,11 @@
 #if PL_CONFIG_HAS_NEO_PIXEL && PL_CONFIG_HAS_GUI
   #include "gui/gui_neopixel.h"
 #endif
+#if PL_HAS_LED_FRAME
+  #include "TmDt1.h"
+  #include "LEDFrame.h"
+#endif
+#include "NeoMatrix.h"
 
 #define WIDTH_PIXELS (3*8)  /* 3 8x8 tiles */
 #define HEIGHT_PIXELS (8)   /* 1 tile */
@@ -64,6 +69,46 @@ static uint32_t NEOA_LightBoxRowColor[NEOA_NOF_LIGHTBOX_ROWS] =
 };
 #endif
 
+/* task notification bits */
+#define NEOA_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
+static xTaskHandle NeoTaskHandle; /* task handle */
+
+void NEOA_RequestDisplayUpdate(void) {
+  (void)xTaskNotify(NeoTaskHandle, NEOA_NOTIFICATION_UPDATE_DISPLAY, eSetBits);
+}
+
+#if PL_CONFIG_HAS_MMA8451
+
+static NEOA_Orientation_e currOrientation = NEOA_ORIENTATION_X_UP;
+
+NEOA_Orientation_e NEOA_GetCurrentOrientation(void) {
+  return currOrientation;
+}
+
+void NEOA_DetermineCurrentOrientation(void) {
+  int16_t xmg, ymg, zmg;
+
+  xmg = MMA1_GetXmg();
+  ymg = MMA1_GetYmg();
+  zmg = MMA1_GetZmg();
+  if(xmg>200) {
+    currOrientation = NEOA_ORIENTATION_X_UP;
+  } else if (xmg<-200) {
+    currOrientation = NEOA_ORIENTATION_X_DOWN;
+  } else if (ymg>200) {
+    currOrientation = NEOA_ORIENTATION_Y_UP;
+  } else if (ymg<-200) {
+    currOrientation = NEOA_ORIENTATION_Y_DOWN;
+  } else if (zmg>200) {
+    currOrientation = NEOA_ORIENTATION_Z_UP;
+  } else if (zmg<-200) {
+    currOrientation = NEOA_ORIENTATION_Z_DOWN;
+  } else {
+    currOrientation = NEOA_ORIENTATION_X_UP; /* error? */
+  }
+}
+#endif
+
 /* interfaces for GUI items */
 void NEOA_SetLightLevel(uint8_t level) {
   NEOA_LightLevel = level;
@@ -82,24 +127,13 @@ bool NEOA_SetAutoLightLevelSetting(bool set) {
 }
 
 
-static void SetPixel(int x, int y, uint32_t color) {
-  /* 0, 0 is left upper corner */
-  /* single lane, 3x64 modules from left to right */
-  int pos;
-
-  pos = ((x/8)*64) /* position in tile */
-       + (x%8) /* position in row */
-       + (y)*8; /* add y offset */
-  NEO_SetPixelColor(0, pos, color);
-}
-
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
 static void Layer(int layer, uint32_t color) {
   int y, x;
 
   y = layer;
   for(x=0;x<WIDTH_PIXELS;x++) {
-    SetPixel(x, y, color);
+    NEO_SetPixelXYXY(x, y, color);
   }
 }
 
@@ -195,6 +229,72 @@ static void NeoTask(void* pvParameters) {
 }
 #endif
 
+
+#if PL_HAS_LED_FRAME
+static void ClockUpdate(void) {
+  static int prevHour=-1, prevMinute=-1, prevSecond=1;
+  TIMEREC time;
+  uint8_t res;
+
+  res = TmDt1_GetTime(&time);
+  if (res==ERR_OK) {
+    if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
+#if PL_HAS_LED_FRAME_CLOCK
+      LEDFRAME_ShowClockTime(&time);
+#endif
+#if PL_HAS_MATRIX_CLOCK
+      MATRIX_ShowClockTime(&time);
+#endif
+      prevHour = time.Hour;
+      prevMinute = time.Min;
+      prevSecond = time.Sec;
+    }
+  }
+}
+
+#include "LEDM1.h"
+#include "LedDisp.h"
+
+static void NeoTask(void* pvParameters) {
+  uint32_t notifcationValue;
+  BaseType_t notified;
+  int cntr = 0;
+
+  (void)pvParameters; /* parameter not used */
+  vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
+  {
+    int x,y;
+
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
+    for(x=0;x<7;x++) {
+      for (y=0;y<7;y++) {
+        LEDM1_PutPixel(x,y,0x05);
+        NEO_TransferPixels();
+      }
+    }
+  }
+  for(;;) {
+    ClockUpdate();
+    notified = xTaskNotifyWait(0UL, NEOA_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
+    if (notified==pdTRUE) {
+      if (notifcationValue&NEOA_NOTIFICATION_UPDATE_DISPLAY) {
+        NEO_TransferPixels();
+      }
+    }
+    cntr++;
+    if (cntr==10) { /* check the current orientation once every second */
+      cntr = 0;
+      NEOA_DetermineCurrentOrientation();
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+#endif
+
+
 #if PL_CONFIG_HAS_NEO_HOUR_GLASS
 
 #define AREA_MIN_X  (0)
@@ -225,11 +325,11 @@ static void DrawArea(void) {
   for(x=1;x<AREA_NOF_X-1;x++) { /* start inside border */
     for(y=1;y<AREA_NOF_Y-1;y++) {
       if (area[x][y]==0) { /* clear pixel area */
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,level));
+        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,level));
       } else if (area[x][y]==1) { /* set pixel area */
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,level,0));
+        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,level,0));
       } else if (area[x][y]==0xff) {
-        SetPixel(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,0)); /* border, obstacle area */
+        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,0)); /* border, obstacle area */
       }
     }
   }
@@ -651,7 +751,7 @@ static void drawpixelsLED(float *p, uint8_t rows, uint8_t cols, uint8_t boxWidth
       uint8_t colorIndex = UTIL1_map(colorTemp, MINTEMP, MAXTEMP, 0, 255);
       colorIndex = UTIL1_constrain(colorIndex, 0, 255);
       //draw the pixels!
-      SetPixel(x, y, NEO_MAKE_COLOR_RGB((colorIndex*15/100), 0, (255-colorIndex)*15/100));
+      NEO_SetPixelXY(x, y, NEO_MAKE_COLOR_RGB((colorIndex*15/100), 0, (255-colorIndex)*15/100));
     }
   }
 }
@@ -911,6 +1011,7 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 
 void NEOA_Init(void) {
   NEO_Init();
+  MATRIX_Init();
   PIXDMA_Init();
   if (xTaskCreate(
         NeoTask,  /* pointer to the task */
@@ -918,7 +1019,7 @@ void NEOA_Init(void) {
         800/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        &NeoTaskHandle /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

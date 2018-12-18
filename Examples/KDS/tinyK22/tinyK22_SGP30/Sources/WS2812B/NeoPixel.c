@@ -134,6 +134,25 @@ uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color)
   return ERR_OK;
 }
 
+void NEO_SetPixelXY(int x, int y, uint32_t color) {
+  /* 0, 0 is left upper corner */
+  /* single lane, 3x64 modules from left to right */
+  int pos;
+
+  pos = ((x/8)*64) /* position in tile */
+       + (x%8) /* position in row */
+       + (y)*8; /* add y offset */
+  NEO_SetPixelColor(0, pos, color);
+}
+
+void NEO_ClearAllXY(void) {
+  /* single lane, 3x64 modules from left to right */
+  int i;
+
+  for(i=0;i<64;i++) {
+    NEO_SetPixelColor(0, i, 0x0);
+  }
+}
 
 /* sets the color of an individual pixel */
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue) {

@@ -48,6 +48,9 @@
 #if PL_CONFIG_HAS_NEO_PIXEL
   #include "WS2812B\NeoApp.h"
 #endif
+#if PL_HAS_LED_FRAME
+  #include "WS2812b/LEDFrame.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -81,6 +84,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_SSD1351
   LCD1_ParseCommand,
+#endif
+#if PL_HAS_LED_FRAME
+  LEDFRAME_ParseCommand,
 #endif
 #if PL_CONFIG_HAS_NEO_PIXEL && NEOA_CONFIG_PARSE_COMMAND_ENABLED
   NEOA_ParseCommand,

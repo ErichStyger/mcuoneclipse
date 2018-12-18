@@ -82,13 +82,12 @@
 #include "BitIoLdd11.h"
 #include "Inhr5.h"
 #include "BitIoLdd12.h"
-#include "Inhr6.h"
-#include "BitIoLdd13.h"
 #include "HF1.h"
 #include "DMA1.h"
 #include "DMACH1.h"
 #include "DMACH2.h"
 #include "DMACH3.h"
+#include "LedDisp.h"
 #include "LEDM1.h"
 #include "FAT1.h"
 #include "SD1.h"
@@ -96,6 +95,8 @@
 #include "CD1.h"
 #include "MINI1.h"
 #include "SYS1.h"
+#include "GFONT1.h"
+#include "FDisp1.h"
 
 #ifdef __cplusplus
 extern "C" {

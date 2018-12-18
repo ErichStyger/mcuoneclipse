@@ -114,7 +114,7 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-#if 1 /* for LPC-Link2, disable the following code */
+#if 0 /* for LPC-Link2, disable the following code. Note that the SWO init is done by the debugger. */
     SWO_Init(0x1, SystemCoreClock);
     SWO_PrintString("SWO Hello World with directly writing to ITM\r\n", 0); /* directly write to ITM */
 #endif

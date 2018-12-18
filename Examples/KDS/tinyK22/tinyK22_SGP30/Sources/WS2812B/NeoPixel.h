@@ -76,6 +76,9 @@ uint8_t NEO_GammaCorrect8(uint8_t color);
 
 uint32_t NEO_GammaCorrect24(uint32_t rgb);
 
+void NEO_SetPixelXY(int x, int y, uint32_t color);
+void NEO_ClearAllXY(void);
+
 /*!
  * \brief Driver initialization routine.
  */

@@ -79,13 +79,12 @@
 #include "BitIoLdd11.h"
 #include "Inhr5.h"
 #include "BitIoLdd12.h"
-#include "Inhr6.h"
-#include "BitIoLdd13.h"
 #include "HF1.h"
 #include "DMA1.h"
 #include "DMACH1.h"
 #include "DMACH2.h"
 #include "DMACH3.h"
+#include "LedDisp.h"
 #include "LEDM1.h"
 #include "FAT1.h"
 #include "SD1.h"
@@ -93,6 +92,8 @@
 #include "CD1.h"
 #include "MINI1.h"
 #include "SYS1.h"
+#include "GFONT1.h"
+#include "FDisp1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -108,7 +109,6 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
