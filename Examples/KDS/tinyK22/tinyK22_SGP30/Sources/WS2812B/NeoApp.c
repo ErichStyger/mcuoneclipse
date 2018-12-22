@@ -5,7 +5,6 @@
  *      Author: Erich Styger
  */
 
-
 #include "Platform.h"
 #if PL_CONFIG_HAS_NEO_PIXEL
 #include "NeoApp.h"
@@ -36,6 +35,7 @@
   #include "LEDFrame.h"
 #endif
 #include "NeoMatrix.h"
+#include "LedDisp.h"
 
 #define WIDTH_PIXELS (3*8)  /* 3 8x8 tiles */
 #define HEIGHT_PIXELS (8)   /* 1 tile */
@@ -93,16 +93,22 @@ void NEOA_DetermineCurrentOrientation(void) {
   zmg = MMA1_GetZmg();
   if(xmg>200) {
     currOrientation = NEOA_ORIENTATION_X_UP;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
   } else if (xmg<-200) {
     currOrientation = NEOA_ORIENTATION_X_DOWN;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
   } else if (ymg>200) {
     currOrientation = NEOA_ORIENTATION_Y_UP;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
   } else if (ymg<-200) {
     currOrientation = NEOA_ORIENTATION_Y_DOWN;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
   } else if (zmg>200) {
     currOrientation = NEOA_ORIENTATION_Z_UP;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
   } else if (zmg<-200) {
     currOrientation = NEOA_ORIENTATION_Z_DOWN;
+    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
   } else {
     currOrientation = NEOA_ORIENTATION_X_UP; /* error? */
   }
@@ -262,20 +268,7 @@ static void NeoTask(void* pvParameters) {
 
   (void)pvParameters; /* parameter not used */
   vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
-  {
-    int x,y;
-
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-    for(x=0;x<7;x++) {
-      for (y=0;y<7;y++) {
-        LEDM1_PutPixel(x,y,0x05);
-        NEO_TransferPixels();
-      }
-    }
-  }
+  NEOA_DetermineCurrentOrientation();
   for(;;) {
     ClockUpdate();
     notified = xTaskNotifyWait(0UL, NEOA_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
@@ -285,7 +278,7 @@ static void NeoTask(void* pvParameters) {
       }
     }
     cntr++;
-    if (cntr==10) { /* check the current orientation once every second */
+    if (cntr==5) { /* check the current orientation every 500 ms */
       cntr = 0;
       NEOA_DetermineCurrentOrientation();
     }

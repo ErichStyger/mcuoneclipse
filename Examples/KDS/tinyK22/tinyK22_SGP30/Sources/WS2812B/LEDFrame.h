@@ -9,8 +9,9 @@
 #define SOURCES_LEDFRAME_H_
 
 #include "Platform.h"
-#include "CLS1.h"
 #include <stdbool.h>
+#include <stdint.h>
+#include "CLS1.h"
 
 uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 

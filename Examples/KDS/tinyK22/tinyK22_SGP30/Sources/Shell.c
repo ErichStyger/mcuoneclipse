@@ -3,7 +3,6 @@
  *
  *      Author: Erich Styger
  */
-
 #include "Platform.h"
 #include "Application.h"
 #include "FRTOS1.h"
@@ -46,7 +45,7 @@
   #include "LCD1.h"
 #endif
 #if PL_CONFIG_HAS_NEO_PIXEL
-  #include "WS2812B\NeoApp.h"
+  #include "WS2812B/NeoApp.h"
 #endif
 #if PL_HAS_LED_FRAME
   #include "WS2812b/LEDFrame.h"

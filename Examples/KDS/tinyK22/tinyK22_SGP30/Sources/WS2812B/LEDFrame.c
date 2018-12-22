@@ -362,7 +362,7 @@ void LEDFRAME_ShowClockTime(TIMEREC *time) {
   #endif
 #endif
 #endif
-  if (LedDisp_GetWidth()==24) { /* three modules */
+  if (LedDisp_GetWidth()==24) { /* three modules in horizontal orientation */
     /* write hour:min:sec with two dots */
     LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
     LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
@@ -374,6 +374,22 @@ void LEDFRAME_ShowClockTime(TIMEREC *time) {
     LedDisp_PutPixel(8, 5, ProcessColor(0x00ff00));
     LedDisp_PutPixel(16, 3, ProcessColor(0x00ff00));
     LedDisp_PutPixel(16, 5, ProcessColor(0x00ff00));
+    NEOA_RequestDisplayUpdate();
+  } else if (LedDisp_GetHeight()==24) { /* portrait mode */
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 8, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 8, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 16, ProcessColor(LEDFRAME_color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 16, ProcessColor(LEDFRAME_color));
+    LedDisp_PutPixel(3, 7, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(3, 8, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(5, 7, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(5, 8, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(3, 15, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(3, 16, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(5, 15, ProcessColor(0x00ff00));
+    LedDisp_PutPixel(5, 16, ProcessColor(0x00ff00));
     NEOA_RequestDisplayUpdate();
   }
 }

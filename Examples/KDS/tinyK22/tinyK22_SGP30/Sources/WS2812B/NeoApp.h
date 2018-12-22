@@ -9,6 +9,7 @@
 #define SOURCES_WS2812B_NEO_APP_C_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #define NEOA_CONFIG_PARSE_COMMAND_ENABLED  (1)
 
