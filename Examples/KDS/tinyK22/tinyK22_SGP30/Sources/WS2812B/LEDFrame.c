@@ -43,8 +43,8 @@ static LEDFRAME_TransitionType LedFrametransition = LEDFRAME_TRANSITION_NONE;
 
 /* global settings */
 static bool LEDFRAME_ClockIsOn = TRUE; /* if clock is on or stopped */
-static uint8_t LEDFRAME_BrightnessPercent = 50; /* brightness value, 0 (off) - 100 (full brightness) */
-static NEO_Color LEDFRAME_color = 0x0000ff;
+static uint8_t LEDFRAME_BrightnessPercent = 25; /* brightness value, 0 (off) - 100 (full brightness) */
+static NEO_Color LEDFRAME_color = 0xff0000;
 #if LEDFRAME_CYCLE_COLORS
   static NEO_Color color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
 #endif
@@ -171,8 +171,8 @@ static const uint32_t Numbers8x4_Small[10] = { /* digits 0-9, data byte with two
      * 0000  0000  0000  0000  0000  0000  0000  0000  0000  0000
      * 0111  0001  0111  0111  0001  0111  0111  0111  0111  0111
      * 0101  0011  0101  0001  0101  0100  0100  0001  0101  0101
-     * 0101  0101  0001  0001  0101  0100  0100  0001  0111  0101
-     * 0101  0001  0010  0111  0111  0011  0111  0010  0101  0111
+     * 0101  0101  0001  0001  0101  0100  0100  0001  0101  0101
+     * 0101  0001  0010  0111  0111  0011  0111  0010  0111  0111
      * 0101  0001  0100  0001  0001  0001  0101  0010  0101  0001
      * 0111  0001  0111  0111  0001  0111  0111  0010  0111  0111
      * 0000  0000  0000  0000  0000  0000  0000  0000  0000  0000
@@ -185,7 +185,7 @@ static const uint32_t Numbers8x4_Small[10] = { /* digits 0-9, data byte with two
   /* 5 */ 0b00000111010001000011000101110000,
   /* 6 */ 0b00000111010001000111010101110000,
   /* 7 */ 0b00000111000100010010001000100000,
-  /* 8 */ 0b00000111010101110101010101110000,
+  /* 8 */ 0b00000111010101010111010101110000,
   /* 9 */ 0b00000111010101010111000101110000
 };
 #else
@@ -338,7 +338,7 @@ void LEDFRAME_ShowClockTime(TIMEREC *time) {
   }
   isOn = TRUE;
 #if LEDFRAME_SMALL_FONT
-    GDisp1_PixelColor color;
+    LedDisp_PixelColor color;
 
 #if LEDFRAME_CYCLE_COLORS
     switch(colorCnt) {

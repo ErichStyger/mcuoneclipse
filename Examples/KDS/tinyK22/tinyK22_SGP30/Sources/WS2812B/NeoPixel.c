@@ -8,8 +8,8 @@
 #include "Platform.h"
 #if PL_CONFIG_HAS_NEO_PIXEL
 #include "NeoPixel.h"
+#include "LedDisp.h"
 #include "WAIT1.h"
-#include "GDisp1.h"
 #include "PixelDMA.h"
 #include "LEDM1.h"
 
@@ -247,7 +247,7 @@ uint8_t NEO_ClearPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos) {
   return NEO_SetPixelColor(lane, pos, 0);
 }
 
-GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t percent) {
+NEO_Color NEO_BrightnessPercentColor(NEO_Color rgbColor, uint8_t percent) {
   uint8_t red, green, blue;
 
   red = (rgbColor>>16)&0xff;
@@ -434,7 +434,7 @@ uint8_t NEO_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_Std
         res = UTIL1_xatoi(&p, &tmp); /* read color RGB value */
         if (res==ERR_OK && tmp>=0 && tmp<=0xffffff) {
           color = tmp;
-          GDisp1_PutPixel((NEO_PixelIdxT)x, (NEO_PixelIdxT)y, color);
+          LedDisp_PutPixel((NEO_PixelIdxT)x, (NEO_PixelIdxT)y, color);
           NEO_TransferPixels();
           *handled = TRUE;
         }

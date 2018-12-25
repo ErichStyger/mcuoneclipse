@@ -88,60 +88,80 @@ static void SensorTask(void *pv) {
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
 #if 0 && PL_CONFIG_HAS_AMG8833
-  if (AMG_Init()!=ERR_OK) {
-    CLS1_SendStr((uint8_t*)"Failed initializing AMG8833!\r\n", CLS1_GetStdio()->stdErr);
+  CLS1_SendStr((uint8_t*)"Enabling AMG8833 Infrared sensor array.\r\n", CLS1_GetStdio()->stdOut);
+  for(;;) {
+    res = AMG_Init()!=ERR_OK)
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed initializing AMG8833, retry ...!\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 #endif
 #if PL_CONFIG_HAS_RTC_DS3231
   CLS1_SendStr((uint8_t*)"Enabling Time and Date.\r\n", CLS1_GetStdio()->stdOut);
-  TmDt1_Init(); /* get time/date from external RTC */
+  for(;;) {
+    res = TmDt1_Init(); /* get time/date from external RTC */
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed TmDt1_Init(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(500));
+  }
 #endif
 #if PL_CONFIG_HAS_TSL2561
-  uint16_t tvoc, co2;
-  uint16_t TVOC_base, eCO2_base;
-  int cntr = 0;
-
   CLS1_SendStr((uint8_t*)"Enabling TLS2561 sensor.\r\n", CLS1_GetStdio()->stdOut);
   TSL1_Init();
 
-  res = TSL1_Disable();
-  vTaskDelay(pdMS_TO_TICKS(5));
-  if (res!=ERR_OK) {
-    for(;;){}
-  }
-  vTaskDelay(pdMS_TO_TICKS(50));
-  res = TSL1_Enable();
-  vTaskDelay(pdMS_TO_TICKS(5));
-  if (res!=ERR_OK) {
-    for(;;){}
+  for(;;) {
+    res = TSL1_Disable();
+    vTaskDelay(pdMS_TO_TICKS(10));
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed TSL1_Disable(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 
-  res = TSL1_SetIntegrationTime(TSL2561_INTEGRATION_TIME_13MS);
-  vTaskDelay(pdMS_TO_TICKS(5));
-  if (res!=ERR_OK) {
-    for(;;){}
+  vTaskDelay(pdMS_TO_TICKS(50));
+  for(;;) {
+    res = TSL1_Enable();
+    vTaskDelay(pdMS_TO_TICKS(10));
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed TSL1_Enable(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
-  res = TSL1_SetGain(TSL2561_GAIN_16X);
-  if (res!=ERR_OK) {
-    for(;;){}
+
+  for(;;) {
+    res = TSL1_SetIntegrationTime(TSL2561_INTEGRATION_TIME_13MS);
+    vTaskDelay(pdMS_TO_TICKS(5));
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed TSL1_SetIntegrationTime(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  for(;;) {
+    res = TSL1_SetGain(TSL2561_GAIN_16X);
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed TSL1_SetGain(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 #endif
 #if PL_CONFIG_HAS_SGP30
-   CLS1_SendStr((uint8_t*)"Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
-   SGP30_Init();
-#endif
-#if PL_CONFIG_HAS_MMA8451
-   bool isEnabled = FALSE;
-
-   res = MMA1_isEnabled(&isEnabled);
-   if (res!=ERR_OK) {
-     CLS1_SendStr((uint8_t*)"ERROR: Cannot access MMA8541!\r\n", CLS1_GetStdio()->stdErr);
-   } else if (!isEnabled) {
-     CLS1_SendStr((uint8_t*)"Enabling MMA8541 sensor.\r\n", CLS1_GetStdio()->stdOut);
-     if (MMA1_Enable()!=ERR_OK) {
-       CLS1_SendStr((uint8_t*)"ERROR: Failed enabling MMA8541!\r\n", CLS1_GetStdio()->stdErr);
-     }
-   }
+  for(;;) {
+    CLS1_SendStr((uint8_t*)"Enabling SGP30 sensor.\r\n", CLS1_GetStdio()->stdOut);
+    res = SGP30_Init();
+    if(res==ERR_OK) {
+      break;
+    }
+    CLS1_SendStr((uint8_t*)"Failed SGP30_Init(), retry ...\r\n", CLS1_GetStdio()->stdErr);
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
 #endif
   for(;;) {
 #if 0 && PL_CONFIG_HAS_AMG8833

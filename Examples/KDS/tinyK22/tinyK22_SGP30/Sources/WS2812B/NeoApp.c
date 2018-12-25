@@ -6,6 +6,10 @@
  */
 
 #include "Platform.h"
+#include "Orientation.h"
+#include "RTC1.h"
+#include "UTIL1.h"
+#include <stddef.h>
 #if PL_CONFIG_HAS_NEO_PIXEL
 #include "NeoApp.h"
 #include "NeoPixel.h"
@@ -13,6 +17,7 @@
 #include "FRTOS1.h"
 #include "LED1.h"
 #include "PixelDMA.h"
+#include "CLS1.h"
 #if PL_CONFIG_HAS_MMA8451
   #include "MMA1.h"
 #endif
@@ -37,11 +42,6 @@
 #include "NeoMatrix.h"
 #include "LedDisp.h"
 
-#define WIDTH_PIXELS (3*8)  /* 3 8x8 tiles */
-#define HEIGHT_PIXELS (8)   /* 1 tile */
-#define PIXEL_NOF_X   (24)
-#define PIXEL_NOF_Y   (8)
-
 static uint8_t NEOA_LightLevel = 50; /* 0 (off) to 255 */
 #if PL_CONFIG_HAS_TSL2561
 static bool NEOA_isAutoLightLevel = TRUE;
@@ -49,7 +49,7 @@ static bool NEOA_isAutoLightLevel = TRUE;
 static bool NEOA_useGammaCorrection = TRUE;
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
 static bool NEOA_LightBoxUseRainbow = TRUE;
-#define NEOA_NOF_LIGHTBOX_ROWS    (8) /* number of rows in light box */
+#define NEOA_NOF_LIGHTBOX_ROWS    (24) /* number of rows in light box */
 static uint8_t NEOA_LightBoxRowMaxBrightness[NEOA_NOF_LIGHTBOX_ROWS] = /* brightness value, 0..255 */
 #if 1
   {50, 50, 30, 20, 10, 10, 5, 3}; /* initial brightness levels */
@@ -77,44 +77,6 @@ void NEOA_RequestDisplayUpdate(void) {
   (void)xTaskNotify(NeoTaskHandle, NEOA_NOTIFICATION_UPDATE_DISPLAY, eSetBits);
 }
 
-#if PL_CONFIG_HAS_MMA8451
-
-static NEOA_Orientation_e currOrientation = NEOA_ORIENTATION_X_UP;
-
-NEOA_Orientation_e NEOA_GetCurrentOrientation(void) {
-  return currOrientation;
-}
-
-void NEOA_DetermineCurrentOrientation(void) {
-  int16_t xmg, ymg, zmg;
-
-  xmg = MMA1_GetXmg();
-  ymg = MMA1_GetYmg();
-  zmg = MMA1_GetZmg();
-  if(xmg>200) {
-    currOrientation = NEOA_ORIENTATION_X_UP;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
-  } else if (xmg<-200) {
-    currOrientation = NEOA_ORIENTATION_X_DOWN;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
-  } else if (ymg>200) {
-    currOrientation = NEOA_ORIENTATION_Y_UP;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
-  } else if (ymg<-200) {
-    currOrientation = NEOA_ORIENTATION_Y_DOWN;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-  } else if (zmg>200) {
-    currOrientation = NEOA_ORIENTATION_Z_UP;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-  } else if (zmg<-200) {
-    currOrientation = NEOA_ORIENTATION_Z_DOWN;
-    LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-  } else {
-    currOrientation = NEOA_ORIENTATION_X_UP; /* error? */
-  }
-}
-#endif
-
 /* interfaces for GUI items */
 void NEOA_SetLightLevel(uint8_t level) {
   NEOA_LightLevel = level;
@@ -132,15 +94,9 @@ bool NEOA_SetAutoLightLevelSetting(bool set) {
   NEOA_isAutoLightLevel = set;
 }
 
-
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
 static void Layer(int layer, uint32_t color) {
-  int y, x;
-
-  y = layer;
-  for(x=0;x<WIDTH_PIXELS;x++) {
-    NEO_SetPixelXYXY(x, y, color);
-  }
+  LedDisp_DrawHLine(0, layer, LedDisp_GetWidth(), color);
 }
 
 static int32_t Rainbow(int32_t numOfSteps, int32_t step) {
@@ -197,18 +153,31 @@ static void NeoTask(void* pvParameters) {
   int inc = 1;
   int red, green, blue;
   NEO_Color color;
-  uint8_t rowStartStep[8] = {0, 20, 50, 70, 90, 130, 150, 170}; /* rainbow color starting values */
+  uint8_t rowStartStep[NEOA_NOF_LIGHTBOX_ROWS]; /* rainbow color starting values */
   int brightness = 0;
 
   (void)pvParameters; /* parameter not used */
-  cntr = 0;
+  if (LedDisp_GetLongerSide()>NEOA_NOF_LIGHTBOX_ROWS) {
+    for(;;) {
+      CLS1_SendStr("ERROR: Not supported number of Rows!\r\n", CLS1_GetStdio()->stdErr);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+  }
+  for(i=0; i<NEOA_NOF_LIGHTBOX_ROWS;i++) {
+    rowStartStep[i] = val;
+    val+=20;
+    if(val>=0xff) {
+      val = 0;
+    }
+  }
 
+  cntr = 0;
   for(;;) {
     int row;
     int32_t color;
 
     if (NEOA_LightBoxUseRainbow) {
-      for(row=0; row<8; row++) {
+      for(row=0; row<LedDisp_GetHeight(); row++) {
         color = Rainbow(256,rowStartStep[row]);
         rowStartStep[row]++;
         brightness = NEOA_GetLightLevel();
@@ -258,17 +227,42 @@ static void ClockUpdate(void) {
   }
 }
 
-#include "LEDM1.h"
-#include "LedDisp.h"
+static void SetDisplayOrientation(ORI_Orientation_e orientation) {
+  switch(orientation) {
+    case ORI_ORIENTATION_X_UP:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
+      break;
+    case ORI_ORIENTATION_X_DOWN:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
+      break;
+    case ORI_ORIENTATION_Y_UP:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
+      break;
+    case ORI_ORIENTATION_Y_DOWN:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
+      break;
+    case ORI_ORIENTATION_Z_UP:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
+      break;
+    case ORI_ORIENTATION_Z_DOWN:
+      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
+      break;
+    default:
+      break;
+  } /* switch */
+}
 
 static void NeoTask(void* pvParameters) {
   uint32_t notifcationValue;
   BaseType_t notified;
   int cntr = 0;
+  ORI_Orientation_e oldOrientation, newOrientation;
+
 
   (void)pvParameters; /* parameter not used */
   vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
-  NEOA_DetermineCurrentOrientation();
+  oldOrientation = ORI_GetCurrentOrientation();
+  SetDisplayOrientation(oldOrientation);
   for(;;) {
     ClockUpdate();
     notified = xTaskNotifyWait(0UL, NEOA_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
@@ -277,10 +271,10 @@ static void NeoTask(void* pvParameters) {
         NEO_TransferPixels();
       }
     }
-    cntr++;
-    if (cntr==5) { /* check the current orientation every 500 ms */
-      cntr = 0;
-      NEOA_DetermineCurrentOrientation();
+    newOrientation = ORI_GetCurrentOrientation();
+    if (newOrientation!=oldOrientation) {
+      oldOrientation = newOrientation;
+      SetDisplayOrientation(newOrientation);
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   }

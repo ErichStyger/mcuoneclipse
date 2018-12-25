@@ -26,18 +26,6 @@ bool NEOA_SetAutoLightLevelSetting(bool set);
 
 void NEOA_RequestDisplayUpdate(void);
 
-typedef enum {
-  NEOA_ORIENTATION_X_UP,  /* tinyK22 up */
-  NEOA_ORIENTATION_X_DOWN,
-  NEOA_ORIENTATION_Y_UP,  /* LCD up */
-  NEOA_ORIENTATION_Y_DOWN,
-  NEOA_ORIENTATION_Z_UP,
-  NEOA_ORIENTATION_Z_DOWN
-} NEOA_Orientation_e;
-
-NEOA_Orientation_e NEOA_GetCurrentOrientation(void);
-
-
 void NEOA_Init(void);
 
 #endif /* SOURCES_WS2812B_NEO_APP_C_ */

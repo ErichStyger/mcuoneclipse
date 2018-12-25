@@ -25,6 +25,9 @@
   #include "gui/lvgl/lvgl.h"
   #include "gui/gui.h"
 #endif
+#if PL_HAS_ORIENTATION
+  #include "Orientation.h"
+#endif
 
 #define APP_PERIODIC_TIMER_PERIOD_MS   10
 #if TmDt1_TICK_TIME_MS!=APP_PERIODIC_TIMER_PERIOD_MS
@@ -65,6 +68,9 @@ void APP_Run(void) {
 #endif
 #if PL_CONFIG_HAS_NEO_PIXEL
   NEOA_Init();
+#endif
+#if PL_HAS_ORIENTATION
+  ORI_Init();
 #endif
   SENSOR_Init();
   if (xTaskCreate(

@@ -9,6 +9,7 @@
 #define GUI_H_
 
 #include "Platform.h"
+#include "GDisp1.h"
 
 #if PL_CONFIG_HAS_GUI_KEY_NAV
   #include "lvgl/lv_core/lv_group.h"
@@ -20,6 +21,8 @@
   void GUI_AddObjToGroup(lv_obj_t *obj);
   void GUI_RemoveObjFromGroup(lv_obj_t *obj);
 #endif
+
+void GUI_ChangeOrientation(GDisp1_DisplayOrientation orientation);
 
 void GUI_Init(void);
 

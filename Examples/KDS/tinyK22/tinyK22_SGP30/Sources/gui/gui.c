@@ -18,6 +18,10 @@
 #endif
 #include "gui_mainmenu.h"
 
+#include "GDisp1.h"
+#include "GFONT1.h"
+#include "FDisp1.h"
+
 #if PL_CONFIG_HAS_GUI_KEY_NAV
 #define GUI_GROUP_NOF_IN_STACK   4
 typedef struct {
@@ -26,6 +30,13 @@ typedef struct {
 } GUI_Group_t;
 
 static GUI_Group_t groups;
+static TaskHandle_t GUI_TaskHndl;
+
+/* task notification bits */
+#define GUI_SET_ORIENTATION_LANDSCAPE    (1<<0)
+#define GUI_SET_ORIENTATION_LANDSCAPE180 (1<<1)
+#define GUI_SET_ORIENTATION_PORTRAIT     (1<<2)
+#define GUI_SET_ORIENTATION_PORTRAIT180  (1<<3)
 
 /* style modification callback for the focus of an element */
 static void style_mod_cb(lv_style_t *style) {
@@ -81,7 +92,7 @@ void GUI_GroupPush(void) {
   }
   gui_group = lv_group_create();
   lv_indev_set_group(LV_GetInputDevice(), gui_group); /* assign group to input device */
-  /* change the default focus style which is an orangish thing */
+  /* change the default focus style which is an orange'ish thing */
   lv_group_set_style_mod_cb(gui_group, style_mod_cb);
   groups.stack[groups.sp] = gui_group;
   groups.sp++;
@@ -89,17 +100,88 @@ void GUI_GroupPush(void) {
 
 #endif /* PL_CONFIG_HAS_GUI_KEY_NAV */
 
-#include "GDisp1.h"
+void GUI_ChangeOrientation(GDisp1_DisplayOrientation orientation) {
+  switch(orientation) {
+    case GDisp1_ORIENTATION_LANDSCAPE:
+      (void)xTaskNotify(GUI_TaskHndl, GUI_SET_ORIENTATION_LANDSCAPE, eSetBits);
+      break;
+    case GDisp1_ORIENTATION_LANDSCAPE180:
+      (void)xTaskNotify(GUI_TaskHndl, GUI_SET_ORIENTATION_LANDSCAPE180, eSetBits);
+      break;
+    case GDisp1_ORIENTATION_PORTRAIT:
+      (void)xTaskNotify(GUI_TaskHndl, GUI_SET_ORIENTATION_PORTRAIT, eSetBits);
+      break;
+    case GDisp1_ORIENTATION_PORTRAIT180:
+      (void)xTaskNotify(GUI_TaskHndl, GUI_SET_ORIENTATION_PORTRAIT180, eSetBits);
+      break;
+    default:
+      break;
+  }
+}
+
 static void GuiTask(void *p) {
+  uint32_t notifcationValue;
+  GDisp1_PixelDim x, y;
+
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
   LCD1_Init();
-//  GDisp1_DrawBox(0, 0, 50, 20, 2, GDisp1_COLOR_RED);
-//  GDisp1_UpdateFull();
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-  //GUI_CreateGroup();
+#if 0
+    char *str;
+    x = y = 2;
+    LCD1_SetDisplayOrientation(GDisp1_ORIENTATION_LANDSCAPE);
+    if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_LANDSCAPE) {
+      str = "Landscape";
+    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_LANDSCAPE180) {
+      str = "Landscape180";
+    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_PORTRAIT) {
+      str = "Portrait";
+    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_PORTRAIT180) {
+      str = "Portrait180";
+    }
+
+    GDisp1_Clear();
+    GDisp1_DrawBox(0, 0, 50, 20, 2, GDisp1_COLOR_BLUE);
+    FDisp1_WriteString(str, GDisp1_COLOR_RED, &x, &y, GFONT1_GetFont());
+    GDisp1_UpdateFull();
 #endif
   GUI_MainMenuCreate();
 	for(;;) {
+    (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */
+    if (notifcationValue!=0) {
+      lv_area_t area;
+
+      if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE) {
+        GDisp1_SetDisplayOrientation(GDisp1_ORIENTATION_LANDSCAPE);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = GDisp1_GetWidth()-1;
+        area.y2 = GDisp1_GetHeight()-1;
+        lv_inv_area(&area);
+        lv_refr_now();
+      } else if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE180) {
+        GDisp1_SetDisplayOrientation(GDisp1_ORIENTATION_LANDSCAPE180);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = GDisp1_GetWidth()-1;
+        area.y2 = GDisp1_GetHeight()-1;
+        lv_inv_area(&area);
+      } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT) {
+        GDisp1_SetDisplayOrientation(GDisp1_ORIENTATION_PORTRAIT);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = GDisp1_GetWidth()-1;
+        area.y2 = GDisp1_GetHeight()-1;
+        lv_inv_area(&area);
+      } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT180) {
+        GDisp1_SetDisplayOrientation(GDisp1_ORIENTATION_PORTRAIT180);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = GDisp1_GetWidth()-1;
+        area.y2 = GDisp1_GetHeight()-1;
+        lv_inv_area(&area);
+        lv_obj_invalidate(lv_scr_act());
+      }
+    }
 		LV_Task(); /* call this every 1-20 ms */
 #if PL_CONFIG_HAS_KEYS
 		KEY1_ScanKeys();
@@ -124,7 +206,7 @@ void GUI_Init(void) {
  // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
  // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "Gui", 1700/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 1700/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
   }
 #if PL_CONFIG_HAS_GUI_KEY_NAV

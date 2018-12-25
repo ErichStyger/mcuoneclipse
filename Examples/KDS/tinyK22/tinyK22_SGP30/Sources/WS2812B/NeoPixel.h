@@ -10,7 +10,6 @@
 
 #include "NeoConfig.h"
 #include "CLS1.h"
-#include "GDisp1.h"
 
 #define NEO_NOF_LANES           NEOC_NOF_LANES  /* number of LED lanes */
 #define NEO_NOF_LEDS_IN_LANE    NEOC_NOF_LEDS_IN_LANE /* number of LEDS in each lane */
@@ -66,7 +65,7 @@ NEO_Color NEO_SetColorValueScale(NEO_Color color, uint8_t value);
 /* Set the color percent to 0..100% of the actual values */
 NEO_Color NEO_SetColorPercent(NEO_Color color, uint8_t percent);
 
-GDisp1_PixelColor NEO_BrightnessPercentColor(GDisp1_PixelColor rgbColor, uint8_t percent);
+NEO_Color NEO_BrightnessPercentColor(NEO_Color rgbColor, uint8_t percent);
 
 uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t percent);
 

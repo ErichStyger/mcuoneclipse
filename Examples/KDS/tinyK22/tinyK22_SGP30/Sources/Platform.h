@@ -28,12 +28,13 @@
 #define PL_CONFIG_HAS_AMG8833     (0) /* thermal sensor */
 #define PL_HAS_LED_FRAME          (1)
 #define PL_HAS_LED_FRAME_CLOCK    (1 && PL_HAS_LED_FRAME)
+#define PL_HAS_ORIENTATION        (1 && PL_CONFIG_HAS_MMA8451)
 
 /* NEO Applications, only one can be active! */
 #define PL_CONFIG_HAS_NEO_SHADOW_BOX    (0 & PL_CONFIG_HAS_NEO_PIXEL)
 #define PL_CONFIG_HAS_NEO_HOUR_GLASS    (0 & PL_CONFIG_HAS_NEO_PIXEL)
 #define PL_CONFIG_HAS_NEO_THERMAL_CAM   (0 & PL_CONFIG_HAS_NEO_PIXEL)
-#define PL_CONFIG_HAS_NEO_CLOCK         (1 & PL_CONFIG_HAS_NEO_PIXEL)
+#define PL_CONFIG_HAS_NEO_CLOCK         (1 & PL_CONFIG_HAS_NEO_PIXEL && PL_HAS_LED_FRAME)
 
 #if ((PL_CONFIG_HAS_NEO_SHADOW_BOX + PL_CONFIG_HAS_NEO_HOUR_GLASS + PL_CONFIG_HAS_NEO_THERMAL_CAM+PL_CONFIG_HAS_NEO_CLOCK)>1)
   #error "only one configuration can be active!"

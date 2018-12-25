@@ -149,6 +149,103 @@ void LV_ButtonEvent(uint8_t keys, uint16_t eventMask) {
    }
 }
 
+static uint8_t MapKeyOrientation(uint8_t key) {
+  switch(GDisp1_GetDisplayOrientation()) {
+    case LCD1_CONFIG_ORIENTATION_PORTRAIT:
+      switch(key) {
+        case LV_BUTTON_LEFT:
+          key = LV_BUTTON_UP;
+          break;
+        case LV_BUTTON_RIGHT:
+          key = LV_BUTTON_DOWN;
+          break;
+        case LV_BUTTON_UP:
+          key = LV_BUTTON_RIGHT;
+          break;
+        case LV_BUTTON_DOWN:
+          key = LV_BUTTON_LEFT;
+          break;
+        case LV_BUTTON_CENTER:
+          key = LV_BUTTON_CENTER;
+          break;
+        default:
+          key = 0; /* error case? */
+          break;
+      } /* switch */
+      break;
+    case LCD1_CONFIG_ORIENTATION_PORTRAIT180:
+      switch(key) {
+        case LV_BUTTON_LEFT:
+          key = LV_BUTTON_DOWN;
+          break;
+        case LV_BUTTON_RIGHT:
+          key = LV_BUTTON_UP;
+          break;
+        case LV_BUTTON_UP:
+          key = LV_BUTTON_LEFT;
+          break;
+        case LV_BUTTON_DOWN:
+          key = LV_BUTTON_RIGHT;
+          break;
+        case LV_BUTTON_CENTER:
+          key = LV_BUTTON_CENTER;
+          break;
+        default:
+          key = 0; /* error case? */
+          break;
+      } /* switch */
+      break;
+    case LCD1_CONFIG_ORIENTATION_LANDSCAPE:
+      switch(key) {
+        case LV_BUTTON_LEFT:
+          key = LV_BUTTON_RIGHT;
+          break;
+        case LV_BUTTON_RIGHT:
+          key = LV_BUTTON_LEFT;
+          break;
+        case LV_BUTTON_UP:
+          key = LV_BUTTON_DOWN;
+          break;
+        case LV_BUTTON_DOWN:
+          key = LV_BUTTON_UP;
+          break;
+        case LV_BUTTON_CENTER:
+          key = LV_BUTTON_CENTER;
+          break;
+        default:
+          key = 0; /* error case? */
+          break;
+      } /* switch */
+      break;
+    case LCD1_CONFIG_ORIENTATION_LANDSCAPE180:
+      switch(key) {
+        case LV_BUTTON_LEFT:
+          key = LV_BUTTON_RIGHT;
+          break;
+        case LV_BUTTON_RIGHT:
+          key = LV_BUTTON_LEFT;
+          break;
+        case LV_BUTTON_UP:
+          key = LV_BUTTON_UP;
+          break;
+        case LV_BUTTON_DOWN:
+          key = LV_BUTTON_DOWN;
+          break;
+        case LV_BUTTON_CENTER:
+          key = LV_BUTTON_CENTER;
+          break;
+        default:
+          key = 0; /* error case? */
+          break;
+      } /* switch */
+      break;
+    default:
+      key = 0; /* error case? */
+      break;
+  } /* switch */
+  return key;
+}
+
 /*
  * To use a keyboard:
     USE_LV_GROUP has to be enabled in lv_conf.h
@@ -172,28 +269,7 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   } else if (keyData&(LV_MASK_RELEASED|LV_MASK_RELEASED_LONG)) {
     data->state = LV_INDEV_STATE_REL;
   }
-  switch(keyData&0xff) {
-  case LV_BUTTON_LEFT:
-    data->key = LV_GROUP_KEY_LEFT;
-    break;
-  case LV_BUTTON_RIGHT:
-    data->key = LV_GROUP_KEY_RIGHT;
-    break;
-  case LV_BUTTON_UP:
-    data->key = LV_GROUP_KEY_UP;
-    break;
-  case LV_BUTTON_DOWN:
-    data->key = LV_GROUP_KEY_DOWN;
-    break;
-  case LV_BUTTON_CENTER:
-    data->key = LV_GROUP_KEY_ENTER;
-    break;
- // case LV_BUTTON_NEXT:
- //   data->key = LV_GROUP_KEY_NEXT;
- //   break;
-  default:
-    return false; /* error case? */
-  }
+  data->key = MapKeyOrientation(keyData&0xff);
   return RNG1_NofElements()!=0;   /* return true if we have more data */
 }
 
@@ -209,6 +285,9 @@ static bool encoder_read(lv_indev_data_t *data){
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
   data->state = LV_INDEV_STATE_REL;
+
+  keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
+
   switch(keyData&0xff) {
   case LV_BUTTON_LEFT:
     if (keyData&(LV_MASK_PRESSED)) {
