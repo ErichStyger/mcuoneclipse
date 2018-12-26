@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<configuration name="" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="a7a7d0a6-6980-4d82-81e5-dc0dd64988a3" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <common>
+      <processor>MK22FN512xxx12</processor>
+      <package>MK22FN512VLH12</package>
+      <board></board>
+      <mcu_data>ksdk2_0</mcu_data>
+      <cores selected="core0">
+         <core name="Cortex-M4F" id="core0" description="M4 core"/>
+      </cores>
+      <description>Configuration imported from tinyK22_Blinky</description>
+   </common>
+   <preferences>
+      <validate_boot_init_only>true</validate_boot_init_only>
+      <generate_extended_information>false</generate_extended_information>
+   </preferences>
+   <tools>
+      <pins name="Pins" version="5.0" enabled="true" update_project_code="true">
+         <generated_project_files>
+            <file path="board/pin_mux.c" update_enabled="true"/>
+            <file path="board/pin_mux.h" update_enabled="true"/>
+         </generated_project_files>
+         <pins_profile>
+            <processor_version>5.0.0</processor_version>
+            <pin_labels>
+               <pin_label pin_num="45" pin_signal="ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b" label="LED_BLUE" identifier="LED_BLUE"/>
+            </pin_labels>
+         </pins_profile>
+         <functions_list>
+            <function name="BOARD_InitPins">
+               <description>Configures pin routing and optionally pin electrical features.</description>
+               <options>
+                  <callFromInitBoot>true</callFromInitBoot>
+                  <coreID>core0</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.port" description="Pins initialization requires the PORT Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <pins>
+                  <pin peripheral="GPIOC" signal="GPIO, 2" pin_num="45" pin_signal="ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="gpio_init_state" value="true"/>
+                     </pin_features>
+                  </pin>
+               </pins>
+            </function>
+         </functions_list>
+      </pins>
+      <clocks name="Clocks" version="5.0" enabled="true" update_project_code="true">
+         <generated_project_files>
+            <file path="board/clock_config.c" update_enabled="true"/>
+            <file path="board/clock_config.h" update_enabled="true"/>
+         </generated_project_files>
+         <clocks_profile>
+            <processor_version>5.0.0</processor_version>
+         </clocks_profile>
+         <clock_configurations>
+            <clock_configuration name="BOARD_BootClockRUN">
+               <description></description>
+               <options/>
+               <dependencies>
+                  <dependency resourceType="PinSignal" resourceId="OSC.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: OSC.EXTAL0, Clocks tool id: OSC.EXTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="OSC.EXTAL0" description="&apos;EXTAL0&apos; (Pins tool id: OSC.EXTAL0, Clocks tool id: OSC.EXTAL0) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>INPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="OSC.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: OSC.XTAL0, Clocks tool id: OSC.XTAL0) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="OSC.XTAL0" description="&apos;XTAL0&apos; (Pins tool id: OSC.XTAL0, Clocks tool id: OSC.XTAL0) needs to have &apos;OUTPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>OUTPUT</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.smc" description="Clocks initialization requires the SMC Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <clock_sources>
+                  <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
+               </clock_sources>
+               <clock_outputs>
+                  <clock_output id="Bus_clock.outFreq" value="40 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Core_clock.outFreq" value="80 MHz" locked="true" accuracy="0.001"/>
+                  <clock_output id="Flash_clock.outFreq" value="16 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FlexBus_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
+                  <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
+                  <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="80 MHz" locked="false" accuracy=""/>
+               </clock_outputs>
+               <clock_settings>
+                  <setting id="MCGMode" value="PEE" locked="false"/>
+                  <setting id="powerMode" value="HSRUN" locked="false"/>
+                  <setting id="MCG.FRDIV.scale" value="32" locked="false"/>
+                  <setting id="MCG.IREFS.sel" value="MCG.FRDIV" locked="false"/>
+                  <setting id="MCG.PLLS.sel" value="MCG.PLL" locked="false"/>
+                  <setting id="MCG.PRDIV.scale" value="3" locked="false"/>
+                  <setting id="MCG.VDIV.scale" value="30" locked="false"/>
+                  <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscLowPower" locked="false"/>
+                  <setting id="MCG_C2_RANGE0_CFG" value="High" locked="false"/>
+                  <setting id="MCG_C2_RANGE0_FRDIV_CFG" value="High" locked="false"/>
+                  <setting id="MCG_C5_PLLCLKEN0_CFG" value="Enabled" locked="false"/>
+                  <setting id="SIM.OUTDIV2.scale" value="2" locked="false"/>
+                  <setting id="SIM.OUTDIV3.scale" value="4" locked="false"/>
+                  <setting id="SIM.OUTDIV4.scale" value="5" locked="false"/>
+               </clock_settings>
+               <called_from_default_init>true</called_from_default_init>
+            </clock_configuration>
+         </clock_configurations>
+      </clocks>
+      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
+         <generated_project_files>
+            <file path="board/peripherals.c" update_enabled="true"/>
+            <file path="board/peripherals.h" update_enabled="true"/>
+         </generated_project_files>
+         <peripherals_profile>
+            <processor_version>5.0.0</processor_version>
+         </peripherals_profile>
+         <functional_groups>
+            <functional_group name="BOARD_InitPeripherals" uuid="0744e9de-26b7-47df-9723-24f52c78ead9" called_from_default_init="true" id_prefix="" core="core0">
+               <description></description>
+               <options/>
+               <dependencies/>
+               <instances>
+                  <instance name="GPIO_1" type="gpio" type_id="gpio_be9de87e5addb6b0f416d9acbab34797" mode="GPIO" peripheral="GPIOC" enabled="false">
+                     <config_set name="fsl_gpio" quick_selection="QS_GPIO_1">
+                        <setting name="enable_irq" value="false"/>
+                        <struct name="port_interrupt">
+                           <setting name="IRQn" value="PORTC_IRQn"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                     </config_set>
+                  </instance>
+               </instances>
+            </functional_group>
+         </functional_groups>
+         <components>
+            <component name="system" type_id="system_54b53072540eeeb8f8e9343e71f28176">
+               <config_set_global name="global_system_definitions"/>
+            </component>
+         </components>
+      </periphs>
+   </tools>
+</configuration>
