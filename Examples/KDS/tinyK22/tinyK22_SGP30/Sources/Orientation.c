@@ -30,21 +30,22 @@ ORI_Orientation_e ORI_GetCurrentOrientation(void) {
 void ORI_DetermineCurrentOrientation(void) {
   int16_t xmg, ymg, zmg;
   ORI_Orientation_e newOrientation = -1;
+  #define ORIENTATION_THRESHOLD  (600)
 
   xmg = MMA1_GetXmg();
   ymg = MMA1_GetYmg();
   zmg = MMA1_GetZmg();
   if(xmg>200) {
     newOrientation = ORI_ORIENTATION_X_UP; /* tinyK22 up */
-  } else if (xmg<-200) {
+  } else if (xmg<-ORIENTATION_THRESHOLD) {
     newOrientation = ORI_ORIENTATION_X_DOWN; /* tinyK22 down */
-  } else if (ymg>200) {
+  } else if (ymg>ORIENTATION_THRESHOLD) {
     newOrientation = ORI_ORIENTATION_Y_UP; /* LCD up */
-  } else if (ymg<-200) {
+  } else if (ymg<-ORIENTATION_THRESHOLD) {
     newOrientation = ORI_ORIENTATION_Y_DOWN; /* LCD down */
-  } else if (zmg>200) {
+  } else if (zmg>ORIENTATION_THRESHOLD) {
     newOrientation = ORI_ORIENTATION_Z_UP; /* NeoPixel up */
-  } else if (zmg<-200) {
+  } else if (zmg<-ORIENTATION_THRESHOLD) {
     newOrientation = ORI_ORIENTATION_Z_DOWN; /* NeoPixel down */
   }
   if (newOrientation!=currOrientation) {

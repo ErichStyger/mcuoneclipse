@@ -67,6 +67,14 @@ void GUI_CLOCK_Create(void) {
     /* Make the window content responsive */
    // lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 
+    /* \todo Workaround with dummy object
+     * lv_obj_align(clock_label_time, win, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+     */
+    lv_obj_t *dummy;
+    dummy = lv_label_create(win, NULL);
+    lv_label_set_text(dummy, "");
+    lv_obj_align(dummy, win, LV_ALIGN_CENTER, 0, 0);
+
     /* label for values: */
     clock_label_time = lv_label_create(win, NULL);
 
@@ -76,7 +84,7 @@ void GUI_CLOCK_Create(void) {
     lv_obj_set_style(clock_label_time, &style_txt);
 
     lv_label_set_text(clock_label_time, "12:15:01");
-    lv_obj_align(clock_label_time, win, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(clock_label_time, dummy, LV_ALIGN_OUT_BOTTOM_MID, 0, 10); /* y offset does not work? */
 
     clock_label_date = lv_label_create(win, NULL);
     lv_label_set_text(clock_label_date, "15.10.2018");
