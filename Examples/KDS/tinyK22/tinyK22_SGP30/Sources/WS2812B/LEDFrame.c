@@ -24,6 +24,7 @@
 
 static TimerHandle_t LedFrameTimer; /* timer handle for changing display */
 static bool LEDFRAME_doUpdate = FALSE;
+static bool LEDFRAME_doMirror = TRUE; /* used for headup display mode */
 
 #if LEDFRAME_HAS_ALARM
   static bool LEDFRAME_alarmEnabled = FALSE; /* if alarm is turned on */
@@ -269,10 +270,18 @@ static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y
     data = Numbers8x4[(unsigned int)(ch-'0')];
 #endif
     for(i=0;i<32;i++) { /* 32bits for each digit */
-      if (data&(1<<31)) { /* MSB set? */
-        LedDisp_PutPixel(x0+(i%4), y0+(i/4), color);
+      if (LEDFRAME_doMirror) {
+        if (data&(1<<31)) { /* MSB set? */
+          LedDisp_PutPixel(x0+(i%4), y0+7-(i/4), color);
+        } else {
+          LedDisp_PutPixel(x0+(i%4), y0+7-(i/4), 0);
+        }
       } else {
-        LedDisp_PutPixel(x0+(i%4), y0+(i/4), 0);
+        if (data&(1<<31)) { /* MSB set? */
+          LedDisp_PutPixel(x0+(i%4), y0+(i/4), color);
+        } else {
+          LedDisp_PutPixel(x0+(i%4), y0+(i/4), 0);
+        }
       }
       data <<= 1; /* next bit */
     } /* for */
