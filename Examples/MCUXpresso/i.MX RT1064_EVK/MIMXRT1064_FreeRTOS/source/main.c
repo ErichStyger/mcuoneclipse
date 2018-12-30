@@ -40,13 +40,14 @@
 #include "MIMXRT1064.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-
+#include "Application.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
+  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
 
   	/* Init board hardware. */
     BOARD_InitBootPins();
@@ -54,6 +55,11 @@ int main(void) {
     BOARD_InitBootPeripherals();
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
+
+    /* Init output LED GPIO. */
+    GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+
+    APP_Run();
 
     PRINTF("Hello World\n");
 
