@@ -41,6 +41,7 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 #include "Application.h"
+#include "McuWait.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -49,25 +50,28 @@
 int main(void) {
   gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
 
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
+  /* Init board hardware. */
+  BOARD_InitBootPins();
+  BOARD_InitBootClocks();
+  BOARD_InitBootPeripherals();
+  /* Init FSL debug console. */
+  BOARD_InitDebugConsole();
 
-    /* Init output LED GPIO. */
-    GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+  McuWait_Init(); /* initialize driver */
 
-    APP_Run();
+  /* Init output LED GPIO. */
+  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+  /* safety belt: delay for some time to give the debug probe a chance to access the target after power-on */
+  for(int i=0;i<30;i++) {
+    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+    McuWait_Waitms(500);
+    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+    McuWait_Waitms(500);
+  }
+  GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+  /* now run the application */
 
-    PRINTF("Hello World\n");
+  APP_Run();
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+  return 0 ;
 }
