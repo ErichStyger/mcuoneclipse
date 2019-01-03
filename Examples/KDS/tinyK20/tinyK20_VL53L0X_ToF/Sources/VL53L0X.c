@@ -1,11 +1,11 @@
 /*
- * VL6180X.c
+ * VL53L0X.c
  *
  *  Created on: 04.03.2016
  *      Author: Erich Styger
  */
 
-#include "VL6180X.h"
+#include "VL53L0X.h"
 #include "GI2C1.h"
 #include "WAIT1.h"
 #if VL_MULTIPLE_DEVICES>=1

@@ -1,12 +1,12 @@
 /*
- * VL6180X.h
+ * VL53L0X.h
  *
  *  Created on: 04.03.2016
  *      Author: Erich Styger
  */
 
-#ifndef SOURCES_VL6180X_H_
-#define SOURCES_VL6180X_H_
+#ifndef SOURCES_VL53L0X_H_
+#define SOURCES_VL53L0X_H_
 
 #include "PE_Types.h"
 
@@ -144,4 +144,4 @@ uint8_t VL_ConfigureDefault(uint8_t i2cDeviceAddress);
 uint8_t VL_InitAndConfigureDevice(uint8_t i2cDeviceAddress);
 uint8_t VL_Init(void);
 
-#endif /* SOURCES_VL6180X_H_ */
+#endif /* SOURCES_VL53L0X_H_ */
