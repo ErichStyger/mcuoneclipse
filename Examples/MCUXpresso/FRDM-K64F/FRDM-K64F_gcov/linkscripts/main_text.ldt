@@ -1,6 +1,7 @@
        /************************************************
         * start of main_text.ldt:                      *
         ************************************************/
+        . = ALIGN(4);
         *(.text*)
         /* added in template for gcov: */
         PROVIDE_HIDDEN (__init_array_start = .);
