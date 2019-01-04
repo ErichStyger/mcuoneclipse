@@ -18,7 +18,8 @@ void APP_Start(void) {
   uint8_t res;
   int cntr;
 
-  /* need pull-up on UART Rx pin (PTC3) on tinyK22 */
+  WAIT1_Waitms(100); /* give sensor time to power up */
+  /* need pull-up on UART Rx pin (PTC3) on tinyK20 */
   PORT_PDD_SetPinPullSelect(PORTC_BASE_PTR, 3, PORT_PDD_PULL_UP);
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
 
@@ -48,6 +49,6 @@ void APP_Start(void) {
     }
     LED1_Neg();
     WAIT1_Waitms(50);
-    SHELL_Parse();
+    SHELL_Parse(); /* call command line parser */
   }
 }
