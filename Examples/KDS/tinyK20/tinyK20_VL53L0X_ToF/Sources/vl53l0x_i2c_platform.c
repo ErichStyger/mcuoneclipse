@@ -2,12 +2,6 @@
 #include "vl53l0x_platform.h"
 #include "GI2C1.h"
 
-#define VL53L0X_I2C_ADDR  0x29 ///< Default sensor I2C address
-
-static void LOG_ERROR(const char *str) {
-  /*! \todo */
-}
-
 /**
  * @brief  Initialise platform comms.
  *
@@ -21,50 +15,11 @@ static void LOG_ERROR(const char *str) {
 int32_t VL53L0X_comms_initialise(uint8_t  comms_type, uint16_t comms_speed_khz){
 
 	if(comms_type == SPI){
-	  LOG_ERROR("SPI not supported. Use I2C.\r\n");
-		return 1;
+		return 1; /* failure */
 	} else if(comms_type != I2C){
-		LOG_ERROR("Invalid communication protocol with VL53L0X. Use I2C.\r\n");
-		return 1;
+		return 1; /* failure */
 	}
-#if 0
-	uint32_t nrf_speed;
-
-	if(comms_speed_khz == 400){
-		nrf_speed = NRF_TWI_FREQ_400K;
-	} else if(comms_speed_khz == 250){
-		nrf_speed = NRF_TWI_FREQ_250K;
-	} else if(comms_speed_khz == 100){
-		nrf_speed = NRF_TWI_FREQ_100K;
-	} else {
-		LOG_ERROR("Invalid TWI comms speed.");
-		return 1;
-	}
-
-	ret_code_t ret;
-	const nrf_drv_twi_config_t config =
-	{
-	   .scl                = TWI_SCL_M,
-	   .sda                = TWI_SDA_M,
-	   .frequency          = nrf_speed,
-	   .interrupt_priority = APP_IRQ_PRIORITY_HIGH,
-	   .clear_bus_init     = false
-	};
-
-    ret = nrf_drv_twi_init(&m_twi_master, &config, NULL, NULL);
-
-	if (NRF_SUCCESS == ret)
-	{
-		nrf_drv_twi_enable(&m_twi_master);
-    		NRF_LOG_DEBUG("TWI init successful\r\n");
-	} else {
-		LOG_ERROR("TWI init failed\r\n");
-	}
-
-	return ret;
-#else
-	return 0;
-#endif
+	return 0; /* ok */
 };
 
 /**
@@ -75,7 +30,7 @@ int32_t VL53L0X_comms_initialise(uint8_t  comms_type, uint16_t comms_speed_khz){
  */
 
 int32_t VL53L0X_comms_close(void){
-	//nrf_drv_twi_disable(&m_twi_master);
+	/* not supported */
 	return 0;
 }
 
