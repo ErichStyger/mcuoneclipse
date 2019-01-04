@@ -8,6 +8,10 @@
 #include <stdint.h>
 
 
+#include "CLS1.h"
+
+uint8_t VL53L0X_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
+
 /*!
  * \brief Performs a single shot measurement and returns the distance in millimeters
  * \return ERR_OK if everything is fine, error code otherwise

@@ -233,7 +233,7 @@ static uint8_t SI7021_PrintStatus(CLS1_ConstStdIOType *io) {
 
 uint8_t SI7021_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "SI7021 help")==0) {
-    CLS1_SendHelpStr((unsigned char*)"SI7021", (const unsigned char*)"Group of CLS1 commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"SI7021", (const unsigned char*)"Group of SI7021 commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
