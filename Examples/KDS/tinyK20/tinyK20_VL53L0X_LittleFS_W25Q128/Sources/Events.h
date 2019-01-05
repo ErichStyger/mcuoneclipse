@@ -52,6 +52,7 @@
 #include "SMasterLdd2.h"
 #include "WSCS.h"
 #include "BitIoLdd6.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {

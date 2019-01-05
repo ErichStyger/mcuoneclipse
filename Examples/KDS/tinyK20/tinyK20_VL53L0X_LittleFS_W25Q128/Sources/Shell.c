@@ -8,10 +8,14 @@
 #include "Platform.h"
 #include "Shell.h"
 #include "CLS1.h"
+#include "KIN1.h"
+#include "W25Q128.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
+  KIN1_ParseCommand,
+  W25_ParseCommand,
   NULL /* sentinel */
 };
 

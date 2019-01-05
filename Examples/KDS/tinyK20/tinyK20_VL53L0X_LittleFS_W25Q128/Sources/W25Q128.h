@@ -11,6 +11,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "CLS1.h"
+
+uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
+
 #define W25_ID_BUF_SIZE  (3)
 
 uint8_t W25_ReadID(uint8_t *buf, size_t bufSize);

@@ -5,10 +5,11 @@
  *      Author: Erich Styger
  */
 
-
 #include "W25Q128.h"
 #include "SM1.h"
 #include "WSCS.h"
+#include "UTIL1.h"
+#include "CLS1.h"
 
 #define W25_GET_ID       0x9F
 
@@ -44,6 +45,46 @@ uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
     return ERR_OK;
   }
   return ERR_FAILED; /* not expected part */
+}
+
+static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
+  uint8_t buf[48];
+  uint8_t id[W25_ID_BUF_SIZE];
+  uint8_t res;
+
+  CLS1_SendStatusStr((const unsigned char*)"W25", (const unsigned char*)"\r\n", io->stdOut);
+
+  res = W25_ReadID(id, sizeof(id)); /* check ID */
+  if(res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), id[0]);
+    UTIL1_chcat(buf, sizeof(buf), ' ');
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), id[1]);
+    UTIL1_chcat(buf, sizeof(buf), ' ');
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), id[2]);
+    if (id[0]==0xEF && id[1]==0x40 && id[2]==0x18) {
+      UTIL1_strcat(buf, sizeof(buf), " (W25Q128)\r\n");
+    } else {
+      UTIL1_strcat(buf, sizeof(buf), " (UNKNOWN)\r\n");
+    }
+    CLS1_SendStatusStr((const unsigned char*)"  ID", buf, io->stdOut);
+  } else {
+    CLS1_SendStatusStr((const unsigned char*)"  ID", "ERROR\r\n", io->stdOut);
+  }
+  return ERR_OK;
+}
+
+uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "W25 help")==0) {
+    CLS1_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "W25 status")==0) {
+    *handled = TRUE;
+    return W25_PrintStatus(io);
+  }
+  return ERR_OK;
 }
 
 uint8_t W25_Init(void) {
