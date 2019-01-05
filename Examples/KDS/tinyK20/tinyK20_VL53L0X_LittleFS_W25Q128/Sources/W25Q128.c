@@ -12,6 +12,8 @@
 #include "CLS1.h"
 
 #define W25_GET_ID       0x9F
+#define W25_GET_SERIAL   0x4B
+
 
 /* W25Q128 chip select is LOW active */
 #define W25_CS_ENABLE()   WSCS_ClrVal()
@@ -44,6 +46,25 @@ uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
   return ERR_OK;
 }
 
+uint8_t W25_ReadSerialNumber(uint8_t *buf, size_t bufSize) {
+  int i;
+
+  if (bufSize<W25_SERIAL_BUF_SIZE) {
+    return ERR_OVERFLOW; /* buffer not large enough */
+  }
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_GET_SERIAL);
+  for(i=0;i<4;i++) {
+    SPI_WRITE(0); /* 4 dummy bytes */
+  }
+  for(i=0; i<W25_SERIAL_BUF_SIZE; i++) {
+    SPI_WRITE_READ(0, &buf[i]);
+  }
+  W25_CS_DISABLE();
+  return ERR_OK;
+}
+
 
 uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
   if (bufSize<W25_ID_BUF_SIZE) {
@@ -66,8 +87,10 @@ uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
 static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
   uint8_t buf[48];
   uint8_t id[W25_ID_BUF_SIZE] = {0,0,0};
+  uint8_t serial[W25_SERIAL_BUF_SIZE] = {0,0,0,0,0,0,0,0};
   uint8_t res;
   uint32_t capacity;
+  int i;
 
   CLS1_SendStatusStr((const unsigned char*)"W25", (const unsigned char*)"\r\n", io->stdOut);
 
@@ -98,6 +121,20 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
     UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
   }
   CLS1_SendStatusStr((const unsigned char*)"  Capacity", buf, io->stdOut);
+
+  res = W25_ReadSerialNumber(serial, sizeof(serial)); /* check serial number */
+  if(res==ERR_OK) {
+    buf[0] = '\0';
+    for(i=0; i<sizeof(serial); i++) {
+      UTIL1_strcatNum8Hex(buf, sizeof(buf), serial[i]);
+      UTIL1_chcat(buf, sizeof(buf), ' ');
+    }
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Serial", buf, io->stdOut);
+
   return ERR_OK;
 }
 

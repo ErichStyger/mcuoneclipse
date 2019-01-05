@@ -15,8 +15,10 @@
 
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 
-#define W25_ID_BUF_SIZE  (3)
+#define W25_SERIAL_BUF_SIZE  (8)
+uint8_t W25_ReadSerialNumber(uint8_t *buf, size_t bufSize);
 
+#define W25_ID_BUF_SIZE  (3)
 uint8_t W25_ReadID(uint8_t *buf, size_t bufSize);
 
 uint8_t W25_Init(void);
