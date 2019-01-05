@@ -10,9 +10,22 @@
 #include "WSCS.h"
 #include "UTIL1.h"
 #include "CLS1.h"
+#include "WAIT1.h"
 
-#define W25_GET_ID       0x9F
-#define W25_GET_SERIAL   0x4B
+#define W25_CMD_DATA_READ     0x03
+
+#define W25_CMD_READ_STATUS   0x05
+
+#define W25_CMD_WRITE_ENABLE  0x06
+
+#define W25_CMD_GET_ID        0x9F
+#define W25_ID0_WINBOND       0xEF
+
+#define W25_CMD_GET_SERIAL    0x4B
+
+#define W25_CMD_SECTOR_ERASE_4K 0x20
+#define W25_CMD_BLOCK_ERASE_32K 0x52
+#define W25_CMD_BLOCK_ERASE_64K 0xD8
 
 
 /* W25Q128 chip select is LOW active */
@@ -30,6 +43,94 @@ static uint8_t rxDummy; /* dummy byte if we do not need the result. Needed to re
      while(SM1_SendChar(write)!=ERR_OK) {} \
      while(SM1_RecvChar(readP)!=ERR_OK) {} \
    }
+
+static bool W25_isBusy(void) {
+  uint8_t status;
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_READ_STATUS);
+  SPI_WRITE_READ(0, &status);
+  W25_CS_DISABLE();
+  return (status&1);
+}
+
+static void W25_Wait(void) {
+  while(W25_isBusy()) {
+    WAIT1_Waitms(1);
+  }
+}
+
+uint8_t W25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
+  size_t i;
+
+  W25_Wait();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_DATA_READ);
+  SPI_WRITE(address>>16);
+  SPI_WRITE(address>>8);
+  SPI_WRITE(address);
+  for(i=0;i<bufSize;i++) {
+    SPI_WRITE_READ(0, &buf[i]);
+  }
+  W25_CS_DISABLE();
+  return ERR_OK;
+}
+
+uint8_t W25_EraseSector4K(uint32_t address) {
+  W25_Wait();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_WRITE_ENABLE);
+  W25_CS_DISABLE();
+  WAIT1_Waitus(1);
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_SECTOR_ERASE_4K);
+  SPI_WRITE(address>>16);
+  SPI_WRITE(address>>8);
+  SPI_WRITE(address);
+  W25_CS_DISABLE();
+
+  return ERR_OK;
+}
+
+
+uint8_t W25_EraseBlock32K(uint32_t address) {
+  W25_Wait();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_WRITE_ENABLE);
+  W25_CS_DISABLE();
+  WAIT1_Waitus(1);
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_BLOCK_ERASE_32K);
+  SPI_WRITE(address>>16);
+  SPI_WRITE(address>>8);
+  SPI_WRITE(address);
+  W25_CS_DISABLE();
+
+  return ERR_OK;
+}
+
+uint8_t W25_EraseBlock64K(uint32_t address) {
+  W25_Wait();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_WRITE_ENABLE);
+  W25_CS_DISABLE();
+  WAIT1_Waitus(1);
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_BLOCK_ERASE_64K);
+  SPI_WRITE(address>>16);
+  SPI_WRITE(address>>8);
+  SPI_WRITE(address);
+  W25_CS_DISABLE();
+
+  return ERR_OK;
+}
 
 uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
   uint32_t n = 0x100000; // unknown chips, default to 1 MByte
@@ -54,7 +155,7 @@ uint8_t W25_ReadSerialNumber(uint8_t *buf, size_t bufSize) {
   }
 
   W25_CS_ENABLE();
-  SPI_WRITE(W25_GET_SERIAL);
+  SPI_WRITE(W25_CMD_GET_SERIAL);
   for(i=0;i<4;i++) {
     SPI_WRITE(0); /* 4 dummy bytes */
   }
@@ -72,13 +173,13 @@ uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
   }
 
   W25_CS_ENABLE();
-  SPI_WRITE(W25_GET_ID);
+  SPI_WRITE(W25_CMD_GET_ID);
   /* W25Q128 should report EF 40 18 */
   SPI_WRITE_READ(0, &buf[0]);
   SPI_WRITE_READ(0, &buf[1]);
   SPI_WRITE_READ(0, &buf[2]);
   W25_CS_DISABLE();
-  if (buf[0]==0xEF && buf[1]==0x40 && buf[2]==0x18) {
+  if (buf[0]==W25_ID0_WINBOND && buf[1]==0x40 && buf[2]==0x18) {
     return ERR_OK;
   }
   return ERR_FAILED; /* not expected part */
@@ -102,8 +203,8 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
     UTIL1_strcatNum8Hex(buf, sizeof(buf), id[1]);
     UTIL1_chcat(buf, sizeof(buf), ' ');
     UTIL1_strcatNum8Hex(buf, sizeof(buf), id[2]);
-    if (id[0]==0xEF && id[1]==0x40 && id[2]==0x18) {
-      UTIL1_strcat(buf, sizeof(buf), " (W25Q128)\r\n");
+    if (id[0]==W25_ID0_WINBOND && id[1]==0x40 && id[2]==0x18) {
+      UTIL1_strcat(buf, sizeof(buf), " (Winbond W25Q128)\r\n");
     } else {
       UTIL1_strcat(buf, sizeof(buf), " (UNKNOWN)\r\n");
     }
@@ -155,6 +256,11 @@ uint8_t W25_Init(void) {
   uint8_t buf[W25_ID_BUF_SIZE];
 
   W25_CS_DISABLE();
+
+  uint8_t buffer[32];
+
+  W25_Read(0, buffer, sizeof(buffer));
+
   return W25_ReadID(buf, sizeof(buf)); /* check ID */
 }
 
