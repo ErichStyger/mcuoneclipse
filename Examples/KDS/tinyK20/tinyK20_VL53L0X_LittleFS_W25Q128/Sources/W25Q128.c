@@ -29,6 +29,22 @@ static uint8_t rxDummy; /* dummy byte if we do not need the result. Needed to re
      while(SM1_RecvChar(readP)!=ERR_OK) {} \
    }
 
+uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
+  uint32_t n = 0x100000; // unknown chips, default to 1 MByte
+
+  if (id[2] >= 16 && id[2] <= 31) {
+    n = 1ul << id[2];
+  } else if (id[2] >= 32 && id[2] <= 37) {
+    n = 1ul << (id[2] - 6);
+  } else if ((id[0]==0 && id[1]==0 && id[2]==0) || (id[0]==255 && id[1]==255 && id[2]==255)) {
+    *capacity = 0;
+    return ERR_FAILED;
+  }
+  *capacity = n;
+  return ERR_OK;
+}
+
+
 uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
   if (bufSize<W25_ID_BUF_SIZE) {
     return ERR_OVERFLOW; /* buffer not large enough */
@@ -49,8 +65,9 @@ uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
 
 static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
   uint8_t buf[48];
-  uint8_t id[W25_ID_BUF_SIZE];
+  uint8_t id[W25_ID_BUF_SIZE] = {0,0,0};
   uint8_t res;
+  uint32_t capacity;
 
   CLS1_SendStatusStr((const unsigned char*)"W25", (const unsigned char*)"\r\n", io->stdOut);
 
@@ -67,10 +84,20 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
     } else {
       UTIL1_strcat(buf, sizeof(buf), " (UNKNOWN)\r\n");
     }
-    CLS1_SendStatusStr((const unsigned char*)"  ID", buf, io->stdOut);
   } else {
-    CLS1_SendStatusStr((const unsigned char*)"  ID", "ERROR\r\n", io->stdOut);
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
   }
+  CLS1_SendStatusStr((const unsigned char*)"  ID", buf, io->stdOut);
+
+  res = W25_GetCapacity(id, &capacity);
+  if (res==ERR_OK) {
+    buf[0] = '\0';
+    UTIL1_strcatNum32u(buf, sizeof(buf), capacity);
+    UTIL1_strcat(buf, sizeof(buf), " bytes\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Capacity", buf, io->stdOut);
   return ERR_OK;
 }
 
