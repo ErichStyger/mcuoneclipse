@@ -48,6 +48,10 @@
 #include "MCUC1.h"
 #include "TGT_SWD_OE.h"
 #include "BitIoLdd2.h"
+#include "SM1.h"
+#include "SMasterLdd2.h"
+#include "WSCS.h"
+#include "BitIoLdd6.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -144,6 +148,26 @@ void AS1_OnFullRxBuf(void);
 ** ===================================================================
 */
 void AS1_OnFreeTxBuf(void);
+
+void SM1_OnRxCharExt(SM1_TComData Chr);
+/*
+** ===================================================================
+**     Event       :  SM1_OnRxCharExt (module Events)
+**
+**     Component   :  SM1 [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The parameter of the event contains the last received
+**         character. If an input buffer is used, the character is also
+**         inserted into the buffer.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         Chr             - The last received character
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

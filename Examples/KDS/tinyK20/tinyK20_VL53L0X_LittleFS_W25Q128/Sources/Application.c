@@ -11,6 +11,7 @@
 #include "CLS1.h"
 #include "PORT_PDD.h"
 #include "Shell.h"
+#include "W25Q128.h"
 
 void APP_Start(void) {
   WAIT1_Waitms(100); /* give sensor time to power up */
@@ -19,6 +20,9 @@ void APP_Start(void) {
   PORT_PDD_SetPinPullEnable(PORTC_BASE_PTR, 3, PORT_PDD_PULL_ENABLE);
 
   CLS1_SendStr("\r\n*****************************\r\nLittleFS with tinyK20\r\n*****************************\r\n", CLS1_GetStdio()->stdOut);
+  if (W25_Init()!=ERR_OK) {
+    CLS1_SendStr("ERROR: Failed W25_Init()\r\n", CLS1_GetStdio()->stdErr);
+  }
   for(;;) { /* main loop */
     LED1_Neg();
     WAIT1_Waitms(50);

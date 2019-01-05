@@ -45,6 +45,10 @@
 #include "MCUC1.h"
 #include "TGT_SWD_OE.h"
 #include "BitIoLdd2.h"
+#include "SM1.h"
+#include "SMasterLdd2.h"
+#include "WSCS.h"
+#include "BitIoLdd6.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
