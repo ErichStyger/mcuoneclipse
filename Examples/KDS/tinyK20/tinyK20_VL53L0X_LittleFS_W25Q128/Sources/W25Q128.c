@@ -15,7 +15,7 @@
 #define W25_CMD_PAGE_PROGRAM  0x02
 #define W25_CMD_DATA_READ     0x03
 
-#define W25_CMD_READ_STATUS   0x05
+#define W25_CMD_READ_STATUS1  0x05
 
 #define W25_CMD_WRITE_ENABLE  0x06
 
@@ -27,6 +27,7 @@
 #define W25_CMD_SECTOR_ERASE_4K 0x20
 #define W25_CMD_BLOCK_ERASE_32K 0x52
 #define W25_CMD_BLOCK_ERASE_64K 0xD8
+#define W25_CMD_CHIP_ERASE      0xC7
 
 
 /* W25Q128 chip select is LOW active */
@@ -45,17 +46,22 @@ static uint8_t rxDummy; /* dummy byte if we do not need the result. Needed to re
      while(SM1_RecvChar(readP)!=ERR_OK) {} \
    }
 
-static bool W25_isBusy(void) {
+uint8_t W25_ReadStatus1(uint8_t *status) {
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_READ_STATUS1);
+  SPI_WRITE_READ(0, status);
+  W25_CS_DISABLE();
+  return ERR_OK;
+}
+
+bool W25_isBusy(void) {
   uint8_t status;
 
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_READ_STATUS);
-  SPI_WRITE_READ(0, &status);
-  W25_CS_DISABLE();
+  W25_ReadStatus1(&status);
   return (status&1);
 }
 
-static void W25_Wait(void) {
+void W25_WaitIfBusy(void) {
   while(W25_isBusy()) {
     WAIT1_Waitms(1);
   }
@@ -64,7 +70,7 @@ static void W25_Wait(void) {
 uint8_t W25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
   size_t i;
 
-  W25_Wait();
+  W25_WaitIfBusy();
 
   W25_CS_ENABLE();
   SPI_WRITE(W25_CMD_DATA_READ);
@@ -78,8 +84,24 @@ uint8_t W25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
   return ERR_OK;
 }
 
+uint8_t W25_EraseAll(void) {
+  W25_WaitIfBusy();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_WRITE_ENABLE);
+  W25_CS_DISABLE();
+  WAIT1_Waitus(1);
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_CHIP_ERASE);
+  W25_CS_DISABLE();
+
+  return ERR_OK;
+}
+
+
 uint8_t W25_EraseSector4K(uint32_t address) {
-  W25_Wait();
+  W25_WaitIfBusy();
 
   W25_CS_ENABLE();
   SPI_WRITE(W25_CMD_WRITE_ENABLE);
@@ -97,7 +119,7 @@ uint8_t W25_EraseSector4K(uint32_t address) {
 }
 
 uint8_t W25_EraseBlock32K(uint32_t address) {
-  W25_Wait();
+  W25_WaitIfBusy();
 
   W25_CS_ENABLE();
   SPI_WRITE(W25_CMD_WRITE_ENABLE);
@@ -115,7 +137,7 @@ uint8_t W25_EraseBlock32K(uint32_t address) {
 }
 
 uint8_t W25_EraseBlock64K(uint32_t address) {
-  W25_Wait();
+  W25_WaitIfBusy();
 
   W25_CS_ENABLE();
   SPI_WRITE(W25_CMD_WRITE_ENABLE);
@@ -140,7 +162,7 @@ uint8_t W25_EraseBlock64K(uint32_t address) {
  * \return error code, ERR_OK for no error
  */
 uint8_t W25_ProgramPage(uint32_t address, uint8_t *data, size_t dataSize) {
-  W25_Wait();
+  W25_WaitIfBusy();
 
   W25_CS_ENABLE();
   SPI_WRITE(W25_CMD_WRITE_ENABLE);
@@ -216,10 +238,10 @@ uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
 }
 
 static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
-  uint8_t buf[48];
+  uint8_t buf[60];
   uint8_t id[W25_ID_BUF_SIZE] = {0,0,0};
   uint8_t serial[W25_SERIAL_BUF_SIZE] = {0,0,0,0,0,0,0,0};
-  uint8_t res;
+  uint8_t res, status;
   uint32_t capacity;
   int i;
 
@@ -266,6 +288,22 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
   }
   CLS1_SendStatusStr((const unsigned char*)"  Serial", buf, io->stdOut);
 
+  res = W25_ReadStatus1(&status);
+  if(res==ERR_OK) {
+    UTIL1_strcpy(buf, sizeof(buf), "0x");
+    UTIL1_strcatNum8Hex(buf, sizeof(buf), status);
+    UTIL1_strcat(buf, sizeof(buf), " SEC:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<6)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " TB:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<5)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " BP2:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<4)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " BP1:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<3)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " BP0:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<2)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " WEL:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<1)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), " BUSY:"); UTIL1_strcat(buf, sizeof(buf), status&(1<<0)?"1": "0");
+    UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), "ERROR\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  Status", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -281,7 +319,10 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
     CLS1_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  read <addr>", (const unsigned char*)"Read 32 bytes from address\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  erase4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  erase all", (const unsigned char*)"Erase all\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  erase 4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  erase 32k <addr>", (const unsigned char*)"Erase a 32K block\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  erase 64k <addr>", (const unsigned char*)"Erase a 64K block\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  write <addr> <data>", (const unsigned char*)"Write to page (max 32 bytes data, separated by spaces)\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
@@ -336,9 +377,17 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
       }
     }
     return ERR_OK;
-  } else if (UTIL1_strncmp((char*)cmd, "W25 erase4k ", sizeof("W25 erase4k ")-1)==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "W25 erase all")==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 erase4k ")-1;
+    res = W25_EraseAll();
+    if (res!=ERR_OK) {
+      CLS1_SendStr("failed erasing all memory\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "W25 erase 4k ", sizeof("W25 erase 4k ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 erase 4k ")-1;
     res = UTIL1_xatoi(&p, &val);
     if (res!=ERR_OK) {
       CLS1_SendStr("wrong address\r\n", io->stdErr);
@@ -347,6 +396,36 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
       res = W25_EraseSector4K(val);
       if (res!=ERR_OK) {
         CLS1_SendStr("failed erasing 4k sector\r\n", io->stdErr);
+        return ERR_FAILED;
+      }
+    }
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "W25 erase 32k ", sizeof("W25 erase 32k ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 erase 32k ")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    } else {
+      res = W25_EraseBlock32K(val);
+      if (res!=ERR_OK) {
+        CLS1_SendStr("failed erasing 32k block\r\n", io->stdErr);
+        return ERR_FAILED;
+      }
+    }
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "W25 erase 64k ", sizeof("W25 erase 64k ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 erase 64k ")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    } else {
+      res = W25_EraseBlock64K(val);
+      if (res!=ERR_OK) {
+        CLS1_SendStr("failed erasing 32k block\r\n", io->stdErr);
         return ERR_FAILED;
       }
     }

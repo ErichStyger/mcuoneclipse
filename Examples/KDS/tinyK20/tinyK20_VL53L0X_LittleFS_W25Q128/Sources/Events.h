@@ -53,6 +53,7 @@
 #include "WSCS.h"
 #include "BitIoLdd6.h"
 #include "KIN1.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {
