@@ -8,6 +8,8 @@
 #ifndef SOURCES_PLATFORM_H_
 #define SOURCES_PLATFORM_H_
 
-
+#include "PE_Types.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #endif /* SOURCES_PLATFORM_H_ */
