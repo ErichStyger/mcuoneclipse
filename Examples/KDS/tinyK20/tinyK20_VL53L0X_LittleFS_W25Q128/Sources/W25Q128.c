@@ -161,7 +161,7 @@ uint8_t W25_EraseBlock64K(uint32_t address) {
  * \param dataSize size of data in bytes, max 256
  * \return error code, ERR_OK for no error
  */
-uint8_t W25_ProgramPage(uint32_t address, uint8_t *data, size_t dataSize) {
+uint8_t W25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize) {
   W25_WaitIfBusy();
 
   W25_CS_ENABLE();
