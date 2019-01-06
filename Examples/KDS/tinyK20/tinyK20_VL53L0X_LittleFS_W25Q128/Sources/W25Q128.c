@@ -12,6 +12,7 @@
 #include "CLS1.h"
 #include "WAIT1.h"
 
+#define W25_CMD_PAGE_PROGRAM  0x02
 #define W25_CMD_DATA_READ     0x03
 
 #define W25_CMD_READ_STATUS   0x05
@@ -95,7 +96,6 @@ uint8_t W25_EraseSector4K(uint32_t address) {
   return ERR_OK;
 }
 
-
 uint8_t W25_EraseBlock32K(uint32_t address) {
   W25_Wait();
 
@@ -132,6 +132,37 @@ uint8_t W25_EraseBlock64K(uint32_t address) {
   return ERR_OK;
 }
 
+/*!
+ * Program a page with data
+ * \param address, should be aligned on page (256 bytes) if programming 256 bytes
+ * \param data pointer to data
+ * \param dataSize size of data in bytes, max 256
+ * \return error code, ERR_OK for no error
+ */
+uint8_t W25_ProgramPage(uint32_t address, uint8_t *data, size_t dataSize) {
+  W25_Wait();
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_WRITE_ENABLE);
+  W25_CS_DISABLE();
+  WAIT1_Waitus(1);
+
+  W25_CS_ENABLE();
+  SPI_WRITE(W25_CMD_PAGE_PROGRAM);
+  SPI_WRITE(address>>16);
+  SPI_WRITE(address>>8);
+  SPI_WRITE(address);
+  while(dataSize>0) {
+    SPI_WRITE(*data);
+    dataSize--;
+    data++;
+  }
+  W25_CS_DISABLE();
+
+  return ERR_OK;
+}
+
+
 uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
   uint32_t n = 0x100000; // unknown chips, default to 1 MByte
 
@@ -165,7 +196,6 @@ uint8_t W25_ReadSerialNumber(uint8_t *buf, size_t bufSize) {
   W25_CS_DISABLE();
   return ERR_OK;
 }
-
 
 uint8_t W25_ReadID(uint8_t *buf, size_t bufSize) {
   if (bufSize<W25_ID_BUF_SIZE) {
@@ -240,14 +270,87 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
 }
 
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
+  const unsigned char *p;
+  uint32_t val;
+  uint32_t res;
+  uint8_t data[32];
+  int i;
+  uint8_t buf[8];
+
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "W25 help")==0) {
     CLS1_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  read <addr>", (const unsigned char*)"Read 32 bytes from address\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  erase4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  write <addr> <data>", (const unsigned char*)"Write to page (max 32 bytes data, separated by spaces)\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "W25 status")==0) {
     *handled = TRUE;
     return W25_PrintStatus(io);
+  } else if (UTIL1_strncmp((char*)cmd, "W25 read ", sizeof("W25 read ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 read ")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    } else {
+      res = W25_Read(val, &data[0], sizeof(data));
+      if (res!=ERR_OK) {
+        CLS1_SendStr("failed reading memory\r\n", io->stdErr);
+        return ERR_FAILED;
+      } else {
+        for(i=0; i<sizeof(data); i++) {
+          buf[0] = '\0';
+          UTIL1_strcatNum8Hex(buf, sizeof(buf), data[i]);
+          UTIL1_chcat(buf, sizeof(buf), ' ');
+          CLS1_SendStr(buf, io->stdOut);
+        }
+        CLS1_SendStr("\r\n", io->stdOut);
+      }
+    }
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "W25 write ", sizeof("W25 write ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 write ")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    } else {
+      for(i=0; i<sizeof(data); i++) {
+        uint32_t v;
+        res = UTIL1_xatoi(&p, &v);
+        if (res!=ERR_OK) {
+          break;
+        }
+        data[i] = v;
+      }
+      if (i>0) {
+        res = W25_ProgramPage(val, data, i);
+        if (res!=ERR_OK) {
+          CLS1_SendStr("failed programming page\r\n", io->stdErr);
+          return ERR_FAILED;
+        }
+      }
+    }
+    return ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "W25 erase4k ", sizeof("W25 erase4k ")-1)==0) {
+    *handled = TRUE;
+    p = cmd+sizeof("W25 erase4k ")-1;
+    res = UTIL1_xatoi(&p, &val);
+    if (res!=ERR_OK) {
+      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      return ERR_FAILED;
+    } else {
+      res = W25_EraseSector4K(val);
+      if (res!=ERR_OK) {
+        CLS1_SendStr("failed erasing 4k sector\r\n", io->stdErr);
+        return ERR_FAILED;
+      }
+    }
+    return ERR_OK;
   }
   return ERR_OK;
 }
@@ -256,11 +359,6 @@ uint8_t W25_Init(void) {
   uint8_t buf[W25_ID_BUF_SIZE];
 
   W25_CS_DISABLE();
-
-  uint8_t buffer[32];
-
-  W25_Read(0, buffer, sizeof(buffer));
-
   return W25_ReadID(buf, sizeof(buf)); /* check ID */
 }
 
