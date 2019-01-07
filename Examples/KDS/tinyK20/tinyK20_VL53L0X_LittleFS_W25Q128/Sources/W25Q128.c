@@ -309,7 +309,7 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
 
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
   const unsigned char *p;
-  uint32_t val;
+  uint32_t val, end;
   uint32_t res;
   uint8_t data[32];
   int i;
@@ -318,7 +318,7 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "W25 help")==0) {
     CLS1_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  read <addr>", (const unsigned char*)"Read 32 bytes from address\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  read <start> <end>", (const unsigned char*)"Read memory from <start> to <end> address\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  erase all", (const unsigned char*)"Erase all\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  erase 4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  erase 32k <addr>", (const unsigned char*)"Erase a 32K block\r\n", io->stdOut);
@@ -334,24 +334,21 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
     p = cmd+sizeof("W25 read ")-1;
     res = UTIL1_xatoi(&p, &val);
     if (res!=ERR_OK) {
-      CLS1_SendStr("wrong address\r\n", io->stdErr);
+      CLS1_SendStr("wrong start address\r\n", io->stdErr);
       return ERR_FAILED;
     } else {
-      res = W25_Read(val, &data[0], sizeof(data));
+      res = UTIL1_xatoi(&p, &end);
       if (res!=ERR_OK) {
-        CLS1_SendStr("failed reading memory\r\n", io->stdErr);
+        CLS1_SendStr("wrong end address\r\n", io->stdErr);
         return ERR_FAILED;
-      } else {
-        for(i=0; i<sizeof(data); i++) {
-          buf[0] = '\0';
-          UTIL1_strcatNum8Hex(buf, sizeof(buf), data[i]);
-          UTIL1_chcat(buf, sizeof(buf), ' ');
-          CLS1_SendStr(buf, io->stdOut);
-        }
-        CLS1_SendStr("\r\n", io->stdOut);
       }
+      res = CLS1_PrintMemory(val, end, 3, 16, W25_Read, io);
+      if (res!=ERR_OK) {
+        CLS1_SendStr("memory read failed\r\n", io->stdErr);
+        return ERR_FAILED;
+      }
+      return ERR_OK;
     }
-    return ERR_OK;
   } else if (UTIL1_strncmp((char*)cmd, "W25 write ", sizeof("W25 write ")-1)==0) {
     *handled = TRUE;
     p = cmd+sizeof("W25 write ")-1;

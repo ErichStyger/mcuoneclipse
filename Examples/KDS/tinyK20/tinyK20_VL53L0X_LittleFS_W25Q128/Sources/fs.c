@@ -134,7 +134,6 @@ uint8_t FS_Mount(CLS1_ConstStdIOType *io) {
   }
   if (io!=NULL) {
     CLS1_SendStr("Mounting ...", io->stdOut);
-    return ERR_FAILED;
   }
   res = lfs_mount(&FS_lfs, &FS_cfg);
   if (res==LFS_ERR_OK) {
@@ -162,7 +161,6 @@ uint8_t FS_Unmount(CLS1_ConstStdIOType *io) {
   }
   if (io!=NULL) {
     CLS1_SendStr("Unmounting ...", io->stdOut);
-    return ERR_FAILED;
   }
   res = lfs_unmount(&FS_lfs);
   if (res==LFS_ERR_OK) {
@@ -179,6 +177,57 @@ uint8_t FS_Unmount(CLS1_ConstStdIOType *io) {
   }
 }
 
+uint8_t FS_Dir(const char *path, CLS1_ConstStdIOType *io) {
+  int res;
+  lfs_dir_t dir;
+  struct lfs_info info;
+
+  if (io==NULL) {
+    return ERR_FAILED; /* listing a directory without an I/O channel does not make any sense */
+  }
+  if (!FS_isMounted) {
+    CLS1_SendStr("File system is not mounted, mount it first.\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  if (path==NULL) {
+    path = "/"; /* default path */
+  }
+  res = lfs_dir_open(&FS_lfs, &dir, path);
+  if (res!=LFS_ERR_OK) {
+    CLS1_SendStr("FAILED lfs_dir_open()!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  for(;;) {
+    res = lfs_dir_read(&FS_lfs, &dir, &info);
+    if (res < 0) {
+      CLS1_SendStr("FAILED lfs_dir_read()!\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    if (res == 0) { /* no more files */
+       break;
+    }
+    switch (info.type) {
+      case LFS_TYPE_REG: CLS1_SendStr("reg ", io->stdOut); break;
+      case LFS_TYPE_DIR: CLS1_SendStr("dir ", io->stdOut); break;
+      default:           CLS1_SendStr("?   ", io->stdOut); break;
+    }
+    static const char *prefixes[] = {"", "K", "M", "G"};
+    for (int i = sizeof(prefixes)/sizeof(prefixes[0])-1; i >= 0; i--) {
+        if (info.size >= (1 << 10*i)-1) {
+            CLS1_printf("%*u%sB ", 4-(i != 0), info.size >> 10*i, prefixes[i]); /* \todo: remove printf */
+            break;
+        }
+    } /* for */
+    CLS1_SendStr(info.name, io->stdOut);
+  } /* for */
+  res = lfs_dir_close(&FS_lfs, &dir);
+  if (res!=LFS_ERR_OK) {
+    CLS1_SendStr("FAILED lfs_dir_close()!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
 static uint8_t FS_PrintStatus(CLS1_ConstStdIOType *io) {
   CLS1_SendStatusStr((const unsigned char*)"FS", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((const unsigned char*)"  mounted", FS_isMounted?"yes\r\n":"no\r\n", io->stdOut);
@@ -192,6 +241,7 @@ uint8_t FS_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdI
     CLS1_SendHelpStr((unsigned char*)"  format", (const unsigned char*)"Format the file system\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  mount", (const unsigned char*)"Mount the file system\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  unmount", (const unsigned char*)"unmount the file system\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  dir", (const unsigned char*)"List directory\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if (UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0 || UTIL1_strcmp((char*)cmd, "FS status")==0) {
@@ -203,9 +253,12 @@ uint8_t FS_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdI
   } else if (UTIL1_strcmp((char*)cmd, "FS mount")==0) {
     *handled = TRUE;
     return FS_Mount(io);
-  } else if (UTIL1_strcmp((char*)cmd, "FS umount")==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "FS unmount")==0) {
     *handled = TRUE;
     return FS_Unmount(io);
+  } else if (UTIL1_strcmp((char*)cmd, "FS dir")==0) {
+    *handled = TRUE;
+    return FS_Dir(NULL, io);
   }
   return ERR_OK;
 }

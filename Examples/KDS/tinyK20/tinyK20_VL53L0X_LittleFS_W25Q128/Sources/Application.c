@@ -18,7 +18,6 @@ void APP_Start(void) {
     CLS1_SendStr("ERROR: Failed FS_Init()\r\n", CLS1_GetStdio()->stdErr);
     for(;;) {}
   }
-  CLS1_SendStr("\r\n*****************************\r\nLittleFS with tinyK20\r\n*****************************\r\n", CLS1_GetStdio()->stdOut);
   for(;;) { /* main loop */
     LED1_Neg();
     WAIT1_Waitms(50);

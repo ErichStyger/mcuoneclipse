@@ -51,6 +51,7 @@
 #include "XF1.h"
 #include "RTT1.h"
 #include "PTC.h"
+#include "I2CSPY1.h"
 #include "GI2C1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

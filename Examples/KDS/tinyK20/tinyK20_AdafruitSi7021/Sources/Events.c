@@ -63,11 +63,6 @@ void Cpu_OnNMIINT(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void GI2C1_OnRequestBus(void)
-{
-  /* Write your code here ... */
-}
-
 /*
 ** ===================================================================
 **     Description :
@@ -77,11 +72,6 @@ void GI2C1_OnRequestBus(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void GI2C1_OnReleaseBus(void)
-{
-  /* Write your code here ... */
-}
-
 /*
 ** ===================================================================
 **     Description :

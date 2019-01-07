@@ -54,6 +54,7 @@
 #include "XF1.h"
 #include "RTT1.h"
 #include "PTC.h"
+#include "I2CSPY1.h"
 #include "GI2C1.h"
 
 #ifdef __cplusplus
@@ -76,7 +77,6 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void GI2C1_OnRequestBus(void);
 /*
 ** ===================================================================
 **     Description :
@@ -87,7 +87,6 @@ void GI2C1_OnRequestBus(void);
 ** ===================================================================
 */
 
-void GI2C1_OnReleaseBus(void);
 /*
 ** ===================================================================
 **     Description :

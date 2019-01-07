@@ -9,6 +9,7 @@
 #include "Shell.h"
 #include "CLS1.h"
 #include "KIN1.h"
+#include "TmDt1.h"
 #include "W25Q128.h"
 #include "fs.h"
 #include "PORT_PDD.h"
@@ -17,6 +18,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
   CLS1_ParseCommand,
   KIN1_ParseCommand,
+  TmDt1_ParseCommand,
   W25_ParseCommand,
   FS_ParseCommand,
   NULL /* sentinel */
