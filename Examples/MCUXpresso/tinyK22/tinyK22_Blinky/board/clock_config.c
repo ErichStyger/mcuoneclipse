@@ -91,20 +91,20 @@ void BOARD_InitBootClocks(void)
 name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
-- {id: Bus_clock.outFreq, value: 40 MHz}
-- {id: Core_clock.outFreq, value: 80 MHz}
-- {id: Flash_clock.outFreq, value: 16 MHz}
-- {id: FlexBus_clock.outFreq, value: 20 MHz}
+- {id: Bus_clock.outFreq, value: 60 MHz}
+- {id: Core_clock.outFreq, value: 120 MHz}
+- {id: Flash_clock.outFreq, value: 24 MHz}
+- {id: FlexBus_clock.outFreq, value: 30 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
 - {id: MCGFFCLK.outFreq, value: 250 kHz}
-- {id: System_clock.outFreq, value: 80 MHz}
+- {id: System_clock.outFreq, value: 120 MHz}
 settings:
 - {id: MCGMode, value: PEE}
 - {id: powerMode, value: HSRUN}
 - {id: MCG.FRDIV.scale, value: '32'}
 - {id: MCG.IREFS.sel, value: MCG.FRDIV}
 - {id: MCG.PLLS.sel, value: MCG.PLL}
-- {id: MCG.PRDIV.scale, value: '3'}
+- {id: MCG.PRDIV.scale, value: '2'}
 - {id: MCG.VDIV.scale, value: '30'}
 - {id: MCG_C2_OSC_MODE_CFG, value: ModeOscLowPower}
 - {id: MCG_C2_RANGE0_CFG, value: High}
@@ -134,7 +134,7 @@ const mcg_config_t mcgConfig_BOARD_BootClockRUN =
         .pll0Config =
             {
                 .enableMode = kMCG_PllEnableIndependent,/* MCGPLLCLK enabled independent of MCG clock mode, MCGPLLCLK disabled in STOP mode */
-                .prdiv = 0x2U,                    /* PLL Reference divider: divided by 3 */
+                .prdiv = 0x1U,                    /* PLL Reference divider: divided by 2 */
                 .vdiv = 0x6U,                     /* VCO divider: multiplied by 30 */
             },
     };
