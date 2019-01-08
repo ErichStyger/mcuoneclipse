@@ -307,6 +307,11 @@ static uint8_t W25_PrintStatus(CLS1_ConstStdIOType *io) {
   return ERR_OK;
 }
 
+static uint8_t ReadBytes(void *hndl, uint32_t address, uint8_t *buf, size_t bufSize) {
+  (void)hndl; /* not used */
+  return W25_Read(address, buf, bufSize);
+}
+
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
   const unsigned char *p;
   uint32_t val, end;
@@ -342,7 +347,7 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
         CLS1_SendStr("wrong end address\r\n", io->stdErr);
         return ERR_FAILED;
       }
-      res = CLS1_PrintMemory(val, end, 3, 16, W25_Read, io);
+      res = CLS1_PrintMemory(NULL, val, end, 3, 16, ReadBytes, io);
       if (res!=ERR_OK) {
         CLS1_SendStr("memory read failed\r\n", io->stdErr);
         return ERR_FAILED;
