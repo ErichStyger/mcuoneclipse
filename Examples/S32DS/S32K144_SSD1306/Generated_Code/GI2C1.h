@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GenericI2C
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.047, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:01, # CodeGen: 5
+**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -27,6 +27,7 @@
 **         WriteBlock        - uint8_t GI2C1_WriteBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags...
 **         ReadBlock         - uint8_t GI2C1_ReadBlock(void* data, uint16_t dataSize, GI2C1_EnumSendFlags...
 **         ReadBlockGeneric  - uint8_t GI2C1_ReadBlockGeneric(void* data, uint16_t dataSize,...
+**         ReadAddressWait   - uint8_t GI2C1_ReadAddressWait(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
 **         ReadAddress       - uint8_t GI2C1_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
 **         WriteAddress      - uint8_t GI2C1_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t...
 **         ReadByte          - uint8_t GI2C1_ReadByte(uint8_t i2cAddr, uint8_t *data);
@@ -430,6 +431,30 @@ uint8_t GI2C1_WriteByte(uint8_t i2cAddr, uint8_t data);
 **         NAME            - DESCRIPTION
 **         i2cAddr         - I2C address of device
 **         data            - Data value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t GI2C1_ReadAddressWait(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint16_t waitMs, uint8_t *data, uint16_t dataSize);
+/*
+** ===================================================================
+**     Method      :  ReadAddressWait (component GenericI2C)
+**
+**     Description :
+**         Same as ReadAddress, but with an optional wait between the
+**         address and read. Read from the device. This writes
+**         (S+i2cAddr+0), (memAddr), (Sr+i2cAddr+1), (data)...(data+P)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         i2cAddr         - I2C Address of device
+**       * memAddr         - Pointer to device memory address
+**         memAddrSize     - number of address bytes
+**         waitMs          - Wait time between the address part
+**                           and reading the data part. Wait time can be
+**                           zero.
+**       * data            - Pointer to read buffer
+**         dataSize        - Size of read buffer
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================

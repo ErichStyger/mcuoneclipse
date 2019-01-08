@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : McuLibConfig
-**     Version     : Component 01.012, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:01, # CodeGen: 5
+**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
 **     Abstract    :
 **          Configures the drivers for various SDKs and APIs used.
 **     Settings    :

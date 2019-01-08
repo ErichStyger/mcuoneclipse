@@ -86,9 +86,3 @@ void FreeRTOS_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void RF1_OnInterrupt(void)
-{
-  /* write your code here */
-}
-
-

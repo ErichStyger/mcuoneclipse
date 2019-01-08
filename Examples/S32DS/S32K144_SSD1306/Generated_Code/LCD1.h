@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : SSD1306
-**     Version     : Component 01.030, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 10:09, # CodeGen: 11
+**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -41,6 +41,7 @@
 **         GetHeight       - LCD1_PixelDim LCD1_GetHeight(void);
 **         GetLongerSide   - LCD1_PixelDim LCD1_GetLongerSide(void);
 **         GetShorterSide  - LCD1_PixelDim LCD1_GetShorterSide(void);
+**         PutPixel        - void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
 **         Clear           - void LCD1_Clear(void);
 **         UpdateFull      - void LCD1_UpdateFull(void);
 **         UpdateRegion    - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
@@ -51,6 +52,7 @@
 **         GetLCD          - void LCD1_GetLCD(void);
 **         GiveLCD         - void LCD1_GiveLCD(void);
 **         PrintString     - void LCD1_PrintString(uint8_t *str);
+**         Deinit          - void LCD1_Deinit(void);
 **         Init            - void LCD1_Init(void);
 **
 ** * Copyright (c) 2017-2018, Erich Styger
@@ -433,6 +435,34 @@ void LCD1_PrintString(uint8_t *str);
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * str             - Pointer to string to be printed on display
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
+/*
+** ===================================================================
+**     Method      :  PutPixel (component SSD1306)
+**
+**     Description :
+**         Draws a pixel into the display buffer (not on the display).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x position of the pixel
+**         y               - y position of the pixel
+**         color           - color value of the pixel
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component SSD1306)
+**
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
 */

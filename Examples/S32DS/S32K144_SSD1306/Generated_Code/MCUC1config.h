@@ -23,6 +23,8 @@
   /*!< 1: STM32 ARM Cortex CPU family, 0: otherwise */
 #define MCUC1_CONFIG_CPU_IS_HCS08           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
   /*!< 1: HCS08 CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_IMXRT           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: NXP i.Mx RT CPU family, 0: otherwise */
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #define MCUC1_CONFIG_CORTEX_M      (4)
@@ -31,6 +33,9 @@
   /*!< 1: floating point unit present, 0: otherwise */
 #define MCUC1_CONFIG_FPU_USED      (0 || (defined(__FPU_USED) && (__FPU_USED)==1))
   /*!< 1: using floating point unit, 0: otherwise */
+
+/* macro for little and big endianess. ARM is little endian */
+#define MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN   (MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
 
 /* Identifiers used to identify the SDK */
 #define MCUC1_CONFIG_SDK_GENERIC             0
@@ -42,7 +47,7 @@
 #define MCUC1_CONFIG_SDK_KINETIS_2_0         3
   /*!< using NXP Kinetis SDK V2.0 */
 #define MCUC1_CONFIG_SDK_MCUXPRESSO_2_0      4
-  /*!< same as Kinetis SDK v2.0 */
+  /*!< using NXP MCUXpresso SDK V2.x, same as Kinetis SDK v2.0 */
 #define MCUC1_CONFIG_SDK_S32K                5
   /*!< SDK for S32K */
 

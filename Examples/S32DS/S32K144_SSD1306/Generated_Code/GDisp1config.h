@@ -29,8 +29,7 @@
   #define GDisp1_CONFIG_FCT_NAME_WRITEPIXEL     LCD1_WritePixel
   #define GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW    LCD1_CloseWindow
 #else
-  #define GDisp1_CONFIG_FCT_NAME_SETPIXEL       LCD1_SetPixel
-  #define GDisp1_CONFIG_FCT_NAME_CLRPIXEL       LCD1_ClrPixel
+  #define GDisp1_CONFIG_FCT_NAME_PUTPIXEL       LCD1_PutPixel
 #endif
 
 #ifndef GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
@@ -52,6 +51,16 @@
   #define GDisp1_CONFIG_CLEAR_DISPLAY_IN_INIT  (0)
     /*!< 1: clear display during Init(); 0: do not clear display. */
 #endif
+
+#ifndef GDisp1_CONFIG_USE_DISPLAY_SHARING
+  #define GDisp1_CONFIG_USE_DISPLAY_SHARING  (0)
+  #define GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGet   OnGetDisplay
+  #define GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGive  OnGiveDisplay
+    /*!< 1: Share display and generate OnGetDisplay() and OnGiveDisplay() events. 0: do not share display */
+#endif
+/* prototypes */
+extern void GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGet(void);  /* called at the start of display critical section */
+extern void GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGive(void); /* called at the end of the display critical section */
 
 #ifndef GDisp1_CONFIG_USE_MUTEX
   #define GDisp1_CONFIG_USE_MUTEX  (0)

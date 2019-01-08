@@ -48,7 +48,6 @@ INFO: empty Drivers\common\GeneralDamage.inc file
 ** ===================================================================
 */
 
-void RF1_OnInterrupt(void);
 /*
 ** ===================================================================
 **     Description :

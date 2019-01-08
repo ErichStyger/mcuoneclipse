@@ -4,13 +4,22 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GDisplay
-**     Version     : Component 01.200, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:58, # CodeGen: 10
+**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
-**
+**          Component name                                 : GDisp1
+**          SDK                                            : MCUC1
+**          Inverted Pixels                                : no
+**          Memory Buffer                                  : Enabled
+**            Orientation                                  : Landscape
+**          Clear screen on Init                           : no
+**          Hardware                                       : 
+**            Display                                      : LCD1
+**          Watchdog                                       : Disabled
+**          RTOS                                           : Disabled
 **     Contents    :
 **         PutPixel          - void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor...
 **         SetPixel          - void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
@@ -40,7 +49,7 @@
 **         Deinit            - void GDisp1_Deinit(void);
 **         Init              - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -92,15 +101,18 @@ extern "C" {
 
 
 
-/* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
-typedef struct {                         /* Image */
-  uint16_t width;                        /* Image width  */
-  uint16_t height;                       /* Image height */
-  const uint8_t *pixmap;                 /* Image pixel bitmap */
-  uint16_t size;                         /* Image size   */
-  const char *name;                      /* Image name   */
-} TIMAGE;
-typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
+#ifndef _TIMAGE_IS_DEFINED
+  #define _TIMAGE_IS_DEFINED
+  /* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
+  typedef struct {                         /* Image */
+    uint16_t width;                        /* Image width  */
+    uint16_t height;                       /* Image height */
+    const uint8_t *pixmap;                 /* Image pixel bitmap */
+    uint16_t size;                         /* Image size   */
+    const char *name;                      /* Image name   */
+  } TIMAGE;
+  typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
+#endif /* _TIMAGE_IS_DEFINED */
 
 #define GDisp1_RGB565(R,G,B)     ((GDisp1_PixelColor)((((R)&0x1f)<<11)+(((G)&0x3f)<<5)+((B)&0x1f))) /* convert RGB into 565 color format */
 
@@ -153,13 +165,16 @@ typedef LCD1_DisplayOrientation GDisp1_DisplayOrientation;
 #define GDisp1_ORIENTATION_LANDSCAPE    LCD1_ORIENTATION_LANDSCAPE
 #define GDisp1_ORIENTATION_LANDSCAPE180 LCD1_ORIENTATION_LANDSCAPE180
 
-
+/* using Memory Buffer */
 /* Landscape */
 
 #define GDisp1_BUF_BYTE(x,y)  /* how to access a byte in the display buf[][] */ \
+  /* one bit per pixel */\
       LCD1_DisplayBuf[(y)/8][x]
-#define GDisp1_BUF_BYTE_PIXEL_BIT_NO(x,y) /* pixel bit number inside display buffer byte (0 is LSB, 7 MSB) */ \
+#if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
+  #define GDisp1_BUF_BYTE_PIXEL_BIT_NO(x,y) /* pixel bit number inside display buffer byte (0 is LSB, 7 MSB) */ \
       ((uint8_t)((y)%8))
+#endif
 
 #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
   #define GDisp1_BUF_BYTE_PIXEL_MASK(x,y)  /* pixel mask for an individual bit inside a display buffer byte */ \
@@ -483,8 +498,7 @@ void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pix
 ** ===================================================================
 */
 
-#define GDisp1_UpdateRegion(x,y,w,h)   LCD1_UpdateRegion(x,y,w,h)
-
+void GDisp1_UpdateRegion(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim w, GDisp1_PixelDim h);
 /*
 ** ===================================================================
 **     Method      :  UpdateRegion (component GDisplay)
@@ -518,7 +532,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetWidth LCD1_GetLongerSide
+#define GDisp1_GetWidth LCD1_GetWidth
 /*
 ** ===================================================================
 **     Method      :  GetWidth (component GDisplay)
@@ -531,7 +545,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetHeight LCD1_GetShorterSide
+#define GDisp1_GetHeight LCD1_GetHeight
 /*
 ** ===================================================================
 **     Method      :  GetHeight (component GDisplay)

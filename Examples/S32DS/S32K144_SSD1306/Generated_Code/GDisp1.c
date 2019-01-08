@@ -4,13 +4,22 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GDisplay
-**     Version     : Component 01.200, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:58, # CodeGen: 10
+**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
-**
+**          Component name                                 : GDisp1
+**          SDK                                            : MCUC1
+**          Inverted Pixels                                : no
+**          Memory Buffer                                  : Enabled
+**            Orientation                                  : Landscape
+**          Clear screen on Init                           : no
+**          Hardware                                       : 
+**            Display                                      : LCD1
+**          Watchdog                                       : Disabled
+**          RTOS                                           : Disabled
 **     Contents    :
 **         PutPixel          - void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor...
 **         SetPixel          - void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
@@ -40,7 +49,7 @@
 **         Deinit            - void GDisp1_Deinit(void);
 **         Init              - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -134,26 +143,7 @@ static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-
 */
 void GDisp1_Clear(void)
 {
-  uint8_t *p = (uint8_t*)(&LCD1_DisplayBuf[0][0]); /* first element in display buffer */
-
-  while (p<((uint8_t*)LCD1_DisplayBuf)+sizeof(LCD1_DisplayBuf)) {
- #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
-    *p++ = (uint8_t)(  (GDisp1_COLOR_PIXEL_CLR<<7)
-                  | (GDisp1_COLOR_PIXEL_CLR<<6)
-                  | (GDisp1_COLOR_PIXEL_CLR<<5)
-                  | (GDisp1_COLOR_PIXEL_CLR<<4)
-                  | (GDisp1_COLOR_PIXEL_CLR<<3)
-                  | (GDisp1_COLOR_PIXEL_CLR<<2)
-                  | (GDisp1_COLOR_PIXEL_CLR<<1)
-                  |  GDisp1_COLOR_PIXEL_CLR
-                 );
- #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-    *((uint16_t*)p) = GDisp1_COLOR_WHITE;
-    p += 2;
- #else
-    *p++ = GDisp1_COLOR_WHITE;
- #endif
-  }
+  GDisp1_DrawFilledBox(0, 0, GDisp1_GetWidth(), GDisp1_GetHeight(), GDisp1_COLOR_PIXEL_CLR);
 }
 
 /*
@@ -174,21 +164,17 @@ void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
   if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
     return;
   }
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
   GDisp1_CONFIG_FCT_NAME_OPENWINDOW(x, y, x, y); /* set up a one pixel window */
   GDisp1_CONFIG_FCT_NAME_WRITEPIXEL(GDisp1_COLOR_BLACK); /* store pixel with color information */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
-#elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
-  GDisp1_CONFIG_FCT_NAME_SETPIXEL(x, y);
-#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_BLACK;
 #else
-  GDisp1_BUF_BYTE(x,y) |= GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, GDisp1_COLOR_PIXEL_SET);
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -211,21 +197,17 @@ void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y)
   if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
     return;
   }
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
   GDisp1_CONFIG_FCT_NAME_OPENWINDOW(x, y, x, y); /* set up a one pixel window */
   GDisp1_CONFIG_FCT_NAME_WRITEPIXEL(GDisp1_COLOR_WHITE); /* store pixel with color information */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
-#elif GDisp1_CONFIG_USE_DISPLAY_MEMORY_WRITE
-  LCD1_ClrPixel(x, y);
-#elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = GDisp1_COLOR_WHITE;
 #else
-  GDisp1_BUF_BYTE(x,y) &= ~GDisp1_BUF_BYTE_PIXEL_MASK(x,y);
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, GDisp1_COLOR_PIXEL_CLR);
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -271,7 +253,7 @@ void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor col
   if (x>=GDisp1_GetWidth() || y>=GDisp1_GetHeight()) { /* values out of range */
     return;
   }
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
@@ -279,22 +261,9 @@ void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor col
   GDisp1_CONFIG_FCT_NAME_WRITEPIXEL(color); /* store pixel with color information */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
 #else
- #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
-  if (   (color==GDisp1_COLOR_BLACK && GDisp1_COLOR_BLACK==GDisp1_COLOR_PIXEL_SET)
-      || (color==GDisp1_COLOR_WHITE && GDisp1_COLOR_WHITE==GDisp1_COLOR_PIXEL_SET)
-     )
-  {
-    GDisp1_SetPixel(x,y);
-  } else {
-    GDisp1_ClrPixel(x,y);
-  }
- #elif GDisp1_CONFIG_NOF_BITS_PER_PIXEL==16
-  GDisp1_BUF_WORD(x,y) = color;
- #else /* multi-bit display */
-  LCD1_PutPixel(x, y, color);
- #endif
+  GDisp1_CONFIG_FCT_NAME_PUTPIXEL(x, y, color);
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -352,7 +321,7 @@ void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim 
   x1 = (GDisp1_PixelDim)(x+width-1);    /* set window lower right x coordinate */
   y1 = (GDisp1_PixelDim)(y+height-1);   /* set window lower right y coordinate */
   pixCnt = (GDisp1_PixelCount)((x1-x+1)*(y1-y+1)); /* number of pixels to write */
-  #if GDisp1_CONFIG_USE_MUTEX
+  #if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
   #endif
   GDisp1_CONFIG_FCT_NAME_OPENWINDOW(x, y, x1, y1); /* set up window as large as the box */
@@ -361,12 +330,12 @@ void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim 
     pixCnt--;
   } /* while */
   GDisp1_CONFIG_FCT_NAME_CLOSEWINDOW(); /* close and execute window */
-  #if GDisp1_CONFIG_USE_MUTEX
+  #if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
   #endif
 #else
   y0 = y; ye = (GDisp1_PixelDim)(y0+height-1);
-  #if GDisp1_CONFIG_USE_MUTEX
+  #if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
   #endif
   for(;;) { /* breaks */
@@ -383,7 +352,7 @@ void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim 
     }
     y0++;
   } /* for */
-  #if GDisp1_CONFIG_USE_MUTEX
+  #if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
   #endif
 #endif
@@ -779,7 +748,7 @@ void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_PixelDi
   GDisp1_PixelCount pixelCount = (GDisp1_PixelCount)((x2-x1+1) * (y2-y1+1));
 
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
@@ -825,7 +794,7 @@ void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_PixelDi
   /* NYI */
   (void)x1; (void)y1; (void)x2; (void)y2; (void)bmp; (void)compressed; /* avoid compiler warning */
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -856,7 +825,7 @@ void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pix
   GDisp1_PixelCount pixelCount = (GDisp1_PixelCount)((x2-x1+1) * (y2-y1+1));
 
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
@@ -904,7 +873,7 @@ void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pix
   /* NYI */
   (void)x1; (void)y1; (void)x2; (void)y2; (void)bmp;  (void)ColorTable; (void)compressed; /* avoid compiler warning */
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -941,7 +910,7 @@ void GDisp1_Draw256BitmapLow(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pixe
   GDisp1_PixelCount pixelCount = (GDisp1_PixelCount)((x2-x1+1) * (y2-y1+1));
 
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GetDisplay();
 #endif
 #if GDisp1_CONFIG_USE_WINDOW_CAPABILITY
@@ -991,7 +960,7 @@ void GDisp1_Draw256BitmapLow(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pixe
   /* NYI */
   (void)x1; (void)y1; (void)x2; (void)y2; (void)bmp; (void)compressed; /* avoid compiler warning */
 #endif
-#if GDisp1_CONFIG_USE_MUTEX
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
   GDisp1_GiveDisplay();
 #endif
 }
@@ -1011,12 +980,16 @@ void GDisp1_Draw256BitmapLow(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pixe
 **     Returns     : Nothing
 ** ===================================================================
 */
-#if 0
 void GDisp1_UpdateRegion(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim w, GDisp1_PixelDim h)
 {
-  /* method is implemented as macro in the header file */
-}
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
+  GDisp1_GetDisplay();
 #endif
+  LCD1_UpdateRegion(x,y,w,h);
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
+  GDisp1_GiveDisplay();
+#endif
+}
 
 /*
 ** ===================================================================
@@ -1098,6 +1071,9 @@ void GDisp1_GetDisplay(void)
 #if GDisp1_CONFIG_USE_MUTEX
   xSemaphoreTakeRecursive(GDisp1_displayMutex, portMAX_DELAY);
 #endif
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
+  GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGet();
+#endif
   LCD1_GetLCD();
 }
 
@@ -1115,6 +1091,9 @@ void GDisp1_GetDisplay(void)
 void GDisp1_GiveDisplay(void)
 {
   LCD1_GiveLCD();
+#if GDisp1_CONFIG_USE_DISPLAY_SHARING
+  GDisp1_CONFIG_USE_DISPLAY_SHARING_OnGive();
+#endif
 #if GDisp1_CONFIG_USE_MUTEX
   xSemaphoreGiveRecursive(GDisp1_displayMutex);
 #endif

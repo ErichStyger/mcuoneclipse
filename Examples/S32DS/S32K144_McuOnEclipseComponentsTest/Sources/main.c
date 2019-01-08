@@ -127,10 +127,10 @@ static void Components_Init(void) {
   KIN1_Init(); /* ### KinetisTools "KIN1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  CE1_Init(); /* ### SDK_BitIO "CE1" init code ... */
+//  CE1_Init(); /* ### SDK_BitIO "CE1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
-  CSN1_Init(); /* ### SDK_BitIO "CSN1" init code ... */
+//  CSN1_Init(); /* ### SDK_BitIO "CSN1" init code ... */
 #endif
 /*------------------------------------------------------------------*/
 }
