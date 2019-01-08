@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="a7a7d0a6-6980-4d82-81e5-dc0dd64988a3" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="" version="1.5" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5.xsd" uuid="0c515a33-5928-488e-94a8-be35054de024" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK22FN512xxx12</processor>
       <package>MK22FN512VLH12</package>
-      <board></board>
       <mcu_data>ksdk2_0</mcu_data>
       <cores selected="core0">
          <core name="Cortex-M4F" id="core0" description="M4 core"/>
       </cores>
-      <description>Configuration imported from tinyK22_Blinky</description>
+      <description></description>
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
@@ -111,7 +110,7 @@
                </clock_sources>
                <clock_outputs>
                   <clock_output id="Bus_clock.outFreq" value="40 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Core_clock.outFreq" value="80 MHz" locked="true" accuracy="0.001"/>
+                  <clock_output id="Core_clock.outFreq" value="80 MHz" locked="false" accuracy=""/>
                   <clock_output id="Flash_clock.outFreq" value="16 MHz" locked="false" accuracy=""/>
                   <clock_output id="FlexBus_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>

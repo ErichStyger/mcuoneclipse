@@ -92,7 +92,7 @@ name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
 - {id: Bus_clock.outFreq, value: 40 MHz}
-- {id: Core_clock.outFreq, value: 80 MHz, locked: true, accuracy: '0.001'}
+- {id: Core_clock.outFreq, value: 80 MHz}
 - {id: Flash_clock.outFreq, value: 16 MHz}
 - {id: FlexBus_clock.outFreq, value: 20 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
