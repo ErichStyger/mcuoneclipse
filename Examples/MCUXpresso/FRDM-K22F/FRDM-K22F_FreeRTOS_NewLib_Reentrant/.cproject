@@ -266,6 +266,7 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
+							<tool id="com.crt.advproject.tool.debug.debug.1881838512" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -305,7 +306,10 @@
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
 &lt;Properties property_3="NXP" property_4="MK22FN512xxx12" property_count="5" version="100200"/&gt;&#13;
-&lt;infoList vendor="NXP"&gt;&lt;info chip="MK22FN512xxx12" name="MK22FN512xxx12"&gt;&lt;chip&gt;&lt;name&gt;MK22FN512xxx12&lt;/name&gt;&#13;
+&lt;infoList vendor="NXP"&gt;&#13;
+&lt;info chip="MK22FN512xxx12" name="MK22FN512xxx12"&gt;&#13;
+&lt;chip&gt;&#13;
+&lt;name&gt;MK22FN512xxx12&lt;/name&gt;&#13;
 &lt;family&gt;K2x&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="512" type="Flash"/&gt;&#13;
@@ -372,7 +376,8 @@
 &lt;peripheralInstance derived_from="NVIC" determined="infoFile" id="NVIC" location="0xE000E100"/&gt;&#13;
 &lt;peripheralInstance derived_from="MCM" determined="infoFile" id="MCM" location="0xE0080000"/&gt;&#13;
 &lt;/chip&gt;&#13;
-&lt;processor&gt;&lt;name gcc_name="cortex-m4"&gt;Cortex-M4&lt;/name&gt;&#13;
+&lt;processor&gt;&#13;
+&lt;name gcc_name="cortex-m4"&gt;Cortex-M4&lt;/name&gt;&#13;
 &lt;family&gt;Cortex-M&lt;/family&gt;&#13;
 &lt;/processor&gt;&#13;
 &lt;link href="MK22F51212_internal_peripheral.xml" show="embed" type="simple"/&gt;&#13;
@@ -382,7 +387,7 @@
 	</storageModule>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_FRDM-K22F</sdkName>
-		<sdkVersion>2.4.1</sdkVersion>
+		<sdkVersion>2.5.0</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;platform.drivers.adc16.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;platform.devices.MK22F51212_CMSIS.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.dspi.MK22F51212;platform.drivers.flash.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.i2c.MK22F51212;platform.drivers.lpuart.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.rtc.MK22F51212;platform.drivers.smc.MK22F51212;platform.drivers.uart.MK22F51212;platform.utilities.debug_console.MK22F51212;platform.devices.MK22F51212_startup.MK22F51212;project_template.frdmk22f.MK22F51212;platform.drivers.sim.MK22F51212;</sdkComponents>
 		<boardId>frdmk22f</boardId>
 		<package>MK22FN512VLL12</package>

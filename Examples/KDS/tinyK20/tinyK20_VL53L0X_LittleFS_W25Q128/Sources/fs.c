@@ -59,47 +59,12 @@ const struct lfs_config FS_cfg = {
   .sync  = block_device_sync,
 
   // block device configuration
-  .read_size = 16,
-  .prog_size = 16,
+  .read_size = 256,
+  .prog_size = 256,
   .block_size = 4096,
   .block_count = 4096, /* 4096 * 4K = 16 MByte */
   .lookahead = 128,
 };
-
-#if 0
-static void testFS(void) {
-  /* mount the filesystem */
-  int err = lfs_mount(&FS_lfs, &FS_cfg);
-  lfs_file_t file;
-
-  /* reformat if we can't mount the filesystem */
-  /* this should only happen on the first boot */
-  if (err) {
-    CLS1_SendStr("failed to mount file system, formatting it.\r\n", CLS1_GetStdio()->stdOut);
-    lfs_format(&FS_lfs, &FS_cfg);
-    lfs_mount(&FS_lfs, &FS_cfg);
-  }
-
-  /* read current count */
-  uint32_t boot_count = 0;
-  lfs_file_open(&FS_lfs, &file, "boot_count", LFS_O_RDWR | LFS_O_CREAT);
-  lfs_file_read(&FS_lfs, &file, &boot_count, sizeof(boot_count));
-
-  /* update boot count */
-  boot_count += 1;
-  lfs_file_rewind(&FS_lfs, &file);
-  lfs_file_write(&FS_lfs, &file, &boot_count, sizeof(boot_count));
-
-  /* remember the storage is not updated until the file is closed successfully */
-  lfs_file_close(&FS_lfs, &file);
-
-  /* release any resources we were using */
-  lfs_unmount(&FS_lfs);
-
-  /* print the boot count */
-  CLS1_printf("boot_count: %d\r\n", boot_count);
-}
-#endif
 
 uint8_t FS_Format(CLS1_ConstStdIOType *io) {
   int res;
@@ -400,7 +365,7 @@ uint8_t FS_RunBenchmark(CLS1_ConstStdIOType *io) {
     CLS1_SendStr((const unsigned char*)"*** Failed creating benchmark file!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  for(i=0;i<1024/*0*/;i++) {
+  for(i=0;i<10240;i++) {
     if (lfs_file_write(&FS_lfs, &file, "benchmark ", sizeof("benchmark ")-1)<0) {
       CLS1_SendStr((const unsigned char*)"*** Failed writing file!\r\n", io->stdErr);
       (void)lfs_file_close(&FS_lfs, &file);
@@ -479,8 +444,34 @@ uint8_t FS_RunBenchmark(CLS1_ConstStdIOType *io) {
 }
 
 static uint8_t FS_PrintStatus(CLS1_ConstStdIOType *io) {
+  uint8_t buf[24];
+
   CLS1_SendStatusStr((const unsigned char*)"FS", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((const unsigned char*)"  mounted", FS_isMounted?"yes\r\n":"no\r\n", io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.block_count*FS_cfg.block_size);
+  UTIL1_strcat(buf, sizeof(buf), " bytes\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  space", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.read_size);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  read_size", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.prog_size);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  prog_size", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.block_size);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  block_size", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.block_count);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  block_count", buf, io->stdOut);
+
+  UTIL1_Num32uToStr(buf, sizeof(buf), FS_cfg.lookahead);
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  lookahead", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -572,6 +563,6 @@ uint8_t FS_Init(void) {
   if (W25_Init()!=ERR_OK) {
     return ERR_FAILED;
   }
-  return ERR_OK;
+  return FS_Mount(NULL);
 }
 
