@@ -59,7 +59,7 @@
 			</tr>
 			<tr>
 				<td>A2</td><td>ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FBa_AD1/EWM_OUT_b/SPI1_SCK</td><td><small><i>same</i></small></td>
-				<td bgcolor='#F8FF9A'>ADC0</td><td bgcolor='#F8FF9A'>adc_seb6</td><td bgcolor='#F8FF9A'>alt0</td><td bgcolor='#F8FF9A'>Input</td>
+				<td bgcolor='#F7DCFF'>PTD</td><td bgcolor='#F7DCFF'>port5</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
 			<tr>
 				<td>A3</td><td>PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FBa_AD2/EWM_IN/SPI1_PCS0</td><td><small><i>same</i></small></td>
@@ -423,7 +423,7 @@
 			</tr>
 			<tr>
 				<td>H8</td><td>PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</td><td><small><i>same</i></small></td>
-				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_di</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Input</td>
+				<td bgcolor='#F7DCFF'>PTA</td><td bgcolor='#F7DCFF'>port1</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
 			<tr>
 				<td>H9</td><td>PTA3/UART0_RTS_b/FTM0_CH0/JTAG_TMS/SWD_DIO</td><td><small><i>same</i></small></td>
@@ -468,11 +468,9 @@
 				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_clk</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Input</td>
 			</tr>
 			<tr>
-				<td rowspan='3'>J7</td><td rowspan='3'>PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</td><td rowspan='3'><small><i>same</i></small></td>
-				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_do</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Output</td>
+				<td>J7</td><td>PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</td><td><small><i>same</i></small></td>
+				<td bgcolor='#F7DCFF'>PTA</td><td bgcolor='#F7DCFF'>port2</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
-			<tr bgcolor='#CCB6A0'><td>TPIU</td><td>tpiu_swo</td><td>alt7</td><td>Output</td></tr>
-			<tr bgcolor='#969696'><td>non-peripheral</td><td>TRACE_SWO</td><td>alt7</td><td>Not Specified</td></tr>
 			<tr>
 				<td rowspan='2'>J8</td><td rowspan='2'>PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b</td><td rowspan='2'><small><i>same</i></small></td>
 				<td bgcolor='#EBD4BD'>SystemControl</td><td bgcolor='#EBD4BD'>scb_nmi</td><td bgcolor='#EBD4BD'>alt7</td><td bgcolor='#EBD4BD'>Input</td>
@@ -2132,7 +2130,7 @@
 			</tr>
 			<tr>
 				<td>A2</td><td>ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FBa_AD1/EWM_OUT_b/SPI1_SCK</td><td><small><i>same</i></small></td>
-				<td bgcolor='#F8FF9A'>ADC0</td><td bgcolor='#F8FF9A'>adc_seb6</td><td bgcolor='#F8FF9A'>alt0</td><td bgcolor='#F8FF9A'>Input</td>
+				<td bgcolor='#F7DCFF'>PTD</td><td bgcolor='#F7DCFF'>port5</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
 			<tr>
 				<td>A3</td><td>PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FBa_AD2/EWM_IN/SPI1_PCS0</td><td><small><i>same</i></small></td>
@@ -2496,7 +2494,7 @@
 			</tr>
 			<tr>
 				<td>H8</td><td>PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</td><td><small><i>same</i></small></td>
-				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_di</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Input</td>
+				<td bgcolor='#F7DCFF'>PTA</td><td bgcolor='#F7DCFF'>port1</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
 			<tr>
 				<td>H9</td><td>PTA3/UART0_RTS_b/FTM0_CH0/JTAG_TMS/SWD_DIO</td><td><small><i>same</i></small></td>
@@ -2541,11 +2539,9 @@
 				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_clk</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Input</td>
 			</tr>
 			<tr>
-				<td rowspan='3'>J7</td><td rowspan='3'>PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</td><td rowspan='3'><small><i>same</i></small></td>
-				<td bgcolor='#DDC7B5'>JTAG</td><td bgcolor='#DDC7B5'>jtag_do</td><td bgcolor='#DDC7B5'>alt7</td><td bgcolor='#DDC7B5'>Output</td>
+				<td>J7</td><td>PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</td><td><small><i>same</i></small></td>
+				<td bgcolor='#F7DCFF'>PTA</td><td bgcolor='#F7DCFF'>port2</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
 			</tr>
-			<tr bgcolor='#CCB6A0'><td>TPIU</td><td>tpiu_swo</td><td>alt7</td><td>Output</td></tr>
-			<tr bgcolor='#969696'><td>non-peripheral</td><td>TRACE_SWO</td><td>alt7</td><td>Not Specified</td></tr>
 			<tr>
 				<td rowspan='2'>J8</td><td rowspan='2'>PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b</td><td rowspan='2'><small><i>same</i></small></td>
 				<td bgcolor='#EBD4BD'>SystemControl</td><td bgcolor='#EBD4BD'>scb_nmi</td><td bgcolor='#EBD4BD'>alt7</td><td bgcolor='#EBD4BD'>Input</td>

@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K22P121M120SF7RM, Rev. 1, March 24, 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:17, # CodeGen: 0
+**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
 **     Abstract    :
 **
 **     Settings    :
@@ -85,6 +85,29 @@ extern "C" {
 #if CPU_COMMON_INIT
 void Common_Init(void)
 {
+  /* Common initialization of registers which initialization is required 
+     for proper functionality of components in the project but initialization
+     component which would be configuring these registers is missing 
+     in the project. 
+     Add associated initialization component to the project to avoid 
+     initialization of registers in the Common_Init().
+     Also, after reset value optimization property affects initialization of 
+     registers in this method (see active generator configuration 
+     Optimizations\Utilize after reset values property or enabled processor 
+     component Common settings\Utilize after reset values property) */
+  /* SIM_CLKDIV2: USBDIV=4,USBFRAC=1 */
+  SIM_CLKDIV2 = (uint32_t)((SIM_CLKDIV2 & (uint32_t)~(uint32_t)(
+                 SIM_CLKDIV2_USBDIV(0x03)
+                )) | (uint32_t)(
+                 SIM_CLKDIV2_USBDIV(0x04) |
+                 SIM_CLKDIV2_USBFRAC_MASK
+                ));
+  /* SIM_SCGC4: USBOTG=1 */
+  SIM_SCGC4 |= SIM_SCGC4_USBOTG_MASK;
+  /* SIM_SOPT2: USBSRC=1 */
+  SIM_SOPT2 |= SIM_SOPT2_USBSRC_MASK;
+  /* NVICIP53: PRI53=0 */
+  NVICIP53 = NVIC_IP_PRI53(0x00);
 }
 
 #endif /* CPU_COMMON_INIT */
@@ -106,6 +129,29 @@ void Common_Init(void)
 #if CPU_COMPONENTS_INIT
 void Components_Init(void)
 {
+  MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
+  /* ### BitIO_LDD "BitIoLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)BitIoLdd1_Init(NULL);
+  LED1_Init(); /* ### LED "LED1" init code ... */
+  /* ### BitIO_LDD "BitIoLdd2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)BitIoLdd2_Init(NULL);
+  LED2_Init(); /* ### LED "LED2" init code ... */
+  /* ### BitIO_LDD "BitIoLdd3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)BitIoLdd3_Init(NULL);
+  LED3_Init(); /* ### LED "LED3" init code ... */
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
+  CS1_Init(); /* ### CriticalSection "CS1" init code ... */
+  /* ### Timeout "TMOUT1" init code ... */
+  TMOUT1_Init();
+  Tx1_Init(); /* ### RingBuffer "Tx1" init code ... */
+  Rx1_Init(); /* ### RingBuffer "Rx1" init code ... */
+  (void)USB1_Init();
+  /* ### TimerInt_LDD "TimerIntLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)TimerIntLdd1_Init(NULL);
+  /* ### TimerInt "TI1" init code ... */
+  XF1_Init(); /* ### XFormat "XF1" init code ... */
+  CLS1_Init(); /* ### Shell "CLS1" init code ... */
 }
 #endif /* CPU_COMPONENTS_INIT */
 

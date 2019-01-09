@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K22P121M120SF7RM, Rev. 1, March 24, 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:17, # CodeGen: 0
+**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
 **     Abstract    :
 **         This file collects Processor Expert components configuration 
 **         and interface files.
@@ -25,7 +25,15 @@
 **                Fast internal reference clock [MHz]      : 4
 **                Initialize fast trim value               : no
 **              RTC oscillator                             : Disabled
-**              System oscillator 0                        : Disabled
+**              System oscillator 0                        : Enabled
+**                Clock source                             : External crystal
+**                  Clock input pin                        : 
+**                    Pin name                             : EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0
+**                  Clock output pin                       : 
+**                    Pin name                             : XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1
+**                  Clock frequency [MHz]                  : 8
+**                  Capacitor load                         : 0pF
+**                  Oscillator operating mode              : Low power
 **            Clock source settings                        : 1
 **              Clock source setting 0                     : 
 **                Internal reference clock                 : 
@@ -36,29 +44,30 @@
 **                External reference clock                 : 
 **                  OSC0ERCLK clock                        : Enabled
 **                  OSC0ERCLK in stop                      : Disabled
-**                  OSC0ERCLK clock [MHz]                  : 0
+**                  OSC0ERCLK clock [MHz]                  : 8
 **                  ERCLK32K clock source                  : Auto select
 **                  ERCLK32K. clock [kHz]                  : 0.001
 **                MCG settings                             : 
-**                  MCG mode                               : FEI
-**                  MCG output clock                       : FLL clock
-**                  MCG output [MHz]                       : 20.97152
+**                  MCG mode                               : PEE
+**                  MCG output clock                       : PLL clock
+**                  MCG output [MHz]                       : 120
 **                  MCG external ref. clock source         : System oscillator 0
-**                  MCG external ref. clock [MHz]          : 0
+**                  MCG external ref. clock [MHz]          : 8
 **                  Clock monitor                          : Disabled
 **                  FLL settings                           : 
-**                    FLL module                           : Enabled
-**                    FLL output [MHz]                     : 20.97152
-**                    MCGFFCLK clock [kHz]                 : 32.768
-**                    Reference clock source               : Slow internal clock
-**                    FLL reference clock [kHz]            : 32.768
+**                    FLL module                           : Disabled
+**                    FLL output [MHz]                     : 0
+**                    MCGFFCLK clock [kHz]                 : 31.25
+**                    Reference clock source               : External clock
+**                      Reference clock divider            : Auto select
+**                    FLL reference clock [kHz]            : 31.25
 **                    Multiplication factor                : Auto select
 **                  PLL 0 settings                         : 
-**                    PLL module                           : Disabled
+**                    PLL module                           : Enabled
 **                    PLL module in Stop                   : Disabled
-**                    PLL output [MHz]                     : 0
+**                    PLL output [MHz]                     : 120
 **                    Reference clock divider              : Auto select
-**                    PLL reference clock [MHz]            : 1
+**                    PLL reference clock [MHz]            : 4
 **                    Multiplication factor                : Auto select
 **                    Loss of lock interrupt               : Disabled
 **            Clock configurations                         : 1
@@ -69,26 +78,26 @@
 **                __RTC_OSC                                : 0
 **                Very low power mode                      : Disabled
 **                Clock source setting                     : configuration 0
-**                  MCG mode                               : FEI
-**                  MCG output [MHz]                       : 20.97152
+**                  MCG mode                               : PEE
+**                  MCG output [MHz]                       : 120
 **                  MCGIRCLK clock [MHz]                   : 0.032768
-**                  OSCERCLK clock [MHz]                   : 0
+**                  OSCERCLK clock [MHz]                   : 8
 **                  ERCLK32K. clock [kHz]                  : 0.001
-**                  MCGFFCLK [kHz]                         : 32.768
+**                  MCGFFCLK [kHz]                         : 31.25
 **                System clocks                            : 
 **                  Core clock prescaler                   : Auto select
-**                  Core clock                             : 20.97152
+**                  Core clock                             : 120
 **                  Bus clock prescaler                    : Auto select
-**                  Bus clock                              : 20.97152
+**                  Bus clock                              : 60
 **                  External clock prescaler               : Auto select
-**                  External bus clock                     : 10.48576
+**                  External bus clock                     : 60
 **                  Flash clock prescaler                  : Auto select
-**                  Flash clock                            : 10.48576
+**                  Flash clock                            : 24
 **                  PLL/FLL clock selection                : Auto select
-**                    Clock frequency [MHz]                : 20.97152
+**                    Clock frequency [MHz]                : 120
 **          Low power mode settings                        : 
 **            Allowed power modes                          : 
-**              High speed run mode                        : Not allowed
+**              High speed run mode                        : Allowed
 **              Very low power modes                       : Not allowed
 **              Low leakage stop mode                      : Not allowed
 **              Very low leakage stop mode                 : Not allowed
@@ -109,16 +118,12 @@
 **            Reset pin                                    : Enabled
 **              Reset Pin                                  : RESET_b
 **            Debug interface (JTAG)                       : 
-**              JTAG Mode                                  : JTAG
-**                TDI                                      : Enabled
-**                  TDI Pin                                : PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI
-**                TDO                                      : Enabled
-**                  TDO Pin                                : PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO
+**              JTAG Mode                                  : cJTAG/SWD
+**                TDO                                      : Disabled
 **                TCK                                      : Enabled
 **                  TCK Pin                                : PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK
 **                TMS                                      : Enabled
 **                  TMS Pin                                : PTA3/UART0_RTS_b/FTM0_CH0/JTAG_TMS/SWD_DIO
-**                nTRST                                    : Disabled
 **            Flash memory organization                    : 
 **              Flash blocks                               : 2
 **                Flash block 0                            : PFlash
@@ -187,7 +192,7 @@
 **              Peripheral settings                        : 
 **                NMI function                             : Enabled
 **                FLASH initialization speed               : Fast
-**                EzPort operation at boot                 : Enabled
+**                EzPort operation at boot                 : Disabled
 **                Low power boot                           : Disabled
 **          CPU interrupts/resets                          : 
 **            Non-maskable interrupt                       : Enabled
@@ -255,6 +260,13 @@
 
 /* PinSettings component header file */
 #include "Pins1.h"
+  
+/* Initialization component configuration header file */
+#include "USB0_Config.h"
+/* Initialization component static header file */
+#include "USB0_Init.h"
+/* Initialization component generated header file */
+#include "USB0.h"
   
   
 #endif /* __Init_Config_H */

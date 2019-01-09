@@ -1,0 +1,1247 @@
+/*!
+  \page USB0 USB0 (Init_USB_OTG)
+**          This file implements the USB_OTG (USB0) module initialization
+**          according to the Peripheral Initialization settings, and
+**          defines interrupt service routines prototypes.
+**
+
+- \subpage USB0_settings
+- \subpage USB0_regs_overview  
+- \subpage USB0_regs_details
+- \ref USB0_module "Component documentation" 
+\page USB0_regs_overview Registers Initialization Overview
+This page contains the initialization values for the registers of the peripheral(s) configured
+by the component. 
+<table>
+<tr><td colspan="4" class="ttitle1">USB0 Initialization</td></tr>
+<tr><td class="ttitle2">Address</td><td class="ttitle2">Register</td><td class="ttitle2">Register Value</td><td class="ttitle2">Register Description</td></tr>
+<tr><td>0x40072094</td><td>USB0_CTL</td>
+<td class="regNotResetVal">0x00000003</td>
+ <td>USB0_CTL register, peripheral USB0.</td></tr>
+<tr><td>0x40072144</td><td>USB0_CLK_RECOVER_IRC_EN</td>
+<td class="regResetVal">0x00000001</td>
+ <td>USB0_CLK_RECOVER_IRC_EN register, peripheral USB0.</td></tr>
+<tr><td>0x40072140</td><td>USB0_CLK_RECOVER_CTRL</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_CLK_RECOVER_CTRL register, peripheral USB0.</td></tr>
+<tr><td>0x40072100</td><td>USB0_USBCTRL</td>
+<td class="regResetVal">0x000000C0</td>
+ <td>USB0_USBCTRL register, peripheral USB0.</td></tr>
+<tr><td>0x40072010</td><td>USB0_OTGISTAT</td>
+<td class="regNotResetVal">0x000000FF</td>
+ <td>USB0_OTGISTAT register, peripheral USB0.</td></tr>
+<tr><td>0x40072080</td><td>USB0_ISTAT</td>
+<td class="regNotResetVal">0x000000FF</td>
+ <td>USB0_ISTAT register, peripheral USB0.</td></tr>
+<tr><td>0x40072088</td><td>USB0_ERRSTAT</td>
+<td class="regNotResetVal">0x000000FF</td>
+ <td>USB0_ERRSTAT register, peripheral USB0.</td></tr>
+<tr><td>0x40072084</td><td>USB0_INTEN</td>
+<td class="regNotResetVal">0x000000FF</td>
+ <td>USB0_INTEN register, peripheral USB0.</td></tr>
+<tr><td>0x4007208C</td><td>USB0_ERREN</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ERREN register, peripheral USB0.</td></tr>
+<tr><td>0x4007210C</td><td>USB0_USBTRC0</td>
+<td class="regNotResetVal">0x00000060</td>
+ <td>USB0_USBTRC0 register, peripheral USB0.</td></tr>
+<tr><td>0x40072014</td><td>USB0_OTGICR</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_OTGICR register, peripheral USB0.</td></tr>
+<tr><td>0x40072098</td><td>USB0_ADDR</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ADDR register, peripheral USB0.</td></tr>
+<tr><td>0x400720C0</td><td>USB0_ENDPT0</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT0 register, peripheral USB0.</td></tr>
+<tr><td>0x400720C4</td><td>USB0_ENDPT1</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT1 register, peripheral USB0.</td></tr>
+<tr><td>0x400720C8</td><td>USB0_ENDPT2</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT2 register, peripheral USB0.</td></tr>
+<tr><td>0x400720CC</td><td>USB0_ENDPT3</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT3 register, peripheral USB0.</td></tr>
+<tr><td>0x400720D0</td><td>USB0_ENDPT4</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT4 register, peripheral USB0.</td></tr>
+<tr><td>0x400720D4</td><td>USB0_ENDPT5</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT5 register, peripheral USB0.</td></tr>
+<tr><td>0x400720D8</td><td>USB0_ENDPT6</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT6 register, peripheral USB0.</td></tr>
+<tr><td>0x400720DC</td><td>USB0_ENDPT7</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT7 register, peripheral USB0.</td></tr>
+<tr><td>0x400720E0</td><td>USB0_ENDPT8</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT8 register, peripheral USB0.</td></tr>
+<tr><td>0x400720E4</td><td>USB0_ENDPT9</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT9 register, peripheral USB0.</td></tr>
+<tr><td>0x400720E8</td><td>USB0_ENDPT10</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT10 register, peripheral USB0.</td></tr>
+<tr><td>0x400720EC</td><td>USB0_ENDPT11</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT11 register, peripheral USB0.</td></tr>
+<tr><td>0x400720F0</td><td>USB0_ENDPT12</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT12 register, peripheral USB0.</td></tr>
+<tr><td>0x400720F4</td><td>USB0_ENDPT13</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT13 register, peripheral USB0.</td></tr>
+<tr><td>0x400720F8</td><td>USB0_ENDPT14</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT14 register, peripheral USB0.</td></tr>
+<tr><td>0x400720FC</td><td>USB0_ENDPT15</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_ENDPT15 register, peripheral USB0.</td></tr>
+<tr><td>0x400720AC</td><td>USB0_SOFTHLD</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_SOFTHLD register, peripheral USB0.</td></tr>
+<tr><td>0x4007201C</td><td>USB0_OTGCTL</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_OTGCTL register, peripheral USB0.</td></tr>
+<tr><td>0x40072108</td><td>USB0_CONTROL</td>
+<td class="regResetVal">0x00000000</td>
+ <td>USB0_CONTROL register, peripheral USB0.</td></tr>
+</table>
+Color Denotes Reset Value
+<br/>
+\page USB0_regs_details Register Initialization Details
+This page contains detailed description of initialization values for the 
+registers of the peripheral(s) configured by the component. 
+
+<div class="reghdr1">USB0_CTL</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">JSTATE</td><td colspan="1" rowspan="2">SE0</td>
+<td colspan="1" rowspan="2">TXSUSPENDTOKENBUSY</td><td colspan="1" rowspan="2">RESET</td>
+<td colspan="1" rowspan="2">HOSTMODEEN</td><td colspan="1" rowspan="2">RESUME</td><td colspan="1" rowspan="2">ODDRST</td>
+<td colspan="1" rowspan="2">USBENSOFEN</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072094</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000003</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>JSTATE</td><td>0x00</td><td>Live USB differential receiver JSTATE signal</td>
+<tr><td>6</td><td>SE0</td><td>0x00</td><td>Live USB Single Ended Zero signal</td>
+<tr><td>5</td><td>TXSUSPENDTOKENBUSY</td><td>0x00</td><td>In Host mode, TOKEN_BUSY is set when the USB module is busy executing a USB token. Software must not write more token commands to the Token Register when TOKEN_BUSY is set. Software should check this field before writing any tokens to the Token Register to ensure that token commands are not lost. In Target mode, TXD_SUSPEND is set when the SIE has disabled packet transmission and reception. Clearing this bit allows the SIE to continue token processing. This bit is set by the SIE when a SETUP Token is received allowing software to dequeue any pending packet transactions in the BDT before resuming token processing</td>
+<tr><td>4</td><td>RESET</td><td>0x00</td><td>Setting this bit enables the USB Module to generate USB reset signaling. This allows the USB Module to reset USB peripherals. This control signal is only valid in Host mode (HOSTMODEEN=1). Software must set RESET to 1 for the required amount of time and then clear it to 0 to end reset signaling. For more information on reset signaling see Section 7.1.4.3 of the USB specification version 1.0</td>
+<tr><td>3</td><td>HOSTMODEEN</td><td>0x00</td><td>When set to 1, this bit enables the USB Module to operate in Host mode. In host mode, the USB module performs USB transactions under the programmed control of the host processor</td>
+<tr><td>2</td><td>RESUME</td><td>0x00</td><td>When set to 1 this bit enables the USB Module to execute resume signaling. This allows the USB Module to perform remote wake-up. Software must set RESUME to 1 for the required amount of time and then clear it to 0. If the HOSTMODEEN bit is set, the USB module appends a Low Speed End of Packet to the Resume signaling when the RESUME bit is cleared. For more information on RESUME signaling see Section 7.1.4.5 of the USB specification version 1.0</td>
+<tr><td>1</td><td>ODDRST</td><td>0x01</td><td>Setting this bit to 1 resets all the BDT ODD ping/pong fields to 0, which then specifies the EVEN BDT bank</td>
+<tr><td>0</td><td>USBENSOFEN</td><td>0x01</td><td>USB Enable</td>
+</tr></table>
+<div class="reghdr1">USB0_CLK_RECOVER_IRC_EN</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">IRC_EN</td><td colspan="1" rowspan="2">REG_EN</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072144</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000001</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000001</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>1</td><td>IRC_EN</td><td>0x00</td><td>IRC48M enable</td>
+<tr><td>0</td><td>REG_EN</td><td>0x01</td><td>IRC48M regulator enable</td>
+</tr></table>
+<div class="reghdr1">USB0_CLK_RECOVER_CTRL</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">CLOCK_RECOVER_EN</td><td colspan="1" rowspan="2">RESET_RESUME_ROUGH_EN</td>
+<td colspan="1" rowspan="2">RESTART_IFRTRIM_EN</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072140</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>CLOCK_RECOVER_EN</td><td>0x00</td><td>Crystal-less USB enable</td>
+<tr><td>6</td><td>RESET_RESUME_ROUGH_EN</td><td>0x00</td><td>Reset/resume to rough phase enable</td>
+<tr><td>5</td><td>RESTART_IFRTRIM_EN</td><td>0x00</td><td>Restart from IFR trim value</td>
+</tr></table>
+<div class="reghdr1">USB0_USBCTRL</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">SUSP</td><td colspan="1" rowspan="2">PDE</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072100</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000C0</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x000000C0</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>SUSP</td><td>0x01</td><td>Places the USB transceiver into the suspend state</td>
+<tr><td>6</td><td>PDE</td><td>0x01</td><td>Enables the weak pulldowns on the USB transceiver</td>
+</tr></table>
+<div class="reghdr1">USB0_OTGISTAT</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">IDCHG</td><td colspan="1" rowspan="2">ONEMSEC</td>
+<td colspan="1" rowspan="2">LINE_STATE_CHG</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">SESSVLDCHG</td>
+<td colspan="1" rowspan="2">B_SESS_CHG</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">AVBUSCHG</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072010</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000FF</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>IDCHG</td><td>0x01</td><td>This bit is set when a change in the ID Signal from the USB connector is sensed</td>
+<tr><td>6</td><td>ONEMSEC</td><td>0x01</td><td>This bit is set when the 1 millisecond timer expires. This bit stays asserted until cleared by software. The interrupt must be serviced every millisecond to avoid losing 1msec counts</td>
+<tr><td>5</td><td>LINE_STATE_CHG</td><td>0x01</td><td>This interrupt is set when the USB line state (CTL[SE0] and CTL[JSTATE] bits) are stable without change for 1 millisecond, and the value of the line state is different from the last time when the line state was stable. It is set on transitions between SE0 and J-state, SE0 and K-state, and J-state and K-state. Changes in J-state while SE0 is true do not cause an interrupt. This interrupt can be used in detecting Reset, Resume, Connect, and Data Line Pulse signaling</td>
+<tr><td>3</td><td>SESSVLDCHG</td><td>0x01</td><td>This bit is set when a change in VBUS is detected indicating a session valid or a session no longer valid</td>
+<tr><td>2</td><td>B_SESS_CHG</td><td>0x01</td><td>This bit is set when a change in VBUS is detected on a B device</td>
+<tr><td>0</td><td>AVBUSCHG</td><td>0x01</td><td>This bit is set when a change in VBUS is detected on an A device</td>
+</tr></table>
+<div class="reghdr1">USB0_ISTAT</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">STALL</td><td colspan="1" rowspan="2">ATTACH</td>
+<td colspan="1" rowspan="2">RESUME</td><td colspan="1" rowspan="2">SLEEP</td><td colspan="1" rowspan="2">TOKDNE</td>
+<td colspan="1" rowspan="2">SOFTOK</td><td colspan="1" rowspan="2">ERROR</td><td colspan="1" rowspan="2">USBRST</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072080</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000FF</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>STALL</td><td>0x01</td><td>Stall Interrupt</td>
+<tr><td>6</td><td>ATTACH</td><td>0x01</td><td>Attach Interrupt</td>
+<tr><td>5</td><td>RESUME</td><td>0x01</td><td>This bit is set when a K-state is observed on the DP/DM signals for 2.5 us. When not in suspend mode this interrupt must be disabled</td>
+<tr><td>4</td><td>SLEEP</td><td>0x01</td><td>This bit is set when the USB Module detects a constant idle on the USB bus for 3 ms. The sleep timer is reset by activity on the USB bus</td>
+<tr><td>3</td><td>TOKDNE</td><td>0x01</td><td>This bit is set when the current token being processed has completed. The processor must immediately read the STATUS (STAT) register to determine the EndPoint and BD used for this token. Clearing this bit (by writing a one) causes STAT to be cleared or the STAT holding register to be loaded into the STAT register</td>
+<tr><td>2</td><td>SOFTOK</td><td>0x01</td><td>This bit is set when the USB Module receives a Start Of Frame (SOF) token. In Host mode this field is set when the SOF threshold is reached, so that software can prepare for the next SOF</td>
+<tr><td>1</td><td>ERROR</td><td>0x01</td><td>This bit is set when any of the error conditions within Error Interrupt Status (ERRSTAT) register occur. The processor must then read the ERRSTAT register to determine the source of the error</td>
+<tr><td>0</td><td>USBRST</td><td>0x01</td><td>This bit is set when the USB Module has decoded a valid USB reset. This informs the processor that it should write 0x00 into the address register and enable endpoint 0. USBRST is set after a USB reset has been detected for 2.5 microseconds. It is not asserted again until the USB reset condition has been removed and then reasserted</td>
+</tr></table>
+<div class="reghdr1">USB0_ERRSTAT</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">BTSERR</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">DMAERR</td><td colspan="1" rowspan="2">BTOERR</td><td colspan="1" rowspan="2">DFN8</td>
+<td colspan="1" rowspan="2">CRC16</td><td colspan="1" rowspan="2">CRC5EOF</td><td colspan="1" rowspan="2">PIDERR</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072088</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000FF</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>BTSERR</td><td>0x01</td><td>This bit is set when a bit stuff error is detected. If set, the corresponding packet is rejected due to the error</td>
+<tr><td>5</td><td>DMAERR</td><td>0x01</td><td>This bit is set if the USB Module has requested a DMA access to read a new BDT but has not been given the bus before it needs to receive or transmit data. If processing a TX transfer this would cause a transmit data underflow condition. If processing a RX transfer this would cause a receive data overflow condition. This interrupt is useful when developing device arbitration hardware for the microprocessor and the USB module to minimize bus request and bus grant latency. This bit is also set if a data packet to or from the host is larger than the buffer size allocated in the BDT. In this case the data packet is truncated as it is put in buffer memory</td>
+<tr><td>4</td><td>BTOERR</td><td>0x01</td><td>This bit is set when a bus turnaround timeout error occurs. The USB module contains a bus turnaround timer that keeps track of the amount of time elapsed between the token and data phases of a SETUP or OUT TOKEN or the data and handshake phases of a IN TOKEN. If more than 16 bit times are counted from the previous EOP before a transition from IDLE, a bus turnaround timeout error occurs</td>
+<tr><td>3</td><td>DFN8</td><td>0x01</td><td>This bit is set if the data field received was not 8 bits in length. USB Specification 1.0 requires that data fields be an integral number of bytes. If the data field was not an integral number of bytes, this bit is set</td>
+<tr><td>2</td><td>CRC16</td><td>0x01</td><td>This bit is set when a data packet is rejected due to a CRC16 error</td>
+<tr><td>1</td><td>CRC5EOF</td><td>0x01</td><td>This error interrupt has two functions. When the USB Module is operating in peripheral mode (HOSTMODEEN=0), this interrupt detects CRC5 errors in the token packets generated by the host. If set the token packet was rejected due to a CRC5 error. When the USB Module is operating in host mode (HOSTMODEEN=1), this interrupt detects End Of Frame (EOF) error conditions. This occurs when the USB Module is transmitting or receiving data and the SOF counter reaches zero. This interrupt is useful when developing USB packet scheduling software to ensure that no USB transactions cross the start of the next frame</td>
+<tr><td>0</td><td>PIDERR</td><td>0x01</td><td>This bit is set when the PID check field fails</td>
+</tr></table>
+<div class="reghdr1">USB0_INTEN</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">STALLEN</td><td colspan="1" rowspan="2">ATTACHEN</td>
+<td colspan="1" rowspan="2">RESUMEEN</td><td colspan="1" rowspan="2">SLEEPEN</td><td colspan="1" rowspan="2">TOKDNEEN</td>
+<td colspan="1" rowspan="2">SOFTOKEN</td><td colspan="1" rowspan="2">ERROREN</td><td colspan="1" rowspan="2">USBRSTEN</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072084</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000FF</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>STALLEN</td><td>0x01</td><td>STALL Interrupt Enable</td>
+<tr><td>6</td><td>ATTACHEN</td><td>0x01</td><td>ATTACH Interrupt Enable</td>
+<tr><td>5</td><td>RESUMEEN</td><td>0x01</td><td>RESUME Interrupt Enable</td>
+<tr><td>4</td><td>SLEEPEN</td><td>0x01</td><td>SLEEP Interrupt Enable</td>
+<tr><td>3</td><td>TOKDNEEN</td><td>0x01</td><td>TOKDNE Interrupt Enable</td>
+<tr><td>2</td><td>SOFTOKEN</td><td>0x01</td><td>SOFTOK Interrupt Enable</td>
+<tr><td>1</td><td>ERROREN</td><td>0x01</td><td>ERROR Interrupt Enable</td>
+<tr><td>0</td><td>USBRSTEN</td><td>0x01</td><td>USBRST Interrupt Enable</td>
+</tr></table>
+<div class="reghdr1">USB0_ERREN</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">BTSERREN</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">DMAERREN</td><td colspan="1" rowspan="2">BTOERREN</td><td colspan="1" rowspan="2">DFN8EN</td>
+<td colspan="1" rowspan="2">CRC16EN</td><td colspan="1" rowspan="2">CRC5EOFEN</td><td colspan="1" rowspan="2">PIDERREN</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x4007208C</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>BTSERREN</td><td>0x00</td><td>BTSERR Interrupt Enable</td>
+<tr><td>5</td><td>DMAERREN</td><td>0x00</td><td>DMAERR Interrupt Enable</td>
+<tr><td>4</td><td>BTOERREN</td><td>0x00</td><td>BTOERR Interrupt Enable</td>
+<tr><td>3</td><td>DFN8EN</td><td>0x00</td><td>DFN8 Interrupt Enable</td>
+<tr><td>2</td><td>CRC16EN</td><td>0x00</td><td>CRC16 Interrupt Enable</td>
+<tr><td>1</td><td>CRC5EOFEN</td><td>0x00</td><td>CRC5/EOF Interrupt Enable</td>
+<tr><td>0</td><td>PIDERREN</td><td>0x00</td><td>PIDERR Interrupt Enable</td>
+</tr></table>
+<div class="reghdr1">USB0_USBTRC0</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1"></td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">USBRESMEN</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="1">USB_CLK_RECOVERY_INT</td>
+<td colspan="1" rowspan="1">SYNC_DET</td><td colspan="1" rowspan="1">USB_RESUME_INT</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+<td colspan="1">USBRESET</td><td colspan="1"></td><td colspan="1"></td><td colspan="1"></td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x4007210C</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000060</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>USBRESET</td><td>0x00</td><td>USB Reset</td>
+<tr><td>5</td><td>USBRESMEN</td><td>0x01</td><td>Asynchronous Resume Interrupt Enable</td>
+<tr><td>2</td><td>USB_CLK_RECOVERY_INT</td><td>0x00</td><td>Combined USB Clock Recovery interrupt status</td>
+<tr><td>1</td><td>SYNC_DET</td><td>0x00</td><td>Synchronous USB Interrupt Detect</td>
+<tr><td>0</td><td>USB_RESUME_INT</td><td>0x00</td><td>USB Asynchronous Interrupt</td>
+</tr></table>
+<div class="reghdr1">USB0_OTGICR</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">IDEN</td><td colspan="1" rowspan="2">ONEMSECEN</td>
+<td colspan="1" rowspan="2">LINESTATEEN</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">SESSVLDEN</td>
+<td colspan="1" rowspan="2">BSESSEN</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">AVBUSEN</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072014</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>IDEN</td><td>0x00</td><td>ID Interrupt Enable</td>
+<tr><td>6</td><td>ONEMSECEN</td><td>0x00</td><td>One Millisecond Interrupt Enable</td>
+<tr><td>5</td><td>LINESTATEEN</td><td>0x00</td><td>Line State Change Interrupt Enable</td>
+<tr><td>3</td><td>SESSVLDEN</td><td>0x00</td><td>Session Valid Interrupt Enable</td>
+<tr><td>2</td><td>BSESSEN</td><td>0x00</td><td>B Session END Interrupt Enable</td>
+<tr><td>0</td><td>AVBUSEN</td><td>0x00</td><td>A VBUS Valid Interrupt Enable</td>
+</tr></table>
+<div class="reghdr1">USB0_ADDR</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">LSEN</td><td colspan="7" rowspan="2">ADDR</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072098</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>LSEN</td><td>0x00</td><td>Low Speed Enable bit</td>
+<tr><td>0 - 6</td><td>ADDR</td><td>0x00</td><td>USB Address</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT0</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720C0</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT1</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720C4</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT2</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720C8</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT3</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720CC</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT4</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720D0</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT5</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720D4</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT6</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720D8</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT7</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720DC</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT8</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720E0</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT9</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720E4</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT10</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720E8</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT11</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720EC</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT12</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720F0</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT13</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720F4</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT14</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720F8</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_ENDPT15</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">HOSTWOHUB</td><td colspan="1" rowspan="2">RETRYDIS</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">EPCTLDIS</td><td colspan="1" rowspan="2">EPRXEN</td>
+<td colspan="1" rowspan="2">EPTXEN</td><td colspan="1" rowspan="2">EPSTALL</td><td colspan="1" rowspan="2">EPHSHK</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720FC</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>HOSTWOHUB</td><td>0x00</td><td>This is a Host mode only field and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit allows the host to communicate to a directly connected low speed device. When cleared, the host produces the PRE_PID. It then switches to low-speed signaling when sending a token to a low speed device as required to communicate with a low speed device through a hub</td>
+<tr><td>6</td><td>RETRYDIS</td><td>0x00</td><td>This is a Host mode only bit and is present in the control register for endpoint 0 (ENDPT0) only. When set this bit causes the host to not retry NAK&apos;ed (Negative Acknowledgement) transactions. When a transaction is NAKed, the BDT PID field is updated with the NAK PID, and the TOKEN_DNE interrupt is set. When this bit is cleared, NAKed transactions are retried in hardware. This bit must be set when the host is attempting to poll an interrupt endpoint</td>
+<tr><td>4</td><td>EPCTLDIS</td><td>0x00</td><td>This bit, when set, disables control (SETUP) transfers. When cleared, control transfers are enabled. This applies if and only if the EPRXEN and EPTXEN bits are also set</td>
+<tr><td>3</td><td>EPRXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for RX transfers</td>
+<tr><td>2</td><td>EPTXEN</td><td>0x00</td><td>This bit, when set, enables the endpoint for TX transfers</td>
+<tr><td>1</td><td>EPSTALL</td><td>0x00</td><td>When set this bit indicates that the endpoint is called. This bit has priority over all other control bits in the EndPoint Enable Register, but it is only valid if EPTXEN=1 or EPRXEN=1. Any access to this endpoint causes the USB Module to return a STALL handshake. After an endpoint is stalled it requires intervention from the Host Controller</td>
+<tr><td>0</td><td>EPHSHK</td><td>0x00</td><td>When set this bit enables an endpoint to perform handshaking during a transaction to this endpoint. This bit is generally 1 unless the endpoint is Isochronous</td>
+</tr></table>
+<div class="reghdr1">USB0_SOFTHLD</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="8" rowspan="2">CNT</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x400720AC</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>0 - 7</td><td>CNT</td><td>0x00</td><td>Represents the SOF count threshold in byte times</td>
+</tr></table>
+<div class="reghdr1">USB0_OTGCTL</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">DPHIGH</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">DPLOW</td><td colspan="1" rowspan="2">DMLOW</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">OTGEN</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x4007201C</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>7</td><td>DPHIGH</td><td>0x00</td><td>D+ Data Line pullup resistor enable</td>
+<tr><td>5</td><td>DPLOW</td><td>0x00</td><td>D+ Data Line pull-down resistor enable</td>
+<tr><td>4</td><td>DMLOW</td><td>0x00</td><td>D- Data Line pull-down resistor enable</td>
+<tr><td>2</td><td>OTGEN</td><td>0x00</td><td>On-The-Go pullup/pulldown resistor enable</td>
+</tr></table>
+<div class="reghdr1">USB0_CONTROL</div>
+<div class="regdiag">
+<table class="regtbl">
+<tr class="trd1r">
+<td class="trd1c">Bit</td><td>7</td><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td>
+</tr>
+<tr>
+<td class="trd1c">R</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">DPPULLUPNONOTG</td><td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+<td colspan="1" rowspan="2">-</td><td colspan="1" rowspan="2">-</td>
+</tr>
+<tr>
+<td class="trd1c">W</td>
+</tr>
+<tr class="trd1r">
+<td class="trd1c">Reset</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+</table>
+        
+</div>
+<table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40072108</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
+<tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
+<tr><td>4</td><td>DPPULLUPNONOTG</td><td>0x00</td><td>Provides control of the DP Pullup in USBOTG, if USB is configured in non-OTG device mode</td>
+</tr></table>
+*/
+/*!
+\page USB0_settings Component Settings
+\code
+**          Component name                                 : USB0
+**          Device                                         : USB0
+**          Settings                                       : 
+**            Clock gate                                   : Enabled
+**            Clock settings                               : 
+**              IRC48 clock setting                        : 
+**                IRC48M module                            : Disabled
+**                IRC48M regulator                         : Enabled
+**                IRC48M clock recovery                    : Disabled
+**                IRC48M Reset/resume to rough phase       : Disabled
+**                Restart from IFR trim value              : Disabled
+**              Clock divider                              : 
+**                Clock divider source                     : PLL/FLL clock
+**                Clock divider input frequency            : 120 MHz
+**                Clock divider fraction                   : multiply by 2
+**                Clock divider divisor                    : divide by 5
+**              Module clock source                        : Clock divider output
+**              Module clock frequency                     : 48 MHz
+**            Pull-up/pull-down settings                   : 
+**              Weak pulldowns                             : Enabled
+**              Pull-up/pull-down control                  : Mode dependent
+**              D+ pull-up                                 : Disabled
+**              D+ pull-down                               : Disabled
+**              D- pull-down                               : Disabled
+**              D+ pull-up for non-OTG mode                : Disabled
+**            Endpoints                                    : 
+**              EP0                                        : Disabled
+**                Direct low speed                         : Disabled
+**                Retry                                    : Enabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP1                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP2                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP3                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP4                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP5                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP6                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP7                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP8                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP9                                        : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP10                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP11                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP12                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP13                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP14                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**              EP15                                       : Disabled
+**                Setup transfers                          : Enabled
+**                Handshake                                : Disabled
+**                Rx transfer                              : Disabled
+**                Tx transfer                              : Disabled
+**                Force stall                              : Disabled
+**            Buffer descriptor table                      : 
+**              External object declaration                : extern uint8_t g_Mem[];
+**              Address                                    : ((uint32_t)&g_Mem[0])
+**            SOF threshold                                : 0
+**          Pins                                           : 
+**            Alternate clock source                       : Disabled
+**            SOF output                                   : Disabled
+**            Data plus                                    : Disabled
+**            Data minus                                   : Disabled
+**          Interrupts                                     : 
+**            USB                                          : 
+**              Interrupt                                  : INT_USB0
+**              Interrupt request                          : Disabled
+**              Interrupt priority                         : default
+**              ISR Name                                   : USB_ISR
+**              Stall                                      : Enabled
+**              Attach                                     : Enabled
+**              Resume                                     : Enabled
+**              Sleep                                      : Enabled
+**              Token OK                                   : Enabled
+**              Start of frame                             : Enabled
+**              Error interrupt                            : Enabled
+**              USB reset                                  : Enabled
+**              Asynchronous Resume interrupt              : Enabled
+**              Error interrupts                           : 
+**                Bit stuff error                          : Disabled
+**                DMA error                                : Disabled
+**                Bus turnaround timeout                   : Disabled
+**                Data length error                        : Disabled
+**                CRC16 error                              : Disabled
+**                CRC5 or EOF                              : Disabled
+**                PID error                                : Disabled
+**              OTG interrupts                             : 
+**                ID pin changed                           : Disabled
+**                1 ms interrupt                           : Disabled
+**                Line stage change                        : Disabled
+**                Session valid                            : Disabled
+**                "B" session end                          : Disabled
+**                "A" bus valid                            : Disabled
+**          Initialization                                 : 
+**            Mode                                         : Device
+**            USB transceiver suspend state                : Enabled
+**            Call Init method                             : yes
+**            Utilize after reset values                   : default
+<h1>
+\endcode
+*/

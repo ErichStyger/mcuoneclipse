@@ -1,14 +1,15 @@
 /* ###################################################################
 **     Filename    : Events.h
-**     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
+**     Project     : FRDM-K22F_USB_CDC
 **     Processor   : MK22FN512VDC12
 **     Component   : Events
 **     Version     : Driver 01.00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:17, # CodeGen: 0
+**     Date/Time   : 2014-12-27, 15:09, # CodeGen: 0
 **     Abstract    :
 **         This is user's event module.
 **         Put your event handler code here.
+**     Settings    :
 **     Contents    :
 **         Cpu_OnNMI - void Cpu_OnNMI(void);
 **
@@ -34,6 +35,29 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "Pins1.h"
+#include "LED1.h"
+#include "LEDpin1.h"
+#include "BitIoLdd1.h"
+#include "LED2.h"
+#include "LEDpin2.h"
+#include "BitIoLdd2.h"
+#include "LED3.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "WAIT1.h"
+#include "UTIL1.h"
+#include "CS1.h"
+#include "USB1.h"
+#include "CDC1.h"
+#include "Tx1.h"
+#include "Rx1.h"
+#include "TMOUT1.h"
+#include "TI1.h"
+#include "TimerIntLdd1.h"
+#include "TU1.h"
+#include "CLS1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,6 +79,22 @@ extern "C" {
 void Cpu_OnNMI(void);
 
 
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt]
+**     Description :
+**         When a timer interrupt occurs this event is called (only
+**         when the component is enabled - <Enable> and the events are
+**         enabled - <EnableEvent>). This event is enabled only if a
+**         <interrupt service/event> is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void TI1_OnInterrupt(void);
+
 /* END Events */
 
 #ifdef __cplusplus
@@ -69,7 +109,7 @@ void Cpu_OnNMI(void);
 /*
 ** ###################################################################
 **
-**     This file was created by Processor Expert 10.5 [05.21]
+**     This file was created by Processor Expert 10.4 [05.11]
 **     for the Freescale Kinetis series of microcontrollers.
 **
 ** ###################################################################
