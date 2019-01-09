@@ -216,6 +216,516 @@ Module "MCUC1"     (component McuLibConfig)
    - MCUC1_Init -Driver initialization method
    - MCUC1_Deinit -Driver deinitialization method
 
+Module "FRTOS1"    (component FreeRTOS)
+   - FRTOS1_xTaskCreate -Create a new task and add it to the list of tasks that are ready to run.
+   - FRTOS1_xTaskCreateStatic -Create a new task and add it to the list of tasks that are ready to run.
+   - FRTOS1_vTaskStartScheduler -Starts the real time kernel tick processing. After calling the kernel has control over which 
+                tasks are executed and when.   The idle task is created automatically when vTaskStartScheduler() is called.   
+                If vTaskStartScheduler() is successful the function will not return until an executing task calls 
+                vTaskEndScheduler(). The function might fail and return immediately if there is insufficient RAM available for 
+                the idle task to be created.
+   - FRTOS1_vTaskSuspend -Suspend any task. When suspended a task will never get any microcontroller processing time, no matter 
+                what its priority. Calls to vTaskSuspend are not accumulative - i.e. calling vTaskSuspend() twice on the same 
+                task still only requires one call to vTaskResume() to ready the suspended task.
+   - FRTOS1_vTaskSuspendAll -Suspends all real time kernel activity while keeping interrupts (including the kernel tick) 
+                enabled.   After calling vTaskSuspendAll () the calling task will continue to execute without risk of being 
+                swapped out until a call to xTaskResumeAll () has been made.   API functions that have the potential to cause a 
+                context switch (for example, vTaskDelayUntil(), xQueueSend(), etc.) must not be called while the scheduler is 
+                suspended.
+   - FRTOS1_vTaskResume -Resumes a suspended task. A task that has been suspended by one of more calls to vTaskSuspend() will 
+                be made available for running again by a single call to vTaskResume().
+   - FRTOS1_xTaskResumeAll -Resumes real time kernel activity following a call to vTaskSuspendAll (). After a call to 
+                xTaskSuspendAll () the kernel will take control of which task is executing at any time.
+   - FRTOS1_xTaskResumeFromISR -An implementation of vTaskResume() that can be called from within an ISR. A task that has been 
+                suspended by one of more calls to vTaskSuspend() will be made available for running again by a single call to 
+                xTaskResumeFromISR().
+   - FRTOS1_taskYIELD -Macro for forcing a context switch.
+   - FRTOS1_taskENTER_CRITICAL -Macro to mark the start of a critical code region. Preemptive context switches cannot occur 
+                when in a critical region.      NOTE: This may alter the stack (depending on the portable implementation) so 
+                must be used with care!
+   - FRTOS1_taskEXIT_CRITICAL -Macro to mark the end of a critical code region. Preemptive context switches cannot occur when 
+                in a critical region.      NOTE: This may alter the stack (depending on the portable implementation) so must be 
+                used with care!
+   - FRTOS1_taskDISABLE_INTERRUPTS -Macro to disable all maskable interrupts.
+   - FRTOS1_taskENABLE_INTERRUPTS -Macro to enable microcontroller interrupts.
+   - FRTOS1_vTaskDelay -Delay a task for a given number of ticks. The actual time that the task remains blocked depends on the 
+                tick rate. The constant portTICK_RATE_MS can be used to calculate real time from the tick rate - with the 
+                resolution of one tick period.      vTaskDelay() specifies a time at which the task wishes to unblock relative 
+                to the time at which vTaskDelay() is called. For example, specifying a block period of 100 ticks will cause the 
+                task to unblock 100 ticks after vTaskDelay() is called. vTaskDelay() does not therefore provide a good method 
+                of controlling the frequency of a cyclical task as the path taken through the code, as well as other task and 
+                interrupt activity, will effect the frequency at which vTaskDelay() gets called and therefore the time at which 
+                the task next executes. See vTaskDelayUntil() for an alternative API function designed to facilitate fixed 
+                frequency execution. It does this by specifying an absolute time (rather than a relative time) at which the 
+                calling task should unblock.
+   - FRTOS1_vTaskDelayUntil -Delay a task until a specified time. This function can be used by cyclical tasks to ensure a 
+                constant execution frequency.      This function differs from vTaskDelay() in one important aspect: 
+                vTaskDelay() specifies a time at which the task wishes to unblock relative to the time at which vTaskDelay() is 
+                called, whereas vTaskDelayUntil() specifies an absolute time at which the task wishes to unblock.      
+                vTaskDelay() will cause a task to block for the specified number of ticks from the time vTaskDelay() is called. 
+                It is therefore difficult to use vTaskDelay() by itself to generate a fixed execution frequency as the time 
+                between a task unblocking following a call to vTaskDelay() and that task next calling vTaskDelay() may not be 
+                fixed [the task may take a different path though the code between calls, or may get interrupted or preempted a 
+                different number of times each time it executes].      Whereas vTaskDelay() specifies a wake time relative to 
+                the time at which the function is called, vTaskDelayUntil() specifies the absolute (exact) time at which it 
+                wishes to unblock.      It should be noted that vTaskDelayUntil() will return immediately (without blocking) if 
+                it is used to specify a wake time that is already in the past. Therefore a task using vTaskDelayUntil() to 
+                execute periodically will have to re-calculate its required wake time if the periodic execution is halted for 
+                any reason (for example, the task is temporarily placed into the Suspended state) causing the task to miss one 
+                or more periodic executions. This can be detected by checking the variable passed by reference as the 
+                pxPreviousWakeTime parameter against the current tick count. This is however not necessary under most usage 
+                scenarios.      The constant portTICK_RATE_MS can be used to calculate real time from the tick rate - with the 
+                resolution of one tick period.      This function must not be called while the scheduler has been suspended by 
+                a call to vTaskSuspendAll().
+   - FRTOS1_uxTaskPriorityGet -Obtain the priority of any task.
+   - FRTOS1_xTaskGetTickCount -Return the count of ticks since vTaskStartScheduler was called.
+   - FRTOS1_xTaskGetTickCountFromISR -A version of xTaskGetTickCount() that can be called from an ISR.
+   - FRTOS1_vTaskPrioritySet -Set the priority of any task.
+   - FRTOS1_xSemaphoreCreateBinary -The old vSemaphoreCreateBinary() macro is now deprecated in favour of this 
+                xSemaphoreCreateBinary() function.  Note that binary semaphores created using the vSemaphoreCreateBinary() 
+                macro are created in a state such that the first call to 'take' the semaphore would pass, whereas binary 
+                semaphores created using xSemaphoreCreateBinary() are created in a state such that the the semaphore must first 
+                be 'given' before it can be 'taken'.      Function that creates a semaphore by using the existing queue 
+                mechanism. The queue length is 1 as this is a binary semaphore.  The data size is 0 as nothing is actually 
+                stored - all that is important is whether the queue is empty or full (the binary semaphore is available or not).
+                This type of semaphore can be used for pure synchronisation between tasks or between an interrupt and a task.  
+                The semaphore need not be given back once obtained, so one task/interrupt can continuously 'give' the semaphore 
+                while another continuously 'takes' the semaphore.  For this reason this type of semaphore does not use a 
+                priority inheritance mechanism.  For an alternative that does use priority inheritance see 
+                xSemaphoreCreateMutex().
+   - FRTOS1_xSemaphoreCreateBinaryStatic -The old vSemaphoreCreateBinary() macro is now deprecated in favour of this 
+                xSemaphoreCreateBinary() function.  Note that binary semaphores created using the vSemaphoreCreateBinary() 
+                macro are created in a state such that the first call to 'take' the semaphore would pass, whereas binary 
+                semaphores created using xSemaphoreCreateBinary() are created in a state such that the the semaphore must first 
+                be 'given' before it can be 'taken'.      Function that creates a semaphore by using the existing queue 
+                mechanism. The queue length is 1 as this is a binary semaphore.  The data size is 0 as nothing is actually 
+                stored - all that is important is whether the queue is empty or full (the binary semaphore is available or not).
+                This type of semaphore can be used for pure synchronisation between tasks or between an interrupt and a task.  
+                The semaphore need not be given back once obtained, so one task/interrupt can continuously 'give' the semaphore 
+                while another continuously 'takes' the semaphore.  For this reason this type of semaphore does not use a 
+                priority inheritance mechanism.  For an alternative that does use priority inheritance see 
+                xSemaphoreCreateMutex().
+   - FRTOS1_xSemaphoreCreateCounting -Macro that creates a counting semaphore by using the existing queue mechanism.      
+                Counting semaphores are typically used for two things:      1. Counting events.   In this usage scenario an 
+                event handler will 'give' a semaphore each time an event occurs (incrementing the semaphore count value), and a 
+                handler task will 'take' a semaphore each time it processes an event (decrementing the semaphore count value). 
+                The count value is therefore the difference between the number of events that have occurred and the number that 
+                have been processed. In this case it is desirable for the initial count value to be zero.      2. Resource 
+                management.   In this usage scenario the count value indicates the number of resources available. To obtain 
+                control of a resource a task must first obtain a semaphore - decrementing the semaphore count value. When the 
+                count value reaches zero there are no free resources. When a task finishes with the resource it 'gives' the 
+                semaphore back - incrementing the semaphore count value. In this case it is desirable for the initial count 
+                value to be equal to the maximum count value, indicating that all resources are free.
+   - FRTOS1_xSemaphoreCreateCountingStatic -Macro that creates a counting semaphore by using the existing queue mechanism.      
+                Counting semaphores are typically used for two things:      1. Counting events.   In this usage scenario an 
+                event handler will 'give' a semaphore each time an event occurs (incrementing the semaphore count value), and a 
+                handler task will 'take' a semaphore each time it processes an event (decrementing the semaphore count value). 
+                The count value is therefore the difference between the number of events that have occurred and the number that 
+                have been processed. In this case it is desirable for the initial count value to be zero.      2. Resource 
+                management.   In this usage scenario the count value indicates the number of resources available. To obtain 
+                control of a resource a task must first obtain a semaphore - decrementing the semaphore count value. When the 
+                count value reaches zero there are no free resources. When a task finishes with the resource it 'gives' the 
+                semaphore back - incrementing the semaphore count value. In this case it is desirable for the initial count 
+                value to be equal to the maximum count value, indicating that all resources are free.
+   - FRTOS1_xSemaphoreGive -Macro to release a semaphore. The semaphore must have previously been created with a call to 
+                vSemaphoreCreateBinary(), xSemaphoreCreateMutex() or xSemaphoreCreateCounting(), and obtained using 
+                sSemaphoreTake().      This must not be used from an ISR. See xSemaphoreGiveFromISR() for an alternative which 
+                can be used from an ISR.      This macro must also not be used on semaphores created using 
+                xSemaphoreCreateRecursiveMutex().      xSemaphoreGive() is part of the fully featured intertask communications 
+                API. xSemaphoreAltGive() is the alternative API equivalent. Both versions require the same parameters and 
+                return the same values.
+   - FRTOS1_xSemaphoreTake -Macro to obtain a semaphore. The semaphore must have previously been created with a call to 
+                vSemaphoreCreateBinary(), xSemaphoreCreateMutex() or xSemaphoreCreateCounting().      This macro must not be 
+                called from an ISR. xQueueReceiveFromISR() can be used to take a semaphore from within an interrupt if required,
+                although this would not be a normal operation. Semaphores use queues as their underlying mechanism, so 
+                functions are to some extent interoperable.      xSemaphoreTake() is part of the fully featured intertask 
+                communications API. xSemaphoreAltTake() is the alternative API equivalent. Both versions require the same 
+                parameters and return the same values.
+   - FRTOS1_uxSemaphoreGetCount -
+   - FRTOS1_xSemaphoreGiveFromISR -Macro to release a semaphore. The semaphore must have previously been created with a call to 
+                vSemaphoreCreateBinary() or xSemaphoreCreateCounting().      Mutex type semaphores (those created using a call 
+                to xSemaphoreCreateMutex()) must not be used with this macro.      This macro can be used from an ISR.
+   - FRTOS1_xSemaphoreTakeFromISR -Macro to take a semaphore from an ISR. The semaphore must have previously been created with 
+                a call to vSemaphoreCreateBinary() or xSemaphoreCreateCounting().      Mutex type semaphores (those created 
+                using a call to xSemaphoreCreateMutex()) must not be used with this macro.      This macro can be used from an 
+                ISR, however taking a semaphore from an ISR is not a common operation.  It is likely to only be useful when 
+                taking a counting semaphore when an interrupt is obtaining an object from a resource pool (when the semaphore 
+                count indicates the number of resources available).
+   - FRTOS1_xSemaphoreGetMutexHolder -Returns the holder of a mutex or semaphore. If xMutex is indeed a mutex type semaphore, 
+                return the current mutex holder. If xMutex is not a mutex type semaphore, or the mutex is available (not held 
+                by a task), return NULL. Note: This Is is a good way of determining if the calling task is the mutex holder, 
+                but not a good way of determining the identity of the mutex holder as the holder may change between the 
+                function exiting and the returned value being tested.
+   - FRTOS1_xSemaphoreCreateMutex -Macro that creates a mutex semaphore by using the existing queue mechanism.      Mutexes 
+                created using this macro can be accessed using the xSemaphoreTake() and xSemaphoreGive() macros. The 
+                xSemaphoreTakeRecursive() and xSemaphoreGiveRecursive() macros should not be used.      Mutexes and binary 
+                semaphores are very similar but have some subtle differences: Mutexes include a priority inheritance mechanism, 
+                binary semaphores do not. This makes binary semaphores the better choice for implementing synchronisation 
+                (between tasks or between tasks and an interrupt), and mutexes the better choice for implementing simple mutual 
+                exclusion.      The priority of a task that 'takes' a mutex can potentially be raised if another task of higher 
+                priority attempts to obtain the same mutex. The task that owns the mutex 'inherits' the priority of the task 
+                attempting to 'take' the same mutex. This means the mutex must always be 'given' back - otherwise the higher 
+                priority task will never be able to obtain the mutex, and the lower priority task will never 'disinherit' the 
+                priority. An example of a mutex being used to implement mutual exclusion is provided on the xSemaphoreTake() 
+                documentation page.      A binary semaphore need not be given back once obtained, so task synchronisation can 
+                be implemented by one task/interrupt continuously 'giving' the semaphore while another continuously 'takes' the 
+                semaphore. This is demonstrated by the sample code on the xSemaphoreGiveFromISR() documentation page.      Both 
+                mutex and binary semaphores are assigned to variables of type xSemaphoreHandle and can be used in any API 
+                function that takes a parameter of this type.
+   - FRTOS1_xSemaphoreCreateMutexStatic -Macro that creates a mutex semaphore by using the existing queue mechanism.      
+                Mutexes created using this macro can be accessed using the xSemaphoreTake() and xSemaphoreGive() macros. The 
+                xSemaphoreTakeRecursive() and xSemaphoreGiveRecursive() macros should not be used.      Mutexes and binary 
+                semaphores are very similar but have some subtle differences: Mutexes include a priority inheritance mechanism, 
+                binary semaphores do not. This makes binary semaphores the better choice for implementing synchronisation 
+                (between tasks or between tasks and an interrupt), and mutexes the better choice for implementing simple mutual 
+                exclusion.      The priority of a task that 'takes' a mutex can potentially be raised if another task of higher 
+                priority attempts to obtain the same mutex. The task that owns the mutex 'inherits' the priority of the task 
+                attempting to 'take' the same mutex. This means the mutex must always be 'given' back - otherwise the higher 
+                priority task will never be able to obtain the mutex, and the lower priority task will never 'disinherit' the 
+                priority. An example of a mutex being used to implement mutual exclusion is provided on the xSemaphoreTake() 
+                documentation page.      A binary semaphore need not be given back once obtained, so task synchronisation can 
+                be implemented by one task/interrupt continuously 'giving' the semaphore while another continuously 'takes' the 
+                semaphore. This is demonstrated by the sample code on the xSemaphoreGiveFromISR() documentation page.      Both 
+                mutex and binary semaphores are assigned to variables of type xSemaphoreHandle and can be used in any API 
+                function that takes a parameter of this type.
+   - FRTOS1_xSemaphoreCreateRecursiveMutex -Macro that implements a recursive mutex by using the existing queue mechanism.   
+                Mutexes created using this macro can be accessed using the xSemaphoreTakeRecursive() and 
+                xSemaphoreGiveRecursive() macros.  The  xSemaphoreTake() and xSemaphoreGive() macros should not be used.   A 
+                mutex used recursively can be 'taken' repeatedly by the owner. The mutex doesn't become available again until 
+                the owner has called xSemaphoreGiveRecursive() for each successful 'take' request.  For example, if a task 
+                successfully 'takes' the same mutex 5 times then the mutex will not be available to any other task until it has 
+                also  'given' the mutex back exactly five times.   This type of semaphore uses a priority inheritance mechanism 
+                so a task 'taking' a semaphore MUST ALWAYS 'give' the semaphore back once the semaphore it is no longer 
+                required. Mutex type semaphores cannot be used from within interrupt service routines.   See 
+                vSemaphoreCreateBinary() for an alternative implementation that can be used for pure synchronisation (where one 
+                task or interrupt always 'gives' the semaphore and another always 'takes' the semaphore) and from within 
+                interrupt service routines.
+   - FRTOS1_xSemaphoreCreateRecursiveMutexStatic -Macro that implements a recursive mutex by using the existing queue mechanism.
+                Mutexes created using this macro can be accessed using the xSemaphoreTakeRecursive() and 
+                xSemaphoreGiveRecursive() macros.  The  xSemaphoreTake() and xSemaphoreGive() macros should not be used.   A 
+                mutex used recursively can be 'taken' repeatedly by the owner. The mutex doesn't become available again until 
+                the owner has called xSemaphoreGiveRecursive() for each successful 'take' request.  For example, if a task 
+                successfully 'takes' the same mutex 5 times then the mutex will not be available to any other task until it has 
+                also  'given' the mutex back exactly five times.   This type of semaphore uses a priority inheritance mechanism 
+                so a task 'taking' a semaphore MUST ALWAYS 'give' the semaphore back once the semaphore it is no longer 
+                required. Mutex type semaphores cannot be used from within interrupt service routines.   See 
+                vSemaphoreCreateBinary() for an alternative implementation that can be used for pure synchronisation (where one 
+                task or interrupt always 'gives' the semaphore and another always 'takes' the semaphore) and from within 
+                interrupt service routines.
+   - FRTOS1_xSemaphoreTakeRecursive -Macro to recursively obtain, or 'take', a mutex type semaphore. The mutex must have 
+                previously been created using a call to xSemaphoreCreateRecursiveMutex();   This macro must not be used on 
+                mutexes created using xSemaphoreCreateMutex(). A mutex used recursively can be 'taken' repeatedly by the owner. 
+                The mutex doesn't become available again until the owner has called xSemaphoreGiveRecursive() for each 
+                successful 'take' request.  For example, if a task successfully 'takes' the same mutex 5 times then the mutex 
+                will not be available to any other task until it has also  'given' the mutex back exactly five times.
+   - FRTOS1_xSemaphoreGiveRecursive -Macro to recursively release, or 'give', a mutex type semaphore. The mutex must have 
+                previously been created using a call to xSemaphoreCreateRecursiveMutex();   This macro must not be used on 
+                mutexes created using xSemaphoreCreateMutex(). A mutex used recursively can be 'taken' repeatedly by the owner. 
+                The mutex doesn't become available again until the owner has called xSemaphoreGiveRecursive() for each 
+                successful 'take' request.  For example, if a task successfully 'takes' the same mutex 5 times then the mutex 
+                will not be available to any other task until it has also  'given' the mutex back exactly five times.
+   - FRTOS1_vSemaphoreDelete -Delete a semaphore.  This function must be used with care.  For example, do not delete a mutex 
+                type semaphore if the mutex is held by a task.
+   - FRTOS1_pvPortMalloc -Allocates a memory block using the port pvPortMalloc() function
+   - FRTOS1_vPortFree -Frees a memory block previously allocated with pvPortMalloc()
+   - FRTOS1_xPortGetFreeHeapSize -Returns the actual free size of the heap
+   - FRTOS1_xTaskGetCurrentTaskHandle -The handle of the currently running (calling) task.
+   - FRTOS1_xTaskGetIdleTaskHandle -The task handle associated with the Idle task. The Idle task is created automatically when 
+                the RTOS scheduler is started.
+   - FRTOS1_xTaskGetHandle -Looks up the handle of a task from the task's name.
+   - FRTOS1_pcTaskGetTaskName -Returns the name of the task.
+   - FRTOS1_xTaskGetSchedulerState -Returns the state of the scheduler
+   - FRTOS1_uxTaskGetStackHighWaterMark -The stack used by a task will grow and shrink as the task executes and interrupts are 
+                processed. uxTaskGetStackHighWaterMark() returns the minimum amount of remaining stack space that was available 
+                to the task since the task started executing - that is the amount of stack that remained unused when the task 
+                stack was at its greatest (deepest) value. This is what is referred to as the stack 'high water mark'.
+   - FRTOS1_uxTaskGetNumberOfTasks -Returns the number of tasks
+   - FRTOS1_uxQueueMessagesWaiting -Queries the number of items that are currently held within a queue.
+   - FRTOS1_uxQueueMessagesWaitingfromISR -A version of uxQueueMessagesWaiting() that can be used from inside an interrupt 
+                service routine.
+   - FRTOS1_xQueueCreate -Creates a queue.
+   - FRTOS1_xQueueCreateStatic -Creates a queue.
+   - FRTOS1_vQueueDelete -Deletes a queue that was previously created using a call to xQueueCreate(). vQueueDelete() can also 
+                be used to delete a semaphore.
+   - FRTOS1_xQueueReset -Reset a queue back to its original empty state.  pdPASS is returned if the queue is successfully reset.
+                pdFAIL is returned if the queue could not be reset because there are tasks blocked on the queue waiting to 
+                either receive from the queue or send to the queue.
+   - FRTOS1_xQueueSendToBack -Sends an item to the back of a queue.
+   - FRTOS1_xQueueSendToFront -Sends an item to the front of a queue.
+   - FRTOS1_xQueueReceive -Receives an item from a queue.
+   - FRTOS1_xQueueOverwrite -This is a macro that calls the xQueueGenericSend() function. A version of xQueueSendToBack() that 
+                will write to the queue even if the queue is full, overwriting data that is already held in the queue. 
+                xQueueOverwrite() is intended for use with queues that have a length of one, meaning the queue is either empty 
+                or full. This function must not be called from an interrupt service routine (ISR). See xQueueOverwriteFromISR() 
+                for an alternative which may be used in an ISR.
+   - FRTOS1_xQueueOverwriteFromISR -This is a macro that calls the xQueueGenericSendFromISR() function. A version of 
+                xQueueOverwrite() that can be used in an ISR. xQueueOverwriteFromISR() is similar to xQueueSendToBackFromISR(), 
+                but will write to the queue even if the queue is full, overwriting data that is already held in the queue. 
+                xQueueOverwriteFromISR() is intended for use with queues that have a length of one, meaning the queue is either 
+                empty or full.
+   - FRTOS1_xQueuePeek -Reads an item from a queue, but does not remove the item from the queue. Therefore the same item would 
+                be returned the next time xQueueReceive() or xQueuePeek() was called on the same queue.
+   - FRTOS1_xQueuePeekFromISR -A version of xQueuePeek() that can be used from an interrupt service routine (ISR). Reads an 
+                item from a queue, but does not remove the item from the queue. Therefore the same item would be returned the 
+                next time xQueueReceive() or xQueuePeek() was called on the same queue.
+   - FRTOS1_xQueueSendToBackFromISR -Versions of xQueueSendToBack() API functions that can be called from an ISR. Unlike 
+                xQueueSendToBack() these functions do not permit a block time to be specified.
+   - FRTOS1_xQueueSendToFrontFromISR -Versions of xQueueSendToFront() API functions that can be called from an ISR. Unlike 
+                xQueueSendToFront() these functions do not permit a block time to be specified.
+   - FRTOS1_xQueueReceiveFromISR -A version of xQueueReceive() that can be called from an ISR. Unlike xQueueReceive(), 
+                xQueueReceiveFromISR() does not permit a block time to be specified.
+   - FRTOS1_vQueueAddToRegistry -Assigns a name to a queue and adds the queue to the registry.
+   - FRTOS1_vQueueUnregisterQueue -Removes a queue from the queue registry.
+   - FRTOS1_xQueueIsQueueFullFromISR -Queries a queue to determine if the queue is full. This function should only be used in 
+                an ISR.
+   - FRTOS1_xQueueIsQueueEmptyFromISR -Queries a queue to determine if the queue is empty. This function should only be used in 
+                an ISR.
+   - FRTOS1_xEventGroupCreate -Create a new RTOS event group. This function cannot be called from an interrupt.      Event 
+                groups are stored in variables of type EventGroupHandle_t. The number of bits (or flags) implemented within an 
+                event group is 8 if configUSE_16_BIT_TICKS is set to 1, or 24 if configUSE_16_BIT_TICKS is set to 0. The 
+                dependency on configUSE_16_BIT_TICKS results from the data type used for thread local storage in the internal 
+                implementation of RTOS tasks.
+   - FRTOS1_xEventGroupCreateStatic -Create a new RTOS event group. This function cannot be called from an interrupt.      
+                Event groups are stored in variables of type EventGroupHandle_t. The number of bits (or flags) implemented 
+                within an event group is 8 if configUSE_16_BIT_TICKS is set to 1, or 24 if configUSE_16_BIT_TICKS is set to 0. 
+                The dependency on configUSE_16_BIT_TICKS results from the data type used for thread local storage in the 
+                internal implementation of RTOS tasks.
+   - FRTOS1_xEventGroupWaitBits -Read bits within an RTOS event group, optionally entering the Blocked state (with a timeout) 
+                to wait for a bit or group of bits to become set. This function cannot be called from an interrupt.
+   - FRTOS1_xEventGroupSetBits -Set bits (flags) within an RTOS event group. This function cannot be called from an interrupt. 
+                xEventGroupSetBitsFromISR() is a version that can be called from an interrupt.      Setting bits in an event 
+                group will automatically unblock tasks that are blocked waiting for the bits.
+   - FRTOS1_xEventGroupSetBitsFromISR -Set bits (flags) within an RTOS event group. A version of xEventGroupSetBits() that can 
+                be called from an interrupt service routine (ISR).      Setting bits in an event group will automatically 
+                unblock tasks that are blocked waiting for the bits.      Setting bits in an event group is not a deterministic 
+                operation because there are an unknown number of tasks that may be waiting for the bit or bits being set. 
+                FreeRTOS does not allow non-deterministic operations to be performed in interrupts or from critical sections. 
+                Therefore xEventGroupSetBitFromISR() sends a message to the RTOS daemon task to have the set operation 
+                performed in the context of the daemon task - where a scheduler lock is used in place of a critical section.    
+                INCLUDE_xEventGroupSetBitFromISR, configUSE_TIMERS and INCLUDE_xTimerPendFunctionCall must all be set to 1 in 
+                FreeRTOSConfig.h for the xEventGroupSetBitsFromISR() function to be available.
+   - FRTOS1_xEventGroupClearBits -Clear bits (flags) within an RTOS event group. This function cannot be called from an 
+                interrupt. See xEventGroupClearBitsFromISR() for a version that can be called from an interrupt.
+   - FRTOS1_xEventGroupClearBitsFromISR -A version of xEventGroupClearBits() that can be called from an interrupt.
+   - FRTOS1_xEventGroupGetBits -Returns the current value of the event bits (event flags) in an RTOS event group. This function 
+                cannot be used from an interrupt. See xEventGroupsGetBitsFromISR() for a version that can be used in an 
+                interrupt.
+   - FRTOS1_xEventGroupGetBitsFromISR -A version of xEventGroupGetBits() that can be called from an interrupt.
+   - FRTOS1_xEventGroupSync -Atomically set bits (flags) within an RTOS event group, then wait for a combination of bits to be 
+                set within the same event group. This functionality is typically used to synchronise multiple tasks (often 
+                called a task rendezvous), where each task has to wait for the other tasks to reach a synchronisation point 
+                before proceeding.      This function cannot be used from an interrupt.      The function will return before 
+                its block time expires if the bits specified by the uxBitsToWait parameter are set, or become set within that 
+                time. In this case all the bits specified by uxBitsToWait will be automatically cleared before the function 
+                returns.
+   - FRTOS1_xTimerCreate -Creates a new software timer instance. This allocates the storage required by the new timer, 
+                initialises the new timers internal state, and returns a handle by which the new timer can be referenced.
+   - FRTOS1_xTimerIsTimerActive -Queries a timer to see if it is active or dormant.    A timer will be dormant if:          It 
+                has been created but not started, or       It is an expired one-shot timer that has not been restarted.      
+                Timers are created in the dormant state. The xTimerStart(), xTimerReset(), xTimerStartFromISR(), 
+                xTimerResetFromISR(), xTimerChangePeriod() and xTimerChangePeriodFromISR() API functions can all be used to 
+                transition a timer into the active state.
+   - FRTOS1_xTimerStart -Timer functionality is provided by a timer service/daemon task. Many of the public FreeRTOS timer API 
+                functions send commands to the timer service task through a queue called the timer command queue. The timer 
+                command queue is private to the RTOS kernel itself and is not directly accessible to application code. The 
+                length of the timer command queue is set by the configTIMER_QUEUE_LENGTH configuration constant.      
+                xTimerStart() starts a timer that was previously created using the xTimerCreate() API function. If the timer 
+                had already been started and was already in the active state, then xTimerStart() has equivalent functionality 
+                to the xTimerReset() API function.      Starting a timer ensures the timer is in the active state. If the timer 
+                is not stopped, deleted, or reset in the mean time, the callback function associated with the timer will get 
+                called 'n 'ticks after xTimerStart() was called, where 'n' is the timers defined period.      It is valid to 
+                call xTimerStart() before the RTOS scheduler has been started, but when this is done the timer will not 
+                actually start until the RTOS scheduler is started, and the timers expiry time will be relative to when the 
+                RTOS scheduler is started, not relative to when xTimerStart() was called.      The configUSE_TIMERS 
+                configuration constant must be set to 1 for xTimerStart() to be available.
+   - FRTOS1_xTimerStop -Timer functionality is provided by a timer service/daemon task. Many of the public FreeRTOS timer API 
+                functions send commands to the timer service task through a queue called the timer command queue. The timer 
+                command queue is private to the RTOS kernel itself and is not directly accessible to application code. The 
+                length of the timer command queue is set by the configTIMER_QUEUE_LENGTH configuration constant.      
+                xTimerStop() stops a timer that was previously started using either of the xTimerStart(), xTimerReset(), 
+                xTimerStartFromISR(), xTimerResetFromISR(), xTimerChangePeriod() and xTimerChangePeriodFromISR() API functions. 
+                Stopping a timer ensures the timer is not in the active state.      The configUSE_TIMERS configuration constant 
+                must be set to 1 for xTimerStop() to be available.
+   - FRTOS1_xTimerChangePeriod -Timer functionality is provided by a timer service/daemon task. Many of the public FreeRTOS 
+                timer API functions send commands to the timer service task through a queue called the timer command queue. The 
+                timer command queue is private to the RTOS kernel itself and is not directly accessible to application code. 
+                The length of the timer command queue is set by the configTIMER_QUEUE_LENGTH configuration constant.      
+                xTimerChangePeriod() changes the period of a timer that was previously created using the xTimerCreate() API 
+                function.      xTimerChangePeriod() can be called to change the period of an active or dormant state timer.     
+                The configUSE_TIMERS configuration constant must be set to 1 for xTimerChangePeriod() to be available.
+   - FRTOS1_xTimerDelete -Timer functionality is provided by a timer service/daemon task. Many of the public FreeRTOS timer API 
+                functions send commands to the timer service task through a queue called the timer command queue. The timer 
+                command queue is private to the RTOS kernel itself and is not directly accessible to application code. The 
+                length of the timer command queue is set by the configTIMER_QUEUE_LENGTH configuration constant.      
+                xTimerDelete() deletes a timer that was previously created using the xTimerCreate() API function.      The 
+                configUSE_TIMERS configuration constant must be set to 1 for xTimerDelete() to be available.
+   - FRTOS1_xTimerReset -Timer functionality is provided by a timer service/daemon task. Many of the public FreeRTOS timer API 
+                functions send commands to the timer service task through a queue called the timer command queue. The timer 
+                command queue is private to the RTOS kernel itself and is not directly accessible to application code. The 
+                length of the timer command queue is set by the configTIMER_QUEUE_LENGTH configuration constant.      
+                xTimerReset() re-starts a timer that was previously created using the xTimerCreate() API function. If the timer 
+                had already been started and was already in the active state, then xTimerReset() will cause the timer to 
+                re-evaluate its expiry time so that it is relative to when xTimerReset() was called. If the timer was in the 
+                dormant state then xTimerReset() has equivalent functionality to the xTimerStart() API function.      Resetting 
+                a timer ensures the timer is in the active state. If the timer is not stopped, deleted, or reset in the mean 
+                time, the callback function associated with the timer will get called 'n' ticks after xTimerReset() was called, 
+                where 'n' is the timers defined period.      It is valid to call xTimerReset() before the RTOS scheduler has 
+                been started, but when this is done the timer will not actually start until the RTOS scheduler is started, and 
+                the timers expiry time will be relative to when the RTOS scheduler is started, not relative to when 
+                xTimerReset() was called.      The configUSE_TIMERS configuration constant must be set to 1 for xTimerReset() 
+                to be available.
+   - FRTOS1_xTimerStartFromISR -A version of xTimerStart() that can be called from an interrupt service routine.
+   - FRTOS1_xTimerStopFromISR -A version of xTimerStop() that can be called from an interrupt service routine.
+   - FRTOS1_xTimerChangePeriodFromISR -A version of xTimerChangePeriod() that can be called from an interrupt service routine.
+   - FRTOS1_xTimerResetFromISR -A version of xTimerReset() that can be called from an interrupt service routine.
+   - FRTOS1_pvTimerGetTimerID -Returns the ID assigned to the timer.      IDs are assigned to timers using the pvTimerID 
+                parameter of the call to xTimerCreate() that was used to create the timer.      If the same callback function 
+                is assigned to multiple timers then the timer ID can be used within the callback function to identify which 
+                timer actually expired.
+   - FRTOS1_xTimerGetTimerDaemonTaskHandle -INCLUDE_xTimerGetTimerDaemonTaskHandle and configUSE_TIMERS must both be set to 1 
+                in FreeRTOSConfig.h for xTimerGetTimerDaemonTaskHandle() to be available.
+   - FRTOS1_pcTimerGetTimerName -
+   - FRTOS1_xTimerPendFunctionCall -Used to pend the execution of a function to the RTOS daemon task (the timer service task, 
+                hence this function is pre-fixed with 'Timer').      Functions that can be deferred to the RTOS daemon task 
+                must have the following prototype:      void vPendableFunction( void * pvParameter1, uint32_t ulParameter2 );   
+                The pvParameter1 and ulParameter2 are provided for use by the application code.      
+                INCLUDE_xTimerPendFunctionCall() and configUSE_TIMERS must both be set to 1 for xTimerPendFunctionCall() to be 
+                available.
+   - FRTOS1_xTimerPendFunctionCallFromISR -Used from application interrupt service routines to defer the execution of a 
+                function to the RTOS daemon task (the timer service task, hence this function is implemented in timers.c and is 
+                prefixed with 'Timer').      Ideally an interrupt service routine (ISR) is kept as short as possible, but 
+                sometimes an ISR either has a lot of processing to do, or needs to perform processing that is not deterministic.
+                In these cases xTimerPendFunctionCallFromISR() can be used to defer processing of a function to the RTOS daemon 
+                task.      A mechanism is provided that allows the interrupt to return directly to the task that will 
+                subsequently execute the pended function. This allows the callback function to execute contiguously in time 
+                with the interrupt - just as if the callback had executed in the interrupt itself.      Functions that can be 
+                deferred to the RTOS daemon task must have the following prototype:      void vPendableFunction( void * 
+                pvParameter1, uint32_t ulParameter2 );      The pvParameter1 and ulParameter2 are provided for use by the 
+                application code.      INCLUDE_xTimerPendFunctionCall() and configUSE_TIMERS must both be set to 1 for 
+                xTimerPendFunctionCallFromISR() to be available.
+   - FRTOS1_xTaskNotifyGive -Each RTOS task has a 32-bit notification value which is initialised to zero when the RTOS task is 
+                created. An RTOS task notification is an event sent directly to a task that can unblock the receiving task, and 
+                optionally update the receiving task's notification value.      xTaskNotifyGive() is a macro intended for use 
+                when an RTOS task notification value is being used as a light weight and faster binary or counting semaphore 
+                alternative. FreeRTOS semaphores are given using the xSemaphoreGive() API function, xTaskNotifyGive() is the 
+                equivalent that instead uses the receiving RTOS task's notification value.      When a task notification value 
+                is being used as a binary or counting semaphore equivalent then the task being notified should wait for the 
+                notification using the ulTaskNotifyTake() API function rather than the xTaskNotifyWait() API function.      
+                xTaskNotifyGive() must not be called from an interrupt service routine. Use vTaskNotifyGiveFromISR() instead.
+   - FRTOS1_vTaskNotifyGiveFromISR -A version of xTaskNotifyGive() that can be called from an interrupt service routine (ISR).  
+                Each RTOS task has a 32-bit notification value which is initialised to zero when the RTOS task is created. An 
+                RTOS task notification is an event sent directly to a task that can unblock the receiving task, and optionally 
+                update the receiving task's notification value.      vTaskNotifyGiveFromISR() is a function intended for use 
+                when an RTOS task notification value is being used as a light weight and faster binary or counting semaphore 
+                alternative. FreeRTOS semaphores are given from an interrupt using the xSemaphoreGiveFromISR() API function, 
+                vTaskNotifyGiveFromISR() is the equivalent that instead uses the receiving RTOS task's notification value.      
+                When a task notification value is being used as a binary or counting semaphore equivalent then the task being 
+                notified should wait for the notification using the ulTaskNotifyTake() API function rather than the 
+                xTaskNotifyWait() API function.
+   - FRTOS1_ulTaskNotifyTake -Each RTOS task has a 32-bit notification value which is initialised to zero when the RTOS task is 
+                created. An RTOS task notification is an event sent directly to a task that can unblock the receiving task, and 
+                optionally update the receiving task's notification value.      ulTaskNotifyTake() is intended for use when a 
+                task notification is used as a faster and lighter weight binary or counting semaphore alternative. FreeRTOS 
+                semaphores are taken using the xSemaphoreTake() API function, ulTaskNotifyTake() is the equivalent that instead 
+                uses a task notification.      When a task is using its notification value as a binary or counting semaphore 
+                other tasks and interrupts should send notifications to it using either the xTaskNotifyGive() macro, or the 
+                xTaskNotify() function with the function's eAction parameter set to eIncrement (the two are equivalent).      
+                ulTaskNotifyTake() can either clear the task's notification value to zero on exit, in which case the 
+                notification value acts like a binary semaphore, or decrement the task's notification value on exit, in which 
+                case the notification value acts more like a counting semaphore.      An RTOS task can use ulTaskNotifyTake() 
+                to [optionally] block to wait for a the task's notification value to be non-zero. The task does not consume any 
+                CPU time while it is in the Blocked state.      Where as xTaskNotifyWait() will return when a notification is 
+                pending, ulTaskNotifyTake() will return when the task's notification value is not zero, decrementing the task's 
+                notification value before it returns.
+   - FRTOS1_xTaskNotify -[If you are using RTOS task notifications to implement binary or counting semaphore type behaviour 
+                then use the simpler xTaskNotifyGive() API function instead of xTaskNotify()]      Each RTOS task has a 32-bit 
+                notification value which is initialised to zero when the RTOS task is created. xTaskNotify() is used to send an 
+                event directly to and potentially unblock an RTOS task, and optionally update the receiving task's notification 
+                value in one of the following ways:          - Write a 32-bit number to the notification value       - Add one 
+                (increment) the notification value       - Set one or more bits in the notification value       - Leave the 
+                notification value unchanged      This function must not be called from an interrupt service routine (ISR). Use 
+                xTaskNotifyFromISR() instead.
+   - FRTOS1_xTaskNotifyFromISR -[If you are using RTOS task notifications to implement binary or counting semaphore type 
+                behaviour then use the simpler xTaskNotifyGive() API function instead of xTaskNotify()]      A version of 
+                xTaskNotify() that can be called from an ISR.       Each RTOS task has a 32-bit notification value which is 
+                initialised to zero when the RTOS task is created. xTaskNotify() is used to send an event directly to and 
+                potentially unblock an RTOS task, and optionally update the receiving task's notification value in one of the 
+                following ways:          - Write a 32-bit number to the notification value       - Add one (increment) the 
+                notification value       - Set one or more bits in the notification value       - Leave the notification value 
+                unchanged      This function must not be called from an interrupt service routine (ISR). Use 
+                xTaskNotifyFromISR() instead.
+   - FRTOS1_xTaskNotifyAndQuery -[If you are using RTOS task notifications to implement binary or counting semaphore type 
+                behaviour then use the simpler xTaskNotifyGive() API function instead of xTaskNotify()]      Each RTOS task has 
+                a 32-bit notification value which is initialised to zero when the RTOS task is created. xTaskNotify() is used 
+                to send an event directly to and potentially unblock an RTOS task, and optionally update the receiving task's 
+                notification value in one of the following ways:          - Write a 32-bit number to the notification value     
+                - Add one (increment) the notification value       - Set one or more bits in the notification value       - 
+                Leave the notification value unchanged      This function must not be called from an interrupt service routine 
+                (ISR). Use xTaskNotifyFromISR() instead.
+   - FRTOS1_xTaskNotifyAndQueryFromISR -[If you are using RTOS task notifications to implement binary or counting semaphore 
+                type behaviour then use the simpler xTaskNotifyGive() API function instead of xTaskNotify()]      Each RTOS 
+                task has a 32-bit notification value which is initialised to zero when the RTOS task is created. xTaskNotify() 
+                is used to send an event directly to and potentially unblock an RTOS task, and optionally update the receiving 
+                task's notification value in one of the following ways:          - Write a 32-bit number to the notification 
+                value       - Add one (increment) the notification value       - Set one or more bits in the notification value 
+                - Leave the notification value unchanged      This function must not be called from an interrupt service 
+                routine (ISR). Use xTaskNotifyFromISR() instead.
+   - FRTOS1_xTaskNotifyWait -[If you are using RTOS task notifications to implement binary or counting semaphore type behaviour 
+                then use the simpler ulTaskNotifyTake() API function instead of xTaskNotifyWait()]      Each RTOS task has a 
+                32-bit notification value which is initialised to zero when the RTOS task is created. An RTOS task notification 
+                is an event sent directly to a task that can unblock the receiving task, and optionally update the receiving 
+                task's notification value in a number of different ways. For example, a notification may overwrite the 
+                receiving task's notification value, or just set one or more bits in the receiving task's notification value. 
+                See the RTOS task notifications use case documentation for examples.      xTaskNotifyWait() waits, with an 
+                optional timeout, for the calling task to receive a notification.      If the receiving RTOS task was already 
+                Blocked waiting for a notification when one arrives the receiving RTOS task will be removed from the Blocked 
+                state and the notification cleared.
+   - FRTOS1_xTaskNotifyStateClear -[If you are using RTOS task notifications to implement binary or counting semaphore type 
+                behaviour then use the simpler xTaskNotifyGive() API function instead of xTaskNotify()]       If the 
+                notification state of the task referenced by the handle xTask is eNotified, then set the task's notification 
+                state to eNotWaitingNotification. The task's notification value is not altered.  Set xTask to NULL to clear the 
+                notification state of the calling task.
+   - FRTOS1_vTaskSetThreadLocalStoragePointer -Only enabled if configNUM_THREAD_LOCAL_STORAGE_POINTERS is >0.
+   - FRTOS1_pvTaskGetThreadLocalStoragePointer -Sets the thread local storage. Only enabled if 
+                configNUM_THREAD_LOCAL_STORAGE_POINTERS is >0
+   - FRTOS1_pcTaskGetName -Looks up the name of a task from the task's handle.
+   - FRTOS1_vTaskGetInfo -Whereas uxTaskGetSystemState() populates a TaskStatus_t structure for each task in the system, 
+                vTaskGetInfo() populates a TaskStatus_t structures for just a single task. The TaskStatus_t structure contains, 
+                among other things, members for the task handle, task name, task priority, task state, and total amount of run 
+                time consumed by the task.
+   - FRTOS1_ParseCommand -Shell Command Line Parser
+   - FRTOS1_AppConfigureTimerForRuntimeStats -Configures the timer for generating runtime statistics
+   - FRTOS1_AppGetRuntimeCounterValueFromISR -returns the current runtime counter. Function can be called from an interrupt 
+                service routine.
+   - FRTOS1_Deinit -Module deinitialization method
+   - FRTOS1_Init -Low level initialization routine called from startup code. This method ensures that the tick timer is  not 
+                enabled.
+
+Module "HF1"       (component HardFault)
+   - HF1_HardFaultHandler -Hard Fault Handler
+   - HF1_Deinit -Deinitializes the driver
+   - HF1_Init -Initializes the driver
+
+Module "KIN1"      (component KinetisTools)
+   - KIN1_SoftwareReset -Performs a reset of the device
+   - KIN1_UIDGet -Return the 128bit UID of the device
+   - KIN1_UIDSame -Compares two UID
+   - KIN1_UIDtoString -Returns the value of the UID as string
+   - KIN1_GetKinetisFamilyString -Determines the Kinetis Familiy based on SIM_SDID register
+   - KIN1_GetPC -returns the program counter
+   - KIN1_GetSP -returns the stack pointer
+   - KIN1_SetPSP -sets the process stack pointer
+   - KIN1_SetLR -Sets the link register
+   - KIN1_InitCycleCounter -Initializes the cycle counter, available if the core has a DWT (Data Watchpoint and Trace) unit, 
+                usually present on M3/M4/M7
+   - KIN1_ResetCycleCounter -Reset the cycle counter (set it to zero)
+   - KIN1_EnableCycleCounter -Enables counting the cycles.
+   - KIN1_DisableCycleCounter -Disables the cycle counter.
+   - KIN1_GetCycleCounter -Return the current cycle counter value
+   - KIN1_ParseCommand -Shell Command Line parser. Method is only available if Shell is enabled in the component properties.
+   - KIN1_Deinit -Driver de-initialization routine
+   - KIN1_Init -Driver initialization routine
+
 Module "Cpu"       (component MK22FN512DC12)
 
 ===================================================================================

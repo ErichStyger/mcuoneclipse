@@ -73,6 +73,9 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "FRTOS1.h"
+#include "HF1.h"
+#include "KIN1.h"
 #include "Events.h"
 
 #ifdef __cplusplus
@@ -85,7 +88,7 @@ extern "C" {
 #define VECTOR_SP_MAIN    &__SP_INIT                            /* 0x00 -    ivINT_Initial_Stack_Pointer   used by PE */
 #define VECTOR_1          (tIsrFunc)&__thumb_startup            /* 0x01 -    ivINT_Initial_Program_Counter used by PE */
 #define VECTOR_2          (tIsrFunc)&Cpu_INT_NMIInterrupt       /* 0x02 -2   ivINT_NMI                     used by PE */
-#define VECTOR_3          (tIsrFunc)&Unhandled_ivINT_Hard_Fault /* 0x03 -1   ivINT_Hard_Fault              unused by PE */
+#define VECTOR_3          (tIsrFunc)&HF1_HardFaultHandler       /* 0x03 -1   ivINT_Hard_Fault              used by PE */
 #define VECTOR_4          (tIsrFunc)&Unhandled_ivINT_Mem_Manage_Fault /* 0x04 - ivINT_Mem_Manage_Fault     unused by PE */
 #define VECTOR_5          (tIsrFunc)&Unhandled_ivINT_Bus_Fault  /* 0x05 -    ivINT_Bus_Fault               unused by PE */
 #define VECTOR_6          (tIsrFunc)&Unhandled_ivINT_Usage_Fault /* 0x06 -   ivINT_Usage_Fault             unused by PE */
@@ -93,11 +96,11 @@ extern "C" {
 #define VECTOR_8          (tIsrFunc)&Unhandled_ivINT_Reserved8  /* 0x08 -    ivINT_Reserved8               unused by PE */
 #define VECTOR_9          (tIsrFunc)&Unhandled_ivINT_Reserved9  /* 0x09 -    ivINT_Reserved9               unused by PE */
 #define VECTOR_10         (tIsrFunc)&Unhandled_ivINT_Reserved10 /* 0x0A -    ivINT_Reserved10              unused by PE */
-#define VECTOR_11         (tIsrFunc)&Unhandled_ivINT_SVCall     /* 0x0B -    ivINT_SVCall                  unused by PE */
+#define VECTOR_11         (tIsrFunc)&vPortSVCHandler            /* 0x0B -    ivINT_SVCall                  used by PE */
 #define VECTOR_12         (tIsrFunc)&Unhandled_ivINT_DebugMonitor /* 0x0C -  ivINT_DebugMonitor            unused by PE */
 #define VECTOR_13         (tIsrFunc)&Unhandled_ivINT_Reserved13 /* 0x0D -    ivINT_Reserved13              unused by PE */
-#define VECTOR_14         (tIsrFunc)&Unhandled_ivINT_PendableSrvReq /* 0x0E - ivINT_PendableSrvReq         unused by PE */
-#define VECTOR_15         (tIsrFunc)&Unhandled_ivINT_SysTick    /* 0x0F -    ivINT_SysTick                 unused by PE */
+#define VECTOR_14         (tIsrFunc)&vPortPendSVHandler         /* 0x0E -    ivINT_PendableSrvReq          used by PE */
+#define VECTOR_15         (tIsrFunc)&vPortTickHandler           /* 0x0F -    ivINT_SysTick                 used by PE */
 #define VECTOR_16         (tIsrFunc)&Unhandled_ivINT_DMA0       /* 0x10 -    ivINT_DMA0                    unused by PE */
 #define VECTOR_17         (tIsrFunc)&Unhandled_ivINT_DMA1       /* 0x11 -    ivINT_DMA1                    unused by PE */
 #define VECTOR_18         (tIsrFunc)&Unhandled_ivINT_DMA2       /* 0x12 -    ivINT_DMA2                    unused by PE */

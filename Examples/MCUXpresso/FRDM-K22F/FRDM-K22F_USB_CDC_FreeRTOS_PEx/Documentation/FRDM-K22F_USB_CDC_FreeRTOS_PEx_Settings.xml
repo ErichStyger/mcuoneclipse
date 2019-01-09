@@ -1186,5 +1186,303 @@
       <EmptySection_DummyValue />
     </Events>
   </Bean>
+  <Bean name="FRTOS1" type="FreeRTOS">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="FRTOS1" />
+      <RTOS_Version v="V10.1.1" />
+      <SDK v="MCUC1" />
+      <boolgroup name="Kinetis SDK" v="Disabled" />
+      <group name="Custom Port">
+        <Compiler v="automatic" />
+        <boolgroup name="Source Folders" v="Disabled" />
+        <boolgroup name="Custom portBASE_TYPE" v="Disabled" />
+      </group>
+      <Classic_CodeWarrior v="no" />
+      <Disabled_Interrupts_in_Startup v="yes" />
+      <configASSERT v="yes" />
+      <Application_Task_Tags v="no" />
+      <Thread_Local_Storage_Pointers v="0" />
+      <Use_Trace_Facility v="no" />
+      <LinkTimeOptimizer_Helper v="yes" />
+      <group name="Debug Helpers">
+        <Enable_GDB_Debug_Helper v="no" />
+        <uxTopUsedPriority v="yes" />
+        <Heap_Indication_Constant v="yes" />
+        <Task_C_Additions v="yes" />
+        <Record_Stack_High_Address v="yes" />
+      </group>
+      <boolgroup name="Segger System Viewer Trace" v="Disabled" />
+      <boolgroup name="Percepio Trace" v="Disabled" />
+      <Custom_FreeRTOSConfig_h v="/* #include &amp;quot;CustomFreeRTOSSettings.h */" />
+      <boolgroup name="Generate Runtime Statistics" v="Disabled" />
+      <group name="Scheduler">
+        <boolgroup name="ColdFire V1" v="Disabled" />
+        <boolgroup name="ColdFire V2" v="Disabled" />
+        <boolgroup name="ARM Cortex-M" v="Enabled">
+          <ARM_Family v="Cortex-M4F" />
+          <Max_SysCall_Interrupt_Priority v="5" />
+          <RTOS_Interrupt_Priority v="15" />
+          <Lowest_Interrupt_Priority v="15" />
+          <Compiler_Optimization_Level v="0" />
+          <MPU v="no" />
+          <boolgroup name="SysTick" v="Enabled">
+            <Core_Clock v="yes" />
+          </boolgroup>
+          <boolgroup name="Low Power Timer" v="Disabled" />
+        </boolgroup>
+        <boolgroup name="non-LDD SWI" v="Disabled" />
+        <Preemptive v="yes" />
+        <Optimized_Task_Selection v="yes" />
+        <Time_Slicing v="yes" />
+        <Use_Co_Routines v="no" />
+        <Idle_should_yield v="yes" />
+        <Task_Name_Length v="12" />
+        <Minimal_Stack_Size v="200" />
+        <Maximum_Priorities v="6" />
+        <Maximum_Coroutine_Priorities v="2" />
+        <Stackoverflow_checking_method v="Method 1" />
+        <Cleanup_Resources v="yes" />
+        <TaskExitError_Handler v="no" />
+      </group>
+      <group name="Ticks">
+        <boolgroup name="Tickless Idle Mode" v="Disabled" />
+        <Tick_Rate__Hz_ v="1000" />
+        <Use_16bit_ticks v="no" />
+        <boolgroup name="non-LDD Tick" v="Disabled" />
+        <boolgroup name="LDD Tick" v="Disabled" />
+      </group>
+      <group name="Queues">
+        <Queue_Registry_Size v="5" />
+        <Queue_Sets v="no" />
+      </group>
+      <group name="Semaphores and Mutexes">
+        <Use_Mutexes v="yes" />
+        <Use_Recursive_Mutexes v="yes" />
+      </group>
+      <boolgroup name="Timers" v="Disabled" />
+      <group name="Memory">
+        <boolgroup name="Dynamic Allocation" v="Enabled">
+          <Application_allocated_Heap v="no" />
+          <Heap_Size v="8192" />
+          <Linker_Heap_Base_Symbol v="__HeapBase" />
+          <Linker_Heap_Limit_Symbol v="__HeapLimit" />
+          <Linker_Heap_Size_Symbol v="__heap_size" />
+          <Memory_Allocation_Scheme v="Scheme 4: merge free blocks" />
+        </boolgroup>
+        <boolgroup name="Static Allocation" v="Disabled" />
+        <boolgroup name="User Memory Section" v="Disabled" />
+      </group>
+      <group name="RTOS Adaptor">
+        <group name="Memory allocation">
+          <boolgroup name="User function for memory allocation" v="no" />
+          <boolgroup name="User function for memory deallocation" v="no" />
+        </group>
+        <group name="Critical section">
+          <boolgroup name="User function for entering critical section" v="no" />
+          <boolgroup name="User function for exiting critical section" v="no" />
+        </group>
+      </group>
+      <boolgroup name="Shell" v="Enabled">
+        <Max_number_of_tasks v="16" />
+        <Shell v="CLS1" />
+      </boolgroup>
+      <Utility v="UTIL1" />
+    </Properties>
+    <Methods>
+      <xTaskCreate v="generate code" />
+      <xTaskCreateStatic v="generate code" />
+      <vTaskDelete v="don&amp;apos;t generate code" />
+      <vTaskStartScheduler v="generate code" />
+      <vTaskEndScheduler v="don&amp;apos;t generate code" />
+      <vTaskSuspend v="generate code" />
+      <vTaskSuspendAll v="generate code" />
+      <vTaskResume v="generate code" />
+      <xTaskResumeAll v="generate code" />
+      <xTaskResumeFromISR v="generate code" />
+      <vTaskStepTick v="don&amp;apos;t generate code" />
+      <xTaskAbortDelay v="don&amp;apos;t generate code" />
+      <taskYIELD v="generate code" />
+      <taskENTER_CRITICAL v="generate code" />
+      <taskEXIT_CRITICAL v="generate code" />
+      <taskDISABLE_INTERRUPTS v="generate code" />
+      <taskENABLE_INTERRUPTS v="generate code" />
+      <vTaskDelay v="generate code" />
+      <vTaskDelayUntil v="generate code" />
+      <uxTaskPriorityGet v="generate code" />
+      <xTaskGetTickCount v="generate code" />
+      <xTaskGetTickCountFromISR v="generate code" />
+      <vTaskPrioritySet v="generate code" />
+      <xSemaphoreCreateBinary v="generate code" />
+      <xSemaphoreCreateBinaryStatic v="generate code" />
+      <xSemaphoreCreateCounting v="generate code" />
+      <xSemaphoreCreateCountingStatic v="generate code" />
+      <xSemaphoreGive v="generate code" />
+      <xSemaphoreTake v="generate code" />
+      <uxSemaphoreGetCount v="generate code" />
+      <xSemaphoreGiveFromISR v="generate code" />
+      <xSemaphoreTakeFromISR v="generate code" />
+      <xSemaphoreGetMutexHolder v="generate code" />
+      <xSemaphoreCreateMutex v="generate code" />
+      <xSemaphoreCreateMutexStatic v="generate code" />
+      <xSemaphoreCreateRecursiveMutex v="generate code" />
+      <xSemaphoreCreateRecursiveMutexStatic v="generate code" />
+      <xSemaphoreTakeRecursive v="generate code" />
+      <xSemaphoreGiveRecursive v="generate code" />
+      <vSemaphoreDelete v="generate code" />
+      <pvPortMalloc v="generate code" />
+      <vPortFree v="generate code" />
+      <xPortGetFreeHeapSize v="generate code" />
+      <vTaskSetApplicationTaskTag v="don&amp;apos;t generate code" />
+      <xTaskGetApplicationTaskTag v="don&amp;apos;t generate code" />
+      <xTaskCallApplicationTaskHook v="don&amp;apos;t generate code" />
+      <xTaskGetCurrentTaskHandle v="generate code" />
+      <xTaskGetIdleTaskHandle v="generate code" />
+      <xTaskGetHandle v="generate code" />
+      <pcTaskGetTaskName v="generate code" />
+      <eTaskGetState v="don&amp;apos;t generate code" />
+      <xTaskGetSchedulerState v="generate code" />
+      <vTaskList v="don&amp;apos;t generate code" />
+      <uxTaskGetStackHighWaterMark v="generate code" />
+      <uxTaskGetNumberOfTasks v="generate code" />
+      <vTaskGetRunTimeStats v="don&amp;apos;t generate code" />
+      <uxQueueMessagesWaiting v="generate code" />
+      <uxQueueMessagesWaitingfromISR v="generate code" />
+      <xQueueCreate v="generate code" />
+      <xQueueCreateStatic v="generate code" />
+      <vQueueDelete v="generate code" />
+      <xQueueReset v="generate code" />
+      <xQueueSendToBack v="generate code" />
+      <xQueueSendToFront v="generate code" />
+      <xQueueReceive v="generate code" />
+      <xQueueOverwrite v="generate code" />
+      <xQueueOverwriteFromISR v="generate code" />
+      <xQueuePeek v="generate code" />
+      <xQueuePeekFromISR v="generate code" />
+      <xQueueSendToBackFromISR v="generate code" />
+      <xQueueSendToFrontFromISR v="generate code" />
+      <xQueueReceiveFromISR v="generate code" />
+      <vQueueAddToRegistry v="generate code" />
+      <vQueueUnregisterQueue v="generate code" />
+      <xQueueIsQueueFullFromISR v="generate code" />
+      <xQueueIsQueueEmptyFromISR v="generate code" />
+      <xQueueCreateSet v="don&amp;apos;t generate code" />
+      <xQueueAddToSet v="don&amp;apos;t generate code" />
+      <xQueueRemoveFromSet v="don&amp;apos;t generate code" />
+      <xQueueSelectFromSet v="don&amp;apos;t generate code" />
+      <xQueueSelectFromSetFromISR v="don&amp;apos;t generate code" />
+      <xEventGroupCreate v="generate code" />
+      <xEventGroupCreateStatic v="generate code" />
+      <xEventGroupWaitBits v="generate code" />
+      <xEventGroupSetBits v="generate code" />
+      <xEventGroupSetBitsFromISR v="generate code" />
+      <xEventGroupClearBits v="generate code" />
+      <xEventGroupClearBitsFromISR v="generate code" />
+      <xEventGroupGetBits v="generate code" />
+      <xEventGroupGetBitsFromISR v="generate code" />
+      <xEventGroupSync v="generate code" />
+      <xTimerCreate v="generate code" />
+      <xTimerCreateStatic v="don&amp;apos;t generate code" />
+      <xTimerIsTimerActive v="generate code" />
+      <xTimerStart v="generate code" />
+      <xTimerStop v="generate code" />
+      <xTimerChangePeriod v="generate code" />
+      <xTimerDelete v="generate code" />
+      <xTimerReset v="generate code" />
+      <xTimerStartFromISR v="generate code" />
+      <xTimerStopFromISR v="generate code" />
+      <xTimerChangePeriodFromISR v="generate code" />
+      <xTimerResetFromISR v="generate code" />
+      <pvTimerGetTimerID v="generate code" />
+      <xTimerGetTimerDaemonTaskHandle v="generate code" />
+      <pcTimerGetTimerName v="generate code" />
+      <xTimerPendFunctionCall v="generate code" />
+      <xTimerPendFunctionCallFromISR v="generate code" />
+      <xTaskNotifyGive v="generate code" />
+      <vTaskNotifyGiveFromISR v="generate code" />
+      <ulTaskNotifyTake v="generate code" />
+      <xTaskNotify v="generate code" />
+      <xTaskNotifyFromISR v="generate code" />
+      <xTaskNotifyAndQuery v="generate code" />
+      <xTaskNotifyAndQueryFromISR v="generate code" />
+      <xTaskNotifyWait v="generate code" />
+      <xTaskNotifyStateClear v="generate code" />
+      <vTaskSetThreadLocalStoragePointer v="generate code" />
+      <pvTaskGetThreadLocalStoragePointer v="generate code" />
+      <pcTaskGetName v="generate code" />
+      <vTaskGetInfo v="generate code" />
+      <ParseCommand v="generate code" />
+      <AppConfigureTimerForRuntimeStats v="generate code" />
+      <AppGetRuntimeCounterValueFromISR v="generate code" />
+      <Deinit v="generate code" />
+      <Init v="generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="vApplicationStackOverflowHook" v="generate code">
+        <Event_procedure_name v="FRTOS1_vApplicationStackOverflowHook" />
+      </event>
+      <event name="vApplicationTickHook" v="generate code">
+        <Event_procedure_name v="FRTOS1_vApplicationTickHook" />
+      </event>
+      <event name="vApplicationIdleHook" v="generate code">
+        <Event_procedure_name v="FRTOS1_vApplicationIdleHook" />
+      </event>
+      <event name="vApplicationMallocFailedHook" v="generate code">
+        <Event_procedure_name v="FRTOS1_vApplicationMallocFailedHook" />
+      </event>
+      <event name="vOnPreSleepProcessing" v="don&amp;apos;t generate code" />
+      <event name="vOnPostSleepProcessing" v="don&amp;apos;t generate code" />
+    </Events>
+  </Bean>
+  <Bean name="HF1" type="HardFault">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="HF1" />
+      <SDK v="MCUC1" />
+      <Disable_write_buffer v="no" />
+    </Properties>
+    <Methods>
+      <HardFaultHandler v="generate code" />
+      <Deinit v="generate code" />
+      <Init v="generate code" />
+    </Methods>
+    <Events>
+      <EmptySection_DummyValue />
+    </Events>
+  </Bean>
+  <Bean name="KIN1" type="KinetisTools">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="KIN1" />
+      <SDK v="MCUC1" />
+      <Utility v="UTIL1" />
+      <boolgroup name="Shell" v="Enabled">
+        <Shell v="CLS1" />
+      </boolgroup>
+    </Properties>
+    <Methods>
+      <SoftwareReset v="generate code" />
+      <UIDGet v="generate code" />
+      <UIDSame v="generate code" />
+      <UIDtoString v="generate code" />
+      <GetKinetisFamilyString v="generate code" />
+      <GetPC v="generate code" />
+      <GetSP v="generate code" />
+      <SetPSP v="generate code" />
+      <SetLR v="generate code" />
+      <InitCycleCounter v="generate code" />
+      <ResetCycleCounter v="generate code" />
+      <EnableCycleCounter v="generate code" />
+      <DisableCycleCounter v="generate code" />
+      <GetCycleCounter v="generate code" />
+      <ParseCommand v="generate code" />
+      <Deinit v="generate code" />
+      <Init v="generate code" />
+    </Methods>
+    <Events>
+      <EmptySection_DummyValue />
+    </Events>
+  </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>
 

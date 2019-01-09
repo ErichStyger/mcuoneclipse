@@ -54,6 +54,9 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "FRTOS1.h"
+#include "HF1.h"
+#include "KIN1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -62,6 +65,8 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "Shell.h"
+
 #if 1
 #include <stdio.h>
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
@@ -129,7 +134,10 @@ int main(void)
   WAIT1_Waitms(100);
   LED3_Off();
 
-  CDC_Run();
+  SHELL_Init();
+  vTaskStartScheduler();
+
+  //CDC_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

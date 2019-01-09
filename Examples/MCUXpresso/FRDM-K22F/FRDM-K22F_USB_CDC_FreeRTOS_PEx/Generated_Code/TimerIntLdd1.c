@@ -7,7 +7,7 @@
 **     Version     : Component 01.018, Driver 01.02, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 17:48, # CodeGen: 7
 **     Abstract    :
 **          This TimerInt component implements a periodic interrupt.
 **          When the component and its events are enabled, the "OnInterrupt"
@@ -95,7 +95,7 @@
 
 #include "TI1.h"
 #include "TimerIntLdd1.h"
-/* {Default RTOS Adapter} No RTOS includes */
+#include "FreeRTOS.h" /* FreeRTOS interface */
 
 #ifdef __cplusplus
 extern "C" {
@@ -109,7 +109,7 @@ typedef struct {
 
 typedef TimerIntLdd1_TDeviceData *TimerIntLdd1_TDeviceDataPtr; /* Pointer to the device data structure. */
 
-/* {Default RTOS Adapter} Static object used for simulation of dynamic driver memory allocation */
+/* {FreeRTOS RTOS Adapter} Static object used for simulation of dynamic driver memory allocation */
 static TimerIntLdd1_TDeviceData DeviceDataPrv__DEFAULT_RTOS_ALLOC;
 
 #define AVAILABLE_EVENTS_MASK (LDD_TEventMask)(LDD_TIMERINT_ON_INTERRUPT)
@@ -142,7 +142,7 @@ LDD_TDeviceData* TimerIntLdd1_Init(LDD_TUserData *UserDataPtr)
 {
   /* Allocate device structure */
   TimerIntLdd1_TDeviceData *DeviceDataPrv;
-  /* {Default RTOS Adapter} Driver memory allocation: Dynamic allocation is simulated by a pointer to the static object */
+  /* {FreeRTOS RTOS Adapter} Driver memory allocation: Dynamic allocation is simulated by a pointer to the static object */
   DeviceDataPrv = &DeviceDataPrv__DEFAULT_RTOS_ALLOC;
   DeviceDataPrv->UserDataPtr = UserDataPtr; /* Store the RTOS device structure */
   DeviceDataPrv->EnUser = TRUE;        /* Set the flag "device enabled" */
@@ -153,7 +153,7 @@ LDD_TDeviceData* TimerIntLdd1_Init(LDD_TUserData *UserDataPtr)
     /* Unregistration of the device structure */
     PE_LDD_UnregisterDeviceStructure(PE_LDD_COMPONENT_TimerIntLdd1_ID);
     /* Deallocation of the device structure */
-    /* {Default RTOS Adapter} Driver memory deallocation: Dynamic allocation is simulated, no deallocation code is generated */
+    /* {FreeRTOS RTOS Adapter} Driver memory deallocation: Dynamic allocation is simulated, no deallocation code is generated */
     return NULL;                       /* If so, then the TimerInt initialization is also unsuccessful */
   }
   return ((LDD_TDeviceData *)DeviceDataPrv); /* Return pointer to the device data structure */

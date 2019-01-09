@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K22P121M120SF7RM, Rev. 1, March 24, 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 18:05, # CodeGen: 8
 **     Abstract    :
 **
 **     Settings    :
@@ -63,7 +63,7 @@
 
 /* MODULE Cpu. */
 
-/* {Default RTOS Adapter} No RTOS includes */
+#include "FreeRTOS.h" /* FreeRTOS interface */
 #include "Cpu.h"
 #include "Events.h"
 #include "Init_Config.h"
@@ -152,6 +152,11 @@ void Components_Init(void)
   /* ### TimerInt "TI1" init code ... */
   XF1_Init(); /* ### XFormat "XF1" init code ... */
   CLS1_Init(); /* ### Shell "CLS1" init code ... */
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
+  HF1_Init(); /* ### HardFault "HF1" init code ... */
+  KIN1_Init(); /* ### KinetisTools "KIN1" init code ... */
 }
 #endif /* CPU_COMPONENTS_INIT */
 

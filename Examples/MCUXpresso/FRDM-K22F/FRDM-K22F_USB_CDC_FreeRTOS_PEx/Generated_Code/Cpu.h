@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K22P121M120SF7RM, Rev. 1, March 24, 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 17:48, # CodeGen: 7
 **     Abstract    :
 **
 **     Settings    :
@@ -125,7 +125,7 @@ void Components_Init(void);
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
-/* {Default RTOS Adapter} ISR function prototype */
+/* {FreeRTOS RTOS Adapter} ISR function prototype */
 PE_ISR(Cpu_INT_NMIInterrupt);
 
 

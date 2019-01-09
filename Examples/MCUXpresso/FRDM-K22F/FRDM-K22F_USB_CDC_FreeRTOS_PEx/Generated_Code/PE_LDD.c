@@ -6,7 +6,7 @@
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 17:48, # CodeGen: 7
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -50,8 +50,8 @@
 
 /* MODULE PE_LDD. */
 
-/* {Default RTOS Adapter} No RTOS includes */
-/* {Default RTOS Adapter} No RTOS driver includes */
+#include "FreeRTOS.h" /* FreeRTOS interface */
+/* {FreeRTOS RTOS Adapter} No RTOS driver includes */
 
 #include "PE_LDD.h"
 #include "Cpu.h"

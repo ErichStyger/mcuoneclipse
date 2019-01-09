@@ -6,7 +6,7 @@
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 18:05, # CodeGen: 8
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -79,6 +79,9 @@
 #include "CLS1.h"
 #include "XF1.h"
 #include "MCUC1.h"
+#include "FRTOS1.h"
+#include "HF1.h"
+#include "KIN1.h"
 
 
 /*
