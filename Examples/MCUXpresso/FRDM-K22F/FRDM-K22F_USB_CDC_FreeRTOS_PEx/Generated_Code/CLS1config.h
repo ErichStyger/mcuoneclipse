@@ -52,7 +52,7 @@
 #endif
 
 #ifndef CLS1_CONFIG_PROJECT_NAME_STRING
-  #define CLS1_CONFIG_PROJECT_NAME_STRING    "My Project Name"
+  #define CLS1_CONFIG_PROJECT_NAME_STRING    "USB CDC on K22F"
 #endif
 
 

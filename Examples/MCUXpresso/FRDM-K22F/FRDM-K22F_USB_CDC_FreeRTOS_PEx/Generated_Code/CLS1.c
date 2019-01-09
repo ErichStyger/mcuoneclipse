@@ -6,14 +6,14 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2019-01-09, 19:14, # CodeGen: 10
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
 **          Component name                                 : CLS1
 **          Echo                                           : no
 **          Prompt                                         : "CMD> "
-**          Project Name                                   : My Project Name
+**          Project Name                                   : USB CDC on K22F
 **          Silent Mode Prefix                             : #
 **          Buffer Size                                    : 48
 **          Blocking Send                                  : Enabled
