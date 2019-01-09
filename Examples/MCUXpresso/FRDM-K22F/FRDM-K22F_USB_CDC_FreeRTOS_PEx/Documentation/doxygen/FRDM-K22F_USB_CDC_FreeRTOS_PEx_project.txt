@@ -1,0 +1,60 @@
+  /*!
+
+\page page_pinalloc Pins allocation 
+\page page_memorymap Memory map 
+<table>
+  <tr><td colspan="2" class="ttitle1">Processor Memory Map</td></tr>
+  <tr><td class="ttitle2">Address</td><td class="ttitle2">Type</td></tr>
+  <tr><td>0xE00FFFFF<br>0x00000000</td><td class="memtypeReserved"></td>
+  <tr><td>0xFFFFFFFF<br>0xE0100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0xE00FFFFF<br>0xE0000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x5FFFFFFF<br>0x44000000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x43FFFFFF<br>0x42000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x41FFFFFF<br>0x40100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x400FFFFF<br>0x400FF000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x400FEFFF<br>0x40080000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x4007FFFF<br>0x40000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x3FFFFFFF<br>0x24000000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x23FFFFFF<br>0x22000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x21FFFFFF<br>0x20100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x2000FFFF<br>0x20000000</td><td class="memtypeRAM">RAM</td>
+  <tr><td>0x1FFFFFFF<br>0x1FFF0000</td><td class="memtypeRAM">RAM</td>
+  <tr><td>0x0007FFFF<br>0x00000410</td><td class="memtypeFLASH">FLASH</td>
+  <tr><td>0x0000040F<br>0x00000400</td><td class="memtypeRAM">FLASH_CONFIG</td>
+  <tr><td>0x000003FF<br>0x00000000</td><td class="memtypeFLASH">FLASH</td>
+</table>
+<br/>
+
+*/
+
+
+  /*!
+
+\page page_pinalloc Pins allocation 
+\page page_memorymap Memory map 
+<table>
+  <tr><td colspan="2" class="ttitle1">Processor Memory Map</td></tr>
+  <tr><td class="ttitle2">Address</td><td class="ttitle2">Type</td></tr>
+  <tr><td>0xE00FFFFF<br>0x00000000</td><td class="memtypeReserved"></td>
+  <tr><td>0xFFFFFFFF<br>0xE0100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0xE00FFFFF<br>0xE0000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x5FFFFFFF<br>0x44000000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x43FFFFFF<br>0x42000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x41FFFFFF<br>0x40100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x400FFFFF<br>0x400FF000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x400FEFFF<br>0x40080000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x4007FFFF<br>0x40000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x3FFFFFFF<br>0x24000000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x23FFFFFF<br>0x22000000</td><td class="memtypeIO">I/O</td>
+  <tr><td>0x21FFFFFF<br>0x20100000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x2000FFFF<br>0x20000000</td><td class="memtypeRAM">RAM</td>
+  <tr><td>0x1FFFFFFF<br>0x1FFF0000</td><td class="memtypeRAM">RAM</td>
+  <tr><td>0x0007FFFF<br>0x00000410</td><td class="memtypeFLASH">FLASH</td>
+  <tr><td>0x0000040F<br>0x00000400</td><td class="memtypeRAM">FLASH_CONFIG</td>
+  <tr><td>0x000003FF<br>0x00000000</td><td class="memtypeFLASH">FLASH</td>
+</table>
+<br/>
+
+*/
+
+
