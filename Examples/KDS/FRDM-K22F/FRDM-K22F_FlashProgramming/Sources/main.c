@@ -49,15 +49,15 @@ static const uint32_t data[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
 static uint8_t TestPrgFlash(void) {
   uint8_t res;
   uint32_t val;
+  uint32_t old_SMC_PMCTRL;
 
-  res = IFsh1_GetLongFlash(FLASH_START_ADDR, &val);
-  if (res!=ERR_OK) {
-    return res;
-  }
-  if (val!=0x1) {
-    res = IFsh1_SetLongFlash(FLASH_START_ADDR, 0x1);
-  }
+  /* Normal RUN Mode with Fcore=60MHz Fbus=Fflash=20MHz */
+  /* read https://community.nxp.com/thread/377633 */
+  old_SMC_PMCTRL = SMC_PMCTRL;
+  SMC_PMCTRL = 0; // set NORMAL running mode
   res = IFsh1_SetBlockFlash((IFsh1_TDataAddress)data, FLASH_START_ADDR, sizeof(data));
+  /* HIGH SPEED Mode Fcore=120MHz Fbus=Fflash=24MHz */
+  SMC_PMCTRL = old_SMC_PMCTRL; // set HIGH SPEED running mode
   return res;
 }
 
