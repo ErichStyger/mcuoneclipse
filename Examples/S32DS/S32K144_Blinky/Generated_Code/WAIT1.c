@@ -4,9 +4,9 @@
 **     Project     : S32K144_Blinky
 **     Processor   : S32K144_100
 **     Component   : Wait
-**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-07, 09:21, # CodeGen: 2
+**     Date/Time   : 2019-01-10, 07:08, # CodeGen: 11
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -27,7 +27,7 @@
 **         Init           - void WAIT1_Init(void);
 **         DeInit         - void WAIT1_DeInit(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -80,10 +80,12 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+#ifdef __GNUC__
+  #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   __attribute__((naked))
-#else
+  #else
   __attribute__((naked, no_instrument_function))
+  #endif
 #endif
 void WAIT1_Wait10Cycles(void)
 {

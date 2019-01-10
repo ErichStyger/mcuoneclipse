@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-07, 09:32, # CodeGen: 5
+**     Date/Time   : 2019-01-10, 07:08, # CodeGen: 11
 **     Abstract    :
 **
 **     Settings    :
@@ -66,7 +66,9 @@
 
 #include "LEDpin3.h"
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if LEDpin3_CONFIG_DO_PIN_MUXING
   #include "fsl_port.h" /* include SDK header file for port muxing */
+  #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   #include "fsl_gpio_driver.h" /* include SDK header file for GPIO */

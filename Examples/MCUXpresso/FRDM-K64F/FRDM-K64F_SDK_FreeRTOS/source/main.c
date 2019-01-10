@@ -128,6 +128,8 @@ int main(void) {
 	FreeRTOS_Timers_Init();
 	IPC_Init();
 
+	__enable_irq();
+
 	if (xTaskCreate(first_task, "first_task", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS)  {
 		PRINTF("Task creation failed!.\r\n");
 		for(;;){}
