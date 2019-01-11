@@ -10,6 +10,8 @@
 #include "McuUtility.h"
 #include "board.h"
 #include "Shell.h"
+#include "fsl_gpio.h"
+#include "pin_mux.h"
 
 static void AppTask(void *p) {
   int cntr = 0;
@@ -18,18 +20,18 @@ static void AppTask(void *p) {
     cntr++;
     if (cntr>100) {
       cntr = 0;
-      GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 0U);
       vTaskDelay(pdMS_TO_TICKS(10));
-      GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
     }
   }
 }
 
 void APP_Run(void) {
-  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
+//  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
 
   /* Init output LED GPIO. */
-  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+//  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
 
   McuUtility_Init();
   SHELL_Init();
@@ -44,9 +46,9 @@ void APP_Run(void) {
   //GPC_CNTR_MEGA_PDN_REQ()
   /* safety belt: delay for some time to give the debug probe a chance to access the target after power-on */
   for(int i=0;i<30;i++) {
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+    GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 0U);
     McuWait_Waitms(500);
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+    GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
     McuWait_Waitms(500);
   }
   GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
