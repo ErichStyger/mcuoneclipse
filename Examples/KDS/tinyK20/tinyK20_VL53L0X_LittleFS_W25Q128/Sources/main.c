@@ -72,6 +72,7 @@ int main(void)
 
   /* Write your code here */
   APP_Start();
+
   /* For example: for(;;) { } */
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

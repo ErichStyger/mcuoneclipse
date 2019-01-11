@@ -2,6 +2,7 @@ readme.txt
 ----------
 Project with MCUXpresso IDE for the FRDM-K22F.
 It uses USB CDC with FreeRTOS.
+The application uses a USB-CDC to UART bridge: data received on USB is forwarded to UART and vice versa.
 
 Important: you have to configure flow control (CTS/RTS) in a terminal like Termite!
 Otherwise the terminal will block!

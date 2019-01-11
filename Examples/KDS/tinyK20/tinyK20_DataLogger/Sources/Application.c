@@ -36,6 +36,7 @@ static uint8_t Test(CLS1_ConstStdIOTypePtr io) {
   uint8_t write_buf[10];
   uint8_t i;
 
+  x
   if (FAT1_isWriteProtected((uint8_t*)"0")) {
     CLS1_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;

@@ -82,10 +82,10 @@ void APP_Run(void) {
   }
   timerHndl = xTimerCreate("timer0", TIMER_PERIOD_MS/portTICK_RATE_MS, pdTRUE, (void *)0, vTimerCallback);
   if (timerHndl==NULL) {
-	for(;;); /* failure! */
+    for(;;); /* failure! */
   }
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
-	for(;;); /* failure! */
+    for(;;); /* failure! */
   }
   vTaskStartScheduler();
   for(;;) {}
