@@ -52,7 +52,7 @@
 #endif
 
 #ifndef McuShell_CONFIG_PROJECT_NAME_STRING
-  #define McuShell_CONFIG_PROJECT_NAME_STRING    "My Project Name"
+  #define McuShell_CONFIG_PROJECT_NAME_STRING    "i.MX RT1064-EVK"
 #endif
 
 

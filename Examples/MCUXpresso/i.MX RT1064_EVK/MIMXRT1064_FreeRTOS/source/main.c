@@ -42,35 +42,21 @@
 /* TODO: insert other include files here. */
 #include "Application.h"
 #include "McuWait.h"
+#include "Shell.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
-
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
-  /* Init FSL debug console. */
-  BOARD_InitDebugConsole();
+  ///* Init FSL debug console. */
+ // BOARD_InitDebugConsole();
 
-  McuWait_Init(); /* initialize driver */
-
-  /* Init output LED GPIO. */
-  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
-  /* safety belt: delay for some time to give the debug probe a chance to access the target after power-on */
-  for(int i=0;i<30;i++) {
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
-    McuWait_Waitms(500);
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
-    McuWait_Waitms(500);
-  }
-  GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
   /* now run the application */
-
   APP_Run();
 
   return 0 ;

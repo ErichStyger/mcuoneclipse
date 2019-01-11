@@ -7,36 +7,53 @@
 
 #include "Application.h"
 #include "McuRTOS.h"
+#include "McuUtility.h"
 #include "board.h"
+#include "Shell.h"
 
 static void AppTask(void *p) {
+  int cntr = 0;
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(10));
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
-    vTaskDelay(pdMS_TO_TICKS(10));
-    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+    cntr++;
+    if (cntr>100) {
+      cntr = 0;
+      GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+      vTaskDelay(pdMS_TO_TICKS(10));
+      GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+    }
   }
 }
 
 void APP_Run(void) {
-	xTaskCreate(/* The function that implements the task. */
-      AppTask,
-      /* Text name for the task, just to help debugging. */
-      "App",
-      /* The size (in words) of the stack that should be created
-      for the task. */
-      (800/sizeof(StackType_t)),
-      /* A parameter that can be passed into the task.  Not used
-      in this simple demo. */
-      NULL,
-      /* The priority to assign to the task.  tskIDLE_PRIORITY
-      (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1
-      is the highest priority. */
-      1,
-      /* Used to obtain a handle to the created task.  Not used in
-      this simple demo, so set to NULL. */
-      NULL);
-  vTaskStartScheduler();
-	for(;;) {
+  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
+
+  /* Init output LED GPIO. */
+  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+
+  McuUtility_Init();
+  SHELL_Init();
+  McuWait_Init(); /* initialize driver */
+
+#if 1 /* do NOT enter WAIT mode with WFI: */
+  CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */
+#else /* default */
+  CLOCK_SetMode(kCLOCK_ModeWait);
+  /* need to route SysTick interrupt through GPC (General Power Controller) alternative interrupt controller */
+  /* reference manual, page 1195ff, GPC Interrupt Controller (INTC) */
+  //GPC_CNTR_MEGA_PDN_REQ()
+  /* safety belt: delay for some time to give the debug probe a chance to access the target after power-on */
+  for(int i=0;i<30;i++) {
+    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+    McuWait_Waitms(500);
+    GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 1U);
+    McuWait_Waitms(500);
+  }
+  GPIO_PinWrite(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, 0U);
+#endif
+
+  if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
+	  for(;;) {}
 	}
+  vTaskStartScheduler();
 }
