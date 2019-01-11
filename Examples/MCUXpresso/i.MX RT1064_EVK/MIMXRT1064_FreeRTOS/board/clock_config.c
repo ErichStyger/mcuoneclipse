@@ -1,11 +1,4 @@
 /*
- * Copyright 2018 NXP
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
-/*
  * How to setup clock using clock driver functions:
  *
  * 1. Call CLOCK_InitXXXPLL() to configure corresponding PLL clock.
@@ -22,15 +15,16 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v4.1
+product: Clocks v5.0
 processor: MIMXRT1064xxxxA
 package_id: MIMXRT1064DVL6A
 mcu_data: ksdk2_0
-processor_version: 0.0.0
+processor_version: 5.0.0
 board: MIMXRT1064-EVK
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 #include "clock_config.h"
+#include "fsl_iomuxc.h"
 
 /*******************************************************************************
  * Definitions
@@ -64,23 +58,35 @@ outputs:
 - {id: CLK_1M.outFreq, value: 1 MHz}
 - {id: CLK_24M.outFreq, value: 24 MHz}
 - {id: CSI_CLK_ROOT.outFreq, value: 12 MHz}
+- {id: ENET1_TX_CLK.outFreq, value: 2.4 MHz}
 - {id: ENET2_125M_CLK.outFreq, value: 1.2 MHz}
+- {id: ENET2_TX_CLK.outFreq, value: 1.2 MHz}
 - {id: ENET_125M_CLK.outFreq, value: 2.4 MHz}
 - {id: ENET_25M_REF_CLK.outFreq, value: 1.2 MHz}
 - {id: FLEXIO1_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: FLEXIO2_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: FLEXSPI2_CLK_ROOT.outFreq, value: 2880/11 MHz}
 - {id: FLEXSPI_CLK_ROOT.outFreq, value: 2880/11 MHz}
+- {id: GPT1_ipg_clk_highfreq.outFreq, value: 75 MHz}
+- {id: GPT2_ipg_clk_highfreq.outFreq, value: 75 MHz}
 - {id: IPG_CLK_ROOT.outFreq, value: 150 MHz}
 - {id: LCDIF_CLK_ROOT.outFreq, value: 67.5 MHz}
 - {id: LPI2C_CLK_ROOT.outFreq, value: 60 MHz}
 - {id: LPSPI_CLK_ROOT.outFreq, value: 105.6 MHz}
 - {id: LVDS1_CLK.outFreq, value: 1.2 GHz}
+- {id: MQS_MCLK.outFreq, value: 1080/17 MHz}
 - {id: PERCLK_CLK_ROOT.outFreq, value: 75 MHz}
 - {id: PLL7_MAIN_CLK.outFreq, value: 24 MHz}
 - {id: SAI1_CLK_ROOT.outFreq, value: 1080/17 MHz}
+- {id: SAI1_MCLK1.outFreq, value: 1080/17 MHz}
+- {id: SAI1_MCLK2.outFreq, value: 1080/17 MHz}
+- {id: SAI1_MCLK3.outFreq, value: 30 MHz}
 - {id: SAI2_CLK_ROOT.outFreq, value: 1080/17 MHz}
+- {id: SAI2_MCLK1.outFreq, value: 1080/17 MHz}
+- {id: SAI2_MCLK3.outFreq, value: 30 MHz}
 - {id: SAI3_CLK_ROOT.outFreq, value: 1080/17 MHz}
+- {id: SAI3_MCLK1.outFreq, value: 1080/17 MHz}
+- {id: SAI3_MCLK3.outFreq, value: 30 MHz}
 - {id: SEMC_CLK_ROOT.outFreq, value: 75 MHz}
 - {id: SPDIF0_CLK_ROOT.outFreq, value: 30 MHz}
 - {id: TRACE_CLK_ROOT.outFreq, value: 352/3 MHz}
@@ -102,7 +108,6 @@ settings:
 - {id: CCM_ANALOG.PLL1_PREDIV.scale, value: '1', locked: true}
 - {id: CCM_ANALOG.PLL1_VDIV.scale, value: '50', locked: true}
 - {id: CCM_ANALOG.PLL2.denom, value: '1', locked: true}
-- {id: CCM_ANALOG.PLL2.div, value: '22'}
 - {id: CCM_ANALOG.PLL2.num, value: '0', locked: true}
 - {id: CCM_ANALOG.PLL2_BYPASS.sel, value: CCM_ANALOG.PLL2_OUT_CLK}
 - {id: CCM_ANALOG.PLL2_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD0}
@@ -447,6 +452,26 @@ void BOARD_BootClockRUN(void)
     CCM->CCOSR &= ~CCM_CCOSR_CLKO1_EN_MASK;
     /* Disable clock out2. */
     CCM->CCOSR &= ~CCM_CCOSR_CLKO2_EN_MASK;
+    /* Set SAI1 MCLK1 clock source. */
+    IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk1Sel, 0);
+    /* Set SAI1 MCLK2 clock source. */
+    IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk2Sel, 0);
+    /* Set SAI1 MCLK3 clock source. */
+    IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk3Sel, 0);
+    /* Set SAI2 MCLK3 clock source. */
+    IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI2MClk3Sel, 0);
+    /* Set SAI3 MCLK3 clock source. */
+    IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI3MClk3Sel, 0);
+    /* Set MQS configuration. */
+    IOMUXC_MQSConfig(IOMUXC_GPR,kIOMUXC_MqsPwmOverSampleRate32, 0);
+    /* Set ENET1 Tx clock source. */
+    IOMUXC_EnableMode(IOMUXC_GPR, kIOMUXC_GPR_ENET1RefClkMode, false);
+    /* Set ENET2 Tx clock source. */
+    IOMUXC_EnableMode(IOMUXC_GPR, IOMUXC_GPR_GPR1_ENET2_CLK_SEL_MASK, false);
+    /* Set GPT1 High frequency reference clock source. */
+    IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT1_MASK;
+    /* Set GPT2 High frequency reference clock source. */
+    IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT2_MASK;
     /* Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
 }

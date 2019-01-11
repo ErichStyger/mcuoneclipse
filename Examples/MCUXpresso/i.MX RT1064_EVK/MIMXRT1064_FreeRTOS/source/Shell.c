@@ -13,6 +13,7 @@
 #include "McuRTOS.h"
 #include "McuShell.h"
 #include "McuUtility.h"
+#include "McuArmTools.h"
 #include "MsgQueue.h"
 #include "uart.h"
 
@@ -46,6 +47,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuRTOS_PARSE_COMMAND_ENABLED
   McuRTOS_ParseCommand,
 #endif
+#if McuArmTools_PARSE_COMMAND_ENABLED
+  McuArmTools_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -66,6 +70,7 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   localConsole_buf[0] = '\0';
+  McuArmTools_Init();
   McuShell_Init();
   UART_Init();
   (void)McuShell_SetStdio(&UART_stdio);

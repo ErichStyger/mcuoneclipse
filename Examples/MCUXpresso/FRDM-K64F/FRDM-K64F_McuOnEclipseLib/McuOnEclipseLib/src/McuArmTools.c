@@ -77,6 +77,7 @@
 #include "McuArmTools.h"
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+#include "fsl_common.h"
   #include "fsl_sim.h" /* system integration module */
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_KINETIS_1_3
   #include "Cpu.h" /* include CPU related interfaces and defines */
