@@ -8,12 +8,12 @@
 #define __SDA1_CONFIG_H
 
 #ifndef SDA1_CONFIG_PORT_NAME
-  #define SDA1_CONFIG_PORT_NAME       PORTA
+  #define SDA1_CONFIG_PORT_NAME       GPIO1
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef SDA1_CONFIG_GPIO_NAME
-  #define SDA1_CONFIG_GPIO_NAME       GPIOA
+  #define SDA1_CONFIG_GPIO_NAME       GPIO1
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 

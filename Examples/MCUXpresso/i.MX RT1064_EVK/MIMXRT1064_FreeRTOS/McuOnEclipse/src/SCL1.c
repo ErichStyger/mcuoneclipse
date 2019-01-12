@@ -66,7 +66,9 @@
 
 #include "SCL1.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if SCL1_CONFIG_DO_PIN_MUXING
   #include "fsl_port.h" /* include SDK header file for port muxing */
+  #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   #include "fsl_gpio_driver.h" /* include SDK header file for GPIO */

@@ -8,12 +8,12 @@
 #define __Clock1_CONFIG_H
 
 #ifndef Clock1_CONFIG_PORT_NAME
-  #define Clock1_CONFIG_PORT_NAME       PORTA
+  #define Clock1_CONFIG_PORT_NAME       GPIO1
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef Clock1_CONFIG_GPIO_NAME
-  #define Clock1_CONFIG_GPIO_NAME       GPIOA
+  #define Clock1_CONFIG_GPIO_NAME       GPIO1
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 

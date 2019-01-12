@@ -8,12 +8,12 @@
 #define __SCL1_CONFIG_H
 
 #ifndef SCL1_CONFIG_PORT_NAME
-  #define SCL1_CONFIG_PORT_NAME       PORTA
+  #define SCL1_CONFIG_PORT_NAME       GPIO1
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef SCL1_CONFIG_GPIO_NAME
-  #define SCL1_CONFIG_GPIO_NAME       GPIOA
+  #define SCL1_CONFIG_GPIO_NAME       GPIO1
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 

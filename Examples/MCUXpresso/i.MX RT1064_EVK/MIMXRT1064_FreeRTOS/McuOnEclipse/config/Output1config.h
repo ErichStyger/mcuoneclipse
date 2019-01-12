@@ -8,12 +8,12 @@
 #define __Output1_CONFIG_H
 
 #ifndef Output1_CONFIG_PORT_NAME
-  #define Output1_CONFIG_PORT_NAME       PORTA
+  #define Output1_CONFIG_PORT_NAME       GPIO1
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef Output1_CONFIG_GPIO_NAME
-  #define Output1_CONFIG_GPIO_NAME       GPIOA
+  #define Output1_CONFIG_GPIO_NAME       GPIO1
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
