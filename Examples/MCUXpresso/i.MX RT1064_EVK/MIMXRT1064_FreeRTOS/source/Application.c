@@ -10,6 +10,7 @@
 #include "McuUtility.h"
 #include "McuHardFault.h"
 #include "McuArmTools.h"
+#include "McuLED.h"
 #include "board.h"
 #include "Shell.h"
 #include "fsl_gpio.h"
@@ -23,9 +24,15 @@ static void AppTask(void *p) {
     cntr++;
     if (cntr>100) {
       cntr = 0;
-      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 0U);
+//      McuLED_Neg();
+      ///GPIO_PortToggle(BOARD_INITPINS_LED_GREEN_GPIO, (1<<BOARD_INITPINS_LED_GREEN_GPIO_PIN));
+      McuLED_On();
+//      GPIO_PortClear(BOARD_INITPINS_LED_GREEN_GPIO, (1<<BOARD_INITPINS_LED_GREEN_GPIO_PIN));
+//      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 0U);
       vTaskDelay(pdMS_TO_TICKS(10));
-      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
+      McuLED_Off();
+//      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
+      //      GPIO_PortSet(BOARD_INITPINS_LED_GREEN_GPIO, (1<<BOARD_INITPINS_LED_GREEN_GPIO_PIN));
     }
   }
 }
@@ -41,9 +48,11 @@ void APP_Run(void) {
   McuArmTools_Init();
   McuWait_Init();
   McuHardFault_Init();
+  McuLED_Init();
 
   SHELL_Init();
- // printf("hello world!\r\n");
+  //printf("hello world!\r\n"); /* uses semihosting */
+  //*((int*)0x70000000) = 5; /* force a hard fault */
 
 #if 1 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */

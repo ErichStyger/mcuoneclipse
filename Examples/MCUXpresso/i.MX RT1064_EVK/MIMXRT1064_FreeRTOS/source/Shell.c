@@ -15,6 +15,7 @@
 #include "McuUtility.h"
 #include "McuArmTools.h"
 #include "MsgQueue.h"
+#include "McuLED.h"
 #include "uart.h"
 
 static bool UART_DataInRx(void) {
@@ -49,6 +50,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if McuArmTools_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
+#endif
+#if McuLED_PARSE_COMMAND_ENABLED
+  McuLED_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

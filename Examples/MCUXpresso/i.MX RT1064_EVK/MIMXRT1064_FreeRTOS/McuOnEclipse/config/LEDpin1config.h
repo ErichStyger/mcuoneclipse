@@ -18,17 +18,17 @@
 #endif
 
 #ifndef LEDpin1_CONFIG_PIN_NUMBER
-  #define LEDpin1_CONFIG_PIN_NUMBER      0u
+  #define LEDpin1_CONFIG_PIN_NUMBER      9u
     /*!< number of pin, type unsigned integer */
 #endif
 
 #ifndef LEDpin1_CONFIG_PIN_SYMBOL
-  #define LEDpin1_CONFIG_PIN_SYMBOL      LED_RED
+  #define LEDpin1_CONFIG_PIN_SYMBOL      USER_LED_GREEN
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 
 #ifndef LEDpin1_CONFIG_INIT_PIN_VALUE
-  #define LEDpin1_CONFIG_INIT_PIN_VALUE  0
+  #define LEDpin1_CONFIG_INIT_PIN_VALUE  1
   /*!< 0: Pin data is initialized with 0 (low); 1: pin value is initialized with 1 (high) */
 #endif
 
