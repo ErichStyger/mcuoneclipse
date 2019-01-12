@@ -8,10 +8,13 @@
 #include "Application.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
+#include "McuHardFault.h"
+#include "McuArmTools.h"
 #include "board.h"
 #include "Shell.h"
 #include "fsl_gpio.h"
 #include "pin_mux.h"
+#include <stdio.h>
 
 static void AppTask(void *p) {
   int cntr = 0;
@@ -33,9 +36,14 @@ void APP_Run(void) {
   /* Init output LED GPIO. */
 //  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
 
+  /* initialize McuLibrary */
   McuUtility_Init();
+  McuArmTools_Init();
+  McuWait_Init();
+  McuHardFault_Init();
+
   SHELL_Init();
-  McuWait_Init(); /* initialize driver */
+ // printf("hello world!\r\n");
 
 #if 1 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */

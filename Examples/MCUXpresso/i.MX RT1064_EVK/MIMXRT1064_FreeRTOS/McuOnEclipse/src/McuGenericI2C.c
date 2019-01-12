@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.046, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.047, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 16:29, # CodeGen: 364
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :

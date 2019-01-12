@@ -70,7 +70,6 @@ static void ShellTask(void *pvParameters) {
 
 void SHELL_Init(void) {
   localConsole_buf[0] = '\0';
-  McuArmTools_Init();
   McuShell_Init();
   UART_Init();
   (void)McuShell_SetStdio(&UART_stdio);

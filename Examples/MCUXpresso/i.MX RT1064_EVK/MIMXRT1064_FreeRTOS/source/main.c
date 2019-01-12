@@ -53,7 +53,6 @@ int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
-  ///* Init FSL debug console. */
  // BOARD_InitDebugConsole();
 
   /* now run the application */

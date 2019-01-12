@@ -6,11 +6,48 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.207, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 17:06, # CodeGen: 365
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **
 **     Settings    :
-**
+**          Component name                                 : McuFatFS
+**          FatFs Version                                  : R0.12 (Patch 3, 29-April-2016)
+**          Tiny                                           : no
+**          Volumes                                        : 1
+**          Drives                                         : 1
+**            Drive0                                       : McuSDCard
+**          FS_MINIMIZE                                    : 0
+**          Maximum Sector Size                            : 512
+**          Relative Path                                  : Enabled with f_getcwd()
+**          Code Page                                      : U.S. (OEM)
+**          File Sharing                                   : 0
+**          Multipartion                                   : no
+**          Fast Seek                                      : yes
+**          Use Find                                       : Disable (0)
+**          String Functions                               : enable
+**          LFN                                            : Long File Name Support
+**            Use LFN                                      : Disable
+**            exFAT                                        : no
+**            Max LFN Length                               : 255
+**            LFN Unicode                                  : no
+**          Write enabled                                  : Enabled
+**            Use TimeDate                                 : Enabled
+**              Realtime clock                             : McuTimeDate
+**          Reentrant                                      : Enabled
+**            Timeout ticks                                : 1000
+**            Handle                                       : HANDLE
+**            User Sync Functions                          : no
+**            RTOS                                         : Enabled
+**              RTOS                                       : McuRTOS
+**              Use dynamic heap                           : yes
+**          Utility                                        : McuUtility
+**          Wait                                           : McuWait
+**          SDK                                            : McuLib
+**          Shell                                          : Enabled
+**            Shell                                        : McuShell
+**            Card Insert Delay (ms)                       : 100
+**            File print buffer size                       : 32
+**            File copy buffer size                        : 32
 **     Contents    :
 **         open              - FRESULT McuFatFS_open(FIL *fp, const XCHAR *path, BYTE mode);
 **         close             - FRESULT McuFatFS_close(FIL *fp);

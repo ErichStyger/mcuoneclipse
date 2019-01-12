@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : I2CSpy
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **          This component implements a utility to inspect devices on the I2C bus.
 **     Settings    :
@@ -23,7 +23,7 @@
 **         GetDeviceAddress - uint8_t McuI2CSpy_GetDeviceAddress(void);
 **         SetAddressSize   - uint8_t McuI2CSpy_SetAddressSize(uint8_t size);
 **         SetBytesPerLine  - uint8_t McuI2CSpy_SetBytesPerLine(uint8_t nofBytesPerLine);
-**         ReadRegData      - uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
+**         ReadRegData      - uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 **         WriteRegData     - uint8_t McuI2CSpy_WriteRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 **         ParseCommand     - uint8_t McuI2CSpy_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         Deinit           - void McuI2CSpy_Deinit(void);
@@ -160,7 +160,7 @@ void McuGenericI2C_OnRequestBus(void);
 
 void McuGenericI2C_OnReleaseBus(void);
 
-uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
+uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 /*
 ** ===================================================================
 **     Method      :  ReadRegData (component I2CSpy)

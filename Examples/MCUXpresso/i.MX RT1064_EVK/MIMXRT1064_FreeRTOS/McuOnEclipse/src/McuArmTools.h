@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-21, 19:41, # CodeGen: 340
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

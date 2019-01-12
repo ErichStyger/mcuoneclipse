@@ -16,4 +16,10 @@
   /*!< 1: disable write buffer in ACTLR register */
 #endif
 
+#ifndef McuHardFault_CONFIG_SETTING_SEMIHOSTING
+  #define McuHardFault_CONFIG_SETTING_SEMIHOSTING   (1)
+  /*!< 1: do not stop in handler with semihosting and no debugger attached. 0: semihosting hardfault will stop target */
+#endif
+
+
 #endif /* __McuHardFault_CONFIG_H */

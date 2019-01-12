@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : I2CSpy
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **          This component implements a utility to inspect devices on the I2C bus.
 **     Settings    :
@@ -23,7 +23,7 @@
 **         GetDeviceAddress - uint8_t McuI2CSpy_GetDeviceAddress(void);
 **         SetAddressSize   - uint8_t McuI2CSpy_SetAddressSize(uint8_t size);
 **         SetBytesPerLine  - uint8_t McuI2CSpy_SetBytesPerLine(uint8_t nofBytesPerLine);
-**         ReadRegData      - uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
+**         ReadRegData      - uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 **         WriteRegData     - uint8_t McuI2CSpy_WriteRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 **         ParseCommand     - uint8_t McuI2CSpy_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         Deinit           - void McuI2CSpy_Deinit(void);
@@ -85,107 +85,6 @@ static McuI2CSpy_TDataState McuI2CSpy_deviceData;
 
 #define MAX_NOF_BYTES_PER_LINE 32 /* maximum number of bytes per line */
 
-static void strcatAddress(unsigned char *buf, size_t bufSize, uint32_t addr) {
-  if (McuI2CSpy_deviceData.addrSize==1) {
-    McuUtility_strcatNum8Hex(buf, bufSize, (uint8_t)addr);
-  } else if (McuI2CSpy_deviceData.addrSize==2) {
-    McuUtility_strcatNum16Hex(buf, bufSize, (uint16_t)addr);
-  } else if (McuI2CSpy_deviceData.addrSize==3) {
-    McuUtility_strcatNum24Hex(buf, bufSize, addr);
-  } else if (McuI2CSpy_deviceData.addrSize==4) {
-    McuUtility_strcatNum32Hex(buf, bufSize, addr);
-  }
-}
-
-static uint8_t Dump(unsigned long startAddr, unsigned long endAddr, const McuShell_StdIOType *io) {
-  #define NOF_BYTES_PER_LINE 32 /* how many bytes are shown on a line. This defines as well the chunk size we read from memory */
-  static uint8_t buf[MAX_NOF_BYTES_PER_LINE]; /* this is the chunk of data we get (per line in output) */
-  static uint8_t str[3*MAX_NOF_BYTES_PER_LINE+((MAX_NOF_BYTES_PER_LINE+1)/8)+1]; /* maximum string for output:
-                                              - '3*' because each byte is 2 hex digits plus a space
-                                              - '(NOF_BYTES_PER_LINE+1)/8' because we add a space between every 8 byte block
-                                              - '+1' for the final zero byte */
-  unsigned long addr;
-  uint8_t res=0, j, bufSize;
-  uint8_t ch;
-
-  if (endAddr<startAddr) {
-    McuShell_SendStr((unsigned char*)"\r\n*** End address must be larger or equal than start address\r\n", io->stdErr);
-    return ERR_RANGE;
-  }
-  McuShell_SendStatusStr((unsigned char*)"device", (unsigned char*)"0x", io->stdOut);
-  str[0]='\0';
-  strcatAddress(str, sizeof(str), McuI2CSpy_deviceData.deviceAddr);
-  McuUtility_strcat(str, sizeof(str), (unsigned char*)"\r\n");
-  McuShell_SendStr((unsigned char*)str, io->stdOut);
-
-  McuShell_SendStatusStr((unsigned char*)"start", (unsigned char*)"0x", io->stdOut);
-  str[0]='\0';
-  strcatAddress(str, sizeof(str), startAddr);
-  McuUtility_strcat(str, sizeof(str), (unsigned char*)"\r\n");
-  McuShell_SendStr((unsigned char*)str, io->stdOut);
-
-  McuShell_SendStatusStr((unsigned char*)"end", (unsigned char*)"0x", io->stdOut);
-  str[0]='\0';
-  strcatAddress(str, sizeof(str), endAddr);
-  McuUtility_strcat(str, sizeof(str), (unsigned char*)"\r\n");
-  McuShell_SendStr((unsigned char*)str, io->stdOut);
-
-  McuShell_SendStatusStr((unsigned char*)"Addr Size", (unsigned char*)"", io->stdOut);
-  McuShell_SendNum8u(McuI2CSpy_deviceData.addrSize, io->stdOut);
-  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-
-  for(addr=startAddr; addr<=endAddr; /* nothing */ ) {
-    if (endAddr-addr+1 >= McuI2CSpy_deviceData.bytesPerLine) { /* read only part of buffer */
-      bufSize = McuI2CSpy_deviceData.bytesPerLine; /* read full buffer */
-    } else {
-      bufSize = (uint8_t)(endAddr-addr+1);
-    }
-    if (McuI2CSpy_ReadRegData(addr, buf, bufSize)!=ERR_OK) {
-      McuShell_SendStr((unsigned char*)"\r\n*** Read failed!\r\n", io->stdErr);
-      return ERR_FAILED;
-    }
-    if (res != ERR_OK) {
-      McuShell_SendStr((unsigned char*)"\r\n*** Failure reading memory block!\r\n", io->stdErr);
-      return ERR_FAULT;
-    }
-    /* write address */
-    McuUtility_strcpy(str, sizeof(str), (unsigned char*)"0x");
-    strcatAddress(str, sizeof(str), addr);
-    McuUtility_chcat(str, sizeof(str), ':');
-    McuShell_SendStr((unsigned char*)str, io->stdOut);
-    /* write data in hex */
-    str[0] = '\0';
-    for (j=0; j<bufSize; j++) {
-      if ((j%8)==0) {
-        McuUtility_chcat(str, sizeof(str), ' ');
-      }
-      McuUtility_strcatNum8Hex(str, sizeof(str), buf[j]);
-      McuUtility_chcat(str, sizeof(str), ' ');
-    }
-    for (/*empty*/; j<McuI2CSpy_deviceData.bytesPerLine; j++) { /* fill up line */
-      McuUtility_strcat(str, sizeof(str), (unsigned char*)"-- ");
-    }
-    McuShell_SendStr((unsigned char*)str, io->stdOut);
-    /* write in ASCII */
-    io->stdOut(' ');
-    for (j=0; j<bufSize; j++) {
-      ch = buf[j];
-      if (ch >= ' ' && ch <= 0x7f) {
-        io->stdOut(ch);
-      } else {
-        io->stdOut('.'); /* place holder */
-      }
-    }
-    for (/*empty*/; j<McuI2CSpy_deviceData.bytesPerLine; j++) { /* fill up line */
-      McuUtility_strcat(str, sizeof(str), (unsigned char*)"-- ");
-    }
-    McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-    addr += McuI2CSpy_deviceData.bytesPerLine;
-  }
-  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-  return ERR_OK;
-}
-
 static uint8_t Read(uint32_t addr, const McuShell_StdIOType *io) {
   uint8_t val;
   uint8_t hexBuf[3];
@@ -199,6 +98,14 @@ static uint8_t Read(uint32_t addr, const McuShell_StdIOType *io) {
   McuUtility_strcatNum8Hex(hexBuf, sizeof(hexBuf), val);
   McuShell_SendStr(hexBuf, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t ReadData(void *hndl, uint32_t addr, uint8_t *buf, size_t bufSize) {
+  (void)hndl; /* not used */
+  if (McuI2CSpy_ReadRegData(addr, buf, bufSize)!=ERR_OK) {
+    return ERR_FAILED;
+  }
   return ERR_OK;
 }
 
@@ -342,7 +249,7 @@ uint8_t McuI2CSpy_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       if (McuUtility_strncmp((char*)p, "..", sizeof("..")-1)==0) {
         p = p+sizeof("..")-1;
         if (McuUtility_ScanHex32uNumber(&p, &end32)==ERR_OK) {
-          (void)Dump(addr32, end32, io);
+          (void)McuShell_PrintMemory(NULL, addr32, end32, McuI2CSpy_deviceData.addrSize, McuI2CSpy_deviceData.bytesPerLine, ReadData, io);
         } else {
           McuShell_SendStr((unsigned char*)"**** wrong end address\r\n", io->stdErr);
         }
@@ -518,7 +425,7 @@ void McuGenericI2C_OnReleaseBus(void)
 **         ---             - Error code
 ** ===================================================================
 */
-uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize)
+uint8_t McuI2CSpy_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize)
 {
   uint8_t addrBuf[4];
 

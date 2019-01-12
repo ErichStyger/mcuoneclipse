@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-19, 17:46, # CodeGen: 341
+**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -78,8 +78,8 @@
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
-  #if  McuLib_CONFIG_CPU_IS_KINETIS
-    #include "fsl_sim.h" /* system integration module */
+  #if McuLib_CONFIG_CPU_IS_KINETIS
+    #include "fsl_sim.h" /* system integration module, used for CPU ID */
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_KINETIS_1_3
   #include "Cpu.h" /* include CPU related interfaces and defines */

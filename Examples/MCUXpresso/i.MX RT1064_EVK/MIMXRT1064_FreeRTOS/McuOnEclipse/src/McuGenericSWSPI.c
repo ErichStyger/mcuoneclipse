@@ -6,7 +6,7 @@
 **     Component   : GenericSWSPI
 **     Version     : Component 01.030, Driver 01.15, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-19, 17:46, # CodeGen: 341
+**     Date/Time   : 2018-12-29, 17:33, # CodeGen: 366
 **     Abstract    :
 **
 **     Settings    :
@@ -67,6 +67,7 @@
 
 /* Include inherited components */
 #include "Clock1.h"
+#include "Input1.h"
 #include "Output1.h"
 #include "McuWait.h"
 #include "McuLib.h"
@@ -213,6 +214,7 @@ uint8_t McuGenericSWSPI_SendChar(uint8_t val)
     InputBuffer <<= 1;
     McuGenericSWSPI_DELAY();
     Clock1_PutVal(CLKsampl);           /* Set CLK to sample value */
+    InputBuffer |= Input1_GetVal()?1:0; /* Read value from MISO */
     val <<= 1;
     Clock1_PutVal(CLKshift);           /* Set CLK to shift value */
   }
@@ -321,6 +323,7 @@ uint8_t McuGenericSWSPI_SetIdleClockPolarity(uint8_t Level)
 void McuGenericSWSPI_Init(void)
 {
 #if McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  Input1_Init();
   Output1_Init();
   Clock1_Init();
 #endif
@@ -346,6 +349,7 @@ void McuGenericSWSPI_Init(void)
 void McuGenericSWSPI_Deinit(void)
 {
 #if McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  Input1_Deinit();
   Output1_Deinit();
   Clock1_Deinit();
 #endif
