@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 20:26, # CodeGen: 372
+**     Date/Time   : 2019-01-12, 20:58, # CodeGen: 373
 **     Abstract    :
 **
 **     Settings    :
@@ -157,7 +157,7 @@ static bool C11_isOutput = false;
 void C11_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_ClearPinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  GPIO_PortClear(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(C11_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -178,7 +178,7 @@ void C11_ClrVal(void)
 void C11_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_SetPinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  GPIO_PortSet(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(C11_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -199,7 +199,7 @@ void C11_SetVal(void)
 void C11_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_TogglePinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  GPIO_PortToggle(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(C11_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K

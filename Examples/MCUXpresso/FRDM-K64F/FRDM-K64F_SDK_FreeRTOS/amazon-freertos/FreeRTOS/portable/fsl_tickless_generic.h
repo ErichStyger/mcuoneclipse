@@ -74,11 +74,11 @@ calculations. */
 /* Low power Tickless idle support. Low power timer input clocks. */
 #define configLPTMR_CLOCK_HZ    (1000)
 #define configRTC_CLOCK_HZ      (0x8000UL)
-#if defined(CPU_MIMX8QM5AVUDD_cm4_core0)
+#if defined(MIMX8QM_CM4_CORE0)
 #define configLPIT_CLOCK_HZ     CLOCK_GetIpFreq(kCLOCK_M4_0_Lpit)
-#elif defined(CPU_MIMX8QM5AVUDD_cm4_core1)
+#elif defined(MIMX8QM_CM4_CORE1)
 #define configLPIT_CLOCK_HZ     CLOCK_GetIpFreq(kCLOCK_M4_1_Lpit)
-#elif defined(CPU_MIMX8QX6AVUDD)
+#elif defined(CPU_MIMX8QX6AVLFZ)
 #define configLPIT_CLOCK_HZ     CLOCK_GetIpFreq(kCLOCK_M4_0_Lpit)
 #endif
 #define configEPIT_CLOCK_HZ     CLOCK_GetFreq(kCLOCK_IpgClk)

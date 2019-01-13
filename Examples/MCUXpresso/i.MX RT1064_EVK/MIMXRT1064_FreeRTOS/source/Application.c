@@ -38,11 +38,6 @@ static void AppTask(void *p) {
 }
 
 void APP_Run(void) {
-//  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
-
-  /* Init output LED GPIO. */
-//  GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
-
   /* initialize McuLibrary */
   McuUtility_Init();
   McuArmTools_Init();
@@ -57,7 +52,7 @@ void APP_Run(void) {
 #if 1 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */
 #else /* default */
-  CLOCK_SetMode(kCLOCK_ModeWait);
+  CLOCK_SetMode(kCLOCK_ModeWait); /* not: SysTick does not run! */
   /* need to route SysTick interrupt through GPC (General Power Controller) alternative interrupt controller */
   /* reference manual, page 1195ff, GPC Interrupt Controller (INTC) */
   //GPC_CNTR_MEGA_PDN_REQ()

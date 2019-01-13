@@ -105,7 +105,7 @@ static void prvPortStartFirstTask( void ) __attribute__ (( naked ));
 /*
  * Function to enable the VFP.
  */
-static void vPortEnableVFP( void );// __attribute__ (( naked ));
+static void vPortEnableVFP( void ) __attribute__ (( naked ));
 
 /*
  * Used to catch tasks that attempt to return from their implementing function.
@@ -207,11 +207,6 @@ void vPortSVCHandler( void )
 				);
 }
 /*-----------------------------------------------------------*/
-volatile const int
-#ifdef __GNUC__
-__attribute__((used))
-#endif
-uxTopUsedPriority = configMAX_PRIORITIES-1;
 
 static void prvPortStartFirstTask( void )
 {
@@ -220,16 +215,9 @@ static void prvPortStartFirstTask( void )
 	would otherwise result in the unnecessary leaving of space in the SVC stack
 	for lazy saving of FPU registers. */
 	__asm volatile(
-#if 0
-			        " ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
-#else
-			        " mov r0, #0xE000       \n"
-                    " lsl r0, #16           \n"
-			        " mov  r1, #0xED08      \n"
-			        " orr  r0, r1           \n"
-#endif
-					" ldr r0, [r0] 			\n" /* load initial stack pointer address from vector table */
-					" ldr r0, [r0] 			\n" /* load stack pointer value from there */
+					" ldr r0, =0xE000ED08 	\n" /* Use the NVIC offset register to locate the stack. */
+					" ldr r0, [r0] 			\n"
+					" ldr r0, [r0] 			\n"
 					" msr msp, r0			\n" /* Set the msp back to the start of the stack. */
 					" mov r0, #0			\n" /* Clear the bit that indicates the FPU is in use, see comment above. */
 					" msr control, r0		\n"
@@ -248,14 +236,6 @@ static void prvPortStartFirstTask( void )
  */
 BaseType_t xPortStartScheduler( void )
 {
-#if 1 || configUSE_TOP_USED_PRIORITY || configLTO_HELPER
-  /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
-  {
-    extern volatile const int uxTopUsedPriority;
-    __attribute__((__unused__)) volatile uint8_t dummy_value_for_openocd;
-    dummy_value_for_openocd = uxTopUsedPriority;
-  }
-#endif
 	/* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0.
 	See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html */
 	configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
@@ -462,17 +442,13 @@ void xPortSysTickHandler( void )
 	save and then restore the interrupt mask value as its value is already
 	known. */
 	portDISABLE_INTERRUPTS();
-  traceISR_ENTER();
 	{
 		/* Increment the RTOS tick. */
 		if( xTaskIncrementTick() != pdFALSE )
 		{
 			/* A context switch is required.  Context switching is performed in
 			the PendSV interrupt.  Pend the PendSV interrupt. */
-	    traceISR_EXIT_TO_SCHEDULER();
 			portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
-	  } else {
-	    traceISR_EXIT();
 		}
 	}
 	portENABLE_INTERRUPTS();
@@ -482,7 +458,6 @@ void xPortSysTickHandler( void )
 /* This is a naked function. */
 static void vPortEnableVFP( void )
 {
-#if 0 /* << EST \todo */
 	__asm volatile
 	(
 		"	ldr.w r0, =0xE000ED88		\n" /* The FPU enable bits are in the CPACR. */
@@ -492,12 +467,6 @@ static void vPortEnableVFP( void )
 		"	str r1, [r0]				\n"
 		"	bx r14						"
 	);
-#else
-#define CPACR_REG_MEM   ((volatile int*)0xE000ED88)
-	//static volatile int *const cpasr_ptr = (volatile int*)0xE000ED88;
-	//*cpasr_ptr = *cpasr_ptr | (0xf << 20);
-	*CPACR_REG_MEM |= (0xf<<20);
-#endif
 }
 /*-----------------------------------------------------------*/
 

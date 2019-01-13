@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 17:33, # CodeGen: 366
+**     Date/Time   : 2019-01-12, 20:58, # CodeGen: 373
 **     Abstract    :
 **
 **     Settings    :
@@ -157,7 +157,7 @@ static bool Clock1_isOutput = false;
 void Clock1_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_ClearPinsOutput(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
+  GPIO_PortClear(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(Clock1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -178,7 +178,7 @@ void Clock1_ClrVal(void)
 void Clock1_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_SetPinsOutput(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
+  GPIO_PortSet(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(Clock1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -199,7 +199,7 @@ void Clock1_SetVal(void)
 void Clock1_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  GPIO_TogglePinsOutput(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
+  GPIO_PortToggle(Clock1_CONFIG_GPIO_NAME, 1<<Clock1_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(Clock1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K

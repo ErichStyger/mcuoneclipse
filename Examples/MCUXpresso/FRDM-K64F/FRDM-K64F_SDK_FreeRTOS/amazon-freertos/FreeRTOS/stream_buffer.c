@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.1.0
+ * FreeRTOS Kernel V10.0.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -43,11 +43,11 @@ task.h is included from an application file. */
 	#error configUSE_TASK_NOTIFICATIONS must be set to 1 to build stream_buffer.c
 #endif
 
-/* Lint e961, e9021 and e750 are suppressed as a MISRA exception justified
-because the MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
-for the header files above, but not in this file, in order to generate the
-correct privileged Vs unprivileged linkage and placement. */
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750 !e9021. */
+/* Lint e961 and e750 are suppressed as a MISRA exception justified because the
+MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
+header files above, but not in this file, in order to generate the correct
+privileged Vs unprivileged linkage and placement. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
 
 /* If the user has not provided application specific Rx notification macros,
 or #defined the notification macros away, them provide default implementations
@@ -129,7 +129,7 @@ that uses task notifications. */
 /*lint -restore (9026) */
 
 /* The number of bytes used to hold the length of a message in the buffer. */
-#define sbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( configMESSAGE_BUFFER_LENGTH_TYPE ) )
+#define sbBYTES_TO_STORE_MESSAGE_LENGTH ( sizeof( size_t ) )
 
 /* Bits stored in the ucFlags field of the stream buffer. */
 #define sbFLAGS_IS_MESSAGE_BUFFER		( ( uint8_t ) 1 ) /* Set if the stream buffer was created as a message buffer, in which case it holds discrete messages rather than a stream. */
@@ -138,7 +138,7 @@ that uses task notifications. */
 /*-----------------------------------------------------------*/
 
 /* Structure that hold state information on the buffer. */
-typedef struct StreamBufferDef_t /*lint !e9058 Style convention uses tag. */
+typedef struct xSTREAM_BUFFER /*lint !e9058 Style convention uses tag. */
 {
 	volatile size_t xTail;				/* Index to the next item to read within the buffer. */
 	volatile size_t xHead;				/* Index to the next item to write within the buffer. */
@@ -200,7 +200,7 @@ static size_t prvWriteMessageToBuffer(  StreamBuffer_t * const pxStreamBuffer,
 static size_t prvReadBytesFromBuffer( StreamBuffer_t *pxStreamBuffer,
 									  uint8_t *pucData,
 									  size_t xMaxCount,
-									  size_t xBytesAvailable ) PRIVILEGED_FUNCTION;
+									  size_t xBytesAvailable ); PRIVILEGED_FUNCTION
 
 /*
  * Called by both pxStreamBufferCreate() and pxStreamBufferCreateStatic() to
@@ -210,7 +210,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
-										  uint8_t ucFlags ) PRIVILEGED_FUNCTION;
+										  BaseType_t xIsMessageBuffer ) PRIVILEGED_FUNCTION;
 
 /*-----------------------------------------------------------*/
 
@@ -219,31 +219,19 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	StreamBufferHandle_t xStreamBufferGenericCreate( size_t xBufferSizeBytes, size_t xTriggerLevelBytes, BaseType_t xIsMessageBuffer )
 	{
 	uint8_t *pucAllocatedMemory;
-	uint8_t ucFlags;
 
 		/* In case the stream buffer is going to be used as a message buffer
 		(that is, it will hold discrete messages with a little meta data that
 		says how big the next message is) check the buffer will be large enough
 		to hold at least one message. */
-		if( xIsMessageBuffer == pdTRUE )
-		{
-			/* Is a message buffer but not statically allocated. */
-			ucFlags = sbFLAGS_IS_MESSAGE_BUFFER;
-			configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
-		}
-		else
-		{
-			/* Not a message buffer and not statically allocated. */
-			ucFlags = 0;
-			configASSERT( xBufferSizeBytes > 0 );
-		}
+		configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
 		configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
 
 		/* A trigger level of 0 would cause a waiting task to unblock even when
 		the buffer was empty. */
 		if( xTriggerLevelBytes == ( size_t ) 0 )
 		{
-			xTriggerLevelBytes = ( size_t ) 1;
+			xTriggerLevelBytes = ( size_t ) 1; /*lint !e9044 Parameter modified to ensure it doesn't have a dangerous value. */
 		}
 
 		/* A stream buffer requires a StreamBuffer_t structure and a buffer.
@@ -263,7 +251,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										   pucAllocatedMemory + sizeof( StreamBuffer_t ),  /* Storage area follows. */ /*lint !e9016 Indexing past structure valid for uint8_t pointer, also storage area has no alignment requirement. */
 										   xBufferSizeBytes,
 										   xTriggerLevelBytes,
-										   ucFlags );
+										   xIsMessageBuffer );
 
 			traceSTREAM_BUFFER_CREATE( ( ( StreamBuffer_t * ) pucAllocatedMemory ), xIsMessageBuffer );
 		}
@@ -272,7 +260,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 			traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer );
 		}
 
-		return ( StreamBufferHandle_t ) pucAllocatedMemory; /*lint !e9087 !e826 Safe cast as allocated memory is aligned. */
+		return ( StreamBufferHandle_t * ) pucAllocatedMemory; /*lint !e9087 !e826 Safe cast as allocated memory is aligned. */
 	}
 
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
@@ -288,7 +276,6 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 	{
 	StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) pxStaticStreamBuffer; /*lint !e740 !e9087 Safe cast as StaticStreamBuffer_t is opaque Streambuffer_t. */
 	StreamBufferHandle_t xReturn;
-	uint8_t ucFlags;
 
 		configASSERT( pucStreamBufferStorageArea );
 		configASSERT( pxStaticStreamBuffer );
@@ -298,18 +285,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 		the buffer was empty. */
 		if( xTriggerLevelBytes == ( size_t ) 0 )
 		{
-			xTriggerLevelBytes = ( size_t ) 1;
-		}
-
-		if( xIsMessageBuffer != pdFALSE )
-		{
-			/* Statically allocated message buffer. */
-			ucFlags = sbFLAGS_IS_MESSAGE_BUFFER | sbFLAGS_IS_STATICALLY_ALLOCATED;
-		}
-		else
-		{
-			/* Statically allocated stream buffer. */
-			ucFlags = sbFLAGS_IS_STATICALLY_ALLOCATED;
+			xTriggerLevelBytes = ( size_t ) 1; /*lint !e9044 Function parameter deliberately modified to ensure it is in range. */
 		}
 
 		/* In case the stream buffer is going to be used as a message buffer
@@ -325,7 +301,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 			message buffer structure. */
 			volatile size_t xSize = sizeof( StaticStreamBuffer_t );
 			configASSERT( xSize == sizeof( StreamBuffer_t ) );
-		} /*lint !e529 xSize is referenced is configASSERT() is defined. */
+		}
 		#endif /* configASSERT_DEFINED */
 
 		if( ( pucStreamBufferStorageArea != NULL ) && ( pxStaticStreamBuffer != NULL ) )
@@ -334,7 +310,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  pucStreamBufferStorageArea,
 										  xBufferSizeBytes,
 										  xTriggerLevelBytes,
-										  ucFlags );
+										  xIsMessageBuffer );
 
 			/* Remember this was statically allocated in case it is ever deleted
 			again. */
@@ -358,7 +334,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 
 void vStreamBufferDelete( StreamBufferHandle_t xStreamBuffer )
 {
-StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 
 	configASSERT( pxStreamBuffer );
 
@@ -391,8 +367,8 @@ StreamBuffer_t * pxStreamBuffer = xStreamBuffer;
 
 BaseType_t xStreamBufferReset( StreamBufferHandle_t xStreamBuffer )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
-BaseType_t xReturn = pdFAIL;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
+BaseType_t xReturn = pdFAIL, xIsMessageBuffer;
 
 #if( configUSE_TRACE_FACILITY == 1 )
 	UBaseType_t uxStreamBufferNumber;
@@ -409,30 +385,35 @@ BaseType_t xReturn = pdFAIL;
 	#endif
 
 	/* Can only reset a message buffer if there are no tasks blocked on it. */
-	taskENTER_CRITICAL();
+	if( pxStreamBuffer->xTaskWaitingToReceive == NULL )
 	{
-		if( pxStreamBuffer->xTaskWaitingToReceive == NULL )
+		if( pxStreamBuffer->xTaskWaitingToSend == NULL )
 		{
-			if( pxStreamBuffer->xTaskWaitingToSend == NULL )
+			if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
 			{
-				prvInitialiseNewStreamBuffer( pxStreamBuffer,
-											  pxStreamBuffer->pucBuffer,
-											  pxStreamBuffer->xLength,
-											  pxStreamBuffer->xTriggerLevelBytes,
-											  pxStreamBuffer->ucFlags );
-				xReturn = pdPASS;
-
-				#if( configUSE_TRACE_FACILITY == 1 )
-				{
-					pxStreamBuffer->uxStreamBufferNumber = uxStreamBufferNumber;
-				}
-				#endif
-
-				traceSTREAM_BUFFER_RESET( xStreamBuffer );
+				xIsMessageBuffer = pdTRUE;
 			}
+			else
+			{
+				xIsMessageBuffer = pdFALSE;
+			}
+
+			prvInitialiseNewStreamBuffer( pxStreamBuffer,
+										  pxStreamBuffer->pucBuffer,
+										  pxStreamBuffer->xLength,
+										  pxStreamBuffer->xTriggerLevelBytes,
+										  xIsMessageBuffer );
+			xReturn = pdPASS;
+
+			#if( configUSE_TRACE_FACILITY == 1 )
+			{
+				pxStreamBuffer->uxStreamBufferNumber = uxStreamBufferNumber;
+			}
+			#endif
+
+			traceSTREAM_BUFFER_RESET( xStreamBuffer );
 		}
 	}
-	taskEXIT_CRITICAL();
 
 	return xReturn;
 }
@@ -440,7 +421,7 @@ BaseType_t xReturn = pdFAIL;
 
 BaseType_t xStreamBufferSetTriggerLevel( StreamBufferHandle_t xStreamBuffer, size_t xTriggerLevel )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 BaseType_t xReturn;
 
 	configASSERT( pxStreamBuffer );
@@ -448,7 +429,7 @@ BaseType_t xReturn;
 	/* It is not valid for the trigger level to be 0. */
 	if( xTriggerLevel == ( size_t ) 0 )
 	{
-		xTriggerLevel = ( size_t ) 1;
+		xTriggerLevel = ( size_t ) 1; /*lint !e9044 Parameter modified to ensure it doesn't have a dangerous value. */
 	}
 
 	/* The trigger level is the number of bytes that must be in the stream
@@ -469,7 +450,7 @@ BaseType_t xReturn;
 
 size_t xStreamBufferSpacesAvailable( StreamBufferHandle_t xStreamBuffer )
 {
-const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+const StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xSpace;
 
 	configASSERT( pxStreamBuffer );
@@ -493,7 +474,7 @@ size_t xSpace;
 
 size_t xStreamBufferBytesAvailable( StreamBufferHandle_t xStreamBuffer )
 {
-const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+const StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReturn;
 
 	configASSERT( pxStreamBuffer );
@@ -508,7 +489,7 @@ size_t xStreamBufferSend( StreamBufferHandle_t xStreamBuffer,
 						  size_t xDataLengthBytes,
 						  TickType_t xTicksToWait )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReturn, xSpace = 0;
 size_t xRequiredSpace = xDataLengthBytes;
 TimeOut_t xTimeOut;
@@ -523,9 +504,6 @@ TimeOut_t xTimeOut;
 	if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
 	{
 		xRequiredSpace += sbBYTES_TO_STORE_MESSAGE_LENGTH;
-
-		/* Overflow? */
-		configASSERT( xRequiredSpace > xDataLengthBytes );
 	}
 	else
 	{
@@ -562,7 +540,7 @@ TimeOut_t xTimeOut;
 			taskEXIT_CRITICAL();
 
 			traceBLOCKING_ON_STREAM_BUFFER_SEND( xStreamBuffer );
-			( void ) xTaskNotifyWait( ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
+			( void ) xTaskNotifyWait( ( uint32_t ) 0, UINT32_MAX, NULL, xTicksToWait );
 			pxStreamBuffer->xTaskWaitingToSend = NULL;
 
 		} while( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE );
@@ -612,7 +590,7 @@ size_t xStreamBufferSendFromISR( StreamBufferHandle_t xStreamBuffer,
 								 size_t xDataLengthBytes,
 								 BaseType_t * const pxHigherPriorityTaskWoken )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReturn, xSpace;
 size_t xRequiredSpace = xDataLengthBytes;
 
@@ -679,7 +657,7 @@ static size_t prvWriteMessageToBuffer( StreamBuffer_t * const pxStreamBuffer,
 		stream of bytes rather than discrete messages.  Write as many bytes as
 		possible. */
 		xShouldWrite = pdTRUE;
-		xDataLengthBytes = configMIN( xDataLengthBytes, xSpace );
+		xDataLengthBytes = configMIN( xDataLengthBytes, xSpace ); /*lint !e9044 Function parameter modified to ensure it is capped to available space. */
 	}
 	else if( xSpace >= xRequiredSpace )
 	{
@@ -715,7 +693,7 @@ size_t xStreamBufferReceive( StreamBufferHandle_t xStreamBuffer,
 							 size_t xBufferLengthBytes,
 							 TickType_t xTicksToWait )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 
 	configASSERT( pvRxData );
@@ -768,7 +746,7 @@ size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 		{
 			/* Wait for data to be available. */
 			traceBLOCKING_ON_STREAM_BUFFER_RECEIVE( xStreamBuffer );
-			( void ) xTaskNotifyWait( ( uint32_t ) 0, ( uint32_t ) 0, NULL, xTicksToWait );
+			( void ) xTaskNotifyWait( ( uint32_t ) 0, UINT32_MAX, NULL, xTicksToWait );
 			pxStreamBuffer->xTaskWaitingToReceive = NULL;
 
 			/* Recheck the data available after blocking. */
@@ -814,56 +792,12 @@ size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 }
 /*-----------------------------------------------------------*/
 
-size_t xStreamBufferNextMessageLengthBytes( StreamBufferHandle_t xStreamBuffer )
-{
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
-size_t xReturn, xBytesAvailable, xOriginalTail;
-configMESSAGE_BUFFER_LENGTH_TYPE xTempReturn;
-
-	configASSERT( pxStreamBuffer );
-
-	/* Ensure the stream buffer is being used as a message buffer. */
-	if( ( pxStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER ) != ( uint8_t ) 0 )
-	{
-		xBytesAvailable = prvBytesInBuffer( pxStreamBuffer );
-		if( xBytesAvailable > sbBYTES_TO_STORE_MESSAGE_LENGTH )
-		{
-			/* The number of bytes available is greater than the number of bytes
-			required to hold the length of the next message, so another message
-			is available.  Return its length without removing the length bytes
-			from the buffer.  A copy of the tail is stored so the buffer can be
-			returned to its prior state as the message is not actually being
-			removed from the buffer. */
-			xOriginalTail = pxStreamBuffer->xTail;
-			( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempReturn, sbBYTES_TO_STORE_MESSAGE_LENGTH, xBytesAvailable );
-			xReturn = ( size_t ) xTempReturn;
-			pxStreamBuffer->xTail = xOriginalTail;
-		}
-		else
-		{
-			/* The minimum amount of bytes in a message buffer is
-			( sbBYTES_TO_STORE_MESSAGE_LENGTH + 1 ), so if xBytesAvailable is
-			less than sbBYTES_TO_STORE_MESSAGE_LENGTH the only other valid
-			value is 0. */
-			configASSERT( xBytesAvailable == 0 );
-			xReturn = 0;
-		}
-	}
-	else
-	{
-		xReturn = 0;
-	}
-
-	return xReturn;
-}
-/*-----------------------------------------------------------*/
-
 size_t xStreamBufferReceiveFromISR( StreamBufferHandle_t xStreamBuffer,
 									void *pvRxData,
 									size_t xBufferLengthBytes,
 									BaseType_t * const pxHigherPriorityTaskWoken )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 size_t xReceivedLength = 0, xBytesAvailable, xBytesToStoreMessageLength;
 
 	configASSERT( pvRxData );
@@ -922,7 +856,6 @@ static size_t prvReadMessageFromBuffer( StreamBuffer_t *pxStreamBuffer,
 										size_t xBytesToStoreMessageLength )
 {
 size_t xOriginalTail, xReceivedLength, xNextMessageLength;
-configMESSAGE_BUFFER_LENGTH_TYPE xTempNextMessageLength;
 
 	if( xBytesToStoreMessageLength != ( size_t ) 0 )
 	{
@@ -931,8 +864,7 @@ configMESSAGE_BUFFER_LENGTH_TYPE xTempNextMessageLength;
 		returned to its prior state if the length of the message is too
 		large for the provided buffer. */
 		xOriginalTail = pxStreamBuffer->xTail;
-		( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xTempNextMessageLength, xBytesToStoreMessageLength, xBytesAvailable );
-		xNextMessageLength = ( size_t ) xTempNextMessageLength;
+		( void ) prvReadBytesFromBuffer( pxStreamBuffer, ( uint8_t * ) &xNextMessageLength, xBytesToStoreMessageLength, xBytesAvailable );
 
 		/* Reduce the number of bytes available by the number of bytes just
 		read out. */
@@ -969,7 +901,7 @@ configMESSAGE_BUFFER_LENGTH_TYPE xTempNextMessageLength;
 
 BaseType_t xStreamBufferIsEmpty( StreamBufferHandle_t xStreamBuffer )
 {
-const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+const StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 BaseType_t xReturn;
 size_t xTail;
 
@@ -994,7 +926,7 @@ BaseType_t xStreamBufferIsFull( StreamBufferHandle_t xStreamBuffer )
 {
 BaseType_t xReturn;
 size_t xBytesToStoreMessageLength;
-const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+const StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 
 	configASSERT( pxStreamBuffer );
 
@@ -1027,7 +959,7 @@ const StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
 
 BaseType_t xStreamBufferSendCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
 
@@ -1057,7 +989,7 @@ UBaseType_t uxSavedInterruptStatus;
 
 BaseType_t xStreamBufferReceiveCompletedFromISR( StreamBufferHandle_t xStreamBuffer, BaseType_t *pxHigherPriorityTaskWoken )
 {
-StreamBuffer_t * const pxStreamBuffer = xStreamBuffer;
+StreamBuffer_t * const pxStreamBuffer = ( StreamBuffer_t * ) xStreamBuffer; /*lint !e9087 !e9079 Safe cast as StreamBufferHandle_t is opaque Streambuffer_t. */
 BaseType_t xReturn;
 UBaseType_t uxSavedInterruptStatus;
 
@@ -1210,7 +1142,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 										  uint8_t * const pucBuffer,
 										  size_t xBufferSizeBytes,
 										  size_t xTriggerLevelBytes,
-										  uint8_t ucFlags )
+										  BaseType_t xIsMessageBuffer )
 {
 	/* Assert here is deliberately writing to the entire buffer to ensure it can
 	be written to without generating exceptions, and is setting the buffer to a
@@ -1222,21 +1154,25 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 		result in confusion as to what is actually being observed. */
 		const BaseType_t xWriteValue = 0x55;
 		configASSERT( memset( pucBuffer, ( int ) xWriteValue, xBufferSizeBytes ) == pucBuffer );
-	} /*lint !e529 !e438 xWriteValue is only used if configASSERT() is defined. */
+	}
 	#endif
 
 	memset( ( void * ) pxStreamBuffer, 0x00, sizeof( StreamBuffer_t ) ); /*lint !e9087 memset() requires void *. */
 	pxStreamBuffer->pucBuffer = pucBuffer;
 	pxStreamBuffer->xLength = xBufferSizeBytes;
 	pxStreamBuffer->xTriggerLevelBytes = xTriggerLevelBytes;
-	pxStreamBuffer->ucFlags = ucFlags;
+
+	if( xIsMessageBuffer != pdFALSE )
+	{
+		pxStreamBuffer->ucFlags |= sbFLAGS_IS_MESSAGE_BUFFER;
+	}
 }
 
 #if ( configUSE_TRACE_FACILITY == 1 )
 
 	UBaseType_t uxStreamBufferGetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer )
 	{
-		return xStreamBuffer->uxStreamBufferNumber;
+		return ( ( StreamBuffer_t * ) xStreamBuffer )->uxStreamBufferNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1246,7 +1182,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 
 	void vStreamBufferSetStreamBufferNumber( StreamBufferHandle_t xStreamBuffer, UBaseType_t uxStreamBufferNumber )
 	{
-		xStreamBuffer->uxStreamBufferNumber = uxStreamBufferNumber;
+		( ( StreamBuffer_t * ) xStreamBuffer )->uxStreamBufferNumber = uxStreamBufferNumber;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
@@ -1256,7 +1192,7 @@ static void prvInitialiseNewStreamBuffer( StreamBuffer_t * const pxStreamBuffer,
 
 	uint8_t ucStreamBufferGetStreamBufferType( StreamBufferHandle_t xStreamBuffer )
 	{
-		return ( xStreamBuffer->ucFlags & sbFLAGS_IS_MESSAGE_BUFFER );
+		return ( ( StreamBuffer_t * )xStreamBuffer )->ucFlags | sbFLAGS_IS_MESSAGE_BUFFER;
 	}
 
 #endif /* configUSE_TRACE_FACILITY */
