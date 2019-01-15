@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
-<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink609100567"/>
-<booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 609100567"/>
+<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink801002301"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 801002301"/>
 <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="1"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="SEGGER"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link PLUS"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB"/>
 <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.base.address" value="0x0"/>
 <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.executable" value="hex"/>
@@ -21,15 +20,16 @@
 <stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-noir"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.jlinkscriptfile" value=""/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.options" value=""/>
-<intAttribute key="com.nxp.mcuxpresso.segger.port" value="2336"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
 <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=609100567"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=801002301"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
-<intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2334"/>
-<intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2335"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2332"/>
+<intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2333"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.verify" value="-vd"/>
 <stringAttribute key="disconnect" value="Run"/>
 <stringAttribute key="launch.config.handler" value="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler"/>
@@ -45,7 +45,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
-<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2336"/>
+<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2331"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
