@@ -13,6 +13,29 @@
 #include <string.h> /* for memset() */
 #include "CLS1.h"
 
+static xTimerHandle timerHndlLcdTimeout;
+
+static void vTimerCallbackLCDExpired(xTimerHandle pxTimer) {
+  /* timer callback to turn off LCD backlight */
+  LCD1_DisplayOnOff(FALSE);
+}
+
+static void KeyPressForLCD(void) {
+  /* called for each key press. It turns on the LCD if it is dormant or resets the LCD backlight timeout timer */
+  if (xTimerIsTimerActive(timerHndlLcdTimeout)==pdFALSE) {
+    /* timer is not active: start it */
+    if (xTimerStart(timerHndlLcdTimeout, 0)!=pdPASS) {
+      for(;;); /* failure!?! */
+    }
+    /* and turn LCD on */
+    LCD1_DisplayOnOff(TRUE);
+  } else {
+    if (xTimerReset(timerHndlLcdTimeout, 0)!=pdPASS) { /* reset timer, e.g. after key press or user input */
+      for(;;); /* failure?!? */
+    }
+  }
+}
+
 static lv_indev_t *inputDevicePtr;
 
 lv_indev_t * LV_GetInputDevice(void) {
@@ -264,6 +287,7 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   if (RNG1_Get(&keyData)!=ERR_OK) {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
+  KeyPressForLCD();
   if (keyData&(LV_MASK_PRESSED|LV_MASK_PRESSED_LONG)) {
     data->state = LV_INDEV_STATE_PR;
   } else if (keyData&(LV_MASK_RELEASED|LV_MASK_RELEASED_LONG)) {
@@ -284,10 +308,9 @@ static bool encoder_read(lv_indev_data_t *data){
   if (RNG1_Get(&keyData)!=ERR_OK) {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
+  KeyPressForLCD();
   data->state = LV_INDEV_STATE_REL;
-
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
-
   switch(keyData&0xff) {
   case LV_BUTTON_LEFT:
     if (keyData&(LV_MASK_PRESSED)) {
@@ -404,6 +427,19 @@ void LV_Init(void) {
   indev_drv.read = keyboard_read;
 #endif
   inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
+
+  timerHndlLcdTimeout = xTimerCreate(
+    "timerLCD", /* name */
+    pdMS_TO_TICKS(5000), /* period/time */
+    pdFALSE, /* auto reload */
+    (void*)1, /* timer ID */
+    vTimerCallbackLCDExpired); /* callback */
+  if (timerHndlLcdTimeout==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndlLcdTimeout, 0)!=pdPASS) {
+    for(;;); /* failure!?! */
+  }
 }
 
 #endif /* PL_CONFIG_HAS_GUI */

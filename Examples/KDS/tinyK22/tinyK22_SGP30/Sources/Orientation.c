@@ -10,7 +10,7 @@
 #if PL_HAS_ORIENTATION
 #include "Orientation.h"
 #include "FRTOS1.h"
-#include "MMA1.h"
+#include "Sensor.h"
 #if PL_CONFIG_HAS_GUI
   #include "GDisp1.h"
   #include "gui/gui.h"
@@ -32,9 +32,7 @@ void ORI_DetermineCurrentOrientation(void) {
   ORI_Orientation_e newOrientation = -1;
   #define ORIENTATION_THRESHOLD  (600)
 
-  xmg = MMA1_GetXmg();
-  ymg = MMA1_GetYmg();
-  zmg = MMA1_GetZmg();
+  SENSOR_GetAccel(&xmg, &ymg, &zmg);
   if(xmg>200) {
     newOrientation = ORI_ORIENTATION_X_UP; /* tinyK22 up */
   } else if (xmg<-ORIENTATION_THRESHOLD) {
@@ -110,32 +108,9 @@ void ORI_DetermineCurrentOrientation(void) {
 #endif
 
 static void OrientationTask(void *p) {
-   bool isEnabled = FALSE;
-   uint8_t res;
-
-   for(;;) {
-     res = MMA1_isEnabled(&isEnabled);
-     if(res==ERR_OK) {
-       break;
-     }
-     CLS1_SendStr((uint8_t*)"Failed MMA1_isEnabled(), retry ...\r\n", CLS1_GetStdio()->stdErr);
-     vTaskDelay(pdMS_TO_TICKS(100));
-   }
-   if (!isEnabled) {
-     for(;;) {
-       CLS1_SendStr((uint8_t*)"Enabling MMA8541 sensor.\r\n", CLS1_GetStdio()->stdOut);
-       res = MMA1_Enable();
-       if(res==ERR_OK) {
-         break;
-       }
-       CLS1_SendStr((uint8_t*)"Failed MMA1_isEnabled(), retry ...\r\n", CLS1_GetStdio()->stdErr);
-       vTaskDelay(pdMS_TO_TICKS(100));
-     }
-   }
-
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(1000)); /* don't access the sensor immediately after power-up! */
     ORI_DetermineCurrentOrientation();
+    vTaskDelay(pdMS_TO_TICKS(1000)); /* don't access the sensor immediately after power-up! */
   }
 }
 
@@ -145,7 +120,7 @@ void ORI_Init(void) {
         "Orientation", /* task name for kernel awareness debugging */
         600/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+3,  /* initial priority */
+        tskIDLE_PRIORITY+2,  /* initial priority */
         (xTaskHandle*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */

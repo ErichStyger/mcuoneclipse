@@ -51,7 +51,7 @@ static void vTimerCallbackExpired(xTimerHandle pxTimer) {
 }
 
 static void AppTask(void *pv) {
-  (void)pv;
+  (void)pv; /* not used */
   for(;;) {
     LED1_Neg();
     vTaskDelay(pdMS_TO_TICKS(500));

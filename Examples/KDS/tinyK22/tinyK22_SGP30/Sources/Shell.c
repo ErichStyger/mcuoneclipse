@@ -50,6 +50,9 @@
 #if PL_HAS_LED_FRAME
   #include "WS2812b/LEDFrame.h"
 #endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  #include "WS2812B/LedShadowBox.h"
+#endif
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -86,6 +89,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_HAS_LED_FRAME
   LEDFRAME_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX && SHADOWBOX_CONFIG_PARSE_COMMAND_ENABLED
+  LedShadowBox_ParseCommand,
 #endif
 #if PL_CONFIG_HAS_NEO_PIXEL && NEOA_CONFIG_PARSE_COMMAND_ENABLED
   NEOA_ParseCommand,

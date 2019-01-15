@@ -17,7 +17,7 @@
   #include "KEY1.h"
 #endif
 #include "gui_mainmenu.h"
-
+#include "LCD1.h"
 #include "GDisp1.h"
 #include "GFONT1.h"
 #include "FDisp1.h"
@@ -206,7 +206,7 @@ void GUI_Init(void) {
  // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
  // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "Gui", 1700/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
   }
 #if PL_CONFIG_HAS_GUI_KEY_NAV

@@ -146,7 +146,7 @@ void NEO_SetPixelXY(int x, int y, uint32_t color) {
 }
 
 void NEO_ClearAllXY(void) {
-  /* single lane, 3x64 modules from left to right */
+  /* single lane, 3x(8x8) modules from left to right */
   int i;
 
   for(i=0;i<64;i++) {

@@ -37,7 +37,7 @@ static lv_res_t slider_action(lv_obj_t *slider) {
   val = lv_slider_get_value(slider); /* get current value from slider */
   /* map to target range: */
   val = UTIL1_map(val, SLIDER_LEVEL_MIN_RANGE, SLIDER_LEVEL_MAX_RANGE, SLIDER_LEVEL_LIGHT_MIN, SLIDER_LEVEL_LIGHT_MAX);
-  NEOA_SetLightLevel(val); /* update model */
+  NEOA_SetFixedBrightness(val); /* update model */
   SetLabelValue(label_slider_level, val);
   return LV_RES_OK;
 }
@@ -45,7 +45,7 @@ static lv_res_t slider_action(lv_obj_t *slider) {
 static lv_res_t auto_light_level_action(lv_obj_t *sw) {
   bool isOn = lv_sw_get_state(sw);
 
-  NEOA_SetAutoLightLevelSetting(isOn); /* update model */
+  NEOA_SetIsAutoBrightness(isOn); /* update model */
   if (isOn) {
     lv_label_set_text(label_auto_light_level, "on");
   } else {
@@ -90,6 +90,27 @@ static lv_res_t btn_loop_click_action(lv_obj_t *btn) {
   return LV_RES_OK; /* Return OK if the button is not deleted */
 }
 
+static lv_res_t roller_appMode_click_action(lv_obj_t *roller) {
+  //uint8_t id = lv_obj_get_free_num(roller);
+  char sel_str[32];
+
+  lv_ddlist_get_selected_str(roller, sel_str);
+  if (UTIL1_strcmp(sel_str, "SandClock")==0) {
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    NEOA_SetAppMode(NEOA_APP_SAND_CLOCK);
+#endif
+  } else if (UTIL1_strcmp(sel_str, "Clock")==0) {
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    NEOA_SetAppMode(NEOA_APP_CLOCK);
+#endif
+  } else if (UTIL1_strcmp(sel_str, "ShadowBox")==0) {
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+    NEOA_SetAppMode(NEOA_APP_SHADOW_BOX);
+#endif
+  }
+  return LV_RES_OK; /* Return OK if the button is not deleted */
+}
+
 void GUI_NEO_Create(void) {
   lv_obj_t *closeBtn, *slider1;
 
@@ -114,7 +135,7 @@ void GUI_NEO_Create(void) {
   /* create a switch for the auto light level setting */
   lv_obj_t *sw1 = lv_sw_create(win, NULL);
   GUI_AddObjToGroup(sw1);
-  if (NEOA_GetAutoLightLevelSetting()) {
+  if (NEOA_GetIsAutoBrightness()) {
     lv_sw_on(sw1); /* turn on */
   } else {
     lv_sw_off(sw1); /* turn on */
@@ -146,14 +167,14 @@ void GUI_NEO_Create(void) {
   lv_slider_set_range(slider1, SLIDER_LEVEL_MIN_RANGE, SLIDER_LEVEL_MAX_RANGE);
   lv_obj_align(slider1, slider1_label, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
   lv_slider_set_action(slider1, slider_action);
-  lv_bar_set_value(slider1, UTIL1_map(NEOA_GetLightLevel(), SLIDER_LEVEL_LIGHT_MIN, SLIDER_LEVEL_LIGHT_MAX, SLIDER_LEVEL_MIN_RANGE, SLIDER_LEVEL_MAX_RANGE));
+  lv_bar_set_value(slider1, UTIL1_map(NEOA_GetFixedBrightness(), SLIDER_LEVEL_LIGHT_MIN, SLIDER_LEVEL_LIGHT_MAX, SLIDER_LEVEL_MIN_RANGE, SLIDER_LEVEL_MAX_RANGE));
 
   /* Create a label with the slider value right to the slider */
   label_slider_level = lv_label_create(win, NULL);
-  SetLabelValue(label_slider_level, NEOA_GetLightLevel());
+  SetLabelValue(label_slider_level, NEOA_GetFixedBrightness());
   lv_obj_align(label_slider_level, slider1, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
 
-  /*Create a bar, an indicator and a knob style*/
+  /* Create a bar, an indicator and a knob style */
   static lv_style_t style_bg;
   static lv_style_t style_indic;
   static lv_style_t style_knob;
@@ -179,10 +200,42 @@ void GUI_NEO_Create(void) {
   style_knob.body.padding.ver = 10;
 
   /*-------------------------------------------------------*/
+  /* Create a roller for application modes */
+  /*-------------------------------------------------------*/
+  /* Create a label left to the roller */
+  lv_obj_t *roller_label = lv_label_create(win, NULL);
+  lv_label_set_text(roller_label, "App Mode:");
+  lv_obj_align(roller_label, slider1_label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 8);
+  lv_obj_t *roller = lv_roller_create(win, NULL);
+  lv_roller_set_options(roller,
+      /* order of entries *must* match NEOA_AppMode enum! */
+#if PL_CONFIG_HAS_NEO_CLOCK
+      "Clock\n"
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+      "SandClock\n"
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+      "ShadowBox\n"
+#endif
+      "Alarm\n"
+      "Countdown\n"
+      "Other");
+  lv_obj_align(roller, roller_label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 2);
+  lv_roller_set_selected(roller, NEOA_GetAppMode(), false); /* order of entries *must* match NEOA_AppMode enum! */
+  lv_roller_set_visible_row_count(roller, 3);
+  lv_roller_set_hor_fit(roller, false);
+  lv_obj_set_width(roller, 60);
+  lv_roller_set_action(roller, roller_appMode_click_action);
+  GUI_AddObjToGroup(roller);
+
+#if 0
+  /*-------------------------------------------------------*/
   /* buttons for play, pause, stop, ... */
   /*-------------------------------------------------------*/
   lv_obj_t *label;
   lv_obj_t *btn_play, *btn_pause, *btn_stop, *btn_next, *btn_prev, *btn_loop;
+
 
   /* play buttons */
   btn_play = lv_btn_create(win, NULL);
@@ -226,5 +279,6 @@ void GUI_NEO_Create(void) {
   label = lv_label_create(btn_loop, NULL);
   lv_label_set_text(label, SYMBOL_LOOP);
   GUI_AddObjToGroup(btn_loop);
+#endif
 }
 #endif /* PL_CONFIG_HAS_NEO_PIXEL */

@@ -15,10 +15,6 @@
 
 uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 
-void LEDFRAME_SetBrightnessPercent(uint8_t brightnessPercent);
-
-uint8_t LEDFRAME_GetBrightnessPercent(void);
-
 uint8_t LEDFRAME_GetColorRedValue(void);
 uint8_t LEDFRAME_GetColorGreenValue(void);
 uint8_t LEDFRAME_GetColorBlueValue(void);
@@ -29,8 +25,7 @@ void LEDFRAME_SetColorBlueValue(uint8_t val);
 
 void LEDFRAME_TurnClockOnOff(bool on);
 
-#include "RTC1.h" /* for TIMEREC */
-void LEDFRAME_ShowClockTime(TIMEREC *time);
+uint8_t LEDFRAME_CheckAndUpdateClock(void); /* supports alarms */
 
 void LEDFRAME_Init(void);
 

@@ -20,11 +20,11 @@
 #define LEDFRAME_SHOW_MIN_SEC  0
 #define LEDFRAME_SHOW_HOUR_MIN 1
 #define LEDFRAME_SHOW_LECTURE_MODE  0  /* different colors depending on time */
-#define LEDFRAME_HAS_ALARM     0  /* show countdown */
+#define LEDFRAME_HAS_ALARM     1  /* show countdown */
 
 static TimerHandle_t LedFrameTimer; /* timer handle for changing display */
 static bool LEDFRAME_doUpdate = FALSE;
-static bool LEDFRAME_doMirror = TRUE; /* used for headup display mode */
+static bool LEDFRAME_doMirror = FALSE; /* used for headup display mode */
 
 #if LEDFRAME_HAS_ALARM
   static bool LEDFRAME_alarmEnabled = FALSE; /* if alarm is turned on */
@@ -44,12 +44,10 @@ static LEDFRAME_TransitionType LedFrametransition = LEDFRAME_TRANSITION_NONE;
 
 /* global settings */
 static bool LEDFRAME_ClockIsOn = TRUE; /* if clock is on or stopped */
-static uint8_t LEDFRAME_BrightnessPercent = 25; /* brightness value, 0 (off) - 100 (full brightness) */
 static NEO_Color LEDFRAME_color = 0xff0000;
 #if LEDFRAME_CYCLE_COLORS
   static NEO_Color color0 = 0x0000ff, color1=0x00ff00, color2=0xff0000, color3 = 0xff00ff;
 #endif
-static bool LEDFRAME_DoGammaCorrection = TRUE;
 
 #if LEDFRAME_SHOW_LECTURE_MODE
 typedef struct {
@@ -214,18 +212,6 @@ static const uint32_t Numbers8x4[10] = { /* digits 0-9, data byte with two nibbl
 };
 #endif
 
-uint8_t LEDFRAME_GetBrightnessPercent(void) {
-  return LEDFRAME_BrightnessPercent;
-}
-
-void LEDFRAME_SetBrightnessPercent(uint8_t brightnessPercent) {
-  if (brightnessPercent>100) {
-    brightnessPercent = 100;
-  }
-  LEDFRAME_BrightnessPercent = brightnessPercent;
-  LEDFRAME_doUpdate = TRUE;
-}
-
 uint8_t LEDFRAME_GetColorRedValue(void) {
   return (LEDFRAME_color>>16)&0xff;
 }
@@ -288,118 +274,92 @@ static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y
   } /* if number */
 }
 
-static uint32_t ProcessColor(uint32_t color) {
-  color = NEO_BrightnessPercentColor(color, LEDFRAME_GetBrightnessPercent());
-  if (LEDFRAME_DoGammaCorrection) {
-    color = NEO_GammaCorrect24(color);
-  }
-  return color;
-}
-
 #if LEDFRAME_HAS_ALARM
 static void LEDFRAME_ShowAlarmTime(TIMEREC *time, NEO_Color color, bool showHours) {
-  NEO_ClearAllXY(); /* clear all pixels */
-  LEDFRAME_RequestDisplayUpdate();
-#if 1 // if (LedDisp_GetWidth()>=16) { /* at least two modules */
-#if LEDFRAME_SMALL_FONT
+  LedDisp_Clear();
+  if (LedDisp_GetWidth()==24) { /* at least three modules */
     if (showHours) {
-      /* write hh:mm */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
-      if ((time->Sec%2)==0) { /* only every 2nd second */
-        LedDisp_PutPixel(8, 3, ProcessColor(0x00ff00));
-        LedDisp_PutPixel(8, 5, ProcessColor(0x00ff00));
-      }
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, ProcessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, ProcessColor(color));
+      /* write hh:mm:ss */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 16, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 20, 0, NEOA_GammaBrightnessColor(color));
+      LedDisp_PutPixel(8, 3, NEOA_GammaBrightnessColor(0x00ff00));
+      LedDisp_PutPixel(8, 5, NEOA_GammaBrightnessColor(0x00ff00));
+      LedDisp_PutPixel(16, 3, NEOA_GammaBrightnessColor(0x00ff00));
+      LedDisp_PutPixel(16, 5, NEOA_GammaBrightnessColor(0x00ff00));
     } else {
       /* write mm:ss */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 0, ProcessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 0, ProcessColor(color));
-      /* write first two digits */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 8, 0, ProcessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 12, 0, ProcessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 4, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 8, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 12, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 16, 0, NEOA_GammaBrightnessColor(color));
+      LedDisp_PutPixel(12, 3, NEOA_GammaBrightnessColor(0x00ff00));
+      LedDisp_PutPixel(12, 5, NEOA_GammaBrightnessColor(0x00ff00));
     }
-#endif
-#else
-  } else if (LedDisp_GetWidth()>=8) { /* at least one module */
+  } else if (LedDisp_GetWidth()==16) { /* at least three modules */
+    if (showHours) {
+      /* write hh:mm:s */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, NEOA_GammaBrightnessColor(color));
+      if ((time->Sec%2)==0) { /* only every 2nd second */
+        LedDisp_PutPixel(8, 3, NEOA_GammaBrightnessColor(0x00ff00));
+        LedDisp_PutPixel(8, 5, NEOA_GammaBrightnessColor(0x00ff00));
+      }
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, NEOA_GammaBrightnessColor(color));
+    } else {
+      /* write mm:ss */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 0, NEOA_GammaBrightnessColor(color));
+      /* write first two digits */
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 8, 0, NEOA_GammaBrightnessColor(color));
+      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 12, 0, NEOA_GammaBrightnessColor(color));
+    }
+  } else if (LedDisp_GetWidth()==8) { /* at least one module */
     /* write sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 0, ProcessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 0, NEOA_GammaBrightnessColor(color));
+    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 0, NEOA_GammaBrightnessColor(color));
   }
-#endif
-  LEDFRAME_RequestDisplayUpdate();
 }
 #endif /* LEDFRAME_HAS_ALARM */
 
-void LEDFRAME_ShowClockTime(TIMEREC *time) {
-#if LEDFRAME_CYCLE_COLORS
-  static int colorCnt = 0;
-#endif
-  static bool isOn = FALSE;
+static void LEDFRAME_PutClockPixels(int32_t seconds, LedDisp_PixelColor colorDigits, LedDisp_PixelColor colorDots) {
+  TIMEREC time;
+  DATEREC date;
 
-  if (isOn && !LEDFRAME_ClockIsOn) { /* turning off clock */
-    LedDisp_Clear(); /* clear all pixels */
-    NEOA_RequestDisplayUpdate();
-  }
-  if (!LEDFRAME_ClockIsOn) {
-    return;
-  }
-  isOn = TRUE;
-#if LEDFRAME_SMALL_FONT
-    LedDisp_PixelColor color;
-
-#if LEDFRAME_CYCLE_COLORS
-    switch(colorCnt) {
-      case 0: color = color0; break;
-      case 1: color = color1; break;
-      case 2: color = color2; break;
-      case 3: color = color3; break;
-      default: color = color0; break;
-    }
-    colorCnt++;
-    if (colorCnt==3) {
-      colorCnt = 0;
-    }
-#else
-  #if LEDFRAME_SHOW_LECTURE_MODE
-    if (!CheckTimeRange(time, &color)) { /* change color for time range */
-      color = LEDFRAME_color;
-    }
-  #else
-    color = LEDFRAME_color;
-  #endif
-#endif
-#endif
+  TmDt1_UnixSecondsToTimeDate(seconds, 0, &time, &date);
+  colorDigits = NEOA_GammaBrightnessColor(colorDigits);
+  colorDots = NEOA_GammaBrightnessColor(colorDots);
   if (LedDisp_GetWidth()==24) { /* three modules in horizontal orientation */
     /* write hour:min:sec with two dots */
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 16, 0, ProcessColor(LEDFRAME_color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 20, 0, ProcessColor(LEDFRAME_color));
-    LedDisp_PutPixel(8, 3, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(8, 5, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(16, 3, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(16, 5, ProcessColor(0x00ff00));
-    NEOA_RequestDisplayUpdate();
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), 0, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), 4, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10),  8, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), 12, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), 16, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), 20, 0, colorDigits);
+    LedDisp_PutPixel(8, 3, colorDots);
+    LedDisp_PutPixel(8, 5, colorDots);
+    LedDisp_PutPixel(16, 3, colorDots);
+    LedDisp_PutPixel(16, 5, colorDots);
   } else if (LedDisp_GetHeight()==24) { /* portrait mode */
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 8, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 8, ProcessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 16, ProcessColor(LEDFRAME_color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 16, ProcessColor(LEDFRAME_color));
-    LedDisp_PutPixel(3, 7, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(3, 8, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(5, 7, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(5, 8, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(3, 15, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(3, 16, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(5, 15, ProcessColor(0x00ff00));
-    LedDisp_PutPixel(5, 16, ProcessColor(0x00ff00));
-    NEOA_RequestDisplayUpdate();
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), 0, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), 4, 0, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10), 0, 8, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), 4, 8, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), 0, 16, colorDigits);
+    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), 4, 16, colorDigits);
+    LedDisp_PutPixel(3, 7, colorDots);
+    LedDisp_PutPixel(3, 8, colorDots);
+    LedDisp_PutPixel(5, 7, colorDots);
+    LedDisp_PutPixel(5, 8, colorDots);
+    LedDisp_PutPixel(3, 15, colorDots);
+    LedDisp_PutPixel(3, 16, colorDots);
+    LedDisp_PutPixel(5, 15, colorDots);
+    LedDisp_PutPixel(5, 16, colorDots);
   }
 }
 
@@ -408,11 +368,6 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
 
   CLS1_SendStatusStr((unsigned char*)"ledframe", (const unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((uint8_t*)"  clock", LEDFRAME_ClockIsOn?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
-  CLS1_SendStatusStr((uint8_t*)"  gamma", LEDFRAME_DoGammaCorrection?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
-
-  UTIL1_Num8uToStr(buf, sizeof(buf), LEDFRAME_GetBrightnessPercent());
-  UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
-  CLS1_SendStatusStr((uint8_t*)"  brightness", buf, io->stdOut);
 
   UTIL1_strcpy(buf, sizeof(buf), (uint8_t*)"R 0x");
   UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorRedValue());
@@ -422,6 +377,8 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   UTIL1_strcatNum8Hex(buf, sizeof(buf), LEDFRAME_GetColorBlueValue());
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((uint8_t*)"  color", buf, io->stdOut);
+
+  CLS1_SendStatusStr((uint8_t*)"  mirror", LEDFRAME_doMirror?(uint8_t*)"on\r\n":(uint8_t*)"off\r\n", io->stdOut);
 
 #if LEDFRAME_HAS_ALARM
   buf[0] = '\0';
@@ -453,8 +410,7 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
   if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "ledframe help")==0) {
     CLS1_SendHelpStr((unsigned char*)"ledframe", (const unsigned char*)"Group of ledframe commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  clock (on|off)", (const unsigned char*)"Turns clock on or off\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  gamma (on|off)", (const unsigned char*)"Turns gamma correction on or off\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set brightness (0-100)%\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  mirror (on|off)", (const unsigned char*)"Turns mirror mode on or off\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  color rgb <rgb>", (const unsigned char*)"Set RGB color with 24bit hex value\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  color red <val>", (const unsigned char*)"Set red color (0-255)\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  color green <val>", (const unsigned char*)"Set green color (0-255)\r\n", io->stdOut);
@@ -463,9 +419,9 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
     CLS1_SendHelpStr((unsigned char*)"  alarm (on|off)", (const unsigned char*)"Turns alarm on or off\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  alarm time hh:mm:ss", (const unsigned char*)"Set alarm absolute time\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  alarm count hh:mm:ss", (const unsigned char*)"Set alarm countdown duration\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  alarm show time (on|off)", (const unsigned char*)"Set show current time in alarm mode\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  alarm show alarm (on|off)", (const unsigned char*)"Set show alarm time in alarm mode\r\n", io->stdOut);
-    CLS1_SendHelpStr((unsigned char*)"  alarm show count (on|off)", (const unsigned char*)"Set show countdown in alarm mode\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show time (on|off)", (const unsigned char*)"Show current time in alarm mode\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show alarm (on|off)", (const unsigned char*)"Show alarm time in alarm mode\r\n", io->stdOut);
+    CLS1_SendHelpStr((unsigned char*)"  alarm show count (on|off)", (const unsigned char*)"Show countdown in alarm mode\r\n", io->stdOut);
 #endif
     *handled = TRUE;
     return ERR_OK;
@@ -478,22 +434,12 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
   } else if (UTIL1_strcmp((char*)cmd, "ledframe clock off")==0) {
     LEDFRAME_TurnClockOnOff(FALSE);
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "ledframe gamma on")==0) {
-    LEDFRAME_DoGammaCorrection = TRUE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe mirror on")==0) {
+    LEDFRAME_doMirror = TRUE;
     *handled = TRUE;
-  } else if (UTIL1_strcmp((char*)cmd, "ledframe gamma off")==0) {
-    LEDFRAME_DoGammaCorrection = FALSE;
+  } else if (UTIL1_strcmp((char*)cmd, "ledframe mirror off")==0) {
+    LEDFRAME_doMirror = FALSE;
     *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, "ledframe brightness", sizeof("ledframe brightness")-1)==0) {
-    p = cmd+sizeof("ledframe brightness")-1;
-    res = UTIL1_xatoi(&p, &val);
-    if (res==ERR_OK && val>=0 && val<=100) {
-      LEDFRAME_SetBrightnessPercent(val);
-      *handled = TRUE;
-    } else {
-      CLS1_SendStr((uint8_t*)"Brightness must be between 0 and 100!\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
   } else if (UTIL1_strncmp((char*)cmd, "ledframe color red", sizeof("ledframe color red")-1)==0) {
     p = cmd+sizeof("ledframe color red")-1;
     res = UTIL1_xatoi(&p, &val);
@@ -613,12 +559,55 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
   return res;
 }
 
-static uint8_t CheckAndUpdateClock(void) {
-  static int prevHour=-1, prevMinute=-1, prevSecond=1;
+uint8_t LEDFRAME_CheckAndUpdateClock(void) {
+  static int32_t lastTimeSecondsShown = -1;
+  int32_t currTimeSeconds, alarmTimeSeconds, showTimeSeconds;
   TIMEREC time;
+  DATEREC date;
   uint8_t res;
 
-  res = TmDt1_GetTime(&time);
+  if (!LEDFRAME_ClockIsOn) {
+    return ERR_IDLE; /* nothing needed */
+  }
+  res = TmDt1_GetTime(&time); /* get current time */
+  if (res!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  res = TmDt1_GetDate(&date); /* get current date */
+  if (res!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  /* show countdown */
+  if (LEDFRAME_alarmEnabled && LEDFRAME_alarmShowCountdown) { /* show alarm countdown */
+    currTimeSeconds = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
+    alarmTimeSeconds = TmDt1_TimeDateToUnixSeconds(&LEDFRAME_alarmTime, &date, 0);
+    showTimeSeconds = alarmTimeSeconds-currTimeSeconds;
+    if (showTimeSeconds!=lastTimeSecondsShown) {
+      if (showTimeSeconds<0) { /* expired */
+        if (((-showTimeSeconds)%2)==1) {
+          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xff0000, 0xff0000);
+        } else {
+          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xffff00, 0xff0000);
+        }
+      } else {
+        LEDFRAME_PutClockPixels(showTimeSeconds, 0xffff00, 0x00ff00);
+      }
+      lastTimeSecondsShown = showTimeSeconds;
+      return ERR_OK; /* request update of display */
+    }
+  } else {
+    /* show current time */
+    showTimeSeconds = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
+    if (showTimeSeconds!=lastTimeSecondsShown) {
+      LEDFRAME_PutClockPixels(showTimeSeconds, LEDFRAME_color, 0x00ff00);
+      lastTimeSecondsShown = showTimeSeconds;
+      return ERR_OK; /* request update of display */
+    }
+  }
+  return ERR_IDLE; /* no need to update display */
+
+#if 0
+
   if (res==ERR_OK) {
 #if LEDFRAME_HAS_ALARM
     if (LEDFRAME_alarmEnabled) {
@@ -669,15 +658,11 @@ static uint8_t CheckAndUpdateClock(void) {
       }
     }
 #endif
-    if (LEDFRAME_doUpdate || time.Hour!=prevHour || time.Min!=prevMinute /*|| time.Sec!=prevSecond*/) {
+    if (LEDFRAME_doUpdate || time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
       if (LEDFRAME_doUpdate) {
         LEDFRAME_doUpdate = FALSE;
       }
-    #if PL_HAS_LED_FRAME_CLOCK
-      LEDFRAME_ShowClockTime(&time);
-    #elif PL_HAS_MATRIX_CLOCK
-      MATRIX_ShowClockTime(&time);
-    #endif
+      LEDFRAME_ShowClockTime(&time, LEDFRAME_color, 0x00ff00);
       prevHour = time.Hour;
       prevMinute = time.Min;
       prevSecond = time.Sec;
@@ -685,6 +670,7 @@ static uint8_t CheckAndUpdateClock(void) {
     }
   }
   return ERR_IDLE;
+#endif
 }
 
 #if 0 && PL_HAS_RTC

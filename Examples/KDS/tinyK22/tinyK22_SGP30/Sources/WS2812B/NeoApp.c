@@ -18,12 +18,7 @@
 #include "LED1.h"
 #include "PixelDMA.h"
 #include "CLS1.h"
-#if PL_CONFIG_HAS_MMA8451
-  #include "MMA1.h"
-#endif
-#if PL_CONFIG_HAS_TSL2561
-  #include "TSL1.h"
-#endif
+#include "Sensor.h"
 #if PL_CONFIG_HAS_AMG8833
   #include "AMG8833.h"
   #include "interpolation.h"
@@ -39,668 +34,203 @@
   #include "TmDt1.h"
   #include "LEDFrame.h"
 #endif
+#if PL_CONFIG_HAS_NEO_CLOCK
+  #include "LedClock.h"
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+  #include "LedSandClock.h"
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  #include "LedShadowBox.h"
+#endif
 #include "NeoMatrix.h"
 #include "LedDisp.h"
 
-static uint8_t NEOA_LightLevel = 50; /* 0 (off) to 255 */
+static NEOA_AppMode NEOA_CurrAppMode = NEOA_APP_CLOCK;
+
+static uint8_t NEOA_BrightnessAuto, NEOA_BrightnessFix = 50; /* 0 (off) to 255 */
 #if PL_CONFIG_HAS_TSL2561
-static bool NEOA_isAutoLightLevel = TRUE;
+  static bool NEOA_isAutoBrightness = TRUE;
 #endif
-static bool NEOA_useGammaCorrection = TRUE;
-#if PL_CONFIG_HAS_NEO_SHADOW_BOX
-static bool NEOA_LightBoxUseRainbow = TRUE;
-#define NEOA_NOF_LIGHTBOX_ROWS    (24) /* number of rows in light box */
-static uint8_t NEOA_LightBoxRowMaxBrightness[NEOA_NOF_LIGHTBOX_ROWS] = /* brightness value, 0..255 */
-#if 1
-  {50, 50, 30, 20, 10, 10, 5, 3}; /* initial brightness levels */
-#else
-  {25, 25, 25, 25, 25, 25, 25, 25}; /* initial brightness levels */
-#endif
-static uint32_t NEOA_LightBoxRowColor[NEOA_NOF_LIGHTBOX_ROWS] =
-{
-    0xff0000,
-    0xff8000,
-    0xffA000,
-    0xFFFF00,
-    0x00FF00,
-    0x00FFC0,
-    0x00ff90,
-    0x00A0ff
-};
-#endif
+static bool NEOA_useGammaCorrection = FALSE;
 
 /* task notification bits */
 #define NEOA_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
 static xTaskHandle NeoTaskHandle; /* task handle */
+static SemaphoreHandle_t NeoPixelMutex; /* mutex to access the NEO pixel buffer */
+
+void NEOA_RequestNeoMutex(void) {
+  if (xSemaphoreTake(NeoPixelMutex, portMAX_DELAY)==pdFALSE) {
+    for(;;) {} /* did not receive mutex? */
+  }
+}
+
+void NEOA_ReleaseNeoMutex(void) {
+  xSemaphoreGive(NeoPixelMutex);
+}
 
 void NEOA_RequestDisplayUpdate(void) {
   (void)xTaskNotify(NeoTaskHandle, NEOA_NOTIFICATION_UPDATE_DISPLAY, eSetBits);
 }
 
 /* interfaces for GUI items */
-void NEOA_SetLightLevel(uint8_t level) {
-  NEOA_LightLevel = level;
+void NEOA_SetAppMode(NEOA_AppMode mode) {
+  NEOA_CurrAppMode = mode;
 }
 
-uint8_t NEOA_GetLightLevel(void) {
-  return NEOA_LightLevel;
+NEOA_AppMode NEOA_GetAppMode(void) {
+  return NEOA_CurrAppMode;
 }
 
-bool NEOA_GetAutoLightLevelSetting(void) {
-  return NEOA_isAutoLightLevel;
+void NEOA_SetUseGammaCorrection(bool on) {
+  NEOA_useGammaCorrection = on;
 }
 
-bool NEOA_SetAutoLightLevelSetting(bool set) {
-  NEOA_isAutoLightLevel = set;
+bool NEOA_GetUseGammaCorrection(void) {
+  return NEOA_useGammaCorrection;
 }
 
+void NEOA_SetFixedBrightness(uint8_t level) {
+  NEOA_BrightnessFix = level;
+}
+
+uint8_t NEOA_GetFixedBrightness(void) {
+  return NEOA_BrightnessFix;
+}
+
+uint8_t NEOA_GetBrightness(void) {
+  if (NEOA_GetIsAutoBrightness()) {
+    return NEOA_BrightnessAuto;
+  }
+  return NEOA_BrightnessFix;
+}
+
+bool NEOA_GetIsAutoBrightness(void) {
+  return NEOA_isAutoBrightness;
+}
+
+bool NEOA_SetIsAutoBrightness(bool on) {
+  NEOA_isAutoBrightness = on;
+}
+
+uint32_t NEOA_GammaBrightnessColor(uint32_t color) {
+  color = NEO_SetColorValueScale(color, NEOA_GetBrightness());
+  if (NEOA_GetUseGammaCorrection()) {
+    color = NEO_GammaCorrect24(color);
+  }
+  return color;
+}
+
+
+
+static void StopTask(NEOA_AppMode curr) {
+  switch(curr) {
+#if PL_CONFIG_HAS_NEO_CLOCK
+    case NEOA_APP_CLOCK:
+      LedClock_StopTask();
+      break;
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    case NEOA_APP_SAND_CLOCK:
+      LedSandClock_StopTask();
+      break;
+#endif
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
-static void Layer(int layer, uint32_t color) {
-  LedDisp_DrawHLine(0, layer, LedDisp_GetWidth(), color);
-}
-
-static int32_t Rainbow(int32_t numOfSteps, int32_t step) {
-    float r = 0.0;
-    float g = 0.0;
-    float b = 0.0;
-    float h = (double)step / numOfSteps;
-    int i = (int32_t)(h * 6);
-    float f = h * 6.0 - i;
-    float q = 1 - f;
-
-    switch (i % 6)  {
-        case 0:
-            r = 1;
-            g = f;
-            b = 0;
-            break;
-        case 1:
-            r = q;
-            g = 1;
-            b = 0;
-            break;
-        case 2:
-            r = 0;
-            g = 1;
-            b = f;
-            break;
-        case 3:
-            r = 0;
-            g = q;
-            b = 1;
-            break;
-        case 4:
-            r = f;
-            g = 0;
-            b = 1;
-            break;
-        case 5:
-            r = 1;
-            g = 0;
-            b = q;
-            break;
-    }
-    r *= 255;
-    g *= 255;
-    b *= 255;
-    return (((int)r)<<16)|(((int)g)<<8)+(int)b;
-}
+    case NEOA_APP_SHADOW_BOX:
+      LedShadowBox_StopTask();
+      break;
 #endif
-
-#if PL_CONFIG_HAS_NEO_SHADOW_BOX
-static void NeoTask(void* pvParameters) {
-  int i, cntr, val = 0;
-  int inc = 1;
-  int red, green, blue;
-  NEO_Color color;
-  uint8_t rowStartStep[NEOA_NOF_LIGHTBOX_ROWS]; /* rainbow color starting values */
-  int brightness = 0;
-
-  (void)pvParameters; /* parameter not used */
-  if (LedDisp_GetLongerSide()>NEOA_NOF_LIGHTBOX_ROWS) {
-    for(;;) {
-      CLS1_SendStr("ERROR: Not supported number of Rows!\r\n", CLS1_GetStdio()->stdErr);
-      vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-  }
-  for(i=0; i<NEOA_NOF_LIGHTBOX_ROWS;i++) {
-    rowStartStep[i] = val;
-    val+=20;
-    if(val>=0xff) {
-      val = 0;
-    }
-  }
-
-  cntr = 0;
-  for(;;) {
-    int row;
-    int32_t color;
-
-    if (NEOA_LightBoxUseRainbow) {
-      for(row=0; row<LedDisp_GetHeight(); row++) {
-        color = Rainbow(256,rowStartStep[row]);
-        rowStartStep[row]++;
-        brightness = NEOA_GetLightLevel();
-        if (brightness > NEOA_LightBoxRowMaxBrightness[row]) {
-          brightness = NEOA_LightBoxRowMaxBrightness[row];
-        }
-        color = NEO_SetColorValueScale(color, brightness); /* reduce brightness */
-        Layer(row, color);
-      }
-    } else {
-      for(row=0; row<8; row++) {
-        color = NEOA_LightBoxRowColor[row];
-        brightness = NEOA_GetLightLevel();
-        if (brightness > NEOA_LightBoxRowMaxBrightness[row]) {
-          brightness = NEOA_LightBoxRowMaxBrightness[row];
-        }
-        color = NEO_SetColorValueScale(color, brightness); /* reduce brightness */
-        Layer(row, color);
-      }
-    }
-    NEO_TransferPixels();
-    vTaskDelay(pdMS_TO_TICKS(30));
-  } /* for */
-}
-#endif
-
-
-#if PL_HAS_LED_FRAME
-static void ClockUpdate(void) {
-  static int prevHour=-1, prevMinute=-1, prevSecond=1;
-  TIMEREC time;
-  uint8_t res;
-
-  res = TmDt1_GetTime(&time);
-  if (res==ERR_OK) {
-    if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
-#if PL_HAS_LED_FRAME_CLOCK
-      LEDFRAME_ShowClockTime(&time);
-#endif
-#if PL_HAS_MATRIX_CLOCK
-      MATRIX_ShowClockTime(&time);
-#endif
-      prevHour = time.Hour;
-      prevMinute = time.Min;
-      prevSecond = time.Sec;
-    }
-  }
-}
-
-static void SetDisplayOrientation(ORI_Orientation_e orientation) {
-  switch(orientation) {
-    case ORI_ORIENTATION_X_UP:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT);
-      break;
-    case ORI_ORIENTATION_X_DOWN:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_PORTRAIT180);
-      break;
-    case ORI_ORIENTATION_Y_UP:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE180);
-      break;
-    case ORI_ORIENTATION_Y_DOWN:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-      break;
-    case ORI_ORIENTATION_Z_UP:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-      break;
-    case ORI_ORIENTATION_Z_DOWN:
-      LedDisp_SetDisplayOrientation(LedDisp_ORIENTATION_LANDSCAPE);
-      break;
     default:
       break;
-  } /* switch */
+  }
+}
+
+static void StartTask(NEOA_AppMode curr) {
+  switch(curr) {
+#if PL_CONFIG_HAS_NEO_CLOCK
+    case NEOA_APP_CLOCK:
+      LedClock_StartTask();
+      break;
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    case NEOA_APP_SAND_CLOCK:
+      LedSandClock_StartTask();
+      break;
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+    case NEOA_APP_SHADOW_BOX:
+      LedShadowBox_StartTask();
+      break;
+#endif
+    default:
+      break;
+  }
 }
 
 static void NeoTask(void* pvParameters) {
   uint32_t notifcationValue;
   BaseType_t notified;
-  int cntr = 0;
-  ORI_Orientation_e oldOrientation, newOrientation;
-
-
-  (void)pvParameters; /* parameter not used */
-  vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
-  oldOrientation = ORI_GetCurrentOrientation();
-  SetDisplayOrientation(oldOrientation);
-  for(;;) {
-    ClockUpdate();
-    notified = xTaskNotifyWait(0UL, NEOA_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
-    if (notified==pdTRUE) {
-      if (notifcationValue&NEOA_NOTIFICATION_UPDATE_DISPLAY) {
-        NEO_TransferPixels();
-      }
-    }
-    newOrientation = ORI_GetCurrentOrientation();
-    if (newOrientation!=oldOrientation) {
-      oldOrientation = newOrientation;
-      SetDisplayOrientation(newOrientation);
-    }
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
-}
-#endif
-
-
-#if PL_CONFIG_HAS_NEO_HOUR_GLASS
-
-#define AREA_MIN_X  (0)
-#define AREA_NOF_X  (PIXEL_NOF_X+2) /* with border */
-#define AREA_MIN_Y  (0)
-#define AREA_NOF_Y  (PIXEL_NOF_Y+2) /* with border
-
-/* area:
- * 1: pixel set
- * 0: pixel not set
- * 0xff: border
- */
-static uint8_t area[PIXEL_NOF_X+2][PIXEL_NOF_Y+2]; /* area with one pixel virtual border */
-
-static void DrawArea(void) {
-  int x, y;
-  NEO_Color level;
-
-  if (NEOA_useGammaCorrection) {
-    level = NEO_GammaCorrect8(NEOA_GetLightLevel());
-    if (level==0) {
-      level = 1; /* have minimal light level */
-    }
-  } else {
-    level = NEOA_GetLightLevel();
-  }
-
-  for(x=1;x<AREA_NOF_X-1;x++) { /* start inside border */
-    for(y=1;y<AREA_NOF_Y-1;y++) {
-      if (area[x][y]==0) { /* clear pixel area */
-        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,level));
-      } else if (area[x][y]==1) { /* set pixel area */
-        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,level,0));
-      } else if (area[x][y]==0xff) {
-        NEO_SetPixelXY(x-1, y-1, NEO_MAKE_COLOR_RGB(0,0,0)); /* border, obstacle area */
-      }
-    }
-  }
-}
-
-static void InitHourGlass(int nofGrains) {
-  int x, y;
-
-  for(x=AREA_MIN_X;x<AREA_NOF_X;x++) {
-    for(y=AREA_MIN_Y;y<AREA_NOF_Y;y++) {
-      area[x][y] = 0; /* init */
-    }
-  }
-  /* border */
-  for(x=AREA_MIN_X;x<AREA_NOF_X;x++) {
-    area[x][0] = 0xff;
-    area[x][AREA_NOF_Y-1] = 0xff;
-  }
-  for(y=AREA_MIN_Y;y<AREA_NOF_Y;y++) {
-    area[0][y] = 0xff;
-    area[AREA_NOF_X-1][y] = 0xff;
-  }
-  /* add sand... */
-  for(x=AREA_MIN_X+1;x<AREA_NOF_X-1;x++) {
-    for(y=AREA_MIN_Y+1;y<AREA_NOF_Y-1;y++) {
-      area[x][y] = 1;
-      nofGrains--;
-      if (nofGrains==0) {
-        break;
-      }
-    }
-    if (nofGrains==0) {
-       break;
-    }
-  }
-
-  /* hourglass obstacle */
-  area[9][1] = 0xff;
-  area[10][1] = 0xff;
-  area[11][1] = 0xff;
-  area[12][1] = 0xff;
-  area[13][1] = 0xff;
-  area[14][1] = 0xff;
-  area[15][1] = 0xff;
-
-  area[10][2] = 0xff;
-  area[11][2] = 0xff;
-  area[12][2] = 0xff;
-  area[13][2] = 0xff;
-  area[14][2] = 0xff;
-
-  area[11][3] = 0xff;
-  area[12][3] = 0xff;
-  area[13][3] = 0xff;
-
-  area[12][4] = 0xff;
-
-  area[10][8] = 0xff;
-  area[11][8] = 0xff;
-  area[12][8] = 0xff;
-  area[13][8] = 0xff;
-  area[14][8] = 0xff;
-  area[15][8] = 0xff;
-  area[16][8] = 0xff;
-
-  area[11][7] = 0xff;
-  area[12][7] = 0xff;
-  area[13][7] = 0xff;
-  area[14][7] = 0xff;
-  area[15][7] = 0xff;
-
-  area[12][6] = 0xff;
-  area[13][6] = 0xff;
-  area[14][6] = 0xff;
-
-  area[13][5] = 0xff;
-}
-
-#define N (3)
-/* An inplace function to rotate a N x N matrix
-   by 90 degrees in cw (clockwise) or anti-clockwise direction */
-static void rotateMatrixAntiClockWise(int mat[][N], bool cw)  {
-  /* source: https://www.geeksforgeeks.org/inplace-rotate-square-matrix-by-90-degrees/ */
-  // Consider all squares one by one
-  for (int x = 0; x < N / 2; x++) { /* Consider elements in group of 4 in current square */
-    for (int y = x; y < N-x-1; y++) {
-      int temp = mat[x][y]; /* store current cell in temp variable */
-      if (cw) { /* clockwise rotation */
-        mat[x][y] = mat[N-1-y][x]; /* move bottom left to top left */
-        mat[N-1-y][x] = mat[N-1-x][N-1-y];  /* move bottom right to bottom left */
-        mat[N-1-x][N-1-y] = mat[y][N-1-x]; /* move top right to bottom right */
-        mat[y][N-1-x] = temp; /* assign temp to top right */
-      } else {
-        mat[x][y] = mat[y][N-1-x]; /* move values from top right to top left */
-        mat[y][N-1-x] = mat[N-1-x][N-1-y]; /* move values from bottom right to top right */
-        mat[N-1-x][N-1-y] = mat[N-1-y][x]; /* move values from bottom left to bottom right */
-        mat[N-1-y][x] = temp; /* assign temp to bottom left */
-      }
-    }
-  }
-}
-
-static void ApplyDownForce(uint8_t *(matrix[3][3])) {
-  /* x: don't care
-   * i: item to check
-   * 0: free space
-   * 1: occupied space
-   */
-  if (*(matrix[1][1])!=1) {
-    return; /* precondition: middle element shall be set! */
-  }
-  /* xxx    xxx
-   * xix => x0x
-   * x0x    xix
-   */
-  if (*(matrix[2][1])==0) {
-    *(matrix[2][1]) = *(matrix[1][1]);
-    *(matrix[1][1]) = 0;
-    return;
-  }
-  /* 0xx    0xx
-   * 0ix => 00x
-   * 01x    i1x
-   */
-  if (*(matrix[2][0])==0 && *(matrix[1][0])==0 && *(matrix[0][0])!=1) {
-    *(matrix[2][0]) = *(matrix[1][1]);
-    *(matrix[1][1]) = 0;
-    return;
-  }
-  /* xx0    xx0
-   * xi0 => x00
-   * x10    x1i
-   */
-  if (*(matrix[2][2])==0 && *(matrix[1][2])==0 && *(matrix[0][2])!=1) {
-    *(matrix[2][2]) = *(matrix[1][1]);
-    *(matrix[1][1]) = 0;
-    return;
-  }
-  /* xxx    xxx
-   * xib => x0b
-   * xb0    xbi
-   */
-  if (*(matrix[2][2])==0 && *(matrix[1][2])==0xff && *(matrix[2][1])==0xff) {
-    *(matrix[2][2]) = *(matrix[1][1]);
-    *(matrix[1][1]) = 0;
-    return;
-  }
-  /* xxx    xxx
-   * bix => b0x
-   * 0bx    xbx
-   */
-  if (*(matrix[2][0])==0 && *(matrix[1][0])==0xff && *(matrix[2][1])==0xff) {
-    *(matrix[2][0]) = *(matrix[1][1]);
-    *(matrix[1][1]) = 0;
-    return;
-  }
-}
-
-static void ApplyGravity(int gx, int gy) {
-  uint8_t *(matrix[3][3]);
-  int x, y;
-  bool changed;
-
-  if (gx==0 && gy==1) { /* down */
-    /* scan from bottom up */
-    for(x=1;x<AREA_NOF_X-1;x++) {
-      for(y=AREA_NOF_Y-2;y>0;y--) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x-1][y-1];
-          matrix[0][1] = &area[x][y-1];
-          matrix[0][2] = &area[x+1][y-1];
-          matrix[1][0] = &area[x-1][y];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x+1][y];
-          matrix[2][0] = &area[x-1][y+1];
-          matrix[2][1] = &area[x][y+1];
-          matrix[2][2] = &area[x+1][y+1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } else if (gx==1 && gy==1) { /* down-right */
-      /* scan from bottom up */
-      for(x=AREA_NOF_X-2;x>0;x--) {
-        for(y=AREA_NOF_Y-2;y>0;y--) {
-          if (area[x][y]==1) { /* we have an item */
-            matrix[0][0] = &area[x-1][y];
-            matrix[0][1] = &area[x-1][y+1];
-            matrix[0][2] = &area[x][y-1];
-            matrix[1][0] = &area[x-1][y+1];
-            matrix[1][1] = &area[x][y];
-            matrix[1][2] = &area[x+1][y-1];
-            matrix[2][0] = &area[x][y+1];
-            matrix[2][1] = &area[x+1][y+1];
-            matrix[2][2] = &area[x+1][y];
-            ApplyDownForce(matrix);
-          }
-        }
-      } /* for */
-  } else if (gx==1 && gy==0) { /* right */
-    /* scan from right to left */
-    for(x=AREA_NOF_X-2;x>0;x--) {
-      for(y=AREA_NOF_Y-2;y>0;y--) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x-1][y+1];
-          matrix[0][1] = &area[x-1][y];
-          matrix[0][2] = &area[x-1][y-1];
-          matrix[1][0] = &area[x][y+1];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x][y-1];
-          matrix[2][0] = &area[x+1][y+1];
-          matrix[2][1] = &area[x+1][y];
-          matrix[2][2] = &area[x+1][y-1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } else if (gx==1 && gy==-1) { /* right-up */
-    /* scan from right to left */
-    for(x=AREA_NOF_X-2;x>0;x--) {
-      for(y=AREA_NOF_Y-2;y>0;y--) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x][y+1];
-          matrix[0][1] = &area[x-1][y+1];
-          matrix[0][2] = &area[x-1][y];
-          matrix[1][0] = &area[x+1][y+1];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x-1][y-1];
-          matrix[2][0] = &area[x+1][y];
-          matrix[2][1] = &area[x+1][y-1];
-          matrix[2][2] = &area[x][y-1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } else if (gx==0 && gy==-1) { /* up */
-    /* scan from top to bottom */
-    for(x=1; x<AREA_NOF_X-1;x++) {
-      for(y=1;y<AREA_NOF_Y-1;y++) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x+1][y+1];
-          matrix[0][1] = &area[x][y+1];
-          matrix[0][2] = &area[x-1][y+1];
-          matrix[1][0] = &area[x+1][y];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x-1][y];
-          matrix[2][0] = &area[x+1][y-1];
-          matrix[2][1] = &area[x][y-1];
-          matrix[2][2] = &area[x-1][y-1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } else if (gx==-1 && gy==-1) { /* left-up */
-    /* scan from top to bottom */
-    for(x=1; x<AREA_NOF_X-1;x++) {
-      for(y=1;y<AREA_NOF_Y-1;y++) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x+1][y];
-          matrix[0][1] = &area[x+1][y+1];
-          matrix[0][2] = &area[x][y+1];
-          matrix[1][0] = &area[x+1][y-1];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x-1][y+1];
-          matrix[2][0] = &area[x][y-1];
-          matrix[2][1] = &area[x-1][y-1];
-          matrix[2][2] = &area[x-1][y];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } else if (gx==-1 && gy==0) { /* left */
-    /* scan from top to down */
-    for(x=1;x<AREA_NOF_X-1;x++) {
-      for(y=1;y<AREA_NOF_Y-1;y++) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x+1][y-1];
-          matrix[0][1] = &area[x+1][y];
-          matrix[0][2] = &area[x+1][y+1];
-          matrix[1][0] = &area[x][y-1];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x][y+1];
-          matrix[2][0] = &area[x-1][y-1];
-          matrix[2][1] = &area[x-1][y];
-          matrix[2][2] = &area[x-1][y+1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-
-
-  } else if (gx==-1 && gy==1) { /* left-down */
-    /* scan from bottom to topo */
-    for(x=1;x<AREA_NOF_X-1;x++) {
-      for(y=AREA_NOF_Y-2;y>0;y--) {
-        if (area[x][y]==1) { /* we have an item */
-          matrix[0][0] = &area[x][y+1];
-          matrix[0][1] = &area[x+1][y+1];
-          matrix[0][2] = &area[x+1][y];
-          matrix[1][0] = &area[x-1][y-1];
-          matrix[1][1] = &area[x][y];
-          matrix[1][2] = &area[x+1][y+1];
-          matrix[2][0] = &area[x-1][y];
-          matrix[2][1] = &area[x-1][y+1];
-          matrix[2][2] = &area[x][y+1];
-          ApplyDownForce(matrix);
-        }
-      }
-    } /* for */
-  } /* if */
-}
-
-static void NeoTask(void* pvParameters) {
-#if PL_CONFIG_HAS_MMA8451
-  int16_t xmg, ymg, zmg;
-#endif
-  int xg = 0, yg = 1;
+  NEOA_AppMode currMode, oldAppMode = NEOA_APP_NONE;
 #if PL_CONFIG_HAS_TSL2561
   uint32_t lux;
   TickType_t tickCnt, lastLightMeasurementTickCnt = 0;
   int new_light_level;
 #endif
 
-  NEOA_SetAutoLightLevelSetting(TRUE);
   (void)pvParameters; /* parameter not used */
-  InitHourGlass(64);
-  NEOA_SetLightLevel(5);
+  vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
+  NEOA_SetFixedBrightness(5);
+  NEOA_SetIsAutoBrightness(TRUE);
 #if PL_CONFIG_HAS_TSL2561
-  new_light_level = NEOA_GetLightLevel();
+  new_light_level = NEOA_GetBrightness();
 #endif
   for(;;) {
-    DrawArea();
-    NEO_TransferPixels();
-    vTaskDelay(pdMS_TO_TICKS(200));
+    currMode = NEOA_GetAppMode();
+    if (currMode!=oldAppMode) {
+      StopTask(oldAppMode);
+      StartTask(currMode);
+      oldAppMode = currMode;
+    }
+    notified = xTaskNotifyWait(0UL, NEOA_NOTIFICATION_UPDATE_DISPLAY, &notifcationValue, 0); /* check flags */
+    if (notified==pdTRUE) {
+      if (notifcationValue&NEOA_NOTIFICATION_UPDATE_DISPLAY) {
+        NEOA_RequestNeoMutex();
+        NEO_TransferPixels();
+        NEOA_ReleaseNeoMutex();
+      }
+    }
 #if PL_CONFIG_HAS_TSL2561
     tickCnt = xTaskGetTickCount();
-    if (NEOA_GetAutoLightLevelSetting() && tickCnt-lastLightMeasurementTickCnt > pdMS_TO_TICKS(1000)) { /* every 2 seconds */
+    if (NEOA_GetIsAutoBrightness() && tickCnt-lastLightMeasurementTickCnt > pdMS_TO_TICKS(1000)) { /* every 2 seconds */
       lastLightMeasurementTickCnt = tickCnt;
-      if (TSL1_GetLux(&lux)==ERR_OK) {
+      if (SENSOR_GetLux(&lux)==ERR_OK) {
         /* 1 lux is pretty dark, 50 is rather dark, 200 is about office light */
-        if (NEOA_useGammaCorrection) {
-          new_light_level = lux;
+        if (NEOA_GetUseGammaCorrection()) { /* not sure if we should do this? */
+          new_light_level = lux*2;
         } else {
-          new_light_level = lux/16 - 5; /* scale down with an offset */
+          new_light_level = lux*2;
         }
-        if (new_light_level>100) {
-          new_light_level = 100;
-        } else if (new_light_level < 1) {
+        if (new_light_level>150) { /* cap it to avoid it goes too bright */
+          new_light_level = 150;
+        } else if (new_light_level < 1) { /* avoid it getting to zero */
           new_light_level = 1;
         }
+      } else {
+        CLS1_SendStr("Failed reading TSL1 to get Lux value!\r\n", CLS1_GetStdio()->stdErr);
       }
     } /* if */
-    /* gradually adopt the light level */
-    if (NEOA_GetAutoLightLevelSetting()) {
-      if (new_light_level>NEOA_GetLightLevel()) {
-        NEOA_SetLightLevel(NEOA_GetLightLevel()+1);
-      } else if (new_light_level<NEOA_GetLightLevel()) {
-        NEOA_SetLightLevel(NEOA_GetLightLevel()-1);
+    /* gradually adopt the auto light level */
+    if (NEOA_GetIsAutoBrightness()) {
+      if (new_light_level>NEOA_GetBrightness()) {
+        NEOA_BrightnessAuto = NEOA_GetBrightness()+1;
+      } else if (new_light_level<NEOA_GetBrightness()) {
+        NEOA_BrightnessAuto = NEOA_GetBrightness()-1;
       }
     }
 #endif
-#if PL_CONFIG_HAS_MMA8451
-    xmg = MMA1_GetXmg();
-    ymg = MMA1_GetYmg();
-    zmg = MMA1_GetZmg();
-    if(xmg>200) {
-      xg = 1;
-    } else if (xmg<-200) {
-      xg = -1;
-    } else {
-      xg = 0;
-    }
-    if(ymg>200) {
-      yg = -1;
-    } else if (ymg<-200) {
-      yg = 1;
-    } else {
-      yg = 0;
-    }
-#endif
-    ApplyGravity(xg, yg);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
-#endif
 
 #if PL_CONFIG_HAS_NEO_THERMAL_CAM
 //low range of the sensor (this will be blue on the screen)
@@ -795,7 +325,6 @@ static void drawpixelsLCD(float *p, uint8_t rows, uint8_t cols, uint8_t boxWidth
 }
 #endif
 
-
 static void NeoTask(void* pvParameters) {
   (void)pvParameters; /* parameter not used */
   vTaskDelay(pdMS_TO_TICKS(1000)); /* give other tasks time to start */
@@ -838,57 +367,54 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
 
   CLS1_SendStatusStr((unsigned char*)"neoa", (unsigned char*)"\r\n", io->stdOut);
 #if PL_CONFIG_HAS_TSL2561
-  UTIL1_Num8uToStr(buf, sizeof(buf), NEOA_GetLightLevel());
-  UTIL1_strcat(buf, sizeof(buf), NEOA_GetAutoLightLevelSetting() ? " (auto on)\r\n": " (auto off)\r\n");
-  CLS1_SendStatusStr("  lightlevel", buf, io->stdOut);
+  UTIL1_strcpy(buf, sizeof(buf), "fix: ");
+  UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_GetFixedBrightness());
+  UTIL1_strcat(buf, sizeof(buf), NEOA_GetIsAutoBrightness() ? " (auto on: ": " (auto off: ");
+  UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_BrightnessAuto);
+  UTIL1_strcat(buf, sizeof(buf), ")\r\n");
+  CLS1_SendStatusStr("  brightness", buf, io->stdOut);
+#endif
+  UTIL1_strcpy(buf, sizeof(buf), NEOA_GetUseGammaCorrection() ? "on\r\n": "off\r\n");
+  CLS1_SendStatusStr("  gamma", buf, io->stdOut);
+
+  switch(NEOA_GetAppMode()) {
+#if PL_CONFIG_HAS_NEO_CLOCK
+    case NEOA_APP_CLOCK: UTIL1_strcpy(buf, sizeof(buf), "clock\r\n"); break;
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    case NEOA_APP_SAND_CLOCK: UTIL1_strcpy(buf, sizeof(buf), "sandclock\r\n"); break;
 #endif
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
-  UTIL1_strcpy(buf, sizeof(buf), NEOA_LightBoxUseRainbow ? "rainbow: on\r\n": "rainbow: off\r\n");
-  CLS1_SendStatusStr("  lightbox", buf, io->stdOut);
-  buf[0] = 0;
-  UTIL1_strcpy(buf, sizeof(buf), "max brightness: ");
-  for(int i=0; i<NEOA_NOF_LIGHTBOX_ROWS;i++) {
-    UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_LightBoxRowMaxBrightness[i]);
-    UTIL1_strcat(buf, sizeof(buf), " ");
-  }
-  UTIL1_strcat(buf, sizeof(buf), "\r\n");
-  CLS1_SendStatusStr("", buf, io->stdOut);
-
-  UTIL1_strcpy(buf, sizeof(buf), "color: ");
-  for(int i=0; i<NEOA_NOF_LIGHTBOX_ROWS;i++) {
-    UTIL1_strcat(buf, sizeof(buf), " 0x");
-    UTIL1_strcatNum32Hex(buf, sizeof(buf), NEOA_LightBoxRowColor[i]);
-    UTIL1_strcat(buf, sizeof(buf), " ");
-    if (i==(NEOA_NOF_LIGHTBOX_ROWS/2)-1) {
-      UTIL1_strcat(buf, sizeof(buf), "\r\n");
-      CLS1_SendStatusStr("", buf, io->stdOut);
-      UTIL1_strcpy(buf, sizeof(buf), "color: ");
-    }
-  }
-  UTIL1_strcat(buf, sizeof(buf), "\r\n");
-  CLS1_SendStatusStr("", buf, io->stdOut);
+    case NEOA_APP_SHADOW_BOX: UTIL1_strcpy(buf, sizeof(buf), "shadowbox\r\n"); break;
 #endif
-  UTIL1_strcpy(buf, sizeof(buf), NEOA_useGammaCorrection ? "on\r\n": "off\r\n");
-  CLS1_SendStatusStr("  gamma", buf, io->stdOut);
+    default: UTIL1_strcpy(buf, sizeof(buf), "UNKNOWN\r\n"); break;
+  }
+  CLS1_SendStatusStr("  app", buf, io->stdOut);
   return ERR_OK;
 }
 
 static uint8_t PrintHelp(const CLS1_StdIOType *io) {
   CLS1_SendHelpStr((unsigned char*)"neoa", (unsigned char*)"Group of neoa commands\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  brightness <val>", (unsigned char*)"Set brightness (0..255)\r\n", io->stdOut);
 #if PL_CONFIG_HAS_TSL2561
-  CLS1_SendHelpStr((unsigned char*)"  lightlevel <val>|auto", (unsigned char*)"Set light level (0..255) or use auto level\r\n", io->stdOut);
-#endif
-#if PL_CONFIG_HAS_NEO_SHADOW_BOX
-  CLS1_SendHelpStr((unsigned char*)"  lb rainbow (on|off)", (unsigned char*)"Use rainbow colors for lightbox\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  lb color <n> <rgb>", (unsigned char*)"Set row RGB color\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  lb brightness <n> <val>", (unsigned char*)"Set row brightness light value (0..255)\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  brightness auto on|off", (unsigned char*)"Auto brightness on or off\r\n", io->stdOut);
 #endif
   CLS1_SendHelpStr((unsigned char*)"  gamma on|off", (unsigned char*)"Usage of gamma correction\r\n", io->stdOut);
+  CLS1_SendHelpStr((unsigned char*)"  app <app>", (unsigned char*)"Set application, one of: "
+#if PL_CONFIG_HAS_NEO_CLOCK
+    "clock "
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+    "sandclock "
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+    "shadowbox "
+#endif
+      "\r\n", io->stdOut);
   CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   return ERR_OK;
 }
 #endif /* NEOA_CONFIG_PARSE_COMMAND_ENABLED */
-
 
 #if NEOA_CONFIG_PARSE_COMMAND_ENABLED
 uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io) {
@@ -906,15 +432,45 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
   {
     *handled = TRUE;
     res = PrintStatus(io);
-#if PL_CONFIG_HAS_TSL2561
-  } else if (UTIL1_strcmp((char*)cmd, "neoa lightlevel auto")==0) {
-    NEOA_SetAutoLightLevelSetting(TRUE);
+  } else if (UTIL1_strcmp((char*)cmd, "neoa gamma on")==0) {
+    NEOA_SetUseGammaCorrection(TRUE);
     *handled = TRUE;
     res = ERR_OK;
-  } else if (UTIL1_strncmp((char*)cmd, "neoa lightlevel ", sizeof("neoa lightlevel ")-1)==0) {
+  } else if (UTIL1_strcmp((char*)cmd, "neoa gamma off")==0) {
+    NEOA_SetUseGammaCorrection(FALSE);
+    *handled = TRUE;
+    res = ERR_OK;
+#if PL_CONFIG_HAS_NEO_CLOCK
+  } else if (UTIL1_strcmp((char*)cmd, "neoa app clock")==0) {
+    NEOA_SetAppMode(NEOA_APP_CLOCK);
+    *handled = TRUE;
+    res = ERR_OK;
+#endif
+#if PL_CONFIG_HAS_NEO_SAND_CLOCK
+  } else if (UTIL1_strcmp((char*)cmd, "neoa app sandclock")==0) {
+    NEOA_SetAppMode(NEOA_APP_SAND_CLOCK);
+    *handled = TRUE;
+    res = ERR_OK;
+#endif
+#if PL_CONFIG_HAS_NEO_SHADOW_BOX
+  } else if (UTIL1_strcmp((char*)cmd, "neoa app shadowbox")==0) {
+    NEOA_SetAppMode(NEOA_APP_SHADOW_BOX);
+    *handled = TRUE;
+    res = ERR_OK;
+#endif
+#if PL_CONFIG_HAS_TSL2561
+  } else if (UTIL1_strcmp((char*)cmd, "neoa brightness auto on")==0) {
+    NEOA_SetIsAutoBrightness(TRUE);
+    *handled = TRUE;
+    res = ERR_OK;
+  } else if (UTIL1_strcmp((char*)cmd, "neoa brightness auto off")==0) {
+    NEOA_SetIsAutoBrightness(FALSE);
+    *handled = TRUE;
+    res = ERR_OK;
+  } else if (UTIL1_strncmp((char*)cmd, "neoa brightness ", sizeof("neoa brightness ")-1)==0) {
     int32_t level;
 
-    p = cmd + sizeof("neoa lightlevel ")-1;
+    p = cmd + sizeof("neoa brightness ")-1;
     res = UTIL1_xatoi(&p, &level);
     if (res==ERR_OK) {
       if (level<0) {
@@ -922,70 +478,7 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
       } else if (level>0xff) {
         level = 0xff;
       }
-      NEOA_SetAutoLightLevelSetting(FALSE);
-      NEOA_SetLightLevel(level);
-    }
-    *handled = TRUE;
-#endif
-#if PL_CONFIG_HAS_NEO_SHADOW_BOX
-  } else if (UTIL1_strcmp((char*)cmd, "neoa lb rainbow on")==0) {
-    NEOA_LightBoxUseRainbow = TRUE;
-   *handled = TRUE;
-   res = ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "neoa lb rainbow off")==0) {
-    NEOA_LightBoxUseRainbow = FALSE;
-   *handled = TRUE;
-   res = ERR_OK;
-  } else if (UTIL1_strncmp((char*)cmd, "neoa lb brightness ", sizeof("neoa lb brightness ")-1)==0) {
-    int32_t level, row;
-
-    p = cmd + sizeof("neoa lb brightness ")-1;
-    res = UTIL1_xatoi(&p, &row);
-    if (res==ERR_OK) {
-      if (row<0) {
-        row = 0;
-        res = ERR_RANGE;
-      } else if (row>=NEOA_NOF_LIGHTBOX_ROWS-1) {
-        row = NEOA_NOF_LIGHTBOX_ROWS-1;
-        res = ERR_RANGE;
-      }
-      res = UTIL1_xatoi(&p, &level);
-      if (res==ERR_OK) {
-        if (level<0) {
-          level = 0;
-          res = ERR_RANGE;
-        } else if (level>255) {
-          level = 255;
-          res = ERR_RANGE;
-        }
-        NEOA_LightBoxRowMaxBrightness[row] = level;
-      }
-    }
-    *handled = TRUE;
-  } else if (UTIL1_strncmp((char*)cmd, "neoa lb color ", sizeof("neoa lb color ")-1)==0) {
-    int32_t color, row;
-
-    p = cmd + sizeof("neoa lb color ")-1;
-    res = UTIL1_xatoi(&p, &row);
-    if (res==ERR_OK) {
-      if (row<0) {
-        row = 0;
-        res = ERR_RANGE;
-      } else if (row>=NEOA_NOF_LIGHTBOX_ROWS-1) {
-        row = NEOA_NOF_LIGHTBOX_ROWS-1;
-        res = ERR_RANGE;
-      }
-      res = UTIL1_xatoi(&p, &color);
-      if (res==ERR_OK) {
-        if (color<0) {
-          color = 0;
-          res = ERR_RANGE;
-        } else if (color>0xffffff) {
-          color = 0xffffff;
-          res = ERR_RANGE;
-        }
-        NEOA_LightBoxRowColor[row] = color;
-      }
+      NEOA_SetFixedBrightness(level);
     }
     *handled = TRUE;
 #endif
@@ -995,8 +488,13 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 #endif /* NEOA_CONFIG_PARSE_COMMAND_ENABLED */
 
 
-
 void NEOA_Init(void) {
+  NeoPixelMutex = xSemaphoreCreateMutex();
+  if (NeoPixelMutex==NULL) {
+    for(;;) {} /* failed? */
+  }
+  vQueueAddToRegistry(NeoPixelMutex, "NeoMutex");
+
   NEO_Init();
   MATRIX_Init();
   PIXDMA_Init();
@@ -1005,7 +503,7 @@ void NEOA_Init(void) {
         "Neo", /* task name for kernel awareness debugging */
         800/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+1,  /* initial priority */
+        tskIDLE_PRIORITY+2,  /* initial priority */
         &NeoTaskHandle /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
