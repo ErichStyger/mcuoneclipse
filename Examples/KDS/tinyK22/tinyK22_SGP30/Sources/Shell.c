@@ -152,6 +152,9 @@ static const SHELL_IODesc ios[] =
 #endif
 };
 
+void SHELL_SendCommand(unsigned char *cmd) {
+  (void)CLS1_ParseWithCommandTable(cmd, CLS1_GetStdio(), CmdParserTable);
+}
 
 static void ShellTask(void *pvParameters) {
 #if PL_CONFIG_HAS_SD_CARD
@@ -161,7 +164,6 @@ static void ShellTask(void *pvParameters) {
   int i;
 
   (void)pvParameters; /* not used */
-  /* \todo */
   //(void)CLS1_ParseWithCommandTable((unsigned char*)CLS1_CMD_HELP, CLS1_GetStdio(), CmdParserTable);
 #if PL_CONFIG_HAS_SD_CARD
   /* pull up card detect pin PTD7: the card shorts to GND if the card is *not* inserted, so the pin is HIGH active. */

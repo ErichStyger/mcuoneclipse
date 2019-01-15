@@ -430,7 +430,7 @@ void LV_Init(void) {
 
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(5000), /* period/time */
+    pdMS_TO_TICKS(10*1000), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */

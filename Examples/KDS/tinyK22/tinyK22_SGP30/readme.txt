@@ -18,4 +18,4 @@ Open Points:
 - Add Sound/Buzzer/MP3
 - SSD1351 flicker with 3.3V supply (==> 5V supply)
 - Add Presentation Counter functionality (Ervin)
-
+- I2C might hang up if running DMA the same time (EMI?). Workaround with mutex around using DMA and Sensor task

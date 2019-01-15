@@ -10,6 +10,8 @@
 #include "gui_neopixel.h"
 #include "lvgl/lvgl.h"
 #include "gui.h"
+#include "Shell.h"
+#include "UTIL1.h"
 #include "../WS2812B/Neoapp.h"
 
 static lv_obj_t *win; /* object for window */
@@ -108,6 +110,19 @@ static lv_res_t roller_appMode_click_action(lv_obj_t *roller) {
     NEOA_SetAppMode(NEOA_APP_SHADOW_BOX);
 #endif
   }
+  return LV_RES_OK; /* Return OK if the button is not deleted */
+}
+
+static lv_res_t roller_alarm_click_action(lv_obj_t *roller) {
+  //uint8_t id = lv_obj_get_free_num(roller);
+  char sel_str[16];
+  unsigned char cmd[32];
+
+  lv_ddlist_get_selected_str(roller, sel_str);
+  NEOA_SetAppMode(NEOA_APP_CLOCK);
+  UTIL1_strcpy(cmd, sizeof(cmd), "ledframe alarm ");
+  UTIL1_strcat(cmd, sizeof(cmd), sel_str);
+  SHELL_SendCommand(cmd);
   return LV_RES_OK; /* Return OK if the button is not deleted */
 }
 
@@ -218,16 +233,40 @@ void GUI_NEO_Create(void) {
 #if PL_CONFIG_HAS_NEO_SHADOW_BOX
       "ShadowBox\n"
 #endif
-      "Alarm\n"
-      "Countdown\n"
       "Other");
   lv_obj_align(roller, roller_label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 2);
   lv_roller_set_selected(roller, NEOA_GetAppMode(), false); /* order of entries *must* match NEOA_AppMode enum! */
   lv_roller_set_visible_row_count(roller, 3);
   lv_roller_set_hor_fit(roller, false);
-  lv_obj_set_width(roller, 60);
+  lv_obj_set_width(roller, 50);
   lv_roller_set_action(roller, roller_appMode_click_action);
   GUI_AddObjToGroup(roller);
+
+  /*-------------------------------------------------------*/
+  /* Create a roller for alarm modes */
+  /*-------------------------------------------------------*/
+  /* Create a label left to the roller */
+  lv_obj_t *roller_label2 = lv_label_create(win, NULL);
+  lv_label_set_text(roller_label2, "Alarm:");
+  lv_obj_align(roller_label2, roller_label, LV_ALIGN_OUT_RIGHT_MID, 15, 0);
+  lv_obj_t *roller2 = lv_roller_create(win, NULL);
+  lv_roller_set_options(roller2,
+      /* will send the following command: "ledframe alarm " + text below */
+      "on\n"
+      "off\n"
+      "count 0:05\n"
+      "count 0:10\n"
+      "count 0:15\n"
+      "count 0:30\n"
+      "count 1:00\n"
+      "count 3:00");
+  lv_obj_align(roller2, roller_label2, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 2);
+  lv_roller_set_selected(roller2, 1, false); /* order of entries *must* match NEOA_AppMode enum! */
+  lv_roller_set_visible_row_count(roller2, 3);
+  lv_roller_set_hor_fit(roller2, false);
+  lv_obj_set_width(roller2, 60);
+  lv_roller_set_action(roller2, roller_alarm_click_action);
+  GUI_AddObjToGroup(roller2);
 
 #if 0
   /*-------------------------------------------------------*/

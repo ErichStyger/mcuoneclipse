@@ -274,92 +274,89 @@ static void LEDFRAME_SetChar8x4Pixels(char ch, NEO_PixelIdxT x0, NEO_PixelIdxT y
   } /* if number */
 }
 
-#if LEDFRAME_HAS_ALARM
-static void LEDFRAME_ShowAlarmTime(TIMEREC *time, NEO_Color color, bool showHours) {
-  LedDisp_Clear();
-  if (LedDisp_GetWidth()==24) { /* at least three modules */
-    if (showHours) {
-      /* write hh:mm:ss */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 16, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 20, 0, NEOA_GammaBrightnessColor(color));
-      LedDisp_PutPixel(8, 3, NEOA_GammaBrightnessColor(0x00ff00));
-      LedDisp_PutPixel(8, 5, NEOA_GammaBrightnessColor(0x00ff00));
-      LedDisp_PutPixel(16, 3, NEOA_GammaBrightnessColor(0x00ff00));
-      LedDisp_PutPixel(16, 5, NEOA_GammaBrightnessColor(0x00ff00));
-    } else {
-      /* write mm:ss */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 4, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 8, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 12, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 16, 0, NEOA_GammaBrightnessColor(color));
-      LedDisp_PutPixel(12, 3, NEOA_GammaBrightnessColor(0x00ff00));
-      LedDisp_PutPixel(12, 5, NEOA_GammaBrightnessColor(0x00ff00));
-    }
-  } else if (LedDisp_GetWidth()==16) { /* at least three modules */
-    if (showHours) {
-      /* write hh:mm:s */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour/10), 0, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Hour%10), 4, 0, NEOA_GammaBrightnessColor(color));
-      if ((time->Sec%2)==0) { /* only every 2nd second */
-        LedDisp_PutPixel(8, 3, NEOA_GammaBrightnessColor(0x00ff00));
-        LedDisp_PutPixel(8, 5, NEOA_GammaBrightnessColor(0x00ff00));
-      }
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 8, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 12, 0, NEOA_GammaBrightnessColor(color));
-    } else {
-      /* write mm:ss */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min/10), 0, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Min%10), 4, 0, NEOA_GammaBrightnessColor(color));
-      /* write first two digits */
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 8, 0, NEOA_GammaBrightnessColor(color));
-      LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 12, 0, NEOA_GammaBrightnessColor(color));
-    }
-  } else if (LedDisp_GetWidth()==8) { /* at least one module */
-    /* write sec */
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec/10), 0, 0, NEOA_GammaBrightnessColor(color));
-    LEDFRAME_SetChar8x4Pixels('0'+(time->Sec%10), 4, 0, NEOA_GammaBrightnessColor(color));
-  }
-}
-#endif /* LEDFRAME_HAS_ALARM */
-
-static void LEDFRAME_PutClockPixels(int32_t seconds, LedDisp_PixelColor colorDigits, LedDisp_PixelColor colorDots) {
+static void LEDFRAME_PutClockPixels(int32_t seconds, LedDisp_PixelColor colorDigits, LedDisp_PixelColor colorDots, bool showHH, bool showMM, bool showSS) {
   TIMEREC time;
   DATEREC date;
+  int pos;
 
   TmDt1_UnixSecondsToTimeDate(seconds, 0, &time, &date);
   colorDigits = NEOA_GammaBrightnessColor(colorDigits);
   colorDots = NEOA_GammaBrightnessColor(colorDots);
+  LedDisp_Clear();
   if (LedDisp_GetWidth()==24) { /* three modules in horizontal orientation */
     /* write hour:min:sec with two dots */
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), 0, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), 4, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10),  8, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), 12, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), 16, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), 20, 0, colorDigits);
-    LedDisp_PutPixel(8, 3, colorDots);
-    LedDisp_PutPixel(8, 5, colorDots);
-    LedDisp_PutPixel(16, 3, colorDots);
-    LedDisp_PutPixel(16, 5, colorDots);
+    pos = 0;
+    if (!showHH) {
+      pos += 4;
+    }
+    if (!showMM) {
+      pos += 4;
+    }
+    if (!showSS) {
+      pos += 4;
+    }
+    if (showHH) {
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), pos, 0, colorDigits);
+      pos+=4;
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), pos, 0, colorDigits);
+      pos+=4;
+    }
+    if (showMM) {
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10),  pos, 0, colorDigits);
+      if (showHH) {
+        LedDisp_PutPixel(pos, 3, colorDots);
+        LedDisp_PutPixel(pos, 5, colorDots);
+      }
+      pos+=4;
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), pos, 0, colorDigits); pos+=4;
+    }
+    if (showSS) {
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), pos, 0, colorDigits);
+      if (showMM) {
+        LedDisp_PutPixel(pos, 3, colorDots);
+        LedDisp_PutPixel(pos, 5, colorDots);
+      }
+      pos+=4;
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), pos, 0, colorDigits);
+      pos+=4;
+    }
   } else if (LedDisp_GetHeight()==24) { /* portrait mode */
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), 0, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), 4, 0, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10), 0, 8, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), 4, 8, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), 0, 16, colorDigits);
-    LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), 4, 16, colorDigits);
-    LedDisp_PutPixel(3, 7, colorDots);
-    LedDisp_PutPixel(3, 8, colorDots);
-    LedDisp_PutPixel(5, 7, colorDots);
-    LedDisp_PutPixel(5, 8, colorDots);
-    LedDisp_PutPixel(3, 15, colorDots);
-    LedDisp_PutPixel(3, 16, colorDots);
-    LedDisp_PutPixel(5, 15, colorDots);
-    LedDisp_PutPixel(5, 16, colorDots);
+    pos = 0;
+    if (!showHH) {
+      pos += 4;
+    }
+    if (!showMM) {
+      pos += 4;
+    }
+    if (!showSS) {
+      pos += 4;
+    }
+    if (showHH) {
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Hour/10), 0, pos, colorDigits);
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Hour%10), 4, pos, colorDigits);
+    }
+    if (showMM) {
+      pos += 8;
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Min/10), 0, pos, colorDigits);
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Min%10), 4, pos, colorDigits);
+      if (showHH) {
+        LedDisp_PutPixel(3, pos-1, colorDots);
+        LedDisp_PutPixel(3, pos, colorDots);
+        LedDisp_PutPixel(5, pos-1, colorDots);
+        LedDisp_PutPixel(5, pos, colorDots);
+      }
+    }
+    if (showSS) {
+      pos += 8;
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Sec/10), 0, pos, colorDigits);
+      LEDFRAME_SetChar8x4Pixels('0'+(time.Sec%10), 4, pos, colorDigits);
+      if (showMM) {
+        LedDisp_PutPixel(3, pos-1, colorDots);
+        LedDisp_PutPixel(3, pos, colorDots);
+        LedDisp_PutPixel(5, pos-1, colorDots);
+        LedDisp_PutPixel(5, pos, colorDots);
+      }
+    }
   }
 }
 
@@ -585,12 +582,12 @@ uint8_t LEDFRAME_CheckAndUpdateClock(void) {
     if (showTimeSeconds!=lastTimeSecondsShown) {
       if (showTimeSeconds<0) { /* expired */
         if (((-showTimeSeconds)%2)==1) {
-          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xff0000, 0xff0000);
+          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xff0000, 0xff0000, TRUE, TRUE, TRUE);
         } else {
-          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xffff00, 0xff0000);
+          LEDFRAME_PutClockPixels(-showTimeSeconds, 0xffff00, 0xff0000, TRUE, TRUE, TRUE);
         }
       } else {
-        LEDFRAME_PutClockPixels(showTimeSeconds, 0xffff00, 0x00ff00);
+        LEDFRAME_PutClockPixels(showTimeSeconds, 0xffff00, 0x00ff00, TRUE, TRUE, TRUE);
       }
       lastTimeSecondsShown = showTimeSeconds;
       return ERR_OK; /* request update of display */
@@ -599,7 +596,7 @@ uint8_t LEDFRAME_CheckAndUpdateClock(void) {
     /* show current time */
     showTimeSeconds = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
     if (showTimeSeconds!=lastTimeSecondsShown) {
-      LEDFRAME_PutClockPixels(showTimeSeconds, LEDFRAME_color, 0x00ff00);
+      LEDFRAME_PutClockPixels(showTimeSeconds, LEDFRAME_color, 0x00ff00, TRUE, TRUE, FALSE);
       lastTimeSecondsShown = showTimeSeconds;
       return ERR_OK; /* request update of display */
     }
