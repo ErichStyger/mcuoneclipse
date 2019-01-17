@@ -41,10 +41,6 @@
   #include <stdint.h>
 #endif
 
-#if (configUSE_TRACE_FACILITY == 0)
-  #error "configUSE_TRACE_FACILITY must be enabled"
-#endif
-
 #define FREERTOS_DEBUG_CONFIG_MAJOR_VERSION 1
 #define FREERTOS_DEBUG_CONFIG_MINOR_VERSION 1
 
@@ -76,11 +72,6 @@ extern "C" {
  * plus offsets into the TCB block to locate elements in the TCB.
  */
 extern const uint8_t FreeRTOSDebugConfig[];
-
-#if 1
-  /* FreeRTOS prior 10.1.0 used tskTaskControlBlock instead of TaskControlBlock_t */
-  #define tskTaskControlBlock TaskControlBlock_t
-#endif
 
 /* NOTES!!
  * IAR documentation is confusing. It suggests the data must be statically

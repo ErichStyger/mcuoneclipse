@@ -4,13 +4,22 @@
 **     Project     : S32K144_Blinky
 **     Processor   : S32K144_100
 **     Component   : SDK_BitIO
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-07, 09:17, # CodeGen: 1
+**     Date/Time   : 2019-01-16, 15:39, # CodeGen: 12
 **     Abstract    :
-**
+**          GPIO component usable with NXP SDK
 **     Settings    :
-**
+**          Component name                                 : LEDpin1
+**          SDK                                            : MCUC1
+**          GPIO Name                                      : 
+**          PORT Name                                      : PTD
+**          Pin Number                                     : 0
+**          Pin Symbol                                     : 
+**          Do Pin Muxing                                  : no
+**          Init Direction                                 : Output
+**          Pull Resistor                                  : no pull resistor
+**          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool LEDpin1_GetDir(void);
 **         SetDir    - void LEDpin1_SetDir(bool Dir);
@@ -24,7 +33,7 @@
 **         Init      - void LEDpin1_Init(void);
 **         Deinit    - void LEDpin1_Deinit(void);
 **
-** * Copyright (c) 2015-2018, Erich Styger
+** * Copyright (c) 2015-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -55,7 +64,7 @@
 ** @file LEDpin1.h
 ** @version 01.00
 ** @brief
-**
+**          GPIO component usable with NXP SDK
 */         
 /*!
 **  @addtogroup LEDpin1_module LEDpin1 module documentation

@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerSystemView
-**     Version     : Component 01.060, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.065, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-09-08, 18:53, # CodeGen: 42
+**     Date/Time   : 2019-01-16, 16:03, # CodeGen: 46
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -49,7 +49,7 @@
 **         Deinit         - void SYS1_Deinit(void);
 **         Init           - void SYS1_Init(void);
 **
-** * (c) Copyright Segger, 2017
+** * (c) Copyright Segger, 2018
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *

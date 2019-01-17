@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.1.0
+ * FreeRTOS Kernel V10.1.1
  * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -96,6 +96,13 @@ typedef portSTACK_TYPE StackType_t;
 #else
   typedef uint32_t TickType_t;
   #define portMAX_DELAY      (TickType_t)0xffffffff
+
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2) || configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  not need to be guarded with a critical section. */
+  #define portTICK_TYPE_IS_ATOMIC 1
+#endif /* 32bit architecture */
+
 #endif
 
 #if configUSE_MPU_SUPPORT

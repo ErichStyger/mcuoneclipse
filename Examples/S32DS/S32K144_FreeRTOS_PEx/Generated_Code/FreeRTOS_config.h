@@ -87,17 +87,17 @@
 
 #ifndef configLINKER_HEAP_BASE_SYMBOL
   #define configLINKER_HEAP_BASE_SYMBOL           __HeapBase
-    /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib) */
+    /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapBase, MCUXpresso: _pvHeapStart)  */
 #endif
 
 #ifndef configLINKER_HEAP_LIMIT_SYMBOL
   #define configLINKER_HEAP_LIMIT_SYMBOL          __HeapLimit
-    /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib) */
+    /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapLimit, MCUXpresso: _pvHeapLimit)  */
 #endif
 
 #ifndef configLINKER_HEAP_SIZE_SYMBOL
   #define configLINKER_HEAP_SIZE_SYMBOL           __heap_size
-    /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib) */
+    /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib). (KDS: __heap_size, MCUXpresso: _HeapSize) */
 #endif
 
 #ifndef configUSE_SHELL

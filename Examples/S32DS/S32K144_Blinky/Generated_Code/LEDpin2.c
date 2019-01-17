@@ -4,13 +4,22 @@
 **     Project     : S32K144_Blinky
 **     Processor   : S32K144_100
 **     Component   : SDK_BitIO
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-10, 07:08, # CodeGen: 11
+**     Date/Time   : 2019-01-16, 15:39, # CodeGen: 12
 **     Abstract    :
-**
+**          GPIO component usable with NXP SDK
 **     Settings    :
-**
+**          Component name                                 : LEDpin2
+**          SDK                                            : MCUC1
+**          GPIO Name                                      : 
+**          PORT Name                                      : PTD
+**          Pin Number                                     : 15
+**          Pin Symbol                                     : 
+**          Do Pin Muxing                                  : no
+**          Init Direction                                 : Output
+**          Pull Resistor                                  : no pull resistor
+**          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool LEDpin2_GetDir(void);
 **         SetDir    - void LEDpin2_SetDir(bool Dir);
@@ -24,7 +33,7 @@
 **         Init      - void LEDpin2_Init(void);
 **         Deinit    - void LEDpin2_Deinit(void);
 **
-** * Copyright (c) 2015-2018, Erich Styger
+** * Copyright (c) 2015-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -55,7 +64,7 @@
 ** @file LEDpin2.h
 ** @version 01.00
 ** @brief
-**
+**          GPIO component usable with NXP SDK
 */         
 /*!
 **  @addtogroup LEDpin2_module LEDpin2 module documentation
@@ -157,7 +166,7 @@ static bool LEDpin2_isOutput = false;
 void LEDpin2_ClrVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_ClearPinsOutput(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
+  GPIO_PortClear(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(LEDpin2_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -178,7 +187,7 @@ void LEDpin2_ClrVal(void)
 void LEDpin2_SetVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_SetPinsOutput(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
+  GPIO_PortSet(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(LEDpin2_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -199,7 +208,7 @@ void LEDpin2_SetVal(void)
 void LEDpin2_NegVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  GPIO_TogglePinsOutput(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
+  GPIO_PortToggle(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(LEDpin2_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
