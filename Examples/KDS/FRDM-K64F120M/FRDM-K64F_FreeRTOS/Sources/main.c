@@ -50,6 +50,7 @@
 #include "CS1.h"
 #include "XF1.h"
 #include "SYS1.h"
+#include "HF1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -98,7 +99,16 @@ static void MainTask(void *param) {
     LED1_Neg();
     xQueueSendToBack(queue, &cntr, pdMS_TO_TICKS(100));
     vTaskDelay(pdMS_TO_TICKS(500));
+    vTaskEndScheduler();
   }
+}
+
+int Test2(int a, int b) {
+  return a+b;
+}
+
+void Test(int a) {
+  a = Test2(a, 5);
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
@@ -106,6 +116,8 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
+  unsigned int checkers[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+
 #if configUSE_HEAP_SCHEME == 5
   vPortDefineHeapRegions(xHeapRegions);
 #endif
@@ -149,6 +161,8 @@ int main(void)
     /*lint +e527 */
   }
   vTaskStartScheduler();
+  Test(checkers[0]);
+  for(;;) {}
 #if USE_HEAP_INDICATOR
   if (freeRTOSMemoryScheme==0) { /* reference the variable */
     for(;;);
