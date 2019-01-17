@@ -27,6 +27,8 @@ void LEDFRAME_TurnClockOnOff(bool on);
 
 uint8_t LEDFRAME_CheckAndUpdateClock(void); /* supports alarms */
 
+void LEDFRAME_LoadIniDefaults(void);
+
 void LEDFRAME_Init(void);
 
 #endif /* SOURCES_LEDFRAME_H_ */

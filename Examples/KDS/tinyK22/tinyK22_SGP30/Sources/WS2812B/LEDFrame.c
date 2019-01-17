@@ -13,6 +13,10 @@
 #include "FRTOS1.h"
 #include "TmDt1.h"
 #include "RTC1.h"
+#include "CLS1.h"
+#if PL_CONFIG_HAS_SD_CARD
+  #include "MINI1.h"
+#endif
 #include "WS2812B/NeoApp.h"
 
 #define LEDFRAME_SMALL_FONT    1
@@ -558,6 +562,7 @@ uint8_t LEDFRAME_ParseCommand(const unsigned char *cmd, bool *handled, const CLS
 
 uint8_t LEDFRAME_CheckAndUpdateClock(void) {
   static int32_t lastTimeSecondsShown = -1;
+  static int32_t lastCountdownSecondsShown = -1;
   int32_t currTimeSeconds, alarmTimeSeconds, showTimeSeconds;
   TIMEREC time;
   DATEREC date;
@@ -574,12 +579,11 @@ uint8_t LEDFRAME_CheckAndUpdateClock(void) {
   if (res!=ERR_OK) {
     return ERR_FAILED;
   }
-  /* show countdown */
-  if (LEDFRAME_alarmEnabled && LEDFRAME_alarmShowCountdown) { /* show alarm countdown */
+  if (LEDFRAME_alarmEnabled && LEDFRAME_alarmShowCountdown) { /* show countdown */
     currTimeSeconds = TmDt1_TimeDateToUnixSeconds(&time, &date, 0);
     alarmTimeSeconds = TmDt1_TimeDateToUnixSeconds(&LEDFRAME_alarmTime, &date, 0);
     showTimeSeconds = alarmTimeSeconds-currTimeSeconds;
-    if (showTimeSeconds!=lastTimeSecondsShown) {
+    if (showTimeSeconds!=lastCountdownSecondsShown) {
       if (showTimeSeconds<0) { /* expired */
         if (((-showTimeSeconds)%2)==1) {
           LEDFRAME_PutClockPixels(-showTimeSeconds, 0xff0000, 0xff0000, TRUE, TRUE, TRUE);
@@ -589,7 +593,7 @@ uint8_t LEDFRAME_CheckAndUpdateClock(void) {
       } else {
         LEDFRAME_PutClockPixels(showTimeSeconds, 0xffff00, 0x00ff00, TRUE, TRUE, TRUE);
       }
-      lastTimeSecondsShown = showTimeSeconds;
+      lastCountdownSecondsShown = showTimeSeconds;
       return ERR_OK; /* request update of display */
     }
   } else {
@@ -757,4 +761,34 @@ void LEDFRAME_Init(void) {
   }
 }
 #endif
+
+void LEDFRAME_LoadIniDefaults(void) {
+#if PL_CONFIG_HAS_SD_CARD
+  uint8_t buf[32];
+  int val;
+  const unsigned char *p;
+  uint8_t res;
+  #define INI_FILE_NAME     "config.ini"
+  #define INI_SECTION_NAME  "LEDFRAME"
+  /*
+   * config.ini
+   *
+   */
+
+  CLS1_SendStr((unsigned char*)"Loading values from " INI_FILE_NAME "\r\n", CLS1_GetStdio()->stdOut);
+  /* Gateway */
+  val = MINI1_ini_gets(INI_SECTION_NAME, "Gateway", "192.168.1.1", (char*)buf, sizeof(buf), INI_FILE_NAME);
+  CLS1_SendStr((unsigned char*)"Gateway: ", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr(buf, CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
+  if (val!=0) {
+    p = &buf[0];
+    res = UTIL1_ScanSeparatedNumbers(&p, &W5100_config.gateway[0], sizeof(W5100_config.gateway), '.', UTIL1_SEP_NUM_TYPE_UINT8);
+    if (res!=ERR_OK) {
+      CLS1_SendStr((unsigned char*)"Gateway FAILED!\r\n", CLS1_GetStdio()->stdOut);
+    }
+  }
+#endif
+}
+
 #endif /* PL_HAS_LED_FRAME */

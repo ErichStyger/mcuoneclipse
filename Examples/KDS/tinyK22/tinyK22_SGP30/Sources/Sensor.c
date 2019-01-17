@@ -145,7 +145,7 @@ static void GetAccel(void) {
 #endif
 
 static void SensorTask(void *pv) {
-#if PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561
+#if PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561 || PL_CONFIG_HAS_RTC_DS3231
   uint8_t res;
 #endif
   uint32_t cntr100ms = 0;

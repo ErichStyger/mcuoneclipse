@@ -106,11 +106,17 @@ uint8_t NEOA_GetBrightness(void) {
 }
 
 bool NEOA_GetIsAutoBrightness(void) {
+#if PL_CONFIG_HAS_TSL2561
   return NEOA_isAutoBrightness;
+#else
+  return FALSE;
+#endif
 }
 
 bool NEOA_SetIsAutoBrightness(bool on) {
+#if PL_CONFIG_HAS_TSL2561
   NEOA_isAutoBrightness = on;
+#endif
 }
 
 uint32_t NEOA_GammaBrightnessColor(uint32_t color) {
@@ -179,7 +185,7 @@ static void NeoTask(void* pvParameters) {
 
   (void)pvParameters; /* parameter not used */
   vTaskDelay(pdMS_TO_TICKS(500)); /* give other tasks time to startup */
-  NEOA_SetFixedBrightness(5);
+  NEOA_SetFixedBrightness(50);
   NEOA_SetIsAutoBrightness(TRUE);
 #if PL_CONFIG_HAS_TSL2561
   new_light_level = NEOA_GetBrightness();
@@ -366,14 +372,16 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t res;
 
   CLS1_SendStatusStr((unsigned char*)"neoa", (unsigned char*)"\r\n", io->stdOut);
-#if PL_CONFIG_HAS_TSL2561
   UTIL1_strcpy(buf, sizeof(buf), "fix: ");
   UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_GetFixedBrightness());
+#if PL_CONFIG_HAS_TSL2561
   UTIL1_strcat(buf, sizeof(buf), NEOA_GetIsAutoBrightness() ? " (auto on: ": " (auto off: ");
   UTIL1_strcatNum8u(buf, sizeof(buf), NEOA_BrightnessAuto);
-  UTIL1_strcat(buf, sizeof(buf), ")\r\n");
-  CLS1_SendStatusStr("  brightness", buf, io->stdOut);
+  UTIL1_strcat(buf, sizeof(buf), ")");
 #endif
+  UTIL1_strcat(buf, sizeof(buf), "\r\n");
+  CLS1_SendStatusStr("  brightness", buf, io->stdOut);
+
   UTIL1_strcpy(buf, sizeof(buf), NEOA_GetUseGammaCorrection() ? "on\r\n": "off\r\n");
   CLS1_SendStatusStr("  gamma", buf, io->stdOut);
 
@@ -467,6 +475,7 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
     NEOA_SetIsAutoBrightness(FALSE);
     *handled = TRUE;
     res = ERR_OK;
+#endif
   } else if (UTIL1_strncmp((char*)cmd, "neoa brightness ", sizeof("neoa brightness ")-1)==0) {
     int32_t level;
 
@@ -481,7 +490,6 @@ uint8_t NEOA_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
       NEOA_SetFixedBrightness(level);
     }
     *handled = TRUE;
-#endif
   }
   return res;
 }

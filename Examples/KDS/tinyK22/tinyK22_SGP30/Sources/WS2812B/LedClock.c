@@ -17,28 +17,6 @@
 
 static xTaskHandle ClockTaskHandle; /* task handle */
 
-#if 0
-static void ClockUpdate(void) {
-  static int prevHour=-1, prevMinute=-1, prevSecond=1;
-  TIMEREC time;
-  uint8_t res;
-
-  res = TmDt1_GetTime(&time);
-  if (res==ERR_OK) {
-    if (time.Hour!=prevHour || time.Min!=prevMinute || time.Sec!=prevSecond) {
-#if PL_HAS_LED_FRAME_CLOCK
-      NEOA_RequestNeoMutex();
-      LEDFRAME_ShowClockTime(&time);
-      NEOA_ReleaseNeoMutex();
-#endif
-      prevHour = time.Hour;
-      prevMinute = time.Min;
-      prevSecond = time.Sec;
-    }
-  }
-}
-#endif
-
 static void SetDisplayOrientation(ORI_Orientation_e orientation) {
   switch(orientation) {
     case ORI_ORIENTATION_X_UP:
@@ -65,18 +43,25 @@ static void SetDisplayOrientation(ORI_Orientation_e orientation) {
 }
 
 static void ClockTask(void* pvParameters) {
+#if PL_CONFIG_HAS_MMA8451
   ORI_Orientation_e oldOrientation, newOrientation;
+#endif
 
   (void)pvParameters; /* parameter not used */
+#if PL_CONFIG_HAS_MMA8451
   oldOrientation = ORI_GetCurrentOrientation();
   SetDisplayOrientation(oldOrientation);
+#endif
+  LEDFRAME_LoadIniDefaults();
   for(;;) {
+#if PL_CONFIG_HAS_MMA8451
     /* check orientation */
     newOrientation = ORI_GetCurrentOrientation();
     if (newOrientation!=oldOrientation) {
       oldOrientation = newOrientation;
       SetDisplayOrientation(newOrientation);
     }
+#endif
     /* update clock */
     NEOA_RequestNeoMutex();
     if (LEDFRAME_CheckAndUpdateClock()==ERR_OK) {
