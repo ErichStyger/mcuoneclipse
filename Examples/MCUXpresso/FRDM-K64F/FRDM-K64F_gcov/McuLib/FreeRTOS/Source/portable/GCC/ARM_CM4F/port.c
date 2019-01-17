@@ -846,6 +846,12 @@ BaseType_t xPortStartScheduler(void) {
 #if INCLUDE_vTaskEndScheduler
     if(setjmp(xJumpBuf) != 0 ) {
       /* here we will get in case of call to vTaskEndScheduler() */
+      __asm volatile(
+        " movs r0, #1         \n" /* Switch back to the MSP stack. */
+        " msr CONTROL, r0     \n"
+      );
+      __asm volatile("dsb");
+      __asm volatile("isb");
       return pdFALSE;
     }
 #endif
@@ -1095,7 +1101,8 @@ void vPortStartFirstTask(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   __asm volatile (
-#if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
+#if 0
+  #if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
     " mov r0, #0xE0000000  \n" /* build the constant 0xE000ED08. First load the upper 16 bits */
     " mov r1, #0xED00      \n" /* next load part of the lower 16 bit */
     " orr r0, r1           \n" /* and or it into R0. Now we have 0xE000ED00 in R0 */
@@ -1107,6 +1114,7 @@ void vPortStartFirstTask(void) {
     " ldr r0, [r0]        \n" /* load address of vector table */
     " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
+#endif
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"

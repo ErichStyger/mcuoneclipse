@@ -40,8 +40,20 @@
 
 /* TODO: insert other include files here. */
 #include "gcov_support.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /* TODO: insert other definitions and declarations here. */
+
+static void AppTask(void *pv) {
+  (void)pv;
+  for(;;) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskEndScheduler();
+  }
+}
+
+
 static int Value(int i) {
   if (i==3) {
     return 5;
@@ -52,7 +64,7 @@ static int Value(int i) {
 static void Test2(int *p) {
   if (*p!=0) {
     if (Value(*p)==5) {
-      printf("value is 5\n");
+     // printf("value is 5\n");
       *p = 0;
     }
   }
@@ -61,9 +73,9 @@ static void Test2(int *p) {
 static void TestCoverage(int i) {
   Test2(&i);
   if (i==0) {
-    printf("i is zero!\n");
+    //printf("i is zero!\n");
   } else {
-    printf("i is not zero!\n");
+    //printf("i is not zero!\n");
   }
 }
 /*
@@ -84,10 +96,14 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
   	/* Init FSL debug console. */
-	BOARD_InitDebugConsole();
+	  BOARD_InitDebugConsole();
 
     printf("Hello World\n");
 
+    if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
+      for(;;) {}
+    }
+    vTaskStartScheduler();
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
