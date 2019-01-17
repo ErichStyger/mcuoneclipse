@@ -11,7 +11,7 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define LEDpin1_CONFIG_PORT_NAME       GPIO1
   #else /* name from properties */
-    #define LEDpin1_CONFIG_PORT_NAME       PORTA
+    #define LEDpin1_CONFIG_PORT_NAME       PORTB
   #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif

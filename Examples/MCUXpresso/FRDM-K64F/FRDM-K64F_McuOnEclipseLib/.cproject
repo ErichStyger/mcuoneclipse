@@ -87,16 +87,16 @@
 									<listOptionValue builtIn="false" value="../"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../startup"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/config"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/config/fonts"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/src"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/SEGGER_RTT"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/SEGGER_Sysview"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/TraceRecorder/config"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/TraceRecorder/include"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipseLib/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/config"/>
+									<listOptionValue builtIn="false" value="../McuLib/config/fonts"/>
+									<listOptionValue builtIn="false" value="../McuLib/src"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
+									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.998122160" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1953506004" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
@@ -265,8 +265,12 @@
 							<tool id="com.crt.advproject.tool.debug.debug.391592501" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1073930256.1494797238" name="FreeRTOShooks.c" rcbsApplicability="disable" resourcePath="McuLib/FreeRTOS/FreeRTOShooks.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.634632384.247640890">
+						<tool id="com.crt.advproject.gcc.exe.debug.634632384.247640890" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.634632384"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
+						<entry excluding="FreeRTOS/FreeRTOShooks.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry excluding="FreeRTOS/FreeRTOShooks.c|src/McuUSB.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuGenericSWSPI.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>

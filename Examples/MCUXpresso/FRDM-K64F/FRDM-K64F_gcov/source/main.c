@@ -110,7 +110,7 @@ int main(void) {
     /* Enter an infinite loop, just incrementing a counter. */
     TestCoverage(3);
 #if GCOV_DO_COVERAGE
-    gcov_write(); /* write coverage files */
+    gcov_write(); /* write coverage files, might take a while depending how many files are covered */
 #endif
     while(1) {
         i++ ;

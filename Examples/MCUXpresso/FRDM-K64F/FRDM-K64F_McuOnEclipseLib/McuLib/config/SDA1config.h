@@ -11,7 +11,7 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define SDA1_CONFIG_PORT_NAME       GPIO1
   #else /* name from properties */
-    #define SDA1_CONFIG_PORT_NAME       PORTA
+    #define SDA1_CONFIG_PORT_NAME       PORTE
   #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
@@ -20,13 +20,13 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define SDA1_CONFIG_GPIO_NAME       GPIO1
   #else /* name from properties */
-    #define SDA1_CONFIG_GPIO_NAME       GPIOA
+    #define SDA1_CONFIG_GPIO_NAME       GPIOE
   #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef SDA1_CONFIG_PIN_NUMBER
-  #define SDA1_CONFIG_PIN_NUMBER      0u
+  #define SDA1_CONFIG_PIN_NUMBER      25u
     /*!< number of pin, type unsigned integer */
 #endif
 

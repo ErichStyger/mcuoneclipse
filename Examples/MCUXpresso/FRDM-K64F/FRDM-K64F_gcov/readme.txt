@@ -16,6 +16,8 @@ additionally, redlib seems not to implement the needed coverage routines (would 
 
 Which gcov implementation is used is configured in gcov_support.h
 
+Note that with FreeRTOS you should end the scheduler first with INCLUDE_vTaskEndScheduler before writing the coverage data.
+
 See:
 - https://mcuoneclipse.com/2017/06/18/adding-gnu-coverage-tools-to-eclipse/
 - https://mcuoneclipse.com/2017/06/19/gnu-code-coverage-on-embedded-target-with-eclipse-neon-and-arm-gcc-5/

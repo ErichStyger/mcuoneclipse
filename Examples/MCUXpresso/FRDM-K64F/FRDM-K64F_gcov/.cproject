@@ -315,18 +315,6 @@
 							<tool id="com.crt.advproject.tool.debug.debug.297836081" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.429593313.291172226" name="main.c" rcbsApplicability="disable" resourcePath="source/main.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.954122534.154370493">
-						<tool id="com.crt.advproject.gcc.exe.debug.954122534.154370493" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
-							<option id="gnu.c.compiler.option.misc.other.170191610" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections --coverage" valueType="string"/>
-							<inputType id="com.crt.advproject.compiler.input.542497277" superClass="com.crt.advproject.compiler.input"/>
-						</tool>
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1962590677" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1748229824" name="Resource Custom Build Step Input Type">
-								<additionalInput kind="additionalinputdependency" paths=""/>
-							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.544838457" name="Resource Custom Build Step Output Type"/>
-						</tool>
-					</fileInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.429593313.970605064" name="/" resourcePath="drivers">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.2014221950" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
@@ -346,9 +334,10 @@
 					</folderInfo>
 					<folderInfo id="com.crt.advproject.config.exe.debug.429593313.1609021871" name="/" resourcePath="device">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.1407391131" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
 							<tool id="com.crt.advproject.cpp.exe.debug.1246766529" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.443183737"/>
 							<tool id="com.crt.advproject.gcc.exe.debug.1625360348" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
-								<option id="gnu.c.compiler.option.misc.other.862869633" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections  --coverage" valueType="string"/>
+								<option id="gnu.c.compiler.option.misc.other.862869633" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections  --coverage" valueType="string"/>
 								<inputType id="com.crt.advproject.compiler.input.326556796" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.debug.388294196" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1864451332">
@@ -361,13 +350,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="device"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="drivers"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/McuUSB.c|src/McuSDCard.c|src/McuSharpMemoryDisplay.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="gcov"/>
 						<entry excluding="old" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
