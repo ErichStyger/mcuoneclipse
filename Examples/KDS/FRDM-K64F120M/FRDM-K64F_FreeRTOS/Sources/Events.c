@@ -98,8 +98,7 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 */
 void FRTOS1_vApplicationTickHook(void)
 {
-  /* Called for every RTOS tick. */
-  /* Write your code here ... */
+   /* Write your code here ... */
 }
 
 /*
@@ -118,7 +117,7 @@ void FRTOS1_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
-  /* Write your code here ... */
+   /* Called for every RTOS tick. */
 }
 
 /*

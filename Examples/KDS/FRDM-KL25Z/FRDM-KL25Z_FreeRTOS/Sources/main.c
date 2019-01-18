@@ -63,7 +63,7 @@ static void Task1(void *pvParameters) {
   for(;;) {
     LEDG_Neg();
     vTaskDelay(pdMS_TO_TICKS(100));
-    //vTaskEndScheduler();
+    vTaskEndScheduler();
   }
 }
 #else
@@ -78,11 +78,6 @@ void main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-  uint8_t buf[16];
-
-  UTIL1_NumFloatToStr(buf, sizeof(buf), -1.00072527, 3);
-  UTIL1_NumFloatToStr(buf, sizeof(buf), -0.00072527, 3);
-  UTIL1_NumFloatToStr(buf, sizeof(buf), -0.00172527, 3);
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
@@ -102,6 +97,23 @@ void main(void)
   vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below too */
   /* only get here after calling vTaskEndScheduler() */
   LEDG_Off();
+#if 1
+  FRTOS1_Init();
+  if (xTaskCreate(
+        Task1,  /* pointer to the task */
+        "Task1", /* task name for kernel awareness debugging */
+        configMINIMAL_STACK_SIZE, /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY+1,  /* initial priority */
+        (xTaskHandle*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+    /*lint -e527 */
+    for(;;){}; /* error! probably out of memory */
+    /*lint +e527 */
+  }
+  vTaskStartScheduler(); /* this is done with PEX_RTOS_START() below too */
+#endif
+
   for(;;) {
     LEDR_Neg();
     WAIT1_Waitms(100);

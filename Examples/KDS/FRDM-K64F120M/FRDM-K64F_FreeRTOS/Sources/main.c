@@ -73,9 +73,6 @@ static HeapRegion_t xHeapRegions[] =
   {NULL, 0}  /* Terminates the array. */
 };
 #endif
-#if USE_HEAP_INDICATOR
-  const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
-#endif
 
 static SemaphoreHandle_t sem = NULL;
 static xQueueHandle queue = NULL;
@@ -99,16 +96,10 @@ static void MainTask(void *param) {
     LED1_Neg();
     xQueueSendToBack(queue, &cntr, pdMS_TO_TICKS(100));
     vTaskDelay(pdMS_TO_TICKS(500));
-    vTaskEndScheduler();
+    if (cntr==10) {
+      vTaskEndScheduler();
+    }
   }
-}
-
-int Test2(int a, int b) {
-  return a+b;
-}
-
-void Test(int a) {
-  a = Test2(a, 5);
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
@@ -117,6 +108,7 @@ int main(void)
 {
   /* Write your local variable definition here */
   unsigned int checkers[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+  int *p;
 
 #if configUSE_HEAP_SCHEME == 5
   vPortDefineHeapRegions(xHeapRegions);
@@ -125,7 +117,6 @@ int main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
   sem = xSemaphoreCreateBinary();
   if (sem==NULL) { /* semaphore creation failed */
     for(;;){} /* error */
@@ -161,13 +152,10 @@ int main(void)
     /*lint +e527 */
   }
   vTaskStartScheduler();
-  Test(checkers[0]);
-  for(;;) {}
-#if USE_HEAP_INDICATOR
-  if (freeRTOSMemoryScheme==0) { /* reference the variable */
-    for(;;);
-  }
-#endif
+
+  FRTOS1_Init(); /* re-init things, e.g. FreeRTOS trace */
+  vTaskStartScheduler();
+
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START

@@ -15,4 +15,4 @@ ECHO Extending PATH
 SET PATH=%PATH%;%TOOLCHAIN_PATH%
 
 ECHO Launching Eclipse IDE
-"%IDE%"
+"%IDE%" -showlocation
