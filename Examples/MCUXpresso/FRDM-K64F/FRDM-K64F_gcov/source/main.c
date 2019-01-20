@@ -46,13 +46,16 @@
 /* TODO: insert other definitions and declarations here. */
 
 static void AppTask(void *pv) {
+  int cntr = 0;
   (void)pv;
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(100));
-    vTaskEndScheduler();
+    cntr++;
+    if (cntr>20) {
+      vTaskEndScheduler();
+    }
   }
 }
-
 
 static int Value(int i) {
   if (i==3) {
@@ -64,7 +67,7 @@ static int Value(int i) {
 static void Test2(int *p) {
   if (*p!=0) {
     if (Value(*p)==5) {
-     // printf("value is 5\n");
+      printf("value is 5\n");
       *p = 0;
     }
   }
@@ -73,9 +76,9 @@ static void Test2(int *p) {
 static void TestCoverage(int i) {
   Test2(&i);
   if (i==0) {
-    //printf("i is zero!\n");
+    printf("i is zero!\n");
   } else {
-    //printf("i is not zero!\n");
+    printf("i is not zero!\n");
   }
 }
 /*
@@ -98,22 +101,18 @@ int main(void) {
   	/* Init FSL debug console. */
 	  BOARD_InitDebugConsole();
 
-    printf("Hello World\n");
-
+    TestCoverage(3); /* quick coverage test */
     if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
     }
     vTaskStartScheduler();
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    TestCoverage(3);
+    /* here we have ended the scheduler so we can write the coverage data */
 #if GCOV_DO_COVERAGE
     gcov_write(); /* write coverage files, might take a while depending how many files are covered */
 #endif
-    while(1) {
-        i++ ;
+    for(;;) { /* do not leave main */
+      __asm("nop");
     }
     return 0 ;
 }

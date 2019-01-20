@@ -21,4 +21,4 @@ Note that with FreeRTOS you should end the scheduler first with INCLUDE_vTaskEnd
 See:
 - https://mcuoneclipse.com/2017/06/18/adding-gnu-coverage-tools-to-eclipse/
 - https://mcuoneclipse.com/2017/06/19/gnu-code-coverage-on-embedded-target-with-eclipse-neon-and-arm-gcc-5/
-
+- https://mcuoneclipse.com/2019/01/20/freertos-how-to-end-and-restart-the-scheduler/
