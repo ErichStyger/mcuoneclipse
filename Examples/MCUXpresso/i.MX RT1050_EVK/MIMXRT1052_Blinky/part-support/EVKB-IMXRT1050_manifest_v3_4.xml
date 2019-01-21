@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.4" api_version="2.0.0" configuration="2669479ae3e1b959225b85322b94f770" id="SDK_2.x_EVKB-IMXRT1050" name="EVKB-IMXRT1050" brief="This is SDK version 2.5.0 manifest file. It describes the content of the EVKB-IMXRT1050 and additional settings for tools that support SDK version 2.5.0">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <ksdk id="MCUXpresso250" name="MCUXpresso250" version="2.5.0"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="10.3.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="10.3.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MIMXRT1052DVL6B" id="evkbimxrt1050" name="EVKB-IMXRT1050" href="https://www.nxp.com/mimxrt1050-evk" version="1.0.0">
+            <description>IMXRT1050-EVKB: EVK Development Platform for i.MX MIMXRT1052 and MIMXRT1051 MCUs</description>
+            <image path="docs/images" type="image">
+                <files mask="EVKB-IMXRT1050.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The NXP IMXRT1050-EVKB is a development board for the i.MX MIMXRT1052 and MIMXRT1051 600 MHz 32-bit ARM® Cortex®-M7 MCUs.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <memory>
+                <memoryBlock addr="60000000" size="04000000" type="ExtFlash" access="RO" id="BOARD_FLASH_evkbimxrt1050" name="BOARD_FLASH"/>
+                <memoryBlock addr="80000000" size="02000000" type="RAM" access="RW" id="BOARD_SDRAM_evkbimxrt1050" name="BOARD_SDRAM"/>
+            </memory>
+            <total_memory flash_size_kb="0" ram_size_kb="32768"/>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <drivers>
+                        <driver id_refs="BOARD_FLASH_evkbimxrt1050">
+                            <driverBinary path="devices/MIMXRT1052/mcuxpresso" type="binary">
+<files mask="MIMXRT1050-EVK_S26KS512S.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+        </board>
+        <board package="MIMXRT1052DVL6B" type="kit" id="evkbimxrt1050_agm01" name="EVKB-IMXRT1050-AGM01" href="http://www.nxp.com/FRDM-STBC-AGM01" version="1.0.0">
+            <description>/nSensor Toolbox Development Platform for FXAS21002C and FXOS8700C 9-Axis Solution/n        </description>
+            <image path="docs/images" type="image">
+                <files mask="EVKB-IMXRT1050-AGM01.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+EVKB-MIMXRT1050 with FRDM-STBC-AGM01 Custom Kit (FRDM-STBC-AGM01 Sensor Shield Development Board with EVKB-MIMXRT1050 Board):
+&lt;ul&gt;
+&lt;li&gt; FRDM-STBC-AGM01 Sensor Shield board is a sensor expansion board enabling NXP’s 9-axis solution (FXAS21002C 3-Axis Gyroscope with FXOS8700CQ 3-Axis Accelerometer + 3-Axis Magnetometer).&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MIMXRT1052DVL6B" type="kit" id="evkbimxrt1050_om13588" name="EVKB-IMXRT1050-OM13588" href="http://www.nxp.com/products/interfaces/usb-interfaces/usb-type-c-shield-board-for-kinetis-freedom-board:OM13588" version="1.0.0">
+            <description>/nUSB Type-C Shield Board for Kinetis Freedom Board/n        </description>
+            <image path="docs/images" type="image">
+                <files mask="EVKB-IMXRT1050-OM13588.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">/nThe USB Type-C shield board combined with a Kinetis Power Delivery SDK allows a system designer to tether a USB Type-C connector to any Kinetis development platform./n        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MIMXRT1052DVL6B" type="kit" id="evkbimxrt1050_om13790host" name="EVKB-IMXRT1050-OM13790HOST" href="http://www.nxp.com/products/interfaces/usb-interfaces/usb-type-c-shield-board-for-kinetis-freedom-board:OM13790HOST" version="1.0.0">
+            <description>/nUSB Type-C Shield Board for Kinetis Freedom Board/n        </description>
+            <image path="docs/images" type="image">
+                <files mask="EVKB-IMXRT1050-OM13790HOST.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">/nThe USB Type-C shield board combined with a Kinetis Power Delivery SDK allows a system designer to tether a USB Type-C connector to any Kinetis development platform./n        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device id="MIMXRT1052xxxxB" name="MIMXRT1052" full_name="MIMXRT1052xxxxB" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>MIMXRT1052: i.MX® MIMXRT1052 600MHz, 512KB SRAM Microcontrollers (MCUs) based on ARM® Cortex®-M7 Core</description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="vendor.device.type" value="i.MX"/>
+                <metadata key="vendor.device.family" value="MIMXRT1050"/>
+                <metadata key="compatible_device.segger" value="MCIMXRT1052"/>
+                <metadata key="compatible_device.pemicro" value="IMXRT1052"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The MIMXRT1052 are ARM Cortex-M7 based microcontrollers for embedded applications.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <core fpu="true" type="cm7" id="core0_MIMXRT1052xxxxB" name="core0"/>
+            <memory>
+                <memoryBlock addr="20000000" size="00020000" type="RAM" access="RW" id="SRAM_DTC_MIMXRT1052xxxxB" name="SRAM_DTC"/>
+                <memoryBlock addr="00000000" size="00020000" type="RAM" access="RW" id="SRAM_ITC_MIMXRT1052xxxxB" name="SRAM_ITC"/>
+                <memoryBlock addr="20200000" size="00040000" type="RAM" access="RW" id="SRAM_OC_MIMXRT1052xxxxB" name="SRAM_OC"/>
+            </memory>
+            <total_memory flash_size_kb="0" ram_size_kb="256"/>
+            <package id="MIMXRT1052CVL5B" name="MIMXRT1052CVL5B"/>
+            <package id="MIMXRT1052CVJ5B" name="MIMXRT1052CVJ5B"/>
+            <package id="MIMXRT1052DVL6B" name="MIMXRT1052DVL6B"/>
+            <package id="MIMXRT1052DVJ6B" name="MIMXRT1052DVJ6B"/>
+            <evaluation_boards>
+                <evaluation_board name="evkbimxrt1050"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="--no-packed" id="misc.options.MIMXRT1052xxxxB" name="misc.options"/>
+                    </params>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MIMXRT1052xxxxB" id="platform.devices.evkbimxrt1050_flash.MIMXRT1052" name="evkbimxrt1050_flash" version="1.0.0">
+            <source path="devices/MIMXRT1052/mcuxpresso" target_path="src" type="binary" toolchain="mcuxpresso">
+                <files mask="MIMXRT1050-EVK_S26KS512S.cfx"/>
+                <files mask="MIMXRT1050-EVK_IS25WP064A.cfx"/>
+            </source>
+        </component>
+        <component user_visible="true" type="debugger" devices="MIMXRT1052xxxxB" id="device.MIMXRT1052_debugger.MIMXRT1052" name="MIMXRT1052_debugger" version="1.0.0">
+            <source path="devices/MIMXRT1052" target_path="src" type="xml">
+                <files mask="MIMXRT1052.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
