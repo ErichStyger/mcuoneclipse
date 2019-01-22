@@ -90,6 +90,7 @@
 									<listOptionValue builtIn="false" value="../McuLib/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/config/fonts"/>
 									<listOptionValue builtIn="false" value="../McuLib/src"/>
+									<listOptionValue builtIn="false" value="../McuLib/HD44780"/>
 									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
@@ -268,7 +269,7 @@
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="FreeRTOS/FreeRTOShooks.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
-						<entry excluding="FreeRTOS/FreeRTOShooks.c|src/McuUSB.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuOneWire.c|src/McuGenericSWSPI.c|src/McuDS18B20.c|src/McuFatFS.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
+						<entry excluding="src/McuGenericSWSPI.c|src/McuSharpMemoryDisplay.c|src/McuSDCard.c|src/McuQuadCounter.c|src/McuFatFS.c|FreeRTOS/FreeRTOShooks.c|src/McuDS18B20.c|src/McuUSB.c|src/McuOneWire.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipseLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
