@@ -5,6 +5,7 @@
  *      Author: Erich Styger
  */
 
+#include "Platform.h"
 #include "Application.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -26,6 +27,9 @@
 #include "McuCriticalSection.h"
 #include "McuXFormat.h"
 #include "McuTrigger.h"
+#if PL_CONFIG_HAS_HD44780
+  #include "McuHD44780.h"
+#endif
 
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS 100
@@ -65,7 +69,12 @@ void APP_Run(void) {
   McuLED_Init(); /* initializes as well the LED pin */
   McuGenericI2C_Init();
   McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
-  //McuSSD1306_Init(); /* requires display on the I2C bus! */
+#if PL_CONFIG_HAS_SSD1606
+  McuSSD1306_Init(); /* requires display on the I2C bus! */
+#endif
+#if PL_CONFIG_HAS_HD44780
+  McuHD44780_Init();
+#endif
   McuTimeDate_Init();
 
   if (xTaskCreate(
