@@ -11,7 +11,7 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define LEDpin1_CONFIG_PORT_NAME       GPIO1
   #else /* name from properties */
-    #define LEDpin1_CONFIG_PORT_NAME       PORTB
+    #define LEDpin1_CONFIG_PORT_NAME       PORTA
   #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
@@ -20,18 +20,18 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define LEDpin1_CONFIG_GPIO_NAME       GPIO1
   #else /* name from properties */
-    #define LEDpin1_CONFIG_GPIO_NAME       GPIOB
+    #define LEDpin1_CONFIG_GPIO_NAME       GPIOA
   #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef LEDpin1_CONFIG_PIN_NUMBER
-  #define LEDpin1_CONFIG_PIN_NUMBER      22u
+  #define LEDpin1_CONFIG_PIN_NUMBER      19u
     /*!< number of pin, type unsigned integer */
 #endif
 
 #ifndef LEDpin1_CONFIG_PIN_SYMBOL
-  #define LEDpin1_CONFIG_PIN_SYMBOL      LED_RED
+  #define LEDpin1_CONFIG_PIN_SYMBOL      LED_GREEN
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 

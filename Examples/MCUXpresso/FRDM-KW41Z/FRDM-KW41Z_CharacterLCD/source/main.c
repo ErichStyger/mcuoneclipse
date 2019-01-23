@@ -40,7 +40,7 @@
 #include "MKW41Z4.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-
+#include "Application.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -55,6 +55,8 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
+    APP_Run();
+#if 0
     PRINTF("Hello World\n");
 
     /* Force the counter to be placed into memory. */
@@ -64,4 +66,5 @@ int main(void) {
         i++ ;
     }
     return 0 ;
+#endif
 }
