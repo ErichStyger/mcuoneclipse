@@ -133,7 +133,8 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 */
 void KEY1_OnKeyPressedLong(uint8_t keys)
 {
-  /* Write your code here ... */
+  (void)keys;
+	/* Write your code here ... */
 }
 
 /*

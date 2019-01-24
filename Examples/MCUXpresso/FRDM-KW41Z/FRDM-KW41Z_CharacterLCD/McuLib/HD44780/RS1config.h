@@ -11,7 +11,7 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define RS1_CONFIG_PORT_NAME       GPIO1
   #else /* name from properties */
-    #define RS1_CONFIG_PORT_NAME       PORTA
+    #define RS1_CONFIG_PORT_NAME       PORTC
   #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
@@ -20,18 +20,18 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define RS1_CONFIG_GPIO_NAME       GPIO1
   #else /* name from properties */
-    #define RS1_CONFIG_GPIO_NAME       GPIOA
+    #define RS1_CONFIG_GPIO_NAME       GPIOC
   #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef RS1_CONFIG_PIN_NUMBER
-  #define RS1_CONFIG_PIN_NUMBER      0u
+  #define RS1_CONFIG_PIN_NUMBER      5u
     /*!< number of pin, type unsigned integer */
 #endif
 
 #ifndef RS1_CONFIG_PIN_SYMBOL
-  #define RS1_CONFIG_PIN_SYMBOL      LED_RED
+  #define RS1_CONFIG_PIN_SYMBOL      HD44780_RS
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 

@@ -157,7 +157,8 @@ void HardFault_Handler(void)
 void McuHardFault_HardFaultHandler(void)
 #endif
 {
-  __asm volatile (".syntax unified\n"
+  __asm volatile (
+      ".syntax unified\n"
     " movs r0,#4                  \n"  /* load bit mask into R0 */
     " mov r1, lr                  \n"  /* load link register into R1 */
     " tst r0, r1                  \n"  /* compare with bitmask */

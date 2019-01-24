@@ -54,6 +54,7 @@
 #include "CS1.h"
 #include "SYS1.h"
 #include "KIN1.h"
+#include "HF1.h"
 
 #ifdef __cplusplus
 extern "C" {

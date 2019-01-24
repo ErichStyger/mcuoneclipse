@@ -11,7 +11,7 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB71_CONFIG_PORT_NAME       GPIO1
   #else /* name from properties */
-    #define DB71_CONFIG_PORT_NAME       PORTA
+    #define DB71_CONFIG_PORT_NAME       PORTC
   #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
@@ -20,18 +20,18 @@
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB71_CONFIG_GPIO_NAME       GPIO1
   #else /* name from properties */
-    #define DB71_CONFIG_GPIO_NAME       GPIOA
+    #define DB71_CONFIG_GPIO_NAME       GPIOC
   #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef DB71_CONFIG_PIN_NUMBER
-  #define DB71_CONFIG_PIN_NUMBER      0u
+  #define DB71_CONFIG_PIN_NUMBER      19u
     /*!< number of pin, type unsigned integer */
 #endif
 
 #ifndef DB71_CONFIG_PIN_SYMBOL
-  #define DB71_CONFIG_PIN_SYMBOL      LED_RED
+  #define DB71_CONFIG_PIN_SYMBOL      HD44780_B7
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 

@@ -25,6 +25,7 @@
 #include "IO_Map.h"
 #include "WAIT1.h"
 #include "MCUC1.h"
+#include "HF1.h"
 #include "LCD1.h"
 #include "RW1.h"
 #include "BitIoLdd12.h"

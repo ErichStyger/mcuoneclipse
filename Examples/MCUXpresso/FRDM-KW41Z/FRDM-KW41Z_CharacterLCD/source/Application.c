@@ -73,7 +73,10 @@ void APP_Run(void) {
   McuSSD1306_Init(); /* requires display on the I2C bus! */
 #endif
 #if PL_CONFIG_HAS_HD44780
-//  McuHD44780_Init();
+  McuHD44780_Init();
+  McuHD44780_Clear();
+  McuHD44780_WriteLineStr(1, "LCD Line 1");
+  McuHD44780_WriteLineStr(2, "LCD Line 2");
 #endif
 //  McuTimeDate_Init();
 

@@ -16,6 +16,12 @@ pin_labels:
 - {pin_num: '7', pin_signal: TSI0_CH13/ADC0_SE5/PTA19/LLWU_P7/SPI1_PCS0/TPM2_CH1, label: LED_GREEN}
 - {pin_num: '6', pin_signal: TSI0_CH12/PTA18/LLWU_P6/SPI1_SCK/TPM2_CH0, label: LED_BLUE}
 - {pin_num: '37', pin_signal: PTC1/ANT_B/I2C0_SDA/UART0_RTS_b/TPM0_CH2/BLE_RF_ACTIVE, label: LED_RED}
+- {pin_num: '41', pin_signal: TSI0_CH1/PTC5/LLWU_P13/RF_NOT_ALLOWED/LPTMR0_ALT2/UART0_RTS_b/TPM1_CH1/BSM_CLK, label: HD44780_EN}
+- {pin_num: '23', pin_signal: DAC0_OUT/ADC0_SE4/CMP0_IN2/PTB18/I2C1_SCL/TPM_CLKIN0/TPM0_CH0/NMI_b, label: HD44780_RW}
+- {pin_num: '18', pin_signal: ADC0_SE3/CMP0_IN3/PTB2/RF_NOT_ALLOWED/DTM_TX/TPM1_CH0, label: HD4470_B4}
+- {pin_num: '19', pin_signal: ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT, label: HD4470_B5}
+- {pin_num: '45', pin_signal: TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3, label: HD4470_B6}
+- {pin_num: '48', pin_signal: TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE, label: HD4470_B6}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -46,6 +52,12 @@ BOARD_InitPins:
   - {pin_num: '7', peripheral: GPIOA, signal: 'GPIO, 19', pin_signal: TSI0_CH13/ADC0_SE5/PTA19/LLWU_P7/SPI1_PCS0/TPM2_CH1}
   - {pin_num: '6', peripheral: GPIOA, signal: 'GPIO, 18', pin_signal: TSI0_CH12/PTA18/LLWU_P6/SPI1_SCK/TPM2_CH0}
   - {pin_num: '37', peripheral: GPIOC, signal: 'GPIO, 1', pin_signal: PTC1/ANT_B/I2C0_SDA/UART0_RTS_b/TPM0_CH2/BLE_RF_ACTIVE}
+  - {pin_num: '41', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: TSI0_CH1/PTC5/LLWU_P13/RF_NOT_ALLOWED/LPTMR0_ALT2/UART0_RTS_b/TPM1_CH1/BSM_CLK}
+  - {pin_num: '23', peripheral: GPIOB, signal: 'GPIO, 18', pin_signal: DAC0_OUT/ADC0_SE4/CMP0_IN2/PTB18/I2C1_SCL/TPM_CLKIN0/TPM0_CH0/NMI_b}
+  - {pin_num: '18', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: ADC0_SE3/CMP0_IN3/PTB2/RF_NOT_ALLOWED/DTM_TX/TPM1_CH0}
+  - {pin_num: '19', peripheral: GPIOB, signal: 'GPIO, 3', pin_signal: ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT}
+  - {pin_num: '45', peripheral: GPIOC, signal: 'GPIO, 16', pin_signal: TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3}
+  - {pin_num: '48', peripheral: GPIOC, signal: 'GPIO, 19', pin_signal: TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -60,6 +72,8 @@ void BOARD_InitPins(void)
 {
     /* Port A Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
 
@@ -69,8 +83,26 @@ void BOARD_InitPins(void)
     /* PORTA19 (pin 7) is configured as PTA19 */
     PORT_SetPinMux(PORTA, 19U, kPORT_MuxAsGpio);
 
+    /* PORTB18 (pin 23) is configured as PTB18 */
+    PORT_SetPinMux(PORTB, 18U, kPORT_MuxAsGpio);
+
+    /* PORTB2 (pin 18) is configured as PTB2 */
+    PORT_SetPinMux(PORTB, 2U, kPORT_MuxAsGpio);
+
+    /* PORTB3 (pin 19) is configured as PTB3 */
+    PORT_SetPinMux(PORTB, 3U, kPORT_MuxAsGpio);
+
     /* PORTC1 (pin 37) is configured as PTC1 */
     PORT_SetPinMux(PORTC, 1U, kPORT_MuxAsGpio);
+
+    /* PORTC16 (pin 45) is configured as PTC16 */
+    PORT_SetPinMux(PORTC, 16U, kPORT_MuxAsGpio);
+
+    /* PORTC19 (pin 48) is configured as PTC19 */
+    PORT_SetPinMux(PORTC, 19U, kPORT_MuxAsGpio);
+
+    /* PORTC5 (pin 41) is configured as PTC5 */
+    PORT_SetPinMux(PORTC, 5U, kPORT_MuxAsGpio);
 
     /* PORTC6 (pin 42) is configured as UART0_RX */
     PORT_SetPinMux(PORTC, 6U, kPORT_MuxAlt4);
