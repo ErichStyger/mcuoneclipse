@@ -139,7 +139,7 @@ static uint8_t DisplayOnOffControlStatus;
 #define BusyFlag       0x80 /* BF Flag */
 
 /* support for custom soft characters in the display which can be used with McuHD44780_LoadSoftChar() */
-const uint8_t McuHD44780_SoftCharUE[8] = { /* ü */
+const uint8_t McuHD44780_SoftCharUE[8] = { /* ï¿½ */
   0x11, 0x00, 0x11, 0x11, 0x11, 0x13, 0x0d, 0
 /* X...X
    .....
@@ -150,7 +150,7 @@ const uint8_t McuHD44780_SoftCharUE[8] = { /* ü */
    .XX.X */
 };
 
-const uint8_t McuHD44780_SoftCharAE[8] = { /* ä */
+const uint8_t McuHD44780_SoftCharAE[8] = { /* ï¿½ */
   0x11, 0x00, 0x0E, 0x01, 0x0F, 0x11, 0x0F, 0
 /* X...X
    .....
@@ -161,7 +161,7 @@ const uint8_t McuHD44780_SoftCharAE[8] = { /* ä */
    .XXXX */
 };
 
-const uint8_t McuHD44780_SoftCharOE[8] = { /* ö */
+const uint8_t McuHD44780_SoftCharOE[8] = { /* ï¿½ */
   0x11, 0x00, 0x0E, 0x11, 0x11, 0x11, 0x0E, 0
 /* X...X
    .....
@@ -175,9 +175,9 @@ const uint8_t McuHD44780_SoftCharOE[8] = { /* ö */
 #if McuHD44780_CONFIG_USE_RW_SIGNAL
 /* macros for the RW pin */
 #define ClrRW() \
-        RWPin_ClrVal()                  /* RW=0: write mode */
+        RW1_ClrVal()                  /* RW=0: write mode */
 #define SetRW() \
-        RWPin_SetVal()                  /* RW=1: read mode */
+        RW1_SetVal()                  /* RW=1: read mode */
 #endif /* McuHD44780_CONFIG_USE_RW_SIGNAL */
 
 /* macros for the RS pin */
@@ -675,7 +675,7 @@ void McuHD44780_Init(void)
   E2Pin_Init();
   #endif
   #if McuHD44780_CONFIG_USE_RW_SIGNAL
-  RWPin_Init();
+  RW1_Init();
   #endif
 #endif
 
@@ -831,8 +831,8 @@ void McuHD44780_Init(void)
 **                           (0..7)
 **       * softChar        - Pointer to an array of 8 bytes
 **                           defining the soft character
-**                           Example of the soft character 'ü':
-**                           const byte SoftCharUE[8] = { // ü
+**                           Example of the soft character 'ï¿½':
+**                           const byte SoftCharUE[8] = { // ï¿½
 **                           0x11, 0x00, 0x11, 0x11, 0x11, 0x13, 0x0d, 0
 **                           //  X...X
 **                           //  .....

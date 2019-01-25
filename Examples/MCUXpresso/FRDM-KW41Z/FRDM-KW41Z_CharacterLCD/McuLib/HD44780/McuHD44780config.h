@@ -35,7 +35,7 @@
 #endif
 
 #ifndef McuHD44780_CONFIG_USE_DISPLAY_READ
-  #define McuHD44780_CONFIG_USE_DISPLAY_READ   (0)
+  #define McuHD44780_CONFIG_USE_DISPLAY_READ   (1)
   /*!< 1: Read from the display. Requires R/W signal. 0: do not read from he display */
 #endif
 
@@ -45,12 +45,12 @@
 #endif
 
 #ifndef McuHD44780_CONFIG_USE_RW_SIGNAL
-  #define McuHD44780_CONFIG_USE_RW_SIGNAL   (0 && McuHD44780_CONFIG_USE_DISPLAY_READ)
+  #define McuHD44780_CONFIG_USE_RW_SIGNAL   (1 && McuHD44780_CONFIG_USE_DISPLAY_READ)
   /*!< 1: Use RW signal to read/write from the display. 0: do not use RW signal */
 #endif
 
 #if McuHD44780_CONFIG_USE_RW_SIGNAL
-  #include "RW.h"
+  #include "RW1.h"
 #endif
 
 

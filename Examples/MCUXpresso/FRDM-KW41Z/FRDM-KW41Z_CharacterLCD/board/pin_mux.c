@@ -22,6 +22,7 @@ pin_labels:
 - {pin_num: '19', pin_signal: ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT, label: HD4470_B5}
 - {pin_num: '45', pin_signal: TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3, label: HD4470_B6}
 - {pin_num: '48', pin_signal: TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE, label: HD4470_B6}
+- {pin_num: '40', pin_signal: TSI0_CH0/PTC4/LLWU_P12/ANT_A/EXTRG_IN/UART0_CTS_b/TPM1_CH0/BSM_DATA, label: HD44780_RW}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -58,6 +59,7 @@ BOARD_InitPins:
   - {pin_num: '19', peripheral: GPIOB, signal: 'GPIO, 3', pin_signal: ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT}
   - {pin_num: '45', peripheral: GPIOC, signal: 'GPIO, 16', pin_signal: TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3}
   - {pin_num: '48', peripheral: GPIOC, signal: 'GPIO, 19', pin_signal: TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE}
+  - {pin_num: '40', peripheral: GPIOC, signal: 'GPIO, 4', pin_signal: TSI0_CH0/PTC4/LLWU_P12/ANT_A/EXTRG_IN/UART0_CTS_b/TPM1_CH0/BSM_DATA}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -100,6 +102,9 @@ void BOARD_InitPins(void)
 
     /* PORTC19 (pin 48) is configured as PTC19 */
     PORT_SetPinMux(PORTC, 19U, kPORT_MuxAsGpio);
+
+    /* PORTC4 (pin 40) is configured as PTC4 */
+    PORT_SetPinMux(PORTC, 4U, kPORT_MuxAsGpio);
 
     /* PORTC5 (pin 41) is configured as PTC5 */
     PORT_SetPinMux(PORTC, 5U, kPORT_MuxAsGpio);

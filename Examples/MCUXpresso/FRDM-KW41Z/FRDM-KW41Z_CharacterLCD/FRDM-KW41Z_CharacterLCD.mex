@@ -31,6 +31,7 @@
                <pin_label pin_num="19" pin_signal="ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT" label="HD4470_B5"/>
                <pin_label pin_num="45" pin_signal="TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3" label="HD4470_B6"/>
                <pin_label pin_num="48" pin_signal="TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE" label="HD4470_B6"/>
+               <pin_label pin_num="40" pin_signal="TSI0_CH0/PTC4/LLWU_P12/ANT_A/EXTRG_IN/UART0_CTS_b/TPM1_CH0/BSM_DATA" label="HD44780_RW"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -70,6 +71,7 @@
                   <pin peripheral="GPIOB" signal="GPIO, 3" pin_num="19" pin_signal="ADC0_SE2/CMP0_IN4/PTB3/CLKOUT/TPM1_CH1/RTC_CLKOUT"/>
                   <pin peripheral="GPIOC" signal="GPIO, 16" pin_num="45" pin_signal="TSI0_CH4/PTC16/LLWU_P0/SPI0_SCK/I2C0_SDA/UART0_RTS_b/TPM0_CH3"/>
                   <pin peripheral="GPIOC" signal="GPIO, 19" pin_num="48" pin_signal="TSI0_CH7/PTC19/LLWU_P3/SPI0_PCS0/I2C0_SCL/UART0_CTS_b/BSM_CLK/BLE_RF_ACTIVE"/>
+                  <pin peripheral="GPIOC" signal="GPIO, 4" pin_num="40" pin_signal="TSI0_CH0/PTC4/LLWU_P12/ANT_A/EXTRG_IN/UART0_CTS_b/TPM1_CH0/BSM_DATA"/>
                </pins>
             </function>
          </functions_list>
