@@ -49,9 +49,12 @@ void APP_Run(void) {
   //printf("hello world!\r\n"); /* uses semihosting */
   //*((int*)0x70000000) = 5; /* force a hard fault */
 
-#if 1 /* do NOT enter WAIT mode with WFI: */
+#if 0 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */
 #else /* default */
+  /* BE CARFUL: THIS MIGHT 'BRICK' YOUR DEVICE. See
+   *  https://mcuoneclipse.com/2019/01/02/regaining-debug-access-of-nxp-i-mx-rt1064-evk-executing-wfi/
+   */
   CLOCK_SetMode(kCLOCK_ModeWait); /* not: SysTick does not run! */
   /* need to route SysTick interrupt through GPC (General Power Controller) alternative interrupt controller */
   /* reference manual, page 1195ff, GPC Interrupt Controller (INTC) */
