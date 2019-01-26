@@ -6,7 +6,7 @@
 **     Component   : LCDHTA
 **     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-26, 08:28, # CodeGen: 413
+**     Date/Time   : 2019-01-26, 08:41, # CodeGen: 415
 **     Abstract    :
 **          This component implements a driver for multiple 2x16 character displays.
 **     Settings    :
@@ -91,10 +91,8 @@
 */         
 
 /* MODULE McuHD44780. */
-
 #include "McuHD44780.h"
 #include "McuWait.h"
-
 
 /* DEFINES for display commands.
    See
@@ -140,8 +138,7 @@
 #define RightShiftCursor   0x14
 #define LeftShiftCursor    0x10
 
-
-static uint8_t DisplayOnOffControlStatus;
+static uint8_t DisplayOnOffControlStatus = 0;
 
 #define BusyFlag       0x80 /* BF Flag */
 
@@ -331,7 +328,12 @@ static void EnablePulse(void)
 #else
   SetEN();
 #endif                                  /* set EN to 1 to create pulse */
+#if McuHD44780_CONFIG_LCD_TYPE==1
+  /* Diplaytech 162c: not clear why this is not according to the 500ns spec? */
+  Waitms(2);
+#else
   Waitns(Timing_PWeh_ns);
+#endif
 #if McuHD44780_CONFIG_USE_E2_SIGNAL
   if (McuHD44780_currDisplay==1) {
     ClrEN();                            /* set to 0 to finish pulse */

@@ -51,6 +51,9 @@ static void AppTask(void *param) {
 }
 
 void APP_Run(void) {
+  uint32_t cntr = 0;
+  unsigned char buf[17];
+
   /* initialize components */
 //  McuRTOS_Init();
   McuCriticalSection_Init();
@@ -73,17 +76,22 @@ void APP_Run(void) {
   McuSSD1306_Init(); /* requires display on the I2C bus! */
 #endif
 #if PL_CONFIG_HAS_HD44780
-  McuWait_Waitms(100); /* give hardware time to power up */
+  McuWait_Waitms(50); /* give hardware time to power up */
   McuHD44780_Init();
 #endif
 //  McuTimeDate_Init();
 
-
-  for(;;) {
 #if PL_CONFIG_HAS_HD44780
   McuHD44780_Clear();
-  McuHD44780_WriteLineStr(1, "LCD Line 1");
-  McuHD44780_WriteLineStr(2, "LCD Line 2");
+#endif
+  for(;;) {
+#if PL_CONFIG_HAS_HD44780
+  McuUtility_strcpy(buf,  sizeof(buf), (unsigned char*)"Line 1:");
+  McuUtility_strcatNum32uFormatted(buf, sizeof(buf), cntr, ' ', 9);
+  McuHD44780_WriteLineStr(1, (char*)buf);
+  McuUtility_Num32uToStr(buf, sizeof(buf), cntr);
+  McuHD44780_WriteLineStr(2, (char*)buf);
+  cntr++;
 #endif
     McuWait_Waitms(100);
     McuLED_Neg();

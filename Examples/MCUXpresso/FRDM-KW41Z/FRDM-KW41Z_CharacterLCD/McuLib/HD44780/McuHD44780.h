@@ -6,7 +6,7 @@
 **     Component   : LCDHTA
 **     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-25, 20:51, # CodeGen: 409
+**     Date/Time   : 2019-01-26, 08:41, # CodeGen: 415
 **     Abstract    :
 **          This component implements a driver for multiple 2x16 character displays.
 **     Settings    :
