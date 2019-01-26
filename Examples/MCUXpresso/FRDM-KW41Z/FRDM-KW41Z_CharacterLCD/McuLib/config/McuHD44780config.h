@@ -15,10 +15,10 @@
 #include "RS1.h" /* RS signal pin header file */
 #include "EN1.h" /* EN signal pin header file */
 #if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8 /* extra includes for 8bit data bus */
-  #include "DB0.h" /* DB0 signal pin header file */
-  #include "DB1.h" /* DB1 signal pin header file */
-  #include "DB2.h" /* DB2 signal pin header file */
-  #include "DB3.h" /* DB3 signal pin header file */
+  #include "DB01.h" /* DB0 signal pin header file */
+  #include "DB11.h" /* DB1 signal pin header file */
+  #include "DB21.h" /* DB2 signal pin header file */
+  #include "DB31.h" /* DB3 signal pin header file */
 #endif /* McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8 */
 #include "DB41.h" /* DB4 signal pin header file */
 #include "DB51.h" /* DB5 signal pin header file */

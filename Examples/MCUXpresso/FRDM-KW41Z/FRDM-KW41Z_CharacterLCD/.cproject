@@ -134,7 +134,7 @@
 							<tool id="com.crt.advproject.gas.exe.debug.1012422287" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug">
 								<option id="com.crt.advproject.gas.thumb.1758570974" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.59375045" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm0plus" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.1465298482" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false"/>
+								<option id="gnu.both.asm.option.flags.crt.1465298482" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__REDLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.971583205" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
@@ -280,18 +280,12 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.1314162943.1047369224" name="semihost_hardfault.c" rcbsApplicability="disable" resourcePath="source/semihost_hardfault.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.531722850.361707536">
-						<tool id="com.crt.advproject.gcc.exe.debug.531722850.361707536" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.531722850"/>
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.171414550" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1378114367" name="Resource Custom Build Step Input Type">
-								<additionalInput kind="additionalinputdependency" paths=""/>
-							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.177627076" name="Resource Custom Build Step Output Type"/>
-						</tool>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1314162943.48789501" name="McuHD44781_new.c" rcbsApplicability="disable" resourcePath="McuLib/HD44780/McuHD44781_new.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.531722850.1459789209">
+						<tool id="com.crt.advproject.gcc.exe.debug.531722850.1459789209" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.531722850"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="HD44780/McuHD44781_new.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
@@ -435,7 +429,7 @@
 							<tool id="com.crt.advproject.gas.exe.release.423397924" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.release">
 								<option id="com.crt.advproject.gas.thumb.2006984627" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.1864681082" name="Architecture" superClass="com.crt.advproject.gas.arch" value="com.crt.advproject.gas.target.cm0plus" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.424969208" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt"/>
+								<option id="gnu.both.asm.option.flags.crt.424969208" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__REDLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.137469330" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="../drivers"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
@@ -708,11 +702,19 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_FRDM-KW41Z</sdkName>
 		<sdkVersion>2.2.0</sdkVersion>
-		<sdkComponents>middleware.baremetal.MKW41Z4;platform.drivers.clock.MKW41Z4;platform.Include_common;platform.drivers.common.MKW41Z4;platform.drivers.lpuart.MKW41Z4;platform.utilities.debug_console.MKW41Z4;platform.drivers.flash.MKW41Z4;platform.drivers.gpio.MKW41Z4;platform.drivers.lptmr.MKW41Z4;platform.drivers.port.MKW41Z4;platform.drivers.smc.MKW41Z4;startup;CMSIS_Include;project_template.frdmkw41z.MKW41Z4;platform.devices.MKW41Z4_startup.MKW41Z4;platform.drivers.sim.MKW41Z4;</sdkComponents>
+		<sdkComponents>middleware.baremetal.MKW41Z4;platform.drivers.clock.MKW41Z4;platform.Include_common;platform.drivers.common.MKW41Z4;platform.drivers.lpuart.MKW41Z4;platform.utilities.debug_console.MKW41Z4;platform.drivers.flash.MKW41Z4;platform.drivers.gpio.MKW41Z4;platform.drivers.lptmr.MKW41Z4;platform.drivers.port.MKW41Z4;platform.drivers.smc.MKW41Z4;startup;CMSIS_Include;project_template.frdmkw41z.MKW41Z4;platform.devices.MKW41Z4_startup.MKW41Z4;</sdkComponents>
 		<boardId>frdmkw41z</boardId>
 		<package>MKW41Z512VHT4</package>
 		<core>cm0plus</core>
 		<coreId>core0_MKW41Z512xxx4</coreId>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-KW41Z_CharacterLCD"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-KW41Z_CharacterLCD"/>
+		</configuration>
+	</storageModule>
 </cproject>

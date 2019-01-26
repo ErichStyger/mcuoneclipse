@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LCDHTA
-**     Version     : Component 01.028, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-22, 09:52, # CodeGen: 399
+**     Date/Time   : 2019-01-25, 20:51, # CodeGen: 409
 **     Abstract    :
 **          This component implements a driver for multiple 2x16 character displays.
 **     Settings    :
@@ -21,14 +21,21 @@
 **              Line 3                                     : 0x10
 **              Line 4                                     : 0x50
 **            LCD Enable Signal                            : Disabled
-**            Read from Display                            : Disabled
+**            Read from Display                            : Enabled
+**              R/W signal                                 : SDK_BitIO
+**              Check Busy Flag                            : yes
 **            Wait (us)                                    : 0
 **            E signal                                     : SDK_BitIO
-**            E2                                           : Disabled
+**            E2                                           : Enabled
+**              E2 signal                                  : SDK_BitIO
 **            RS signal                                    : SDK_BitIO
 **            Data/Control Bus                             : 
-**              Data/Control Bus Width                     : 4bit
-**              DB0..DB3                                   : Disabled
+**              Data/Control Bus Width                     : 8bit
+**              DB0..DB3                                   : Enabled
+**                DB0                                      : SDK_BitIO
+**                DB1                                      : SDK_BitIO
+**                DB2                                      : SDK_BitIO
+**                DB3                                      : SDK_BitIO
 **              DB4..DB7                                   : Enabled
 **                DB4                                      : SDK_BitIO
 **                DB5                                      : SDK_BitIO

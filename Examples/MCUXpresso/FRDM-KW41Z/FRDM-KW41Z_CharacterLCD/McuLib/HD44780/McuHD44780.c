@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LCDHTA
-**     Version     : Component 01.028, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-22, 09:52, # CodeGen: 399
+**     Date/Time   : 2019-01-26, 08:28, # CodeGen: 413
 **     Abstract    :
 **          This component implements a driver for multiple 2x16 character displays.
 **     Settings    :
@@ -21,14 +21,21 @@
 **              Line 3                                     : 0x10
 **              Line 4                                     : 0x50
 **            LCD Enable Signal                            : Disabled
-**            Read from Display                            : Disabled
+**            Read from Display                            : Enabled
+**              R/W signal                                 : SDK_BitIO
+**              Check Busy Flag                            : yes
 **            Wait (us)                                    : 0
 **            E signal                                     : SDK_BitIO
-**            E2                                           : Disabled
+**            E2                                           : Enabled
+**              E2 signal                                  : SDK_BitIO
 **            RS signal                                    : SDK_BitIO
 **            Data/Control Bus                             : 
-**              Data/Control Bus Width                     : 4bit
-**              DB0..DB3                                   : Disabled
+**              Data/Control Bus Width                     : 8bit
+**              DB0..DB3                                   : Enabled
+**                DB0                                      : SDK_BitIO
+**                DB1                                      : SDK_BitIO
+**                DB2                                      : SDK_BitIO
+**                DB3                                      : SDK_BitIO
 **              DB4..DB7                                   : Enabled
 **                DB4                                      : SDK_BitIO
 **                DB5                                      : SDK_BitIO
@@ -139,7 +146,7 @@ static uint8_t DisplayOnOffControlStatus;
 #define BusyFlag       0x80 /* BF Flag */
 
 /* support for custom soft characters in the display which can be used with McuHD44780_LoadSoftChar() */
-const uint8_t McuHD44780_SoftCharUE[8] = { /* ï¿½ */
+const uint8_t McuHD44780_SoftCharUE[8] = { /* ü */
   0x11, 0x00, 0x11, 0x11, 0x11, 0x13, 0x0d, 0
 /* X...X
    .....
@@ -150,7 +157,7 @@ const uint8_t McuHD44780_SoftCharUE[8] = { /* ï¿½ */
    .XX.X */
 };
 
-const uint8_t McuHD44780_SoftCharAE[8] = { /* ï¿½ */
+const uint8_t McuHD44780_SoftCharAE[8] = { /* ä */
   0x11, 0x00, 0x0E, 0x01, 0x0F, 0x11, 0x0F, 0
 /* X...X
    .....
@@ -161,7 +168,7 @@ const uint8_t McuHD44780_SoftCharAE[8] = { /* ï¿½ */
    .XXXX */
 };
 
-const uint8_t McuHD44780_SoftCharOE[8] = { /* ï¿½ */
+const uint8_t McuHD44780_SoftCharOE[8] = { /* ö */
   0x11, 0x00, 0x0E, 0x11, 0x11, 0x11, 0x0E, 0
 /* X...X
    .....
@@ -175,9 +182,9 @@ const uint8_t McuHD44780_SoftCharOE[8] = { /* ï¿½ */
 #if McuHD44780_CONFIG_USE_RW_SIGNAL
 /* macros for the RW pin */
 #define ClrRW() \
-        RW1_ClrVal()                  /* RW=0: write mode */
+        RW1_ClrVal()                    /* RW=0: write mode */
 #define SetRW() \
-        RW1_SetVal()                  /* RW=1: read mode */
+        RW1_SetVal()                    /* RW=1: read mode */
 #endif /* McuHD44780_CONFIG_USE_RW_SIGNAL */
 
 /* macros for the RS pin */
@@ -195,23 +202,57 @@ const uint8_t McuHD44780_SoftCharOE[8] = { /* ï¿½ */
 #if McuHD44780_CONFIG_USE_E2_SIGNAL
   /* macros for the EN2 pin */
   #define ClrEN2() \
-        E2Pin_ClrVal()                  /* E2=0 */
+        EN2_ClrVal()                    /* E2=0 */
   #define SetEN2() \
-        E2Pin_SetVal()                  /* E2=1 */
+        EN2_SetVal()                    /* E2=1 */
   static uint8_t McuHD44780_currDisplay = 1; /* only for displays with E1 and E2: if set to 1, it will use E1, if set to 2 it will use E2 */
 #endif
 
 /* macros for the data bus */
-#define DataAsOutput() \
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8
+  #define DataAsOutput03() \
+        DB01_SetOutput();               /* set data port as output */ \
+        DB11_SetOutput();               /* set data port as output */ \
+        DB21_SetOutput();               /* set data port as output */ \
+        DB31_SetOutput();               /* set data port as output */
+#endif
+
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8 || McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
+  #define DataAsOutput47() \
         DB41_SetOutput();               /* set data port as output */ \
         DB51_SetOutput();               /* set data port as output */ \
         DB61_SetOutput();               /* set data port as output */ \
         DB71_SetOutput()                /* set data port as output */
-#define DataAsInput() \
+#endif
+
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8 || McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
+  #define DataAsInput03() \
+        DB01_SetInput();                /* set data port as input */ \
+        DB11_SetInput();                /* set data port as input */ \
+        DB21_SetInput();                /* set data port as input */ \
+        DB31_SetInput();                /* set data port as input */
+#endif
+
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
+  #define DataAsInput47() \
         DB41_SetInput();                /* set data port as input */ \
         DB51_SetInput();                /* set data port as input */ \
         DB61_SetInput();                /* set data port as input */ \
         DB71_SetInput()                 /* set data port as input */
+#endif
+
+#if McuHD44780_CONFIG_LCD_DATA_BUS_PORT_8BIT
+  #define DataAsOutput()        DataBus_SetOutput() /* set data port as output */
+  #define DataAsInput()         DataBus_SetInput() /* set data port as input */
+#elif McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
+  #define DataAsOutput()        DataAsOutput47()
+  #define DataAsInput()         DataAsInput47()
+#elif McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8
+  #define DataAsOutput()        DataAsOutput03(); DataAsOutput47()
+  #define DataAsInput()         DataAsInput03(); DataAsInput47()
+#endif
+
+
 
 /* waiting macros */
 #define Waitns(x) \
@@ -231,10 +272,21 @@ const uint8_t McuHD44780_SoftCharOE[8] = { /* ï¿½ */
 static uint8_t DataGet(void) {
   uint8_t val;
 
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
   val =  (DB71_GetVal()<<3)
         |(DB61_GetVal()<<2)
         |(DB51_GetVal()<<1)
         |(DB41_GetVal()<<0);
+#elif McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8 /* 8bit */
+  val =  (DB71_GetVal()<<7)
+        |(DB61_GetVal()<<6)
+        |(DB51_GetVal()<<5)
+        |(DB41_GetVal()<<4)
+        |(DB31_GetVal()<<3)
+        |(DB21_GetVal()<<2)
+        |(DB11_GetVal()<<1)
+        |(DB01_GetVal()<<0);
+#endif
   return val;
 }
 #endif /* #if McuHD44780_CONFIG_USE_DISPLAY_READ && McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG */
@@ -250,10 +302,10 @@ static void DataPut(uint8_t val) {
   DB61_PutVal((val&(1<<6))!=0);
   DB51_PutVal((val&(1<<5))!=0);
   DB41_PutVal((val&(1<<4))!=0);
-  DB3Pin_PutVal((val&(1<<3))!=0);
-  DB2Pin_PutVal((val&(1<<2))!=0);
-  DB1Pin_PutVal((val&(1<<1))!=0);
-  DB0Pin_PutVal((val&(1<<0))!=0);
+  DB31_PutVal((val&(1<<3))!=0);
+  DB21_PutVal((val&(1<<2))!=0);
+  DB11_PutVal((val&(1<<1))!=0);
+  DB01_PutVal((val&(1<<0))!=0);
 #endif
 }
 
@@ -387,6 +439,10 @@ void McuHD44780_WriteLCDCommand(uint8_t cmd)
 #if McuHD44780_CONFIG_WAIT_DISPLAY_US > 0
   McuWait_Waitus(McuHD44780_CONFIG_WAIT_DISPLAY_US); /* wait for some time not to write to the display while he may be busy with previous command */
 #endif
+#if McuHD44780_CONFIG_USE_DISPLAY_READ && McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG
+  McuHD44780_WaitForLCDReady();         /* Wait until LCD is ready */
+#endif
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
   /* 2 4bit transfer */
   DataPut((uint8_t)((cmd&0xF0)>>4));    /* Write the data (cycle #1) */
   EnablePulse();                        /* transfer data */
@@ -394,6 +450,11 @@ void McuHD44780_WriteLCDCommand(uint8_t cmd)
   DataPut((uint8_t)(cmd&0x0F) );        /* Write the data (cycle #2) */
   EnablePulse();                        /* do the command transfer */
   Waitus(McuHD44780_CONFIG_WAIT_LCD_CMD_AFTER_4BIT_DATA2_US);
+#else
+  /* 8bit transfer */
+  DataPut(cmd);                         /* put data on bus */
+  EnablePulse();                        /* do the command transfer */
+#endif
 }
 
 /*
@@ -439,7 +500,11 @@ void McuHD44780_WriteLCDData(uint8_t ch)
 #if McuHD44780_CONFIG_WAIT_DISPLAY_US > 0
    McuWait_Waitus(McuHD44780_CONFIG_WAIT_DISPLAY_US); /* wait for some time not to write to the display while he may be busy with previous command */
 #endif
+#if McuHD44780_CONFIG_USE_DISPLAY_READ && McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG
+   McuHD44780_WaitForLCDReady();        /* Wait until LCD is ready */
+#endif
    SetRS();                             /* RS = 1: data mode */
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
    /* 2 4bit transfer */
    DataPut((uint8_t)((ch&0xF0)>>4));    /* Write the data (cycle #1) */
    EnablePulse();                       /* transfer data */
@@ -447,6 +512,11 @@ void McuHD44780_WriteLCDData(uint8_t ch)
    DataPut((uint8_t)(ch&0x0F));         /* Write the data (cycle #2) */
    EnablePulse();                       /* do the command transfer */
    Waitus(McuHD44780_CONFIG_WAIT_LCD_CMD_AFTER_4BIT_DATA2_US);
+#else
+   /* 8bit data transfer */
+   DataPut(ch);                         /* put data on bus */
+   EnablePulse();                       /* do the command transfer */
+#endif
    ClrRS();                             /* RS = 0: back to command mode */
 }
 
@@ -655,16 +725,15 @@ void McuHD44780_Line(uint8_t line)
 */
 void McuHD44780_Init(void)
 {
-  /* test */
   /* for non-Processor Expert projects, initialize the used pins */
 #if McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   RS1_Init();
   EN1_Init();
   #if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==8
-  DB0Pin_Init();
-  DB1Pin_Init();
-  DB2Pin_Init();
-  DB3Pin_Init();
+  DB01_Init();
+  DB11_Init();
+  DB21_Init();
+  DB31_Init();
   #endif
 
   DB41_Init();
@@ -672,7 +741,7 @@ void McuHD44780_Init(void)
   DB61_Init();
   DB71_Init();
   #if McuHD44780_CONFIG_USE_E2_SIGNAL
-  E2Pin_Init();
+  EN2_Init();
   #endif
   #if McuHD44780_CONFIG_USE_RW_SIGNAL
   RW1_Init();
@@ -776,7 +845,11 @@ void McuHD44780_Init(void)
   McuHD44780_UseDisplay(1);
 #endif
   McuHD44780_WriteLCDCommand(FunctionSetCmd|FunctionSet_Font5x8
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
                  |FunctionSet_4bit      /* we are using 4bit data bus */
+#else
+                 |FunctionSet_8bit      /* we are using 8bit data bus */
+#endif
              #if McuHD44780_CONFIG_LCD_NOF_LINES==1
                  |FunctionSet_1Line     /* we are using only one line */
              #else
@@ -786,7 +859,11 @@ void McuHD44780_Init(void)
 #if McuHD44780_CONFIG_USE_E2_SIGNAL
   McuHD44780_UseDisplay(2);
   McuHD44780_WriteLCDCommand(FunctionSetCmd|FunctionSet_Font5x8
+#if McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH==4
                  |FunctionSet_4bit      /* we are using 4bit data bus */
+#else
+                 |FunctionSet_8bit      /* we are using 8bit data bus */
+#endif
              #if McuHD44780_CONFIG_LCD_NOF_LINES==1
                  |FunctionSet_1Line     /* we are using only one line */
              #else
@@ -831,8 +908,8 @@ void McuHD44780_Init(void)
 **                           (0..7)
 **       * softChar        - Pointer to an array of 8 bytes
 **                           defining the soft character
-**                           Example of the soft character 'ï¿½':
-**                           const byte SoftCharUE[8] = { // ï¿½
+**                           Example of the soft character 'ü':
+**                           const byte SoftCharUE[8] = { // ü
 **                           0x11, 0x00, 0x11, 0x11, 0x11, 0x13, 0x0d, 0
 **                           //  X...X
 **                           //  .....

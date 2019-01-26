@@ -6,7 +6,7 @@
 **     Component   : HardFault
 **     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 15:05, # CodeGen: 371
+**     Date/Time   : 2019-01-24, 18:36, # CodeGen: 401
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -158,7 +158,7 @@ void McuHardFault_HardFaultHandler(void)
 #endif
 {
   __asm volatile (
-      ".syntax unified\n"
+    ".syntax unified              \n"  /* needed for the 'adds r1,#2' below */
     " movs r0,#4                  \n"  /* load bit mask into R0 */
     " mov r1, lr                  \n"  /* load link register into R1 */
     " tst r0, r1                  \n"  /* compare with bitmask */

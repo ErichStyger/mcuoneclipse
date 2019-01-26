@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-25, 05:31, # CodeGen: 405
+**     Date/Time   : 2019-01-25, 20:51, # CodeGen: 409
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
