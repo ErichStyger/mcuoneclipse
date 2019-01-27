@@ -36,7 +36,7 @@
 
 #ifndef McuHD44780_CONFIG_USE_DISPLAY_READ
   #define McuHD44780_CONFIG_USE_DISPLAY_READ   (1)
-  /*!< 1: Read from the display. Requires R/W signal. 0: do not read from he display */
+  /*!< 1: Read from the display. Requires R/W signal. 0: do not read from the display */
 #endif
 
 #ifndef McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG

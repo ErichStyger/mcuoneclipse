@@ -79,14 +79,29 @@ void APP_Run(void) {
   McuWait_Waitms(50); /* give hardware time to power up */
   McuHD44780_Init();
 #endif
-//  McuTimeDate_Init();
+  McuTimeDate_Init();
 
 #if PL_CONFIG_HAS_HD44780
   McuHD44780_Clear();
+  {
+    DATEREC date;
+    TIMEREC time;
+
+    buf[0] = '\0';
+    McuTimeDate_GetTime(&time);
+    McuTimeDate_AddTimeString(buf, sizeof(buf), &time, (uint8_t*)"hh:mm.ss,cc");
+    McuHD44780_WriteLineStr(1, (char*)buf);
+
+    buf[0] = '\0';
+    McuTimeDate_GetDate(&date);
+    McuTimeDate_AddDateString(buf, sizeof(buf), &date, (uint8_t*)"dd.mm.yyyy");
+    McuHD44780_WriteLineStr(2, (char*)buf);
+  }
 #endif
+
   for(;;) {
 #if PL_CONFIG_HAS_HD44780
-  McuUtility_strcpy(buf,  sizeof(buf), (unsigned char*)"Line 1:");
+  McuUtility_strcpy(buf,  sizeof(buf), (uint8_t*)"Line 1:");
   McuUtility_strcatNum32uFormatted(buf, sizeof(buf), cntr, ' ', 9);
   McuHD44780_WriteLineStr(1, (char*)buf);
   McuUtility_Num32uToStr(buf, sizeof(buf), cntr);
