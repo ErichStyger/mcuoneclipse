@@ -40,6 +40,12 @@
 #include "LPC845.h"
 /* TODO: insert other include files here. */
 
+#include "McuWait.h"
+#include "McuLED1.h"
+#include "McuLED2.h"
+#include "McuLED3.h"
+#include "McuHardFault.h"
+#include "fsl_gpio.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -53,10 +59,23 @@ int main(void) {
 
     printf("Hello World\n");
 
+    GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1 */
+
+    McuWait_Init();
+    McuHardFault_Init();
+    McuLED1_Init();
+    McuLED2_Init();
+    McuLED3_Init();
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
+      McuLED1_On();
+      McuLED1_Off();
+      McuLED1_Neg();
+      McuLED1_Put(1);
+      McuLED1_Put(0);
+      McuWait_Waitms(100);
         i++ ;
     }
     return 0 ;
