@@ -60,7 +60,7 @@ void APP_Run(void) {
   /* reference manual, page 1195ff, GPC Interrupt Controller (INTC) */
   //GPC_CNTR_MEGA_PDN_REQ()
   /* safety belt: delay for some time to give the debug probe a chance to access the target after power-on */
-  for(int i=0;i<30;i++) {
+  for(int i=0;i<10;i++) {
     GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 0U);
     McuWait_Waitms(500);
     GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
