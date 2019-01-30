@@ -154,6 +154,8 @@
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 								</option>
@@ -280,6 +282,16 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1314162943.554104587" name="/" resourcePath="lib">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1846504900" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.969031880" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1923775933"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.466794816" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.531722850"/>
+							<tool id="com.crt.advproject.gas.exe.debug.2134556921" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1012422287"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.984874353" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1881034739"/>
+							<tool id="com.crt.advproject.link.exe.debug.1836076304" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.15243711"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1098913721" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.904101048"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="HD44780/McuHD44781_new.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -389,6 +401,8 @@
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 								</option>
@@ -446,6 +460,8 @@
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
+									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200_pex/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/redlib/include"/>
 									<listOptionValue builtIn="false" value="c:/nxp/mcuxpressoide_10.3.0_2200/ide/plugins/com.nxp.mcuxpresso.tools.win32_10.3.0.201811011841/tools/features/include"/>
 								</option>
@@ -574,12 +590,14 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="HD44780/McuHD44781_new.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH" kind="sourcePath" name="source"/>
@@ -699,7 +717,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_FRDM-KW41Z</sdkName>
 		<sdkVersion>2.2.0</sdkVersion>
-		<sdkComponents>middleware.baremetal.MKW41Z4;platform.drivers.clock.MKW41Z4;platform.Include_common;platform.drivers.common.MKW41Z4;platform.drivers.lpuart.MKW41Z4;platform.utilities.debug_console.MKW41Z4;platform.drivers.flash.MKW41Z4;platform.drivers.gpio.MKW41Z4;platform.drivers.lptmr.MKW41Z4;platform.drivers.port.MKW41Z4;platform.drivers.smc.MKW41Z4;startup;CMSIS_Include;project_template.frdmkw41z.MKW41Z4;platform.devices.MKW41Z4_startup.MKW41Z4;</sdkComponents>
+		<sdkComponents>middleware.baremetal.MKW41Z4;platform.drivers.clock.MKW41Z4;platform.Include_common;platform.drivers.common.MKW41Z4;platform.drivers.lpuart.MKW41Z4;platform.utilities.debug_console.MKW41Z4;platform.drivers.flash.MKW41Z4;platform.drivers.gpio.MKW41Z4;platform.drivers.lptmr.MKW41Z4;platform.drivers.port.MKW41Z4;platform.drivers.smc.MKW41Z4;startup;CMSIS_Include;project_template.frdmkw41z.MKW41Z4;platform.devices.MKW41Z4_startup.MKW41Z4;platform.drivers.sim.MKW41Z4;</sdkComponents>
 		<boardId>frdmkw41z</boardId>
 		<package>MKW41Z512VHT4</package>
 		<core>cm0plus</core>

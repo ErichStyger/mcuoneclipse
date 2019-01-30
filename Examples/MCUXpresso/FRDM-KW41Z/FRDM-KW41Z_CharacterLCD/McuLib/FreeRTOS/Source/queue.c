@@ -2928,7 +2928,12 @@ Queue_t * const pxQueue = xQueue;
 
 #endif /* configUSE_QUEUE_SETS */
 
-
+/*-----------------------------------------------------------*/
+void vQueueEndScheduler(void) { /* << EST */
+#if configQUEUE_REGISTRY_SIZE>0
+  memset(xQueueRegistry, 0, sizeof(xQueueRegistry));
+#endif /* configQUEUE_REGISTRY_SIZE */
+}
 
 
 

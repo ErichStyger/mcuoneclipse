@@ -10,6 +10,8 @@
 #ifndef RW1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define RW1_CONFIG_PORT_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define RW1_CONFIG_PORT_NAME       0
   #else /* name from properties */
     #define RW1_CONFIG_PORT_NAME       PORTC
   #endif

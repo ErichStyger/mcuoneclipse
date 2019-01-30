@@ -10,6 +10,8 @@
 #ifndef SDA1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define SDA1_CONFIG_PORT_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define SDA1_CONFIG_PORT_NAME       0
   #else /* name from properties */
     #define SDA1_CONFIG_PORT_NAME       PORTA
   #endif
@@ -19,6 +21,8 @@
 #ifndef SDA1_CONFIG_GPIO_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define SDA1_CONFIG_GPIO_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define SDA1_CONFIG_GPIO_NAME       GPIO
   #else /* name from properties */
     #define SDA1_CONFIG_GPIO_NAME       GPIOA
   #endif
@@ -26,7 +30,7 @@
 #endif
 
 #ifndef SDA1_CONFIG_PIN_NUMBER
-  #define SDA1_CONFIG_PIN_NUMBER      25u
+  #define SDA1_CONFIG_PIN_NUMBER      0u
     /*!< number of pin, type unsigned integer */
 #endif
 

@@ -152,7 +152,7 @@
 
 /* default time/date values */
 static const TIMEREC McuTimeDate_DefaultTime = {
-  13, /* hour */
+  17, /* hour */
   51,  /* minute */
   31,  /* second */
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
@@ -160,9 +160,9 @@ static const TIMEREC McuTimeDate_DefaultTime = {
 #endif
 };
 static const DATEREC McuTimeDate_DefaultDate = {
-  2019, /* year */
-  1,  /* month */
-  27 /* day */
+  2018, /* year */
+  8,  /* month */
+  1 /* day */
 };
 
 #define McuTimeDate_TICK_TIME_MS \

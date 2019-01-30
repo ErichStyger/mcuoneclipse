@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-25, 06:31, # CodeGen: 406
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t LEDpin4_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     LEDpin4_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,9 @@ static bool LEDpin4_isOutput = false;
 void LEDpin4_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortClear(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
@@ -191,7 +192,9 @@ void LEDpin4_ClrVal(void)
 void LEDpin4_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortSet(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
@@ -216,7 +219,9 @@ void LEDpin4_SetVal(void)
 void LEDpin4_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortToggle(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
@@ -250,7 +255,9 @@ void LEDpin4_NegVal(void)
 */
 bool LEDpin4_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, LEDpin4_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(LEDpin4_CONFIG_PIN_SYMBOL)!=0;
@@ -311,7 +318,9 @@ void LEDpin4_SetDir(bool Dir)
 */
 void LEDpin4_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, LEDpin4_CONFIG_PIN_NUMBER, &LEDpin4_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PIN_NUMBER, &LEDpin4_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LEDpin4_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -337,7 +346,9 @@ void LEDpin4_SetInput(void)
 */
 void LEDpin4_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, LEDpin4_CONFIG_PIN_NUMBER, &LEDpin4_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PIN_NUMBER, &LEDpin4_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LEDpin4_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -366,7 +377,13 @@ void LEDpin4_SetOutput(void)
 */
 void LEDpin4_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(LEDpin4_CONFIG_GPIO_NAME, LEDpin4_CONFIG_PORT_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(LEDpin4_CONFIG_GPIO_NAME, 1<<LEDpin4_CONFIG_PIN_NUMBER);
   } else {

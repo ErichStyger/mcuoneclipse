@@ -61,22 +61,23 @@ int main(void) {
 
     GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1 */
 
+    /* initialize driver and modules */
     McuWait_Init();
     McuHardFault_Init();
     McuLED1_Init();
     McuLED2_Init();
     McuLED3_Init();
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
       McuLED1_On();
+      McuWait_Waitms(100);
       McuLED1_Off();
+      McuWait_Waitms(100);
       McuLED1_Neg();
-      McuLED1_Put(1);
+      McuWait_Waitms(100);
       McuLED1_Put(0);
       McuWait_Waitms(100);
-        i++ ;
+      McuLED1_Put(1);
+      McuWait_Waitms(100);
     }
     return 0 ;
 }

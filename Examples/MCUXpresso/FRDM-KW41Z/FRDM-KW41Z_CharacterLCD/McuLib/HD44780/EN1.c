@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-26, 08:41, # CodeGen: 415
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t EN1_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     EN1_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,9 @@ static bool EN1_isOutput = false;
 void EN1_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortClear(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
@@ -191,7 +192,9 @@ void EN1_ClrVal(void)
 void EN1_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortSet(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
@@ -216,7 +219,9 @@ void EN1_SetVal(void)
 void EN1_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortToggle(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
@@ -250,7 +255,9 @@ void EN1_NegVal(void)
 */
 bool EN1_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, EN1_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(EN1_CONFIG_PIN_SYMBOL)!=0;
@@ -311,7 +318,9 @@ void EN1_SetDir(bool Dir)
 */
 void EN1_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, EN1_CONFIG_PIN_NUMBER, &EN1_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PIN_NUMBER, &EN1_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(EN1_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -337,7 +346,9 @@ void EN1_SetInput(void)
 */
 void EN1_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, EN1_CONFIG_PIN_NUMBER, &EN1_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PIN_NUMBER, &EN1_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(EN1_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -366,7 +377,13 @@ void EN1_SetOutput(void)
 */
 void EN1_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(EN1_CONFIG_GPIO_NAME, EN1_CONFIG_PORT_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(EN1_CONFIG_GPIO_NAME, 1<<EN1_CONFIG_PIN_NUMBER);
   } else {

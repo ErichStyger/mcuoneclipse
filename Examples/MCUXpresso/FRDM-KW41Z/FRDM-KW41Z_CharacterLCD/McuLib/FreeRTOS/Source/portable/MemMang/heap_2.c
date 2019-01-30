@@ -124,11 +124,12 @@ size_t xBlockSize;																	\
 	pxIterator->pxNextFreeBlock = pxBlockToInsert;									\
 }
 /*-----------------------------------------------------------*/
+static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
 
 void *pvPortMalloc( size_t xWantedSize )
 {
 BlockLink_t *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
-static BaseType_t xHeapHasBeenInitialised = pdFALSE;
+//static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
 void *pvReturn = NULL;
 
 	vTaskSuspendAll();
@@ -281,5 +282,15 @@ uint8_t *pucAlignedHeap;
 	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }
 /*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  xStart.pxNextFreeBlock = NULL;
+  xStart.xBlockSize = 0;
+  xEnd.pxNextFreeBlock = NULL;
+  xEnd.xBlockSize = 0;
+  xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
+  xHeapHasBeenInitialised = pdFALSE;
+}
+#endif
 #endif /* configUSE_HEAP_SCHEME==2 */ /* << EST */
 

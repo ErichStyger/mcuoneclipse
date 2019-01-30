@@ -75,11 +75,12 @@ task.h is included from an application file. */
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
+static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
 
 void *pvPortMalloc( size_t xWantedSize )
 {
 void *pvReturn = NULL;
-static uint8_t *pucAlignedHeap = NULL;
+//static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if( portBYTE_ALIGNMENT != 1 )
@@ -152,6 +153,14 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  xNextFreeByte = 0;
+  pucAlignedHeap = NULL
+}
+#endif
+
 #endif /* configUSE_HEAP_SCHEME==1 */ /* << EST */
 
 

@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-26, 08:41, # CodeGen: 415
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t DB61_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     DB61_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,9 @@ static bool DB61_isOutput = false;
 void DB61_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortClear(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
@@ -191,7 +192,9 @@ void DB61_ClrVal(void)
 void DB61_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortSet(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
@@ -216,7 +219,9 @@ void DB61_SetVal(void)
 void DB61_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortToggle(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
@@ -250,7 +255,9 @@ void DB61_NegVal(void)
 */
 bool DB61_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, DB61_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(DB61_CONFIG_PIN_SYMBOL)!=0;
@@ -311,7 +318,9 @@ void DB61_SetDir(bool Dir)
 */
 void DB61_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, DB61_CONFIG_PIN_NUMBER, &DB61_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PIN_NUMBER, &DB61_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB61_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -337,7 +346,9 @@ void DB61_SetInput(void)
 */
 void DB61_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, DB61_CONFIG_PIN_NUMBER, &DB61_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PIN_NUMBER, &DB61_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB61_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -366,7 +377,13 @@ void DB61_SetOutput(void)
 */
 void DB61_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(DB61_CONFIG_GPIO_NAME, DB61_CONFIG_PORT_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(DB61_CONFIG_GPIO_NAME, 1<<DB61_CONFIG_PIN_NUMBER);
   } else {

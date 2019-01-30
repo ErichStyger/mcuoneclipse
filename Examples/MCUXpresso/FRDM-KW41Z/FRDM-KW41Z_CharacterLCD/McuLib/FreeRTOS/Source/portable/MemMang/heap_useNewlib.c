@@ -190,4 +190,11 @@ size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION {
 //! No implementation needed, but stub provided in case application already calls vPortInitialiseBlocks
 void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION {};
 
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  /* sorry, not able to free up the standard library heap */
+}
+#endif
+
 #endif /* !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==6) */

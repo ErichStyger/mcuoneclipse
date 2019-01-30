@@ -10,6 +10,8 @@
 #ifndef DB51_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB51_CONFIG_PORT_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define DB51_CONFIG_PORT_NAME       0
   #else /* name from properties */
     #define DB51_CONFIG_PORT_NAME       PORTB
   #endif
@@ -19,6 +21,8 @@
 #ifndef DB51_CONFIG_GPIO_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB51_CONFIG_GPIO_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define DB51_CONFIG_GPIO_NAME       GPIO
   #else /* name from properties */
     #define DB51_CONFIG_GPIO_NAME       GPIOB
   #endif

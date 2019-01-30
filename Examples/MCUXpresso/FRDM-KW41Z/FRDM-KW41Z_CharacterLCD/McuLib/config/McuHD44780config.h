@@ -8,9 +8,17 @@
 #ifndef __McuHD44780_CONFIG_H
 #define __McuHD44780_CONFIG_H
 
+#ifndef McuHD44780_CONFIG_LCD_TYPE
+  #define McuHD44780_CONFIG_LCD_TYPE   (0)
+    /*!< 1: Diplaytech 162c: use different timing than the default. 0: use default timing */
+#endif
+
 #define McuHD44780_CONFIG_LCD_NOF_LINES                        (2) /* 1, 2, 3 or 4 */
 
 #define McuHD44780_CONFIG_LCD_DATA_BUS_WIDTH                   (4) /* 4 or 8 */
+
+#define McuHD44780_CONFIG_LCD_DATA_BUS_PORT_8BIT               (0)
+  /*!< 1: using 8bit data port; 0: not using 8bit data port */
 
 #include "RS1.h" /* RS signal pin header file */
 #include "EN1.h" /* EN signal pin header file */
@@ -31,7 +39,7 @@
 #endif
 
 #if McuHD44780_CONFIG_USE_E2_SIGNAL
-  #include "E2.h"
+  #include "EN2.h"
 #endif
 
 #ifndef McuHD44780_CONFIG_USE_DISPLAY_READ
@@ -40,7 +48,11 @@
 #endif
 
 #ifndef McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG
+#if McuHD44780_CONFIG_USE_DISPLAY_READ && McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG
+  #define McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG   (1 && McuHD44780_CONFIG_USE_DISPLAY_READ)
+#else
   #define McuHD44780_CONFIG_USE_DISPLAY_READ_CHECK_BUSY_FLAG   (0 && McuHD44780_CONFIG_USE_DISPLAY_READ)
+#endif
   /*!< 1: Check the busy flag Requires reading from the display. 0: do not check busy flag */
 #endif
 

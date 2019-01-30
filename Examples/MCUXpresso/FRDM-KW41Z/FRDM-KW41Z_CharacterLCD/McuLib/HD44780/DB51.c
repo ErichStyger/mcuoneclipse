@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-26, 08:41, # CodeGen: 415
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t DB51_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     DB51_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,9 @@ static bool DB51_isOutput = false;
 void DB51_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortClear(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
@@ -191,7 +192,9 @@ void DB51_ClrVal(void)
 void DB51_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortSet(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
@@ -216,7 +219,9 @@ void DB51_SetVal(void)
 void DB51_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortToggle(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
@@ -250,7 +255,9 @@ void DB51_NegVal(void)
 */
 bool DB51_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, DB51_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(DB51_CONFIG_PIN_SYMBOL)!=0;
@@ -311,7 +318,9 @@ void DB51_SetDir(bool Dir)
 */
 void DB51_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, DB51_CONFIG_PIN_NUMBER, &DB51_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PIN_NUMBER, &DB51_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB51_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -337,7 +346,9 @@ void DB51_SetInput(void)
 */
 void DB51_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, DB51_CONFIG_PIN_NUMBER, &DB51_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PIN_NUMBER, &DB51_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB51_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -366,7 +377,13 @@ void DB51_SetOutput(void)
 */
 void DB51_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(DB51_CONFIG_GPIO_NAME, DB51_CONFIG_PORT_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(DB51_CONFIG_GPIO_NAME, 1<<DB51_CONFIG_PIN_NUMBER);
   } else {

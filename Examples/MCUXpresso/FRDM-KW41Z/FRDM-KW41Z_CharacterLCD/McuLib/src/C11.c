@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-23, 21:26, # CodeGen: 400
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t C11_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     C11_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,9 @@ static bool C11_isOutput = false;
 void C11_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortClear(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
@@ -191,7 +192,9 @@ void C11_ClrVal(void)
 void C11_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortSet(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
@@ -216,7 +219,9 @@ void C11_SetVal(void)
 void C11_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-  #if McuLib_CONFIG_SDK_VERSION < 250
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
   #else
   GPIO_PortToggle(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
@@ -250,7 +255,9 @@ void C11_NegVal(void)
 */
 bool C11_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, C11_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(C11_CONFIG_GPIO_NAME, C11_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(C11_CONFIG_PIN_SYMBOL)!=0;
@@ -311,7 +318,9 @@ void C11_SetDir(bool Dir)
 */
 void C11_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, C11_CONFIG_PIN_NUMBER, &C11_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(C11_CONFIG_GPIO_NAME, C11_CONFIG_PIN_NUMBER, &C11_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(C11_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -337,7 +346,9 @@ void C11_SetInput(void)
 */
 void C11_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, C11_CONFIG_PIN_NUMBER, &C11_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(C11_CONFIG_GPIO_NAME, C11_CONFIG_PIN_NUMBER, &C11_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(C11_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -366,7 +377,13 @@ void C11_SetOutput(void)
 */
 void C11_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(C11_CONFIG_GPIO_NAME, C11_CONFIG_PORT_NAME, 1<<C11_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(C11_CONFIG_GPIO_NAME, 1<<C11_CONFIG_PIN_NUMBER);
   } else {
