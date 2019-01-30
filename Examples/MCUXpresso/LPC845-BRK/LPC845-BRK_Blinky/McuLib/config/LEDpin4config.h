@@ -35,7 +35,7 @@
 #endif
 
 #ifndef LEDpin4_CONFIG_PIN_SYMBOL
-  #define LEDpin4_CONFIG_PIN_SYMBOL      LED_RED
+  #define LEDpin4_CONFIG_PIN_SYMBOL      LED1
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 

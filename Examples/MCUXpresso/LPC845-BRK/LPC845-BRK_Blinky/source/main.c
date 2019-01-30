@@ -68,16 +68,17 @@ int main(void) {
     McuLED2_Init();
     McuLED3_Init();
     while(1) {
-      McuLED1_On();
+      McuLED1_On(); /* green */
       McuWait_Waitms(100);
       McuLED1_Off();
+
+      McuLED2_On(); /* blue */
       McuWait_Waitms(100);
-      McuLED1_Neg();
+      McuLED2_Off();
+
+      McuLED3_On(); /* red */
       McuWait_Waitms(100);
-      McuLED1_Put(0);
-      McuWait_Waitms(100);
-      McuLED1_Put(1);
-      McuWait_Waitms(100);
+      McuLED3_Off();
     }
     return 0 ;
 }
