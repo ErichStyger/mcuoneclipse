@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-21, 15:52, # CodeGen: 379
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t RS1_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     RS1_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,13 @@ static bool RS1_isOutput = false;
 void RS1_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_ClearPinsOutput(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortClear(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(RS1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -187,7 +192,13 @@ void RS1_ClrVal(void)
 void RS1_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_SetPinsOutput(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortSet(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(RS1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -208,7 +219,13 @@ void RS1_SetVal(void)
 void RS1_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_TogglePinsOutput(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortToggle(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(RS1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -238,7 +255,9 @@ void RS1_NegVal(void)
 */
 bool RS1_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(RS1_CONFIG_PIN_SYMBOL)!=0;
@@ -299,7 +318,9 @@ void RS1_SetDir(bool Dir)
 */
 void RS1_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, &RS1_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PIN_NUMBER, &RS1_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(RS1_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -325,7 +346,9 @@ void RS1_SetInput(void)
 */
 void RS1_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, &RS1_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PIN_NUMBER, &RS1_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(RS1_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -354,7 +377,13 @@ void RS1_SetOutput(void)
 */
 void RS1_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(RS1_CONFIG_GPIO_NAME, RS1_CONFIG_PORT_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(RS1_CONFIG_GPIO_NAME, 1<<RS1_CONFIG_PIN_NUMBER);
   } else {

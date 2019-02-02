@@ -452,6 +452,16 @@ uint8_t *puc;
 		mtCOVERAGE_TEST_MARKER();
 	}
 }
-
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  pxEnd = NULL; /* force initialization of heap next time a block gets allocated */
+  xStart.pxNextFreeBlock = NULL;
+  xStart.xBlockSize = 0;
+  xFreeBytesRemaining = 0;
+  xMinimumEverFreeBytesRemaining = 0;
+  xBlockAllocatedBit = 0;
+}
+#endif
 #endif /* configUSE_HEAP_SCHEME==4 */ /* << EST */
 

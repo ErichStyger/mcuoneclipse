@@ -51,6 +51,11 @@
 #define McuLib_CONFIG_SDK_S32K                5
   /*!< SDK for S32K */
 
+#define McuLib_CONFIG_SDK_VERSION_MAJOR   2
+#define McuLib_CONFIG_SDK_VERSION_MINOR   5
+#define McuLib_CONFIG_SDK_VERSION_BUILD   0
+#define McuLib_CONFIG_SDK_VERSION        (McuLib_CONFIG_SDK_VERSION_MAJOR*100)+(McuLib_CONFIG_SDK_VERSION_MINOR*10)+McuLib_CONFIG_SDK_VERSION_BUILD
+
 /* specify the SDK and API used */
 #ifndef McuLib_CONFIG_SDK_VERSION_USED
 #if McuLib_CONFIG_CPU_IS_STM32

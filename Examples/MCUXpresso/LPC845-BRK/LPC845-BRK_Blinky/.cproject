@@ -133,7 +133,7 @@
 							<tool id="com.crt.advproject.gas.exe.debug.2083701023" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug">
 								<option id="com.crt.advproject.gas.thumb.425337482" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.2036993957" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm0plus" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.529987908" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false"/>
+								<option id="gnu.both.asm.option.flags.crt.529987908" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__REDLIB__" valueType="string"/>
 								<option id="gnu.both.asm.option.include.paths.891958948" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../board"/>
 									<listOptionValue builtIn="false" value="../source"/>
@@ -261,15 +261,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.229096820.488241291" name="semihost_hardfault.c" rcbsApplicability="disable" resourcePath="source/semihost_hardfault.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.110516120.1303671561">
-						<tool id="com.crt.advproject.gcc.exe.debug.110516120.1303671561" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.110516120"/>
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.2109808304" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.650035755" name="Resource Custom Build Step Input Type">
-								<additionalInput kind="additionalinputdependency" paths=""/>
-							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.749641316" name="Resource Custom Build Step Output Type"/>
-						</tool>
-					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -368,4 +359,5 @@
 		<coreId>core0_LPC845</coreId>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

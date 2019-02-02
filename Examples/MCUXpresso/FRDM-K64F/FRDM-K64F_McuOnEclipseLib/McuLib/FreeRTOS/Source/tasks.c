@@ -2134,13 +2134,35 @@ BaseType_t xReturn;
 /*-----------------------------------------------------------*/
 
 #if INCLUDE_vTaskEndScheduler /* << EST */
+#include "queue.h"
 void vTaskEndScheduler( void )
 {
 	/* Stop the scheduler interrupts and call the portable scheduler end
 	routine so the original ISRs can be restored if necessary.  The port
 	layer must ensure interrupts enable	bit is left in the correct state. */
 	portDISABLE_INTERRUPTS();
+	/* set back the scheduler and tasks */
 	xSchedulerRunning = pdFALSE;
+	pxCurrentTCB = NULL;
+	memset(pxReadyTasksLists, 0, sizeof(pxReadyTasksLists));
+  memset(&xDelayedTaskList1, 0, sizeof(xDelayedTaskList1));
+  pxDelayedTaskList = NULL;
+  pxOverflowDelayedTaskList = NULL;
+  memset(&xPendingReadyList, 0, sizeof(xPendingReadyList));
+
+  uxCurrentNumberOfTasks  = ( UBaseType_t ) 0U;
+  xTickCount         = ( TickType_t ) configINITIAL_TICK_COUNT;
+  uxTopReadyPriority    = tskIDLE_PRIORITY;
+  uxPendedTicks       = ( UBaseType_t ) 0U;
+  xYieldPending      = pdFALSE;
+  xNumOfOverflows      = ( BaseType_t ) 0;
+  uxTaskNumber           = ( UBaseType_t ) 0U;
+  xNextTaskUnblockTime   = ( TickType_t ) 0U; /* Initialised to portMAX_DELAY before the scheduler starts. */
+  xIdleTaskHandle         = NULL;     /*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
+
+  /* reset the queues */
+  vQueueEndScheduler();
+  /* now do the very low level stuff and reset the heap memory if possible */
 	vPortEndScheduler();
 }
 #endif /* << EST */

@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-21, 15:52, # CodeGen: 379
+**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t DB71_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     DB71_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,13 @@ static bool DB71_isOutput = false;
 void DB71_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_ClearPinsOutput(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortClear(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(DB71_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -187,7 +192,13 @@ void DB71_ClrVal(void)
 void DB71_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_SetPinsOutput(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortSet(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(DB71_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -208,7 +219,13 @@ void DB71_SetVal(void)
 void DB71_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_TogglePinsOutput(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortToggle(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(DB71_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -238,7 +255,9 @@ void DB71_NegVal(void)
 */
 bool DB71_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, DB71_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   return GPIO_ReadPinInput(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PIN_NUMBER)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(DB71_CONFIG_PIN_SYMBOL)!=0;
@@ -299,7 +318,9 @@ void DB71_SetDir(bool Dir)
 */
 void DB71_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, DB71_CONFIG_PIN_NUMBER, &DB71_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PIN_NUMBER, &DB71_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB71_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -325,7 +346,9 @@ void DB71_SetInput(void)
 */
 void DB71_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, DB71_CONFIG_PIN_NUMBER, &DB71_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PIN_NUMBER, &DB71_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(DB71_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -354,7 +377,13 @@ void DB71_SetOutput(void)
 */
 void DB71_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(DB71_CONFIG_GPIO_NAME, DB71_CONFIG_PORT_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   if (Val) {
     GPIO_SetPinsOutput(DB71_CONFIG_GPIO_NAME, 1<<DB71_CONFIG_PIN_NUMBER);
   } else {
