@@ -7,11 +7,26 @@
 #ifndef __LEDpin1_CONFIG_H
 #define __LEDpin1_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_LEDpin1_PIN)
+    #define LEDpin1_CONFIG_PIN_NUMBER    BOARD_INITPINS_LEDpin1_PIN
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin1_GPIO)
+    #define LEDpin1_CONFIG_GPIO_NAME     BOARD_INITPINS_LEDpin1_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin1_PORT)
+    #define LEDpin1_CONFIG_PORT_NAME     BOARD_INITPINS_LEDpin1_PORT
+  #endif
+#endif
+
+
 #ifndef LEDpin1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define LEDpin1_CONFIG_PORT_NAME       GPIO1
   #elif McuLib_CONFIG_CPU_IS_LPC
-    #define LEDpin1_CONFIG_PORT_NAME       1
+    #define LEDpin1_CONFIG_PORT_NAME       0
   #else /* name from properties */
     #define LEDpin1_CONFIG_PORT_NAME       PORTA
   #endif

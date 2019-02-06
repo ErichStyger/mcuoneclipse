@@ -6,7 +6,7 @@
 **     Component   : LED
 **     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-30, 21:12, # CodeGen: 421
+**     Date/Time   : 2019-02-02, 20:38, # CodeGen: 424
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -17,16 +17,19 @@
 **              Pin                                        : SDK_BitIO
 **            PWM                                          : Disabled
 **            High Value means ON                          : no
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Shell                                        : McuShell
+**            Utility                                      : McuUtility
 **     Contents    :
-**         On         - void McuLED2_On(void);
-**         Off        - void McuLED2_Off(void);
-**         Neg        - void McuLED2_Neg(void);
-**         Get        - uint8_t McuLED2_Get(void);
-**         Put        - void McuLED2_Put(uint8_t val);
-**         SetRatio16 - void McuLED2_SetRatio16(uint16_t ratio);
-**         Deinit     - void McuLED2_Deinit(void);
-**         Init       - void McuLED2_Init(void);
+**         On           - void McuLED2_On(void);
+**         Off          - void McuLED2_Off(void);
+**         Neg          - void McuLED2_Neg(void);
+**         Get          - uint8_t McuLED2_Get(void);
+**         Put          - void McuLED2_Put(uint8_t val);
+**         SetRatio16   - void McuLED2_SetRatio16(uint16_t ratio);
+**         ParseCommand - uint8_t McuLED2_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit       - void McuLED2_Deinit(void);
+**         Init         - void McuLED2_Init(void);
 **
 ** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -71,18 +74,17 @@
 
 /* MODULE McuLED2. */
 #include "McuLib.h" /* SDK and API used */
-#include "McuLED2config.h" /* configuration */
-
-/* Include inherited components */
-#include "McuLib.h"
-#include "LEDpin2.h"
+#include "McuLED2config.h" /* LED configuration */
+#include "LEDpin2.h" /* interface to pin */
+#include "McuShell.h" /* interface to Shell */
+#include "McuUtility.h" /* interface to Utility */
 
 #define McuLED2_ClrVal()    LEDpin2_ClrVal() /* put the pin on low level */
 #define McuLED2_SetVal()    LEDpin2_SetVal() /* put the pin on high level */
 #define McuLED2_SetInput()  LEDpin2_SetInput() /* use the pin as input pin */
 #define McuLED2_SetOutput() LEDpin2_SetOutput() /* use the pin as output pin */
 
-#define McuLED2_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define McuLED2_PARSE_COMMAND_ENABLED  1 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
 #define McuLED2_On() LEDpin2_ClrVal()
@@ -170,6 +172,26 @@ void McuLED2_Deinit(void);
 **         Deinitializes the driver
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t McuLED2_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+/*
+** ===================================================================
+**     Method      :  ParseCommand (component LED)
+**
+**     Description :
+**         Shell Command Line parser. This method is enabled/disabled
+**         depending on if you have the Shell enabled/disabled in the
+**         properties.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

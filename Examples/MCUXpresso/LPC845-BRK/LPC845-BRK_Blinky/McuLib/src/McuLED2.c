@@ -6,7 +6,7 @@
 **     Component   : LED
 **     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-30, 21:12, # CodeGen: 421
+**     Date/Time   : 2019-02-02, 20:15, # CodeGen: 423
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -17,16 +17,19 @@
 **              Pin                                        : SDK_BitIO
 **            PWM                                          : Disabled
 **            High Value means ON                          : no
-**          Shell                                          : Disabled
+**          Shell                                          : Enabled
+**            Shell                                        : McuShell
+**            Utility                                      : McuUtility
 **     Contents    :
-**         On         - void McuLED2_On(void);
-**         Off        - void McuLED2_Off(void);
-**         Neg        - void McuLED2_Neg(void);
-**         Get        - uint8_t McuLED2_Get(void);
-**         Put        - void McuLED2_Put(uint8_t val);
-**         SetRatio16 - void McuLED2_SetRatio16(uint16_t ratio);
-**         Deinit     - void McuLED2_Deinit(void);
-**         Init       - void McuLED2_Init(void);
+**         On           - void McuLED2_On(void);
+**         Off          - void McuLED2_Off(void);
+**         Neg          - void McuLED2_Neg(void);
+**         Get          - uint8_t McuLED2_Get(void);
+**         Put          - void McuLED2_Put(uint8_t val);
+**         SetRatio16   - void McuLED2_SetRatio16(uint16_t ratio);
+**         ParseCommand - uint8_t McuLED2_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit       - void McuLED2_Deinit(void);
+**         Init         - void McuLED2_Init(void);
 **
 ** * Copyright (c) 2013-2018, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -69,6 +72,65 @@
 /* MODULE McuLED2. */
 
 #include "McuLED2.h"
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"McuLED2", (unsigned char*)"\r\n", io->stdOut);
+  if (McuLED2_Get()!=0) {
+    McuShell_SendStatusStr((unsigned char*)"  on", (unsigned char*)"yes\r\n", io->stdOut);
+  } else {
+    McuShell_SendStatusStr((unsigned char*)"  on", (unsigned char*)"no\r\n", io->stdOut);
+  }
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"McuLED2", (unsigned char*)"Group of McuLED2 commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  on|off|neg", (unsigned char*)"Turns it on, off or toggle it\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  ParseCommand (component LED)
+**
+**     Description :
+**         Shell Command Line parser. This method is enabled/disabled
+**         depending on if you have the Shell enabled/disabled in the
+**         properties.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * handled         - Pointer to variable which tells if
+**                           the command has been handled or not
+**       * io              - Pointer to I/O structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuLED2_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io)
+{
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "McuLED2 help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "McuLED2 status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "McuLED2 on")==0) {
+    *handled = TRUE;
+    McuLED2_On();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "McuLED2 off")==0) {
+    *handled = TRUE;
+    McuLED2_Off();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "McuLED2 neg")==0) {
+    *handled = TRUE;
+    McuLED2_Neg();
+    return ERR_OK;
+  }
+  return ERR_OK;
+}
 
 /*
 ** ===================================================================

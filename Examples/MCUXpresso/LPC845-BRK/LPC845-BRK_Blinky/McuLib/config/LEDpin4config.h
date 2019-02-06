@@ -7,6 +7,21 @@
 #ifndef __LEDpin4_CONFIG_H
 #define __LEDpin4_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_LEDpin4_PIN)
+    #define LEDpin4_CONFIG_PIN_NUMBER    BOARD_INITPINS_LEDpin4_PIN
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin4_GPIO)
+    #define LEDpin4_CONFIG_GPIO_NAME     BOARD_INITPINS_LEDpin4_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin4_PORT)
+    #define LEDpin4_CONFIG_PORT_NAME     BOARD_INITPINS_LEDpin4_PORT
+  #endif
+#endif
+
+
 #ifndef LEDpin4_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define LEDpin4_CONFIG_PORT_NAME       GPIO1
@@ -35,7 +50,7 @@
 #endif
 
 #ifndef LEDpin4_CONFIG_PIN_SYMBOL
-  #define LEDpin4_CONFIG_PIN_SYMBOL      LED1
+  #define LEDpin4_CONFIG_PIN_SYMBOL      LED4
     /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 

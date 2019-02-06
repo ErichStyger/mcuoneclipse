@@ -13,9 +13,9 @@ package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
 processor_version: 5.0.0
 pin_labels:
-- {pin_num: '14', pin_signal: PIO1_1/CAPT_X2, label: LED_BLUE, identifier: LED_BLUE}
-- {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: LED_GREEN, identifier: LED_GREEN}
-- {pin_num: '16', pin_signal: PIO1_2/CAPT_X3, label: LED_RED, identifier: LED_RED}
+- {pin_num: '14', pin_signal: PIO1_1/CAPT_X2, label: LED_BLUE, identifier: LEDpin2}
+- {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: LED_GREEN, identifier: LEDpin1}
+- {pin_num: '16', pin_signal: PIO1_2/CAPT_X3, label: LED_RED, identifier: LEDpin3}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */

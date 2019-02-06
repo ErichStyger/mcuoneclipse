@@ -9,7 +9,7 @@ Erich
 NOTES:
 - The content of the 'EclipsePlugins' folder has been move to SourceForge:
 https://sourceforge.net/projects/mcuoneclipse/files/Eclipse%20Plugins
-- The releases of the Processor Expert components can be found on SourceForge_
+- The releases of the Processor Expert components can be found on SourceForge:
 https://sourceforge.net/projects/mcuoneclipse/files/PEx%20Components/
 - The content of the 'Beans' and 'Drivers' folder have been moved to a separate
   GitHub repository (https://github.com/ErichStyger/McuOnEclipse_PEx), see

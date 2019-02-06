@@ -39,47 +39,47 @@ void BOARD_InitBootPins(void);
 
 /*! @name PIO1_0 (number 11), LED_GREEN
   @{ */
-#define BOARD_INITPINS_LED_GREEN_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LED_GREEN_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LED_GREEN_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LED_GREEN_GPIO_PIN 0U                        /*!<@brief PIO1 pin index: 0 */
-#define BOARD_INITPINS_LED_GREEN_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LED_GREEN_PIN 0U                             /*!<@brief 1U pin index: 0 */
-#define BOARD_INITPINS_LED_GREEN_CHANNEL 0                          /*!<@brief GPIO PIO1 channel: 0 */
-#define BOARD_INITPINS_LED_GREEN_PIN_NAME PIO1_0                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LED_GREEN_LABEL "LED_GREEN"                  /*!<@brief Label */
-#define BOARD_INITPINS_LED_GREEN_NAME "LED_GREEN"                   /*!<@brief Identifier name */
-#define BOARD_INITPINS_LED_GREEN_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
-                                                                    /* @} */
+#define BOARD_INITPINS_LEDpin1_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_LEDpin1_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
+#define BOARD_INITPINS_LEDpin1_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_LEDpin1_GPIO_PIN 0U                        /*!<@brief PIO1 pin index: 0 */
+#define BOARD_INITPINS_LEDpin1_PORT 1U                            /*!<@brief PORT device name: 1U */
+#define BOARD_INITPINS_LEDpin1_PIN 0U                             /*!<@brief 1U pin index: 0 */
+#define BOARD_INITPINS_LEDpin1_CHANNEL 0                          /*!<@brief GPIO PIO1 channel: 0 */
+#define BOARD_INITPINS_LEDpin1_PIN_NAME PIO1_0                    /*!<@brief Pin name */
+#define BOARD_INITPINS_LEDpin1_LABEL "LED_GREEN"                  /*!<@brief Label */
+#define BOARD_INITPINS_LEDpin1_NAME "LEDpin1"                     /*!<@brief Identifier name */
+#define BOARD_INITPINS_LEDpin1_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
+                                                                  /* @} */
 
 /*! @name PIO1_1 (number 14), LED_BLUE
   @{ */
-#define BOARD_INITPINS_LED_BLUE_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LED_BLUE_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LED_BLUE_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LED_BLUE_GPIO_PIN 1U                        /*!<@brief PIO1 pin index: 1 */
-#define BOARD_INITPINS_LED_BLUE_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LED_BLUE_PIN 1U                             /*!<@brief 1U pin index: 1 */
-#define BOARD_INITPINS_LED_BLUE_CHANNEL 1                          /*!<@brief GPIO PIO1 channel: 1 */
-#define BOARD_INITPINS_LED_BLUE_PIN_NAME PIO1_1                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LED_BLUE_LABEL "LED_BLUE"                   /*!<@brief Label */
-#define BOARD_INITPINS_LED_BLUE_NAME "LED_BLUE"                    /*!<@brief Identifier name */
-#define BOARD_INITPINS_LED_BLUE_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
-                                                                   /* @} */
+#define BOARD_INITPINS_LEDpin2_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_LEDpin2_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
+#define BOARD_INITPINS_LEDpin2_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_LEDpin2_GPIO_PIN 1U                        /*!<@brief PIO1 pin index: 1 */
+#define BOARD_INITPINS_LEDpin2_PORT 1U                            /*!<@brief PORT device name: 1U */
+#define BOARD_INITPINS_LEDpin2_PIN 1U                             /*!<@brief 1U pin index: 1 */
+#define BOARD_INITPINS_LEDpin2_CHANNEL 1                          /*!<@brief GPIO PIO1 channel: 1 */
+#define BOARD_INITPINS_LEDpin2_PIN_NAME PIO1_1                    /*!<@brief Pin name */
+#define BOARD_INITPINS_LEDpin2_LABEL "LED_BLUE"                   /*!<@brief Label */
+#define BOARD_INITPINS_LEDpin2_NAME "LEDpin2"                     /*!<@brief Identifier name */
+#define BOARD_INITPINS_LEDpin2_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
+                                                                  /* @} */
 
 /*! @name PIO1_2 (number 16), LED_RED
   @{ */
-#define BOARD_INITPINS_LED_RED_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LED_RED_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LED_RED_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LED_RED_GPIO_PIN 2U                        /*!<@brief PIO1 pin index: 2 */
-#define BOARD_INITPINS_LED_RED_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LED_RED_PIN 2U                             /*!<@brief 1U pin index: 2 */
-#define BOARD_INITPINS_LED_RED_CHANNEL 2                          /*!<@brief GPIO PIO1 channel: 2 */
-#define BOARD_INITPINS_LED_RED_PIN_NAME PIO1_2                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LED_RED_LABEL "LED_RED"                    /*!<@brief Label */
-#define BOARD_INITPINS_LED_RED_NAME "LED_RED"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_LED_RED_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
+#define BOARD_INITPINS_LEDpin3_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_LEDpin3_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
+#define BOARD_INITPINS_LEDpin3_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_LEDpin3_GPIO_PIN 2U                        /*!<@brief PIO1 pin index: 2 */
+#define BOARD_INITPINS_LEDpin3_PORT 1U                            /*!<@brief PORT device name: 1U */
+#define BOARD_INITPINS_LEDpin3_PIN 2U                             /*!<@brief 1U pin index: 2 */
+#define BOARD_INITPINS_LEDpin3_CHANNEL 2                          /*!<@brief GPIO PIO1 channel: 2 */
+#define BOARD_INITPINS_LEDpin3_PIN_NAME PIO1_2                    /*!<@brief Pin name */
+#define BOARD_INITPINS_LEDpin3_LABEL "LED_RED"                    /*!<@brief Label */
+#define BOARD_INITPINS_LEDpin3_NAME "LEDpin3"                     /*!<@brief Identifier name */
+#define BOARD_INITPINS_LEDpin3_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
                                                                   /* @} */
 
 /*!
