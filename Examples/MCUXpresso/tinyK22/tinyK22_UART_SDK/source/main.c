@@ -39,38 +39,55 @@
 #include "clock_config.h"
 #include "MK22F51212.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
-/* TODO: insert other definitions and declarations here. */
-#define USE_UART_POLLING (1)
+#define USE_UART_POLLING   (0)
+#define USE_UART_INTERRUPT (1 && !USE_UART_POLLING)
 
-#if USE_UART_POLLING
-  #include "fsl_lpuart.h"
+#define BOARD_LUART_BAUDRATE   (115200)
+#define BOARD_LPUART_DEVICE    LPUART0
+#define BOARD_LPUART_CLK_FREQ  CLOCK_GetFreq(kCLOCK_PllFllSelClk)
 
-  static uint8_t txbuff[] = "Lpuart polling example\r\nBoard will send back received characters\r\n";
-  static uint8_t rxbuff[20] = {0};
-  uint8_t ch;
-  lpuart_config_t config;
-  #define BOARD_LUART_BAUDRATE   (115200)
-  #define DEMO_LPUART LPUART0
-  #define DEMO_LPUART_CLKSRC    kCLOCK_PllFllSelClk
-  #define DEMO_LPUART_CLK_FREQ  CLOCK_GetFreq(kCLOCK_PllFllSelClk)
-#endif
+#include "fsl_lpuart.h"
 
-/*
- * @brief   Application entry point.
- */
-int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
+#if USE_UART_INTERRUPT
+  #define RX_RING_BUFFER_SIZE 20U
+  #define ECHO_BUFFER_SIZE 8U
 
-    BOARD_InitDebugConsole(); /* Init FSL debug console. used for printf() */
-    PRINTF("Hello World\n");
+  /* LPUART user callback */
+  void LPUART_UserCallback(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData);
 
-#if USE_UART_POLLING
-    CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
+  lpuart_handle_t g_lpuartHandle;
+  uint8_t g_tipString[] = "LPUART RX ring buffer example\r\nSend back received data\r\nEcho every 8 types\r\n";
+  uint8_t g_rxRingBuffer[RX_RING_BUFFER_SIZE] = {0}; /* RX ring buffer. */
+
+  uint8_t g_rxBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for receive data to echo. */
+  uint8_t g_txBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for send data to echo. */
+  volatile bool rxBufferEmpty = true;
+  volatile bool txBufferFull = false;
+  volatile bool txOnGoing = false;
+  volatile bool rxOnGoing = false;
+
+  /* LPUART user callback */
+  void LPUART_UserCallback(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData) {
+    if (kStatus_LPUART_TxIdle == status) {
+      txBufferFull = false;
+      txOnGoing = false;
+    }
+    if (kStatus_LPUART_RxIdle == status) {
+      rxBufferEmpty = false;
+      rxOnGoing = false;
+    }
+  }
+
+  static void DoUartInterrupt(void) {
+    lpuart_config_t config;
+    lpuart_transfer_t xfer;
+    lpuart_transfer_t sendXfer;
+    lpuart_transfer_t receiveXfer;
+    size_t receivedBytes = 0U;
+    int i;
+
+    CLOCK_SetLpuartClock(1U);
     /*
      * config.baudRate_Bps = 115200U;
      * config.parityMode = kLPUART_ParityDisabled;
@@ -81,18 +98,109 @@ int main(void) {
      * config.enableRx = false;
      */
     LPUART_GetDefaultConfig(&config);
-    config.baudRate_Bps = BOARD_LUART_BAUDRATE;
+    config.baudRate_Bps = BOARD_DEBUG_UART_BAUDRATE;
     config.enableTx = true;
     config.enableRx = true;
 
-    LPUART_Init(DEMO_LPUART, &config, DEMO_LPUART_CLK_FREQ);
+    LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+    LPUART_TransferCreateHandle(BOARD_LPUART_DEVICE, &g_lpuartHandle, LPUART_UserCallback, NULL);
+    LPUART_TransferStartRingBuffer(BOARD_LPUART_DEVICE, &g_lpuartHandle, g_rxRingBuffer, sizeof(g_rxRingBuffer));
 
-    LPUART_WriteBlocking(DEMO_LPUART, txbuff, sizeof(txbuff) - 1);
-    while (1)
-    {
-        LPUART_ReadBlocking(DEMO_LPUART, &ch, 1);
-        LPUART_WriteBlocking(DEMO_LPUART, &ch, 1);
+    /* Send g_tipString out. */
+    xfer.data = g_tipString;
+    xfer.dataSize = sizeof(g_tipString) - 1;
+    txOnGoing = true;
+    LPUART_TransferSendNonBlocking(BOARD_LPUART_DEVICE, &g_lpuartHandle, &xfer);
+
+    /* Wait send finished */
+    while (txOnGoing) {
+      __NOP();
     }
+
+    /* Start to echo. */
+    sendXfer.data = g_txBuffer;
+    sendXfer.dataSize = ECHO_BUFFER_SIZE;
+    receiveXfer.data = g_rxBuffer;
+    receiveXfer.dataSize = ECHO_BUFFER_SIZE;
+    for(;;) {
+        /* If g_txBuffer is empty and g_rxBuffer is full, copy g_rxBuffer to g_txBuffer. */
+        if ((!rxBufferEmpty) && (!txBufferFull)) {
+            memcpy(g_txBuffer, g_rxBuffer, ECHO_BUFFER_SIZE);
+            rxBufferEmpty = true;
+            txBufferFull = true;
+        }
+        /* If RX is idle and g_rxBuffer is empty, start to read data to g_rxBuffer. */
+        if ((!rxOnGoing) && rxBufferEmpty) {
+            rxOnGoing = true;
+            LPUART_TransferReceiveNonBlocking(BOARD_LPUART_DEVICE, &g_lpuartHandle, &receiveXfer, &receivedBytes);
+            if (ECHO_BUFFER_SIZE == receivedBytes) {
+                rxBufferEmpty = false;
+                rxOnGoing = false;
+            }
+        }
+        /* If TX is idle and g_txBuffer is full, start to send data. */
+        if ((!txOnGoing) && txBufferFull) {
+            txOnGoing = true;
+            LPUART_TransferSendNonBlocking(BOARD_LPUART_DEVICE, &g_lpuartHandle, &sendXfer);
+        }
+        /* Delay some time, simulate the app is processing other things, input data save to ring buffer. */
+        i = 0x10U;
+        while (i--) {
+            __NOP();
+        }
+    }
+  }
+#endif
+
+#if USE_UART_POLLING
+
+static void DoUartPolling(void) {
+  static uint8_t txbuff[] = "Lpuart polling example\r\nBoard will send back received characters\r\n";
+//  static uint8_t rxbuff[20] = {'\0'};
+  uint8_t ch;
+  lpuart_config_t config;
+
+  CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
+  /*
+   * config.baudRate_Bps = 115200U;
+   * config.parityMode = kLPUART_ParityDisabled;
+   * config.stopBitCount = kLPUART_OneStopBit;
+   * config.txFifoWatermark = 0;
+   * config.rxFifoWatermark = 0;
+   * config.enableTx = false;
+   * config.enableRx = false;
+   */
+  LPUART_GetDefaultConfig(&config);
+  config.baudRate_Bps = BOARD_LUART_BAUDRATE;
+  config.enableTx = true;
+  config.enableRx = true;
+
+  LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+
+  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, txbuff, sizeof(txbuff) - 1);
+  while (1)
+  {
+      LPUART_ReadBlocking(BOARD_LPUART_DEVICE, &ch, 1);
+      LPUART_WriteBlocking(BOARD_LPUART_DEVICE, &ch, 1);
+  }
+}
+#endif
+/*
+ * @brief   Application entry point.
+ */
+int main(void) {
+  	/* Init board hardware. */
+    BOARD_InitBootPins();
+    BOARD_InitBootClocks();
+    BOARD_InitBootPeripherals();
+
+    BOARD_InitDebugConsole(); /* Init FSL debug console. Used for printf() */
+    PRINTF("Hello World\n");
+
+#if USE_UART_POLLING
+    DoUartPolling();
+#elif USE_UART_INTERRUPT
+    DoUartInterrupt();
 #endif
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
