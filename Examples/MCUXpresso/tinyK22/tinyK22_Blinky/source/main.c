@@ -42,16 +42,6 @@
 #include "fsl_gpio.h"
 /* TODO: insert other definitions and declarations here. */
 
-/*
-Zażółć gęślą jaźń
-
-in Spanish, "El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja."
-(all 27 letters and diacritics).
-
-in Russian, "Съешь же ещё этих мягких французских булок, да выпей чаю"
-(all 33 Russian Cyrillic alphabet letters).
-*/
-
 static void delay(void) {
 	volatile int i = 1000000;
 	while(i>0) {
@@ -76,7 +66,7 @@ int main(void) {
     	GPIO_PortSet(BOARD_INITPINS_LED_BLUE_GPIO, (1<<BOARD_INITPINS_LED_BLUE_PIN)); /* led off */
     	delay();
     	GPIO_PortClear(BOARD_INITPINS_LED_BLUE_GPIO, (1<<BOARD_INITPINS_LED_BLUE_PIN)); /* led on */
-        delay();
+      delay();
     }
     return 0 ;
 }
