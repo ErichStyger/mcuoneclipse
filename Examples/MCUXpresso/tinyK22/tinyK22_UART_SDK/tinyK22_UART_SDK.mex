@@ -800,10 +800,10 @@
             </clock_configuration>
          </clock_configurations>
       </clocks>
-      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="false">
+      <periphs name="Peripherals" version="5.0" enabled="true" update_project_code="true">
          <generated_project_files>
-            <file path="board/peripherals.c" update_enabled="false"/>
-            <file path="board/peripherals.h" update_enabled="false"/>
+            <file path="board/peripherals.c" update_enabled="true"/>
+            <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
             <processor_version>5.0.0</processor_version>
