@@ -35,9 +35,9 @@ pin_labels:
 - {pin_num: '43', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14, label: 'J2[5]/U13[3]'}
 - {pin_num: '44', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0/LPUART0_RTS_b, label: 'J24[6]/LLWU_P6/ADC0_SE15/PUSH_BUTTON2',
   identifier: SW2}
-- {pin_num: '45', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b, label: 'J24[8]'}
+- {pin_num: '45', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b, label: LEDBLUE, identifier: LED_BLUE;LEDBLUE}
 - {pin_num: '51', pin_signal: CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK, label: 'J1[16]/LLWU_P10'}
-- {pin_num: '49', pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, label: 'J8[P2]/J24[9]/uSD_card_CS', identifier: SD_CARD_DAT3}
+- {pin_num: '49', pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, label: LPUART0_TX, identifier: SD_CARD_DAT3;LPUART0_TX}
 - {pin_num: '50', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, label: 'J1[15]/I2S0_RXD0', identifier: AC_I2S_DOUT}
 - {pin_num: '52', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8, label: 'J1[11]/I2S0_RX_FS'}
 - {pin_num: '53', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7, label: 'J1[7]/I2S0_MCLK', identifier: AC_SYS_MCLK}
@@ -78,7 +78,7 @@ pin_labels:
 - {pin_num: '6', pin_signal: USB0_DM, label: USB_DN, identifier: USB_DN}
 - {pin_num: '34', pin_signal: RESET_b, label: 'J11[10]/RST_TGTMCU_b'}
 - {pin_num: '8', pin_signal: VREGIN, label: P5V_K22F, identifier: USB_VREGIN}
-- {pin_num: '46', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX, label: 'J1[14]', identifier: CLKOUT}
+- {pin_num: '46', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX, label: LPUART0_RX, identifier: CLKOUT;LPCUART0_RX;LPCART0_RX;LPUART0_RX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -106,8 +106,10 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX}
-  - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
+  - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX, identifier: LPUART0_RX}
+  - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: LPUART0_TX}
+  - {pin_num: '45', peripheral: GPIOC, signal: 'GPIO, 2', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b, identifier: LEDBLUE,
+    direction: OUTPUT, gpio_init_state: 'true'}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -123,18 +125,28 @@ void BOARD_InitPins(void)
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
 
+    gpio_pin_config_t LEDBLUE_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTC2 (pin 45)  */
+    GPIO_PinInit(BOARD_LEDBLUE_GPIO, BOARD_LEDBLUE_PIN, &LEDBLUE_config);
+
+    /* PORTC2 (pin 45) is configured as PTC2 */
+    PORT_SetPinMux(BOARD_LEDBLUE_PORT, BOARD_LEDBLUE_PIN, kPORT_MuxAsGpio);
+
     /* PORTC3 (pin 46) is configured as LPUART0_RX */
-    PORT_SetPinMux(BOARD_CLKOUT_PORT, BOARD_CLKOUT_PIN, kPORT_MuxAlt7);
+    PORT_SetPinMux(BOARD_LPUART0_RX_PORT, BOARD_LPUART0_RX_PIN, kPORT_MuxAlt7);
 
     /* PORTC4 (pin 49) is configured as LPUART0_TX */
-    PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);
+    PORT_SetPinMux(BOARD_LPUART0_TX_PORT, BOARD_LPUART0_TX_PIN, kPORT_MuxAlt7);
 }
 
 /* clang-format off */
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitLEDsPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '23', peripheral: GPIOA, signal: 'GPIO, 1', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, direction: OUTPUT, gpio_init_state: 'true', slew_rate: slow,
     open_drain: disable, pull_select: down, pull_enable: disable}
@@ -236,7 +248,7 @@ void BOARD_InitLEDsPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitButtonsPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '40', peripheral: GPIOB, signal: 'GPIO, 17', pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, direction: INPUT, slew_rate: fast, open_drain: disable,
     pull_select: up, pull_enable: enable}
@@ -379,7 +391,7 @@ void BOARD_InitDEBUG_UARTPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitAccelPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '37', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3, identifier: ACCEL_SCL, slew_rate: fast, open_drain: enable,
     pull_select: up, pull_enable: enable}
@@ -493,10 +505,10 @@ void BOARD_InitAccelPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitSDHCPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, direction: INPUT, slew_rate: fast,
-    open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable}
+  - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: SD_CARD_DAT3,
+    direction: INPUT, slew_rate: fast, open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable}
   - {pin_num: '58', peripheral: SPI0, signal: SCK, pin_signal: ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FB_CS0_b/LPUART0_CTS_b, identifier: SD_CARD_CLK, slew_rate: fast,
     open_drain: disable, pull_select: down, pull_enable: disable}
   - {pin_num: '59', peripheral: SPI0, signal: SOUT, pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/LPUART0_RX/I2C0_SCL, slew_rate: fast, open_drain: disable,
@@ -621,7 +633,7 @@ void BOARD_InitSDHCPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitOSCPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '32', peripheral: OSC, signal: EXTAL0, pin_signal: EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0, slew_rate: no_init, open_drain: no_init, pull_select: no_init,
     pull_enable: no_init}
@@ -653,7 +665,7 @@ void BOARD_InitOSCPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitPOTPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '37', peripheral: ADC0, signal: 'SE, 12', pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3, identifier: POT_5K, slew_rate: fast, open_drain: disable,
     pull_select: down, pull_enable: disable}
@@ -694,7 +706,7 @@ void BOARD_InitPOTPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitLSENSEPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '11', peripheral: ADC0, signal: 'SE, 3', pin_signal: ADC1_DP0/ADC0_DP3}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********

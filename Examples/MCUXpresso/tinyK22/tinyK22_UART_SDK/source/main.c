@@ -39,15 +39,24 @@
 #include "clock_config.h"
 #include "MK22F51212.h"
 #include "fsl_debug_console.h"
+#include <ctype.h> /* for isupper() */
 
-#define USE_UART_POLLING   (0)
+#include "fsl_lpuart.h"
+
+#define USE_UART_POLLING   (1)
 #define USE_UART_INTERRUPT (1 && !USE_UART_POLLING)
 
 #define BOARD_LUART_BAUDRATE   (115200)
 #define BOARD_LPUART_DEVICE    LPUART0
 #define BOARD_LPUART_CLK_FREQ  CLOCK_GetFreq(kCLOCK_PllFllSelClk)
 
-#include "fsl_lpuart.h"
+static void delay(void) {
+  volatile int i = 1000000;
+  while(i>0) {
+    __asm("nop");
+    i--;
+  }
+}
 
 #if USE_UART_INTERRUPT
   #define RX_RING_BUFFER_SIZE 20U
@@ -56,16 +65,16 @@
   /* LPUART user callback */
   void LPUART_UserCallback(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData);
 
-  lpuart_handle_t g_lpuartHandle;
-  uint8_t g_tipString[] = "LPUART RX ring buffer example\r\nSend back received data\r\nEcho every 8 types\r\n";
-  uint8_t g_rxRingBuffer[RX_RING_BUFFER_SIZE] = {0}; /* RX ring buffer. */
+  static lpuart_handle_t g_lpuartHandle;
+  static uint8_t g_tipString[] = "LPUART RX ring buffer example\r\nSend back received data\r\nEcho every 8 types\r\n";
+  static uint8_t g_rxRingBuffer[RX_RING_BUFFER_SIZE] = {0}; /* RX ring buffer. */
 
-  uint8_t g_rxBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for receive data to echo. */
-  uint8_t g_txBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for send data to echo. */
-  volatile bool rxBufferEmpty = true;
-  volatile bool txBufferFull = false;
-  volatile bool txOnGoing = false;
-  volatile bool rxOnGoing = false;
+  static uint8_t g_rxBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for receive data to echo. */
+  static uint8_t g_txBuffer[ECHO_BUFFER_SIZE] = {'\0'}; /* Buffer for send data to echo. */
+  static volatile bool rxBufferEmpty = true;
+  static volatile bool txBufferFull = false;
+  static volatile bool txOnGoing = false;
+  static volatile bool rxOnGoing = false;
 
   /* LPUART user callback */
   void LPUART_UserCallback(LPUART_Type *base, lpuart_handle_t *handle, status_t status, void *userData) {
@@ -155,8 +164,7 @@
 #if USE_UART_POLLING
 
 static void DoUartPolling(void) {
-  static uint8_t txbuff[] = "Lpuart polling example\r\nBoard will send back received characters\r\n";
-//  static uint8_t rxbuff[20] = {'\0'};
+  static uint8_t txbuff[] = "Lpuart polling example\r\ntinyK22 will send back received characters\r\n";
   uint8_t ch;
   lpuart_config_t config;
 
@@ -176,12 +184,21 @@ static void DoUartPolling(void) {
   config.enableRx = true;
 
   LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+  for(int i=0; i<10; i++) {
+    GPIO_PortToggle(BOARD_LEDBLUE_GPIO, 1<<BOARD_LEDBLUE_PIN);
+    delay();
+  }
 
   LPUART_WriteBlocking(BOARD_LPUART_DEVICE, txbuff, sizeof(txbuff) - 1);
-  while (1)
-  {
-      LPUART_ReadBlocking(BOARD_LPUART_DEVICE, &ch, 1);
-      LPUART_WriteBlocking(BOARD_LPUART_DEVICE, &ch, 1);
+  for(;;) { /* do echo application */
+    GPIO_PortToggle(BOARD_LEDBLUE_GPIO, 1<<BOARD_LEDBLUE_PIN);
+    LPUART_ReadBlocking(BOARD_LPUART_DEVICE, &ch, 1);
+    if (isupper(ch)) {
+      ch = tolower(ch);
+    } else {
+      ch = toupper(ch);
+    }
+    LPUART_WriteBlocking(BOARD_LPUART_DEVICE, &ch, 1);
   }
 }
 #endif

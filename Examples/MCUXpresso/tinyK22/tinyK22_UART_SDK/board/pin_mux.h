@@ -25,11 +25,24 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-/*! @name PORTC3 (number 46), J1[14]
+/*! @name PORTC3 (number 46), LPUART0_RX
   @{ */
-#define BOARD_CLKOUT_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_CLKOUT_PIN 3U     /*!<@brief PORTC pin index: 3 */
-                                /* @} */
+#define BOARD_LPUART0_RX_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_LPUART0_RX_PIN 3U     /*!<@brief PORTC pin index: 3 */
+                                    /* @} */
+
+/*! @name PORTC4 (number 49), LPUART0_TX
+  @{ */
+#define BOARD_LPUART0_TX_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_LPUART0_TX_PIN 4U     /*!<@brief PORTC pin index: 4 */
+                                    /* @} */
+
+/*! @name PORTC2 (number 45), LEDBLUE
+  @{ */
+#define BOARD_LEDBLUE_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_LEDBLUE_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_LEDBLUE_PIN 2U     /*!<@brief PORTC pin index: 2 */
+                                 /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
@@ -136,7 +149,7 @@ void BOARD_InitDEBUG_UARTPins(void);
  */
 void BOARD_InitAccelPins(void);
 
-/*! @name PORTC4 (number 49), J8[P2]/J24[9]/uSD_card_CS
+/*! @name PORTC4 (number 49), LPUART0_TX
   @{ */
 #define BOARD_SD_CARD_DAT3_PORT PORTC /*!<@brief PORT device name: PORTC */
 #define BOARD_SD_CARD_DAT3_PIN 4U     /*!<@brief PORTC pin index: 4 */
