@@ -26,6 +26,8 @@
                <pin_label pin_num="14" pin_signal="PIO1_1/CAPT_X2" label="LED_BLUE" identifier="LEDpin2"/>
                <pin_label pin_num="11" pin_signal="PIO1_0/CAPT_X1" label="LED_GREEN" identifier="LEDpin1"/>
                <pin_label pin_num="16" pin_signal="PIO1_2/CAPT_X3" label="LED_RED" identifier="LEDpin3"/>
+               <pin_label pin_num="6" pin_signal="PIO0_4/ADC_11" label="BTN_K3" identifier="BTNpin3"/>
+               <pin_label pin_num="4" pin_signal="PIO0_12" label="BTN_K1" identifier="BTNpin1"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -58,6 +60,18 @@
                   <pin peripheral="GPIO" signal="PIO1, 2" pin_num="16" pin_signal="PIO1_2/CAPT_X3">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 4" pin_num="6" pin_signal="PIO0_4/ADC_11">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="mode" value="inactive"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 12" pin_num="4" pin_signal="PIO0_12">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="mode" value="inactive"/>
                      </pin_features>
                   </pin>
                </pins>

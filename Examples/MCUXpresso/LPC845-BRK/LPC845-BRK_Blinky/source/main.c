@@ -48,6 +48,15 @@
 #include "fsl_gpio.h"
 /* TODO: insert other definitions and declarations here. */
 
+static bool BTN_K3_Pressed(void) {
+  /* pin has 10K pull-up */
+  return GPIO_PinRead(BOARD_INITPINS_BTNpin3_GPIO, BOARD_INITPINS_BTNpin3_PORT, BOARD_INITPINS_BTNpin3_PIN)==0;
+}
+
+static bool BTN_K1_Pressed(void) {
+  /* pin has 10K pull-up */
+  return GPIO_PinRead(BOARD_INITPINS_BTNpin1_GPIO, BOARD_INITPINS_BTNpin1_PORT, BOARD_INITPINS_BTNpin1_PIN)==0;
+}
 /*
  * @brief   Application entry point.
  */
@@ -59,7 +68,8 @@ int main(void) {
 
     printf("Hello World\n");
 
-    GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1 */
+    GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0: used for push buttons */
+    GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1: used for LEDs */
 
     /* initialize driver and modules */
     McuWait_Init();
@@ -67,7 +77,15 @@ int main(void) {
     McuLED1_Init();
     McuLED2_Init();
     McuLED3_Init();
-    while(1) {
+    for(;;) {
+      if (BTN_K1_Pressed()) { /* check push button */
+        McuLED1_On(); /* green */
+        while(BTN_K1_Pressed()) {}
+      }
+      if (BTN_K3_Pressed()) { /* check push button */
+        McuLED3_On(); /* red */
+        while(BTN_K3_Pressed()) {}
+      }
       McuLED1_On(); /* green */
       McuWait_Waitms(100);
       McuLED1_Off();

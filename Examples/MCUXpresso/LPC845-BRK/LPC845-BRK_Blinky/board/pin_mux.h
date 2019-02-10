@@ -37,6 +37,21 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO0_12_MODE_INACTIVE 0x00u
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO0_4_MODE_INACTIVE 0x00u
+
 /*! @name PIO1_0 (number 11), LED_GREEN
   @{ */
 #define BOARD_INITPINS_LEDpin1_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
@@ -81,6 +96,36 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LEDpin3_NAME "LEDpin3"                     /*!<@brief Identifier name */
 #define BOARD_INITPINS_LEDpin3_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
                                                                   /* @} */
+
+/*! @name PIO0_4 (number 6), BTN_K3
+  @{ */
+#define BOARD_INITPINS_BTNpin3_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_BTNpin3_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
+#define BOARD_INITPINS_BTNpin3_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_BTNpin3_GPIO_PIN 4U                       /*!<@brief PIO0 pin index: 4 */
+#define BOARD_INITPINS_BTNpin3_PORT 0U                           /*!<@brief PORT device name: 0U */
+#define BOARD_INITPINS_BTNpin3_PIN 4U                            /*!<@brief 0U pin index: 4 */
+#define BOARD_INITPINS_BTNpin3_CHANNEL 4                         /*!<@brief GPIO PIO0 channel: 4 */
+#define BOARD_INITPINS_BTNpin3_PIN_NAME PIO0_4                   /*!<@brief Pin name */
+#define BOARD_INITPINS_BTNpin3_LABEL "BTN_K3"                    /*!<@brief Label */
+#define BOARD_INITPINS_BTNpin3_NAME "BTNpin3"                    /*!<@brief Identifier name */
+#define BOARD_INITPINS_BTNpin3_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
+                                                                 /* @} */
+
+/*! @name PIO0_12 (number 4), BTN_K1
+  @{ */
+#define BOARD_INITPINS_BTNpin1_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_BTNpin1_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
+#define BOARD_INITPINS_BTNpin1_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_BTNpin1_GPIO_PIN 12U                      /*!<@brief PIO0 pin index: 12 */
+#define BOARD_INITPINS_BTNpin1_PORT 0U                           /*!<@brief PORT device name: 0U */
+#define BOARD_INITPINS_BTNpin1_PIN 12U                           /*!<@brief 0U pin index: 12 */
+#define BOARD_INITPINS_BTNpin1_CHANNEL 12                        /*!<@brief GPIO PIO0 channel: 12 */
+#define BOARD_INITPINS_BTNpin1_PIN_NAME PIO0_12                  /*!<@brief Pin name */
+#define BOARD_INITPINS_BTNpin1_LABEL "BTN_K1"                    /*!<@brief Label */
+#define BOARD_INITPINS_BTNpin1_NAME "BTNpin1"                    /*!<@brief Identifier name */
+#define BOARD_INITPINS_BTNpin1_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
+                                                                 /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
