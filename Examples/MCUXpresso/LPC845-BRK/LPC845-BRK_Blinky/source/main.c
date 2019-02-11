@@ -45,6 +45,7 @@
 #include "McuLED2.h"
 #include "McuLED3.h"
 #include "McuHardFault.h"
+#include "McuArmTools.h"
 #include "fsl_gpio.h"
 /* TODO: insert other definitions and declarations here. */
 
@@ -74,9 +75,13 @@ int main(void) {
     /* initialize driver and modules */
     McuWait_Init();
     McuHardFault_Init();
+    McuArmTools_Init();
     McuLED1_Init();
     McuLED2_Init();
     McuLED3_Init();
+#if 0
+    McuArmTools_SoftwareReset(); /* this will perform a reset, see https://mcuoneclipse.com/2015/07/01/how-to-reset-an-arm-cortex-m-with-software/ */
+#endif
     for(;;) {
       if (BTN_K1_Pressed()) { /* check push button */
         McuLED1_On(); /* green */
