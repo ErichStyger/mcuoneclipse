@@ -43,8 +43,9 @@
 
 #include "fsl_lpuart.h"
 
-#define USE_UART_POLLING   (1)
-#define USE_UART_INTERRUPT (1 && !USE_UART_POLLING)
+#define USE_UART_POLLING         (0)
+#define USE_UART_INTERRUPT       (1 && !USE_UART_POLLING)
+#define USE_UART_ISR_RINGBUFFER  (0 && !USE_UART_POLLING)
 
 #define BOARD_LUART_BAUDRATE   (115200)
 #define BOARD_LPUART_DEVICE    LPUART0
@@ -58,7 +59,31 @@ static void delay(void) {
   }
 }
 
-#if USE_UART_INTERRUPT
+static void InitUart(void) {
+  lpuart_config_t config;
+
+  CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
+  /*
+   * config.baudRate_Bps = 115200U;
+   * config.parityMode = kLPUART_ParityDisabled;
+   * config.stopBitCount = kLPUART_OneStopBit;
+   * config.txFifoWatermark = 0;
+   * config.rxFifoWatermark = 0;
+   * config.enableTx = false;
+   * config.enableRx = false;
+   */
+  LPUART_GetDefaultConfig(&config);
+  config.baudRate_Bps = BOARD_LUART_BAUDRATE;
+  config.enableTx = true;
+  config.enableRx = true;
+  LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+}
+
+static void UartWriteString(const unsigned char *str) {
+  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, str, strlen((char*)str));
+}
+
+#if USE_UART_ISR_RINGBUFFER
   #define RX_RING_BUFFER_SIZE 20U
   #define ECHO_BUFFER_SIZE 8U
 
@@ -88,7 +113,7 @@ static void delay(void) {
     }
   }
 
-  static void DoUartInterrupt(void) {
+  static void DoUartInterruptRingbuffer(void) {
     lpuart_config_t config;
     lpuart_transfer_t xfer;
     lpuart_transfer_t sendXfer;
@@ -161,36 +186,78 @@ static void delay(void) {
   }
 #endif
 
-#if USE_UART_POLLING
-
-static void DoUartPolling(void) {
-  static uint8_t txbuff[] = "Lpuart polling example\r\ntinyK22 will send back received characters\r\n";
-  uint8_t ch;
-  lpuart_config_t config;
-
-  CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
+#if USE_UART_INTERRUPT
   /*
-   * config.baudRate_Bps = 115200U;
-   * config.parityMode = kLPUART_ParityDisabled;
-   * config.stopBitCount = kLPUART_OneStopBit;
-   * config.txFifoWatermark = 0;
-   * config.rxFifoWatermark = 0;
-   * config.enableTx = false;
-   * config.enableRx = false;
-   */
-  LPUART_GetDefaultConfig(&config);
-  config.baudRate_Bps = BOARD_LUART_BAUDRATE;
-  config.enableTx = true;
-  config.enableRx = true;
+    Ring buffer for data input and output, in this example, input data are saved
+    to ring buffer in IRQ handler. The main function polls the ring buffer status,
+    if there are new data, then send them out.
+    Ring buffer full: (((rxIndex + 1) % DEMO_RING_BUFFER_SIZE) == txIndex)
+    Ring buffer empty: (rxIndex == txIndex)
+  */
+  #define UART_RING_BUFFER_SIZE  (16)
+  static uint8_t uartRingBuffer[UART_RING_BUFFER_SIZE];
+  static volatile uint16_t txIndex; /* Index of the data to send out. */
+  static volatile uint16_t rxIndex; /* Index of the memory to save new arrived data. */
 
-  LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+  void LPUART0_IRQHandler(void) {
+      uint8_t data;
+
+      /* If new data arrived. */
+      if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(BOARD_LPUART_DEVICE)) {
+          data = LPUART_ReadByte(BOARD_LPUART_DEVICE);
+          /* If ring buffer is not full, add data to ring buffer. */
+          if (((rxIndex + 1) % UART_RING_BUFFER_SIZE) != txIndex) {
+            uartRingBuffer[rxIndex] = data;
+            rxIndex++;
+            rxIndex %= UART_RING_BUFFER_SIZE;
+          }
+      }
+      /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
+        exception return operation might vector to incorrect interrupt */
+  #if defined __CORTEX_M && (__CORTEX_M == 4U)
+      __DSB();
+  #endif
+  }
+
+  static void DoUartInterrupt(void) {
+    InitUart();
+    UartWriteString((unsigned char*)"Lpuart functional API interrupt example\r\nBoard receives characters then sends them out\r\nNow please input:\r\n");
+    /* Enable RX interrupt. */
+    LPUART_EnableInterrupts(BOARD_LPUART_DEVICE, kLPUART_RxDataRegFullInterruptEnable);
+    EnableIRQ(LPUART0_IRQn);
+
+    for(;;) {
+        /* Send data only when LPUART TX register is empty and ring buffer has data to send out. */
+        while ((kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(BOARD_LPUART_DEVICE)) && (rxIndex != txIndex)) {
+          uint8_t ch;
+
+          ch = uartRingBuffer[txIndex];
+          if (isupper(ch)) {
+            ch = tolower(ch);
+          } else {
+            ch = toupper(ch);
+          }
+          LPUART_WriteByte(BOARD_LPUART_DEVICE, ch);
+          txIndex++;
+          txIndex %= UART_RING_BUFFER_SIZE;
+        }
+    }
+  }
+#endif /* USE_UART_INTERRUPT */
+
+#if USE_UART_POLLING
+static void DoUartPolling(void) {
+  InitUart();
+#if 0
   for(int i=0; i<10; i++) {
     GPIO_PortToggle(BOARD_LEDBLUE_GPIO, 1<<BOARD_LEDBLUE_PIN);
     delay();
   }
+#endif
+  UartWriteString((unsigned char*)"Lpuart polling example\r\ntinyK22 will send back received characters\r\n");
+  for(;;) { /* echo application */
+    uint8_t ch;
 
-  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, txbuff, sizeof(txbuff) - 1);
-  for(;;) { /* do echo application */
     GPIO_PortToggle(BOARD_LEDBLUE_GPIO, 1<<BOARD_LEDBLUE_PIN);
     LPUART_ReadBlocking(BOARD_LPUART_DEVICE, &ch, 1);
     if (isupper(ch)) {
@@ -213,11 +280,13 @@ int main(void) {
 
     BOARD_InitDebugConsole(); /* Init FSL debug console. Used for printf() */
     PRINTF("Hello World\n");
-
+    delay();
 #if USE_UART_POLLING
     DoUartPolling();
 #elif USE_UART_INTERRUPT
     DoUartInterrupt();
+#elif USE_UART_ISR_RINGBUFFER
+    DoUartInterruptRingbuffer();
 #endif
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
