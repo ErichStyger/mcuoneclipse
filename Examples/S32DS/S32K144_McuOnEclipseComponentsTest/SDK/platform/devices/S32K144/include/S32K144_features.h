@@ -1245,7 +1245,7 @@ CMD_GET_ID */
 
 /* OSIF module features */
 
-#define FEATURE_OSIF_USE_SYSTICK                         (1)
+#define FEATURE_OSIF_USE_SYSTICK                         (0)
 #define FEATURE_OSIF_USE_PIT                             (0)
 #define FEATURE_OSIF_FREERTOS_ISR_CONTEXT_METHOD         (1) /* Cortex M device */
 
