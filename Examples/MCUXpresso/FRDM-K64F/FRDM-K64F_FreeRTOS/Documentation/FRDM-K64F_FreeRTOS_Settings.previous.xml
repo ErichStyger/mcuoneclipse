@@ -97,7 +97,7 @@
     <Enabled v="Y" />
     <Properties>
       <Component_name v="FRTOS1" />
-      <RTOS_Version v="V10.0.1" />
+      <RTOS_Version v="V10.1.1" />
       <SDK v="MCUC1" />
       <boolgroup name="Kinetis SDK" v="Disabled" />
       <group name="Custom Port">
@@ -121,6 +121,7 @@
       </group>
       <boolgroup name="Segger System Viewer Trace" v="Disabled" />
       <boolgroup name="Percepio Trace" v="Disabled" />
+      <Custom_FreeRTOSConfig_h v="/* #include &amp;quot;CustomFreeRTOSSettings.h */" />
       <boolgroup name="Generate Runtime Statistics" v="Enabled">
         <Use_Tick_Counter v="no" />
         <boolgroup name="LDD" v="Enabled">
@@ -1001,7 +1002,7 @@
     <Enabled v="N" />
     <Properties>
       <Component_name v="SYS1" />
-      <Version v="V2.52a" />
+      <Version v="V2.52b" />
       <Application_Name v="&amp;quot;Demo Application&amp;quot;" />
       <Device_Name v="&amp;quot;Cortex&amp;quot;" />
       <RAM_Base v="536805376" />
@@ -1011,6 +1012,11 @@
       <Static_Buffer v="yes" />
       <Post_Mortem v="no" />
       <Implicit_Format_for_printf__ v="no" />
+      <boolgroup name="Events" v="Enabled">
+        <Queues v="yes" />
+        <ISR v="yes" />
+        <StreamBuffer v="yes" />
+      </boolgroup>
       <group name="RTT Channel">
         <Segger_RTT v="RTT1" />
         <Name v="&amp;quot;SysView&amp;quot;" />

@@ -94,6 +94,7 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
+							<tool id="com.crt.advproject.tool.debug.debug.1851973429" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -115,8 +116,11 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_2="LPC800_32.cfx" property_3="NXP" property_4="LPC824" property_count="5" version="100200"/&gt;&#13;
-&lt;infoList vendor="NXP"&gt;&lt;info chip="LPC824" flash_driver="LPC800_32.cfx" match_id="0x0" name="LPC824" stub="crt_emu_cm3_gen"&gt;&lt;chip&gt;&lt;name&gt;LPC824&lt;/name&gt;&#13;
+&lt;Properties property_2="LPC800_32.cfx" property_3="NXP" property_4="LPC824" property_count="5" version="100300"/&gt;&#13;
+&lt;infoList vendor="NXP"&gt;&#13;
+&lt;info chip="LPC824" flash_driver="LPC800_32.cfx" match_id="0x0" name="LPC824" stub="crt_emu_cm3_gen"&gt;&#13;
+&lt;chip&gt;&#13;
+&lt;name&gt;LPC824&lt;/name&gt;&#13;
 &lt;family&gt;LPC82x&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP (formerly Philips)&lt;/vendor&gt;&#13;
 &lt;reset board="None" core="Real" sys="Real"/&gt;&#13;
@@ -155,7 +159,8 @@
 &lt;peripheralInstance derived_from="GPIO-PORT" determined="infoFile" id="GPIO-PORT" location="0xa0000000"/&gt;&#13;
 &lt;peripheralInstance derived_from="PIN-INT" determined="infoFile" id="PIN-INT" location="0xa0004000"/&gt;&#13;
 &lt;/chip&gt;&#13;
-&lt;processor&gt;&lt;name gcc_name="cortex-m0"&gt;Cortex-M0&lt;/name&gt;&#13;
+&lt;processor&gt;&#13;
+&lt;name gcc_name="cortex-m0"&gt;Cortex-M0&lt;/name&gt;&#13;
 &lt;family&gt;Cortex-M&lt;/family&gt;&#13;
 &lt;/processor&gt;&#13;
 &lt;link href="LPC82x_peripheral.xme" show="embed" type="simple"/&gt;&#13;

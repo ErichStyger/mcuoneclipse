@@ -131,6 +131,7 @@ void vPortFree( void *pv ) PRIVILEGED_FUNCTION;
 void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION;
 size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION;
 size_t xPortGetMinimumEverFreeHeapSize( void ) PRIVILEGED_FUNCTION;
+void vPortInitializeHeap(void) PRIVILEGED_FUNCTION; /* << EST */
 
 /*
  * Setup the hardware ready for the scheduler to take control.  This generally

@@ -1615,7 +1615,7 @@ extern "C" void __thumb_startup( void );
 extern void __thumb_startup( void );
 #endif
 
-extern uint32_t __SP_INIT[];
+extern uint32_t __SP_INIT;
 
 /*lint -esym(765,__vect_table) Disable MISRA rule (8.10) checking for symbols (__vect_table). Definition of the interrupt vector table placed by linker on a predefined location. */
 /*lint -save  -e926 -e927 -e928 -e929 Disable MISRA rule (11.4) checking. Need to explicitly cast pointers to the general ISR for Interrupt vector table */

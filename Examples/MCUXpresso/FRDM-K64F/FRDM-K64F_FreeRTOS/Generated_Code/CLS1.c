@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.098, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -41,6 +41,7 @@
 **         SendNum32s                   - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
 **         SendCh                       - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
 **         SendStr                      - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
+**         PrintMemory                  - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
 **         printfIO                     - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
 **         printf                       - unsigned CLS1_printf(const char *fmt, ...);
 **         SendData                     - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
@@ -66,7 +67,7 @@
 **         Init                         - void CLS1_Init(void);
 **         Deinit                       - void CLS1_Deinit(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -1282,9 +1283,9 @@ void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch))
 {
 #if CLS1_CONFIG_BLOCKING_SEND_ENABLED
   uint8_t res;
-#endif
-#if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS>0
-  int timeoutMs = CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS;
+  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
+  int timeoutMs = CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS;
+  #endif
 #endif
 
 #if CLS1_CONFIG_USE_MUTEX
@@ -1293,16 +1294,16 @@ void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch))
 #if CLS1_CONFIG_BLOCKING_SEND_ENABLED
   do {
     res = fct((uint8_t)ch);            /* Send char, returns error code */
-  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS
+  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if (res==ERR_TXFULL) {
     #if CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT
-      WAIT1_WaitOSms(CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT);
+      WAIT1_WaitOSms(CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS);
     #else
-      WAIT1_Waitms(CLS1_CONFIG_BLOCKING_SEND_RTOS_WAIT);
+      WAIT1_Waitms(CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS);
     #endif
     }
   #endif
-  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_WAIT_MS>0
+  #if CLS1_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if(timeoutMs<=0) {
       break; /* timeout */
     }
@@ -1315,6 +1316,97 @@ void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch))
 #if CLS1_CONFIG_USE_MUTEX
   (void)xSemaphoreGiveRecursive(ShellSem);
 #endif
+}
+
+/*
+** ===================================================================
+**     Method      :  PrintMemory (component Shell)
+**
+**     Description :
+**         Prints a chunk of memory bytes in a formatted way.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * hndl            - Pointer to 
+**         startAddr       - Memory start address
+**         endAddr         - Memory end address
+**         addrSize        - Number of bytes for the address
+**                           (1, 2, 3 or 4)
+**         bytesPerLine    - Number of bytes per line
+**         readfp          - Function pointer to read the memory.
+**                           Returns error code, uses a device handle,
+**                           32bit address with a pointer to a buffer
+**                           and a buffer size.
+**       * io              - Pointer to I/O to be used
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr, uint8_t addrSize, uint8_t bytesPerLine, uint8_t (*readfp)(void *, uint32_t, uint8_t*, size_t), CLS1_ConstStdIOType *io)
+{
+  #define NOF_BYTES_PER_LINE 32 /* how many bytes are shown on a line. This defines as well the chunk size we read from memory */
+  #define MAX_NOF_BYTES_PER_LINE 32
+  uint8_t buf[MAX_NOF_BYTES_PER_LINE]; /* this is the chunk of data we get (per line in output) */
+  uint8_t str[3*MAX_NOF_BYTES_PER_LINE+((MAX_NOF_BYTES_PER_LINE+1)/8)+1]; /* maximum string for output:
+                                              - '3*' because each byte is 2 hex digits plus a space
+                                              - '(NOF_BYTES_PER_LINE+1)/8' because we add a space between every 8 byte block
+                                              - '+1' for the final zero byte */
+  uint32_t addr;
+  uint8_t res=0, j, bufSize;
+  uint8_t ch;
+
+  if (endAddr<startAddr) {
+    CLS1_SendStr((unsigned char*)"\r\n*** End address must be larger or equal than start address\r\n", io->stdErr);
+    return ERR_RANGE;
+  }
+  for(addr=startAddr; addr<=endAddr; /* nothing */ ) {
+    if (endAddr-addr+1 >= bytesPerLine) { /* read only part of buffer */
+      bufSize = bytesPerLine; /* read full buffer */
+    } else {
+      bufSize = (uint8_t)(endAddr-addr+1);
+    }
+    if (readfp(hndl, addr, buf, bufSize)!=ERR_OK) {
+      CLS1_SendStr((unsigned char*)"\r\n*** Read failed!\r\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    if (res != ERR_OK) {
+      CLS1_SendStr((unsigned char*)"\r\n*** Failure reading memory block!\r\n", io->stdErr);
+      return ERR_FAULT;
+    }
+    /* write address */
+    UTIL1_strcpy(str, sizeof(str), (unsigned char*)"0x");
+    UTIL1_strcatNumHex(str, sizeof(str), addr, addrSize);
+    UTIL1_chcat(str, sizeof(str), ':');
+    CLS1_SendStr((unsigned char*)str, io->stdOut);
+    /* write data in hex */
+    str[0] = '\0';
+    for (j=0; j<bufSize; j++) {
+      if ((j)==0) {
+        UTIL1_chcat(str, sizeof(str), ' ');
+      }
+      UTIL1_strcatNum8Hex(str, sizeof(str), buf[j]);
+      UTIL1_chcat(str, sizeof(str), ' ');
+    }
+    for (/*empty*/; j<bytesPerLine; j++) { /* fill up line */
+      UTIL1_strcat(str, sizeof(str), (unsigned char*)"-- ");
+    }
+    CLS1_SendStr((unsigned char*)str, io->stdOut);
+    /* write in ASCII */
+    io->stdOut(' ');
+    for (j=0; j<bufSize; j++) {
+      ch = buf[j];
+      if (ch >= ' ' && ch <= 0x7f) {
+        io->stdOut(ch);
+      } else {
+        io->stdOut('.'); /* place holder */
+      }
+    }
+    for (/*empty*/; j<bytesPerLine; j++) { /* fill up line */
+      UTIL1_strcat(str, sizeof(str), (unsigned char*)"-- ");
+    }
+    CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
+    addr += bytesPerLine;
+  }
+  return ERR_OK;
 }
 
 /* END CLS1. */

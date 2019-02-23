@@ -486,6 +486,14 @@ const HeapRegion_t *pxHeapRegion;
 	/* Work out the position of the top bit in a size_t variable. */
 	xBlockAllocatedBit = ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * heapBITS_PER_BYTE ) - 1 );
 }
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  /* sorry, not able to free up the standard library heap */
+}
+#endif
+
+/*-----------------------------------------------------------*/
 
 #endif /* configUSE_HEAP_SCHEME==5 */ /* << EST */
 

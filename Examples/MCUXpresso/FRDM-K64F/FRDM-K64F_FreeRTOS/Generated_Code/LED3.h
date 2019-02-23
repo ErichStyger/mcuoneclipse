@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LED3_Deinit(void);
 **         Init       - void LED3_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -71,11 +71,8 @@
 
 /* MODULE LED3. */
 #include "MCUC1.h" /* SDK and API used */
-#include "LED3config.h" /* configuration */
-
-/* Include inherited components */
-#include "MCUC1.h"
-#include "LEDpin3.h"
+#include "LED3config.h" /* LED configuration */
+#include "LEDpin3.h" /* interface to pin */
 
 #define LED3_ClrVal()    LEDpin3_ClrVal() /* put the pin on low level */
 #define LED3_SetVal()    LEDpin3_SetVal() /* put the pin on high level */

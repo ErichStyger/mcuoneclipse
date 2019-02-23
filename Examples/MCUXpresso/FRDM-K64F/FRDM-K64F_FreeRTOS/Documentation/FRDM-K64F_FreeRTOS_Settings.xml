@@ -215,6 +215,7 @@
           <RTOS_Interrupt_Priority v="15" />
           <Lowest_Interrupt_Priority v="15" />
           <Compiler_Optimization_Level v="0" />
+          <Reset_MSP v="yes" />
           <MPU v="no" />
           <boolgroup name="SysTick" v="Enabled">
             <Core_Clock v="yes" />
@@ -479,6 +480,7 @@
       <strcatNum16sFormatted v="generate code" />
       <strcatNum32uFormatted v="generate code" />
       <strcatNum32sFormatted v="generate code" />
+      <strcatNumHex v="generate code" />
       <strcatNum8Hex v="generate code" />
       <strcatNum16Hex v="generate code" />
       <strcatNum24Hex v="generate code" />
@@ -927,6 +929,7 @@
       <SendNum32s v="generate code" />
       <SendCh v="generate code" />
       <SendStr v="generate code" />
+      <PrintMemory v="generate code" />
       <printfIO v="generate code" />
       <printf v="generate code" />
       <SendData v="generate code" />

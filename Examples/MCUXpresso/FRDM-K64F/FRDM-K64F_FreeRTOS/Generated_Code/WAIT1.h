@@ -6,7 +6,7 @@
 **     Component   : Wait
 **     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-19, 17:51, # CodeGen: 49
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :

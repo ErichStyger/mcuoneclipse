@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.098, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -41,6 +41,7 @@
 **         SendNum32s                   - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
 **         SendCh                       - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
 **         SendStr                      - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
+**         PrintMemory                  - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
 **         printfIO                     - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
 **         printf                       - unsigned CLS1_printf(const char *fmt, ...);
 **         SendData                     - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
@@ -66,7 +67,7 @@
 **         Init                         - void CLS1_Init(void);
 **         Deinit                       - void CLS1_Deinit(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -746,6 +747,31 @@ void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
 **       * fct             - Function pointer to output function: takes
 **                           a byte to write and returns error code.
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr, uint8_t addrSize, uint8_t bytesPerLine, uint8_t (*readfp)(void *, uint32_t, uint8_t*, size_t), CLS1_ConstStdIOType *io);
+/*
+** ===================================================================
+**     Method      :  PrintMemory (component Shell)
+**
+**     Description :
+**         Prints a chunk of memory bytes in a formatted way.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * hndl            - Pointer to 
+**         startAddr       - Memory start address
+**         endAddr         - Memory end address
+**         addrSize        - Number of bytes for the address
+**                           (1, 2, 3 or 4)
+**         bytesPerLine    - Number of bytes per line
+**         readfp          - Function pointer to read the memory.
+**                           Returns error code, uses a device handle,
+**                           32bit address with a pointer to a buffer
+**                           and a buffer size.
+**       * io              - Pointer to I/O to be used
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

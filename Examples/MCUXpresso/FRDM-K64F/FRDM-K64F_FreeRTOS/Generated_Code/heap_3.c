@@ -97,7 +97,12 @@ void vPortFree( void *pv )
 		( void ) xTaskResumeAll();
 	}
 }
-
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  /* sorry, not able to free up the standard library heap */
+}
+#endif
 
 #endif /* configUSE_HEAP_SCHEME==3 */ /* << EST */
 

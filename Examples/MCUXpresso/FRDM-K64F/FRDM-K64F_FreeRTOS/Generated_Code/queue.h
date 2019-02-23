@@ -1646,6 +1646,7 @@ void vQueueSetQueueNumber( QueueHandle_t xQueue, UBaseType_t uxQueueNumber ) PRI
 UBaseType_t uxQueueGetQueueNumber( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
 uint8_t ucQueueGetQueueType( QueueHandle_t xQueue ) PRIVILEGED_FUNCTION;
 
+void vQueueEndScheduler(void); /* << EST */
 
 #ifdef __cplusplus
 }

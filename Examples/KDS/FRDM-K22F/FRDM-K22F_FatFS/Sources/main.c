@@ -54,6 +54,7 @@
 #include "SMasterLdd2.h"
 #include "TmDt1.h"
 #include "FAT1.h"
+#include "MINI1.h"
 #include "TMOUT1.h"
 #include "XF1.h"
 #include "MCUC1.h"

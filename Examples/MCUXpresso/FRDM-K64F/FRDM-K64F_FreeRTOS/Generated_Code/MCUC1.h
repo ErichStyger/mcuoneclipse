@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : McuLibConfig
-**     Version     : Component 01.012, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-10, 18:28, # CodeGen: 48
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Configures the drivers for various SDKs and APIs used.
 **     Settings    :

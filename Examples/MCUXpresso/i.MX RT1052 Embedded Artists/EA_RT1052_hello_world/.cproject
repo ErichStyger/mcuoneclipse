@@ -255,6 +255,7 @@
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
+							<tool id="com.crt.advproject.tool.debug.debug.1266333680" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -293,8 +294,11 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_3="NXP" property_4="MIMXRT1052xxxxB" property_count="5" version="100200"/&gt;&#13;
-&lt;infoList vendor="NXP"&gt;&lt;info chip="MIMXRT1052xxxxB" name="MIMXRT1052xxxxB"&gt;&lt;chip&gt;&lt;name&gt;MIMXRT1052xxxxB&lt;/name&gt;&#13;
+&lt;Properties property_3="NXP" property_4="MIMXRT1052xxxxB" property_count="5" version="100300"/&gt;&#13;
+&lt;infoList vendor="NXP"&gt;&#13;
+&lt;info chip="MIMXRT1052xxxxB" name="MIMXRT1052xxxxB"&gt;&#13;
+&lt;chip&gt;&#13;
+&lt;name&gt;MIMXRT1052xxxxB&lt;/name&gt;&#13;
 &lt;family&gt;MIMXRT1050&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="0" type="Flash"/&gt;&#13;
@@ -411,7 +415,8 @@
 &lt;peripheralInstance derived_from="SystemControl" id="SystemControl" location="0xE000E000"/&gt;&#13;
 &lt;peripheralInstance derived_from="NVIC" id="NVIC" location="0xE000E100"/&gt;&#13;
 &lt;/chip&gt;&#13;
-&lt;processor&gt;&lt;name gcc_name="cortex-m7"&gt;Cortex-M7&lt;/name&gt;&#13;
+&lt;processor&gt;&#13;
+&lt;name gcc_name="cortex-m7"&gt;Cortex-M7&lt;/name&gt;&#13;
 &lt;family&gt;Cortex-M&lt;/family&gt;&#13;
 &lt;/processor&gt;&#13;
 &lt;link href="MIMXRT1052_internal_peripheral.xml" show="embed" type="simple"/&gt;&#13;
@@ -422,7 +427,7 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_EVKB-IMXRT1050</sdkName>
-		<sdkVersion>2.4.2</sdkVersion>
+		<sdkVersion>2.5.0</sdkVersion>
 	</storageModule>
 	<storageModule moduleId="refreshScope"/>
 </cproject>

@@ -6,7 +6,7 @@
 **     Component   : SeggerRTT
 **     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-16, 09:24, # CodeGen: 50
+**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :

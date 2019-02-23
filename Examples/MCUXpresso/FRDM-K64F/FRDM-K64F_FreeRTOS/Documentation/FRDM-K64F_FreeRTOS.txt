@@ -534,11 +534,13 @@ Module "UTIL1"     (component Utility)
    - UTIL1_strcatNum16sFormatted -Appends a 16bit signed value to a string buffer in a formatted way.
    - UTIL1_strcatNum32uFormatted -Appends a 32bit unsigned value to a string buffer in a formatted way.
    - UTIL1_strcatNum32sFormatted -Appends a 32bit signed value to a string buffer in a formatted way.
+   - UTIL1_strcatNumHex -Appends a value as hex valalue to a string buffer as hex number (without a 0x prefix), with variable 
+                number of digits
    - UTIL1_strcatNum8Hex -Appends a 8bit unsigned value to a string buffer as hex number (without a 0x prefix).
    - UTIL1_strcatNum16Hex -Appends a 16bit unsigned value to a string buffer as hex number (without a 0x prefix).
    - UTIL1_strcatNum24Hex -Appends a 32bit unsigned value to a string buffer as hex number (without a 0x prefix). Only 24bits 
                 are used.
-   - UTIL1_strcatNum32Hex -Appends a 16bit unsigned value to a string buffer as hex number (without a 0x prefix).
+   - UTIL1_strcatNum32Hex -Appends a 32bit unsigned value to a string buffer as hex number (without a 0x prefix).
    - UTIL1_strcatNum32sDotValue100 -Appends a 32bit signed value to a string buffer. The value is in 1/100 units.  For example 
                 for the value -13456 it will append the string "-134.56"
    - UTIL1_strcatNumFloat -Converts a float value into a string.
@@ -662,6 +664,7 @@ Module "CLS1"      (component Shell)
    - CLS1_SendNum32s -Sends a 32bit signed number to the given I/O
    - CLS1_SendCh -Prints a character using an I/O function
    - CLS1_SendStr -Prints a string using an I/O function
+   - CLS1_PrintMemory -Prints a chunk of memory bytes in a formatted way.
    - CLS1_printfIO -Printf() style function using XFormat component, using a custom I/O handler.
    - CLS1_printf -Printf() style function using XFormat component, using the shell default I/O handler.
    - CLS1_SendData -Sends data using an I/O function. Unlike SendStr(), with this method it is possible to send binary data, 
