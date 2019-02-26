@@ -105,6 +105,12 @@
    /*!< 1: enable Shell and command line support; 0: disabled */
 #endif
 
+#ifndef configRESET_MSP
+  #define configRESET_MSP                         (1)
+   /*!< 1: reset MSP at scheduler start (Cortex M3/M4/M7 only); 0: do not reset MSP */
+#endif
+
+
 /*-----------------------------------------------------------
  * FreeRTOS Trace hook support
  *----------------------------------------------------------- */

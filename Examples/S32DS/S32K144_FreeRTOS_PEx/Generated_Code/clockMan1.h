@@ -7,7 +7,7 @@
 **     Version     : Component SDK_S32K14x_09, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K14x_09
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-09-08, 18:53, # CodeGen: 42
+**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
 **     Contents    :
 **         CLOCK_SYS_Init                    - status_t CLOCK_SYS_Init(clock_manager_user_config_t const **...
 **         CLOCK_SYS_UpdateConfiguration     - status_t CLOCK_SYS_UpdateConfiguration(uint8_t...

@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerSystemView
-**     Version     : Component 01.065, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-16, 16:03, # CodeGen: 46
+**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -49,11 +49,11 @@
 **         Deinit         - void SYS1_Deinit(void);
 **         Init           - void SYS1_Init(void);
 **
-** * (c) Copyright Segger, 2018
+** * (c) Copyright Segger, 2019
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2017, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

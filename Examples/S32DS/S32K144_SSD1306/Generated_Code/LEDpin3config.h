@@ -7,13 +7,40 @@
 #ifndef __LEDpin3_CONFIG_H
 #define __LEDpin3_CONFIG_H
 
+#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_LEDpin3_PIN)
+    #define LEDpin3_CONFIG_PIN_NUMBER    BOARD_INITPINS_LEDpin3_PIN
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin3_GPIO)
+    #define LEDpin3_CONFIG_GPIO_NAME     BOARD_INITPINS_LEDpin3_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin3_PORT)
+    #define LEDpin3_CONFIG_PORT_NAME     BOARD_INITPINS_LEDpin3_PORT
+  #endif
+#endif
+
+
 #ifndef LEDpin3_CONFIG_PORT_NAME
-  #define LEDpin3_CONFIG_PORT_NAME       PTD
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define LEDpin3_CONFIG_PORT_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define LEDpin3_CONFIG_PORT_NAME       0
+  #else /* name from properties */
+    #define LEDpin3_CONFIG_PORT_NAME       PTD
+  #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef LEDpin3_CONFIG_GPIO_NAME
-  #define LEDpin3_CONFIG_GPIO_NAME       
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define LEDpin3_CONFIG_GPIO_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define LEDpin3_CONFIG_GPIO_NAME       GPIO
+  #else /* name from properties */
+    #define LEDpin3_CONFIG_GPIO_NAME       
+  #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 

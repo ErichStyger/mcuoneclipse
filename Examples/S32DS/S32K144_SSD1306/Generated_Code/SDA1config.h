@@ -7,13 +7,40 @@
 #ifndef __SDA1_CONFIG_H
 #define __SDA1_CONFIG_H
 
+#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_SDA1_PIN)
+    #define SDA1_CONFIG_PIN_NUMBER    BOARD_INITPINS_SDA1_PIN
+  #endif
+  #if defined(BOARD_INITPINS_SDA1_GPIO)
+    #define SDA1_CONFIG_GPIO_NAME     BOARD_INITPINS_SDA1_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_SDA1_PORT)
+    #define SDA1_CONFIG_PORT_NAME     BOARD_INITPINS_SDA1_PORT
+  #endif
+#endif
+
+
 #ifndef SDA1_CONFIG_PORT_NAME
-  #define SDA1_CONFIG_PORT_NAME       PTE
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define SDA1_CONFIG_PORT_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define SDA1_CONFIG_PORT_NAME       0
+  #else /* name from properties */
+    #define SDA1_CONFIG_PORT_NAME       PTE
+  #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef SDA1_CONFIG_GPIO_NAME
-  #define SDA1_CONFIG_GPIO_NAME       
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define SDA1_CONFIG_GPIO_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define SDA1_CONFIG_GPIO_NAME       GPIO
+  #else /* name from properties */
+    #define SDA1_CONFIG_GPIO_NAME       
+  #endif
     /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 

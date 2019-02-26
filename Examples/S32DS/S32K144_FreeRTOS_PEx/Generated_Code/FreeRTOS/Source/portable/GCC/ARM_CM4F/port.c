@@ -848,17 +848,25 @@ BaseType_t xPortStartScheduler(void) {
 #endif
 #if INCLUDE_vTaskEndScheduler
     if(setjmp(xJumpBuf) != 0 ) {
-      /* here we will get in case of call to vTaskEndScheduler() */
+      /* here we will get in case of a call to vTaskEndScheduler() */
+      __asm volatile(
+        " movs r0, #0         \n" /* Reset CONTROL register and switch back to the MSP stack. */
+        " msr CONTROL, r0     \n"
+        " dsb                 \n"
+        " isb                 \n"
+      );
       return pdFALSE;
     }
 #endif
   vPortStartFirstTask(); /* Start the first task. */
-  /* Should not get here, unless you call vTaskEndScheduler()! */
+  /* Should not get here! */
   return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 void vPortEndScheduler(void) {
   vPortStopTickTimer();
+  vPortInitializeHeap();
+  uxCriticalNesting = 0xaaaaaaaa;
   /* Jump back to the processor state prior to starting the
      scheduler.  This means we are not going to be using a
      task stack frame so the task can be deleted. */
@@ -1025,11 +1033,13 @@ void vPortStartFirstTask(void) {
 __asm void vPortStartFirstTask(void) {
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   /* Use the NVIC offset register to locate the stack. */
+#if configRESET_MSP && !INCLUDE_vTaskEndScheduler
   ldr r0, =0xE000ED08
   ldr r0, [r0]
   ldr r0, [r0]
   /* Set the msp back to the start of the stack. */
   msr msp, r0
+#endif
   /* Globally enable interrupts. */
   cpsie i
   /* Call SVC to start the first task. */
@@ -1098,6 +1108,7 @@ void vPortStartFirstTask(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   __asm volatile (
+#if configRESET_MSP && !INCLUDE_vTaskEndScheduler
 #if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
     " mov r0, #0xE0000000  \n" /* build the constant 0xE000ED08. First load the upper 16 bits */
     " mov r1, #0xED00      \n" /* next load part of the lower 16 bit */
@@ -1110,6 +1121,7 @@ void vPortStartFirstTask(void) {
     " ldr r0, [r0]        \n" /* load address of vector table */
     " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
+#endif
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"

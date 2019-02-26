@@ -4,13 +4,22 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : SDK_BitIO
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
+**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
 **     Abstract    :
-**
+**          GPIO component usable with NXP SDK
 **     Settings    :
-**
+**          Component name                                 : LEDpin3
+**          SDK                                            : MCUC1
+**          GPIO Name                                      : 
+**          PORT Name                                      : PTD
+**          Pin Number                                     : 0
+**          Pin Symbol                                     : 
+**          Do Pin Muxing                                  : no
+**          Init Direction                                 : Output
+**          Pull Resistor                                  : no pull resistor
+**          Init Value                                     : 0
 **     Contents    :
 **         GetDir    - bool LEDpin3_GetDir(void);
 **         SetDir    - void LEDpin3_SetDir(bool Dir);
@@ -24,7 +33,7 @@
 **         Init      - void LEDpin3_Init(void);
 **         Deinit    - void LEDpin3_Deinit(void);
 **
-** * Copyright (c) 2015-2018, Erich Styger
+** * Copyright (c) 2015-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -55,7 +64,7 @@
 ** @file LEDpin3.h
 ** @version 01.00
 ** @brief
-**
+**          GPIO component usable with NXP SDK
 */         
 /*!
 **  @addtogroup LEDpin3_module LEDpin3 module documentation
@@ -80,7 +89,6 @@
 #endif
 
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t LEDpin3_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     LEDpin3_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -157,7 +165,13 @@ static bool LEDpin3_isOutput = false;
 void LEDpin3_ClrVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #elif MCUC1_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #else
+  GPIO_PortClear(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(LEDpin3_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -178,7 +192,13 @@ void LEDpin3_ClrVal(void)
 void LEDpin3_SetVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #elif MCUC1_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #else
+  GPIO_PortSet(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(LEDpin3_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -199,7 +219,13 @@ void LEDpin3_SetVal(void)
 void LEDpin3_NegVal(void)
 {
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #elif MCUC1_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #else
+  GPIO_PortToggle(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(LEDpin3_CONFIG_PIN_SYMBOL);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -229,8 +255,14 @@ void LEDpin3_NegVal(void)
 */
 bool LEDpin3_GetVal(void)
 {
-#if MCUC1_CONFIG_NXP_SDK_2_0_USED
+#if MCUC1_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, LEDpin3_CONFIG_PIN_NUMBER);
+#elif MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(LEDpin3_CONFIG_PIN_SYMBOL)!=0;
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K
@@ -290,7 +322,9 @@ void LEDpin3_SetDir(bool Dir)
 */
 void LEDpin3_SetInput(void)
 {
-#if MCUC1_CONFIG_NXP_SDK_2_0_USED
+#if MCUC1_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, LEDpin3_CONFIG_PIN_NUMBER, &LEDpin3_configInput);
+#elif MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PIN_NUMBER, &LEDpin3_configInput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LEDpin3_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -316,7 +350,9 @@ void LEDpin3_SetInput(void)
 */
 void LEDpin3_SetOutput(void)
 {
-#if MCUC1_CONFIG_NXP_SDK_2_0_USED
+#if MCUC1_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, LEDpin3_CONFIG_PIN_NUMBER, &LEDpin3_configOutput);
+#elif MCUC1_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PIN_NUMBER, &LEDpin3_configOutput);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(LEDpin3_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -345,12 +381,26 @@ void LEDpin3_SetOutput(void)
 */
 void LEDpin3_PutVal(bool Val)
 {
-#if MCUC1_CONFIG_NXP_SDK_2_0_USED
+#if MCUC1_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(LEDpin3_CONFIG_GPIO_NAME, LEDpin3_CONFIG_PORT_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  }
+#elif MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(LEDpin3_CONFIG_GPIO_NAME, 1<<LEDpin3_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(LEDpin3_CONFIG_PIN_SYMBOL, Val);
 #elif MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_S32K

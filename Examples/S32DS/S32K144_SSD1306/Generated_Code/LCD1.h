@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : SSD1306
-**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-08, 19:20, # CodeGen: 20
+**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -51,11 +51,12 @@
 **         DisplayInvert   - uint8_t LCD1_DisplayInvert(bool invert);
 **         GetLCD          - void LCD1_GetLCD(void);
 **         GiveLCD         - void LCD1_GiveLCD(void);
-**         PrintString     - void LCD1_PrintString(uint8_t *str);
+**         SetRowCol       - uint8_t LCD1_SetRowCol(uint8_t row, uint8_t col);
+**         PrintString     - void LCD1_PrintString(uint8_t line, uint8_t col, uint8_t *str);
 **         Deinit          - void LCD1_Deinit(void);
 **         Init            - void LCD1_Init(void);
 **
-** * Copyright (c) 2017-2018, Erich Styger
+** * Copyright (c) 2017-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -102,14 +103,16 @@
 #include <stddef.h> /* for size_t */
 
 
-#if LCD1_CONFIG_SSD1306_128X64
+#if LCD1_CONFIG_SSD1306_SIZE_TYPE==12864
   #define LCD1_DISPLAY_HW_NOF_COLUMNS  128u /* number of columns in hardware */
   #define LCD1_DISPLAY_HW_NOF_ROWS      64u /* number of rows in hardware */
   #define LCD1_DISPLAY_HW_NOF_PAGES      8u /* number of pages in hardware */
-#elif LCD1_CONFIG_SSD1306_128X32
+#elif LCD1_CONFIG_SSD1306_SIZE_TYPE==12832
   #define LCD1_DISPLAY_HW_NOF_COLUMNS  128u /* number of columns in hardware */
   #define LCD1_DISPLAY_HW_NOF_ROWS      32u /* number of rows in hardware */
   #define LCD1_DISPLAY_HW_NOF_PAGES      4u /* number of pages in hardware */
+#else
+  #error "unknown display type, must be 128x64 or 128x32"
 #endif
 
 typedef bool LCD1_PixelColor;          /* type to hold color information */
@@ -143,12 +146,8 @@ extern uint8_t LCD1_DisplayBuf[((LCD1_DISPLAY_HW_NOF_ROWS-1)/8)+1][LCD1_DISPLAY_
 #define LCD1_PIXEL_ON  LCD1_COLOR_WHITE /* value of a pixel if it is 'on' */
 #define LCD1_PIXEL_OFF LCD1_COLOR_BLACK /* value of a pixel if it is 'off' */
 
-#define LCD1_WIDTH  128u                /* Logical display width in pixels */
-#define LCD1_HEIGHT 64u                 /* Logical display height in pixels */
-#define LCD1_HW_WIDTH  LCD1_WIDTH       /* Hardware display width in pixels */
-#define LCD1_HW_HEIGHT LCD1_HEIGHT      /* Hardware display height in pixels */
-#define LCD1_HW_LONGER_SIDE  LCD1_WIDTH /* Hardware display longer side in pixels */
-#define LCD1_HW_SHORTER_SIDE LCD1_HEIGHT /* Hardware display shorter side in pixels */
+#define LCD1_HW_LONGER_SIDE  LCD1_DISPLAY_HW_NOF_COLUMNS                        /* Hardware display longer side in pixels */
+#define LCD1_HW_SHORTER_SIDE LCD1_DISPLAY_HW_NOF_ROWS                           /* Hardware display shorter side in pixels */
 
 typedef enum {
   LCD1_ORIENTATION_PORTRAIT    = 0,
@@ -424,7 +423,7 @@ uint8_t LCD1_DisplayInvert(bool invert);
 ** ===================================================================
 */
 
-void LCD1_PrintString(uint8_t *str);
+void LCD1_PrintString(uint8_t line, uint8_t col, uint8_t *str);
 /*
 ** ===================================================================
 **     Method      :  PrintString (component SSD1306)
@@ -434,6 +433,8 @@ void LCD1_PrintString(uint8_t *str);
 **         Newline is supported.
 **     Parameters  :
 **         NAME            - DESCRIPTION
+**         line            - line number, starting with 0
+**         col             - column number, starting with 0
 **       * str             - Pointer to string to be printed on display
 **     Returns     : Nothing
 ** ===================================================================
@@ -464,6 +465,23 @@ void LCD1_Deinit(void);
 **         Driver de-initialization
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t LCD1_SetRowCol(uint8_t row, uint8_t col);
+/*
+** ===================================================================
+**     Method      :  SetRowCol (component SSD1306)
+**
+**     Description :
+**         Sets the column and row position, useful for start writing
+**         text with PrintString()
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         row             - row (or line) number, starting with 0
+**         col             - column number, starting with 0
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

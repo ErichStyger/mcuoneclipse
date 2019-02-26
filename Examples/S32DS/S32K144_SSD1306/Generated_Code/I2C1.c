@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GenericSWI2C
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:01, # CodeGen: 5
+**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -32,7 +32,7 @@
 **         Deinit            - void I2C1_Deinit(void);
 **         Init              - void I2C1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -74,19 +74,17 @@
 
 #include "I2C1.h"
 #include "WAIT1.h" /* waiting routines */
+#include "MCUC1.h" /* SDK defines */
 #include "SDA1.h" /* SDA pin */
 #include "SCL1.h" /* SCL pin */
 
-#define I2C1_HAS_RTOS  0 /* No RTOS present */
-#define I2C1_YIELD     1 /* Yield is enabled in the component properties */
-
-#if I2C1_HAS_RTOS
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
   /* include RTOS header files */
   #include "FreeRTOS.h" /* for yielding */
   #include "task.h"
 #endif
 
-#if I2C1_HAS_RTOS && I2C1_YIELD
+#if MCUC1_CONFIG_SDK_USE_FREERTOS && I2C1_CONFIG_DO_YIELD
   #define I2C1_OSYIELD() taskYIELD()
 #else
   #define I2C1_OSYIELD() /* do nothing */
@@ -96,9 +94,6 @@
 #define INPUT       0U
 #define WRITE       0U
 #define READ        1U
-#define TRIALS      256 /* defined by component properties */
-
-#define I2C1_DELAY_NS    1250   /* delay time in ns, as specified in the component properties */
 
 static uint8_t SlaveAddr;             /* destination slave address      */
 
@@ -140,7 +135,7 @@ static void InternalStop(void);
 static void Delay(void)
 {
   I2C1_OSYIELD();
-  WAIT1_Waitns(I2C1_DELAY_NS);
+  WAIT1_Waitns(I2C1_CONFIG_DELAY_NS);
 }
 
 /*
@@ -384,7 +379,7 @@ uint8_t I2C1_SendChar(uint8_t Chr)
   bool Acknowledge;
   uint16_t timeout;
 
-  Trial = TRIALS;
+  Trial = I2C1_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP*/
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -468,7 +463,7 @@ uint8_t I2C1_RecvChar(uint8_t *Chr)
   bool Acknowledge;
   uint16_t timeout;
 
-  Trial = TRIALS;
+  Trial = I2C1_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP */
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -565,7 +560,7 @@ uint8_t I2C1_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt)
   uint16_t timeout;
 
   *Snt = 0U;
-  Trial = TRIALS;
+  Trial = I2C1_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH  - START SETUP */
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -741,7 +736,7 @@ uint8_t I2C1_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, I2C1_EnumSt
   uint16_t timeout;
 
   *Rcv = 0U;
-  Trial = TRIALS;
+  Trial = I2C1_CONFIG_NOF_TRIALS;
   if (flagsStart == I2C1_SEND_START) {
     do {
       SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP */

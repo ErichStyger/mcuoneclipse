@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : FreeRTOS
-**     Version     : Component 01.565, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.568, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-16, 16:03, # CodeGen: 46
+**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :

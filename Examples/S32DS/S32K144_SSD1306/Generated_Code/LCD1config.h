@@ -14,9 +14,9 @@
     /*!< Header file to be included for the SPI driver */
 #endif
 
-/* Which display is used */
-#define LCD1_CONFIG_SSD1306_128X64      (1)
-#define LCD1_CONFIG_SSD1306_128X32      (0)
+/* Which display is used: only one of the two options below can be enabled: */
+#define LCD1_CONFIG_SSD1306_SIZE_TYPE   (12864)
+  /*!< either 12864 (128x64) or 12832 (128x32) */
 
 #ifndef LCD1_CONFIG_SSD1306_HAS_RST
   #define LCD1_CONFIG_SSD1306_HAS_RST         (0)
@@ -34,13 +34,19 @@
 #endif
 #ifndef LCD1_CONFIG_SSD1306_I2C_ADDR
   #define LCD1_CONFIG_SSD1306_I2C_ADDR        (60)
-    /*!< I2C 7bit (unshifted) device address, usually 0x3C (0b11'1100) or 0x3D (0b11'1101) */
+    /*!< I2C 7bit (unshifted) device address, usually 0x3C (60) (0b11'1100) or 0x3D (61) (0b11'1101) */
 #endif
 
 #ifndef LCD1_CONFIG_SSD1306_DRIVER_TYPE
   #define LCD1_CONFIG_SSD1306_DRIVER_TYPE        (1106)
     /*!< Either 1306 for SSD1306 or 1106 for SH1106 */
 #endif
+
+#ifndef LCD1_CONFIG_SSD1306_START_COLUMN_OFFSET
+  #define LCD1_CONFIG_SSD1306_START_COLUMN_OFFSET  (0)
+    /*!< Some SH1106 displays need a start colum of 2 instead of the default 0 */
+#endif
+
 
 #ifndef LCD1_CONFIG_SSD1306_I2C_DELAY_US
   #define LCD1_CONFIG_SSD1306_I2C_DELAY_US    (100)
@@ -67,6 +73,12 @@
     LCD1_CONFIG_ORIENTATION_LANDSCAPE180
   */
 #endif
+
+#ifndef LCD1_CONFIG_INITIALIZE_IN_INIT
+  #define LCD1_CONFIG_INITIALIZE_IN_INIT (1)
+  /*!< 1: Initialize LCD during PE_low_level_init(); 0: Do not initialize during PE_low_level_init() */
+#endif
+
 
 #ifndef LCD1_CONFIG_CLEAR_DISPLAY_IN_INIT
   #define LCD1_CONFIG_CLEAR_DISPLAY_IN_INIT (0)

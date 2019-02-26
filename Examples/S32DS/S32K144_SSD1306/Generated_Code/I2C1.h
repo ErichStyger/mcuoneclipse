@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GenericSWI2C
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 09:01, # CodeGen: 5
+**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -32,7 +32,7 @@
 **         Deinit            - void I2C1_Deinit(void);
 **         Init              - void I2C1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

@@ -224,11 +224,12 @@ U32 SEGGER_SYSVIEW_X_GetTimestamp(void) {
 *  Function description
 *    Sends SystemView description strings.
 */
+#if SYSVIEW_USING_FREERTOS
 static void _cbSendSystemDesc(void) {
   SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_APP_NAME",O="SYSVIEW_OS_NAME",D="SYSVIEW_DEVICE_NAME);
   SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
 }
-
+#endif
 /*********************************************************************
 *
 *       Global functions
@@ -240,10 +241,10 @@ void SEGGER_SYSVIEW_Conf(void) {
   #if configUSE_TRACE_HOOKS /* using Percepio Trace */ && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer */
     #warning "Percepio Trace is enabled, this might conflict with Segger System View."
   #endif
-#endif
   SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, 
       SYSVIEW_OS_API, _cbSendSystemDesc);
   SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
+#endif
 }
 
 /*************************** End of file ****************************/

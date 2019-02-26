@@ -4,9 +4,9 @@
 **     Project     : S32K144_Blinky
 **     Processor   : S32K144_100
 **     Component   : LED
-**     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-07, 09:32, # CodeGen: 5
+**     Date/Time   : 2019-02-26, 15:47, # CodeGen: 0
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LEDG_Deinit(void);
 **         Init       - void LEDG_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -71,11 +71,8 @@
 
 /* MODULE LEDG. */
 #include "MCUC1.h" /* SDK and API used */
-#include "LEDGconfig.h" /* configuration */
-
-/* Include inherited components */
-#include "MCUC1.h"
-#include "LEDpin3.h"
+#include "LEDGconfig.h" /* LED configuration */
+#include "LEDpin3.h" /* interface to pin */
 
 #define LEDG_ClrVal()    LEDpin3_ClrVal() /* put the pin on low level */
 #define LEDG_SetVal()    LEDpin3_SetVal() /* put the pin on high level */

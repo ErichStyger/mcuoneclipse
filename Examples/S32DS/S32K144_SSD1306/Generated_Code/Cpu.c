@@ -7,7 +7,7 @@
 **     Version     : Component 01.197, Driver 01.00, CPU db: 3.00.000
 **     Datasheet   : S32K14XRM Rev. 2, 02/2017
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-09, 10:09, # CodeGen: 12
+**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -97,7 +97,9 @@ extern "C" {
   GI2C1_Init(); /* ### GenericI2C "GI2C1" init code ... */
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
+#if LCD1_CONFIG_INITIALIZE_IN_INIT
   LCD1_Init(); /* ### SSD1306 "LCD1" init code ... */
+#endif
 #endif
 #ifdef CPU_INIT_MCUONECLIPSE_DRIVERS
   GDisp1_Init(); /* ### GDisplay "GDisp1" init code ... */
