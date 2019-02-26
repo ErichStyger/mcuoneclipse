@@ -23,3 +23,8 @@ d) before including events.c, include FreeRTOS.h and task.h
 #include "Events.c"
 e) add the following define to the compiler preprocessor settings:
 USING_OS_FREERTOS
+
+
+NOTE:
+The subfolder 'SDK' in the project has been removed as the NXP SDK for S32 does not grant redistribution rights.
+So you have to add that folder from your SDK locally.
