@@ -1,8 +1,8 @@
 /*
  * Application.h
  *
- *  Created on: 17.02.2018
- *      Author: Erich Styger
+ *  Created on: 20.09.2015
+ *      Author: tastyger
  */
 
 #ifndef SOURCES_APPLICATION_H_
