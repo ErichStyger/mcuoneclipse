@@ -124,6 +124,7 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   TMOUT1_AddTick();
+  TmDt1_AddTick();
 }
 
 /*
