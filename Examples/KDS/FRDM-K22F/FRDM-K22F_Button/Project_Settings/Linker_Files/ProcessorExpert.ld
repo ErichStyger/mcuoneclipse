@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : FRDM-K22_Button   */
+/*##     Project   : FRDM-K22F_Button  */
 /*##                                   */
 /*##     Processor : MK22FN512VDC12    */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2016-11-20, 11:17, # CodeGen: 0 */
+/*##     Date/Time : 2019-03-02, 18:31, # CodeGen: 0 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

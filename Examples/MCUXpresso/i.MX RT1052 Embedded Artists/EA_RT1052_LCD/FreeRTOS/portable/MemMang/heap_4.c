@@ -3,8 +3,8 @@
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==4 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -452,6 +452,16 @@ uint8_t *puc;
 		mtCOVERAGE_TEST_MARKER();
 	}
 }
-
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  pxEnd = NULL; /* force initialization of heap next time a block gets allocated */
+  xStart.pxNextFreeBlock = NULL;
+  xStart.xBlockSize = 0;
+  xFreeBytesRemaining = 0;
+  xMinimumEverFreeBytesRemaining = 0;
+  xBlockAllocatedBit = 0;
+}
+#endif
 #endif /* configUSE_HEAP_SCHEME==4 */ /* << EST */
 

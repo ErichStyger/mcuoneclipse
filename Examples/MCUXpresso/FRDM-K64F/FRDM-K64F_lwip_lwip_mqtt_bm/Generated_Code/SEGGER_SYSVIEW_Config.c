@@ -72,10 +72,10 @@ Revision: $Rev: 3734 $
 **********************************************************************
 */
 #include "MCUC1.h"
-#define SYSVIEW_USING_KINETIS_SDK                 (MCUC1_CONFIG_NXP_SDK_USED) /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
-#define SYSVIEW_USING_FREERTOS                    SEGGER_RTT_FREERTOS_PRESENT /* 1: using FreeRTOS; 0: Bare metal */
+#define SYSVIEW_USING_PEX                         (MCUC1_CONFIG_PEX_SDK_USED) /* 1: project is a Kinetis SDK Processor Expert project; 0: No Kinetis Processor Expert project */
+#define SYSVIEW_USING_FREERTOS                    (MCUC1_CONFIG_SDK_USE_FREERTOS) /* 1: using FreeRTOS; 0: Bare metal */
 
-#if !SYSVIEW_USING_KINETIS_SDK
+#if SYSVIEW_USING_PEX
   #include "Cpu.h"
 #endif
 #if SYSVIEW_USING_FREERTOS
@@ -99,14 +99,14 @@ Revision: $Rev: 3734 $
 #define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
 
 // System Frequency. SystemcoreClock is used in most CMSIS compatible projects.
-#if SYSVIEW_USING_KINETIS_SDK
+#if SYSVIEW_USING_FREERTOS
+  #define SYSVIEW_CPU_FREQ                        configCPU_CLOCK_HZ
+#elif SYSVIEW_USING_PEX
+  #define SYSVIEW_CPU_FREQ                        configCPU_CLOCK_HZ
+#else
   /* The SDK variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
   #define SYSVIEW_CPU_FREQ                        (SystemCoreClock) /* CPU clock frequency */
-#elif SYSVIEW_USING_FREERTOS
-  #define SYSVIEW_CPU_FREQ                        configCPU_CLOCK_HZ
-#else
-  #define SYSVIEW_CPU_FREQ                        CPU_CORE_CLK_HZ /* CPU core clock defined in Cpu.h */
 #endif /* SYSVIEW_USING_KINETIS_SDK */
 
 // Frequency of the timestamp. Must match SEGGER_SYSVIEW_Conf.h
@@ -224,11 +224,12 @@ U32 SEGGER_SYSVIEW_X_GetTimestamp(void) {
 *  Function description
 *    Sends SystemView description strings.
 */
+#if SYSVIEW_USING_FREERTOS
 static void _cbSendSystemDesc(void) {
   SEGGER_SYSVIEW_SendSysDesc("N="SYSVIEW_APP_NAME",O="SYSVIEW_OS_NAME",D="SYSVIEW_DEVICE_NAME);
   SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
 }
-
+#endif
 /*********************************************************************
 *
 *       Global functions
@@ -240,10 +241,10 @@ void SEGGER_SYSVIEW_Conf(void) {
   #if configUSE_TRACE_HOOKS /* using Percepio Trace */ && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* using SEGGER SystemViewer */
     #warning "Percepio Trace is enabled, this might conflict with Segger System View."
   #endif
-#endif
   SEGGER_SYSVIEW_Init(SYSVIEW_TIMESTAMP_FREQ, SYSVIEW_CPU_FREQ, 
       SYSVIEW_OS_API, _cbSendSystemDesc);
   SEGGER_SYSVIEW_SetRAMBase(SYSVIEW_RAM_BASE);
+#endif
 }
 
 /*************************** End of file ****************************/

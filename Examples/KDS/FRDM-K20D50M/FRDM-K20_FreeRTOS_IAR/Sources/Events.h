@@ -45,6 +45,7 @@
 #include "BitIoLdd3.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
+#include "MCUC1.h"
 #include "KSDK1.h"
 
 #ifdef __cplusplus
@@ -67,7 +68,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)

@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2019-03-03, 06:23, # CodeGen: 1
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -129,7 +129,7 @@ uint8_t CLS1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* default buff
   #pragma MESSAGE DISABLE C3303 /* implicit concatenation of strings */
 #endif
 #if CLS1_CONFIG_USE_MUTEX
-  static xSemaphoreHandle ShellSem = NULL; /* Semaphore to protect shell SCI access */
+  static SemaphoreHandle_t ShellSem = NULL; /* Semaphore to protect shell SCI access */
 #endif
 
 #if CLS1_DEFAULT_SERIAL

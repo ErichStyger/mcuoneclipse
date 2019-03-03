@@ -16,4 +16,8 @@
 #define McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS  (1)
   /*!< 1: events for Stream Buffer are generated. 0: no Stream Buffer events are generated */
 
+#define McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS  (1)
+  /*!< 1: events for Stream Buffer are generated. 0: no Stream Buffer events are generated */
+
+
 #endif /* __McuSystemView_CONFIG_H */

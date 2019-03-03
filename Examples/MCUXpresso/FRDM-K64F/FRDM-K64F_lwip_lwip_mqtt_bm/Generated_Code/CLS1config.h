@@ -47,4 +47,13 @@
     /*!< Function name to check if there is anything available to receive and returns TRUE, otherwise FALSE */
 #endif
 
+#ifndef CLS1_CONFIG_PROMPT_STRING
+  #define CLS1_CONFIG_PROMPT_STRING    "CMD> "
+#endif
+
+#ifndef CLS1_CONFIG_PROJECT_NAME_STRING
+  #define CLS1_CONFIG_PROJECT_NAME_STRING    "MQTT with lwip"
+#endif
+
+
 #endif /* __CLS1_CONFIG_H */

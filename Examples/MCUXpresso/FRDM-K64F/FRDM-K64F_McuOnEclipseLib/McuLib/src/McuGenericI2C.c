@@ -94,7 +94,7 @@
 #endif /* NULL */
 
 #if McuGenericI2C_CONFIG_USE_MUTEX
-static xSemaphoreHandle McuGenericI2C_busSem = NULL; /* Semaphore to protect I2C bus access */
+static SemaphoreHandle_t McuGenericI2C_busSem = NULL; /* Semaphore to protect I2C bus access */
 #endif
 /*
 ** ===================================================================

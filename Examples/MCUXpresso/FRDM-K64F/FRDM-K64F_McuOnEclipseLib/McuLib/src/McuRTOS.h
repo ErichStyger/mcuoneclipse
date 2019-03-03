@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.567, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.568, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-17, 07:41, # CodeGen: 375
+**     Date/Time   : 2019-01-21, 15:52, # CodeGen: 379
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -47,7 +47,7 @@
 **            ColdFire V1                                  : Disabled
 **            ColdFire V2                                  : Disabled
 **            ARM (Kinetis)                                : Enabled
-**              ARM Family                                 : Cortex-M4
+**              ARM Family                                 : Cortex-M4F
 **              Max SysCall Interrupt Priority             : 5
 **              RTOS Interrupt Priority                    : 15
 **              Lowest Interrupt Priority                  : 15

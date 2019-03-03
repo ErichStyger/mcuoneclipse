@@ -152,14 +152,14 @@ static portTASK_FUNCTION(USBTask, pvParameters) {
   for(;;) {
     while(CDC1_App_Task(cdc_buffer, sizeof(cdc_buffer))==ERR_BUSOFF) {
       /* device not enumerated */
-      FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(50));
       LED2_Off();
     }
     cntr++;
     if ((cntr%16)==0) {
       LED2_Neg();
     }
-    FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
 #endif
@@ -224,7 +224,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_USB_CDC
     (void)CLS1_ReadAndParseWithCommandTable(cdc_buf, sizeof(cdc_buf), &CDC_stdio, CmdParserTable);
 #endif
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
 }
 #endif /* PL_HAS_RTOS */
@@ -235,12 +235,12 @@ void SHELL_Init(void) {
   (void)CLS1_SetStdio(&BT_stdio); /* use the Bluetooth stdio as default */
 #endif
 #if PL_HAS_RTOS
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", configMINIMAL_STACK_SIZE+300, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #endif
 #if PL_HAS_USB_CDC
-  if (FRTOS1_xTaskCreate(USBTask, "USB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS) {
+  if (xTaskCreate(USBTask, "USB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #endif

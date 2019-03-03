@@ -142,8 +142,8 @@ char * sbrk(int incr) {
 //! Synonym for sbrk.
 char * _sbrk(int incr) { return sbrk(incr); };
 
-void __malloc_lock()     {       vTaskSuspendAll(); };
-void __malloc_unlock()   { (void)xTaskResumeAll();  };
+void __malloc_lock(struct _reent *p)     {       vTaskSuspendAll(); };
+void __malloc_unlock(struct _reent *p)   { (void)xTaskResumeAll();  };
 
 // newlib also requires implementing locks for the application's environment memory space,
 // accessed by newlib's setenv() and getenv() functions.
@@ -189,5 +189,12 @@ size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION {
 
 //! No implementation needed, but stub provided in case application already calls vPortInitialiseBlocks
 void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION {};
+
+/*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  /* sorry, not able to free up the standard library heap */
+}
+#endif
 
 #endif /* !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==6) */

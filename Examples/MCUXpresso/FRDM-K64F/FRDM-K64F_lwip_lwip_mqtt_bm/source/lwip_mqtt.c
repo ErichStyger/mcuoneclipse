@@ -132,7 +132,7 @@ static ip4_addr_t brokerServerAddress;
 
 static mqtt_client_t mqtt_client; /* descriptor holding all the needed client information */
 
-static xQueueHandle APP_MsgQueue;
+static QueueHandle_t APP_MsgQueue;
 #define APP_MSG_QUEUE_LENGTH        10
 #define APP_MSG_QUEUE_ITEM_SIZE     sizeof(APP_MQTT_Msg_t)
 

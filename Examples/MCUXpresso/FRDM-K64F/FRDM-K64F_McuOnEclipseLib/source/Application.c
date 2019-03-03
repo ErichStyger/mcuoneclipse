@@ -19,7 +19,7 @@
 #include "McuArmTools.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
-#include "McuLED.h"
+#include "McuLED1.h"
 #include "McuGenericI2C.h"
 #include "McuGenericSWI2C.h"
 #include "McuSSD1306.h"
@@ -34,7 +34,7 @@
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS 100
 
-static void vTimerCallback(xTimerHandle pxTimer) {
+static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
 }
 
@@ -45,7 +45,7 @@ void McuGenericI2C_OnError(void) {
 static void AppTask(void *param) {
 	(void)param;
 	for(;;) {
-		McuLED_Neg();
+		McuLED1_Neg();
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 }
@@ -66,9 +66,9 @@ void APP_Run(void) {
   McuUtility_Init();
   McuHardFault_Init();
   McuArmTools_Init();
-  McuLED_Init(); /* initializes as well the LED pin */
-  McuGenericI2C_Init();
-  McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
+  McuLED1_Init(); /* initializes as well the LED pin */
+//  McuGenericI2C_Init();
+//  McuGenericSWI2C_Init(); /* initializes as well the SCL and SDA pins */
 #if PL_CONFIG_HAS_SSD1606
   McuSSD1306_Init(); /* requires display on the I2C bus! */
 #endif
@@ -82,14 +82,14 @@ void APP_Run(void) {
 	  "App", /* task name for kernel awareness debugging */
 	  configMINIMAL_STACK_SIZE+500, /* task stack size */
 	  (void*)NULL, /* optional task startup argument */
-	  tskIDLE_PRIORITY,  /* initial priority */
-	  (xTaskHandle*)NULL /* optional task handle to create */
+	  tskIDLE_PRIORITY+1,  /* initial priority */
+	  (TaskHandle_t*)NULL /* optional task handle to create */
 	) != pdPASS) {
     /*lint -e527 */
 	 for(;;){} /* error! probably out of memory */
 	/*lint +e527 */
   }
-  timerHndl = xTimerCreate("timer0", TIMER_PERIOD_MS/portTICK_RATE_MS, pdTRUE, (void *)0, vTimerCallback);
+  timerHndl = xTimerCreate("timer0", pdMS_TO_TICKS(TIMER_PERIOD_MS), pdTRUE, (void *)0, vTimerCallback);
   if (timerHndl==NULL) {
     for(;;); /* failure! */
   }

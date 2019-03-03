@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-17, 07:41, # CodeGen: 375
+**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -89,7 +89,6 @@
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t Input1_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     Input1_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,7 +165,13 @@ static bool Input1_isOutput = false;
 void Input1_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_ClearPinsOutput(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortClear(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(Input1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -187,7 +192,13 @@ void Input1_ClrVal(void)
 void Input1_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_SetPinsOutput(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortSet(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(Input1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -208,7 +219,13 @@ void Input1_SetVal(void)
 void Input1_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_TogglePinsOutput(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortToggle(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(Input1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -238,8 +255,14 @@ void Input1_NegVal(void)
 */
 bool Input1_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, Input1_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(Input1_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -299,7 +322,9 @@ void Input1_SetDir(bool Dir)
 */
 void Input1_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, Input1_CONFIG_PIN_NUMBER, &Input1_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PIN_NUMBER, &Input1_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(Input1_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -325,7 +350,9 @@ void Input1_SetInput(void)
 */
 void Input1_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, Input1_CONFIG_PIN_NUMBER, &Input1_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PIN_NUMBER, &Input1_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(Input1_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -354,12 +381,26 @@ void Input1_SetOutput(void)
 */
 void Input1_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(Input1_CONFIG_GPIO_NAME, Input1_CONFIG_PORT_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(Input1_CONFIG_GPIO_NAME, 1<<Input1_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(Input1_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K

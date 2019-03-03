@@ -7,19 +7,51 @@
 #ifndef __LEDpin3_CONFIG_H
 #define __LEDpin3_CONFIG_H
 
+#if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_LEDpin3_PIN)
+    #define LEDpin3_CONFIG_PIN_NUMBER    BOARD_INITPINS_LEDpin3_PIN
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin3_GPIO)
+    #define LEDpin3_CONFIG_GPIO_NAME     BOARD_INITPINS_LEDpin3_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_LEDpin3_PORT)
+    #define LEDpin3_CONFIG_PORT_NAME     BOARD_INITPINS_LEDpin3_PORT
+  #endif
+#endif
+
+
 #ifndef LEDpin3_CONFIG_PORT_NAME
-  #define LEDpin3_CONFIG_PORT_NAME       PORTB
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define LEDpin3_CONFIG_PORT_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define LEDpin3_CONFIG_PORT_NAME       0
+  #else /* name from properties */
+    #define LEDpin3_CONFIG_PORT_NAME       PORTB
+  #endif
     /*!< name of PORT, is pointer to PORT_Type */
 #endif
 
 #ifndef LEDpin3_CONFIG_GPIO_NAME
-  #define LEDpin3_CONFIG_GPIO_NAME       GPIOB
-    /*!< name of GPIO, is pointer to GPIO_Type */
+  #if MCUC1_CONFIG_CPU_IS_IMXRT
+    #define LEDpin3_CONFIG_GPIO_NAME       GPIO1
+  #elif MCUC1_CONFIG_CPU_IS_LPC
+    #define LEDpin3_CONFIG_GPIO_NAME       GPIO
+  #else /* name from properties */
+    #define LEDpin3_CONFIG_GPIO_NAME       GPIOB
+  #endif
+    /*!< name of GPIO, is pointer to GPIO_Type, not used for S32K SDK */
 #endif
 
 #ifndef LEDpin3_CONFIG_PIN_NUMBER
   #define LEDpin3_CONFIG_PIN_NUMBER      21u
     /*!< number of pin, type unsigned integer */
+#endif
+
+#ifndef LEDpin3_CONFIG_PIN_SYMBOL
+  #define LEDpin3_CONFIG_PIN_SYMBOL      LED_BLUE
+    /*!< symbolic name for pin, used for NXP SDK V1.3 */
 #endif
 
 #ifndef LEDpin3_CONFIG_INIT_PIN_VALUE
@@ -39,6 +71,11 @@
 #ifndef LEDpin3_CONFIG_DO_PIN_MUXING
   #define LEDpin3_CONFIG_DO_PIN_MUXING  1
   /*!< 1: perform pin muxing in Init(), 0: do not do pin muxing */
+#endif
+
+#ifndef LEDpin3_CONFIG_PULL_RESISTOR
+  #define LEDpin3_CONFIG_PULL_RESISTOR  0
+  /*!< pull resistor setting. 0: no pull resistor, 1: pull-up, 2: pull-down, 3: pull-up or no pull, 4: pull-down or no pull: 4: autoselect-pull */
 #endif
 
 #endif /* __LEDpin3_CONFIG_H */

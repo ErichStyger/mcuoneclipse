@@ -34,7 +34,8 @@ static void AppTask(void *p) {
 //      GPIO_PinWrite(BOARD_INITPINS_LED_GREEN_GPIO, BOARD_INITPINS_LED_GREEN_GPIO_PIN, 1U);
       //      GPIO_PortSet(BOARD_INITPINS_LED_GREEN_GPIO, (1<<BOARD_INITPINS_LED_GREEN_GPIO_PIN));
     }
-    vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement)
+    //vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement);
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 

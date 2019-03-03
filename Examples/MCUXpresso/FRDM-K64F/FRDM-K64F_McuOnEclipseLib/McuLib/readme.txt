@@ -4,11 +4,12 @@ This folder contains all the library sources:
 - config: application specific configuration files
 - src: source files
 
-Middleware:
+Middleware and dedicated driver folders:
 - FreeRTOS: FreeRTOS realtime operating system, optimized and tuned for Segger SystemView and Percepio Trace
 - TraceRecorder: Percipio Tracealyzer library for FreeRTOS (https://percepio.com/tz/)
 - SEGGER_RTT: Segger Realtime Terminal Library (https://www.segger.com/products/debug-probes/j-link/technology/real-time-transfer/about-real-time-transfer/)
 - SEGGER_SysView: Segger Systemview Library for tracing FreeRTOS (https://www.segger.com/products/development-tools/systemview/)
+- HDD44780: Driver for HD44780 LCDs with up to 4 lines (https://mcuoneclipse.com/2012/12/22/hd44780-2x16-character-display-for-kinetis-and-freedom-board/)
 
 Components of the McuOnEclipse (in alphabetical order):
 - McuArmTools: various ARM Cortex utilities

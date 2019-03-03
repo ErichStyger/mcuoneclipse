@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
+**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -258,7 +258,11 @@ bool DB11_GetVal(void)
 #if McuLib_CONFIG_CPU_IS_LPC
   return GPIO_PinRead(DB11_CONFIG_GPIO_NAME, DB11_CONFIG_PORT_NAME, DB11_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(DB11_CONFIG_GPIO_NAME, DB11_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(DB11_CONFIG_GPIO_NAME, DB11_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(DB11_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -384,11 +388,19 @@ void DB11_PutVal(bool Val)
     GPIO_PortClear(DB11_CONFIG_GPIO_NAME, DB11_CONFIG_PORT_NAME, 1<<DB11_CONFIG_PIN_NUMBER);
   }
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(DB11_CONFIG_GPIO_NAME, 1<<DB11_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(DB11_CONFIG_GPIO_NAME, 1<<DB11_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(DB11_CONFIG_GPIO_NAME, 1<<DB11_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(DB11_CONFIG_GPIO_NAME, 1<<DB11_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(DB11_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K

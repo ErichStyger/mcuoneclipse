@@ -31,7 +31,8 @@
 #include "McuLib.h" /* SDK and API used */
 #include "McuRTOSconfig.h" /* extra configuration settings not part of the original FreeRTOS ports */
 
-#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H           1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configENABLE_BACKWARD_COMPATIBILITY                 0 /* 1: enable backward compatibility mode, using old names in kernel. 0: use new kernel structure names (recommended) */
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -126,12 +127,12 @@
 #define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          1 /* set to 1 to enable software timers */
-#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U)
-#define configTIMER_QUEUE_LENGTH                  10U /* size of queue for the timer task */
-#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE)
-#define INCLUDE_xEventGroupSetBitFromISR          0 /* 1: function is included; 0: do not include function */
-#define INCLUDE_xTimerPendFunctionCall            0 /* 1: function is included; 0: do not include function */
+#define configUSE_TIMERS                          1 /* 1: enable software timers; 0: software timers disabled */
+#define configTIMER_TASK_PRIORITY                 2 /* e.g. (configMAX_PRIORITIES-1U) */
+#define configTIMER_QUEUE_LENGTH                  10 /* size of queue for the timer task */
+#define configTIMER_TASK_STACK_DEPTH              150 /* e.g. (configMINIMAL_STACK_SIZE) */
+#define INCLUDE_xEventGroupSetBitFromISR          1 /* 1: function is included; 0: do not include function */
+#define INCLUDE_xTimerPendFunctionCall            1 /* 1: function is included; 0: do not include function */
 #define configUSE_DAEMON_TASK_STARTUP_HOOK        0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even

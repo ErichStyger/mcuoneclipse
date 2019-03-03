@@ -27,9 +27,8 @@ char *GetDataDirectory(void) {
 #if USE_FATFS
 	return ".//";
 #else
-	const char *thisSourceFile = __FILE__;
+	//const char *thisSourceFile = __FILE__;
 	//UTIL1_strcat
-
 	return NULL;
 #endif
 }
@@ -42,7 +41,7 @@ char *CLS1_fgets(char *buf, int bufSize, void *channel) {
   *buf = '\0';
   for(;;) {
     len = UTIL1_strlen((const char*)buf);
-    foundLine = CLS1_ReadLine(buf, buf+len, bufSize-len, CLS1_GetStdio());
+    foundLine = CLS1_ReadLine((uint8_t*)buf, (uint8_t*)buf+len, bufSize-len, CLS1_GetStdio());
     if (foundLine) {
       len = UTIL1_strlen((const char*)buf); /* length of buffer string */
       if (len==1 && (buf[0]=='\n' || buf[0]=='\r')) { /* eat preceding newline characters */
@@ -300,7 +299,7 @@ void zork_config(void) {
   void hexedit (uint16_t offset);
   hexedit(0x2000);
 #endif
-  CLS1_SendStr("\n***************************\n* ZORK! ZORK! ZORK! ZORK! *\n***************************\n", CLS1_GetStdio()->stdOut);
+  CLS1_SendStr((uint8_t*)"\n***************************\n* ZORK! ZORK! ZORK! ZORK! *\n***************************\n", CLS1_GetStdio()->stdOut);
 #if USE_FATFS
   if (FAT1_Init()!=ERR_OK) { /* initialize FAT driver */
     CLS1_SendStr("Failed FAT init!\r\n", CLS1_GetStdio()->stdErr);

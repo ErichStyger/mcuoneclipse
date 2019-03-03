@@ -4,50 +4,49 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : XFormat
-**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-04-18, 15:12, # CodeGen: 15
+**     Date/Time   : 2019-03-03, 06:44, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
-**          Component name                                 : XF1
-**          SDK                                            : MCUC1
-**          Floating Point                                 : no
+**
 **     Contents    :
 **         xvformat  - unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char *...
 **         xformat   - unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char *...
 **         xsprintf  - int XF1_xsprintf(char *buf, const char *fmt, ...);
 **         xsnprintf - int XF1_xsnprintf(char *buf, size_t max_len, const char *fmt, ...);
+**         Deinit    - void XF1_Deinit(void);
+**         Init      - void XF1_Init(void);
 **
-**     *  Copyright : (c) Copyright Mario Viara, 2014-2017, https://github.com/MarioViara/xprintfc
-**      * Adopted for Processor Expert: Erich Styger
-**      * xsnprintf() contributed by Engin Lee
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+**  * Adopted for Processor Expert: Erich Styger
+**  * xsnprintf() contributed by Engin Lee
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file XF1.h
@@ -70,6 +69,7 @@
 /* other includes needed */
 #include <stdarg.h> /* open argument list support */
 #include <stddef.h> /* for size_t */
+
 /* GCC have printf type attribute check. */
 #ifdef __GNUC__
   /* inform the GNU compiler about printf() style functions, so the compiler can check the arguments */
@@ -78,11 +78,15 @@
   #define XF1_PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
 
+/* low level functions */
+int xsnprintf(char *buf, size_t max_len, const char *fmt, va_list args);
+int xsprintf(char *buf, const char *fmt, va_list args);
 
 unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char * fmt, ...) XF1_PRINTF_ATTRIBUTE(3,4);
 /*
 ** ===================================================================
-**     Method      :  XF1_xformat (component XFormat)
+**     Method      :  xformat (component XFormat)
+**
 **     Description :
 **         Printf() like function using variable arguments
 **     Parameters  :
@@ -100,7 +104,8 @@ unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char * fmt, 
 unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt, va_list args);
 /*
 ** ===================================================================
-**     Method      :  XF1_xvformat (component XFormat)
+**     Method      :  xvformat (component XFormat)
+**
 **     Description :
 **         Printf() like format function
 **     Parameters  :
@@ -118,7 +123,8 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
 int XF1_xsprintf(char *buf, const char *fmt, ...) XF1_PRINTF_ATTRIBUTE(2,3);
 /*
 ** ===================================================================
-**     Method      :  XF1_xsprintf (component XFormat)
+**     Method      :  xsprintf (component XFormat)
+**
 **     Description :
 **         sprintf() like function
 **     Parameters  :
@@ -135,7 +141,8 @@ int XF1_xsprintf(char *buf, const char *fmt, ...) XF1_PRINTF_ATTRIBUTE(2,3);
 int XF1_xsnprintf(char *buf, size_t max_len, const char *fmt, ...) XF1_PRINTF_ATTRIBUTE(3,4);
 /*
 ** ===================================================================
-**     Method      :  XF1_xsnprintf (component XFormat)
+**     Method      :  xsnprintf (component XFormat)
+**
 **     Description :
 **         snprintf() like function, returns the number of characters
 **         written, negative in case of error.
@@ -151,18 +158,34 @@ int XF1_xsnprintf(char *buf, size_t max_len, const char *fmt, ...) XF1_PRINTF_AT
 ** ===================================================================
 */
 
+void XF1_Init(void);
+/*
+** ===================================================================
+**     Method      :  Init (component XFormat)
+**
+**     Description :
+**         Driver initialization routine
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void XF1_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component XFormat)
+**
+**     Description :
+**         Driver de-initialization routine
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END XF1. */
 
 #endif
 /* ifndef __XF1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

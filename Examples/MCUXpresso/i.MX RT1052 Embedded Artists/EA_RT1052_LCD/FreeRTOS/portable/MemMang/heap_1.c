@@ -3,8 +3,8 @@
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==1 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -75,11 +75,12 @@ task.h is included from an application file. */
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
+static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
 
 void *pvPortMalloc( size_t xWantedSize )
 {
 void *pvReturn = NULL;
-static uint8_t *pucAlignedHeap = NULL;
+//static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
 
 	/* Ensure that blocks are always aligned to the required number of bytes. */
 	#if( portBYTE_ALIGNMENT != 1 )
@@ -152,6 +153,14 @@ size_t xPortGetFreeHeapSize( void )
 {
 	return ( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  xNextFreeByte = 0;
+  pucAlignedHeap = NULL
+}
+#endif
+
 #endif /* configUSE_HEAP_SCHEME==1 */ /* << EST */
 
 

@@ -75,7 +75,7 @@ static HeapRegion_t xHeapRegions[] =
 #endif
 
 static SemaphoreHandle_t sem = NULL;
-static xQueueHandle queue = NULL;
+static QueueHandle_t queue = NULL;
 
 static void LedTask(void *param) {
   uint8_t cntr;
@@ -133,7 +133,7 @@ int main(void)
       100, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
     /*lint -e527 */
      for(;;){} /* error! probably out of memory */
@@ -145,7 +145,7 @@ int main(void)
       100, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+1,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
     /*lint -e527 */
      for(;;){} /* error! probably out of memory */

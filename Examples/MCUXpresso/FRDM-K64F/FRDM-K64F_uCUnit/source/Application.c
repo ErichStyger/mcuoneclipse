@@ -49,7 +49,6 @@ Chem_t crazyScientist(Chem_t a, Chem_t b) {
 
 void APP_Run(void) {
 	Chem_t res;
-	int i;
 	char *str;
 	UCUNIT_Init(); /* initialize framework */
 

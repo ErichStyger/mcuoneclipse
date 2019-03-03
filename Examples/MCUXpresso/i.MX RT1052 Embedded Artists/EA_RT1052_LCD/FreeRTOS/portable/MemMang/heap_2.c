@@ -3,8 +3,8 @@
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==2 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -124,11 +124,12 @@ size_t xBlockSize;																	\
 	pxIterator->pxNextFreeBlock = pxBlockToInsert;									\
 }
 /*-----------------------------------------------------------*/
+static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
 
 void *pvPortMalloc( size_t xWantedSize )
 {
 BlockLink_t *pxBlock, *pxPreviousBlock, *pxNewBlockLink;
-static BaseType_t xHeapHasBeenInitialised = pdFALSE;
+//static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
 void *pvReturn = NULL;
 
 	vTaskSuspendAll();
@@ -281,5 +282,15 @@ uint8_t *pucAlignedHeap;
 	pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
 }
 /*-----------------------------------------------------------*/
+#if 1 /* << EST */
+void vPortInitializeHeap(void) {
+  xStart.pxNextFreeBlock = NULL;
+  xStart.xBlockSize = 0;
+  xEnd.pxNextFreeBlock = NULL;
+  xEnd.xBlockSize = 0;
+  xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
+  xHeapHasBeenInitialised = pdFALSE;
+}
+#endif
 #endif /* configUSE_HEAP_SCHEME==2 */ /* << EST */
 

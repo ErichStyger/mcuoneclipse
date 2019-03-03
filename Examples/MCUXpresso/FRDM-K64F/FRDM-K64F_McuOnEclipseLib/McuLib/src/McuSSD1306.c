@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 15:45, # CodeGen: 363
+**     Date/Time   : 2019-02-23, 08:58, # CodeGen: 435
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -53,11 +53,12 @@
 **         DisplayInvert         - uint8_t McuSSD1306_DisplayInvert(bool invert);
 **         GetLCD                - void McuSSD1306_GetLCD(void);
 **         GiveLCD               - void McuSSD1306_GiveLCD(void);
-**         PrintString           - void McuSSD1306_PrintString(uint8_t *str);
+**         SetRowCol             - uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col);
+**         PrintString           - void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str);
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
-** * Copyright (c) 2017-2018, Erich Styger
+** * Copyright (c) 2017-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -310,25 +311,26 @@ static void SSD1306_WriteDataBlock(uint8_t *data, size_t size) {
 #endif
 }
 
-
 static uint8_t actCol = 0;
 static uint8_t actPage = 0;
 
-static void SSD1306_SetPageStartAddr(uint8_t page) {
+static uint8_t SSD1306_SetPageStartAddr(uint8_t page) {
   actPage = page;
   if(actPage>=McuSSD1306_DISPLAY_HW_NOF_PAGES) {
-    return;
+    return ERR_RANGE;
   }
   SSD1306_WriteCommand(0xB0 | actPage);
+  return ERR_OK;
 }
 
-static void SSD1306_SetColStartAddr(uint8_t col){
+static uint8_t SSD1306_SetColStartAddr(uint8_t col){
   actCol = col;
   if(actCol>=McuSSD1306_DISPLAY_HW_NOF_COLUMNS) {
-    return;
+    return ERR_RANGE;
   }
-  SSD1306_WriteCommand(0x10 | (actCol>>4));
-  SSD1306_WriteCommand(actCol & 0x0F);
+  SSD1306_WriteCommand(0x10 | ((actCol+McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET)>>4));
+  SSD1306_WriteCommand((actCol+McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET) & 0x0F);
+  return ERR_OK;
 }
 
 static void SSD1306_PrintChar(uint8_t ch) {
@@ -412,16 +414,16 @@ void McuSSD1306_Clear(void)
 void McuSSD1306_UpdateFull(void)
 {
 #if McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1306 /* SSD1306 */
-  SSD1306_SetPageStartAddr(0);
-  SSD1306_SetColStartAddr(0);
+  (void)SSD1306_SetPageStartAddr(0);
+  (void)SSD1306_SetColStartAddr(0);
   SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0], sizeof(McuSSD1306_DisplayBuf));
-#elif McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1106 /* SH1306 */
+#elif McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1106 /* SH1106 */
   /* the SSH1306 has a 132x64 memory organization (compared to the 128x64 of the SSD1306) */
   int page;
 
   for(page=0; page<McuSSD1306_DISPLAY_HW_NOF_PAGES; page++) {
-    SSD1306_SetPageStartAddr(page);
-    SSD1306_SetColStartAddr(0);
+    (void)SSD1306_SetPageStartAddr(page);
+    (void)SSD1306_SetColStartAddr(0);
     SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0]+(page*McuSSD1306_DISPLAY_HW_NOF_COLUMNS), McuSSD1306_DISPLAY_HW_NOF_COLUMNS);
   }
 #else
@@ -751,6 +753,32 @@ uint8_t McuSSD1306_DisplayInvert(bool invert)
 
 /*
 ** ===================================================================
+**     Method      :  SetRowCol (component SSD1306)
+**
+**     Description :
+**         Sets the column and row position, useful for start writing
+**         text with PrintString()
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         row             - row (or line) number, starting with 0
+**         col             - column number, starting with 0
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col)
+{
+  uint8_t res;
+
+  res = SSD1306_SetPageStartAddr(row);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  return SSD1306_SetColStartAddr(col);
+}
+
+/*
+** ===================================================================
 **     Method      :  PrintString (component SSD1306)
 **
 **     Description :
@@ -758,12 +786,17 @@ uint8_t McuSSD1306_DisplayInvert(bool invert)
 **         Newline is supported.
 **     Parameters  :
 **         NAME            - DESCRIPTION
+**         line            - line number, starting with 0
+**         col             - column number, starting with 0
 **       * str             - Pointer to string to be printed on display
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuSSD1306_PrintString(uint8_t *str)
+void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str)
 {
+  if (McuSSD1306_SetRowCol(line ,col)!=ERR_OK) {
+    return; /* error! */
+  }
   while(*str != '\0'){
     if(*str == '\n') {
       actPage++;
@@ -792,6 +825,7 @@ void McuSSD1306_PrintString(uint8_t *str)
 */
 void McuSSD1306_Init(void)
 {
+  /* see as well https://github.com/hallard/ArduiPi_OLED/blob/master/ArduiPi_OLED.cpp */
 #if McuSSD1306_CONFIG_INIT_DELAY_MS>0
   McuWait_Waitms(McuSSD1306_CONFIG_INIT_DELAY_MS);                   /* give hardware time to power up*/
 #endif
@@ -825,12 +859,12 @@ void McuSSD1306_Init(void)
 #else
   SSD1306_WriteCommand(0x14);                                        /* set to enabled */
 #endif
-#if McuSSD1306_CONFIG_SSD1306_128X32
+#if McuSSD1306_CONFIG_SSD1306_SIZE_TYPE==12832
   SSD1306_WriteCommand(SSD1306_SET_COM_PINS);                        /* set COM pins hardware configuration */
   SSD1306_WriteCommand(0x02);
   SSD1306_WriteCommand(SSD1306_SET_CONTRAST);                        /* set contrast control register */
   SSD1306_WriteCommand(0x8F);
-#else
+#elif McuSSD1306_CONFIG_SSD1306_SIZE_TYPE==12864
   SSD1306_WriteCommand(SSD1306_SET_COM_PINS);                        /* set COM pins hardware configuration */
   SSD1306_WriteCommand(0x12);
   SSD1306_WriteCommand(SSD1306_SET_CONTRAST);                        /* set contrast control register */
@@ -839,6 +873,8 @@ void McuSSD1306_Init(void)
   #else
   SSD1306_WriteCommand(0xCF);
   #endif
+#else
+  #error "unknown display type"
 #endif
 
   SSD1306_WriteCommand(SSD1306_SET_PRECHARGE);                       /* set pre-charge period */

@@ -4,19 +4,14 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RingBuffer
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.053, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-26, 06:31, # CodeGen: 39
+**     Date/Time   : 2019-03-03, 06:44, # CodeGen: 0
 **     Abstract    :
 **         This component implements a ring buffer for different integer data type.
 **     Settings    :
 **          Component name                                 : ConsoleRx
-**          SDK                                            : MCUC1
-**          Reentrant                                      : yes
-**          Critical Section                               : CS1
-**          Buffer Elements                                : 64
-**          Element Size                                   : 1 Byte
+**          Buffer Size                                    : 64
 **     Contents    :
 **         Clear           - void ConsoleRx_Clear(void);
 **         Put             - uint8_t ConsoleRx_Put(ConsoleRx_ElementType elem);
@@ -32,32 +27,32 @@
 **         Deinit          - void ConsoleRx_Deinit(void);
 **         Init            - void ConsoleRx_Init(void);
 **
-**     * Copyright (c) 2014-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2014-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file ConsoleRx.h
@@ -104,7 +99,8 @@ extern "C" {
 uint8_t ConsoleRx_Put(ConsoleRx_ElementType elem);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Put (component RingBuffer)
+**     Method      :  Put (component RingBuffer)
+**
 **     Description :
 **         Puts a new element into the buffer
 **     Parameters  :
@@ -118,7 +114,8 @@ uint8_t ConsoleRx_Put(ConsoleRx_ElementType elem);
 uint8_t ConsoleRx_Get(ConsoleRx_ElementType *elemP);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Get (component RingBuffer)
+**     Method      :  Get (component RingBuffer)
+**
 **     Description :
 **         Removes an element from the buffer
 **     Parameters  :
@@ -133,7 +130,8 @@ uint8_t ConsoleRx_Get(ConsoleRx_ElementType *elemP);
 ConsoleRx_BufSizeType ConsoleRx_NofElements(void);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_NofElements (component RingBuffer)
+**     Method      :  NofElements (component RingBuffer)
+**
 **     Description :
 **         Returns the actual number of elements in the buffer.
 **     Parameters  : None
@@ -145,7 +143,8 @@ ConsoleRx_BufSizeType ConsoleRx_NofElements(void);
 void ConsoleRx_Init(void);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Init (component RingBuffer)
+**     Method      :  Init (component RingBuffer)
+**
 **     Description :
 **         Initializes the data structure
 **     Parameters  : None
@@ -156,7 +155,8 @@ void ConsoleRx_Init(void);
 ConsoleRx_BufSizeType ConsoleRx_NofFreeElements(void);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_NofFreeElements (component RingBuffer)
+**     Method      :  NofFreeElements (component RingBuffer)
+**
 **     Description :
 **         Returns the actual number of free elements/space in the
 **         buffer.
@@ -169,7 +169,8 @@ ConsoleRx_BufSizeType ConsoleRx_NofFreeElements(void);
 void ConsoleRx_Clear(void);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Clear (component RingBuffer)
+**     Method      :  Clear (component RingBuffer)
+**
 **     Description :
 **         Clear (empty) the ring buffer.
 **     Parameters  : None
@@ -180,7 +181,8 @@ void ConsoleRx_Clear(void);
 uint8_t ConsoleRx_Peek(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Peek (component RingBuffer)
+**     Method      :  Peek (component RingBuffer)
+**
 **     Description :
 **         Returns an element of the buffer without removiing it.
 **     Parameters  :
@@ -198,7 +200,8 @@ uint8_t ConsoleRx_Peek(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP
    /* nothing to deinitialize */
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Deinit (component RingBuffer)
+**     Method      :  Deinit (component RingBuffer)
+**
 **     Description :
 **         Driver de-initialization
 **     Parameters  : None
@@ -209,7 +212,8 @@ uint8_t ConsoleRx_Peek(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP
 uint8_t ConsoleRx_Delete(void);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Delete (component RingBuffer)
+**     Method      :  Delete (component RingBuffer)
+**
 **     Description :
 **         Removes an element from the buffer
 **     Parameters  : None
@@ -221,7 +225,8 @@ uint8_t ConsoleRx_Delete(void);
 uint8_t ConsoleRx_Putn(ConsoleRx_ElementType *elem, ConsoleRx_BufSizeType nof);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Putn (component RingBuffer)
+**     Method      :  Putn (component RingBuffer)
+**
 **     Description :
 **         Put a number new element into the buffer.
 **     Parameters  :
@@ -237,7 +242,8 @@ uint8_t ConsoleRx_Putn(ConsoleRx_ElementType *elem, ConsoleRx_BufSizeType nof);
 uint8_t ConsoleRx_Compare(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP, ConsoleRx_BufSizeType nof);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Compare (component RingBuffer)
+**     Method      :  Compare (component RingBuffer)
+**
 **     Description :
 **         Compares the elements in the buffer.
 **     Parameters  :
@@ -254,7 +260,8 @@ uint8_t ConsoleRx_Compare(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *el
 uint8_t ConsoleRx_Getn(ConsoleRx_ElementType *buf, ConsoleRx_BufSizeType nof);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Getn (component RingBuffer)
+**     Method      :  Getn (component RingBuffer)
+**
 **     Description :
 **         Get a number elements into a buffer.
 **     Parameters  :
@@ -270,7 +277,8 @@ uint8_t ConsoleRx_Getn(ConsoleRx_ElementType *buf, ConsoleRx_BufSizeType nof);
 uint8_t ConsoleRx_Update(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *elemP);
 /*
 ** ===================================================================
-**     Method      :  ConsoleRx_Update (component RingBuffer)
+**     Method      :  Update (component RingBuffer)
+**
 **     Description :
 **         Updates the data of an element.
 **     Parameters  :
@@ -294,12 +302,4 @@ uint8_t ConsoleRx_Update(ConsoleRx_BufSizeType index, ConsoleRx_ElementType *ele
 /* ifndef __ConsoleRx_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

@@ -361,7 +361,7 @@ __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
 #if configUSE_MPU_SUPPORT
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged) {
 #else
-StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters) {
+StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters) {
 #endif
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
   pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts, and to ensure alignment. */

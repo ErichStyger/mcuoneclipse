@@ -7,6 +7,21 @@
 #ifndef __DB71_CONFIG_H
 #define __DB71_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_DB71_PIN)
+    #define DB71_CONFIG_PIN_NUMBER    BOARD_INITPINS_DB71_PIN
+  #endif
+  #if defined(BOARD_INITPINS_DB71_GPIO)
+    #define DB71_CONFIG_GPIO_NAME     BOARD_INITPINS_DB71_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_DB71_PORT)
+    #define DB71_CONFIG_PORT_NAME     BOARD_INITPINS_DB71_PORT
+  #endif
+#endif
+
+
 #ifndef DB71_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB71_CONFIG_PORT_NAME       GPIO1

@@ -108,7 +108,7 @@ void McuRTOS_vApplicationIdleHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuRTOS_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used */
 #if 1
@@ -142,7 +142,7 @@ void McuRTOS_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuRTOS_vOnPostSleepProcessing(portTickType expectedIdleTicks)
+void McuRTOS_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */

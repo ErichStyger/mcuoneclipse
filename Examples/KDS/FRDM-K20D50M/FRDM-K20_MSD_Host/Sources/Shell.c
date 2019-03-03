@@ -138,7 +138,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
         "0" /* volume */, &fileSystemObject, CLS1_GetStdio());
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
     LEDG_Neg();
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
 

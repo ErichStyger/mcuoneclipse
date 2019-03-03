@@ -1,71 +1,29 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 /* Standard includes. */
 #include <stdlib.h>
@@ -84,11 +42,11 @@ task.h is included from an application file. */
 	#error configUSE_TIMERS must be set to 1 to make the xTimerPendFunctionCall() function available.
 #endif
 
-/* Lint e961 and e750 are suppressed as a MISRA exception justified because the
-MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
-header files above, but not in this file, in order to generate the correct
-privileged Vs unprivileged linkage and placement. */
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
+/* Lint e9021, e961 and e750 are suppressed as a MISRA exception justified
+because the MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
+for the header files above, but not in this file, in order to generate the
+correct privileged Vs unprivileged linkage and placement. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e9021 !e961 !e750. */
 
 
 /* This entire source file will be skipped if the application is not configured
@@ -100,8 +58,14 @@ configUSE_TIMERS is set to 1 in FreeRTOSConfig.h. */
 /* Misc definitions. */
 #define tmrNO_DELAY		( TickType_t ) 0U
 
+/* The name assigned to the timer service task.  This can be overridden by
+defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
+#ifndef configTIMER_SERVICE_TASK_NAME
+	#define configTIMER_SERVICE_TASK_NAME "Tmr Svc"
+#endif
+
 /* The definition of the timers themselves. */
-typedef struct tmrTimerControl
+typedef struct tmrTimerControl /* The old naming convention is used to prevent breaking kernel aware debuggers. */
 {
 	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 	ListItem_t				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
@@ -163,7 +127,10 @@ which static variables must be declared volatile. */
 
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
-timer service task is allowed to access these lists. */
+timer service task is allowed to access these lists. 
+xActiveTimerList1 and xActiveTimerList2 could be at function scope but that
+breaks some kernel aware debuggers, and debuggers that reply on removing the
+static qualifier. */
 PRIVILEGED_DATA static List_t xActiveTimerList1;
 PRIVILEGED_DATA static List_t xActiveTimerList2;
 PRIVILEGED_DATA static List_t *pxCurrentTimerList;
@@ -276,7 +243,7 @@ BaseType_t xReturn = pdFAIL;
 
 			vApplicationGetTimerTaskMemory( &pxTimerTaskTCBBuffer, &pxTimerTaskStackBuffer, &ulTimerTaskStackSize );
 			xTimerTaskHandle = xTaskCreateStatic(	prvTimerTask,
-													"Tmr Svc",
+													configTIMER_SERVICE_TASK_NAME,
 													ulTimerTaskStackSize,
 													NULL,
 													( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
@@ -291,7 +258,7 @@ BaseType_t xReturn = pdFAIL;
 		#else
 		{
 			xReturn = xTaskCreate(	prvTimerTask,
-									"Tmr Svc",
+									configTIMER_SERVICE_TASK_NAME,
 									configTIMER_TASK_STACK_DEPTH,
 									NULL,
 									( ( UBaseType_t ) configTIMER_TASK_PRIORITY ) | portPRIVILEGE_BIT,
@@ -319,7 +286,7 @@ BaseType_t xReturn = pdFAIL;
 	{
 	Timer_t *pxNewTimer;
 
-		pxNewTimer = ( Timer_t * ) pvPortMalloc( sizeof( Timer_t ) );
+		pxNewTimer = ( Timer_t * ) pvPortMalloc( sizeof( Timer_t ) ); /*lint !e9087 !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack, and the first member of Timer_t is always a pointer to the timer's mame. */
 
 		if( pxNewTimer != NULL )
 		{
@@ -359,12 +326,13 @@ BaseType_t xReturn = pdFAIL;
 			structure. */
 			volatile size_t xSize = sizeof( StaticTimer_t );
 			configASSERT( xSize == sizeof( Timer_t ) );
+			( void ) xSize; /* Keeps lint quiet when configASSERT() is not defined. */
 		}
 		#endif /* configASSERT_DEFINED */
 
 		/* A pointer to a StaticTimer_t structure MUST be provided, use it. */
 		configASSERT( pxTimerBuffer );
-		pxNewTimer = ( Timer_t * ) pxTimerBuffer; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+		pxNewTimer = ( Timer_t * ) pxTimerBuffer; /*lint !e740 !e9087 StaticTimer_t is a pointer to a Timer_t, so guaranteed to be aligned and sized correctly (checked by an assert()), so this is safe. */
 
 		if( pxNewTimer != NULL )
 		{
@@ -428,7 +396,7 @@ DaemonTaskMessage_t xMessage;
 		/* Send a command to the timer service task to start the xTimer timer. */
 		xMessage.xMessageID = xCommandID;
 		xMessage.u.xTimerParameters.xMessageValue = xOptionalValue;
-		xMessage.u.xTimerParameters.pxTimer = ( Timer_t * ) xTimer;
+		xMessage.u.xTimerParameters.pxTimer = xTimer;
 
 		if( xCommandID < tmrFIRST_FROM_ISR_COMMAND )
 		{
@@ -468,7 +436,7 @@ TaskHandle_t xTimerGetTimerDaemonTaskHandle( void )
 
 TickType_t xTimerGetPeriod( TimerHandle_t xTimer )
 {
-Timer_t *pxTimer = ( Timer_t * ) xTimer;
+Timer_t *pxTimer = xTimer;
 
 	configASSERT( xTimer );
 	return pxTimer->xTimerPeriodInTicks;
@@ -477,7 +445,7 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
 TickType_t xTimerGetExpiryTime( TimerHandle_t xTimer )
 {
-Timer_t * pxTimer = ( Timer_t * ) xTimer;
+Timer_t * pxTimer =  xTimer;
 TickType_t xReturn;
 
 	configASSERT( xTimer );
@@ -488,7 +456,7 @@ TickType_t xReturn;
 
 const char * pcTimerGetName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 {
-Timer_t *pxTimer = ( Timer_t * ) xTimer;
+Timer_t *pxTimer = xTimer;
 
 	configASSERT( xTimer );
 	return pxTimer->pcTimerName;
@@ -498,7 +466,7 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 static void prvProcessExpiredTimer( const TickType_t xNextExpireTime, const TickType_t xTimeNow )
 {
 BaseType_t xResult;
-Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
+Timer_t * const pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList ); /*lint !e9087 !e9079 void * is used as this macro is used with tasks and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
 
 	/* Remove the timer from the list of active timers.  A check has already
 	been performed to ensure the list is not empty. */
@@ -884,7 +852,7 @@ BaseType_t xResult;
 		xNextExpireTime = listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxCurrentTimerList );
 
 		/* Remove the timer from the list. */
-		pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList );
+		pxTimer = ( Timer_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxCurrentTimerList ); /*lint !e9087 !e9079 void * is used as this macro is used with tasks and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
 		( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
 		traceTIMER_EXPIRED( pxTimer );
 
@@ -981,7 +949,7 @@ static void prvCheckForValidListAndQueue( void )
 BaseType_t xTimerIsTimerActive( TimerHandle_t xTimer )
 {
 BaseType_t xTimerIsInActiveList;
-Timer_t *pxTimer = ( Timer_t * ) xTimer;
+Timer_t *pxTimer = xTimer;
 
 	configASSERT( xTimer );
 
@@ -991,7 +959,14 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 		/* Checking to see if it is in the NULL list in effect checks to see if
 		it is referenced from either the current or the overflow timer lists in
 		one go, but the logic has to be reversed, hence the '!'. */
-		xTimerIsInActiveList = ( BaseType_t ) !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) ); /*lint !e961. Cast is only redundant when NULL is passed into the macro. */
+		if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdTRUE )
+		{
+			xTimerIsInActiveList = pdFALSE;
+		}
+		else
+		{
+			xTimerIsInActiveList = pdTRUE;
+		}
 	}
 	taskEXIT_CRITICAL();
 
@@ -1001,7 +976,7 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
 void *pvTimerGetTimerID( const TimerHandle_t xTimer )
 {
-Timer_t * const pxTimer = ( Timer_t * ) xTimer;
+Timer_t * const pxTimer = xTimer;
 void *pvReturn;
 
 	configASSERT( xTimer );
@@ -1018,7 +993,7 @@ void *pvReturn;
 
 void vTimerSetTimerID( TimerHandle_t xTimer, void *pvNewID )
 {
-Timer_t * const pxTimer = ( Timer_t * ) xTimer;
+Timer_t * const pxTimer = xTimer;
 
 	configASSERT( xTimer );
 
@@ -1081,6 +1056,26 @@ Timer_t * const pxTimer = ( Timer_t * ) xTimer;
 	}
 
 #endif /* INCLUDE_xTimerPendFunctionCall */
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+
+	UBaseType_t uxTimerGetTimerNumber( TimerHandle_t xTimer )
+	{
+		return ( ( Timer_t * ) xTimer )->uxTimerNumber;
+	}
+
+#endif /* configUSE_TRACE_FACILITY */
+/*-----------------------------------------------------------*/
+
+#if ( configUSE_TRACE_FACILITY == 1 )
+
+	void vTimerSetTimerNumber( TimerHandle_t xTimer, UBaseType_t uxTimerNumber )
+	{
+		( ( Timer_t * ) xTimer )->uxTimerNumber = uxTimerNumber;
+	}
+
+#endif /* configUSE_TRACE_FACILITY */
 /*-----------------------------------------------------------*/
 
 /* This entire source file will be skipped if the application is not configured

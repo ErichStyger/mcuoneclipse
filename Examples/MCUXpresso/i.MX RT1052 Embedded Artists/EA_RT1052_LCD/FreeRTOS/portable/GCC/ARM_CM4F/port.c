@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -361,7 +361,7 @@ __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
 #if configUSE_MPU_SUPPORT
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged) {
 #else
-StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters) {
+StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters) {
 #endif
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
   pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts, and to ensure alignment. */
@@ -622,7 +622,9 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     portENTER_CRITICAL();
     {
       ENABLE_TICK_COUNTER();
-      vTaskStepTick(ulCompleteTickPeriods);
+      if (ulCompleteTickPeriods>0) {
+        vTaskStepTick(ulCompleteTickPeriods);
+      }
 #if configSYSTICK_USE_LOW_POWER_TIMER
       /* The compare register of the LPTMR should not be modified when the
        * timer is running, so wait for the next tick interrupt to change it.
@@ -658,7 +660,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 }
 #endif /* #if configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
-void vPortInitTickTimer(void) {
+static void vPortInitTickTimer(void) {
 #if configUSE_TICKLESS_IDLE == 1
 {
 #if TICK_NOF_BITS==32
@@ -718,7 +720,7 @@ void vPortInitTickTimer(void) {
   ENABLE_TICK_COUNTER(); /* let it run */
 }
 /*-----------------------------------------------------------*/
-void vPortStartTickTimer(void) {
+static void vPortStartTickTimer(void) {
   ENABLE_TICK_COUNTER();
 }
 /*-----------------------------------------------------------*/
@@ -843,17 +845,25 @@ BaseType_t xPortStartScheduler(void) {
 #endif
 #if INCLUDE_vTaskEndScheduler
     if(setjmp(xJumpBuf) != 0 ) {
-      /* here we will get in case of call to vTaskEndScheduler() */
+      /* here we will get in case of a call to vTaskEndScheduler() */
+      __asm volatile(
+        " movs r0, #0         \n" /* Reset CONTROL register and switch back to the MSP stack. */
+        " msr CONTROL, r0     \n"
+        " dsb                 \n"
+        " isb                 \n"
+      );
       return pdFALSE;
     }
 #endif
   vPortStartFirstTask(); /* Start the first task. */
-  /* Should not get here, unless you call vTaskEndScheduler()! */
+  /* Should not get here! */
   return pdFALSE;
 }
 /*-----------------------------------------------------------*/
 void vPortEndScheduler(void) {
   vPortStopTickTimer();
+  vPortInitializeHeap();
+  uxCriticalNesting = 0xaaaaaaaa;
   /* Jump back to the processor state prior to starting the
      scheduler.  This means we are not going to be using a
      task stack frame so the task can be deleted. */
@@ -1020,11 +1030,13 @@ void vPortStartFirstTask(void) {
 __asm void vPortStartFirstTask(void) {
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   /* Use the NVIC offset register to locate the stack. */
+#if configRESET_MSP && !INCLUDE_vTaskEndScheduler
   ldr r0, =0xE000ED08
   ldr r0, [r0]
   ldr r0, [r0]
   /* Set the msp back to the start of the stack. */
   msr msp, r0
+#endif
   /* Globally enable interrupts. */
   cpsie i
   /* Call SVC to start the first task. */
@@ -1093,6 +1105,7 @@ void vPortStartFirstTask(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
   __asm volatile (
+#if configRESET_MSP && !INCLUDE_vTaskEndScheduler
 #if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
     " mov r0, #0xE0000000  \n" /* build the constant 0xE000ED08. First load the upper 16 bits */
     " mov r1, #0xED00      \n" /* next load part of the lower 16 bit */
@@ -1105,6 +1118,7 @@ void vPortStartFirstTask(void) {
     " ldr r0, [r0]        \n" /* load address of vector table */
     " ldr r0, [r0]        \n" /* load first entry of vector table which is the reset stack pointer */
     " msr msp, r0         \n" /* Set the msp back to the start of the stack. */
+#endif
     " cpsie i             \n" /* Globally enable interrupts. */
     " svc 0               \n" /* System call to start first task. */
     " nop                 \n"
