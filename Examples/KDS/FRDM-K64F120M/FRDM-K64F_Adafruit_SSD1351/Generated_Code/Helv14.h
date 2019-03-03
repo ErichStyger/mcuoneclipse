@@ -6,7 +6,7 @@
 **     Component   : GFont
 **     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-15, 21:04, # CodeGen: 148
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Driver for graphical fonts
 **     Settings    :

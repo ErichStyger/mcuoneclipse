@@ -16,4 +16,10 @@
   /*!< 1: disable write buffer in ACTLR register */
 #endif
 
+#ifndef HF1_CONFIG_SETTING_SEMIHOSTING
+  #define HF1_CONFIG_SETTING_SEMIHOSTING   (1)
+  /*!< 1: do not stop in handler with semihosting and no debugger attached. 0: semihosting hardfault will stop target */
+#endif
+
+
 #endif /* __HF1_CONFIG_H */

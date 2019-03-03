@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : HardFault
-**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void HF1_Deinit(void);
 **         Init             - void HF1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

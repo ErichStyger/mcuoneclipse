@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1351
-**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -26,6 +26,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          Use RAM Buffer                                 : yes
 **          Clear display in init                          : no
 **          Initialize on Init                             : no
+**          Settings                                       : 
+**            Contrast A                                   : 0xC8
+**            Contrast B                                   : 0x80
+**            Contrast C                                   : 0xC8
 **          HW                                             : 
 **            HW SPI Delay (us)                            : 0
 **            SW SPI                                       : Disabled
@@ -41,6 +45,7 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          System                                         : 
 **            Wait                                         : WAIT1
 **            SDK                                          : MCUC1
+**          Shell                                          : Disabled
 **     Contents    :
 **         GetWidth              - LCD1_PixelDim LCD1_GetWidth(void);
 **         GetHeight             - LCD1_PixelDim LCD1_GetHeight(void);
@@ -59,11 +64,16 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         UpdateFull            - void LCD1_UpdateFull(void);
 **         UpdateRegion          - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
 **         InitCommChannel       - void LCD1_InitCommChannel(void);
-**         GetLCD                - void LCD1_GetLCD(void);
-**         GiveLCD               - void LCD1_GiveLCD(void);
 **         OnDataReceived        - void LCD1_OnDataReceived(void);
 **         PutPixel              - void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
 **         GetPixel              - LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
+**         DisplayOnOff          - uint8_t LCD1_DisplayOnOff(bool on);
+**         SetContrastABC        - uint8_t LCD1_SetContrastABC(uint8_t contrastA, uint8_t contrastB, uint8_t...
+**         SetContrastMaster     - uint8_t LCD1_SetContrastMaster(uint8_t contrast);
+**         GetLCD                - void LCD1_GetLCD(void);
+**         GiveLCD               - void LCD1_GiveLCD(void);
+**         GetBus                - void LCD1_GetBus(void);
+**         Deinit                - void LCD1_Deinit(void);
 **         Init                  - void LCD1_Init(void);
 **
 ** * Copyright (c) 2014-2018, Erich Styger
@@ -115,6 +125,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 #include "LCD1config.h" /* configuration */
 #include <stddef.h> /* for size_t */
 
+#if LCD1_CONFIG_PARSE_COMMAND_ENABLED
+  #include "Shell.h"
+#endif
+
 /* Include inherited components */
 #include LCD1_CONFIG_SPI_HEADER_FILE  /* SPI driver */
 #include "SM1.h"
@@ -133,7 +147,7 @@ typedef uint16_t LCD1_PixelDim;        /* one word is enough to describe an x/y 
 typedef uint32_t LCD1_PixelCount;      /* need a 32bit type to hold the number of pixels on the display. */
 
 #if LCD1_CONFIG_USE_RAM_BUFFER
-  extern LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
+extern LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
 #endif
 
 /* Predefined colors and pixel values. The display is using words for a pixel/color. Using 16bits for color (65k: 5:red + 6:green + 5:blue */
@@ -158,8 +172,10 @@ typedef uint32_t LCD1_PixelCount;      /* need a 32bit type to hold the number o
 #define LCD1_COLOR_GREY           0b0011100011100111
 #define LCD1_COLOR_BRIGHT_GREY    0b0111101111101111
 
-#define LCD1_PIXEL_ON  LCD1_COLOR_WHITE /* value of a pixel if it is 'on' */
-#define LCD1_PIXEL_OFF LCD1_COLOR_BLACK /* value of a pixel if it is 'off' */
+#define LCD1_PIXEL_ON             LCD1_COLOR_WHITE /* value of a pixel if it is 'on' */
+#define LCD1_PIXEL_OFF            LCD1_COLOR_BLACK /* value of a pixel if it is 'off' */
+#define LCD1_COLOR_PIXEL_SET      LCD1_COLOR_WHITE /* value of a pixel if it is 'on' */
+#define LCD1_COLOR_PIXEL_CLR      LCD1_COLOR_BLACK /* value of a pixel if it is 'off' */
 
 #define LCD1_WIDTH  128u                /* Logical display width in pixels */
 #define LCD1_HEIGHT 128u                /* Logical display height in pixels */
@@ -180,6 +196,10 @@ typedef enum {
 
 #define LCD1_ReadPixel(data)  \
   0 /* with the serial interface it is NOT possible to read from display memory */
+
+#define LCD1_PARSE_COMMAND_ENABLED    LCD1_CONFIG_PARSE_COMMAND_ENABLED
+  /*!< set to 1 if method ParseCommand() is present, 0 otherwise */
+
 
 void LCD1_Clear(void);
 /*
@@ -253,8 +273,7 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
 ** ===================================================================
 */
 
-#define LCD1_CloseWindow()  /* nothing to do */
-
+void LCD1_CloseWindow(void);
 /*
 ** ===================================================================
 **     Method      :  CloseWindow (component SSD1351)
@@ -521,6 +540,88 @@ LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
 **         y               - y coordinate
 **     Returns     :
 **         ---             - Error code
+** ===================================================================
+*/
+
+void LCD1_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component SSD1351)
+**
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t LCD1_DisplayOnOff(bool on);
+/*
+** ===================================================================
+**     Method      :  DisplayOnOff (component SSD1351)
+**
+**     Description :
+**         Turns the display on or off
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         on              - TRUE to turn the display on, FALSE to turn
+**                           it off
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t LCD1_SetContrastABC(uint8_t contrastA, uint8_t contrastB, uint8_t contrastC);
+/*
+** ===================================================================
+**     Method      :  SetContrastABC (component SSD1351)
+**
+**     Description :
+**         Sets the contrast ABC value (Command 0xC1)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         contrastA       - contrast A value
+**         contrastB       - contrast B value
+**         contrastC       - contrast C value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t LCD1_SetContrastMaster(uint8_t contrast);
+/*
+** ===================================================================
+**     Method      :  SetContrastMaster (component SSD1351)
+**
+**     Description :
+**         Sets the contrast Master value (Command 0xC7)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         contrast        - contrast master value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+void LCD1_GetBus(void);
+/*
+** ===================================================================
+**     Method      :  GetBus (component SSD1351)
+**
+**     Description :
+**         Called to get the SPI bus
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void LCD1_GiveBus(void);
+/*
+** ===================================================================
+**     Method      :  LCD1_GiveBus (component SSD1351)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
 

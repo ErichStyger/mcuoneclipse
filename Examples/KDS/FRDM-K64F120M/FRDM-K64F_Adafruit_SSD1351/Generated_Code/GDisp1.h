@@ -4,13 +4,22 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.202, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
-**
+**          Component name                                 : GDisp1
+**          SDK                                            : MCUC1
+**          Inverted Pixels                                : no
+**          Memory Buffer                                  : Enabled
+**            Orientation                                  : Landscape
+**          Clear screen on Init                           : no
+**          Hardware                                       : 
+**            Display                                      : LCD1
+**          Watchdog                                       : Disabled
+**          RTOS                                           : Disabled
 **     Contents    :
 **         PutPixel              - void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor...
 **         SetPixel              - void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
@@ -93,15 +102,18 @@ extern "C" {
 
 
 
-/* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
-typedef struct {                         /* Image */
-  uint16_t width;                        /* Image width  */
-  uint16_t height;                       /* Image height */
-  const uint8_t *pixmap;                 /* Image pixel bitmap */
-  uint16_t size;                         /* Image size   */
-  const char *name;                      /* Image name   */
-} TIMAGE;
-typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
+#ifndef _TIMAGE_IS_DEFINED
+  #define _TIMAGE_IS_DEFINED
+  /* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
+  typedef struct {                         /* Image */
+    uint16_t width;                        /* Image width  */
+    uint16_t height;                       /* Image height */
+    const uint8_t *pixmap;                 /* Image pixel bitmap */
+    uint16_t size;                         /* Image size   */
+    const char *name;                      /* Image name   */
+  } TIMAGE;
+  typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
+#endif /* _TIMAGE_IS_DEFINED */
 
 #define GDisp1_RGB565(R,G,B)     ((GDisp1_PixelColor)((((R)&0x1f)<<11)+(((G)&0x3f)<<5)+((B)&0x1f))) /* convert RGB into 565 color format */
 
@@ -154,11 +166,17 @@ typedef LCD1_DisplayOrientation GDisp1_DisplayOrientation;
 #define GDisp1_ORIENTATION_LANDSCAPE    LCD1_ORIENTATION_LANDSCAPE
 #define GDisp1_ORIENTATION_LANDSCAPE180 LCD1_ORIENTATION_LANDSCAPE180
 
-
+/* using Memory Buffer */
 /* Landscape */
 
-//#define GDisp1_BUF_WORD(x,y)  /* how to access a byte in the display buf[][] */ \
-//  LCD1_DisplayBuf[y][x]
+#if 0
+  #define GDisp1_BUF_WORD(x,y)  /* how to access a byte in the display buf[][] */ \
+    LCD1_DisplayBuf[y][x]
+#endif
+#if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
+  #define GDisp1_BUF_BYTE_PIXEL_BIT_NO(x,y) /* pixel bit number inside display buffer byte (0 is LSB, 7 MSB) */ \
+      ((uint8_t)((x)%8))
+#endif
 
 #if GDisp1_CONFIG_NOF_BITS_PER_PIXEL==1
   #define GDisp1_BUF_BYTE_PIXEL_MASK(x,y)  /* pixel mask for an individual bit inside a display buffer byte */ \
@@ -482,8 +500,7 @@ void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1, GDisp1_Pix
 ** ===================================================================
 */
 
-#define GDisp1_UpdateRegion(x,y,w,h)   LCD1_UpdateRegion(x,y,w,h)
-
+void GDisp1_UpdateRegion(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim w, GDisp1_PixelDim h);
 /*
 ** ===================================================================
 **     Method      :  UpdateRegion (component GDisplay)
@@ -517,7 +534,7 @@ void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0, GDisp1_Pixe
 ** ===================================================================
 */
 
-#define GDisp1_GetDisplayOrientation() GDisp1_ORIENTATION_LANDSCAPE
+#define GDisp1_GetDisplayOrientation LCD1_GetDisplayOrientation
 /*
 ** ===================================================================
 **     Method      :  GetDisplayOrientation (component GDisplay)

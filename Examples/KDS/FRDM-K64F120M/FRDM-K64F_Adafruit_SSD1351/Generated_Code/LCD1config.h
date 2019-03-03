@@ -79,4 +79,25 @@
    #define LCD1_CONFIG_SPI_API_DEVICE_HANDLE           SM1_DeviceData
 #endif
 
+#if !defined(LCD1_CONFIG_PARSE_COMMAND_ENABLED)
+  #define LCD1_CONFIG_PARSE_COMMAND_ENABLED                (0)
+    /*!< 1: shell support enabled, 0: otherwise */
+#endif
+
+/* Contrast Master (Command 0xC7) and Contrast ABC values (Command 0xC1) */
+#define LCD1_CONFIG_CONTRAST_MASTER   0x0F /* Adafruit default: 0x0F */
+#define LCD1_CONFIG_CONTRAST_A        0xC8 /* Adafruit default: 0xC8 */
+#define LCD1_CONFIG_CONTRAST_B        0x80 /* Adafruit default: 0x80 */
+#define LCD1_CONFIG_CONTRAST_C        0xC8 /* Adafruit default: 0xC8 */
+
+#ifndef LCD1_CONFIG_USE_BUS_SHARING
+  #define LCD1_CONFIG_USE_BUS_SHARING  (0)
+  #define LCD1_CONFIG_USE_BUS_SHARING_OnGet   OnGetBus
+  #define LCD1_CONFIG_USE_BUS_SHARING_OnGive  OnGiveBus
+    /*!< 1: Share SPI bus and generate OnGetLCD() and OnGiveLCD() events. 0: do not share bus */
+#endif
+/* prototypes */
+extern void LCD1_CONFIG_USE_BUS_SHARING_OnGet(void);  /* called at the start of display critical section */
+extern void LCD1_CONFIG_USE_BUS_SHARING_OnGive(void); /* called at the end of the display critical section */
+
 #endif /* __LCD1_CONFIG_H */

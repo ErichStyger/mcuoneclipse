@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -32,7 +32,7 @@
 **         Deinit                 - void KIN1_Deinit(void);
 **         Init                   - void KIN1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -75,7 +75,10 @@
 #include "KIN1.h"
 #include "UTIL1.h" /* various utility functions */
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  #include "fsl_sim.h" /* system integration module */
+  #include "fsl_common.h"
+  #if MCUC1_CONFIG_CPU_IS_KINETIS
+    #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_1_3
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_S32K

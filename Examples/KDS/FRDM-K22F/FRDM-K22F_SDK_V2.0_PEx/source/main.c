@@ -48,7 +48,30 @@
 #include "FreeRTOS.h"
 #include "FRTOS1.h"
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName) {
+/*
+** ===================================================================
+**     Event       :  PTRC1_OnTraceWrap (module Events)
+**
+**     Component   :  PTRC1 [PercepioTrace]
+**     Description :
+**         Called for trace ring buffer wrap around. This gives the
+**         application a chance to dump the trace buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void PTRC1_OnTraceWrap(void)
+{
+#if 0 /* default implementation for gdb below ... */
+  /* Write your code here ... */
+  uint8_t buf[64];
+
+  /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
+  PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
+#endif
+}
+
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
      problems within nested interrupts, but only do this for debug purposes as
@@ -124,7 +147,7 @@ int main(void) {
   SYS1_Init();
 #elif configUSE_TRACE_HOOKS /* using Percepio FreeRTOS+Trace */
   #if TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_SNAPSHOT
-    PTRC1_Init(TRC_START); /* snapshot trace, from startup */
+    PTRC1_vTraceEnable(TRC_START); /* snapshot trace, from startup */
   #elif TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_STREAMING
     vTraceEnable(TRC_START_AWAIT_HOST); /* from startup, Blocks! */
   #else

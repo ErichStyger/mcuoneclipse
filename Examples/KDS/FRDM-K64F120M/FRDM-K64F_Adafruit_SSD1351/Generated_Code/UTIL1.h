@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.158, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.160, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-26, 15:26, # CodeGen: 147
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -37,6 +37,7 @@
 **         strcatNum16sFormatted   - void UTIL1_strcatNum16sFormatted(uint8_t *dst, size_t dstSize, int16_t val,...
 **         strcatNum32uFormatted   - void UTIL1_strcatNum32uFormatted(uint8_t *dst, size_t dstSize, uint32_t val,...
 **         strcatNum32sFormatted   - void UTIL1_strcatNum32sFormatted(uint8_t *dst, size_t dstSize, int32_t val,...
+**         strcatNumHex            - void UTIL1_strcatNumHex(uint8_t *dst, size_t dstSize, uint32_t num, uint8_t...
 **         strcatNum8Hex           - void UTIL1_strcatNum8Hex(uint8_t *dst, size_t dstSize, uint8_t num);
 **         strcatNum16Hex          - void UTIL1_strcatNum16Hex(uint8_t *dst, size_t dstSize, uint16_t num);
 **         strcatNum24Hex          - void UTIL1_strcatNum24Hex(uint8_t *dst, size_t dstSize, uint32_t num);
@@ -82,7 +83,7 @@
 **         Deinit                  - void UTIL1_Deinit(void);
 **         Init                    - void UTIL1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -326,7 +327,7 @@ void UTIL1_strcatNum32Hex(uint8_t *dst, size_t dstSize, uint32_t num);
 **     Method      :  strcatNum32Hex (component Utility)
 **
 **     Description :
-**         Appends a 16bit unsigned value to a string buffer as hex
+**         Appends a 32bit unsigned value to a string buffer as hex
 **         number (without a 0x prefix).
 **     Parameters  :
 **         NAME            - DESCRIPTION
@@ -1312,8 +1313,8 @@ int32_t UTIL1_map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, in
 **         x               - value to be mapped
 **         in_min          - input range minimum value
 **         in_max          - input range maximum value
-**         out_min         - output range maximum value
-**         out_max         - 
+**         out_min         - output range minimum value
+**         out_max         - output range maximum value
 **     Returns     :
 **         ---             - remapped value
 ** ===================================================================
@@ -1386,6 +1387,25 @@ int64_t UTIL1_map64(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, 
 **         out_max         - 
 **     Returns     :
 **         ---             - remapped value
+** ===================================================================
+*/
+
+void UTIL1_strcatNumHex(uint8_t *dst, size_t dstSize, uint32_t num, uint8_t nofBytes);
+/*
+** ===================================================================
+**     Method      :  strcatNumHex (component Utility)
+**
+**     Description :
+**         Appends a value as hex valalue to a string buffer as hex
+**         number (without a 0x prefix), with variable number of digits
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * dst             - Pointer to destination string
+**         dstSize         - Size of the destination buffer (in
+**                           bytes).
+**         num             - Value to convert.
+**         nofBytes        - Number of bytes to write
+**     Returns     : Nothing
 ** ===================================================================
 */
 

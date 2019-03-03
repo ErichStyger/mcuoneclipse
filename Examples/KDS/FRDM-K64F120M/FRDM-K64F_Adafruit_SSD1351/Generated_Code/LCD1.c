@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1351
-**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.059, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-03, 16:10, # CodeGen: 154
+**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
 **     Abstract    :
 **
 Display driver for the SSD1351 (e.g. found on Hexiwear).
@@ -26,6 +26,10 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          Use RAM Buffer                                 : yes
 **          Clear display in init                          : no
 **          Initialize on Init                             : no
+**          Settings                                       : 
+**            Contrast A                                   : 0xC8
+**            Contrast B                                   : 0x80
+**            Contrast C                                   : 0xC8
 **          HW                                             : 
 **            HW SPI Delay (us)                            : 0
 **            SW SPI                                       : Disabled
@@ -41,6 +45,7 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **          System                                         : 
 **            Wait                                         : WAIT1
 **            SDK                                          : MCUC1
+**          Shell                                          : Disabled
 **     Contents    :
 **         GetWidth              - LCD1_PixelDim LCD1_GetWidth(void);
 **         GetHeight             - LCD1_PixelDim LCD1_GetHeight(void);
@@ -59,11 +64,16 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 **         UpdateFull            - void LCD1_UpdateFull(void);
 **         UpdateRegion          - void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w,...
 **         InitCommChannel       - void LCD1_InitCommChannel(void);
-**         GetLCD                - void LCD1_GetLCD(void);
-**         GiveLCD               - void LCD1_GiveLCD(void);
 **         OnDataReceived        - void LCD1_OnDataReceived(void);
 **         PutPixel              - void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color);
 **         GetPixel              - LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y);
+**         DisplayOnOff          - uint8_t LCD1_DisplayOnOff(bool on);
+**         SetContrastABC        - uint8_t LCD1_SetContrastABC(uint8_t contrastA, uint8_t contrastB, uint8_t...
+**         SetContrastMaster     - uint8_t LCD1_SetContrastMaster(uint8_t contrast);
+**         GetLCD                - void LCD1_GetLCD(void);
+**         GiveLCD               - void LCD1_GiveLCD(void);
+**         GetBus                - void LCD1_GetBus(void);
+**         Deinit                - void LCD1_Deinit(void);
 **         Init                  - void LCD1_Init(void);
 **
 ** * Copyright (c) 2014-2018, Erich Styger
@@ -110,7 +120,7 @@ Display driver for the SSD1351 (e.g. found on Hexiwear).
 #include "LCD1.h"
 
 #if LCD1_CONFIG_USE_RAM_BUFFER
-  LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
+LCD1_PixelColor LCD1_DisplayBuf[LCD1_DISPLAY_HW_NOF_ROWS][LCD1_DISPLAY_HW_NOF_COLUMNS]; /* buffer for the display */
 #endif
 /*
 - RESET is low active
@@ -277,25 +287,35 @@ static void SetDisplayOrientation(LCD1_DisplayOrientation orientation) {
     #define REMAP_BASE_VALUES           (REMAP_COLOR_RGB565 | REMAP_COM_SPLIT_ODD_EVEN_EN | REMAP_SCAN_UP_TO_DOWN | REMAP_ORDER_ABC)
   #endif
 
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+  currentOrientation = orientation;
+#endif
+#if 1 /* using normal landscape modus of hardware. Will do the rotation in the RAM buffer! */
+  remap =  REMAP_BASE_VALUES | REMAP_COLUMNS_RIGHT_TO_LEFT  | REMAP_HORIZONTAL_INCREMENT;
+#else
   switch(orientation) {
     default:
     case LCD1_ORIENTATION_LANDSCAPE:
       remap =  REMAP_BASE_VALUES | REMAP_COLUMNS_RIGHT_TO_LEFT  | REMAP_HORIZONTAL_INCREMENT;
       break;
-    case LCD1_ORIENTATION_LANDSCAPE180: /* ??? right lower corner, reverted? */
+    case LCD1_ORIENTATION_LANDSCAPE180:
       remap = REMAP_BASE_VALUES | REMAP_COLUMNS_LEFT_TO_RIGHT  | REMAP_VERTICAL_INCREMENT;
       break;
-    case LCD1_ORIENTATION_PORTRAIT180: /* lower left corner, reverted */
+    case LCD1_ORIENTATION_PORTRAIT180:
       remap = REMAP_BASE_VALUES | REMAP_COLUMNS_RIGHT_TO_LEFT  | REMAP_HORIZONTAL_INCREMENT;
       break;
     case LCD1_ORIENTATION_PORTRAIT:
       remap = REMAP_BASE_VALUES | REMAP_COLUMNS_RIGHT_TO_LEFT  | REMAP_VERTICAL_INCREMENT;
       break;
   } /* switch */
+#endif
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GetBus();
+#endif
   LCD1_WriteCommand(OLED_CMD_SET_REMAP); /* Remap command */
   LCD1_WriteData(remap);                 /* remap data */
-#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
-  currentOrientation = orientation;
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GiveBus();
 #endif
 }
 /*
@@ -455,13 +475,11 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
   if ((y0 >= LCD1_GetHeight()) || (y1 >= LCD1_GetHeight())) {
     return;
   }
-#if LCD1_CONFIG_USE_RAM_BUFFER
-  /* orientation is handled by the writes to the RAM buffer, use default landscape setting */
-  c0 = x0+OLED_COLUMN_OFFSET;
-  c1 = x1+OLED_COLUMN_OFFSET;
-  r0 = y0+OLED_ROW_OFFSET;
-  r1 = y1+OLED_ROW_OFFSET;
-#elif LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+#if LCD1_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
+  #if LCD1_CONFIG_USE_RAM_BUFFER /* if using RAM buffer, don't need to rotate, as this is already done with the writes to the memory */
+    c0 = x0+OLED_COLUMN_OFFSET; c1 = x1+OLED_COLUMN_OFFSET;
+    r0 = y0+OLED_ROW_OFFSET; r1 = y1+OLED_ROW_OFFSET;
+  #else
   switch(currentOrientation) {
     default:
     case LCD1_ORIENTATION_LANDSCAPE:
@@ -481,18 +499,22 @@ void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_
       r0 = LCD1_HW_HEIGHT-1-x1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-x0+OLED_ROW_OFFSET;
       break;
   } /* switch */
-#elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT
-  c0 = LCD1_HW_WIDTH-1-y1+OLED_COLUMN_OFFSET; c1 = LCD1_HW_WIDTH-1-y0+OLED_COLUMN_OFFSET;
-  r0 = x0+OLED_ROW_OFFSET; r1 = x1+OLED_ROW_OFFSET;
-#elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT180
-  c0 = y0+OLED_COLUMN_OFFSET; c1 = y1+OLED_COLUMN_OFFSET;
-  r0 = LCD1_HW_HEIGHT-1-x1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-x0+OLED_ROW_OFFSET;
+  #endif
 #elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE
   c0 = x0+OLED_COLUMN_OFFSET; c1 = x1+OLED_COLUMN_OFFSET;
   r0 = y0+OLED_ROW_OFFSET; r1 = y1+OLED_ROW_OFFSET;
 #elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_LANDSCAPE180
   c0 = x0+OLED_COLUMN_OFFSET; c1 = x1+OLED_COLUMN_OFFSET;
   r0 = LCD1_HW_HEIGHT-1-y1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-y0+OLED_ROW_OFFSET;
+#elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT
+  c0 = LCD1_HW_WIDTH-1-y1+OLED_COLUMN_OFFSET; c1 = LCD1_HW_WIDTH-1-y0+OLED_COLUMN_OFFSET;
+  r0 = x0+OLED_ROW_OFFSET; r1 = x1+OLED_ROW_OFFSET;
+#elif LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION==LCD1_CONFIG_ORIENTATION_PORTRAIT180
+  c0 = y0+OLED_COLUMN_OFFSET; c1 = y1+OLED_COLUMN_OFFSET;
+  r0 = LCD1_HW_HEIGHT-1-x1+OLED_ROW_OFFSET; r1 = LCD1_HW_HEIGHT-1-x0+OLED_ROW_OFFSET;
+#endif
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GetBus();
 #endif
   /* Set Window */
   LCD1_WriteCommand(OLED_CMD_SET_COLUMN); /* set column command */
@@ -598,13 +620,16 @@ void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_P
   #endif
 
   LCD1_OpenWindow(xb, yb, xb+wb-1, yb+hb-1);  /* window for region */
+#if 0 /* this only works for Landscape and Landscape180? */
   if (xb==0 && w==LCD1_HW_WIDTH) { /* can write full block */
     LCD1_WriteDataBlock((uint8_t*)(&LCD1_DisplayBuf[yb][xb]), wb*hb*sizeof(LCD1_DisplayBuf[0][0]));
-  } else {
+  } else
+#endif
+  {
     /* need to write memory line by line */
     LCD1_PixelDim i;
 
-    for(i=yb;i<yb+hb-1;i++) {
+    for(i=yb;i<yb+hb;i++) {
       LCD1_WriteDataBlock((uint8_t*)(&LCD1_DisplayBuf[i][xb]), wb*sizeof(LCD1_DisplayBuf[0][0]));
     }
   }
@@ -624,12 +649,12 @@ void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_P
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
 void LCD1_CloseWindow(void)
 {
-  implemented as macro in LCD1.h
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GiveBus();
+#endif
 }
-*/
 
 /*
 ** ===================================================================
@@ -783,7 +808,6 @@ LCD1_PixelDim LCD1_GetShorterSide(void)
 */
 void LCD1_GetLCD(void)
 {
-  LCD1_InitCommChannel();
 }
 
 /*
@@ -846,57 +870,72 @@ void LCD1_Init(void)
   #define CMD_BYTE   (1)
   #define DATA_BYTE  (0)
 
+  /* Not all displays are the same. They differ in brightness, speed, capacitance
+     Things to consider or tune:
+     OLED_CMD_PRECHARGE
+     SSD1351_CMD_VCOMH
+     SSD1351_CMD_CONTRASTABC
+     SSD1351_CMD_CONTRASTMASTER
+     SSD1351_CMD_SETVSL
+     SSD1351_CMD_PRECHARGE2
+     Additionally, powering the Adafruit from 5V or 3.3V makes a difference!
+  */
   static const init_cmd_t seq[] = {
     /* 0xFD */ {OLED_CMD_SET_CMD_LOCK,   CMD_BYTE},
-    /* 0x12 */ {OLED_UNLOCK,             DATA_BYTE},
+               {OLED_UNLOCK,             DATA_BYTE}, /* 0x12 */
     /* 0xFD */ {OLED_CMD_SET_CMD_LOCK,   CMD_BYTE},
-    /* 0xB1 */ {OLED_ACC_TO_CMD_YES,     DATA_BYTE},
+               {OLED_ACC_TO_CMD_YES,     DATA_BYTE}, /* 0xB1 */
     /* 0xAE */ {OLED_CMD_DISPLAYOFF,     CMD_BYTE},
     /* 0xB3 */ {OLED_CMD_SET_OSC_FREQ_AND_CLOCKDIV, CMD_BYTE},
                {0xF1,                    DATA_BYTE}, /* 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16) */
+               /* reset:
+                 [7:4] 1101 (oszillator frequency, frequency increases as level increases
+                 [3:0] 0001 (divide by DIVSET, 0001 means divide by 2
+                 */
     /* 0xCA */ {OLED_CMD_SET_MUX_RATIO,  CMD_BYTE},
                {(LCD1_HW_WIDTH-1), DATA_BYTE},
     /* 0x15 */ {OLED_CMD_SET_COLUMN,     CMD_BYTE},
                {0x00,                    DATA_BYTE},
                {(LCD1_HW_WIDTH-1), DATA_BYTE},
-    /* 0x75 */ {OLED_CMD_SET_ROW,       CMD_BYTE},
-               {0x00,                   DATA_BYTE},
+    /* 0x75 */ {OLED_CMD_SET_ROW,        CMD_BYTE},
+               {0x00,                    DATA_BYTE},
                {(LCD1_HW_HEIGHT-1),DATA_BYTE},
-    /* 0xA1 */ {OLED_CMD_STARTLINE,     CMD_BYTE},
+    /* 0xA1 */ {OLED_CMD_STARTLINE,      CMD_BYTE},
          #if LCD1_HW_HEIGHT==96
                {0x80, DATA_BYTE},
          #else
-               {0x00,                   DATA_BYTE},
+               {0x00,                    DATA_BYTE},
          #endif
-    /* 0xA2 */ {OLED_CMD_DISPLAYOFFSET, CMD_BYTE},
+    /* 0xA2 */ {OLED_CMD_DISPLAYOFFSET,  CMD_BYTE},
          #if LCD1_HW_HEIGHT==96
                {LCD1_HW_HEIGHT, DATA_BYTE},
          #else
-               {0x00,                   DATA_BYTE},
+               {0x00,                    DATA_BYTE},
          #endif
-    /* 0xB5 */ {OLED_CMD_SETGPIO,       CMD_BYTE},
-               {0x00,                   DATA_BYTE}, /* disable GPIO pins */
+    /* 0xB5 */ {OLED_CMD_SETGPIO,        CMD_BYTE},
+               {0x00,                    DATA_BYTE}, /* disable GPIO pins */
     /* 0xAB */ {OLED_CMD_FUNCTIONSELECT, CMD_BYTE},
-               {0x01,                   DATA_BYTE}, /* enable internal Vdd regulator (diode drop) */
-               {OLED_CMD_PRECHARGE,     CMD_BYTE},
-               {0x32,                   CMD_BYTE},
-               {OLED_CMD_VCOMH,         CMD_BYTE},
-               {0x05,                   CMD_BYTE},
-               {OLED_CMD_NORMALDISPLAY, CMD_BYTE},
-               {OLED_CMD_CONTRASTABC,   CMD_BYTE},
-               {0x8A,                   DATA_BYTE}, /* 0xC8 */
-               {0x51,                   DATA_BYTE}, /* 0x80 */
-               {0x8A,                   DATA_BYTE}, /* 0xC8 */
-               {OLED_CMD_CONTRASTMASTER, CMD_BYTE},
-               {0xCF,                   DATA_BYTE}, /* 0x0F */
-               {OLED_CMD_SETVSL,        CMD_BYTE},
-               {0xA0,                   DATA_BYTE},
-               {0xB5,                   DATA_BYTE},
-               {0x55,                   DATA_BYTE},
-               {OLED_CMD_PRECHARGE2,    CMD_BYTE},
-               {0x01,                   DATA_BYTE},
-               {OLED_CMD_DISPLAYON,     CMD_BYTE}
-               };
+               {0x01,                    DATA_BYTE}, /* enable internal Vdd regulator (diode drop) */
+    /* 0xB1 */ {OLED_CMD_PRECHARGE,      CMD_BYTE},
+               {0x32,                    CMD_BYTE},
+    /* 0xBE */ {OLED_CMD_VCOMH,          CMD_BYTE},
+               {0x05,                    CMD_BYTE},
+    /* 0xA6 */ {OLED_CMD_NORMALDISPLAY,  CMD_BYTE},
+    /* 0xC1 */ {OLED_CMD_CONTRASTABC,    CMD_BYTE},
+    /* Adafruit contrast settings: https://github.com/adafruit/Adafruit-SSD1351-library/blob/master/Adafruit_SSD1351.cpp */
+               {LCD1_CONFIG_CONTRAST_A, DATA_BYTE},
+               {LCD1_CONFIG_CONTRAST_B, DATA_BYTE},
+               {LCD1_CONFIG_CONTRAST_C, DATA_BYTE},
+    /* 0xC7 */ {OLED_CMD_CONTRASTMASTER, CMD_BYTE},
+               {LCD1_CONFIG_CONTRAST_MASTER, DATA_BYTE},
+    /* 0xB4 */ {OLED_CMD_SETVSL,         CMD_BYTE},
+               {0xA0,                    DATA_BYTE},
+               {0xB5,                    DATA_BYTE},
+               {0x55,                    DATA_BYTE},
+    /* 0xB6 */ {OLED_CMD_PRECHARGE2,     CMD_BYTE},
+               {0x01,                    DATA_BYTE},
+    /* 0xAF */ {OLED_CMD_DISPLAYON,      CMD_BYTE}
+    };
 
   POWER_OFF();
   WAIT1_Waitms(1);
@@ -913,13 +952,7 @@ void LCD1_Init(void)
       LCD1_WriteData(seq[i].cmd);
     }
   }
-#if LCD1_CONFIG_USE_RAM_BUFFER
-  /* if using RAM buffer, display orientation is handled by the memory buffer itself */
-  SetDisplayOrientation(LCD1_ORIENTATION_LANDSCAPE);
-#else
   SetDisplayOrientation(LCD1_CONFIG_INITIAL_DISPLAY_ORIENTATION);
-#endif
-
 #if LCD1_CONFIG_CLEAR_DISPLAY_IN_INIT
   LCD1_Clear();
 #endif
@@ -1044,6 +1077,137 @@ LCD1_PixelColor LCD1_GetPixel(LCD1_PixelDim x, LCD1_PixelDim y)
 #else
   return 0; /* not able to read from display! */
 #endif /* LCD1_CONFIG_USE_RAM_BUFFER */
+}
+
+/*
+** ===================================================================
+**     Method      :  Deinit (component SSD1351)
+**
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_Deinit(void)
+{
+  /* nothing required */
+}
+
+/*
+** ===================================================================
+**     Method      :  DisplayOnOff (component SSD1351)
+**
+**     Description :
+**         Turns the display on or off
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         on              - TRUE to turn the display on, FALSE to turn
+**                           it off
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t LCD1_DisplayOnOff(bool on)
+{
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GetBus();
+#endif
+  LCD1_WriteCommand(on?OLED_CMD_DISPLAYON:OLED_CMD_DISPLAYOFF);
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GiveBus();
+#endif
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  SetContrastABC (component SSD1351)
+**
+**     Description :
+**         Sets the contrast ABC value (Command 0xC1)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         contrastA       - contrast A value
+**         contrastB       - contrast B value
+**         contrastC       - contrast C value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t LCD1_SetContrastABC(uint8_t contrastA, uint8_t contrastB, uint8_t contrastC)
+{
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GetBus();
+#endif
+  LCD1_WriteCommand(OLED_CMD_CONTRASTABC);
+  LCD1_WriteData(contrastA);
+  LCD1_WriteData(contrastB);
+  LCD1_WriteData(contrastC);
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GiveBus();
+#endif
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  SetContrastMaster (component SSD1351)
+**
+**     Description :
+**         Sets the contrast Master value (Command 0xC7)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         contrast        - contrast master value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t LCD1_SetContrastMaster(uint8_t contrast)
+{
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GetBus();
+#endif
+  contrast &= 0xF; /* value is limited to 0-16 */
+  LCD1_WriteCommand(OLED_CMD_CONTRASTMASTER);
+  LCD1_WriteData(contrast);
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_GiveBus();
+#endif
+  return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  GetBus (component SSD1351)
+**
+**     Description :
+**         Called to get the SPI bus
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_GetBus(void)
+{
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_CONFIG_USE_BUS_SHARING_OnGet();
+  LCD1_InitCommChannel();
+#endif
+}
+
+/*
+** ===================================================================
+**     Method      :  LCD1_GiveBus (component SSD1351)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+void LCD1_GiveBus(void)
+{
+#if LCD1_CONFIG_USE_BUS_SHARING
+  LCD1_CONFIG_USE_BUS_SHARING_OnGive();
+#endif
 }
 
 /* END LCD1. */
