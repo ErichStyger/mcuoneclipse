@@ -56,7 +56,7 @@ static bool NEOA_useGammaCorrection = FALSE;
 
 /* task notification bits */
 #define NEOA_NOTIFICATION_UPDATE_DISPLAY      (1<<0)  /* update display */
-static xTaskHandle NeoTaskHandle; /* task handle */
+static TaskHandle_t NeoTaskHandle; /* task handle */
 static SemaphoreHandle_t NeoPixelMutex; /* mutex to access the NEO pixel buffer */
 
 void NEOA_RequestNeoMutex(void) {

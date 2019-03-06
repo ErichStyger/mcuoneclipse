@@ -16,7 +16,7 @@
 #include "Orientation.h"
 #include "Sensor.h"
 
-static xTaskHandle SandClockTaskHandle; /* task handle */
+static TaskHandle_t SandClockTaskHandle; /* task handle */
 
 #define AREA_MIN_X  (0)
 #define AREA_NOF_X  (LEDM1_HW_WIDTH+2) /* with border */

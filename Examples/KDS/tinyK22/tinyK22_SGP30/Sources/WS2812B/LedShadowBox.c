@@ -14,7 +14,7 @@
 #include "NeoApp.h"
 #include "LedDisp.h"
 
-static xTaskHandle ShadowBoxTaskHandle; /* task handle */
+static TaskHandle_t ShadowBoxTaskHandle; /* task handle */
 
 static bool NEOA_LightBoxUseRainbow = TRUE;
 #define NEOA_NOF_LIGHTBOX_ROWS    (8) /* number of rows in light box */

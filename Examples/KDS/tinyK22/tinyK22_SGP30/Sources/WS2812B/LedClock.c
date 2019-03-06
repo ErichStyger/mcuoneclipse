@@ -15,7 +15,7 @@
 #include "NeoApp.h"
 #include "Orientation.h"
 
-static xTaskHandle ClockTaskHandle; /* task handle */
+static TaskHandle_t ClockTaskHandle; /* task handle */
 
 static void SetDisplayOrientation(ORI_Orientation_e orientation) {
   switch(orientation) {

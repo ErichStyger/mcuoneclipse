@@ -39,9 +39,9 @@
 #if TMOUT1_TICK_PERIOD_MS!=APP_PERIODIC_TIMER_PERIOD_MS
   #error "Timeout tick time has to match timer time"
 #endif
-static xTimerHandle timerHndl;
+static TimerHandle_t timerHndl;
 
-static void vTimerCallbackExpired(xTimerHandle pxTimer) {
+static void vTimerCallbackExpired(TimerHandle_t pxTimer) {
 #if PL_CONFIG_HAS_GUI
   lv_tick_inc(APP_PERIODIC_TIMER_PERIOD_MS);
 #endif
@@ -79,7 +79,7 @@ void APP_Run(void) {
         500/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

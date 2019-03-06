@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 06:44, # CodeGen: 0
+**     Date/Time   : 2019-03-03, 19:10, # CodeGen: 3
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -24,7 +24,7 @@
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
 **          Multi Command                                  : Enabled
-**            Length                                       : 32
+**            Length                                       : 96
 **            Separator                                    : ;
 **          Utility                                        : UTIL1
 **          Default Serial                                 : Disabled
@@ -177,7 +177,7 @@
 
 /* multi command support */
 #define CLS1_MULTI_CMD_ENABLED   1 /* 1: enabled, 0: disabled */
-#define CLS1_MULTI_CMD_SIZE      32 /* max size of each command */
+#define CLS1_MULTI_CMD_SIZE      96 /* max size of each command */
 #define CLS1_MULTI_CMD_CHAR      ';' /* separation character */
 
 /* settings for local echo */

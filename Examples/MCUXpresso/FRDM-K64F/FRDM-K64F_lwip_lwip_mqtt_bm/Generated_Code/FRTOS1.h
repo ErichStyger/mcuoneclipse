@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_lwip_mqtt_bm
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.570, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.574, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 06:44, # CodeGen: 0
+**     Date/Time   : 2019-03-03, 19:10, # CodeGen: 3
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :

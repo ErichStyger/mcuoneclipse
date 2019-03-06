@@ -13,9 +13,9 @@
 #include <string.h> /* for memset() */
 #include "CLS1.h"
 
-static xTimerHandle timerHndlLcdTimeout;
+static TimerHandle_t timerHndlLcdTimeout;
 
-static void vTimerCallbackLCDExpired(xTimerHandle pxTimer) {
+static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
   /* timer callback to turn off LCD backlight */
   LCD1_DisplayOnOff(FALSE);
 }
