@@ -64,7 +64,7 @@
 #if CONFIG_I_AM_SENDER
 static bool SW2_Pressed(void) {
   if (!SW2_GetVal()) { /* pressed */
-	  WAIT1_Waitms(50); /* simple debound */
+	  WAIT1_Waitms(100); /* simple debound */
 	  if (!SW2_GetVal()) { /* still pressed */
 		  while(!SW2_GetVal()) {
 			  /* wait for release */
@@ -77,9 +77,9 @@ static bool SW2_Pressed(void) {
 
 static bool SW3_Pressed(void) {
   if (!SW3_GetVal()) { /* pressed */
-	  WAIT1_Waitms(50); /* simple debound */
+	  WAIT1_Waitms(100); /* simple debound */
 	  if (!SW3_GetVal()) { /* still pressed */
-		  while(!SW2_GetVal()) {
+		  while(!SW3_GetVal()) {
 			  /* wait for release */
 		  }
 		  return true; /* pressed */
@@ -89,6 +89,7 @@ static bool SW3_Pressed(void) {
 }
 
 static void sendData(bool data) {
+#if 0
   while(!RX_RDY_GetVal()) { /* wait until receiver is ready */
     WAIT1_Waitms(1);
   }
@@ -100,6 +101,9 @@ static void sendData(bool data) {
     WAIT1_Waitms(1);
   }
   DATA_RDY_ClrVal(); /* de-assert */
+#else
+  /* \todo send data */
+#endif
 }
 
 static void sender(void) {
@@ -114,7 +118,7 @@ static void sender(void) {
 	LED1_On(); /* red on */
 	for(;;) {
 	  /* handle push buttons */
-	  if (SW2_Pressed()) {
+	  if (SW2_Pressed()) { /* change LED color */
 		  /* toggle between red and blue */
 		  if (LED1_Get()) { /* red is on */
 			  LED2_On(); /* blue on */
@@ -144,7 +148,6 @@ static void sender(void) {
 #else
 static void receiver(void) {
 	bool data;
-	uint32_t cntr;
 
 	RX_RDY_ClrVal(); /* is high active */
 	RX_RDY_SetOutput(); /* set as output pin */
@@ -156,6 +159,7 @@ static void receiver(void) {
 	DATA_SetInput(); /* we read from the data line */
 
 	for(;;) {
+#if 0
 		RX_RDY_SetVal(); /* signal that we are ready */
 		while(!DATA_RDY_GetVal()) {
 			/* wait until data is ready */
@@ -177,13 +181,9 @@ static void receiver(void) {
 			WAIT1_Waitms(100);
 			LED2_Off();
 		}
-		cntr++;
-		if (cntr>50) {
-			cntr = 0;
-			LED3_On();
-			WAIT1_Waitms(20);
-			LED3_Off();
-		}
+#else
+		/* \todo Receive data and signal it with the LED */
+#endif
 	}
 }
 #endif /* CONFIG_I_AM_SENDER */
