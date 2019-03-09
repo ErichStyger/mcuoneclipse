@@ -101,12 +101,12 @@
   #define CONFIG_CLIENT_USER_PASSWORD   NULL /* no password */
   #define CONFIG_TOPIC_NAME             "HSLU/test"
 #elif CONFIG_USE_BROKER_HSLU
-  #define CONFIG_BROKER_HOST_NAME       NULL
-  #define CONFIG_BROKER_HOST_IP         "147.88.62.9"
+  #define CONFIG_BROKER_HOST_NAME       "eee-00031"
+  #define CONFIG_BROKER_HOST_IP         "192.168.0.118" /* raspberry pi running mosquitto */
   #define CONFIG_CLIENT_ID_NAME         "FRDM-K64F" /* each client connected to the host has to use a unique ID */
   #define CONFIG_CLIENT_USER_NAME       "tastyger" /* user name */
   #define CONFIG_CLIENT_USER_PASSWORD   "1234" /* dummy password */
-  #define CONFIG_TOPIC_NAME             "tastyger/test"
+  #define CONFIG_TOPIC_NAME             "tastyger/test" /* hard coded topic name to subscribe to */
 #elif CONFIG_USE_BROKER_LOCAL
   #if CONFIG_USE_IN_WORK_NETWORK
     #define CONFIG_BROKER_HOST_NAME     NULL

@@ -27,7 +27,7 @@
 #endif
 
 #ifndef CLS1_CONFIG_DEFAULT_SHELL_BUFFER_SIZE
-  #define CLS1_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  (48)
+  #define CLS1_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  (96)
     /*!< default buffer size for shell command parsing */
 #endif
 

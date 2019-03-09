@@ -67,7 +67,7 @@
 #endif
 
 #if USE_HOME
-	/* IP address configuration. */
+	/* IP address configuration for FRDM-K64F */
 	#define configIP_ADDR0 192
 	#define configIP_ADDR1 168
 	#define configIP_ADDR2 0
@@ -89,7 +89,7 @@
 	#define configBroker_ADDR0 192
 	#define configBroker_ADDR1 168
 	#define configBroker_ADDR2 0
-	#define configBroker_ADDR3 111
+	#define configBroker_ADDR3 118
 #elif USE_HSLU
 	/* IP address configuration. */
 	#define configIP_ADDR0 10
@@ -331,10 +331,12 @@ static void print_dhcp_state(struct netif *netif)
 
   void example_publish(mqtt_client_t *client, void *arg)
   {
-    const char *pub_payload= "abcd";
+    const char *pub_payload = "abcd";
+    const char *pub_topic = "HSLU/test";
     err_t err;
     u8_t qos = 2; /* 0 1 or 2, see MQTT specification */
     u8_t retain = 0; /* No don't retain such crappy payload... */
+    printf("Publishing data '%s' to topic '%s'\r\n", pub_payload, pub_topic);
     err = mqtt_publish(client, "HSLU/test", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
     if(err != ERR_OK) {
       printf("Publish err: %d\n", err);

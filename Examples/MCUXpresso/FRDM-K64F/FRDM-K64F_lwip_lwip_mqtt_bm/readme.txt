@@ -1,6 +1,7 @@
 readme.txt
 ----------
 Project for MCUXpresso IDE and lwip and MQTT on FRDM-K64F board.
+Connect on the OpenSDA UART-2-USB with 38400 baud.
 
 Links and more information:
 - https://mcuoneclipse.com/2017/04/09/mqtt-with-lwip-and-nxp-frdm-k64f-board/

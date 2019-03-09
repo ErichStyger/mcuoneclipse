@@ -910,7 +910,7 @@ static uint8_t ShellDoConnect(const CLS1_StdIOType *io) {
   }
   CLS1_SendStr((uint8_t*)"Initiating connection to broker...\r\n", io->stdOut);
   msg.msgKind = APP_MQTT_MSG_CONNECT;
-  if (!APP_SendMsg(&msg)) {
+  if (APP_SendMsg(&msg)!=0) {
     CLS1_SendStr((uint8_t*)"ERROR: Failed sending connect message!\r\n", io->stdOut);
     return ERR_FAILED;
   }
@@ -933,7 +933,7 @@ static uint8_t ShellDoDisconnect(const CLS1_StdIOType *io) {
   }
   CLS1_SendStr((uint8_t*)"Initiating disconnect from broker...\r\n", io->stdOut);
   msg.msgKind = APP_MQTT_MSG_DISCONNECT;
-  if (!APP_SendMsg(&msg)) {
+  if (APP_SendMsg(&msg)!=0) {
     CLS1_SendStr((uint8_t*)"ERROR: Failed sending disconnect message!\r\n", io->stdOut);
     return ERR_FAILED;
   }
@@ -968,7 +968,7 @@ static uint8_t ShellDoSubscribe(const CLS1_StdIOType *io, unsigned char *topic) 
   CLS1_SendStr((uint8_t*)"Initiating SUBSCRIBE to broker...\r\n", io->stdOut);
   msg.msgKind = APP_MQTT_MSG_SUBSCRIBE;
   msg.subscribe.topic = topic;
-  if (!APP_SendMsg(&msg)) {
+  if (APP_SendMsg(&msg)!=0) {
     CLS1_SendStr((uint8_t*)"ERROR: Failed sending subscribe message!\r\n", io->stdOut);
     return ERR_FAILED;
   }
