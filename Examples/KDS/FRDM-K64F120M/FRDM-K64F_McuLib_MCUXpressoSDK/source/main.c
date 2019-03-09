@@ -35,7 +35,8 @@
 #include "board.h"
 #include "pin_mux.h"
 #include "clock_config.h"
-
+#include "FreeRTOS.h"
+#include "task.h"
 #include "LEDR.h"
 #include "WAIT1.h"
 
@@ -65,7 +66,7 @@ int main(void) {
       configMINIMAL_STACK_SIZE+500, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
   /*lint -e527 */
      for(;;){} /* error! probably out of memory */

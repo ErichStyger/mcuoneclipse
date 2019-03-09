@@ -1,11 +1,16 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.1
+ * Trace Recorder Library for Tracealyzer v3.3.0
  * Percepio AB, www.percepio.com
  *
  * trcStreamingPort.h
  *
  * The interface definitions for trace streaming ("stream ports").
  * This "stream port" sets up the recorder to use SEGGER RTT as streaming channel.
+ *
+ * Note that this stream port is more complex than the typical case, since
+ * the J-Link interface uses a separate RAM buffer in SEGGER_RTT.c, instead
+ * of the default buffer included in the recorder core. The other stream ports 
+ * offer more typical examples of how to define a custom streaming interface.
  *
  * Terms of Use
  * This file is part of the trace recorder library (RECORDER), which is the 
@@ -106,7 +111,6 @@ extern "C" {
  * If you prefer to use buffer 0, it must be configured in SEGGER_RTT_Conf.h. 
  ******************************************************************************/
 #define TRC_CFG_RTT_DOWN_BUFFER_INDEX     2   /* << EST */
-
 /*******************************************************************************
  * TRC_CFG_RTT_MODE
  * This stream port for J-Link streaming relies on SEGGER RTT, that contains an
@@ -140,22 +144,18 @@ extern "C" {
 #if TRC_CFG_RTT_UP_BUFFER_INDEX == 0
 #define TRC_RTT_ALLOC_UP() static char* _TzTraceData = NULL;    /* Not actually used. Ignore allocation method. */
 #define TRC_STREAM_PORT_MALLOC() /* Static allocation. Not used. */
-#define TRC_ALLOC_CUSTOM_BUFFER(bufname) /* Only for custom allocation */
 #else
 #if TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_STATIC
 #define TRC_RTT_ALLOC_UP() char _TzTraceData[TRC_CFG_RTT_BUFFER_SIZE_UP];    /* Static allocation */
 #define TRC_STREAM_PORT_MALLOC() /* Static allocation. Not used. */
-#define TRC_ALLOC_CUSTOM_BUFFER(bufname) /* Only for custom allocation */
 #endif
 #if TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_DYNAMIC
 #define TRC_RTT_ALLOC_UP() char* _TzTraceData = NULL;    /* Dynamic allocation */
 #define TRC_STREAM_PORT_MALLOC() _TzTraceData = TRC_PORT_MALLOC(TRC_CFG_RTT_BUFFER_SIZE_UP);
-#define TRC_ALLOC_CUSTOM_BUFFER(bufname) /* Only for custom allocation */
 #endif
 #if TRC_CFG_RECORDER_BUFFER_ALLOCATION == TRC_RECORDER_BUFFER_ALLOCATION_CUSTOM
 #define TRC_RTT_ALLOC_UP() char* _TzTraceData = NULL;					/* Custom allocation, user needs to call vTraceSetRecorderDataBuffer before vTraceEnable, to assign this */ 
 #define TRC_STREAM_PORT_MALLOC()										/* Not used in custom mode */
-#define TRC_ALLOC_CUSTOM_BUFFER(bufname) char bufname [TRC_CFG_RTT_BUFFER_SIZE_UP];  /* Not static in this case, since declared in user code */
 #endif
 #endif
 
@@ -170,25 +170,26 @@ extern "C" {
 	TRC_RTT_ALLOC_UP() /* Macro that will result in proper UP buffer allocation */ \
 	TRC_RTT_ALLOC_DOWN() /* Macro that will result in proper DOWN buffer allocation */
 
+int32_t readFromRTT(void* ptrData, uint32_t size, int32_t* ptrBytesRead);
+
+int32_t writeToRTT(void* ptrData, uint32_t size, int32_t* ptrBytesWritten);
+
+
 #define TRC_STREAM_PORT_INIT() \
 	TRC_STREAM_PORT_MALLOC(); /*Dynamic allocation or empty if static */ \
 	SEGGER_RTT_ConfigUpBuffer(TRC_CFG_RTT_UP_BUFFER_INDEX, "TzData", _TzTraceData, TRC_CFG_RTT_BUFFER_SIZE_UP, TRC_CFG_RTT_MODE ); \
 	SEGGER_RTT_ConfigDownBuffer(TRC_CFG_RTT_DOWN_BUFFER_INDEX, "TzCtrl", _TzCtrlData, TRC_CFG_RTT_BUFFER_SIZE_DOWN, TRC_CFG_RTT_MODE);
 
-#define TRC_STREAM_PORT_ALLOCATE_EVENT(_type, _ptrData, _size) _type _tmpArray[_size / sizeof(_type)]; _type* _ptrData = _tmpArray;
-#define TRC_STREAM_PORT_ALLOCATE_DYNAMIC_EVENT(_type, _ptrData, _size) _type _tmpArray[sizeof(largestEventType) / sizeof(_type)]; _type* _ptrData = _tmpArray;
-#define TRC_STREAM_PORT_COMMIT_EVENT(_ptrData, _size) SEGGER_RTT_Write(TRC_CFG_RTT_UP_BUFFER_INDEX, (const char*)_ptrData, _size);
-#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) if (SEGGER_RTT_HASDATA(TRC_CFG_RTT_DOWN_BUFFER_INDEX)) *_ptrBytesRead = (int)SEGGER_RTT_Read(TRC_CFG_RTT_DOWN_BUFFER_INDEX, (char*)_ptrData, _size);
-#define TRC_STREAM_PORT_PERIODIC_SEND_DATA(_ptrBytesSent)
+/* Important for the J-Link port, in most other ports this can be skipped (default is 1) */
+#define TRC_STREAM_PORT_USE_INTERNAL_BUFFER 0
+  
+#define TRC_STREAM_PORT_WRITE_DATA(_ptrData, _size, _ptrBytesWritten) writeToRTT(_ptrData, _size, _ptrBytesWritten)
 
-#define TRC_STREAM_PORT_ON_TRACE_BEGIN() /* Do nothing */
-#define TRC_STREAM_PORT_ON_TRACE_END() /* Do nothing */
-    
+#define TRC_STREAM_PORT_READ_DATA(_ptrData, _size, _ptrBytesRead) readFromRTT(_ptrData, _size, _ptrBytesRead)
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* TRC_STREAMING_PORT_H */
-
 

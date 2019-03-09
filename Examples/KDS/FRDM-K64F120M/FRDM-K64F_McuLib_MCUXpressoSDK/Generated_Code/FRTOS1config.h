@@ -1,6 +1,8 @@
 #ifndef __FRTOS1_CONFIG_H
 #define __FRTOS1_CONFIG_H
 
+#include "MCUC1.h" /* SDK and API used */
+
 /* -------------------------------------------------------------------- */
 /* Macros to identify the compiler used: */
 #define configCOMPILER_ARM_GCC                    1 /* GNU ARM gcc compiler */
@@ -34,8 +36,24 @@
 #define configCPU_FAMILY_IS_ARM_FPU(fam)          (((fam)==configCPU_FAMILY_ARM_M4F) || ((fam)==configCPU_FAMILY_ARM_M7F))
 #define configCPU_FAMILY_IS_ARM(fam)              (configCPU_FAMILY_IS_ARM_M0(fam) || configCPU_FAMILY_IS_ARM_M4(fam) || configCPU_FAMILY_IS_ARM_M7(fam))
 
-#define configCPU_FAMILY                          configCPU_FAMILY_ARM_M4F
-
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+  /* determine core based on library configuration */
+  #if MCUC1_CONFIG_CORTEX_M==0
+    #define configCPU_FAMILY                      configCPU_FAMILY_ARM_M0P
+  #elif MCUC1_CONFIG_CORTEX_M==4 && MCUC1_CONFIG_FPU_PRESENT
+    #define configCPU_FAMILY                      configCPU_FAMILY_ARM_M4F
+  #elif MCUC1_CONFIG_CORTEX_M==4
+    #define configCPU_FAMILY                      configCPU_FAMILY_ARM_M4
+  #elif MCUC1_CONFIG_CORTEX_M==7 && MCUC1_CONFIG_FPU_PRESENT
+    #define configCPU_FAMILY                      configCPU_FAMILY_ARM_M7F
+  #elif MCUC1_CONFIG_CORTEX_M==7
+    #define configCPU_FAMILY                      configCPU_FAMILY_ARM_M7
+  #else
+    #error "unsupported configuaration!"
+  #endif
+#else
+  #define configCPU_FAMILY                        configCPU_FAMILY_ARM_M4F
+#endif
 /* MPU support: portUSING_MPU_WRAPPERS is defined (or not) in portmacro.h and turns on MPU support. Currently only supported for ARM Cortex-M4/M3 ports */
 #ifndef configUSE_MPU_SUPPORT
   #define configUSE_MPU_SUPPORT                   (0 && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY))
@@ -51,6 +69,11 @@
    /*!< 1: enable special GDB stack backtrace debug helper; 0: disabled */
 #endif
 
+#ifndef configLTO_HELPER
+  #define configLTO_HELPER                        (1 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
+   /*!< 1: enable special GNU Link Time Optimizer (-lto) debug helper code; 0: disabled */
+#endif
+
 #ifndef configHEAP_SCHEME_IDENTIFICATION
   #define configHEAP_SCHEME_IDENTIFICATION        (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
    /*!< 1: use constant freeRTOSMemoryScheme to identify memory scheme; 0: no constant used */
@@ -58,8 +81,50 @@
 
 #ifndef configUSE_TOP_USED_PRIORITY
   #define configUSE_TOP_USED_PRIORITY             (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY))
-   /*!< 1: Makes sure uxTopUsedPriority is present (needed for OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
+   /*!< 1: Makes sure uxTopUsedPriority is present (needed for SEGGER and OpenOCD thread aware debugging); 0: no special reference to uxTopUsedPriority */
 #endif
 
+#ifndef configLINKER_HEAP_BASE_SYMBOL
+  #define configLINKER_HEAP_BASE_SYMBOL           __HeapBase
+    /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapBase, MCUXpresso: _pvHeapStart)  */
+#endif
+
+#ifndef configLINKER_HEAP_LIMIT_SYMBOL
+  #define configLINKER_HEAP_LIMIT_SYMBOL          __HeapLimit
+    /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapLimit, MCUXpresso: _pvHeapLimit)  */
+#endif
+
+#ifndef configLINKER_HEAP_SIZE_SYMBOL
+  #define configLINKER_HEAP_SIZE_SYMBOL           __heap_size
+    /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib). (KDS: __heap_size, MCUXpresso: _HeapSize) */
+#endif
+
+#ifndef configUSE_SHELL
+  #define configUSE_SHELL                         (0)
+   /*!< 1: enable Shell and command line support; 0: disabled */
+#endif
+
+#ifndef configRESET_MSP
+  #define configRESET_MSP                         (1)
+   /*!< 1: reset MSP at scheduler start (Cortex M3/M4/M7 only); 0: do not reset MSP */
+#endif
+
+
+/*-----------------------------------------------------------
+ * FreeRTOS Trace hook support
+ *----------------------------------------------------------- */
+#ifndef configUSE_PERCEPIO_TRACE_HOOKS
+  #define configUSE_PERCEPIO_TRACE_HOOKS          0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
+#endif
+#define configUSE_TRACE_HOOKS                     configUSE_PERCEPIO_TRACE_HOOKS /* legacy configUSE_TRACE_HOOKS should not be used any more */
+
+#ifndef configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
+#endif
+
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_PERCEPIO_TRACE_HOOKS
+  #error "only one trace method can be active!"
+#endif
+/*----------------------------------------------------------- */
 
 #endif /* __FRTOS1_CONFIG_H */

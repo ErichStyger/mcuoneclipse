@@ -99,13 +99,13 @@ typedef portSTACK_TYPE   task_stack_t;
 typedef void* task_param_t;
 
 /*! @brief Type for a task function. */
-typedef pdTASK_CODE      task_t;
+typedef TaskFunction_t      task_t;
 
 /*! @brief Type for a mutex. */
-typedef xSemaphoreHandle mutex_t;
+typedef SemaphoreHandle_t mutex_t;
 
 /*! @brief Type for a semaphore. */
-typedef xSemaphoreHandle semaphore_t;
+typedef SemaphoreHandle_t semaphore_t;
 
 /*! @brief Type for an event flags object.*/
 typedef EventBits_t      event_flags_t;
@@ -120,10 +120,10 @@ typedef struct EventFreertos {
 typedef event_freertos event_t;
 
 /*! @brief Type for a message queue declaration and creation. */
-typedef xQueueHandle  msg_queue_t;
+typedef QueueHandle_t  msg_queue_t;
 
 /*! @brief Type for a message queue handler */
-typedef xQueueHandle  msg_queue_handler_t;
+typedef QueueHandle_t  msg_queue_handler_t;
 
 
 /*! @brief Constant to pass as timeout value in order to wait indefinitely. */

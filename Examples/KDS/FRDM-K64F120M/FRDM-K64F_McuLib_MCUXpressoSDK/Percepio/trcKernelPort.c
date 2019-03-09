@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.1
+ * Trace Recorder Library for Tracealyzer v3.3.0
  * Percepio AB, www.percepio.com
  *
  * trcKernelPort.c
@@ -43,7 +43,7 @@
  ******************************************************************************/
 
 #include "FreeRTOS.h"
-#if configUSE_TRACE_HOOKS /* << EST: FreeRTOS using Percepio Trace */
+#if configUSE_PERCEPIO_TRACE_HOOKS /* << EST: FreeRTOS using Percepio Trace */
 
 #if (!defined(TRC_USE_TRACEALYZER_RECORDER) && configUSE_TRACE_FACILITY == 1)
 #error Trace Recorder: You need to include trcRecorder.h at the end of your FreeRTOSConfig.h!
@@ -58,8 +58,8 @@
 		The hardware port selected in trcConfig.h uses the operating system timer for the 
 		timestamping, i.e., the periodic interrupt timer that drives the OS tick interrupt.
 				
-		When using tickless idle, the recorder needs an independent time source in order to
-		correctly record the durations of the idle times. Otherwise, the trace may appear
+		When using "tickless idle" mode, the recorder needs an independent time source in
+		order to correctly record the durations of the idle times. Otherwise, the trace may appear
 		to have a different length than in reality, and the reported CPU load is also affected.
 		
 		You may override this warning by defining the TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
@@ -78,19 +78,176 @@
 	#ifndef TRC_CFG_ACKNOWLEDGE_TICKLESS_IDLE_WARNING
 	#error Trace Recorder: This timestamping mode is not recommended with Tickless Idle.
 	#endif
-#endif
+#endif /* (configUSE_TICKLESS_IDLE != 0 && (TRC_HWTC_TYPE == TRC_OS_TIMER_INCR || TRC_HWTC_TYPE == TRC_OS_TIMER_DECR)) */
 	
 #include "task.h"
 #include "queue.h"
 
+#if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
+/* If the project does not include the FreeRTOS timers, TRC_CFG_INCLUDE_TIMER_EVENTS must be set to 0 */
+#include "timers.h"
+#endif /* (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X) */
+
+#if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
+/* If the project does not include the FreeRTOS event groups, TRC_CFG_INCLUDE_TIMER_EVENTS must be set to 0 */
+#include "event_groups.h"
+#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X) */
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+#include "stream_buffer.h"
+#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
+
+uint32_t prvTraceGetQueueNumber(void* handle);
+
+#if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_8_X)
+
+extern unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue );
+extern void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber );
+extern unsigned char ucQueueGetQueueType( xQueueHandle pxQueue );
+
+uint32_t prvTraceGetQueueNumber(void* handle)
+{
+	return (uint32_t)ucQueueGetQueueNumber(handle);
+}
+#else 
+uint32_t prvTraceGetQueueNumber(void* handle)
+{
+	return (uint32_t)uxQueueGetQueueNumber(handle);
+}
+#endif /* (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_8_X) */
+
+uint8_t prvTraceGetQueueType(void* handle)
+{
+	// This is either declared in header file in FreeRTOS 8 and later, or as extern above
+	return ucQueueGetQueueType(handle);
+}
+
+/* Tasks */
+uint16_t prvTraceGetTaskNumberLow16(void* handle)
+{
+	return TRACE_GET_LOW16(uxTaskGetTaskNumber(handle));
+}
+
+uint16_t prvTraceGetTaskNumberHigh16(void* handle)
+{
+	return TRACE_GET_HIGH16(uxTaskGetTaskNumber(handle));
+}
+
+void prvTraceSetTaskNumberLow16(void* handle, uint16_t value)
+{
+	vTaskSetTaskNumber(handle, TRACE_SET_LOW16(uxTaskGetTaskNumber(handle), value));
+}
+
+void prvTraceSetTaskNumberHigh16(void* handle, uint16_t value)
+{
+	vTaskSetTaskNumber(handle, TRACE_SET_HIGH16(uxTaskGetTaskNumber(handle), value));
+}
+
+uint16_t prvTraceGetQueueNumberLow16(void* handle)
+{
+	return TRACE_GET_LOW16(prvTraceGetQueueNumber(handle));
+}
+
+uint16_t prvTraceGetQueueNumberHigh16(void* handle)
+{
+	return TRACE_GET_HIGH16(prvTraceGetQueueNumber(handle));
+}
+
+void prvTraceSetQueueNumberLow16(void* handle, uint16_t value)
+{
+	vQueueSetQueueNumber(handle, TRACE_SET_LOW16(prvTraceGetQueueNumber(handle), value));
+}
+
+void prvTraceSetQueueNumberHigh16(void* handle, uint16_t value)
+{
+	vQueueSetQueueNumber(handle, TRACE_SET_HIGH16(prvTraceGetQueueNumber(handle), value));
+}
+
+#if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+uint16_t prvTraceGetTimerNumberLow16(void* handle)
+{
+	return TRACE_GET_LOW16(uxTimerGetTimerNumber(handle));
+}
+
+uint16_t prvTraceGetTimerNumberHigh16(void* handle)
+{
+	return TRACE_GET_HIGH16(uxTimerGetTimerNumber(handle));
+}
+
+void prvTraceSetTimerNumberLow16(void* handle, uint16_t value)
+{
+	vTimerSetTimerNumber(handle, TRACE_SET_LOW16(uxTimerGetTimerNumber(handle), value));
+}
+
+void prvTraceSetTimerNumberHigh16(void* handle, uint16_t value)
+{
+	vTimerSetTimerNumber(handle, TRACE_SET_HIGH16(uxTimerGetTimerNumber(handle), value));
+}
+#endif /* (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
+
+#if (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+uint16_t prvTraceGetEventGroupNumberLow16(void* handle)
+{
+	return TRACE_GET_LOW16(uxEventGroupGetNumber(handle));
+}
+
+uint16_t prvTraceGetEventGroupNumberHigh16(void* handle)
+{
+	return TRACE_GET_HIGH16(uxEventGroupGetNumber(handle));
+}
+
+void prvTraceSetEventGroupNumberLow16(void* handle, uint16_t value)
+{
+	vEventGroupSetNumber(handle, TRACE_SET_LOW16(uxEventGroupGetNumber(handle), value));
+}
+
+void prvTraceSetEventGroupNumberHigh16(void* handle, uint16_t value)
+{
+	vEventGroupSetNumber(handle, TRACE_SET_HIGH16(uxEventGroupGetNumber(handle), value));
+}
+#endif /* (TRC_CFG_INCLUDE_EVENT_GROUP_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+
+uint16_t prvTraceGetStreamBufferNumberLow16(void* handle)
+{
+	return TRACE_GET_LOW16(uxStreamBufferGetStreamBufferNumber(handle));
+}
+
+uint16_t prvTraceGetStreamBufferNumberHigh16(void* handle)
+{
+	return TRACE_GET_HIGH16(uxStreamBufferGetStreamBufferNumber(handle));
+}
+
+void prvTraceSetStreamBufferNumberLow16(void* handle, uint16_t value)
+{
+	vStreamBufferSetStreamBufferNumber(handle, TRACE_SET_LOW16(uxStreamBufferGetStreamBufferNumber(handle), value));
+}
+
+void prvTraceSetStreamBufferNumberHigh16(void* handle, uint16_t value)
+{
+	vStreamBufferSetStreamBufferNumber(handle, TRACE_SET_HIGH16(uxStreamBufferGetStreamBufferNumber(handle), value));
+}
+#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
+
 #if (TRC_CFG_RECORDER_MODE == TRC_RECORDER_MODE_STREAMING)
-
+	
 static void* pCurrentTCB = NULL;
+#if (defined(configENABLE_BACKWARD_COMPATIBILITY) && configENABLE_BACKWARD_COMPATIBILITY == 0)
+/* We're explicitly not using compatibility mode */
+static TaskHandle_t HandleTzCtrl = NULL;       /* TzCtrl task TCB */
+#else
+/* We're using compatibility mode, or we're running an old kernel */
 static xTaskHandle HandleTzCtrl = NULL;       /* TzCtrl task TCB */
+#endif
 
+#if defined(configSUPPORT_STATIC_ALLOCATION)
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
 static StackType_t stackTzCtrl[TRC_CFG_CTRL_TASK_STACK_SIZE];
 static StaticTask_t tcbTzCtrl;
+#endif
 #endif
 
 /* Monitored by TzCtrl task, that give warnings as User Events */
@@ -115,6 +272,8 @@ TRC_STREAM_PORT_ALLOCATE_FIELDS()
 /* Called by TzCtrl task periodically (Normally every 100 ms) */
 static void prvCheckRecorderStatus(void);
 
+extern void prvTraceWarning(int errCode);
+
 /* The TzCtrl task - receives commands from Tracealyzer (start/stop) */
 static portTASK_FUNCTION( TzCtrl, pvParameters );
 
@@ -127,24 +286,47 @@ static portTASK_FUNCTION( TzCtrl, pvParameters );
  ******************************************************************************/
 void vTraceEnable(int startOption)
 {
-	int bytes = 0;
+	int32_t bytes = 0;
+	int32_t status;
 	extern uint32_t RecorderEnabled;
 	TracealyzerCommandType msg;
-	
-	if (HandleTzCtrl != NULL)
-		return;	/* Seems we already initiated */
-	
-	TRC_STREAM_PORT_INIT();
-	
+
+	/* Only do this first time...*/
+	if (HandleTzCtrl == NULL)
+	{
+		TRC_STREAM_PORT_INIT();
+		
+		/* Note: Requires that TRC_CFG_INCLUDE_USER_EVENTS is 1. */
+		trcWarningChannel = xTraceRegisterString("Warnings from Recorder");
+
+		/* Creates the TzCtrl task - receives trace commands (start, stop, ...) */
+		#if defined(configSUPPORT_STATIC_ALLOCATION) && (configSUPPORT_STATIC_ALLOCATION == 1)
+		HandleTzCtrl = xTaskCreateStatic(TzCtrl, STRING_CAST("TzCtrl"), TRC_CFG_CTRL_TASK_STACK_SIZE, NULL, TRC_CFG_CTRL_TASK_PRIORITY, stackTzCtrl, &tcbTzCtrl);
+		#else
+		xTaskCreate( TzCtrl, STRING_CAST("TzCtrl"), TRC_CFG_CTRL_TASK_STACK_SIZE, NULL, TRC_CFG_CTRL_TASK_PRIORITY, &HandleTzCtrl );
+		#endif
+
+		if (HandleTzCtrl == NULL)
+		{
+			prvTraceError(PSF_ERROR_TZCTRLTASK_NOT_CREATED);
+		}
+	}
+
 	if (startOption == TRC_START_AWAIT_HOST)
 	{
 		/* We keep trying to read commands until the recorder has been started */
 		do
 		{
 			bytes = 0;
-			TRC_STREAM_PORT_READ_DATA(&msg, sizeof(TracealyzerCommandType), &bytes);
+			
+			status = TRC_STREAM_PORT_READ_DATA(&msg, sizeof(TracealyzerCommandType), (int32_t*)&bytes);
+			
+			if (status != 0)
+			{
+				prvTraceWarning(PSF_WARNING_STREAM_PORT_READ);
+			}
 
-			if (bytes == sizeof(TracealyzerCommandType))
+			if ((status == 0) && (bytes == sizeof(TracealyzerCommandType)))
 			{
 				if (prvIsValidCommand(&msg))
 				{
@@ -174,36 +356,6 @@ void vTraceEnable(int startOption)
 		/* On TRC_INIT */
 		TRC_PORT_SPECIFIC_INIT();
 	}
-
-	trcWarningChannel = xTraceRegisterString("Warnings from Recorder");
-
-  	/* Creates the TzCtrl task - receives trace commands (start, stop, ...) */
-#if (configSUPPORT_STATIC_ALLOCATION == 1)
-	HandleTzCtrl = xTaskCreateStatic(TzCtrl, "TzCtrl", TRC_CFG_CTRL_TASK_STACK_SIZE, NULL, TRC_CFG_CTRL_TASK_PRIORITY, stackTzCtrl, &tcbTzCtrl);
-	(void)HandleTzCtrl;
-#else 
-	xTaskCreate( TzCtrl, "TzCtrl", TRC_CFG_CTRL_TASK_STACK_SIZE, NULL, TRC_CFG_CTRL_TASK_PRIORITY, &HandleTzCtrl );
-#endif
-}
-
-/*******************************************************************************
- * prvTraceOnBegin
- *
- * Called on trace begin.
- ******************************************************************************/
-void prvTraceOnBegin()
-{
-	TRC_STREAM_PORT_ON_TRACE_BEGIN();
-}
-
-/*******************************************************************************
- * prvTraceOnEnd
- *
- * Called on trace end.
- ******************************************************************************/
-void prvTraceOnEnd()
-{
-	TRC_STREAM_PORT_ON_TRACE_END();
 }
 
 /*******************************************************************************
@@ -238,9 +390,48 @@ void vTraceSetSemaphoreName(void* object, const char* name)
  * Parameter object: pointer to the Mutex that shall be named
  * Parameter name: the name to set (const string literal)
  *
- * Sets a name for Semaphore objects for display in Tracealyzer.
+ * Sets a name for Mutex objects for display in Tracealyzer.
  ******************************************************************************/
 void vTraceSetMutexName(void* object, const char* name)
+{
+	vTraceStoreKernelObjectName(object, name);
+}
+
+/*******************************************************************************
+* vTraceSetEventGroupName(void* object, const char* name)
+*
+* Parameter object: pointer to the vTraceSetEventGroupName that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for EventGroup objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetEventGroupName(void* object, const char* name)
+{
+	vTraceStoreKernelObjectName(object, name);
+}
+
+/*******************************************************************************
+* vTraceSetStreamBufferName(void* object, const char* name)
+*
+* Parameter object: pointer to the StreamBuffer that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for StreamBuffer objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetStreamBufferName(void* object, const char* name)
+{
+	vTraceStoreKernelObjectName(object, name);
+}
+
+/*******************************************************************************
+* vTraceSetMessageBufferName(void* object, const char* name)
+*
+* Parameter object: pointer to the MessageBuffer that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for MessageBuffer objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetMessageBufferName(void* object, const char* name)
 {
 	vTraceStoreKernelObjectName(object, name);
 }
@@ -278,7 +469,7 @@ uint32_t prvIsNewTCB(void* pNewTCB)
  * Returns true if the RTOS scheduler currently is disabled, thus preventing any
  * task-switches from occurring. Only called from vTraceStoreISREnd.
  ******************************************************************************/
-unsigned char prvTraceIsSchedulerSuspended()
+unsigned char prvTraceIsSchedulerSuspended(void)
 {
     /* Assumed to be available in FreeRTOS. According to the FreeRTOS docs, 
 	INCLUDE_xTaskGetSchedulerState or configUSE_TIMERS must be set to 1 in
@@ -299,17 +490,19 @@ static void prvCheckRecorderStatus(void)
 {
 	if (NoRoomForSymbol > NoRoomForSymbol_last)
 	{
-		vTracePrintF(trcWarningChannel, "TRC_CFG_SYMBOL_TABLE_SLOTS too small. Add %d slots.",
-			NoRoomForSymbol);
-
+		if (NoRoomForSymbol > 0)
+		{
+			prvTraceWarning(PSF_WARNING_SYMBOL_TABLE_SLOTS);
+		}
 		NoRoomForSymbol_last = NoRoomForSymbol;
 	}
 
 	if (NoRoomForObjectData > NoRoomForObjectData_last)
 	{
-		vTracePrintF(trcWarningChannel, "TRC_CFG_OBJECT_DATA_SLOTS too small. Add %d slots.",
-			NoRoomForObjectData);
-
+		if (NoRoomForObjectData > 0)
+		{
+			prvTraceWarning(PSF_WARNING_OBJECT_DATA_SLOTS);
+		}
 		NoRoomForObjectData_last = NoRoomForObjectData;
 	}
 
@@ -317,29 +510,17 @@ static void prvCheckRecorderStatus(void)
 	{
 		if (LongestSymbolName > TRC_CFG_SYMBOL_MAX_LENGTH)
 		{
-			vTracePrintF(trcWarningChannel, "TRC_CFG_SYMBOL_MAX_LENGTH too small. Add %d chars.",
-				LongestSymbolName);
+			prvTraceWarning(PSF_WARNING_SYMBOL_MAX_LENGTH);
 		}
 		LongestSymbolName_last = LongestSymbolName;
 	}
 
 	if (MaxBytesTruncated > MaxBytesTruncated_last)
 	{
-		/* Some string event generated a too long string that was truncated.
-		This may happen for the following functions:
-		- vTracePrintF
-		- vTracePrintF
-		- vTraceStoreKernelObjectName
-		- vTraceStoreUserEventChannelName
-		- vTraceSetISRProperties
-
-		A PSF event may store maximum 60 bytes payload, including data arguments
-		and string characters. For User Events, also the User Event Channel ptr
-		must be squeezed in, if a channel is specified. */
-
-		vTracePrintF(trcWarningChannel, "String event too long, up to %d bytes truncated.",
-			MaxBytesTruncated);
-
+		if (MaxBytesTruncated > 0)
+		{
+			prvTraceWarning(PSF_WARNING_STRING_TOO_LONG);
+		}
 		MaxBytesTruncated_last = MaxBytesTruncated;
 	}
 }
@@ -347,14 +528,15 @@ static void prvCheckRecorderStatus(void)
 /*******************************************************************************
  * TzCtrl
  *
- * Task for receiving commands from Tracealyzer and for recorder diagnostics.
- *
+ * Task for sending the trace data from the internal buffer to the stream 
+ * interface (assuming TRC_STREAM_PORT_USE_INTERNAL_BUFFER == 1) and for
+ * receiving commands from Tracealyzer. Also does some diagnostics.
  ******************************************************************************/
 static portTASK_FUNCTION( TzCtrl, pvParameters )
 {
 	TracealyzerCommandType msg;
-	int bytes = 0;
-	
+	int32_t bytes = 0;
+	int32_t status = 0;
 	(void)pvParameters;
 
 	while (1)
@@ -363,24 +545,36 @@ static portTASK_FUNCTION( TzCtrl, pvParameters )
 		{
 			/* Listen for new commands */
 			bytes = 0;
-			TRC_STREAM_PORT_READ_DATA(&msg, sizeof(TracealyzerCommandType), &bytes);
-			if (bytes == sizeof(TracealyzerCommandType))
+			status = TRC_STREAM_PORT_READ_DATA(&msg, sizeof(TracealyzerCommandType), (int32_t*)&bytes);
+
+			if (status != 0)
+			{
+				prvTraceWarning(PSF_WARNING_STREAM_PORT_READ);
+			}
+
+			if ((status == 0) && (bytes == sizeof(TracealyzerCommandType)))
 			{
 				if (prvIsValidCommand(&msg))
 				{
 					prvProcessCommand(&msg); /* Start or Stop currently... */
 				}
 			}
+
+/* If the internal buffer is disabled, the COMMIT macro instead sends the data directly 
+   from the "event functions" (using TRC_STREAM_PORT_WRITE_DATA). */			
+#if (TRC_STREAM_PORT_USE_INTERNAL_BUFFER == 1)
+			/* If there is a buffer page, this sends it to the streaming interface using TRC_STREAM_PORT_WRITE_DATA. */
+			bytes = prvPagedEventBufferTransfer();
+#endif			
 			
-			/* Send periodic data */
-			bytes = 0;
-			TRC_STREAM_PORT_PERIODIC_SEND_DATA(&bytes);
-			/* If there was data sent (bytes != 0), immediately loop around and do all this again. Otherwise, step out of this loop and sleep for a while. */
-		}
-		while (bytes != 0);
+		/* If there was data sent or received (bytes != 0), loop around and repeat, if there is more data to send or receive.
+		Otherwise, step out of this loop and sleep for a while. */		
+		
+		} while (bytes != 0);
 
 		prvCheckRecorderStatus();
-		vTaskDelay(TRC_CFG_CTRL_TASK_DELAY);	/* 10ms */
+
+		vTaskDelay(TRC_CFG_CTRL_TASK_DELAY);
 	}
 }
 
@@ -393,11 +587,11 @@ static portTASK_FUNCTION( TzCtrl, pvParameters )
 int uiInEventGroupSetBitsFromISR = 0;
 
 /******************************************************************************
- * TraceObjectClassTable
+ * TraceQueueClassTable
  * Translates a FreeRTOS QueueType into trace objects classes (TRACE_CLASS_).
  * Has one entry for each QueueType, gives TRACE_CLASS ID.
  ******************************************************************************/
-traceObjectClass TraceObjectClassTable[5] = {
+traceObjectClass TraceQueueClassTable[5] = {
 	TRACE_CLASS_QUEUE,
 	TRACE_CLASS_MUTEX,
 	TRACE_CLASS_SEMAPHORE,
@@ -415,7 +609,7 @@ traceObjectClass TraceObjectClassTable[5] = {
  ******************************************************************************/
 void vTraceSetQueueName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_CLASS_QUEUE, TRACE_GET_OBJECT_NUMBER(QUEUE, object), name);
 }
 
 /*******************************************************************************
@@ -428,7 +622,7 @@ void vTraceSetQueueName(void* object, const char* name)
  ******************************************************************************/
 void vTraceSetSemaphoreName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_CLASS_SEMAPHORE, TRACE_GET_OBJECT_NUMBER(QUEUE, object), name);
 }
 
 /*******************************************************************************
@@ -441,34 +635,55 @@ void vTraceSetSemaphoreName(void* object, const char* name)
  ******************************************************************************/
 void vTraceSetMutexName(void* object, const char* name)
 {
-	prvTraceSetObjectName(TRACE_GET_OBJECT_TRACE_CLASS(TRC_UNUSED, object), TRACE_GET_OBJECT_NUMBER(TRC_UNUSED, object), name);
+	prvTraceSetObjectName(TRACE_CLASS_MUTEX, TRACE_GET_OBJECT_NUMBER(QUEUE, object), name);
 }
+
+#if (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X)
+/*******************************************************************************
+* vTraceSetEventGroupName(void* object, const char* name)
+*
+* Parameter object: pointer to the EventGroup that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for EventGroup objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetEventGroupName(void* object, const char* name)
+{
+	prvTraceSetObjectName(TRACE_CLASS_EVENTGROUP, TRACE_GET_OBJECT_NUMBER(EVENTGROUP, object), name);
+}
+#endif /* (TRC_CFG_INCLUDE_TIMER_EVENTS == 1 && TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_8_X) */
+
+#if (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0)
+/*******************************************************************************
+* vTraceSetStreamBufferName(void* object, const char* name)
+*
+* Parameter object: pointer to the StreamBuffer that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for StreamBuffer objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetStreamBufferName(void* object, const char* name)
+{
+	prvTraceSetObjectName(TRACE_CLASS_STREAMBUFFER, TRACE_GET_OBJECT_NUMBER(STREAMBUFFER, object), name);
+}
+
+/*******************************************************************************
+* vTraceSetMessageBufferName(void* object, const char* name)
+*
+* Parameter object: pointer to the MessageBuffer that shall be named
+* Parameter name: the name to set (const string literal)
+*
+* Sets a name for MessageBuffer objects for display in Tracealyzer.
+******************************************************************************/
+void vTraceSetMessageBufferName(void* object, const char* name)
+{
+	prvTraceSetObjectName(TRACE_CLASS_MESSAGEBUFFER, TRACE_GET_OBJECT_NUMBER(STREAMBUFFER, object), name);
+}
+#endif /* (TRC_CFG_FREERTOS_VERSION >= TRC_FREERTOS_VERSION_10_0_0) */
 
 void* prvTraceGetCurrentTaskHandle()
 {
 	return xTaskGetCurrentTaskHandle();
-}
-
-#if (TRC_CFG_FREERTOS_VERSION < TRC_FREERTOS_VERSION_8_X)
-traceHandle prvTraceGetObjectNumber(void* handle)
-{
-	return (traceHandle) ucQueueGetQueueNumber(handle);
-}
-#else /* For FreeRTOS v8 and later */
-traceHandle prvTraceGetObjectNumber(void* handle)
-{
-	return (traceHandle) uxQueueGetQueueNumber(handle);
-}
-#endif
-
-uint8_t prvTraceGetObjectType(void* handle)
-{
-	return ucQueueGetQueueType(handle);
-}
-
-traceHandle prvTraceGetTaskNumber(void* handle)
-{
-	return (traceHandle)uxTaskGetTaskNumber(handle);
 }
 
 /* Initialization of the object property table */
@@ -481,14 +696,18 @@ void vTraceInitObjectPropertyTable()
 	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[3] = TRC_CFG_NTASK;
 	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[4] = TRC_CFG_NISR;
 	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[5] = TRC_CFG_NTIMER;
-	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[6] = TRC_CFG_NEVENTGROUP;	
+	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[6] = TRC_CFG_NEVENTGROUP;
+	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[7] = TRC_CFG_NSTREAMBUFFER;
+	RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[8] = TRC_CFG_NMESSAGEBUFFER;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[0] = TRC_CFG_NAME_LEN_QUEUE;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[1] = TRC_CFG_NAME_LEN_SEMAPHORE;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[2] = TRC_CFG_NAME_LEN_MUTEX;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[3] = TRC_CFG_NAME_LEN_TASK;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[4] = TRC_CFG_NAME_LEN_ISR;
 	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[5] = TRC_CFG_NAME_LEN_TIMER;
-	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[6] = TRC_CFG_NAME_LEN_EVENTGROUP;	
+	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[6] = TRC_CFG_NAME_LEN_EVENTGROUP;
+	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[7] = TRC_CFG_NAME_LEN_STREAMBUFFER;
+	RecorderDataPtr->ObjectPropertyTable.NameLengthPerClass[8] = TRC_CFG_NAME_LEN_MESSAGEBUFFER;
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[0] = PropertyTableSizeQueue;
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[1] = PropertyTableSizeSemaphore;
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[2] = PropertyTableSizeMutex;
@@ -496,6 +715,8 @@ void vTraceInitObjectPropertyTable()
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[4] = PropertyTableSizeISR;
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[5] = PropertyTableSizeTimer;
 	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[6] = PropertyTableSizeEventGroup;
+	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[7] = PropertyTableSizeStreamBuffer;
+	RecorderDataPtr->ObjectPropertyTable.TotalPropertyBytesPerClass[8] = PropertyTableSizeMessageBuffer;
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[0] = StartIndexQueue;
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[1] = StartIndexSemaphore;
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[2] = StartIndexMutex;
@@ -503,6 +724,8 @@ void vTraceInitObjectPropertyTable()
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[4] = StartIndexISR;
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[5] = StartIndexTimer;
 	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[6] = StartIndexEventGroup;
+	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[7] = StartIndexStreamBuffer;
+	RecorderDataPtr->ObjectPropertyTable.StartIndexOfClass[8] = StartIndexMessageBuffer;
 	RecorderDataPtr->ObjectPropertyTable.ObjectPropertyTableSizeInBytes = TRACE_OBJECT_TABLE_SIZE;
 }
 
@@ -516,6 +739,8 @@ void vTraceInitObjectHandleStack()
 	objectHandleStacks.indexOfNextAvailableHandle[4] = objectHandleStacks.lowestIndexOfClass[4] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK;
 	objectHandleStacks.indexOfNextAvailableHandle[5] = objectHandleStacks.lowestIndexOfClass[5] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR;
 	objectHandleStacks.indexOfNextAvailableHandle[6] = objectHandleStacks.lowestIndexOfClass[6] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER;
+	objectHandleStacks.indexOfNextAvailableHandle[7] = objectHandleStacks.lowestIndexOfClass[7] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER + TRC_CFG_NEVENTGROUP;
+	objectHandleStacks.indexOfNextAvailableHandle[8] = objectHandleStacks.lowestIndexOfClass[8] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER + TRC_CFG_NEVENTGROUP + TRC_CFG_NSTREAMBUFFER;
 
 	objectHandleStacks.highestIndexOfClass[0] = TRC_CFG_NQUEUE - 1;
 	objectHandleStacks.highestIndexOfClass[1] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE - 1;
@@ -524,6 +749,8 @@ void vTraceInitObjectHandleStack()
 	objectHandleStacks.highestIndexOfClass[4] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR - 1;
 	objectHandleStacks.highestIndexOfClass[5] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER - 1;
 	objectHandleStacks.highestIndexOfClass[6] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER + TRC_CFG_NEVENTGROUP - 1;
+	objectHandleStacks.highestIndexOfClass[7] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER + TRC_CFG_NEVENTGROUP + TRC_CFG_NSTREAMBUFFER - 1;
+	objectHandleStacks.highestIndexOfClass[8] = TRC_CFG_NQUEUE + TRC_CFG_NSEMAPHORE + TRC_CFG_NMUTEX + TRC_CFG_NTASK + TRC_CFG_NISR + TRC_CFG_NTIMER + TRC_CFG_NEVENTGROUP + TRC_CFG_NSTREAMBUFFER + TRC_CFG_NMESSAGEBUFFER - 1;
 }
 
 /* Returns the "Not enough handles" error message for this object class */
@@ -544,38 +771,14 @@ const char* pszTraceGetErrorNotEnoughHandles(traceObjectClass objectclass)
 	case TRACE_CLASS_TIMER:
 		return "Not enough TIMER handles - increase TRC_CFG_NTIMER in trcSnapshotConfig.h";
 	case TRACE_CLASS_EVENTGROUP:
-		return "Not enough EVENTGROUP handles - increase TRC_CFG_NEVENTGROUP in trcSnapshotConfig.h";		
+		return "Not enough EVENTGROUP handles - increase TRC_CFG_NEVENTGROUP in trcSnapshotConfig.h";
+	case TRACE_CLASS_STREAMBUFFER:
+		return "Not enough STREAMBUFFER handles - increase TRC_CFG_NSTREAMBUFFER in trcSnapshotConfig.h";
+	case TRACE_CLASS_MESSAGEBUFFER:
+		return "Not enough MESSAGEBUFFER handles - increase TRC_CFG_NMESSAGEBUFFER in trcSnapshotConfig.h";
 	default:
 		return "pszTraceGetErrorHandles: Invalid objectclass!";
 	}
-}
-
-/* Returns the exclude state of the object */
-uint8_t uiTraceIsObjectExcluded(traceObjectClass objectclass, traceHandle handle)
-{
-	TRACE_ASSERT(objectclass < TRACE_NCLASSES, "prvIsObjectExcluded: objectclass >= TRACE_NCLASSES", 1);
-	TRACE_ASSERT(handle <= RecorderDataPtr->ObjectPropertyTable.NumberOfObjectsPerClass[objectclass], "prvIsObjectExcluded: Invalid value for handle", 1);
-	
-	switch(objectclass)
-	{
-	case TRACE_CLASS_TASK:
-		return (uint8_t) TRACE_GET_TASK_FLAG_ISEXCLUDED(handle);
-	case TRACE_CLASS_SEMAPHORE:
-		return (uint8_t) TRACE_GET_SEMAPHORE_FLAG_ISEXCLUDED(handle);
-	case TRACE_CLASS_MUTEX:
-		return (uint8_t) TRACE_GET_MUTEX_FLAG_ISEXCLUDED(handle);
-	case TRACE_CLASS_QUEUE:
-		return (uint8_t) TRACE_GET_QUEUE_FLAG_ISEXCLUDED(handle);
-	case TRACE_CLASS_TIMER:
-		return (uint8_t) TRACE_GET_TIMER_FLAG_ISEXCLUDED(handle);
-	case TRACE_CLASS_EVENTGROUP:
-		return (uint8_t) TRACE_GET_EVENTGROUP_FLAG_ISEXCLUDED(handle);
-	}
-	
-	prvTraceError("Invalid object class ID in prvIsObjectExcluded!");
-	
-	/* Must never reach */
-	return 1;
 }
 
 /*******************************************************************************
@@ -585,7 +788,7 @@ uint8_t uiTraceIsObjectExcluded(traceObjectClass objectclass, traceHandle handle
  * task-switches from occurring. Only called from vTraceStoreISREnd.
  ******************************************************************************/
 #if (TRC_CFG_INCLUDE_ISR_TRACING == 1)
-unsigned char prvTraceIsSchedulerSuspended()
+unsigned char prvTraceIsSchedulerSuspended(void)
 {
     /* Assumed to be available in FreeRTOS. According to the FreeRTOS docs, 
 	INCLUDE_xTaskGetSchedulerState or configUSE_TIMERS must be set to 1 in
@@ -598,6 +801,6 @@ unsigned char prvTraceIsSchedulerSuspended()
 #endif /* Snapshot mode */
 
 #endif /*(TRC_USE_TRACEALYZER_RECORDER == 1)*/
-#endif /* configUSE_TRACE_HOOKS */ /* << EST: FreeRTOS using Percepio Trace */
+#endif /* configUSE_PERCEPIO_TRACE_HOOKS */ /* << EST: FreeRTOS using Percepio Trace */
 
 

@@ -128,7 +128,7 @@ void FRTOS1_vApplicationIdleHook(void);
 ** ===================================================================
 */
 
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)

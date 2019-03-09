@@ -8,13 +8,25 @@
 #ifndef __MCUC1_CONFIG_H
 #define __MCUC1_CONFIG_H
 
-/* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core */
+/* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core.
+   Otherwise CPU Family is set automatically by Processor Expert: detected: Kinetis (supported: "Kinetis", "S32K", "HCS08")
+*/
 #define MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M    (1 || defined(__CORTEX_M))
   /*!< 1: ARM Cortex-M family, 0 otherwise */
 #define MCUC1_CONFIG_CPU_IS_KINETIS         (1 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
   /*!< 1: NXP Kinetis CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_S32K            (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: NXP S32K CPU family, 0: otherwise */
 #define MCUC1_CONFIG_CPU_IS_LPC             (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
   /*!< 1: NXP LPC CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_STM32           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: STM32 ARM Cortex CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_IMXRT           (0 && MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
+  /*!< 1: NXP i.Mx RT CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_HCS08           (0)
+  /*!< 1: HCS08 CPU family, 0: otherwise */
+#define MCUC1_CONFIG_CPU_IS_RISC_V          (0)
+  /*!< 1: RISC-V CPU family, 0: otherwise */
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #define MCUC1_CONFIG_CORTEX_M      (4)
@@ -23,6 +35,9 @@
   /*!< 1: floating point unit present, 0: otherwise */
 #define MCUC1_CONFIG_FPU_USED      (1 || (defined(__FPU_USED) && (__FPU_USED)==1))
   /*!< 1: using floating point unit, 0: otherwise */
+
+/* macro for little and big endianess. ARM is little endian */
+#define MCUC1_CONFIG_CPU_IS_LITTLE_ENDIAN   (MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M)
 
 /* Identifiers used to identify the SDK */
 #define MCUC1_CONFIG_SDK_GENERIC             0
@@ -34,18 +49,53 @@
 #define MCUC1_CONFIG_SDK_KINETIS_2_0         3
   /*!< using NXP Kinetis SDK V2.0 */
 #define MCUC1_CONFIG_SDK_MCUXPRESSO_2_0      4
-  /*!< same as Kinetis SDK v2.0 */
+  /*!< using NXP MCUXpresso SDK V2.x, same as Kinetis SDK v2.0 */
+#define MCUC1_CONFIG_SDK_S32K                5
+  /*!< SDK for S32K */
+
+#ifndef MCUC1_CONFIG_SDK_VERSION_MAJOR
+  #define MCUC1_CONFIG_SDK_VERSION_MAJOR   (2)
+    /*!< SDK major version number */
+#endif
+
+#ifndef MCUC1_CONFIG_SDK_VERSION_MINOR
+  #define MCUC1_CONFIG_SDK_VERSION_MINOR   (2)
+    /*!< SDK minor version number */
+#endif
+
+#ifndef MCUC1_CONFIG_SDK_VERSION_BUILD
+  #define MCUC1_CONFIG_SDK_VERSION_BUILD   (0)
+    /*!< SDK build version number */
+#endif
+
+#ifndef MCUC1_CONFIG_SDK_VERSION
+  #define MCUC1_CONFIG_SDK_VERSION        (MCUC1_CONFIG_SDK_VERSION_MAJOR*100)+(MCUC1_CONFIG_SDK_VERSION_MINOR*10)+MCUC1_CONFIG_SDK_VERSION_BUILD
+    /*!< Builds a single number with the SDK version (major, minor, build), e.g. 250 for 2.5.0 */
+#endif
 
 /* specify the SDK and API used */
 #ifndef MCUC1_CONFIG_SDK_VERSION_USED
+#if MCUC1_CONFIG_CPU_IS_STM32
+  #define MCUC1_CONFIG_SDK_VERSION_USED  MCUC1_CONFIG_SDK_GENERIC
+    /*!< identify the version of SDK/API used. For STM32 we are using a generic SDK (actually the CubeMX one) */
+#else
   #define MCUC1_CONFIG_SDK_VERSION_USED  MCUC1_CONFIG_SDK_MCUXPRESSO_2_0
     /*!< identify the version of SDK/API used */
+#endif
+#endif
+
+
+/* Configuration macro if FreeRTOS is used */
+#ifndef MCUC1_CONFIG_SDK_USE_FREERTOS
+  #define MCUC1_CONFIG_SDK_USE_FREERTOS           (1)
+    /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
 #endif
 
 /* special macro to identify a set of SDKs used */
 #define MCUC1_CONFIG_NXP_SDK_USED                (   (MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_1_3) \
                                                   || (MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_2_0) \
                                                   || (MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_MCUXPRESSO_2_0) \
+                                                  || (MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_S32K) \
                                                  )
   /*!< Using one of the Freescale/NXP SDKs */
 

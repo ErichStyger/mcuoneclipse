@@ -65,6 +65,7 @@
 #include "BitIoLdd10.h"
 #include "TRG1.h"
 #include "CS1.h"
+#include "KIN1.h"
 
 #ifdef __cplusplus
 extern "C" {

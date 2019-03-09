@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.1
+ * Trace Recorder Library for Tracealyzer v3.3.0
  * Percepio AB, www.percepio.com
  *
  * trcStreamingConfig.h
@@ -57,7 +57,7 @@ extern "C" {
  * - Task names
  * - Named ISRs (vTraceSetISRProperties)
  * - Named kernel objects (vTraceStoreKernelObjectName)
- * - User event channels (vTraceStoreUserEventChannelName)
+ * - User event channels (xTraceRegisterString)
  *
  * If this value is too small, not all symbol names will be stored and the
  * trace display will be affected. In that case, there will be warnings
@@ -72,7 +72,7 @@ extern "C" {
  * - Task names
  * - Named ISRs (vTraceSetISRProperties)
  * - Named kernel objects (vTraceStoreKernelObjectName)
- * - User event channel names (vTraceStoreUserEventChannelName)
+ * - User event channel names (xTraceRegisterString)
  *
  * If longer symbol names are used, they will be truncated by the recorder,
  * which will affect the trace display. In that case, there will be warnings
@@ -155,38 +155,13 @@ extern "C" {
  * however a threshold value that must be measured for your specific setup.
  * See http://percepio.com/2014/03/21/isr_tailchaining_threshold/
  *
- * The default setting is 0, meaning "disabled" and that you may get an
+ * The default setting is 0, meaning "disabled" and that you may get an 
  * extra fragments of the previous context in between tail-chained ISRs.
  *
  * Note: This setting has separate definitions in trcSnapshotConfig.h and 
  * trcStreamingConfig.h, since it is affected by the recorder mode.
  ******************************************************************************/
 #define TRC_CFG_ISR_TAILCHAINING_THRESHOLD 0
-
-/* << EST: additional configuration item */
-/******************************************************************************
- * TRC_CFG_TRACE_DESCRIPTION
- *
- * Macro which should be defined as a string.
- *
- * This string is stored in the trace and displayed in Tracealyzer. Can be
- * used to store, e.g., system version or build date. This is also used to store
- * internal error messages from the recorder, which if occurs overwrites the
- * value defined here. This may be maximum 256 chars.
- *****************************************************************************/
-#define TRC_CFG_TRACE_DESCRIPTION "FreeRTOS+Trace"
-
-/* << EST: additional configuration item */
-/******************************************************************************
- * TRC_CFG_TRACE_DESCRIPTION_MAX_LENGTH
- *
- * The maximum length (including zero termination) for the TRC_CFG_TRACE_DESCRIPTION
- * string. Since this string also is used for internal error messages from the
- * recorder do not make it too short, as this may truncate the error messages.
- * Default is 80.
- * Maximum allowed length is 256 - the trace will fail to load if longer.
- *****************************************************************************/
-#define TRC_CFG_TRACE_DESCRIPTION_MAX_LENGTH 80
 
 #ifdef __cplusplus
 }

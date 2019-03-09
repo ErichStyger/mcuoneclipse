@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-19, 08:44, # CodeGen: 23
+**     Date/Time   : 2019-03-09, 11:35, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -106,14 +106,14 @@ void Common_Init(void)
 #if CPU_COMPONENTS_INIT
 void Components_Init(void)
 {
-  /* ### McuLibConfig "MCUC1" init code ... */
-  /* ### SDK_BitIO "LEDpin1" init code ... */
-  /* Write code here ... */
-  /* ### LED "LEDR" init code ... */
-  LEDR_Init(); /* initialize LED driver */
-  WAIT1_Init();
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
+  MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
+  LEDpin1_Init(); /* ### SDK_BitIO "LEDpin1" init code ... */
+  LEDR_Init(); /* ### LED "LEDR" init code ... */
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
   /* ### PercepioTrace "PTRC1" init code ... */
 }
 #endif /* CPU_COMPONENTS_INIT */

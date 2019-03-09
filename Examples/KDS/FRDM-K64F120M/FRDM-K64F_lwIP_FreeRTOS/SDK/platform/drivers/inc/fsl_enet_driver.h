@@ -58,7 +58,7 @@ extern const IRQn_Type g_enetErrIrqId[];
  ******************************************************************************/
 /*! @brief Defines the approach: ENET interrupt handler receive */
 #ifndef ENET_RECEIVE_ALL_INTERRUPT
-#define ENET_RECEIVE_ALL_INTERRUPT  0 /* see https://community.freescale.com/thread/381894 */
+#define ENET_RECEIVE_ALL_INTERRUPT  1
 #endif
 
 /*! @brief Defines the statistic enable macro.*/

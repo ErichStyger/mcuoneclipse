@@ -1,71 +1,29 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-	***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-	***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-	the FAQ page "My application does not run, what could be wrong?".  Have you
-	defined configASSERT()?
-
-	http://www.FreeRTOS.org/support - In return for receiving this top quality
-	embedded software for free we request you assist our global community by
-	participating in the support forum.
-
-	http://www.FreeRTOS.org/training - Investing in training allows your team to
-	be as productive as possible as early as possible.  Now you can receive
-	FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-	Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.1.0
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
@@ -73,7 +31,8 @@
 #include "MCUC1.h" /* SDK and API used */
 #include "FRTOS1config.h" /* extra configuration settings not part of the original FreeRTOS ports */
 
-#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H           1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configENABLE_BACKWARD_COMPATIBILITY                 0 /* 1: enable backward compatibility mode, using old names in kernel. 0: use new kernel structure names (recommended) */
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -108,11 +67,11 @@
 #define configUSE_TICK_HOOK_NAME                  FRTOS1_vApplicationTickHook
 #define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
 #define configUSE_MALLOC_FAILED_HOOK_NAME         FRTOS1_vApplicationMallocFailedHook
-#define configTICK_RATE_HZ                        ((TickType_t)100) /* frequency of tick interrupt */
+#define configTICK_RATE_HZ                        (100) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
-#if MCUC1_CONFIG_NXP_SDK_USED
-/* The SDK variable SystemCoreClock contains the current clock speed */
+#if MCUC1_CONFIG_NXP_SDK_USED || MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_GENERIC
+/* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
   #define configCPU_CLOCK_HZ                      SystemCoreClock /* CPU clock frequency */
   #define configBUS_CLOCK_HZ                      SystemCoreClock /* Bus clock frequency */
@@ -126,9 +85,9 @@
 #define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
-#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks) */
+#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
 #define configFRTOS_MEMORY_SCHEME                 configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
-#define configTOTAL_HEAP_SIZE                     ((size_t)(16384)) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     (16384) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -136,11 +95,10 @@
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
 #define configSUPPORT_DYNAMIC_ALLOCATION          1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
 #define configSUPPORT_STATIC_ALLOCATION           0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#define configUSE_NEWLIB_REENTRANT                (configUSE_HEAP_SCHEME==6) /* 1: a newlib reent structure will be allocated for each task; 0: no such reentr structure used */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
 #define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
-#define configUSE_TRACE_HOOKS                     0 /* 1: Percepio Trace hooks, 0: not using Percepio Trace hooks */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS      0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
@@ -231,6 +189,10 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
 #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+
+/* custom include file: */
+/* #include "CustomFreeRTOSSettings.h */
+
 
 #endif /* FREERTOS_CONFIG_H */
 

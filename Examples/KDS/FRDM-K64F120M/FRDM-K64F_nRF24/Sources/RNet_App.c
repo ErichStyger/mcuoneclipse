@@ -34,7 +34,7 @@ static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *
       *handled = TRUE;
       /* to be defined: do something with the ping, e.g blink a LED */
       LED2_On(); /* green LED blink */
-      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(20));
       LED2_Off();
       return ERR_OK;
 
@@ -42,7 +42,7 @@ static uint8_t RNETA_HandleRxMessage(RAPP_MSG_Type type, uint8_t size, uint8_t *
       *handled = TRUE;
       /* to be defined: do something with the button message, e.g blink a LED */
       LED1_On(); /* red LED blink */
-      FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(pdMS_TO_TICKS(20));
       LED1_Off();
       return ERR_OK;
 
@@ -60,12 +60,12 @@ static const RAPP_MsgHandler handlerTable[] =
 
 static void RadioPowerUp(void) {
   /* need to ensure that we wait at least 100 ms (I use 150 ms here) after power-on of the transceiver */
-  portTickType xTime;
+  TickType_t xTime;
   
-  xTime = FRTOS1_xTaskGetTickCount();
-  if (xTime<(150/portTICK_RATE_MS)) {
+  xTime = xTaskGetTickCount();
+  if (xTime<(pdMS_TO_TICKS(150))) {
     /* not powered for 100 ms: wait until we can access the radio transceiver */
-    xTime = (150/portTICK_RATE_MS)-xTime; /* remaining ticks to wait */
+    xTime = pdMS_TO_TICKS(150)-xTime; /* remaining ticks to wait */
     FRTOS1_vTaskDelay(xTime);
   }
   (void)RADIO_PowerUp(); /* enable the transceiver */
@@ -116,7 +116,7 @@ static void RNetTask(void *pvParameters) {
       RAPP_SendPayloadDataBlock(&msgCntr, sizeof(msgCntr), RAPP_MSG_TYPE_PING, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
       msgCntr++;
       cntr = 0;
-      vTaskDelay(20/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(20));
       LED3_Off(); /* blink blue LED */
     }
     FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
@@ -128,7 +128,7 @@ void RNETA_KeyPressed(uint8_t key) {
   LED2_On();
   LED3_On();
   RAPP_SendPayloadDataBlock(&key, sizeof(key), RAPP_MSG_TYPE_BUTTON, RNWK_ADDR_BROADCAST, RPHY_PACKET_FLAGS_NONE);
-  vTaskDelay(10/portTICK_RATE_MS);
+  vTaskDelay(pdMS_TO_TICKS(10));
   LED1_Off();
   LED2_Off();
   LED3_Off();
@@ -145,7 +145,7 @@ void RNETA_Init(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

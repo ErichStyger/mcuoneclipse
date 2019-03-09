@@ -59,7 +59,7 @@
 #endif
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-#define CONFIG_I_AM_SENDER   (1)
+#define CONFIG_I_AM_SENDER   (0)
 
 #if CONFIG_I_AM_SENDER
 static bool SW2_Pressed(void) {
@@ -89,7 +89,7 @@ static bool SW3_Pressed(void) {
 }
 
 static void sendData(bool data) {
-#if 0
+#if 1
   while(!RX_RDY_GetVal()) { /* wait until receiver is ready */
     WAIT1_Waitms(1);
   }
@@ -159,7 +159,7 @@ static void receiver(void) {
 	DATA_SetInput(); /* we read from the data line */
 
 	for(;;) {
-#if 0
+#if 1
 		RX_RDY_SetVal(); /* signal that we are ready */
 		while(!DATA_RDY_GetVal()) {
 			/* wait until data is ready */
