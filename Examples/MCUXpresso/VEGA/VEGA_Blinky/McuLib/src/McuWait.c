@@ -6,7 +6,7 @@
 **     Component   : Wait
 **     Version     : Component 01.084, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-11, 16:38, # CodeGen: 459
+**     Date/Time   : 2019-03-12, 17:26, # CodeGen: 466
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -82,11 +82,18 @@
 ** ===================================================================
 */
 #ifdef __GNUC__
+#if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
-  __attribute__((naked))
   #else
-  __attribute__((naked, no_instrument_function))
+    __attribute__((no_instrument_function))
   #endif
+#else
+  #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+    __attribute__((naked))
+  #else
+    __attribute__((naked, no_instrument_function))
+  #endif
+#endif
 #endif
 void McuWait_Wait10Cycles(void)
 {
@@ -125,11 +132,18 @@ void McuWait_Wait10Cycles(void)
 ** ===================================================================
 */
 #ifdef __GNUC__
-#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
-  __attribute__((naked))
-#else
-  __attribute__((naked, no_instrument_function))
-#endif
+  #if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+    #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+    #else
+      __attribute__((no_instrument_function))
+    #endif
+  #else
+    #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+      __attribute__((naked))
+    #else
+      __attribute__((naked, no_instrument_function))
+    #endif
+  #endif
 #endif
 void McuWait_Wait100Cycles(void)
 {
