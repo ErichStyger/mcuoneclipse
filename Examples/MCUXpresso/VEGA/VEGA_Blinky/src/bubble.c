@@ -163,7 +163,7 @@ static void Board_UpdatePwm(uint16_t x, uint16_t y)
     TPM_UpdatePwmDutycycle(BOARD_TIMER_BASEADDR, (tpm_chnl_t)BOARD_SECOND_TIMER_CHANNEL, kTPM_EdgeAlignedPwm, y);
 }
 
-int main(void)
+int main2(void)
 {
     fxos_handle_t fxosHandle = {0};
     fxos_data_t sensorData = {0};
