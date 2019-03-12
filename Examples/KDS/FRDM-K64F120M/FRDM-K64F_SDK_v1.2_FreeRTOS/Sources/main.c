@@ -49,7 +49,7 @@ static void BlinkyTask(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     GPIO_DRV_TogglePinOutput(LEDRGB_RED);
-    vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
@@ -72,7 +72,7 @@ int main(void)
       configMINIMAL_STACK_SIZE, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
     for(;;){} /* error! probably out of memory */

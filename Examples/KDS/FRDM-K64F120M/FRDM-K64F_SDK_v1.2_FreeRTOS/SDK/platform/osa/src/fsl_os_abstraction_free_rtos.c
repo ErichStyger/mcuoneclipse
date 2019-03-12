@@ -715,7 +715,7 @@ void OSA_TimeDelay(uint32_t delay)
  *END**************************************************************************/
 uint32_t OSA_TimeGetMsec(void)
 {
-    portTickType ticks;
+    TickType_t ticks;
 
     if (__get_IPSR())
     {

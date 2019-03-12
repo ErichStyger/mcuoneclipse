@@ -17,3 +17,6 @@ Profiling (per file) option: -pg
  
  call _monInit() from SystemInit()
  Do *not* instrument System Init (SDK\platform\devices)
+
+ 
+ Rename SysTick_Handler() in osa1.c to OSA_SysTick_Handler().
