@@ -25,7 +25,8 @@ int main(void) {
     /* Board pin, clock, debug console init */
     CLOCK_EnableClock(kCLOCK_Rgpio1);
     //BOARD_InitPins();
-    CLOCK_EnableClock(kCLOCK_PortA);                           /* Clock Gate Control: 0x01u */
+    CLOCK_EnableClock(kCLOCK_PortA);  /* RGB LED */
+    CLOCK_EnableClock(kCLOCK_PortE);  /* STS LED */
     BOARD_BootClockRUN();
     //BOARD_I2C_ReleaseBus();
     //BOARD_I2C_ConfigurePins();

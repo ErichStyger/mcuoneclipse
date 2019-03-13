@@ -69,7 +69,7 @@ defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
 #define tmrSTATUS_IS_STATICALLY_ALLOCATED	( ( uint8_t ) 0x02 )
 #define tmrSTATUS_IS_AUTORELOAD				( ( uint8_t ) 0x04 )
 
-#define TIMER_LEGACY_API   (1)  /* << EST: needed to have TAD working */
+#define TIMER_LEGACY_API   (0)  /* << EST: needed to have TAD working */
 
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl /* The old naming convention is used to prevent breaking kernel aware debuggers. */

@@ -116,6 +116,9 @@ void McuWait_Wait10Cycles(void)
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
+		   "nop   \n\t" /* [1] */
+		   "nop   \n\t" /* [1] */
+		   "nop   \n\t" /* [1] */
   );
 #endif
   /*lint -restore */
@@ -174,10 +177,11 @@ void McuWait_Wait100Cycles(void)
   );
 #elif McuLib_CONFIG_CPU_IS_RISC_V
   /* \todo */
-  __asm (
-   "nop   \n\t" /* [1] */
-   "nop   \n\t" /* [1] */
-   "nop   \n\t" /* [1] */
+  __asm ( /* assuming [10] for overhead */
+    "  li a5,20        \n\t"
+    "Loop:             \n\t"
+    "  addi a5,a5,-1   \n\t"
+    "  bgtz a5, Loop   \n\t"
   );
 #endif
   /*lint -restore */
