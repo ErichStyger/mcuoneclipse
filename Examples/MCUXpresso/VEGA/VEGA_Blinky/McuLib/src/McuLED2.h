@@ -6,7 +6,7 @@
 **     Component   : LED
 **     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
+**     Date/Time   : 2019-03-13, 08:03, # CodeGen: 469
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -87,7 +87,11 @@
 #define McuLED2_PARSE_COMMAND_ENABLED  1 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define McuLED2_On() LEDpin2_ClrVal()
+#if McuLED2_CONFIG_IS_LOW_ACTIVE
+  #define McuLED2_On() LEDpin2_ClrVal()
+#else
+  #define McuLED2_On() LEDpin2_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -99,7 +103,11 @@
 ** ===================================================================
 */
 
-#define McuLED2_Off() LEDpin2_SetVal()
+#if McuLED2_CONFIG_IS_LOW_ACTIVE
+  #define McuLED2_Off() LEDpin2_SetVal()
+#else
+  #define McuLED2_Off() LEDpin2_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -123,7 +131,11 @@
 ** ===================================================================
 */
 
-#define McuLED2_Get() (!(LEDpin2_GetVal()))
+#if McuLED2_CONFIG_IS_LOW_ACTIVE
+  #define McuLED2_Get() (!(LEDpin2_GetVal()))
+#else
+  #define McuLED2_Get() LEDpin2_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

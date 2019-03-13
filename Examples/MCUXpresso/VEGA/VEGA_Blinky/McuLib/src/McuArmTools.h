@@ -274,7 +274,7 @@ void McuArmTools_SetLR(uint32_t setval);
 ** ===================================================================
 */
 
-#if McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if CONFIG_CPU_IS_ARM_CORTEX_M && McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
 #define McuArmTools_InitCycleCounter() \
   McuArmTools_DEMCR |= McuArmTools_TRCENA_BIT
   /*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
@@ -292,7 +292,7 @@ void McuArmTools_SetLR(uint32_t setval);
 */
 #endif
 
-#if McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if CONFIG_CPU_IS_ARM_CORTEX_M && McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
 #define McuArmTools_ResetCycleCounter() \
   McuArmTools_DWT_CYCCNT = 0
   /*!< Reset cycle counter */
@@ -308,7 +308,7 @@ void McuArmTools_SetLR(uint32_t setval);
 */
 #endif
 
-#if McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if CONFIG_CPU_IS_ARM_CORTEX_M && McuLib_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
 #define McuArmTools_EnableCycleCounter() \
   McuArmTools_DWT_CONTROL |= McuArmTools_DWT_CYCCNTENA_BIT
   /*!< Enable cycle counter */

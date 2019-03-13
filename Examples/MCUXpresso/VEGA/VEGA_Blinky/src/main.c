@@ -17,17 +17,21 @@
 #include "fsl_port.h"
 #include "fsl_intmux.h"
 
+#include "Application.h"
+
 static int i;
 
 int main(void) {
     /* Board pin, clock, debug console init */
     CLOCK_EnableClock(kCLOCK_Rgpio1);
-    BOARD_InitPins();
+    //BOARD_InitPins();
+    CLOCK_EnableClock(kCLOCK_PortA);                           /* Clock Gate Control: 0x01u */
     BOARD_BootClockRUN();
     //BOARD_I2C_ReleaseBus();
-    BOARD_I2C_ConfigurePins();
-    BOARD_InitDebugConsole();
+    //BOARD_I2C_ConfigurePins();
+    //BOARD_InitDebugConsole();
 
+    APP_Run();
 	for(;;) {
 		i++;
 		__asm("nop");
