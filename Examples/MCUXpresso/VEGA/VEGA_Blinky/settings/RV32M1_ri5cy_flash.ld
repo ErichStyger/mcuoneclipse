@@ -161,6 +161,9 @@ SECTIONS
     __StackLimit = .;
     . += STACK_SIZE;
     __StackTop = .;
+    /* << EST added for FreeRTOS */
+    __freertos_irq_stack_top = .;
+    /* >> EST End */
   } > m_data
 
   m_usb_bdt (NOLOAD) :

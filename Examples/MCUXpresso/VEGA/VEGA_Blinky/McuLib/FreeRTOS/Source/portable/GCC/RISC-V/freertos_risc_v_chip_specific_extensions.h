@@ -61,7 +61,7 @@
 
 #define portasmHAS_CLINT 0
 
-#define portasmHANDLE_INTERRUPT  myAsmInterruptHandler /* << EST */
+#define portasmHANDLE_INTERRUPT  SystemIrqHandler /* << EST */
 
 /* Constants to define the additional registers found on the Pulpino RI5KY. */
 #define lpstart0 	0x7b0

@@ -12,10 +12,21 @@
 #include "McuLED2.h"
 #include "McuLED3.h"
 #include "McuLED4.h"
+#include "McuRTOS.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+static void AppTask(void *pv) {
+	for(;;) {
+		McuLED4_Neg();
+		vTaskDelay(pdMS_TO_TICKS(100));
+	}
+}
 
 void APP_Run(void) {
   /* initialize McuLib drivers */
   McuLib_Init();
+//  McuRTOS_Init();
   McuWait_Init();
   McuLED1_Init(); /* red */
   McuLED2_Init(); /* green */
@@ -32,11 +43,13 @@ void APP_Run(void) {
   McuLED3_Off();
   McuLED4_On();
   McuLED4_Off();
-  int i = 99;
-  do {
-	  asm("nop");
-	  i--;
-  } while (i>0);
+
+
+  if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+    for(;;){} /* error */
+  }
+  vTaskStartScheduler();
+
   for(;;) {
 	  McuWait_Waitms(950);
 	  McuLED1_On();
