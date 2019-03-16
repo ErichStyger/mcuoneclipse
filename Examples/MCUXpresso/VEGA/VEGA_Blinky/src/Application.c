@@ -1,10 +1,8 @@
 /*
  * Application.c
  *
- *  Created on: 13.03.2019
- *      Author: Erich Styger Local
+  *      Author: Erich Styger
  */
-
 #include "Application.h"
 #include "McuLib.h"
 #include "McuWait.h"
@@ -16,12 +14,23 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-
 static void AppTask(void *pv) {
-	for(;;) {
-		McuLED4_Neg();
-		vTaskDelay(pdMS_TO_TICKS(1000));
-	}
+  for(;;) {
+    McuLED1_On();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED1_Off();
+    McuLED2_On();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED2_Off();
+    McuLED3_On();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED3_Off();
+    McuLED4_On();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED4_Off();
+    vTaskDelay(pdMS_TO_TICKS(500));
+    McuLED4_Neg();
+  }
 }
 
 void APP_Run(void) {
@@ -34,26 +43,10 @@ void APP_Run(void) {
   McuLED3_Init(); /* blue */
   McuLED4_Init(); /* red status */
 
-//  wait();
-  /* test the LEDs */
-  McuLED1_On();
-  McuLED1_Off();
-  McuLED2_On();
-  McuLED2_Off();
-  McuLED3_On();
-  McuLED3_Off();
-  McuLED4_On();
-  McuLED4_Off();
-
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
   vTaskStartScheduler();
-
-  for(;;) {
-	  McuWait_Waitms(950);
-	  McuLED1_On();
-	  McuWait_Waitms(50);
-	  McuLED1_Off();
-  }
+  /* shoul not end up here... */
+  for(;;) { }
 }

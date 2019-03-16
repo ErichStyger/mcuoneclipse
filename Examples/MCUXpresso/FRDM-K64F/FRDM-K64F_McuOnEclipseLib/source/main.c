@@ -43,6 +43,35 @@
 #include "Application.h"
 /* TODO: insert other definitions and declarations here. */
 
+#define NOF  128
+static uint32_t samplesA[NOF], samplesB[NOF], samplesC[NOF];
+static float FsamplesA[NOF], FsamplesB[NOF], FsamplesC[NOF];
+float fZeroCurrent = 8.0;
+int currentBufferSize = NOF;
+int nSamples = NOF;
+
+static void Test1(void) {
+  int i;
+
+  for ( i = 0; i < currentBufferSize && i < nSamples; i++ )
+  {
+  FsamplesA[i] = (float)samplesA[i]*3.3/4096.0 - fZeroCurrent;
+  FsamplesB[i] = (float)samplesB[i]*3.3/4096.0 - fZeroCurrent;
+  FsamplesC[i] = (float)samplesC[i]*3.3/4096.0 - fZeroCurrent;
+  }
+}
+
+static void Test2(void) {
+  int i;
+
+  for ( i = 0; i < currentBufferSize && i < nSamples; i++ )
+  {
+  FsamplesA[i] = (float)samplesA[i]*3.3f/4096.0f - fZeroCurrent;
+  FsamplesB[i] = (float)samplesB[i]*3.3f/4096.0f - fZeroCurrent;
+  FsamplesC[i] = (float)samplesC[i]*3.3f/4096.0f - fZeroCurrent;
+  }
+}
+
 /*
  * @brief   Application entry point.
  */
@@ -58,6 +87,8 @@ int main(void) {
     BOARD_InitLEDs();
 
     PRINTF("Hello World\n");
+    Test1();
+    Test2();
     APP_Run();
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
