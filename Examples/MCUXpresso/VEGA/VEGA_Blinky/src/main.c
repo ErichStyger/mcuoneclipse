@@ -19,22 +19,19 @@
 
 #include "Application.h"
 
-static int i;
-
 int main(void) {
-    /* Board pin, clock, debug console init */
-    CLOCK_EnableClock(kCLOCK_Rgpio1);
-    //BOARD_InitPins();
-    CLOCK_EnableClock(kCLOCK_PortA);  /* RGB LED */
-    CLOCK_EnableClock(kCLOCK_PortE);  /* STS LED */
-    BOARD_BootClockRUN();
-    //BOARD_I2C_ReleaseBus();
-    //BOARD_I2C_ConfigurePins();
-    //BOARD_InitDebugConsole();
+  /* Board pin, clock, debug console init */
+  CLOCK_EnableClock(kCLOCK_Rgpio1);
+  //BOARD_InitPins();
+  CLOCK_EnableClock(kCLOCK_PortA);  /* RGB LED */
+  CLOCK_EnableClock(kCLOCK_PortE);  /* STS LED */
+  BOARD_BootClockRUN();
+  //BOARD_I2C_ReleaseBus();
+  //BOARD_I2C_ConfigurePins();
+  //BOARD_InitDebugConsole();
 
-    APP_Run();
+  APP_Run();
 	for(;;) {
-		i++;
 		__asm("nop");
 	}
 	return 0;

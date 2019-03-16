@@ -16,10 +16,67 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "fsl_clock.h"
+
+void vPortSetupTimerInterrupt( void ) {
+  extern void SystemSetupSystick(uint32_t tickRateHz, uint32_t intPriority );
+
+  /* No CLINT so use the LPIT (Low Power Interrupt Timer) to generate the tick interrupt. */
+  CLOCK_SetIpSrc(kCLOCK_Lpit0, kCLOCK_IpSrcFircAsync);
+  SystemSetupSystick(configTICK_RATE_HZ, configKERNEL_INTERRUPT_PRIORITY-1);
+}
+
+/*-----------------------------------------------------------*/
+
+void LPIT0_IRQHandler( void )
+{
+BaseType_t xTaskIncrementTick( void );
+void vTaskSwitchContext( void );
+
+#warning requires critical section if interrpt nesting is used.
+
+  /* vPortSetupTimerInterrupt() uses LPIT0 to generate the tick interrupt. */
+  if( xTaskIncrementTick() != 0 )
+  {
+    vTaskSwitchContext();
+  }
+
+  /* Clear LPIT0 interrupt. */
+  LPIT0->MSR = 1U;
+}
+/*-----------------------------------------------------------*/
+
+/* At the time of writing, interrupt nesting is not supported, so do not use
+the default SystemIrqHandler() implementation as that enables interrupts.  A
+version that does not enable interrupts is provided below.  THIS INTERRUPT
+HANDLER IS SPECIFIC TO THE VEGA BOARD WHICH DOES NOT INCLUDE A CLINT! */
+void SystemIrqHandler( uint32_t mcause )
+{
+uint32_t ulInterruptNumber;
+typedef void ( * irq_handler_t )( void );
+extern const irq_handler_t isrTable[];
+
+  ulInterruptNumber = mcause & 0x1FUL;
+
+  /* Clear pending flag in EVENT unit .*/
+  EVENT_UNIT->INTPTPENDCLEAR = ( 1U << ulInterruptNumber );
+
+  /* Read back to make sure write finished. */
+  (void)(EVENT_UNIT->INTPTPENDCLEAR);
+
+  /* Now call the real irq handler for ulInterruptNumber */
+  isrTable[ ulInterruptNumber ]();
+}
+
+//void freertos_risc_v_trap_handler(void) {
+//  for(;;){}
+//}
+
+
 static void AppTask(void *pv) {
 	for(;;) {
 		McuLED4_Neg();
-		vTaskDelay(pdMS_TO_TICKS(100));
+		vTaskDelay(pdMS_TO_TICKS(1000));
 	}
 }
 
@@ -43,7 +100,6 @@ void APP_Run(void) {
   McuLED3_Off();
   McuLED4_On();
   McuLED4_Off();
-
 
   if (xTaskCreate(AppTask, "App", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */

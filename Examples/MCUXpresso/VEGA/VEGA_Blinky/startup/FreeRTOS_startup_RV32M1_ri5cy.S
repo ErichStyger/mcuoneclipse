@@ -23,7 +23,8 @@
 // this License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
-dummy error
+
+.extern freertos_risc_v_trap_handler
 
 #define EXCEPTION_STACK_SIZE 0x58
 
@@ -31,38 +32,38 @@ dummy error
     .section .vectors, "ax"
     .option norvc;
 
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
-    jal x0, IRQ_Handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
+    jal x0, freertos_risc_v_trap_handler
 
     // reset vector
     jal x0, Reset_Handler
@@ -71,7 +72,7 @@ dummy error
     jal x0, IllegalInstruction_Handler
 
     // ecall handler
-    jal x0, Ecall_Handler
+    jal x0, freertos_risc_v_trap_handler
 
     // LSU error
     jal x0, LSU_Handler
