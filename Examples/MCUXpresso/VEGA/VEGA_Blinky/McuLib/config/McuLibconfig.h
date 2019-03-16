@@ -44,6 +44,12 @@
     /*!< 1: RISC-V CPU family, 0: otherwise */
 #endif
 
+#ifndef McuLib_CONFIG_CPU_IS_RISC_V_RV32M1_RI5CY
+  #define McuLib_CONFIG_CPU_IS_RISC_V_RV32M1_RI5CY          (1 && McuLib_CONFIG_CPU_IS_RISC_V)
+    /*!< 1: VEGA Board: RISC-V RV32M1 RI5CY, 0: other core */
+#endif
+
+
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #define McuLib_CONFIG_CORTEX_M      (4)
   /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, -1 otherwise */

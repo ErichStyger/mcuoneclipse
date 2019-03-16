@@ -189,7 +189,62 @@ void vPortEndScheduler( void )
 	for( ;; );
 }
 
+/* << EST Begin .... */
+/*-----------------------------------------------------------*/
+//static void vPortStartTickTimer(void) {
+  //ENABLE_TICK_COUNTER();
+//}
+/*-----------------------------------------------------------*/
+void vPortStopTickTimer(void) {
+  //DISABLE_TICK_COUNTER();
+}
+/*-----------------------------------------------------------*/
+#include "fsl_clock.h"
 
+/* At the time of writing, interrupt nesting is not supported, so do not use
+the default SystemIrqHandler() implementation as that enables interrupts.  A
+version that does not enable interrupts is provided below.  THIS INTERRUPT
+HANDLER IS SPECIFIC TO THE VEGA BOARD WHICH DOES NOT INCLUDE A CLINT! */
+void SystemIrqHandler(uint32_t mcause) {
+  uint32_t ulInterruptNumber;
+  typedef void ( * irq_handler_t )( void );
+  extern const irq_handler_t isrTable[];
+
+  ulInterruptNumber = mcause & 0x1FUL;
+
+  /* Clear pending flag in EVENT unit .*/
+  EVENT_UNIT->INTPTPENDCLEAR = ( 1U << ulInterruptNumber );
+
+  /* Read back to make sure write finished. */
+  (void)(EVENT_UNIT->INTPTPENDCLEAR);
+
+  /* Now call the real irq handler for ulInterruptNumber */
+  isrTable[ ulInterruptNumber ]();
+}
+/*-----------------------------------------------------------*/
+void vPortSetupTimerInterrupt( void ) {
+  //extern void SystemSetupSystick(uint32_t tickRateHz, uint32_t intPriority );
+
+  /* No CLINT so use the LPIT (Low Power Interrupt Timer) to generate the tick interrupt. */
+  CLOCK_SetIpSrc(kCLOCK_Lpit0, kCLOCK_IpSrcFircAsync);
+  SystemSetupSystick(configTICK_RATE_HZ, configKERNEL_INTERRUPT_PRIORITY-1);
+}
+
+/*-----------------------------------------------------------*/
+void LPIT0_IRQHandler(void) {
+  //BaseType_t xTaskIncrementTick( void );
+  //void vTaskSwitchContext( void );
+  #warning "requires critical section if interrpt nesting is used."
+
+  /* vPortSetupTimerInterrupt() uses LPIT0 to generate the tick interrupt. */
+  if(xTaskIncrementTick() != 0) {
+    vTaskSwitchContext();
+  }
+  LPIT0->MSR = 1U; /* Clear LPIT0 interrupt flag. */
+}
+/*-----------------------------------------------------------*/
+
+/* << EST End */
 
 
 

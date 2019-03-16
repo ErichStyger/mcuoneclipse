@@ -441,6 +441,16 @@
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_PROCESSOR_EXPERT) /* << EST */
   #include "portTicks.h" /* << EST */
 
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_RISC_V) /* << EST */
+		/* \todo */
+  #define TRC_HWTC_TYPE TRC_OS_TIMER_INCR
+  #define TRC_HWTC_COUNT 0
+  #define TRC_HWTC_PERIOD 1
+  #define TRC_HWTC_DIVISOR 1
+  #define TRC_HWTC_FREQ_HZ TRACE_TICK_RATE_HZ
+
+  /* Set the meaning of IRQ priorities in ISR tracing - see above */
+  #define TRC_IRQ_PRIORITY_ORDER  1 // higher IRQ priority values are more significant
 #elif (TRC_CFG_HARDWARE_PORT != TRC_HARDWARE_PORT_NOT_SET)
 
 	#error "TRC_CFG_HARDWARE_PORT had unsupported value!"

@@ -134,6 +134,7 @@
 #define TRC_HARDWARE_PORT_ARM_CORTEX_A9					15	/*	Yes			Any					*/
 #define TRC_HARDWARE_PORT_POWERPC_Z4                    16  /*  No          FreeRTOS            */
 #define TRC_HARDWARE_PORT_Altera_NiosII					17  /*  No          Any                 */
+#define TRC_HARDWARE_PORT_RISC_V     94  /*  No          FreeRTOS            */ /* << EST */
 #define TRC_HARDWARE_PORT_PROCESSOR_EXPERT     95  /*  No          FreeRTOS            */ /* << EST */
 
 #endif /*TRC_PORTDEFINES_H*/

@@ -4,9 +4,6 @@
 
 /* this header file is included with the compiler option -include */
 
-//#ifndef SRC_INCLUDEMCULIBCONFIG_H_
-//#define SRC_INCLUDEMCULIBCONFIG_H_
-
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
 #define McuLib_CONFIG_CPU_IS_ARM_CORTEX_M    (0)
@@ -46,4 +43,3 @@
 #define LEDpin4_CONFIG_PIN_NUMBER      0u
 #define LEDpin4_CONFIG_DO_PIN_MUXING   1
 
-//#endif /* SRC_INCLUDEMCULIBCONFIG_H_ */
