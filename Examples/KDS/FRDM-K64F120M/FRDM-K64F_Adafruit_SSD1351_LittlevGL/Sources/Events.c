@@ -81,30 +81,6 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
   LCD1_OnDataReceived();
 }
 
-/*
-** ===================================================================
-**     Description :
-**         if enabled, this hook will be called in case of a stack
-**         overflow.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         pxTask          - Task handle
-**       * pcTaskName      - Pointer to task name
-**     Returns     : Nothing
-** ===================================================================
-*/
-void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
-{
-  /* This will get called if a stack overflow is detected during the context
-     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
-     problems within nested interrupts, but only do this for debug purposes as
-     it will increase the context switch time. */
-  (void)pxTask;
-  (void)pcTaskName;
-  taskDISABLE_INTERRUPTS();
-  /* Write your code here ... */
-  for(;;) {}
-}
 
 /*
 ** ===================================================================
@@ -277,6 +253,36 @@ void KEY1_OnKeyReleasedLong(uint8_t keys)
 void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         if enabled, this hook will be called in case of a stack
+**         overflow.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         pxTask          - Task handle
+**       * pcTaskName      - Pointer to task name
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
+{
+  /* This will get called if a stack overflow is detected during the context
+     switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
+     problems within nested interrupts, but only do this for debug purposes as
+     it will increase the context switch time. */
+  (void)pxTask;
+  (void)pcTaskName;
+  taskDISABLE_INTERRUPTS();
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    __asm volatile("bkpt #0");
+#elif MCUC1_CONFIG_CPU_IS_RISC_V
+    __asm volatile( "ebreak" );
+#endif
+  /* Write your code here ... */
+  for(;;) {}
 }
 
 /* END Events */
