@@ -49,9 +49,19 @@ static void AppTask(void *param) {
 		vTaskDelay(pdMS_TO_TICKS(100));
 	}
 }
+float calib[16];
+
+extern float calib[16];
+
+static float calc(float f, int idx) {
+  return f*calib[16];
+}
 
 void APP_Run(void) {
   /* initialize components */
+
+  calc(3.0, 0);
+
   McuRTOS_Init();
   McuCriticalSection_Init();
   McuRTT_Init();
