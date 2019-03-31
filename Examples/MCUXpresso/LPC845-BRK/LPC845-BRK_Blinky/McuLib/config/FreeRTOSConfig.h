@@ -31,7 +31,8 @@
 #include "McuLib.h" /* SDK and API used */
 #include "McuRTOSconfig.h" /* extra configuration settings not part of the original FreeRTOS ports */
 
-#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H 1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H           1 /* 1: include additional header file at the end of task.c to help with debugging in GDB in combination with configUSE_TRACE_FACILITY; 0: no extra file included. */
+#define configENABLE_BACKWARD_COMPATIBILITY                 0 /* 1: enable backward compatibility mode, using old names in kernel. 0: use new kernel structure names (recommended) */
 /*-----------------------------------------------------------
  * Application specific definitions.
  *
@@ -69,7 +70,7 @@
 #define configTICK_RATE_HZ                        (1000) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
-#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC
+#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
   #define configCPU_CLOCK_HZ                      SystemCoreClock /* CPU clock frequency */
@@ -108,7 +109,7 @@
 #define configCHECK_FOR_STACK_OVERFLOW_NAME       McuRTOS_vApplicationStackOverflowHook
 #define configUSE_RECURSIVE_MUTEXES               1
 #define configQUEUE_REGISTRY_SIZE                 5
-#define configUSE_QUEUE_SETS                      0
+#define configUSE_QUEUE_SETS                      1
 #define configUSE_COUNTING_SEMAPHORES             1
 #define configUSE_APPLICATION_TASK_TAG            0
 /* Tickless Idle Mode ----------------------------------------------------------*/
@@ -126,12 +127,12 @@
 #define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          0 /* set to 1 to enable software timers */
-#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U)
-#define configTIMER_QUEUE_LENGTH                  10U /* size of queue for the timer task */
-#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE)
-#define INCLUDE_xEventGroupSetBitFromISR          0 /* 1: function is included; 0: do not include function */
-#define INCLUDE_xTimerPendFunctionCall            0 /* 1: function is included; 0: do not include function */
+#define configUSE_TIMERS                          1 /* 1: enable software timers; 0: software timers disabled */
+#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U) /* e.g. (configMAX_PRIORITIES-1U) */
+#define configTIMER_QUEUE_LENGTH                  10 /* size of queue for the timer task */
+#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE) /* e.g. (configMINIMAL_STACK_SIZE) */
+#define INCLUDE_xEventGroupSetBitFromISR          1 /* 1: function is included; 0: do not include function */
+#define INCLUDE_xTimerPendFunctionCall            1 /* 1: function is included; 0: do not include function */
 #define configUSE_DAEMON_TASK_STARTUP_HOOK        0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even
@@ -142,10 +143,10 @@ point support. */
 
 /* Set the following definitions to 1 to include the API function, or zero
    to exclude the API function. */
-#define INCLUDE_vTaskEndScheduler                 0
+#define INCLUDE_vTaskEndScheduler                 1
 #define INCLUDE_vTaskPrioritySet                  1
 #define INCLUDE_uxTaskPriorityGet                 1
-#define INCLUDE_vTaskDelete                       0
+#define INCLUDE_vTaskDelete                       1
 #define INCLUDE_vTaskCleanUpResources             1
 #define INCLUDE_vTaskSuspend                      1
 #define INCLUDE_vTaskDelayUntil                   1
@@ -158,36 +159,50 @@ point support. */
 #define INCLUDE_xTaskGetCurrentTaskHandle         1
 #define INCLUDE_xTaskGetIdleTaskHandle            1
 #define INCLUDE_xTaskResumeFromISR                1
-#define INCLUDE_eTaskGetState                     0
+#define INCLUDE_eTaskGetState                     1
 #define INCLUDE_pcTaskGetTaskName                 1
 /* -------------------------------------------------------------------- */
 #define INCLUDE_pxTaskGetStackStart               (1 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS)
 /* -------------------------------------------------------------------- */
-/* Cortex-M specific definitions. */
-#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
-  #define configPRIO_BITS                         4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
-#else
-  #define configPRIO_BITS                         2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  /* Cortex-M specific definitions. */
+  #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+    #define configPRIO_BITS                       4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+  #else
+    #define configPRIO_BITS                       2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+  #endif
+
+  /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
+  #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY 15
+
+  /* The highest interrupt priority that can be used by any interrupt service
+     routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+     INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+     PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
+  #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
+
+  /* Interrupt priorities used by the kernel port layer itself.  These are generic
+     to all Cortex-M ports, and do not rely on any particular library functions. */
+  #define configKERNEL_INTERRUPT_PRIORITY         (configLIBRARY_LOWEST_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
+
+  /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+  #define configMAX_SYSCALL_INTERRUPT_PRIORITY    (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+  #define configKERNEL_INTERRUPT_PRIORITY         (7)
 #endif
-
-/* The lowest interrupt priority that can be used in a call to a "set priority" function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
-
-/* The highest interrupt priority that can be used by any interrupt service
-   routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
-   INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
-   PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
-
-/* Interrupt priorities used by the kernel port layer itself.  These are generic
-   to all Cortex-M ports, and do not rely on any particular library functions. */
-#define configKERNEL_INTERRUPT_PRIORITY           (configLIBRARY_LOWEST_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
-/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
-See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY      (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
 #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+#if 0 /* version for RISC-V with a debug break: */
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#endif
+
+/* RISC-V only: If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT base address.
+  Otherwise set configCLINT_BASE_ADDRESS to 0.
+ */
+#define configCLINT_BASE_ADDRESS   0x0
+
 
 /* custom include file: */
 /* #include "CustomFreeRTOSSettings.h */

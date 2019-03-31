@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-02, 20:38, # CodeGen: 424
+**     Date/Time   : 2019-03-13, 08:03, # CodeGen: 469
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -31,7 +31,7 @@
 **         Deinit       - void McuLED1_Deinit(void);
 **         Init         - void McuLED1_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -87,7 +87,11 @@
 #define McuLED1_PARSE_COMMAND_ENABLED  1 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define McuLED1_On() LEDpin1_ClrVal()
+#if McuLED1_CONFIG_IS_LOW_ACTIVE
+  #define McuLED1_On() LEDpin1_ClrVal()
+#else
+  #define McuLED1_On() LEDpin1_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -99,7 +103,11 @@
 ** ===================================================================
 */
 
-#define McuLED1_Off() LEDpin1_SetVal()
+#if McuLED1_CONFIG_IS_LOW_ACTIVE
+  #define McuLED1_Off() LEDpin1_SetVal()
+#else
+  #define McuLED1_Off() LEDpin1_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -123,7 +131,11 @@
 ** ===================================================================
 */
 
-#define McuLED1_Get() (!(LEDpin1_GetVal()))
+#if McuLED1_CONFIG_IS_LOW_ACTIVE
+  #define McuLED1_Get() (!(LEDpin1_GetVal()))
+#else
+  #define McuLED1_Get() LEDpin1_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

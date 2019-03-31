@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.568, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.576, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-21, 15:52, # CodeGen: 379
+**     Date/Time   : 2019-03-26, 15:45, # CodeGen: 479
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.1.1
+**          RTOS Version                                   : V10.2.0
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -81,11 +81,15 @@
 **            LDD Tick                                     : Disabled
 **          Queues                                         : Settings for Queues
 **            Queue Registry Size                          : 5
-**            Queue Sets                                   : no
+**            Queue Sets                                   : yes
 **          Semaphores and Mutexes                         : Settings for Mutex and Semaphore
 **            Use Mutexes                                  : yes
 **            Use Recursive Mutexes                        : yes
-**          Timers                                         : Disabled
+**          Timers                                         : Enabled
+**            Priority                                     : (configMAX_PRIORITIES-1U)
+**            Queue Length                                 : 10
+**            Stack Depth                                  : (configMINIMAL_STACK_SIZE)
+**            Use Daemon Task Startup Hook                 : no
 **          Memory                                         : Settings for the memory and heap allocation
 **            Dynamic Allocation                           : Enabled
 **              Heap Size                                  : 8192
@@ -107,12 +111,15 @@
 **     Contents    :
 **         xTaskCreate                          - portBASE_TYPE McuRTOS_xTaskCreate(pdTASK_CODE pvTaskCode, const portCHAR *...
 **         xTaskCreateStatic                    - TaskHandle_t McuRTOS_xTaskCreateStatic(pdTASK_CODE pvTaskCode, const portCHAR...
+**         vTaskDelete                          - void McuRTOS_vTaskDelete(xTaskHandle pxTask);
 **         vTaskStartScheduler                  - void McuRTOS_vTaskStartScheduler(void);
+**         vTaskEndScheduler                    - void McuRTOS_vTaskEndScheduler(void);
 **         vTaskSuspend                         - void McuRTOS_vTaskSuspend(xTaskHandle pxTaskToSuspend);
 **         vTaskSuspendAll                      - void McuRTOS_vTaskSuspendAll(void);
 **         vTaskResume                          - void McuRTOS_vTaskResume(xTaskHandle pxTaskToResume);
 **         xTaskResumeAll                       - portBASE_TYPE McuRTOS_xTaskResumeAll(void);
 **         xTaskResumeFromISR                   - portBASE_TYPE McuRTOS_xTaskResumeFromISR(xTaskHandle pxTaskToResume);
+**         vTaskStepTick                        - void McuRTOS_vTaskStepTick(portTickType xTicksToJump);
 **         xTaskAbortDelay                      - BaseType_t McuRTOS_xTaskAbortDelay(TaskHandle_t xTask);
 **         taskYIELD                            - void McuRTOS_taskYIELD(void);
 **         taskENTER_CRITICAL                   - void McuRTOS_taskENTER_CRITICAL(void);
@@ -150,6 +157,7 @@
 **         xTaskGetIdleTaskHandle               - xTaskHandle McuRTOS_xTaskGetIdleTaskHandle(void);
 **         xTaskGetHandle                       - TaskHandle_t McuRTOS_xTaskGetHandle(const char *pcNameToQuery );
 **         pcTaskGetTaskName                    - signed char McuRTOS_pcTaskGetTaskName(xTaskHandle xTaskToQuery);
+**         eTaskGetState                        - eTaskState McuRTOS_eTaskGetState(xTaskHandle xTask);
 **         xTaskGetSchedulerState               - portBASE_TYPE McuRTOS_xTaskGetSchedulerState(void);
 **         vTaskList                            - void McuRTOS_vTaskList(signed portCHAR *pcWriteBuffer, size_t bufSize);
 **         uxTaskGetStackHighWaterMark          - unsigned_portBASE_TYPE McuRTOS_uxTaskGetStackHighWaterMark(xTaskHandle xTask);
@@ -175,6 +183,11 @@
 **         vQueueUnregisterQueue                - void McuRTOS_vQueueUnregisterQueue(xQueueHandle xQueue);
 **         xQueueIsQueueFullFromISR             - portBASE_TYPE McuRTOS_xQueueIsQueueFullFromISR(xQueueHandle xQueue);
 **         xQueueIsQueueEmptyFromISR            - portBASE_TYPE McuRTOS_xQueueIsQueueEmptyFromISR(xQueueHandle xQueue);
+**         xQueueCreateSet                      - xQueueSetHandle McuRTOS_xQueueCreateSet(unsigned portBASE_TYPE...
+**         xQueueAddToSet                       - portBASE_TYPE McuRTOS_xQueueAddToSet(xQueueSetMemberHandle xQueueOrSemaphore,...
+**         xQueueRemoveFromSet                  - portBASE_TYPE McuRTOS_xQueueRemoveFromSet(xQueueSetMemberHandle...
+**         xQueueSelectFromSet                  - xQueueSetMemberHandle McuRTOS_xQueueSelectFromSet(xQueueSetHandle xQueueSet,...
+**         xQueueSelectFromSetFromISR           - xQueueSetMemberHandle McuRTOS_xQueueSelectFromSetFromISR(xQueueSetHandle...
 **         xEventGroupCreate                    - EventGroupHandle_t McuRTOS_xEventGroupCreate(void);
 **         xEventGroupCreateStatic              - EventGroupHandle_t McuRTOS_xEventGroupCreateStatic(StaticEventGroup_t...
 **         xEventGroupWaitBits                  - byte McuRTOS_xEventGroupWaitBits(const EventGroupHandle_t xEventGroup, const...
@@ -186,6 +199,7 @@
 **         xEventGroupGetBitsFromISR            - EventBits_t McuRTOS_xEventGroupGetBitsFromISR(EventGroupHandle_t xEventGroup);
 **         xEventGroupSync                      - EventBits_t McuRTOS_xEventGroupSync(EventGroupHandle_t xEventGroup, const...
 **         xTimerCreate                         - TimerHandle_t McuRTOS_xTimerCreate(const char * const pcTimerName, const...
+**         xTimerCreateStatic                   - TimerHandle_t McuRTOS_xTimerCreateStatic(const char * const pcTimerName,...
 **         xTimerIsTimerActive                  - BaseType_t McuRTOS_xTimerIsTimerActive(TimerHandle_t xTimer);
 **         xTimerStart                          - BaseType_t McuRTOS_xTimerStart(TimerHandle_t xTimer, TickType_t xBlockTime);
 **         xTimerStop                           - BaseType_t McuRTOS_xTimerStop(TimerHandle_t xTimer, TickType_t xBlockTime);
@@ -220,7 +234,7 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2018 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
 **  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
@@ -368,6 +382,32 @@ extern "C" {
 ** ===================================================================
 */
 
+#define McuRTOS_vTaskDelete(pxTask) \
+        vTaskDelete(pxTask)
+/*
+** ===================================================================
+**     Method      :  vTaskDelete (component FreeRTOS)
+**
+**     Description :
+**         Remove a task from the RTOS real time kernels management.
+**         The task being deleted will be removed from all ready,
+**         blocked, suspended and event lists.
+**         NOTE: The idle task is responsible for freeing the kernel
+**         allocated memory from tasks that have been deleted. It is
+**         therefore important that the idle task is not starved of
+**         microcontroller processing time if your application makes
+**         any calls to vTaskDelete (). Memory allocated by the task
+**         code is not automatically freed, and should be freed before
+**         the task is deleted.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         pxTask          - The handle of the task to be deleted.
+**                           Passing NULL will cause the calling task to
+**                           be deleted.
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 #define McuRTOS_vTaskStartScheduler() \
   vTaskStartScheduler()
 /*
@@ -456,6 +496,32 @@ extern "C" {
 **
 **     Description :
 **         Macro to enable microcontroller interrupts.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+#define McuRTOS_vTaskEndScheduler() \
+  vTaskEndScheduler()
+/*
+** ===================================================================
+**     Method      :  vTaskEndScheduler (component FreeRTOS)
+**
+**     Description :
+**         Stops the real time kernel tick. All created tasks will be
+**         automatically deleted and multitasking (either preemptive or
+**         cooperative) will stop. Execution then resumes from the
+**         point where vTaskStartScheduler() was called, as if
+**         vTaskStartScheduler() had just returned.
+**         See the demo application file main. c in the demo/PC
+**         directory for an example that uses vTaskEndScheduler ().
+**         vTaskEndScheduler () requires an exit function to be defined
+**         within the portable layer (see vPortEndScheduler () in port.
+**         c for the PC port). This performs hardware specific
+**         operations such as stopping the kernel tick.
+**         vTaskEndScheduler () will cause all of the resources
+**         allocated by the kernel to be freed - but will not free
+**         resources allocated by application tasks.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
@@ -1818,6 +1884,25 @@ void McuRTOS_Init(void);
 ** ===================================================================
 */
 
+#define McuRTOS_eTaskGetState(xTask) \
+  eTaskGetState(xTask)
+/*
+** ===================================================================
+**     Method      :  eTaskGetState (component FreeRTOS)
+**
+**     Description :
+**         Returns as an enumerated type the state in which a task
+**         existed at the time eTaskGetState() was executed. 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xTask           - The handle of the subject task (the
+**                           task being queried).
+**     Returns     :
+**         ---             - task state (eReady, eRunning, eBlocked,
+**                           eSuspended, eDeleted)
+** ===================================================================
+*/
+
 #define McuRTOS_pcTaskGetTaskName(xTaskToQuery) \
   pcTaskGetTaskName(xTaskToQuery)
 /*
@@ -1850,6 +1935,38 @@ void McuRTOS_Init(void);
 **     Returns     :
 **         ---             - The count of ticks since
 **                           vTaskStartScheduler was called. 
+** ===================================================================
+*/
+
+#define McuRTOS_vTaskStepTick(xTicksToJump) \
+  vTaskStepTick(xTicksToJump)
+/*
+** ===================================================================
+**     Method      :  vTaskStepTick (component FreeRTOS)
+**
+**     Description :
+**          If the RTOS is configured to use tickless idle
+**         functionality then the tick interrupt will be stopped, and
+**         the microcontroller placed into a low power state, whenever
+**         the Idle task is the only task able to execute. Upon exiting
+**         the low power state the tick count value must be corrected
+**         to account for the time that passed while it was stopped.
+**         If a FreeRTOS port includes a default
+**         portSUPPRESS_TICKS_AND_SLEEP() implementation, then
+**         vTaskStepTick() is used internally to ensure the correct
+**         tick count value is maintained. vTaskStepTick() is a public
+**         API function to allow the default
+**         portSUPPRESS_TICKS_AND_SLEEP() implementation to be
+**         overridden, and for a portSUPPRESS_TICKS_AND_SLEEP() to be
+**         provided if the port being used does not provide a default. 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xTicksToJump    - The number of RTOS ticks
+**                           that have passed since the tick interrupt
+**                           was stopped. For correct operation the
+**                           parameter must be less than or equal to the
+**                           portSUPPRESS_TICKS_AND_SLEEP() parameter. 
+**     Returns     : Nothing
 ** ===================================================================
 */
 
@@ -2056,6 +2173,147 @@ void McuRTOS_Init(void);
 **     Returns     :
 **         ---             - pdFALSE if the queue is not empty, or any
 **                           other value if the queue is empty. 
+** ===================================================================
+*/
+
+#define McuRTOS_xQueueAddToSet(xQueueOrSemaphore, xQueueSet) \
+  xQueueAddToSet(xQueueOrSemaphore, xQueueSet)
+/*
+** ===================================================================
+**     Method      :  xQueueAddToSet (component FreeRTOS)
+**
+**     Description :
+**          Adds an RTOS queue or semaphore to a queue set that was
+**         previously created by a call to xQueueCreateSet().
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xQueueOrSemaphore - The handle of
+**                           the queue or semaphore being added to the
+**                           queue set (cast to an xQueueSetMemberHandle
+**                           type). 
+**         xQueueSet       - The handle of the queue set to
+**                           which the queue or semaphore is being added.
+**     Returns     :
+**         ---             - If the queue or semaphore was successfully
+**                           added to the queue set then pdPASS is
+**                           returned. If the queue could not be
+**                           successfully added to the queue set because
+**                           it is already a member of a different queue
+**                           set then pdFAIL is returned. 
+** ===================================================================
+*/
+
+#define McuRTOS_xQueueCreateSet(uxEventQueueLength) \
+  xQueueCreateSet(uxEventQueueLength)
+/*
+** ===================================================================
+**     Method      :  xQueueCreateSet (component FreeRTOS)
+**
+**     Description :
+**         Queue sets provide a mechanism to allow an RTOS task to
+**         block (pend) on a read operation from multiple RTOS queues
+**         or semaphores simultaneously. Note that there are simpler
+**         alternatives to using queue sets. See the Blocking on
+**         Multiple Objects page for more information.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         uxEventQueueLength - 
+**     Returns     :
+**         ---             - If the queue set is created successfully
+**                           then a handle to the created queue set is
+**                           returned. Otherwise NULL is returned. 
+** ===================================================================
+*/
+
+#define McuRTOS_xQueueRemoveFromSet(xQueueOrSemaphore, xQueueSet) \
+  xQueueRemoveFromSet(xQueueOrSemaphore, xQueueSet)
+/*
+** ===================================================================
+**     Method      :  xQueueRemoveFromSet (component FreeRTOS)
+**
+**     Description :
+**         Remove an RTOS queue or semaphore from a queue set. An RTOS
+**         queue or semaphore can only be removed from a queue set if
+**         the queue or semaphore is empty. 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xQueueOrSemaphore - The handle of
+**                           the queue or semaphore being removed from
+**                           the queue set (cast to an
+**                           xQueueSetMemberHandle type). 
+**         xQueueSet       - The handle of the queue set in
+**                           which the queue or semaphore is included.
+**     Returns     :
+**         ---             - If the queue or semaphore was successfully
+**                           added to the queue set then pdPASS is
+**                           returned. If the queue could not be
+**                           successfully added to the queue set because
+**                           it is already a member of a different queue
+**                           set then pdFAIL is returned. 
+** ===================================================================
+*/
+
+#define McuRTOS_xQueueSelectFromSet(xQueueSet, xBlockTimeTicks) \
+  xQueueSelectFromSet(xQueueSet, xBlockTimeTicks)
+/*
+** ===================================================================
+**     Method      :  xQueueSelectFromSet (component FreeRTOS)
+**
+**     Description :
+**         xQueueSelectFromSet() selects from the members of a queue
+**         set a queue or semaphore that either contains data (in the
+**         case of a queue) or is available to take (in the case of a
+**         semaphore). xQueueSelectFromSet() effectively allows a task
+**         to block (pend) on a read operation on all the queues and
+**         semaphores in a queue set simultaneously. 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xQueueSet       - The queue set on which the
+**                           task will (potentially) block. 
+**         xBlockTimeTicks - The maximum time,
+**                           in ticks, that the calling task will remain
+**                           in the Blocked state (with other tasks
+**                           executing) to wait for a member of the
+**                           queue set to be ready for a successful
+**                           queue read or semaphore take operation. 
+**     Returns     :
+**         ---             - xQueueSelectFromSet() will return the
+**                           handle of a queue (cast to a
+**                           xQueueSetMemberHandle type) contained in
+**                           the queue set that contains data, or the
+**                           handle of a semaphore (cast to a
+**                           xQueueSetMemberHandle type) contained in
+**                           the queue set that is available, or NULL if
+**                           no such queue or semaphore exists before
+**                           before the specified block time expires. 
+** ===================================================================
+*/
+
+#define McuRTOS_xQueueSelectFromSetFromISR(xQueueSet) \
+  xQueueSelectFromSetFromISR(xQueueSet)
+/*
+** ===================================================================
+**     Method      :  xQueueSelectFromSetFromISR (component FreeRTOS)
+**
+**     Description :
+**         A version of xQueueSelectFromSet() that can be used from an
+**         interrupt service routine (ISR). 
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         xQueueSet       - The queue set being queried.
+**                           It is not possible to block on a read as
+**                           this function is designed to be used from
+**                           an interrupt. 
+**     Returns     :
+**         ---             - xQueueSelectFromSet() will return the
+**                           handle of a queue (cast to a
+**                           xQueueSetMemberHandle type) contained in
+**                           the queue set that contains data, or the
+**                           handle of a semaphore (cast to a
+**                           xQueueSetMemberHandle type) contained in
+**                           the queue set that is available, or NULL if
+**                           no such queue or semaphore exists before
+**                           before the specified block time expires. 
 ** ===================================================================
 */
 
@@ -4088,6 +4346,69 @@ void McuRTOS_Deinit(void);
 **                           returned. If there was insufficient
 **                           FreeRTOS heap available to create the event
 **                           group then NULL is returned. 
+** ===================================================================
+*/
+
+#define McuRTOS_xTimerCreateStatic(pcTimerName, xTimerPeriod, uxAutoReload, pvTimerID, pxCallbackFunction, pxTimerBuffer) \
+  xTimerCreateStatic(pcTimerName, xTimerPeriod, uxAutoReload, pvTimerID, pxCallbackFunction, pxTimerBuffer)
+
+/*
+** ===================================================================
+**     Method      :  xTimerCreateStatic (component FreeRTOS)
+**
+**     Description :
+**          Creates a new software timer instance. This allocates the
+**         storage required by the new timer, initialises the new
+**         timers internal state, and returns a handle by which the new
+**         timer can be referenced.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         pcTimerName     -
+**                           Atextnamethatisassignedtothetimer_Thisisdone
+**                           purelytoassistdebugging_TheRTOSkernelitselfo
+**                           nlyeverreferencesatimerbyitshandle_andneverb
+**                           yitsname_
+**         xTimerPeriod    - The timer period. The
+**                           time is defined in tick periods so the
+**                           constant portTICK_PERIOD_MS can be used to
+**                           convert a time that has been specified in
+**                           milliseconds. For example, if the timer
+**                           must expire after 100 ticks, then
+**                           xTimerPeriod should be set to 100.
+**                           Alternatively, if the timer must expire
+**                           after 500ms, then xPeriod can be set to (
+**                           500 / portTICK_PERIOD_MS ) provided
+**                           configTICK_RATE_HZ is less than or equal to
+**                           1000. 
+**         uxAutoReload    - If uxAutoReload is set
+**                           to pdTRUE, then the timer will expire
+**                           repeatedly with a frequency set by the
+**                           xTimerPeriod parameter. If uxAutoReload is
+**                           set to pdFALSE, then the timer will be a
+**                           one-shot and enter the dormant state after
+**                           it expires. 
+**         pvTimerID       - An identifier that is assigned
+**                           to the timer being created. Typically this
+**                           would be used in the timer callback
+**                           function to identify which timer expired
+**                           when the same callback function is assigned
+**                           to more than one timer. 
+**         pxCallbackFunction - The function
+**                           to call when the timer expires. Callback
+**                           functions must have the prototype defined
+**                           by TimerCallbackFunction_t, which is "void
+**                           vCallbackFunction( TimerHandle_t xTimer );".
+**         pxTimerBuffer   - Must point to a
+**                           variable of type StaticTimer_t, which is
+**                           then used to hold the timer's state. 
+**     Returns     :
+**         ---             - Timer handle. If the timer is successfully
+**                           created then a handle to the newly created
+**                           timer is returned. If the timer cannot be
+**                           created (because either there is
+**                           insufficient FreeRTOS heap remaining to
+**                           allocate the timer structures, or the timer
+**                           period was set to 0) then NULL is returned. 
 ** ===================================================================
 */
 

@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.2.0
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -162,7 +162,7 @@ typedef struct MPU_SETTINGS
 #define portTICK_PERIOD_MS      ((TickType_t)1000/configTICK_RATE_HZ)
 /*-----------------------------------------------------------*/
 /* Critical section management. */
-unsigned portLONG ulPortSetIPL(unsigned portLONG);
+unsigned long ulPortSetIPL(unsigned portLONG);
 
 /* If set to 1, then this port uses the critical nesting count from the TCB rather than
 maintaining a separate value and then saving this value in the task stack. */

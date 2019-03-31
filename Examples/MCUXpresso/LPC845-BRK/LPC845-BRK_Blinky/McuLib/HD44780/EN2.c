@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-28, 20:48, # CodeGen: 417
+**     Date/Time   : 2019-03-26, 15:59, # CodeGen: 480
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -84,6 +84,8 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -176,6 +178,8 @@ void EN2_ClrVal(void)
   GPIO_DRV_ClearPinOutput(EN2_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(EN2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -203,6 +207,8 @@ void EN2_SetVal(void)
   GPIO_DRV_SetPinOutput(EN2_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(EN2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -237,6 +243,8 @@ void EN2_NegVal(void)
   } else {
     PINS_GPIO_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, 1);
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(EN2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -258,11 +266,17 @@ bool EN2_GetVal(void)
 #if McuLib_CONFIG_CPU_IS_LPC
   return GPIO_PinRead(EN2_CONFIG_GPIO_NAME, EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(EN2_CONFIG_GPIO_NAME, EN2_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(EN2_CONFIG_GPIO_NAME, EN2_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(EN2_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(EN2_CONFIG_PORT_NAME)&(1<<EN2_CONFIG_PIN_NUMBER))!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(EN2_CONFIG_PIN_NUMBER)!=0;
 #else
   return FALSE;
 #endif
@@ -330,6 +344,8 @@ void EN2_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(EN2_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<EN2_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(EN2_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(EN2_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
 #endif
   EN2_isOutput = false;
 }
@@ -358,6 +374,8 @@ void EN2_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(EN2_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<EN2_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(EN2_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(EN2_CONFIG_PIN_NUMBER);
 #endif
   EN2_isOutput = true;
 }
@@ -384,15 +402,25 @@ void EN2_PutVal(bool Val)
     GPIO_PortClear(EN2_CONFIG_GPIO_NAME, EN2_CONFIG_PORT_NAME, 1<<EN2_CONFIG_PIN_NUMBER);
   }
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(EN2_CONFIG_GPIO_NAME, 1<<EN2_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(EN2_CONFIG_GPIO_NAME, 1<<EN2_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(EN2_CONFIG_GPIO_NAME, 1<<EN2_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(EN2_CONFIG_GPIO_NAME, 1<<EN2_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(EN2_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, Val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /*! \todo */
 #endif
 }
 
@@ -419,6 +447,8 @@ void EN2_Init(void)
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
 #endif
 #if EN2_CONFIG_INIT_PIN_DIRECTION == EN2_CONFIG_INIT_PIN_DIRECTION_INPUT
   EN2_SetInput();

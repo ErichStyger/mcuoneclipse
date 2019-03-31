@@ -7,6 +7,20 @@
 #ifndef __SCL1_CONFIG_H
 #define __SCL1_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_SCL1_PIN)
+    #define SCL1_CONFIG_PIN_NUMBER    BOARD_INITPINS_SCL1_PIN
+  #endif
+  #if defined(BOARD_INITPINS_SCL1_GPIO)
+    #define SCL1_CONFIG_GPIO_NAME     BOARD_INITPINS_SCL1_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_SCL1_PORT)
+    #define SCL1_CONFIG_PORT_NAME     BOARD_INITPINS_SCL1_PORT
+  #endif
+#endif
+
 #ifndef SCL1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define SCL1_CONFIG_PORT_NAME       GPIO1

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 15:45, # CodeGen: 363
+**     Date/Time   : 2019-02-23, 10:55, # CodeGen: 437
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -53,11 +53,12 @@
 **         DisplayInvert         - uint8_t McuSSD1306_DisplayInvert(bool invert);
 **         GetLCD                - void McuSSD1306_GetLCD(void);
 **         GiveLCD               - void McuSSD1306_GiveLCD(void);
-**         PrintString           - void McuSSD1306_PrintString(uint8_t *str);
+**         SetRowCol             - uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col);
+**         PrintString           - void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str);
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
-** * Copyright (c) 2017-2018, Erich Styger
+** * Copyright (c) 2017-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -104,14 +105,16 @@
 #include <stddef.h> /* for size_t */
 
 
-#if McuSSD1306_CONFIG_SSD1306_128X64
+#if McuSSD1306_CONFIG_SSD1306_SIZE_TYPE==12864
   #define McuSSD1306_DISPLAY_HW_NOF_COLUMNS  128u /* number of columns in hardware */
   #define McuSSD1306_DISPLAY_HW_NOF_ROWS      64u /* number of rows in hardware */
   #define McuSSD1306_DISPLAY_HW_NOF_PAGES      8u /* number of pages in hardware */
-#elif McuSSD1306_CONFIG_SSD1306_128X32
+#elif McuSSD1306_CONFIG_SSD1306_SIZE_TYPE==12832
   #define McuSSD1306_DISPLAY_HW_NOF_COLUMNS  128u /* number of columns in hardware */
   #define McuSSD1306_DISPLAY_HW_NOF_ROWS      32u /* number of rows in hardware */
   #define McuSSD1306_DISPLAY_HW_NOF_PAGES      4u /* number of pages in hardware */
+#else
+  #error "unknown display type, must be 128x64 or 128x32"
 #endif
 
 typedef bool McuSSD1306_PixelColor;    /* type to hold color information */
@@ -145,12 +148,8 @@ extern uint8_t McuSSD1306_DisplayBuf[((McuSSD1306_DISPLAY_HW_NOF_ROWS-1)/8)+1][M
 #define McuSSD1306_PIXEL_ON  McuSSD1306_COLOR_WHITE /* value of a pixel if it is 'on' */
 #define McuSSD1306_PIXEL_OFF McuSSD1306_COLOR_BLACK /* value of a pixel if it is 'off' */
 
-#define McuSSD1306_WIDTH  128u          /* Logical display width in pixels */
-#define McuSSD1306_HEIGHT 64u           /* Logical display height in pixels */
-#define McuSSD1306_HW_WIDTH  McuSSD1306_WIDTH /* Hardware display width in pixels */
-#define McuSSD1306_HW_HEIGHT McuSSD1306_HEIGHT /* Hardware display height in pixels */
-#define McuSSD1306_HW_LONGER_SIDE  McuSSD1306_WIDTH /* Hardware display longer side in pixels */
-#define McuSSD1306_HW_SHORTER_SIDE McuSSD1306_HEIGHT /* Hardware display shorter side in pixels */
+#define McuSSD1306_HW_LONGER_SIDE  McuSSD1306_DISPLAY_HW_NOF_COLUMNS            /* Hardware display longer side in pixels */
+#define McuSSD1306_HW_SHORTER_SIDE McuSSD1306_DISPLAY_HW_NOF_ROWS               /* Hardware display shorter side in pixels */
 
 typedef enum {
   McuSSD1306_ORIENTATION_PORTRAIT    = 0,
@@ -456,7 +455,7 @@ uint8_t McuSSD1306_DisplayInvert(bool invert);
 ** ===================================================================
 */
 
-void McuSSD1306_PrintString(uint8_t *str);
+void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str);
 /*
 ** ===================================================================
 **     Method      :  PrintString (component SSD1306)
@@ -466,6 +465,8 @@ void McuSSD1306_PrintString(uint8_t *str);
 **         Newline is supported.
 **     Parameters  :
 **         NAME            - DESCRIPTION
+**         line            - line number, starting with 0
+**         col             - column number, starting with 0
 **       * str             - Pointer to string to be printed on display
 **     Returns     : Nothing
 ** ===================================================================
@@ -496,6 +497,23 @@ void McuSSD1306_Deinit(void);
 **         Driver de-initialization
 **     Parameters  : None
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col);
+/*
+** ===================================================================
+**     Method      :  SetRowCol (component SSD1306)
+**
+**     Description :
+**         Sets the column and row position, useful for start writing
+**         text with PrintString()
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         row             - row (or line) number, starting with 0
+**         col             - column number, starting with 0
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

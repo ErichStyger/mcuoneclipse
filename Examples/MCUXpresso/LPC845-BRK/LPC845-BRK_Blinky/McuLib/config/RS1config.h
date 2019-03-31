@@ -7,6 +7,20 @@
 #ifndef __RS1_CONFIG_H
 #define __RS1_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_RS1_PIN)
+    #define RS1_CONFIG_PIN_NUMBER    BOARD_INITPINS_RS1_PIN
+  #endif
+  #if defined(BOARD_INITPINS_RS1_GPIO)
+    #define RS1_CONFIG_GPIO_NAME     BOARD_INITPINS_RS1_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_RS1_PORT)
+    #define RS1_CONFIG_PORT_NAME     BOARD_INITPINS_RS1_PORT
+  #endif
+#endif
+
 #ifndef RS1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define RS1_CONFIG_PORT_NAME       GPIO1

@@ -7,6 +7,20 @@
 #ifndef __DB11_CONFIG_H
 #define __DB11_CONFIG_H
 
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_DB11_PIN)
+    #define DB11_CONFIG_PIN_NUMBER    BOARD_INITPINS_DB11_PIN
+  #endif
+  #if defined(BOARD_INITPINS_DB11_GPIO)
+    #define DB11_CONFIG_GPIO_NAME     BOARD_INITPINS_DB11_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_DB11_PORT)
+    #define DB11_CONFIG_PORT_NAME     BOARD_INITPINS_DB11_PORT
+  #endif
+#endif
+
 #ifndef DB11_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB11_CONFIG_PORT_NAME       GPIO1

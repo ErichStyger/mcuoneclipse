@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.2.0
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -41,7 +41,9 @@
     #include "SIM_PDD.h"   /* PDD interface to system integration module */
   #endif
 #endif
+
 #include "McuLib.h" /* include SDK and API used */
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -361,7 +363,7 @@ __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
 #if configUSE_MPU_SUPPORT
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged) {
 #else
-StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, pdTASK_CODE pxCode, void *pvParameters) {
+StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters) {
 #endif
   /* Simulate the stack frame as it would be created by a context switch interrupt. */
   pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts, and to ensure alignment. */
@@ -428,6 +430,8 @@ static portBASE_TYPE xBankedStartScheduler(void) {
 /*-----------------------------------------------------------*/
 #if configUSE_TICKLESS_IDLE == 1
 void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
+
+void McuRTOS_vOnPostSleepProcessing(TickType_t expectedIdleTicks); /* prototype */
 
 #if (configCOMPILER==configCOMPILER_ARM_GCC) || (configCOMPILER==configCOMPILER_ARM_KEIL)
 __attribute__((weak))
@@ -529,6 +533,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     /* ----------------------------------------------------------------------------
      * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
+    McuRTOS_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is
      * accounted for as best it can be, but using the tickless mode will
      * inevitably result in some tiny drift of the time maintained by the
@@ -924,8 +929,8 @@ void vPortYieldFromISR(void) {
 }
 /*-----------------------------------------------------------*/
 /* return the tick raw counter value. It is assumed that the counter register has been reset at the last tick time */
-portLONG uxGetTickCounterValue(void) {
-  portLONG val;
+    uint32_t uxGetTickCounterValue(void) {
+  long val;
   
   GET_TICK_CURRENT_VAL(&val);
   return val;
@@ -1652,4 +1657,6 @@ __asm uint32_t vPortGetIPSR(void) {
 
 
 #endif /* ARM M4(F) core */ 
+
+#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 

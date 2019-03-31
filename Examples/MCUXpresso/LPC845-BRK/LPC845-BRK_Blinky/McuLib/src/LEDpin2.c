@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-30, 21:09, # CodeGen: 420
+**     Date/Time   : 2019-03-26, 15:59, # CodeGen: 480
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -15,7 +15,7 @@
 **          GPIO Name                                      : GPIOA
 **          PORT Name                                      : PORTA
 **          Pin Number                                     : 0
-**          Pin Symbol                                     : LED1
+**          Pin Symbol                                     : LED2
 **          Do Pin Muxing                                  : no
 **          Init Direction                                 : Output
 **          Pull Resistor                                  : no pull resistor
@@ -84,6 +84,8 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -176,6 +178,8 @@ void LEDpin2_ClrVal(void)
   GPIO_DRV_ClearPinOutput(LEDpin2_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(LEDpin2_CONFIG_PORT_NAME, LEDpin2_CONFIG_PIN_NUMBER, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(LEDpin2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -203,6 +207,8 @@ void LEDpin2_SetVal(void)
   GPIO_DRV_SetPinOutput(LEDpin2_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(LEDpin2_CONFIG_PORT_NAME, LEDpin2_CONFIG_PIN_NUMBER, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(LEDpin2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -237,6 +243,8 @@ void LEDpin2_NegVal(void)
   } else {
     PINS_GPIO_WritePin(LEDpin2_CONFIG_PORT_NAME, LEDpin2_CONFIG_PIN_NUMBER, 1);
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(LEDpin2_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -258,11 +266,17 @@ bool LEDpin2_GetVal(void)
 #if McuLib_CONFIG_CPU_IS_LPC
   return GPIO_PinRead(LEDpin2_CONFIG_GPIO_NAME, LEDpin2_CONFIG_PORT_NAME, LEDpin2_CONFIG_PIN_NUMBER);
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(LEDpin2_CONFIG_GPIO_NAME, LEDpin2_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(LEDpin2_CONFIG_GPIO_NAME, LEDpin2_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(LEDpin2_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(LEDpin2_CONFIG_PORT_NAME)&(1<<LEDpin2_CONFIG_PIN_NUMBER))!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(LEDpin2_CONFIG_PIN_NUMBER)!=0;
 #else
   return FALSE;
 #endif
@@ -330,6 +344,8 @@ void LEDpin2_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(LEDpin2_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<LEDpin2_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(LEDpin2_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(LEDpin2_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
 #endif
   LEDpin2_isOutput = false;
 }
@@ -358,6 +374,8 @@ void LEDpin2_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(LEDpin2_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<LEDpin2_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(LEDpin2_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(LEDpin2_CONFIG_PIN_NUMBER);
 #endif
   LEDpin2_isOutput = true;
 }
@@ -384,15 +402,25 @@ void LEDpin2_PutVal(bool Val)
     GPIO_PortClear(LEDpin2_CONFIG_GPIO_NAME, LEDpin2_CONFIG_PORT_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
   }
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(LEDpin2_CONFIG_GPIO_NAME, 1<<LEDpin2_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(LEDpin2_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(LEDpin2_CONFIG_PORT_NAME, LEDpin2_CONFIG_PIN_NUMBER, Val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /*! \todo */
 #endif
 }
 
@@ -419,6 +447,8 @@ void LEDpin2_Init(void)
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
 #endif
 #if LEDpin2_CONFIG_INIT_PIN_DIRECTION == LEDpin2_CONFIG_INIT_PIN_DIRECTION_INPUT
   LEDpin2_SetInput();
