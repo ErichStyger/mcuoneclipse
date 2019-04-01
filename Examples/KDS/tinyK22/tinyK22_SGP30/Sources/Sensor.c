@@ -151,6 +151,9 @@ static void SensorTask(void *pv) {
   uint32_t cntr100ms = 0;
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give sensors time to power up */
+#if PL_CONFIG_HAS_SW_I2C
+  I2C1_ResetBus();
+#endif
 #if 0 && PL_CONFIG_HAS_AMG8833
   CLS1_SendStr((uint8_t*)"Enabling AMG8833 Infrared sensor array.\r\n", CLS1_GetStdio()->stdOut);
   for(;;) {
@@ -311,7 +314,7 @@ void SENSOR_Init(void) {
         600/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+3,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
