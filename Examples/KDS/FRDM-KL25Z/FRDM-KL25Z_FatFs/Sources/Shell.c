@@ -68,7 +68,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
     }
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
     LEDG_Neg();
   }
 }
