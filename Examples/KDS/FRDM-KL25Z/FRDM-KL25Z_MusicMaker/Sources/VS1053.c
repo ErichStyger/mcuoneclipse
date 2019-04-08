@@ -29,11 +29,11 @@ void VS_OnSPIBlockReceived(void) {
 }
 
 void VS_OnSPIActivate(void) {
-  FRTOS1_xSemaphoreTakeRecursive(spiSem, portMAX_DELAY);
+  xSemaphoreTakeRecursive(spiSem, portMAX_DELAY);
 }
 
 void VS_OnSPIDeactivate(void) {
-  FRTOS1_xSemaphoreGiveRecursive(spiSem);
+  xSemaphoreGiveRecursive(spiSem);
 }
 
 static void VS_SPI_WRITE(unsigned char write) {
@@ -288,7 +288,7 @@ void VS_Init(void) {
   MCS_SetVal(); /* chip select is low active, deselect it */
   DCS_SetVal(); /* data mode is low active, deselect data mode */
   VS_SPIDataReceivedFlag = FALSE; /* Initialization */
-  spiSem = FRTOS1_xSemaphoreCreateRecursiveMutex();
+  spiSem = xSemaphoreCreateRecursiveMutex();
   if (spiSem==NULL) { /* creation failed? */
     for(;;);
   }

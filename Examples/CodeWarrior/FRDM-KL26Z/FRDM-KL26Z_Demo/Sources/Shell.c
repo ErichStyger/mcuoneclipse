@@ -42,7 +42,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
   buf[0] = '\0';
   for(;;) {
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), ioLocal, CmdParserTable);
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }
 
