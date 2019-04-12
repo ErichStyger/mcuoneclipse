@@ -34,6 +34,7 @@
 #define ROTATE_270          3
 
 #include "Display_Config.h"
+#if DISPLAY_IS_2_COLOR || DISPLAY_IS_3_COLOR
 // Color inverse. 1 or 0 = set or reset a bit if set a colored pixel
 #if DISPLAY_IS_2_COLOR
 	#define IF_INVERT_COLOR     1
@@ -69,6 +70,8 @@ void Paint_DrawRectangle(Paint* paint, int x0, int y0, int x1, int y1, int color
 void Paint_DrawFilledRectangle(Paint* paint, int x0, int y0, int x1, int y1, int colored);
 void Paint_DrawCircle(Paint* paint, int x, int y, int radius, int colored);
 void Paint_DrawFilledCircle(Paint* paint, int x, int y, int radius, int colored);
+
+#endif
 
 #endif
 

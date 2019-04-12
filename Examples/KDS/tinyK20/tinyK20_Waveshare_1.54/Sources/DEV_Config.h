@@ -1,12 +1,30 @@
 /*****************************************************************************
-* | File      	:   ImageData.h
+* | File      	:   DEV_Config.h
 * | Author      :   Waveshare team
-* | Function    :	
-*----------------
-* |	This version:   V1.0
-* | Date        :   2018-10-23
+* | Function    :   Hardware underlying interface
 * | Info        :
-*
+*                Used to shield the underlying layers of each master 
+*                and enhance portability
+*----------------
+* |	This version:   V2.0
+* | Date        :   2018-10-30
+* | Info        :
+* 1.add:
+*   UBYTE\UWORD\UDOUBLE
+* 2.Change:
+*   EPD_RST -> EPD_RST_PIN
+*   EPD_DC -> EPD_DC_PIN
+*   EPD_CS -> EPD_CS_PIN
+*   EPD_BUSY -> EPD_BUSY_PIN
+* 3.Remote:
+*   EPD_RST_1\EPD_RST_0
+*   EPD_DC_1\EPD_DC_0
+*   EPD_CS_1\EPD_CS_0
+*   EPD_BUSY_1\EPD_BUSY_0
+* 3.add:
+*   #define DEV_Digital_Write(_pin, _value) bcm2835_gpio_write(_pin, _value)
+*   #define DEV_Digital_Read(_pin) bcm2835_gpio_lev(_pin)
+*   #define DEV_SPI_WriteByte(__value) bcm2835_spi_transfer(__value)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -26,15 +44,38 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-
 ******************************************************************************/
+#ifndef _DEV_CONFIG_H_
+#define _DEV_CONFIG_H_
 
-#ifndef _IMAGEDATA_H_
-#define _IMAGEDATA_H_
+#include <stdint.h>
+#include "WAIT1.h"
 
-extern const unsigned char IMAGE_BLACK[];
-extern const unsigned char IMAGE_RED[];
+/**
+ * data
+**/
+#define UBYTE   uint8_t
+#define UWORD   uint16_t
+#define UDOUBLE uint32_t
+
+/**
+ * e-Paper GPIO
+**/
+typedef enum {
+  EPD_RST_PIN, EPD_DC_PIN, EPD_CS_PIN, EPD_BUSY_PIN
+} EPD_Pins;
+
+/**
+ * GPIO read and write
+**/
+int DEV_Digital_Read(EPD_Pins pin);
+void DEV_Digital_Write(EPD_Pins pin, int val);
+
+/**
+ * delay x ms
+**/
+#define DEV_Delay_ms(__xms) WAIT1_Waitms(__xms);
+
+void DEV_SPI_WriteByte(UBYTE value);
+
 #endif
-/* FILE END */
-
-

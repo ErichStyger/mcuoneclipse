@@ -26,7 +26,7 @@
 
 #include "epdpaint.h"
 
-
+#if DISPLAY_IS_2_COLOR || DISPLAY_IS_3_COLOR
 void Paint_Init(Paint* paint, unsigned char* image, int width, int height) {
     paint->rotate = ROTATE_0;
     paint->image = image;
@@ -312,28 +312,6 @@ void Paint_DrawFilledCircle(Paint* paint, int x, int y, int radius, int colored)
         }
     } while(x_pos <= 0);
 }
-
+#endif /* DISPLAY_IS_2_COLOR || DISPLAY_IS_3_COLOR */
 /* END OF FILE */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

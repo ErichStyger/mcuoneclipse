@@ -58,14 +58,19 @@
 #if DISPLAY_IS_2_COLOR
   #include "epd2in9.h"
   #include "epd2in9.h"
-#else
+#elif DISPLAY_IS_3_COLOR
   #include "epd2in9b.h"
   #include "epd2in9b.h"
+#elif 0 && DISPLAY_IS_1_54_BW
+  #include "EPD_1in54b.h"
 #endif
+#if 0
 #include "epdif.h"
 #include "epdpaint.h"
 #include "imagedata.h"
 #include "testimage.h"
+#endif
+
 #include <stdlib.h>
 
 #if DISPLAY_IS_2_COLOR
@@ -242,7 +247,201 @@ int Test(void) {
   {
   }
 }
+#elif 0 && DISPLAY_IS_1_54_BW
 
+#include "EPD_1in54b.h"
+#include "DEV_Config.h"
+#include "GUI_Paint.h"
+#include "imagedata.h"
+#include <stdio.h>
+
+#define IMAGE_SIZE (((EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1)) * EPD_HEIGHT)
+static uint8_t BlackImage[IMAGE_SIZE];
+//static uint8_t RedImage[IMAGE_SIZE];
+
+static int Run(void) {
+    //printf("epd init and clear------------------------\r\n");
+    if(EPD_Init()) {
+      //  printf("e-Paper init failed\r\n");
+    }
+    EPD_Clear();
+    DEV_Delay_ms(200);
+
+#if 0
+    //Create a new image cache named IMAGE_BW and fill it with white
+    UBYTE *BlackImage, *RedImage;
+    UWORD Imagesize = IMAGE_SIZE;
+    if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+        printf("Failed to apply for black memory...\r\n");
+        return -1;
+    }
+    if((RedImage = (UBYTE *)malloc(Imagesize)) == NULL) {
+        printf("Failed to apply for red memory...\r\n");
+        return -1;
+    }
+#endif
+#if 0
+    //printf("NewImage:BlackImage and RedImage\r\n");
+    Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 270, WHITE);
+    Paint_NewImage(RedImage, EPD_WIDTH, EPD_HEIGHT, 270, WHITE);
+
+    //Select Image
+    Paint_SelectImage(BlackImage);
+    Paint_Clear(WHITE);
+    Paint_SelectImage(RedImage);
+    Paint_Clear(WHITE);
+#endif
+
+#if 1   //show image for array
+    //printf("show image for array------------------------\r\n");
+    Paint_SelectImage(BlackImage);
+    Paint_DrawBitMap(IMAGE_BLACK);
+#if 0
+    Paint_SelectImage(RedImage);
+    Paint_DrawBitMap(IMAGE_RED);
+
+    EPD_Display(BlackImage, RedImage);
+#else
+    EPD_Display(BlackImage, BlackImage);
+#endif
+    DEV_Delay_ms(2000);
+#endif
+
+#if 0   //Drawing
+    //printf("Drawing------------------------\r\n");
+    Paint_SelectImage(BlackImage);
+    Paint_Clear(WHITE);
+    Paint_DrawPoint(5, 10, BLACK, DOT_PIXEL_1X1, DOT_STYLE_DFT);
+    Paint_DrawPoint(5, 25, BLACK, DOT_PIXEL_2X2, DOT_STYLE_DFT);
+    Paint_DrawLine(20, 10, 70, 60, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1);
+    Paint_DrawLine(70, 10, 20, 60, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1);
+    Paint_DrawRectangle(20, 10, 70, 60, BLACK, DRAW_FILL_EMPTY, DOT_PIXEL_1X1);
+    Paint_DrawCircle(170, 85, 20, BLACK, DRAW_FILL_FULL, DOT_PIXEL_1X1);
+    Paint_DrawString_EN(5, 70, "hello world", &Font16, WHITE, BLACK);
+    Paint_DrawString_CN(5, 160, "Î¢Ñ©µç×Ó", &Font24CN, WHITE, BLACK);
+
+    Paint_SelectImage(RedImage);
+    Paint_Clear(WHITE);
+    Paint_DrawPoint(5, 40, BLACK, DOT_PIXEL_3X3, DOT_STYLE_DFT);
+    Paint_DrawPoint(5, 55, BLACK, DOT_PIXEL_4X4, DOT_STYLE_DFT);
+    Paint_DrawLine(170, 15, 170, 55, BLACK, LINE_STYLE_DOTTED, DOT_PIXEL_1X1);
+    Paint_DrawLine(150, 35, 190, 35, BLACK, LINE_STYLE_DOTTED, DOT_PIXEL_1X1);
+    Paint_DrawRectangle(85, 10, 130, 60, BLACK, DRAW_FILL_FULL, DOT_PIXEL_1X1);
+    Paint_DrawCircle(170, 35, 20, BLACK, DRAW_FILL_EMPTY, DOT_PIXEL_1X1);
+    Paint_DrawString_EN(5, 90, "waveshare", &Font20, BLACK, WHITE);
+    Paint_DrawNum(5, 120, 123456789, &Font20, BLACK, WHITE);
+    Paint_DrawString_CN(5, 135,"ÄãºÃabc", &Font12CN, BLACK, WHITE);
+
+    EPD_Display(BlackImage, RedImage);
+    DEV_Delay_ms(2000);
+#endif
+
+    //printf("Goto Sleep mode...\r\n");
+    EPD_Sleep();
+#if 0
+    free(BlackImage);
+    free(RedImage);
+    BlackImage = NULL;
+    RedImage = NULL;
+#endif
+  while (1)
+  {
+  }
+}
+#endif
+
+#if 1
+#include "ep154.h"
+#include "GUI_Paint.h"
+
+#define IMAGE_SIZE  (((EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1)) * EPD_HEIGHT)
+static uint8_t data[IMAGE_SIZE];
+
+static int Run(void) {
+  EPD_Init(lut_full_update);
+  EPD_Clear();
+  //Create a new image cache
+  uint8_t *BlackImage;
+  unsigned int Imagesize = ((EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1)) * EPD_HEIGHT;
+#if 0
+  if((BlackImage = (unsigned int *)malloc(Imagesize)) == NULL) {
+      return 0;
+  }
+#else
+  BlackImage = &data[0];
+#endif
+  Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 270, WHITE);
+  Paint_SelectImage(BlackImage);
+
+  Paint_Clear(WHITE);
+  EPD_Display(BlackImage);
+
+  Paint_DrawString_EN(10, 15,"Atomizer", &Font24, WHITE, BLACK);
+  EPD_Display(BlackImage);
+
+//  Paint_Clear(BLACK);
+//  EPD_Display(BlackImage);
+
+  //Paint_DrawBitMap(logo);
+  //SetFrameMemory(logo,0,0,185,185);
+   /* Paint_DrawLine(0, 48, 200, 48, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1);
+  Paint_DrawString_EN(40,50 ,"31.03.2018", &Font16, WHITE, BLACK);
+  if(EPD_Init(lut_partial_update) != 0) {
+      printf("e-Paper init failed\r\n");
+  }
+  Paint_SelectImage(BlackImage);
+  PAINT_TIME sPaint_time;
+  sPaint_time.Hour = 17;
+  sPaint_time.Min = 49;
+  sPaint_time.Sec = 00;
+  for (;;) {
+      sPaint_time.Sec = sPaint_time.Sec + 1;
+      if (sPaint_time.Sec == 60) {
+          sPaint_time.Min = sPaint_time.Min + 1;
+          sPaint_time.Sec = 0;
+          if (sPaint_time.Min == 60) {
+              sPaint_time.Hour =  sPaint_time.Hour + 1;
+              sPaint_time.Min = 0;
+              if (sPaint_time.Hour == 24) {
+                  sPaint_time.Hour = 0;
+                  sPaint_time.Min = 0;
+                  sPaint_time.Sec = 0;
+              }
+          }
+      }
+      Paint_ClearWindows(35, 90, 35 + Font24.Width * 7, 90 + Font24.Height, WHITE);
+      Paint_DrawTime(35, 90, &sPaint_time, &Font24, WHITE, BLACK);
+  EPD_Display(BlackImage);
+      WAIT1_Waitms(500);//Analog clock 1s
+  }*/
+  /* Paint_NewImage(BlackImage, EPD_WIDTH, EPD_HEIGHT, 270, WHITE);
+  Paint_SelectImage(BlackImage);
+  Paint_Clear(WHITE);
+  Paint_DrawString_EN(5, 5,"Atomizer", &Font24, WHITE, BLACK);
+  Paint_DrawLine(0, 28, 200, 28, BLACK, LINE_STYLE_SOLID, DOT_PIXEL_1X1);
+  Paint_DrawString_EN(5,30 ,"25.03.2018", &Font12, WHITE, BLACK);*/
+
+  //Paint_DrawCircle(170, 85, 20, BLACK, DRAW_FILL_FULL, DOT_PIXEL_1X1);
+  //Paint_DrawNum(180, 180, 666, &Font20, WHITE, BLACK);
+  /*Paint_DrawRectangle(5, 42, 110, 64, BLACK, DRAW_FILL_EMPTY, DOT_PIXEL_1X1);
+  Paint_DrawString_EN(7,45 ,"Parameter", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(7,70 ,"Einstellungen", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(10,90 ,"Volume:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 90, "13", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(10,110 ,"Frequenz:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 110, "100Hz", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(10,130 ,"Luefter 1:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 130, "10", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(10,150 ,"Luefter 2:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 150, "10", &Font16, WHITE, BLACK);
+  EPD_Display(BlackImage);
+  Paint_DrawString_EN(10,130 ,"Luefter 1:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 130, "15", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(10,150 ,"Luefter 2:", &Font16, WHITE, BLACK);
+  Paint_DrawString_EN(130, 150, "15", &Font16, WHITE, BLACK);
+  Paint_Clear(WHITE);
+  EPD_Display(BlackImage);*/
+}
 #endif
 
 
@@ -258,7 +457,7 @@ int main(void)
 
   /* Write your code here */
   LED1_On();
-  Test();
+  Run();
   LED1_Off();
   /* For example: for(;;) { } */
 
