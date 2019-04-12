@@ -459,7 +459,15 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 	/* Do not move these variables to function scope as doing so prevents the
 	code working with debuggers that need to remove the static qualifier. */
 	PRIVILEGED_DATA static uint32_t ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
-	PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;		/*< Holds the total amount of execution time as defined by the run time counter clock. */
+#if 1 /* << EST: prevent optimizations and removal of the following variable with -O1, -O2 or -O3, as used by NXP TAD */
+  PRIVILEGED_DATA static
+#ifdef __GNUC__
+__attribute__((used))
+#endif
+  uint32_t ulTotalRunTime = 0UL;   /*< Holds the total amount of execution time as defined by the run time counter clock. */
+#else
+    PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;       /*< Holds the total amount of execution time as defined by the run time counter clock. */
+#endif
 
 #endif
 
