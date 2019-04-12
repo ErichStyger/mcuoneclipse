@@ -43,19 +43,6 @@
 #include "Application.h"
 /* TODO: insert other definitions and declarations here. */
 
-#define NOF  64
-static uint32_t samples[NOF];
-static float Fsamples[NOF];
-float fZeroCurrent = 8.0;
-
-static void ProcessSamples(void) {
-  int i;
-
-  for (i=0; i<NOF; i++) {
-    Fsamples[i] = samples[i]*3.3f/4096.0f - fZeroCurrent;
-  }
-}
-
 /*
  * @brief   Application entry point.
  */
@@ -71,7 +58,6 @@ int main(void) {
     BOARD_InitLEDs();
 
     PRINTF("Hello World\n");
-    ProcessSamples();
     APP_Run();
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
