@@ -58,6 +58,10 @@
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+BaseType_t xEnterTicklessIdle(void) {
+  return pdTRUE; /* yes, enter low power mode */
+}
+
 #if 1
 static void Task1(void *pvParameters) {
   (void)pvParameters; /* parameter not used */
