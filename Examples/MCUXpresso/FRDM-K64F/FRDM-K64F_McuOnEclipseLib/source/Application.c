@@ -57,10 +57,20 @@ static float calc(float f, int idx) {
   return f*calib[16];
 }
 
+static void test2(double val) {
+   calib[0] = (float)(val)/10.0f + 233.0f;
+}
+
+static void test(double val) {
+   calib[0] = (float)(val)/10.0 + 233.0;
+}
+
 void APP_Run(void) {
   /* initialize components */
 
   calc(3.0, 0);
+  test(3.0);
+  test2(3.0f);
 
   McuRTOS_Init();
   McuCriticalSection_Init();
