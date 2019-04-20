@@ -42,7 +42,7 @@
 #include "lcd.h"
 #define LV_HOR_RES          (LCD_DISPLAY_WIDTH)
 #define LV_VER_RES          (LCD_DISPLAY_HEIGHT)
-#define LV_DPI              100
+#define LV_DPI              25/*100*/
 
 /* Size of VDB (Virtual Display Buffer: the internal graphics buffer).
  * Required for buffered drawing, opacity and anti-aliasing

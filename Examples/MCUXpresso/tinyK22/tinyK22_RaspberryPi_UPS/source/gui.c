@@ -128,47 +128,111 @@ static lv_res_t Btn_Accel_click_action(struct _lv_obj_t *obj) {
   //  GUI_ACCEL_Create();
     return LV_RES_OK;
 }
+static lv_res_t Btn_Air_click_action(struct _lv_obj_t *obj) {
+  //  GUI_ACCEL_Create();
+    return LV_RES_OK;
+}
+
+static lv_obj_t *mbox1;
+
+static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char * txt) {
+    //printf("Mbox button: %s\n", txt);
+  if (txt!=NULL) {
+    if (McuUtility_strcmp(txt, "yes")==0) {
+      return LV_RES_OK; /* keep message box */
+    } else if (McuUtility_strcmp(txt, "Cancel")==0) {
+      GUI_GroupPull();
+      lv_obj_del(mbox1);
+      mbox1 = NULL;
+      return LV_RES_INV; /* delete message box */
+    }
+  }
+  return LV_RES_OK; /*Return OK if the message box is not deleted*/
+}
+
+static lv_res_t Btn_shutdown_click_action(struct _lv_obj_t *obj) {
+  mbox1 = lv_mbox_create(lv_scr_act(), NULL);
+  lv_mbox_set_text(mbox1, "Shutdown Raspy?");  /*Set the text*/
+  /*Add two buttons*/
+  static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
+  lv_mbox_add_btns(mbox1, btns, mbox_apply_action);
+  lv_obj_set_width(mbox1, 80);
+  lv_obj_align(mbox1, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10); /*Align to the corner*/
+
+  GUI_GroupPush();
+  GUI_AddObjToGroup(mbox1);
+  lv_group_focus_obj(mbox1);
+
+  return LV_RES_OK;
+}
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
+#define AUTO_POS (1)
 
   GUI_GroupPush();
   /* create window */
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
-  lv_win_set_btn_size(gui_win, 8);
+  //int size = lv_win_get_btn_size(gui_win);
+  //lv_win_set_btn_size(gui_win, 8);
+  lv_win_set_sb_mode(gui_win, LV_SB_MODE_OFF); /* no scroll bar */
 
   /* Make the window content responsive */
-  //lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
+#if AUTO_POS
+  lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
+#endif
 #if 1
   /*Create a normal button*/
-  lv_obj_t *btn1;
-  lv_obj_t *label1;
+  lv_obj_t *btn1, *btn2, *btn3, *btn4;
+  lv_obj_t *label;
 
   btn1 = lv_btn_create(gui_win, NULL);
-  lv_obj_set_pos(btn1, 10, 5);
-  lv_obj_set_size(btn1, 40, 30);
+  lv_obj_set_size(btn1, 40, 20);
+#if !AUTO_POS
+  lv_obj_set_pos(btn1, 5, 0);
+#endif
   //lv_cont_set_fit(btn1, true, true); /*Enable resizing horizontally and vertically*/
 //  lv_obj_align(btn1, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-  label1 = lv_label_create(btn1, NULL);
-  lv_label_set_text(label1, "Btn1");
+  label = lv_label_create(btn1, NULL);
+  lv_label_set_text(label, "Shutdown");
   //lv_obj_set_free_num(btn1, 1);   /*Set a unique number for the button*/
-  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_shutdown_click_action);
   GUI_AddObjToGroup(btn1);
 
-  lv_obj_t *btn2;
-  lv_obj_t *label2;
-
   btn2 = lv_btn_create(gui_win, NULL);
-  lv_obj_set_pos(btn2, 40, 5);
-  lv_obj_set_size(btn2, 30, 20);
+  //lv_obj_set_size(btn2, 40, 20);
+#if !AUTO_POS
+  lv_obj_set_pos(btn2, 60, 0);
+#endif
   //lv_cont_set_fit(btn2, true, true); /*Enable resizing horizontally and vertically*/
 //  lv_obj_align(btn2, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-  label2 = lv_label_create(btn2, NULL);
-  lv_label_set_text(label2, "222");
+  label = lv_label_create(btn2, NULL);
+  lv_label_set_text(label, "Btn2");
   //lv_obj_set_free_num(btn2, 1);   /*Set a unique number for the button*/
   lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_action);
   GUI_AddObjToGroup(btn2);
+#if 1
+  btn3 = lv_btn_create(gui_win, NULL);
+  //lv_obj_set_size(btn3, 40, 20);
+#if !AUTO_POS
+  lv_obj_set_pos(btn3, 5, 30);
+#endif
+  label = lv_label_create(btn3, NULL);
+  lv_label_set_text(label, "Btn3");
+  lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, btn_click_action);
+  GUI_AddObjToGroup(btn3);
+
+  btn4 = lv_btn_create(gui_win, NULL);
+  //lv_obj_set_size(btn4, 40, 20);
+#if !AUTO_POS
+  lv_obj_set_pos(btn4, 60, 25);
+#endif
+  label = lv_label_create(btn4, NULL);
+  lv_label_set_text(label, "Btn4");
+  lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, btn_click_action);
+  GUI_AddObjToGroup(btn4);
+#endif
 #endif
 
 #if 0
@@ -185,7 +249,7 @@ void GUI_MainMenuCreate(void) {
   obj = lv_list_add(list1, SYMBOL_FILE, "Accel", Btn_Accel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
-#if PL_CONFIG_HAS_SGP30
+#if 1 || PL_CONFIG_HAS_SGP30
   obj = lv_list_add(list1, SYMBOL_DIRECTORY, "Air", Btn_Air_click_action);
   GUI_AddObjToGroup(obj);
 #endif
@@ -265,17 +329,18 @@ static void btnCallback(EVNT_Handle event) {
       break;
 
     case EVNT_SW5_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_PRESSED);
       break;
     case EVNT_SW5_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_RELEASED);
       break;
     case EVNT_SW5_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW5_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_RELEASED_LONG);
       break;
+
     default:
       break;
   }
@@ -358,10 +423,10 @@ void GUI_Init(void) {
   // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
   // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+3, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
   }
-  timerHndl = xTimerCreate(
+  timerHndl = xTimerCreate(  /* timer to handle periodic things */
         "timer", /* name */
         pdMS_TO_TICKS(APP_PERIODIC_TIMER_PERIOD_MS), /* period/time */
         pdTRUE, /* auto reload */
