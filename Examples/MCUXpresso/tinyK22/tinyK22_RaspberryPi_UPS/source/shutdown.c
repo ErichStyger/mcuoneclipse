@@ -4,7 +4,7 @@
  *  Created on: 11.04.2019
  *      Author: Erich Styger
  */
-
+#include "platform.h"
 #include "shutdown.h"
 #include "fsl_gpio.h"
 #include "leds.h"
@@ -54,7 +54,11 @@ BDM21: LED4 (Red)
 */
 
 static bool isShutDownButtonPressed(void) {
+#if !PL_CONFIG_HAS_GUI_KEY_NAV /* handled in GUI */
   return GPIO_PinRead(PINS_HATNAVPUSH_GPIO, PINS_HATNAVPUSH_PIN)==0; /* push button is low active */
+#else
+  return false;
+#endif
 }
 
 bool SHUTDOWN_UserPowerOffRequested(void) {

@@ -10,6 +10,7 @@
 #include "gui.h"
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
+#include "McuRTOS.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "McuSSD1306.h"
@@ -199,6 +200,13 @@ static void GuiTask(void *p) {
   }
 }
 
+#define APP_PERIODIC_TIMER_PERIOD_MS   10
+static TimerHandle_t timerHndl;
+
+static void vTimerCallbackExpired(TimerHandle_t pxTimer) {
+  lv_tick_inc(APP_PERIODIC_TIMER_PERIOD_MS);
+}
+
 void GUI_Init(void) {
   LV_Init(); /* initialize GUI library */
   //lv_theme_set_current(lv_theme_night_init(128, NULL));
@@ -218,6 +226,18 @@ void GUI_Init(void) {
 
   if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
+  }
+  timerHndl = xTimerCreate(
+        "timer", /* name */
+        pdMS_TO_TICKS(APP_PERIODIC_TIMER_PERIOD_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackExpired); /* callback */
+  if (timerHndl==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndl, 0)!=pdPASS) { /* start the timer */
+    for(;;); /* failure!?! */
   }
 #if PL_CONFIG_HAS_GUI_KEY_NAV
   groups.sp = 0;

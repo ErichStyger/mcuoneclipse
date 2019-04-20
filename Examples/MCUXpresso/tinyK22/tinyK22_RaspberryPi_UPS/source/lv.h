@@ -8,8 +8,14 @@
 #ifndef SOURCES_LV_H_
 #define SOURCES_LV_H_
 
-
 #include "LittlevGL/lvgl/lvgl.h"
+
+/* button numbers */
+#define LV_HW_BTN_CENTER    (1<<0)
+#define LV_HW_BTN_RIGHT     (1<<1)
+#define LV_HW_BTN_DOWN      (1<<2)
+#define LV_HW_BTN_UP        (1<<3)
+#define LV_HW_BTN_LEFT      (1<<4)
 
 /* push button bits */
 #define LV_MASK_PRESSED       (1<<15)
@@ -32,6 +38,5 @@ void LV_ButtonEvent(uint8_t key, uint16_t eventMask);
 void LV_Task(void);
 
 void LV_Init(void);
-
 
 #endif /* SOURCES_LV_H_ */
