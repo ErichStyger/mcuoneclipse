@@ -4,7 +4,7 @@
  *  Created on: 03.08.2018
  *      Author: Erich Styger
  */
-#include <platform.h>
+#include "platform.h"
 #if PL_CONFIG_USE_LVGL
 
 #include "gui.h"
@@ -14,7 +14,7 @@
 #include "task.h"
 #include "McuSSD1306.h"
 #if PL_CONFIG_HAS_KEYS
-  #include "KEY1.h"
+  #include "navSwitch.h"
 #endif
 //#include "gui_mainmenu.h"
 #include "McuGDisplaySSD1306.h"
@@ -30,11 +30,11 @@ static TaskHandle_t GUI_TaskHndl;
 
 #if PL_CONFIG_HAS_GUI_KEY_NAV
 #define GUI_GROUP_NOF_IN_STACK   4
-static GUI_Group_t groups;
 typedef struct {
   lv_group_t *stack[GUI_GROUP_NOF_IN_STACK]; /* stack of GUI groups */
   uint8_t sp; /* stack pointer, points to next free element */
 } GUI_Group_t;
+static GUI_Group_t groups;
 
 /* style modification callback for the focus of an element */
 static void style_mod_cb(lv_style_t *style) {
@@ -153,70 +153,50 @@ static void GuiTask(void *p) {
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
   //LCD1_Init();
-#if 0 /* display tests */
-    McuGDisplaySSD1306_PixelDim x, y;
-    char *str;
-    x = y = 2;
-    LCD1_SetDisplayOrientation(GDisp1_ORIENTATION_LANDSCAPE);
-    if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_LANDSCAPE) {
-      str = "Landscape";
-    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_LANDSCAPE180) {
-      str = "Landscape180";
-    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_PORTRAIT) {
-      str = "Portrait";
-    } else  if (GDisp1_GetDisplayOrientation()==GDisp1_ORIENTATION_PORTRAIT180) {
-      str = "Portrait180";
-    }
+  GUI_MainMenuCreate();
+  for(;;) {
+    (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */
+    if (notifcationValue!=0) {
+      lv_area_t area;
 
-    GDisp1_Clear();
-    GDisp1_DrawBox(0, 0, 50, 20, 2, GDisp1_COLOR_BLUE);
-    FDisp1_WriteString(str, GDisp1_COLOR_RED, &x, &y, GFONT1_GetFont());
-    GDisp1_UpdateFull();
-#endif
-    GUI_MainMenuCreate();
-	for(;;) {
-      (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */
-      if (notifcationValue!=0) {
-        lv_area_t area;
-
-        if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE) {
-          McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
-          area.x1 = 0;
-          area.y1 = 0;
-          area.x2 = McuGDisplaySSD1306_GetWidth()-1;
-          area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-          lv_inv_area(&area);
-          lv_refr_now();
-        } else if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE180) {
-          McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
-          area.x1 = 0;
-          area.y1 = 0;
-          area.x2 = McuGDisplaySSD1306_GetWidth()-1;
-          area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-          lv_inv_area(&area);
-        } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT) {
-          McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT);
-          area.x1 = 0;
-          area.y1 = 0;
-          area.x2 = McuGDisplaySSD1306_GetWidth()-1;
-          area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-          lv_inv_area(&area);
-        } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT180) {
-          McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT180);
-          area.x1 = 0;
-          area.y1 = 0;
-          area.x2 = McuGDisplaySSD1306_GetWidth()-1;
-          area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-          lv_inv_area(&area);
-          lv_obj_invalidate(lv_scr_act());
-        }
+      if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE) {
+        McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = McuGDisplaySSD1306_GetWidth()-1;
+        area.y2 = McuGDisplaySSD1306_GetHeight()-1;
+        lv_inv_area(&area);
+        lv_refr_now();
+      } else if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE180) {
+        McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = McuGDisplaySSD1306_GetWidth()-1;
+        area.y2 = McuGDisplaySSD1306_GetHeight()-1;
+        lv_inv_area(&area);
+      } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT) {
+        McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = McuGDisplaySSD1306_GetWidth()-1;
+        area.y2 = McuGDisplaySSD1306_GetHeight()-1;
+        lv_inv_area(&area);
+      } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT180) {
+        McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT180);
+        area.x1 = 0;
+        area.y1 = 0;
+        area.x2 = McuGDisplaySSD1306_GetWidth()-1;
+        area.y2 = McuGDisplaySSD1306_GetHeight()-1;
+        lv_inv_area(&area);
+        lv_obj_invalidate(lv_scr_act());
       }
-      LV_Task(); /* call this every 1-20 ms */
-  #if PL_CONFIG_HAS_KEYS
-      KEY1_ScanKeys();
-  #endif
-	  vTaskDelay(pdMS_TO_TICKS(10));
-   }
+    }
+    LV_Task(); /* call this every 1-20 ms */
+#if PL_CONFIG_HAS_KEYS
+    NAV_ScanKeys();
+#endif
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
 }
 
 void GUI_Init(void) {
@@ -234,10 +214,7 @@ void GUI_Init(void) {
  // lv_style_btn_rel.body.radius = LV_DPI / 15;
  // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
  // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
-
-
   GUI_MainMenuCreate();
-
 
   if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */

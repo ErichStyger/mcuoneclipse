@@ -169,12 +169,6 @@ void doNavInterrupts(void) {
 }
 
 static void MainTask(void *pv) {
-  for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(500));
-  }
-}
-
-void APP_Run(void) {
 #if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
   uint32_t oldNofRx=-1, oldNofTx=-1, nofRx, nofTx;
 #endif
@@ -185,99 +179,43 @@ void APP_Run(void) {
 #endif
   uint32_t currCycleCnt, lastCycleCnt, elapsedCycleCnt;
 
-  PL_Init();
-
-  InitPins(); /* do all the pin muxing */
-
-  /* initialize McuLib modules */
-  McuLib_Init();
-  McuUtility_Init();
-  McuWait_Init();
-  McuArmTools_Init();
-  McuCriticalSection_Init();
-  McuRB_Init();
-
-  /* initialize my own modules */
-  NAV_Init();
-#if PL_CONFIG_USE_SHUTDOWN
-  SHUTDOWN_Init();
-#endif
-#if PL_CONFIG_USE_I2C
-  McuGenericI2C_Init();
-  McuGenericSWI2C_Init();
-#endif
-#if PL_CONFIG_USE_OLED
-  OLED_Init(); /* initializes the needed McuLib components for the OLED */
-#endif
-#if PL_CONFIG_USE_LVGL
-  GUI_Init();
-#endif
-#if PL_CONFIG_USE_GATEWAY
-  GATEWAY_Init();
-#endif
-#if PL_CONFIG_USE_SHUTDOWN && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
-  OLED_PrintShutdownHelp();
-#endif
-  InitTimer();
-  LEDS_Init();
-
-  McuRTOS_Init();
-  if (xTaskCreate(
-      MainTask,  /* pointer to the task */
-      "Main", /* task name for kernel awareness debugging */
-      400/sizeof(StackType_t), /* task stack size */
-      (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
-      (TaskHandle_t*)NULL /* optional task handle to create */
-    ) != pdPASS) {
-     for(;;){} /* error! probably out of memory */
-  }
-  vTaskStartScheduler();
-
-
-
   lastCycleCnt = McuArmTools_GetCycleCounter();
   for(;;) { /* main loop */
-  #if PL_CONFIG_USE_GATEWAY
-    GATEWAY_Process();
-  #endif
     currCycleCnt = McuArmTools_GetCycleCounter();
     elapsedCycleCnt = (int32_t)currCycleCnt - (int32_t)lastCycleCnt; /* calculate delta (signed) */
     if (elapsedCycleCnt > McuWait_NofCyclesMs(1000, SystemCoreClock)) { /* every second */
       lastCycleCnt = currCycleCnt;
       McuLED_Neg(tinyLED);
   #if PL_CONFIG_USE_UPS
-      {
-        if (UPS_GetCharge(&charge)==0 && UPS_GetVoltage(&voltage)==0) {
-          if (prevVoltage==0.0f) { /* first check */
-            prevVoltage = voltage;
-          }
-          if (voltage-prevVoltage>0.02f) {
-            chargeCounter++;
-          } else if (prevVoltage-voltage>0.02f) {
-            chargeCounter--;
-          }
-          if (!isCharging && chargeCounter>=5) {
-            isCharging = true;
-            prevVoltage = voltage;
-            chargeCounter = 5;
-          } else if (isCharging && chargeCounter<=-5) {
-            isCharging = false;
-            prevVoltage = voltage;
-            chargeCounter = -5;
-          }
-    #if PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
-          OLED_ShowUPS(voltage, charge, isCharging);
-    #endif
-    #if PL_CONFIG_USE_SHUTDOWN
-          if (charge<15.0f && !isCharging) { /* low battery and not is charging => power down */
-        #if PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
-            OLED_PrintShutdownMsg();
-        #endif
-            SHUTDOWN_RequestPowerOff();
-          }
-    #endif
+      if (UPS_GetCharge(&charge)==0 && UPS_GetVoltage(&voltage)==0) {
+        if (prevVoltage==0.0f) { /* first check */
+          prevVoltage = voltage;
         }
+        if (voltage-prevVoltage>0.02f) {
+          chargeCounter++;
+        } else if (prevVoltage-voltage>0.02f) {
+          chargeCounter--;
+        }
+        if (!isCharging && chargeCounter>=5) {
+          isCharging = true;
+          prevVoltage = voltage;
+          chargeCounter = 5;
+        } else if (isCharging && chargeCounter<=-5) {
+          isCharging = false;
+          prevVoltage = voltage;
+          chargeCounter = -5;
+        }
+  #if PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
+        OLED_ShowUPS(voltage, charge, isCharging);
+  #endif
+  #if PL_CONFIG_USE_SHUTDOWN
+        if (charge<15.0f && !isCharging) { /* low battery and not is charging => power down */
+      #if PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
+          OLED_PrintShutdownMsg();
+      #endif
+          SHUTDOWN_RequestPowerOff();
+        }
+  #endif
       }
   #endif
   #if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
@@ -298,9 +236,6 @@ void APP_Run(void) {
         }
       }
   #endif
-  #if PL_CONFIG_USE_LVGL
-      LV_Task();
-  #endif
     } /* for */
 #if PL_CONFIG_USE_SHUTDOWN
     if (SHUTDOWN_UserPowerOffRequested()) {
@@ -310,5 +245,28 @@ void APP_Run(void) {
       SHUTDOWN_RequestPowerOff();
     }
 #endif
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
+}
+
+void APP_Run(void) {
+  PL_Init();
+#if PL_CONFIG_USE_SHUTDOWN && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
+  OLED_PrintShutdownHelp();
+#endif
+  InitTimer();
+
+  McuRTOS_Init();
+  if (xTaskCreate(
+      MainTask,  /* pointer to the task */
+      "Main", /* task name for kernel awareness debugging */
+      400/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+  vTaskStartScheduler();
+  for(;;) { /* should not get here */ }
 }

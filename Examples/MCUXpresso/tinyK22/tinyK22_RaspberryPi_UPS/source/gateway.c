@@ -4,7 +4,7 @@
  *  Created on: 18.03.2019
  *      Author: Erich Styger
  */
-#include <platform.h>
+#include "platform.h"
 #if PL_CONFIG_USE_GATEWAY
 #include "gateway.h"
 #include "fsl_uart.h"

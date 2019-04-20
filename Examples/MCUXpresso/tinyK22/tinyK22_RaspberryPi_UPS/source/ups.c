@@ -5,7 +5,7 @@
  *      Author: Erich Styger Local
  */
 
-#include <platform.h>
+#include "platform.h"
 #if PL_CONFIG_USE_UPS
 #include "McuGenericI2C.h"
 #include "ups.h"

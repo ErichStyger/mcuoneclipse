@@ -9,7 +9,7 @@
 #define SOURCES_SHT31_C_
 
 
-#include <platform.h>
+#include "platform.h"
 #if PL_CONFIG_USE_SHT31
 #include "SHT31.h"
 #include "McuGenericI2C.h"

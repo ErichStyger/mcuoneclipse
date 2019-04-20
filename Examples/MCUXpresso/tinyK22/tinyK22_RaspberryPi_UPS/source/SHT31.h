@@ -9,7 +9,7 @@
 #ifndef SOURCES_SHT31_H_
 #define SOURCES_SHT31_H_
 
-#include <platform.h>
+#include "platform.h"
 
 #define SHT31_CONFIG_PARSE_COMMAND_ENABLED  (1 && PL_CONFIG_HAS_SHELL)
 

@@ -8,6 +8,8 @@
 #ifndef NAVSWITCH_H_
 #define NAVSWITCH_H_
 
+void NAV_ScanKeys(void);
+
 void NAV_Init(void);
 void NAV_Deinit(void);
 

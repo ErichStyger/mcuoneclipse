@@ -7,6 +7,9 @@
 
 #include "navSwitch.h"
 
+void NAV_ScanKeys(void) {
+}
+
 void NAV_Init(void) {
   /* nothing needed */
 }

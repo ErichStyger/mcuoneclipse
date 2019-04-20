@@ -3,7 +3,7 @@
  *
  *      Author: Erich Styger
  */
-#include <platform.h>
+#include "platform.h"
 #if PL_CONFIG_USE_OLED
 #include "oled.h"
 #include "McuLib.h"
