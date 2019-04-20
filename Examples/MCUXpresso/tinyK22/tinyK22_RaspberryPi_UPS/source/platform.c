@@ -19,11 +19,14 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "leds.h"
-#include "navSwitch.h"
 #include "shutdown.h"
 #include "oled.h"
 #include "gui.h"
 #include "gateway.h"
+#include "Keys.h"
+#include "KeyDebounce.h"
+#include "Trigger.h"
+#include "Event.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -47,8 +50,11 @@ void PL_Init(void) {
   McuLED_Init();
 
   /* initialize my own modules */
+  KEY_Init();
+  KEYDBNC_Init();
+  TRG_Init();
+  EVNT_Init();
   LEDS_Init();
-  NAV_Init();
 #if PL_CONFIG_USE_SHUTDOWN
   SHUTDOWN_Init();
 #endif

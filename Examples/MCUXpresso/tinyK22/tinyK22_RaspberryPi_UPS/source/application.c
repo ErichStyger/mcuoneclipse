@@ -22,7 +22,6 @@
 #include "gateway.h"
 #include "shutdown.h"
 #include "oled.h"
-#include "navSwitch.h"
 #include "McuRB.h"
 
 /* McuLib */
@@ -188,7 +187,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
-      400/sizeof(StackType_t), /* task stack size */
+      500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

@@ -20,6 +20,18 @@
 #define PL_CONFIG_HAS_KEYS          (1)
 #define PL_CONFIG_HAS_GUI_KEY_NAV   (1 && PL_CONFIG_HAS_KEYS)
 
+#define PL_CONFIG_HAS_DEBOUNCE      (1)
+#define PL_HAS_KEYS                 (1)
+#define PL_CONFIG_NOF_KEYS          (5)
+#define PL_CONFIG_HAS_KBI           (0)
+#define PL_CONFIG_KEY_1_ISR         (0)
+#define PL_CONFIG_KEY_2_ISR         (0)
+#define PL_CONFIG_KEY_3_ISR         (0)
+#define PL_CONFIG_KEY_4_ISR         (0)
+#define PL_CONFIG_KEY_5_ISR         (0)
+#define PL_CONFIG_HAS_TRIGGER       (1)
+#define PL_CONFIG_HAS_EVENTS        (1)
+
 void PL_Init(void);
 void PL_Deinit(void);
 
