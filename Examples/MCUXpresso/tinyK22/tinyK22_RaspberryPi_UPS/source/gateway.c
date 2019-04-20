@@ -15,7 +15,7 @@
 #include "leds.h"
 #include "McuArmTools.h"
 #include "oled.h"
-
+#include "McuRTOS.h"
 
 /* OpenSDA UART */
 #define BOARD_LPUART_BAUDRATE  (115200)
@@ -108,6 +108,17 @@ uint32_t GATEWAY_GetNofTx(void) {
   return nofTx;
 }
 
+static void UartTask(void *pv) {
+  (void)pv; /* not used */
+  for(;;) {
+    if (McuRB_NofElements(LpuartRingBuffer)>0 || McuRB_NofElements(UartRingBuffer)>0) {
+      GATEWAY_Process();
+    } else {
+      vTaskDelay(pdMS_TO_TICKS(20));
+    }
+  }
+}
+
 void GATEWAY_Init(void) {
   McuRB_Config_t rbConfig;
 
@@ -131,6 +142,17 @@ void GATEWAY_Init(void) {
 
   nofRx = 0;
   nofTx = 0;
+
+  if (xTaskCreate(
+      UartTask,  /* pointer to the task */
+      "Uart", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+1,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
 }
 
 void GATEWAY_Deinit(void) {
