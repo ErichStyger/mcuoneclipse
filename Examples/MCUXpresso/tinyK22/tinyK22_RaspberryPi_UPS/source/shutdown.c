@@ -8,7 +8,6 @@
 #include "shutdown.h"
 #include "fsl_gpio.h"
 #include "leds.h"
-#include "SuperDuperLedDriverOfTheWorld.h"
 #include "McuWait.h"
 
 /* $ gpoio readall to show status on Pi */
@@ -69,7 +68,7 @@ bool SHUTDOWN_UserPowerOffRequested(void) {
 }
 
 void SHUTDOWN_RequestPowerOff(void) {
-  SDLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
+  McuLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
   /* driving the pin low requests a poweroff */
   GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 0); /* driving low */
   McuWait_Waitms(50); /* wait for some time */

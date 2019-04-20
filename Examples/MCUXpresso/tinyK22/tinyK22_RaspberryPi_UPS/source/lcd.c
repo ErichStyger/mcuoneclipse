@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 
-#include "Platform.h"
+#include <platform.h>
 #if PL_CONFIG_USE_LVGL
 #include "lcd.h"
 #include "McuGDisplaySSD1306.h"

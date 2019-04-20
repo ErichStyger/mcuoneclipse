@@ -20,4 +20,7 @@
 
 #define PL_CONFIG_HAS_KEYS  (0)
 
+void PL_Init(void);
+void PL_Deinit(void);
+
 #endif /* PLATFORM_H_ */

@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
+**     Date/Time   : 2019-03-26, 15:59, # CodeGen: 480
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -84,6 +84,8 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -176,6 +178,8 @@ void Output1_ClrVal(void)
   GPIO_DRV_ClearPinOutput(Output1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(Output1_CONFIG_PORT_NAME, Output1_CONFIG_PIN_NUMBER, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(Output1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -203,6 +207,8 @@ void Output1_SetVal(void)
   GPIO_DRV_SetPinOutput(Output1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(Output1_CONFIG_PORT_NAME, Output1_CONFIG_PIN_NUMBER, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(Output1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -237,6 +243,8 @@ void Output1_NegVal(void)
   } else {
     PINS_GPIO_WritePin(Output1_CONFIG_PORT_NAME, Output1_CONFIG_PIN_NUMBER, 1);
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(Output1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -267,6 +275,8 @@ bool Output1_GetVal(void)
   return GPIO_DRV_ReadPinInput(Output1_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(Output1_CONFIG_PORT_NAME)&(1<<Output1_CONFIG_PIN_NUMBER))!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(Output1_CONFIG_PIN_NUMBER)!=0;
 #else
   return FALSE;
 #endif
@@ -334,6 +344,8 @@ void Output1_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(Output1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<Output1_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(Output1_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(Output1_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
 #endif
   Output1_isOutput = false;
 }
@@ -362,6 +374,8 @@ void Output1_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(Output1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<Output1_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(Output1_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(Output1_CONFIG_PIN_NUMBER);
 #endif
   Output1_isOutput = true;
 }
@@ -405,6 +419,8 @@ void Output1_PutVal(bool Val)
   GPIO_DRV_WritePinOutput(Output1_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(Output1_CONFIG_PORT_NAME, Output1_CONFIG_PIN_NUMBER, Val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /*! \todo */
 #endif
 }
 
@@ -431,6 +447,8 @@ void Output1_Init(void)
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
 #endif
 #if Output1_CONFIG_INIT_PIN_DIRECTION == Output1_CONFIG_INIT_PIN_DIRECTION_INPUT
   Output1_SetInput();

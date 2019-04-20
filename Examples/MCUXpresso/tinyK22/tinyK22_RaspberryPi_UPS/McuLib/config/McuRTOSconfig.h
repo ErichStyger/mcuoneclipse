@@ -28,6 +28,8 @@
 #define configCPU_FAMILY_ARM_M4F                  8   /* ARM Cortex-M4F (with floating point unit) */
 #define configCPU_FAMILY_ARM_M7                   9   /* ARM Cortex-M7 */
 #define configCPU_FAMILY_ARM_M7F                  10  /* ARM Cortex-M7F (with floating point unit) */
+#define configCPU_FAMILY_RISC_V                   11  /* RISC-V */
+
 /* Macros to identify set of core families */
 #define configCPU_FAMILY_IS_ARM_M0(fam)           ((fam)==configCPU_FAMILY_ARM_M0P)
 #define configCPU_FAMILY_IS_ARM_M4(fam)           (((fam)==configCPU_FAMILY_ARM_M4)  || ((fam)==configCPU_FAMILY_ARM_M4F))
@@ -51,9 +53,12 @@
   #else
     #error "unsupported configuaration!"
   #endif
-#else
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+  #define configCPU_FAMILY                        configCPU_FAMILY_RISC_V
+#else /* default CPU family */
   #define configCPU_FAMILY                        configCPU_FAMILY_ARM_M4F
 #endif
+
 /* MPU support: portUSING_MPU_WRAPPERS is defined (or not) in portmacro.h and turns on MPU support. Currently only supported for ARM Cortex-M4/M3 ports */
 #ifndef configUSE_MPU_SUPPORT
   #define configUSE_MPU_SUPPORT                   (0 && configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY))

@@ -4,7 +4,7 @@
  *  Created on: 02.08.2018
  *      Author: Erich Styger
  */
-#include "Platform.h"
+#include <platform.h>
 #if PL_CONFIG_USE_LVGL
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"

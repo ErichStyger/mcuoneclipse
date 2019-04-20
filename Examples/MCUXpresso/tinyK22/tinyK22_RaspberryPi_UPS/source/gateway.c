@@ -4,17 +4,12 @@
  *  Created on: 18.03.2019
  *      Author: Erich Styger
  */
-#include "Platform.h"
+#include <platform.h>
 #if PL_CONFIG_USE_GATEWAY
 #include "gateway.h"
 #include "fsl_uart.h"
 #include "fsl_lpuart.h"
-#include "McuCriticalSection.h"
 #include "McuRB.h"
-#include "SuperDuperLedDriverOfTheWorld.h"
-#include "leds.h"
-#include "McuArmTools.h"
-#include "oled.h"
 #include "McuRTOS.h"
 
 /* OpenSDA UART */

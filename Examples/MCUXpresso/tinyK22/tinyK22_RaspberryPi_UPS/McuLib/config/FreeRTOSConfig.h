@@ -70,7 +70,7 @@
 #define configTICK_RATE_HZ                        (1000) /* frequency of tick interrupt */
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
-#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC
+#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
   #define configCPU_CLOCK_HZ                      SystemCoreClock /* CPU clock frequency */
@@ -87,7 +87,7 @@
 /* Heap Memory */
 #define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
 #define configFRTOS_MEMORY_SCHEME                 configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
-#define configTOTAL_HEAP_SIZE                     (8192) /* size of heap in bytes */
+#define configTOTAL_HEAP_SIZE                     (2*8192) /* size of heap in bytes */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -164,34 +164,48 @@ point support. */
 /* -------------------------------------------------------------------- */
 #define INCLUDE_pxTaskGetStackStart               (1 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS)
 /* -------------------------------------------------------------------- */
-/* Cortex-M specific definitions. */
-#if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
-  #define configPRIO_BITS                         4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
-#else
-  #define configPRIO_BITS                         2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+#if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  /* Cortex-M specific definitions. */
+  #if configCPU_FAMILY_IS_ARM_M4(configCPU_FAMILY)
+    #define configPRIO_BITS                       4 /* 4 bits/16 priority levels on ARM Cortex M4 (Kinetis K Family) */
+  #else
+    #define configPRIO_BITS                       2 /* 2 bits/4 priority levels on ARM Cortex M0+ (Kinetis L Family) */
+  #endif
+
+  /* The lowest interrupt priority that can be used in a call to a "set priority" function. */
+  #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY 15
+
+  /* The highest interrupt priority that can be used by any interrupt service
+     routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
+     INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
+     PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
+  #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
+
+  /* Interrupt priorities used by the kernel port layer itself.  These are generic
+     to all Cortex-M ports, and do not rely on any particular library functions. */
+  #define configKERNEL_INTERRUPT_PRIORITY         (configLIBRARY_LOWEST_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
+
+  /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
+  See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
+  #define configMAX_SYSCALL_INTERRUPT_PRIORITY    (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+  #define configKERNEL_INTERRUPT_PRIORITY         (7)
 #endif
-
-/* The lowest interrupt priority that can be used in a call to a "set priority" function. */
-#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY   15
-
-/* The highest interrupt priority that can be used by any interrupt service
-   routine that makes calls to interrupt safe FreeRTOS API functions.  DO NOT CALL
-   INTERRUPT SAFE FREERTOS API FUNCTIONS FROM ANY INTERRUPT THAT HAS A HIGHER
-   PRIORITY THAN THIS! (higher priorities are lower numeric values on an ARM Cortex-M). */
-#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
-
-/* Interrupt priorities used by the kernel port layer itself.  These are generic
-   to all Cortex-M ports, and do not rely on any particular library functions. */
-#define configKERNEL_INTERRUPT_PRIORITY           (configLIBRARY_LOWEST_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
-/* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
-See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY      (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY<<(8-configPRIO_BITS))
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
 #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+#if 0 /* version for RISC-V with a debug break: */
+#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#endif
+
+/* RISC-V only: If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT base address.
+  Otherwise set configCLINT_BASE_ADDRESS to 0.
+ */
+#define configCLINT_BASE_ADDRESS   0x0
+
 
 /* custom include file: */
-/* #include "CustomFreeRTOSSettings.h */
+// #include "CustomFreeRTOSSettings.h
 
 
 #endif /* FREERTOS_CONFIG_H */

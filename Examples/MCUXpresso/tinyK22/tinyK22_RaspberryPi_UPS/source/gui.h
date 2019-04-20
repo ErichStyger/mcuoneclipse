@@ -1,4 +1,5 @@
 /*
+
  * gui.h
  *
  *  Created on: 03.08.2018
@@ -8,7 +9,7 @@
 #ifndef GUI_H_
 #define GUI_H_
 
-#include "Platform.h"
+#include <platform.h>
 #include "McuGDisplaySSD1306.h"
 
 #if PL_CONFIG_HAS_GUI_KEY_NAV

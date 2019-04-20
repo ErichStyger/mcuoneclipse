@@ -1,5 +1,6 @@
 readme.txt
 ----------
+Project for a tinyK22 board (NXP K22FN512) with a UPS board on the Raspberry Pi.
 
 Blinky tinyK22:
   Pins tool for tinyK22 LED: PTC2

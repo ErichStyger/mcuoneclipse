@@ -290,9 +290,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.2047746019.116253977" name="/" resourcePath="McuLib/FreeRTOS/Source/portable/GCC/RISC-V">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.969003718" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1447458682" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.742827866"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1053643744" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.678694384"/>
+							<tool id="com.crt.advproject.gas.exe.debug.371324109" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.260378838"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.133253187" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.817426488"/>
+							<tool id="com.crt.advproject.link.exe.debug.1847529783" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1280908334"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1125596010" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1726536036"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
@@ -731,7 +741,7 @@
 	</storageModule>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/MK22FN512xxx12_Project"/>
+			<resource resourceType="PROJECT" workspacePath="/tinyK22_RaspberryPi_UPS"/>
 		</configuration>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/MK22FN512xxx12_Project"/>

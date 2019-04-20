@@ -6,48 +6,54 @@
  */
 
 #include "leds.h"
-#include "SuperDuperLedDriverOfTheWorld.h"
+#include "McuLED.h"
 
-SDLED_Handle_t tinyLED, hatRedLED, hatBlueLED, hatGreenLED, hatYellowLED;
+McuLED_Handle_t tinyLED, hatRedLED, hatBlueLED, hatGreenLED, hatYellowLED;
 
 void LEDS_Deinit(void) {
-  /* nothing to do */
+  tinyLED = McuLED_DeinitLed(tinyLED);
+  hatBlueLED = McuLED_DeinitLed(hatBlueLED);
+  hatRedLED = McuLED_DeinitLed(hatRedLED);
+  hatGreenLED = McuLED_DeinitLed(hatGreenLED);
+  hatYellowLED = McuLED_DeinitLed(hatYellowLED);
+
+  McuLED_Deinit(); /* de-initialize LED module */
 }
 
 void LEDS_Init(void) {
-  SDLED_Config_t config;
+  McuLED_Config_t config;
 
-  SDLED_Init(); /* initialize LED module */
+  McuLED_Init(); /* initialize LED module */
 
   /* initialize LEDs */
-  SDLED_GetDefaultConfig(&config);
+  McuLED_GetDefaultConfig(&config);
 
   config.isLowActive = true;
-  config.pinNr = PINS_LEDBLUE_PIN;
+  config.pin = PINS_LEDBLUE_PIN;
   config.port = PINS_LEDBLUE_PORT;
   config.gpio = PINS_LEDBLUE_GPIO;
-  tinyLED = SDLED_InitLed(&config);
+  tinyLED = McuLED_InitLed(&config);
 
   /* hat LEDs are high active */
   config.isLowActive = false;
 
-  config.pinNr = PINS_HATLEDBLUE_PIN;
+  config.pin = PINS_HATLEDBLUE_PIN;
   config.port = PINS_HATLEDBLUE_PORT;
   config.gpio = PINS_HATLEDBLUE_GPIO;
-  hatBlueLED = SDLED_InitLed(&config);
+  hatBlueLED = McuLED_InitLed(&config);
 
-  config.pinNr = PINS_HATLEDGREEN_PIN;
+  config.pin = PINS_HATLEDGREEN_PIN;
   config.port = PINS_HATLEDGREEN_PORT;
   config.gpio = PINS_HATLEDGREEN_GPIO;
-  hatGreenLED = SDLED_InitLed(&config);
+  hatGreenLED = McuLED_InitLed(&config);
 
-  config.pinNr = PINS_HATLEDRED_PIN;
+  config.pin = PINS_HATLEDRED_PIN;
   config.port = PINS_HATLEDRED_PORT;
   config.gpio = PINS_HATLEDRED_GPIO;
-  hatRedLED = SDLED_InitLed(&config);
+  hatRedLED = McuLED_InitLed(&config);
 
-  config.pinNr = PINS_HATLEDYELLOW_PIN;
+  config.pin = PINS_HATLEDYELLOW_PIN;
   config.port = PINS_HATLEDYELLOW_PORT;
   config.gpio = PINS_HATLEDYELLOW_GPIO;
-  hatYellowLED = SDLED_InitLed(&config);
+  hatYellowLED = McuLED_InitLed(&config);
 }

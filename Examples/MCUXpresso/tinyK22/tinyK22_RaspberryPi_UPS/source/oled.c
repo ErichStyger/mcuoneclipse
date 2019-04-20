@@ -3,7 +3,7 @@
  *
  *      Author: Erich Styger
  */
-#include "Platform.h"
+#include <platform.h>
 #if PL_CONFIG_USE_OLED
 #include "oled.h"
 #include "McuLib.h"
@@ -194,11 +194,9 @@ void doOLED(void) {
 }
 
 void OLED_Init(void) {
-  McuSSD1306_Init();
   McuSSD1306_Clear();
 }
 
 void OLED_DeInit(void) {
-  McuSSD1306_Deinit();
 }
 #endif

@@ -4,9 +4,10 @@
  */
 
 /* own modules and standard library */
-#include "Platform.h"
+#include "McuArmTools.h"
 #include "application.h" /* own interface */
 #include <ctype.h> /* for isupper() */
+#include "platform.h"
 
 /* SDK */
 #include "fsl_lpuart.h"
@@ -19,7 +20,6 @@
 #include "leds.h"
 #include "initPins.h"
 #include "gateway.h"
-#include "SuperDuperLedDriverOfTheWorld.h"
 #include "shutdown.h"
 #include "oled.h"
 #include "navSwitch.h"
@@ -37,7 +37,6 @@
 
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
-
 
 #if PL_CONFIG_USE_UPS
   #include "ups.h"
@@ -68,7 +67,7 @@ void FTM0_IRQHandler(void) { /* called every 1 ms */
   FTM_ClearStatusFlags(BOARD_FTM_BASEADDR, kFTM_TimeOverflowFlag);
   ms++;
   if (ms>=1000) {
-    SDLED_Neg(hatBlueLED);
+    McuLED_Neg(hatBlueLED);
     ms = 0;
   }
   __DSB();
@@ -175,7 +174,6 @@ static void MainTask(void *pv) {
   }
 }
 
-
 void APP_Run(void) {
 #if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
   uint32_t oldNofRx=-1, oldNofTx=-1, nofRx, nofTx;
@@ -186,6 +184,8 @@ void APP_Run(void) {
   int chargeCounter = 0; /* counting up for charging, counting down for discharging */
 #endif
   uint32_t currCycleCnt, lastCycleCnt, elapsedCycleCnt;
+
+  PL_Init();
 
   InitPins(); /* do all the pin muxing */
 
@@ -225,7 +225,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */
-      600/sizeof(StackType_t), /* task stack size */
+      400/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
@@ -245,7 +245,7 @@ void APP_Run(void) {
     elapsedCycleCnt = (int32_t)currCycleCnt - (int32_t)lastCycleCnt; /* calculate delta (signed) */
     if (elapsedCycleCnt > McuWait_NofCyclesMs(1000, SystemCoreClock)) { /* every second */
       lastCycleCnt = currCycleCnt;
-      SDLED_Neg(tinyLED);
+      McuLED_Neg(tinyLED);
   #if PL_CONFIG_USE_UPS
       {
         if (UPS_GetCharge(&charge)==0 && UPS_GetVoltage(&voltage)==0) {

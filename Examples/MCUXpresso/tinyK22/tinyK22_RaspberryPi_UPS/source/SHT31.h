@@ -1,4 +1,5 @@
 /*
+
  * SHT31.h
  *
  *  Created on: 08.10.2018
@@ -8,7 +9,7 @@
 #ifndef SOURCES_SHT31_H_
 #define SOURCES_SHT31_H_
 
-#include "Platform.h"
+#include <platform.h>
 
 #define SHT31_CONFIG_PARSE_COMMAND_ENABLED  (1 && PL_CONFIG_HAS_SHELL)
 
