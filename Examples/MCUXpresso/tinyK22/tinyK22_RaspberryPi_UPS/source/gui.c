@@ -20,6 +20,9 @@
 #include "McuFontDisplay.h"
 #include "Trigger.h"
 #include "Event.h"
+#if PL_CONFIG_USE_SHUTDOWN
+  #include "shutdown.h"
+#endif
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -133,35 +136,65 @@ static lv_res_t Btn_Air_click_action(struct _lv_obj_t *obj) {
     return LV_RES_OK;
 }
 
-static lv_obj_t *mbox1;
+static lv_obj_t *mboxShutdown, *mboxShutdownWait;
 
-static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char * txt) {
-    //printf("Mbox button: %s\n", txt);
+static lv_res_t mbox_shutdownWait_apply_action(lv_obj_t *mbox, const char *txt) {
   if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "yes")==0) {
-      return LV_RES_OK; /* keep message box */
+    if (McuUtility_strcmp(txt, "OK")==0) {
+      GUI_GroupPull();
+      lv_obj_del(mboxShutdownWait);
+      mboxShutdownWait = NULL;
+      return LV_RES_INV; /* close/delete message box */
+    }
+  }
+  return LV_RES_OK; /*Return OK if the message box is not deleted*/
+}
+
+static void Btn_shutdown_CreateWaitBox(void) {
+  mboxShutdownWait = lv_mbox_create(lv_scr_act(), NULL);
+  lv_mbox_set_text(mboxShutdownWait, "Shutdown in progress. Wait for RED LED.");  /* Set the text */
+  /*Add OK button*/
+  static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
+  lv_mbox_add_btns(mboxShutdownWait, btns, mbox_shutdownWait_apply_action);
+  lv_obj_set_width(mboxShutdownWait, 100);
+  lv_obj_align(mboxShutdownWait, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
+
+  GUI_GroupPush();
+  GUI_AddObjToGroup(mboxShutdownWait);
+  lv_group_focus_obj(mboxShutdownWait);
+}
+
+static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char *txt) {
+  if (txt!=NULL) {
+    if (McuUtility_strcmp(txt, "Yes")==0) {
+      SHUTDOWN_RequestPowerOff(); /* request shutdown to Linux */
+      GUI_GroupPull();
+      lv_obj_del(mboxShutdown);
+      mboxShutdown = NULL;
+      Btn_shutdown_CreateWaitBox();
+      return LV_RES_INV; /* close/delete message box */
     } else if (McuUtility_strcmp(txt, "Cancel")==0) {
       GUI_GroupPull();
-      lv_obj_del(mbox1);
-      mbox1 = NULL;
-      return LV_RES_INV; /* delete message box */
+      lv_obj_del(mboxShutdown);
+      mboxShutdown = NULL;
+      return LV_RES_INV; /* close/delete message box */
     }
   }
   return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
 static lv_res_t Btn_shutdown_click_action(struct _lv_obj_t *obj) {
-  mbox1 = lv_mbox_create(lv_scr_act(), NULL);
-  lv_mbox_set_text(mbox1, "Shutdown Raspy?");  /*Set the text*/
+  mboxShutdown = lv_mbox_create(lv_scr_act(), NULL);
+  lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
   /*Add two buttons*/
   static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mbox1, btns, mbox_apply_action);
-  lv_obj_set_width(mbox1, 80);
-  lv_obj_align(mbox1, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10); /*Align to the corner*/
+  lv_mbox_add_btns(mboxShutdown, btns, mbox_apply_action);
+  lv_obj_set_width(mboxShutdown, 80);
+  lv_obj_align(mboxShutdown, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
   GUI_GroupPush();
-  GUI_AddObjToGroup(mbox1);
-  lv_group_focus_obj(mbox1);
+  GUI_AddObjToGroup(mboxShutdown);
+  lv_group_focus_obj(mboxShutdown);
 
   return LV_RES_OK;
 }
@@ -188,8 +221,8 @@ void GUI_MainMenuCreate(void) {
   lv_obj_t *label;
 
   btn1 = lv_btn_create(gui_win, NULL);
-  lv_obj_set_size(btn1, 40, 20);
 #if !AUTO_POS
+  lv_obj_set_size(btn1, 45, 20);
   lv_obj_set_pos(btn1, 5, 0);
 #endif
   //lv_cont_set_fit(btn1, true, true); /*Enable resizing horizontally and vertically*/
@@ -198,11 +231,12 @@ void GUI_MainMenuCreate(void) {
   lv_label_set_text(label, "Shutdown");
   //lv_obj_set_free_num(btn1, 1);   /*Set a unique number for the button*/
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_shutdown_click_action);
+  lv_btn_set_fit(btn1, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn1);
 
   btn2 = lv_btn_create(gui_win, NULL);
-  //lv_obj_set_size(btn2, 40, 20);
 #if !AUTO_POS
+  lv_obj_set_size(btn2, 40, 20);
   lv_obj_set_pos(btn2, 60, 0);
 #endif
   //lv_cont_set_fit(btn2, true, true); /*Enable resizing horizontally and vertically*/
@@ -211,26 +245,29 @@ void GUI_MainMenuCreate(void) {
   lv_label_set_text(label, "Btn2");
   //lv_obj_set_free_num(btn2, 1);   /*Set a unique number for the button*/
   lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_btn_set_fit(btn2, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn2);
 #if 1
   btn3 = lv_btn_create(gui_win, NULL);
-  //lv_obj_set_size(btn3, 40, 20);
 #if !AUTO_POS
+  lv_obj_set_size(btn3, 40, 20);
   lv_obj_set_pos(btn3, 5, 30);
 #endif
   label = lv_label_create(btn3, NULL);
   lv_label_set_text(label, "Btn3");
   lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_btn_set_fit(btn3, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn3);
 
   btn4 = lv_btn_create(gui_win, NULL);
-  //lv_obj_set_size(btn4, 40, 20);
 #if !AUTO_POS
+  lv_obj_set_size(btn4, 40, 20);
   lv_obj_set_pos(btn4, 60, 25);
 #endif
   label = lv_label_create(btn4, NULL);
   lv_label_set_text(label, "Btn4");
   lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_btn_set_fit(btn4, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn4);
 #endif
 #endif
@@ -277,68 +314,68 @@ void GUI_MainMenuCreate(void) {
 static void btnCallback(EVNT_Handle event) {
   switch(event) {
     case EVNT_SW1_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
       break;
     case EVNT_SW1_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
       break;
     case EVNT_SW1_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW1_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED_LONG);
       break;
 
     case EVNT_SW2_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
       break;
     case EVNT_SW2_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
       break;
     case EVNT_SW2_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW2_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED_LONG);
       break;
 
     case EVNT_SW3_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
       break;
     case EVNT_SW3_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
       break;
     case EVNT_SW3_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW3_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED_LONG);
       break;
 
     case EVNT_SW4_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
       break;
     case EVNT_SW4_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
       break;
     case EVNT_SW4_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW4_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED_LONG);
       break;
 
     case EVNT_SW5_PRESSED:
-      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_PRESSED);
+      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
       break;
     case EVNT_SW5_RELEASED:
-      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_RELEASED);
+      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
       break;
     case EVNT_SW5_LPRESSED:
-      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_PRESSED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED_LONG);
       break;
     case EVNT_SW5_LRELEASED:
-      LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_RELEASED_LONG);
+      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED_LONG);
       break;
 
     default:

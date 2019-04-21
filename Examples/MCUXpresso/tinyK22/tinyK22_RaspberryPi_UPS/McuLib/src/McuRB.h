@@ -14,6 +14,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include "McuRBconfig.h"
 
 typedef void *McuRB_Handle_t; /* handle to be used in API */
 

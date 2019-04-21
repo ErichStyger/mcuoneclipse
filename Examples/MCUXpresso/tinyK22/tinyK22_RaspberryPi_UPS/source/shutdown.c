@@ -75,7 +75,7 @@ void SHUTDOWN_RequestPowerOff(void) {
   McuLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
   /* driving the pin low requests a poweroff */
   GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 0); /* driving low */
-  McuWait_Waitms(50); /* wait for some time */
+  McuWait_WaitOSms(50); /* wait for some time */
   GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 1); /* back to high again */
 }
 

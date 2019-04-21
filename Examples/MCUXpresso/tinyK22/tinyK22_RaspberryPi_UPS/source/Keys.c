@@ -222,40 +222,40 @@ void PORTB_IRQHandler(void) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVLEFT_GPIO, 1U<<PINS_HATNAVLEFT_PIN);
     McuLED_Neg(hatBlueLED);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_HW_BTN_LEFT, LV_MASK_RELEASED);
+    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
+    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
 #endif
   }
   if (flags&(1U<<PINS_HATNAVRIGHT_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVRIGHT_GPIO, 1U<<PINS_HATNAVRIGHT_PIN);
     McuLED_Neg(hatRedLED);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_HW_BTN_RIGHT, LV_MASK_RELEASED);
+    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
+    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
 #endif
   }
   if (flags&(1U<<PINS_HATNAVUP_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVUP_GPIO, 1U<<PINS_HATNAVUP_PIN);
     McuLED_Neg(hatGreenLED);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_HW_BTN_UP, LV_MASK_RELEASED);
+    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
+    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
 #endif
   }
   if (flags&(1U<<PINS_HATNAVDOWN_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVDOWN_GPIO, 1U<<PINS_HATNAVDOWN_PIN);
     McuLED_Neg(hatYellowLED);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_HW_BTN_DOWN, LV_MASK_RELEASED);
+    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
+    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
 #endif
   }
   if (flags&(1U<<PINS_HATNAVPUSH_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVPUSH_GPIO, 1U<<PINS_HATNAVPUSH_PIN);
     McuLED_Neg(hatBlueLED);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_HW_BTN_CENTER, LV_MASK_RELEASED);
+    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
+    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
 #endif
   }
   __DSB();

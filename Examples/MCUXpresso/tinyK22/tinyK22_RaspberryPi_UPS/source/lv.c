@@ -160,20 +160,20 @@ void LV_Task(void) {
 void LV_ButtonEvent(uint8_t keys, uint16_t eventMask) {
   uint16_t buttonInfo;
 
-  if (keys&(1<<0)) {
-    buttonInfo = LV_BUTTON_CENTER | eventMask;
+  if (keys&LV_BTN_MASK_CENTER) {
+    buttonInfo = LV_BTN_MASK_CENTER | eventMask;
     McuRB_Put(ringBufferHndl, &buttonInfo);
-  } else if (keys&(1<<1)) {
-    buttonInfo = LV_BUTTON_RIGHT | eventMask;
+  } else if (keys&LV_BTN_MASK_RIGHT) {
+    buttonInfo = LV_BTN_MASK_RIGHT | eventMask;
     McuRB_Put(ringBufferHndl, &buttonInfo);
-  } else if (keys&(1<<2)) {
-    buttonInfo = LV_BUTTON_DOWN | eventMask;
+  } else if (keys&LV_BTN_MASK_DOWN) {
+    buttonInfo = LV_BTN_MASK_DOWN | eventMask;
     McuRB_Put(ringBufferHndl, &buttonInfo);
-  } else if (keys&(1<<3)) {
-    buttonInfo = LV_BUTTON_UP | eventMask;
+  } else if (keys&LV_BTN_MASK_UP) {
+    buttonInfo = LV_BTN_MASK_UP | eventMask;
     McuRB_Put(ringBufferHndl, &buttonInfo);
-  } else if (keys&(1<<4)) {
-    buttonInfo = LV_BUTTON_LEFT | eventMask;
+  } else if (keys&LV_BTN_MASK_LEFT) {
+    buttonInfo = LV_BTN_MASK_LEFT | eventMask;
     McuRB_Put(ringBufferHndl, &buttonInfo);
    }
 }
@@ -182,20 +182,20 @@ static uint8_t MapKeyOrientation(uint8_t key) {
   switch(McuGDisplaySSD1306_GetDisplayOrientation()) {
     case McuSSD1306_CONFIG_ORIENTATION_PORTRAIT:
       switch(key) {
-        case LV_BUTTON_LEFT:
-          key = LV_BUTTON_UP;
+        case LV_BTN_MASK_LEFT:
+          key = LV_BTN_MASK_UP;
           break;
-        case LV_BUTTON_RIGHT:
-          key = LV_BUTTON_DOWN;
+        case LV_BTN_MASK_RIGHT:
+          key = LV_BTN_MASK_DOWN;
           break;
-        case LV_BUTTON_UP:
-          key = LV_BUTTON_RIGHT;
+        case LV_BTN_MASK_UP:
+          key = LV_BTN_MASK_RIGHT;
           break;
-        case LV_BUTTON_DOWN:
-          key = LV_BUTTON_LEFT;
+        case LV_BTN_MASK_DOWN:
+          key = LV_BTN_MASK_LEFT;
           break;
-        case LV_BUTTON_CENTER:
-          key = LV_BUTTON_CENTER;
+        case LV_BTN_MASK_CENTER:
+          key = LV_BTN_MASK_CENTER;
           break;
         default:
           key = 0; /* error case? */
@@ -204,42 +204,20 @@ static uint8_t MapKeyOrientation(uint8_t key) {
       break;
     case McuSSD1306_CONFIG_ORIENTATION_PORTRAIT180:
       switch(key) {
-        case LV_BUTTON_LEFT:
-          key = LV_BUTTON_DOWN;
+        case LV_BTN_MASK_LEFT:
+          key = LV_BTN_MASK_DOWN;
           break;
-        case LV_BUTTON_RIGHT:
-          key = LV_BUTTON_UP;
+        case LV_BTN_MASK_RIGHT:
+          key = LV_BTN_MASK_UP;
           break;
-        case LV_BUTTON_UP:
-          key = LV_BUTTON_LEFT;
+        case LV_BTN_MASK_UP:
+          key = LV_BTN_MASK_LEFT;
           break;
-        case LV_BUTTON_DOWN:
-          key = LV_BUTTON_RIGHT;
+        case LV_BTN_MASK_DOWN:
+          key = LV_BTN_MASK_RIGHT;
           break;
-        case LV_BUTTON_CENTER:
-          key = LV_BUTTON_CENTER;
-          break;
-        default:
-          key = 0; /* error case? */
-          break;
-      } /* switch */
-      break;
-    case McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE:
-      switch(key) {
-        case LV_BUTTON_LEFT:
-          key = LV_BUTTON_RIGHT;
-          break;
-        case LV_BUTTON_RIGHT:
-          key = LV_BUTTON_LEFT;
-          break;
-        case LV_BUTTON_UP:
-          key = LV_BUTTON_DOWN;
-          break;
-        case LV_BUTTON_DOWN:
-          key = LV_BUTTON_UP;
-          break;
-        case LV_BUTTON_CENTER:
-          key = LV_BUTTON_CENTER;
+        case LV_BTN_MASK_CENTER:
+          key = LV_BTN_MASK_CENTER;
           break;
         default:
           key = 0; /* error case? */
@@ -248,20 +226,42 @@ static uint8_t MapKeyOrientation(uint8_t key) {
       break;
     case McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180:
       switch(key) {
-        case LV_BUTTON_LEFT:
-          key = LV_BUTTON_RIGHT;
+        case LV_BTN_MASK_LEFT:
+          key = LV_BTN_MASK_RIGHT;
           break;
-        case LV_BUTTON_RIGHT:
-          key = LV_BUTTON_LEFT;
+        case LV_BTN_MASK_RIGHT:
+          key = LV_BTN_MASK_LEFT;
           break;
-        case LV_BUTTON_UP:
-          key = LV_BUTTON_UP;
+        case LV_BTN_MASK_UP:
+          key = LV_BTN_MASK_DOWN;
           break;
-        case LV_BUTTON_DOWN:
-          key = LV_BUTTON_DOWN;
+        case LV_BTN_MASK_DOWN:
+          key = LV_BTN_MASK_UP;
           break;
-        case LV_BUTTON_CENTER:
-          key = LV_BUTTON_CENTER;
+        case LV_BTN_MASK_CENTER:
+          key = LV_BTN_MASK_CENTER;
+          break;
+        default:
+          key = 0; /* error case? */
+          break;
+      } /* switch */
+      break;
+    case McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE:
+      switch(key) {
+        case LV_BTN_MASK_LEFT:
+          key = LV_BTN_MASK_LEFT;
+          break;
+        case LV_BTN_MASK_RIGHT:
+          key = LV_BTN_MASK_RIGHT;
+          break;
+        case LV_BTN_MASK_UP:
+          key = LV_BTN_MASK_UP;
+          break;
+        case LV_BTN_MASK_DOWN:
+          key = LV_BTN_MASK_DOWN;
+          break;
+        case LV_BTN_MASK_CENTER:
+          key = LV_BTN_MASK_CENTER;
           break;
         default:
           key = 0; /* error case? */
@@ -320,7 +320,7 @@ static bool encoder_read(lv_indev_data_t *data){
   data->state = LV_INDEV_STATE_REL;
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
   switch(keyData&0xff) {
-  case LV_BUTTON_LEFT:
+  case LV_BTN_MASK_LEFT:
     if (keyData&(LV_MASK_PRESSED)) {
       data->enc_diff = -1;
       McuShell_SendStr((uint8_t*)"left pressed\r\n", McuShell_GetStdio()->stdOut);
@@ -329,7 +329,7 @@ static bool encoder_read(lv_indev_data_t *data){
       McuShell_SendStr((uint8_t*)"left released\r\n", McuShell_GetStdio()->stdOut);
     }
     break;
-  case LV_BUTTON_RIGHT:
+  case LV_BTN_MASK_RIGHT:
     if (keyData&(LV_MASK_PRESSED)) {
       data->enc_diff = 1;
       McuShell_SendStr((uint8_t*)"right pressed\r\n", McuShell_GetStdio()->stdOut);
@@ -338,7 +338,7 @@ static bool encoder_read(lv_indev_data_t *data){
       McuShell_SendStr((uint8_t*)"right released\r\n", McuShell_GetStdio()->stdOut);
     }
     break;
-  case LV_BUTTON_UP:
+  case LV_BTN_MASK_UP:
     if (keyData&(LV_MASK_PRESSED)) {
       data->enc_diff = -1;
       McuShell_SendStr((uint8_t*)"up pressed\r\n", McuShell_GetStdio()->stdOut);
@@ -347,7 +347,7 @@ static bool encoder_read(lv_indev_data_t *data){
       McuShell_SendStr((uint8_t*)"up released\r\n", McuShell_GetStdio()->stdOut);
     }
     break;
-  case LV_BUTTON_DOWN:
+  case LV_BTN_MASK_DOWN:
     if (keyData&(LV_MASK_PRESSED)) {
       data->enc_diff = 1;
       McuShell_SendStr((uint8_t*)"down pressed\r\n", McuShell_GetStdio()->stdOut);
@@ -356,7 +356,7 @@ static bool encoder_read(lv_indev_data_t *data){
       McuShell_SendStr((uint8_t*)"down released\r\n", McuShell_GetStdio()->stdOut);
     }
     break;
-  case LV_BUTTON_CENTER:
+  case LV_BTN_MASK_CENTER:
     if (keyData&(LV_MASK_PRESSED)) {
       data->state = LV_INDEV_STATE_REL;
       data->enc_diff = 0;
@@ -372,7 +372,7 @@ static bool encoder_read(lv_indev_data_t *data){
     }
     break;
 #if 0
-  case LV_BUTTON_NEXT:
+  case LV_BTN_MASK_NEXT:
     if (keyData&(LV_MASK_PRESSED)) {
       data->state = LV_INDEV_STATE_REL;
       data->enc_diff = 1;
@@ -384,7 +384,7 @@ static bool encoder_read(lv_indev_data_t *data){
       data->enc_diff = 0;
     }
     break;
-  case LV_BUTTON_PREV:
+  case LV_BTN_MASK_PREV:
     if (keyData&(LV_MASK_PRESSED_LONG)) {
       data->state = LV_INDEV_STATE_PR;
       data->enc_diff = 0;
@@ -438,7 +438,7 @@ void LV_Init(void) {
 
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(30*1000), /* period/time */
+    pdMS_TO_TICKS(60*1000), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */

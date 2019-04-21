@@ -10,26 +10,20 @@
 
 #include "LittlevGL/lvgl/lvgl.h"
 
-/* button numbers */
-#define LV_HW_BTN_CENTER    (1<<0)
-#define LV_HW_BTN_RIGHT     (1<<1)
-#define LV_HW_BTN_DOWN      (1<<2)
-#define LV_HW_BTN_UP        (1<<3)
-#define LV_HW_BTN_LEFT      (1<<4)
+/* button masks */
+#define LV_BTN_MASK_CENTER    (1<<0)
+#define LV_BTN_MASK_RIGHT     (1<<1)
+#define LV_BTN_MASK_DOWN      (1<<2)
+#define LV_BTN_MASK_UP        (1<<3)
+#define LV_BTN_MASK_LEFT      (1<<4)
+#define LV_BTN_MASK_PREV      (1<<5)
+#define LV_BTN_MASK_NEXT      (1<<6)
 
-/* push button bits */
+/* push button event mask bits. Must be outside of button masks above! */
 #define LV_MASK_PRESSED       (1<<15)
 #define LV_MASK_RELEASED      (1<<14)
 #define LV_MASK_PRESSED_LONG  (1<<13)
 #define LV_MASK_RELEASED_LONG (1<<12)
-
-#define LV_BUTTON_UP      (1)
-#define LV_BUTTON_DOWN    (2)
-#define LV_BUTTON_LEFT    (3)
-#define LV_BUTTON_RIGHT   (4)
-#define LV_BUTTON_CENTER  (5)
-//#define LV_BUTTON_NEXT    (6)
-//#define LV_BUTTON_PREV    (7)
 
 lv_indev_t *LV_GetInputDevice(void);
 
