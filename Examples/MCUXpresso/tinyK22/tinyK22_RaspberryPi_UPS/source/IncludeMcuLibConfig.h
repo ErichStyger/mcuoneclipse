@@ -21,9 +21,9 @@
 
 /* ------------------- I2C ---------------------------*/
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
-#define McuGenericI2C_CONFIG_USE_MUTEX          (0)
+#define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
-#define McuGenericSWI2C_CONFIG_DO_YIELD (0) /* because of Yield in GenericSWI2C */
+#define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 /* I2C Pin Muxing */
 #define SDA1_CONFIG_DO_PIN_MUXING (1)

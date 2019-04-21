@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#if PL_CONFIG_HAS_SHELL
+#if PL_CONFIG_USE_SHELL
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "McuRTT.h"
@@ -51,7 +51,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      500/sizeof(StackType_t), /* task stack size */
+      800/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
@@ -63,4 +63,4 @@ void SHELL_Init(void) {
 
 void SHELL_Deinit(void) {}
 
-#endif /* PL_CONFIG_HAS_SHELL */
+#endif /* PL_CONFIG_USE_SHELL */

@@ -9,4 +9,7 @@ UART Polling:
   Pin46, LPUART0, RX
   Pin49, LPUART0, TX
   
+ Open Points:
+ - V/charge on display
+
  

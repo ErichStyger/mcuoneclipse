@@ -14,6 +14,7 @@
 #include <string.h> /* for memset() */
 #include "McuShell.h"
 #include "McuRTOS.h"
+#include "lcd.h"
 
 static TimerHandle_t timerHndlLcdTimeout;
 static McuRB_Handle_t ringBufferHndl;
@@ -50,56 +51,52 @@ lv_indev_t * LV_GetInputDevice(void) {
  * 'lv_flush_ready()' has to be called when finished
  * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
 static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
-    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-    int32_t x;
-    int32_t y;
-    for(y = y1; y <= y2; y++) {
-        for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display. */
-          McuGDisplaySSD1306_PutPixel(x, y, color_p->full);
-          color_p++;
-        }
+  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
+  int32_t x, y;
+
+  for(y = y1; y <= y2; y++) {
+    for(x = x1; x <= x2; x++) {
+      /* Put a pixel to the display. */
+      LCD_SetPixel(x, y, color_p->full);
+      color_p++;
     }
-    //McuGDisplaySSD1306_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-    McuGDisplaySSD1306_UpdateFull();
-    /* IMPORTANT!!!
-     * Inform the graphics library that you are ready with the flushing*/
-    lv_flush_ready();
+  }
+  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
+  /* IMPORTANT!!!
+   * Inform the graphics library that you are ready with the flushing*/
+  lv_flush_ready();
 }
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
-    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-    int32_t x;
-    int32_t y;
+static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p) {
+  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
+  int32_t x, y;
 
-    for(y = y1; y <= y2; y++) {
-        for(x = x1; x <= x2; x++) {
-            /* Put a pixel to the display.*/
-            McuGDisplaySSD1306_PutPixel(x, y, color_p->full);
-            color_p++;
-        }
-    }
-    //McuGDisplaySSD1306_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-    McuGDisplaySSD1306_UpdateFull();
+  for(y = y1; y <= y2; y++) {
+      for(x = x1; x <= x2; x++) {
+        /* Put a pixel to the display.*/
+        LCD_SetPixel(x, y, color_p->full);
+        color_p++;
+      }
+  }
+  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 /* Write a pixel array (called 'map') to the a specific area on the display
  * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
 static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_color_t color) {
-    /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-    int32_t x;
-    int32_t y;
+  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
+  int32_t x;
+  int32_t y;
 
-    for(y = y1; y <= y2; y++) {
-        for(x = x1; x <= x2; x++) {
-          /* Put a pixel to the display.*/
-          McuGDisplaySSD1306_PutPixel(x, y, color.full);
-        }
+  for(y = y1; y <= y2; y++) {
+    for(x = x1; x <= x2; x++) {
+      /* Put a pixel to the display.*/
+      LCD_SetPixel(x, y, color.full);
     }
-    //McuGDisplaySSD1306_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-    McuGDisplaySSD1306_UpdateFull();
+  }
+  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
 }
 
 #if USE_LV_GPU
@@ -316,7 +313,7 @@ static bool encoder_read(lv_indev_data_t *data){
   if (McuRB_Get(ringBufferHndl, &keyData)!=ERR_OK) {
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
-  KeyPressForLCD();
+  KeyPressForLCD(); /* inform LCD timer that there is a user action */
   data->state = LV_INDEV_STATE_REL; /* default state */
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
   /* keys are changing only enc_diff, except ENTER/CENTER/PUSH which sets the LV_INDEV_STATE_PR state */
@@ -467,7 +464,7 @@ void LV_Init(void) {
 
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(60*1000), /* period/time */
+    pdMS_TO_TICKS(120*1000), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */

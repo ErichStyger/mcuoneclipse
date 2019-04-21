@@ -106,6 +106,7 @@ static void AppTask(void *pv) {
 
   lastCycleCnt = McuArmTools_GetCycleCounter();
   for(;;) { /* main loop */
+#if 0
     currCycleCnt = McuArmTools_GetCycleCounter();
     elapsedCycleCnt = (int32_t)currCycleCnt - (int32_t)lastCycleCnt; /* calculate delta (signed) */
     if (elapsedCycleCnt > McuWait_NofCyclesMs(1000, SystemCoreClock)) { /* every second */
@@ -169,6 +170,7 @@ static void AppTask(void *pv) {
   #endif
       SHUTDOWN_RequestPowerOff();
     }
+#endif
 #endif
     vTaskDelay(pdMS_TO_TICKS(10));
   }

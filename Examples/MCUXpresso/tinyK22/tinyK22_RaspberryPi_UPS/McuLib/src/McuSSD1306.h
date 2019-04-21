@@ -204,10 +204,7 @@ void McuSSD1306_UpdateFull(void);
 ** ===================================================================
 */
 
-/* implemented as macro
 void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h);
-*/
-#define McuSSD1306_UpdateRegion(x,y,w,h) /* nothing to do, as this display type does not require a refresh */
 /*
 ** ===================================================================
 **     Method      :  UpdateRegion (component SSD1306)

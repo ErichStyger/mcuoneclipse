@@ -30,6 +30,8 @@
 #include "Shell.h"
 #include "McuRTT.h"
 #include "McuSystemView.h"
+#include "McuXFormat.h"
+#include "Sensor.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -42,6 +44,7 @@ void PL_Init(void) {
   McuArmTools_Init();
   McuCriticalSection_Init();
   McuRB_Init();
+  McuXFormat_Init();
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   McuGenericSWI2C_Init();
@@ -53,7 +56,7 @@ void PL_Init(void) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
-#if PL_CONFIG_HAS_SHELL
+#if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
   McuGPIO_Init();
@@ -77,6 +80,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_GATEWAY
   GATEWAY_Init();
 #endif
+  SENSOR_Init();
 }
 
 void PL_Deinit(void) {

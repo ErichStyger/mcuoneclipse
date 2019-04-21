@@ -14,7 +14,7 @@
 #define PL_CONFIG_USE_UPS           (1 && PL_CONFIG_USE_I2C) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY       (1) /* if implementing UART gateway to Raspberry Pi */
 #define PL_CONFIG_USE_SHUTDOWN      (1) /* if implementing shutdown for Raspberry Pi */
-#define PL_CONFIG_HAS_SHELL         (1) /* if shell is enabled, uses RTT */
+#define PL_CONFIG_USE_SHELL         (1) /* if shell is enabled, uses RTT */
 #define PL_CONFIG_USE_LVGL          (1 && PL_CONFIG_USE_OLED) /* use LittlevGL */
 
 #define PL_CONFIG_HAS_KEYS          (1)
@@ -31,6 +31,11 @@
 #define PL_CONFIG_KEY_5_ISR         (0)
 #define PL_CONFIG_HAS_TRIGGER       (1)
 #define PL_CONFIG_HAS_EVENTS        (1)
+
+#define PL_CONFIG_HAS_TSL2561       (0)
+#define PL_CONFIG_HAS_MMA8451       (0)
+#define PL_CONFIG_HAS_AMG8833       (0)
+#define PL_CONFIG_HAS_RTC_DS3231    (0)
 
 void PL_Init(void);
 void PL_Deinit(void);

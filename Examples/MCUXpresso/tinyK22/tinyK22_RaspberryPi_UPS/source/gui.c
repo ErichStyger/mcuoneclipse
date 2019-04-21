@@ -23,6 +23,7 @@
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
+#include "gui_tempHum.h"
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -99,7 +100,6 @@ void GUI_GroupPush(void) {
   groups.stack[groups.sp] = gui_group;
   groups.sp++;
 }
-
 #endif /* PL_CONFIG_HAS_GUI_KEY_NAV */
 
 void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
@@ -131,9 +131,10 @@ static lv_res_t Btn_Accel_click_action(struct _lv_obj_t *obj) {
   //  GUI_ACCEL_Create();
     return LV_RES_OK;
 }
-static lv_res_t Btn_Air_click_action(struct _lv_obj_t *obj) {
-  //  GUI_ACCEL_Create();
-    return LV_RES_OK;
+
+static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
+  GUI_TEMPHUM_CreateView();
+  return LV_RES_OK;
 }
 
 #if PL_CONFIG_USE_SHUTDOWN
@@ -246,9 +247,9 @@ void GUI_MainMenuCreate(void) {
 #endif
 //  lv_obj_align(btn2, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   label = lv_label_create(btn2, NULL);
-  lv_label_set_text(label, "Btn2");
+  lv_label_set_text(label, "SHT31");
   //lv_obj_set_free_num(btn2, 1);   /*Set a unique number for the button*/
-  lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_sht31_action);
   lv_btn_set_fit(btn2, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn2);
 #if 1

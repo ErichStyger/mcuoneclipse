@@ -16,12 +16,11 @@
 #define LCD_LV_COLOR_DEPTH          (1)
 #define LCD_LV_DPI                  (25)
 
-void LCD_WritePixel(int x, int y, int color);
+void LCD_SetPixel(int x, int y, int color);
 
-void LCD_SetPixel(int idx, int x, int y, int color);
-
-void LCD_SwitchDisplayBuffer(int idx);
+void LCD_UpdateRegion(int x, int y, int w, int h);
 
 void LCD_Init(void);
+void LCD_Deinit(void);
 
 #endif /* LCD_H_ */
