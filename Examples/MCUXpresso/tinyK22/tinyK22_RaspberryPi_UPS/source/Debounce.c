@@ -36,9 +36,7 @@ void DBNC_Process(DBNC_FSMData *data) {
       case DBNC_KEY_IDLE: /* idle, and now getting a key */
         data->scanValue = data->getKeys();
         data->longKeyCnt = 1; /* zero is a special value */
-#if 0 /* \todo call event if you want to be notified here */
         data->onDebounceEvent(DBNC_EVENT_PRESSED, data->scanValue); /* we have a key press: call event handler  */
-#endif
         data->state = DBNC_KEY_PRESSED; /* advance to next state */
         (void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data);
         return;
@@ -46,7 +44,6 @@ void DBNC_Process(DBNC_FSMData *data) {
       case DBNC_KEY_PRESSED:
         keys = data->getKeys();
         if (keys==data->scanValue) { /* still pressing the same keys */
-          /*! \todo See how it checks long or short press */
           if (data->longKeyCnt>=data->longKeyTicks) {
             /* yes, long key press detected */
             data->longKeyCnt=0; /* zero is a special value to prevent counting */
@@ -56,17 +53,19 @@ void DBNC_Process(DBNC_FSMData *data) {
           }
           (void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data); /* continue waiting */
           return;
-        } else if (keys==0) { /* all keys are released */
-#if 1 /* \todo call event here if you want to be notified when button is released */
-          if (data->longKeyCnt!=0) { /* zero means we already issued the long button press message */
-            data->onDebounceEvent(DBNC_EVENT_PRESSED, data->scanValue); /* we have a key press: call event handler  */
+        } else if (keys==0) { /* 0: all keys are released */
+          if (data->longKeyCnt==0) { /* zero means we already issued the long button press message,  or: just started counting */
+            data->onDebounceEvent(DBNC_EVENT_LONG_RELEASED, data->scanValue); /* inform about long press  */
+            data->onDebounceEvent(DBNC_EVENT_RELEASED, data->scanValue); /* inform about short press too */
+          } else {
+            data->onDebounceEvent(DBNC_EVENT_RELEASED, data->scanValue); /* throw short event */
           }
-#endif
           data->state = DBNC_KEY_RELEASE; /* advance to next state */
           (void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data);
           return;
         } else { /* we got another key set pressed */
-          /*! \todo Here it goes to the next state */
+          data->onDebounceEvent(DBNC_EVENT_PRESSED, keys&(~data->scanValue)); /* generate press event for the new keys pressed */
+          data->onDebounceEvent(DBNC_EVENT_RELEASED, (data->scanValue)&(~keys)); /* generate release event for the new keys released */
           data->state = DBNC_KEY_RELEASE;
         }
         break;
@@ -74,13 +73,13 @@ void DBNC_Process(DBNC_FSMData *data) {
       case DBNC_KEY_RELEASE: /* wait until keys are released */
         keys = data->getKeys();
         if (keys==0) { /* all keys released, go back to idle state. */
-          data->onDebounceEvent(DBNC_EVENT_RELEASED, data->scanValue);
+          // data->onDebounceEvent(DBNC_EVENT_RELEASED, data->scanValue);
           data->state = DBNC_KEY_IDLE; /* go back to idle */
           data->onDebounceEvent(DBNC_EVENT_END, data->scanValue); /* callback at the end of debouncing. */
           return;
         } else { /* continue waiting */
           /* create events for the delta */
-          data->onDebounceEvent(DBNC_EVENT_RELEASED, (uint8_t)(data->scanValue&(~keys)));
+          // data->onDebounceEvent(DBNC_EVENT_RELEASED, (uint8_t)(data->scanValue&(~keys)));
           data->scanValue = keys;
           data->longKeyCnt = 1; /* zero is a special value */
           data->state = DBNC_KEY_PRESSED;

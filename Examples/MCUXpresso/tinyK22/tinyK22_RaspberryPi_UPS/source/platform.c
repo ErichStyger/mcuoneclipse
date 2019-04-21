@@ -29,6 +29,7 @@
 #include "Event.h"
 #include "Shell.h"
 #include "McuRTT.h"
+#include "McuSystemView.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -48,8 +49,11 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_OLED
   McuSSD1306_Init();
 #endif
-#if PL_CONFIG_HAS_SHELL
   McuRTT_Init();
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  McuSystemView_Init();
+#endif
+#if PL_CONFIG_HAS_SHELL
   SHELL_Init();
 #endif
   McuGPIO_Init();

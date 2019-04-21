@@ -93,9 +93,7 @@ static void InitTimer(void) {
 }
 #endif /* ENABLE_TIMER */
 
-
-
-static void MainTask(void *pv) {
+static void AppTask(void *pv) {
 #if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_OLED && !PL_CONFIG_USE_LVGL
   uint32_t oldNofRx=-1, oldNofTx=-1, nofRx, nofTx;
 #endif
@@ -184,9 +182,9 @@ void APP_Run(void) {
   InitTimer();
 
   if (xTaskCreate(
-      MainTask,  /* pointer to the task */
-      "Main", /* task name for kernel awareness debugging */
-      500/sizeof(StackType_t), /* task stack size */
+      AppTask,  /* pointer to the task */
+      "App", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
