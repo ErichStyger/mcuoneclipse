@@ -9,13 +9,7 @@
 #if PL_CONFIG_USE_LVGL
 #include "lcd.h"
 #include "McuGDisplaySSD1306.h"
-#include <string.h> /* for memset() */
-#include "FreeRTOS.h"
-#include "task.h"
 
-/*******************************************************************************
- * Code
- ******************************************************************************/
 void LCD_SwitchDisplayBuffer(int idx) {
 }
 

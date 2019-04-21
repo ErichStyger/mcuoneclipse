@@ -163,6 +163,8 @@
 #endif
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
 /* -------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING "Raspberry Pi UPS and Gateway"
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
 

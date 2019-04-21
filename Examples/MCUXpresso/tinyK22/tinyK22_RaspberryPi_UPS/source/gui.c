@@ -136,6 +136,7 @@ static lv_res_t Btn_Air_click_action(struct _lv_obj_t *obj) {
     return LV_RES_OK;
 }
 
+#if PL_CONFIG_USE_SHUTDOWN
 static lv_obj_t *mboxShutdown, *mboxShutdownWait;
 
 static lv_res_t mbox_shutdownWait_apply_action(lv_obj_t *mbox, const char *txt) {
@@ -198,6 +199,7 @@ static lv_res_t Btn_shutdown_click_action(struct _lv_obj_t *obj) {
 
   return LV_RES_OK;
 }
+#endif /* PL_CONFIG_USE_SHUTDOWN */
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -217,15 +219,17 @@ void GUI_MainMenuCreate(void) {
 #endif
 #if 1
   /*Create a normal button*/
-  lv_obj_t *btn1, *btn2, *btn3, *btn4;
+  lv_obj_t *btn2, *btn3, *btn4;
   lv_obj_t *label;
+
+#if PL_CONFIG_USE_SHUTDOWN
+  lv_obj_t *btn1;
 
   btn1 = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn1, 45, 20);
   lv_obj_set_pos(btn1, 5, 0);
 #endif
-  //lv_cont_set_fit(btn1, true, true); /*Enable resizing horizontally and vertically*/
 //  lv_obj_align(btn1, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   label = lv_label_create(btn1, NULL);
   lv_label_set_text(label, "Shutdown");
@@ -233,13 +237,13 @@ void GUI_MainMenuCreate(void) {
   lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_shutdown_click_action);
   lv_btn_set_fit(btn1, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn1);
+#endif
 
   btn2 = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn2, 40, 20);
   lv_obj_set_pos(btn2, 60, 0);
 #endif
-  //lv_cont_set_fit(btn2, true, true); /*Enable resizing horizontally and vertically*/
 //  lv_obj_align(btn2, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   label = lv_label_create(btn2, NULL);
   lv_label_set_text(label, "Btn2");

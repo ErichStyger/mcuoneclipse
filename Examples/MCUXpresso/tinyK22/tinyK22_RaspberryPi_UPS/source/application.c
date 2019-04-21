@@ -183,7 +183,6 @@ void APP_Run(void) {
 #endif
   InitTimer();
 
-  McuRTOS_Init();
   if (xTaskCreate(
       MainTask,  /* pointer to the task */
       "Main", /* task name for kernel awareness debugging */

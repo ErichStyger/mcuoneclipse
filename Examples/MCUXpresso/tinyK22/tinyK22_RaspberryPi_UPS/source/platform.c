@@ -27,6 +27,8 @@
 #include "KeyDebounce.h"
 #include "Trigger.h"
 #include "Event.h"
+#include "Shell.h"
+#include "McuRTT.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -45,6 +47,10 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_OLED
   McuSSD1306_Init();
+#endif
+#if PL_CONFIG_HAS_SHELL
+  McuRTT_Init();
+  SHELL_Init();
 #endif
   McuGPIO_Init();
   McuLED_Init();

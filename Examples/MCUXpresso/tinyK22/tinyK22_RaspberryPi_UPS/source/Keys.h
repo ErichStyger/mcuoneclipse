@@ -78,6 +78,6 @@ void KEY_Init(void);
 /*! \brief Key driver de-initialization */
 void KEY_Deinit(void);
 
-#endif /* PL_HAS_KEYS */
+#endif /* PL_CONFIG_HAS_KEYS */
 
 #endif /* KEYS_H_ */

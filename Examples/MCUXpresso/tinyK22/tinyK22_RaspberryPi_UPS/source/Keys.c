@@ -8,7 +8,7 @@
  */
 
 #include "platform.h"
-#if PL_HAS_KEYS
+#if PL_CONFIG_HAS_KEYS
 #include "Keys.h"
 #include "McuWait.h"
 #include "McuGPIO.h"
@@ -315,4 +315,4 @@ void KEY_Deinit(void) {
 #endif
 }
 
-#endif /* PL_HAS_KEYS */
+#endif /* PL_CONFIG_HAS_KEYS */

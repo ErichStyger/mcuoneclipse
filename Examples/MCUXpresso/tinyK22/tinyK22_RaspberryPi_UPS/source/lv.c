@@ -317,85 +317,114 @@ static bool encoder_read(lv_indev_data_t *data){
     return false; /* we had data in the buffer, but now not anymore? something went wrong! */
   }
   KeyPressForLCD();
-  data->state = LV_INDEV_STATE_REL;
+  data->state = LV_INDEV_STATE_REL; /* default state */
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
+  /* keys are changing only enc_diff, except ENTER/CENTER/PUSH which sets the LV_INDEV_STATE_PR state */
   switch(keyData&0xff) {
-  case LV_BTN_MASK_LEFT:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->enc_diff = -1;
-      McuShell_SendStr((uint8_t*)"left pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else {
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"left released\r\n", McuShell_GetStdio()->stdOut);
-    }
-    break;
-  case LV_BTN_MASK_RIGHT:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->enc_diff = 1;
-      McuShell_SendStr((uint8_t*)"right pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else {
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"right released\r\n", McuShell_GetStdio()->stdOut);
-    }
-    break;
-  case LV_BTN_MASK_UP:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->enc_diff = -1;
-      McuShell_SendStr((uint8_t*)"up pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else {
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"up released\r\n", McuShell_GetStdio()->stdOut);
-    }
-    break;
-  case LV_BTN_MASK_DOWN:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->enc_diff = 1;
-      McuShell_SendStr((uint8_t*)"down pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else {
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"down released\r\n", McuShell_GetStdio()->stdOut);
-    }
-    break;
-  case LV_BTN_MASK_CENTER:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"center pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else if (keyData&(LV_MASK_PRESSED_LONG)) {
-      data->state = LV_INDEV_STATE_PR;
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"center long pressed\r\n", McuShell_GetStdio()->stdOut);
-    } else {
-      data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = 0;
-      McuShell_SendStr((uint8_t*)"center released\r\n", McuShell_GetStdio()->stdOut);
-    }
-    break;
-#if 0
-  case LV_BTN_MASK_NEXT:
-    if (keyData&(LV_MASK_PRESSED)) {
-      data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = 1;
-    } else if (keyData&(LV_MASK_PRESSED_LONG)) {
-      data->state = LV_INDEV_STATE_PR;
-      data->enc_diff = 0;
-    } else {
-      data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = 0;
-    }
-    break;
-  case LV_BTN_MASK_PREV:
-    if (keyData&(LV_MASK_PRESSED_LONG)) {
-      data->state = LV_INDEV_STATE_PR;
-      data->enc_diff = 0;
-    } else {
-      data->state = LV_INDEV_STATE_REL;
-      data->enc_diff = -1;
-    }
-    break;
-#endif
-  default:
-    return false; /* error case? */
+    case LV_BTN_MASK_LEFT:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->enc_diff = -1;
+        McuShell_SendStr((uint8_t*)"left pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->enc_diff = -1;
+        McuShell_SendStr((uint8_t*)"left long pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED_LONG)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"left long released\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"left released\r\n", McuShell_GetStdio()->stdOut);
+      }
+      break;
+    case LV_BTN_MASK_RIGHT:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->enc_diff = 1;
+        McuShell_SendStr((uint8_t*)"right pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->enc_diff = 1;
+        McuShell_SendStr((uint8_t*)"right long pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED_LONG)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"right long released\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"right released\r\n", McuShell_GetStdio()->stdOut);
+      }
+      break;
+    case LV_BTN_MASK_UP:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->enc_diff = -1;
+        McuShell_SendStr((uint8_t*)"up pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->enc_diff = -1;
+        McuShell_SendStr((uint8_t*)"up long pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED_LONG)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"up long released\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"up released\r\n", McuShell_GetStdio()->stdOut);
+      }
+      break;
+    case LV_BTN_MASK_DOWN:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->enc_diff = 1;
+        McuShell_SendStr((uint8_t*)"down pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->enc_diff = 1;
+        McuShell_SendStr((uint8_t*)"down long pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED_LONG)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"down long released\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED)) {
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"down released\r\n", McuShell_GetStdio()->stdOut);
+      }
+      break;
+    case LV_BTN_MASK_CENTER:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"center pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->state = LV_INDEV_STATE_PR;
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"center long pressed\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED_LONG)) {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"center long released\r\n", McuShell_GetStdio()->stdOut);
+      } else if (keyData&(LV_MASK_RELEASED)) {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = 0;
+        McuShell_SendStr((uint8_t*)"center released\r\n", McuShell_GetStdio()->stdOut);
+      }
+      break;
+  #if 0
+    case LV_BTN_MASK_NEXT:
+      if (keyData&(LV_MASK_PRESSED)) {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = 1;
+      } else if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->state = LV_INDEV_STATE_PR;
+        data->enc_diff = 0;
+      } else {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = 0;
+      }
+      break;
+    case LV_BTN_MASK_PREV:
+      if (keyData&(LV_MASK_PRESSED_LONG)) {
+        data->state = LV_INDEV_STATE_PR;
+        data->enc_diff = 0;
+      } else {
+        data->state = LV_INDEV_STATE_REL;
+        data->enc_diff = -1;
+      }
+      break;
+  #endif
+    default:
+      return false; /* error case? */
   } /* switch */
   return McuRB_NofElements(ringBufferHndl)!=0;   /* return true if we have more data */
 }
