@@ -24,6 +24,7 @@
   #include "shutdown.h"
 #endif
 #include "gui_tempHum.h"
+#include "gui_ups.h"
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -122,14 +123,12 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 }
 
 static lv_res_t btn_click_action(lv_obj_t *btn) {
-   // uint8_t id = lv_obj_get_free_num(btn);
-   // printf("Button %d is released\n", id);
-    return LV_RES_OK; /*Return OK if the button is not deleted*/
+  return LV_RES_OK; /*Return OK if the button is not deleted*/
 }
 
-static lv_res_t Btn_Accel_click_action(struct _lv_obj_t *obj) {
-  //  GUI_ACCEL_Create();
-    return LV_RES_OK;
+static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
+  GUI_UPS_CreateView();
+  return LV_RES_OK;
 }
 
 static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
@@ -185,7 +184,7 @@ static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char *txt) {
   return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
-static lv_res_t Btn_shutdown_click_action(struct _lv_obj_t *obj) {
+static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
   mboxShutdown = lv_mbox_create(lv_scr_act(), NULL);
   lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
   /*Add two buttons*/
@@ -218,9 +217,7 @@ void GUI_MainMenuCreate(void) {
 #if AUTO_POS
   lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
 #endif
-#if 1
-  /*Create a normal button*/
-  lv_obj_t *btn2, *btn3, *btn4;
+  lv_obj_t *btn2, *btn3;
   lv_obj_t *label;
 
 #if PL_CONFIG_USE_SHUTDOWN
@@ -231,51 +228,39 @@ void GUI_MainMenuCreate(void) {
   lv_obj_set_size(btn1, 45, 20);
   lv_obj_set_pos(btn1, 5, 0);
 #endif
-//  lv_obj_align(btn1, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   label = lv_label_create(btn1, NULL);
   lv_label_set_text(label, "Shutdown");
-  //lv_obj_set_free_num(btn1, 1);   /*Set a unique number for the button*/
-  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, Btn_shutdown_click_action);
+  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
   lv_btn_set_fit(btn1, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn1);
-#endif
+#endif /* PL_CONFIG_USE_SHUTDOWN */
 
+#if PL_CONFIG_USE_SHT31
   btn2 = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn2, 40, 20);
   lv_obj_set_pos(btn2, 60, 0);
 #endif
-//  lv_obj_align(btn2, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
   label = lv_label_create(btn2, NULL);
   lv_label_set_text(label, "SHT31");
   //lv_obj_set_free_num(btn2, 1);   /*Set a unique number for the button*/
   lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_sht31_action);
   lv_btn_set_fit(btn2, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn2);
-#if 1
+#endif /* PL_CONFIG_USE_SHT31 */
+
+#if PL_CONFIG_USE_UPS
   btn3 = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn3, 40, 20);
   lv_obj_set_pos(btn3, 5, 30);
 #endif
   label = lv_label_create(btn3, NULL);
-  lv_label_set_text(label, "Btn3");
-  lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, btn_click_action);
+  lv_label_set_text(label, "UPS");
+  lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, btn_click_ups_action);
   lv_btn_set_fit(btn3, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn3);
-
-  btn4 = lv_btn_create(gui_win, NULL);
-#if !AUTO_POS
-  lv_obj_set_size(btn4, 40, 20);
-  lv_obj_set_pos(btn4, 60, 25);
-#endif
-  label = lv_label_create(btn4, NULL);
-  lv_label_set_text(label, "Btn4");
-  lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, btn_click_action);
-  lv_btn_set_fit(btn4, true, true); /* set auto fit to text */
-  GUI_AddObjToGroup(btn4);
-#endif
-#endif
+#endif /* PL_CONFIG_USE_UPS */
 
 #if 0
   /* create list of objects */
@@ -289,26 +274,6 @@ void GUI_MainMenuCreate(void) {
 //  GUI_AddObjToGroup(obj);
 #if 1 || PL_CONFIG_HAS_MMA8451
   obj = lv_list_add(list1, SYMBOL_FILE, "Accel", Btn_Accel_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-#if 1 || PL_CONFIG_HAS_SGP30
-  obj = lv_list_add(list1, SYMBOL_DIRECTORY, "Air", Btn_Air_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-#if PL_CONFIG_HAS_TSL2561
-  obj = lv_list_add(list1, SYMBOL_CLOSE, "Ambient", Btn_Ambient_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-#if PL_CONFIG_HAS_RTC_DS3231
-  obj = lv_list_add(list1, SYMBOL_CLOSE, "Clock", Btn_Clock_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-#if PL_CONFIG_HAS_SHT31
-  obj = lv_list_add(list1, SYMBOL_CLOSE, "Temp/Hum", Btn_TempHum_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-#if PL_CONFIG_HAS_NEO_PIXEL
-  obj = lv_list_add(list1, SYMBOL_CLOSE, "NeoPixel", Btn_NeoPixel_click_action);
   GUI_AddObjToGroup(obj);
 #endif
   lv_obj_set_size(list1, 100, 40); /* fixed size */

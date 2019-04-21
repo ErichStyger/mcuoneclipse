@@ -451,12 +451,6 @@ void McuSSD1306_UpdateFull(void)
 
 void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
 {
-#if McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1306 /* SSD1306 */
-  (void)SSD1306_SetPageStartAddr(0);
-  (void)SSD1306_SetColStartAddr(0);
-  SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0], sizeof(McuSSD1306_DisplayBuf));
-#elif McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE==1106 /* SH1106 */
-  /* the SSH1306 has a 132x64 memory organization (compared to the 128x64 of the SSD1306) */
   int page, pageBeg, pageEnd, colStart;
 
   pageBeg = y/8;
@@ -467,9 +461,6 @@ void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSS
     (void)SSD1306_SetColStartAddr(colStart);
     SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0]+(page*McuSSD1306_DISPLAY_HW_NOF_COLUMNS+colStart), w);
   }
-#else
-  #error "unknown display type?"
-#endif
 }
 
 /*

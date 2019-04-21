@@ -11,7 +11,6 @@
 #include "ups.h"
 
 /* Maxim 17048 */
-
 #define MAX17048_VREG     2  /* VCELL Register: voltage between Vdd und GND */
 #define MAX17048_CREG     4 /* SOC Register: State of Charge */
 #define MAX17048_I2C_ADDR 0x36
