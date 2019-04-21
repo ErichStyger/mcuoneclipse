@@ -30,12 +30,12 @@ static lv_task_t *refr_task;
  * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
 static lv_res_t win_close_action(lv_obj_t *btn) {
-    lv_group_focus_freeze(GUI_GetGroup(), false);
-    lv_obj_del(win);
-    win = NULL;
-    lv_task_del(refr_task);
-    refr_task = NULL;
-    return LV_RES_INV;
+  GUI_GroupPull();
+  lv_obj_del(win);
+  win = NULL;
+  lv_task_del(refr_task);
+  refr_task = NULL;
+  return LV_RES_INV;
 }
 
 /**

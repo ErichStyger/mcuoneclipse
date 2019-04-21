@@ -25,7 +25,7 @@ static lv_task_t *refr_task;
  */
 static lv_res_t win_close_action(lv_obj_t *btn) {
   GUI_GroupPull();
- lv_obj_del(win);
+  lv_obj_del(win);
   win = NULL;
   lv_task_del(refr_task);
   refr_task = NULL;
