@@ -104,6 +104,28 @@ static void AppTask(void *pv) {
 #endif
   uint32_t currCycleCnt, lastCycleCnt, elapsedCycleCnt;
 
+  McuLED_On(tinyLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_On(hatRedLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_On(hatYellowLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_On(hatGreenLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_On(hatBlueLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+
+  McuLED_Off(tinyLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_Off(hatRedLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_Off(hatYellowLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_Off(hatGreenLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+  McuLED_Off(hatBlueLED);
+  vTaskDelay(pdMS_TO_TICKS(50));
+
   lastCycleCnt = McuArmTools_GetCycleCounter();
   for(;;) { /* main loop */
 #if 0

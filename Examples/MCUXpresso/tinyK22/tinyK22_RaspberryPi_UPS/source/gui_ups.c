@@ -75,7 +75,7 @@ static void refresh_task(void *param) {
   lv_chart_set_next(chart, charge_ser, chart_cvalue);
   lv_chart_set_next(chart, voltage_ser, chart_vvalue);
 
-  McuXFormat_xsnprintf((char*)buf, sizeof(buf), "%s%s V: %.1fV%s\n%s%s Ch: %.1f%%%s\ncharge:%c",
+  McuXFormat_xsnprintf((char*)buf, sizeof(buf), "%s%s V: %.1fV%s\n%s%s Ch: %.1f%%%s\ncharge: %c",
     LV_TXT_COLOR_CMD, VOLTAGE_LABEL_COLOR, voltage, LV_TXT_COLOR_CMD,
     LV_TXT_COLOR_CMD, CHARGE_LABEL_COLOR,  charge, LV_TXT_COLOR_CMD,
     'y'
