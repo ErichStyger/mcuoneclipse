@@ -12,6 +12,7 @@
 
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)
+#define McuLib_CONFIG_CORTEX_M          (4)/*(33)*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
 /* ------------------- RTOS ---------------------------*/
@@ -26,8 +27,8 @@
 #define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 /* I2C Pin Muxing */
-#define SDA1_CONFIG_DO_PIN_MUXING (1)
-#define SCL1_CONFIG_DO_PIN_MUXING (1)
+#define SDA1_CONFIG_DO_PIN_MUXING (0)
+#define SCL1_CONFIG_DO_PIN_MUXING (0)
 
 //  #define SCL1_CONFIG_GPIO_NAME     GPIOA
 //  #define SCL1_CONFIG_PORT_NAME     PORTA

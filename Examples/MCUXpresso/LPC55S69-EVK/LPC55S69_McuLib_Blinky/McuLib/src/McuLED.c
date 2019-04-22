@@ -50,9 +50,9 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   gpio_config.port = config->port;
   gpio_config.pin = config->pin;
   if (config->isLowActive) {
-    gpio_config.isLowOnInit = config->isOnInit?0:1;
+    gpio_config.isLowOnInit = config->isOnInit;
   } else {
-    gpio_config.isLowOnInit = config->isOnInit?1:0;
+    gpio_config.isLowOnInit = !config->isOnInit;
   }
   gpio = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
   handle = (McuLED_t*)malloc(sizeof(McuLED_t)); /* get a new device descriptor */

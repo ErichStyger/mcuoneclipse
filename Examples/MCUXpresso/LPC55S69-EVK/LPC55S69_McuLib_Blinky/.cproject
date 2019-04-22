@@ -287,25 +287,24 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.651754409.485507015" name="/" resourcePath="McuLib">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1938043451" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1978900844" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.814137859"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.2007279272" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.523192842"/>
-							<tool id="com.crt.advproject.gas.exe.debug.295047772" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.993691357"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.307264932" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.967751306"/>
-							<tool id="com.crt.advproject.link.exe.debug.841008706" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.538759573"/>
-							<tool id="com.crt.advproject.tool.debug.debug.149141604" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.218460647"/>
-						</toolChain>
-					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.651754409.1313679248" name="semihost_hardfault.c" rcbsApplicability="disable" resourcePath="source/semihost_hardfault.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.523192842.670596351">
+						<tool id="com.crt.advproject.gcc.exe.debug.523192842.670596351" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.523192842"/>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.153633198" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.156099041" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.516115263" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="libs"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>

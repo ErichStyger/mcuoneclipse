@@ -40,7 +40,7 @@
 #include "LPC55S69_cm33_core0.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-
+#include "application.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -56,11 +56,6 @@ int main(void) {
 
     PRINTF("Hello World\n");
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
+    APP_Run();
     return 0 ;
 }
