@@ -11,6 +11,7 @@
 #include "McuLib.h"
 #include "McuWait.h"
 #include "McuLED.h"
+#include "McuRTOS.h"
 
 #include "fsl_iocon.h"
 #include "pin_mux.h"
@@ -41,8 +42,15 @@ static McuLED_Handle_t ledRed, ledGreen, ledBlue;
 
 static void Init(void) {
   McuLib_Init();
+  McuRTOS_Init();
   McuWait_Init();
   McuLED_Init();
+}
+
+static void AppTask(void *pv) {
+  for(;;) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
 }
 
 void APP_Run(void) {
@@ -51,6 +59,7 @@ void APP_Run(void) {
   Init(); /* init modules */
 
   CLOCK_EnableClock(kCLOCK_Iocon);
+  GPIO_PortInit(LED_GPIO, LED_PORT); /* ungate clock for port */
 
   const uint32_t port1_pin4_config = (/* Pin is configured as PIO1_4 */
                                       IOCON_PIO_FUNC0 |
@@ -69,9 +78,6 @@ void APP_Run(void) {
   IOCON_PinMuxSet(IOCON, LED_GREEN_PORT, LED_GREEN_PIN, port1_pin4_config);
   IOCON_PinMuxSet(IOCON, LED_BLUE_PORT, LED_BLUE_PIN, port1_pin4_config);
 
-
-  GPIO_PortInit(LED_GPIO, LED_PORT); /* ungate clock for port */
-
   McuLED_GetDefaultConfig(&config);
   config.isLowActive = true;
   config.isOnInit = false;
@@ -89,7 +95,7 @@ void APP_Run(void) {
   config.gpio = LED_BLUE_GPIO;
   config.pin = LED_BLUE_PIN;
   ledBlue = McuLED_InitLed(&config);
-  for(;;) {
+ // for(;;) {
  //   McuLED_On(ledRed);
  //   McuLED_Off(ledRed);
 
@@ -105,5 +111,17 @@ void APP_Run(void) {
     McuWait_Waitms(100);
     McuLED_Neg(ledBlue);
     McuWait_Waitms(100);
+ // } /* for */
+  if (xTaskCreate(
+      AppTask,  /* pointer to the task */
+      "App", /* task name for kernel awareness debugging */
+      20/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
   }
+  vTaskStartScheduler();
+  for(;;) { /* should not get here */ }
 }

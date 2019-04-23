@@ -46,6 +46,34 @@
 
 #include "McuLib.h" /* include SDK and API used */
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+
+#if( configENABLE_TRUSTZONE == 1 )
+    /* Secure components includes. */
+    #include "secure_context.h"
+    #include "secure_init.h"
+#endif /* configENABLE_TRUSTZONE */
+
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+
+/**
+ * The FreeRTOS Cortex M33 port can be configured to run on the Secure Side only
+ * i.e. the processor boots as secure and never jumps to the non-secure side.
+ * The Trust Zone support in the port must be disabled in order to run FreeRTOS
+ * on the secure side. The following are the valid configuration seetings:
+ *
+ * 1. Run FreeRTOS on the Secure Side:
+ *      configRUN_FREERTOS_SECURE_ONLY = 1 and configENABLE_TRUSTZONE = 0
+ *
+ * 2. Run FreeRTOS on the Non-Secure Side with Secure Side function call support:
+ *      configRUN_FREERTOS_SECURE_ONLY = 0 and configENABLE_TRUSTZONE = 1
+ *
+ * 3. Run FreeRTOS on the Non-Secure Side only i.e. no Secure Side function call support:
+ *      configRUN_FREERTOS_SECURE_ONLY = 0 and configENABLE_TRUSTZONE = 0
+ */
+#if( ( configRUN_FREERTOS_SECURE_ONLY == 1 ) && ( configENABLE_TRUSTZONE == 1 ) )
+    #error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
+#endif
+
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -170,7 +198,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
  */
 #if configUSE_TICKLESS_IDLE == 1
   static TickCounter_t ulStoppedTimerCompensation = 0; /* number of timer ticks to compensate */
-  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate, as defined in properties. ulStoppedTimerCompensation will contain the number of timer ticks. */
+  #define configSTOPPED_TIMER_COMPENSATION    45UL  /* number of CPU cycles to compensate. ulStoppedTimerCompensation will contain the number of timer ticks. */
 #endif /* configUSE_TICKLESS_IDLE */
 
 /* Flag indicating that the tick counter interval needs to be restored back to
@@ -448,6 +476,12 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
   /* if we wait for the tick interrupt, do not enter low power again below */
   if (restoreTickInterval!=0) {
     McuRTOS_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+#if 0 /* default example code */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#endif
     return;
   }
 #endif
@@ -532,6 +566,12 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
 
      /* CPU *HAS TO WAIT* in the sequence below for an interrupt. If vOnPreSleepProcessing() is not used, a default implementation is provided */
     McuRTOS_vOnPreSleepProcessing(xExpectedIdleTime); /* go into low power mode. Re-enable interrupts as needed! */
+#if 0 /* example/default code */
+    /* default wait/sleep code */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#endif
     /* ----------------------------------------------------------------------------
      * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
@@ -1110,7 +1150,7 @@ void vPortStartFirstTask(void) {
     for(;;);
   }
 #endif
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* Cortex M4/M7 */
   __asm volatile (
 #if configRESET_MSP && !INCLUDE_vTaskEndScheduler
 #if configLTO_HELPER /* with -flto, we cannot load the constant directly, otherwise we get "Error: offset out of range" with "lto-wrapper failed" */
