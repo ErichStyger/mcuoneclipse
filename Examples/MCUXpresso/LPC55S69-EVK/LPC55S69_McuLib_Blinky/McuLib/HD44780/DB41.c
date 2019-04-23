@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-26, 15:59, # CodeGen: 480
+**     Date/Time   : 2019-04-23, 07:43, # CodeGen: 490
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -76,7 +76,11 @@
 #include "DB41.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB41_CONFIG_DO_PIN_MUXING
-  #include "fsl_port.h" /* include SDK header file for port muxing */
+    #if McuLib_CONFIG_CPU_IS_LPC && DB41_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+      #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
+    #else /* normal Kinetis or LPC */
+      #include "fsl_port.h" /* include SDK header file for port muxing */
+    #endif
   #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
@@ -438,7 +442,30 @@ void DB41_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB41_CONFIG_DO_PIN_MUXING
-  PORT_SetPinMux(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #if McuLib_CONFIG_CPU_IS_LPC && DB41_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+        #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+        #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+        static const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
+                                      IOCON_PIO_FUNC0 |
+                                      /* Selects pull-up function */
+                                      IOCON_PIO_MODE_PULLUP |
+                                      /* Standard mode, output slew rate control is enabled */
+                                      IOCON_PIO_SLEW_STANDARD |
+                                      /* Input function is not inverted */
+                                      IOCON_PIO_INV_DI |
+                                      /* Enables digital function */
+                                      IOCON_PIO_DIGITAL_EN |
+                                      /* Open drain is disabled */
+                                      IOCON_PIO_OPENDRAIN_DI);
+        IOCON_PinMuxSet(IOCON, DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, port_pin_config);
+      #else
+        PORT_SetPinMux(DB41_CONFIG_PORT_NAME, DB41_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #endif
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   /*! \todo Pin Muxing not implemented */
