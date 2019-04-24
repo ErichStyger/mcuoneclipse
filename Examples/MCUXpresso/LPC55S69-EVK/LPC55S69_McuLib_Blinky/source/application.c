@@ -49,6 +49,7 @@ static void Init(void) {
 
 static void AppTask(void *pv) {
   for(;;) {
+    McuLED_Neg(ledRed);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }

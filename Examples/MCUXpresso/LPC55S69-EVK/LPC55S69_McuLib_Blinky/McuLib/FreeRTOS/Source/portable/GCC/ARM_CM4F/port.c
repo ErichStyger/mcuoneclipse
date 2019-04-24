@@ -74,6 +74,77 @@
   #error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
 #endif
 
+#if( configENABLE_MPU == 1 )
+  /**
+   * @brief Constants required to manipulate the MPU.
+   */
+  #define portMPU_TYPE_REG          ( * ( ( volatile uint32_t * ) 0xe000ed90 ) )
+  #define portMPU_CTRL_REG          ( * ( ( volatile uint32_t * ) 0xe000ed94 ) )
+  #define portMPU_RNR_REG           ( * ( ( volatile uint32_t * ) 0xe000ed98 ) )
+
+  #define portMPU_RBAR_REG          ( * ( ( volatile uint32_t * ) 0xe000ed9c ) )
+  #define portMPU_RLAR_REG          ( * ( ( volatile uint32_t * ) 0xe000eda0 ) )
+
+  #define portMPU_RBAR_A1_REG         ( * ( ( volatile uint32_t * ) 0xe000eda4 ) )
+  #define portMPU_RLAR_A1_REG         ( * ( ( volatile uint32_t * ) 0xe000eda8 ) )
+
+  #define portMPU_RBAR_A2_REG         ( * ( ( volatile uint32_t * ) 0xe000edac ) )
+  #define portMPU_RLAR_A2_REG         ( * ( ( volatile uint32_t * ) 0xe000edb0 ) )
+
+  #define portMPU_RBAR_A3_REG         ( * ( ( volatile uint32_t * ) 0xe000edb4 ) )
+  #define portMPU_RLAR_A3_REG         ( * ( ( volatile uint32_t * ) 0xe000edb8 ) )
+
+  #define portMPU_MAIR0_REG         ( * ( ( volatile uint32_t * ) 0xe000edc0 ) )
+  #define portMPU_MAIR1_REG         ( * ( ( volatile uint32_t * ) 0xe000edc4 ) )
+
+  #define portMPU_RBAR_ADDRESS_MASK     ( 0xffffffe0 ) /* Must be 32-byte aligned. */
+  #define portMPU_RLAR_ADDRESS_MASK     ( 0xffffffe0 ) /* Must be 32-byte aligned. */
+
+  #define portMPU_MAIR_ATTR0_POS        ( 0UL )
+  #define portMPU_MAIR_ATTR0_MASK       ( 0x000000ff )
+
+  #define portMPU_MAIR_ATTR1_POS        ( 8UL )
+  #define portMPU_MAIR_ATTR1_MASK       ( 0x0000ff00 )
+
+  #define portMPU_MAIR_ATTR2_POS        ( 16UL )
+  #define portMPU_MAIR_ATTR2_MASK       ( 0x00ff0000 )
+
+  #define portMPU_MAIR_ATTR3_POS        ( 24UL )
+  #define portMPU_MAIR_ATTR3_MASK       ( 0xff000000 )
+
+  #define portMPU_MAIR_ATTR4_POS        ( 0UL )
+  #define portMPU_MAIR_ATTR4_MASK       ( 0x000000ff )
+
+  #define portMPU_MAIR_ATTR5_POS        ( 8UL )
+  #define portMPU_MAIR_ATTR5_MASK       ( 0x0000ff00 )
+
+  #define portMPU_MAIR_ATTR6_POS        ( 16UL )
+  #define portMPU_MAIR_ATTR6_MASK       ( 0x00ff0000 )
+
+  #define portMPU_MAIR_ATTR7_POS        ( 24UL )
+  #define portMPU_MAIR_ATTR7_MASK       ( 0xff000000 )
+
+  #define portMPU_RLAR_ATTR_INDEX0      ( 0UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX1      ( 1UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX2      ( 2UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX3      ( 3UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX4      ( 4UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX5      ( 5UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX6      ( 6UL << 1UL )
+  #define portMPU_RLAR_ATTR_INDEX7      ( 7UL << 1UL )
+
+  #define portMPU_RLAR_REGION_ENABLE      ( 1UL )
+
+  /* Enable privileged access to unmapped region. */
+  #define portMPU_PRIV_BACKGROUND_ENABLE    ( 1UL << 2UL )
+
+  /* Enable MPU. */
+  #define portMPU_ENABLE            ( 1UL << 0UL )
+
+  /* Expected value of the portMPU_TYPE register. */
+  #define portEXPECTED_MPU_TYPE_VALUE     ( 8UL << 8UL ) /* 8 regions, unified. */
+#endif /* configENABLE_MPU */
+
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -83,6 +154,19 @@
 #else
   #define portTASK_RETURN_ADDRESS   prvTaskExitError
 #endif
+
+/**
+ * @brief If portPRELOAD_REGISTERS then registers will be given an initial value
+ * when a task is created. This helps in debugging at the cost of code size.
+ */
+#define portPRELOAD_REGISTERS       1
+
+/**
+ * @brief A task is created without a secure context, and must call
+ * portALLOCATE_SECURE_CONTEXT() to give itself a secure context before it makes
+ * any secure calls.
+ */
+#define portNO_SECURE_CONTEXT       0
 /* --------------------------------------------------- */
 /* macros dealing with tick counter */
 #if configSYSTICK_USE_LOW_POWER_TIMER
@@ -336,7 +420,54 @@ static void NVIC_EnableIRQ(IRQn_Type IRQn) {
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_XPSR                       (0x01000000)
-#define portINITIAL_EXEC_RETURN                (0xfffffffd)
+
+#if configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY)
+  #if( configRUN_FREERTOS_SECURE_ONLY == 1 )
+    /**
+     * @brief Initial EXC_RETURN value.
+     *
+     *     FF         FF         FF         FD
+     * 1111 1111  1111 1111  1111 1111  1111 1101
+     *
+     * Bit[6] - 1 --> The exception was taken from the Secure state.
+     * Bit[5] - 1 --> Do not skip stacking of additional state context.
+     * Bit[4] - 1 --> The PE did not allocate space on the stack for FP context.
+     * Bit[3] - 1 --> Return to the Thread mode.
+     * Bit[2] - 1 --> Restore registers from the process stack.
+     * Bit[1] - 0 --> Reserved, 0.
+     * Bit[0] - 1 --> The exception was taken to the Secure state.
+     */
+    #define portINITIAL_EXC_RETURN      ( 0xfffffffd )
+  #else
+    /**
+     * @brief Initial EXC_RETURN value.
+     *
+     *     FF         FF         FF         BC
+     * 1111 1111  1111 1111  1111 1111  1011 1100
+     *
+     * Bit[6] - 0 --> The exception was taken from the Non-Secure state.
+     * Bit[5] - 1 --> Do not skip stacking of additional state context.
+     * Bit[4] - 1 --> The PE did not allocate space on the stack for FP context.
+     * Bit[3] - 1 --> Return to the Thread mode.
+     * Bit[2] - 1 --> Restore registers from the process stack.
+     * Bit[1] - 0 --> Reserved, 0.
+     * Bit[0] - 0 --> The exception was taken to the Non-Secure state.
+     */
+    #define portINITIAL_EXC_RETURN      ( 0xffffffbc )
+  #endif /* configRUN_FREERTOS_SECURE_ONLY */
+#else
+  #define portINITIAL_EXC_RETURN                (0xfffffffd)
+#endif
+
+/**
+ * @brief CONTROL register privileged bit mask.
+ *
+ * Bit[0] in CONTROL register tells the privilege:
+ *  Bit[0] = 0 ==> The task is privileged.
+ *  Bit[0] = 1 ==> The task is not privileged.
+ */
+#define portCONTROL_PRIVILEGED_MASK     ( 1UL << 0UL )
+
 #define portINITIAL_CONTROL_IF_UNPRIVILEGED    (0x03)
 #define portINITIAL_CONTROL_IF_PRIVILEGED      (0x02)
 
@@ -348,8 +479,11 @@ static void NVIC_EnableIRQ(IRQn_Type IRQn) {
 #endif
 /* Used to keep track of the number of nested calls to taskENTER_CRITICAL().
    This will be set to 0 prior to the first task being started. */
-/* Each task maintains its own interrupt status in the critical nesting variable. */
-static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
+/**
+ * @brief Each task maintains its own interrupt status in the critical nesting
+ * variable.
+ */
+static volatile uint32_t ulCriticalNesting = 0xaaaaaaaaUL;
 
 #if INCLUDE_vTaskEndScheduler
 #include <setjmp.h>
@@ -358,16 +492,21 @@ static jmp_buf xJumpBuf; /* Used to restore the original context when the schedu
 /*-----------------------------------------------------------*/
 void prvTaskExitError(void) {
   /* A function that implements a task must not exit or attempt to return to
-  its caller as there is nothing to return to.  If a task wants to exit it
-  should instead call vTaskDelete( NULL ).
-
-  Artificially force an assert() to be triggered if configASSERT() is
-  defined, then stop here so application writers can catch the error. */
-  configASSERT(uxCriticalNesting == ~0UL);
+    * its caller as there is nothing to return to. If a task wants to exit it
+    * should instead call vTaskDelete( NULL ). Artificially force an assert()
+    * to be triggered if configASSERT() is defined, then stop here so
+    * application writers can catch the error. */
+  configASSERT(ulCriticalNesting == ~0UL);
   portDISABLE_INTERRUPTS();
   for(;;) {
-    /* wait here */
-  }
+    /* This file calls prvTaskExitError() after the scheduler has been
+      * started to remove a compiler warning about the function being
+      * defined but never called.  ulDummy is used purely to quieten other
+      * warnings about code appearing after this function is called - making
+      * ulDummy volatile makes the compiler think the function could return
+      * and therefore not output an 'unreachable code' warning for code that
+      * appears after it. */
+ }
 }
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_KEIL) && (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)  || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY)) /* ARM M4(F)/M7/M33 core */
@@ -390,45 +529,211 @@ __asm void vPortClearInterruptMask(uint32_t ulNewMask) {
 }
 #endif /* (configCOMPILER==configCOMPILER_ARM_KEIL) */
 /*-----------------------------------------------------------*/
-#if configUSE_MPU_SUPPORT
-StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged) {
-#else
-StackType_t *pxPortInitialiseStack(portSTACK_TYPE *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters) {
-#endif
-  /* Simulate the stack frame as it would be created by a context switch interrupt. */
-  pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts, and to ensure alignment. */
-  *pxTopOfStack = portINITIAL_XPSR;   /* xPSR */
-  pxTopOfStack--;
-#if configUSE_MPU_SUPPORT
-  *pxTopOfStack = ((StackType_t)pxCode)&portSTART_ADDRESS_MASK;  /* PC */
-#else
-  *pxTopOfStack = ((StackType_t)pxCode);  /* PC */
-#endif
-  pxTopOfStack--;
-  *pxTopOfStack = (StackType_t)portTASK_RETURN_ADDRESS;  /* LR */
 
-  /* Save code space by skipping register initialization. */
-  pxTopOfStack -= 5;  /* R12, R3, R2 and R1. */
-  *pxTopOfStack = (portSTACK_TYPE)pvParameters; /* R0 */
+/*-----------------------------------------------------------*/
+#if( configENABLE_MPU == 1 )
+  static void prvSetupMPU( void ) /* PRIVILEGED_FUNCTION */
+  {
+  #if defined( __ARMCC_VERSION )
+    /* Declaration when these variable are defined in code instead of being
+     * exported from linker scripts. */
+    extern uint32_t * __privileged_functions_start__;
+    extern uint32_t * __privileged_functions_end__;
+    extern uint32_t * __syscalls_flash_start__;
+    extern uint32_t * __unprivileged_flash_end__;
+    extern uint32_t * __privileged_sram_start__;
+    extern uint32_t * __privileged_sram_end__;
+  #else
+    /* Declaration when these variable are exported from linker scripts. */
+    extern uint32_t __privileged_functions_start__[];
+    extern uint32_t __privileged_functions_end__[];
+    extern uint32_t __syscalls_flash_start__[];
+    extern uint32_t __unprivileged_flash_end__[];
+    extern uint32_t __privileged_sram_start__[];
+    extern uint32_t __privileged_sram_end__[];
+  #endif /* defined( __ARMCC_VERSION ) */
 
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
-  /* A save method is being used that requires each task to maintain its
-     own exec return value. */
-  pxTopOfStack--;
-  *pxTopOfStack = portINITIAL_EXEC_RETURN;
-#endif
-#if configUSE_MPU_SUPPORT
-  pxTopOfStack -= 9;  /* R11, R10, R9, R8, R7, R6, R5 and R4 plus privilege level */
-  if (xRunPrivileged == pdTRUE) {
-    *pxTopOfStack = portINITIAL_CONTROL_IF_PRIVILEGED;
-  } else {
-    *pxTopOfStack = portINITIAL_CONTROL_IF_UNPRIVILEGED;
+    /* Check that the MPU is present. */
+    if( portMPU_TYPE_REG == portEXPECTED_MPU_TYPE_VALUE )
+    {
+      /* MAIR0 - Index 0. */
+      portMPU_MAIR0_REG |= ( ( portMPU_NORMAL_MEMORY_BUFFERABLE_CACHEABLE << portMPU_MAIR_ATTR0_POS ) & portMPU_MAIR_ATTR0_MASK );
+      /* MAIR0 - Index 1. */
+      portMPU_MAIR0_REG |= ( ( portMPU_DEVICE_MEMORY_nGnRE << portMPU_MAIR_ATTR1_POS ) & portMPU_MAIR_ATTR1_MASK );
+
+      /* Setup privileged flash as Read Only so that privileged tasks can
+       * read it but not modify. */
+      portMPU_RNR_REG = portPRIVILEGED_FLASH_REGION;
+      portMPU_RBAR_REG =  ( ( ( uint32_t ) __privileged_functions_start__ ) & portMPU_RBAR_ADDRESS_MASK ) |
+                ( portMPU_REGION_NON_SHAREABLE ) |
+                ( portMPU_REGION_PRIVILEGED_READ_ONLY );
+      portMPU_RLAR_REG =  ( ( ( uint32_t ) __privileged_functions_end__ ) & portMPU_RLAR_ADDRESS_MASK ) |
+                ( portMPU_RLAR_ATTR_INDEX0 ) |
+                ( portMPU_RLAR_REGION_ENABLE );
+
+      /* Setup unprivileged flash and system calls flash as Read Only by
+       * both privileged and unprivileged tasks. All tasks can read it but
+       * no-one can modify. */
+      portMPU_RNR_REG = portUNPRIVILEGED_FLASH_REGION;
+      portMPU_RBAR_REG =  ( ( ( uint32_t ) __syscalls_flash_start__ ) & portMPU_RBAR_ADDRESS_MASK ) |
+                ( portMPU_REGION_NON_SHAREABLE ) |
+                ( portMPU_REGION_READ_ONLY );
+      portMPU_RLAR_REG =  ( ( ( uint32_t ) __unprivileged_flash_end__ ) & portMPU_RLAR_ADDRESS_MASK ) |
+                ( portMPU_RLAR_ATTR_INDEX0 ) |
+                ( portMPU_RLAR_REGION_ENABLE );
+
+      /* Setup RAM containing kernel data for privileged access only. */
+      portMPU_RNR_REG = portPRIVILEGED_RAM_REGION;
+      portMPU_RBAR_REG =  ( ( ( uint32_t ) __privileged_sram_start__ ) & portMPU_RBAR_ADDRESS_MASK ) |
+                ( portMPU_REGION_NON_SHAREABLE ) |
+                ( portMPU_REGION_PRIVILEGED_READ_WRITE ) |
+                ( portMPU_REGION_EXECUTE_NEVER );
+      portMPU_RLAR_REG =  ( ( ( uint32_t ) __privileged_sram_end__ ) & portMPU_RLAR_ADDRESS_MASK ) |
+                ( portMPU_RLAR_ATTR_INDEX0 ) |
+                ( portMPU_RLAR_REGION_ENABLE );
+
+      /* By default allow everything to access the general peripherals.
+       * The system peripherals and registers are protected. */
+      portMPU_RNR_REG = portUNPRIVILEGED_DEVICE_REGION;
+      portMPU_RBAR_REG =  ( ( ( uint32_t ) portDEVICE_REGION_START_ADDRESS ) & portMPU_RBAR_ADDRESS_MASK ) |
+                ( portMPU_REGION_NON_SHAREABLE ) |
+                ( portMPU_REGION_READ_WRITE ) |
+                ( portMPU_REGION_EXECUTE_NEVER );
+      portMPU_RLAR_REG =  ( ( ( uint32_t ) portDEVICE_REGION_END_ADDRESS ) & portMPU_RLAR_ADDRESS_MASK ) |
+                ( portMPU_RLAR_ATTR_INDEX1 ) |
+                ( portMPU_RLAR_REGION_ENABLE );
+
+      /* Enable mem fault. */
+      portSCB_SYS_HANDLER_CTRL_STATE_REG |= portSCB_MEM_FAULT_ENABLE;
+
+      /* Enable MPU with privileged background access i.e. unmapped
+       * regions have privileged access. */
+      portMPU_CTRL_REG |= ( portMPU_PRIV_BACKGROUND_ENABLE | portMPU_ENABLE );
+    }
   }
+#endif /* configENABLE_MPU */
+/*-----------------------------------------------------------*/
+
+#if( portUSING_MPU_WRAPPERS == 1 )
+    #if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+        StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) /*PRIVILEGED_FUNCTION*/
+    #else
+        StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters, BaseType_t xRunPrivileged ) /*PRIVILEGED_FUNCTION*/
+    #endif
 #else
-  pxTopOfStack -= 8;  /* R11, R10, R9, R8, R7, R6, R5 and R4. */
+    #if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+        StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, StackType_t *pxEndOfStack, TaskFunction_t pxCode, void *pvParameters ) /*PRIVILEGED_FUNCTION*/
+    #else
+        StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters ) /*PRIVILEGED_FUNCTION*/
+    #endif
 #endif
+{
+  /* Simulate the stack frame as it would be created by a context switch
+   * interrupt. */
+  #if( portPRELOAD_REGISTERS == 0 )
+  {
+    pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
+    *pxTopOfStack = portINITIAL_XPSR;             /* xPSR */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxCode;           /* PC */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) portTASK_RETURN_ADDRESS;  /* LR */
+    pxTopOfStack -= 5;                      /* R12, R3, R2 and R1. */
+    *pxTopOfStack = ( StackType_t ) pvParameters;       /* R0 */
+    pxTopOfStack -= 9;                      /* R11..R4, EXC_RETURN. */
+    *pxTopOfStack = portINITIAL_EXC_RETURN;
+
+    #if( configENABLE_MPU == 1 )
+    {
+      pxTopOfStack--;
+      if( xRunPrivileged == pdTRUE )
+      {
+        *pxTopOfStack = portINITIAL_CONTROL_PRIVILEGED;   /* Slot used to hold this task's CONTROL value. */
+      }
+      else
+      {
+        *pxTopOfStack = portINITIAL_CONTROL_UNPRIVILEGED; /* Slot used to hold this task's CONTROL value. */
+      }
+    }
+    #endif /* configENABLE_MPU */
+
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxEndOfStack; /* Slot used to hold this task's PSPLIM value. */
+
+    #if( configENABLE_TRUSTZONE == 1 )
+    {
+      pxTopOfStack--;
+      *pxTopOfStack = portNO_SECURE_CONTEXT;    /* Slot used to hold this task's xSecureContext value. */
+    }
+    #endif /* configENABLE_TRUSTZONE */
+  }
+  #else /* portPRELOAD_REGISTERS */
+  {
+    pxTopOfStack--; /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
+    *pxTopOfStack = portINITIAL_XPSR;             /* xPSR */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxCode;           /* PC */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) portTASK_RETURN_ADDRESS;  /* LR */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x12121212UL;       /* R12 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x03030303UL;       /* R3 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x02020202UL;       /* R2 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x01010101UL;       /* R1 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pvParameters;       /* R0 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x11111111UL;       /* R11 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x10101010UL;       /* R10 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x09090909UL;       /* R09 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x08080808UL;       /* R08 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x07070707UL;       /* R07 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x06060606UL;       /* R06 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x05050505UL;       /* R05 */
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) 0x04040404UL;       /* R04 */
+    pxTopOfStack--;
+    *pxTopOfStack = portINITIAL_EXC_RETURN;           /* EXC_RETURN */
+
+    #if( configENABLE_MPU == 1 )
+    {
+      pxTopOfStack--;
+      if( xRunPrivileged == pdTRUE )
+      {
+        *pxTopOfStack = portINITIAL_CONTROL_PRIVILEGED;   /* Slot used to hold this task's CONTROL value. */
+      }
+      else
+      {
+        *pxTopOfStack = portINITIAL_CONTROL_UNPRIVILEGED; /* Slot used to hold this task's CONTROL value. */
+      }
+    }
+    #endif /* configENABLE_MPU */
+
+    #if( portHAS_STACK_OVERFLOW_CHECKING == 1 )
+    pxTopOfStack--;
+    *pxTopOfStack = ( StackType_t ) pxEndOfStack; /* Slot used to hold this task's PSPLIM value. */
+    #endif
+    #if( configENABLE_TRUSTZONE == 1 )
+    {
+      pxTopOfStack--;
+      *pxTopOfStack = portNO_SECURE_CONTEXT;    /* Slot used to hold this task's xSecureContext value. */
+    }
+    #endif /* configENABLE_TRUSTZONE */
+  }
+  #endif /* portPRELOAD_REGISTERS */
+
   return pxTopOfStack;
 }
+/*-----------------------------------------------------------*/
 
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_S08_FSL) || (configCOMPILER==configCOMPILER_S12_FSL)
@@ -883,7 +1188,7 @@ BaseType_t xPortStartScheduler(void) {
   *(portNVIC_SYSPRI2) |= portNVIC_SVCALL_PRI; /* set priority of SVCall interrupt */
 #endif
   *(portNVIC_SYSPRI3) |= portNVIC_PENDSV_PRI; /* set priority of PendSV interrupt */
-  uxCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
+  ulCriticalNesting = 0; /* Initialize the critical nesting count ready for the first task. */
   vPortInitTickTimer(); /* initialize tick timer */
   vPortStartTickTimer(); /* start tick timer */
 #if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
@@ -910,7 +1215,7 @@ BaseType_t xPortStartScheduler(void) {
 void vPortEndScheduler(void) {
   vPortStopTickTimer();
   vPortInitializeHeap();
-  uxCriticalNesting = 0xaaaaaaaa;
+  ulCriticalNesting = 0xaaaaaaaa;
   /* Jump back to the processor state prior to starting the
      scheduler.  This means we are not going to be using a
      task stack frame so the task can be deleted. */
@@ -930,14 +1235,14 @@ void vPortEnterCritical(void) {
  */
   portDISABLE_INTERRUPTS();
   portPOST_ENABLE_DISABLE_INTERRUPTS();
-  uxCriticalNesting++;
+  ulCriticalNesting++;
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   /* This is not the interrupt safe version of the enter critical function so
   assert() if it is being called from an interrupt context.  Only API
   functions that end in "FromISR" can be used in an interrupt.  Only assert if
   the critical nesting count is 1 to protect against recursive calls if the
   assert function also uses a critical section. */
-  if( uxCriticalNesting == 1 )
+  if( ulCriticalNesting == 1 )
   {
     /* Masks off all bits but the VECTACTIVE bits in the ICSR register. */
     #define portVECTACTIVE_MASK         (0xFFUL)
@@ -954,8 +1259,9 @@ void vPortExitCritical(void) {
   * nesting is found to be 0 (no nesting) then we are leaving the critical
   * section and interrupts can be re-enabled.
   */
-  uxCriticalNesting--;
-  if (uxCriticalNesting == 0)  {
+  configASSERT( ulCriticalNesting );
+  ulCriticalNesting--;
+  if (ulCriticalNesting == 0)  {
     portENABLE_INTERRUPTS();
     portPOST_ENABLE_DISABLE_INTERRUPTS();
   }
