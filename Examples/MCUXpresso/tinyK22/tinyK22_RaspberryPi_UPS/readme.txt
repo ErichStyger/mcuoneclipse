@@ -9,7 +9,6 @@ UART Polling:
   Pin46, LPUART0, RX
   Pin49, LPUART0, TX
   
- Open Points:
- - V/charge on display
-
+Open Points:
+- https://learn.adafruit.com/animated-flying-toaster-oled-jewelry/code
  

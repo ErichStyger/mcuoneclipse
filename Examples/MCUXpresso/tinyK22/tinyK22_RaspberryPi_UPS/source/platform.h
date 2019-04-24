@@ -16,6 +16,7 @@
 #define PL_CONFIG_USE_SHUTDOWN      (1) /* if implementing shutdown for Raspberry Pi */
 #define PL_CONFIG_USE_SHELL         (1) /* if shell is enabled, uses RTT */
 #define PL_CONFIG_USE_LVGL          (1 && PL_CONFIG_USE_OLED) /* use LittlevGL */
+#define PL_CONFIG_USE_TOASTER       (1 && PL_CONFIG_USE_OLED) /* flying toaster screensaver */
 
 #define PL_CONFIG_HAS_KEYS          (1)
 #define PL_CONFIG_HAS_GUI_KEY_NAV   (1 && PL_CONFIG_HAS_KEYS)

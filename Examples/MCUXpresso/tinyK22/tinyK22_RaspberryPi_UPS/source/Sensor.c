@@ -87,7 +87,7 @@ static void SENSOR_SetTemperature(float t) {
 static void SHT31Task(void *pv) {
   float temp, hum;
 
-  vTaskDelay(pdMS_TO_TICKS(1000)); /* give sensors time to power up */
+  vTaskDelay(pdMS_TO_TICKS(200)); /* give sensors time to power up */
   McuShell_SendStr((uint8_t*)"Initializing SHT31.\r\n", McuShell_GetStdio()->stdOut);
   SHT31_Init();
   for(;;) {
@@ -95,7 +95,7 @@ static void SHT31Task(void *pv) {
       SENSOR_SetTemperature(temp);
       SENSOR_SetHumidity(hum);
     }
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(10000));
   }
 }
 #endif
@@ -296,6 +296,7 @@ static void SensorTask(void *pv) {
 }
 
 void SENSOR_Init(void) {
+#if PL_CONFIG_HAS_SGP30 || PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561
   if (xTaskCreate(
         SensorTask,  /* pointer to the task */
         "Sensor", /* task name for kernel awareness debugging */
@@ -308,6 +309,7 @@ void SENSOR_Init(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
+#endif
 #if PL_CONFIG_USE_SHT31
   if (xTaskCreate(
         SHT31Task,  /* pointer to the task */

@@ -32,6 +32,7 @@
 #include "McuSystemView.h"
 #include "McuXFormat.h"
 #include "Sensor.h"
+#include "toaster.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -79,6 +80,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_GATEWAY
   GATEWAY_Init();
+#endif
+#if PL_CONFIG_USE_TOASTER
+  TOASTER_Init();
 #endif
   SENSOR_Init();
 }

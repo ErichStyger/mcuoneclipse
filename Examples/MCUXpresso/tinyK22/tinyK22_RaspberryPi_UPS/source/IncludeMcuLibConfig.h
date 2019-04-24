@@ -23,7 +23,7 @@
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
-#define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
+#define McuGenericSWI2C_CONFIG_DO_YIELD (0 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 /* I2C Pin Muxing */
 #define SDA1_CONFIG_DO_PIN_MUXING (1)
@@ -162,6 +162,7 @@
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1306)
 #endif
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
+#define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "Raspberry Pi UPS and Gateway"

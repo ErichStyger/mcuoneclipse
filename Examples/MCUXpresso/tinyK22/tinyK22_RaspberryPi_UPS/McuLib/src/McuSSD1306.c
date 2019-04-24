@@ -365,6 +365,7 @@ uint16_t McuSSD1306_ReadDataWord(void)
 */
 void McuSSD1306_WriteData(uint8_t data)
 {
+  SSD1306_WriteData(data);
 }
 
 /*

@@ -7,16 +7,16 @@
 #ifndef __McuSystemView_CONFIG_H
 #define __McuSystemView_CONFIG_H
 
-#define McuSystemView_CONFIG_GENERATE_QUEUE_EVENTS  (1)
+#define McuSystemView_CONFIG_GENERATE_QUEUE_EVENTS  (0)
   /*!< 1: events for queues are generated. 0: no queue events are generated */
 
-#define McuSystemView_CONFIG_GENERATE_ISR_EVENTS  (1)
+#define McuSystemView_CONFIG_GENERATE_ISR_EVENTS  (0)
   /*!< 1: events for ISR are generated. 0: no ISR events are generated */
 
-#define McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS  (1)
+#define McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS  (0)
   /*!< 1: events for Stream Buffer are generated. 0: no Stream Buffer events are generated */
 
-#define McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS  (1)
+#define McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS  (0)
   /*!< 1: events for Stream Buffer are generated. 0: no Stream Buffer events are generated */
 
 
