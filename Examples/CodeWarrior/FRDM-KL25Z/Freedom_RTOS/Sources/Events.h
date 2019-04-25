@@ -122,7 +122,7 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 ** ===================================================================
 */
 
-void vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void vOnPreSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  vOnPreSleepProcessing (module Events)
@@ -139,7 +139,7 @@ void vOnPreSleepProcessing(portTickType expectedIdleTicks);
 ** ===================================================================
 */
 
-void vOnPostSleepProcessing(portTickType expectedIdleTicks);
+void vOnPostSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  vOnPostSleepProcessing (module Events)

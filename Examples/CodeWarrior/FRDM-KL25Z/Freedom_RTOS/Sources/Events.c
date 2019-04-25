@@ -145,7 +145,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
 #if 1
   B10_SetVal();
@@ -183,7 +183,7 @@ void vOnPreSleepProcessing(portTickType expectedIdleTicks)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void vOnPostSleepProcessing(portTickType expectedIdleTicks)
+void vOnPostSleepProcessing(TickType_t expectedIdleTicks)
 {
   B10_ClrVal();
 }
