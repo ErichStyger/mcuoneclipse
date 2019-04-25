@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK22_SGP30</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>163</ModificationStamp>
+    <ModificationStamp>164</ModificationStamp>
     <Date>2018-09-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -14770,7 +14770,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.576</BeanVersion>
+    <BeanVersion>01.577</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18209,10 +18209,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPreSleepProcessingName</ItemSymbol>
@@ -18222,13 +18222,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessing</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
+        <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>false</Value>
         <Expanded>false</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>no</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessingName</ItemSymbol>
@@ -25002,7 +25002,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerInputFreq</ItemSymbol>
-              <Value>120 MHz</Value>
+              <Value>unknown</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>DividerClockFraction</ItemSymbol>
@@ -25032,7 +25032,7 @@
             </ItemState>
             <ItemState>
               <ItemSymbol>ModuleClockFreq</ItemSymbol>
-              <Value>48 MHz</Value>
+              <Value>unknown</Value>
             </ItemState>
             <ItemState>
               <ItemSymbol>PullUpDownGrp</ItemSymbol>
@@ -37856,7 +37856,7 @@
     <UserFolderName>LCD</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.206</BeanVersion>
+    <BeanVersion>01.207</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -38107,6 +38107,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>DrawMonoBitmap</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DrawMonoBitmapMask</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>DrawMonoBitmapMask</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>DrawColorBitmap</ItemSymbol>
@@ -56562,7 +56573,7 @@
     <UserFolderName>WS2812B</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.206</BeanVersion>
+    <BeanVersion>01.207</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -56813,6 +56824,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>DrawMonoBitmap</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DrawMonoBitmapMask</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>DrawMonoBitmapMask</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>DrawColorBitmap</ItemSymbol>
