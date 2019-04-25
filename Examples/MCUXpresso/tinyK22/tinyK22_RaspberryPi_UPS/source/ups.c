@@ -7,6 +7,7 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_UPS
+#include <stdbool.h>
 #include "McuGenericI2C.h"
 #include "ups.h"
 
@@ -14,6 +15,16 @@
 #define MAX17048_VREG     2  /* VCELL Register: voltage between Vdd und GND */
 #define MAX17048_CREG     4 /* SOC Register: State of Charge */
 #define MAX17048_I2C_ADDR 0x36
+
+static bool isCharging = true;
+
+void UPS_SetIsCharging(bool charging) {
+  isCharging = charging;
+}
+
+bool UPS_IsCharging(void) {
+  return isCharging;
+}
 
 int UPS_GetVoltage(float *voltage) {
   uint8_t res;
@@ -48,7 +59,7 @@ void UPS_Deinit(void) {
 }
 
 void UPS_Init(void) {
-  /* nothing to do */
+  isCharging = true;
 }
 
 #endif /* PL_CONFIG_USE_UPS */

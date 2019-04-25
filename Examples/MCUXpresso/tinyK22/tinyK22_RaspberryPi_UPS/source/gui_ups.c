@@ -12,6 +12,7 @@
 #include "ups.h"
 #include "McuXFormat.h"
 #include "gui.h"
+#include "toaster.h"
 
 static lv_obj_t *win;
 static lv_obj_t *chart_label;
@@ -53,6 +54,10 @@ static void refresh_task(void *param) {
   int16_t chart_vvalue;
   int16_t chart_cvalue;
 
+  if (TOASTER_IsRunning()) {
+    return;
+  }
+
   if (UPS_GetVoltage(&voltage)!=0) {
     voltage = 0.0f; /* error */
   }
@@ -78,7 +83,7 @@ static void refresh_task(void *param) {
   McuXFormat_xsnprintf((char*)buf, sizeof(buf), "%s%s V: %.1fV%s\n%s%s Ch: %.1f%%%s\ncharge: %c",
     LV_TXT_COLOR_CMD, VOLTAGE_LABEL_COLOR, voltage, LV_TXT_COLOR_CMD,
     LV_TXT_COLOR_CMD, CHARGE_LABEL_COLOR,  charge, LV_TXT_COLOR_CMD,
-    'y'
+    UPS_IsCharging()?'y':'n'
     );
   lv_label_set_text(chart_label, (char*)buf);
 }

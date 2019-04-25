@@ -227,7 +227,12 @@ static void DisplayToasters(void) {
 #define REFR_TIME_MS   (100)
 static lv_task_t *refr_task;
 static lv_obj_t *win;
+static bool screenSaverIsRunning = false;
 static bool stopScreenSaver = false;
+
+bool TOASTER_IsRunning(void) {
+  return screenSaverIsRunning;
+}
 
 void TOASTER_StopScreenSaver(void) {
   stopScreenSaver = true;
@@ -237,12 +242,11 @@ static void refresh_task(void *param) {
   if (stopScreenSaver) {
     lv_obj_del(win);
     win = NULL;
-    //lv_obj_del(line1);
-    //line1 = NULL;
     lv_task_del(refr_task);
     refr_task = NULL;
-   // return LV_RES_INV;
+    screenSaverIsRunning = false;
   } else {
+    screenSaverIsRunning = true;
 #if 1
     DisplayToasters();
 #elif 1
@@ -276,6 +280,7 @@ static void refresh_task(void *param) {
 
 void TOASTER_Show(void) {
   stopScreenSaver = false;
+  screenSaverIsRunning = false;
   refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
 
   win = lv_obj_create(lv_scr_act(), NULL);

@@ -12,6 +12,7 @@
 #include "Sensor.h"
 #include "McuXFormat.h"
 #include "gui.h"
+#include "toaster.h"
 
 static lv_obj_t *win;
 static lv_obj_t *chart_label;
@@ -53,6 +54,9 @@ static void refresh_task(void *param) {
   int16_t chart_tvalue;
   int16_t chart_hvalue;
 
+  if (TOASTER_IsRunning()) {
+    return;
+  }
   temperature = SENSOR_GetTemperature();
   humidity = SENSOR_GetHumidity();
   chart_tvalue = temperature+30; /* add offset */
