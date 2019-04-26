@@ -295,6 +295,8 @@ typedef struct MPU_SETTINGS
 #endif /* configENABLE_MPU */
 /*-----------------------------------------------------------*/
 
+#define portMEMORY_BARRIER() __asm volatile( "" ::: "memory" )
+
 #ifdef __cplusplus
 }
 #endif
