@@ -86,7 +86,7 @@ static const RAPP_MsgHandler handlerTable[] =
 
 static void RadioPowerUp(void) {
   /* need to ensure that we wait 100 ms after power-on of the transceiver */
-  portTickType xTime;
+  TickType_t xTime;
   
   xTime = FRTOS1_xTaskGetTickCount();
   if (xTime<(100/portTICK_PERIOD_MS)) {
@@ -133,7 +133,7 @@ static void RadioTask(void *pvParameters) {
   appState = RNETA_NONE;
   for(;;) {
     Process(); /* process radio in/out queues */
-    FRTOS1_vTaskDelay(5/portTICK_PERIOD_MS);
+    vTaskDelay(5/portTICK_PERIOD_MS);
   }
 }
 
@@ -146,13 +146,13 @@ void RNETA_Init(void) {
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     APP_DebugPrint((unsigned char*)"ERR: failed setting message handler!\r\n");
   }
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         RadioTask,  /* pointer to the task */
         "Radio", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE+100, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+3,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

@@ -44,12 +44,12 @@ extern unsigned char _start_sg[];
  *       User should configure all peripherals, which shouldn't be accessible
  *       from normal world.
 */
-void BOARD_InitTrustZone()
+void BOARD_InitTrustZone(void)
 {
     /* Disable SAU */
     SAU->CTRL = 0U;
     
-    /* Configure SAU region 0 - Non-secure RAM for CODE execution*/
+    /* Configure SAU region 0 - Non-secure FLASH for CODE execution*/
     /* Set SAU region number */
     SAU->RNR = 0;
     /* Region base address */   

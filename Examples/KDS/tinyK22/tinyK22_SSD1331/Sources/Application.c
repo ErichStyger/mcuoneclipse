@@ -6,7 +6,7 @@
  */
 
 #include "Application.h"
-#include "LED1.h"
+//#include "LED1.h"
 #include "WAIT1.h"
 #include "LCD1.h"
 #include "GDisp1.h"
@@ -101,7 +101,7 @@ void APP_Run(void) {
   //lvgl_test(); /* create test GUI */
   do_image();
   for(;;) {
-    LED1_Neg();
+   // LED1_Neg();
     LV_Task();
     WAIT1_Waitms(5);
  //   lv_tutorial_hello_world();

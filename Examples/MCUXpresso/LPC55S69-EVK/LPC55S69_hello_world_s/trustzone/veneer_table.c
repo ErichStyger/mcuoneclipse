@@ -9,7 +9,7 @@
 #error "Compile with --cmse"
 #endif
 
-#include "stdint.h"
+#include <stdint.h>
 #include "arm_cmse.h"
 #include "veneer_table.h"
 #include "fsl_debug_console.h"
