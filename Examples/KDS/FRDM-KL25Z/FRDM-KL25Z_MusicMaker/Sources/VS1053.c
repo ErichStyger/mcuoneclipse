@@ -189,7 +189,7 @@ uint8_t VS_PlaySong(const uint8_t *fileName, const CLS1_StdIOType *io) {
       break;
     }
     while(!VS_Ready()) {
-      FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
     }
     VS_SendData(readBuf, sizeof(readBuf));
   }

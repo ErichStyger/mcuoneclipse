@@ -45,7 +45,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
       LEDR_On();
     }
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
 

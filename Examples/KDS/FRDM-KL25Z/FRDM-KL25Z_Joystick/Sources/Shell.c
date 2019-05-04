@@ -50,7 +50,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
     RSTDIO_Print(ioLocal); /* dispatch incoming messages */
     (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), ioRemote, CmdParserTable);
 #endif
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }
 

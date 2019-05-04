@@ -248,7 +248,7 @@ static void AppTask(void *pvParameters) {
     }
     CTRL_ScanKeys();
     APP_HandleEvent();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
     cntMs += 10;
   }
 }
@@ -273,7 +273,7 @@ void APP_Run(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
