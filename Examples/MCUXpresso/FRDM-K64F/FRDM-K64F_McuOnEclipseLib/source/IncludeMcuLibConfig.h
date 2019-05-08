@@ -2,7 +2,7 @@
  * IncludeMcuLibConfig.h
  *
  *  Created on: 17.02.2019
- *      Author: Erich Styger Local
+ *      Author: Erich Styger
  */
 
 #ifndef INCLUDEMCULIBCONFIG_H_
@@ -26,7 +26,7 @@
 
 /*------------------ FreeRTOS ----------------------- */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
-/* turn on the fillowing in FreeRTOSconfig.h: */
+/* turn on the following in FreeRTOSconfig.h: */
 //#define configUSE_TIMERS                          1
 
 #define McuGenericSWI2C_CONFIG_DO_YIELD (0) /* Yield Msg in GenericSWI2C */

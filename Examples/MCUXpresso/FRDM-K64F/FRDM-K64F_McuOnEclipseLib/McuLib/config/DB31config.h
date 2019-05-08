@@ -21,7 +21,6 @@
   #endif
 #endif
 
-
 #ifndef DB31_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define DB31_CONFIG_PORT_NAME       GPIO1

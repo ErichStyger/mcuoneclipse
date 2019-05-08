@@ -6,7 +6,7 @@
 **     Component   : KinetisTools
 **     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
+**     Date/Time   : 2019-03-26, 20:11, # CodeGen: 481
 **     Abstract    :
 **
 **     Settings    :
@@ -75,6 +75,9 @@
 /* MODULE McuArmTools. */
 
 #include "McuArmTools.h"
+
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
@@ -208,7 +211,7 @@ void McuArmTools_SoftwareReset(void)
 uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
   int i, j;
 
@@ -224,19 +227,19 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   for(i=0,j=sizeof(McuArmTools_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(McuArmTools_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
-#else
-#ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
-#ifdef SIM_UIDH
+  #else /* not McuLib_CONFIG_NXP_SDK_2_0_USED */
+    #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
+      #ifdef SIM_UIDH
   uid->id[0] = (SIM_UIDH>>24)&0xff;
   uid->id[1] = (SIM_UIDH>>16)&0xff;
   uid->id[2] = (SIM_UIDH>>8)&0xff;
   uid->id[3] = SIM_UIDH&0xff;
-#else
+      #else
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
   uid->id[3] = 0;
-#endif
+      #endif
   uid->id[4] = (SIM_UIDMH>>24)&0xff;
   uid->id[5] = (SIM_UIDMH>>16)&0xff;
   uid->id[6] = (SIM_UIDMH>>8)&0xff;
@@ -251,7 +254,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UIDL>>16)&0xff;
   uid->id[14] = (SIM_UIDL>>8)&0xff;
   uid->id[15] = SIM_UIDL&0xff;
-#elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
+    #elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -270,7 +273,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+    #else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -288,8 +291,8 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#endif
-#endif /* SDK V2.0 */
+    #endif
+  #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
 #else
   (void)uid; /* not used */
@@ -689,6 +692,8 @@ void McuArmTools_Init(void)
   /* Nothing needed */
 }
 
+
+#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* END McuArmTools. */
 
 /*!

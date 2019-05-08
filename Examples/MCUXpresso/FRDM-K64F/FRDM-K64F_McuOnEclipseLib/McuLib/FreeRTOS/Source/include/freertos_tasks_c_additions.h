@@ -116,7 +116,7 @@ char *const portArch_Name = NULL;
     offsetof(struct tskTaskControlBlock, uxTaskNumber),
     configMAX_TASK_NAME_LEN,
     configMAX_PRIORITIES,
-#if 0 // (tskKERNEL_VERSION_MAJOR >= 10) && (tskKERNEL_VERSION_MINOR >= 2)
+#if (tskKERNEL_VERSION_MAJOR >= 10) && (tskKERNEL_VERSION_MINOR >= 2)
     configENABLE_MPU,
     configENABLE_FPU,
     configENABLE_TRUSTZONE,

@@ -74,6 +74,7 @@ static HeapRegion_t xHeapRegions[] =
 };
 #endif
 
+
 static SemaphoreHandle_t sem = NULL;
 static QueueHandle_t queue = NULL;
 

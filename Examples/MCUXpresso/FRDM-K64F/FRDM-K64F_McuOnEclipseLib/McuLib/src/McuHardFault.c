@@ -6,7 +6,7 @@
 **     Component   : HardFault
 **     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-24, 18:36, # CodeGen: 401
+**     Date/Time   : 2019-03-11, 16:44, # CodeGen: 460
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -57,6 +57,8 @@
 /* MODULE McuHardFault. */
 
 #include "McuHardFault.h"
+
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
 
 /*
 ** ===================================================================
@@ -231,6 +233,8 @@ void McuHardFault_Init(void)
 #endif
 }
 
+
+#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* END McuHardFault. */
 
 /*!

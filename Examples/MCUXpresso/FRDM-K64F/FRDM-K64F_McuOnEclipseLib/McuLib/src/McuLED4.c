@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
+**     Date/Time   : 2019-04-03, 18:58, # CodeGen: 486
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :

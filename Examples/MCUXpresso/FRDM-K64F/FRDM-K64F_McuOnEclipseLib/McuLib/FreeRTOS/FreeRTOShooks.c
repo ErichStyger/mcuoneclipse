@@ -1,10 +1,11 @@
 /*
  * FreeRTOShooks.c
  *
- *  Created on: 22.07.2018
+ *  This is a default FreeRTOS hooks file you can use in your application.
  *      Author: Erich Styger
  */
 
+#include "McuLibconfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 /*
@@ -32,6 +33,11 @@ void McuRTOS_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName
   (void)pcTaskName;
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+    __asm volatile("bkpt #0");
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+    __asm volatile( "ebreak" );
+#endif
   for(;;) {}
 }
 
@@ -56,6 +62,11 @@ void McuRTOS_vApplicationMallocFailedHook(void)
      configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
   taskDISABLE_INTERRUPTS();
   /* Write your code here ... */
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+    __asm volatile("bkpt #0");
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+    __asm volatile( "ebreak" );
+#endif
   for(;;) {}
 }
 
@@ -73,7 +84,7 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 */
 void McuRTOS_vApplicationTickHook(void)
 {
-  /* Called for every RTOS tick. */
+  /* Hook called for every RTOS tick. */
 }
 
 /*
@@ -111,13 +122,15 @@ void McuRTOS_vApplicationIdleHook(void)
 void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used */
-#if 1
-  /* example for Kinetis (enable SetOperationMode() in CPU component): */
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+  /* example for ARM Cortex-M (enable SetOperationMode() in CPU component): */
   // Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
   /* or to wait for interrupt: */
     __asm volatile("dsb");
     __asm volatile("wfi");
     __asm volatile("isb");
+#elif McuLib_CONFIG_CPU_IS_RISC_V
+  #warning "NYI" /* \todo */
 #elif 0
   /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
   Cpu_SetWaitMode();

@@ -46,7 +46,7 @@ task.h is included from an application file. */
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
-#if configUSE_MPU_SUPPORT /* << EST: only compile this module if MPU is actually enabled and supported */
+#if configENABLE_MPU /* << EST: only compile this module if MPU is actually enabled and supported */
 
 /**
  * @brief Calls the port specific code to raise the privilege.
@@ -1338,5 +1338,5 @@ BaseType_t xRunningPrivileged = xPortRaisePrivilege();
 	#include "application_defined_privileged_functions.h"
 #endif
 
-#endif /* configUSE_MPU_SUPPORT */ /* << EST: only compile this module if MPU is actually enabled and supported */
+#endif /* configENABLE_MPU */ /* << EST: only compile this module if MPU is actually enabled and supported */
 

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.207, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 06:02, # CodeGen: 433
+**     Date/Time   : 2019-04-24, 10:26, # CodeGen: 505
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -34,6 +34,7 @@
 **         DrawFilledCircle      - void McuGDisplaySSD1306_DrawFilledCircle(McuGDisplaySSD1306_PixelDim x0,...
 **         DrawBarChart          - void McuGDisplaySSD1306_DrawBarChart(McuGDisplaySSD1306_PixelDim x,...
 **         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x,...
+**         DrawMonoBitmapMask    - void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x,...
 **         DrawColorBitmap       - void McuGDisplaySSD1306_DrawColorBitmap(McuGDisplaySSD1306_PixelDim x,...
 **         Draw65kBitmap         - void McuGDisplaySSD1306_Draw65kBitmap(McuGDisplaySSD1306_PixelDim x1,...
 **         Draw256BitmapLow      - void McuGDisplaySSD1306_Draw256BitmapLow(McuGDisplaySSD1306_PixelDim x1,...
@@ -51,7 +52,7 @@
 **         Deinit                - void McuGDisplaySSD1306_Deinit(void);
 **         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -425,6 +426,59 @@ void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x, McuGDispla
     for(;;) {
       pixel = (McuGDisplaySSD1306_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
       McuGDisplaySSD1306_PutPixel(x0, y0, (McuGDisplaySSD1306_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      if (i==0 && x0!=xe) { /* next byte inside the row */
+        data++;
+        i = 7;
+      } else {
+        i--;
+      }
+      if (x0==xe) { /* reached end of line, next row */
+        data++; /* next data byte */
+        break;
+      }
+      x0++;
+    } /* for */
+    if (y0==ye) break; /* reached end */
+    y0++;
+  } /* for */
+}
+
+/*
+** ===================================================================
+**     Method      :  DrawMonoBitmapMask (component GDisplay)
+**
+**     Description :
+**         Draws a B/W bitmap, but only the pixels which are set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x position of left upper corner
+**         y               - y position of left upper corner
+**         image           - Pointer to image structure and
+**                           information.
+**         pixelColor      - Color to be used for pixels
+**                           (pixel set)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD1306_PixelDim y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor)
+{
+  McuGDisplaySSD1306_PixelDim x0, y0, xe, ye;
+  McuGDisplaySSD1306_PixelColor pixel;
+  uint8_t i;
+  const uint8_t *data;
+
+  data = image->pixmap;
+  y0 = y;
+  ye = (McuGDisplaySSD1306_PixelDim)(y+image->height-1);
+  xe = (McuGDisplaySSD1306_PixelDim)(x+image->width-1);
+  for(;;) {
+    i=7;
+    x0 = x;
+    for(;;) {
+      pixel = (McuGDisplaySSD1306_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
+      if (pixel) { /* only draw if pixel is set, everything else is transparent */
+        McuGDisplaySSD1306_PutPixel(x0, y0, pixelColor);
+      }
       if (i==0 && x0!=xe) { /* next byte inside the row */
         data++;
         i = 7;

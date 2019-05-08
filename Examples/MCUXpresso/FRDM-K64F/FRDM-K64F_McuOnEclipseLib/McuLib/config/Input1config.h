@@ -21,7 +21,6 @@
   #endif
 #endif
 
-
 #ifndef Input1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define Input1_CONFIG_PORT_NAME       GPIO1

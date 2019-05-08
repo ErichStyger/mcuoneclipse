@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-16, 17:45, # CodeGen: 426
+**     Date/Time   : 2019-04-23, 08:34, # CodeGen: 494
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -76,7 +76,11 @@
 #include "RS1.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if RS1_CONFIG_DO_PIN_MUXING
-  #include "fsl_port.h" /* include SDK header file for port muxing */
+    #if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+      #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
+    #else /* normal Kinetis or LPC */
+      #include "fsl_port.h" /* include SDK header file for port muxing */
+    #endif
   #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
@@ -84,6 +88,8 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -176,6 +182,8 @@ void RS1_ClrVal(void)
   GPIO_DRV_ClearPinOutput(RS1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(RS1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -203,6 +211,8 @@ void RS1_SetVal(void)
   GPIO_DRV_SetPinOutput(RS1_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(RS1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -237,6 +247,8 @@ void RS1_NegVal(void)
   } else {
     PINS_GPIO_WritePin(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, 1);
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(RS1_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -267,6 +279,8 @@ bool RS1_GetVal(void)
   return GPIO_DRV_ReadPinInput(RS1_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(RS1_CONFIG_PORT_NAME)&(1<<RS1_CONFIG_PIN_NUMBER))!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(RS1_CONFIG_PIN_NUMBER)!=0;
 #else
   return FALSE;
 #endif
@@ -334,6 +348,8 @@ void RS1_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(RS1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<RS1_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(RS1_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(RS1_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
 #endif
   RS1_isOutput = false;
 }
@@ -362,6 +378,8 @@ void RS1_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(RS1_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<RS1_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(RS1_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(RS1_CONFIG_PIN_NUMBER);
 #endif
   RS1_isOutput = true;
 }
@@ -405,6 +423,8 @@ void RS1_PutVal(bool Val)
   GPIO_DRV_WritePinOutput(RS1_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, Val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /*! \todo */
 #endif
 }
 
@@ -422,7 +442,30 @@ void RS1_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if RS1_CONFIG_DO_PIN_MUXING
-  PORT_SetPinMux(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+        #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+        #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+        const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
+                                      IOCON_PIO_FUNC0 |
+                                      /* Selects pull-up function */
+                                      IOCON_PIO_MODE_PULLUP |
+                                      /* Standard mode, output slew rate control is enabled */
+                                      IOCON_PIO_SLEW_STANDARD |
+                                      /* Input function is not inverted */
+                                      IOCON_PIO_INV_DI |
+                                      /* Enables digital function */
+                                      IOCON_PIO_DIGITAL_EN |
+                                      /* Open drain is disabled */
+                                      IOCON_PIO_OPENDRAIN_DI);
+        IOCON_PinMuxSet(IOCON, RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, port_pin_config);
+      #else
+        PORT_SetPinMux(RS1_CONFIG_PORT_NAME, RS1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #endif
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   /*! \todo Pin Muxing not implemented */
@@ -431,6 +474,8 @@ void RS1_Init(void)
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
 #endif
 #if RS1_CONFIG_INIT_PIN_DIRECTION == RS1_CONFIG_INIT_PIN_DIRECTION_INPUT
   RS1_SetInput();

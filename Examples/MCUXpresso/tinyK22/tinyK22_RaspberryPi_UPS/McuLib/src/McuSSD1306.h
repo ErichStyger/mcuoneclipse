@@ -6,7 +6,7 @@
 **     Component   : SSD1306
 **     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-17, 13:35, # CodeGen: 487
+**     Date/Time   : 2019-04-24, 10:23, # CodeGen: 503
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -232,7 +232,7 @@ void McuSSD1306_OpenWindow(McuSSD1306_PixelDim x0, McuSSD1306_PixelDim y0, McuSS
 ** ===================================================================
 */
 
-#define McuSSD1306_CloseWindow()  /* nothing to do */
+void McuSSD1306_CloseWindow(void);
 
 /*
 ** ===================================================================

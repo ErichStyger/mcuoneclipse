@@ -87,7 +87,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     }
 #endif
     LED1_Neg();
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
 
@@ -102,13 +102,13 @@ void APP_Run(void) {
   _LCD_DP3_ON(); /* dot for third digit */
   _LCD_COL_ON(); /* : between digit two and three */
 
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         MainTask,  /* pointer to the task */
         (signed char *)"Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

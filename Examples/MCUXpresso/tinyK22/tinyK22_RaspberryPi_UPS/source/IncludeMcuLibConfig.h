@@ -16,6 +16,7 @@
 
 /* ------------------- RTOS ---------------------------*/
 /* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
+#define configTOTAL_HEAP_SIZE   (16*1024)
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
 

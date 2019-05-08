@@ -113,7 +113,7 @@ static portTASK_FUNCTION(TraceTask, pvParameters) {
   (void)pvParameters;
   for(;;) {
     if (traceChannel==TRACE_TO_NONE) {
-      FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(1000));
     } else if (traceChannel==TRACE_TO_SHELL) {
       buf[0] = '\0';
       UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" => ");
@@ -144,9 +144,9 @@ static portTASK_FUNCTION(TraceTask, pvParameters) {
       }
       if (traceMagnetometer || traceAccel) {
         CLS1_SendStr((unsigned char*)"\r\n", CLS1_GetStdio()->stdOut);
-        FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+        vTaskDelay(pdMS_TO_TICKS(100));
       } else {
-        FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
+        vTaskDelay(pdMS_TO_TICKS(25));
       }
     }
   }
@@ -158,7 +158,7 @@ void TRACE_Deinit(void) {
 /*! \brief Initialization of the module */
 void TRACE_Init(void) {
   traceChannel = TRACE_TO_NONE;
-  if (FRTOS1_xTaskCreate(TraceTask, (signed char *)"Trace", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(TraceTask, (signed char *)"Trace", configMINIMAL_STACK_SIZE+150, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error, maybe not enough memory? */
   }
 }

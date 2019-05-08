@@ -6,7 +6,7 @@
 **     Component   : SSD1306
 **     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-17, 13:35, # CodeGen: 487
+**     Date/Time   : 2019-04-24, 10:23, # CodeGen: 503
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -378,6 +378,20 @@ void McuSSD1306_WriteData(uint8_t data)
 */
 void McuSSD1306_OpenWindow(McuSSD1306_PixelDim x0, McuSSD1306_PixelDim y0, McuSSD1306_PixelDim x1, McuSSD1306_PixelDim y1)
 {
+  /* no windowing capabilities */
+}
+
+/*
+** ===================================================================
+**     Method      :  McuSSD1306_CloseWindow (component SSD1306)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+void McuSSD1306_CloseWindow(void)
+{
+  /* no windowing capabilities */
 }
 
 /*
@@ -400,6 +414,36 @@ void McuSSD1306_Clear(void)
     p++;
   }
   McuSSD1306_UpdateFull();
+}
+
+/*
+** ===================================================================
+**     Method      :  UpdateRegion (component SSD1306)
+**
+**     Description :
+**         Updates a region of the display. This is only a stub for
+**         this display as we are using windowing.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - y coordinate
+**         w               - width of the region
+**         h               - Height of the region
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
+{
+  int page, pageBeg, pageEnd, colStart;
+
+  pageBeg = y/8;
+  pageEnd = (y+h-1)/8;
+  colStart = x;
+  for(page = pageBeg; page<=pageEnd; page++) {
+    (void)SSD1306_SetPageStartAddr(page);
+    (void)SSD1306_SetColStartAddr(colStart);
+    SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0]+(page*McuSSD1306_DISPLAY_HW_NOF_COLUMNS+colStart), w);
+  }
 }
 
 /*
@@ -435,52 +479,6 @@ void McuSSD1306_UpdateFull(void)
 
 /*
 ** ===================================================================
-**     Method      :  UpdateRegion (component SSD1306)
-**
-**     Description :
-**         Updates a region of the display. This is only a stub for
-**         this display as we are using windowing.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         x               - x coordinate
-**         y               - y coordinate
-**         w               - width of the region
-**         h               - Height of the region
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
-{
-  int page, pageBeg, pageEnd, colStart;
-
-  pageBeg = y/8;
-  pageEnd = (y+h-1)/8;
-  colStart = x;
-  for(page = pageBeg; page<=pageEnd; page++) {
-    (void)SSD1306_SetPageStartAddr(page);
-    (void)SSD1306_SetColStartAddr(colStart);
-    SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0]+(page*McuSSD1306_DISPLAY_HW_NOF_COLUMNS+colStart), w);
-  }
-}
-
-/*
-** ===================================================================
-**     Method      :  McuSSD1306_CloseWindow (component SSD1306)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-/*
-void McuSSD1306_CloseWindow(void)
-{
-  implemented as macro in McuSSD1306.h
-}
-*/
-
-/*
-** ===================================================================
 **     Method      :  GetDisplayOrientation (component SSD1306)
 **
 **     Description :
@@ -497,11 +495,11 @@ McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void)
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT
   return McuSSD1306_ORIENTATION_PORTRAIT; /* Portrait mode */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT180
-  return McuSSD1306_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180ï¿½ */
+  return McuSSD1306_ORIENTATION_PORTRAIT180; /* Portrait mode, rotated 180° */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
-  return McuSSD1306_ORIENTATION_LANDSCAPE; /* Landscape mode, rotated right 90ï¿½ */
+  return McuSSD1306_ORIENTATION_LANDSCAPE; /* Landscape mode, rotated right 90° */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
-  return McuSSD1306_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90ï¿½ */
+  return McuSSD1306_ORIENTATION_LANDSCAPE180; /* Landscape mode, rotated left 90° */
 #endif
 }
 
@@ -928,11 +926,11 @@ void McuSSD1306_Init(void)
 #if McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT
   McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT); /* Portrait mode */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_PORTRAIT180
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180ï¿½ */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_PORTRAIT180); /* Portrait mode, rotated 180° */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90ï¿½ */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE); /* Landscape mode, rotated right 90° */
 #elif McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION==McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
-  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90ï¿½ */
+  McuSSD1306_SetDisplayOrientation(McuSSD1306_ORIENTATION_LANDSCAPE180); /* Landscape mode, rotated left 90° */
 #endif
 #if McuSSD1306_CONFIG_CLEAR_DISPLAY_IN_INIT
   McuSSD1306_Clear();

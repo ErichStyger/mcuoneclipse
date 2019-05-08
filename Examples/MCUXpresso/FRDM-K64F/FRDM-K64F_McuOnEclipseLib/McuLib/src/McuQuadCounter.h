@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : QuadCounter
-**     Version     : Component 01.031, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.032, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 20:26, # CodeGen: 372
+**     Date/Time   : 2019-04-17, 13:35, # CodeGen: 487
 **     Abstract    :
 **
 This driver implements a quadrature encoder using two signals (C1 and C2) to generate position information.
@@ -33,7 +33,7 @@ This driver implements a quadrature encoder using two signals (C1 and C2) to gen
 **         ParseCommand - uint8_t McuQuadCounter_ParseCommand(const unsigned char *cmd, bool *handled,...
 **
 ** License   :  Open Source (LGPL)
-** Copyright : (c) Copyright Erich Styger, 2014, all rights reserved.
+** Copyright : (c) Copyright Erich Styger, 2014-2019, all rights reserved.
 ** 
 ** This an open source software using Processor Expert.
 ** This is a free software and is opened for education,  research  and commercial developments under license policy of following terms:

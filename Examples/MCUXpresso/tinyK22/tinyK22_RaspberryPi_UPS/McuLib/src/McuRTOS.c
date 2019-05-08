@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.576, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.577, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-26, 15:45, # CodeGen: 479
+**     Date/Time   : 2019-04-23, 09:05, # CodeGen: 497
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -71,10 +71,7 @@
 **            Cleanup Resources                            : yes
 **            TaskExitError Handler                        : no
 **          Ticks                                          : Settings for the periodic tick timer
-**            Tickless Idle Mode                           : Enabled
-**              Stopped Timer Compensation                 : 45
-**              Expected Idle Time (Ticks) before Sleep    : 2
-**              Idle Decision Hook                         : Disabled
+**            Tickless Idle Mode                           : Disabled
 **            Tick Rate (Hz)                               : 1000
 **            Use 16bit ticks                              : no
 **            non-LDD Tick                                 : Disabled

@@ -85,9 +85,13 @@
 #define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
 /*----------------------------------------------------------*/
 /* Heap Memory */
-#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#ifndef configUSE_HEAP_SCHEME
+  #define configUSE_HEAP_SCHEME                   4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#endif /* configUSE_HEAP_SCHEME */
 #define configFRTOS_MEMORY_SCHEME                 configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
-#define configTOTAL_HEAP_SIZE                     (2*8192) /* size of heap in bytes */
+#ifndef configTOTAL_HEAP_SIZE
+  #define configTOTAL_HEAP_SIZE                   (8192) /* size of heap in bytes */
+#endif /* configTOTAL_HEAP_SIZE */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -203,6 +207,20 @@ point support. */
  */
 #define configCLINT_BASE_ADDRESS   0x0
 
+/*---------------------------------------------------------------------------------------*/
+/* MPU and TrustZone settings */
+#ifndef configENABLE_FPU
+  #define configENABLE_FPU        (0)
+#endif /* configENABLE_FPU */
+
+#ifndef configENABLE_MPU
+  #define configENABLE_MPU        (0)
+#endif /* configENABLE_MPU */
+
+#ifndef configENABLE_TRUSTZONE
+  #define configENABLE_TRUSTZONE  (0)
+#endif /* configENABLE_TRUSTZONE */
+/*---------------------------------------------------------------------------------------*/
 
 /* custom include file: */
 // #include "CustomFreeRTOSSettings.h
