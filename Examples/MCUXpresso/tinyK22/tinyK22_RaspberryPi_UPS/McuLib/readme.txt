@@ -13,6 +13,7 @@ Middleware and dedicated driver folders:
 - SEGGER_SysView: Segger Systemview Library for tracing FreeRTOS (https://www.segger.com/products/development-tools/systemview/)
 - TraceRecorder: Percipio Tracealyzer library for FreeRTOS (https://percepio.com/tz/)
 - LittlevGL: GUI library (https://littlevgl.com/)
+- minIni: a minimal INI file parser: https://www.compuphase.com/minini.htm
 
 Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - C11, C21: subdrivers of McuQuadCounter

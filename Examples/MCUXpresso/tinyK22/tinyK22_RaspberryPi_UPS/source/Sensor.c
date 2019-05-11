@@ -145,6 +145,7 @@ static void GetAccel(void) {
 }
 #endif
 
+#if PL_CONFIG_HAS_SGP30 || PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561
 static void SensorTask(void *pv) {
 #if PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561 || PL_CONFIG_HAS_RTC_DS3231
   uint8_t res;
@@ -294,6 +295,8 @@ static void SensorTask(void *pv) {
     cntr100ms++;
   }
 }
+#endif /* PL_CONFIG_HAS_SGP30 || PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561 */
+
 
 void SENSOR_Init(void) {
 #if PL_CONFIG_HAS_SGP30 || PL_CONFIG_HAS_MMA8451 || PL_CONFIG_HAS_TSL2561

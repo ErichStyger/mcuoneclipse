@@ -1,10 +1,3 @@
-/*
- * McuLibVersion.h
- *
- *  Created on: 20.04.2019
- *      Author: Erich Styger
- */
-
 #ifndef SOURCES_MCULIBVERSION_H_
 #define SOURCES_MCULIBVERSION_H_
 
