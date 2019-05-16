@@ -55,7 +55,7 @@ static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
@@ -67,13 +67,13 @@ void main(void)
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         Task1,  /* pointer to the task */
         (signed portCHAR *)"Task1", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */ /* note: 250 without 'copy' command */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS)
   {
     for(;;){}; /* error! probably out of memory */

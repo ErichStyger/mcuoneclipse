@@ -86,7 +86,7 @@ static portTASK_FUNCTION(AppTask, pvParameters) {
   (void)pvParameters;
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
@@ -108,13 +108,13 @@ void main(void) {
   PDC1_WriteString("Hello World!");
   draw4Dots();
   drawDemo();
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
       AppTask,  /* pointer to the task */
         "Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) 
   {
     /*lint -e527 */

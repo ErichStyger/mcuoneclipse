@@ -138,7 +138,7 @@ typedef struct {
 
 static CUBE_WinParams cubeParam;
 #if PL_HAS_SHIP_DEMO
-  static xTaskHandle xHandleTask3Dship = NULL;
+  static TaskHandle_t xHandleTask3Dship = NULL;
 #endif
 
 #define CUBE_NOF_LINES  12 /* cube has 12 lines */
@@ -271,7 +271,7 @@ static portTASK_FUNCTION(Task3Dcube, pvParameters) {
       EVNT1_ClearEvent(EVNT1_APP_MODE_CHANGE); /* reset event flag */
       FRTOS1_vTaskDelete(NULL); /* kill ourself */ 
     }
-    FRTOS1_vTaskDelay(80/portTICK_RATE_MS); /* give user a chance to see the cube rotating... */
+    vTaskDelay(pdMS_TO_TICKS(80)); /* give user a chance to see the cube rotating... */
   } /* for */
 }
 
@@ -280,7 +280,7 @@ void CUBE_CloseCubeWindow(void) {
   EVNT1_SetEvent(EVNT1_APP_MODE_CHANGE); /* request to close application */
   while(EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) {
     /* wait until task has killed itself */
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
   (void)UI1_RemoveWindowPaintBackground(&cubeParam.descP->screen, &cubeParam.descP->windowCube);
   if (cubeParam.descP->screen.first==NULL) {
@@ -438,7 +438,7 @@ static portTASK_FUNCTION(Task3Dship, pvParameters) {
       xHandleTask3Dship = NULL;
       FRTOS1_vTaskDelete(NULL); /* kill ourself */ 
     }
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS); /* give user a chance to see the cube rotating... */
+    vTaskDelay(pdMS_TO_TICKS(50)); /* give user a chance to see the cube rotating... */
   } /* for */
 }
 #endif /* PL_HAS_SHIP_DEMO */
@@ -450,7 +450,7 @@ void CUBE_CloseShipWindow(void) {
   EVNT1_SetEvent(EVNT1_APP_MODE_CHANGE); /* request to close application */
   while(EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) {
     /* wait until task has killed itself */
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
   (void)UI1_RemoveWindowPaintBackground(&cubeParam.descP->screen, &cubeParam.descP->windowShip);
   if (cubeParam.descP->screen.first==NULL) {
@@ -531,14 +531,14 @@ void CUBE_CreateWindow(CUBE_WindowDesc *desc) {
 #if PL_HAS_SHIP_DEMO
   doCloseShipWindow = FALSE;
   /* Start space ship task */
-  if (FRTOS1_xTaskCreate(Task3Dship, "Ship", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, &xHandleTask3Dship)!=pdPASS) {
+  if (xTaskCreate(Task3Dship, "Ship", configMINIMAL_STACK_SIZE+80, &cubeParam, tskIDLE_PRIORITY+3, &xHandleTask3Dship)!=pdPASS) {
     /* task creation failed */
     for(;;) {} /* out of memory? */
   }
 #endif
 }
 
-void CUBE_StopTask(xTaskHandle task) {
+void CUBE_StopTask(TaskHandle_t task) {
   GDisp1_GetDisplay();
   FRTOS1_vTaskSuspend(task);
   GDisp1_GiveDisplay();

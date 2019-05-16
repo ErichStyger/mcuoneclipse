@@ -122,10 +122,6 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
   }
 }
 
-static lv_res_t btn_click_action(lv_obj_t *btn) {
-  return LV_RES_OK; /*Return OK if the button is not deleted*/
-}
-
 static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
   GUI_UPS_CreateView();
   return LV_RES_OK;

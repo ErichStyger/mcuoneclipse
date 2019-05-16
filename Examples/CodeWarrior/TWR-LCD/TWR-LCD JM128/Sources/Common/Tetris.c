@@ -1220,7 +1220,7 @@ static portTASK_FUNCTION(TaskTetris, pvParameters) {
       EVNT1_ClearEvent(EVNT1_APP_MODE_CHANGE); /* reset event flag */
       FRTOS1_vTaskDelete(NULL); /* kill ourself */ 
     }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }
 
@@ -1291,7 +1291,7 @@ static void tetrisW_WindowCallback(UI1_Window *window, UI1_Element *element, UI1
       EVNT1_SetEvent(EVNT1_APP_MODE_CHANGE); /* request to close application */
       while(EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) {
         /* wait until task has killed itself */
-        FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+        vTaskDelay(pdMS_TO_TICKS(50));
       }
       TETRIS_isRunning = FALSE;
       APP_SetApplicationMode(APP_MODE_MAIN_MENU);

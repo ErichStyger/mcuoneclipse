@@ -24,6 +24,7 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "PE_Timer.h"
+#include "XF1.h"
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "LED4.h"
@@ -70,9 +71,11 @@
 #include "UIG1.h"
 #include "WDog1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "CLS1.h"
 
 
-void KEY2_OnKeyPressed(byte keys);
+void KEY2_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY2_OnKeyPressed (module Events)
@@ -88,7 +91,7 @@ void KEY2_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY2_OnKeyReleased(byte keys);
+void KEY2_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY2_OnKeyReleased (module Events)
@@ -104,7 +107,7 @@ void KEY2_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -120,7 +123,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -136,7 +139,7 @@ void KEY1_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -153,7 +156,7 @@ void KEY1_OnKeyReleasedLong(byte keys);
 ** ===================================================================
 */
 
-void EVNT1_AppHandleEvent(byte event);
+void EVNT1_AppHandleEvent(uint8_t event);
 /*
 ** ===================================================================
 **     Event       :  EVNT1_AppHandleEvent (module Events)
@@ -221,7 +224,7 @@ void Sensor1_OnADGive(void);
 ** ===================================================================
 */
 
-void KEY2_OnKeyReleasedLong(byte keys);
+void KEY2_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY2_OnKeyReleasedLong (module Events)
@@ -262,7 +265,7 @@ void UICalendar1_OnCalendarGetAppointments(UICalendar1_CalendarDateTime *startHi
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -351,6 +354,75 @@ void GDisp1_OnGetDisplay(void);
 **         (e.g. SPI) with other peripherals, as this gives you a
 **         chance to protect the access to it.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GDisp1_OnGiveDisplay(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called from GetDisplay() method. This callback is
+**         useful if you want to share the communication to the display
+**         (e.g. SPI) with other peripherals, as this gives you a
+**         chance to protect the access to it.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY2_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

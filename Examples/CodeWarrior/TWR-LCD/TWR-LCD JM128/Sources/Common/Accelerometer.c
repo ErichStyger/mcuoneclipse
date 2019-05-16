@@ -39,7 +39,7 @@
   #define FONT   Helv12n_GetFont()
 #endif
 
-static xTaskHandle xHandleTaskAccelOrientation;  /* display orientation task */
+static TaskHandle_t xHandleTaskAccelOrientation;  /* display orientation task */
 static ACCEL_WindowDesc *appWp;
 
 #define VAL_1G           5500 /* about 1g value */
@@ -49,7 +49,7 @@ void ACCEL_StopAccelDemo(void) {
   EVNT1_SetEvent(EVNT1_APP_MODE_CHANGE); /* request to close application */
   while(EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) {
     /* wait until task has killed itself */
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
   APP_SetApplicationMode(APP_MODE_MAIN_MENU);
 }
@@ -105,16 +105,16 @@ static portTASK_FUNCTION(TaskAccelOrientation, pvParameters) {
         GDisp1_GiveDisplay();
       }
     }
-    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(500));
   } /* for */
 }
 
 void ACCEL_SuspendOrientationTask(void) {
-  FRTOS1_vTaskSuspend(xHandleTaskAccelOrientation);
+  vTaskSuspend(xHandleTaskAccelOrientation);
 }
 
 void ACCEL_ResumeOrientationTask(void) {
-  FRTOS1_vTaskResume(xHandleTaskAccelOrientation);
+  vTaskResume(xHandleTaskAccelOrientation);
 }
 
 static portTASK_FUNCTION(TaskAccelDemo, pvParameters) {
@@ -185,10 +185,10 @@ static portTASK_FUNCTION(TaskAccelDemo, pvParameters) {
     prevData[2].data = data[2].data;
     if (EVNT1_GetEvent(EVNT1_APP_MODE_CHANGE)) { /* request to close application */
       EVNT1_ClearEvent(EVNT1_APP_MODE_CHANGE); /* reset event flag */
-      FRTOS1_vTaskDelete(NULL); /* kill ourself */
+      vTaskDelete(NULL); /* kill ourself */
     }
-    FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
-  } /* for */
+    vTaskDelay(pdMS_TO_TICKS(25));
+  }
 }
 
 void ACCEL_StartDemoTask(ACCEL_WindowDesc *desc) {

@@ -32,7 +32,7 @@ typedef struct {
 
 void CUBE_CreateWindow(CUBE_WindowDesc *desc);
 
-void CUBE_StopTask(xTaskHandle task);
+void CUBE_StopTask(TaskHandle_t task);
 
 void CUBE_OnEvent(UI1_Screen *screen, UI1_Window *window, UI1_Element *element, UI1_EventCallbackKind event);
   /* UI event handler */

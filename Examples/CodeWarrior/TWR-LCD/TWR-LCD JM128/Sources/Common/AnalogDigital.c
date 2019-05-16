@@ -18,18 +18,18 @@
 #endif
 
 #if PL_USE_RTOS
-  static xSemaphoreHandle AD_deviceMutex;
+  static SemaphoreHandle_t AD_deviceMutex;
 #endif
 
 void AD_GetDevice(void) {
 #if PL_USE_RTOS
-  FRTOS1_xSemaphoreTake(AD_deviceMutex, portMAX_DELAY);
+  xSemaphoreTake(AD_deviceMutex, portMAX_DELAY);
 #endif
 }
 
 void AD_GiveDevice(void) {
 #if PL_USE_RTOS
-  FRTOS1_xSemaphoreGive(AD_deviceMutex);
+  xSemaphoreGive(AD_deviceMutex);
 #endif
 }
 

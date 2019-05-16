@@ -218,8 +218,8 @@ static portTASK_FUNCTION(TaskMain, pvParameters ) {
     //FRTOS1_vTaskDelay((5*1000)/portTICK_RATE_MS);
     heapSize = FRTOS1_xPortGetFreeHeapSize();
 #endif
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-	} /* for */
+    vTaskDelay(pdMS_TO_TICKS(50));
+  } /* for */
 }
 #endif
 
@@ -244,7 +244,7 @@ void RTOS_Start(void) {
   SERIAL_Start();
 #endif
 #if PL_USE_RTOS
-  if (FRTOS1_xTaskCreate(TaskMain, "Main", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+2, (xTaskHandle *) NULL)==pdPASS) {
+  if (xTaskCreate(TaskMain, "Main", configMINIMAL_STACK_SIZE+350, NULL, tskIDLE_PRIORITY+2, (TaskHandle_t *) NULL)==pdPASS) {
     FRTOS1_vTaskStartScheduler(); /* Start the scheduler */
   }
 #endif

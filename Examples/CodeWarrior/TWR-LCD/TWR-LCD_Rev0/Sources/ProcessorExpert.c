@@ -19,6 +19,7 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "XF1.h"
 #include "LED3.h"
 #include "LEDpin3.h"
 #include "LED4.h"
@@ -65,6 +66,8 @@
 #include "UIG1.h"
 #include "WDog1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "CLS1.h"
 /* Include shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
