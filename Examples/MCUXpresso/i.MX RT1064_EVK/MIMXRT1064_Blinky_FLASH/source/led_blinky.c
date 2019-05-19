@@ -48,16 +48,21 @@ void SysTick_DelayTicks(uint32_t n)
     }
 }
 
-void __attribute__((section (".text_EXECUTE_ONLY"))) blinkRAM(void) {
-  /* Delay 1000 ms */
-  SysTick_DelayTicks(1000U);
-  if (g_pinSet)
-  {
+static void __attribute__((section (".ramfunc"))) blinkRAM(void) {
+  if (g_pinSet) {
       GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
       g_pinSet = false;
+  } else  {
+      GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
+      g_pinSet = true;
   }
-  else
-  {
+}
+
+static void blinkFLASH(void) {
+  if (g_pinSet) {
+      GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
+      g_pinSet = false;
+  } else  {
       GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
       g_pinSet = true;
   }
@@ -88,20 +93,14 @@ int main(void)
         {
         }
     }
-    blinkRAM();
     while (1)
     {
         /* Delay 1000 ms */
         SysTick_DelayTicks(1000U);
-        if (g_pinSet)
-        {
-            GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
-            g_pinSet = false;
-        }
-        else
-        {
-            GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
-            g_pinSet = true;
-        }
+#if 1
+        blinkRAM();
+#else
+        blinkFLASH();
+#endif
     }
 }
