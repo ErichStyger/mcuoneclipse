@@ -1,5 +1,8 @@
 readme.txt
 ----------
+
+Repository and more details: https://github.com/ErichStyger/McuOnEclipseLibrary
+
 This folder contains all the library sources:
 - config: application specific configuration files
 - src: source files

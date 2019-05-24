@@ -95,6 +95,8 @@ char *const portArch_Name = NULL;
 #elif defined(__IAR_SYSTEMS_ICC__)
   #pragma required=FreeRTOSDebugConfig
   const uint8_t FreeRTOSDebugConfig[] =
+#else /* << EST generic compiler */
+  const uint8_t FreeRTOSDebugConfig[] =
 #endif
 {
     FREERTOS_DEBUG_CONFIG_MAJOR_VERSION,

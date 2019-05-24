@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.0
+ * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -82,6 +82,14 @@ must be set in the compiler's include path. */
 
 #ifndef portNUM_CONFIGURABLE_REGIONS
 	#define portNUM_CONFIGURABLE_REGIONS 1
+#endif
+
+#ifndef portHAS_STACK_OVERFLOW_CHECKING
+	#define portHAS_STACK_OVERFLOW_CHECKING 0
+#endif
+
+#ifndef portARCH_NAME
+	#define portARCH_NAME NULL
 #endif
 
 #ifdef __cplusplus

@@ -1,6 +1,10 @@
 #ifndef SOURCES_MCULIBVERSION_H_
 #define SOURCES_MCULIBVERSION_H_
 
+/* See
+ * https://github.com/ErichStyger/McuOnEclipseLibrary
+ */
+
 /* Date: 07-May-2019
  * Time: 21:23
  */

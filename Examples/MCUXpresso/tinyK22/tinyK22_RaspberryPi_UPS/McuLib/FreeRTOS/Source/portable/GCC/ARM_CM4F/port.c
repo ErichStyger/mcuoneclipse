@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.0
+ * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -74,6 +74,7 @@
   #error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
 #endif
 
+#endif /*  McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -158,7 +159,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
 #endif
 
-  #if 1
+  #if 1 /* using ARM SysTick Timer */
     #if configSYSTICK_USE_LOW_POWER_TIMER
       /* using Low Power Timer */
       #if CONFIG_PEX_SDK_USEDMcuLib_CONFIG_PEX_SDK_USED
@@ -1697,10 +1698,7 @@ __asm uint32_t vPortGetIPSR(void) {
 
 #endif /* configASSERT_DEFINED */
 
-
 #endif /* ARM M4(F) core */ 
-
-#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
