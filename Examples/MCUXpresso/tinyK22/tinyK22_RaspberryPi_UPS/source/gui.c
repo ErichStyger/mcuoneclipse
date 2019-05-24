@@ -25,6 +25,7 @@
 #endif
 #include "gui_tempHum.h"
 #include "gui_ups.h"
+#include "gui_uart.h"
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -127,6 +128,11 @@ static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
   return LV_RES_OK;
 }
 
+static lv_res_t btn_click_uart_action(struct _lv_obj_t *obj) {
+  GUI_UART_CreateView();
+  return LV_RES_OK;
+}
+
 static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
   GUI_TEMPHUM_CreateView();
   return LV_RES_OK;
@@ -199,7 +205,7 @@ static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
-#define AUTO_POS (1)
+#define AUTO_POS (1) /* automatically place GUI elements */
 
   GUI_GroupPush();
   /* create window */
@@ -213,7 +219,7 @@ void GUI_MainMenuCreate(void) {
 #if AUTO_POS
   lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
 #endif
-  lv_obj_t *btn2, *btn3;
+  lv_obj_t *btn2, *btn3, *btn4;
   lv_obj_t *label;
 
 #if PL_CONFIG_USE_SHUTDOWN
@@ -257,6 +263,20 @@ void GUI_MainMenuCreate(void) {
   lv_btn_set_fit(btn3, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn3);
 #endif /* PL_CONFIG_USE_UPS */
+
+#if PL_CONFIG_USE_GATEWAY
+  btn4 = lv_btn_create(gui_win, NULL);
+#if !AUTO_POS
+  lv_obj_set_size(btn4, 60, 20);
+  lv_obj_set_pos(btn4, 5, 30);
+#endif
+  label = lv_label_create(btn4, NULL);
+  lv_label_set_text(label, "UART");
+  lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, btn_click_uart_action);
+  lv_btn_set_fit(btn4, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn4);
+#endif /* PL_CONFIG_USE_GATEWAY */
+
 
 #if 0
   /* create list of objects */

@@ -41,7 +41,7 @@
   #include "ups.h"
 #endif
 #if PL_CONFIG_USE_SHT31
-  #include "SHT31.h"
+  #include <McuSHT31.h>
 #endif
 
 

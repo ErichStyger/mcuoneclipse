@@ -19,6 +19,15 @@
 
 static McuRB_Handle_t LpuartRingBuffer;
 static McuRB_Handle_t UartRingBuffer;
+static bool GatewayIsEnabled = true;
+
+bool GATEWAY_IsEnabled(void) {
+  return GatewayIsEnabled;
+}
+
+void GATEWAY_SetEnabled(bool isEnabled) {
+  GatewayIsEnabled = isEnabled;
+}
 
 void LPUART0_IRQHandler(void) {
   uint8_t data;

@@ -9,7 +9,7 @@
 #include "Sensor.h"
 #include "McuRTOS.h"
 #if PL_CONFIG_USE_SHT31
-  #include "SHT31.h"
+  #include <McuSHT31.h>
 #endif
 #if PL_CONFIG_HAS_TSL2561
   #include "TSL1.h"
@@ -89,9 +89,9 @@ static void SHT31Task(void *pv) {
 
   vTaskDelay(pdMS_TO_TICKS(200)); /* give sensors time to power up */
   McuShell_SendStr((uint8_t*)"Initializing SHT31.\r\n", McuShell_GetStdio()->stdOut);
-  SHT31_Init();
+  McuSHT31_Init();
   for(;;) {
-    if (SHT31_ReadTempHum(&temp, &hum)==ERR_OK) {
+    if (McuSHT31_ReadTempHum(&temp, &hum)==ERR_OK) {
       SENSOR_SetTemperature(temp);
       SENSOR_SetHumidity(hum);
     }

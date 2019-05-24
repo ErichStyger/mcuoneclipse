@@ -9,9 +9,13 @@
 #define UARTGATEWAY_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 uint32_t GATEWAY_GetNofRx(void);
 uint32_t GATEWAY_GetNofTx(void);
+
+bool GATEWAY_IsEnabled(void);
+void GATEWAY_SetEnabled(bool isEnabled);
 
 void GW_WriteToHost(const unsigned char *str);
 

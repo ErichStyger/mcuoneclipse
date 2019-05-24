@@ -11,12 +11,18 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
+#include "McuSHT31.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand,
   McuRTOS_ParseCommand,
+#if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
+#endif
+#if MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
+  McuSHT31_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 

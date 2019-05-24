@@ -90,8 +90,8 @@ static void refresh_task(void *param) {
 
 void GUI_UPS_CreateView(void) {
     lv_obj_t *closeBtn;
-    refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
 
+    refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
     win = lv_win_create(lv_scr_act(), NULL);
     lv_win_set_title(win, "UPS");
     closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
