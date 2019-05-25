@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include "McuShell.h"
 
+uint8_t GATEWAY_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
+
 extern uint8_t GATEWAY_LinuxToShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 extern McuShell_ConstStdIOType GATEWAY_stdioLinuxToShell; /* default standard I/O */
 
@@ -27,7 +29,11 @@ void GATEWAY_SetLinuxToHostEnabled(bool isEnabled);
 bool GATEWAY_HostToLinuxIsEnabled(void);
 void GATEWAY_SetHostToLinuxEnabled(bool isEnabled);
 
-void GW_WriteToHost(const unsigned char *str);
+void GATEWAY_UartWriteToHostCh(unsigned char ch);
+void GATEWAY_UartWriteToHostStr(const unsigned char *str);
+
+void GATEWAY_UartWriteToLinuxCh(unsigned char ch);
+void GATEWAY_UartWriteToLinuxStr(const unsigned char *str);
 
 void GATEWAY_Process(void);
 

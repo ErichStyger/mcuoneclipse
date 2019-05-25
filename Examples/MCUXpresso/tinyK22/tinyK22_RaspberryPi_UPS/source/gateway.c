@@ -4,6 +4,7 @@
  *  Created on: 18.03.2019
  *      Author: Erich Styger
  */
+
 #include "platform.h"
 #if PL_CONFIG_USE_GATEWAY
 #include "gateway.h"
@@ -13,51 +14,65 @@
 #include "McuRTOS.h"
 #include "Shell.h"
 
-/* OpenSDA UART */
+/* OpenSDA UART to Host: LPUART */
+/* UART to Linux/Raspberry Pi: UART0 */
 #define BOARD_LPUART_BAUDRATE  (115200)
-#define BOARD_LPUART_DEVICE    LPUART0
-#define BOARD_LPUART_CLK_FREQ  CLOCK_GetFreq(kCLOCK_PllFllSelClk)
 
 #define LINUX_RX_QUEUE_LENGTH   (512)
 #define HOST_RX_QUEUE_LENGTH    (512)
 static QueueHandle_t linuxRxQueue, hostRxQueue;
-static bool GatewayLinuxToHostIsEnabled = true;
-static bool GatewayHostToLinuxIsEnabled = true;
+static bool gatewayLinuxToHostIsEnabled = true;
+static bool gatewayHostToLinuxIsEnabled = true;
 static TaskHandle_t txToLinuxTaskHndl, txToHostTaskHndl;
 static uint32_t nofRx, nofTx;
 
 bool GATEWAY_LinuxToHostIsEnabled(void) {
-  return GatewayLinuxToHostIsEnabled;
+  return gatewayLinuxToHostIsEnabled;
 }
 
 void GATEWAY_SetLinuxToHostEnabled(bool isEnabled) {
-  GatewayLinuxToHostIsEnabled = isEnabled;
-  if (GatewayLinuxToHostIsEnabled) { /* wake up gateway tasks */
+  gatewayLinuxToHostIsEnabled = isEnabled;
+  if (gatewayLinuxToHostIsEnabled) { /* wake up gateway tasks */
     vTaskResume(txToHostTaskHndl);
   }
 }
 
 bool GATEWAY_HostToLinuxIsEnabled(void) {
-  return GatewayHostToLinuxIsEnabled;
+  return gatewayHostToLinuxIsEnabled;
 }
 
 void GATEWAY_SetHostToLinuxEnabled(bool isEnabled) {
-  GatewayHostToLinuxIsEnabled = isEnabled;
-  if (GatewayHostToLinuxIsEnabled) { /* wake up gateway tasks */
+  gatewayHostToLinuxIsEnabled = isEnabled;
+  if (gatewayHostToLinuxIsEnabled) { /* wake up gateway tasks */
     vTaskResume(txToLinuxTaskHndl);
   }
 }
 
+void GATEWAY_UartWriteToHostCh(unsigned char ch) {
+  LPUART_WriteBlocking(LPUART0, &ch, 1);
+}
+
+void GATEWAY_UartWriteToHostStr(const unsigned char *str) {
+  LPUART_WriteBlocking(LPUART0, str, strlen((char*)str));
+}
+
+void GATEWAY_UartWriteToLinuxCh(unsigned char ch) {
+  UART_WriteBlocking(UART0, &ch, 1);
+}
+
+void GATEWAY_UartWriteToLinuxStr(const unsigned char *str) {
+  UART_WriteBlocking(UART0, str, strlen((char*)str));
+}
 
 void LPUART0_IRQHandler(void) {
   uint8_t data;
   uint32_t flags;
   BaseType_t xHigherPriorityTaskWoken;
 
-  flags = LPUART_GetStatusFlags(BOARD_LPUART_DEVICE);
+  flags = LPUART_GetStatusFlags(LPUART0);
   /* If new data arrived. */
   if (flags&(kLPUART_RxDataRegFullFlag|kLPUART_RxOverrunFlag)) {
-    data = LPUART_ReadByte(BOARD_LPUART_DEVICE);
+    data = LPUART_ReadByte(LPUART0);
     (void)xQueueSendFromISR(hostRxQueue, &data, &xHigherPriorityTaskWoken);
     if (xHigherPriorityTaskWoken != pdFALSE) {
       vPortYieldFromISR();
@@ -74,7 +89,7 @@ static void Init_LPUART(void) {
   config.baudRate_Bps = BOARD_LPUART_BAUDRATE;
   config.enableTx = true;
   config.enableRx = true;
-  LPUART_Init(BOARD_LPUART_DEVICE, &config, BOARD_LPUART_CLK_FREQ);
+  LPUART_Init(LPUART0, &config, CLOCK_GetFreq(kCLOCK_PllFllSelClk));
 }
 /*********************************************************************************************************/
 static void Init_UART(void) {
@@ -106,16 +121,8 @@ void UART0_RX_TX_IRQHandler(void) {
   __DSB();
 }
 /*********************************************************************************************************/
-static void LPUartWriteStringBlocking(const unsigned char *str) { /* write to host */
-  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, str, strlen((char*)str));
-}
-
-void GW_WriteToHost(const unsigned char *str) {
-  LPUartWriteStringBlocking(str);
-}
-/*********************************************************************************************************/
 static void Shell_SendCharToLinux(unsigned char ch) {
-  UART_WriteBlocking(UART0, &ch, 1); /* send to Raspberry Pi */
+  GATEWAY_UartWriteToLinuxCh(ch);
 }
 
 static void Shell_ReadCharFromLinux(uint8_t *c) {
@@ -129,7 +136,7 @@ static void Shell_ReadCharFromLinux(uint8_t *c) {
 }
 
 static bool Shell_CharFromLinuxPresent(void) {
-  if (GatewayLinuxToHostIsEnabled) {
+  if (gatewayLinuxToHostIsEnabled) {
     return false;
   }
   return uxQueueMessagesWaiting(linuxRxQueue)!=0;
@@ -145,7 +152,7 @@ McuShell_ConstStdIOType GATEWAY_stdioLinuxToShell = {
 uint8_t GATEWAY_LinuxToShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
 static void Shell_SendCharToHost(unsigned char ch) {
-  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, &ch, 1); /* send to host */
+  GATEWAY_UartWriteToHostCh(ch);
 }
 
 static void Shell_ReadCharFromHost(uint8_t *c) {
@@ -159,7 +166,7 @@ static void Shell_ReadCharFromHost(uint8_t *c) {
 }
 
 static bool Shell_CharFromHostPresent(void) {
-  if (GatewayHostToLinuxIsEnabled) {
+  if (gatewayHostToLinuxIsEnabled) {
     return false;
   }
   return uxQueueMessagesWaiting(hostRxQueue)!=0;
@@ -173,7 +180,6 @@ McuShell_ConstStdIOType GATEWAY_stdioHostToShell = {
   };
 
 uint8_t GATEWAY_HostToShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
-
 /*********************************************************************************************************/
 static void TxToHostTask(void *pv) {
   uint8_t chRx;
@@ -181,11 +187,11 @@ static void TxToHostTask(void *pv) {
 
   (void)pv; /* not used */
   for(;;) {
-    if (!GatewayLinuxToHostIsEnabled) {
+    if (!gatewayLinuxToHostIsEnabled) {
       vTaskSuspend(NULL); /* put myself to sleep */
     }
     res = xQueueReceive(linuxRxQueue, &chRx, portMAX_DELAY);
-    if (!GatewayLinuxToHostIsEnabled) { /* were blocking, but now in non-gateway mode */
+    if (!gatewayLinuxToHostIsEnabled) { /* were blocking, but now in non-gateway mode */
       (void)xQueueSendToFront(linuxRxQueue, &chRx, 0); /* put it back in to the queue */
     } else if (res!=errQUEUE_EMPTY) {
       LPUART_WriteBlocking(LPUART0, &chRx, 1); /* send to host */
@@ -200,11 +206,11 @@ static void TxToLinuxTask(void *pv) {
 
   (void)pv; /* not used */
   for(;;) {
-    if (!GatewayHostToLinuxIsEnabled) {
+    if (!gatewayHostToLinuxIsEnabled) {
       vTaskSuspend(NULL); /* put myself to sleep */
     }
     res = xQueueReceive(hostRxQueue, &chRx, portMAX_DELAY);
-    if (!GatewayHostToLinuxIsEnabled) { /* were blocking, but now in non-gateway mode */
+    if (!gatewayHostToLinuxIsEnabled) { /* were blocking, but now in non-gateway mode */
       (void)xQueueSendToFront(hostRxQueue, &chRx, 0); /* put it back in to the queue */
     } else if (res!=errQUEUE_EMPTY) {
       UART_WriteBlocking(UART0, &chRx, 1); /* send to Raspberry Pi */
@@ -221,18 +227,63 @@ uint32_t GATEWAY_GetNofTx(void) {
   return nofTx;
 }
 
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"gateway", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  host", gatewayHostToLinuxIsEnabled?(const unsigned char*)"Host -> Linux\r\n":(const unsigned char*)"Host -> Shell\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  linux", gatewayLinuxToHostIsEnabled?(const unsigned char*)"Linux -> Host\r\n":(const unsigned char*)"Linux -> Shell\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"gateway", (unsigned char*)"Group of gateway commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  host to (shell|linux)", (unsigned char*)"Send host traffic to shell or linux\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  linux to (shell|host)", (unsigned char*)"Send linux traffic to shell or host\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t GATEWAY_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
+    || McuUtility_strcmp((char*)cmd, "gateway help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0)
+             || (McuUtility_strcmp((char*)cmd, "gateway status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "gateway host to linux")==0) {
+    gatewayHostToLinuxIsEnabled = false;
+    *handled = TRUE;
+  } else if (McuUtility_strcmp((char*)cmd, "gateway host to shell")==0) {
+    gatewayHostToLinuxIsEnabled = false;
+    *handled = TRUE;
+  } else if (McuUtility_strcmp((char*)cmd, "gateway linux to host")==0) {
+    gatewayLinuxToHostIsEnabled = false;
+    *handled = TRUE;
+  } else if (McuUtility_strcmp((char*)cmd, "gateway linux to shell")==0) {
+    gatewayLinuxToHostIsEnabled = false;
+    *handled = TRUE;
+  }
+  return res;
+}
+
 void GATEWAY_Init(void) {
-  GatewayHostToLinuxIsEnabled = true;
-  GatewayLinuxToHostIsEnabled = true;
+  gatewayHostToLinuxIsEnabled = true;
+  gatewayLinuxToHostIsEnabled = true;
   /* initialize LPUART to host */
   Init_LPUART();
-  LPUART_EnableInterrupts(BOARD_LPUART_DEVICE, kLPUART_RxDataRegFullInterruptEnable|kLPUART_RxOverrunFlag);
+  LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable|kLPUART_RxOverrunFlag);
   EnableIRQ(LPUART0_IRQn);
   NVIC_SetPriority(LPUART0_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 
-  LPUartWriteStringBlocking((unsigned char*)"\r\n********************************\r\n");
-  LPUartWriteStringBlocking((unsigned char*)"* UART gateway to Raspberry Pi *\r\n");
-  LPUartWriteStringBlocking((unsigned char*)"********************************\r\n");
+  GATEWAY_UartWriteToHostStr((unsigned char*)"\r\n********************************\r\n");
+  GATEWAY_UartWriteToHostStr((unsigned char*)"* UART gateway to Raspberry Pi *\r\n");
+  GATEWAY_UartWriteToHostStr((unsigned char*)"********************************\r\n");
 
   /* init UART0 to Raspberry */
   Init_UART();

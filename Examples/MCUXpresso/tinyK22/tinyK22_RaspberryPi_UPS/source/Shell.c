@@ -28,6 +28,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_ParseCommand,
 #endif
+  GATEWAY_ParseCommand,
   NULL /* Sentinel */
 };
 

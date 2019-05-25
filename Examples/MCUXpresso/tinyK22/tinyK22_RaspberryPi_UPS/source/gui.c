@@ -300,6 +300,7 @@ void GUI_MainMenuCreate(void) {
 static void btnCallback(EVNT_Handle event) {
   switch(event) {
     case EVNT_SW1_PRESSED:
+      RASPYU_OnJoystickEvent(event);
       LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
       break;
     case EVNT_SW1_RELEASED:
@@ -313,6 +314,7 @@ static void btnCallback(EVNT_Handle event) {
       break;
 
     case EVNT_SW2_PRESSED:
+      RASPYU_OnJoystickEvent(event);
       LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
       break;
     case EVNT_SW2_RELEASED:
@@ -326,6 +328,7 @@ static void btnCallback(EVNT_Handle event) {
       break;
 
     case EVNT_SW3_PRESSED:
+      RASPYU_OnJoystickEvent(event);
       LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
       break;
     case EVNT_SW3_RELEASED:
@@ -339,6 +342,7 @@ static void btnCallback(EVNT_Handle event) {
       break;
 
     case EVNT_SW4_PRESSED:
+      RASPYU_OnJoystickEvent(event);
       LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
       break;
     case EVNT_SW4_RELEASED:
@@ -352,6 +356,7 @@ static void btnCallback(EVNT_Handle event) {
       break;
 
     case EVNT_SW5_PRESSED:
+      RASPYU_OnJoystickEvent(event);
       LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
       break;
     case EVNT_SW5_RELEASED:

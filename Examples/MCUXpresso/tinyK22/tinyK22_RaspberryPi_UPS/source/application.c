@@ -72,13 +72,13 @@ static void AppTask(void *pv) {
         prevVoltage = voltage;
         chargeCounter = -5;
       }
-  #if PL_CONFIG_USE_SHUTDOWN
+    #if PL_CONFIG_USE_SHUTDOWN
       if (charge<20.0f && !isCharging) { /* low battery and not is charging => power down */
         SHUTDOWN_RequestPowerOff();
       }
-  #endif
+    #endif
     } /* for */
-#endif
+#endif /* PL_CONFIG_USE_UPS */
     McuLED_Neg(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(1000));
   }

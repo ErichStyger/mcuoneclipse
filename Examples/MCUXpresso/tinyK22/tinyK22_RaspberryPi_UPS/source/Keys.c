@@ -66,7 +66,6 @@ DBNC_KeySet Key_GetKeysBits(void) {
   return keys;
 }
 
-
 void KEY_Scan(void) {
 #if PL_CONFIG_NOF_KEYS>=1 && !PL_CONFIG_KEY_1_ISR
   if (McuGPIO_Get(navPinUp)==0) {
