@@ -33,6 +33,7 @@
 #include "McuXFormat.h"
 #include "Sensor.h"
 #include "toaster.h"
+#include "RaspyUART.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -85,6 +86,9 @@ void PL_Init(void) {
   TOASTER_Init();
 #endif
   SENSOR_Init();
+#if PL_CONFIG_USE_RASPY_UART
+  RASPYU_Init();
+#endif
 }
 
 void PL_Deinit(void) {

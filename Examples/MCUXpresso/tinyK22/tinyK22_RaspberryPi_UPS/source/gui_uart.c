@@ -33,9 +33,15 @@ static lv_res_t win_close_action(lv_obj_t *btn) {
   return LV_RES_INV;
 }
 
-static lv_res_t cb_click_action(lv_obj_t *cb) {
-  GATEWAY_SetEnabled(!GATEWAY_IsEnabled()); /* toggle */
-  lv_cb_set_checked(cb, GATEWAY_IsEnabled());
+static lv_res_t cb_linuxToHost_click_action(lv_obj_t *cb) {
+  GATEWAY_SetLinuxToHostEnabled(!GATEWAY_LinuxToHostIsEnabled()); /* toggle */
+  lv_cb_set_checked(cb, GATEWAY_LinuxToHostIsEnabled());
+  return LV_RES_INV;
+}
+
+static lv_res_t cb_hostToLinux_click_action(lv_obj_t *cb) {
+  GATEWAY_SetHostToLinuxEnabled(!GATEWAY_HostToLinuxIsEnabled()); /* toggle */
+  lv_cb_set_checked(cb, GATEWAY_HostToLinuxIsEnabled());
   return LV_RES_INV;
 }
 
@@ -63,13 +69,21 @@ void GUI_UART_CreateView(void) {
     GUI_AddObjToGroup(closeBtn);
     lv_group_focus_obj(closeBtn);
 
-    /* checkbox */
+    /* checkboxes */
     lv_obj_t *cb;
+
     cb = lv_cb_create(win, NULL);
-    lv_cb_set_text(cb, "Gateway");
-    lv_cb_set_checked(cb, GATEWAY_IsEnabled());
+    lv_cb_set_text(cb, "Gateway Linux->Host");
+    lv_cb_set_checked(cb, GATEWAY_LinuxToHostIsEnabled());
    //lv_obj_align(cb, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
-    lv_cb_set_action(cb, cb_click_action);
+    lv_cb_set_action(cb, cb_linuxToHost_click_action);
+    GUI_AddObjToGroup(cb);
+
+    cb = lv_cb_create(win, NULL);
+    lv_cb_set_text(cb, "Gateway Host->Linx");
+    lv_cb_set_checked(cb, GATEWAY_HostToLinuxIsEnabled());
+   //lv_obj_align(cb, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
+    lv_cb_set_action(cb, cb_hostToLinux_click_action);
     GUI_AddObjToGroup(cb);
 
     rxtx_label = lv_label_create(win, NULL);

@@ -13,6 +13,7 @@
 #define PL_CONFIG_USE_OLED          (1 && PL_CONFIG_USE_I2C) /* if using OLED */
 #define PL_CONFIG_USE_UPS           (1 && PL_CONFIG_USE_I2C) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY       (1) /* if implementing UART gateway to Raspberry Pi */
+#define PL_CONFIG_USE_RASPY_UART    (1) /* uses UART to Raspy as interface for joystick, led and sensor values */
 #define PL_CONFIG_USE_SHUTDOWN      (1) /* if implementing shutdown for Raspberry Pi */
 #define PL_CONFIG_USE_SHELL         (1) /* if shell is enabled, uses RTT */
 #define PL_CONFIG_USE_LVGL          (1 && PL_CONFIG_USE_OLED) /* use LittlevGL */

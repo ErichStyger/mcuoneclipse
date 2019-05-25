@@ -12,6 +12,8 @@
 #include "McuRTT.h"
 #include "McuArmTools.h"
 #include "McuSHT31.h"
+#include "RaspyUART.h"
+#include "gateway.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -22,6 +24,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
   McuSHT31_ParseCommand,
+#endif
+#if PL_CONFIG_USE_RASPY_UART
+  RASPYU_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -34,7 +39,9 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
-  {&McuRTT_stdio, McuRTT_DefaultShellBuffer, sizeof(McuRTT_DefaultShellBuffer)},
+  {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
+  {&GATEWAY_stdioLinuxToShell, GATEWAY_LinuxToShellBuffer, sizeof(GATEWAY_LinuxToShellBuffer)},
+  {&GATEWAY_stdioHostToShell, GATEWAY_HostToShellBuffer, sizeof(GATEWAY_HostToShellBuffer)},
 };
 
 static void ShellTask(void *pv) {

@@ -33,17 +33,14 @@
   #include "lv.h"
   #include "gui.h"
 #endif
-
-#include "McuRTOS.h"
-#include "FreeRTOS.h"
-
 #if PL_CONFIG_USE_UPS
   #include "ups.h"
 #endif
 #if PL_CONFIG_USE_SHT31
   #include <McuSHT31.h>
 #endif
-
+#include "McuRTOS.h"
+#include "FreeRTOS.h"
 
 static void AppTask(void *pv) {
 #if PL_CONFIG_USE_UPS

@@ -11,33 +11,57 @@
 #include "fsl_lpuart.h"
 #include "McuRB.h"
 #include "McuRTOS.h"
+#include "Shell.h"
 
 /* OpenSDA UART */
 #define BOARD_LPUART_BAUDRATE  (115200)
 #define BOARD_LPUART_DEVICE    LPUART0
 #define BOARD_LPUART_CLK_FREQ  CLOCK_GetFreq(kCLOCK_PllFllSelClk)
 
-static McuRB_Handle_t LpuartRingBuffer;
-static McuRB_Handle_t UartRingBuffer;
-static bool GatewayIsEnabled = true;
+#define LINUX_RX_QUEUE_LENGTH   (512)
+#define HOST_RX_QUEUE_LENGTH    (512)
+static QueueHandle_t linuxRxQueue, hostRxQueue;
+static bool GatewayLinuxToHostIsEnabled = true;
+static bool GatewayHostToLinuxIsEnabled = true;
+static TaskHandle_t txToLinuxTaskHndl, txToHostTaskHndl;
+static uint32_t nofRx, nofTx;
 
-bool GATEWAY_IsEnabled(void) {
-  return GatewayIsEnabled;
+bool GATEWAY_LinuxToHostIsEnabled(void) {
+  return GatewayLinuxToHostIsEnabled;
 }
 
-void GATEWAY_SetEnabled(bool isEnabled) {
-  GatewayIsEnabled = isEnabled;
+void GATEWAY_SetLinuxToHostEnabled(bool isEnabled) {
+  GatewayLinuxToHostIsEnabled = isEnabled;
+  if (GatewayLinuxToHostIsEnabled) { /* wake up gateway tasks */
+    vTaskResume(txToHostTaskHndl);
+  }
 }
+
+bool GATEWAY_HostToLinuxIsEnabled(void) {
+  return GatewayHostToLinuxIsEnabled;
+}
+
+void GATEWAY_SetHostToLinuxEnabled(bool isEnabled) {
+  GatewayHostToLinuxIsEnabled = isEnabled;
+  if (GatewayHostToLinuxIsEnabled) { /* wake up gateway tasks */
+    vTaskResume(txToLinuxTaskHndl);
+  }
+}
+
 
 void LPUART0_IRQHandler(void) {
   uint8_t data;
   uint32_t flags;
+  BaseType_t xHigherPriorityTaskWoken;
 
   flags = LPUART_GetStatusFlags(BOARD_LPUART_DEVICE);
   /* If new data arrived. */
   if (flags&(kLPUART_RxDataRegFullFlag|kLPUART_RxOverrunFlag)) {
     data = LPUART_ReadByte(BOARD_LPUART_DEVICE);
-    (void)McuRB_Put(LpuartRingBuffer, &data);
+    (void)xQueueSendFromISR(hostRxQueue, &data, &xHigherPriorityTaskWoken);
+    if (xHigherPriorityTaskWoken != pdFALSE) {
+      vPortYieldFromISR();
+    }
   }
   __DSB();
 }
@@ -68,17 +92,21 @@ static void Init_UART(void) {
 void UART0_RX_TX_IRQHandler(void) {
   uint8_t data;
   uint32_t flags;
+  BaseType_t xHigherPriorityTaskWoken;
 
   flags = UART_GetStatusFlags(UART0);
   /* If new data arrived. */
   if (flags&(kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)) {
     data = UART_ReadByte(UART0);
-    (void)McuRB_Put(UartRingBuffer, &data);
+    (void)xQueueSendFromISR(linuxRxQueue, &data, &xHigherPriorityTaskWoken);
+    if (xHigherPriorityTaskWoken != pdFALSE) {
+      vPortYieldFromISR();
+    }
   }
   __DSB();
 }
-
-static void LPUartWriteStringBlocking(const unsigned char *str) {
+/*********************************************************************************************************/
+static void LPUartWriteStringBlocking(const unsigned char *str) { /* write to host */
   LPUART_WriteBlocking(BOARD_LPUART_DEVICE, str, strlen((char*)str));
 }
 
@@ -86,21 +114,102 @@ void GW_WriteToHost(const unsigned char *str) {
   LPUartWriteStringBlocking(str);
 }
 /*********************************************************************************************************/
-static uint32_t nofRx, nofTx;
-#define RINGBUFFER_SIZE  1024
+static void Shell_SendCharToLinux(unsigned char ch) {
+  UART_WriteBlocking(UART0, &ch, 1); /* send to Raspberry Pi */
+}
 
-void GATEWAY_Process(void) {
-  uint8_t chRx;
+static void Shell_ReadCharFromLinux(uint8_t *c) {
+  uint8_t ch;
 
-  /* check Rx from host */
-  if (McuRB_Get(LpuartRingBuffer, &chRx)==0) {
-    UART_WriteBlocking(UART0, &chRx, 1); /* send to Raspberry Pi */
-    nofRx++;
+  if (xQueueReceive(linuxRxQueue, &ch, 0)==pdPASS ) {
+    *c = ch; /* return received character */
+  } else {
+    *c = '\0'; /* nothing received */
   }
-  /* check Rx from Raspberry */
-  if (McuRB_Get(UartRingBuffer, &chRx)==0) {
-    LPUART_WriteBlocking(LPUART0, &chRx, 1); /* send to host */
-    nofTx++;
+}
+
+static bool Shell_CharFromLinuxPresent(void) {
+  if (GatewayLinuxToHostIsEnabled) {
+    return false;
+  }
+  return uxQueueMessagesWaiting(linuxRxQueue)!=0;
+}
+
+McuShell_ConstStdIOType GATEWAY_stdioLinuxToShell = {
+    (McuShell_StdIO_In_FctType)Shell_ReadCharFromLinux, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)Shell_SendCharToLinux,  /* stdout */
+    (McuShell_StdIO_OutErr_FctType)Shell_SendCharToLinux,  /* stderr */
+    Shell_CharFromLinuxPresent /* if input is not empty */
+  };
+
+uint8_t GATEWAY_LinuxToShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+/*********************************************************************************************************/
+static void Shell_SendCharToHost(unsigned char ch) {
+  LPUART_WriteBlocking(BOARD_LPUART_DEVICE, &ch, 1); /* send to host */
+}
+
+static void Shell_ReadCharFromHost(uint8_t *c) {
+  uint8_t ch;
+
+  if (xQueueReceive(hostRxQueue, &ch, 0)==pdPASS ) {
+    *c = ch; /* return received character */
+  } else {
+    *c = '\0'; /* nothing received */
+  }
+}
+
+static bool Shell_CharFromHostPresent(void) {
+  if (GatewayHostToLinuxIsEnabled) {
+    return false;
+  }
+  return uxQueueMessagesWaiting(hostRxQueue)!=0;
+}
+
+McuShell_ConstStdIOType GATEWAY_stdioHostToShell = {
+    (McuShell_StdIO_In_FctType)Shell_ReadCharFromHost, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)Shell_SendCharToHost,  /* stdout */
+    (McuShell_StdIO_OutErr_FctType)Shell_SendCharToHost,  /* stderr */
+    Shell_CharFromHostPresent /* if input is not empty */
+  };
+
+uint8_t GATEWAY_HostToShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
+/*********************************************************************************************************/
+static void TxToHostTask(void *pv) {
+  uint8_t chRx;
+  portBASE_TYPE res;
+
+  (void)pv; /* not used */
+  for(;;) {
+    if (!GatewayLinuxToHostIsEnabled) {
+      vTaskSuspend(NULL); /* put myself to sleep */
+    }
+    res = xQueueReceive(linuxRxQueue, &chRx, portMAX_DELAY);
+    if (!GatewayLinuxToHostIsEnabled) { /* were blocking, but now in non-gateway mode */
+      (void)xQueueSendToFront(linuxRxQueue, &chRx, 0); /* put it back in to the queue */
+    } else if (res!=errQUEUE_EMPTY) {
+      LPUART_WriteBlocking(LPUART0, &chRx, 1); /* send to host */
+      nofTx++;
+    }
+  }
+}
+
+static void TxToLinuxTask(void *pv) {
+  uint8_t chRx;
+  portBASE_TYPE res;
+
+  (void)pv; /* not used */
+  for(;;) {
+    if (!GatewayHostToLinuxIsEnabled) {
+      vTaskSuspend(NULL); /* put myself to sleep */
+    }
+    res = xQueueReceive(hostRxQueue, &chRx, portMAX_DELAY);
+    if (!GatewayHostToLinuxIsEnabled) { /* were blocking, but now in non-gateway mode */
+      (void)xQueueSendToFront(hostRxQueue, &chRx, 0); /* put it back in to the queue */
+    } else if (res!=errQUEUE_EMPTY) {
+      UART_WriteBlocking(UART0, &chRx, 1); /* send to Raspberry Pi */
+      nofRx++;
+    }
   }
 }
 
@@ -112,29 +221,15 @@ uint32_t GATEWAY_GetNofTx(void) {
   return nofTx;
 }
 
-static void UartTask(void *pv) {
-  (void)pv; /* not used */
-  for(;;) {
-    if (McuRB_NofElements(LpuartRingBuffer)>0 || McuRB_NofElements(UartRingBuffer)>0) {
-      GATEWAY_Process();
-    } else {
-      vTaskDelay(pdMS_TO_TICKS(20));
-    }
-  }
-}
-
 void GATEWAY_Init(void) {
-  McuRB_Config_t rbConfig;
-
-  McuRB_GetDefaultconfig(&rbConfig);
-  rbConfig.nofElements = RINGBUFFER_SIZE;
-  LpuartRingBuffer = McuRB_InitRB(&rbConfig);
-  UartRingBuffer = McuRB_InitRB(&rbConfig);
-
+  GatewayHostToLinuxIsEnabled = true;
+  GatewayLinuxToHostIsEnabled = true;
   /* initialize LPUART to host */
   Init_LPUART();
   LPUART_EnableInterrupts(BOARD_LPUART_DEVICE, kLPUART_RxDataRegFullInterruptEnable|kLPUART_RxOverrunFlag);
   EnableIRQ(LPUART0_IRQn);
+  NVIC_SetPriority(LPUART0_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+
   LPUartWriteStringBlocking((unsigned char*)"\r\n********************************\r\n");
   LPUartWriteStringBlocking((unsigned char*)"* UART gateway to Raspberry Pi *\r\n");
   LPUartWriteStringBlocking((unsigned char*)"********************************\r\n");
@@ -143,25 +238,51 @@ void GATEWAY_Init(void) {
   Init_UART();
   UART_EnableInterrupts(UART0, kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable);
   EnableIRQ(UART0_RX_TX_IRQn);
+  NVIC_SetPriority(UART0_RX_TX_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 
   nofRx = 0;
   nofTx = 0;
 
+  linuxRxQueue = xQueueCreate(LINUX_RX_QUEUE_LENGTH, sizeof(uint8_t));
+  if (linuxRxQueue==NULL) {
+    for(;;){} /* out of memory? */
+  }
+  vQueueAddToRegistry(linuxRxQueue, "LinuxRxQueue");
+
+  hostRxQueue = xQueueCreate(HOST_RX_QUEUE_LENGTH, sizeof(uint8_t));
+  if (hostRxQueue==NULL) {
+    for(;;){} /* out of memory? */
+  }
+  vQueueAddToRegistry(hostRxQueue, "HostRxQueue");
+
   if (xTaskCreate(
-      UartTask,  /* pointer to the task */
-      "Uart", /* task name for kernel awareness debugging */
+      TxToHostTask,  /* pointer to the task */
+      "TxToHost", /* task name for kernel awareness debugging */
       600/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+1,  /* initial priority */
-      (TaskHandle_t*)NULL /* optional task handle to create */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      &txToHostTaskHndl /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+  if (xTaskCreate(
+      TxToLinuxTask,  /* pointer to the task */
+      "TxToLinux", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      &txToLinuxTaskHndl /* optional task handle to create */
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
 }
 
 void GATEWAY_Deinit(void) {
-  LpuartRingBuffer = McuRB_DeinitRB(LpuartRingBuffer);
-  UartRingBuffer = McuRB_DeinitRB(UartRingBuffer);
+  vQueueDelete(hostRxQueue);
+  hostRxQueue = NULL;
+
+  vQueueDelete(linuxRxQueue);
+  linuxRxQueue = NULL;
 }
 
 #endif /* PL_CONFIG_USE_GATEWAY */
