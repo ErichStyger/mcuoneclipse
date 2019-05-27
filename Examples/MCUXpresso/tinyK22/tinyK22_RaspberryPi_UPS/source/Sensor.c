@@ -98,7 +98,7 @@ static void SHT31Task(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(10000));
   }
 }
-#endif
+#endif /* PL_CONFIG_USE_SHT31 */
 
 #if PL_CONFIG_HAS_AMG8833
 static float AMGBuf[AMG88xx_PIXEL_ARRAY_SIZE];
