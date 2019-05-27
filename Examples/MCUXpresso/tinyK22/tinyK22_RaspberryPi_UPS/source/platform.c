@@ -31,6 +31,7 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuXFormat.h"
+#include "McuButton.h"
 #include "Sensor.h"
 #include "toaster.h"
 #include "RaspyUART.h"
@@ -63,6 +64,7 @@ void PL_Init(void) {
 #endif
   McuGPIO_Init();
   McuLED_Init();
+  McuBtn_Init();
 
   /* initialize my own modules */
 #if PL_CONFIG_HAS_KEYS

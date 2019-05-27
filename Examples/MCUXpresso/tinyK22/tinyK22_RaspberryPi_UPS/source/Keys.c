@@ -17,6 +17,7 @@
 #include "leds.h"
 #include "lv.h"
 #include "Debounce.h"
+#include "KeyDebounce.h"
 #include "Event.h"
 #include "McuRTOS.h"
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
@@ -107,19 +108,19 @@ void KEY_Scan(void) {
 #if PL_CONFIG_HAS_KBI
 void KEY_EnableInterrupts(void) {
 #if PL_CONFIG_KEY_1_ISR
-  SW1_Enable();
+  EnableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_2_ISR
-  SW2_Enable();
+  EnableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_3_ISR
-  SW3_Enable();
+  EnableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_4_ISR
-  SW4_Enable();
+  EnableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_5_ISR
-  SW5_Enable();
+  EnableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_6_ISR
   SW6_Enable();
@@ -133,19 +134,19 @@ void KEY_EnableInterrupts(void) {
 #if PL_CONFIG_HAS_KBI
 void KEY_DisableInterrupts(void) {
 #if PL_CONFIG_KEY_1_ISR
-  SW1_Disable();
+  DisableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_2_ISR
-  SW2_Disable();
+  DisableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_3_ISR
-  SW3_Disable();
+  DisableIRQ(PORTB_IRQn);;
 #endif
 #if PL_CONFIG_KEY_4_ISR
-  SW4_Disable();
+  DisableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_5_ISR
-  SW5_Disable();
+  DisableIRQ(PORTB_IRQn);
 #endif
 #if PL_CONFIG_KEY_6_ISR
   SW6_Disable();
@@ -159,7 +160,7 @@ void KEY_DisableInterrupts(void) {
 #if PL_CONFIG_HAS_KBI
 void KEY_OnInterrupt(KEY_Buttons button) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
-  SYS1_RecordEnterISR();
+  McuSystemView_RecordEnterISR();
 #endif
 #if PL_CONFIG_HAS_DEBOUNCE
   (void)button;
@@ -207,7 +208,7 @@ void KEY_OnInterrupt(KEY_Buttons button) {
   }
 #endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
-  SYS1_RecordExitISR();
+  McuSystemView_RecordExitISR();
 #endif
 }
 #endif /* PL_CONFIG_HAS_KBI */
@@ -219,56 +220,28 @@ void PORTB_IRQHandler(void) {
   flags = GPIO_PortGetInterruptFlags(GPIOB);
   if (flags&(1U<<PINS_HATNAVLEFT_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVLEFT_GPIO, 1U<<PINS_HATNAVLEFT_PIN);
-    McuLED_Neg(hatBlueLED);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
-#endif
+    KEY_OnInterrupt(KEY_BTN1);
   }
   if (flags&(1U<<PINS_HATNAVRIGHT_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVRIGHT_GPIO, 1U<<PINS_HATNAVRIGHT_PIN);
-    McuLED_Neg(hatRedLED);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
-#endif
+    KEY_OnInterrupt(KEY_BTN2);
   }
   if (flags&(1U<<PINS_HATNAVUP_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVUP_GPIO, 1U<<PINS_HATNAVUP_PIN);
-    McuLED_Neg(hatGreenLED);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
-#endif
+    KEY_OnInterrupt(KEY_BTN3);
   }
   if (flags&(1U<<PINS_HATNAVDOWN_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVDOWN_GPIO, 1U<<PINS_HATNAVDOWN_PIN);
-    McuLED_Neg(hatYellowLED);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
-#endif
+    KEY_OnInterrupt(KEY_BTN4);
   }
   if (flags&(1U<<PINS_HATNAVPUSH_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVPUSH_GPIO, 1U<<PINS_HATNAVPUSH_PIN);
-    McuLED_Neg(hatBlueLED);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
-    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
-#endif
+    KEY_OnInterrupt(KEY_BTN5);
   }
   __DSB();
 }
 
 void KEY_Init(void) {
-#if PL_CONFIG_HAS_KBI
-  PORT_SetPinInterruptConfig(PINS_HATNAVUP_PORT, PINS_HATNAVUP_PIN, kPORT_InterruptFallingEdge);
-  PORT_SetPinInterruptConfig(PINS_HATNAVDOWN_PORT, PINS_HATNAVDOWN_PIN, kPORT_InterruptFallingEdge);
-  PORT_SetPinInterruptConfig(PINS_HATNAVLEFT_PORT, PINS_HATNAVLEFT_PIN, kPORT_InterruptFallingEdge);
-  PORT_SetPinInterruptConfig(PINS_HATNAVRIGHT_PORT, PINS_HATNAVRIGHT_PIN, kPORT_InterruptFallingEdge);
-  PORT_SetPinInterruptConfig(PINS_HATNAVPUSH_PORT, PINS_HATNAVPUSH_PIN, kPORT_InterruptFallingEdge);
-  EnableIRQ(PORTB_IRQn);
-#else
   McuGPIO_Config_t config;
 
   McuGPIO_GetDefaultConfig(&config);
@@ -298,6 +271,13 @@ void KEY_Init(void) {
   config.port = PINS_HATNAVPUSH_PORT;
   config.pin = PINS_HATNAVPUSH_PIN;
   navPinCenter = McuGPIO_InitGPIO(&config);
+#if PL_CONFIG_HAS_KBI
+  PORT_SetPinInterruptConfig(PINS_HATNAVUP_PORT, PINS_HATNAVUP_PIN, kPORT_InterruptFallingEdge);
+  PORT_SetPinInterruptConfig(PINS_HATNAVDOWN_PORT, PINS_HATNAVDOWN_PIN, kPORT_InterruptFallingEdge);
+  PORT_SetPinInterruptConfig(PINS_HATNAVLEFT_PORT, PINS_HATNAVLEFT_PIN, kPORT_InterruptFallingEdge);
+  PORT_SetPinInterruptConfig(PINS_HATNAVRIGHT_PORT, PINS_HATNAVRIGHT_PIN, kPORT_InterruptFallingEdge);
+  PORT_SetPinInterruptConfig(PINS_HATNAVPUSH_PORT, PINS_HATNAVPUSH_PIN, kPORT_InterruptFallingEdge);
+  EnableIRQ(PORTB_IRQn);
 #endif
 }
 
@@ -305,13 +285,12 @@ void KEY_Init(void) {
 void KEY_Deinit(void) {
 #if PL_CONFIG_HAS_KBI
   DisableIRQ(PORTB_IRQn);
-#else
+#endif
   navPinDown = McuGPIO_DeinitGPIO(navPinDown);
   navPinUp = McuGPIO_DeinitGPIO(navPinUp);
   navPinLeft = McuGPIO_DeinitGPIO(navPinLeft);
   navPinRight = McuGPIO_DeinitGPIO(navPinRight);
   navPinCenter = McuGPIO_DeinitGPIO(navPinCenter);
-#endif
 }
 
 #endif /* PL_CONFIG_HAS_KEYS */
