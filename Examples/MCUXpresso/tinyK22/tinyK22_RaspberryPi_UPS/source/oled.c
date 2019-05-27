@@ -194,6 +194,7 @@ void doOLED(void) {
 }
 
 void OLED_Init(void) {
+  McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
   McuSSD1306_Clear();
 }
 
