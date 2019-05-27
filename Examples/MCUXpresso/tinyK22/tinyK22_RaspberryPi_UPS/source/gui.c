@@ -15,7 +15,6 @@
 #include "task.h"
 #include "KeyDebounce.h"
 #include "McuSSD1306.h"
-//#include "gui_mainmenu.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
 #include "Trigger.h"
@@ -26,6 +25,7 @@
 #include "gui_tempHum.h"
 #include "gui_ups.h"
 #include "gui_uart.h"
+#include "RaspyUART.h"
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -123,20 +123,24 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
   }
 }
 
+#if PL_CONFIG_USE_UPS
 static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
   GUI_UPS_CreateView();
   return LV_RES_OK;
 }
+#endif
 
 static lv_res_t btn_click_uart_action(struct _lv_obj_t *obj) {
   GUI_UART_CreateView();
   return LV_RES_OK;
 }
 
+#if PL_CONFIG_USE_SHT31
 static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
   GUI_TEMPHUM_CreateView();
   return LV_RES_OK;
 }
+#endif
 
 #if PL_CONFIG_USE_SHUTDOWN
 static lv_obj_t *mboxShutdown, *mboxShutdownWait;
@@ -219,62 +223,60 @@ void GUI_MainMenuCreate(void) {
 #if AUTO_POS
   lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
 #endif
-  lv_obj_t *btn2, *btn3, *btn4;
+  lv_obj_t *btn;
   lv_obj_t *label;
 
 #if PL_CONFIG_USE_SHUTDOWN
-  lv_obj_t *btn1;
-
-  btn1 = lv_btn_create(gui_win, NULL);
+  btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
-  lv_obj_set_size(btn1, 45, 20);
-  lv_obj_set_pos(btn1, 5, 0);
+  lv_obj_set_size(btn, 45, 20);
+  lv_obj_set_pos(btn, 5, 0);
 #endif
-  label = lv_label_create(btn1, NULL);
+  label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Shutdown");
-  lv_btn_set_action(btn1, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
-  lv_btn_set_fit(btn1, true, true); /* set auto fit to text */
-  GUI_AddObjToGroup(btn1);
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
+  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn);
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 
 #if PL_CONFIG_USE_SHT31
-  btn2 = lv_btn_create(gui_win, NULL);
+  btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
-  lv_obj_set_size(btn2, 40, 20);
-  lv_obj_set_pos(btn2, 60, 0);
+  lv_obj_set_size(btn, 40, 20);
+  lv_obj_set_pos(btn, 60, 0);
 #endif
-  label = lv_label_create(btn2, NULL);
+  label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "SHT31");
-  //lv_obj_set_free_num(btn2, 1);   /*Set a unique number for the button*/
-  lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, btn_click_sht31_action);
-  lv_btn_set_fit(btn2, true, true); /* set auto fit to text */
-  GUI_AddObjToGroup(btn2);
+  //lv_obj_set_free_num(btn, 1);   /*Set a unique number for the button*/
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_sht31_action);
+  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn);
 #endif /* PL_CONFIG_USE_SHT31 */
 
 #if PL_CONFIG_USE_UPS
-  btn3 = lv_btn_create(gui_win, NULL);
+  btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
-  lv_obj_set_size(btn3, 40, 20);
-  lv_obj_set_pos(btn3, 5, 30);
+  lv_obj_set_size(btn, 40, 20);
+  lv_obj_set_pos(btn, 5, 30);
 #endif
-  label = lv_label_create(btn3, NULL);
+  label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "UPS");
-  lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, btn_click_ups_action);
-  lv_btn_set_fit(btn3, true, true); /* set auto fit to text */
-  GUI_AddObjToGroup(btn3);
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_ups_action);
+  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn);
 #endif /* PL_CONFIG_USE_UPS */
 
 #if PL_CONFIG_USE_GATEWAY
-  btn4 = lv_btn_create(gui_win, NULL);
+  btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
-  lv_obj_set_size(btn4, 60, 20);
-  lv_obj_set_pos(btn4, 5, 30);
+  lv_obj_set_size(btn, 60, 20);
+  lv_obj_set_pos(btn, 5, 30);
 #endif
-  label = lv_label_create(btn4, NULL);
+  label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "UART");
-  lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, btn_click_uart_action);
-  lv_btn_set_fit(btn4, true, true); /* set auto fit to text */
-  GUI_AddObjToGroup(btn4);
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_uart_action);
+  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn);
 #endif /* PL_CONFIG_USE_GATEWAY */
 
 

@@ -60,7 +60,9 @@ typedef enum EVNT_Handle {
   EVNT_SW7_LRELEASED,
   EVNT_SW7_RELEASED,
   #endif
-#endif
+#else
+  EVNT_DUMMY, /* needed, otherwise we get a negative array size! */
+#endif /* PL_CONFIG_HAS_KEYS */
   /*!< \todo Your events here */
   EVNT_NOF_EVENTS       /*!< Must be last one! */
 } EVNT_Handle;

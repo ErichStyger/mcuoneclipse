@@ -65,8 +65,12 @@ void PL_Init(void) {
   McuLED_Init();
 
   /* initialize my own modules */
+#if PL_CONFIG_HAS_KEYS
   KEY_Init();
+#endif
+#if PL_CONFIG_HAS_DEBOUNCE
   KEYDBNC_Init();
+#endif
   TRG_Init();
   EVNT_Init();
   LEDS_Init();

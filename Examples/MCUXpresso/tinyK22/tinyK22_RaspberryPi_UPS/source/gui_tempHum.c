@@ -54,9 +54,11 @@ static void refresh_task(void *param) {
   int16_t chart_tvalue;
   int16_t chart_hvalue;
 
+#if PL_CONFIG_USE_TOASTER
   if (TOASTER_IsRunning()) {
     return;
   }
+#endif
   temperature = SENSOR_GetTemperature();
   humidity = SENSOR_GetHumidity();
   chart_tvalue = temperature+30; /* add offset */

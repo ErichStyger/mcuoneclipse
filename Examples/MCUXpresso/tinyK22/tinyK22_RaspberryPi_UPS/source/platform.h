@@ -20,10 +20,9 @@
 #define PL_CONFIG_USE_TOASTER       (1 && PL_CONFIG_USE_OLED) /* flying toaster screensaver */
 
 #define PL_CONFIG_HAS_KEYS          (1)
-#define PL_CONFIG_HAS_GUI_KEY_NAV   (1 && PL_CONFIG_HAS_KEYS)
+#define PL_CONFIG_HAS_GUI_KEY_NAV   (1 && PL_CONFIG_HAS_KEYS && PL_CONFIG_USE_LVGL)
 
-#define PL_CONFIG_HAS_DEBOUNCE      (1)
-#define PL_CONFIG_HAS_KEYS          (1)
+#define PL_CONFIG_HAS_DEBOUNCE      (1 && PL_CONFIG_HAS_KEYS)
 #define PL_CONFIG_NOF_KEYS          (5)
 #define PL_CONFIG_HAS_KBI           (0)
 #define PL_CONFIG_KEY_1_ISR         (0)

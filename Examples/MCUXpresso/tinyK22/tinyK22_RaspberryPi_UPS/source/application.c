@@ -49,7 +49,9 @@ static void AppTask(void *pv) {
   int chargeCounter = 0; /* counting up for charging, counting down for discharging */
 #endif
 
+#if PL_CONFIG_USE_UPS
   UPS_SetIsCharging(false);
+#endif
   for(;;) { /* main loop */
   #if PL_CONFIG_USE_UPS
     if (UPS_GetCharge(&charge)==0 && UPS_GetVoltage(&voltage)==0) {

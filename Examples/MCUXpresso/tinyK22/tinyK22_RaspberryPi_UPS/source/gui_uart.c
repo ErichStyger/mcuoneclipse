@@ -49,9 +49,11 @@ static void refresh_task(void *param) {
   unsigned char buf[24];
   uint32_t rx, tx;
 
+#if PL_CONFIG_USE_TOASTER
   if (TOASTER_IsRunning()) {
     return;
   }
+#endif
   rx = GATEWAY_GetNofRx();
   tx = GATEWAY_GetNofTx();
   McuXFormat_xsnprintf((char*)buf, sizeof(buf), "Rx: %lu Tx: %lu", rx, tx);

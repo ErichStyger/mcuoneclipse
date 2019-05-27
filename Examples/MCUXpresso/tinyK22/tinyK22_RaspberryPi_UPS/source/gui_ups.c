@@ -54,10 +54,11 @@ static void refresh_task(void *param) {
   int16_t chart_vvalue;
   int16_t chart_cvalue;
 
+#if PL_CONFIG_USE_TOASTER
   if (TOASTER_IsRunning()) {
     return;
   }
-
+#endif
   if (UPS_GetVoltage(&voltage)!=0) {
     voltage = 0.0f; /* error */
   }
