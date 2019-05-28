@@ -1,5 +1,10 @@
 /*
- * Mculed.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
+ *
+ * Driver for LEDs
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef LED_H_

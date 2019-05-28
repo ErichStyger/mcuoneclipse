@@ -1,7 +1,12 @@
 /*
- * led.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
+ * Driver for LEDs
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "McuLibconfig.h"
 #include "McuLED.h"
 #include "McuGPIO.h"

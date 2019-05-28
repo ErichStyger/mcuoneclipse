@@ -1,5 +1,10 @@
 /*
- * McuLEDconfig.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
+ *
+ * Configuration header file for McuLED
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCULED_CONFIG_H_

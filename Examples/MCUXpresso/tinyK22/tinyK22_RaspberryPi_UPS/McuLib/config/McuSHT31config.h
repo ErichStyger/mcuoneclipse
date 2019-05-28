@@ -1,5 +1,10 @@
 /*
- * McuSHT31config.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
+ *
+ * Configuration header file for McuSHT31
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCUSHT31_CONFIG_H_

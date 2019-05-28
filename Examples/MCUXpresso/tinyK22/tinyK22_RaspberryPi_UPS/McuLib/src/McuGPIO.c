@@ -1,7 +1,12 @@
 /*
- * McuGPIO.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
+ * Driver for GPIO pins
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "McuLibconfig.h"
 #include "McuGPIO.h"
 #include "fsl_gpio.h"
@@ -18,11 +23,11 @@ static const McuGPIO_Config_t defaultConfig =
     .isInput = true,
     .isLowOnInit = true,
     .gpio = NULL,
-#if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_CPU_IS_KINETIS
     .port = NULL,
-#elif McuLib_CONFIG_CPU_IS_LPC
+  #elif McuLib_CONFIG_CPU_IS_LPC
     .port = 0,
-#endif
+  #endif
     .pin = 0,
 };
 

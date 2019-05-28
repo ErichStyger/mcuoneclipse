@@ -1,9 +1,10 @@
 /*
- * SHT31.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 08.10.2018
- *      Author: Erich Styger
- *  Driver for the SHT31 Temperature/Humidity sensor
+ * Driver for the SHT31 Temperature/Humidity sensor
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef SOURCES_MCUSHT31_H_
