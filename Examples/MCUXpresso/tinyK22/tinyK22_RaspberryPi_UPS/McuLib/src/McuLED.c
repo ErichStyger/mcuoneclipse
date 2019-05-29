@@ -24,13 +24,15 @@ static const McuLED_Config_t defaultConfig =
 {
     .isLowActive = false,
     .isOnInit = false,
-    .gpio = NULL,
-#if McuLib_CONFIG_CPU_IS_KINETIS
-    .port = NULL,
-#elif McuLib_CONFIG_CPU_IS_LPC
-    .port = 0,
-#endif
-    .pin = 0,
+    .hw = {
+      .gpio = NULL,
+  #if McuLib_CONFIG_CPU_IS_KINETIS
+      .port = NULL,
+  #elif McuLib_CONFIG_CPU_IS_LPC
+      .port = 0,
+  #endif
+      .pin = 0,
+    }
 };
 
 typedef struct {
@@ -51,9 +53,9 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   assert(config!=NULL);
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
-  gpio_config.gpio = config->gpio;
-  gpio_config.port = config->port;
-  gpio_config.pin = config->pin;
+  gpio_config.hw.gpio = config->hw.gpio;
+  gpio_config.hw.port = config->hw.port;
+  gpio_config.hw.pin  = config->hw.pin;
   if (config->isLowActive) {
     gpio_config.isLowOnInit = config->isOnInit;
   } else {

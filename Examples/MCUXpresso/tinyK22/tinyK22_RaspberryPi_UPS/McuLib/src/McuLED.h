@@ -15,22 +15,16 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-#include "fsl_gpio.h"
 #include "McuLibconfig.h"
 #include "McuLEDconfig.h"
+#include "McuGPIO.h"
 
 typedef void *McuLED_Handle_t;
 
 typedef struct {
   bool isLowActive;
   bool isOnInit;
-  GPIO_Type *gpio;
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_Type *port;
-#elif McuLib_CONFIG_CPU_IS_LPC
-  uint32_t port;
-#endif
-  uint32_t pin;
+  McuGPIO_HwPin_t hw;
 } McuLED_Config_t;
 
 void McuLED_GetDefaultConfig(McuLED_Config_t *config);

@@ -22,24 +22,20 @@ static const McuGPIO_Config_t defaultConfig =
 {
     .isInput = true,
     .isLowOnInit = true,
-    .gpio = NULL,
-  #if McuLib_CONFIG_CPU_IS_KINETIS
-    .port = NULL,
-  #elif McuLib_CONFIG_CPU_IS_LPC
-    .port = 0,
-  #endif
-    .pin = 0,
+    .hw = {
+      .gpio = NULL,
+    #if McuLib_CONFIG_CPU_IS_KINETIS
+      .port = NULL,
+    #elif McuLib_CONFIG_CPU_IS_LPC
+      .port = 0,
+    #endif
+      .pin = 0,
+    }
 };
 
 typedef struct {
   bool isInput;
-  GPIO_Type *gpio;
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_Type *port;
-#elif McuLib_CONFIG_CPU_IS_LPC
-  uint32_t port;
-#endif
-  uint32_t pin;
+  McuGPIO_HwPin_t hw;
 } McuGPIO_t;
 
 void McuGPIO_GetDefaultConfig(McuGPIO_Config_t *config) {
@@ -60,10 +56,10 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   }
   pin_config.outputLogic = !config->isLowOnInit;
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PinInit(config->gpio, config->pin, &pin_config);
-  PORT_SetPinMux(config->port, config->pin, kPORT_MuxAsGpio);
+  GPIO_PinInit(config->hw.gpio, config->hw.pin, &pin_config);
+  PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PinInit(config->gpio, config->port, config->pin, &pin_config);
+  GPIO_PinInit(config->hw.gpio, config->hw.port, config->hw.pin, &pin_config);
 #endif
 
   handle = (McuGPIO_t*)malloc(sizeof(McuGPIO_t)); /* get a new device descriptor */
@@ -71,9 +67,9 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(McuGPIO_t)); /* init all fields */
     handle->isInput = config->isInput;
-    handle->gpio = config->gpio;
-    handle->pin = config->pin;
-    handle->port = config->port;
+    handle->hw.gpio = config->hw.gpio;
+    handle->hw.pin = config->hw.pin;
+    handle->hw.port = config->hw.port;
   }
 	return handle;
 }
@@ -89,7 +85,7 @@ void McuGPIO_Low(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PortClear(pin->gpio, (1<<pin->pin));
+  GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortClear(pin->gpio, pin->port, (1<<pin->pin));
 #endif
@@ -100,9 +96,9 @@ void McuGPIO_High(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PortSet(pin->gpio, (1<<pin->pin));
+  GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PortSet(pin->gpio, pin->port, (1<<pin->pin));
+  GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
 }
 
@@ -111,9 +107,9 @@ void McuGPIO_Neg(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PortToggle(pin->gpio, (1<<pin->pin));
+  GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PortToggle(pin->gpio, pin->port, (1<<pin->pin));
+  GPIO_PortToggle(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
 }
 
@@ -123,15 +119,15 @@ void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toLow) {
 
   if (toLow) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-    GPIO_PortClear(pin->gpio, (1<<pin->pin));
+    GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
-    GPIO_PortClear(pin->gpio, pin->port, (1<<pin->pin));
+    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
   } else {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-    GPIO_PortSet(pin->gpio, (1<<pin->pin));
+    GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
-    GPIO_PortSet(pin->gpio, pin->port, (1<<pin->pin));
+    GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
   }
 }
@@ -142,9 +138,9 @@ bool McuGPIO_Get(McuGPIO_Handle_t gpio) {
 
   if (pin->isInput) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-    return GPIO_PinRead(pin->gpio, pin->pin)!=0;
+    return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
 #elif McuLib_CONFIG_CPU_IS_LPC
-    return GPIO_PinRead(pin->gpio, pin->port, pin->pin)!=0;
+    return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
 #endif
   }
   return false;

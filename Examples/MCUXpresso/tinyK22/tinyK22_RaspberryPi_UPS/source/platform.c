@@ -35,6 +35,7 @@
 #include "Sensor.h"
 #include "toaster.h"
 #include "RaspyUART.h"
+#include "buttons.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -95,6 +96,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_Init();
 #endif
+  BTN_Init();
 }
 
 void PL_Deinit(void) {

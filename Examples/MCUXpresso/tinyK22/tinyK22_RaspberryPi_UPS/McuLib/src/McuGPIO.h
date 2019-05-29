@@ -22,8 +22,6 @@ extern "C" {
 typedef void *McuGPIO_Handle_t;
 
 typedef struct {
-  bool isInput;
-  bool isLowOnInit;
   GPIO_Type *gpio;
 #if McuLib_CONFIG_CPU_IS_KINETIS
   PORT_Type *port;
@@ -31,6 +29,12 @@ typedef struct {
   uint32_t port;
 #endif
   uint32_t pin;
+} McuGPIO_HwPin_t;
+
+typedef struct {
+  bool isInput;
+  bool isLowOnInit;
+  McuGPIO_HwPin_t hw;
 } McuGPIO_Config_t;
 
 void McuGPIO_GetDefaultConfig(McuGPIO_Config_t *config);

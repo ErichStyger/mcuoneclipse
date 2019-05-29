@@ -247,29 +247,29 @@ void KEY_Init(void) {
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = true;
 
-  config.gpio = PINS_HATNAVUP_GPIO;
-  config.port = PINS_HATNAVUP_PORT;
-  config.pin = PINS_HATNAVUP_PIN;
+  config.hw.gpio = PINS_HATNAVUP_GPIO;
+  config.hw.port = PINS_HATNAVUP_PORT;
+  config.hw.pin = PINS_HATNAVUP_PIN;
   navPinUp = McuGPIO_InitGPIO(&config);
 
-  config.gpio = PINS_HATNAVDOWN_GPIO;
-  config.port = PINS_HATNAVDOWN_PORT;
-  config.pin = PINS_HATNAVDOWN_PIN;
+  config.hw.gpio = PINS_HATNAVDOWN_GPIO;
+  config.hw.port = PINS_HATNAVDOWN_PORT;
+  config.hw.pin = PINS_HATNAVDOWN_PIN;
   navPinDown = McuGPIO_InitGPIO(&config);
 
-  config.gpio = PINS_HATNAVLEFT_GPIO;
-  config.port = PINS_HATNAVLEFT_PORT;
-  config.pin = PINS_HATNAVLEFT_PIN;
+  config.hw.gpio = PINS_HATNAVLEFT_GPIO;
+  config.hw.port = PINS_HATNAVLEFT_PORT;
+  config.hw.pin = PINS_HATNAVLEFT_PIN;
   navPinLeft = McuGPIO_InitGPIO(&config);
 
-  config.gpio = PINS_HATNAVRIGHT_GPIO;
-  config.port = PINS_HATNAVRIGHT_PORT;
-  config.pin = PINS_HATNAVRIGHT_PIN;
+  config.hw.gpio = PINS_HATNAVRIGHT_GPIO;
+  config.hw.port = PINS_HATNAVRIGHT_PORT;
+  config.hw.pin = PINS_HATNAVRIGHT_PIN;
   navPinRight = McuGPIO_InitGPIO(&config);
 
-  config.gpio = PINS_HATNAVPUSH_GPIO;
-  config.port = PINS_HATNAVPUSH_PORT;
-  config.pin = PINS_HATNAVPUSH_PIN;
+  config.hw.gpio = PINS_HATNAVPUSH_GPIO;
+  config.hw.port = PINS_HATNAVPUSH_PORT;
+  config.hw.pin = PINS_HATNAVPUSH_PIN;
   navPinCenter = McuGPIO_InitGPIO(&config);
 #if PL_CONFIG_HAS_KBI
   PORT_SetPinInterruptConfig(PINS_HATNAVUP_PORT, PINS_HATNAVUP_PIN, kPORT_InterruptFallingEdge);

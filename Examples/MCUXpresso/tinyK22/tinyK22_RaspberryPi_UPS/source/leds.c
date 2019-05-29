@@ -29,31 +29,31 @@ void LEDS_Init(void) {
   McuLED_GetDefaultConfig(&config);
 
   config.isLowActive = true;
-  config.pin = PINS_LEDBLUE_PIN;
-  config.port = PINS_LEDBLUE_PORT;
-  config.gpio = PINS_LEDBLUE_GPIO;
+  config.hw.pin = PINS_LEDBLUE_PIN;
+  config.hw.port = PINS_LEDBLUE_PORT;
+  config.hw.gpio = PINS_LEDBLUE_GPIO;
   tinyLED = McuLED_InitLed(&config);
 
   /* hat LEDs are high active */
   config.isLowActive = false;
 
-  config.pin = PINS_HATLEDBLUE_PIN;
-  config.port = PINS_HATLEDBLUE_PORT;
-  config.gpio = PINS_HATLEDBLUE_GPIO;
+  config.hw.pin = PINS_HATLEDBLUE_PIN;
+  config.hw.port = PINS_HATLEDBLUE_PORT;
+  config.hw.gpio = PINS_HATLEDBLUE_GPIO;
   hatBlueLED = McuLED_InitLed(&config);
 
-  config.pin = PINS_HATLEDGREEN_PIN;
-  config.port = PINS_HATLEDGREEN_PORT;
-  config.gpio = PINS_HATLEDGREEN_GPIO;
+  config.hw.pin = PINS_HATLEDGREEN_PIN;
+  config.hw.port = PINS_HATLEDGREEN_PORT;
+  config.hw.gpio = PINS_HATLEDGREEN_GPIO;
   hatGreenLED = McuLED_InitLed(&config);
 
-  config.pin = PINS_HATLEDRED_PIN;
-  config.port = PINS_HATLEDRED_PORT;
-  config.gpio = PINS_HATLEDRED_GPIO;
+  config.hw.pin = PINS_HATLEDRED_PIN;
+  config.hw.port = PINS_HATLEDRED_PORT;
+  config.hw.gpio = PINS_HATLEDRED_GPIO;
   hatRedLED = McuLED_InitLed(&config);
 
-  config.pin = PINS_HATLEDYELLOW_PIN;
-  config.port = PINS_HATLEDYELLOW_PORT;
-  config.gpio = PINS_HATLEDYELLOW_GPIO;
+  config.hw.pin = PINS_HATLEDYELLOW_PIN;
+  config.hw.port = PINS_HATLEDYELLOW_PORT;
+  config.hw.gpio = PINS_HATLEDYELLOW_GPIO;
   hatYellowLED = McuLED_InitLed(&config);
 }
