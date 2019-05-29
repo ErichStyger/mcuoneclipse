@@ -10,6 +10,7 @@
 
 #include "McuDebounceconfig.h"
 #include <stdint.h>
+#include "McuRTOS.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,6 +35,8 @@ typedef enum {
 typedef struct {
   McuDbnc_State_e state;
   uint32_t flags;
+  uint32_t timerPeriodMs;
+  TimerHandle_t timer;
   uint32_t debounceTicks;
   uint32_t scanValue;
   uint32_t longKeyCnt;
@@ -41,7 +44,8 @@ typedef struct {
   uint32_t (*getButtons)(void);
   void (*onDebounceEvent)(McuDbnc_EventKinds event, uint32_t buttons);
 } McuDbnc_Desc_t;
-//void McuDbnc_Process(McuDbnc_Handle_t handle);
+
+void McuDbnc_Process(McuDbnc_Desc_t *data);
 
 void McuDbnc_Deinit(void);
 void McuDbnc_Init(void);
