@@ -11,54 +11,120 @@
 #include "McuDebounce.h"
 #include "RaspyUART.h"
 #include "lv.h"
+#include "McuRTT.h"
 
 static McuBtn_Handle_t btnUp, btnDown, btnLeft, btnRight, btnCenter;
-#define BTN_UP 		(1<<0)
-#define BTN_DOWN 	(1<<1)
-#define BTN_LEFT 	(1<<2)
-#define BTN_RIGHT 	(1<<3)
-#define BTN_CENTER 	(1<<4)
 
 
 static uint32_t GetButtons(void) {
-	return 0;
+  uint32_t val = 0;
+
+  if (McuBtn_IsOn(btnUp)) {
+    val |= BTN_UP;
+  }
+  if (McuBtn_IsOn(btnDown)) {
+    val |= BTN_DOWN;
+  }
+  if (McuBtn_IsOn(btnLeft)) {
+    val |= BTN_LEFT;
+  }
+  if (McuBtn_IsOn(btnRight)) {
+    val |= BTN_RIGHT;
+  }
+  if (McuBtn_IsOn(btnCenter)) {
+    val |= BTN_CENTER;
+  }
+  return val;
 }
 
-static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
+static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons);
 
-}
-
-#define TIMER_PERIOD_MS  20
+#define TIMER_PERIOD_MS  20 /* frequency of timer */
 static McuDbnc_Desc_t data =
 {
 	.state = MCUDBMC_STATE_IDLE,
-	.flags = 0,
 	.timerPeriodMs = TIMER_PERIOD_MS,
 	.timer = NULL,
-	.debounceTicks = 10,
-	.scanValue = 0,
-	.longKeyCnt = 0,
-	.longKeyTicks = 500,
+	.debounceTimeMs = 100,
+	.repeatTimeMs   = 500,
+	.longKeyTimeMs  = 5000,
 	.getButtons = GetButtons,
 	.onDebounceEvent = OnDebounceEvent,
 };
 
-static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
+static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
+  switch(event) {
+    case MCUDBNC_EVENT_PRESSED:
+      SEGGER_printf("pressed: %d\r\n", buttons);
+    #if PL_CONFIG_USE_RASPY_UART
+      RASPYU_OnJoystickEvent(buttons);
+    #endif
+    #if PL_CONFIG_USE_LVGL
+      if (buttons&BTN_UP) {
+        LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
+      }
+      if (buttons&BTN_DOWN) {
+        LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
+      }
+      if (buttons&BTN_LEFT) {
+        LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
+      }
+      if (buttons&BTN_RIGHT) {
+        LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
+      }
+      if (buttons&BTN_CENTER) {
+        LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
+      }
+    #endif
+      break;
 
-}
+    case MCUDBNC_EVENT_PRESSED_REPEAT:
+      SEGGER_printf("repeat: %d\r\n", buttons);
+      break;
 
-static void StartDebounce(uint32_t buttons) {
-  data.scanValue = buttons;
-  if (xTimerStart(data.timer, 0)!=pdPASS) {
-	for(;;); /* failure!?! */
+    case MCUDBNC_EVENT_LONG_PRESSED:
+      SEGGER_printf("long pressed: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_LONG_PRESSED_REPEAT:
+      SEGGER_printf("long repeat: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_RELEASED:
+      SEGGER_printf("released: %d\r\n", buttons);
+    #if PL_CONFIG_USE_RASPY_UART
+      RASPYU_OnJoystickEvent(0);
+    #endif
+      break;
+
+    default:
+    case MCUDBNC_EVENT_END:
+      (void)xTimerStop(data.timer, pdMS_TO_TICKS(100)); /* stop timer */
+      SEGGER_printf("end: %d\r\n", buttons);
+      break;
   }
 }
 
+static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
+  /* called with TIMER_PERIOD_MS during debouncing */
+  McuDbnc_Process(&data);
+}
+
+static void StartDebounce(uint32_t buttons) {
+  if (data.state==MCUDBMC_STATE_IDLE) {
+    data.scanValue = buttons;
+    data.state = MCUDBMC_STATE_START;
+    McuDbnc_Process(&data);
+    if (xTimerStart(data.timer, 0)!=pdPASS) {
+      for(;;); /* failure!?! */
+    }
+  }
+}
 
 static void PollButtons(void) {
   if (McuBtn_IsOn(btnUp)) {
 	StartDebounce(BTN_UP);
-    RASPYU_OnJoystickEvent(EVNT_SW1_PRESSED);
+    //RASPYU_OnJoystickEvent(BTN_UP);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
     LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -66,7 +132,8 @@ static void PollButtons(void) {
 #endif
   }
   if (McuBtn_IsOn(btnDown)) {
-    RASPYU_OnJoystickEvent(EVNT_SW2_PRESSED);
+    StartDebounce(BTN_DOWN);
+    //RASPYU_OnJoystickEvent(BTN_DOWN);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
     LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -74,7 +141,8 @@ static void PollButtons(void) {
 #endif
   }
   if (McuBtn_IsOn(btnLeft)) {
-    RASPYU_OnJoystickEvent(EVNT_SW3_PRESSED);
+    StartDebounce(BTN_LEFT);
+    //RASPYU_OnJoystickEvent(BTN_LEFT);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
     LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -82,7 +150,8 @@ static void PollButtons(void) {
 #endif
   }
   if (McuBtn_IsOn(btnRight)) {
-    RASPYU_OnJoystickEvent(EVNT_SW4_PRESSED);
+    StartDebounce(BTN_RIGHT);
+    //RASPYU_OnJoystickEvent(BTN_RIGHT);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
     LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
     vTaskDelay(pdMS_TO_TICKS(50));
@@ -90,8 +159,9 @@ static void PollButtons(void) {
 #endif
   }
   if (McuBtn_IsOn(btnCenter)) {
+    StartDebounce(BTN_CENTER);
+    //RASPYU_OnJoystickEvent(BTN_CENTER);
 #if PL_CONFIG_HAS_GUI_KEY_NAV
-    RASPYU_OnJoystickEvent(EVNT_SW5_PRESSED);
     LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
     vTaskDelay(pdMS_TO_TICKS(50));
     LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);

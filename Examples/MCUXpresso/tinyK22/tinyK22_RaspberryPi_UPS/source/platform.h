@@ -8,7 +8,7 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_I2C           (1) /* if I2C is enabled */
+#define PL_CONFIG_USE_I2C           (0) /* if I2C is enabled */
 #define PL_CONFIG_USE_SHT31         (1 && PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_OLED          (0 && PL_CONFIG_USE_I2C) /* if using OLED */
 #define PL_CONFIG_USE_UPS           (1 && PL_CONFIG_USE_I2C) /* if using UPS HAT */

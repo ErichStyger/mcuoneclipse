@@ -8,63 +8,114 @@
 #include "McuDebounce.h"
 #include <stdint.h>
 
+/* \todo: timeout if keys are stuck */
+
 void McuDbnc_Process(McuDbnc_Desc_t *data) {
   uint32_t buttons;
 
   for(;;) {
     switch(data->state) {
-      case MCUDBMC_STATE_IDLE:
-         data->scanValue = data->getButtons();
-         data->longKeyCnt = 1; /* zero is a special value */
-         data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, data->scanValue); /* we have a key press: call event handler  */
-         data->state = MCUDBMC_STATE_PRESSED; /* advance to next state */
-         //(void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data);
-         return;
-        break;
+      case MCUDBMC_STATE_IDLE: /* not doing anything */
+        return;
 
-      case MCUDBMC_STATE_PRESSED:
+      case MCUDBMC_STATE_START: /* entering state machine */
+        if (data->scanValue==0) { /* not assigned yet */
+          data->scanValue = data->getButtons();
+        }
+        data->countTimeMs = 0; /* initialize */
+        data->lastEventTimeMs = 0; /* initialize */
+        data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, data->scanValue); /* we have a key press: call event handler  */
+        data->state = MCUDBMC_STATE_DEBOUNCE; /* advance to next state */
+        return; /* wait the timer period time for next iteration */
+
+      case MCUDBMC_STATE_DEBOUNCE: /* debouncing */
+        data->countTimeMs += data->timerPeriodMs;
+        if (data->countTimeMs<data->debounceTimeMs) {
+          return; /* continue waiting */
+        }
+        data->state = MCUDBMC_STATE_PRESSED;
+        break; /* go to next state */
+
+      case MCUDBMC_STATE_PRESSED: /* button has been pressed, wait for release */
+        data->countTimeMs += data->timerPeriodMs;
         buttons = data->getButtons();
-        if (buttons==data->scanValue) { /* still pressing the same keys */
-          data->onDebounceEvent(MCUDBNC_EVENT_PRESSED_REPEAT, data->scanValue);
-          if (data->longKeyCnt>=data->longKeyTicks) {
-            /* yes, long key press detected */
-            data->longKeyCnt=0; /* zero is a special value to prevent counting */
+        if (buttons==0) { /* all buttons are released */
+          data->state = MCUDBMC_STATE_RELEASED; /* advance to next state */
+          break; /* advance to the next state */
+        } else if (buttons==data->scanValue) { /* still pressing the same keys */
+          if (data->countTimeMs>=data->longKeyTimeMs) { /* long key press detected */
             data->onDebounceEvent(MCUDBNC_EVENT_LONG_PRESSED, data->scanValue);
-          } else if (data->longKeyCnt>0) { /* zero is a special value to prevent counting */
-            data->longKeyCnt += data->debounceTicks; /* increment loop counter */
+            data->lastEventTimeMs = data->countTimeMs;
+            data->state = MCUDBMC_STATE_LONG_PRESSED; /* advance to next state */
+            return; /* wait the timer period time for next iteration */
           }
-         // (void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data); /* continue waiting */
-          return;
-        } else if (buttons==0) { /* 0: all keys are released */
-          if (data->longKeyCnt==0) { /* zero means we already issued the long button press message,  or: just started counting */
-            data->onDebounceEvent(MCUDBNC_EVENT_LONG_RELEASED, data->scanValue); /* we have a key press: call event handler  */
-          } else {
-            data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, data->scanValue); /* throw short event */
+          if (data->countTimeMs-data->lastEventTimeMs > data->repeatTimeMs) {
+            data->onDebounceEvent(MCUDBNC_EVENT_PRESSED_REPEAT, data->scanValue);
+            data->lastEventTimeMs = data->countTimeMs;
           }
-          data->state = MCUDBMC_STATE_RELEASE; /* advance to next state */
-       //   (void)TRG_SetTrigger(data->trigger, data->debounceTicks, (TRG_Callback)DBNC_Process, (void*)data);
-          return;
+          return; /* wait the timer period time for next iteration */
         } else { /* we got another key set pressed */
-          data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, buttons&(~data->scanValue)); /* generate press event for the new keys pressed */
-          data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, (data->scanValue)&(~buttons)); /* generate release event for the new keys released */
-          data->state = MCUDBMC_STATE_RELEASE;
-        }
-        break;
+          uint32_t changed;
 
-      case MCUDBMC_STATE_RELEASE: /* wait until keys are released */
+          changed = buttons&(~data->scanValue); /* newly pressed buttons */
+          if (changed!=0) {
+            data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, changed); /* generate press event for the new keys pressed */
+            data->lastEventTimeMs = data->countTimeMs;
+          }
+          changed = (data->scanValue)&(~buttons); /* newly released buttons */
+          if (changed!=0) {
+            data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, changed); /* generate release event for the old keys released */
+            data->lastEventTimeMs = data->countTimeMs;
+          }
+          data->scanValue = buttons; /* store new set of buttons */
+          return; /* wait the timer period time for next iteration */
+        }
+        break; /* go to next state */
+
+      case MCUDBMC_STATE_LONG_PRESSED: /* we are in the long press range */
+        data->countTimeMs += data->timerPeriodMs;
         buttons = data->getButtons();
-        if (buttons==0) { /* all keys released, go back to idle state. */
-          data->state = MCUDBMC_STATE_IDLE; /* go back to idle */
-          data->onDebounceEvent(MCUDBNC_EVENT_END, data->scanValue); /* callback at the end of debouncing. */
-          return;
-        } else { /* continue waiting */
-          data->scanValue = buttons;
-          data->longKeyCnt = 1; /* zero is a special value */
-          data->state = MCUDBMC_STATE_PRESSED;
+        if (buttons==0) { /* all buttons are released */
+          data->state = MCUDBMC_STATE_RELEASED; /* advance to next state */
+          break; /* advance to the next state */
+        } else if (buttons==data->scanValue) { /* still pressing the same keys */
+          if (data->countTimeMs-data->lastEventTimeMs > data->repeatTimeMs) {
+            data->onDebounceEvent(MCUDBNC_EVENT_LONG_PRESSED_REPEAT, data->scanValue);
+            data->lastEventTimeMs = data->countTimeMs;
+          }
+          return; /* wait the timer period time for next iteration */
+        } else { /* we got another key set pressed */
+          uint32_t changed;
+
+          changed = buttons&(~data->scanValue); /* newly pressed buttons */
+          if (changed!=0) {
+            data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, changed); /* generate press event for the new keys pressed */
+            data->lastEventTimeMs = data->countTimeMs;
+          }
+          changed = (data->scanValue)&(~buttons); /* newly released buttons */
+          if (changed!=0) {
+            data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, changed); /* generate release event for the old keys released */
+            data->lastEventTimeMs = data->countTimeMs;
+          }
+          data->scanValue = buttons; /* store new set of buttons */
+          return; /* wait the timer period time for next iteration */
         }
+        break; /* go to next state */
+
+      case MCUDBMC_STATE_RELEASED:
+        data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, data->scanValue); /* throw short event */
+        data->lastEventTimeMs = data->countTimeMs;
+        data->state = MCUDBMC_STATE_END;
         break;
 
-      default:
+      case MCUDBMC_STATE_END: /* finish up */
+        data->onDebounceEvent(MCUDBNC_EVENT_END, data->scanValue); /* callback at the end of debouncing. */
+        data->scanValue = 0; /* reset */
+        data->countTimeMs = 0; /* reset */
+        data->state = MCUDBMC_STATE_IDLE; /* go back to idle */
+        return; /* get out of state machine */
+
+      default: /* should not happen */
         break;
     } /* switch */
   } /* for */

@@ -13,7 +13,7 @@
 
 uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 
-void RASPYU_OnJoystickEvent(EVNT_Handle event);
+void RASPYU_OnJoystickEvent(uint32_t buttons);
 
 void RASPYU_Deinit(void);
 void RASPYU_Init(void);

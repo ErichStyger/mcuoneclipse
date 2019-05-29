@@ -13,6 +13,7 @@
 #include "McuLED.h"
 #include "gateway.h"
 #include "Sensor.h"
+#include "buttons.h"
 
 static bool joystickEventsToLinuxEnabled = true;
 static bool joystickEventsToHostEnabled = true;
@@ -55,26 +56,34 @@ static void UartTask(void *pv) {
 }
 #endif /* PL_CONFIG_USE_SHT31 */
 
-void RASPYU_OnJoystickEvent(EVNT_Handle event) {
+void RASPYU_OnJoystickEvent(uint32_t buttons) {
   uint8_t buf[24];
   uint8_t mask;
 
   if (joystickEventsToLinuxEnabled || joystickEventsToHostEnabled) {
-    switch(event) {
-      case EVNT_SW1_PRESSED:    mask = (1<<0); break; /* left */
-      case EVNT_SW2_PRESSED:    mask = (1<<1); break; /* right */
-      case EVNT_SW3_PRESSED:    mask = (1<<2); break; /* up */
-      case EVNT_SW4_PRESSED:    mask = (1<<3); break; /* down */
-      case EVNT_SW5_PRESSED:    mask = (1<<4); break; /* center */
-      default:                  mask = 0;      break; /* none, error case */
+    mask = 0;
+    if (buttons&BTN_UP) {
+      mask |= (1<<2);
+    }
+    if (buttons&BTN_DOWN) {
+      mask |= mask = (1<<3);
+    }
+    if (buttons&BTN_LEFT) {
+      mask |= mask = (1<<0);
+    }
+    if (buttons&BTN_RIGHT) {
+      mask |= mask = (1<<1);
+    }
+    if (buttons&BTN_CENTER) {
+      mask |= mask = (1<<4);
     }
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"joystick ");
     McuUtility_strcatNum8u(buf, sizeof(buf), mask);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    if (joystickEventsToLinuxEnabled && !GATEWAY_HostToLinuxIsEnabled()) {
+    if (joystickEventsToLinuxEnabled) {
       GATEWAY_UartWriteToLinuxStr(buf);
     }
-    if (joystickEventsToHostEnabled && !GATEWAY_LinuxToHostIsEnabled()) {
+    if (joystickEventsToHostEnabled) {
       GATEWAY_UartWriteToHostStr(buf);
     }
   }
@@ -97,8 +106,10 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  nav to linux (on|off)", (unsigned char*)"send nav events to linux\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  nav to host (on|off)", (unsigned char*)"send nav events to host\r\n", io->stdOut);
+#if PL_CONFIG_USE_SHT31
   McuShell_SendHelpStr((unsigned char*)"  sht to linux (on|off)", (unsigned char*)"send SHT31 events to linux\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  sht to host (on|off)", (unsigned char*)"send SHT31 events to host\r\n", io->stdOut);
+#endif
   McuShell_SendHelpStr((unsigned char*)"  red (on|off)", (unsigned char*)"turn red LED on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  green (on|off)", (unsigned char*)"turn green LED on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  blue (on|off)", (unsigned char*)"turn blue LED on or off\r\n", io->stdOut);
@@ -132,6 +143,7 @@ uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "uart nav to host off")==0) {
     joystickEventsToLinuxEnabled = false;
     *handled = TRUE;
+#if PL_CONFIG_USE_SHT31
   } else if (McuUtility_strcmp((char*)cmd, "uart sht to linux on")==0) {
     shtEventsToLinuxEnabled = true;
     *handled = TRUE;
@@ -144,6 +156,7 @@ uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "uart sht to host off")==0) {
     shtEventsToHostEnabled = false;
     *handled = TRUE;
+#endif
   } else if (McuUtility_strcmp((char*)cmd, "uart red on")==0 || McuUtility_strcmp((char*)cmd, "red on")==0) {
     McuLED_On(hatRedLED);
     *handled = TRUE;

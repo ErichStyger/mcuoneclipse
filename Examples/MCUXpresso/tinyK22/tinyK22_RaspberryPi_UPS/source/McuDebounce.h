@@ -18,31 +18,36 @@ extern "C" {
 
 typedef enum {
   MCUDBMC_STATE_IDLE = 0,
+  MCUDBMC_STATE_START,
+  MCUDBMC_STATE_DEBOUNCE,
   MCUDBMC_STATE_PRESSED,
-  MCUDBMC_STATE_RELEASE,
+  MCUDBMC_STATE_LONG_PRESSED,
+  MCUDBMC_STATE_RELEASED,
+  MCUDBMC_STATE_END,
 } McuDbnc_State_e;
 
 typedef enum {
-  MCUDBNC_EVENT_PRESSED,        /*!< Event for key(s) pressed */
-  MCUDBNC_EVENT_PRESSED_REPEAT, /*!< Event for key(s) while pressed */
-  MCUDBNC_EVENT_LONG_PRESSED,   /*!< Event for key(s) pressed for a long time */
-  MCUDBNC_EVENT_RELEASED,       /*!< Event for key(s) released */
-  MCUDBNC_EVENT_LONG_RELEASED,  /*!< Event for key(s) released after a long time */
-  MCUDBNC_EVENT_END             /*!< Debouncing end event. This one is called when the FSM finishes. */
+  MCUDBNC_EVENT_PRESSED,                /*!< Event for key(s) pressed */
+  MCUDBNC_EVENT_PRESSED_REPEAT,         /*!< Event for key(s) while pressed */
+  MCUDBNC_EVENT_LONG_PRESSED,           /*!< Event for key(s) pressed for a long time */
+  MCUDBNC_EVENT_LONG_PRESSED_REPEAT,    /*!< Event for key(s) pressed for a long time */
+  MCUDBNC_EVENT_RELEASED,               /*!< Event for key(s) released */
+  MCUDBNC_EVENT_END                     /*!< Debouncing end event. This one is called when the FSM finishes. */
 } McuDbnc_EventKinds;
 
-
 typedef struct {
-  McuDbnc_State_e state;
-  uint32_t flags;
-  uint32_t timerPeriodMs;
-  TimerHandle_t timer;
-  uint32_t debounceTicks;
-  uint32_t scanValue;
-  uint32_t longKeyCnt;
-  uint32_t longKeyTicks;
-  uint32_t (*getButtons)(void);
-  void (*onDebounceEvent)(McuDbnc_EventKinds event, uint32_t buttons);
+  McuDbnc_State_e state;        /* data */
+  //uint32_t flags;
+  uint32_t timerPeriodMs;       /* config: period of timer in ms */
+  TimerHandle_t timer;          /* config: RTOS timer handle */
+  uint32_t scanValue;           /* data: value of buttons at debounce start */
+  uint32_t countTimeMs;         /* data: counting time in ms from the beginning */
+  uint32_t lastEventTimeMs;     /* data: time of last event, used for repeated messages */
+  uint32_t debounceTimeMs;      /* config: debounce time in ms */
+  uint32_t repeatTimeMs;        /* config: wait time for a button repeat message */
+  uint32_t longKeyTimeMs;       /* config: wait time for a long key press */
+  uint32_t (*getButtons)(void); /* config: get the pressed buttons */
+  void (*onDebounceEvent)(McuDbnc_EventKinds event, uint32_t buttons); /* config: event handler called */
 } McuDbnc_Desc_t;
 
 void McuDbnc_Process(McuDbnc_Desc_t *data);
