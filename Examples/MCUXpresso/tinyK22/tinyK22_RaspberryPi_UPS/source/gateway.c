@@ -311,7 +311,7 @@ void GATEWAY_Init(void) {
       "TxToHost", /* task name for kernel awareness debugging */
       600/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
+      tskIDLE_PRIORITY+3,  /* initial priority */
       &txToHostTaskHndl /* optional task handle to create */
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
@@ -321,7 +321,7 @@ void GATEWAY_Init(void) {
       "TxToLinux", /* task name for kernel awareness debugging */
       600/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
+      tskIDLE_PRIORITY+3,  /* initial priority */
       &txToLinuxTaskHndl /* optional task handle to create */
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */

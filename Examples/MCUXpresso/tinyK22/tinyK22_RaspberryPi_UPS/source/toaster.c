@@ -201,7 +201,6 @@ static void DisplayToasters(void) {
     drawBitmap(x, y, mask[f], 32, 32, McuGDisplaySSD1306_COLOR_BLACK);
     drawBitmap(x, y, img[ f], 32, 32, McuGDisplaySSD1306_COLOR_WHITE);
 
-
     // Then update position, checking if item moved off screen...
     flyer[i].x -= flyer[i].depth * 2; // Update position based on depth,
     flyer[i].y += flyer[i].depth;     // for a sort of pseudo-parallax effect.
@@ -224,7 +223,7 @@ static void DisplayToasters(void) {
   }
 }
 
-#define REFR_TIME_MS   (100)
+#define REFR_TIME_MS   (150) /* with I2C bit banging, it requires about 130 ms for a OLED refresh */
 static lv_task_t *refr_task;
 static lv_obj_t *win;
 static bool screenSaverIsRunning = false;

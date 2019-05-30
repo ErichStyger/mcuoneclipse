@@ -265,7 +265,7 @@ void BTN_Init(void) {
       "Btn", /* task name for kernel awareness debugging */
       500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+1,  /* initial priority */
+      tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {

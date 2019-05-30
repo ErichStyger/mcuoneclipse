@@ -9,7 +9,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_USE_BUTTONS       (1) /* using buttons (navigation switch) */
-#define PL_CONFIG_USE_KBI           (0 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
+#define PL_CONFIG_USE_KBI           (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
 #define PL_CONFIG_USE_I2C           (1) /* if I2C is enabled */
 #define PL_CONFIG_USE_SHT31         (1 && PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_OLED          (1 && PL_CONFIG_USE_I2C) /* if using OLED */

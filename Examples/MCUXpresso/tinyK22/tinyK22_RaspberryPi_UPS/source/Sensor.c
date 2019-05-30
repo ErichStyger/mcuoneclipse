@@ -319,7 +319,7 @@ void SENSOR_Init(void) {
         "SHT31", /* task name for kernel awareness debugging */
         700/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+3,  /* initial priority */
+        tskIDLE_PRIORITY+2,  /* initial priority */
         (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
