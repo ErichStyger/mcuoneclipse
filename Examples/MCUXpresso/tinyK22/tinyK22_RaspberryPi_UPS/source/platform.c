@@ -23,19 +23,17 @@
 #include "oled.h"
 #include "gui.h"
 #include "gateway.h"
-#include "Keys.h"
-#include "KeyDebounce.h"
 #include "Trigger.h"
-#include "Event.h"
 #include "Shell.h"
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuXFormat.h"
-#include "McuButton.h"
 #include "Sensor.h"
 #include "toaster.h"
 #include "RaspyUART.h"
 #include "buttons.h"
+#include "McuButton.h"
+#include "McuDebounce.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -60,22 +58,16 @@ void PL_Init(void) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
-#if PL_CONFIG_USE_SHELL
-  SHELL_Init();
-#endif
   McuGPIO_Init();
   McuLED_Init();
   McuBtn_Init();
+  McuDbnc_Init();
 
   /* initialize my own modules */
-#if PL_CONFIG_HAS_KEYS
-  KEY_Init();
-#endif
-#if PL_CONFIG_HAS_DEBOUNCE
-  KEYDBNC_Init();
+#if PL_CONFIG_USE_SHELL
+  SHELL_Init();
 #endif
   TRG_Init();
-  EVNT_Init();
   LEDS_Init();
 #if PL_CONFIG_USE_SHUTDOWN
   SHUTDOWN_Init();
@@ -100,5 +92,5 @@ void PL_Init(void) {
 }
 
 void PL_Deinit(void) {
-  /* \todo */
+  /*! \todo */
 }

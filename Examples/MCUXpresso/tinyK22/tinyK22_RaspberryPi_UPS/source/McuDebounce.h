@@ -17,13 +17,14 @@ extern "C" {
 #endif
 
 typedef enum {
-  MCUDBMC_STATE_IDLE = 0,
-  MCUDBMC_STATE_START,
-  MCUDBMC_STATE_DEBOUNCE,
-  MCUDBMC_STATE_PRESSED,
-  MCUDBMC_STATE_LONG_PRESSED,
-  MCUDBMC_STATE_RELEASED,
-  MCUDBMC_STATE_END,
+  MCUDBMC_STATE_IDLE = 0,       /*!< initial state, not doing anything */
+  MCUDBMC_STATE_START,          /*!< starting debouncing, entered after a button press */
+  MCUDBMC_STATE_PRESS,          /*!< state after start to send a press notification */
+  MCUDBMC_STATE_DEBOUNCE,       /*!< debounce after press */
+  MCUDBMC_STATE_PRESSED,        /*!< while pressing */
+  MCUDBMC_STATE_LONG_PRESSED,   /*!< enters this state after pressing for the long press time */
+  MCUDBMC_STATE_RELEASED,       /*!< buttons have been released */
+  MCUDBMC_STATE_END,            /*!< final state used for cleanup */
 } McuDbnc_State_e;
 
 typedef enum {

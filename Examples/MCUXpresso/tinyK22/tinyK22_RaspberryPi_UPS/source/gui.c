@@ -13,12 +13,10 @@
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "KeyDebounce.h"
 #include "McuSSD1306.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
 #include "Trigger.h"
-#include "Event.h"
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
@@ -298,84 +296,6 @@ void GUI_MainMenuCreate(void) {
 #endif
 }
 
-#if PL_CONFIG_HAS_KEYS
-static void btnCallback(EVNT_Handle event) {
-  switch(event) {
-    case EVNT_SW1_PRESSED:
-      RASPYU_OnJoystickEvent(event);
-      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
-      break;
-    case EVNT_SW1_RELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
-      break;
-    case EVNT_SW1_LPRESSED:
-      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED_LONG);
-      break;
-    case EVNT_SW1_LRELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED_LONG);
-      break;
-
-    case EVNT_SW2_PRESSED:
-      RASPYU_OnJoystickEvent(event);
-      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
-      break;
-    case EVNT_SW2_RELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
-      break;
-    case EVNT_SW2_LPRESSED:
-      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED_LONG);
-      break;
-    case EVNT_SW2_LRELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED_LONG);
-      break;
-
-    case EVNT_SW3_PRESSED:
-      RASPYU_OnJoystickEvent(event);
-      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
-      break;
-    case EVNT_SW3_RELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
-      break;
-    case EVNT_SW3_LPRESSED:
-      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED_LONG);
-      break;
-    case EVNT_SW3_LRELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED_LONG);
-      break;
-
-    case EVNT_SW4_PRESSED:
-      RASPYU_OnJoystickEvent(event);
-      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
-      break;
-    case EVNT_SW4_RELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
-      break;
-    case EVNT_SW4_LPRESSED:
-      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED_LONG);
-      break;
-    case EVNT_SW4_LRELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED_LONG);
-      break;
-
-    case EVNT_SW5_PRESSED:
-      RASPYU_OnJoystickEvent(event);
-      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
-      break;
-    case EVNT_SW5_RELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
-      break;
-    case EVNT_SW5_LPRESSED:
-      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED_LONG);
-      break;
-    case EVNT_SW5_LRELEASED:
-      LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED_LONG);
-      break;
-
-    default:
-      break;
-  }
-}
-#endif
 
 static void GuiTask(void *p) {
   uint32_t notifcationValue;
@@ -421,10 +341,6 @@ static void GuiTask(void *p) {
       }
     }
     LV_Task(); /* call this every 1-20 ms */
-#if PL_CONFIG_HAS_KEYS
-    KEYDBNC_Process();
-    EVNT_HandleEvent(btnCallback, true);
-#endif
     vTaskDelay(pdMS_TO_TICKS(10));
   }
 }

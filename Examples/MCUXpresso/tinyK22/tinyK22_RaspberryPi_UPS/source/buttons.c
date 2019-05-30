@@ -12,9 +12,11 @@
 #include "RaspyUART.h"
 #include "lv.h"
 #include "McuRTT.h"
+#if PL_CONFIG_USE_KBI
+  #include "fsl_port.h"
+#endif
 
 static McuBtn_Handle_t btnUp, btnDown, btnLeft, btnRight, btnCenter;
-
 
 static uint32_t GetButtons(void) {
   uint32_t val = 0;
@@ -46,8 +48,8 @@ static McuDbnc_Desc_t data =
 	.timerPeriodMs = TIMER_PERIOD_MS,
 	.timer = NULL,
 	.debounceTimeMs = 100,
-	.repeatTimeMs   = 500,
-	.longKeyTimeMs  = 5000,
+	.repeatTimeMs   = 300,
+	.longKeyTimeMs  = 1000,
 	.getButtons = GetButtons,
 	.onDebounceEvent = OnDebounceEvent,
 };
@@ -84,6 +86,23 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
 
     case MCUDBNC_EVENT_LONG_PRESSED:
       SEGGER_printf("long pressed: %d\r\n", buttons);
+    #if PL_CONFIG_USE_LVGL
+      if (buttons&BTN_UP) {
+        LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED_LONG);
+      }
+      if (buttons&BTN_DOWN) {
+        LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED_LONG);
+      }
+      if (buttons&BTN_LEFT) {
+        LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED_LONG);
+      }
+      if (buttons&BTN_RIGHT) {
+        LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED_LONG);
+      }
+      if (buttons&BTN_CENTER) {
+        LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED_LONG);
+      }
+    #endif
       break;
 
     case MCUDBNC_EVENT_LONG_PRESSED_REPEAT:
@@ -94,6 +113,23 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
       SEGGER_printf("released: %d\r\n", buttons);
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(0);
+    #endif
+    #if PL_CONFIG_USE_LVGL
+      if (buttons&BTN_UP) {
+        LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
+      }
+      if (buttons&BTN_DOWN) {
+        LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
+      }
+      if (buttons&BTN_LEFT) {
+        LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
+      }
+      if (buttons&BTN_RIGHT) {
+        LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
+      }
+      if (buttons&BTN_CENTER) {
+        LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
+      }
     #endif
       break;
 
@@ -110,62 +146,42 @@ static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
   McuDbnc_Process(&data);
 }
 
-static void StartDebounce(uint32_t buttons) {
+static void StartDebounce(uint32_t buttons, bool fromISR) {
+  BaseType_t res;
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
   if (data.state==MCUDBMC_STATE_IDLE) {
     data.scanValue = buttons;
     data.state = MCUDBMC_STATE_START;
     McuDbnc_Process(&data);
-    if (xTimerStart(data.timer, 0)!=pdPASS) {
-      for(;;); /* failure!?! */
+    if (fromISR) {
+      res = xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
+    } else {
+      res = xTimerStart(data.timer, pdMS_TO_TICKS(100));
+    }
+    assert(res==pdPASS);
+    if (fromISR) {
+      portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
   }
 }
 
+#if !PL_CONFIG_USE_KBI
 static void PollButtons(void) {
   if (McuBtn_IsOn(btnUp)) {
 	StartDebounce(BTN_UP);
-    //RASPYU_OnJoystickEvent(BTN_UP);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
-    vTaskDelay(pdMS_TO_TICKS(50));
-    LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
-#endif
   }
   if (McuBtn_IsOn(btnDown)) {
     StartDebounce(BTN_DOWN);
-    //RASPYU_OnJoystickEvent(BTN_DOWN);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_PRESSED);
-    vTaskDelay(pdMS_TO_TICKS(50));
-    LV_ButtonEvent(LV_BTN_MASK_DOWN, LV_MASK_RELEASED);
-#endif
   }
   if (McuBtn_IsOn(btnLeft)) {
     StartDebounce(BTN_LEFT);
-    //RASPYU_OnJoystickEvent(BTN_LEFT);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_PRESSED);
-    vTaskDelay(pdMS_TO_TICKS(50));
-    LV_ButtonEvent(LV_BTN_MASK_LEFT, LV_MASK_RELEASED);
-#endif
   }
   if (McuBtn_IsOn(btnRight)) {
     StartDebounce(BTN_RIGHT);
-    //RASPYU_OnJoystickEvent(BTN_RIGHT);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_PRESSED);
-    vTaskDelay(pdMS_TO_TICKS(50));
-    LV_ButtonEvent(LV_BTN_MASK_RIGHT, LV_MASK_RELEASED);
-#endif
   }
   if (McuBtn_IsOn(btnCenter)) {
     StartDebounce(BTN_CENTER);
-    //RASPYU_OnJoystickEvent(BTN_CENTER);
-#if PL_CONFIG_HAS_GUI_KEY_NAV
-    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_PRESSED);
-    vTaskDelay(pdMS_TO_TICKS(50));
-    LV_ButtonEvent(LV_BTN_MASK_CENTER, LV_MASK_RELEASED);
-#endif
   }
 }
 
@@ -175,6 +191,34 @@ static void BtnTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
+#else
+void PORTB_IRQHandler(void) {
+  uint32_t flags;
+
+  flags = GPIO_PortGetInterruptFlags(GPIOB);
+  if (flags&(1U<<PINS_HATNAVLEFT_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVLEFT_GPIO, 1U<<PINS_HATNAVLEFT_PIN);
+    StartDebounce(BTN_LEFT, true);
+  }
+  if (flags&(1U<<PINS_HATNAVRIGHT_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVRIGHT_GPIO, 1U<<PINS_HATNAVRIGHT_PIN);
+    StartDebounce(BTN_RIGHT, true);
+  }
+  if (flags&(1U<<PINS_HATNAVUP_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVUP_GPIO, 1U<<PINS_HATNAVUP_PIN);
+    StartDebounce(BTN_UP, true);
+  }
+  if (flags&(1U<<PINS_HATNAVDOWN_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVDOWN_GPIO, 1U<<PINS_HATNAVDOWN_PIN);
+    StartDebounce(BTN_DOWN, true);
+  }
+  if (flags&(1U<<PINS_HATNAVPUSH_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVPUSH_GPIO, 1U<<PINS_HATNAVPUSH_PIN);
+    StartDebounce(BTN_CENTER, true);
+  }
+  __DSB();
+}
+#endif
 
 void BTN_Init(void) {
   McuBtn_Config_t btnConfig;
@@ -207,15 +251,15 @@ void BTN_Init(void) {
   btnConfig.hw.pin = PINS_HATNAVPUSH_PIN;
   btnCenter = McuBtn_InitButton(&btnConfig);
 
-#if 0 && PL_CONFIG_HAS_KBI
+#if PL_CONFIG_USE_KBI
   PORT_SetPinInterruptConfig(PINS_HATNAVUP_PORT, PINS_HATNAVUP_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVDOWN_PORT, PINS_HATNAVDOWN_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVLEFT_PORT, PINS_HATNAVLEFT_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVRIGHT_PORT, PINS_HATNAVRIGHT_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVPUSH_PORT, PINS_HATNAVPUSH_PIN, kPORT_InterruptFallingEdge);
+  NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTB_IRQn);
-#endif
-
+#else /* use task for button polling */
   if (xTaskCreate(
       BtnTask,  /* pointer to the task */
       "Btn", /* task name for kernel awareness debugging */
@@ -227,6 +271,7 @@ void BTN_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
+#endif
   data.timer = xTimerCreate(
         "tmrDbnc", /* name */
         pdMS_TO_TICKS(TIMER_PERIOD_MS), /* period/time */
@@ -239,7 +284,7 @@ void BTN_Init(void) {
 }
 
 void BTN_Deinit(void) {
-#if 0 && PL_CONFIG_HAS_KBI
+#if PL_CONFIG_USE_KBI
   DisableIRQ(PORTB_IRQn);
 #endif
   btnUp = McuBtn_DeinitButton(btnUp);

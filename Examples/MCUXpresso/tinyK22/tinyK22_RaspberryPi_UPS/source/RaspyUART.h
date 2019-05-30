@@ -8,8 +8,8 @@
 #ifndef RASPYUART_H_
 #define RASPYUART_H_
 
-#include "Event.h"
 #include "McuShell.h"
+#include <stdint.h>
 
 uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 

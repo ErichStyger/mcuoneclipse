@@ -8,8 +8,6 @@
 #include "McuDebounce.h"
 #include <stdint.h>
 
-/* \todo: timeout if keys are stuck */
-
 void McuDbnc_Process(McuDbnc_Desc_t *data) {
   uint32_t buttons;
 
@@ -18,12 +16,16 @@ void McuDbnc_Process(McuDbnc_Desc_t *data) {
       case MCUDBMC_STATE_IDLE: /* not doing anything */
         return;
 
-      case MCUDBMC_STATE_START: /* entering state machine */
+      case MCUDBMC_STATE_START: /* entering state machine. This might be done from an interrupt, so keep it simple */
         if (data->scanValue==0) { /* not assigned yet */
           data->scanValue = data->getButtons();
         }
         data->countTimeMs = 0; /* initialize */
         data->lastEventTimeMs = 0; /* initialize */
+        data->state = MCUDBMC_STATE_PRESS;
+        return; /* wait the timer period time for next iteration. Caller should enable timer to get to the next state */
+
+      case MCUDBMC_STATE_PRESS:
         data->onDebounceEvent(MCUDBNC_EVENT_PRESSED, data->scanValue); /* we have a key press: call event handler  */
         data->state = MCUDBMC_STATE_DEBOUNCE; /* advance to next state */
         return; /* wait the timer period time for next iteration */
