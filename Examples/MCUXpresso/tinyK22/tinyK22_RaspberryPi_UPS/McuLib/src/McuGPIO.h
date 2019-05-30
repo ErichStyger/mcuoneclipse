@@ -10,14 +10,14 @@
 #ifndef McuGPIO_H_
 #define McuGPIO_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "fsl_gpio.h"
 #include "McuLibconfig.h"
 #include "McuGPIOconfig.h"
 #include <stdbool.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *McuGPIO_Handle_t;
 

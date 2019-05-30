@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#if PL_CONFIG_USE_UPS && PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_UPS && PL_CONFIG_USE_GUI
 #include "gui_ups.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "ups.h"

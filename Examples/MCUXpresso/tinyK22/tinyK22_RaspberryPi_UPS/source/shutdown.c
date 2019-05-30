@@ -54,7 +54,7 @@ BDM21: LED4 (Red)
 */
 
 static bool isShutDownButtonPressed(void) {
-#if !PL_CONFIG_HAS_GUI_KEY_NAV /* handled in GUI */
+#if !PL_CONFIG_USE_GUI_KEY_NAV /* handled in GUI */
   return GPIO_PinRead(PINS_HATNAVPUSH_GPIO, PINS_HATNAVPUSH_PIN)==0; /* push button is low active */
 #else
   return false;

@@ -10,6 +10,14 @@
 #ifndef MCUGPIO_CONFIG_H_
 #define MCUGPIO_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* no configuration settings yet */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* MCUGPIOCONFIG_H_ */

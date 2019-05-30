@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_GUI
 #include "gui_uart.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuXFormat.h"
@@ -95,4 +95,4 @@ void GUI_UART_CreateView(void) {
     /* Make the window content responsive */
     lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 }
-#endif /* PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_LVGL */
+#endif /* PL_CONFIG_USE_GATEWAY && PL_CONFIG_USE_GUI */

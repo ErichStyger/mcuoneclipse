@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#if PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GUI
 #include "lcd.h"
 #include "McuGDisplaySSD1306.h"
 

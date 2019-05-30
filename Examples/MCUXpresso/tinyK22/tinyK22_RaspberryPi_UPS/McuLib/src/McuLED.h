@@ -10,14 +10,14 @@
 #ifndef LED_H_
 #define LED_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
 #include "McuLibconfig.h"
 #include "McuLEDconfig.h"
 #include "McuGPIO.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *McuLED_Handle_t;
 

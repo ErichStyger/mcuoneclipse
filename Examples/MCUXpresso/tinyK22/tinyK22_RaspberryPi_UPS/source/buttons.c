@@ -61,7 +61,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(buttons);
     #endif
-    #if PL_CONFIG_USE_LVGL
+    #if PL_CONFIG_USE_GUI
       if (buttons&BTN_UP) {
         LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED);
       }
@@ -86,7 +86,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
 
     case MCUDBNC_EVENT_LONG_PRESSED:
       SEGGER_printf("long pressed: %d\r\n", buttons);
-    #if PL_CONFIG_USE_LVGL
+    #if PL_CONFIG_USE_GUI
       if (buttons&BTN_UP) {
         LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED_LONG);
       }
@@ -114,7 +114,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(0);
     #endif
-    #if PL_CONFIG_USE_LVGL
+    #if PL_CONFIG_USE_GUI
       if (buttons&BTN_UP) {
         LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_RELEASED);
       }
@@ -169,19 +169,19 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
 #if !PL_CONFIG_USE_KBI
 static void PollButtons(void) {
   if (McuBtn_IsOn(btnUp)) {
-	StartDebounce(BTN_UP);
+	StartDebounce(BTN_UP, false);
   }
   if (McuBtn_IsOn(btnDown)) {
-    StartDebounce(BTN_DOWN);
+    StartDebounce(BTN_DOWN, false);
   }
   if (McuBtn_IsOn(btnLeft)) {
-    StartDebounce(BTN_LEFT);
+    StartDebounce(BTN_LEFT, false);
   }
   if (McuBtn_IsOn(btnRight)) {
-    StartDebounce(BTN_RIGHT);
+    StartDebounce(BTN_RIGHT, false);
   }
   if (McuBtn_IsOn(btnCenter)) {
-    StartDebounce(BTN_CENTER);
+    StartDebounce(BTN_CENTER, false);
   }
 }
 

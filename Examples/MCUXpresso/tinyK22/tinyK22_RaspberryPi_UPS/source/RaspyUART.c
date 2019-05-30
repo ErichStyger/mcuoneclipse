@@ -58,24 +58,25 @@ static void UartTask(void *pv) {
 
 void RASPYU_OnJoystickEvent(uint32_t buttons) {
   uint8_t buf[24];
-  uint8_t mask;
 
   if (joystickEventsToLinuxEnabled || joystickEventsToHostEnabled) {
+    uint8_t mask;
+
     mask = 0;
     if (buttons&BTN_UP) {
       mask |= (1<<2);
     }
     if (buttons&BTN_DOWN) {
-      mask |= mask = (1<<3);
+      mask |= (1<<3);
     }
     if (buttons&BTN_LEFT) {
-      mask |= mask = (1<<0);
+      mask |= (1<<0);
     }
     if (buttons&BTN_RIGHT) {
-      mask |= mask = (1<<1);
+      mask |= (1<<1);
     }
     if (buttons&BTN_CENTER) {
-      mask |= mask = (1<<4);
+      mask |= (1<<4);
     }
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"joystick ");
     McuUtility_strcatNum8u(buf, sizeof(buf), mask);

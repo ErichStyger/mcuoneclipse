@@ -29,7 +29,7 @@
 #include "McuArmTools.h"
 #include "McuGenericI2C.h"
 #include "McuGenericSWI2C.h"
-#if PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GUI
   #include "lv.h"
   #include "gui.h"
 #endif

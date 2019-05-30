@@ -23,7 +23,6 @@
 #include "oled.h"
 #include "gui.h"
 #include "gateway.h"
-#include "Trigger.h"
 #include "Shell.h"
 #include "McuRTT.h"
 #include "McuSystemView.h"
@@ -67,7 +66,6 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
-  TRG_Init();
   LEDS_Init();
 #if PL_CONFIG_USE_SHUTDOWN
   SHUTDOWN_Init();
@@ -75,7 +73,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_OLED
   OLED_Init(); /* initializes the needed McuLib components for the OLED */
 #endif
-#if PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GUI
   GUI_Init();
 #endif
 #if PL_CONFIG_USE_GATEWAY

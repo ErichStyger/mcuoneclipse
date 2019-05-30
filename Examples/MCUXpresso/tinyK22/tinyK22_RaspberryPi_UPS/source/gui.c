@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 #include "platform.h"
-#if PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GUI
 
 #include "gui.h"
 #include "lv.h"
@@ -16,7 +16,6 @@
 #include "McuSSD1306.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
-#include "Trigger.h"
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
@@ -33,7 +32,7 @@ static TaskHandle_t GUI_TaskHndl;
 #define GUI_SET_ORIENTATION_PORTRAIT     (1<<2)
 #define GUI_SET_ORIENTATION_PORTRAIT180  (1<<3)
 
-#if PL_CONFIG_HAS_GUI_KEY_NAV
+#if PL_CONFIG_USE_GUI_KEY_NAV
 #define GUI_GROUP_NOF_IN_STACK   4
 typedef struct {
   lv_group_t *stack[GUI_GROUP_NOF_IN_STACK]; /* stack of GUI groups */
@@ -100,7 +99,7 @@ void GUI_GroupPush(void) {
   groups.stack[groups.sp] = gui_group;
   groups.sp++;
 }
-#endif /* PL_CONFIG_HAS_GUI_KEY_NAV */
+#endif /* PL_CONFIG_USE_GUI_KEY_NAV */
 
 void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
   switch(orientation) {
@@ -348,9 +347,8 @@ static void GuiTask(void *p) {
 #define APP_PERIODIC_TIMER_PERIOD_MS   10
 static TimerHandle_t timerHndl;
 
-static void vTimerCallbackExpired(TimerHandle_t pxTimer) {
+static void vTimerGuiTickCallbackExpired(TimerHandle_t pxTimer) {
   lv_tick_inc(APP_PERIODIC_TIMER_PERIOD_MS);
-  TRG_AddTick();
 }
 
 void GUI_Init(void) {
@@ -373,18 +371,18 @@ void GUI_Init(void) {
     for(;;){} /* error */
   }
   timerHndl = xTimerCreate(  /* timer to handle periodic things */
-        "timer", /* name */
+        "guiTick", /* name */
         pdMS_TO_TICKS(APP_PERIODIC_TIMER_PERIOD_MS), /* period/time */
         pdTRUE, /* auto reload */
         (void*)0, /* timer ID */
-        vTimerCallbackExpired); /* callback */
+        vTimerGuiTickCallbackExpired); /* callback */
   if (timerHndl==NULL) {
     for(;;); /* failure! */
   }
   if (xTimerStart(timerHndl, 0)!=pdPASS) { /* start the timer */
     for(;;); /* failure!?! */
   }
-#if PL_CONFIG_HAS_GUI_KEY_NAV
+#if PL_CONFIG_USE_GUI_KEY_NAV
   groups.sp = 0;
 #endif
 }

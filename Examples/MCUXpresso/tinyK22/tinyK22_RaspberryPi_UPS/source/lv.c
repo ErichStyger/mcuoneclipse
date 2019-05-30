@@ -5,7 +5,7 @@
  *      Author: Erich Styger
  */
 #include "platform.h"
-#if PL_CONFIG_USE_LVGL
+#if PL_CONFIG_USE_GUI
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuGDisplaySSD1306.h"
@@ -493,4 +493,4 @@ void LV_Init(void) {
   config.nofElements = 16;
   ringBufferHndl = McuRB_InitRB(&config);
 }
-#endif /* PL_CONFIG_USE_LVGL */
+#endif /* PL_CONFIG_USE_GUI */
