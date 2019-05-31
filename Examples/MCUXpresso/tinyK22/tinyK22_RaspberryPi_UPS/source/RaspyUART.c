@@ -15,29 +15,48 @@
 #include "Sensor.h"
 #include "buttons.h"
 
-static bool joystickEventsToLinuxEnabled = true;
-static bool joystickEventsToHostEnabled = true;
+static bool joystickEventsToLinuxEnabled = false;
+static bool joystickEventsToHostEnabled = false;
 #if PL_CONFIG_USE_SHT31
-  static bool shtEventsToHostEnabled = true;
-  static bool shtEventsToLinuxEnabled = true;
+  static bool shtEventsToHostEnabled = false;
+  static bool shtEventsToLinuxEnabled = false;
 #endif
+
+bool RASPYU_GetEventsEnabled(void) {
+  return
+#if PL_CONFIG_USE_SHT31
+      shtEventsToHostEnabled ||
+      shtEventsToLinuxEnabled ||
+#endif
+      joystickEventsToLinuxEnabled ||
+      joystickEventsToHostEnabled;
+}
+
+void RASPYU_SetEventsEnabled(bool on) {
+  joystickEventsToLinuxEnabled = on;
+  joystickEventsToHostEnabled = on;
+#if PL_CONFIG_USE_SHT31
+  shtEventsToHostEnabled = on;
+  shtEventsToLinuxEnabled = on;
+#endif
+}
 
 #if PL_CONFIG_USE_SHT31
 static void UartTask(void *pv) {
-  int16_t t,h, oldT=0, oldH=0;
+  int16_t t,h, oldT=0, oldH=0; /* in deci-format, 375 is 37.5 */
   uint8_t buf[32];
 
   for(;;) {
     vTaskDelay(1000);
     buf[0] = '\0';
-    t = SENSOR_GetTemperature();
+    t = SENSOR_GetTemperature()*10;
     if (t!=oldT) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"Temp ");
       McuUtility_strcatNum16s(buf, sizeof(buf), t);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
       oldT = t;
     }
-    h = SENSOR_GetHumidity();
+    h = SENSOR_GetHumidity()*10;
     if (h!=oldH) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"Humidity ");
       McuUtility_strcatNum16s(buf, sizeof(buf), h);
@@ -45,10 +64,10 @@ static void UartTask(void *pv) {
       oldH = h;
     }
     if (buf[0]!='\0') {
-      if (shtEventsToLinuxEnabled && !GATEWAY_HostToLinuxIsEnabled()) {
+      if (shtEventsToLinuxEnabled) {
         GATEWAY_UartWriteToLinuxStr(buf);
       }
-      if (shtEventsToHostEnabled && !GATEWAY_LinuxToHostIsEnabled()) {
+      if (shtEventsToHostEnabled) {
         GATEWAY_UartWriteToHostStr(buf);
       }
     }
@@ -99,6 +118,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), joystickEventsToHostEnabled?(const unsigned char*)", to host (on)":(const unsigned char*)", to host (off)");
   McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  nav", buf, io->stdOut);
+#if PL_CONFIG_USE_SHT31
+  buf[0] = '\0';
+  McuUtility_strcat(buf, sizeof(buf), shtEventsToLinuxEnabled?(const unsigned char*)"to linux (on)":(const unsigned char*)"to linux (off)");
+  McuUtility_strcat(buf, sizeof(buf), shtEventsToHostEnabled?(const unsigned char*)", to host (on)":(const unsigned char*)", to host (off)");
+  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  sht", buf, io->stdOut);
+#endif
   return ERR_OK;
 }
 

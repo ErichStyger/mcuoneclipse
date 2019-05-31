@@ -41,6 +41,9 @@
 #endif
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
+#include "Buttons.h"
+#include "RaspyUART.h"
+#include "McuRTT.h"
 
 static void AppTask(void *pv) {
 #if PL_CONFIG_USE_UPS
@@ -81,8 +84,37 @@ static void AppTask(void *pv) {
     #endif
     } /* for */
 #endif /* PL_CONFIG_USE_UPS */
+#if PL_CONFIG_USE_RASPY_UART
+    if (BTN_DownButtonIsPressed()) {
+      int counter = 0;
+      do {
+        counter++;
+        McuLED_Neg(tinyLED);
+        vTaskDelay(pdMS_TO_TICKS(100));
+      } while(BTN_DownButtonIsPressed() && counter<30); /* 3 secs */
+      if (counter>=30) { /* pressed for more than 3 secs */
+        RASPYU_SetEventsEnabled(!RASPYU_GetEventsEnabled()); /* toggle */
+        McuRTT_WriteString(0, "Toggling Raspy UART Events, current status: %s");
+        if (RASPYU_GetEventsEnabled()) {
+          McuRTT_WriteString(0, "on\r\n");
+        } else {
+          McuRTT_WriteString(0, "off\r\n");
+        }
+      }
+    }
+    if (RASPYU_GetEventsEnabled()) {
+      McuLED_On(tinyLED);
+      vTaskDelay(pdMS_TO_TICKS(100));
+      McuLED_Off(tinyLED);
+      vTaskDelay(pdMS_TO_TICKS(900));
+    } else {
+      McuLED_Neg(tinyLED);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+#else
     McuLED_Neg(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(1000));
+#endif /* PL_CONFIG_USE_RASPY_UART */
   }
 }
 

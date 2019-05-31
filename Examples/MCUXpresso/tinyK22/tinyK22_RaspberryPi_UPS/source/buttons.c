@@ -18,6 +18,10 @@
 
 static McuBtn_Handle_t btnUp, btnDown, btnLeft, btnRight, btnCenter;
 
+bool BTN_DownButtonIsPressed(void) {
+  return McuBtn_IsOn(btnDown);
+}
+
 static uint32_t GetButtons(void) {
   uint32_t val = 0;
 
