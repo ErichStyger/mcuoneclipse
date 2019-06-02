@@ -42,26 +42,63 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
+#define EXAMPLE_LED_GPIO BOARD_USER_LED_GPIO
+#define EXAMPLE_LED_GPIO_PIN BOARD_USER_LED_GPIO_PIN
+
+volatile uint32_t g_systickCounter;
+/* The PIN status */
+volatile bool g_pinSet = false;
+
+void SysTick_Handler(void) {
+  if (g_systickCounter != 0U) {
+      g_systickCounter--;
+  }
+}
+
+void SysTick_DelayTicks(uint32_t n) {
+  g_systickCounter = n;
+  while(g_systickCounter != 0U)
+  {
+  }
+}
+
+static void blinkFLASH(void) {
+  if (g_pinSet) {
+    GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
+    g_pinSet = false;
+  } else  {
+    GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
+    g_pinSet = true;
+  }
+}
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
+  gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
 
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
+  /* Init board hardware. */
+  BOARD_InitBootPins();
+  BOARD_InitBootClocks();
+  BOARD_InitBootPeripherals();
+  /* Init FSL debug console. */
+  BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
+  PRINTF("Hello World\n");
 
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
-    return 0 ;
+  /* Init output LED GPIO. */
+  GPIO_PinInit(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, &led_config);
+
+  /* Set systick reload value to generate 1ms interrupt */
+  if(SysTick_Config(SystemCoreClock / 1000U)) {
+     while(1) {
+     }
+  }
+  while (1) {
+    /* Delay 1000 ms */
+    SysTick_DelayTicks(1000U);
+    blinkFLASH();
+  }
+  return 0 ;
 }
