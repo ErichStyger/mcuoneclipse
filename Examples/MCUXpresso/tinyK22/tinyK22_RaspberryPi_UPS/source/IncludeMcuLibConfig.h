@@ -34,7 +34,7 @@
 #if TINYK22_HAT_VERSION==3
   /*
    * HAT V3:
-   *
+   * SW I2C (bitbanging):
    * I2C SCL: PTA12
    * I2C SDA: PTA13
    *
@@ -75,6 +75,7 @@
   /*
    * HAT V4:
    *
+   * HW I2C0:
    * I2C SCL: PTB0
    * I2C SDA: PTB1
    *

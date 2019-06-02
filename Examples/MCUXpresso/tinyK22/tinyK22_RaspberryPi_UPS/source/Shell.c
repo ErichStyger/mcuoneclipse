@@ -14,6 +14,9 @@
 #include "McuSHT31.h"
 #include "RaspyUART.h"
 #include "gateway.h"
+#if PL_CONFIG_USE_I2C
+  #include "McuI2CSpy.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -27,6 +30,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_ParseCommand,
+#endif
+#if PL_CONFIG_USE_I2C
+  McuI2CSpy_ParseCommand,
 #endif
   GATEWAY_ParseCommand,
   NULL /* Sentinel */

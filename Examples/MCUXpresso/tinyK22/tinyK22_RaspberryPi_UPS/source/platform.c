@@ -33,6 +33,7 @@
 #include "buttons.h"
 #include "McuButton.h"
 #include "McuDebounce.h"
+#include "McuI2CSpy.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -49,6 +50,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   McuGenericSWI2C_Init();
+  McuI2CSpy_Init();
 #endif
 #if PL_CONFIG_USE_OLED
   McuSSD1306_Init();
