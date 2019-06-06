@@ -1,3 +1,4 @@
+#include <application.h>
 /*
  * Copyright 2016-2018 NXP
  * All rights reserved.
@@ -40,7 +41,7 @@
 #include "MK22F51212.h"
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
-
+#include "application.h"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -56,6 +57,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 
     PRINTF("Hello World\n");
+    APP_Run();
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;

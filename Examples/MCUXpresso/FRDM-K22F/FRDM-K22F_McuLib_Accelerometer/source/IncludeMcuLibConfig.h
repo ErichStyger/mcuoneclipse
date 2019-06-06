@@ -33,18 +33,5 @@
 #define SDA1_CONFIG_PORT_NAME     PORTB
 #define SDA1_CONFIG_PIN_NUMBER    3u
 
-/* -------------------------------------------------*/
-/* tinyK22 blue: PTC2
- * HAT LED blue: PTC8
- * HAT LED green: PTC9
- * HAT LED yellow: PTC10
- * HAT LED red: PTC11
- */
-#define PINS_LEDBLUE_GPIO       GPIOC
-#define PINS_LEDBLUE_PORT       PORTC
-#define PINS_LEDBLUE_PIN        2U
-
-
-
 #endif /* INCLUDEMCULIBCONFIG_H_ */
 
