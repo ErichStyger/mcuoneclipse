@@ -29,9 +29,6 @@ volatile uint32_t g_systickCounter;
 /* The PIN status */
 volatile bool g_pinSet = false;
 
-/*******************************************************************************
- * Code
- ******************************************************************************/
 void SysTick_Handler(void)
 {
     if (g_systickCounter != 0U)
