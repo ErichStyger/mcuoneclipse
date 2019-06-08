@@ -21,7 +21,7 @@
 #include "i2clib.h"
 
 void PL_Init(void) {
-  uint8_t res;
+  //uint8_t res;
 
   /* LEDs are on PTA1, PTA2 and PTD5 */
   CLOCK_EnableClock(kCLOCK_PortA);
@@ -34,12 +34,12 @@ void PL_Init(void) {
   McuWait_Init();
   McuGPIO_Init();
   McuLED_Init();
-  McuGenericI2C_Init();
-  McuGenericSWI2C_Init();
-  res = McuFXOS8700_Init();
-  if (res!=ERR_OK) {
-    for(;;) {} /* error case */
-  }
+//  McuGenericI2C_Init();
+//  McuGenericSWI2C_Init();
+//  res = McuFXOS8700_Init();
+//  if (res!=ERR_OK) {
+//    for(;;) {} /* error case */
+//  }
   McuHardFault_Init();
 
   /* initialize application modules */

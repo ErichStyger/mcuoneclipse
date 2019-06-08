@@ -21,17 +21,20 @@
 
 #define McuGenericSWI2C_CONFIG_DO_YIELD (0 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
-/* I2C Pin Muxing */
-#define SDA1_CONFIG_DO_PIN_MUXING (1)
-#define SCL1_CONFIG_DO_PIN_MUXING (1)
 
-#define SCL1_CONFIG_GPIO_NAME     GPIOB
-#define SCL1_CONFIG_PORT_NAME     PORTB
-#define SCL1_CONFIG_PIN_NUMBER    2u
+#if 1
+  /* I2C0 Pin Muxing (bitbanging) */
+  #define SDA1_CONFIG_DO_PIN_MUXING (1)
+  #define SCL1_CONFIG_DO_PIN_MUXING (1)
 
-#define SDA1_CONFIG_GPIO_NAME     GPIOB
-#define SDA1_CONFIG_PORT_NAME     PORTB
-#define SDA1_CONFIG_PIN_NUMBER    3u
+  #define SCL1_CONFIG_GPIO_NAME     GPIOB
+  #define SCL1_CONFIG_PORT_NAME     PORTB
+  #define SCL1_CONFIG_PIN_NUMBER    2u
+
+  #define SDA1_CONFIG_GPIO_NAME     GPIOB
+  #define SDA1_CONFIG_PORT_NAME     PORTB
+  #define SDA1_CONFIG_PIN_NUMBER    3u
+#endif
 
 #define McuFXOS8700_CONFIG_I2C_DEVICE_ADDRESS   (0x1C)
 
