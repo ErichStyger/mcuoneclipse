@@ -5,7 +5,6 @@
  *      Author: Erich Styger
  */
 
-
 #include "platform.h"
 #include "application.h"
 #include "leds.h"
