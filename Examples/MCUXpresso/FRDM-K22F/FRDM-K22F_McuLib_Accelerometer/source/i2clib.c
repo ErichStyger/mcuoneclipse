@@ -13,10 +13,11 @@
 #include "McuFXOS8700.h"
 #include "McuWait.h"
 
-#define EXAMPLE_I2C_MASTER_BASEADDR     I2C0
+#define I2C_MASTER_BASEADDR     I2C0
 
 static uint8_t i2cSlaveDeviceAddr;
 
+#if 0 /* not used */
 uint8_t I2CLIB_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize) {
   i2c_master_transfer_t masterXfer;
   status_t res;
@@ -32,7 +33,7 @@ uint8_t I2CLIB_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSiz
   masterXfer.dataSize = dataSize;
   masterXfer.flags = kI2C_TransferDefaultFlag;
 
-  res = I2C_MasterTransferBlocking(EXAMPLE_I2C_MASTER_BASEADDR, &masterXfer);
+  res = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
   if (res!=kStatus_Success) {
     return ERR_FAILED;
   }
@@ -54,68 +55,40 @@ uint8_t I2CLIB_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSi
   masterXfer.dataSize = dataSize;
   masterXfer.flags = kI2C_TransferDefaultFlag;
 
-  res = I2C_MasterTransferBlocking(EXAMPLE_I2C_MASTER_BASEADDR, &masterXfer);
+  res = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
   if (res!=kStatus_Success) {
     return ERR_FAILED;
   }
   return ERR_OK;
 }
+#endif
 
 uint8_t I2CLIB_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   status_t status;
 
-  I2C_MasterClearStatusFlags(EXAMPLE_I2C_MASTER_BASEADDR, kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag | kI2C_StartDetectFlag | kI2C_StopDetectFlag);
-  status = I2C_MasterStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Write);
+  I2C_MasterClearStatusFlags(I2C_MASTER_BASEADDR, kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag | kI2C_StartDetectFlag | kI2C_StopDetectFlag);
+  status = I2C_MasterStart(I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Write);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
   McuWait_Waitus(100); /* need to add a delay for the FXOS? */
-  status = I2C_MasterWriteBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferNoStopFlag);
+  status = I2C_MasterWriteBlocking(I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferNoStopFlag);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
   *Snt = Siz;
-  return ERR_OK;
-}
-
-uint8_t I2CLIB_SendBlockContinue(void *Ptr, uint16_t Siz, uint16_t *Snt) {
-  status_t status;
-
-  status = I2C_MasterWriteBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStopFlag);
-  if (status!=kStatus_Success) {
-    return ERR_FAILED;
-  }
-  *Snt = Siz;
-  return ERR_OK;
-}
-
-uint8_t I2CLIB_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, I2CLIB_EnumStartFlags flagsStart, I2CLIB_EnumAckFlags flagsAck) {
-  status_t status;
-
-  if (flagsStart==I2CLIB_SEND_START) {
-    status = I2C_MasterStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Write);
-  }
-  status = I2C_MasterReadBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStopFlag);
-  if (status!=kStatus_Success) {
-    return ERR_FAILED;
-  }
-  *Rcv = Siz;
-  if (flagsAck==I2CLIB_SEND_LAST_ACK) {
-    /* \todo */
-  }
   return ERR_OK;
 }
 
 uint8_t I2CLIB_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
   status_t status;
 
-  status = I2C_MasterRepeatedStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Read);
+  status = I2C_MasterRepeatedStart(I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Read);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
   McuWait_Waitus(100); /* need to add a delay for the FXOS? */
-
-  status = I2C_MasterReadBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferDefaultFlag);
+  status = I2C_MasterReadBlocking(I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferDefaultFlag);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
@@ -126,7 +99,7 @@ uint8_t I2CLIB_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
 uint8_t I2CLIB_SendStop(void) {
   status_t status;
 
-  status = I2C_MasterStop(EXAMPLE_I2C_MASTER_BASEADDR);
+  status = I2C_MasterStop(I2C_MASTER_BASEADDR);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
@@ -143,11 +116,7 @@ uint8_t I2CLIB_SelectSlave(uint8_t Slv) {
 
 #define I2C_MASTER_SLAVE_ADDR_7BIT      McuFXOS8700_I2C_ADDR
 #define I2C_BAUDRATE 100000U
-#define I2C_DATA_LENGTH 33U
 
-uint8_t g_master_txBuff[I2C_DATA_LENGTH];
-uint8_t g_master_rxBuff[I2C_DATA_LENGTH];
-volatile bool g_MasterCompletionFlag = false;
 
 #define I2C_RELEASE_SDA_PORT PORTB
 #define I2C_RELEASE_SCL_PORT PORTB
@@ -263,7 +232,7 @@ void I2CLIB_Init(void) {
   I2C_MasterGetDefaultConfig(&masterConfig);
   masterConfig.baudRate_Bps = I2C_BAUDRATE;
   sourceClock = I2C_MASTER_CLK_FREQ;
-  I2C_MasterInit(EXAMPLE_I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
+  I2C_MasterInit(I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
 
 #if 1 /* test code */
   {
@@ -278,7 +247,7 @@ void I2CLIB_Init(void) {
   whoami = 0;
   res = McuFXOS8700_WhoAmI(&whoami);
   if (res!=ERR_OK) {
-    for(;;){}
+    for(;;){} /* error */
   }
   if (whoami!=0xc7) {
     for(;;) {} /* error */
