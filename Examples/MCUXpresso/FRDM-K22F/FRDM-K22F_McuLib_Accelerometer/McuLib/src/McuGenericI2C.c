@@ -424,8 +424,8 @@ uint8_t McuGenericI2C_ReadAddressWait(uint8_t i2cAddr, uint8_t *memAddr, uint8_t
 */
 uint8_t McuGenericI2C_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize)
 {
-  //return McuGenericI2C_ReadAddressWait(i2cAddr, memAddr, memAddrSize, 0, data, dataSize);
-  return I2CLIB_ReadAddress(i2cAddr, memAddr, memAddrSize, data, dataSize);
+  return McuGenericI2C_ReadAddressWait(i2cAddr, memAddr, memAddrSize, 0, data, dataSize);
+  //return I2CLIB_ReadAddress(i2cAddr, memAddr, memAddrSize, data, dataSize);
 }
 
 /*

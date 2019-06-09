@@ -11,6 +11,7 @@
 #include "fsl_gpio.h"
 #include "fsl_port.h"
 #include "McuFXOS8700.h"
+#include "McuWait.h"
 
 #define EXAMPLE_I2C_MASTER_BASEADDR     I2C0
 
@@ -21,7 +22,7 @@ uint8_t I2CLIB_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSiz
   status_t res;
 
   memset(&masterXfer, 0, sizeof(masterXfer));
-  /* subAddress = memory address on device, data = g_master_rxBuff - read from slave.
+  /* subAddress = memory address on device, data = data pointer.
     start + slaveaddress(w) + subAddress + repeated start + slaveaddress(r) + rx data buffer + stop */
   masterXfer.slaveAddress = i2cAddr;
   masterXfer.direction = kI2C_Read;
@@ -38,14 +39,40 @@ uint8_t I2CLIB_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSiz
   return ERR_OK;
 }
 
+uint8_t I2CLIB_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize) {
+  i2c_master_transfer_t masterXfer;
+  status_t res;
+
+  memset(&masterXfer, 0, sizeof(masterXfer));
+  /* subAddress = memory address in device, data = data pointer.
+    start + slaveaddress(w) + subAddress + length of data buffer + data buffer + stop*/
+  masterXfer.slaveAddress = i2cAddr;
+  masterXfer.direction = kI2C_Write;
+  masterXfer.subaddress = *memAddr;
+  masterXfer.subaddressSize = memAddrSize;
+  masterXfer.data = data;
+  masterXfer.dataSize = dataSize;
+  masterXfer.flags = kI2C_TransferDefaultFlag;
+
+  res = I2C_MasterTransferBlocking(EXAMPLE_I2C_MASTER_BASEADDR, &masterXfer);
+  if (res!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+}
+
 uint8_t I2CLIB_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   status_t status;
 
+  I2C_MasterClearStatusFlags(EXAMPLE_I2C_MASTER_BASEADDR, kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag | kI2C_StartDetectFlag | kI2C_StopDetectFlag);
   status = I2C_MasterStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Write);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
-  status = I2C_MasterWriteBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStopFlag);
+  McuWait_Waitms(1); /* need to add a delay for the FXOS? */
+//  while (EXAMPLE_I2C_MASTER_BASEADDR->S & kI2C_BusBusyFlag) { } /* Wait until data transfer complete. */
+
+  status = I2C_MasterWriteBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferNoStopFlag);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
@@ -84,11 +111,14 @@ uint8_t I2CLIB_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, I2CLIB_En
 uint8_t I2CLIB_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
   status_t status;
 
- // status = I2C_MasterStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Read);
- // if (status!=kStatus_Success) {
- //   return ERR_FAILED;
- // }
-  status = I2C_MasterReadBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferRepeatedStartFlag|kI2C_TransferNoStopFlag);
+  status = I2C_MasterRepeatedStart(EXAMPLE_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Read);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+  McuWait_Waitms(1); /* need to add a delay for the FXOS? */
+  //while (EXAMPLE_I2C_MASTER_BASEADDR->S & kI2C_BusBusyFlag) { } /* Wait until data transfer complete. */
+
+  status = I2C_MasterReadBlocking(EXAMPLE_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferDefaultFlag);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
@@ -287,10 +317,19 @@ void I2CLIB_Init(void) {
   {
   uint8_t res;
   uint8_t whoami;
+  uint8_t addr = McuFXOS8700_WHO_AM_I;
 
+  //I2CLIB_ReadAddress(McuFXOS8700_I2C_ADDR, &addr, 1, &whoami, 1);
+  //if (whoami!=0xc7) {
+  //  for(;;) {} /* error */
+ // }
+  whoami = 0;
   res = McuFXOS8700_WhoAmI(&whoami);
   if (res!=ERR_OK) {
     for(;;){}
+  }
+  if (whoami!=0xc7) {
+    for(;;) {} /* error */
   }
   }
 #endif
