@@ -34,7 +34,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_I2C
   McuI2CSpy_ParseCommand,
 #endif
+#if PL_CONFIG_USE_GATEWAY
   GATEWAY_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -47,8 +49,10 @@ typedef struct {
 static const SHELL_IODesc ios[] =
 {
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
+#if PL_CONFIG_USE_GATEWAY
   {&GATEWAY_stdioLinuxToShell, GATEWAY_LinuxToShellBuffer, sizeof(GATEWAY_LinuxToShellBuffer)},
   {&GATEWAY_stdioHostToShell, GATEWAY_HostToShellBuffer, sizeof(GATEWAY_HostToShellBuffer)},
+#endif
 };
 
 static void ShellTask(void *pv) {

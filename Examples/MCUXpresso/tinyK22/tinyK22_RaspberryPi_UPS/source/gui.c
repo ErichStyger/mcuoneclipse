@@ -127,10 +127,12 @@ static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
 }
 #endif
 
+#if PL_CONFIG_USE_GATEWAY
 static lv_res_t btn_click_uart_action(struct _lv_obj_t *obj) {
   GUI_UART_CreateView();
   return LV_RES_OK;
 }
+#endif
 
 #if PL_CONFIG_USE_SHT31
 static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
