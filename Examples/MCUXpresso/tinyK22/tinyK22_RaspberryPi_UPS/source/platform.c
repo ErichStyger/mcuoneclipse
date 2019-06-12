@@ -34,6 +34,8 @@
 #include "McuButton.h"
 #include "McuDebounce.h"
 #include "McuI2CSpy.h"
+#include "i2clib.h"
+#include "virtual_com.h"
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */
@@ -49,7 +51,11 @@ void PL_Init(void) {
   McuXFormat_Init();
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
+#if PL_CONFIG_USE_HW_I2C
+  I2CLIB_Init();
+#else
   McuGenericSWI2C_Init();
+#endif
   McuI2CSpy_Init();
 #endif
 #if PL_CONFIG_USE_OLED
@@ -89,6 +95,9 @@ void PL_Init(void) {
   RASPYU_Init();
 #endif
   BTN_Init();
+#if PL_CONFIG_USE_USB_CDC
+  USB_APPInit();
+#endif
 }
 
 void PL_Deinit(void) {

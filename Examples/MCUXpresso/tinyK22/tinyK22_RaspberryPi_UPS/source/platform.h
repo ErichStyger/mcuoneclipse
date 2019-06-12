@@ -22,6 +22,9 @@
 #define PL_CONFIG_USE_GUI           (1 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
 #define PL_CONFIG_USE_TOASTER       (1 && PL_CONFIG_USE_OLED) /* flying toaster screensaver */
 #define PL_CONFIG_USE_GUI_KEY_NAV   (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)
+#define PL_CONFIG_USE_USB_CDC       (1)
+
+#define PL_CONFIG_USE_HW_I2C        USE_HW_I2C /* defined in IncludeMcuLibConfig.h */
 
 /* defines for sensor.c */
 #define PL_CONFIG_HAS_TSL2561       (0)

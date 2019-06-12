@@ -16,6 +16,9 @@
 #include <stddef.h>
 #include <string.h> /* for memset */
 #include <assert.h>
+#if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
+  #include "McuRTOS.h"
+#endif
 
 /* default configuration, used for initializing the config */
 static const McuGPIO_Config_t defaultConfig =
@@ -62,7 +65,11 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   GPIO_PinInit(config->hw.gpio, config->hw.port, config->hw.pin, &pin_config);
 #endif
 
+#if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
+  handle = (McuGPIO_t*)pvPortMalloc(sizeof(McuGPIO_t)); /* get a new device descriptor */
+#else
   handle = (McuGPIO_t*)malloc(sizeof(McuGPIO_t)); /* get a new device descriptor */
+#endif
   assert(handle!=NULL);
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(McuGPIO_t)); /* init all fields */
@@ -71,12 +78,16 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
     handle->hw.pin = config->hw.pin;
     handle->hw.port = config->hw.port;
   }
-	return handle;
+  return handle;
 }
 
 McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
+#if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
+  vPortFree(gpio);
+#else
   free(gpio);
+#endif
   return NULL;
 }
 

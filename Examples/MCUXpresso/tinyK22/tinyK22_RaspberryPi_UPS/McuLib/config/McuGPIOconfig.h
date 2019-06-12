@@ -14,7 +14,11 @@
 extern "C" {
 #endif
 
-/* no configuration settings yet */
+#include "McuLibconfig.h"
+
+#ifndef MCUGPIO_CONFIG_USE_FREERTOS_HEAP
+  #define MCUGPIO_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS) /* use FreeRTOS Heap by default */
+#endif
 
 #ifdef __cplusplus
 }  /* extern "C" */

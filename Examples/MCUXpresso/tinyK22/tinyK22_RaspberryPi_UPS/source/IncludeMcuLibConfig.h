@@ -10,7 +10,8 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (3)  /* 3 or 4 */
+#define TINYK22_HAT_VERSION  (4)  /* 3 or 4 */
+#define USE_HW_I2C           (1 && TINYK22_HAT_VERSION==4)
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
@@ -29,6 +30,19 @@
 /* I2C Pin Muxing */
 #define SDA1_CONFIG_DO_PIN_MUXING (1)
 #define SCL1_CONFIG_DO_PIN_MUXING (1)
+
+#if USE_HW_I2C
+  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE "i2clib.h"
+  #define McuGenericI2C_CONFIG_RECV_BLOCK                        I2CLIB_RecvBlock
+  #define McuGenericI2C_CONFIG_SEND_BLOCK                        I2CLIB_SendBlock
+  #if McuGenericI2C_CONFIG_SUPPORT_STOP_NO_START
+  #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               I2CLIB_SendBlockContinue
+  #endif
+  #define McuGenericI2C_CONFIG_SEND_STOP                         I2CLIB_SendStop
+  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      I2CLIB_SelectSlave
+  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (0)
+  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 I2CLIB_RecvBlockCustom
+#endif
 
 /* --------------------  HAT Differences -------------*/
 #if TINYK22_HAT_VERSION==3

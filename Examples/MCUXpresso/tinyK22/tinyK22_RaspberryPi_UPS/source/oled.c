@@ -45,11 +45,13 @@ typedef enum {
 #define OLED_FIXED_FONTH_CHAR_WIDTH  (5) /* a char needs this number of pixels */
 #define OLED_NOF_CHARS_ON_LINE  (McuSSD1306_DISPLAY_HW_NOF_COLUMNS/OLED_FIXED_FONTH_CHAR_WIDTH)
 
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHUTDOWN || PL_CONFIG_USE_UPS
 static void WritePadStringLine(uint8_t *buf, size_t bufSize, uint8_t *str, OLED_Line_e line) {
   buf[0] = '\0';
   McuUtility_strcatPad(buf, bufSize, str, ' ', bufSize); /* pad with spaces */
   McuSSD1306_PrintString(line, 0, buf);
 }
+#endif
 
 #if PL_CONFIG_USE_SHUTDOWN
 void OLED_PrintShutdownHelp(void) {

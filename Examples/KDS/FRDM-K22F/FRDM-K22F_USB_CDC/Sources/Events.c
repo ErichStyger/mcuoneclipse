@@ -76,6 +76,22 @@ void TI1_OnInterrupt(void)
   TMOUT1_AddTick();
 }
 
+/*
+** ===================================================================
+**     Description :
+**         Event called for SET_CONTROL_LINE_STATE, useful to monitor
+**         control flow signals
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         value           - Line state value
+**     Returns     : Nothing
+** ===================================================================
+*/
+void CDC1_OnLineStateChanged(uint8_t value)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

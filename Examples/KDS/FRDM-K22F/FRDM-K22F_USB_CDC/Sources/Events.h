@@ -95,6 +95,19 @@ void Cpu_OnNMI(void);
 */
 void TI1_OnInterrupt(void);
 
+void CDC1_OnLineStateChanged(uint8_t value);
+/*
+** ===================================================================
+**     Description :
+**         Event called for SET_CONTROL_LINE_STATE, useful to monitor
+**         control flow signals
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         value           - Line state value
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus
