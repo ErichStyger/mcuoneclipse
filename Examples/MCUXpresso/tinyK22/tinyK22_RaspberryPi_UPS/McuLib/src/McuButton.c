@@ -9,6 +9,9 @@
 #include <stdlib.h> /* memcpy */
 #include <string.h> /* memset */
 #include <assert.h>
+#if MCUBUTTON_CONFIG_USE_FREERTOS_HEAP
+  #include "McuRTOS.h"
+#endif
 
 /* default configuration, used for initializing the config */
 static const McuBtn_Config_t defaultConfig =
@@ -52,7 +55,11 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
   McuGPIO_Config_t gpioConfig;
   assert(config!=NULL);
 
+#if MCUBUTTON_CONFIG_USE_FREERTOS_HEAP
+  handle = (McuBtn_t*)pvPortMalloc(sizeof(McuBtn_t)); /* get a new device descriptor */
+#else
   handle = (McuBtn_t*)malloc(sizeof(McuBtn_t)); /* get a new device descriptor */
+#endif
   assert(handle!=NULL);
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(McuBtn_t)); /* init all fields */
@@ -69,7 +76,11 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
 
 McuBtn_Handle_t McuBtn_DeinitButton(McuBtn_Handle_t button) {
   assert(button!=NULL);
+#if MCUBUTTON_CONFIG_USE_FREERTOS_HEAP
+  vPortFree(button);
+#else
   free(button);
+#endif
   return NULL;
 }
 

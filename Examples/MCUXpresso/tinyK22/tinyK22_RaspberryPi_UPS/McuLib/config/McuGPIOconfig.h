@@ -17,7 +17,8 @@ extern "C" {
 #include "McuLibconfig.h"
 
 #ifndef MCUGPIO_CONFIG_USE_FREERTOS_HEAP
-  #define MCUGPIO_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS) /* use FreeRTOS Heap by default */
+  #define MCUGPIO_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)
+    /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
 #ifdef __cplusplus
