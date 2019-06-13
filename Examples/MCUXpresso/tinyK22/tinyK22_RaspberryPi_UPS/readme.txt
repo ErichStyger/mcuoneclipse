@@ -9,3 +9,6 @@ McuLib is configured in source/IncludeMcuLibConfig.h
 See:
 https://mcuoneclipse.com/2019/05/05/building-a-raspberry-pi-ups-and-serial-login-console-with-tinyk22-nxp-k22fn512/
 Screensaver by Adafruit: https://learn.adafruit.com/animated-flying-toaster-oled-jewelry/code
+
+
+Note: USB CDC requires flow control enabled (RTC/CTS) in the terminal program!
