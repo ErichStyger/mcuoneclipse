@@ -19,7 +19,7 @@
 #define PL_CONFIG_USE_RASPY_UART    (1 && PL_CONFIG_USE_RASPBERRY) /* uses UART to Raspy as interface for joystick, led and sensor values */
 #define PL_CONFIG_USE_SHUTDOWN      (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */
 #define PL_CONFIG_USE_SHELL         (1) /* if shell is enabled, uses RTT */
-#define PL_CONFIG_USE_GUI           (1 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
+#define PL_CONFIG_USE_GUI           (0 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
 #define PL_CONFIG_USE_TOASTER       (1 && PL_CONFIG_USE_OLED) /* flying toaster screensaver */
 #define PL_CONFIG_USE_GUI_KEY_NAV   (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)
 #define PL_CONFIG_USE_USB_CDC       (1)
