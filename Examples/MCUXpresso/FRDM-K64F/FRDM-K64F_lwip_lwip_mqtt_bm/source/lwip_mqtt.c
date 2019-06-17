@@ -877,12 +877,13 @@ int main(void) {
   ACCEL_Init();
 #endif
 
+#if CONFIG_USE_FREERTOS
   APP_MsgQueue = xQueueCreate(APP_MSG_QUEUE_LENGTH, APP_MSG_QUEUE_ITEM_SIZE);
   if (APP_MsgQueue==NULL) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(APP_MsgQueue, "AppMsgQueue");
-
+#endif
   APP_Run();
   for(;;) {}
   return 0;
