@@ -8,13 +8,13 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_RASPBERRY     (0) /* board used with Raspberry Pi */
+#define PL_CONFIG_USE_RASPBERRY     (1) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS       (1) /* using buttons (navigation switch) */
 #define PL_CONFIG_USE_KBI           (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
 #define PL_CONFIG_USE_I2C           (1) /* if I2C is enabled */
 #define PL_CONFIG_USE_SHT31         (1 && PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_OLED          (1 && PL_CONFIG_USE_I2C) /* if using OLED */
-#define PL_CONFIG_USE_UPS           (0 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
+#define PL_CONFIG_USE_UPS           (1 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY       (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing UART gateway to Raspberry Pi */
 #define PL_CONFIG_USE_RASPY_UART    (1 && PL_CONFIG_USE_RASPBERRY) /* uses UART to Raspy as interface for joystick, led and sensor values */
 #define PL_CONFIG_USE_SHUTDOWN      (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */

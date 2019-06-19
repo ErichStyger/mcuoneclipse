@@ -8,7 +8,6 @@
 #include "application.h" /* own interface */
 #include <ctype.h> /* for isupper() */
 #include "platform.h"
-
 /* SDK */
 #include "fsl_lpuart.h"
 #include "fsl_gpio.h"

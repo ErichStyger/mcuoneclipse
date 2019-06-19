@@ -2,7 +2,7 @@
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
 <listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.NUMBER_ELVES" value="0"/>
-<stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="Freescale_KEx_KE06Z128M4"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="NXP_KEx_KE06Z128M4"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_IP" value="127.0.0.1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_OPTIONS" value=""/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_PORT" value="7224"/>
@@ -33,7 +33,7 @@
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.DO_RESET_DELAY" value="false"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.INTERFACE_PORT" value="0"/>
-<stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.INTERFACE_PORT_STRING" value=""/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.INTERFACE_PORT_STRING" value="COM1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.NETWORK_CARD_IP" value=""/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.POWER_DOWN_DELAY" value="250"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_ser.POWER_OFF" value="false"/>
@@ -78,6 +78,8 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.enableSemihostingIoclientGdbClient" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.enableSemihostingIoclientTelnet" value="true"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.enableSwo" value="true"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.eraseOptionIndex" value="0"/>
+<booleanAttribute key="com.pemicro.debug.gdbjtag.pne.eraseOptionsenabled" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.firstResetSpeed" value="30"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.firstResetType" value=""/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#13;&#10;set tcp auto-retry on&#13;&#10;set tcp connect-timeout 30"/>
@@ -94,9 +96,12 @@
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerOther" value="-s"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerSwoPortNumber" value="2332"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerTelnetPortNumber" value="51794"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbmiPortNumber" value="6224"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.interfaceSpeed" value="auto"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagPreIrBits" value="0"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagTapNumber" value="0"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.macScript" value=""/>
+<booleanAttribute key="com.pemicro.debug.gdbjtag.pne.macScriptEnable" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.ALWAYS_ERASE" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.DO_RESET_DELAY" value="false"/>
@@ -130,7 +135,7 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.ALWAYS_ERASE" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.sda.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.DO_RESET_DELAY" value="false"/>
-<intAttribute key="com.pemicro.debug.gdbjtag.pne.sda.INTERFACE_PORT" value="-1"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.sda.INTERFACE_PORT" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.sda.INTERFACE_PORT_STRING" value="USB1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.sda.NETWORK_CARD_IP" value=""/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.sda.POWER_DOWN_DELAY" value=""/>
@@ -145,6 +150,7 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.STARTUP_USE_SWD" value="true"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.secondResetType" value=""/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.selectedCoreNumber" value="1"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.serverPortNumber" value="7224"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetCpuFreq" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetPortMask" value="0x1"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.swoEnableTargetSwoFreq" value="0"/>
@@ -209,6 +215,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\FRDM-KE06Z.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-KE06Z"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
