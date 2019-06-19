@@ -8,3 +8,5 @@ original FLASH area:
 - name: m_text
 - address: 0x410
 - size: 0x1FBF0
+
+Note that the clock settings in the IntFLASH component had to be set to 12 MHz.
