@@ -1,0 +1,9 @@
+set mem inaccessible-by-default off
+target extended-remote \\.\COM81
+monitor swdp_scan
+attach 1
+file lpc824.axf
+load lpc824.axf
+#compare-sections
+kill
+quit

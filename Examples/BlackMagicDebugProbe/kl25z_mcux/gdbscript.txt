@@ -1,0 +1,8 @@
+set mem inaccessible-by-default off
+target extended-remote \\.\COM81
+monitor swdp_scan
+attach 1
+load kl25z.axf
+#compare-sections
+kill
+quit
