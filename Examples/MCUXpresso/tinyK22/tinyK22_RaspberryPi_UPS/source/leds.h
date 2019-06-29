@@ -11,7 +11,7 @@
 #include "McuLED.h"
 
 /* led handles */
-extern McuLED_Handle_t tinyLED, hatRedLED, hatBlueLED, hatGreenLED, hatYellowLED;;
+extern McuLED_Handle_t tinyLED, hatRedLED, hatBlueLED, hatGreenLED, hatYellowLED;
 
 void LEDS_Deinit(void);
 void LEDS_Init(void);

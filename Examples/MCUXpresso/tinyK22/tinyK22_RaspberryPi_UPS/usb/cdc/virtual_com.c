@@ -46,6 +46,13 @@ void BOARD_DbgConsole_Deinit(void);
 void BOARD_DbgConsole_Init(void);
 #include "fsl_common.h"
 #include "pin_mux.h"
+
+#include "McuRTOS.h"
+#include "McuRB.h"
+
+#define USB_RB_SIZE  DATA_BUFF_SIZE  /* size of ring buffers */
+static McuRB_Handle_t usb_rxBuf, usb_txBuf;
+
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
@@ -620,38 +627,42 @@ usb_status_t USB_DeviceConfigureEndpointStatus(usb_device_handle handle, uint8_t
     }
 }
 
-/*!
- * @brief Application initialization function.
- *
- * This function initializes the application.
- *
- * @return None.
- */
-void USB_APPInit(void)
-{
-    USB_DeviceClockInit();
-#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
-    SYSMPU_Enable(SYSMPU, 0);
-#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
-
-    s_cdcVcom.speed = USB_SPEED_FULL;
-    s_cdcVcom.attach = 0;
-    s_cdcVcom.deviceHandle = NULL;
-
-    if (kStatus_USB_Success != USB_DeviceInit(CONTROLLER_ID, USB_DeviceCallback, &s_cdcVcom.deviceHandle))
-    {
-        usb_echo("USB device vcom failed\r\n");
-        return;
-    }
-    else
-    {
-        usb_echo("USB device CDC virtual com demo\r\n");
-    }
-
-    USB_DeviceIsrEnable();
-
-    USB_DeviceRun(s_cdcVcom.deviceHandle);
+static void USB_CdcStdIOReadChar(uint8_t *c) {
+	if (McuRB_NofElements(usb_rxBuf)==0) {
+		*c = '\0';
+		return;
+	}
+	if (McuRB_Get(usb_rxBuf, c)!=ERR_OK) {
+		*c = '\0';
+		return;
+	}
 }
+
+static void USB_CdcStdIOSendChar(uint8_t ch)
+{
+  int timeoutMs = 50;
+
+  while (McuRB_Put(usb_txBuf, &ch)!=ERR_OK) {
+	McuWait_WaitOSms(1);
+	if(timeoutMs<=0) {
+	  break; /* timeout */
+	}
+	timeoutMs -= 1;
+  }
+}
+
+static bool USB_CdcStdIOKeyPressed(void) {
+  return McuRB_NofElements(usb_rxBuf)!=0;
+}
+
+McuShell_ConstStdIOType USB_CdcStdio = {
+    (McuShell_StdIO_In_FctType)USB_CdcStdIOReadChar, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stdout */
+    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stderr */
+    USB_CdcStdIOKeyPressed /* if input is not empty */
+  };
+uint8_t USB_CdcDefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
 
 /*!
  * @brief Application task function.
@@ -663,26 +674,28 @@ void USB_APPInit(void)
 void USB_AppTask(void)
 {
     usb_status_t error = kStatus_USB_Error;
-    if ((1 == s_cdcVcom.attach) && (1 == s_cdcVcom.startTransactions))
+    if ((s_cdcVcom.attach==1) && (s_cdcVcom.startTransactions==1))
     {
         /* User Code */
-        if ((0 != s_recvSize) && (0xFFFFFFFFU != s_recvSize))
+        if ((s_recvSize != 0) && (s_recvSize != 0xFFFFFFFFU))
         {
             int32_t i;
 
             /* Copy Buffer to Send Buff */
-            for (i = 0; i < s_recvSize; i++)
-            {
-                s_currSendBuf[s_sendSize++] = s_currRecvBuf[i];
+            for (i = 0; i < s_recvSize; i++) {
+            	McuRB_Put(usb_rxBuf, &s_currRecvBuf[i]);
             }
             s_recvSize = 0;
         }
 
-        if (s_sendSize)
+        if (McuRB_NofElements(usb_txBuf)!=0)
         {
-            uint32_t size = s_sendSize;
-            s_sendSize = 0;
+            uint32_t size = 0;
 
+            while(size < sizeof(s_currSendBuf) && McuRB_NofElements(usb_txBuf)>0) {
+              (void)McuRB_Get(usb_txBuf, &s_currSendBuf[size]);
+              size++;
+            }
             error = USB_DeviceSendRequest(s_cdcVcom.deviceHandle, USB_CDC_VCOM_BULK_IN_ENDPOINT, s_currSendBuf, size);
 
             if (error != kStatus_USB_Success)
@@ -722,4 +735,55 @@ void USB_AppTask(void)
     }
 }
 
+static void UsbTask(void *pv) {
+  USB_DeviceIsrEnable();
+  USB_DeviceRun(s_cdcVcom.deviceHandle);
+  for(;;) {
+	  USB_AppTask();
+	  vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
 
+/*!
+ * @brief Application initialization function.
+ *
+ * This function initializes the application.
+ *
+ * @return None.
+ */
+void USB_APPInit(void)
+{
+  McuRB_Config_t config;
+
+  USB_DeviceClockInit();
+#if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
+  SYSMPU_Enable(SYSMPU, 0);
+#endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
+
+  s_cdcVcom.speed = USB_SPEED_FULL;
+  s_cdcVcom.attach = 0;
+  s_cdcVcom.deviceHandle = NULL;
+
+  if (kStatus_USB_Success != USB_DeviceInit(CONTROLLER_ID, USB_DeviceCallback, &s_cdcVcom.deviceHandle)) {
+      usb_echo("USB device vcom failed\r\n");
+      return;
+  } else {
+      usb_echo("USB device CDC virtual com demo\r\n");
+  }
+
+  McuRB_GetDefaultconfig(&config);
+  config.elementSize = 1;
+  config.nofElements = USB_RB_SIZE;
+  usb_rxBuf = McuRB_InitRB(&config);
+  usb_txBuf = McuRB_InitRB(&config);
+  if (xTaskCreate(
+      UsbTask,  /* pointer to the task */
+      "Usb", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+}

@@ -82,4 +82,9 @@ typedef struct _usb_cdc_acm_info
     uint8_t currentInterface; /* Current interface index.                           */
     uint16_t uartState;       /* UART state of the CDC device.                      */
 } usb_cdc_acm_info_t;
+
+#include "McuShell.h"
+extern McuShell_ConstStdIOType USB_CdcStdio;
+extern uint8_t USB_CdcDefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
 #endif /* _USB_CDC_VCOM_H_ */

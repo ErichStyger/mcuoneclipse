@@ -111,9 +111,6 @@ static void AppTask(void *pv) {
       McuLED_Neg(tinyLED);
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
-#elif PL_CONFIG_USE_USB_CDC
-    USB_AppTask();
-    vTaskDelay(pdMS_TO_TICKS(10));
 #else
     McuLED_Neg(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(1000));
