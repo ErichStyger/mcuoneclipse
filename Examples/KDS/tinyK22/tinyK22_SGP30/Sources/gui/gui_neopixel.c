@@ -259,6 +259,9 @@ void GUI_NEO_Create(void) {
       "count 0:15\n"
       "count 0:30\n"
       "count 1:00\n"
+      "count 1:30\n"
+      "count 2:00\n"
+      "count 2:15\n"
       "count 3:00");
   lv_obj_align(roller2, roller_label2, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 2);
   lv_roller_set_selected(roller2, 1, false); /* order of entries *must* match NEOA_AppMode enum! */
