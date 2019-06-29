@@ -42,15 +42,24 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-class {
+class C {
   int a;
-} c;
+  public:
+  	  void f(int b) {
+  		  this->a = b;
+  	  }
+};
+
+struct S {
+	int a;
+};
+
+S s;
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -59,6 +68,9 @@ int main(void) {
     BOARD_InitDebugConsole();
 
     PRINTF("Hello World\n");
+    C c;
+
+    c.f(3);
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
