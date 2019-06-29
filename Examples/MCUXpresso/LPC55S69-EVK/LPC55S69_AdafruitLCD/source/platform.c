@@ -24,6 +24,7 @@
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
+#include "spi.h"
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */
@@ -47,6 +48,7 @@ void PL_Init(void) {
   McuDbnc_Init();
 
   /* initialize my own modules */
+  SPI_Init();
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
