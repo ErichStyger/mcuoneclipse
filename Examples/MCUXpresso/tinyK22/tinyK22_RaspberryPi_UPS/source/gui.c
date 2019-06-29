@@ -210,7 +210,9 @@ void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
 #define AUTO_POS (1) /* automatically place GUI elements */
 
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
+#endif
   /* create window */
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
