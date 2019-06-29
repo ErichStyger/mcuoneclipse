@@ -25,7 +25,7 @@
   #include "gui.h"
 #endif
 #include "McuSPI.h"
-#include "McuIL9341.h"
+#include "McuILI9341.h"
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */
@@ -50,7 +50,7 @@ void PL_Init(void) {
 
   /* initialize my own modules */
   McuSPI_Init();
-  McuIL9341_Init();
+  McuILI9341_Init();
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif

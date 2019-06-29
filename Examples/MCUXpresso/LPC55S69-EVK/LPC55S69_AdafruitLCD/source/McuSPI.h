@@ -11,6 +11,7 @@
 #include <stdint.h>
 
 void McuSPI_WriteByte(uint8_t data);
+void McuSPI_ReadByte(uint8_t *data);
 
 void McuSPI_Init(void);
 

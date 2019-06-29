@@ -9,12 +9,12 @@
 #include "McuSPI.h"
 #include "fsl_spi.h"
 
-#define EXAMPLE_SPI_MASTER            SPI7
-#define EXAMPLE_SPI_MASTER_IRQ        FLEXCOMM7_IRQn
-#define EXAMPLE_SPI_MASTER_CLK_SRC    kCLOCK_Flexcomm7
-#define EXAMPLE_SPI_MASTER_CLK_FREQ   CLOCK_GetFreq(kCLOCK_Flexcomm7)
+#define EXAMPLE_SPI_MASTER            SPI8
+#define EXAMPLE_SPI_MASTER_IRQ        FLEXCOMM8_IRQn
+#define EXAMPLE_SPI_MASTER_CLK_SRC    kCLOCK_Flexcomm8
+#define EXAMPLE_SPI_MASTER_CLK_FREQ   CLOCK_GetFreq(kCLOCK_HsLspi)
 #define EXAMPLE_SPI_SSEL              1
-#define SPI_MASTER_IRQHandler         FLEXCOMM7_IRQHandler
+#define SPI_MASTER_IRQHandler         FLEXCOMM8_IRQHandler
 #define EXAMPLE_SPI_SPOL              kSPI_SpolActiveAllLow
 
 #define BUFFER_SIZE (64)
@@ -59,12 +59,22 @@ void SPI_MASTER_IRQHandler(void)
 }
 
 void McuSPI_WriteByte(uint8_t data) {
-  spi_transfer_t xfer            = {0};
+  spi_transfer_t xfer = {0};
   uint8_t destBuff;
 
-  /*Start Transfer*/
   xfer.txData   = &data;
   xfer.rxData   = &destBuff;
+  xfer.dataSize = 1;
+  SPI_MasterTransferBlocking(EXAMPLE_SPI_MASTER, &xfer);
+}
+
+void McuSPI_ReadByte(uint8_t *data) {
+  spi_transfer_t xfer = {0};
+  uint8_t dummy = 0xff;
+
+  /*Start Transfer*/
+  xfer.txData   = &dummy;
+  xfer.rxData   = data;
   xfer.dataSize = 1;
   SPI_MasterTransferBlocking(EXAMPLE_SPI_MASTER, &xfer);
 }

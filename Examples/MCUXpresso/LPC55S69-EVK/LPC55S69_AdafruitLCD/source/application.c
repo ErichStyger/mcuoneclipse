@@ -16,15 +16,28 @@
 #include "fsl_iocon.h"
 #include "pin_mux.h"
 #include "leds.h"
-#include "McuIL9341.h"
+#include "McuILI9341.h"
 
 static SemaphoreHandle_t mutex;
 
 static void AppTask(void *pv) {
-  McuIL9341_InitLCD();
+  uint8_t res;
+  uint8_t var1, var2, var3;
+
+  if (McuILI9341_InitLCD()!=ERR_OK) {
+    for(;;) { /* error */
+      McuLED_Neg(LED_Red);
+      vTaskDelay(pdMS_TO_TICKS(100));
+    }
+  }
+  res = McuILI9341_GetDisplayIdentification(&var1, &var2, &var3);
+  res = McuILI9341_InvertDisplay(true);
+  res = McuILI9341_InvertDisplay(false);
+  res = McuILI9341_DisplayOn(true);
+  res = McuILI9341_DisplayOn(false);
   for(;;) {
-    McuLED_Neg(LED_Red);
-    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED_Neg(LED_Green);
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
