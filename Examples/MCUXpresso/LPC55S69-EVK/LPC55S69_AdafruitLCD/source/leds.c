@@ -27,13 +27,10 @@ void LEDS_Deinit(void) {
   LED_Red = McuLED_DeinitLed(LED_Red);
   LED_Green = McuLED_DeinitLed(LED_Green);
   LED_Blue = McuLED_DeinitLed(LED_Blue);
-  McuLED_Deinit(); /* de-initialize LED module */
 }
 
 void LEDS_Init(void) {
   McuLED_Config_t config;
-
-  McuLED_Init(); /* initialize LED module */
 
   /* initialize LEDs */
   McuLED_GetDefaultConfig(&config);

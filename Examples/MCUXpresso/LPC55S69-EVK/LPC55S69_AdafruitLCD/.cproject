@@ -107,7 +107,7 @@
 									<listOptionValue builtIn="false" value="../McuLib/fonts"/>
 									<listOptionValue builtIn="false" value="../McuLib/src"/>
 									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM33/non_secure"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
@@ -152,7 +152,7 @@
 								<option id="com.crt.advproject.gas.fpu.1601789368" name="Floating point" superClass="com.crt.advproject.gas.fpu" useByScannerDiscovery="false" value="com.crt.advproject.gas.fpu.fpv5sp.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.thumb.1225243976" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.gas.arch.1079898542" name="Architecture" superClass="com.crt.advproject.gas.arch" useByScannerDiscovery="false" value="com.crt.advproject.gas.target.cm33" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.flags.crt.920126837" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__MULTICORE_NONE -D__NEWLIB__ -D__MULTICORE_MASTER -S -save-temps=obj" valueType="string"/>
+								<option id="gnu.both.asm.option.flags.crt.920126837" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" useByScannerDiscovery="false" value="-c -x assembler-with-cpp -D__MULTICORE_NONE -D__NEWLIB__ -D__MULTICORE_MASTER" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.both.asm.option.include.paths.350581514" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../board"/>
 									<listOptionValue builtIn="false" value="../source"/>
@@ -307,7 +307,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33/secure/secure_heap.c|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM4F" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/ARM_CM33/secure/secure_heap.c|FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
