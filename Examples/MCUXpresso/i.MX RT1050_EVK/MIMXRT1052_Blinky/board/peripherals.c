@@ -3,56 +3,45 @@
  * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
  **********************************************************************************************************************/
 
-#ifndef _PIN_MUX_H_
-#define _PIN_MUX_H_
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+!!GlobalInfo
+product: Peripherals v6.0
+processor: MIMXRT1052xxxxB
+package_id: MIMXRT1052DVL6B
+mcu_data: ksdk2_0
+processor_version: 6.0.1
+board: IMXRT1050-EVKB
+functionalGroups:
+- name: BOARD_InitPeripherals
+  called_from_default_init: true
+  selectedCore: core0
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'system'
+- type_id: 'system_54b53072540eeeb8f8e9343e71f28176'
+- global_system_definitions: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
 
 /***********************************************************************************************************************
- * Definitions
+ * Included files
  **********************************************************************************************************************/
+#include "peripherals.h"
 
-/*! @brief Direction type  */
-typedef enum _pin_mux_direction
+/***********************************************************************************************************************
+ * Initialization functions
+ **********************************************************************************************************************/
+void BOARD_InitPeripherals(void)
 {
-  kPIN_MUX_DirectionInput = 0U,         /* Input direction */
-  kPIN_MUX_DirectionOutput = 1U,        /* Output direction */
-  kPIN_MUX_DirectionInputOrOutput = 2U  /* Input or output direction */
-} pin_mux_direction_t;
-
-/*!
- * @addtogroup pin_mux
- * @{
- */
-
-/***********************************************************************************************************************
- * API
- **********************************************************************************************************************/
-
-#if defined(__cplusplus)
-extern "C" {
-#endif
-
-/*!
- * @brief Calls initialization functions.
- *
- */
-void BOARD_InitBootPins(void);
-
-
-/*!
- * @brief Configures pin routing and optionally pin electrical features.
- *
- */
-void BOARD_InitPins(void);
-
-#if defined(__cplusplus)
 }
-#endif
-
-/*!
- * @}
- */
-#endif /* _PIN_MUX_H_ */
 
 /***********************************************************************************************************************
- * EOF
+ * BOARD_InitBootPeripherals function
  **********************************************************************************************************************/
+void BOARD_InitBootPeripherals(void)
+{
+  BOARD_InitPeripherals();
+}
