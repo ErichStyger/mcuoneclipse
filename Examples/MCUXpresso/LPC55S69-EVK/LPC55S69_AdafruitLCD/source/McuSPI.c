@@ -6,16 +6,16 @@
  */
 
 #include "platform.h"
-#include "spi.h"
+#include "McuSPI.h"
 #include "fsl_spi.h"
 
-#define EXAMPLE_SPI_MASTER SPI7
-#define EXAMPLE_SPI_MASTER_IRQ FLEXCOMM7_IRQn
-#define EXAMPLE_SPI_MASTER_CLK_SRC kCLOCK_Flexcomm7
-#define EXAMPLE_SPI_MASTER_CLK_FREQ CLOCK_GetFreq(kCLOCK_Flexcomm7)
-#define EXAMPLE_SPI_SSEL 1
-#define SPI_MASTER_IRQHandler FLEXCOMM7_IRQHandler
-#define EXAMPLE_SPI_SPOL kSPI_SpolActiveAllLow
+#define EXAMPLE_SPI_MASTER            SPI7
+#define EXAMPLE_SPI_MASTER_IRQ        FLEXCOMM7_IRQn
+#define EXAMPLE_SPI_MASTER_CLK_SRC    kCLOCK_Flexcomm7
+#define EXAMPLE_SPI_MASTER_CLK_FREQ   CLOCK_GetFreq(kCLOCK_Flexcomm7)
+#define EXAMPLE_SPI_SSEL              1
+#define SPI_MASTER_IRQHandler         FLEXCOMM7_IRQHandler
+#define EXAMPLE_SPI_SPOL              kSPI_SpolActiveAllLow
 
 #define BUFFER_SIZE (64)
 static uint8_t srcBuff[BUFFER_SIZE];
@@ -58,18 +58,28 @@ void SPI_MASTER_IRQHandler(void)
 #endif
 }
 
-void SPI_WriteByte(uint8_t data, uint8_t *rx) {
+void McuSPI_WriteByte(uint8_t data) {
+  spi_transfer_t xfer            = {0};
+  uint8_t destBuff;
 
+  /*Start Transfer*/
+  xfer.txData   = &data;
+  xfer.rxData   = &destBuff;
+  xfer.dataSize = 1;
+  SPI_MasterTransferBlocking(EXAMPLE_SPI_MASTER, &xfer);
 }
 
-void SPI_Init(void) {
+void McuSPI_Init(void) {
   spi_master_config_t masterConfig = {0};
   uint32_t sourceClock             = 0U;
   uint32_t i                       = 0U;
-  uint32_t err                     = 0U;
+  //uint32_t err                     = 0U;
 
   /* attach 12 MHz clock to SPI3 */
   CLOCK_AttachClk(kFRO12M_to_FLEXCOMM7);
+
+  /* reset FLEXCOMM for SPI */
+  RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
 
   /* Init SPI master */
   /*
@@ -85,24 +95,18 @@ void SPI_Init(void) {
   masterConfig.sselNum = (spi_ssel_t)EXAMPLE_SPI_SSEL;
   masterConfig.sselPol = (spi_spol_t)EXAMPLE_SPI_SPOL;
   SPI_MasterInit(EXAMPLE_SPI_MASTER, &masterConfig, sourceClock);
-#if 0
+
   /* Init source buffer */
   for (i = 0U; i < BUFFER_SIZE; i++)
   {
       srcBuff[i] = i;
   }
+//  NVIC_SetPriority(EXAMPLE_SPI_MASTER_IRQ, 1U);
+  /* Enable interrupt */
+//  EnableIRQ(EXAMPLE_SPI_MASTER_IRQ);
+//  SPI_EnableInterrupts(EXAMPLE_SPI_MASTER, kSPI_TxLvlIrq | kSPI_RxLvlIrq);
 
-  NVIC_SetPriority(EXAMPLE_SPI_MASTER_IRQ, 1U);
-  /* Enable interrupt, first enable slave and then master. */
-  EnableIRQ(EXAMPLE_SPI_MASTER_IRQ);
-  SPI_EnableInterrupts(EXAMPLE_SPI_MASTER, kSPI_TxLvlIrq | kSPI_RxLvlIrq);
-
-  SPI_WriteData(EXAMPLE_SPI_MASTER, 0x1234, kSPI_FrameAssert);
-
-  while (masterFinished != true)
-  {
-  }
-
+#if 0
   /* Check the data received */
   for (i = 0U; i < BUFFER_SIZE; i++)
   {
@@ -111,14 +115,6 @@ void SPI_Init(void) {
  //         PRINTF("\r\nThe %d data is wrong, the data received is %d \r\n", i, destBuff[i]);
           err++;
       }
-  }
-  if (err == 0U)
-  {
-//      PRINTF("\r\nSPI transfer finished!\r\n");
-  }
-
-  while (1)
-  {
   }
 #endif
 }

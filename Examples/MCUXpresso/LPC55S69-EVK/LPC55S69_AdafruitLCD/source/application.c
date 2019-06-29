@@ -16,10 +16,12 @@
 #include "fsl_iocon.h"
 #include "pin_mux.h"
 #include "leds.h"
+#include "McuIL9341.h"
 
 static SemaphoreHandle_t mutex;
 
 static void AppTask(void *pv) {
+  McuIL9341_InitLCD();
   for(;;) {
     McuLED_Neg(LED_Red);
     vTaskDelay(pdMS_TO_TICKS(100));

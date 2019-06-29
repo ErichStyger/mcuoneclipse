@@ -8,6 +8,10 @@
 #ifndef MCUIL9341_C_
 #define MCUIL9341_C_
 
-void MCUIL9341_Init(void);
+#include <stdint.h>
+
+uint8_t McuIL9341_InitLCD(void);
+
+void McuIL9341_Init(void);
 
 #endif /* MCUIL9341_C_ */

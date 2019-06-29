@@ -24,7 +24,7 @@
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
-#include "spi.h"
+#include "McuSPI.h"
 #include "McuIL9341.h"
 
 void PL_Init(void) {
@@ -49,8 +49,8 @@ void PL_Init(void) {
   McuDbnc_Init();
 
   /* initialize my own modules */
-  SPI_Init();
-  MCUIL9341_Init();
+  McuSPI_Init();
+  McuIL9341_Init();
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif

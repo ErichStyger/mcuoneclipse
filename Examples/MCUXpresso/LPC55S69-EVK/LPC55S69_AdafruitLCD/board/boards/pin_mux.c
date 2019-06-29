@@ -16,6 +16,8 @@ pin_labels:
 - {pin_num: '1', pin_signal: PIO1_4/FC0_SCK/SD0_D0/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A, label: LED_BLUE}
 - {pin_num: '5', pin_signal: PIO1_6/FC0_TXD_SCL_MISO_WS/SD0_D3/CTIMER2_MAT1/SCT_GPI3, label: LED_RED}
 - {pin_num: '9', pin_signal: PIO1_7/FC0_RTS_SCL_SSEL1/SD0_D1/CTIMER2_MAT2/SCT_GPI4, label: LED_GREEN}
+- {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: LCD_CS}
+- {pin_num: '31', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/SD0_D2/CTIMER2_MAT0/SCT_GPI0, label: LCD_DC}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -34,6 +36,7 @@ void BOARD_InitBootPins(void)
 {
     BOARD_InitPins();
     BOARD_InitLedPins();
+    BOARD_InitSpiPins();
 }
 
 /* clang-format off */
@@ -153,6 +156,94 @@ void BOARD_InitLedPins(void)
                         /* Select Digital mode.
                          * : Digital mode, digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_7_DIGIMODE_DIGITAL));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitSpiPins:
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '60', peripheral: FLEXCOMM8, signal: HS_SPI_MOSI, pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26}
+  - {pin_num: '61', peripheral: FLEXCOMM8, signal: HS_SPI_SCK, pin_signal: PIO1_2/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5}
+  - {pin_num: '62', peripheral: FLEXCOMM8, signal: HS_SPI_MISO, pin_signal: PIO1_3/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6}
+  - {pin_num: '59', peripheral: GPIO, signal: 'PIO1, 1', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4}
+  - {pin_num: '31', peripheral: GPIO, signal: 'PIO1, 5', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/SD0_D2/CTIMER2_MAT0/SCT_GPI0}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitSpiPins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void BOARD_InitSpiPins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][26] = ((IOCON->PIO[0][26] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT026 (pin 60) is configured as HS_SPI_MOSI. */
+                         | IOCON_PIO_FUNC(0x09u)
+
+                         /* Select Digital mode.
+                          * : Digital mode, digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_26_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][1] = ((IOCON->PIO[1][1] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT11 (pin 59) is configured as PIO1_1. */
+                        | IOCON_PIO_FUNC(PIO1_1_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Digital mode, digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_1_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][2] = ((IOCON->PIO[1][2] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT12 (pin 61) is configured as HS_SPI_SCK. */
+                        | IOCON_PIO_FUNC(PIO1_2_FUNC_ALT6)
+
+                        /* Select Digital mode.
+                         * : Digital mode, digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][3] = ((IOCON->PIO[1][3] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT13 (pin 62) is configured as HS_SPI_MISO. */
+                        | IOCON_PIO_FUNC(PIO1_3_FUNC_ALT6)
+
+                        /* Select Digital mode.
+                         * : Digital mode, digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_3_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][5] = ((IOCON->PIO[1][5] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT15 (pin 31) is configured as PIO1_5. */
+                        | IOCON_PIO_FUNC(PIO1_5_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Digital mode, digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_5_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF
