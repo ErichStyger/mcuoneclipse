@@ -12,8 +12,6 @@
 #include "McuArmTools.h"
 #include "McuCriticalSection.h"
 #include "McuRB.h"
-#include "McuGenericI2C.h"
-#include "McuGenericSWI2C.h"
 #include "McuSSD1306.h"
 #include "McuGPIO.h"
 #include "McuLED.h"
@@ -23,6 +21,9 @@
 #include "McuButton.h"
 #include "McuDebounce.h"
 #include "leds.h"
+#if PL_CONFIG_USE_GUI
+  #include "gui.h"
+#endif
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */

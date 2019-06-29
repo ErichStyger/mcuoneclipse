@@ -25,8 +25,8 @@
 #define configENABLE_FPU                      (1) /* \todo */
 #define configENABLE_MPU                      (0) /* \todo */
 
-#if 0
 /* ------------------- I2C ---------------------------*/
+#if 0
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
