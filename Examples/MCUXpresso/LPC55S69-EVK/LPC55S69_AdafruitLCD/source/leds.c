@@ -7,19 +7,58 @@
 
 #include "leds.h"
 #include "McuLED.h"
+#include "board.h" /* defines the BOARD_LED_ macros */
 
 /* Blue: P1_4 */
-#define LED_BLUE_GPIO    GPIO
-#define LED_BLUE_PORT    1U
-#define LED_BLUE_PIN     4U
+#ifdef BOARD_LED_BLUE_GPIO
+  #define LED_BLUE_GPIO    BOARD_LED_BLUE_GPIO
+#else
+  #define LED_BLUE_GPIO    GPIO
+#endif
+#ifdef BOARD_LED_BLUE_GPIO_PORT
+  #define LED_BLUE_PORT    BOARD_LED_BLUE_GPIO_PORT
+#else
+  #define LED_BLUE_PORT    1U
+#endif
+#ifdef BOARD_LED_BLUE_GPIO_PIN
+  #define LED_BLUE_PIN     BOARD_LED_BLUE_GPIO_PIN
+#else
+  #define LED_BLUE_PIN     4U
+#endif
+
 /* Red: P1_6 */
-#define LED_RED_GPIO     GPIO
-#define LED_RED_PORT     1U
-#define LED_RED_PIN      6U
+#ifdef BOARD_LED_BLUE_GPIO
+  #define LED_RED_GPIO    BOARD_LED_RED_GPIO
+#else
+  #define LED_RED_GPIO    GPIO
+#endif
+#ifdef BOARD_LED_RED_GPIO_PORT
+  #define LED_RED_PORT    BOARD_LED_RED_GPIO_PORT
+#else
+  #define LED_RED_PORT    1U
+#endif
+#ifdef BOARD_LED_RED_GPIO_PIN
+  #define LED_RED_PIN     BOARD_LED_RED_GPIO_PIN
+#else
+  #define LED_RED_PIN    6U
+#endif
+
 /* Green: P1_7 */
-#define LED_GREEN_GPIO   GPIO
-#define LED_GREEN_PORT   1U
-#define LED_GREEN_PIN    7U
+#ifdef BOARD_LED_GREEN_GPIO
+  #define LED_GREEN_GPIO    BOARD_LED_GREEN_GPIO
+#else
+  #define LED_GREEN_GPIO    GPIO
+#endif
+#ifdef BOARD_LED_GREEN_GPIO_PORT
+  #define LED_GREEN_PORT    BOARD_LED_GREEN_GPIO_PORT
+#else
+  #define LED_GREEN_PORT    1U
+#endif
+#ifdef BOARD_LED_GREEN_GPIO_PIN
+  #define LED_GREEN_PIN     BOARD_LED_GREEN_GPIO_PIN
+#else
+  #define LED_GREEN_PIN    7U
+#endif
 
 McuLED_Handle_t LED_Red, LED_Blue, LED_Green;
 

@@ -8,3 +8,12 @@ https://github.com/adafruit/Adafruit-2.8-TFT-Shield-v2-PCB
 Open points:
 - use C33 port (currently M4F)
 - merge back GUI with Raspberry Pi project
+
+
+GND               GND 
+LSPI_HS_SCK       D13 SCLK_5V
+LSPI_HS_MISO      D12 MISO
+LSPI_HS_CS        D11 MOSI_5V
+LSPI_HS_SSEL1     D10 TFT_CS_5V
+PIO1_5_GPIO_ARD   D9  TFT_DC_5V
+PIO1_8_GPIO_ARD   D8  RT_CS_5V

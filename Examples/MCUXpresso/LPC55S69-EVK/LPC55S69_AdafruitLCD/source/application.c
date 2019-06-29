@@ -36,12 +36,17 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 
-  McuLED_Neg(LED_Red);
+  McuLED_On(LED_Red);
   McuWait_Waitms(100);
-  McuLED_Neg(LED_Green);
+  McuLED_Off(LED_Red);
+
+  McuLED_On(LED_Green);
   McuWait_Waitms(100);
-  McuLED_Neg(LED_Blue);
+  McuLED_Off(LED_Green);
+
+  McuLED_On(LED_Blue);
   McuWait_Waitms(100);
+  McuLED_Off(LED_Blue);
 
   if (xTaskCreate(
       AppTask,  /* pointer to the task */

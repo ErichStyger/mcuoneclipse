@@ -3,6 +3,7 @@
    <common>
       <processor>LPC55S69</processor>
       <package>LPC55S69JBD100</package>
+      <board></board>
       <mcu_data>ksdk2_0</mcu_data>
       <cores selected="cm33_core0">
          <core name="Cortex-M33 (Core #0)" id="cm33_core0" description=""/>
@@ -18,11 +19,16 @@
    <tools>
       <pins name="Pins" version="6.0" enabled="true" update_project_code="true">
          <generated_project_files>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NXP_Code/board/pin_mux.c" update_enabled="true"/>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NXP_Code/board/pin_mux.h" update_enabled="true"/>
+            <file path="board/boards/pin_mux.c" update_enabled="true"/>
+            <file path="board/boards/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
             <processor_version>6.0.1</processor_version>
+            <pin_labels>
+               <pin_label pin_num="1" pin_signal="PIO1_4/FC0_SCK/SD0_D0/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A" label="LED_BLUE"/>
+               <pin_label pin_num="5" pin_signal="PIO1_6/FC0_TXD_SCL_MISO_WS/SD0_D3/CTIMER2_MAT1/SCT_GPI3" label="LED_RED"/>
+               <pin_label pin_num="9" pin_signal="PIO1_7/FC0_RTS_SCL_SSEL1/SD0_D1/CTIMER2_MAT2/SCT_GPI4" label="LED_GREEN"/>
+            </pin_labels>
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
@@ -68,12 +74,32 @@
                   </pin>
                </pins>
             </function>
+            <function name="BOARD_InitLedPins">
+               <description>Configures pin routing and optionally pin electrical features.</description>
+               <options>
+                  <callFromInitBoot>true</callFromInitBoot>
+                  <coreID>cm33_core0</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitLedPins">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core1">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <pins>
+                  <pin peripheral="GPIO" signal="PIO1, 4" pin_num="1" pin_signal="PIO1_4/FC0_SCK/SD0_D0/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A"/>
+                  <pin peripheral="GPIO" signal="PIO1, 6" pin_num="5" pin_signal="PIO1_6/FC0_TXD_SCL_MISO_WS/SD0_D3/CTIMER2_MAT1/SCT_GPI3"/>
+                  <pin peripheral="GPIO" signal="PIO1, 7" pin_num="9" pin_signal="PIO1_7/FC0_RTS_SCL_SSEL1/SD0_D1/CTIMER2_MAT2/SCT_GPI4"/>
+               </pins>
+            </function>
          </functions_list>
       </pins>
       <clocks name="Clocks" version="6.0" enabled="true" update_project_code="true">
          <generated_project_files>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NXP_Code/board/clock_config.c" update_enabled="true"/>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/NXP_Code/board/clock_config.h" update_enabled="true"/>
+            <file path="board/boards/clock_config.c" update_enabled="true"/>
+            <file path="board/boards/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
             <processor_version>6.0.1</processor_version>
@@ -256,8 +282,8 @@
       </periphs>
       <tee name="TEE" version="1.0" enabled="true" update_project_code="true">
          <generated_project_files>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/Projects/MCUXpresso/Secure/tzm_config.c" update_enabled="true"/>
-            <file path="FreeRTOS/Demo/CORTEX_MPU_M33F_NXP_LPC55S69_MCUXpresso/Projects/MCUXpresso/Secure/tzm_config.h" update_enabled="true"/>
+            <file path="trustzone/tzm_config.c" update_enabled="true"/>
+            <file path="trustzone/tzm_config.h" update_enabled="true"/>
          </generated_project_files>
          <tee_profile>
             <processor_version>6.0.1</processor_version>
