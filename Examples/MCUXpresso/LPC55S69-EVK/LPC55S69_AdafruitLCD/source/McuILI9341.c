@@ -121,13 +121,13 @@ static const uint8_t initlist[] = {
 };
 
 static uint8_t spi_write(uint8_t *data, size_t nofBytes) {
-  McuGPIO_Low(McuILI9341_CSPin);
+//  McuGPIO_Low(McuILI9341_CSPin);
   while(nofBytes>0) {
     McuSPI_WriteByte(*data);
     data++;
     nofBytes--;
   }
-  McuGPIO_High(McuILI9341_CSPin);
+//  McuGPIO_High(McuILI9341_CSPin);
   return ERR_OK;
 }
 
@@ -159,6 +159,7 @@ uint8_t McuILI9341_SoftReset(void) {
   SELECT_DISPLAY();
   res = McuILI9341_Write8Cmd(MCUILI9341_SWRESET);
   DESELECT_DISPLAY();
+  McuWait_WaitOSms(5); /* need to wait 5 ms according data sheet */
   return res;
 }
 
@@ -184,13 +185,20 @@ uint8_t McuILI9341_GetDisplayIdentification(uint8_t *manufacurer, uint8_t *drive
   uint8_t res;
 
   SELECT_DISPLAY();
-  res = McuILI9341_Write8Cmd(MCUILI9341_RDDID);
-  SET_DATA_MODE(); /* go back to data mode */
+  res = McuILI9341_Write8Cmd(MCUILI9341_RDID1);
+//  SET_DATA_MODE(); /* go back to data mode */
+//  McuSPI_WriteByte(0xff); /* dummy */
   McuSPI_ReadByte(manufacurer);
+
+  res = McuILI9341_Write8Cmd(MCUILI9341_RDID2);
+//  SET_DATA_MODE(); /* go back to data mode */
   McuSPI_ReadByte(driverVersion);
+
+  res = McuILI9341_Write8Cmd(MCUILI9341_RDID3);
+//  SET_DATA_MODE(); /* go back to data mode */
   McuSPI_ReadByte(driverID);
   DESELECT_DISPLAY();
-  return ERR_OK;
+  return res;
 }
 
 uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
@@ -221,6 +229,25 @@ uint8_t McuILI9341_InitLCD(void) {
   uint8_t *p;
   uint8_t res, cmd, numArgs, x;
 
+  SET_CMD_MODE();
+  SELECT_DISPLAY();
+  McuSPI_WriteByte(MCUILI9341_SLPOUT); /* exit sleep */
+  McuWait_WaitOSms(120);
+
+  McuSPI_WriteByte(MCUILI9341_DISPON); /* turn on */
+  McuWait_WaitOSms(5);
+
+  McuSPI_WriteByte(MCUILI9341_DISPOFF); /* turn off */
+  McuWait_WaitOSms(5);
+
+  DESELECT_DISPLAY();
+
+  McuILI9341_DisplayOn(true);
+  McuILI9341_DisplayOn(false);
+
+  for(;;) {
+
+  }
   /* first do a soft reset */
   res = McuILI9341_SoftReset();
   if (res!=ERR_OK) {
