@@ -1,8 +1,8 @@
 /*
- * McuILI9341.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 29.06.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "McuLib.h"
@@ -13,7 +13,6 @@
 #include "McuSPI.h"
 
 /* ILI9341 register and commands */
-
 #define MCUILI9341_TFTWIDTH   240      /*!< ILI9341 max TFT width */
 #define MCUILI9341_TFTHEIGHT  320      /*!< ILI9341 max TFT height */
 
@@ -91,7 +90,7 @@
 static McuGPIO_Handle_t McuILI9341_CSPin;
 static McuGPIO_Handle_t McuILI9341_DCPin;
 
-/* initialisation sequence for Adafruit ILI9341 driver, see https://github.com/mongoose-os-libs/ili9341-spi/blob/master/src/mgos_ili9341.c */
+/* Initialization sequence for Adafruit ILI9341 driver, see https://github.com/mongoose-os-libs/ili9341-spi/blob/master/src/mgos_ili9341.c */
 static const uint8_t initlist[] = {
   0xEF, 3, 0x03, 0x80, 0x02,
   0xCF, 3, 0x00, 0xC1, 0x30,
@@ -121,19 +120,12 @@ static const uint8_t initlist[] = {
 };
 
 static uint8_t spi_write(uint8_t *data, size_t nofBytes) {
-//  McuGPIO_Low(McuILI9341_CSPin);
   while(nofBytes>0) {
     McuSPI_WriteByte(*data);
     data++;
     nofBytes--;
   }
-//  McuGPIO_High(McuILI9341_CSPin);
   return ERR_OK;
-}
-
-static uint8_t McuILI9341_Write8Data(uint8_t data) {
-  SET_DATA_MODE();
-  return spi_write(&data, 1);
 }
 
 static uint8_t McuILI9341_Write8Cmd(uint8_t cmd) {
@@ -185,9 +177,11 @@ uint8_t McuILI9341_DisplayOn(bool on) {
 static uint8_t spi_readcommand8(uint8_t cmd, uint8_t index, uint8_t *data) {
   SET_CMD_MODE();
   McuSPI_WriteByte(0xD9); /* undocumented code? */
-  McuSPI_WriteByte(0x10+index);
   SET_DATA_MODE();
+  McuSPI_WriteByte(0x10+index);
+  SET_CMD_MODE();
   McuSPI_WriteByte(cmd);
+  SET_DATA_MODE();
   McuSPI_ReadByte(data);
   return ERR_OK;
 }
@@ -213,21 +207,29 @@ uint8_t McuILI9341_GetDisplayIdentification(uint8_t *manufacurer, uint8_t *drive
 }
 
 uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
-#if 0
-  do {
-    ili9341_spi_write8_cmd(ILI9341_CASET); // Column addr set
-    ili9341_spi_write8(x0 >> 8);
-    ili9341_spi_write8(x0 & 0xFF);         // XSTART
-    ili9341_spi_write8(x1 >> 8);
-    ili9341_spi_write8(x1 & 0xFF);         // XEND
-    ili9341_spi_write8_cmd(ILI9341_PASET); // Row addr set
-    ili9341_spi_write8(y0 >> 8);
-    ili9341_spi_write8(y0);                // YSTART
-    ili9341_spi_write8(y1 >> 8);
-    ili9341_spi_write8(y1);                // YEND
-    ili9341_spi_write8_cmd(ILI9341_RAMWR); // write to RAM}
-  } while(0);
-#endif
+  SELECT_DISPLAY();
+
+  SET_CMD_MODE();
+  McuSPI_WriteByte(MCUILI9341_CASET);
+  SET_DATA_MODE();
+  McuSPI_WriteByte(x0 >> 8);
+  McuSPI_WriteByte(x0 & 0xFF);         // XSTART
+  McuSPI_WriteByte(x1 >> 8);
+  McuSPI_WriteByte(x1 & 0xFF);         // XEND
+
+  SET_CMD_MODE();
+  McuSPI_WriteByte(MCUILI9341_PASET); // Row addr set
+  SET_DATA_MODE();
+  McuSPI_WriteByte(y0 >> 8);
+  McuSPI_WriteByte(y0);                // YSTART
+  McuSPI_WriteByte(y1 >> 8);
+  McuSPI_WriteByte(y1);                // YEND
+
+  SET_CMD_MODE();
+  McuSPI_WriteByte(MCUILI9341_RAMWR); // write to RAM}
+
+  DESELECT_DISPLAY();
+
   return ERR_OK;
 }
 
@@ -236,10 +238,21 @@ uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
   return spi_write((uint8_t*)&color, 2);
 }
 
+uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
+  McuILI9341_SetWindow(x, y, x+w-1, y+h-1);
+  SELECT_DISPLAY();
+  SET_DATA_MODE();
+  for(int i=0; i<w*h; i++) {
+    spi_write((uint8_t*)&color, 2);
+  }
+  DESELECT_DISPLAY();
+  return ERR_OK;
+}
+
 uint8_t McuILI9341_InitLCD(void) {
   uint8_t *p;
   uint8_t res, cmd, numArgs, x;
-
+#if 0
   res = McuILI9341_GetDisplayPowerMode(&x);
 
   SET_CMD_MODE();
@@ -257,10 +270,7 @@ uint8_t McuILI9341_InitLCD(void) {
 
   McuILI9341_DisplayOn(true);
   McuILI9341_DisplayOn(false);
-
-  for(;;) {
-
-  }
+#endif
   /* first do a soft reset */
   res = McuILI9341_SoftReset();
   if (res!=ERR_OK) {
@@ -293,7 +303,7 @@ void McuILI9341_Init(void) {
   config.isInput = false;
   config.isLowOnInit = false;
 
-  /* initialize CS (is LOW active) */
+  /* initialize TFT CS (is LOW active) */
   config.hw.pin = MCUILI9341_CS_PIN;
   config.hw.port = MCUILI9341_CS_PORT;
   config.hw.gpio = MCUILI9341_CS_GPIO;

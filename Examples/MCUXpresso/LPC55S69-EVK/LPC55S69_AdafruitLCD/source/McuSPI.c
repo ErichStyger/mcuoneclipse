@@ -101,7 +101,7 @@ void McuSPI_Init(void) {
    * masterConfig->baudRate_Bps = 500000U;
    */
   SPI_MasterGetDefaultConfig(&masterConfig);
-  sourceClock          = EXAMPLE_SPI_MASTER_CLK_FREQ;
+  sourceClock = EXAMPLE_SPI_MASTER_CLK_FREQ;
   masterConfig.sselNum = kSPI_Ssel1;  /*! \todo */
   masterConfig.sselPol = kSPI_SpolActiveAllLow;
   masterConfig.polarity = kSPI_ClockPolarityActiveHigh; /* clock is LOW if not active, high if active */
