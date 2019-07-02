@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+uint8_t McuILI9341_GetDisplayPowerMode(uint8_t *mode);
+
 uint8_t McuILI9341_GetDisplayIdentification(uint8_t *manufacurer, uint8_t *driverVersion, uint8_t *driverID);
 
 uint8_t McuILI9341_InvertDisplay(bool invert);

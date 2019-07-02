@@ -106,6 +106,7 @@ void McuSPI_Init(void) {
   masterConfig.sselPol = kSPI_SpolActiveAllLow;
   masterConfig.polarity = kSPI_ClockPolarityActiveHigh; /* clock is LOW if not active, high if active */
   masterConfig.phase = kSPI_ClockPhaseFirstEdge; /* data is valid at raising clock edge */
+  masterConfig.baudRate_Bps = 1*1000000;
   SPI_MasterInit(EXAMPLE_SPI_MASTER, &masterConfig, sourceClock);
 #if 0
   /* Init source buffer */

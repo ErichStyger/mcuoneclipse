@@ -181,22 +181,33 @@ uint8_t McuILI9341_DisplayOn(bool on) {
   return res;
 }
 
+/* read a byte from the configuration memory (NOT from the display memory) */
+static uint8_t spi_readcommand8(uint8_t cmd, uint8_t index, uint8_t *data) {
+  SET_CMD_MODE();
+  McuSPI_WriteByte(0xD9); /* undocumented code? */
+  McuSPI_WriteByte(0x10+index);
+  SET_DATA_MODE();
+  McuSPI_WriteByte(cmd);
+  McuSPI_ReadByte(data);
+  return ERR_OK;
+}
+
+uint8_t McuILI9341_GetDisplayPowerMode(uint8_t *mode) {
+  uint8_t res;
+
+  SELECT_DISPLAY();
+  res = spi_readcommand8(MCUILI9341_RDMODE, 0, mode);
+  DESELECT_DISPLAY();
+  return res;
+}
+
 uint8_t McuILI9341_GetDisplayIdentification(uint8_t *manufacurer, uint8_t *driverVersion, uint8_t *driverID) {
   uint8_t res;
 
   SELECT_DISPLAY();
-  res = McuILI9341_Write8Cmd(MCUILI9341_RDID1);
-//  SET_DATA_MODE(); /* go back to data mode */
-//  McuSPI_WriteByte(0xff); /* dummy */
-  McuSPI_ReadByte(manufacurer);
-
-  res = McuILI9341_Write8Cmd(MCUILI9341_RDID2);
-//  SET_DATA_MODE(); /* go back to data mode */
-  McuSPI_ReadByte(driverVersion);
-
-  res = McuILI9341_Write8Cmd(MCUILI9341_RDID3);
-//  SET_DATA_MODE(); /* go back to data mode */
-  McuSPI_ReadByte(driverID);
+  res = spi_readcommand8(MCUILI9341_RDID1, 0, manufacurer);
+  res = spi_readcommand8(MCUILI9341_RDID2, 0, driverVersion);
+  res = spi_readcommand8(MCUILI9341_RDID3, 0, driverID);
   DESELECT_DISPLAY();
   return res;
 }
@@ -228,6 +239,8 @@ uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
 uint8_t McuILI9341_InitLCD(void) {
   uint8_t *p;
   uint8_t res, cmd, numArgs, x;
+
+  res = McuILI9341_GetDisplayPowerMode(&x);
 
   SET_CMD_MODE();
   SELECT_DISPLAY();

@@ -22,7 +22,7 @@ static SemaphoreHandle_t mutex;
 
 static void AppTask(void *pv) {
   uint8_t res;
-  uint8_t var1, var2, var3;
+  uint8_t var1, var2, var3, mode;
 
   if (McuILI9341_InitLCD()!=ERR_OK) {
     for(;;) { /* error */
@@ -30,6 +30,7 @@ static void AppTask(void *pv) {
       vTaskDelay(pdMS_TO_TICKS(100));
     }
   }
+  res = McuILI9341_GetDisplayPowerMode(&mode);
   res = McuILI9341_GetDisplayIdentification(&var1, &var2, &var3);
   res = McuILI9341_InvertDisplay(true);
   res = McuILI9341_InvertDisplay(false);

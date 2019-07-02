@@ -18,7 +18,7 @@
 #define CONFIG_USE_BROKER_HSLU                  (1) /* 1: use HSLU broker; 0: do not use HSLU broker */
 
 /* various configuration settings */
-#define CONFIG_USE_FREERTOS                     (1) /* 1: use FreeRTOS; 0: bare metal */
+#define CONFIG_USE_FREERTOS                     (1) /* 1: use FreeRTOS; 0: bare metal: NOTE: currently the project only compiles with using FreeRTOS */
 #define CONFIG_USE_SHELL                        (1) /* 1: use shell console; 0: do not use shell console */
 #define CONFIG_USE_ACCELEROMETER                (1) /* 1: use accelerometer sensor; 0: do not use accelerometer */
 #define CONFIG_USE_DNS                          (1) /* 1: use DNS to get broker IP address; 0: do not use DNS, use fixed address instead */
