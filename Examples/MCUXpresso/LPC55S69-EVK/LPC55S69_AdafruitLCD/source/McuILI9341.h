@@ -39,6 +39,14 @@
 #define MCUILI9341_GREENYELLOW 0xAFE5  ///< 173, 255,  41
 #define MCUILI9341_PINK        0xFC18  ///< 255, 130, 198
 
+uint8_t McuILI9341_ClearDisplay(uint16_t color);
+
+uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+
+uint8_t McuILI9341_WritePixelData(uint16_t *pixels, size_t nofPixels);
+
+uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color); /* does set a window and writes pixel */
+
 uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
 uint8_t McuILI9341_GetDisplayPowerMode(uint8_t *mode);

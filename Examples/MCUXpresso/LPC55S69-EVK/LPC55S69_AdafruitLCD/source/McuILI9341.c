@@ -90,7 +90,7 @@
 static McuGPIO_Handle_t McuILI9341_CSPin;
 static McuGPIO_Handle_t McuILI9341_DCPin;
 
-/* Initialization sequence for Adafruit ILI9341 driver, see https://github.com/mongoose-os-libs/ili9341-spi/blob/master/src/mgos_ili9341.c */
+/* Initialization sequence for Adafruit ILI9341 driver, see https://github.com/adafruit/Adafruit_ILI9341/blob/master/Adafruit_ILI9341.cpp */
 static const uint8_t initlist[] = {
   0xEF, 3, 0x03, 0x80, 0x02,
   0xCF, 3, 0x00, 0xC1, 0x30,
@@ -233,7 +233,19 @@ uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
   return ERR_OK;
 }
 
+uint8_t McuILI9341_WritePixelData(uint16_t *pixels, size_t nofPixels) {
+  SELECT_DISPLAY();
+  SET_DATA_MODE();
+  spi_write_bytes((uint8_t*)pixels, 2*nofPixels);
+  DESELECT_DISPLAY();
+  return ERR_OK;
+}
+
 uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
+#if McuLib_CONFIG_CPU_IS_LITTLE_ENDIAN
+  /*! \todo: should change endianess in Interface control (0xF6)? */
+  color = (color>>8)|(color<<8); /* swap */
+#endif
   McuILI9341_SetWindow(x, y, x, y);
   SELECT_DISPLAY();
   SET_DATA_MODE();
@@ -243,6 +255,10 @@ uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
 }
 
 uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
+#if McuLib_CONFIG_CPU_IS_LITTLE_ENDIAN
+  /*! \todo: should change endianess in Interface control (0xF6)? */
+  color = (color>>8)|(color<<8); /* swap */
+#endif
   McuILI9341_SetWindow(x, y, x+w-1, y+h-1);
   SELECT_DISPLAY();
   SET_DATA_MODE();
@@ -251,6 +267,10 @@ uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
   }
   DESELECT_DISPLAY();
   return ERR_OK;
+}
+
+uint8_t McuILI9341_ClearDisplay(uint16_t color) {
+  return McuILI9341_DrawBox(0, 0, MCUILI9341_TFTWIDTH, MCUILI9341_TFTHEIGHT, color);
 }
 
 #if MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED
@@ -262,7 +282,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[32], res;
-  uint8_t man, driver, id;
+  uint8_t man, driver, id, mode;
 
   McuShell_SendStatusStr((unsigned char*)"ILI9341", (unsigned char*)"\r\n", io->stdOut);
 
@@ -279,7 +299,16 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Version", (const unsigned char*)buf, io->stdOut);
-  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+
+  res = McuILI9341_GetDisplayPowerMode(&mode);
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), mode);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Power Mode", (const unsigned char*)buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -290,9 +319,6 @@ uint8_t McuILI9341_ParseCommand(const unsigned char *cmd, bool *handled, const M
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "ILI9341 status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-//  } else if (McuUtility_strcmp((char*)cmd, "McuRTOS tasklist")==0) {
-//    *handled = TRUE;
-//    return PrintTaskList(io);
   }
   return ERR_OK;
 }

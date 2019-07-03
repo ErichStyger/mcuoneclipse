@@ -12,22 +12,12 @@
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuRTOS.h"
+#include "leds.h"
+#include "McuLED.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#if 0
-#include "McuSSD1306.h"
-#include "McuGDisplaySSD1306.h"
-#endif
+#include "McuILI9341.h"
 #include "McuFontDisplay.h"
-#if PL_CONFIG_USE_SHUTDOWN
-  #include "shutdown.h"
-#endif
-#if 0
-#include "gui_tempHum.h"
-#include "gui_ups.h"
-#include "gui_uart.h"
-#include "RaspyUART.h"
-#endif
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -129,91 +119,6 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 }
 #endif
 
-#if PL_CONFIG_USE_UPS
-static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
-  GUI_UPS_CreateView();
-  return LV_RES_OK;
-}
-#endif
-
-#if PL_CONFIG_USE_GATEWAY
-static lv_res_t btn_click_uart_action(struct _lv_obj_t *obj) {
-  GUI_UART_CreateView();
-  return LV_RES_OK;
-}
-#endif
-
-#if PL_CONFIG_USE_SHT31
-static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
-  GUI_TEMPHUM_CreateView();
-  return LV_RES_OK;
-}
-#endif
-
-#if PL_CONFIG_USE_SHUTDOWN
-static lv_obj_t *mboxShutdown, *mboxShutdownWait;
-
-static lv_res_t mbox_shutdownWait_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "OK")==0) {
-      GUI_GroupPull();
-      lv_obj_del(mboxShutdownWait);
-      mboxShutdownWait = NULL;
-      return LV_RES_INV; /* close/delete message box */
-    }
-  }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
-}
-
-static void Btn_shutdown_CreateWaitBox(void) {
-  mboxShutdownWait = lv_mbox_create(lv_scr_act(), NULL);
-  lv_mbox_set_text(mboxShutdownWait, "Shutdown in progress. Wait for RED LED.");  /* Set the text */
-  /*Add OK button*/
-  static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxShutdownWait, btns, mbox_shutdownWait_apply_action);
-  lv_obj_set_width(mboxShutdownWait, 100);
-  lv_obj_align(mboxShutdownWait, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
-
-  GUI_GroupPush();
-  GUI_AddObjToGroup(mboxShutdownWait);
-  lv_group_focus_obj(mboxShutdownWait);
-}
-
-static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "Yes")==0) {
-      SHUTDOWN_RequestPowerOff(); /* request shutdown to Linux */
-      GUI_GroupPull();
-      lv_obj_del(mboxShutdown);
-      mboxShutdown = NULL;
-      Btn_shutdown_CreateWaitBox();
-      return LV_RES_INV; /* close/delete message box */
-    } else if (McuUtility_strcmp(txt, "Cancel")==0) {
-      GUI_GroupPull();
-      lv_obj_del(mboxShutdown);
-      mboxShutdown = NULL;
-      return LV_RES_INV; /* close/delete message box */
-    }
-  }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
-}
-
-static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
-  mboxShutdown = lv_mbox_create(lv_scr_act(), NULL);
-  lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
-  /*Add two buttons*/
-  static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxShutdown, btns, mbox_apply_action);
-  lv_obj_set_width(mboxShutdown, 80);
-  lv_obj_align(mboxShutdown, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
-
-  GUI_GroupPush();
-  GUI_AddObjToGroup(mboxShutdown);
-  lv_group_focus_obj(mboxShutdown);
-
-  return LV_RES_OK;
-}
-#endif /* PL_CONFIG_USE_SHUTDOWN */
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -250,12 +155,22 @@ void GUI_MainMenuCreate(void) {
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 }
 
+static void ErrMsg(void) {
+  for(;;) { /* error */
+    McuLED_Neg(LED_Red);
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
 
 static void GuiTask(void *p) {
   uint32_t notifcationValue;
 
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
-  //LCD1_Init();
+  if (McuILI9341_InitLCD()!=ERR_OK) {
+    ErrMsg();
+  }
+  McuILI9341_ClearDisplay(MCUILI9341_GREEN);
+//  McuILI9341_ClearDisplay(MCUILI9341_BLUE);
   GUI_MainMenuCreate();
   for(;;) {
 #if 0

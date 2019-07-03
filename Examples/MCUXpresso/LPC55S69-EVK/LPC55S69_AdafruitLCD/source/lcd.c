@@ -8,15 +8,22 @@
 #include "platform.h"
 #if PL_CONFIG_USE_GUI
 #include "lcd.h"
-//#include "McuGDisplaySSD1306.h"
+#include "McuILI9341.h"
 
 void LCD_UpdateRegion(int x, int y, int w, int h) {
-  //McuGDisplaySSD1306_UpdateRegion(x, y, w, h);
-  //McuGDisplaySSD1306_UpdateFull();
+  /* nothing needed, as we write directly to the display RAM */
+}
+
+void LCD_SetWindow(int x, int y, int w, int h) {
+  McuILI9341_SetWindow(x, y, w, h);
+}
+
+void LCD_WritePixelData(uint16_t *pixels, size_t nofPixels) {
+  McuILI9341_WritePixelData(pixels, nofPixels);
 }
 
 void LCD_SetPixel(int x, int y, int color) {
-  //McuGDisplaySSD1306_PutPixel(x, y, color);
+  McuILI9341_DrawPixel(x, y, color);
 }
 
 void LCD_Init(void) {

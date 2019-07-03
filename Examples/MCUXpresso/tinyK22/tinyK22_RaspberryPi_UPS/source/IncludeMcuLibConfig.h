@@ -182,7 +182,8 @@
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "Raspberry Pi UPS and Gateway"
-
+/* -------------------------------------------------*/
+/* LittlevGL */
 #define LV_CONFIG_DISPLAY_WIDTH        (128)
 #define LV_CONFIG_DISPLAY_HEIGHT       (64)
 #define LV_CONFIG_COLOR_DEPTH          (1)

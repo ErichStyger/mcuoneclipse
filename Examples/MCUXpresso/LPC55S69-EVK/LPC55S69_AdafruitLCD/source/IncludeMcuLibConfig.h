@@ -25,10 +25,6 @@
 #define configENABLE_FPU                      (1) /* \todo */
 #define configENABLE_MPU                      (0) /* \todo */
 
-/* -------------------------------------------------*/
-/* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"
-
 /* ------------------- I2C ---------------------------*/
 #if 0
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
@@ -60,17 +56,16 @@
 #define SDA1_CONFIG_GPIO_NAME     GPIOA
 #define SDA1_CONFIG_PORT_NAME     PORTA
 #define SDA1_CONFIG_PIN_NUMBER    13u
-
+#endif
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING "Raspberry Pi UPS and Gateway"
-
-#define LV_CONFIG_DISPLAY_WIDTH        (128)
-#define LV_CONFIG_DISPLAY_HEIGHT       (64)
-#define LV_CONFIG_COLOR_DEPTH          (1)
+#define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"
+/* -------------------------------------------------*/
+/* LittlevGL */
+#define LV_CONFIG_DISPLAY_WIDTH        (240)
+#define LV_CONFIG_DISPLAY_HEIGHT       (320)
+#define LV_CONFIG_COLOR_DEPTH          (16)
 #define LV_CONFIG_DPI                  (25)
-
-#endif
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
 

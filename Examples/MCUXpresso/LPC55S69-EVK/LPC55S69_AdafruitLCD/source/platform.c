@@ -29,6 +29,7 @@
   #include "Shell.h"
 #endif
 #include "McuSPI.h"
+#include "lcd.h"
 #include "McuILI9341.h"
 
 void PL_Init(void) {
@@ -59,6 +60,7 @@ void PL_Init(void) {
   SHELL_Init();
 #endif
   LEDS_Init();
+  LCD_Init();
 #if PL_CONFIG_USE_GUI
   GUI_Init();
 #endif

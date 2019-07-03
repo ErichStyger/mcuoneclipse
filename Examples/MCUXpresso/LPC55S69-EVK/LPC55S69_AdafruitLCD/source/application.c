@@ -16,53 +16,11 @@
 #include "fsl_iocon.h"
 #include "pin_mux.h"
 #include "leds.h"
-#include "McuILI9341.h"
 
 static SemaphoreHandle_t mutex;
 
-static void ErrMsg(void) {
-  for(;;) { /* error */
-    McuLED_Neg(LED_Red);
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
-}
-
 static void AppTask(void *pv) {
   uint8_t res;
-  uint8_t var1, var2, var3, mode;
-
-  if (McuILI9341_InitLCD()!=ERR_OK) {
-    ErrMsg();
-  }
-
-  res = McuILI9341_DrawBox(0, 0, 20, 30, MCUILI9341_BLUE);
-  res = McuILI9341_DrawBox(50, 10, 20, 30, MCUILI9341_BLUE);
-  res = McuILI9341_DrawBox(20, 20, 10, 10, MCUILI9341_GREEN);
-
-  res = McuILI9341_GetDisplayPowerMode(&mode);
-  if (res!=ERR_OK) {
-    ErrMsg();
-  }
-  res = McuILI9341_GetDisplayIdentification(&var1, &var2, &var3);
-  if (res!=ERR_OK) {
-     ErrMsg();
-  }
-  res = McuILI9341_InvertDisplay(true);
-  if (res!=ERR_OK) {
-     ErrMsg();
-  }
-  res = McuILI9341_InvertDisplay(false);
-  if (res!=ERR_OK) {
-     ErrMsg();
-  }
-  res = McuILI9341_DisplayOn(false);
-  if (res!=ERR_OK) {
-     ErrMsg();
-   }
-  res = McuILI9341_DisplayOn(true);
-  if (res!=ERR_OK) {
-     ErrMsg();
-  }
   for(;;) {
     McuLED_Neg(LED_Green);
     vTaskDelay(pdMS_TO_TICKS(500));

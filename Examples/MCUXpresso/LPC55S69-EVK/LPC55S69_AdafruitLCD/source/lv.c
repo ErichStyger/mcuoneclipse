@@ -9,10 +9,7 @@
 #if PL_CONFIG_USE_GUI
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
-#if 0
-#include "McuGDisplaySSD1306.h"
-#include "McuSSD1306.h"
-#endif
+#include "McuILI9341.h"
 
 #include "McuRB.h"
 #include <string.h> /* for memset() */
@@ -23,17 +20,22 @@
   #include "toaster.h"
 #endif
 
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER
 static TimerHandle_t timerHndlLcdTimeout;
+#endif
+
 static McuRB_Handle_t ringBufferHndl;
 
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER
 static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
   /* timer callback to turn off LCD backlight */
 #if PL_CONFIG_USE_TOASTER
   TOASTER_Show();
 #else
-  //McuSSD1306_DisplayOn(false);
+  McuILI9341_DisplayOn(false);
 #endif
 }
+#endif
 
 #if PL_CONFIG_USE_GUI_KEY_NAV
 static void KeyPressForLCD(void) {
@@ -57,7 +59,7 @@ static void KeyPressForLCD(void) {
 }
 #endif
 
-static lv_indev_t *inputDevicePtr;
+static lv_indev_t *inputDevicePtr = NULL;
 
 lv_indev_t * LV_GetInputDevice(void) {
   return inputDevicePtr;
@@ -67,18 +69,10 @@ lv_indev_t * LV_GetInputDevice(void) {
  * You can use DMA or any hardware acceleration to do this operation in the background but
  * 'lv_flush_ready()' has to be called when finished
  * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
-static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
+static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p) {
   /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  int32_t x, y;
-
-  for(y = y1; y <= y2; y++) {
-    for(x = x1; x <= x2; x++) {
-      /* Put a pixel to the display. */
-      LCD_SetPixel(x, y, color_p->full);
-      color_p++;
-    }
-  }
-  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
+  McuILI9341_SetWindow(x1, y1, x2, y2);
+  McuILI9341_WritePixelData((uint16_t*)color_p, (x2-x1+1)*(y2-y1+1));
   /* IMPORTANT!!!
    * Inform the graphics library that you are ready with the flushing*/
   lv_flush_ready();
@@ -487,9 +481,10 @@ void LV_Init(void) {
   inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 #endif
 
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(15*1000), /* period/time */
+    pdMS_TO_TICKS(60*1000), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */
@@ -499,7 +494,7 @@ void LV_Init(void) {
   if (xTimerStart(timerHndlLcdTimeout, 0)!=pdPASS) {
     for(;;); /* failure!?! */
   }
-
+#endif
   McuRB_Config_t config;
 
   McuRB_GetDefaultconfig(&config);

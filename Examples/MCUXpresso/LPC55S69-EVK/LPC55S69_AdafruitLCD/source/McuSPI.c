@@ -41,8 +41,6 @@ void McuSPI_ReadByte(uint8_t *data) {
 void McuSPI_Init(void) {
   spi_master_config_t masterConfig = {0};
   uint32_t sourceClock             = 0U;
-  //uint32_t i                       = 0U;
-  //uint32_t err                     = 0U;
 
   /* attach 12 MHz clock to SPI3 */
   CLOCK_AttachClk(kFRO12M_to_FLEXCOMM7);
@@ -65,6 +63,6 @@ void McuSPI_Init(void) {
   masterConfig.sselPol = kSPI_SpolActiveAllLow;
   masterConfig.polarity = kSPI_ClockPolarityActiveHigh; /* clock is LOW if not active, high if active */
   masterConfig.phase = kSPI_ClockPhaseFirstEdge; /* data is valid at raising clock edge */
-  masterConfig.baudRate_Bps = 1*1000000;
+  masterConfig.baudRate_Bps = 24*1000000;
   SPI_MasterInit(EXAMPLE_SPI_MASTER, &masterConfig, sourceClock);
 }
