@@ -305,9 +305,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1892444753.1918926193" name="/" resourcePath="McuLib/FatFS">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1326372069" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.606957951" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.234500547"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1118966797" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1237155471"/>
+							<tool id="com.crt.advproject.gas.exe.debug.2008275777" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1758616624"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1572315748" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.669672402"/>
+							<tool id="com.crt.advproject.link.exe.debug.1352867372" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.618433858"/>
+							<tool id="com.crt.advproject.tool.debug.debug.937962789" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.2107094656"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/ARM_CM33/secure/secure_heap.c|FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FatFS|minIni|HD44780|FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/ARM_CM33/secure/secure_heap.c|FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>

@@ -8,6 +8,9 @@
  */
 
 #include "McuLib.h"
+#if McuLib_CONFIG_CPU_IS_STM
+  #include "libIIC.h"
+#endif
 #include "McuLC709203Fconfig.h"
 #include "McuLC709203F.h"
 #include "McuGenericI2C.h"
@@ -120,41 +123,43 @@ void McuLC_Wakeup(void) {
    * Pull down SDA for 0.6us, then high again,
    * wait for 400 us
    *  */
-#if 0
+#if McuLib_CONFIG_CPU_IS_STM
 	/* set SDA pin of I2C to GPIO Ouput mode. */
 	HAL_I2C_MspDeInit(&hi2c3);
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    GPIO_InitStruct.Pin = I2C_SDA_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  GPIO_InitStruct.Pin = I2C_SDA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 	HAL_GPIO_WritePin(I2C_SDA_GPIO_Port, I2C_SDA_Pin, GPIO_PIN_RESET);
-    McuWait_Waitus(1);		/* SDA min 0.6us low */
+  McuWait_Waitus(1);		/* SDA min 0.6us low */
 	HAL_GPIO_WritePin(I2C_SDA_GPIO_Port, I2C_SDA_Pin, GPIO_PIN_SET);
 	McuWait_Waitus(400);  	/* wait 400us */
 	/* set SDA pin of I2C to GPIO Ouput mode. */
 	HAL_I2C_MspInit(&hi2c3);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  PORT_PDD_SetPinMuxControl(PORTB_BASE_PTR, 3, PORT_PDD_MUX_CONTROL_ALT1); /* MUX SDA/PTB3 as GPIO */
+  PORT_PDD_SetPinOpenDrain(PORTB_BASE_PTR, 3, PORT_PDD_OPEN_DRAIN_ENABLE);
+  GPIO_PDD_SetPortOutputDirectionMask(PTB_BASE_PTR, (1<<3)); /* SDA/PTB3 as output */
+  GPIO_PDD_ClearPortDataOutputMask(PTB_BASE_PTR, 1<<3); /* SDA/PB3 low */
+  McuWait_Waitus(1);                                        /* SDA min 0.6us low */
+  GPIO_PDD_SetPortDataOutputMask(PTB_BASE_PTR, 1<<3);   /* SDA/PB3 high */
+  McuWait_Waitus(400);                                      /* wait 400us */
+  /* mux back to normal I2C mode with interrupts enabled */
+  PORTB_PCR3 = (uint32_t)((PORTB_PCR3 & (uint32_t)~(uint32_t)(
+                PORT_PCR_ISF_MASK |
+                PORT_PCR_MUX(0x05)
+               )) | (uint32_t)(
+                PORT_PCR_MUX(0x02)
+               ));
+  PORT_PDD_SetPinOpenDrain(PORTB_BASE_PTR, 0x03u, PORT_PDD_OPEN_DRAIN_ENABLE); /* Set SDA pin as open drain */
+#else
+  /*! \todo NYI for NXP SDK yet */
 #endif
-//
-//  PORT_PDD_SetPinMuxControl(PORTB_BASE_PTR, 3, PORT_PDD_MUX_CONTROL_ALT1); /* MUX SDA/PTB3 as GPIO */
-//  PORT_PDD_SetPinOpenDrain(PORTB_BASE_PTR, 3, PORT_PDD_OPEN_DRAIN_ENABLE);
-//  GPIO_PDD_SetPortOutputDirectionMask(PTB_BASE_PTR, (1<<3)); /* SDA/PTB3 as output */
-//  GPIO_PDD_ClearPortDataOutputMask(PTB_BASE_PTR, 1<<3); /* SDA/PB3 low */
-//  McuWait_Waitus(1);                                        /* SDA min 0.6us low */
-//  GPIO_PDD_SetPortDataOutputMask(PTB_BASE_PTR, 1<<3);   /* SDA/PB3 high */
-//  McuWait_Waitus(400);                                      /* wait 400us */
-//  /* mux back to normal I2C mode with interrupts enabled */
-//  PORTB_PCR3 = (uint32_t)((PORTB_PCR3 & (uint32_t)~(uint32_t)(
-//                PORT_PCR_ISF_MASK |
-//                PORT_PCR_MUX(0x05)
-//               )) | (uint32_t)(
-//                PORT_PCR_MUX(0x02)
-//               ));
-//  PORT_PDD_SetPinOpenDrain(PORTB_BASE_PTR, 0x03u, PORT_PDD_OPEN_DRAIN_ENABLE); /* Set SDA pin as open drain */
 }
 
-static uint8_t ReadCmdWordChecked(uint8_t i2cSlaveAddr, uint8_t cmd, int16_t *val) {
+static uint8_t ReadCmdWordChecked(uint8_t i2cSlaveAddr, uint8_t cmd, uint16_t *val) {
   uint8_t data[3];
   uint8_t res;
 
@@ -175,12 +180,12 @@ uint8_t McuLC_GetVoltage(uint16_t *pVoltage) {
   return ReadCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_VOLTAGE, pVoltage);
 }
 
-/* returns cell temperature (10 = 1�C) */
+/* returns cell temperature (10 = 1 degree C) */
 uint8_t McuLC_GetTemperature(int16_t *pTemperature) {
   /* cell temperature is in 0.1C units, from 0x09E4 (-20C) up to 0x0D04 (60C) */
   uint8_t res;
 
-  res = ReadCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_CELL_TEMP, pTemperature);
+  res = ReadCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_CELL_TEMP, (uint16_t*)pTemperature);
   if (res!=ERR_OK) {
      return res;
    }

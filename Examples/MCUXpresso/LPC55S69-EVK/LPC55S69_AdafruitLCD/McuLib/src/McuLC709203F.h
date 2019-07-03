@@ -15,6 +15,13 @@ extern "C" {
 
 #include "McuShell.h"
 
+/*!
+ * \brief Returns the current battery voltage
+ * \param pVoltage Pointer where to store the value (in mV)
+ * \return Error code, ERR_OK for no error
+ */
+uint8_t McuLC_GetVoltage(uint16_t *pVoltage);
+
 typedef enum {
   McuLC_CURRENT_DIR_AUTO,         /*!< automatic mode (default) */
   McuLC_CURRENT_DIR_CHARGING,     /*!< charging mode */
@@ -37,6 +44,7 @@ uint8_t McuLC_SetTemperatureMeasurementMode(bool i2cMode);
  * \return Error code, ERR_OK if everything is ok
  */
 uint8_t McuLC_GetTemperatureMeasurementMode(bool *isI2Cmode);
+
 
 /*!
  * \brief Get the current direction mode

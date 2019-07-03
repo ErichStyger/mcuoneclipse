@@ -119,7 +119,7 @@ static const uint8_t initlist[] = {
   0x00                                       // Sentinel at the end of the list
 };
 
-static uint8_t spi_write(uint8_t *data, size_t nofBytes) {
+static uint8_t spi_write_bytes(uint8_t *data, size_t nofBytes) {
   while(nofBytes>0) {
     McuSPI_WriteByte(*data);
     data++;
@@ -130,7 +130,7 @@ static uint8_t spi_write(uint8_t *data, size_t nofBytes) {
 
 static uint8_t McuILI9341_Write8Cmd(uint8_t cmd) {
   SET_CMD_MODE();
-  return spi_write(&cmd, 1);
+  return spi_write_bytes(&cmd, 1);
 }
 
 uint8_t McuILI9341_WriteCommandArgs(uint8_t cmd, uint8_t *args, uint8_t nofArgs) {
@@ -141,7 +141,7 @@ uint8_t McuILI9341_WriteCommandArgs(uint8_t cmd, uint8_t *args, uint8_t nofArgs)
      return res;
    }
    SET_DATA_MODE(); /* go back to data mode */
-   spi_write(args, nofArgs);
+   spi_write_bytes(args, nofArgs);
    return ERR_OK;
 }
 
@@ -234,8 +234,12 @@ uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 }
 
 uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
+  McuILI9341_SetWindow(x, y, x, y);
+  SELECT_DISPLAY();
   SET_DATA_MODE();
-  return spi_write((uint8_t*)&color, 2);
+  spi_write_bytes((uint8_t*)&color, 2);
+  DESELECT_DISPLAY();
+  return ERR_OK;
 }
 
 uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
@@ -243,34 +247,62 @@ uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
   SELECT_DISPLAY();
   SET_DATA_MODE();
   for(int i=0; i<w*h; i++) {
-    spi_write((uint8_t*)&color, 2);
+    spi_write_bytes((uint8_t*)&color, 2);
   }
   DESELECT_DISPLAY();
   return ERR_OK;
 }
 
+#if MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"ILI9341", (unsigned char*)"Group of ILI9341 commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[32], res;
+  uint8_t man, driver, id;
+
+  McuShell_SendStatusStr((unsigned char*)"ILI9341", (unsigned char*)"\r\n", io->stdOut);
+
+  res = McuILI9341_GetDisplayIdentification(&man, &driver, &id);
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"man: 0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), man);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" driver: 0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), driver);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ID: 0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), id);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Version", (const unsigned char*)buf, io->stdOut);
+  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t McuILI9341_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "ILI9341 help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "ILI9341 status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+//  } else if (McuUtility_strcmp((char*)cmd, "McuRTOS tasklist")==0) {
+//    *handled = TRUE;
+//    return PrintTaskList(io);
+  }
+  return ERR_OK;
+}
+#endif /* MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED */
+
+
 uint8_t McuILI9341_InitLCD(void) {
   uint8_t *p;
   uint8_t res, cmd, numArgs, x;
-#if 0
-  res = McuILI9341_GetDisplayPowerMode(&x);
 
-  SET_CMD_MODE();
-  SELECT_DISPLAY();
-  McuSPI_WriteByte(MCUILI9341_SLPOUT); /* exit sleep */
-  McuWait_WaitOSms(120);
-
-  McuSPI_WriteByte(MCUILI9341_DISPON); /* turn on */
-  McuWait_WaitOSms(5);
-
-  McuSPI_WriteByte(MCUILI9341_DISPOFF); /* turn off */
-  McuWait_WaitOSms(5);
-
-  DESELECT_DISPLAY();
-
-  McuILI9341_DisplayOn(true);
-  McuILI9341_DisplayOn(false);
-#endif
   /* first do a soft reset */
   res = McuILI9341_SoftReset();
   if (res!=ERR_OK) {

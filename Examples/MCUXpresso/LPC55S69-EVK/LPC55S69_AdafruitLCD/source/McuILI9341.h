@@ -10,6 +10,13 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "McuILI9341config.h"
+
+#if MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED
+  #include "McuShell.h"
+
+  uint8_t McuILI9341_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+#endif
 
 /* Color definitions */
 #define MCUILI9341_BLACK       0x0000  ///<   0,   0,   0

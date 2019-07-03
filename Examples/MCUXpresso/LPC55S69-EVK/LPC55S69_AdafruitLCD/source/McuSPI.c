@@ -1,8 +1,8 @@
 /*
- * spi.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 29.06.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -15,47 +15,6 @@
 #define EXAMPLE_SPI_MASTER_CLK_FREQ   CLOCK_GetFreq(kCLOCK_HsLspi)
 #define SPI_MASTER_IRQHandler         FLEXCOMM8_IRQHandler
 
-#define BUFFER_SIZE (64)
-static uint8_t srcBuff[BUFFER_SIZE];
-static uint8_t destBuff[BUFFER_SIZE];
-static uint32_t txIndex             = BUFFER_SIZE;
-static uint32_t rxIndex             = BUFFER_SIZE;
-static volatile bool masterFinished = false;
-static volatile bool slaveFinished  = false;
-#if 0
-void SPI_MASTER_IRQHandler(void)
-{
-    if ((SPI_GetStatusFlags(EXAMPLE_SPI_MASTER) & kSPI_RxNotEmptyFlag) && (rxIndex > 0))
-    {
-        destBuff[BUFFER_SIZE - rxIndex] = SPI_ReadData(EXAMPLE_SPI_MASTER);
-        rxIndex--;
-    }
-    if ((SPI_GetStatusFlags(EXAMPLE_SPI_MASTER) & kSPI_TxNotFullFlag) && (txIndex > 0))
-    {
-        if (txIndex == 1)
-        {
-            /* need to disable interrupts before write last data */
-            SPI_DisableInterrupts(EXAMPLE_SPI_MASTER, kSPI_TxLvlIrq);
-            SPI_WriteData(EXAMPLE_SPI_MASTER, (uint16_t)(srcBuff[BUFFER_SIZE - txIndex]), kSPI_FrameAssert);
-        }
-        else
-        {
-            SPI_WriteData(EXAMPLE_SPI_MASTER, (uint16_t)(srcBuff[BUFFER_SIZE - txIndex]), 0);
-        }
-        txIndex--;
-    }
-    if ((txIndex == 0U) && (rxIndex == 0U))
-    {
-        masterFinished = true;
-        SPI_DisableInterrupts(EXAMPLE_SPI_MASTER, kSPI_RxLvlIrq);
-    }
-    /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
-      exception return operation might vector to incorrect interrupt */
-#if defined __CORTEX_M && (__CORTEX_M == 4U)
-    __DSB();
-#endif
-}
-#endif
 void McuSPI_WriteByte(uint8_t data) {
   spi_transfer_t xfer = {0};
   uint8_t destBuff;
@@ -108,26 +67,4 @@ void McuSPI_Init(void) {
   masterConfig.phase = kSPI_ClockPhaseFirstEdge; /* data is valid at raising clock edge */
   masterConfig.baudRate_Bps = 1*1000000;
   SPI_MasterInit(EXAMPLE_SPI_MASTER, &masterConfig, sourceClock);
-#if 0
-  /* Init source buffer */
-  for (i = 0U; i < BUFFER_SIZE; i++)
-  {
-      srcBuff[i] = i;
-  }
-//  NVIC_SetPriority(EXAMPLE_SPI_MASTER_IRQ, 1U);
-  /* Enable interrupt */
-//  EnableIRQ(EXAMPLE_SPI_MASTER_IRQ);
-//  SPI_EnableInterrupts(EXAMPLE_SPI_MASTER, kSPI_TxLvlIrq | kSPI_RxLvlIrq);
-
-
-  /* Check the data received */
-  for (i = 0U; i < BUFFER_SIZE; i++)
-  {
-      if (destBuff[i] != srcBuff[i])
-      {
- //         PRINTF("\r\nThe %d data is wrong, the data received is %d \r\n", i, destBuff[i]);
-          err++;
-      }
-  }
-#endif
 }

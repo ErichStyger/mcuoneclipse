@@ -1,9 +1,10 @@
 /*
- * lv.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 02.08.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 
 #ifndef SOURCES_LV_H_
 #define SOURCES_LV_H_

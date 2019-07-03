@@ -1,9 +1,10 @@
 /*
- * Shell.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 21.04.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 
 #include "platform.h"
 #if PL_CONFIG_USE_SHELL
@@ -11,6 +12,7 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
+#include "McuILI9341.h"
 #if PL_CONFIG_USE_I2C
   #include "McuI2CSpy.h"
 #endif
@@ -25,6 +27,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_I2C
   McuI2CSpy_ParseCommand,
 #endif
+  McuILI9341_ParseCommand,
   NULL /* Sentinel */
 };
 
@@ -39,10 +42,6 @@ static const SHELL_IODesc ios[] =
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
-#endif
-#if PL_CONFIG_USE_GATEWAY
-  {&GATEWAY_stdioLinuxToShell, GATEWAY_LinuxToShellBuffer, sizeof(GATEWAY_LinuxToShellBuffer)},
-  {&GATEWAY_stdioHostToShell, GATEWAY_HostToShellBuffer, sizeof(GATEWAY_HostToShellBuffer)},
 #endif
 };
 

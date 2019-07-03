@@ -41,7 +41,6 @@
 
 void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_FUNCTION */
 {
-#if 1
 	__asm volatile
 	(
 	"	.syntax unified									\n"
@@ -101,7 +100,9 @@ void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_
 	"													\n"
 	"	.align 4										\n"
 	"pxCurrentTCBConst2: .word pxCurrentTCB				\n"
+#if( configENABLE_MPU == 1 ) /* << EST */
 	"xSecureContextConst2: .word xSecureContext			\n"
+#endif
 	#if( configENABLE_MPU == 1 )
 	"xMPUCTRLConst2: .word 0xe000ed94					\n"
 	"xMAIR0Const2: .word 0xe000edc0						\n"
@@ -109,7 +110,6 @@ void vRestoreContextOfFirstTask( void ) /* __attribute__ (( naked )) PRIVILEGED_
 	"xRBARConst2: .word 0xe000ed9c						\n"
 	#endif /* configENABLE_MPU */
 	);
-#endif
 }
 /*-----------------------------------------------------------*/
 

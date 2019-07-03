@@ -1,9 +1,10 @@
 /*
- * platform.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 20.04.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "Platform.h"
 #include "McuLib.h"
 #include "McuRTOS.h"
@@ -23,6 +24,9 @@
 #include "leds.h"
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
+#endif
+#if PL_CONFIG_USE_SHELL
+  #include "Shell.h"
 #endif
 #include "McuSPI.h"
 #include "McuILI9341.h"

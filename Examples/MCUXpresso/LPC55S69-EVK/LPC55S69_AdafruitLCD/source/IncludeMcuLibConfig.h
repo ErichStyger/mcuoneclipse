@@ -1,8 +1,8 @@
 /*
- * IncludeMcuLibConfig.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 17.02.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 /* header file is included with -include compiler option */
@@ -24,6 +24,10 @@
 #define configENABLE_TRUSTZONE                (0)
 #define configENABLE_FPU                      (1) /* \todo */
 #define configENABLE_MPU                      (0) /* \todo */
+
+/* -------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"
 
 /* ------------------- I2C ---------------------------*/
 #if 0

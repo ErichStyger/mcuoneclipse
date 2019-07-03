@@ -1,9 +1,10 @@
 /*
- * gui.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 03.08.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "platform.h"
 #if PL_CONFIG_USE_GUI
 

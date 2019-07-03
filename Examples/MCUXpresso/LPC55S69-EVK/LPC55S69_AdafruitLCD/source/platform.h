@@ -10,6 +10,7 @@
 
 #define PL_CONFIG_USE_GUI               (1)
 #define PL_CONFIG_USE_SHELL             (1)
+#define PL_CONFIG_USE_USB_CDC           (0)
 #define PL_CONFIG_USE_I2C               (0)
 #define PL_CONFIG_USE_GUI_KEY_NAV       (0)
 #define PL_CONFIG_USE_GUI_TOUCH_NAV     (0)
