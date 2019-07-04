@@ -8,10 +8,12 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#define PL_CONFIG_USE_I2C               (1)
+#define PL_CONFIG_USE_HW_I2C            (PL_CONFIG_USE_I2C)
+#define PL_CONFIG_USE_FT6206            (1 && PL_CONFIG_USE_I2C) /* capacitive touch controller */
 #define PL_CONFIG_USE_GUI               (1)
 #define PL_CONFIG_USE_SHELL             (1)
 #define PL_CONFIG_USE_USB_CDC           (0)
-#define PL_CONFIG_USE_I2C               (0)
 #define PL_CONFIG_USE_GUI_KEY_NAV       (0)
 #define PL_CONFIG_USE_GUI_TOUCH_NAV     (0)
 #define PL_CONFIG_USE_GUI_KEYPAD_NAV    (0)

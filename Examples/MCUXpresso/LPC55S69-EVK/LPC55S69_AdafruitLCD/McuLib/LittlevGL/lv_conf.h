@@ -26,6 +26,9 @@
 #ifndef LV_CONFIG_DPI
   #define LV_CONFIG_DPI                  (25)
 #endif
+#ifndef LV_CONFIG_COLOR_16_SWAP
+  #define LV_CONFIG_COLOR_16_SWAP        (0)
+#endif
 
 /*===================
    Dynamic memory
@@ -91,7 +94,7 @@
 
 /*Color settings*/
 #define LV_COLOR_DEPTH     LV_CONFIG_COLOR_DEPTH  /*Color depth: 1/8/16/32*/
-#define LV_COLOR_16_SWAP   0                      /*Swap the 2 bytes of RGB565 color. Useful if the display has a 8 bit interface (e.g. SPI)*/
+#define LV_COLOR_16_SWAP   LV_CONFIG_COLOR_16_SWAP                      /*Swap the 2 bytes of RGB565 color. Useful if the display has a 8 bit interface (e.g. SPI)*/
 #define LV_COLOR_SCREEN_TRANSP        0           /*1: Enable screen transparency. Useful for OSD or other overlapping GUIs. Requires ARGB8888 colors*/
 #define LV_COLOR_TRANSP    LV_COLOR_LIME          /*Images pixels with this color will not be drawn (with chroma keying)*/
 
@@ -142,10 +145,10 @@
 #define LV_THEME_LIVE_UPDATE    0       /*1: Allow theme switching at run time. Uses 8..10 kB of RAM*/
 
 #define USE_LV_THEME_TEMPL      0       /*Just for test*/
-#define USE_LV_THEME_DEFAULT    0       /*Built mainly from the built-in styles. Consumes very few RAM*/
+#define USE_LV_THEME_DEFAULT    1       /*Built mainly from the built-in styles. Consumes very few RAM*/
 #define USE_LV_THEME_ALIEN      0       /*Dark futuristic theme*/
 #define USE_LV_THEME_NIGHT      0       /*Dark elegant theme*/
-#define USE_LV_THEME_MONO       1       /*Mono color theme for monochrome displays*/
+#define USE_LV_THEME_MONO       0       /*Mono color theme for monochrome displays*/
 #define USE_LV_THEME_MATERIAL   0       /*Flat theme with bold colors and light shadows*/
 #define USE_LV_THEME_ZEN        0       /*Peaceful, mainly light theme */
 #define USE_LV_THEME_NEMO       0       /*Water-like theme based on the movie "Finding Nemo"*/
@@ -162,15 +165,15 @@
 #define USE_LV_FONT_DEJAVU_10_CYRILLIC     0
 #define USE_LV_FONT_SYMBOL_10              4
 
-#define USE_LV_FONT_DEJAVU_20              0
+#define USE_LV_FONT_DEJAVU_20              4
 #define USE_LV_FONT_DEJAVU_20_LATIN_SUP    0
 #define USE_LV_FONT_DEJAVU_20_CYRILLIC     0
-#define USE_LV_FONT_SYMBOL_20              0
+#define USE_LV_FONT_SYMBOL_20              4
 
-#define USE_LV_FONT_DEJAVU_30              0
+#define USE_LV_FONT_DEJAVU_30              4
 #define USE_LV_FONT_DEJAVU_30_LATIN_SUP    0
 #define USE_LV_FONT_DEJAVU_30_CYRILLIC     0
-#define USE_LV_FONT_SYMBOL_30              0
+#define USE_LV_FONT_SYMBOL_30              4
 
 #define USE_LV_FONT_DEJAVU_40              0
 #define USE_LV_FONT_DEJAVU_40_LATIN_SUP    0
@@ -187,7 +190,7 @@
  */
 #define LV_FONT_CUSTOM_DECLARE
 
-#define LV_FONT_DEFAULT        &lv_font_dejavu_10     /*Always set a default font from the built-in fonts*/
+#define LV_FONT_DEFAULT        &lv_font_dejavu_20     /*Always set a default font from the built-in fonts*/
 
 /*===================
  *  LV_OBJ SETTINGS

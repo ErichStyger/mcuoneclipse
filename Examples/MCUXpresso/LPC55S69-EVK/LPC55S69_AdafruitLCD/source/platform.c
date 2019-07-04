@@ -21,12 +21,20 @@
 #include "McuXFormat.h"
 #include "McuButton.h"
 #include "McuDebounce.h"
+#if PL_CONFIG_USE_I2C
+  #include "McuGenericI2C.h"
+  #include "McuI2CSpy.h"
+  #include "i2clib.h"
+#endif
 #include "leds.h"
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
+#endif
+#if PL_CONFIG_USE_FT6206
+  #include "McuFT6206.h"
 #endif
 #include "McuSPI.h"
 #include "lcd.h"
@@ -52,6 +60,15 @@ void PL_Init(void) {
   McuLED_Init();
   McuBtn_Init();
   McuDbnc_Init();
+#if PL_CONFIG_USE_I2C
+  McuGenericI2C_Init();
+#if PL_CONFIG_USE_HW_I2C
+  I2CLIB_Init();
+#else
+  McuGenericSWI2C_Init();
+#endif
+  McuI2CSpy_Init();
+#endif
 
   /* initialize my own modules */
   McuSPI_Init();
@@ -61,6 +78,9 @@ void PL_Init(void) {
 #endif
   LEDS_Init();
   LCD_Init();
+#if PL_CONFIG_USE_FT6206
+  McuFT6206_Init();
+#endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();
 #endif

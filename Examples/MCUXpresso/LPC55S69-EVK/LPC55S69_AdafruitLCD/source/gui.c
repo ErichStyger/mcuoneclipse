@@ -119,6 +119,10 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 }
 #endif
 
+static lv_res_t btn_click_sensor_action(struct _lv_obj_t *obj) {
+  //GUI_TEMPHUM_CreateView();
+  return LV_RES_OK;
+}
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -141,17 +145,19 @@ void GUI_MainMenuCreate(void) {
   lv_obj_t *btn;
   lv_obj_t *label;
 
-#if 0
+#if 1
   btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn, 45, 20);
   lv_obj_set_pos(btn, 5, 0);
 #endif
   label = lv_label_create(btn, NULL);
-  lv_label_set_text(label, "Shutdown");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
+  lv_label_set_text(label, "Sensor");
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_sensor_action);
   lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 }
 
@@ -229,7 +235,7 @@ void GUI_Init(void) {
   //lv_theme_set_current(lv_theme_alien_init(128, NULL));
   //lv_theme_set_current(lv_theme_default_init(128, NULL));
   //lv_theme_set_current(lv_theme_material_init(128, NULL));
-  lv_theme_set_current(lv_theme_mono_init(128, NULL));
+  //lv_theme_set_current(lv_theme_mono_init(128, NULL));
   //lv_theme_set_current(lv_theme_zen_init(128, NULL));
   //lv_theme_set_current(lv_theme_nemo_init(128, NULL));
 
