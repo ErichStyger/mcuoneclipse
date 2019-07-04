@@ -22,11 +22,6 @@
 static SemaphoreHandle_t mutex;
 
 static void AppTask(void *pv) {
-  uint8_t res;
-  uint8_t addr = 0;
-  uint8_t val = 0;
-
-  res = McuGenericI2C_ReadAddress(0x38, &addr, sizeof(addr), &val, sizeof(val));
   for(;;) {
     McuLED_Neg(LED_Green);
     vTaskDelay(pdMS_TO_TICKS(500));
