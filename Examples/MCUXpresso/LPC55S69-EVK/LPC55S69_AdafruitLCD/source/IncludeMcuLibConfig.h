@@ -26,14 +26,32 @@
 #define configENABLE_MPU                      (0) /* \todo */
 
 /* ------------------- I2C ---------------------------*/
-#define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
-#define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
+#define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
+#define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT (0)
+#define McuGenericI2C_CONFIG_USE_MUTEX                (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
 #define McuGenericSWI2C_CONFIG_DO_YIELD (0 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 /* I2C Pin Muxing */
 #define SDA1_CONFIG_DO_PIN_MUXING (1)
 #define SCL1_CONFIG_DO_PIN_MUXING (1)
+
+/* setting for I2CLib */
+#define I2CLIB_SCL_GPIO         GPIO
+#define I2CLIB_SCL_GPIO_PORT    1
+#define I2CLIB_SCL_GPIO_PIN     20
+#define I2CLIB_SDA_GPIO         GPIO
+#define I2CLIB_SDA_GPIO_PORT    1
+#define I2CLIB_SDA_GPIO_PIN     21
+
+/* settings for GenericSWI2C */
+#define SCL1_CONFIG_GPIO_NAME     I2CLIB_SCL_GPIO
+#define SCL1_CONFIG_PORT_NAME     I2CLIB_SCL_GPIO_PORT
+#define SCL1_CONFIG_PIN_NUMBER    I2CLIB_SCL_GPIO_PIN
+
+#define SDA1_CONFIG_GPIO_NAME     I2CLIB_SDA_GPIO
+#define SDA1_CONFIG_PORT_NAME     I2CLIB_SDA_GPIO_PORT
+#define SDA1_CONFIG_PIN_NUMBER    I2CLIB_SDA_GPIO_PIN
 
 #if USE_HW_I2C
   #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE "i2clib.h"
@@ -48,13 +66,6 @@
   #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 I2CLIB_RecvBlockCustom
 #endif
 
-#define SCL1_CONFIG_GPIO_NAME     GPIO
-#define SCL1_CONFIG_PORT_NAME     1
-#define SCL1_CONFIG_PIN_NUMBER    1
-
-#define SDA1_CONFIG_GPIO_NAME     GPIO
-#define SDA1_CONFIG_PORT_NAME     1
-#define SDA1_CONFIG_PIN_NUMBER    1
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"

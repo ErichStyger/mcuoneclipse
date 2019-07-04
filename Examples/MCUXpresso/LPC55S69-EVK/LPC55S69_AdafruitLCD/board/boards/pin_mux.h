@@ -67,6 +67,28 @@ void BOARD_InitLedPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
  */
 void BOARD_InitSpiPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
+#define PIO1_20_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_20_FUNC_ALT5 0x05u        /*!<@brief Selects pin function.: Alternative connection 5. */
+#define PIO1_21_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_21_FUNC_ALT5 0x05u        /*!<@brief Selects pin function.: Alternative connection 5. */
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_InitI2cPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
+
+#define PIO1_20_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_20_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
+#define PIO1_21_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_21_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_InitI2cPinsAsGPIO(void); /* Function assigned for the Cortex-M33 (Core #0) */
+
 #if defined(__cplusplus)
 }
 #endif

@@ -19,6 +19,8 @@ pin_labels:
 - {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: LCD_CS}
 - {pin_num: '31', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/SD0_D2/CTIMER2_MAT0/SCT_GPI0, label: LCD_DC}
 - {pin_num: '24', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SD0_CLK/SCT0_OUT1/FC4_SSEL2/ADC0_4, label: RT_CS}
+- {pin_num: '4', pin_signal: PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2, label: I2C_SCL}
+- {pin_num: '30', pin_signal: PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3, label: I2C_SDA}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -245,6 +247,104 @@ void BOARD_InitSpiPins(void)
                         /* Select Digital mode.
                          * : Digital mode, digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_5_DIGIMODE_DIGITAL));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitI2cPins:
+- options: {callFromInitBoot: 'false', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '4', peripheral: FLEXCOMM4, signal: TXD_SCL_MISO_WS, pin_signal: PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2}
+  - {pin_num: '30', peripheral: FLEXCOMM4, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitI2cPins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void BOARD_InitI2cPins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[1][20] = ((IOCON->PIO[1][20] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT120 (pin 4) is configured as FC4_TXD_SCL_MISO_WS. */
+                         | IOCON_PIO_FUNC(PIO1_20_FUNC_ALT5)
+
+                         /* Select Digital mode.
+                          * : Digital mode, digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_20_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][21] = ((IOCON->PIO[1][21] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT121 (pin 30) is configured as FC4_RXD_SDA_MOSI_DATA. */
+                         | IOCON_PIO_FUNC(PIO1_21_FUNC_ALT5)
+
+                         /* Select Digital mode.
+                          * : Digital mode, digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_21_DIGIMODE_DIGITAL));
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitI2cPinsAsGPIO:
+- options: {callFromInitBoot: 'false', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '4', peripheral: GPIO, signal: 'PIO1, 20', pin_signal: PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2}
+  - {pin_num: '30', peripheral: GPIO, signal: 'PIO1, 21', pin_signal: PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitI2cPinsAsGPIO
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void BOARD_InitI2cPinsAsGPIO(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[1][20] = ((IOCON->PIO[1][20] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT120 (pin 4) is configured as PIO1_20. */
+                         | IOCON_PIO_FUNC(PIO1_20_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Digital mode, digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_20_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][21] = ((IOCON->PIO[1][21] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT121 (pin 30) is configured as PIO1_21. */
+                         | IOCON_PIO_FUNC(PIO1_21_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Digital mode, digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_21_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF

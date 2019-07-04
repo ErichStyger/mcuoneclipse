@@ -9,7 +9,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_USE_I2C               (1)
-#define PL_CONFIG_USE_HW_I2C            (PL_CONFIG_USE_I2C)
+#define PL_CONFIG_USE_HW_I2C            (0 && PL_CONFIG_USE_I2C) /* otherwise uses bit-banging */
 #define PL_CONFIG_USE_FT6206            (1 && PL_CONFIG_USE_I2C) /* capacitive touch controller */
 #define PL_CONFIG_USE_GUI               (1)
 #define PL_CONFIG_USE_SHELL             (1)
