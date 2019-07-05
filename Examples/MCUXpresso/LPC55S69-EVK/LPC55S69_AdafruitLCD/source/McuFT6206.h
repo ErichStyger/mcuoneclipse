@@ -8,7 +8,14 @@
 #ifndef MCUFT6206_H_
 #define MCUFT6206_H_
 
+#include "platform.h"
 #include <stdint.h>
+
+#if MCUFT6206_CONFIG_PARSE_COMMAND_ENABLED
+  #include "McuShell.h"
+
+  uint8_t McuFT6206_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+#endif
 
 typedef struct {
   int16_t x, y, z;

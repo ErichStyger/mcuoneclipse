@@ -84,6 +84,9 @@ static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv
   /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
   int32_t x, y;
 
+  for(;;) {
+    /* should not get here, NYI */
+  }
   for(y = y1; y <= y2; y++) {
       for(x = x1; x <= x2; x++) {
         /* Put a pixel to the display.*/
@@ -101,6 +104,9 @@ static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_col
   int32_t x;
   int32_t y;
 
+  for(;;) {
+    /* should not get here, NYI */
+  }
   for(y = y1; y <= y2; y++) {
     for(x = x1; x <= x2; x++) {
       /* Put a pixel to the display.*/

@@ -324,7 +324,6 @@ uint8_t McuILI9341_ParseCommand(const unsigned char *cmd, bool *handled, const M
 }
 #endif /* MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED */
 
-
 uint8_t McuILI9341_InitLCD(void) {
   uint8_t *p;
   uint8_t res, cmd, numArgs, x;

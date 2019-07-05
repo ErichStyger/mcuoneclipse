@@ -27,10 +27,6 @@
 #define MCUFT62XX_REG_CHIPID        0xA3
 #define MCUFT62XX_REG_VENDID        0xA8
 
-
-/* calibrated for Adafruit 2.8" capacitive touch screen */
-#define MCUFT62XX_DEFAULT_THRESHOLD 128
-
 uint8_t McuFT6206_ReadVendorID(uint8_t *id) {
   return McuGenericI2C_ReadByteAddress8(MCUFT62XX_I2C_ADDR, MCUFT62XX_REG_VENDID, id);
 }
@@ -111,23 +107,101 @@ uint8_t McuFT6206_ReadPoint(uint8_t n, McuFT6206_TouchPoint *point) {
   return ERR_OK;
 }
 
+#if MCUFT6206_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"FT6206", (unsigned char*)"Group of FT6206 commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[32], val, res;
+
+  McuShell_SendStatusStr((unsigned char*)"FT6206", (unsigned char*)"\r\n", io->stdOut);
+
+  res = McuFT6206_ReadVendorID(&val); /* expect MCUFT62XX_VENDID */
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Vendor ID", (const unsigned char*)buf, io->stdOut);
+
+  res = McuFT6206_ReadChipID(&val);  /* expect MCUFT6206_CHIPID */
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), val);
+    if (val==MCUFT6206_CHIPID) {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (FT6206)\r\n");
+    } else if (val==MCUFT6236_CHIPID) {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (FT6236)\r\n");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (unknown)\r\n");
+    }
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Chip ID", (const unsigned char*)buf, io->stdOut);
+
+  res = McuFT6206_ReadFirmwareVersion(&val);
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  FW Version", (const unsigned char*)buf, io->stdOut);
+
+  res = McuFT6206_ReadPointRateHz(&val);
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Point Rate", (const unsigned char*)buf, io->stdOut);
+
+  res = McuFT6206_ReadThreshold(&val);
+  if (res==ERR_OK) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum8Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Threshold", (const unsigned char*)buf, io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t McuFT6206_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "FT6206 help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "FT6206 status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  }
+  return ERR_OK;
+}
+#endif /* MCUFT6206_CONFIG_PARSE_COMMAND_ENABLED */
+
+
 void McuFT6206_Deinit(void) {
 }
 
 void McuFT6206_Init(void) {
   uint8_t res;
-#if 0
-  uint8_t val = 0;
-  McuFT6206_TouchPoint point;
 
-  res = McuFT6206_ReadVendorID(&val); /* expect MCUFT62XX_VENDID */
-  res = McuFT6206_ReadChipID(&val);  /* expect MCUFT6206_CHIPID */
-  res = McuFT6206_ReadFirmwareVersion(&val);
-  res = McuFT6206_ReadPointRateHz(&val);
-  res = McuFT6206_ReadThreshold(&val);
-#endif
-  res = McuFT6206_WriteThreshold(MCUFT62XX_DEFAULT_THRESHOLD);
-
+  res = McuFT6206_WriteThreshold(MCUFT6206_CONFIG_DEFAULT_THRESHOLD);
+  if (res!=ERR_OK) {
+    for(;;) {
+      /* failed initializing driver */
+    }
+  }
 #if 0
   do {
     res = McuFT6206_ReadNofTouches(&val);

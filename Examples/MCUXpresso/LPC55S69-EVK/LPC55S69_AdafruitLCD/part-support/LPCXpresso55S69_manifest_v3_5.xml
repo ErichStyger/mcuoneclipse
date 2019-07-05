@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.5" api_version="2.0.0" configuration="a3a83d0d050e144ff7d86654c2af9f7a" id="SDK_2.x_LPCXpresso55S69" name="LPCXpresso55S69" brief="This is SDK version 2.6.2 manifest file. It describes the content of the LPCXpresso55S69 and additional settings for tools that support SDK version 2.6.2">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+        <define name="CPU_$|package|_$|core_name|" value=""/>
+    </defines>
+    <ksdk id="MCUXpresso262" name="MCUXpresso262" version="2.6.2" revision="233 2019-06-26"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <core_slave_roles_definitions>
+        <slave_role id="M33SLAVE" name="Cortex-M33 core1 acts as slave by default"/>
+    </core_slave_roles_definitions>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.0.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="LPC55S69JBD100" id="lpcxpresso55s69" name="LPCXpresso55S69" href="http://www.nxp.com/products/:OM13089" version="1.0.0">
+            <description>The LPCXpresso family of boards provides a powerful and flexible development system for NXP®'s Cortex-M33 MCUs</description>
+            <image path="docs/images" type="image">
+                <files mask="LPCXpresso55S69.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The LPCXpresso family of boards provides a powerful and flexible development system for NXP®'s Cortex-M33 MCUs. The LPCXpresso55S69 board has been developed by NXP to enable evaluation of and prototyping with the LPC55xx family of MCUs and its low power features make it as easy as possible to get started with your project.&amp;lt;br/&amp;gt; LPCXpresso™ is a low-cost development platform available from NXP supporting NXP's ARM-based microcontrollers. The platform is comprised of a simplified Eclipse-based IDE and low-cost target boards which include an attached JTAG debugger. LPCXpresso is an end-to-end solution enabling embedded engineers to develop their applications from initial evaluation to final production.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="LPC55S69JBD100" type="kit" id="lpcxpresso55s69_agm01" name="LPCXPRESSO55S69-AGM01" href="http://www.nxp.com/products/sensors/sensor-toolbox-sensor-development-ecosystem/evaluation-boards:SNSTOOLBOX" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for FXAS21002C and FXOS8700C 9-Axis Solution
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="LPCXPRESSO55S69-AGM01.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+LPCXPRESSO55S69 with FRDM-STBC-AGM01 Custom Kit (FRDM-STBC-AGM01 Sensor Shield Development Board with lpcxpresso55s69 Board):
+&lt;ul&gt;
+&lt;li&gt; FRDM-STBC-AGM01 Sensor Shield board is a sensor expansion board enabling NXP’s 9-axis solution (FXAS21002C 3-Axis Gyroscope with FXOS8700CQ 3-Axis Accelerometer + 3-Axis Magnetometer).&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="LPC55xx" platform="LPC" id="LPC55S69" name="LPC55S69" full_name="LPC55S69" href="http://www.nxp.com/lpc" version="1.0.0">
+            <description>The LPC55xx are ARM Cortex-M33 based microcontrollers for embedded applications.</description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The LPC55xx/LPC55Sxx is an ARM Cortex M33 based micro-controller for embedded applications. These devices include up to 320 KB of on-chip SRAM, up to 640 KB on-chip flash, high-speed and full-speed USB host and device interface with crystal-less operation for full-speed, five general-purpose timers, one SCTimer/PWM, one RTC/alarm timer, one 24-bit Multi-Rate Timer (MRT), a Windowed Watchdog Timer (WWDT), eight flexible serial communication peripherals (each of which can be a USART, SPI, I2C, or I2S interface), one 16-bit 1.0 Msamples/sec ADC, temperature sensor.</content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="true" dsp="true" type="cm33" boot_role="primary" id="cm33_core0_LPC55S69" name="cm33_core0"/>
+            <core fpu="false" dsp="false" type="cm33_nodsp" slave_roles="M33SLAVE" boot_role="primary_secondary" id="cm33_core1_LPC55S69" name="cm33_core1"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00098000" type="Flash" access="RO" id="PROGRAM_FLASH_LPC55S69" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00044000" type="RAM" access="RW" id="SRAM_LPC55S69" name="SRAM"/>
+                <memoryBlock addr="04000000" size="00008000" type="RAM" access="RW" id="SRAMX_LPC55S69" name="SRAMX"/>
+                <memoryBlock addr="40100000" size="00004000" type="RAM" access="RW" id="USB_RAM_LPC55S69" name="USB_RAM"/>
+            </memory>
+            <total_memory flash_size_kb="608" ram_size_kb="16"/>
+            <package id="LPC55S69JBD100" name="LPC55S69JBD100"/>
+            <package id="LPC55S69JET98" name="LPC55S69JET98"/>
+            <evaluation_boards>
+                <evaluation_board name="lpcxpresso55s69"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="true" id="internal.attach.slave.release.LPC55S69" name="internal.attach.slave"/>
+                        <params value="true" id="internal.multi.swd.release.LPC55S69" name="internal.multi.swd"/>
+                        <params value="SWD" id="internal.wiretype.release.LPC55S69" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.LPC55S69" name="internal.has_swo"/>
+                        <params value="--bootromstall 0x40000040" id="misc.options.LPC55S69" name="misc.options"/>
+                        <params value="SYSRESETREQ" id="flash.driver.reset.release.LPC55S69" name="flash.driver.reset"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_LPC55S69">
+                            <driverBinary path="devices/LPC55S69/mcuxpresso" type="binary">
+<files mask="LPC55xx.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="LPC55S69" device_cores="" id="platform.devices.LPC55S69_debugger.LPC55S69" name="LPC55S69_debugger" version="1.0.0">
+            <source path="devices/LPC55S69" target_path="svd" type="xml" device_cores="cm33_core0_LPC55S69">
+                <files mask="LPC55S69_cm33_core0.xml"/>
+            </source>
+            <source path="devices/LPC55S69" target_path="svd" type="xml" device_cores="cm33_core1_LPC55S69">
+                <files mask="LPC55S69_cm33_core1.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>

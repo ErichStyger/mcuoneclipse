@@ -26,7 +26,7 @@
 #define configENABLE_MPU                      (0) /* \todo */
 
 /* ------------------- I2C ---------------------------*/
-#define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use sofware bit banging */
+#define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use software bit banging */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
 #define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX                (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
