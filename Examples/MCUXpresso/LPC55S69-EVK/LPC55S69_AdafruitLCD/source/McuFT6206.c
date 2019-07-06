@@ -202,17 +202,6 @@ void McuFT6206_Init(void) {
       /* failed initializing driver */
     }
   }
-#if 0
-  do {
-    res = McuFT6206_ReadNofTouches(&val);
-    if (val>0) {
-      res = McuFT6206_ReadPoint(0, &point);
-      if (point.z>0) {
-        val = 0;
-      }
-    }
-  } while(1);
-#endif
 }
 
 

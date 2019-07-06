@@ -39,6 +39,7 @@
 #include "McuSPI.h"
 #include "lcd.h"
 #include "McuILI9341.h"
+#include "touch.h"
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */
@@ -80,6 +81,9 @@ void PL_Init(void) {
   LCD_Init();
 #if PL_CONFIG_USE_FT6206
   McuFT6206_Init();
+#endif
+#if PL_CONFIG_USE_GUI_TOUCH_NAV
+  TOUCH_Init();
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();

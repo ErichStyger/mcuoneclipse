@@ -16,6 +16,9 @@
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "lcd.h"
+#if PL_CONFIG_USE_GUI_TOUCH_NAV
+  #include "touch.h"
+#endif
 #if PL_CONFIG_USE_TOASTER
   #include "toaster.h"
 #endif
@@ -160,7 +163,7 @@ static bool ex_tp_read(lv_indev_data_t * data) {
 	}
 	data->point.x = x;
 	data->point.y = y;
-    return false;   /*false: no more data to read because we are no buffering*/
+  return false;   /*false: no more data to read because we are no buffering*/
 }
 #endif
 

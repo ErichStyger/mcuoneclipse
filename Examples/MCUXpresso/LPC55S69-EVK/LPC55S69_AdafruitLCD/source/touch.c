@@ -1,27 +1,45 @@
 /*
  * touch.c
  *
- *  Created on: 02.07.2019
- *      Author: Erich Styger Local
+ *  Created on: 03.08.2018
+ *      Author: Erich Styger
  */
 
+#include "Platform.h"
+#if PL_CONFIG_USE_GUI_TOUCH_NAV
+#include "McuLib.h"
+#include "touch.h"
+#include "McuFT6206.h"
 
-#if 0
+void TOUCH_Init(void) {
+}
 
-/* RT_CS_5V: PIO1_8_GPIO_ARD, PIO1_8 */
-#define MCUSTMPE610_CS_GPIO   GPIO
-#define MCUSTMPE610_CS_PORT   1U
-#define MCUSTMPE610_CS_PIN    8U
-static McuGPIO_Handle_t McuSTMPE610_CSPin;
+void TOUCH_Deinit(void) {
+}
 
+int TOUCH_Poll(bool *pressed, int *x, int *y) {
+  uint8_t val, res;
+  McuFT6206_TouchPoint point;
 
+  if (McuFT6206_ReadNofTouches(&val)==ERR_OK) {
+    if (val>0) { /* there are touches */
+      res = McuFT6206_ReadPoint(0, &point);
+      if (point.z>0) {
+        val = 0;
+      }
+      if (res==ERR_OK && point.z>0) {
+        *pressed = true;
+        *x = point.x;
+        *y = point.y;
+        return 1; /* touched */
+      }
+    }
+  }
+  return 0; /* not touched */
+  /* default */
+  *pressed = false;
+  *x = 0;
+  *y = 0;
+}
 
-
-
-
-/* initialize Touch CS (is LOW active) */
-  config.hw.pin = MCUSTMPE610_CS_PIN;
-  config.hw.port = MCUSTMPE610_CS_PORT;
-  config.hw.gpio = MCUSTMPE610_CS_GPIO;
-  McuSTMPE610_CSPin = McuGPIO_InitGPIO(&config);
-#endif
+#endif /* PL_CONFIG_USE_TOUCH */
