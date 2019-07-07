@@ -35,11 +35,11 @@ McuLED_Handle_t McuLED_DeinitLed(McuLED_Handle_t led);
 
 void McuLED_On(McuLED_Handle_t led);
 void McuLED_Off(McuLED_Handle_t led);
-void McuLED_Neg(McuLED_Handle_t led);
+void McuLED_Toggle(McuLED_Handle_t led);
 bool McuLED_Get(McuLED_Handle_t led);
 void McuLED_Set(McuLED_Handle_t led, bool isOn);
 
-/* driver intitialization */
+/* driver initialization */
 void McuLED_Init(void);
 
 /* driver deinitialization */

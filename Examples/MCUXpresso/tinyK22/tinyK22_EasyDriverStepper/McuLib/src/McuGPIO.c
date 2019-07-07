@@ -91,18 +91,18 @@ McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio) {
   return NULL;
 }
 
-void McuGPIO_Low(McuGPIO_Handle_t gpio) {
+void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
   GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+  GPIO_PortClear(pin->gpio, pin->port, (1<<pin->pin));
 #endif
 }
 
-void McuGPIO_High(McuGPIO_Handle_t gpio) {
+void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
@@ -113,7 +113,7 @@ void McuGPIO_High(McuGPIO_Handle_t gpio) {
 #endif
 }
 
-void McuGPIO_Neg(McuGPIO_Handle_t gpio) {
+void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
@@ -124,37 +124,39 @@ void McuGPIO_Neg(McuGPIO_Handle_t gpio) {
 #endif
 }
 
-void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toLow) {
+void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
-  if (toLow) {
-#if McuLib_CONFIG_CPU_IS_KINETIS
-    GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
-#elif McuLib_CONFIG_CPU_IS_LPC
-    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
-#endif
-  } else {
+  if (val) { /* set to HIGH */
 #if McuLib_CONFIG_CPU_IS_KINETIS
     GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
+  } else { /* set to LOW */
+#if McuLib_CONFIG_CPU_IS_KINETIS
+    GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_LPC
+    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#endif
   }
 }
 
-bool McuGPIO_Get(McuGPIO_Handle_t gpio) {
+bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
-  if (pin->isInput) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-    return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
+  return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
 #elif McuLib_CONFIG_CPU_IS_LPC
-    return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
+  return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
 #endif
-  }
   return false;
+}
+
+bool McuGPIO_IsLow(McuGPIO_Handle_t gpio) {
+  return !McuGPIO_IsHigh(gpio);
 }
 
 void McuGPIO_Init(void) {

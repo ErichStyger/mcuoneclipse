@@ -96,9 +96,9 @@ void McuLED_On(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    McuGPIO_Low(desc->gpio);
+    McuGPIO_SetLow(desc->gpio);
   } else {
-    McuGPIO_High(desc->gpio);
+    McuGPIO_SetHigh(desc->gpio);
   }
 }
 
@@ -107,17 +107,17 @@ void McuLED_Off(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    McuGPIO_High(desc->gpio);
+    McuGPIO_SetHigh(desc->gpio);
   } else {
-    McuGPIO_Low(desc->gpio);
+    McuGPIO_SetLow(desc->gpio);
   }
 }
 
-void McuLED_Neg(McuLED_Handle_t led) {
+void McuLED_Toggle(McuLED_Handle_t led) {
   assert(led!=NULL);
   McuLED_t *desc = (McuLED_t*)led;
 
-  McuGPIO_Neg(desc->gpio);
+  McuGPIO_Toggle(desc->gpio);
 }
 
 bool McuLED_Get(McuLED_Handle_t led) {
@@ -125,9 +125,9 @@ bool McuLED_Get(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    return McuGPIO_Get(desc->gpio)==false;
+    return !McuGPIO_IsHigh(desc->gpio);
   } else {
-    return McuGPIO_Get(desc->gpio)!=false;
+    return McuGPIO_IsHigh(desc->gpio);
  }
 }
 
