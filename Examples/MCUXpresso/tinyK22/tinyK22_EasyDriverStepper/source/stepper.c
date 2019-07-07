@@ -118,11 +118,8 @@ static void DoStepping(void) {
   bool wait = true;
   int i;
 
-  while (wait) {
-    i++;
-  }
   McuA3967_SetDirection(stepper, forward);
-  for(;;) {
+  for(i=0;i<100;i++) {
     McuA3967_Step(stepper);
     McuWait_Waitms(25);
   }
@@ -168,11 +165,11 @@ void STEPPER_Init(void) {
 
   stepper = McuA3967_InitHandle(&config);
 
-  UnitTest();
+  //UnitTest();
 
   /* enable device */
   McuA3967_SetReset(stepper, false); /* take out of reset */
   McuA3967_SetSleep(stepper, false); /* turn off sleep */
   McuA3967_SetEnable(stepper, true); /* enable device */
-  DoStepping();
+  //DoStepping();
 }

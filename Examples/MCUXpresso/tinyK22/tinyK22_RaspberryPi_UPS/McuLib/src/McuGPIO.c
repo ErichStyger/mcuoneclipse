@@ -124,21 +124,21 @@ void McuGPIO_Neg(McuGPIO_Handle_t gpio) {
 #endif
 }
 
-void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toLow) {
+void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toHigh) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
-  if (toLow) {
-#if McuLib_CONFIG_CPU_IS_KINETIS
-    GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
-#elif McuLib_CONFIG_CPU_IS_LPC
-    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
-#endif
-  } else {
+  if (toHigh) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
     GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#endif
+  } else {
+#if McuLib_CONFIG_CPU_IS_KINETIS
+    GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_LPC
+    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #endif
   }
 }

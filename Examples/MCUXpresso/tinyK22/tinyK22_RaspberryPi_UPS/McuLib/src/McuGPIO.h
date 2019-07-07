@@ -49,7 +49,7 @@ void McuGPIO_Low(McuGPIO_Handle_t gpio);
 void McuGPIO_High(McuGPIO_Handle_t gpio);
 void McuGPIO_Neg(McuGPIO_Handle_t gpio);
 bool McuGPIO_Get(McuGPIO_Handle_t gpio);
-void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toLow);
+void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toHigh);
 
 /* driver initialization */
 void McuGPIO_Init(void);

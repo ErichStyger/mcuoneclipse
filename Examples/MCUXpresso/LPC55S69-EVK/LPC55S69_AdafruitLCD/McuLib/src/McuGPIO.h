@@ -43,13 +43,14 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config);
 
 McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio);
 
-void McuGPIO_SetInput(McuGPIO_Handle_t gpio);
-void McuGPIO_SetOutput(McuGPIO_Handle_t gpio);
-void McuGPIO_Low(McuGPIO_Handle_t gpio);
-void McuGPIO_High(McuGPIO_Handle_t gpio);
-void McuGPIO_Neg(McuGPIO_Handle_t gpio);
-bool McuGPIO_Get(McuGPIO_Handle_t gpio);
-void McuGPIO_Set(McuGPIO_Handle_t gpio, bool toLow);
+void McuGPIO_SetAsInput(McuGPIO_Handle_t gpio);
+void McuGPIO_SetAsOutput(McuGPIO_Handle_t gpio);
+void McuGPIO_SetLow(McuGPIO_Handle_t gpio);
+void McuGPIO_SetHigh(McuGPIO_Handle_t gpio);
+void McuGPIO_Toggle(McuGPIO_Handle_t gpio);
+bool McuGPIO_IsLow(McuGPIO_Handle_t gpio);
+bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio);
+void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val);
 
 /* driver initialization */
 void McuGPIO_Init(void);

@@ -163,7 +163,7 @@ void GUI_MainMenuCreate(void) {
 
 static void ErrMsg(void) {
   for(;;) { /* error */
-    McuLED_Neg(LED_Red);
+    McuLED_Toggle(LED_Red);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }

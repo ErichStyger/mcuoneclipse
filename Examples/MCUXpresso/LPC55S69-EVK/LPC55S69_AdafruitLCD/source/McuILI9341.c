@@ -79,10 +79,10 @@
 #define MCUILI9341_DC_PORT   1U
 #define MCUILI9341_DC_PIN    5U
 
-#define SET_CMD_MODE()      McuGPIO_Low(McuILI9341_DCPin)
-#define SET_DATA_MODE()     McuGPIO_High(McuILI9341_DCPin)
-#define SELECT_DISPLAY()    McuGPIO_Low(McuILI9341_CSPin)
-#define DESELECT_DISPLAY()  McuGPIO_High(McuILI9341_CSPin);
+#define SET_CMD_MODE()      McuGPIO_SetLow(McuILI9341_DCPin)
+#define SET_DATA_MODE()     McuGPIO_SetHigh(McuILI9341_DCPin)
+#define SELECT_DISPLAY()    McuGPIO_SetLow(McuILI9341_CSPin)
+#define DESELECT_DISPLAY()  McuGPIO_SetHigh(McuILI9341_CSPin);
 
 static McuGPIO_Handle_t McuILI9341_CSPin;
 static McuGPIO_Handle_t McuILI9341_DCPin;

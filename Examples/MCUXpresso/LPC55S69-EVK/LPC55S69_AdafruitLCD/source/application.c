@@ -23,7 +23,7 @@ static SemaphoreHandle_t mutex;
 
 static void AppTask(void *pv) {
   for(;;) {
-    McuLED_Neg(LED_Green);
+    McuLED_Toggle(LED_Green);
     vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
