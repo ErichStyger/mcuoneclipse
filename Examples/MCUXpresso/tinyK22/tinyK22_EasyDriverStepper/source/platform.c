@@ -22,6 +22,7 @@
   #include "Shell.h"
 #endif
 #include "McuA3967.h"
+#include "stepper.h"
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */
@@ -47,6 +48,7 @@ void PL_Init(void) {
 #endif
   LEDS_Init();
   McuA3967_Init();
+  STEPPER_Init();
 }
 
 void PL_Deinit(void) {

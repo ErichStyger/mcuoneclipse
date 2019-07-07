@@ -10,11 +10,6 @@
 #include "McuLED.h"
 #include "board.h" /* defines the BOARD_LED_ macros */
 
-#define PINS_LEDBLUE_GPIO       GPIOC
-#define PINS_LEDBLUE_PORT       PORTC
-#define PINS_LEDBLUE_PIN        2U
-
-/* Blue: P1_4 */
 #ifdef BOARD_LED_BLUE_GPIO
   #define LED_BLUE_GPIO    BOARD_LED_BLUE_GPIO
 #else
