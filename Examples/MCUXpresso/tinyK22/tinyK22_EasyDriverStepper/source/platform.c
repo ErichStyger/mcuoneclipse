@@ -21,6 +21,7 @@
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
+#include "McuA3967.h"
 
 void PL_Init(void) {
 //  InitPins(); /* do all the pin muxing */
@@ -45,6 +46,7 @@ void PL_Init(void) {
   SHELL_Init();
 #endif
   LEDS_Init();
+  McuA3967_Init();
 }
 
 void PL_Deinit(void) {
