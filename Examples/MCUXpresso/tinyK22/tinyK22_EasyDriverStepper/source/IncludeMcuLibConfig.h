@@ -12,7 +12,6 @@
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 #define McuLib_CONFIG_CPU_IS_KINETIS    (1)
-#define McuLib_CONFIG_FPU_PRESENT       (0) /* no FPU on K22DX256 */
 
 /* ------------------- RTOS ---------------------------*/
 #define configTOTAL_HEAP_SIZE                 (16*1024)
