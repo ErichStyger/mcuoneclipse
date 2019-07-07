@@ -13,9 +13,6 @@
 #include "McuSPI.h"
 
 /* ILI9341 register and commands */
-#define MCUILI9341_TFTWIDTH   240      /*!< ILI9341 max TFT width */
-#define MCUILI9341_TFTHEIGHT  320      /*!< ILI9341 max TFT height */
-
 #define MCUILI9341_NOP        0x00     /*!< No-op register */
 #define MCUILI9341_SWRESET    0x01     /*!< Software reset register */
 #define MCUILI9341_RDDID      0x04     /*!< Read display identification information */

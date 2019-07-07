@@ -24,7 +24,8 @@
 #endif
 
 #if PL_CONFIG_USE_GUI_SCREEN_SAVER
-static TimerHandle_t timerHndlLcdTimeout;
+  static TimerHandle_t timerHndlLcdTimeout;
+  #define SCREEN_SAVER_TIMEOUT_MS (10*1000)
 #endif
 
 static McuRB_Handle_t ringBufferHndl;
@@ -40,7 +41,7 @@ static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
 }
 #endif
 
-#if PL_CONFIG_USE_GUI_KEY_NAV
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER
 static void KeyPressForLCD(void) {
   /* called for each key press. It turns on the LCD if it is dormant or resets the LCD backlight timeout timer */
   if (xTimerIsTimerActive(timerHndlLcdTimeout)==pdFALSE) {
@@ -158,12 +159,15 @@ static bool ex_tp_read(lv_indev_data_t * data) {
 	res = TOUCH_Poll(&pressed, &x, &y);
 	if (res==1 && pressed) {
 		data->state = LV_INDEV_STATE_PR;
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER
+		KeyPressForLCD();
+#endif
 	} else {
 		data->state = LV_INDEV_STATE_REL;
 	}
 	data->point.x = x;
 	data->point.y = y;
-  return false;   /*false: no more data to read because we are no buffering*/
+  return false;   /* false: no more data to read because we are no buffering*/
 }
 #endif
 
@@ -493,7 +497,7 @@ void LV_Init(void) {
 #if PL_CONFIG_USE_GUI_SCREEN_SAVER
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(60*1000), /* period/time */
+    pdMS_TO_TICKS(SCREEN_SAVER_TIMEOUT_MS), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */

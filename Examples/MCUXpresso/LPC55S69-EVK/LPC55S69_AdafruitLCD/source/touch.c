@@ -10,11 +10,18 @@
 #include "McuLib.h"
 #include "touch.h"
 #include "McuFT6206.h"
+#include "McuILI9341.h"
 
 void TOUCH_Init(void) {
 }
 
 void TOUCH_Deinit(void) {
+}
+
+static void TOUCH_OrientationRotate(McuFT6206_TouchPoint *point) {
+  /* Portrait180 */
+  point->y = MCUILI9341_TFTHEIGHT-point->y;
+  point->x = MCUILI9341_TFTWIDTH-point->x;
 }
 
 int TOUCH_Poll(bool *pressed, int *x, int *y) {
@@ -28,6 +35,7 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
         val = 0;
       }
       if (res==ERR_OK && point.z>0) {
+        TOUCH_OrientationRotate(&point);
         *pressed = true;
         *x = point.x;
         *y = point.y;

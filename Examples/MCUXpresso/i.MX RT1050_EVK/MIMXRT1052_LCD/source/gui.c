@@ -396,20 +396,20 @@ static void GuiTask(void *p) {
 void GUI_Init(void) {
 	LV_Init(); /* initialize GUI library */
 	xTaskCreate(/* The function that implements the task. */
-                GuiTask,
-                /* Text name for the task, just to help debugging. */
-                "gui",
-                /* The size (in words) of the stack that should be created
-                for the task. */
-                configMINIMAL_STACK_SIZE + 800,
-                /* A parameter that can be passed into the task.  Not used
-                in this simple demo. */
-                NULL,
-                /* The priority to assign to the task.  tskIDLE_PRIORITY
-                (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1
-                is the highest priority. */
-                1,
-                /* Used to obtain a handle to the created task.  Not used in
-                this simple demo, so set to NULL. */
-                NULL);
+      GuiTask,
+      /* Text name for the task, just to help debugging. */
+      "gui",
+      /* The size (in words) of the stack that should be created
+      for the task. */
+      configMINIMAL_STACK_SIZE + 800,
+      /* A parameter that can be passed into the task.  Not used
+      in this simple demo. */
+      NULL,
+      /* The priority to assign to the task.  tskIDLE_PRIORITY
+      (which is 0) is the lowest priority.  configMAX_PRIORITIES - 1
+      is the highest priority. */
+      1,
+      /* Used to obtain a handle to the created task.  Not used in
+      this simple demo, so set to NULL. */
+      NULL);
 }

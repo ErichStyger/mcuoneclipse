@@ -18,6 +18,9 @@
   uint8_t McuILI9341_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
+#define MCUILI9341_TFTWIDTH   240      /*!< ILI9341 max TFT width */
+#define MCUILI9341_TFTHEIGHT  320      /*!< ILI9341 max TFT height */
+
 /* Color definitions */
 #define MCUILI9341_BLACK       0x0000  ///<   0,   0,   0
 #define MCUILI9341_NAVY        0x000F  ///<   0,   0, 123
