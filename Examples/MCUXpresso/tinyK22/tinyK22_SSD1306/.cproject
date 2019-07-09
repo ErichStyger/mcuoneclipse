@@ -297,9 +297,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.2047746019.210622301" name="/" resourcePath="McuLib/FatFS">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.663178031" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1464801515" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.742827866"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.761811180" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.678694384"/>
+							<tool id="com.crt.advproject.gas.exe.debug.2026674649" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.260378838"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1725671816" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.817426488"/>
+							<tool id="com.crt.advproject.link.exe.debug.896169947" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1280908334"/>
+							<tool id="com.crt.advproject.tool.debug.debug.2004831988" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1726536036"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FatFS|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
