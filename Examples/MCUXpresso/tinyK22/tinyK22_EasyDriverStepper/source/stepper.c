@@ -9,6 +9,8 @@
 #include "McuA3967.h"
 #include "McuWait.h"
 
+#define DO_UINT_TEST  (0)
+
 #define PINS_STEPPER1_RST_GPIO      GPIOB
 #define PINS_STEPPER1_RST_PORT      PORTB
 #define PINS_STEPPER1_RST_PIN       0U
@@ -39,6 +41,7 @@
 
 static McuA3967_Handle_t stepper;
 
+#if DO_UINT_TEST
 static void UnitTest(void) {
   bool inSleep, dir, enable, reset;
   uint8_t micro;
@@ -112,7 +115,9 @@ static void UnitTest(void) {
     for(;;) {}
   }
 }
+#endif
 
+#if DO_UINT_TEST
 static void DoStepping(void) {
   bool forward = true;
   bool wait = true;
@@ -124,6 +129,7 @@ static void DoStepping(void) {
     McuWait_Waitms(25);
   }
 }
+#endif
 
 void STEPPER_Deinit(void){
 }
@@ -165,11 +171,15 @@ void STEPPER_Init(void) {
 
   stepper = McuA3967_InitHandle(&config);
 
-  //UnitTest();
+#if DO_UINT_TEST
+  UnitTest();
+#endif
 
   /* enable device */
   McuA3967_SetReset(stepper, false); /* take out of reset */
   McuA3967_SetSleep(stepper, false); /* turn off sleep */
   McuA3967_SetEnable(stepper, true); /* enable device */
-  //DoStepping();
+#if DO_UINT_TEST
+  DoStepping();
+#endif
 }
