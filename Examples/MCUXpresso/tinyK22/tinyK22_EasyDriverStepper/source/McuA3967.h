@@ -12,10 +12,19 @@
 extern "C" {
 #endif
 
+#include "McuA3967config.h"
 #include "McuGPIO.h"
 #include <stdbool.h>
 
 typedef void *McuA3967_Handle_t;
+
+#if McuA3967_CONFIG_PARSE_COMMAND_ENABLED
+  #include "McuShell.h" /* Command line shell */
+  uint8_t McuA3967_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
+
+  /* handler for stepper motor */
+  uint8_t McuA3967_PrintStepperStatus(McuA3967_Handle_t stepper, const unsigned char *name, const McuShell_StdIOType *io);
+#endif
 
 /*! \brief Return the RESET pin status
  * \param stepper motor handle
@@ -49,6 +58,19 @@ void McuA3967_SetSleep(McuA3967_Handle_t stepper, bool sleep);
 
 bool McuA3967_GetSleep(McuA3967_Handle_t stepper);
 
+
+/*! \brief Return the STEP pin status
+ * \param stepper motor handle
+ * \return true if STEP pin is HIGH, false otherwise
+ */
+bool McuA3967_GetStep(McuA3967_Handle_t stepper);
+
+/*! \brief Changes the STEP pin
+ * \param stepper motor handle
+ * \param status boolean value for HIGH or LOW
+ */
+void McuA3967_SetStep(McuA3967_Handle_t stepper, bool status);
+
 /*!
  * \brief returns the current micro stepping mode
  * \param stepper handle for stepper motor
@@ -65,7 +87,7 @@ void McuA3967_SetMicroStepping(McuA3967_Handle_t stepper, uint8_t mode);
 /*!
  * \brief performs a step
  */
-void McuA3967_Step(McuA3967_Handle_t stepper);
+void McuA3967_MakeStep(McuA3967_Handle_t stepper);
 
 
 typedef struct {

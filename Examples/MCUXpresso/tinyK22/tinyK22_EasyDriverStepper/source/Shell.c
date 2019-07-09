@@ -12,6 +12,8 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
+#include "McuA3967.h"
+#include "Stepper.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -20,6 +22,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
+#if McuA3967_CONFIG_PARSE_COMMAND_ENABLED
+  McuA3967_ParseCommand,
+#endif
+  STEPPER_ParseCommand,
   NULL /* Sentinel */
 };
 

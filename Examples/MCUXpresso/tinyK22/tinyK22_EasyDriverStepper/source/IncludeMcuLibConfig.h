@@ -64,7 +64,7 @@
 #endif
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING "EasyDriver on NXP K22FN512"
+#define McuShell_CONFIG_PROJECT_NAME_STRING "EasyDriver with NXP K22FN512"
 /* -------------------------------------------------*/
 #if 0
 /* LittlevGL */

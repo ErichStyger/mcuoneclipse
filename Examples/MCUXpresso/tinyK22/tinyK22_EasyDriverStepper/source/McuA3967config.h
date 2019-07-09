@@ -17,6 +17,11 @@ extern "C" {
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
+#ifndef McuA3967_CONFIG_PARSE_COMMAND_ENABLED
+  #define McuA3967_CONFIG_PARSE_COMMAND_ENABLED		(1)
+	/*!< 1: implement command line shell support; 0: no command line shell support */
+#endif
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif

@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
 #include "Stepper.h"
 #include "McuA3967.h"
 #include "McuWait.h"
@@ -130,6 +131,44 @@ static void DoStepping(void) {
   }
 }
 #endif
+
+#if PL_CONFIG_USE_SHELL
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"Stepper", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"\r\n", io->stdOut);
+  (void)McuA3967_PrintStepperStatus(stepper, (unsigned char*)"Stepper 1", io);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"Stepper", (unsigned char*)"Group of Stepper commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t STEPPER_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
+    || McuUtility_strcmp((char*)cmd, "Stepper help") == 0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0)
+             || (McuUtility_strcmp((char*)cmd, "Stepper status") == 0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+#if 0
+  } else if (McuUtility_strcmp((char*)cmd, "McuArmTools reset") == 0) {
+    *handled = TRUE;
+    McuArmTools_SoftwareReset(); /* will perform RESET and does NOT return here! */
+#endif
+  }
+  return res;
+}
+
+#endif /* PL_CONFIG_USE_SHELL */
 
 void STEPPER_Deinit(void){
 }

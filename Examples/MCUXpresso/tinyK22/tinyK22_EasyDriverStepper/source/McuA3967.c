@@ -164,7 +164,15 @@ void McuA3967_SetMicroStepping(McuA3967_Handle_t stepper, uint8_t mode) {
   }
 }
 
-void McuA3967_Step(McuA3967_Handle_t stepper) {
+bool McuA3967_GetStep(McuA3967_Handle_t stepper) {
+  return McuGPIO_IsHigh(((McuA3967_Stepper_t*)stepper)->step);
+}
+
+void McuA3967_SetStep(McuA3967_Handle_t stepper, bool status) {
+  McuGPIO_SetValue(((McuA3967_Stepper_t*)stepper)->step, status);
+}
+
+void McuA3967_MakeStep(McuA3967_Handle_t stepper) {
   McuA3967_Stepper_t *motor = (McuA3967_Stepper_t*)stepper;
 
   McuGPIO_SetHigh(motor->step);
@@ -267,6 +275,58 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
 
   return (McuA3967_Handle_t)handle;
 }
+
+#if McuA3967_CONFIG_PARSE_COMMAND_ENABLED
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"A3967", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t McuA3967_PrintStepperStatus(McuA3967_Handle_t stepper, const unsigned char *name, const McuShell_StdIOType *io) {
+  uint8_t buf[24];
+
+  McuShell_SendStatusStr(name, (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  RESET", McuA3967_GetReset(stepper)?(unsigned char*)"yes (LOW)\r\n":(unsigned char*)"no (HIGH)\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  DIR", McuA3967_GetDirection(stepper)?(unsigned char*)"forward (HIGH)\r\n":(unsigned char*)"backward (LOW)\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  SLP", McuA3967_GetSleep(stepper)?(unsigned char*)"yes (LOW)\r\n":(unsigned char*)"no (HIGH)\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  ENABLE", McuA3967_GetEnable(stepper)?(unsigned char*)"yes (LOW)\r\n":(unsigned char*)"no (HIGH)\r\n", io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"1/");
+  McuUtility_strcatNum8u(buf, sizeof(buf), McuA3967_GetMicroStepping(stepper));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" micro step\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  MS1,MS2", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  STEP", McuA3967_GetStep(stepper)?(unsigned char*)"HIGH\r\n":(unsigned char*)"LOW\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"A3967", (unsigned char*)"Group of A3967 commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t McuA3967_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
+    || McuUtility_strcmp((char*)cmd, "A3967 help") == 0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0)
+             || (McuUtility_strcmp((char*)cmd, "A3967 status") == 0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+#if 0
+  } else if (McuUtility_strcmp((char*)cmd, "McuArmTools reset") == 0) {
+    *handled = TRUE;
+    McuArmTools_SoftwareReset(); /* will perform RESET and does NOT return here! */
+#endif
+  }
+  return res;
+}
+#endif /* McuA3967_CONFIG_PARSE_COMMAND_ENABLED */
 
 McuA3967_Handle_t McuA3967_DeinitHandle(McuA3967_Handle_t stepper){
   assert(stepper!=NULL);
