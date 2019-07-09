@@ -300,19 +300,21 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.486583693.1022501534" name="/" resourcePath="McuLib/HD44780">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1005384465" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.59759270" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.706022544"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1745125103" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1695125406"/>
-							<tool id="com.crt.advproject.gas.exe.debug.116125348" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.280840216"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.483901309" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.312444743"/>
-							<tool id="com.crt.advproject.link.exe.debug.1461982241" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1497538664"/>
-							<tool id="com.crt.advproject.tool.debug.debug.1621177349" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1564019358"/>
+					<folderInfo id="com.crt.advproject.config.exe.debug.486583693.1087634053" name="/" resourcePath="device">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1329167158" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1850131288" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.706022544"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.34555575" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1695125406"/>
+							<tool id="com.crt.advproject.gas.exe.debug.1576801123" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.280840216"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.924653608" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.312444743"/>
+							<tool id="com.crt.advproject.link.exe.debug.1940194313" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1497538664"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1656774914" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1564019358"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|fonts|LittlevGL|minIni|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
