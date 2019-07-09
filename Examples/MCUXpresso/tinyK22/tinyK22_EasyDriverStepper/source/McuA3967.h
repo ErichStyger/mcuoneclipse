@@ -38,8 +38,16 @@ bool McuA3967_GetReset(McuA3967_Handle_t stepper);
  */
 void McuA3967_SetReset(McuA3967_Handle_t stepper, bool reset);
 
+/*! \brief Returns the status of the A3967 DIR (direction) pin
+ * \param stepper motor handle
+ * \return true if it is forward (pin HIGH), false otherwise
+ */
 bool McuA3967_GetDirection(McuA3967_Handle_t stepper);
 
+/*! \brief Sets the DIR (direction) pin of the A3967
+ * \param stepper motor handle
+ * \param enable true for forward, false otherwise
+ */
 void McuA3967_SetDirection(McuA3967_Handle_t stepper, bool forward);
 
 /*! \brief Returns the status of the A3967, if it is enabled with the ENABLE pin
@@ -54,10 +62,17 @@ bool McuA3967_GetEnable(McuA3967_Handle_t stepper);
  */
 void McuA3967_SetEnable(McuA3967_Handle_t stepper, bool enable);
 
+/*! \brief Sets the SLP (sleep) pin of the A3967
+ * \param stepper motor handle
+ * \param enable true to put the IC into sleep mode (pin LOW), false otherwise
+ */
 void McuA3967_SetSleep(McuA3967_Handle_t stepper, bool sleep);
 
+/*! \brief Returns the status of the A3967, if it is in sleep mode or not
+ * \param stepper motor handle
+ * \return true if driver is in sleep mode (SLP pin LOW), false otherwise
+ */
 bool McuA3967_GetSleep(McuA3967_Handle_t stepper);
-
 
 /*! \brief Return the STEP pin status
  * \param stepper motor handle

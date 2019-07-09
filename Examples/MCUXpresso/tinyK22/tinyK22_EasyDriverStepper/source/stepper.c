@@ -9,8 +9,10 @@
 #include "Stepper.h"
 #include "McuA3967.h"
 #include "McuWait.h"
+#include "McuRTOS.h"
 
-#define DO_UINT_TEST  (0)
+#define STEPPER_CONFIG_DO_UINT_TEST             (0)
+#define STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING   (1)  /* reduce current if not moving */
 
 #define PINS_STEPPER1_RST_GPIO      GPIOB
 #define PINS_STEPPER1_RST_PORT      PORTB
@@ -40,10 +42,21 @@
 #define PINS_STEPPER1_DIR_PORT      PORTB
 #define PINS_STEPPER1_DIR_PIN       18U
 
-static McuA3967_Handle_t stepper;
+typedef struct {
+  bool isSleeping;
+  bool isForward;
+  int32_t pos;
+  McuA3967_Handle_t stepper;
+  struct {
+    uint32_t speed;
+    int32_t steps;
+  } move;
+} STEPPER_Motor;
 
-#if DO_UINT_TEST
-static void UnitTest(void) {
+static STEPPER_Motor stepper0;
+
+#if STEPPER_CONFIG_
+static void UnitTest(McuA3967_Handle_t stepper) {
   bool inSleep, dir, enable, reset;
   uint8_t micro;
 
@@ -118,36 +131,92 @@ static void UnitTest(void) {
 }
 #endif
 
-#if DO_UINT_TEST
-static void DoStepping(void) {
+#if STEPPER_CONFIG_
+static void DoStepping(McuA3967_Handle_t stepper) {
   bool forward = true;
   bool wait = true;
   int i;
 
   McuA3967_SetDirection(stepper, forward);
   for(i=0;i<100;i++) {
-    McuA3967_Step(stepper);
+    McuA3967_MakeStep(stepper);
     McuWait_Waitms(25);
   }
 }
 #endif
 
+static void StepperTask(void *pv) {
+  for(;;) {
+    if (stepper0.move.steps!=0) {
+#if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
+      if (stepper0.isSleeping) {
+        stepper0.isSleeping = false;
+        McuA3967_SetSleep(stepper0.stepper, stepper0.isSleeping); /* wake up from sleep */
+      }
+#endif
+      if (stepper0.move.steps<0 && stepper0.isForward) {
+        stepper0.isForward = false;
+        McuA3967_SetDirection(stepper0.stepper, stepper0.isForward);
+      } else if (stepper0.move.steps>0 && !stepper0.isForward) {
+        stepper0.isForward = true;
+        McuA3967_SetDirection(stepper0.stepper, stepper0.isForward);
+      }
+      /* do step */
+      McuA3967_SetStep(stepper0.stepper, true); /* set HIGH */
+      vTaskDelay(1);
+      McuA3967_SetStep(stepper0.stepper, false); /* set LOW */
+      /* update position */
+      if (stepper0.move.steps>0) { /* forward */
+        stepper0.move.steps--;
+        stepper0.pos++;
+      } else { /* backward */
+        stepper0.move.steps++;
+        stepper0.pos--;
+      }
+#if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
+      if (stepper0.move.steps==0 && !stepper0.isSleeping) { /* end of stepping */
+        stepper0.isSleeping = true;
+        McuA3967_SetSleep(stepper0.stepper, stepper0.isSleeping); /* go to sleep to reduce current consumption */
+      }
+#endif
+    }
+    vTaskDelay(1);
+  }
+}
+
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[32];
+
   McuShell_SendStatusStr((unsigned char*)"Stepper", (unsigned char*)"\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  tbd", (unsigned char*)"\r\n", io->stdOut);
-  (void)McuA3967_PrintStepperStatus(stepper, (unsigned char*)"Stepper 1", io);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"pos: ");
+  McuUtility_strcatNum32s(buf, sizeof(buf), stepper0.pos);
+  if (stepper0.isForward) {
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", FW");
+  } else {
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", BW");
+  }
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+
+  McuShell_SendStatusStr((unsigned char*)"  stepper0", buf, io->stdOut);
+  (void)McuA3967_PrintStepperStatus(stepper0.stepper, (unsigned char*)"Stepper 0", io);
   return ERR_OK;
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"Stepper", (unsigned char*)"Group of Stepper commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  go <m> <step> <speed>", (unsigned char*)"Move motor (0, ...) with number of steps at given speed\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  microstep <m> <step>", (unsigned char*)"Set micro steps: 1, 2, 4 or 8\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t STEPPER_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
   uint8_t res = ERR_OK;
+  int32_t val;
+  uint8_t motor;
+  const unsigned char *p;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
     || McuUtility_strcmp((char*)cmd, "Stepper help") == 0) {
@@ -159,15 +228,50 @@ uint8_t STEPPER_ParseCommand(const unsigned char* cmd, bool *handled, const McuS
   {
     *handled = TRUE;
     res = PrintStatus(io);
-#if 0
-  } else if (McuUtility_strcmp((char*)cmd, "McuArmTools reset") == 0) {
+  } else if (McuUtility_strncmp((char*)cmd, "Stepper microstep ", sizeof("Stepper microstep ")-1) == 0) {
+    p = cmd + sizeof("Stepper microstep ")-1;
+
+    res = McuUtility_xatoi(&p, &val);
+    if (res!=ERR_OK || val<0) {
+      return ERR_FAILED;
+    }
+    motor = val;
+
+    res = McuUtility_xatoi(&p, &val);
+    if (res!=ERR_OK || !(val==1 || val==2 || val==4 || val==8)) {
+      return ERR_FAILED;
+    }
+    McuA3967_SetMicroStepping(stepper0.stepper, val);
     *handled = TRUE;
-    McuArmTools_SoftwareReset(); /* will perform RESET and does NOT return here! */
-#endif
+    res = ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "Stepper go ", sizeof("Stepper go ")-1) == 0) {
+    int32_t steps;
+    uint32_t speed;
+
+    p = cmd + sizeof("Stepper go ")-1;
+    res = McuUtility_xatoi(&p, &val);
+    if (res!=ERR_OK || val<0) {
+      return ERR_FAILED;
+    }
+    motor = val;
+    res = McuUtility_xatoi(&p, &steps);
+    if (res!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    res = McuUtility_xatoi(&p, &val);
+    if (res!=ERR_OK && val<0) {
+      return ERR_FAILED;
+    }
+    speed =  val;
+    if (motor==0) {
+      stepper0.move.speed = speed;
+      stepper0.move.steps = steps;
+    }
+    *handled = TRUE;
+    res = ERR_OK;
   }
   return res;
 }
-
 #endif /* PL_CONFIG_USE_SHELL */
 
 void STEPPER_Deinit(void){
@@ -208,17 +312,34 @@ void STEPPER_Init(void) {
   config.step.port = PINS_STEPPER1_STEP_PORT;
   config.step.pin = PINS_STEPPER1_STEP_PIN;
 
-  stepper = McuA3967_InitHandle(&config);
+  stepper0.stepper = McuA3967_InitHandle(&config);
 
-#if DO_UINT_TEST
+#if STEPPER_CONFIG_
   UnitTest();
 #endif
 
   /* enable device */
-  McuA3967_SetReset(stepper, false); /* take out of reset */
-  McuA3967_SetSleep(stepper, false); /* turn off sleep */
-  McuA3967_SetEnable(stepper, true); /* enable device */
-#if DO_UINT_TEST
+  McuA3967_SetReset(stepper0.stepper, false); /* take out of reset */
+  McuA3967_SetEnable(stepper0.stepper, true); /* enable device */
+  stepper0.isSleeping = true;
+  McuA3967_SetSleep(stepper0.stepper, stepper0.isSleeping); /* turn on sleep mode */
+  stepper0.isForward = true;
+  McuA3967_SetDirection(stepper0.stepper, stepper0.isForward);
+  stepper0.pos = 0;
+  stepper0.move.speed = 0;
+  stepper0.move.steps = 0;
+#if STEPPER_CONFIG_
   DoStepping();
 #endif
+  if (xTaskCreate(
+      StepperTask,  /* pointer to the task */
+      "Stepper", /* task name for kernel awareness debugging */
+      300/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+
 }
