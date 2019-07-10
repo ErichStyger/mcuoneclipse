@@ -42,7 +42,17 @@
 #define PINS_STEPPER1_DIR_PORT      PORTB
 #define PINS_STEPPER1_DIR_PIN       18U
 
+typedef enum {
+  STEPPER_STATE_IDLE,
+  STEPPER_STATE_START,
+  STEPPER_STATE_STEP_HIGH,
+  STEPPER_STATE_STEP_LOW,
+  STEPPER_STATE_DELAY,
+  STEPPER_STATE_END
+} STEPPER_State;
+
 typedef struct {
+  STEPPER_State state;
   bool isSleeping;
   bool isForward;
   int32_t pos;
@@ -50,10 +60,125 @@ typedef struct {
   struct {
     uint32_t speed;
     int32_t steps;
+    uint32_t delay;
   } move;
 } STEPPER_Motor;
 
 static STEPPER_Motor stepper0;
+
+#include "fsl_ftm.h"
+
+/* The Flextimer instance/channel used for board */
+#define BOARD_FTM_BASEADDR FTM0
+
+/* Interrupt number and interrupt handler for the FTM instance used */
+#define BOARD_FTM_IRQ_NUM FTM0_IRQn
+
+/* Get source clock for FTM driver */
+#define FTM_SOURCE_CLOCK (CLOCK_GetFreq(kCLOCK_BusClk)/4)
+
+static void ProcessStepper(STEPPER_Motor *stepper) {
+  for(;;) {
+    switch(stepper->state) {
+      case STEPPER_STATE_IDLE:
+        return;
+
+      case STEPPER_STATE_START:
+    #if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
+        /* check if we need to get out of sleep mode */
+        if (stepper->isSleeping) {
+          stepper->isSleeping = false;
+          McuA3967_SetSleep(stepper->stepper, stepper->isSleeping); /* wake up from sleep */
+        }
+    #endif
+        /* check and change direction */
+        if (stepper->move.steps<0 && stepper->isForward) {
+          stepper->isForward = false;
+          McuA3967_SetDirection(stepper->stepper, stepper->isForward);
+        } else if (stepper->move.steps>0 && !stepper->isForward) {
+          stepper->isForward = true;
+          McuA3967_SetDirection(stepper->stepper, stepper->isForward);
+        }
+        stepper->move.delay = 0;
+        stepper->state = STEPPER_STATE_STEP_HIGH; /* go to next state */
+        break; /* go directly to next iteration */
+
+      case STEPPER_STATE_STEP_HIGH:
+        /* do step */
+        McuA3967_SetStep(stepper->stepper, true); /* set HIGH */
+        stepper->state = STEPPER_STATE_STEP_LOW; /* go to next state */
+        return;
+
+      case STEPPER_STATE_STEP_LOW:
+        McuA3967_SetStep(stepper->stepper, false); /* set LOW */
+        /* update position */
+        if (stepper->move.steps>0) { /* forward */
+          stepper->move.steps--;
+          stepper->pos++;
+        } else { /* backward */
+          stepper->move.steps++;
+          stepper->pos--;
+        }
+        if (stepper->move.steps==0) { /* no more steps */
+          stepper->state = STEPPER_STATE_END;
+          break; /* directly to next state */
+        }
+        stepper->state = STEPPER_STATE_DELAY;
+        return; /* continue stepping */
+
+      case STEPPER_STATE_DELAY:
+        stepper->move.delay++;
+        if (stepper->move.delay>stepper->move.speed) {
+          stepper->move.delay = 0;
+          stepper->state = STEPPER_STATE_STEP_HIGH;
+          break;
+        }
+        return;
+
+      case STEPPER_STATE_END:
+    #if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
+        if (!stepper->isSleeping) { /* end of stepping */
+          stepper->isSleeping = true;
+          McuA3967_SetSleep(stepper->stepper, stepper->isSleeping); /* go to sleep to reduce current consumption */
+        }
+    #endif
+        stepper->state = STEPPER_STATE_IDLE;
+        break; /* directly to next state */
+
+      default: /* just in case ... */
+        return;
+    } /* switch */
+  }
+}
+
+void FTM0_IRQHandler(void) { /* called every 1 ms */
+  /* Clear interrupt flag.*/
+
+  FTM_ClearStatusFlags(BOARD_FTM_BASEADDR, kFTM_TimeOverflowFlag);
+  ProcessStepper(&stepper0);
+  __DSB();
+}
+
+static void InitTimer(void) {
+  ftm_config_t ftmInfo;
+
+  FTM_GetDefaultConfig(&ftmInfo);
+  /* Divide FTM clock by 4 */
+  ftmInfo.prescale = kFTM_Prescale_Divide_4;
+
+  /* Initialize FTM module */
+  FTM_Init(BOARD_FTM_BASEADDR, &ftmInfo);
+  /*
+   * Set timer period.
+   */
+  FTM_SetTimerPeriod(BOARD_FTM_BASEADDR, USEC_TO_COUNT(100U, FTM_SOURCE_CLOCK));
+
+  FTM_EnableInterrupts(BOARD_FTM_BASEADDR, kFTM_TimeOverflowInterruptEnable);
+  EnableIRQ(BOARD_FTM_IRQ_NUM);
+
+  FTM_StartTimer(BOARD_FTM_BASEADDR, kFTM_SystemClock);
+}
+
 
 #if STEPPER_CONFIG_
 static void UnitTest(McuA3967_Handle_t stepper) {
@@ -145,42 +270,12 @@ static void DoStepping(McuA3967_Handle_t stepper) {
 }
 #endif
 
+
+
 static void StepperTask(void *pv) {
   for(;;) {
-    if (stepper0.move.steps!=0) {
-#if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
-      if (stepper0.isSleeping) {
-        stepper0.isSleeping = false;
-        McuA3967_SetSleep(stepper0.stepper, stepper0.isSleeping); /* wake up from sleep */
-      }
-#endif
-      if (stepper0.move.steps<0 && stepper0.isForward) {
-        stepper0.isForward = false;
-        McuA3967_SetDirection(stepper0.stepper, stepper0.isForward);
-      } else if (stepper0.move.steps>0 && !stepper0.isForward) {
-        stepper0.isForward = true;
-        McuA3967_SetDirection(stepper0.stepper, stepper0.isForward);
-      }
-      /* do step */
-      McuA3967_SetStep(stepper0.stepper, true); /* set HIGH */
-      vTaskDelay(1);
-      McuA3967_SetStep(stepper0.stepper, false); /* set LOW */
-      /* update position */
-      if (stepper0.move.steps>0) { /* forward */
-        stepper0.move.steps--;
-        stepper0.pos++;
-      } else { /* backward */
-        stepper0.move.steps++;
-        stepper0.pos--;
-      }
-#if STEPPER_CONFIG_DO_SLEEP_IF_NOT_MOVING
-      if (stepper0.move.steps==0 && !stepper0.isSleeping) { /* end of stepping */
-        stepper0.isSleeping = true;
-        McuA3967_SetSleep(stepper0.stepper, stepper0.isSleeping); /* go to sleep to reduce current consumption */
-      }
-#endif
-    }
-    vTaskDelay(1);
+    //ProcessStepper(&stepper0);
+    vTaskDelay(10);
   }
 }
 
@@ -266,6 +361,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char* cmd, bool *handled, const McuS
     if (motor==0) {
       stepper0.move.speed = speed;
       stepper0.move.steps = steps;
+      stepper0.state = STEPPER_STATE_START;
     }
     *handled = TRUE;
     res = ERR_OK;
@@ -280,6 +376,7 @@ void STEPPER_Deinit(void){
 void STEPPER_Init(void) {
   McuA3967_Config_t config;
 
+  InitTimer();
   CLOCK_EnableClock(kCLOCK_PortB);
 
   McuA3967_GetDefaultConfig(&config);
@@ -328,6 +425,7 @@ void STEPPER_Init(void) {
   stepper0.pos = 0;
   stepper0.move.speed = 0;
   stepper0.move.steps = 0;
+  stepper0.state = STEPPER_STATE_IDLE;
 #if STEPPER_CONFIG_
   DoStepping();
 #endif
@@ -341,5 +439,12 @@ void STEPPER_Init(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-
 }
+
+/* what works:
+ *
+ * 10 kHz/100 ms
+ * - 1/8 ok
+ * - 1, 1/2, 1/4: nok
+ *
+ */
