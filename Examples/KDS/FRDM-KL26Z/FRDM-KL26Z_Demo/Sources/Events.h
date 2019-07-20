@@ -65,7 +65,8 @@
 #include "FX1.h"
 #include "TMOUT1.h"
 #include "CS1.h"
-#include "KSDK1.h"
+#include "XF1.h"
+#include "MCUC1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,7 +88,7 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -103,7 +104,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -119,7 +120,7 @@ void KEY1_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -206,6 +207,48 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 **         If enabled, the RTOS will call this hook in case memory
 **         allocation failed.
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -147,10 +147,10 @@ static void AppTask(void *pvParameters) {
     EVNT1_HandleEvent();
     LED1_Neg();
 #if 0
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
 #else /* task rate depending on light sensor value */
     lightVal = GetLightValue();
-    FRTOS1_vTaskDelay((lightVal>>8)/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(lightVal>>8));
 #endif
   }
 }
@@ -175,7 +175,7 @@ void APP_Run(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
