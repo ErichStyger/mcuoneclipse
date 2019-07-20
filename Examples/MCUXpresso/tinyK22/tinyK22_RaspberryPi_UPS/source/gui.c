@@ -13,6 +13,7 @@
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "oled.h"
 #include "McuSSD1306.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
@@ -303,8 +304,9 @@ void GUI_MainMenuCreate(void) {
 static void GuiTask(void *p) {
   uint32_t notifcationValue;
 
-  vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
-  //LCD1_Init();
+  vTaskDelay(pdMS_TO_TICKS(100)); /* give hardware time to power up */
+  McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
+  OLED_Init(); /* initializes the needed McuLib components for the OLED */
   GUI_MainMenuCreate();
   for(;;) {
     (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */

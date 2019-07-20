@@ -109,7 +109,7 @@ static void AppTask(void *pv) {
       McuLED_Off(tinyLED);
       vTaskDelay(pdMS_TO_TICKS(900));
     } else {
-      McuLED_Neg(tinyLED);
+      McuLED_Toggle(tinyLED);
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
 #else

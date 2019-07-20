@@ -59,8 +59,8 @@ void PL_Init(void) {
   McuI2CSpy_Init();
 #endif
 #if PL_CONFIG_USE_OLED
-  McuWait_Waitms(100); /* display needs some time to power up */
-  McuSSD1306_Init();
+  //McuWait_Waitms(100); /* display needs some time to power up */
+  //McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
 #endif
   McuRTT_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
@@ -80,10 +80,10 @@ void PL_Init(void) {
   SHUTDOWN_Init();
 #endif
 #if PL_CONFIG_USE_OLED
-  OLED_Init(); /* initializes the needed McuLib components for the OLED */
+  //OLED_Init(); /* initializes the needed McuLib components for the OLED */
 #endif
 #if PL_CONFIG_USE_GUI
-  GUI_Init();
+  GUI_Init(); /* requires interrupts enabled if using HW I2C */
 #endif
 #if PL_CONFIG_USE_GATEWAY
   GATEWAY_Init();

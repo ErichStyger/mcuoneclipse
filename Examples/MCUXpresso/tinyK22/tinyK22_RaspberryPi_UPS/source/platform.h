@@ -8,7 +8,7 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_RASPBERRY     (0) /* board used with Raspberry Pi */
+#define PL_CONFIG_USE_RASPBERRY     (1) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS       (1) /* using buttons (navigation switch) */
 #define PL_CONFIG_USE_KBI           (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
 #define PL_CONFIG_USE_I2C           (1) /* if I2C is enabled */

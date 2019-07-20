@@ -196,7 +196,11 @@ void doOLED(void) {
 }
 
 void OLED_Init(void) {
+#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+  McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
+#else
   McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
+#endif
   McuSSD1306_Clear();
 }
 

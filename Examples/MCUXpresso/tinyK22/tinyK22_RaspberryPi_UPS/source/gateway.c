@@ -228,9 +228,20 @@ uint32_t GATEWAY_GetNofTx(void) {
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[16];
+
   McuShell_SendStatusStr((unsigned char*)"gateway", (const unsigned char*)"\r\n", io->stdOut);
+  McuUtility_Num8uToStr(buf, sizeof(buf), TINYK22_HAT_VERSION);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  HW version", buf, io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  host", gatewayHostToLinuxIsEnabled?(const unsigned char*)"Host -> Linux\r\n":(const unsigned char*)"Host -> Shell\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  linux", gatewayLinuxToHostIsEnabled?(const unsigned char*)"Linux -> Host\r\n":(const unsigned char*)"Linux -> Shell\r\n", io->stdOut);
+  McuUtility_Num8uToStr(buf, sizeof(buf), GATEWAY_GetNofRx());
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  #Rx", buf, io->stdOut);
+  McuUtility_Num8uToStr(buf, sizeof(buf), GATEWAY_GetNofTx());
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  #Tx", buf, io->stdOut);
   return ERR_OK;
 }
 

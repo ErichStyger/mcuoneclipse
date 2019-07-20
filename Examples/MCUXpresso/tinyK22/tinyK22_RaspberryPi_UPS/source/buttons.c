@@ -200,6 +200,7 @@ void PORTB_IRQHandler(void) {
   uint32_t flags;
 
   flags = GPIO_PortGetInterruptFlags(GPIOB);
+#if TINYK22_HAT_VERSION==3 /* only Rev V3 has left and right on Port B. Rev V4 and V5 have it on Port A */
   if (flags&(1U<<PINS_HATNAVLEFT_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVLEFT_GPIO, 1U<<PINS_HATNAVLEFT_PIN);
     StartDebounce(BTN_LEFT, true);
@@ -208,6 +209,7 @@ void PORTB_IRQHandler(void) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVRIGHT_GPIO, 1U<<PINS_HATNAVRIGHT_PIN);
     StartDebounce(BTN_RIGHT, true);
   }
+#endif
   if (flags&(1U<<PINS_HATNAVUP_PIN)) {
     GPIO_PortClearInterruptFlags(PINS_HATNAVUP_GPIO, 1U<<PINS_HATNAVUP_PIN);
     StartDebounce(BTN_UP, true);
@@ -222,6 +224,24 @@ void PORTB_IRQHandler(void) {
   }
   __DSB();
 }
+
+#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+void PORTA_IRQHandler(void) { /* left and right are on Port A */
+  uint32_t flags;
+
+  flags = GPIO_PortGetInterruptFlags(GPIOA);
+  if (flags&(1U<<PINS_HATNAVLEFT_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVLEFT_GPIO, 1U<<PINS_HATNAVLEFT_PIN);
+    StartDebounce(BTN_LEFT, true);
+  }
+  if (flags&(1U<<PINS_HATNAVRIGHT_PIN)) {
+    GPIO_PortClearInterruptFlags(PINS_HATNAVRIGHT_GPIO, 1U<<PINS_HATNAVRIGHT_PIN);
+    StartDebounce(BTN_RIGHT, true);
+  }
+  __DSB();
+}
+#endif
+
 #endif
 
 void BTN_Init(void) {
@@ -261,8 +281,17 @@ void BTN_Init(void) {
   PORT_SetPinInterruptConfig(PINS_HATNAVLEFT_PORT, PINS_HATNAVLEFT_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVRIGHT_PORT, PINS_HATNAVRIGHT_PIN, kPORT_InterruptFallingEdge);
   PORT_SetPinInterruptConfig(PINS_HATNAVPUSH_PORT, PINS_HATNAVPUSH_PIN, kPORT_InterruptFallingEdge);
+  #if TINYK22_HAT_VERSION==3
+  /* all buttons are on Port B */
   NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTB_IRQn);
+  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+  /* left and right are on Port A. up, down and push are on Port B */
+  NVIC_SetPriority(PORTA_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  EnableIRQ(PORTA_IRQn);
+  NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  EnableIRQ(PORTB_IRQn);
+  #endif
 #else /* use task for button polling */
   if (xTaskCreate(
       BtnTask,  /* pointer to the task */
@@ -289,7 +318,12 @@ void BTN_Init(void) {
 
 void BTN_Deinit(void) {
 #if PL_CONFIG_USE_KBI
-  DisableIRQ(PORTB_IRQn);
+  #if TINYK22_HAT_VERSION==3
+    DisableIRQ(PORTB_IRQn); /* all buttons are on Port B */
+  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+    DisableIRQ(PORTA_IRQn); /* left and right are on Port A */
+    DisableIRQ(PORTB_IRQn); /* up, down, push are on Port B */
+  #endif
 #endif
   btnUp = McuBtn_DeinitButton(btnUp);
   btnDown = McuBtn_DeinitButton(btnDown);
