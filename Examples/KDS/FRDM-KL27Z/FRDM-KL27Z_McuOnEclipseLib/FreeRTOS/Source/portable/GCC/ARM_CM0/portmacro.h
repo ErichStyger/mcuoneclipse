@@ -1,71 +1,29 @@
 /*
-    FreeRTOS V9.0.0 - Copyright (C) 2016 Real Time Engineers Ltd.
-    All rights reserved
-
-    VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
-
-    This file is part of the FreeRTOS distribution.
-
-    FreeRTOS is free software; you can redistribute it and/or modify it under
-    the terms of the GNU General Public License (version 2) as published by the
-    Free Software Foundation >>>> AND MODIFIED BY <<<< the FreeRTOS exception.
-
-    ***************************************************************************
-    >>!   NOTE: The modification to the GPL is included to allow you to     !<<
-    >>!   distribute a combined work that includes FreeRTOS without being   !<<
-    >>!   obliged to provide the source code for proprietary components     !<<
-    >>!   outside of the FreeRTOS kernel.                                   !<<
-    ***************************************************************************
-
-    FreeRTOS is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-    FOR A PARTICULAR PURPOSE.  Full license text is available on the following
-    link: http://www.freertos.org/a00114.html
-
-    ***************************************************************************
-     *                                                                       *
-     *    FreeRTOS provides completely free yet professionally developed,    *
-     *    robust, strictly quality controlled, supported, and cross          *
-     *    platform software that is more than just the market leader, it     *
-     *    is the industry's de facto standard.                               *
-     *                                                                       *
-     *    Help yourself get started quickly while simultaneously helping     *
-     *    to support the FreeRTOS project by purchasing a FreeRTOS           *
-     *    tutorial book, reference manual, or both:                          *
-     *    http://www.FreeRTOS.org/Documentation                              *
-     *                                                                       *
-    ***************************************************************************
-
-    http://www.FreeRTOS.org/FAQHelp.html - Having a problem?  Start by reading
-    the FAQ page "My application does not run, what could be wrong?".  Have you
-    defined configASSERT()?
-
-    http://www.FreeRTOS.org/support - In return for receiving this top quality
-    embedded software for free we request you assist our global community by
-    participating in the support forum.
-
-    http://www.FreeRTOS.org/training - Investing in training allows your team to
-    be as productive as possible as early as possible.  Now you can receive
-    FreeRTOS training directly from Richard Barry, CEO of Real Time Engineers
-    Ltd, and the world's leading authority on the world's leading RTOS.
-
-    http://www.FreeRTOS.org/plus - A selection of FreeRTOS ecosystem products,
-    including FreeRTOS+Trace - an indispensable productivity tool, a DOS
-    compatible FAT file system, and our tiny thread aware UDP/IP stack.
-
-    http://www.FreeRTOS.org/labs - Where new FreeRTOS products go to incubate.
-    Come and try FreeRTOS+TCP, our new open source TCP/IP stack for FreeRTOS.
-
-    http://www.OpenRTOS.com - Real Time Engineers ltd. license FreeRTOS to High
-    Integrity Systems ltd. to sell under the OpenRTOS brand.  Low cost OpenRTOS
-    licenses offer ticketed support, indemnification and commercial middleware.
-
-    http://www.SafeRTOS.com - High Integrity Systems also provide a safety
-    engineered and independently SIL3 certified version for use in safety and
-    mission critical applications that require provable dependability.
-
-    1 tab == 4 spaces!
-*/
+ * FreeRTOS Kernel V10.2.1
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * http://www.FreeRTOS.org
+ * http://aws.amazon.com/freertos
+ *
+ * 1 tab == 4 spaces!
+ */
 
 
 #ifndef PORTMACRO_H
@@ -77,6 +35,8 @@ extern "C" {
 
 #include "FreeRTOSConfig.h"
 #include "projdefs.h" /* for pdFALSE, pdTRUE */
+
+void vPortStopTickTimer(void);
 /*-----------------------------------------------------------
  * Port specific definitions.
  *
@@ -86,6 +46,18 @@ extern "C" {
  * These settings should not be altered.
  *-----------------------------------------------------------
  */
+#ifndef configENABLE_FPU
+    #error configENABLE_FPU must be defined in FreeRTOSConfig.h.  Set configENABLE_FPU to 1 to enable the FPU or 0 to disable the FPU.
+#endif /* configENABLE_FPU */
+
+#ifndef configENABLE_MPU
+    #error configENABLE_MPU must be defined in FreeRTOSConfig.h.  Set configENABLE_MPU to 1 to enable the MPU or 0 to disable the MPU.
+#endif /* configENABLE_MPU */
+
+#ifndef configENABLE_TRUSTZONE
+    #error configENABLE_TRUSTZONE must be defined in FreeRTOSConfig.h.  Set configENABLE_TRUSTZONE to 1 to enable TrustZone or 0 to disable TrustZone.
+#endif /* configENABLE_TRUSTZONE */
+
 #if (configCOMPILER==configCOMPILER_S12_FSL) || (configCOMPILER==configCOMPILER_S08_FSL)
   /* disabling some warnings as the RTOS sources are not that clean... */
   #pragma MESSAGE DISABLE C5909 /* assignment in condition */
@@ -136,13 +108,38 @@ typedef portSTACK_TYPE StackType_t;
 #else
   typedef uint32_t TickType_t;
   #define portMAX_DELAY      (TickType_t)0xffffffff
+
+#if (configCPU_FAMILY==configCPU_FAMILY_CF1) || (configCPU_FAMILY==configCPU_FAMILY_CF2) || configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
+  /* 32-bit tick type on a 32-bit architecture, so reads of the tick count do
+  not need to be guarded with a critical section. */
+  #define portTICK_TYPE_IS_ATOMIC 1
+#endif /* 32bit architecture */
+
 #endif
 
-#if configUSE_MPU_SUPPORT
+#if( configENABLE_TRUSTZONE == 1 )
+    extern void vPortAllocateSecureContext( uint32_t ulSecureStackSize );
+    extern void vPortFreeSecureContext( uint32_t *pulTCB ) /* PRIVILEGED_FUNCTION */;
+#endif /* configENABLE_TRUSTZONE */
+
+#if( configENABLE_MPU == 1 )
+    extern BaseType_t xIsPrivileged( void ) /* __attribute__ (( naked )) */;
+    extern void vResetPrivilege( void ) /* __attribute__ (( naked )) */;
+#endif /* configENABLE_MPU */
+
+/**
+ * @brief MPU specific constants.
+ */
+#if( configENABLE_MPU == 1 )
+    #define portUSING_MPU_WRAPPERS              1
+    #define portPRIVILEGE_BIT                   ( 0x80000000UL )
+#else
+    #define portPRIVILEGE_BIT                   ( 0x0UL )
+#endif /* configENABLE_MPU */
+
+#if configENABLE_MPU
 /*-----------------------------------------------------------*/
 /* MPU specific constants. */
-#define portUSING_MPU_WRAPPERS		1
-#define portPRIVILEGE_BIT			( 0x80000000UL )
 
 #define portMPU_REGION_READ_WRITE				( 0x03UL << 24UL )
 #define portMPU_REGION_PRIVILEGED_READ_ONLY		( 0x05UL << 24UL )
@@ -174,7 +171,76 @@ typedef struct MPU_SETTINGS
 {
 	xMPU_REGION_REGISTERS xRegion[ portTOTAL_NUM_REGIONS ];
 } xMPU_SETTINGS;
-#endif /* configUSE_MPU_SUPPORT */
+#endif /* configENABLE_MPU */
+
+#if configENABLE_MPU /* check values for LPC55xx! */
+/* Devices Region. */
+#define portDEVICE_REGION_START_ADDRESS                     ( 0x50000000 )
+#define portDEVICE_REGION_END_ADDRESS                       ( 0x5FFFFFFF )
+
+/* Device memory attributes used in MPU_MAIR registers.
+ *
+ * 8-bit values encoded as follows:
+ *  Bit[7:4] - 0000 - Device Memory
+ *  Bit[3:2] - 00 --> Device-nGnRnE
+ *              01 --> Device-nGnRE
+ *              10 --> Device-nGRE
+ *              11 --> Device-GRE
+ *  Bit[1:0] - 00, Reserved.
+ */
+#define portMPU_DEVICE_MEMORY_nGnRnE                        ( 0x00 ) /* 0000 0000 */
+#define portMPU_DEVICE_MEMORY_nGnRE                         ( 0x04 ) /* 0000 0100 */
+#define portMPU_DEVICE_MEMORY_nGRE                          ( 0x08 ) /* 0000 1000 */
+#define portMPU_DEVICE_MEMORY_GRE                           ( 0x0C ) /* 0000 1100 */
+
+/* Normal memory attributes used in MPU_MAIR registers. */
+#define portMPU_NORMAL_MEMORY_NON_CACHEABLE                 ( 0x44 ) /* Non-cacheable. */
+#define portMPU_NORMAL_MEMORY_BUFFERABLE_CACHEABLE          ( 0xFF ) /* Non-Transient, Write-back, Read-Allocate and Write-Allocate. */
+
+/* Attributes used in MPU_RBAR registers. */
+#define portMPU_REGION_NON_SHAREABLE                        ( 0UL << 3UL )
+#define portMPU_REGION_INNER_SHAREABLE                      ( 1UL << 3UL )
+#define portMPU_REGION_OUTER_SHAREABLE                      ( 2UL << 3UL )
+
+#define portMPU_REGION_PRIVILEGED_READ_WRITE                ( 0UL << 1UL )
+#define portMPU_REGION_READ_WRITE                           ( 1UL << 1UL )
+#define portMPU_REGION_PRIVILEGED_READ_ONLY                 ( 2UL << 1UL )
+#define portMPU_REGION_READ_ONLY                            ( 3UL << 1UL )
+
+#define portMPU_REGION_EXECUTE_NEVER                        ( 1UL )
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief Settings to define an MPU region.
+ */
+typedef struct MPURegionSettings
+{
+    uint32_t ulRBAR;    /**< RBAR for the region. */
+    uint32_t ulRLAR;    /**< RLAR for the region. */
+} MPURegionSettings_t;
+
+/**
+ * @brief MPU settings as stored in the TCB.
+ */
+typedef struct MPU_SETTINGS
+{
+    uint32_t ulMAIR0;   /**< MAIR0 for the task containing attributes for all the 4 per task regions. */
+    MPURegionSettings_t xRegionsSettings[ portTOTAL_NUM_REGIONS ]; /**< Settings for 4 per task regions. */
+} xMPU_SETTINGS;
+
+/*-----------------------------------------------------------*/
+
+/**
+ * @brief SVC numbers.
+ */
+#define portSVC_ALLOCATE_SECURE_CONTEXT                     0
+#define portSVC_FREE_SECURE_CONTEXT                         1
+#define portSVC_START_SCHEDULER                             2
+#define portSVC_RAISE_PRIVILEGE                             3
+/*-----------------------------------------------------------*/
+
+#endif /* configENABLE_MPU */
 
 /*-----------------------------------------------------------*/
 /* Hardware specifics. */
@@ -195,7 +261,7 @@ typedef struct MPU_SETTINGS
 #define portTICK_PERIOD_MS      ((TickType_t)1000/configTICK_RATE_HZ)
 /*-----------------------------------------------------------*/
 /* Critical section management. */
-unsigned portLONG ulPortSetIPL(unsigned portLONG);
+unsigned long ulPortSetIPL(unsigned portLONG);
 
 /* If set to 1, then this port uses the critical nesting count from the TCB rather than
 maintaining a separate value and then saving this value in the task stack. */
@@ -214,7 +280,7 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
   #define portPOST_ENABLE_DISABLE_INTERRUPTS() /* nothing special needed */
 #endif
 
-#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) /* Cortex M4/M7 */
+#if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* Cortex M4/M7/M33 */
   #if (configCOMPILER==configCOMPILER_ARM_KEIL)
     __asm uint32_t ulPortSetInterruptMask(void);
     __asm void vPortClearInterruptMask(uint32_t ulNewMask);
@@ -286,6 +352,63 @@ extern void vPortExitCritical(void);
 /* There are an uneven number of items on the initial stack, so
 portALIGNMENT_ASSERT_pxCurrentTCB() will trigger false positive asserts. */
 #define portALIGNMENT_ASSERT_pxCurrentTCB (void)
+
+#if( configENABLE_TRUSTZONE == 1 )
+    /**
+     * @brief Allocate a secure context for the task.
+     *
+     * Tasks are not created with a secure context. Any task that is going to call
+     * secure functions must call portALLOCATE_SECURE_CONTEXT() to allocate itself a
+     * secure context before it calls any secure function.
+     *
+     * @param[in] ulSecureStackSize The size of the secure stack to be allocated.
+     */
+    #define portALLOCATE_SECURE_CONTEXT( ulSecureStackSize )    vPortAllocateSecureContext( ulSecureStackSize )
+
+    /**
+     * @brief Called when a task is deleted to delete the task's secure context,
+     * if it has one.
+     *
+     * @param[in] pxTCB The TCB of the task being deleted.
+     */
+    #define portCLEAN_UP_TCB( pxTCB )                           vPortFreeSecureContext( ( uint32_t * ) pxTCB )
+#else
+    #define portALLOCATE_SECURE_CONTEXT( ulSecureStackSize )
+    #define portCLEAN_UP_TCB( pxTCB )
+#endif /* configENABLE_TRUSTZONE */
+
+/*-----------------------------------------------------------*/
+
+#if( configENABLE_MPU == 1 )
+    /**
+     * @brief Checks whether or not the processor is privileged.
+     *
+     * @return 1 if the processor is already privileged, 0 otherwise.
+     */
+    #define portIS_PRIVILEGED()                                 xIsPrivileged()
+
+    /**
+     * @brief Raise an SVC request to raise privilege.
+     *
+     * The SVC handler checks that the SVC was raised from a system call and only
+     * then it raises the privilege. If this is called from any other place,
+     * the privilege is not raised.
+     */
+    #define portRAISE_PRIVILEGE()                               __asm volatile ( "svc %0 \n" :: "i" ( portSVC_RAISE_PRIVILEGE ) : "memory" );
+
+    /**
+     * @brief Lowers the privilege level by setting the bit 0 of the CONTROL
+     * register.
+     */
+    #define portRESET_PRIVILEGE()                               vResetPrivilege()
+#else
+    #define portIS_PRIVILEGED()
+    #define portRAISE_PRIVILEGE()
+    #define portRESET_PRIVILEGE()
+#endif /* configENABLE_MPU */
+/*-----------------------------------------------------------*/
+
+
 /*-----------------------------------------------------------*/
 /* Scheduler utilities. */
 
@@ -356,13 +479,13 @@ void vPortStartFirstTask(void);
 void vPortYieldHandler(void);
   /* handler for the SWI interrupt */
 
-#if configCPU_FAMILY_IS_ARM_FPU(configCPU_FAMILY) /* has floating point unit */
+#if configENABLE_FPU /* has floating point unit */
   void vPortEnableVFP(void);
     /* enables floating point support in the CPU */
 #endif
 
 /* Prototypes for interrupt service handlers */
-#if MCUC1_CONFIG_NXP_SDK_USED /* the SDK expects different interrupt handler names */
+#if !MCUC1_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
   void SVC_Handler(void); /* SVC interrupt handler */
   void PendSV_Handler(void); /* PendSV interrupt handler */
   void SysTick_Handler(void); /* Systick interrupt handler */
@@ -379,7 +502,7 @@ void vPortYieldHandler(void);
     #define portFORCE_INLINE inline __attribute__(( always_inline))
   #endif
 
-  #if configUSE_MPU_SUPPORT
+  #if configENABLE_MPU
 	  /* Set the privilege level to user mode if xRunningPrivileged is false. */
 	  portFORCE_INLINE static void vPortResetPrivilege( BaseType_t xRunningPrivileged )
 	  {

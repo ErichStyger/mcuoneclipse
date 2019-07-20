@@ -55,7 +55,7 @@ void FRTOS1_vApplicationIdleHook(void) {
   /* Write your code here ... */
 }
 
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used */
 #if 1

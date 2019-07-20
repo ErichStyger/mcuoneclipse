@@ -4,10 +4,9 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : I2CSpy
-**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **          This component implements a utility to inspect devices on the I2C bus.
 **     Settings    :
@@ -16,7 +15,6 @@
 **          Default Address                                : 0x0
 **          Default Address Size                           : 1
 **          Default Bytes per Line                         : 8
-**          SDK                                            : MCUC1
 **          Shell                                          : Enabled
 **            Shell                                        : CLS1
 **            Utility                                      : UTIL1
@@ -25,38 +23,38 @@
 **         GetDeviceAddress - uint8_t I2CSPY1_GetDeviceAddress(void);
 **         SetAddressSize   - uint8_t I2CSPY1_SetAddressSize(uint8_t size);
 **         SetBytesPerLine  - uint8_t I2CSPY1_SetBytesPerLine(uint8_t nofBytesPerLine);
-**         ReadRegData      - uint8_t I2CSPY1_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
+**         ReadRegData      - uint8_t I2CSPY1_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 **         WriteRegData     - uint8_t I2CSPY1_WriteRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 **         ParseCommand     - uint8_t I2CSPY1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         Deinit           - void I2CSPY1_Deinit(void);
 **         Init             - uint8_t I2CSPY1_Init(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2017, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file I2CSPY1.h
@@ -89,7 +87,8 @@
 uint8_t I2CSPY1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_Init (component I2CSpy)
+**     Method      :  Init (component I2CSpy)
+**
 **     Description :
 **         Initialization method
 **     Parameters  : None
@@ -101,7 +100,8 @@ uint8_t I2CSPY1_Init(void);
 void I2CSPY1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_Deinit (component I2CSpy)
+**     Method      :  Deinit (component I2CSpy)
+**
 **     Description :
 **         Deinitialization method
 **     Parameters  : None
@@ -112,7 +112,8 @@ void I2CSPY1_Deinit(void);
 uint8_t I2CSPY1_SetDeviceAddress(uint8_t addr);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_SetDeviceAddress (component I2CSpy)
+**     Method      :  SetDeviceAddress (component I2CSpy)
+**
 **     Description :
 **         Sets the I2C Device address to be used
 **     Parameters  :
@@ -126,7 +127,8 @@ uint8_t I2CSPY1_SetDeviceAddress(uint8_t addr);
 uint8_t I2CSPY1_SetAddressSize(uint8_t size);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_SetAddressSize (component I2CSpy)
+**     Method      :  SetAddressSize (component I2CSpy)
+**
 **     Description :
 **         Specifies the address size of the I2C device memory
 **     Parameters  :
@@ -141,7 +143,8 @@ uint8_t I2CSPY1_SetAddressSize(uint8_t size);
 uint8_t I2CSPY1_SetBytesPerLine(uint8_t nofBytesPerLine);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_SetBytesPerLine (component I2CSpy)
+**     Method      :  SetBytesPerLine (component I2CSpy)
+**
 **     Description :
 **         Sets the number of bytes per line for the Dump shell command
 **     Parameters  :
@@ -157,10 +160,11 @@ void GI2C1_OnRequestBus(void);
 
 void GI2C1_OnReleaseBus(void);
 
-uint8_t I2CSPY1_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
+uint8_t I2CSPY1_ReadRegData(uint32_t addr, uint8_t *data, size_t dataSize);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_ReadRegData (component I2CSpy)
+**     Method      :  ReadRegData (component I2CSpy)
+**
 **     Description :
 **         Reads data starting from a register address from the current
 **         device
@@ -178,7 +182,8 @@ uint8_t I2CSPY1_ReadRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 uint8_t I2CSPY1_WriteRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_WriteRegData (component I2CSpy)
+**     Method      :  WriteRegData (component I2CSpy)
+**
 **     Description :
 **         Writes data starting from a register address to the current
 **         device
@@ -195,7 +200,8 @@ uint8_t I2CSPY1_WriteRegData(uint32_t addr, uint8_t *data, uint16_t dataSize);
 uint8_t I2CSPY1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_ParseCommand (component I2CSpy)
+**     Method      :  ParseCommand (component I2CSpy)
+**
 **     Description :
 **         Shell Command Line parser
 **     Parameters  :
@@ -212,7 +218,8 @@ uint8_t I2CSPY1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1
 uint8_t I2CSPY1_GetDeviceAddress(void);
 /*
 ** ===================================================================
-**     Method      :  I2CSPY1_GetDeviceAddress (component I2CSpy)
+**     Method      :  GetDeviceAddress (component I2CSpy)
+**
 **     Description :
 **         Returns the current I2C Device address used
 **     Parameters  : None
@@ -227,12 +234,4 @@ uint8_t I2CSPY1_GetDeviceAddress(void);
 /* ifndef __I2CSPY1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

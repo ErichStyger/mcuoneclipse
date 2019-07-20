@@ -11,12 +11,12 @@
 #include "MCUC1.h" /* include library configuration */
 
 #ifndef WAIT1_CONFIG_USE_CYCLE_COUNTER
-  #define WAIT1_CONFIG_USE_CYCLE_COUNTER  (0 && (MCUC1_CONFIG_CORTEX_M>=3))
+  #define WAIT1_CONFIG_USE_CYCLE_COUNTER  (0 && (MCUC1_CONFIG_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3))
     /*!< 1: Use hardware cycle counter (if present, only on Cortex-M3 or higher), 0: not using hardware cycle counter */
 #endif
 
 #ifndef WAIT1_CONFIG_USE_RTOS_WAIT
-  #define WAIT1_CONFIG_USE_RTOS_WAIT  (0)
+  #define WAIT1_CONFIG_USE_RTOS_WAIT  (0 && MCUC1_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: Use RTOS wait if RTOS is present; 0: use normal busy waiting */
 #endif
 

@@ -4,15 +4,14 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : FreeRTOS
-**     Version     : Component 01.539, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-14, 20:46, # CodeGen: 160
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V9.0.0
+**          RTOS Version                                   : V10.2.1
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -38,8 +37,6 @@
 **            Enable GDB Debug Helper                      : no
 **            uxTopUsedPriority                            : no
 **            Heap Indication Constant                     : no
-**            Task C Additions                             : no
-**            Record Stack High Address                    : yes
 **          Segger System Viewer Trace                     : Disabled
 **          Percepio Trace                                 : Disabled
 **          Generate Runtime Statistics                    : Enabled
@@ -67,6 +64,7 @@
 **            Idle should yield                            : yes
 **            Task Name Length                             : 12
 **            Minimal Stack Size                           : 150
+**            Record Stack High Address                    : yes
 **            Maximum Priorities                           : 6
 **            Maximum Coroutine Priorities                 : 2
 **            Stackoverflow checking method                : Method 1
@@ -97,7 +95,7 @@
 **              User function for memory allocation        : no
 **              User function for memory deallocation      : no
 **            Critical section                             : Configures how critical sections are handled.
-**              User function for entering critical section: no
+**              User function for entering critical section : no
 **              User function for exiting critical section : no
 **          Shell                                          : Enabled
 **            Max number of tasks                          : 16
@@ -215,38 +213,38 @@
 **         ParseCommand                         - uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         AppConfigureTimerForRuntimeStats     - void FRTOS1_AppConfigureTimerForRuntimeStats(void);
 **         AppGetRuntimeCounterValueFromISR     - uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
-**         Init                                 - void FRTOS1_Init(void);
 **         Deinit                               - void FRTOS1_Deinit(void);
+**         Init                                 - void FRTOS1_Init(void);
 **
-**     * FreeRTOS (c) Copyright 2003-2016 Richard Barry, http: www.FreeRTOS.org
-**      * See separate FreeRTOS licensing terms.
-**      *
-**      * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2017
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
+**  * See separate FreeRTOS licensing terms.
+**  *
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file FRTOS1.h
@@ -259,17 +257,18 @@
 **  @{
 */         
 
+
 #ifndef __FRTOS1_H
 #define __FRTOS1_H
 
 /* MODULE FRTOS1. */
 #include "MCUC1.h" /* SDK and API used */
-#include "FRTOS1config.h" /* configuration */
+#include "FreeRTOSConfig.h"
+#include "FRTOS1config.h" /* configuration file for component */
 
-/* Include inherited components */
-#include "MCUC1.h"
-#include "CLS1.h"
-#include "UTIL1.h"
+#if configUSE_SHELL
+  #include "CLS1.h"
+#endif
 
 /* other includes needed */
 #include "FreeRTOS.h"
@@ -279,8 +278,12 @@
 #include "timers.h"                    /* timer module API */
 #include <stddef.h>                    /* for size_t type */
 
+#if configUSE_PERCEPIO_TRACE_HOOKS
+  #include "McuPercepio.h" /* Interface to Percepio Trace */
+#endif
+
 /* Macro for shell support */
-#define FRTOS1_PARSE_COMMAND_ENABLED         1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define FRTOS1_PARSE_COMMAND_ENABLED         (configUSE_SHELL) /* set to 1 if method ParseCommand() is present, 0 otherwise */
 #define FRTOS1_GENERATE_PEX_RTOS_MACROS      1  /* set to 1 to generate the RTOS macros PEX_RTOS_INIT() and PEX_RTOS_START() */
 
 /* Macros used by Processor Expert */
@@ -320,7 +323,8 @@ extern "C" {
         xTaskCreate(pvTaskCode, pcName, usStackDepth, pvParameters, uxPriority, pvCreatedTask)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskCreate (component FreeRTOS)
+**     Method      :  xTaskCreate (component FreeRTOS)
+**
 **     Description :
 **         Create a new task and add it to the list of tasks that are
 **         ready to run.
@@ -363,7 +367,8 @@ extern "C" {
   vTaskStartScheduler()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskStartScheduler (component FreeRTOS)
+**     Method      :  vTaskStartScheduler (component FreeRTOS)
+**
 **     Description :
 **         Starts the real time kernel tick processing. After calling
 **         the kernel has control over which tasks are executed and
@@ -383,7 +388,8 @@ extern "C" {
   taskYIELD()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_taskYIELD (component FreeRTOS)
+**     Method      :  taskYIELD (component FreeRTOS)
+**
 **     Description :
 **         Macro for forcing a context switch.
 **     Parameters  : None
@@ -395,7 +401,8 @@ extern "C" {
   taskENTER_CRITICAL()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_taskENTER_CRITICAL (component FreeRTOS)
+**     Method      :  taskENTER_CRITICAL (component FreeRTOS)
+**
 **     Description :
 **         Macro to mark the start of a critical code region.
 **         Preemptive context switches cannot occur when in a critical
@@ -411,7 +418,8 @@ extern "C" {
   taskEXIT_CRITICAL()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_taskEXIT_CRITICAL (component FreeRTOS)
+**     Method      :  taskEXIT_CRITICAL (component FreeRTOS)
+**
 **     Description :
 **         Macro to mark the end of a critical code region. Preemptive
 **         context switches cannot occur when in a critical region.
@@ -426,7 +434,8 @@ extern "C" {
   taskDISABLE_INTERRUPTS()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_taskDISABLE_INTERRUPTS (component FreeRTOS)
+**     Method      :  taskDISABLE_INTERRUPTS (component FreeRTOS)
+**
 **     Description :
 **         Macro to disable all maskable interrupts.
 **     Parameters  : None
@@ -438,7 +447,8 @@ extern "C" {
   taskENABLE_INTERRUPTS()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_taskENABLE_INTERRUPTS (component FreeRTOS)
+**     Method      :  taskENABLE_INTERRUPTS (component FreeRTOS)
+**
 **     Description :
 **         Macro to enable microcontroller interrupts.
 **     Parameters  : None
@@ -450,7 +460,8 @@ extern "C" {
   vTaskSuspendAll()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskSuspendAll (component FreeRTOS)
+**     Method      :  vTaskSuspendAll (component FreeRTOS)
+**
 **     Description :
 **         Suspends all real time kernel activity while keeping
 **         interrupts (including the kernel tick) enabled.
@@ -469,7 +480,8 @@ extern "C" {
   xTaskResumeAll()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskResumeAll (component FreeRTOS)
+**     Method      :  xTaskResumeAll (component FreeRTOS)
+**
 **     Description :
 **         Resumes real time kernel activity following a call to
 **         vTaskSuspendAll (). After a call to xTaskSuspendAll () the
@@ -487,11 +499,12 @@ extern "C" {
   vTaskDelay(xTicksToDelay)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskDelay (component FreeRTOS)
+**     Method      :  vTaskDelay (component FreeRTOS)
+**
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.
@@ -520,7 +533,8 @@ extern "C" {
   vTaskDelayUntil(pxPreviousWakeTime, xTimeIncrement)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskDelayUntil (component FreeRTOS)
+**     Method      :  vTaskDelayUntil (component FreeRTOS)
+**
 **     Description :
 **         Delay a task until a specified time. This function can be
 **         used by cyclical tasks to ensure a constant execution
@@ -584,7 +598,8 @@ extern "C" {
   uxTaskPriorityGet(pxTask)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxTaskPriorityGet (component FreeRTOS)
+**     Method      :  uxTaskPriorityGet (component FreeRTOS)
+**
 **     Description :
 **         Obtain the priority of any task.
 **     Parameters  :
@@ -601,7 +616,8 @@ extern "C" {
   vTaskPrioritySet(pxTask, uxNewPriority)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskPrioritySet (component FreeRTOS)
+**     Method      :  vTaskPrioritySet (component FreeRTOS)
+**
 **     Description :
 **         Set the priority of any task.
 **     Parameters  :
@@ -621,7 +637,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreTakeRecursive (component FreeRTOS)
+**     Method      :  xSemaphoreTakeRecursive (component FreeRTOS)
+**
 **     Description :
 **         Macro to recursively obtain, or 'take', a mutex type
 **         semaphore. The mutex must have previously been created using
@@ -660,7 +677,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreGiveRecursive (component FreeRTOS)
+**     Method      :  xSemaphoreGiveRecursive (component FreeRTOS)
+**
 **     Description :
 **         Macro to recursively release, or 'give', a mutex type
 **         semaphore. The mutex must have previously been created using
@@ -688,7 +706,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateRecursiveMutex (component FreeRTOS)
+**     Method      :  xSemaphoreCreateRecursiveMutex (component FreeRTOS)
+**
 **     Description :
 **         Macro that implements a recursive mutex by using the
 **         existing queue mechanism.
@@ -725,7 +744,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskSuspend (component FreeRTOS)
+**     Method      :  vTaskSuspend (component FreeRTOS)
+**
 **     Description :
 **         Suspend any task. When suspended a task will never get any
 **         microcontroller processing time, no matter what its priority.
@@ -746,7 +766,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskResume (component FreeRTOS)
+**     Method      :  vTaskResume (component FreeRTOS)
+**
 **     Description :
 **         Resumes a suspended task. A task that has been suspended by
 **         one of more calls to vTaskSuspend() will be made available
@@ -764,7 +785,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateMutex (component FreeRTOS)
+**     Method      :  xSemaphoreCreateMutex (component FreeRTOS)
+**
 **     Description :
 **         Macro that creates a mutex semaphore by using the existing
 **         queue mechanism.
@@ -810,7 +832,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreTake (component FreeRTOS)
+**     Method      :  xSemaphoreTake (component FreeRTOS)
+**
 **     Description :
 **         Macro to obtain a semaphore. The semaphore must have
 **         previously been created with a call to
@@ -854,7 +877,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreGive (component FreeRTOS)
+**     Method      :  xSemaphoreGive (component FreeRTOS)
+**
 **     Description :
 **         Macro to release a semaphore. The semaphore must have
 **         previously been created with a call to
@@ -885,7 +909,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vSemaphoreCreateBinary (component FreeRTOS)
+**     Method      :  vSemaphoreCreateBinary (component FreeRTOS)
+**
 **     Description :
 **         Macro that creates a semaphore by using the existing queue
 **         mechanism. The queue length is 1 as this is a binary
@@ -940,7 +965,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateCounting (component FreeRTOS)
+**     Method      :  xSemaphoreCreateCounting (component FreeRTOS)
+**
 **     Description :
 **         Macro that creates a counting semaphore by using the
 **         existing queue mechanism.
@@ -982,7 +1008,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreGiveFromISR (component FreeRTOS)
+**     Method      :  xSemaphoreGiveFromISR (component FreeRTOS)
+**
 **     Description :
 **         Macro to release a semaphore. The semaphore must have
 **         previously been created with a call to
@@ -1014,7 +1041,8 @@ extern "C" {
   vSemaphoreDelete(xSemaphore)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vSemaphoreDelete (component FreeRTOS)
+**     Method      :  vSemaphoreDelete (component FreeRTOS)
+**
 **     Description :
 **         Delete a semaphore.  This function must be used with care.
 **         For example, do not delete a mutex type semaphore if the
@@ -1032,7 +1060,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskList (component FreeRTOS)
+**     Method      :  vTaskList (component FreeRTOS)
+**
 **     Description :
 **         configUSE_TRACE_FACILITY, INCLUDE_vTaskDelete and
 **         INCLUDE_vTaskSuspend must all be defined as 1 for this
@@ -1062,7 +1091,8 @@ extern "C" {
   pvPortMalloc(xWantedSize)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pvPortMalloc (component FreeRTOS)
+**     Method      :  pvPortMalloc (component FreeRTOS)
+**
 **     Description :
 **         Allocates a memory block using the port pvPortMalloc()
 **         function
@@ -1079,7 +1109,8 @@ extern "C" {
   vPortFree(pv)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vPortFree (component FreeRTOS)
+**     Method      :  vPortFree (component FreeRTOS)
+**
 **     Description :
 **         Frees a memory block previously allocated with pvPortMalloc()
 **     Parameters  :
@@ -1093,7 +1124,8 @@ extern "C" {
   xTaskGetTickCount()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetTickCount (component FreeRTOS)
+**     Method      :  xTaskGetTickCount (component FreeRTOS)
+**
 **     Description :
 **         Return the count of ticks since vTaskStartScheduler was
 **         called.
@@ -1107,7 +1139,8 @@ extern "C" {
   xTaskGetSchedulerState()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetSchedulerState (component FreeRTOS)
+**     Method      :  xTaskGetSchedulerState (component FreeRTOS)
+**
 **     Description :
 **         Returns the state of the scheduler
 **     Parameters  : None
@@ -1123,7 +1156,8 @@ extern "C" {
   uxTaskGetStackHighWaterMark(xTask)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxTaskGetStackHighWaterMark (component FreeRTOS)
+**     Method      :  uxTaskGetStackHighWaterMark (component FreeRTOS)
+**
 **     Description :
 **         The stack used by a task will grow and shrink as the task
 **         executes and interrupts are processed.
@@ -1147,7 +1181,8 @@ extern "C" {
   uxTaskGetNumberOfTasks()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxTaskGetNumberOfTasks (component FreeRTOS)
+**     Method      :  uxTaskGetNumberOfTasks (component FreeRTOS)
+**
 **     Description :
 **         Returns the number of tasks
 **     Parameters  : None
@@ -1161,7 +1196,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskGetRunTimeStats (component FreeRTOS)
+**     Method      :  vTaskGetRunTimeStats (component FreeRTOS)
+**
 **     Description :
 **         configGENERATE_RUN_TIME_STATS must be defined as 1 for this
 **         function to be available. The application must also then
@@ -1200,7 +1236,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xPortGetFreeHeapSize (component FreeRTOS)
+**     Method      :  xPortGetFreeHeapSize (component FreeRTOS)
+**
 **     Description :
 **         Returns the actual free size of the heap
 **     Parameters  : None
@@ -1213,7 +1250,8 @@ extern "C" {
   xQueueCreate(uxQueueLength, uxItemSize)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueCreate (component FreeRTOS)
+**     Method      :  xQueueCreate (component FreeRTOS)
+**
 **     Description :
 **         Creates a queue.
 **     Parameters  :
@@ -1235,7 +1273,8 @@ extern "C" {
   xQueueSendToFront(xQueue, pvItemToQueue, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueSendToFront (component FreeRTOS)
+**     Method      :  xQueueSendToFront (component FreeRTOS)
+**
 **     Description :
 **         Sends an item to the front of a queue.
 **     Parameters  :
@@ -1279,7 +1318,8 @@ extern "C" {
   xQueueSendToBack(xQueue, pvItemToQueue, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueSendToBack (component FreeRTOS)
+**     Method      :  xQueueSendToBack (component FreeRTOS)
+**
 **     Description :
 **         Sends an item to the back of a queue.
 **     Parameters  :
@@ -1323,7 +1363,8 @@ extern "C" {
   xQueueReceive(xQueue, pvBuffer, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueReceive (component FreeRTOS)
+**     Method      :  xQueueReceive (component FreeRTOS)
+**
 **     Description :
 **         Receives an item from a queue.
 **     Parameters  :
@@ -1369,7 +1410,8 @@ extern "C" {
   xQueuePeek(xQueue, pvBuffer, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueuePeek (component FreeRTOS)
+**     Method      :  xQueuePeek (component FreeRTOS)
+**
 **     Description :
 **         Reads an item from a queue, but does not remove the item
 **         from the queue. Therefore the same item would be returned
@@ -1417,7 +1459,8 @@ extern "C" {
   vQueueDelete(pxQueueToDelete)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vQueueDelete (component FreeRTOS)
+**     Method      :  vQueueDelete (component FreeRTOS)
+**
 **     Description :
 **         Deletes a queue that was previously created using a call to
 **         xQueueCreate(). vQueueDelete() can also be used to delete a
@@ -1440,7 +1483,8 @@ extern "C" {
   uxQueueMessagesWaiting(xQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxQueueMessagesWaiting (component FreeRTOS)
+**     Method      :  uxQueueMessagesWaiting (component FreeRTOS)
+**
 **     Description :
 **         Queries the number of items that are currently held within a
 **         queue.
@@ -1458,7 +1502,8 @@ extern "C" {
   uxQueueMessagesWaitingfromISR(xQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxQueueMessagesWaitingfromISR (component FreeRTOS)
+**     Method      :  uxQueueMessagesWaitingfromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of uxQueueMessagesWaiting() that can be used from
 **         inside an interrupt service routine.
@@ -1476,7 +1521,8 @@ extern "C" {
   xQueueReceiveFromISR(xQueue, pvBuffer, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueReceiveFromISR (component FreeRTOS)
+**     Method      :  xQueueReceiveFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xQueueReceive() that can be called from an ISR.
 **         Unlike xQueueReceive(), xQueueReceiveFromISR() does not
@@ -1521,7 +1567,8 @@ extern "C" {
   xQueueSendToFrontFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueSendToFrontFromISR (component FreeRTOS)
+**     Method      :  xQueueSendToFrontFromISR (component FreeRTOS)
+**
 **     Description :
 **         Versions of xQueueSendToFront() API functions that can be
 **         called from an ISR. Unlike xQueueSendToFront() these
@@ -1556,7 +1603,8 @@ extern "C" {
   xQueueSendToBackFromISR(xQueue, pvItemToQueue,pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueSendToBackFromISR (component FreeRTOS)
+**     Method      :  xQueueSendToBackFromISR (component FreeRTOS)
+**
 **     Description :
 **         Versions of xQueueSendToBack() API functions that can be
 **         called from an ISR. Unlike xQueueSendToBack() these
@@ -1592,7 +1640,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskResumeFromISR (component FreeRTOS)
+**     Method      :  xTaskResumeFromISR (component FreeRTOS)
+**
 **     Description :
 **         An implementation of vTaskResume() that can be called from
 **         within an ISR. A task that has been suspended by one of more
@@ -1612,7 +1661,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueReset (component FreeRTOS)
+**     Method      :  xQueueReset (component FreeRTOS)
+**
 **     Description :
 **         Reset a queue back to its original empty state.  pdPASS is
 **         returned if the queue is successfully reset.  pdFAIL is
@@ -1637,7 +1687,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreGetMutexHolder (component FreeRTOS)
+**     Method      :  xSemaphoreGetMutexHolder (component FreeRTOS)
+**
 **     Description :
 **         Returns the holder of a mutex or semaphore. If xMutex is
 **         indeed a mutex type semaphore, return the current mutex
@@ -1662,7 +1713,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreTakeFromISR (component FreeRTOS)
+**     Method      :  xSemaphoreTakeFromISR (component FreeRTOS)
+**
 **     Description :
 **         Macro to take a semaphore from an ISR. The semaphore must
 **         have previously been created with a call to
@@ -1695,10 +1747,12 @@ extern "C" {
 ** ===================================================================
 */
 
+#if configUSE_SHELL
 uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_ParseCommand (component FreeRTOS)
+**     Method      :  ParseCommand (component FreeRTOS)
+**
 **     Description :
 **         Shell Command Line Parser
 **     Parameters  :
@@ -1711,11 +1765,13 @@ uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
 **         ---             - Error code
 ** ===================================================================
 */
+#endif
 
 void FRTOS1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_Init (component FreeRTOS)
+**     Method      :  Init (component FreeRTOS)
+**
 **     Description :
 **         Low level initialization routine called from startup code.
 **         This method ensures that the tick timer is  not enabled.
@@ -1728,7 +1784,8 @@ void FRTOS1_Init(void);
   xTaskGetCurrentTaskHandle()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetCurrentTaskHandle (component FreeRTOS)
+**     Method      :  xTaskGetCurrentTaskHandle (component FreeRTOS)
+**
 **     Description :
 **         The handle of the currently running (calling) task.
 **     Parameters  : None
@@ -1742,7 +1799,8 @@ void FRTOS1_Init(void);
   xTaskGetIdleTaskHandle()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetIdleTaskHandle (component FreeRTOS)
+**     Method      :  xTaskGetIdleTaskHandle (component FreeRTOS)
+**
 **     Description :
 **         The task handle associated with the Idle task. The Idle task
 **         is created automatically when the RTOS scheduler is started.
@@ -1759,7 +1817,8 @@ void FRTOS1_Init(void);
   pcTaskGetTaskName(xTaskToQuery)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pcTaskGetTaskName (component FreeRTOS)
+**     Method      :  pcTaskGetTaskName (component FreeRTOS)
+**
 **     Description :
 **         Returns the name of the task.
 **     Parameters  :
@@ -1777,7 +1836,8 @@ void FRTOS1_Init(void);
   xTaskGetTickCountFromISR()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetTickCountFromISR (component FreeRTOS)
+**     Method      :  xTaskGetTickCountFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xTaskGetTickCount() that can be called from an
 **         ISR. 
@@ -1792,7 +1852,8 @@ void FRTOS1_Init(void);
   xQueuePeekFromISR(xQueue, pvBuffer, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueuePeekFromISR (component FreeRTOS)
+**     Method      :  xQueuePeekFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xQueuePeek() that can be used from an interrupt
 **         service routine (ISR). Reads an item from a queue, but does
@@ -1841,7 +1902,8 @@ void FRTOS1_Init(void);
   xQueueOverwrite(xQueue, pvItemToQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueOverwrite (component FreeRTOS)
+**     Method      :  xQueueOverwrite (component FreeRTOS)
+**
 **     Description :
 **         This is a macro that calls the xQueueGenericSend() function.
 **         A version of xQueueSendToBack() that will write to the queue
@@ -1882,7 +1944,8 @@ void FRTOS1_Init(void);
   xQueueOverwriteFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueOverwriteFromISR (component FreeRTOS)
+**     Method      :  xQueueOverwriteFromISR (component FreeRTOS)
+**
 **     Description :
 **         This is a macro that calls the xQueueGenericSendFromISR()
 **         function. A version of xQueueOverwrite() that can be used in
@@ -1922,7 +1985,8 @@ void FRTOS1_Init(void);
   vQueueAddToRegistry(xQueue, pcQueueName)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vQueueAddToRegistry (component FreeRTOS)
+**     Method      :  vQueueAddToRegistry (component FreeRTOS)
+**
 **     Description :
 **         Assigns a name to a queue and adds the queue to the registry.
 **     Parameters  :
@@ -1940,7 +2004,8 @@ void FRTOS1_Init(void);
   vQueueUnregisterQueue(xQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vQueueUnregisterQueue (component FreeRTOS)
+**     Method      :  vQueueUnregisterQueue (component FreeRTOS)
+**
 **     Description :
 **         Removes a queue from the queue registry. 
 **     Parameters  :
@@ -1955,7 +2020,8 @@ void FRTOS1_Init(void);
   xQueueIsQueueFullFromISR(xQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueIsQueueFullFromISR (component FreeRTOS)
+**     Method      :  xQueueIsQueueFullFromISR (component FreeRTOS)
+**
 **     Description :
 **         Queries a queue to determine if the queue is full. This
 **         function should only be used in an ISR. 
@@ -1973,7 +2039,8 @@ void FRTOS1_Init(void);
   xQueueIsQueueEmptyFromISR(xQueue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueIsQueueEmptyFromISR (component FreeRTOS)
+**     Method      :  xQueueIsQueueEmptyFromISR (component FreeRTOS)
+**
 **     Description :
 **         Queries a queue to determine if the queue is empty. This
 **         function should only be used in an ISR. 
@@ -1991,7 +2058,8 @@ void FRTOS1_Init(void);
   xEventGroupCreate()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupCreate (component FreeRTOS)
+**     Method      :  xEventGroupCreate (component FreeRTOS)
+**
 **     Description :
 **          Create a new RTOS event group. This function cannot be
 **         called from an interrupt.
@@ -2017,7 +2085,8 @@ void FRTOS1_Init(void);
   xEventGroupWaitBits(xEventGroup, uxBitsToWaitFor, xClearOnExit, xWaitForAllBits, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupWaitBits (component FreeRTOS)
+**     Method      :  xEventGroupWaitBits (component FreeRTOS)
+**
 **     Description :
 **          Read bits within an RTOS event group, optionally entering
 **         the Blocked state (with a timeout) to wait for a bit or
@@ -2099,7 +2168,8 @@ void FRTOS1_Init(void);
   xEventGroupSetBits(xEventGroup, uxBitsToSet)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupSetBits (component FreeRTOS)
+**     Method      :  xEventGroupSetBits (component FreeRTOS)
+**
 **     Description :
 **          Set bits (flags) within an RTOS event group. This function
 **         cannot be called from an interrupt.
@@ -2143,7 +2213,8 @@ void FRTOS1_Init(void);
   xEventGroupSetBitsFromISR(xEventGroup, uxBitsToSet, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupSetBitsFromISR (component FreeRTOS)
+**     Method      :  xEventGroupSetBitsFromISR (component FreeRTOS)
+**
 **     Description :
 **          Set bits (flags) within an RTOS event group. A version of
 **         xEventGroupSetBits() that can be called from an interrupt
@@ -2213,7 +2284,8 @@ void FRTOS1_Init(void);
   xEventGroupClearBits(xEventGroup, uxBitsToSet)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupClearBits (component FreeRTOS)
+**     Method      :  xEventGroupClearBits (component FreeRTOS)
+**
 **     Description :
 **         Clear bits (flags) within an RTOS event group. This function
 **         cannot be called from an interrupt. See
@@ -2256,7 +2328,8 @@ void FRTOS1_Init(void);
   xEventGroupClearBitsFromISR(xEventGroup, uxBitsToSet)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupClearBitsFromISR (component FreeRTOS)
+**     Method      :  xEventGroupClearBitsFromISR (component FreeRTOS)
+**
 **     Description :
 **          A version of xEventGroupClearBits() that can be called from
 **         an interrupt. 
@@ -2296,7 +2369,8 @@ void FRTOS1_Init(void);
   xEventGroupGetBits(xEventGroup)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupGetBits (component FreeRTOS)
+**     Method      :  xEventGroupGetBits (component FreeRTOS)
+**
 **     Description :
 **         Returns the current value of the event bits (event flags) in
 **         an RTOS event group. This function cannot be used from an
@@ -2319,7 +2393,8 @@ void FRTOS1_Init(void);
   xEventGroupGetBitsFromISR(xEventGroup)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupGetBitsFromISR (component FreeRTOS)
+**     Method      :  xEventGroupGetBitsFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xEventGroupGetBits() that can be called from an
 **         interrupt. 
@@ -2340,7 +2415,8 @@ void FRTOS1_Init(void);
   xEventGroupSync(xEventGroup, uxBitsToSet, uxBitsToWaitFor, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupSync (component FreeRTOS)
+**     Method      :  xEventGroupSync (component FreeRTOS)
+**
 **     Description :
 **          Atomically set bits (flags) within an RTOS event group,
 **         then wait for a combination of bits to be set within the
@@ -2385,7 +2461,8 @@ void FRTOS1_Init(void);
   xTimerCreate(pcTimerName, xTimerPeriod, uxAutoReload, pvTimerID, pxCallbackFunction)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerCreate (component FreeRTOS)
+**     Method      :  xTimerCreate (component FreeRTOS)
+**
 **     Description :
 **          Creates a new software timer instance. This allocates the
 **         storage required by the new timer, initialises the new
@@ -2443,7 +2520,8 @@ void FRTOS1_Init(void);
   xTimerIsTimerActive(xTimer)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerIsTimerActive (component FreeRTOS)
+**     Method      :  xTimerIsTimerActive (component FreeRTOS)
+**
 **     Description :
 **         Queries a timer to see if it is active or dormant.
 **         A timer will be dormant if:
@@ -2466,7 +2544,8 @@ void FRTOS1_Init(void);
   xTimerStart(xTimer, xBlockTime)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerStart (component FreeRTOS)
+**     Method      :  xTimerStart (component FreeRTOS)
+**
 **     Description :
 **          Timer functionality is provided by a timer service/daemon
 **         task. Many of the public FreeRTOS timer API functions send
@@ -2527,7 +2606,8 @@ void FRTOS1_Init(void);
   xTimerStop(xTimer, xBlockTime)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerStop (component FreeRTOS)
+**     Method      :  xTimerStop (component FreeRTOS)
+**
 **     Description :
 **          Timer functionality is provided by a timer service/daemon
 **         task. Many of the public FreeRTOS timer API functions send
@@ -2577,7 +2657,8 @@ void FRTOS1_Init(void);
   xTimerChangePeriod(xTimer, xNewPeriod, xBlockTime)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerChangePeriod (component FreeRTOS)
+**     Method      :  xTimerChangePeriod (component FreeRTOS)
+**
 **     Description :
 **          Timer functionality is provided by a timer service/daemon
 **         task. Many of the public FreeRTOS timer API functions send
@@ -2637,7 +2718,8 @@ void FRTOS1_Init(void);
   xTimerDelete(xTimer, xBlockTime)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerDelete (component FreeRTOS)
+**     Method      :  xTimerDelete (component FreeRTOS)
+**
 **     Description :
 **          Timer functionality is provided by a timer service/daemon
 **         task. Many of the public FreeRTOS timer API functions send
@@ -2683,7 +2765,8 @@ void FRTOS1_Init(void);
   xTimerReset(xTimer, xBlockTime)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerReset (component FreeRTOS)
+**     Method      :  xTimerReset (component FreeRTOS)
+**
 **     Description :
 **          Timer functionality is provided by a timer service/daemon
 **         task. Many of the public FreeRTOS timer API functions send
@@ -2747,7 +2830,8 @@ void FRTOS1_Init(void);
   xTimerStartFromISR(xTimer, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerStartFromISR (component FreeRTOS)
+**     Method      :  xTimerStartFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xTimerStart() that can be called from an
 **         interrupt service routine. 
@@ -2797,7 +2881,8 @@ void FRTOS1_Init(void);
   xTimerStopFromISR(xTimer, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerStopFromISR (component FreeRTOS)
+**     Method      :  xTimerStopFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xTimerStop() that can be called from an
 **         interrupt service routine.
@@ -2844,7 +2929,8 @@ void FRTOS1_Init(void);
   xTimerChangePeriodFromISR(xTimer, xNewPeriod, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerChangePeriodFromISR (component FreeRTOS)
+**     Method      :  xTimerChangePeriodFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xTimerChangePeriod() that can be called from an
 **         interrupt service routine. 
@@ -2904,7 +2990,8 @@ void FRTOS1_Init(void);
   xTimerResetFromISR(xTimer, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerResetFromISR (component FreeRTOS)
+**     Method      :  xTimerResetFromISR (component FreeRTOS)
+**
 **     Description :
 **         A version of xTimerReset() that can be called from an
 **         interrupt service routine.
@@ -2954,7 +3041,8 @@ void FRTOS1_Init(void);
   pvTimerGetTimerID(xTimer)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pvTimerGetTimerID (component FreeRTOS)
+**     Method      :  pvTimerGetTimerID (component FreeRTOS)
+**
 **     Description :
 **          Returns the ID assigned to the timer.
 **         IDs are assigned to timers using the pvTimerID parameter of
@@ -2974,7 +3062,8 @@ void FRTOS1_Init(void);
   xTimerGetTimerDaemonTaskHandle()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerGetTimerDaemonTaskHandle (component FreeRTOS)
+**     Method      :  xTimerGetTimerDaemonTaskHandle (component FreeRTOS)
+**
 **     Description :
 **         INCLUDE_xTimerGetTimerDaemonTaskHandle and configUSE_TIMERS
 **         must both be set to 1 in FreeRTOSConfig.h for
@@ -2994,7 +3083,8 @@ void FRTOS1_Init(void);
   pcTimerGetTimerName(xTimer)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pcTimerGetTimerName (component FreeRTOS)
+**     Method      :  pcTimerGetTimerName (component FreeRTOS)
+**
 **     Description :
 **         
 **     Parameters  :
@@ -3011,7 +3101,8 @@ void FRTOS1_Init(void);
   xTimerPendFunctionCall(xFunctionToPend, pvParameter1, ulParameter2, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerPendFunctionCall (component FreeRTOS)
+**     Method      :  xTimerPendFunctionCall (component FreeRTOS)
+**
 **     Description :
 **          Used to pend the execution of a function to the RTOS daemon
 **         task (the timer service task, hence this function is
@@ -3062,7 +3153,8 @@ void FRTOS1_Init(void);
   xTimerPendFunctionCallFromISR(xFunctionToPend, pvParameter1, ulParameter2, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTimerPendFunctionCallFromISR (component FreeRTOS)
+**     Method      :  xTimerPendFunctionCallFromISR (component FreeRTOS)
+**
 **     Description :
 **          Used from application interrupt service routines to defer
 **         the execution of a function to the RTOS daemon task (the
@@ -3132,7 +3224,8 @@ void FRTOS1_Init(void);
   xTaskNotifyGive(xTaskToNotify) \
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyGive (component FreeRTOS)
+**     Method      :  xTaskNotifyGive (component FreeRTOS)
+**
 **     Description :
 **          Each RTOS task has a 32-bit notification value which is
 **         initialised to zero when the RTOS task is created. An RTOS
@@ -3174,7 +3267,8 @@ void FRTOS1_Init(void);
   ulTaskNotifyTake(xClearCountOnExit, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_ulTaskNotifyTake (component FreeRTOS)
+**     Method      :  ulTaskNotifyTake (component FreeRTOS)
+**
 **     Description :
 **          Each RTOS task has a 32-bit notification value which is
 **         initialised to zero when the RTOS task is created. An RTOS
@@ -3245,7 +3339,8 @@ void FRTOS1_Init(void);
   vTaskNotifyGiveFromISR(xTaskToNotify, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskNotifyGiveFromISR (component FreeRTOS)
+**     Method      :  vTaskNotifyGiveFromISR (component FreeRTOS)
+**
 **     Description :
 **          A version of xTaskNotifyGive() that can be called from an
 **         interrupt service routine (ISR).
@@ -3299,7 +3394,8 @@ void FRTOS1_Init(void);
   xTaskNotify(xTaskToNotify, ulValue, eAction)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotify (component FreeRTOS)
+**     Method      :  xTaskNotify (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3386,7 +3482,8 @@ void FRTOS1_Init(void);
   xTaskNotifyFromISR(xTaskToNotify, ulValue, eAction, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyFromISR (component FreeRTOS)
+**     Method      :  xTaskNotifyFromISR (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3489,7 +3586,8 @@ void FRTOS1_Init(void);
   xTaskNotifyWait(ulBitsToClearOnEntry, ulBitsToClearOnExit, pulNotificationValue, xTicksToWait)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyWait (component FreeRTOS)
+**     Method      :  xTaskNotifyWait (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3578,7 +3676,8 @@ void FRTOS1_Init(void);
   vTaskSetThreadLocalStoragePointer(xTaskToSet, xIndex, pvValue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskSetThreadLocalStoragePointer (component FreeRTOS)
+**     Method      :  vTaskSetThreadLocalStoragePointer (component FreeRTOS)
+**
 **     Description :
 **         Only enabled if configNUM_THREAD_LOCAL_STORAGE_POINTERS is >
 **         0.
@@ -3595,7 +3694,8 @@ void FRTOS1_Init(void);
   pvTaskGetThreadLocalStoragePointer(xTaskToQuery, xIndex)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pvTaskGetThreadLocalStoragePointer (component FreeRTOS)
+**     Method      :  pvTaskGetThreadLocalStoragePointer (component FreeRTOS)
+**
 **     Description :
 **         Sets the thread local storage. Only enabled if
 **         configNUM_THREAD_LOCAL_STORAGE_POINTERS is >0
@@ -3613,7 +3713,8 @@ void FRTOS1_Init(void);
   xSemaphoreCreateBinary()
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateBinary (component FreeRTOS)
+**     Method      :  xSemaphoreCreateBinary (component FreeRTOS)
+**
 **     Description :
 **         The old vSemaphoreCreateBinary() macro is now deprecated in
 **         favour of this xSemaphoreCreateBinary() function.  Note that
@@ -3646,7 +3747,8 @@ void FRTOS1_Init(void);
   xTaskNotifyAndQuery(xTaskToNotify, ulValue, eAction, pulPreviousNotifyValue)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyAndQuery (component FreeRTOS)
+**     Method      :  xTaskNotifyAndQuery (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3706,7 +3808,8 @@ void FRTOS1_Init(void);
   xTaskNotifyAndQueryFromISR(xTaskToNotify, ulValue, eAction, pulPreviousNotifyValue, pxHigherPriorityTaskWoken)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyAndQueryFromISR (component FreeRTOS)
+**     Method      :  xTaskNotifyAndQueryFromISR (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3781,7 +3884,8 @@ void FRTOS1_Init(void);
   xTaskNotifyStateClear(xTask)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskNotifyStateClear (component FreeRTOS)
+**     Method      :  xTaskNotifyStateClear (component FreeRTOS)
+**
 **     Description :
 **          [If you are using RTOS task notifications to implement
 **         binary or counting semaphore type behaviour then use the
@@ -3809,7 +3913,8 @@ void FRTOS1_Init(void);
 void FRTOS1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_Deinit (component FreeRTOS)
+**     Method      :  Deinit (component FreeRTOS)
+**
 **     Description :
 **         Module deinitialization method
 **     Parameters  : None
@@ -3822,7 +3927,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskGetHandle (component FreeRTOS)
+**     Method      :  xTaskGetHandle (component FreeRTOS)
+**
 **     Description :
 **         Looks up the handle of a task from the task's name. 
 **     Parameters  :
@@ -3843,7 +3949,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_pcTaskGetName (component FreeRTOS)
+**     Method      :  pcTaskGetName (component FreeRTOS)
+**
 **     Description :
 **         Looks up the name of a task from the task's handle. 
 **     Parameters  :
@@ -3863,7 +3970,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xTaskCreateStatic (component FreeRTOS)
+**     Method      :  xTaskCreateStatic (component FreeRTOS)
+**
 **     Description :
 **         Create a new task and add it to the list of tasks that are
 **         ready to run.
@@ -3914,7 +4022,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xQueueCreateStatic (component FreeRTOS)
+**     Method      :  xQueueCreateStatic (component FreeRTOS)
+**
 **     Description :
 **         Creates a queue.
 **     Parameters  :
@@ -3949,7 +4058,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xEventGroupCreateStatic (component FreeRTOS)
+**     Method      :  xEventGroupCreateStatic (component FreeRTOS)
+**
 **     Description :
 **          Create a new RTOS event group. This function cannot be
 **         called from an interrupt.
@@ -3981,7 +4091,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateBinaryStatic (component FreeRTOS)
+**     Method      :  xSemaphoreCreateBinaryStatic (component FreeRTOS)
+**
 **     Description :
 **         The old vSemaphoreCreateBinary() macro is now deprecated in
 **         favour of this xSemaphoreCreateBinary() function.  Note that
@@ -4018,7 +4129,8 @@ void FRTOS1_Deinit(void);
   xSemaphoreCreateCountingStatic(uxMaxCount, uxInitialCount, pxSempahoreBuffer)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateCountingStatic (component FreeRTOS)
+**     Method      :  xSemaphoreCreateCountingStatic (component FreeRTOS)
+**
 **     Description :
 **         Macro that creates a counting semaphore by using the
 **         existing queue mechanism.
@@ -4064,7 +4176,8 @@ void FRTOS1_Deinit(void);
 
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateMutexStatic (component FreeRTOS)
+**     Method      :  xSemaphoreCreateMutexStatic (component FreeRTOS)
+**
 **     Description :
 **         Macro that creates a mutex semaphore by using the existing
 **         queue mechanism.
@@ -4113,7 +4226,8 @@ void FRTOS1_Deinit(void);
   vTaskGetInfo(xTask, pxTaskStatus, xGetFreeStackSpace, eState)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_vTaskGetInfo (component FreeRTOS)
+**     Method      :  vTaskGetInfo (component FreeRTOS)
+**
 **     Description :
 **         Whereas uxTaskGetSystemState() populates a TaskStatus_t
 **         structure for each task in the system, vTaskGetInfo()
@@ -4166,7 +4280,8 @@ void FRTOS1_Deinit(void);
   uxSemaphoreGetCount(xSemaphore)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_uxSemaphoreGetCount (component FreeRTOS)
+**     Method      :  uxSemaphoreGetCount (component FreeRTOS)
+**
 **     Description :
 **         
 **     Parameters  :
@@ -4187,7 +4302,8 @@ void FRTOS1_Deinit(void);
   xSemaphoreCreateRecursiveMutexStatic(pxMutexBuffer)
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_xSemaphoreCreateRecursiveMutexStatic (component FreeRTOS)
+**     Method      :  xSemaphoreCreateRecursiveMutexStatic (component FreeRTOS)
+**
 **     Description :
 **         Macro that implements a recursive mutex by using the
 **         existing queue mechanism.
@@ -4226,7 +4342,8 @@ void FRTOS1_Deinit(void);
 void FRTOS1_AppConfigureTimerForRuntimeStats(void);
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_AppConfigureTimerForRuntimeStats (component FreeRTOS)
+**     Method      :  AppConfigureTimerForRuntimeStats (component FreeRTOS)
+**
 **     Description :
 **         Configures the timer for generating runtime statistics
 **     Parameters  : None
@@ -4237,7 +4354,8 @@ void FRTOS1_AppConfigureTimerForRuntimeStats(void);
 uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 /*
 ** ===================================================================
-**     Method      :  FRTOS1_AppGetRuntimeCounterValueFromISR (component FreeRTOS)
+**     Method      :  AppGetRuntimeCounterValueFromISR (component FreeRTOS)
+**
 **     Description :
 **         returns the current runtime counter. Function can be called
 **         from an interrupt service routine.
@@ -4257,12 +4375,4 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void);
 /* ifndef __FRTOS1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

@@ -4,10 +4,9 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : GenericTimeDate
-**     Version     : Component 01.061, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.062, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -30,9 +29,9 @@
 **            Software RTC Initialization                  : Init from Defaults
 **          System                                         : 
 **            Critical Section                             : CS1
-**            Utility                                      : UTIL1
 **            SDK                                          : MCUC1
 **            Shell                                        : Enabled
+**              Utility                                    : UTIL1
 **              Shell                                      : CLS1
 **     Contents    :
 **         AddTick                     - void TmDt1_AddTick(void);
@@ -65,32 +64,32 @@
 **         DeInit                      - void TmDt1_DeInit(void);
 **         Init                        - uint8_t TmDt1_Init(void);
 **
-**     * Copyright (c) 2011-2016, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2011-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file TmDt1.h
@@ -117,49 +116,6 @@
 #include "MCUC1.h"
 #include "CLS1.h"
 
-
-/* if command line parser is enabled */
-#define TmDt1_PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
-
-/* if Init() is called durint startup */
-#define TmDt1_INIT_IN_STARTUP                               1 /* 1: call Init() during startup, 0: application needs to call Init() */
-
-/* RTC Initialization options during Init() */
-#define TmDt1_INIT_SOFTWARE_RTC_FROM_DEFAULTS               0  /* init software RTC from default values */
-#define TmDt1_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC           1  /* init software RTC from internal RTC values */
-#define TmDt1_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC           2  /* init software RTC from external RTC values */
-
-/* settings for software RTC */
-#define TmDt1_USE_SOFTWARE_RTC                              1  /* set to 1 if using software RTC, 0 otherwise */
-#define TmDt1_INIT_SOFTWARE_RTC_METHOD                      TmDt1_INIT_SOFTWARE_RTC_FROM_DEFAULTS /* which method to use during Init() */
-
-/* settings for internal hardware RTC */
-#define TmDt1_USE_INTERNAL_HW_RTC                           0  /* set to 1 if using internal HW RTC, 0 otherwise */
-#define TmDt1_USE_INTERNAL_HW_RTC_BEAN                      0  /* set to 1 if using HW RTC using normal bean driver, 0 otherwise */
-#define TmDt1_USE_INTERNAL_HW_RTC_LDD                       0  /* set to 1 if using HW RTC using LDD driver, 0 otherwise */
-
-#define TmDt1_USE_EXTERNAL_HW_RTC                           0  /* set to 1 if using external HW RTC driver, 0 otherwise */
-
-#if TmDt1_USE_INTERNAL_HW_RTC_BEAN
-  #define TmDt1_HAS_SEC100_IN_TIMEREC                       0 /* Bean version have no Sec100!  */
-#else
-  #define TmDt1_HAS_SEC100_IN_TIMEREC                       1 /* non-Bean version have Sec100  */
-#endif
-
-/* SetTime() and SetDate() configuration */
-#define TmDt1_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC        1 /* 1: Enable setting software RTC time/date */
-#define TmDt1_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC        0 /* 1: Enable setting internal RTC time/date */
-#define TmDt1_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC        0 /* 1: Enable setting external RTC time/date */
-
-/* GetTime() and GetDate() configuration */
-#define TmDt1_GET_TIME_DATE_METHOD_SOFTWARE_RTC             1 /* use software RTC */
-#define TmDt1_GET_TIME_DATE_METHOD_INTERNAL_RTC             2 /* use internal RTC */
-#define TmDt1_GET_TIME_DATE_METHOD_EXTERNAL_RTC             3 /* use external RTC */
-#define TmDt1_USE_GET_TIME_DATE_METHOD                      TmDt1_GET_TIME_DATE_METHOD_SOFTWARE_RTC /* specifies method to get time and date */
-
-/* default time and date format strings */
-#define TmDt1_DEFAULT_TIME_FORMAT_STR  "hh:mm:ss,cc"
-#define TmDt1_DEFAULT_DATE_FORMAT_STR  "dd.mm.yyyy"
 
 /* user events */
 #define TmDt1_ON_DATE_GET_EVENT                             0 /* 1: enabled user event */
@@ -217,7 +173,8 @@ static const DATEREC TmDt1_DefaultDate = {
 uint8_t TmDt1_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetTime (component GenericTimeDate)
+**     Method      :  SetTime (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual time of the software RTC.
 **     Parameters  :
@@ -234,7 +191,8 @@ uint8_t TmDt1_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100);
 void TmDt1_AddTick(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_AddTick (component GenericTimeDate)
+**     Method      :  AddTick (component GenericTimeDate)
+**
 **     Description :
 **         Increments the tick counter of the software RTC. Needs to be
 **         called periodically by the application to increase the time
@@ -247,7 +205,8 @@ void TmDt1_AddTick(void);
 uint8_t TmDt1_GetTime(TIMEREC *time);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetTime (component GenericTimeDate)
+**     Method      :  GetTime (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current time from the software RTC.
 **     Parameters  :
@@ -263,7 +222,8 @@ uint8_t TmDt1_GetTime(TIMEREC *time);
 uint8_t TmDt1_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetDate (component GenericTimeDate)
+**     Method      :  SetDate (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual date of the software RTC.
 **     Parameters  :
@@ -279,7 +239,8 @@ uint8_t TmDt1_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
 uint8_t TmDt1_GetDate(DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetDate (component GenericTimeDate)
+**     Method      :  GetDate (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current date from the software RTC.
 **     Parameters  :
@@ -293,7 +254,8 @@ uint8_t TmDt1_GetDate(DATEREC *date);
 uint8_t TmDt1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_Init (component GenericTimeDate)
+**     Method      :  Init (component GenericTimeDate)
+**
 **     Description :
 **         Initialization method
 **     Parameters  : None
@@ -305,7 +267,8 @@ uint8_t TmDt1_Init(void);
 uint8_t TmDt1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_ParseCommand (component GenericTimeDate)
+**     Method      :  ParseCommand (component GenericTimeDate)
+**
 **     Description :
 **         Shell Command Line parser
 **     Parameters  :
@@ -322,7 +285,8 @@ uint8_t TmDt1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_S
 void TmDt1_DeInit(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_DeInit (component GenericTimeDate)
+**     Method      :  DeInit (component GenericTimeDate)
+**
 **     Description :
 **         Deinitializes the driver.
 **     Parameters  : None
@@ -333,7 +297,8 @@ void TmDt1_DeInit(void);
 void TmDt1_AddTicks(uint16_t nofTicks);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_AddTicks (component GenericTimeDate)
+**     Method      :  AddTicks (component GenericTimeDate)
+**
 **     Description :
 **         Same as AddTick(), but multiple ticks can be added in one
 **         step.
@@ -347,7 +312,8 @@ void TmDt1_AddTicks(uint16_t nofTicks);
 uint8_t TmDt1_TicksToTime(uint32_t ticks, TIMEREC *time);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_TicksToTime (component GenericTimeDate)
+**     Method      :  TicksToTime (component GenericTimeDate)
+**
 **     Description :
 **         Transforms ticks into time information
 **     Parameters  :
@@ -363,7 +329,8 @@ uint8_t TmDt1_TicksToTime(uint32_t ticks, TIMEREC *time);
 uint8_t TmDt1_TimeToTicks(TIMEREC *time, uint32_t *ticks);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_TimeToTicks (component GenericTimeDate)
+**     Method      :  TimeToTicks (component GenericTimeDate)
+**
 **     Description :
 **         Transforms time information into ticks
 **     Parameters  :
@@ -378,7 +345,8 @@ uint8_t TmDt1_TimeToTicks(TIMEREC *time, uint32_t *ticks);
 uint8_t TmDt1_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetInternalRTCTimeDate (component GenericTimeDate)
+**     Method      :  SetInternalRTCTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual time and date of the internal
 **         hardware RTC.
@@ -398,7 +366,8 @@ uint8_t TmDt1_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetInternalRTCTimeDate (component GenericTimeDate)
+**     Method      :  GetInternalRTCTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current time and date from the hardware
 **         RTC.
@@ -416,7 +385,8 @@ uint8_t TmDt1_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_CalculateDayOfWeek(uint16_t Year, uint8_t Month, uint8_t Day);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_CalculateDayOfWeek (component GenericTimeDate)
+**     Method      :  CalculateDayOfWeek (component GenericTimeDate)
+**
 **     Description :
 **         Returns the day of the week, Sunday starting as zero. Monday
 **         is 1, ...
@@ -433,7 +403,8 @@ uint8_t TmDt1_CalculateDayOfWeek(uint16_t Year, uint8_t Month, uint8_t Day);
 uint8_t TmDt1_SetSWTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetSWTimeDate (component GenericTimeDate)
+**     Method      :  SetSWTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual time and date of the software
 **         RTC.
@@ -453,7 +424,8 @@ uint8_t TmDt1_SetSWTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_GetSWTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetSWTimeDate (component GenericTimeDate)
+**     Method      :  GetSWTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current time and date from the software
 **         RTC.
@@ -471,7 +443,8 @@ uint8_t TmDt1_GetSWTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_SyncWithInternalRTC(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SyncWithInternalRTC (component GenericTimeDate)
+**     Method      :  SyncWithInternalRTC (component GenericTimeDate)
+**
 **     Description :
 **         Synchronizes the software RTC with date and time from the
 **         internal hardware RTC
@@ -484,7 +457,8 @@ uint8_t TmDt1_SyncWithInternalRTC(void);
 uint8_t TmDt1_SyncWithExternalRTC(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SyncWithExternalRTC (component GenericTimeDate)
+**     Method      :  SyncWithExternalRTC (component GenericTimeDate)
+**
 **     Description :
 **         Synchronizes the software RTC with date and time from the
 **         hardware RTC. Note that if that RTC interface requires
@@ -499,7 +473,8 @@ uint8_t TmDt1_SyncWithExternalRTC(void);
 uint8_t TmDt1_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetExternalRTCTimeDate (component GenericTimeDate)
+**     Method      :  SetExternalRTCTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual time and date of the external
 **         hardware RTC.
@@ -519,7 +494,8 @@ uint8_t TmDt1_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetExternalRTCTimeDate (component GenericTimeDate)
+**     Method      :  GetExternalRTCTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current time and date from the external
 **         hardware RTC.
@@ -537,7 +513,8 @@ uint8_t TmDt1_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_SetTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SetTimeDate (component GenericTimeDate)
+**     Method      :  SetTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method sets a new actual time and date of the RTC.
 **     Parameters  :
@@ -556,7 +533,8 @@ uint8_t TmDt1_SetTimeDate(TIMEREC *time, DATEREC *date);
 uint8_t TmDt1_GetTimeDate(TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_GetTimeDate (component GenericTimeDate)
+**     Method      :  GetTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         This method returns current time and date from the RTC.
 **     Parameters  :
@@ -573,7 +551,8 @@ uint8_t TmDt1_GetTimeDate(TIMEREC *time, DATEREC *date);
 void TmDt1_UnixSecondsToTimeDateCustom(int32_t seconds, int8_t offset_hours, TIMEREC *time, DATEREC *date, uint16_t baseYear);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_UnixSecondsToTimeDateCustom (component GenericTimeDate)
+**     Method      :  UnixSecondsToTimeDateCustom (component GenericTimeDate)
+**
 **     Description :
 **         Transforms a given time/date into the Unix time stamp, with
 **         the number of seconds from a starting date
@@ -596,7 +575,8 @@ void TmDt1_UnixSecondsToTimeDateCustom(int32_t seconds, int8_t offset_hours, TIM
 int32_t TmDt1_TimeDateToUnixSecondsCustom(TIMEREC *time, DATEREC *date, int8_t offset_hours, uint16_t baseYear);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_TimeDateToUnixSecondsCustom (component GenericTimeDate)
+**     Method      :  TimeDateToUnixSecondsCustom (component GenericTimeDate)
+**
 **     Description :
 **         Returns for a given time/date the corresponding UNIX time
 **         stamp with a custom base date.
@@ -620,7 +600,8 @@ int32_t TmDt1_TimeDateToUnixSecondsCustom(TIMEREC *time, DATEREC *date, int8_t o
 void TmDt1_UnixSecondsToTimeDate(int32_t seconds, int8_t offset_hours, TIMEREC *time, DATEREC *date);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_UnixSecondsToTimeDate (component GenericTimeDate)
+**     Method      :  UnixSecondsToTimeDate (component GenericTimeDate)
+**
 **     Description :
 **         Transforms a given time/date into the Unix time stamp, with
 **         the number of seconds after 1-Jan-1970
@@ -641,7 +622,8 @@ void TmDt1_UnixSecondsToTimeDate(int32_t seconds, int8_t offset_hours, TIMEREC *
 int32_t TmDt1_TimeDateToUnixSeconds(TIMEREC *time, DATEREC *date, int8_t offset_hours);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_TimeDateToUnixSeconds (component GenericTimeDate)
+**     Method      :  TimeDateToUnixSeconds (component GenericTimeDate)
+**
 **     Description :
 **         Returns for a given time/date the corresponding UNIX time
 **         stamp, starting at 1-Jan-1970.
@@ -663,7 +645,8 @@ int32_t TmDt1_TimeDateToUnixSeconds(TIMEREC *time, DATEREC *date, int8_t offset_
 uint8_t TmDt1_AddDateString(uint8_t *buf, size_t bufSize, DATEREC *date, uint8_t *format);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_AddDateString (component GenericTimeDate)
+**     Method      :  AddDateString (component GenericTimeDate)
+**
 **     Description :
 **         Adds a formatted date string to a buffer
 **     Parameters  :
@@ -682,7 +665,8 @@ uint8_t TmDt1_AddDateString(uint8_t *buf, size_t bufSize, DATEREC *date, uint8_t
 uint8_t TmDt1_AddTimeString(uint8_t *buf, size_t bufSize, TIMEREC *time, uint8_t *format);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_AddTimeString (component GenericTimeDate)
+**     Method      :  AddTimeString (component GenericTimeDate)
+**
 **     Description :
 **         Adds a formatted time string to a buffer
 **     Parameters  :
@@ -701,7 +685,8 @@ uint8_t TmDt1_AddTimeString(uint8_t *buf, size_t bufSize, TIMEREC *time, uint8_t
 uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void);
 /*
 ** ===================================================================
-**     Method      :  TmDt1_SyncSWtimeToInternalRTCsec (component GenericTimeDate)
+**     Method      :  SyncSWtimeToInternalRTCsec (component GenericTimeDate)
+**
 **     Description :
 **         This method synchronizes the software RTC with the internal
 **         HW RTC. Because the internal RTC only counts seconds, we
@@ -718,12 +703,4 @@ uint8_t TmDt1_SyncSWtimeToInternalRTCsec(void);
 /* ifndef __TmDt1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

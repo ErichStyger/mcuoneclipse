@@ -4,16 +4,13 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : Wait
-**     Version     : Component 01.082, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.084, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-05, 12:54, # CodeGen: 135
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
 **          Component name                                 : WAIT1
-**          SDK                                            : MCUC1
-**          Use Cycle Counter                              : Disabled
 **          Manual Clock Values                            : Disabled
 **          Delay100usFunction                             : Delay100US
 **          RTOS                                           : Disabled
@@ -30,32 +27,32 @@
 **         Init           - void WAIT1_Init(void);
 **         DeInit         - void WAIT1_DeInit(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2019, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file WAIT1.h
@@ -75,14 +72,13 @@
 #include "MCUC1.h" /* SDK and API used */
 #include "WAIT1config.h" /* configuration */
 
-/* Include inherited components */
-#include "MCUC1.h"
-
 /* other includes needed */
-/* include RTOS header files */
-#include "FreeRTOS.h" /* for vTaskDelay() */
-#include "task.h"
-
+#if WAIT1_CONFIG_USE_RTOS_WAIT
+  /* include RTOS header files */
+  #include "McuRTOS.h"
+  #include "FreeRTOS.h" /* for vTaskDelay() */
+  #include "task.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -109,7 +105,8 @@ extern "C" {
 void WAIT1_Wait10Cycles(void);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Wait10Cycles (component Wait)
+**     Method      :  Wait10Cycles (component Wait)
+**
 **     Description :
 **         Wait for 10 CPU cycles.
 **     Parameters  : None
@@ -120,7 +117,8 @@ void WAIT1_Wait10Cycles(void);
 void WAIT1_Wait100Cycles(void);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Wait100Cycles (component Wait)
+**     Method      :  Wait100Cycles (component Wait)
+**
 **     Description :
 **         Wait for 100 CPU cycles.
 **     Parameters  : None
@@ -131,7 +129,8 @@ void WAIT1_Wait100Cycles(void);
 void WAIT1_WaitCycles(uint16_t cycles);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_WaitCycles (component Wait)
+**     Method      :  WaitCycles (component Wait)
+**
 **     Description :
 **         Wait for a specified number of CPU cycles (16bit data type).
 **     Parameters  :
@@ -144,7 +143,8 @@ void WAIT1_WaitCycles(uint16_t cycles);
 void WAIT1_Waitms(uint16_t ms);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Waitms (component Wait)
+**     Method      :  Waitms (component Wait)
+**
 **     Description :
 **         Wait for a specified time in milliseconds.
 **     Parameters  :
@@ -167,7 +167,8 @@ void WAIT1_Waitms(uint16_t ms);
        )
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Waitus (component Wait)
+**     Method      :  Waitus (component Wait)
+**
 **     Description :
 **         Wait for a specified time in microseconds.
 **     Parameters  :
@@ -191,7 +192,8 @@ void WAIT1_Waitms(uint16_t ms);
        )
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Waitns (component Wait)
+**     Method      :  Waitns (component Wait)
+**
 **     Description :
 **         Wait for a specified time in nano seconds.
 **     Parameters  :
@@ -202,13 +204,14 @@ void WAIT1_Waitms(uint16_t ms);
 */
 
 #if WAIT1_CONFIG_USE_RTOS_WAIT
-  #define WAIT1_WaitOSms(ms) vTaskDelay(ms/portTICK_PERIOD_MS) /* use FreeRTOS API */
+  #define WAIT1_WaitOSms(ms) vTaskDelay(pdMS_TO_TICKS(ms)) /* use FreeRTOS API */
 #else
   #define WAIT1_WaitOSms(ms)  WAIT1_Waitms(ms) /* use normal wait */
 #endif
 /*
 ** ===================================================================
-**     Method      :  WAIT1_WaitOSms (component Wait)
+**     Method      :  WaitOSms (component Wait)
+**
 **     Description :
 **         If an RTOS is enabled, this routine will use a non-blocking
 **         wait method. Otherwise it will do a busy/blocking wait.
@@ -220,7 +223,8 @@ void WAIT1_Waitms(uint16_t ms);
 void WAIT1_WaitLongCycles(uint32_t cycles);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_WaitLongCycles (component Wait)
+**     Method      :  WaitLongCycles (component Wait)
+**
 **     Description :
 **         Wait for a specified number of CPU cycles (32bit data type).
 **     Parameters  :
@@ -233,7 +237,8 @@ void WAIT1_WaitLongCycles(uint32_t cycles);
 void WAIT1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_Init (component Wait)
+**     Method      :  Init (component Wait)
+**
 **     Description :
 **         Driver initialization routine.
 **     Parameters  : None
@@ -244,7 +249,8 @@ void WAIT1_Init(void);
 void WAIT1_DeInit(void);
 /*
 ** ===================================================================
-**     Method      :  WAIT1_DeInit (component Wait)
+**     Method      :  DeInit (component Wait)
+**
 **     Description :
 **         Driver de-initialization routine
 **     Parameters  : None
@@ -262,12 +268,4 @@ void WAIT1_DeInit(void);
 /* ifndef __WAIT1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

@@ -4,10 +4,9 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : CriticalSection
-**     Version     : Component 01.010, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-01-19, 18:27, # CodeGen: 11
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -19,33 +18,35 @@
 **         CriticalVariable - void CS1_CriticalVariable(void);
 **         EnterCritical    - void CS1_EnterCritical(void);
 **         ExitCritical     - void CS1_ExitCritical(void);
+**         Deinit           - void CS1_Deinit(void);
+**         Init             - void CS1_Init(void);
 **
-**     * Copyright (c) 2014-2016, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2014-2019, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file CS1.h
@@ -72,6 +73,10 @@
   #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* workaround macros for wrong EnterCritical()/ExitCritical() in the low level drivers. */
 #define CS1_CriticalVariableDrv() \
@@ -90,11 +95,16 @@
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_CriticalVariable() /* nothing needed */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_CriticalVariable() /* nothing needed */
+  #else
+    #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #endif
 #endif
 /*
 ** ===================================================================
-**     Method      :  CS1_CriticalVariable (component CriticalSection)
+**     Method      :  CriticalVariable (component CriticalSection)
+**
 **     Description :
 **         Defines a variable if necessary. This is a macro.
 **     Parameters  : None
@@ -107,8 +117,14 @@
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_EnterCritical()   taskENTER_CRITICAL_FROM_ISR() /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_EnterCritical() \
-    do {                                  \
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_EnterCritical() \
+      do {                                  \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts \todo */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_EnterCritical() \
+      do {                                  \
       /*lint -save  -esym(529,cpuSR) Symbol 'cpuSR' not subsequently referenced. */\
       __asm (                             \
       "mrs   r0, PRIMASK     \n\t"        \
@@ -117,11 +133,13 @@
       : [output] "=m" (cpuSR) :: "r0");   \
       __asm ("" ::: "memory");            \
       /*lint -restore Symbol 'cpuSR' not subsequently referenced. */\
-    } while(0)
+      } while(0)
+    #endif
 #endif
 /*
 ** ===================================================================
-**     Method      :  CS1_EnterCritical (component CriticalSection)
+**     Method      :  EnterCritical (component CriticalSection)
+**
 **     Description :
 **         Enters a critical section
 **     Parameters  : None
@@ -134,17 +152,26 @@
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_ExitCritical()   taskEXIT_CRITICAL_FROM_ISR(0) /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_ExitCritical() \
-   do{                                  \
+
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_ExitCritical() \
+      do {                                  \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts \todo */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_ExitCritical() \
+     do{                                  \
      __asm (                            \
      "ldrb r0, %[input]    \n\t"        \
      "msr PRIMASK,r0        \n\t"       \
      ::[input] "m" (cpuSR) : "r0");     \
-   } while(0)
+     } while(0)
+  #endif
 #endif
 /*
 ** ===================================================================
-**     Method      :  CS1_ExitCritical (component CriticalSection)
+**     Method      :  ExitCritical (component CriticalSection)
+**
 **     Description :
 **         Exits a critical section
 **     Parameters  : None
@@ -152,18 +179,38 @@
 ** ===================================================================
 */
 
+void CS1_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component CriticalSection)
+**
+**     Description :
+**         Driver de-initialization routine
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void CS1_Init(void);
+/*
+** ===================================================================
+**     Method      :  Init (component CriticalSection)
+**
+**     Description :
+**         driver initialization routine
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END CS1. */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /* ifndef __CS1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

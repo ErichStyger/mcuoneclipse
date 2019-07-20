@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Trace Recorder Library for Tracealyzer v3.1.1
+ * Trace Recorder Library for Tracealyzer v3.3.0
  * Percepio AB, www.percepio.com
  *
  * trcHardwarePort.h
@@ -19,7 +19,7 @@
  * configuration or porting of the RECORDER, e.g., to allow using it on a 
  * specific processor, processor family or with a specific communication
  * interface. Any such modifications should be documented directly below
- * this comment block.  
+ * this comment block.
  *
  * Disclaimer
  * The RECORDER is being delivered to you AS IS and PERCEPIO makes no warranty
@@ -73,6 +73,10 @@
   {
     __asm volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
   }
+#elif MCUC1_CONFIG_CPU_IS_STM32
+  #include "stm32f3xx_hal.h" /* header file for STM32F303K8 */
+#elif MCUC1_CONFIG_CPU_IS_NORDIC_NRF
+  #include "nrf.h" /* header file Nordic devices */
 #else
   #include "fsl_device_registers.h"
 #endif /* #if MCUC1_CONFIG_PEX_SDK_USED */
@@ -184,6 +188,7 @@
 	#ifndef __CORTEX_M
 	#error "Can't find the CMSIS API. Please include your processor's header file in trcConfig.h" 	
 	#endif
+
 	/**************************************************************************
 	* For Cortex-M3, M4 and M7, the DWT cycle counter is used for timestamping.
 	* For Cortex-M0 and M0+, the SysTick timer is used since DWT is not
@@ -229,15 +234,15 @@
 		#define TRC_HWTC_DIVISOR 4
 		#define TRC_HWTC_FREQ_HZ TRACE_CPU_CLOCK_HZ
 		#define TRC_IRQ_PRIORITY_ORDER 0
-
-	#else
 	
-    #define TRC_HWTC_TYPE           TRC_OS_TIMER_DECR
-    #define TRC_HWTC_COUNT          (*((volatile uint32_t*)0xE000E018))        /* SYST_CVR, SysTick current value register */
-    #define TRC_HWTC_PERIOD         ((*((volatile uint32_t*)0xE000E014)) + 1)  /* SYST_RVR, SysTick reload value register */
-    #define TRC_HWTC_DIVISOR        4
-    #define TRC_HWTC_FREQ_HZ        TRACE_CPU_CLOCK_HZ
-    #define TRC_IRQ_PRIORITY_ORDER  0
+	#else
+			
+		#define TRC_HWTC_TYPE TRC_OS_TIMER_DECR
+		#define TRC_HWTC_COUNT (*((volatile uint32_t*)0xE000E018))
+		#define TRC_HWTC_PERIOD ((*((volatile uint32_t*)0xE000E014)) + 1)
+		#define TRC_HWTC_DIVISOR 4
+		#define TRC_HWTC_FREQ_HZ TRACE_CPU_CLOCK_HZ
+		#define TRC_IRQ_PRIORITY_ORDER 0
 	
 	#endif
 
@@ -374,7 +379,22 @@
 	#define TRC_HWTC_FREQ_HZ (TRACE_TICK_RATE_HZ * TRC_HWTC_PERIOD)
 	#define TRC_IRQ_PRIORITY_ORDER 0
 
+#elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_Altera_NiosII)
+
+    /* UNOFFICIAL PORT - NOT YET VERIFIED BY PERCEPIO */
+    
+    #include "system.h"
+    #include "sys/alt_timestamp.h"
+
+    #define TRC_HWTC_TYPE          TRC_OS_TIMER_INCR
+    #define TRC_HWTC_COUNT         (uint32_t)alt_timestamp()
+    #define TRC_HWTC_PERIOD        0xFFFFFFFF
+    #define TRC_HWTC_FREQ_HZ       TIMESTAMP_TIMER_FREQ
+    #define TRC_HWTC_DIVISOR       1
+    #define TRC_IRQ_PRIORITY_ORDER 0
+
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_ARM_CORTEX_A9)
+	
 	/* INPUT YOUR PERIPHERAL BASE ADDRESS HERE */
 	#define TRC_CA9_MPCORE_PERIPHERAL_BASE_ADDRESS	0xSOMETHING
 	
@@ -421,7 +441,7 @@
 	#endif
 
 #elif (TRC_CFG_HARDWARE_PORT == TRC_HARDWARE_PORT_PROCESSOR_EXPERT) /* << EST */
-  #include "portTicks.h"
+  #include "portTicks.h" /* << EST */
 
 #elif (TRC_CFG_HARDWARE_PORT != TRC_HARDWARE_PORT_NOT_SET)
 

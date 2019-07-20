@@ -5,10 +5,9 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : DS18B20
-**     Version     : Component 01.016, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.018, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-01, 12:02, # CodeGen: 227
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
@@ -16,7 +15,7 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **          Component Name                                 : DS1
 **          Temperature Reading                            : Auto
 **          Connection mode                                : Multiple slaves
-**            Number of devices                            : 2
+**            Number of DS18B20 devices to connect         : 2
 **              Sensor 64-bit ROM code                     : 28-87-99-37-09-00-00-75
 **                Family code                              : 0x28
 **                Serial number 1                          : 0x87
@@ -37,7 +36,6 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **                CRC                                      : 0x73
 **          One Wire                                       : OW1
 **          SDK                                            : MCUC1
-**          Wait                                           : WAIT1
 **          Shell                                          : Enabled
 **            Shell                                        : CLS1
 **            Utility                                      : UTIL1
@@ -57,33 +55,33 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **         Init                    - void DS1_Init(void);
 **         Deinit                  - void DS1_Deinit(void);
 **
-**     * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
-**      * Updated and maintained by Erich Styger, 2014-2017
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
+**  * Updated and maintained by Erich Styger, 2014-2019
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file DS1.h
@@ -126,7 +124,8 @@ typedef enum {
 uint8_t DS1_StartConversion(uint8_t sensor_index);
 /*
 ** ===================================================================
-**     Method      :  DS1_StartConversion (component DS18B20)
+**     Method      :  StartConversion (component DS18B20)
+**
 **     Description :
 **         Starts the conversion of temperature in the sensor.
 **     Parameters  :
@@ -141,7 +140,8 @@ uint8_t DS1_StartConversion(uint8_t sensor_index);
 uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits resolution);
 /*
 ** ===================================================================
-**     Method      :  DS1_SetResolution (component DS18B20)
+**     Method      :  SetResolution (component DS18B20)
+**
 **     Description :
 **         Sets the resolution
 **     Parameters  :
@@ -162,7 +162,8 @@ uint8_t DS1_SetResolution(uint8_t sensor_index, DS18B20_ResolutionBits resolutio
 uint8_t DS1_ConvertAll(void);
 /*
 ** ===================================================================
-**     Method      :  DS1_ConvertAll (component DS18B20)
+**     Method      :  ConvertAll (component DS18B20)
+**
 **     Description :
 **         Convert temperature for all sensors
 **     Parameters  : None
@@ -174,7 +175,8 @@ uint8_t DS1_ConvertAll(void);
 uint8_t DS1_ReadTemperature(uint8_t sensor_index);
 /*
 ** ===================================================================
-**     Method      :  DS1_ReadTemperature (component DS18B20)
+**     Method      :  ReadTemperature (component DS18B20)
+**
 **     Description :
 **         Read the temperature value from the sensor and stores it in
 **         memory
@@ -190,7 +192,8 @@ uint8_t DS1_ReadTemperature(uint8_t sensor_index);
 uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
 /*
 ** ===================================================================
-**     Method      :  DS1_GetTemperature (component DS18B20)
+**     Method      :  GetTemperature (component DS18B20)
+**
 **     Description :
 **         Gets the temperature from memory.
 **     Parameters  :
@@ -205,7 +208,8 @@ uint8_t DS1_GetTemperatureRaw(uint16_t sensor_index, uint32_t *raw);
 bool DS1_isBusy(void);
 /*
 ** ===================================================================
-**     Method      :  DS1_isBusy (component DS18B20)
+**     Method      :  isBusy (component DS18B20)
+**
 **     Description :
 **         Returns TRUE if there are a operation in progress.
 **     Parameters  : None
@@ -218,7 +222,8 @@ bool DS1_isBusy(void);
 uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
 /*
 ** ===================================================================
-**     Method      :  DS1_GetRomCode (component DS18B20)
+**     Method      :  GetRomCode (component DS18B20)
+**
 **     Description :
 **         Gets the rom code from the memory.
 **     Parameters  :
@@ -235,7 +240,8 @@ uint8_t DS1_GetRomCode(uint8_t sensor_index, uint8_t **romCodePtr);
 uint8_t DS1_ReadRom(uint8_t sensor_index);
 /*
 ** ===================================================================
-**     Method      :  DS1_ReadRom (component DS18B20)
+**     Method      :  ReadRom (component DS18B20)
+**
 **     Description :
 **         Starts to read the rom code and saves it in memory.
 **     Parameters  :
@@ -250,7 +256,8 @@ uint8_t DS1_ReadRom(uint8_t sensor_index);
 void DS1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  DS1_Init (component DS18B20)
+**     Method      :  Init (component DS18B20)
+**
 **     Description :
 **         Initializes the device.
 **     Parameters  : None
@@ -261,7 +268,8 @@ void DS1_Init(void);
 uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
 /*
 ** ===================================================================
-**     Method      :  DS1_GetTemperatureFloat (component DS18B20)
+**     Method      :  GetTemperatureFloat (component DS18B20)
+**
 **     Description :
 **         Returns the temperature from memory in floating point format.
 **     Parameters  :
@@ -278,7 +286,8 @@ uint8_t DS1_GetTemperatureFloat(uint8_t sensor_index, float *temperature);
 uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  DS1_ParseCommand (component DS18B20)
+**     Method      :  ParseCommand (component DS18B20)
+**
 **     Description :
 **         Shell Command Line parser. Method is only available if Shell
 **         is enabled in the component properties.
@@ -296,7 +305,8 @@ uint8_t DS1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_Std
 void DS1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  DS1_Deinit (component DS18B20)
+**     Method      :  Deinit (component DS18B20)
+**
 **     Description :
 **         Driver deinitialization routine
 **     Parameters  : None
@@ -307,7 +317,8 @@ void DS1_Deinit(void);
 uint8_t DS1_ReadResolution(uint8_t sensor_index);
 /*
 ** ===================================================================
-**     Method      :  DS1_ReadResolution (component DS18B20)
+**     Method      :  ReadResolution (component DS18B20)
+**
 **     Description :
 **         Read the sensor resolution sensor and stores it in memory
 **     Parameters  :
@@ -322,7 +333,8 @@ uint8_t DS1_ReadResolution(uint8_t sensor_index);
 uint8_t DS1_SearchAndAssignROMCodes(void);
 /*
 ** ===================================================================
-**     Method      :  DS1_SearchAndAssignROMCodes (component DS18B20)
+**     Method      :  SearchAndAssignROMCodes (component DS18B20)
+**
 **     Description :
 **         Scans the devices on the bus and assigns the ROM codes to
 **         the list of available sensors
@@ -342,12 +354,4 @@ uint8_t DS1_SearchAndAssignROMCodes(void);
 /* ifndef __DS1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

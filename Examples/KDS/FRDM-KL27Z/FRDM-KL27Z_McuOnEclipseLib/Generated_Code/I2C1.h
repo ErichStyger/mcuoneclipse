@@ -4,10 +4,9 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : GenericSWI2C
-**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-03-13, 09:07, # CodeGen: 108
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -16,7 +15,6 @@
 **          Trials                                         : 256
 **          SDA                                            : SDK_BitIO
 **          SCL                                            : SDK_BitIO
-**          SDK                                            : MCUC1
 **          Wait                                           : WAIT1
 **          Yield                                          : yes
 **     Contents    :
@@ -34,32 +32,32 @@
 **         Deinit            - void I2C1_Deinit(void);
 **         Init              - void I2C1_Init(void);
 **
-**     * Copyright (c) 2014-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2014-2019, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file I2C1.h
@@ -80,6 +78,9 @@
 #include "I2C1config.h" /* configuration */
 
 
+#define I2C1_RECVBLOCKCUSTOM_AVAILABLE  (1)
+  /*!< Define which can be used to check if the function RecvBlockCustom() is available */
+
 typedef enum I2C1_EnumStartFlags_ {
   I2C1_SEND_START,        /* Start is sent */
   I2C1_DO_NOT_SEND_START  /* Start is not sent */
@@ -97,7 +98,8 @@ typedef enum I2C1_EnumAckFlags_ {
 void I2C1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  I2C1_Init (component GenericSWI2C)
+**     Method      :  Init (component GenericSWI2C)
+**
 **     Description :
 **         Initializes the associated peripheral(s) and the components
 **         internal variables.
@@ -109,7 +111,8 @@ void I2C1_Init(void);
 uint8_t I2C1_SendChar(uint8_t Chr);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SendChar (component GenericSWI2C)
+**     Method      :  SendChar (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method writes 7 bits of slave
 **         address plus R/W bit = 0 to the I2C bus and then writes one
@@ -146,7 +149,8 @@ uint8_t I2C1_SendChar(uint8_t Chr);
 uint8_t I2C1_RecvChar(uint8_t *Chr);
 /*
 ** ===================================================================
-**     Method      :  I2C1_RecvChar (component GenericSWI2C)
+**     Method      :  RecvChar (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method writes 7 bits of slave
 **         address plus R/W bit = 1 to the I2C bus and then reads one
@@ -175,7 +179,8 @@ uint8_t I2C1_RecvChar(uint8_t *Chr);
 uint8_t I2C1_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SendBlock (component GenericSWI2C)
+**     Method      :  SendBlock (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method writes 7 bits of slave
 **         address plus R/W bit = 0 to the I2C bus and then writes the
@@ -224,7 +229,8 @@ uint8_t I2C1_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt);
 uint8_t I2C1_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv);
 /*
 ** ===================================================================
-**     Method      :  I2C1_RecvBlock (component GenericSWI2C)
+**     Method      :  RecvBlock (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method writes 7 bits of slave
 **         address plus R/W bit = 1 to the I2C bus and then reads the
@@ -257,7 +263,8 @@ uint8_t I2C1_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv);
 uint8_t I2C1_SendStop(void);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SendStop (component GenericSWI2C)
+**     Method      :  SendStop (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, if the 'Automatic stop condition'
 **         property value is 'no', this method sends a valid stop
@@ -279,7 +286,8 @@ uint8_t I2C1_SendStop(void);
 uint8_t I2C1_SelectSlave(uint8_t Slv);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SelectSlave (component GenericSWI2C)
+**     Method      :  SelectSlave (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method selects a new slave
 **         for communication by its slave address value. Any send or
@@ -307,7 +315,8 @@ uint8_t I2C1_SelectSlave(uint8_t Slv);
 uint8_t I2C1_GetSelected(uint8_t *Slv);
 /*
 ** ===================================================================
-**     Method      :  I2C1_GetSelected (component GenericSWI2C)
+**     Method      :  GetSelected (component GenericSWI2C)
+**
 **     Description :
 **         When working as a MASTER, this method returns the
 **         identification address value of the slave, which is
@@ -333,7 +342,8 @@ uint8_t I2C1_GetSelected(uint8_t *Slv);
 bool I2C1_ResetBus(void);
 /*
 ** ===================================================================
-**     Method      :  I2C1_ResetBus (component GenericSWI2C)
+**     Method      :  ResetBus (component GenericSWI2C)
+**
 **     Description :
 **         Reset bus if needed.
 **     Parameters  : None
@@ -346,7 +356,8 @@ bool I2C1_ResetBus(void);
 uint8_t I2C1_SendBlockContinue(void *Ptr, uint16_t Siz, uint16_t *Snt);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SendBlockContinue (component GenericSWI2C)
+**     Method      :  SendBlockContinue (component GenericSWI2C)
+**
 **     Description :
 **         Same is SendBlock() but does not send start condition. When
 **         working as a MASTER, this method writes 7 bits of slave
@@ -396,7 +407,8 @@ uint8_t I2C1_SendBlockContinue(void *Ptr, uint16_t Siz, uint16_t *Snt);
 uint8_t I2C1_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, I2C1_EnumStartFlags flagsStart, I2C1_EnumAckFlags flagsAck);
 /*
 ** ===================================================================
-**     Method      :  I2C1_RecvBlockCustom (component GenericSWI2C)
+**     Method      :  RecvBlockCustom (component GenericSWI2C)
+**
 **     Description :
 **         Same as RecvBlock(), but with additional flags to control
 **         the bus transfer.
@@ -426,7 +438,8 @@ uint8_t I2C1_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, I2C1_EnumSt
 void I2C1_SendAck(bool Ack);
 /*
 ** ===================================================================
-**     Method      :  I2C1_SendAck (component GenericSWI2C)
+**     Method      :  SendAck (component GenericSWI2C)
+**
 **     Description :
 **         The method sends ACK to the bus.
 **     Parameters  :
@@ -439,7 +452,8 @@ void I2C1_SendAck(bool Ack);
 void I2C1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  I2C1_Deinit (component GenericSWI2C)
+**     Method      :  Deinit (component GenericSWI2C)
+**
 **     Description :
 **         Driver de-initialization method.
 **     Parameters  : None
@@ -453,12 +467,4 @@ void I2C1_Deinit(void);
 /* ifndef __I2C1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

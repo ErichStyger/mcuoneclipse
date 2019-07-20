@@ -4,18 +4,18 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : SeggerRTT
-**     Version     : Component 01.081, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-15, 20:30, # CodeGen: 180
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : RTT1
-**          Version                                        : V5.10u
+**          Version                                        : V6.32b
 **          Number of Up Channels                          : 3
 **          Number of Down Channels                        : 3
 **          Max Blocked Interrupt Level                    : 3
+**          Syscalls                                       : no
 **          Channel 0                                      : Enabled
 **            Name                                         : "Terminal"
 **            Up Buffer Size (Tx)                          : 256
@@ -29,6 +29,9 @@
 **            Printf Buffer Size                           : 64
 **          SDK                                            : MCUC1
 **          Shell                                          : CLS1
+**          Source Folders                                 : 
+**            Source Folder                                : 
+**            Config Folder                                : 
 **     Contents    :
 **         Read             - int RTT1_Read(unsigned BufferIndex, const char* pBuffer, unsigned NumBytes);
 **         Write            - int RTT1_Write(unsigned BufferIndex, char* pBuffer, unsigned BufferSize);
@@ -51,36 +54,36 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-**     * (c) Copyright Segger, 2016
-**      * http      : www.segger.com
-**      * See separate Segger licensing terms.
-**      *
-**      * Processor Expert port: Copyright (c) 2016, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * (c) Copyright Segger, 2019
+**  * http      : www.segger.com
+**  * See separate Segger licensing terms.
+**  *
+**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file RTT1.h
@@ -123,7 +126,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_Read (component SeggerRTT)
+**     Method      :  Read (component SeggerRTT)
+**
 **     Description :
 **         Read from buffer
 **     Parameters  :
@@ -142,7 +146,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_Write (component SeggerRTT)
+**     Method      :  Write (component SeggerRTT)
+**
 **     Description :
 **         Write to buffer
 **     Parameters  :
@@ -162,7 +167,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_WriteString (component SeggerRTT)
+**     Method      :  WriteString (component SeggerRTT)
+**
 **     Description :
 **         Write to buffer
 **     Parameters  :
@@ -181,7 +187,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_GetKey (component SeggerRTT)
+**     Method      :  GetKey (component SeggerRTT)
+**
 **     Description :
 **         Returns a character/key
 **     Parameters  : None
@@ -195,7 +202,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_WaitKey (component SeggerRTT)
+**     Method      :  WaitKey (component SeggerRTT)
+**
 **     Description :
 **         Waits for a key and returns it.
 **     Parameters  : None
@@ -209,7 +217,8 @@ extern "C" {
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_HasKey (component SeggerRTT)
+**     Method      :  HasKey (component SeggerRTT)
+**
 **     Description :
 **         Checks if at least one character for reading is available in
 **         the SEGGER RTT buffer
@@ -223,7 +232,8 @@ extern "C" {
 bool RTT1_StdIOKeyPressed(void);
 /*
 ** ===================================================================
-**     Method      :  RTT1_StdIOKeyPressed (component SeggerRTT)
+**     Method      :  StdIOKeyPressed (component SeggerRTT)
+**
 **     Description :
 **         StdIO handler for Shell
 **     Parameters  : None
@@ -236,7 +246,8 @@ bool RTT1_StdIOKeyPressed(void);
 void RTT1_StdIOReadChar(uint8_t *c);
 /*
 ** ===================================================================
-**     Method      :  RTT1_StdIOReadChar (component SeggerRTT)
+**     Method      :  StdIOReadChar (component SeggerRTT)
+**
 **     Description :
 **         StdIO Handler for reading a character. It returns a zero
 **         byte if there is no character in input buffer.
@@ -251,7 +262,8 @@ void RTT1_StdIOReadChar(uint8_t *c);
 void RTT1_StdIOSendChar(uint8_t ch);
 /*
 ** ===================================================================
-**     Method      :  RTT1_StdIOSendChar (component SeggerRTT)
+**     Method      :  StdIOSendChar (component SeggerRTT)
+**
 **     Description :
 **         StdIO handler to sends a character.
 **     Parameters  :
@@ -264,7 +276,8 @@ void RTT1_StdIOSendChar(uint8_t ch);
 uint8_t RTT1_RecvChar(uint8_t *c);
 /*
 ** ===================================================================
-**     Method      :  RTT1_RecvChar (component SeggerRTT)
+**     Method      :  RecvChar (component SeggerRTT)
+**
 **     Description :
 **         Receives a character from channel 0. Returns ERR_RXEMPTY if
 **         no character available
@@ -280,7 +293,8 @@ uint8_t RTT1_RecvChar(uint8_t *c);
 uint8_t RTT1_SendChar(uint8_t ch);
 /*
 ** ===================================================================
-**     Method      :  RTT1_SendChar (component SeggerRTT)
+**     Method      :  SendChar (component SeggerRTT)
+**
 **     Description :
 **         Sends a character to channel 0.
 **     Parameters  :
@@ -297,7 +311,8 @@ uint8_t RTT1_SendChar(uint8_t ch);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_GetCharsInRxBuf (component SeggerRTT)
+**     Method      :  GetCharsInRxBuf (component SeggerRTT)
+**
 **     Description :
 **         Returns the number of characters in the receive buffer.
 **     Parameters  : None
@@ -311,7 +326,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_Init (component SeggerRTT)
+**     Method      :  Init (component SeggerRTT)
+**
 **     Description :
 **         Initializes the RTT Control Block.
 **     Parameters  : None
@@ -324,7 +340,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_TerminalOut (component SeggerRTT)
+**     Method      :  TerminalOut (component SeggerRTT)
+**
 **     Description :
 **         Writes a string to the given terminal without changing the
 **         terminal for channel 0.
@@ -342,7 +359,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_SetTerminal (component SeggerRTT)
+**     Method      :  SetTerminal (component SeggerRTT)
+**
 **     Description :
 **          Sets the terminal to be used for output on channel 0.
 **     Parameters  :
@@ -358,7 +376,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_ConfigUpBuffer (component SeggerRTT)
+**     Method      :  ConfigUpBuffer (component SeggerRTT)
+**
 **     Description :
 **         Configures the Up (device to host) buffer
 **     Parameters  :
@@ -380,7 +399,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_ConfigDownBuffer (component SeggerRTT)
+**     Method      :  ConfigDownBuffer (component SeggerRTT)
+**
 **     Description :
 **         Configures the Down (host to device) buffer
 **     Parameters  :
@@ -402,7 +422,8 @@ void RTT1_Init(void);
 
 /*
 ** ===================================================================
-**     Method      :  RTT1_printf (component SeggerRTT)
+**     Method      :  printf (component SeggerRTT)
+**
 **     Description :
 **         Stores a formatted string in SEGGER RTT control block. This
 **         data is sent to the host.
@@ -420,7 +441,8 @@ void RTT1_Init(void);
 void RTT1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  RTT1_Deinit (component SeggerRTT)
+**     Method      :  Deinit (component SeggerRTT)
+**
 **     Description :
 **         Driver deinitialization
 **     Parameters  : None
@@ -431,7 +453,8 @@ void RTT1_Deinit(void);
 CLS1_ConstStdIOTypePtr RTT1_GetStdio(void);
 /*
 ** ===================================================================
-**     Method      :  RTT1_GetStdio (component SeggerRTT)
+**     Method      :  GetStdio (component SeggerRTT)
+**
 **     Description :
 **         Returns a pointer to the standard I/O
 **     Parameters  : None
@@ -450,12 +473,4 @@ CLS1_ConstStdIOTypePtr RTT1_GetStdio(void);
 /* ifndef __RTT1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

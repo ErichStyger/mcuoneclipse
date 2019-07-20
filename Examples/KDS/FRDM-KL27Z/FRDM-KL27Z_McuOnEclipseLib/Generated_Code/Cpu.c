@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : KL25P80M48SF0RM, Rev.3, Sep 2012
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-06-01, 11:55, # CodeGen: 223
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -481,64 +481,46 @@ void PE_low_level_init(void)
                 ));
   /* NVIC_IPR1: PRI_6=0 */
   NVIC_IPR1 &= (uint32_t)~(uint32_t)(NVIC_IP_PRI_6(0xFF));
-  /* ### McuLibConfig "MCUC1" init code ... */
-  WAIT1_Init();
-  /* ### SDK_BitIO "LEDpin2" init code ... */
-  /* Write code here ... */
-  /* ### LED "LEDR" init code ... */
-  LEDR_Init(); /* initialize LED driver */
-  /* ### SDK_BitIO "LEDpin3" init code ... */
-  /* Write code here ... */
-  /* ### LED "LEDG" init code ... */
-  LEDG_Init(); /* initialize LED driver */
-  /* ### SDK_BitIO "LEDpin1" init code ... */
-  /* Write code here ... */
-  /* ### LED "LEDB" init code ... */
-  LEDB_Init(); /* initialize LED driver */
-  /* ### XFormat "XF1" init code ... */
-  /* ### CriticalSection "CS1" init code ... */
-  /* ### Shell "CLS1" init code ... */
-  CLS1_Init(); /* initialize shell */
-  /* ### FreeRTOS "FRTOS1" init code ... */
-  /* PEX_RTOS_INIT() should have been called at this time already with the most critical setup */
-  /* ### SeggerRTT "RTT1" init code ... */
-  RTT1_Init();
-  /* ### SeggerSystemView "SYS1" init code ... */
-  SYS1_Init();
-  /* ### KinetisTools "KIN1" init code ... */
-  /* ### HardFault "HF1" init code ... */
-  HF1_Init();
+  MCUC1_Init(); /* ### McuLibConfig "MCUC1" init code ... */
+  UTIL1_Init(); /* ### Utility "UTIL1" init code ... */
+  WAIT1_Init(); /* ### Wait "WAIT1" init code ... */
+  LEDpin2_Init(); /* ### SDK_BitIO "LEDpin2" init code ... */
+  LEDR_Init(); /* ### LED "LEDR" init code ... */
+  LEDpin3_Init(); /* ### SDK_BitIO "LEDpin3" init code ... */
+  LEDG_Init(); /* ### LED "LEDG" init code ... */
+  LEDpin1_Init(); /* ### SDK_BitIO "LEDpin1" init code ... */
+  LEDB_Init(); /* ### LED "LEDB" init code ... */
+  XF1_Init(); /* ### XFormat "XF1" init code ... */
+  CS1_Init(); /* ### CriticalSection "CS1" init code ... */
+  CLS1_Init(); /* ### Shell "CLS1" init code ... */
+  /* PEX_RTOS_INIT() is a macro should already have been called either from main()
+     or Processor Expert startup code. So we don't call it here again. */
+  /* PEX_RTOS_INIT(); */ /* ### FreeRTOS "FRTOS1" init code ... */
+  RTT1_Init(); /* ### SeggerRTT "RTT1" init code ... */
+  SYS1_Init(); /* ### SeggerSystemView "SYS1" init code ... */
+  KIN1_Init(); /* ### KinetisTools "KIN1" init code ... */
+  HF1_Init(); /* ### HardFault "HF1" init code ... */
   /* ### PercepioTrace "PTRC1" init code ... */
-  /* ### SDK_BitIO "SDA1" init code ... */
-  /* Write code here ... */
-  /* ### SDK_BitIO "SCL1" init code ... */
-  /* Write code here ... */
-  /* ### GenericSWI2C "I2C1" init code ... */
-  I2C1_Init();
-  /* ### GenericI2C "GI2C1" init code ... */
-  GI2C1_Init();
+  SDA1_Init(); /* ### SDK_BitIO "SDA1" init code ... */
+  SCL1_Init(); /* ### SDK_BitIO "SCL1" init code ... */
+  I2C1_Init(); /* ### GenericSWI2C "I2C1" init code ... */
+  GI2C1_Init(); /* ### GenericI2C "GI2C1" init code ... */
   /* ### GenericTimeDate "TmDt1" init code ... */
 #if TmDt1_INIT_IN_STARTUP
   (void)TmDt1_Init();
 #endif
   /* ### I2CSpy "I2CSPY1" init code ... */
   (void)I2CSPY1_Init();
-  /* ### MMA8451Q "MMA1" init code ... */
-  /* Write code here ... */
-  /* ### SDK_BitIO "Clock1" init code ... */
-  /* Write code here ... */
-  /* ### SDK_BitIO "Input1" init code ... */
-  /* Write code here ... */
-  /* ### SDK_BitIO "Output1" init code ... */
-  /* Write code here ... */
-  /* ### GenericSWSPI "SPI1" init code ... */
-  SPI1_Init();
-  /* ### SDK_BitIO "DQ1" init code ... */
-  /* Write code here ... */
-  /* ### RingBuffer "InputRB1" init code ... */
-  InputRB1_Init();
-  /* ### SDK_BitIO "DbgRd1" init code ... */
-  /* Write code here ... */
+#if MMA1_CONFIG_INIT_DRIVER_IN_STARTUP
+  MMA1_Init(); /* ### MMA8451Q "MMA1" init code ... */
+#endif
+  Clock1_Init(); /* ### SDK_BitIO "Clock1" init code ... */
+  Input1_Init(); /* ### SDK_BitIO "Input1" init code ... */
+  Output1_Init(); /* ### SDK_BitIO "Output1" init code ... */
+  SPI1_Init(); /* ### GenericSWSPI "SPI1" init code ... */
+  DQ1_Init(); /* ### SDK_BitIO "DQ1" init code ... */
+  InputRB1_Init(); /* ### RingBuffer "InputRB1" init code ... */
+  DbgRd1_Init(); /* ### SDK_BitIO "DbgRd1" init code ... */
   /* ### OneWire "OW1" init code ... */
   OW1_Init();
   /* ### DS18B20 "DS1" init code ... */

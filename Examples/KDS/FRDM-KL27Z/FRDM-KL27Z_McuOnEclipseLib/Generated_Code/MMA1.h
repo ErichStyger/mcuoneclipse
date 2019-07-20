@@ -5,18 +5,15 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : MMA8451Q
-**     Version     : Component 01.039, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.046, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
-**         Implements a Driver for the MMA8451 accelerometer from Freescale.
+**         Implements a Driver for the MMA8451 accelerometer from NXP/Freescale.
 **     Settings    :
 **          Component Name                                 : MMA1
 **          Slave Address                                  : 1D
 **          I2C Bus                                        : GI2C1
-**          Wait                                           : WAIT1
-**          SDK                                            : MCUC1
 **          Constant Offsets                               : Enabled
 **            X offset                                     : 0
 **            Y offset                                     : 0
@@ -29,12 +26,12 @@
 **         Disable        - uint8_t MMA1_Disable(void);
 **         isEnabled      - uint8_t MMA1_isEnabled(bool *isEnabled);
 **         SwReset        - uint8_t MMA1_SwReset(void);
-**         ReadReg8       - uint8_t MMA1_ReadReg8(void* addr, void* *val);
-**         WriteReg8      - uint8_t MMA1_WriteReg8(void* addr, void* val);
+**         ReadReg8       - uint8_t MMA1_ReadReg8(uint8_t addr, uint8_t *val);
+**         WriteReg8      - uint8_t MMA1_WriteReg8(uint8_t addr, uint8_t val);
 **         GetX           - int16_t MMA1_GetX(void);
 **         GetY           - int16_t MMA1_GetY(void);
 **         GetZ           - int16_t MMA1_GetZ(void);
-**         GetRaw8XYZ     - uint8_t MMA1_GetRaw8XYZ(void* *xyz);
+**         GetRaw8XYZ     - uint8_t MMA1_GetRaw8XYZ(uint8_t *xyz);
 **         CalibrateX1g   - void MMA1_CalibrateX1g(void);
 **         CalibrateY1g   - void MMA1_CalibrateY1g(void);
 **         CalibrateZ1g   - void MMA1_CalibrateZ1g(void);
@@ -51,43 +48,45 @@
 **         GetY1gValue    - int16_t MMA1_GetY1gValue(void);
 **         GetZ1gValue    - int16_t MMA1_GetZ1gValue(void);
 **         SetFastMode    - uint8_t MMA1_SetFastMode(bool on);
-**         WhoAmI         - uint8_t MMA1_WhoAmI(void* *value);
+**         WhoAmI         - uint8_t MMA1_WhoAmI(uint8_t *value);
+**         GetScaleRangeG - uint8_t MMA1_GetScaleRangeG(uint8_t *gScale);
+**         SetScaleRangeG - uint8_t MMA1_SetScaleRangeG(uint8_t gScale);
 **         ParseCommand   - uint8_t MMA1_ParseCommand(const unsigned char *cmd, bool *handled, const...
 **         Deinit         - uint8_t MMA1_Deinit(void);
 **         Init           - uint8_t MMA1_Init(void);
 **
-**     * Copyright (c) 2013-2017, Erich Styger
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * Copyright (c) 2013-2018, Erich Styger
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file MMA1.h
 ** @version 01.00
 ** @brief
-**         Implements a Driver for the MMA8451 accelerometer from Freescale.
+**         Implements a Driver for the MMA8451 accelerometer from NXP/Freescale.
 */         
 /*!
 **  @addtogroup MMA1_module MMA1 module documentation
@@ -138,7 +137,8 @@
 uint8_t MMA1_GetRaw8XYZ(uint8_t *xyz);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetRaw8XYZ (component MMA8451Q)
+**     Method      :  GetRaw8XYZ (component MMA8451Q)
+**
 **     Description :
 **         Returns in an array the x, y and z accelerometer as 8bit
 **         values.
@@ -155,7 +155,8 @@ uint8_t MMA1_GetRaw8XYZ(uint8_t *xyz);
 uint8_t MMA1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_Deinit (component MMA8451Q)
+**     Method      :  Deinit (component MMA8451Q)
+**
 **     Description :
 **         Counterpart to Init() method.
 **     Parameters  : None
@@ -167,7 +168,8 @@ uint8_t MMA1_Deinit(void);
 uint8_t MMA1_Init(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_Init (component MMA8451Q)
+**     Method      :  Init (component MMA8451Q)
+**
 **     Description :
 **         Initializes the device driver
 **     Parameters  : None
@@ -179,7 +181,8 @@ uint8_t MMA1_Init(void);
 void MMA1_CalibrateX1g(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_CalibrateX1g (component MMA8451Q)
+**     Method      :  CalibrateX1g (component MMA8451Q)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         Y and Z sensors have 0 g, and the X sensor has 1 g.
@@ -191,7 +194,8 @@ void MMA1_CalibrateX1g(void);
 void MMA1_CalibrateY1g(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_CalibrateY1g (component MMA8451Q)
+**     Method      :  CalibrateY1g (component MMA8451Q)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         X and Z sensors have 0 g, and the Y sensor has 1 g.
@@ -203,7 +207,8 @@ void MMA1_CalibrateY1g(void);
 void MMA1_CalibrateZ1g(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_CalibrateZ1g (component MMA8451Q)
+**     Method      :  CalibrateZ1g (component MMA8451Q)
+**
 **     Description :
 **         Performs a calibration of the sensor. It is assumed that the
 **         X and Y sensors have 0 g, and the Z sensor has 1 g.
@@ -215,7 +220,8 @@ void MMA1_CalibrateZ1g(void);
 int16_t MMA1_GetXmg(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetXmg (component MMA8451Q)
+**     Method      :  GetXmg (component MMA8451Q)
+**
 **     Description :
 **         Returns the X value in mg
 **     Parameters  : None
@@ -227,7 +233,8 @@ int16_t MMA1_GetXmg(void);
 int16_t MMA1_GetYmg(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetYmg (component MMA8451Q)
+**     Method      :  GetYmg (component MMA8451Q)
+**
 **     Description :
 **         Returns the Y value in mg
 **     Parameters  : None
@@ -239,7 +246,8 @@ int16_t MMA1_GetYmg(void);
 int16_t MMA1_GetZmg(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetZmg (component MMA8451Q)
+**     Method      :  GetZmg (component MMA8451Q)
+**
 **     Description :
 **         Returns the Z value in mg
 **     Parameters  : None
@@ -251,7 +259,8 @@ int16_t MMA1_GetZmg(void);
 uint16_t MMA1_MeasureGetRawX(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_MeasureGetRawX (component MMA8451Q)
+**     Method      :  MeasureGetRawX (component MMA8451Q)
+**
 **     Description :
 **         Performs a measurement on X channel and returns the raw
 **         value.
@@ -264,7 +273,8 @@ uint16_t MMA1_MeasureGetRawX(void);
 uint16_t MMA1_MeasureGetRawY(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_MeasureGetRawY (component MMA8451Q)
+**     Method      :  MeasureGetRawY (component MMA8451Q)
+**
 **     Description :
 **         Performs a measurement on Y channel and returns the raw
 **         value.
@@ -277,7 +287,8 @@ uint16_t MMA1_MeasureGetRawY(void);
 uint16_t MMA1_MeasureGetRawZ(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_MeasureGetRawZ (component MMA8451Q)
+**     Method      :  MeasureGetRawZ (component MMA8451Q)
+**
 **     Description :
 **         Performs a measurement on Z channel and returns the raw
 **         value.
@@ -290,7 +301,8 @@ uint16_t MMA1_MeasureGetRawZ(void);
 int16_t MMA1_GetXOffset(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetXOffset (component MMA8451Q)
+**     Method      :  GetXOffset (component MMA8451Q)
+**
 **     Description :
 **         Returns the offset applied to the X value.
 **     Parameters  : None
@@ -302,7 +314,8 @@ int16_t MMA1_GetXOffset(void);
 int16_t MMA1_GetYOffset(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetYOffset (component MMA8451Q)
+**     Method      :  GetYOffset (component MMA8451Q)
+**
 **     Description :
 **         Returns the offset applied to the Y value.
 **     Parameters  : None
@@ -314,7 +327,8 @@ int16_t MMA1_GetYOffset(void);
 int16_t MMA1_GetZOffset(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetZOffset (component MMA8451Q)
+**     Method      :  GetZOffset (component MMA8451Q)
+**
 **     Description :
 **         Returns the offset applied to the Z value.
 **     Parameters  : None
@@ -326,7 +340,8 @@ int16_t MMA1_GetZOffset(void);
 int16_t MMA1_GetX1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetX1gValue (component MMA8451Q)
+**     Method      :  GetX1gValue (component MMA8451Q)
+**
 **     Description :
 **         Returns the value for 1g for channel  X.
 **     Parameters  : None
@@ -338,7 +353,8 @@ int16_t MMA1_GetX1gValue(void);
 int16_t MMA1_GetY1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetY1gValue (component MMA8451Q)
+**     Method      :  GetY1gValue (component MMA8451Q)
+**
 **     Description :
 **         Returns the value for 1g for channel  Y.
 **     Parameters  : None
@@ -350,7 +366,8 @@ int16_t MMA1_GetY1gValue(void);
 int16_t MMA1_GetZ1gValue(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetZ1gValue (component MMA8451Q)
+**     Method      :  GetZ1gValue (component MMA8451Q)
+**
 **     Description :
 **         Returns the value for 1g for channel  Z.
 **     Parameters  : None
@@ -362,7 +379,8 @@ int16_t MMA1_GetZ1gValue(void);
 int16_t MMA1_GetX(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetX (component MMA8451Q)
+**     Method      :  GetX (component MMA8451Q)
+**
 **     Description :
 **         Retrieves the value for the X axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -376,7 +394,8 @@ int16_t MMA1_GetX(void);
 int16_t MMA1_GetY(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetY (component MMA8451Q)
+**     Method      :  GetY (component MMA8451Q)
+**
 **     Description :
 **         Retrieves the value for the Y axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -390,7 +409,8 @@ int16_t MMA1_GetY(void);
 int16_t MMA1_GetZ(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_GetZ (component MMA8451Q)
+**     Method      :  GetZ (component MMA8451Q)
+**
 **     Description :
 **         Retrieves the value for the Z axis. The value is adjusted
 **         with the zero calibration value (0 for 0 g, negative for
@@ -404,7 +424,8 @@ int16_t MMA1_GetZ(void);
 uint8_t MMA1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
 /*
 ** ===================================================================
-**     Method      :  MMA1_ParseCommand (component MMA8451Q)
+**     Method      :  ParseCommand (component MMA8451Q)
+**
 **     Description :
 **         Shell Command Line parser. This method is enabled/disabled
 **         depending on if you have the Shell enabled/disabled in the
@@ -423,7 +444,8 @@ uint8_t MMA1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_St
 uint8_t MMA1_SetFastMode(bool on);
 /*
 ** ===================================================================
-**     Method      :  MMA1_SetFastMode (component MMA8451Q)
+**     Method      :  SetFastMode (component MMA8451Q)
+**
 **     Description :
 **         Turns the F_READ (Fast Read Mode) on or off
 **     Parameters  :
@@ -437,7 +459,8 @@ uint8_t MMA1_SetFastMode(bool on);
 uint8_t MMA1_Enable(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_Enable (component MMA8451Q)
+**     Method      :  Enable (component MMA8451Q)
+**
 **     Description :
 **         Enables the device with setting the ACTIVE bit in the CTRL
 **         register 1
@@ -450,7 +473,8 @@ uint8_t MMA1_Enable(void);
 uint8_t MMA1_Disable(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_Disable (component MMA8451Q)
+**     Method      :  Disable (component MMA8451Q)
+**
 **     Description :
 **         Disables the device with clearing the ACTIVE bit in the CTRL
 **         register 1
@@ -463,7 +487,8 @@ uint8_t MMA1_Disable(void);
 uint8_t MMA1_isEnabled(bool *isEnabled);
 /*
 ** ===================================================================
-**     Method      :  MMA1_isEnabled (component MMA8451Q)
+**     Method      :  isEnabled (component MMA8451Q)
+**
 **     Description :
 **         Returns the status of the the ACTIVE bit in the CTRL
 **         register 1
@@ -480,7 +505,8 @@ uint8_t MMA1_isEnabled(bool *isEnabled);
 uint8_t MMA1_WhoAmI(uint8_t *value);
 /*
 ** ===================================================================
-**     Method      :  MMA1_WhoAmI (component MMA8451Q)
+**     Method      :  WhoAmI (component MMA8451Q)
+**
 **     Description :
 **         Returns the value of the WHO_AM_I (0x0D) register
 **     Parameters  :
@@ -494,12 +520,13 @@ uint8_t MMA1_WhoAmI(uint8_t *value);
 uint8_t MMA1_ReadReg8(uint8_t addr, uint8_t *val);
 /*
 ** ===================================================================
-**     Method      :  MMA1_ReadReg8 (component MMA8451Q)
+**     Method      :  ReadReg8 (component MMA8451Q)
+**
 **     Description :
 **         Reads an 8bit device register
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * addr            - device memory map address
+**         addr            - device memory map address
 **       * val             - Pointer to value
 **     Returns     :
 **         ---             - Error code
@@ -509,13 +536,14 @@ uint8_t MMA1_ReadReg8(uint8_t addr, uint8_t *val);
 uint8_t MMA1_WriteReg8(uint8_t addr, uint8_t val);
 /*
 ** ===================================================================
-**     Method      :  MMA1_WriteReg8 (component MMA8451Q)
+**     Method      :  WriteReg8 (component MMA8451Q)
+**
 **     Description :
 **         Write an 8bit device register
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**       * addr            - device memory map address
-**       * val             - value to write
+**         addr            - device memory map address
+**         val             - value to write
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
@@ -524,11 +552,47 @@ uint8_t MMA1_WriteReg8(uint8_t addr, uint8_t val);
 uint8_t MMA1_SwReset(void);
 /*
 ** ===================================================================
-**     Method      :  MMA1_SwReset (component MMA8451Q)
+**     Method      :  SwReset (component MMA8451Q)
+**
 **     Description :
 **         Perform a software reset using the rst bit in the CTRL
 **         register 2
 **     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t MMA1_GetScaleRangeG(uint8_t *gScale);
+/*
+** ===================================================================
+**     Method      :  GetScaleRangeG (component MMA8451Q)
+**
+**     Description :
+**         Returns the selected Full Scale Range from the XYZ_Data_CFG
+**         Register
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * gScale          - Pointer to where to store the
+**                           desired full scale g value (returns 2, 4 or
+**                           8)
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t MMA1_SetScaleRangeG(uint8_t gScale);
+/*
+** ===================================================================
+**     Method      :  SetScaleRangeG (component MMA8451Q)
+**
+**     Description :
+**         Sets the desired full scale range G value (2, 4 or 6) using
+**         the XYZ_DATA_CFG register. Note that the device has to be
+**         disabled.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         gScale          - desired g value, has to be 2, 4 or 8
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
@@ -540,12 +604,4 @@ uint8_t MMA1_SwReset(void);
 /* ifndef __MMA1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */

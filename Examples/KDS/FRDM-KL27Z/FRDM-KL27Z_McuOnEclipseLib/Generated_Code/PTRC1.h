@@ -4,29 +4,24 @@
 **     Project     : FRDM-KL27Z_McuOnEclipseLib
 **     Processor   : MKL25Z128VLK4
 **     Component   : PercepioTrace
-**     Version     : Component 01.127, Driver 01.00, CPU db: 3.00.000
-**     Repository  : Legacy User Components
+**     Version     : Component 01.138, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2017-05-16, 20:12, # CodeGen: 190
+**     Date/Time   : 2019-07-20, 16:53, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : PTRC1
-**          RTOS+Trace Version                             : V3.1.1
+**          RTOS+Trace Version                             : V3.3.0
 **          Recorder Mode                                  : Snapshot
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 8
 **          Snapshot Mode                                  : 
-**            Snapshot trace enable method                 : TRC_START
 **            Recorder store mode                          : Ring Buffer
 **            Scheduling only                              : no
 **            Description string                           : FreeRTOS+Trace
 **            Description max length                       : 80
 **            Event buffer size                            : 300
 **            Symbol table size                            : 30
-**            Use Trace Assert                             : yes
-**            ISR Tailchaining Threshold                   : 0
-**            Separate User Event Buffer                   : Disabled
 **            Objects                                      : 
 **              Number of tasks                            : 10
 **              Name length for task                       : configMAX_TASK_NAME_LEN
@@ -53,10 +48,9 @@
 **            Float support                                : no
 **            Use implicit IFE rules                       : yes
 **            Use 16bit Object Handles                     : no
+**          Segger RTT                                     : Enabled
+**            Segger RTT                                   : RTT1
 **          Streaming Mode                                 : 
-**            Segger RTT                                   : Enabled
-**              Segger RTT                                 : RTT1
-**            Streaming trace enable method                : TRC_START
 **            Up Buffer Index                              : 2
 **            Up Buffer Size                               : 1024
 **            Down Buffer Index                            : 2
@@ -81,7 +75,7 @@
 **         vTraceStop                - void PTRC1_vTraceStop(void);
 **         vTraceClear               - void PTRC1_vTraceClear(void);
 **         uiTraceGetTraceBufferSize - dword PTRC1_uiTraceGetTraceBufferSize(void);
-**         vTraceGetTraceBuffer      - void* PTRC1_vTraceGetTraceBuffer(void);
+**         xTraceGetTraceBuffer      - void* PTRC1_xTraceGetTraceBuffer(void);
 **         xTraceRegisterString      - traceString PTRC1_xTraceRegisterString(const char* name);
 **         vTracePrint               - void PTRC1_vTracePrint(traceString chn, const char* str);
 **         vTracePrintF              - void PTRC1_vTracePrintF(traceLabel eventLabel, char *formatStr, ...);
@@ -97,37 +91,37 @@
 **         vTraceClearError          - byte PTRC1_vTraceClearError(int resetErrorMessage);
 **         Startup                   - void PTRC1_Startup(void);
 **
-**     * (c) Copyright Percepio AB, 2013-2017
-**      * http      : www.percepio.se
-**      * mail      : info@percepio.com
-**      * See separate Percepio licensing terms.
-**      *
-**      * Processor Expert Component: (c) Copyright Erich Styger, 2013-2016
-**      * Web:         https://mcuoneclipse.com
-**      * SourceForge: https://sourceforge.net/projects/mcuoneclipse
-**      * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
-**      * All rights reserved.
-**      *
-**      * Redistribution and use in source and binary forms, with or without modification,
-**      * are permitted provided that the following conditions are met:
-**      *
-**      * - Redistributions of source code must retain the above copyright notice, this list
-**      *   of conditions and the following disclaimer.
-**      *
-**      * - Redistributions in binary form must reproduce the above copyright notice, this
-**      *   list of conditions and the following disclaimer in the documentation and/or
-**      *   other materials provided with the distribution.
-**      *
-**      * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-**      * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-**      * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-**      * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-**      * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-**      * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-**      * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-**      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-**      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-**      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+** * (c) Copyright Percepio AB, 2013-2018
+**  * http      : www.percepio.se
+**  * mail      : info@percepio.com
+**  * See separate Percepio licensing terms.
+**  *
+**  * Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * Web:         https://mcuoneclipse.com
+**  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
+**  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
+**  * All rights reserved.
+**  *
+**  * Redistribution and use in source and binary forms, with or without modification,
+**  * are permitted provided that the following conditions are met:
+**  *
+**  * - Redistributions of source code must retain the above copyright notice, this list
+**  *   of conditions and the following disclaimer.
+**  *
+**  * - Redistributions in binary form must reproduce the above copyright notice, this
+**  *   list of conditions and the following disclaimer in the documentation and/or
+**  *   other materials provided with the distribution.
+**  *
+**  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+**  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+**  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+**  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+**  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+**  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+**  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+**  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+**  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+**  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ** ###################################################################*/
 /*!
 ** @file PTRC1.h
@@ -165,7 +159,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_uiTraceGetTraceBufferSize (component PercepioTrace)
+**     Method      :  uiTraceGetTraceBufferSize (component PercepioTrace)
+**
 **     Description :
 **         Gets the size of the recorder data structure. For use
 **         together with vTraceGetTraceBuffer if you wish to implement
@@ -177,12 +172,13 @@
 ** ===================================================================
 */
 
-#define PTRC1_vTraceGetTraceBuffer() \
-  vTraceGetTraceBuffer()
+#define PTRC1_xTraceGetTraceBuffer() \
+  xTraceGetTraceBuffer()
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceGetTraceBuffer (component PercepioTrace)
+**     Method      :  xTraceGetTraceBuffer (component PercepioTrace)
+**
 **     Description :
 **         Return a pointer to the recorder data structure. Use this
 **         together with uiTraceGetTraceBufferSize if you wish to
@@ -198,7 +194,8 @@
   uiTraceStart()
 /*
 ** ===================================================================
-**     Method      :  PTRC1_uiTraceStart (component PercepioTrace)
+**     Method      :  uiTraceStart (component PercepioTrace)
+**
 **     Description :
 **         Starts the trace.
 **     Parameters  : None
@@ -213,7 +210,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceStop (component PercepioTrace)
+**     Method      :  vTraceStop (component PercepioTrace)
+**
 **     Description :
 **         Stops the trace.
 **     Parameters  : None
@@ -226,7 +224,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceClear (component PercepioTrace)
+**     Method      :  vTraceClear (component PercepioTrace)
+**
 **     Description :
 **         Clears the trace.
 **     Parameters  : None
@@ -239,7 +238,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_xTraceRegisterString (component PercepioTrace)
+**     Method      :  xTraceRegisterString (component PercepioTrace)
+**
 **     Description :
 **         Register strings in the recorder, e.g. for names of user
 **         event channels.
@@ -256,7 +256,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTracePrint (component PercepioTrace)
+**     Method      :  vTracePrint (component PercepioTrace)
+**
 **     Description :
 **         Generates a User Event with a text label. The label is
 **         created/looked up in the symbol table using
@@ -274,7 +275,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTracePrintF (component PercepioTrace)
+**     Method      :  vTracePrintF (component PercepioTrace)
+**
 **     Description :
 **         Advanced user event - like printf (but limited formatting
 **         support - will improve)
@@ -292,7 +294,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceSetQueueName (component PercepioTrace)
+**     Method      :  vTraceSetQueueName (component PercepioTrace)
+**
 **     Description :
 **         Assigns a name to a FreeRTOS Queue, Semaphore or Mutex. This
 **         function should  be called right after creation of the
@@ -312,7 +315,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_xTraceSetISRProperties (component PercepioTrace)
+**     Method      :  xTraceSetISRProperties (component PercepioTrace)
+**
 **     Description :
 **         Registers an Interrupt Service Routine in the recorder
 **         library, This must be called before using
@@ -335,7 +339,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceStoreISRBegin (component PercepioTrace)
+**     Method      :  vTraceStoreISRBegin (component PercepioTrace)
+**
 **     Description :
 **         Registers the beginning of an Interrupt Service Routine.
 **         This must not be interrupted by another ISR containing
@@ -355,7 +360,8 @@
 
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceStoreISREnd (component PercepioTrace)
+**     Method      :  vTraceStoreISREnd (component PercepioTrace)
+**
 **     Description :
 **         Registers the end of an Interrupt Service Routine. This must
 **         not be interrupted by another ISR containing recorder
@@ -376,7 +382,8 @@
 void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName);
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vGetGDBDumpCommand (component PercepioTrace)
+**     Method      :  vGetGDBDumpCommand (component PercepioTrace)
+**
 **     Description :
 **         Gets the gdb command to dump the trace data to a file.
 **         Useful for copy-pasting it to the gdb console.
@@ -395,7 +402,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   vTraceSetStopHook(stopHookFunction)
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceSetStopHook (component PercepioTrace)
+**     Method      :  vTraceSetStopHook (component PercepioTrace)
+**
 **     Description :
 **         Sets a function to be called when the recorder is stopped.
 **     Parameters  :
@@ -409,7 +417,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   xTraceGetLastError()
 /*
 ** ===================================================================
-**     Method      :  PTRC1_xTraceGetLastError (component PercepioTrace)
+**     Method      :  xTraceGetLastError (component PercepioTrace)
+**
 **     Description :
 **         Gives the last error message, if any. NULL if no error
 **         message is stored. Any error message is also presented when
@@ -424,7 +433,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   vTraceClearError(resetErrorMessage)
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceClearError (component PercepioTrace)
+**     Method      :  vTraceClearError (component PercepioTrace)
+**
 **     Description :
 **         Removes any previous error message generated by recorder
 **         calling vTraceError. By calling this function, it may be
@@ -445,7 +455,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   vTraceEnable(startOption)
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceEnable (component PercepioTrace)
+**     Method      :  vTraceEnable (component PercepioTrace)
+**
 **     Description :
 **         
 **     Parameters  :
@@ -484,7 +495,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   vTraceSetSemaphoreName(semaphore, name)
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceSetSemaphoreName (component PercepioTrace)
+**     Method      :  vTraceSetSemaphoreName (component PercepioTrace)
+**
 **     Description :
 **         Assigns a name to a FreeRTOS Queue, Semaphore or Mutex. This
 **         function should  be called right after creation of the
@@ -503,7 +515,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
   vTraceSetMutexName(mutex, name)
 /*
 ** ===================================================================
-**     Method      :  PTRC1_vTraceSetMutexName (component PercepioTrace)
+**     Method      :  vTraceSetMutexName (component PercepioTrace)
+**
 **     Description :
 **         Assigns a name to a FreeRTOS Queue, Semaphore or Mutex. This
 **         function should  be called right after creation of the
@@ -521,7 +534,8 @@ void PTRC1_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
 void PTRC1_Startup(void);
 /*
 ** ===================================================================
-**     Method      :  PTRC1_Startup (component PercepioTrace)
+**     Method      :  Startup (component PercepioTrace)
+**
 **     Description :
 **         Routine called during startup. Depending on the mode and
 **         settings, it starts tracing and might block!
@@ -536,12 +550,4 @@ void PTRC1_Startup(void);
 /* ifndef __PTRC1_H */
 /*!
 ** @}
-*/
-/*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.5 [05.21]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
 */
