@@ -42,9 +42,9 @@ void PL_Init(void) {
 
   /* initialize McuLib modules */
   McuLib_Init();
+  McuWait_Init();
   McuRTOS_Init();
   McuUtility_Init();
-  McuWait_Init();
   McuArmTools_Init();
   McuCriticalSection_Init();
   McuRB_Init();
@@ -59,6 +59,7 @@ void PL_Init(void) {
   McuI2CSpy_Init();
 #endif
 #if PL_CONFIG_USE_OLED
+  McuWait_Waitms(100); /* display needs some time to power up */
   McuSSD1306_Init();
 #endif
   McuRTT_Init();
