@@ -84,7 +84,7 @@ void LPUART0_IRQHandler(void) {
 static void Init_LPUART(void) {
   lpuart_config_t config;
 
-  CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
+  CLOCK_SetLpuartClock(1U); /* 1: MCGFLLCLK, or MCGPLLCLK, or IRC48M clock as selected by SOPT2[PLLFLLSEL]. */
   LPUART_GetDefaultConfig(&config);
   config.baudRate_Bps = BOARD_LPUART_BAUDRATE;
   config.enableTx = true;
@@ -191,7 +191,7 @@ static void TxToHostTask(void *pv) {
       vTaskSuspend(NULL); /* put myself to sleep */
     }
     res = xQueueReceive(linuxRxQueue, &chRx, portMAX_DELAY);
-    if (!gatewayLinuxToHostIsEnabled) { /* were blocking, but now in non-gateway mode */
+    if (!gatewayLinuxToHostIsEnabled) { /* we were blocking, but now in non-gateway mode */
       (void)xQueueSendToFront(linuxRxQueue, &chRx, 0); /* put it back in to the queue */
     } else if (res!=errQUEUE_EMPTY) {
       LPUART_WriteBlocking(LPUART0, &chRx, 1); /* send to host */

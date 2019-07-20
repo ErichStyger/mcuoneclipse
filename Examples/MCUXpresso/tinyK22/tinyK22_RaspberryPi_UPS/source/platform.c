@@ -72,6 +72,9 @@ void PL_Init(void) {
   McuDbnc_Init();
 
   /* initialize my own modules */
+#if PL_CONFIG_USE_USB_CDC
+  USB_APPInit(); /* Initialize USB first before the UART/Gateway, because this changes the clock settings! */
+#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
@@ -96,9 +99,6 @@ void PL_Init(void) {
   RASPYU_Init();
 #endif
   BTN_Init();
-#if PL_CONFIG_USE_USB_CDC
-  USB_APPInit();
-#endif
 }
 
 void PL_Deinit(void) {
