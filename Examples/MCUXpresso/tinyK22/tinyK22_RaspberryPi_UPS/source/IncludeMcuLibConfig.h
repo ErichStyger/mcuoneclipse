@@ -10,8 +10,8 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (4)  /* 3 or 4 */
-#define USE_HW_I2C           (1 && TINYK22_HAT_VERSION==4)
+#define TINYK22_HAT_VERSION  (4)  /* 3, 4 or 5 */
+#define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5))
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
@@ -85,9 +85,9 @@
   #define PINS_HATNAVPUSH_GPIO    GPIOB
   #define PINS_HATNAVPUSH_PORT    PORTB
   #define PINS_HATNAVPUSH_PIN     16u
-#elif TINYK22_HAT_VERSION==4
+#elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
   /*
-   * HAT V4:
+   * HAT V4 & V5:
    *
    * HW I2C0:
    * I2C SCL: PTB0
@@ -189,6 +189,4 @@
 #define LV_CONFIG_COLOR_DEPTH          (1)
 #define LV_CONFIG_DPI                  (25)
 
-
 #endif /* INCLUDEMCULIBCONFIG_H_ */
-
