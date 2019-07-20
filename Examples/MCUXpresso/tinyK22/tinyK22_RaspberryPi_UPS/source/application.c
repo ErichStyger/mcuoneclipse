@@ -25,6 +25,7 @@
 
 /* McuLib */
 #include "McuWait.h"
+#include "McuLED.h"
 #include "McuArmTools.h"
 #include "McuGenericI2C.h"
 #include "McuGenericSWI2C.h"
@@ -89,7 +90,7 @@ static void AppTask(void *pv) {
       int counter = 0;
       do {
         counter++;
-        McuLED_Neg(tinyLED);
+        McuLED_Toggle(tinyLED);
         vTaskDelay(pdMS_TO_TICKS(100));
       } while(BTN_DownButtonIsPressed() && counter<30); /* 3 secs */
       if (counter>=30) { /* pressed for more than 3 secs */
@@ -112,7 +113,7 @@ static void AppTask(void *pv) {
       vTaskDelay(pdMS_TO_TICKS(1000));
     }
 #else
-    McuLED_Neg(tinyLED);
+    McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(1000));
 #endif /* PL_CONFIG_USE_RASPY_UART */
   }
