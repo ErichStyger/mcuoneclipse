@@ -6,7 +6,7 @@
 **     Component   : GDisplay
 **     Version     : Component 01.207, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-24, 10:26, # CodeGen: 505
+**     Date/Time   : 2019-05-15, 15:56, # CodeGen: 528
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -98,7 +98,7 @@
   #include "FreeRTOS.h"
   #include "semphr.h"
 
-  static xSemaphoreHandle McuGDisplaySSD1306_displayMutex;
+  static SemaphoreHandle_t McuGDisplaySSD1306_displayMutex;
 #endif
 static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-6-5 RGB value */
  0x0000, 0x000A, 0x0014, 0xF81E, 0x0120, 0x012A, 0x0134, 0xF93E,

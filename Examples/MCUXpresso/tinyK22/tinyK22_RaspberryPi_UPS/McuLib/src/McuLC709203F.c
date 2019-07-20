@@ -214,6 +214,7 @@ uint8_t McuLC_GetICversion(uint16_t *pVersion) {
   return ReadCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_IC_VER, pVersion);
 }
 
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
 static const unsigned char *McuLC_CurrentDirectionToString(McuLC_CurrentDirection dir) {
   switch(dir) {
     case McuLC_CURRENT_DIR_AUTO:       return (const unsigned char*)"auto";
@@ -223,6 +224,7 @@ static const unsigned char *McuLC_CurrentDirectionToString(McuLC_CurrentDirectio
     default:                           return (const unsigned char*)"ERROR";
   }
 }
+#endif
 
 uint8_t McuLC_GetCurrentDirection(McuLC_CurrentDirection *pDir) {
   uint16_t val;

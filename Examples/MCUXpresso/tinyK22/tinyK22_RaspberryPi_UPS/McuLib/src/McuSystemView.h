@@ -6,7 +6,7 @@
 **     Component   : SeggerSystemView
 **     Version     : Component 01.070, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-23, 06:31, # CodeGen: 489
+**     Date/Time   : 2019-05-30, 10:44, # CodeGen: 534
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -17,7 +17,7 @@
 **          RAM Base                                       : 0x20000000
 **          ID Base                                        : 0x10000000
 **          ID Shift                                       : 2
-**          Number of tasks                                : 8
+**          Number of tasks                                : 10
 **          Static Buffer                                  : yes
 **          Post Mortem                                    : no
 **          Implicit Format for printf()                   : no
