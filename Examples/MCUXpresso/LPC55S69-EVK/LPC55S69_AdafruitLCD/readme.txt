@@ -14,6 +14,9 @@ https://www.adafruit.com/product/3315
 
 https://github.com/adafruit/Adafruit_ILI9341
 
+Resistive touch controller: 
+https://github.com/adafruit/Adafruit_STMPE610
+
 LPC55S69-EVK      Adafruit board (#1947)
 GND               GND 
 LSPI_HS_SCK       D13 SCLK_5V
