@@ -6,9 +6,9 @@
  */
 #include "platform.h"
 #include "shutdown.h"
-#include "fsl_gpio.h"
 #include "leds.h"
 #include "McuWait.h"
+#include "RaspyGPIO.h"
 
 /* $ gpoio readall to show status on Pi */
 /* content of /boot/config.txt
@@ -73,10 +73,7 @@ bool SHUTDOWN_UserPowerOffRequested(void) {
 
 void SHUTDOWN_RequestPowerOff(void) {
   McuLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
-  /* driving the pin low requests a poweroff */
-  GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 0); /* driving low */
-  McuWait_WaitOSms(50); /* wait for some time */
-  GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 1); /* back to high again */
+  RGPIO_SignalPowerdown();
 }
 
 void SHUTDOWN_Init(void) {

@@ -30,6 +30,7 @@
 #include "Sensor.h"
 #include "toaster.h"
 #include "RaspyUART.h"
+#include "RaspyGPIO.h"
 #include "buttons.h"
 #include "McuButton.h"
 #include "McuDebounce.h"
@@ -97,6 +98,9 @@ void PL_Init(void) {
   SENSOR_Init();
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_Init();
+#endif
+#if PL_CONFIG_USE_RASPBERRY
+  RGPIO_Init();
 #endif
   BTN_Init();
 }

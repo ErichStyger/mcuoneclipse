@@ -53,6 +53,21 @@ static void AppTask(void *pv) {
   int chargeCounter = 0; /* counting up for charging, counting down for discharging */
 #endif
 
+  /* blink the LEDs on startup */
+  for(int i=0;i<5;i++) {
+    McuLED_On(hatRedLED);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED_Off(hatRedLED);
+    McuLED_On(hatYellowLED);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED_Off(hatYellowLED);
+    McuLED_On(hatGreenLED);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED_Off(hatGreenLED);
+    McuLED_On(hatBlueLED);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    McuLED_Off(hatBlueLED);
+  }
 #if PL_CONFIG_USE_UPS
   UPS_SetIsCharging(false);
 #endif

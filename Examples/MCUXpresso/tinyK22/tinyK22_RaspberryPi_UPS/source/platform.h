@@ -8,6 +8,8 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+/* configure the HW/Board version with TINYK22_HAT_VERSION in IncludeMcuLibConfig.h */
+
 #define PL_CONFIG_USE_RASPBERRY     (1) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS       (1) /* using buttons (navigation switch) */
 #define PL_CONFIG_USE_KBI           (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */

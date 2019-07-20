@@ -129,6 +129,45 @@
 #else
   #error "unknown configuration"
 #endif
+
+#if TINYK22_HAT_VERSION==5
+  /* HAT V5 has additional GPIO pins available:
+   * - can use the I2C bus without having the Raspberry powered
+   * - pin to disconnect/connect the I2C bus in order to power up the Raspberry Pi
+   * - dedicated power-down pin and power-down-status pins
+   */
+
+  /* for shutdown signal to Raspyerry Pi: */
+  #define PINS_GP_0_GPIO        GPIOA
+  #define PINS_GP_0_PORT        PORTA
+  #define PINS_GP_0_PIN         1u
+
+  /* for signal from Raspberry Pi to tinyK22 that shutdown is completed: */
+  #define PINS_GP_1_GPIO        GPIOA
+  #define PINS_GP_1_PORT        PORTA
+  #define PINS_GP_1_PIN         2u
+
+  /* Extra GPIO pin: */
+  #define PINS_GP_2_GPIO        GPIOA
+  #define PINS_GP_2_PORT        PORTA
+  #define PINS_GP_2_PIN         4u
+
+  /* Wake_Raspi pin: */
+  #define PINS_WAKE_RASPY_GPIO  GPIOA
+  #define PINS_WAKE_RASPY_PORT  PORTA
+  #define PINS_WAKE_RASPY_PIN   5u
+
+  /* Extra GPIO pin: */
+  #define PINS_GP_3_GPIO        GPIOB
+  #define PINS_GP_3_PORT        PORTB
+  #define PINS_GP_3_PIN         17u
+
+  /* Extra GPIO pin: */
+  #define PINS_GP_4_GPIO        GPIOB
+  #define PINS_GP_4_PORT        PORTB
+  #define PINS_GP_4_PIN         18u
+#endif
+
 /* -------------------------------------------------*/
 /* tinyK22 blue: PTC2
  * HAT LED blue: PTC8
@@ -156,11 +195,7 @@
 #define PINS_HATLEDRED_PORT     PORTC
 #define PINS_HATLEDRED_PIN      11U
 
-#define PINS_ALERT_GPIO     GPIOD
-#define PINS_ALERT_PORT     PORTD
-#define PINS_ALERT_PIN      3U
-/* -------------------------------------------------*/
-/* SHT pin, used for Raspy Powerdown */
+/* SHT pin, used for Raspy Powerdown (only pre-V5 boards) */
 #define PINS_ALERT_GPIO     GPIOD
 #define PINS_ALERT_PORT     PORTD
 #define PINS_ALERT_PIN      3U
