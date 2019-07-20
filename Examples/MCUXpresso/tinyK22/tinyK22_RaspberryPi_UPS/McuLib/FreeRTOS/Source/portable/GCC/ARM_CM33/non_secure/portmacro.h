@@ -225,6 +225,11 @@ typedef struct MPU_SETTINGS
 #define portEXIT_CRITICAL()									vPortExitCritical()
 /*-----------------------------------------------------------*/
 
+#if 1 /* << EST */
+#define portDISABLE_ALL_INTERRUPTS()   __asm volatile("cpsid i")
+#define portENABLE_ALL_INTERRUPTS()    __asm volatile("cpsie i")
+#endif
+
 /**
  * @brief Task function macros as described on the FreeRTOS.org WEB site.
  */

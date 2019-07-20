@@ -44,9 +44,9 @@ bool McuBtn_IsOn(McuBtn_Handle_t btn) {
   assert(btn!=NULL);
   button = (McuBtn_t*)btn;
   if (button->isLowActive) {
-    return !McuGPIO_Get(button->gpio);
+    return McuGPIO_IsLow(button->gpio);
   } else {
-    return McuGPIO_Get(button->gpio);
+    return McuGPIO_IsHigh(button->gpio);
   }
 }
 

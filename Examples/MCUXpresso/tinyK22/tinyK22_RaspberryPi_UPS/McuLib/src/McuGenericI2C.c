@@ -205,11 +205,10 @@ uint8_t McuGenericI2C_UnselectSlave(void)
 uint8_t McuGenericI2C_ReadBlockGeneric(void* data, uint16_t dataSize, McuGenericI2C_EnumSendFlags flags, McuGenericI2C_EnumStartFlags flagsStart, McuGenericI2C_EnumAckFlags flagsAck)
 {
   uint8_t res = ERR_OK;
+  uint16_t nof;
 
 #if McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE
   for(;;) { /* breaks */
-    uint16_t nof;
-
     res = McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM(data, dataSize, &nof, flagsStart, flagsAck);
     if (res!=ERR_OK) {
     #if McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT
@@ -425,7 +424,6 @@ uint8_t McuGenericI2C_ReadAddressWait(uint8_t i2cAddr, uint8_t *memAddr, uint8_t
 uint8_t McuGenericI2C_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize)
 {
   return McuGenericI2C_ReadAddressWait(i2cAddr, memAddr, memAddrSize, 0, data, dataSize);
-  //return I2CLIB_ReadAddress(i2cAddr, memAddr, memAddrSize, data, dataSize);
 }
 
 /*

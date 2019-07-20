@@ -6,7 +6,7 @@
 **     Component   : KinetisTools
 **     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-26, 20:11, # CodeGen: 481
+**     Date/Time   : 2019-07-03, 12:04, # CodeGen: 542
 **     Abstract    :
 **
 **     Settings    :
@@ -423,7 +423,7 @@ uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled, const 
 McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-#if McuLib_CONFIG_CORTEX_M==0
+  #if McuLib_CONFIG_CORTEX_M==0
   #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
@@ -448,8 +448,8 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     #error "Unknown architecture!"
     return (McuArmTools_ConstCharPtr)"ERROR";
   #endif
-#elif McuLib_CONFIG_CORTEX_M==4
-  #ifdef SIM_SDID /* normal Kinetis define this */
+  #elif McuLib_CONFIG_CORTEX_M==4
+    #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
     val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
@@ -458,7 +458,7 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     } else {
       return (McuArmTools_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #elif defined(SIM_SDID_FAMID)
+    #elif defined(SIM_SDID_FAMID)
     int32_t val;
 
     val = ((SIM->SDID)>>4)&0x3; /* bits 6..4 */
@@ -467,18 +467,30 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     } else {
       return (McuArmTools_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #else
+    #else
     #error "Unknown architecture!"
     return (McuArmTools_ConstCharPtr)"ERROR";
-  #endif
-#elif McuLib_CONFIG_CORTEX_M==7
+    #endif
+  #elif McuLib_CONFIG_CORTEX_M==7
   return (McuArmTools_ConstCharPtr)"Cortex-M7";
-#else
+  #else
   #error "Unknown architecture!"
   return (McuArmTools_ConstCharPtr)"ERROR";
-#endif
+  #endif
+#elif McuLib_CONFIG_CPU_IS_NORDIC_NRF
+  return (McuArmTools_ConstCharPtr)"Nordic nRF";
+#elif McuLib_CONFIG_CPU_IS_STM
+  return (McuArmTools_ConstCharPtr)"STM32";
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  return (McuArmTools_ConstCharPtr)"NXP i.MX RT";
+#elif McuLib_CONFIG_CPU_IS_S32K
+  return (McuArmTools_ConstCharPtr)"NXP S32K";
+#elif McuLib_CONFIG_CPU_IS_LPC55xx
+  return (McuArmTools_ConstCharPtr)"NXP LPC55xx";
+#elif McuLib_CONFIG_CPU_IS_LPC
+  return (McuArmTools_ConstCharPtr)"NXP LPC";
 #else
-  return (McuArmTools_ConstCharPtr)"NOT KINETIS";
+  return (McuArmTools_ConstCharPtr)"UNKNOWN";
 #endif
 }
 

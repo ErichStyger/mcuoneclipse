@@ -45,39 +45,15 @@
 #endif
 
 /* configuration of function names used for low level I2C functions */
-#ifndef McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE
-  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE "McuGenericSWI2C.h"
-#endif
-#include McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE /* interface of low level I2C driver */
-
-#ifndef McuGenericI2C_CONFIG_RECV_BLOCK
-  #define McuGenericI2C_CONFIG_RECV_BLOCK                        McuGenericSWI2C_RecvBlock
-#endif
-
-#ifndef McuGenericI2C_CONFIG_SEND_BLOCK
-  #define McuGenericI2C_CONFIG_SEND_BLOCK                        McuGenericSWI2C_SendBlock
-#endif
-
+#include "McuGenericSWI2C.h" /* interface of low level I2C driver */
+#define McuGenericI2C_CONFIG_RECV_BLOCK                        McuGenericSWI2C_RecvBlock
+#define McuGenericI2C_CONFIG_SEND_BLOCK                        McuGenericSWI2C_SendBlock
 #if McuGenericI2C_CONFIG_SUPPORT_STOP_NO_START
-  #ifndef McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE
-    #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE             McuGenericSWI2C_SendBlockContinue
-  #endif
+#define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               McuGenericSWI2C_SendBlockContinue
 #endif
-
-#ifndef McuGenericI2C_CONFIG_SEND_STOP
-  #define McuGenericI2C_CONFIG_SEND_STOP                         McuGenericSWI2C_SendStop
-#endif
-
-#ifndef McuGenericI2C_CONFIG_SELECT_SLAVE
-  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      McuGenericSWI2C_SelectSlave
-#endif
-
-#ifndef McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM
-  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 McuGenericSWI2C_RecvBlockCustom
-#endif
-
-#ifndef McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE
-  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE         (defined(McuGenericSWI2C_RECVBLOCKCUSTOM_AVAILABLE) && (McuGenericSWI2C_RECVBLOCKCUSTOM_AVAILABLE))
-#endif
+#define McuGenericI2C_CONFIG_SEND_STOP                         McuGenericSWI2C_SendStop
+#define McuGenericI2C_CONFIG_SELECT_SLAVE                      McuGenericSWI2C_SelectSlave
+#define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 McuGenericSWI2C_RecvBlockCustom
+#define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (defined(McuGenericSWI2C_RECVBLOCKCUSTOM_AVAILABLE) && (McuGenericSWI2C_RECVBLOCKCUSTOM_AVAILABLE==1))
 
 #endif /* __McuGenericI2C_CONFIG_H */

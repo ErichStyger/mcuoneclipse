@@ -27,7 +27,9 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - InputRB1: subdriver of McuOneWire
 - LEDpin1, LEDpin2, LEDpin3, LEDpin4: subdrivers for McuLED1, McuLED2, McuLED3 and McuLED4
 - McuArmTools: various ARM Cortex utilities
+- McuButton: Push button driver
 - McuCriticalSection: critical section handling
+- McuDebounce: Debouncing for McuButton
 - McuDS18B20: Driver for the DS18B20 One-Wire temperature sensor library
 - McuEvents: event handling using a bit array
 - McuFontDisplay: Font rendering for graphical displays
