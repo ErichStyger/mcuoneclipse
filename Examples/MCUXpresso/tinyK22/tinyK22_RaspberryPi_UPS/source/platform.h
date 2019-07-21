@@ -25,6 +25,7 @@
 #define PL_CONFIG_USE_TOASTER       (1 && PL_CONFIG_USE_OLED) /* flying toaster screensaver */
 #define PL_CONFIG_USE_GUI_KEY_NAV   (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)
 #define PL_CONFIG_USE_USB_CDC       (1)
+#define PL_CONFIG_USE_POWER_ON      (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION==5) /* ability to power up Raspy, only possible with Rev5 of the board. See shutdown.c for Raspy settings! */
 
 #define PL_CONFIG_USE_HW_I2C        USE_HW_I2C /* defined in IncludeMcuLibConfig.h */
 

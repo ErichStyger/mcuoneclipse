@@ -253,7 +253,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   return ERR_OK;
 }
 
-uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+uint8_t GATEWAY_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
   uint8_t res = ERR_OK;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
