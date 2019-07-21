@@ -30,15 +30,9 @@ void RGPIO_EnableI2CtoRaspy(bool enable) {
 
 void RGPIO_SignalPowerdown(void) {
   /* driving the pin low requests a poweroff */
-#if TINYK22_HAT_VERSION==5
   McuGPIO_SetLow(RGPIO_shutdown);   /* driving low */
   McuWait_WaitOSms(50);             /* wait for some time */
   McuGPIO_SetHigh(RGPIO_shutdown);  /* back to high again */
-#else
-  GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 0); /* driving low */
-  McuWait_WaitOSms(50); /* wait for some time */
-  GPIO_PinWrite(PINS_ALERT_GPIO, PINS_ALERT_PIN, 1); /* back to high again */
-#endif
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
@@ -73,11 +67,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #else
-  if (McuGPIO_IsHigh(hatRedLED)) {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH (red LED): Raspy down\r\n");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW (red LED): Raspy up\r\n");
-  }
+  McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Check the red LED: if on, the Raspy has shutdown\r\n");
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #endif
   return ERR_OK;
@@ -120,6 +110,7 @@ void RGPIO_Init(void) {
 
   McuGPIO_GetDefaultConfig(&config);
 #if TINYK22_HAT_VERSION==5
+  /* wakeup pin which controls the connection of the I2C SCL signal: output pin */
   config.hw.gpio = PINS_WAKE_RASPY_GPIO;
   config.hw.port = PINS_WAKE_RASPY_PORT;
   config.hw.pin = PINS_WAKE_RASPY_PIN;
@@ -127,8 +118,10 @@ void RGPIO_Init(void) {
   config.isLowOnInit = true;
   RGPIO_wake_gpio = McuGPIO_InitGPIO(&config);
 
+  /* shutdown pin to request a power-off: output pin */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
 
+  /* status pin which is used by Raspy to signal that the shutdown has been finished: input pin */
   config.hw.gpio = PINS_GP_1_GPIO;
   config.hw.port = PINS_GP_1_PORT;
   config.hw.pin = PINS_GP_1_PIN;
@@ -136,12 +129,14 @@ void RGPIO_Init(void) {
   config.isLowOnInit = true;
   RGPIO_state = McuGPIO_InitGPIO(&config);
 #else
+  /* shutdown pin to request a power-off: output pin */
   config.hw.gpio = PINS_ALERT_GPIO;
   config.hw.port = PINS_ALERT_PORT;
   config.hw.pin = PINS_ALERT_PIN;
-  config.isInput = true;
-  config.isLowOnInit = true;
+  config.isInput = false;
+  config.isLowOnInit = false;
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
+  /* note: the RED LED is used by the Raspy to indicate a sucessful shutdown */
 #endif
 }
 #endif /* PL_CONFIG_USE_RASPBERRY */

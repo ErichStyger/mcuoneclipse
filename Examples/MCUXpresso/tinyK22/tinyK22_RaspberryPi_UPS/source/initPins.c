@@ -52,7 +52,7 @@ void InitPins(void) {
   PORT_SetPinMux(PINS_HATLEDRED_PORT, PINS_HATLEDRED_PIN, kPORT_MuxAsGpio);
   PORT_SetPinMux(PINS_HATLEDGREEN_PORT, PINS_HATLEDGREEN_PIN, kPORT_MuxAsGpio);
   PORT_SetPinMux(PINS_HATLEDBLUE_PORT, PINS_HATLEDBLUE_PIN, kPORT_MuxAsGpio);
-
+#if 0
   /* mux the SHT alert pin, used to indicate Linux poweroff completed */
   gpio_pin_config_t shutdown_config = {
       .pinDirection = kGPIO_DigitalOutput,
@@ -60,7 +60,7 @@ void InitPins(void) {
   };
   GPIO_PinInit(PINS_ALERT_GPIO, PINS_ALERT_PIN, &shutdown_config);
   PORT_SetPinMux(PINS_ALERT_PORT, PINS_ALERT_PIN, kPORT_MuxAsGpio);
-
+#endif
   /* Mux the UART to the OpenSDA and host side */
   PORT_SetPinMux(PINS_LPUART0_TX_PORT, PINS_LPUART0_TX_PIN, kPORT_MuxAlt7);
   PORT_SetPinMux(PINS_LPUART0_RX_PORT, PINS_LPUART0_RX_PIN, kPORT_MuxAlt7);

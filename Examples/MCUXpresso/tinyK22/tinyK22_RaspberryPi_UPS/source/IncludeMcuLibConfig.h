@@ -10,7 +10,7 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (4)  /* 3, 4 or 5 */
+#define TINYK22_HAT_VERSION  (3)  /* 3, 4 or 5 */
 #define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5))
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
@@ -195,7 +195,7 @@
 #define PINS_HATLEDRED_PORT     PORTC
 #define PINS_HATLEDRED_PIN      11U
 
-/* SHT pin, used for Raspy Powerdown (only pre-V5 boards) */
+/* SHT pin, used for Raspy Powerdown (only pre-V5 boards), connected to Raspy Header Pin #7 (BCM4, wPi7, GPIO.7) */
 #define PINS_ALERT_GPIO     GPIOD
 #define PINS_ALERT_PORT     PORTD
 #define PINS_ALERT_PIN      3U
