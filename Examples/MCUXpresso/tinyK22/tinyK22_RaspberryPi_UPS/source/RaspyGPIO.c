@@ -11,6 +11,7 @@
 #include "McuGPIO.h"
 #include "McuWait.h"
 #include "leds.h"
+#include "shutdown.h"
 
 static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initiate a shutdown */
 #if TINYK22_HAT_VERSION==5
@@ -76,6 +77,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rgpio", (unsigned char*)"Group of Raspberry GPIO commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  shutdown", (unsigned char*)"Signal Raspy to shutdown\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -93,6 +95,9 @@ uint8_t GATEWAY_ParseCommand(const unsigned char* cmd, bool *handled, const McuS
   {
     *handled = TRUE;
     res = PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown")==0) {
+    *handled = TRUE;
+    SHUTDOWN_RequestPowerOff();
   }
   return res;
 }
