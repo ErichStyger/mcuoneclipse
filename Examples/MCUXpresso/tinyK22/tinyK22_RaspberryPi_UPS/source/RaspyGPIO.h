@@ -16,6 +16,7 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
 
 void RGPIO_EnableI2CtoRaspy(bool enable);
 void RGPIO_SignalPowerdown(void);
+void RGPIO_PowerOn(void);
 
 void RGPIO_Deinit(void);
 void RGPIO_Init(void);

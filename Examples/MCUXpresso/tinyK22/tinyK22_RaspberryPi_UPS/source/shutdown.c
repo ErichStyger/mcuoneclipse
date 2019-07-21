@@ -6,7 +6,6 @@
  */
 #include "platform.h"
 #include "shutdown.h"
-#include "leds.h"
 #include "McuWait.h"
 #include "RaspyGPIO.h"
 
@@ -149,6 +148,10 @@ bool SHUTDOWN_UserPowerOffRequested(void) {
 
 void SHUTDOWN_RequestPowerOff(void) {
   RGPIO_SignalPowerdown();
+}
+
+void SHUTDOWN_RequestPowerOn(void) {
+  RGPIO_PowerOn();
 }
 
 void SHUTDOWN_Init(void) {

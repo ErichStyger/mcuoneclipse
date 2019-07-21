@@ -16,9 +16,10 @@
 static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initiate a shutdown */
 #if TINYK22_HAT_VERSION==5
   static McuGPIO_Handle_t RGPIO_wake_gpio;  /* used by the tinyK22 to connect or disconnect the SCL line to the Raspberry Pi which can wake it up */
-  #if !PL_CONFIG_USE_POWER_ON /* if we want to power on the Raspy, we cannot use a hardware pin to indicate the shutdown finish */
+#endif
+#if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
+  /* if we want to power on the Raspy, we cannot use a hardware pin to indicate the shutdown finish */
   static McuGPIO_Handle_t RGPIO_state;      /* used by Raspberry Pi to signal that a shutdown/poweroff is completed */
-  #endif
 #endif
 
 void RGPIO_EnableI2CtoRaspy(bool enable) {
@@ -32,7 +33,9 @@ void RGPIO_EnableI2CtoRaspy(bool enable) {
 }
 
 void RGPIO_SignalPowerdown(void) {
+#if PL_CONFIG_USE_POWER_DOWN_RED_LED
   McuLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
+#endif
 #if TINYK22_HAT_VERSION==5 && PL_CONFIG_USE_POWER_ON /* disconnect I2C bus to Raspy, otherwise a falling SCL can wakeup the Raspy */
   RGPIO_EnableI2CtoRaspy(false);
 #endif
@@ -77,6 +80,14 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 #endif
   McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)": falling edge to request power-off\r\n");
   McuShell_SendStatusStr((unsigned char*)"  Shutdown", buf, io->stdOut);
+#if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
+  if (McuGPIO_IsHigh(RGPIO_state)) {
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH (GP_1, BCM18), Raspy down or not powered\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW (GP_1, BCM18), Raspy up\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
+#endif
 #if TINYK22_HAT_VERSION==5
   if (McuGPIO_IsHigh(RGPIO_wake_gpio)) {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Wake_Raspy HIGH: SCL connected, falling edge can wakeup Raspy\r\n");
@@ -84,16 +95,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Wake_Raspy LOW: SCL not connected to Raspy\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Wake", buf, io->stdOut);
-
-  #if !PL_CONFIG_USE_POWER_ON
-  if (McuGPIO_IsHigh(RGPIO_state)) {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH (GP_1, BCM18), Raspy down or not powered\r\n");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW (GP_1, BCM18), Raspy up\r\n");
-  }
-  McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
-  #endif
-#else
+#elif PL_CONFIG_USE_POWER_DOWN_RED_LED
   McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Check the red LED: if on, the Raspy has shutdown\r\n");
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #endif
@@ -143,7 +145,7 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
   } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown")==0) {
     *handled = TRUE;
     SHUTDOWN_RequestPowerOff();
-#if TINYK22_HAT_VERSION==5 && !PL_CONFIG_USE_POWER_ON
+#if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
     int timeout = 15;
 
     McuShell_SendStr((unsigned char*)"Waiting for Raspy to signal power down ", io->stdOut);
@@ -165,7 +167,7 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
     }
 #elif PL_CONFIG_USE_POWER_ON
     McuShell_SendStr((unsigned char*)"Wait until there is no Raspy activity anymore\r\n", io->stdOut);
-#else
+#elif PL_CONFIG_USE_POWER_DOWN_RED_LED
     McuShell_SendStr((unsigned char*)"Wait for the red LED\r\n", io->stdOut);
 #endif
   }
@@ -176,9 +178,9 @@ void RGPIO_Deinit(void) {
   RGPIO_shutdown = McuGPIO_DeinitGPIO(RGPIO_shutdown);
 #if TINYK22_HAT_VERSION==5
   RGPIO_wake_gpio = McuGPIO_DeinitGPIO(RGPIO_wake_gpio);
-  #if !PL_CONFIG_USE_POWER_ON
+#endif
+#if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
   RGPIO_state = McuGPIO_DeinitGPIO(RGPIO_state);
-  #endif
 #endif
 }
 
@@ -186,6 +188,16 @@ void RGPIO_Init(void) {
   McuGPIO_Config_t config;
 
   McuGPIO_GetDefaultConfig(&config);
+#if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
+  /* status pin which is used by Raspy to signal that the shutdown has been finished: input pin */
+  config.hw.gpio = PINS_GP_1_GPIO;
+  config.hw.port = PINS_GP_1_PORT;
+  config.hw.pin = PINS_GP_1_PIN;
+  config.isInput = true;
+  config.isLowOnInit = true;
+  RGPIO_state = McuGPIO_InitGPIO(&config);
+#endif
+
 #if TINYK22_HAT_VERSION==5
   /* wakeup pin which controls the connection of the I2C SCL signal: output pin */
   config.hw.gpio = PINS_WAKE_RASPY_GPIO;
@@ -195,15 +207,6 @@ void RGPIO_Init(void) {
   config.isLowOnInit = true;
   RGPIO_wake_gpio = McuGPIO_InitGPIO(&config);
 
-  #if !PL_CONFIG_USE_POWER_ON
-  /* status pin which is used by Raspy to signal that the shutdown has been finished: input pin */
-  config.hw.gpio = PINS_GP_1_GPIO;
-  config.hw.port = PINS_GP_1_PORT;
-  config.hw.pin = PINS_GP_1_PIN;
-  config.isInput = true;
-  config.isLowOnInit = true;
-  RGPIO_state = McuGPIO_InitGPIO(&config);
-  #endif
   /* shutdown pin to request a power-off: output pin */
   config.hw.gpio = PINS_GP_0_GPIO;
   config.hw.port = PINS_GP_0_PORT;
@@ -219,7 +222,7 @@ void RGPIO_Init(void) {
   config.isInput = false;
   config.isLowOnInit = false; /* a falling edge causes a power-down */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
-  /* note: the RED LED is used by the Raspy to indicate a sucessful shutdown */
+  /* note: the RED LED is used by the Raspy to indicate a successful shutdown */
 #endif
 }
 #endif /* PL_CONFIG_USE_RASPBERRY */

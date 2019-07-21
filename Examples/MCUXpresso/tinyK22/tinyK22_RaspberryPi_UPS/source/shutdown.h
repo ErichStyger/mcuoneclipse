@@ -13,6 +13,7 @@
 bool SHUTDOWN_UserPowerOffRequested(void);
 
 void SHUTDOWN_RequestPowerOff(void);
+void SHUTDOWN_RequestPowerOn(void);
 
 void SHUTDOWN_Init(void);
 void SHUTDOWN_Deinit(void);

@@ -159,7 +159,11 @@ static lv_res_t mbox_shutdownWait_apply_action(lv_obj_t *mbox, const char *txt) 
 
 static void Btn_shutdown_CreateWaitBox(void) {
   mboxShutdownWait = lv_mbox_create(lv_scr_act(), NULL);
+#if PL_CONFIG_USE_POWER_DOWN_RED_LED
   lv_mbox_set_text(mboxShutdownWait, "Shutdown in progress. Wait for RED LED.");  /* Set the text */
+#else
+  lv_mbox_set_text(mboxShutdownWait, "Shutdown in progress.");  /* Set the text */
+#endif
   /*Add OK button*/
   static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
   lv_mbox_add_btns(mboxShutdownWait, btns, mbox_shutdownWait_apply_action);
@@ -171,7 +175,7 @@ static void Btn_shutdown_CreateWaitBox(void) {
   lv_group_focus_obj(mboxShutdownWait);
 }
 
-static lv_res_t mbox_apply_action(lv_obj_t *mbox, const char *txt) {
+static lv_res_t mbox_shutdown_apply_action(lv_obj_t *mbox, const char *txt) {
   if (txt!=NULL) {
     if (McuUtility_strcmp(txt, "Yes")==0) {
       SHUTDOWN_RequestPowerOff(); /* request shutdown to Linux */
@@ -195,7 +199,7 @@ static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
   lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
   /*Add two buttons*/
   static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxShutdown, btns, mbox_apply_action);
+  lv_mbox_add_btns(mboxShutdown, btns, mbox_shutdown_apply_action);
   lv_obj_set_width(mboxShutdown, 80);
   lv_obj_align(mboxShutdown, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
@@ -206,6 +210,72 @@ static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
   return LV_RES_OK;
 }
 #endif /* PL_CONFIG_USE_SHUTDOWN */
+
+#if PL_CONFIG_USE_POWER_ON
+static lv_obj_t *mboxPoweron, *mboxPoweronWait;
+
+static lv_res_t mbox_poweronWait_apply_action(lv_obj_t *mbox, const char *txt) {
+  if (txt!=NULL) {
+    if (McuUtility_strcmp(txt, "OK")==0) {
+      GUI_GroupPull();
+      lv_obj_del(mboxPoweronWait);
+      mboxPoweronWait = NULL;
+      return LV_RES_INV; /* close/delete message box */
+    }
+  }
+  return LV_RES_OK; /*Return OK if the message box is not deleted*/
+}
+
+static void Btn_poweron_CreateWaitBox(void) {
+  mboxPoweronWait = lv_mbox_create(lv_scr_act(), NULL);
+  lv_mbox_set_text(mboxPoweronWait, "Poweron in progress.");  /* Set the text */
+  /*Add OK button*/
+  static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
+  lv_mbox_add_btns(mboxPoweronWait, btns, mbox_poweronWait_apply_action);
+  lv_obj_set_width(mboxPoweronWait, 100);
+  lv_obj_align(mboxPoweronWait, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
+
+  GUI_GroupPush();
+  GUI_AddObjToGroup(mboxPoweronWait);
+  lv_group_focus_obj(mboxPoweronWait);
+}
+
+static lv_res_t mbox_poweron_apply_action(lv_obj_t *mbox, const char *txt) {
+  if (txt!=NULL) {
+    if (McuUtility_strcmp(txt, "Yes")==0) {
+      SHUTDOWN_RequestPowerOn(); /* request powerone to Linux */
+      GUI_GroupPull();
+      lv_obj_del(mboxPoweron);
+      mboxPoweron = NULL;
+      Btn_poweron_CreateWaitBox();
+      return LV_RES_INV; /* close/delete message box */
+    } else if (McuUtility_strcmp(txt, "Cancel")==0) {
+      GUI_GroupPull();
+      lv_obj_del(mboxPoweron);
+      mboxPoweron = NULL;
+      return LV_RES_INV; /* close/delete message box */
+    }
+  }
+  return LV_RES_OK; /*Return OK if the message box is not deleted*/
+}
+
+static lv_res_t btn_click_poweron_action(struct _lv_obj_t *obj) {
+  mboxPoweron = lv_mbox_create(lv_scr_act(), NULL);
+  lv_mbox_set_text(mboxPoweron, "Poweron Raspy?");  /*Set the text*/
+  /*Add two buttons*/
+  static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
+  lv_mbox_add_btns(mboxPoweron, btns, mbox_poweron_apply_action);
+  lv_obj_set_width(mboxPoweron, 80);
+  lv_obj_align(mboxPoweron, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
+
+  GUI_GroupPush();
+  GUI_AddObjToGroup(mboxPoweron);
+  lv_group_focus_obj(mboxPoweron);
+
+  return LV_RES_OK;
+}
+
+#endif /* #if PL_CONFIG_USE_POWER_ON */
 
 void GUI_MainMenuCreate(void) {
   lv_obj_t *gui_win;
@@ -237,6 +307,15 @@ void GUI_MainMenuCreate(void) {
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Shutdown");
   lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
+  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  GUI_AddObjToGroup(btn);
+#endif /* PL_CONFIG_USE_SHUTDOWN */
+
+#if PL_CONFIG_USE_POWER_ON
+  btn = lv_btn_create(gui_win, NULL);
+  label = lv_label_create(btn, NULL);
+  lv_label_set_text(label, "Poweron");
+  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_poweron_action);
   lv_btn_set_fit(btn, true, true); /* set auto fit to text */
   GUI_AddObjToGroup(btn);
 #endif /* PL_CONFIG_USE_SHUTDOWN */
