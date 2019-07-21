@@ -46,25 +46,25 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW");
   }
 #if TINYK22_HAT_VERSION==5
-  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (GP_0)");
+  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (GP_0, BCM17)");
 #else
-  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (SHT31 Alarm)");
+  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (SHT31 Alert, BCM4)");
 #endif
-  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)": High-Low-High to request power-off\r\n");
+  McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)": falling edge to request power-off\r\n");
   McuShell_SendStatusStr((unsigned char*)"  Shutdown", buf, io->stdOut);
 #if TINYK22_HAT_VERSION==5
   if (McuGPIO_IsHigh(RGPIO_wake_gpio)) {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH: SCL connected to Raspy\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW: SCL disconnected to Raspy\r\n");
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW: SCL not connected to Raspy\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  Wake_Raspy", buf, io->stdOut);
 
 
   if (McuGPIO_IsHigh(RGPIO_state)) {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH (GP_1), Raspy down\r\n");
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"HIGH (GP_1, BCM18), Raspy down or not powered\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW (GP_1), Raspy up\r\n");
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW (GP_1, BCM18), Raspy up\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #else
@@ -98,6 +98,29 @@ uint8_t GATEWAY_ParseCommand(const unsigned char* cmd, bool *handled, const McuS
   } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown")==0) {
     *handled = TRUE;
     SHUTDOWN_RequestPowerOff();
+#if TINYK22_HAT_VERSION==5
+    int timeout = 15;
+
+    McuShell_SendStr((unsigned char*)"Waiting for Raspy to signal powerdown ", io->stdOut);
+    do {
+      McuShell_SendStr((unsigned char*)".", io->stdOut);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+      timeout--;
+    } while(McuGPIO_IsLow(RGPIO_state) && timeout>0);
+    if (timeout==0) {
+      McuShell_SendStr((unsigned char*)" Timeout!\r\n", io->stdOut);
+      for(int i=0; i<3; i++) {
+        McuLED_Toggle(hatRedLED); /* visual indication of error */
+        vTaskDelay(pdMS_TO_TICKS(100));
+      }
+      McuLED_Off(hatRedLED);
+    } else {
+      McuShell_SendStr((unsigned char*)" done!\r\n", io->stdOut);
+      McuLED_On(hatRedLED); /* visual indication */
+    }
+#else
+    McuShell_SendStr((unsigned char*)"Wait for the red LED\r\n", io->stdOut);
+#endif
   }
   return res;
 }
@@ -123,9 +146,6 @@ void RGPIO_Init(void) {
   config.isLowOnInit = true;
   RGPIO_wake_gpio = McuGPIO_InitGPIO(&config);
 
-  /* shutdown pin to request a power-off: output pin */
-  RGPIO_shutdown = McuGPIO_InitGPIO(&config);
-
   /* status pin which is used by Raspy to signal that the shutdown has been finished: input pin */
   config.hw.gpio = PINS_GP_1_GPIO;
   config.hw.port = PINS_GP_1_PORT;
@@ -133,13 +153,21 @@ void RGPIO_Init(void) {
   config.isInput = true;
   config.isLowOnInit = true;
   RGPIO_state = McuGPIO_InitGPIO(&config);
+
+  /* shutdown pin to request a power-off: output pin */
+  config.hw.gpio = PINS_GP_0_GPIO;
+  config.hw.port = PINS_GP_0_PORT;
+  config.hw.pin = PINS_GP_0_PIN;
+  config.isInput = false;
+  config.isLowOnInit = false; /* a falling edge causes a power-down */
+  RGPIO_shutdown = McuGPIO_InitGPIO(&config);
 #else
   /* shutdown pin to request a power-off: output pin */
   config.hw.gpio = PINS_ALERT_GPIO;
   config.hw.port = PINS_ALERT_PORT;
   config.hw.pin = PINS_ALERT_PIN;
   config.isInput = false;
-  config.isLowOnInit = false;
+  config.isLowOnInit = false; /* a falling edge causes a power-down */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
   /* note: the RED LED is used by the Raspy to indicate a sucessful shutdown */
 #endif

@@ -11,20 +11,75 @@
 #include "RaspyGPIO.h"
 
 /* $ gpoio readall to show status on Pi */
-/* content of /boot/config.txt
+/* content of /boot/config.txt, see https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README
 
-# Pin goes HIGH after a power down:
-dtoverlay=gpio-poweroff,gpiopin=21  ==> RED LED
+Name:   gpio-poweroff
+Info:   Drives a GPIO high or low on poweroff (including halt). Enabling this
+        overlay will prevent the ability to boot by driving GPIO3 low.
+Load:   dtoverlay=gpio-poweroff,<param>=<val>
+Params: gpiopin                 GPIO for signalling (default 26)
 
-# Pulling pin down performs a shutdown:
-dtoverlay=gpio-shutdown,gpio_pin=4,gpio_pull=up
+        active_low              Set if the power control device requires a
+                                high->low transition to trigger a power-down.
+                                Note that this will require the support of a
+                                custom dt-blob.bin to prevent a power-down
+                                during the boot process, and that a reboot
+                                will also cause the pin to go low.
+        input                   Set if the gpio pin should be configured as
+                                an input.
+        export                  Set to export the configured pin to sysfs
 
+
+Name:   gpio-shutdown
+Info:   Initiates a shutdown when GPIO pin changes. The given GPIO pin
+        is configured as an input key that generates KEY_POWER events.
+        This event is handled by systemd-logind by initiating a
+        shutdown. Systemd versions older than 225 need an udev rule
+        enable listening to the input device:
+
+                ACTION!="REMOVE", SUBSYSTEM=="input", KERNEL=="event*", \
+                        SUBSYSTEMS=="platform", DRIVERS=="gpio-keys", \
+                        ATTRS{keys}=="116", TAG+="power-switch"
+
+        This overlay only handles shutdown. After shutdown, the system
+        can be powered up again by driving GPIO3 low. The default
+        configuration uses GPIO3 with a pullup, so if you connect a
+        button between GPIO3 and GND (pin 5 and 6 on the 40-pin header),
+        you get a shutdown and power-up button.
+Load:   dtoverlay=gpio-shutdown,<param>=<val>
+Params: gpio_pin                GPIO pin to trigger on (default 3)
+
+        active_low              When this is 1 (active low), a falling
+                                edge generates a key down event and a
+                                rising edge generates a key up event.
+                                When this is 0 (active high), this is
+                                reversed. The default is 1 (active low).
+
+        gpio_pull               Desired pull-up/down state (off, down, up)
+                                Default is "up".
+
+                                Note that the default pin (GPIO3) has an
+                                external pullup.
+
+
+#################################################
+# State: Pin from Raspy which goes HIGH after a power down:
+# Board V3 & V4: Using pyhsical 40, BCM21 (Red LED)
+#dtoverlay=gpio-poweroff,gpiopin=21
+# Board V5: Using tinyGP_1 (physical 12, BCM18)
+dtoverlay=gpio-poweroff,gpiopin=18
+
+##################################################
+# Shutdown: Pin to request shutdown (pulling pin LOW) and power-up:
+# Board V3 & V4: BCM4 (SHT30 Alert)
+#dtoverlay=gpio-shutdown,gpio_pin=4,gpio_pull=up
+# Board V5: using tinyGP_0, (physical 11, BCM17)
+dtoverlay=gpio-shutdown,gpio_pin=17,gpio_pull=up
+
+#enable login console
 enable_uart=1
 
-V3:
-BCM4:  SHT30 Alert
-BDM21: LED4 (Red)
-
+Below the mapping for V3 & V4:
 +-----+-----+---------+------+---+---Pi 3+--+---+------+---------+-----+-----+
  | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
  +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
