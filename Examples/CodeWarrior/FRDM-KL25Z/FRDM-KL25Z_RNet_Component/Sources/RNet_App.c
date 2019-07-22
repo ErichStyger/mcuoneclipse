@@ -56,12 +56,12 @@ static unsigned char *StringForState(RNETA_State state) {
 
 static void RadioPowerUp(void) {
   /* need to ensure that we wait 100 ms after power-on of the transceiver */
-  portTickType xTime;
+  TickType_t xTime;
   
   xTime = FRTOS1_xTaskGetTickCount();
-  if (xTime<(100/portTICK_RATE_MS)) {
+  if (xTime<pdMS_TO_TICKS(100)) {
     /* not powered for 100 ms: wait until we can access the radio transceiver */
-    xTime = (100/portTICK_RATE_MS)-xTime; /* remaining ticks to wait */
+    xTime = pdMS_TO_TICKS(100)-xTime; /* remaining ticks to wait */
     FRTOS1_vTaskDelay(xTime);
   }
   (void)RNET1_PowerUp();
@@ -103,7 +103,7 @@ static portTASK_FUNCTION(RNetTask, pvParameters) {
   appState = RNETA_NONE;
   for(;;) {
     Process();
-    FRTOS1_vTaskDelay(2/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(2));
   } /* for */
 }
 
@@ -112,13 +112,13 @@ void RNETA_Init(void) {
   if (RAPP_SetMessageHandlerTable(handlerTable)!=ERR_OK) { /* assign application message handler */
     APP_DebugPrint((unsigned char*)"ERR: failed setting message handler!\r\n");
   }
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         RNetTask,  /* pointer to the task */
         "RNet", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+3,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

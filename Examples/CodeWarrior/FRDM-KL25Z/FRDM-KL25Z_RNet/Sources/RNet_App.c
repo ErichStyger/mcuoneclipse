@@ -88,7 +88,7 @@ static portTASK_FUNCTION(RadioTask, pvParameters) {
   (void)RADIO_PowerUp();
   for(;;) {
     (void)RADIO_Process();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -123,7 +123,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     (void)CLS1_ReadAndParseWithCommandTable(radio_cmd_buf, sizeof(radio_cmd_buf), ioRemote, CmdParserTable);
 #endif
     LED1_Neg();
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -135,13 +135,13 @@ void RNETA_Run(void) {
   if (RAPP_SetThisNodeAddr(RNWK_ADDR_BROADCAST)!=ERR_OK) { /* set a default address */
     Err((unsigned char*)"Failed setting source address!\r\n");
   }
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
         MainTask,  /* pointer to the task */
         "Main", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
@@ -153,7 +153,7 @@ void RNETA_Run(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+1,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

@@ -27,7 +27,7 @@ void APP_DebugPrint(unsigned char *str) {
 static void AppTask(void *pvParameters) {
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
@@ -43,7 +43,7 @@ void APP_Run(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

@@ -22,7 +22,7 @@
 #define RMSG_QUEUE_TX_NOF_ITEMS   (RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS) /* number of items in the queue */
 #define RMSG_QUEUE_PUT_WAIT       (RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS) /* blocking time for putting messages into queue */
 
-static xQueueHandle RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
+static QueueHandle_t RMSG_MsgRxQueue, RMSG_MsgTxQueue; /* queue for messages,  format is: kind(8bit) dataSize(8bit) data */
 
 uint8_t RMSG_FlushRxQueue(void) {
   if (FRTOS1_xQueueReset(RMSG_MsgRxQueue)!=pdPASS) {
@@ -32,7 +32,7 @@ uint8_t RMSG_FlushRxQueue(void) {
 }
 
 uint8_t RMSG_FlushTxQueue(void) {
-  if (FRTOS1_xQueueReset(RMSG_MsgTxQueue)!=pdPASS) {
+  if (xQueueReset(RMSG_MsgTxQueue)!=pdPASS) {
     return ERR_FAILED;
   }
   return ERR_OK;
@@ -42,7 +42,7 @@ uint8_t RMSG_FlushTxQueue(void) {
 uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fromISR, bool isTx, RPHY_FlagsType flags) {
   /* data format is: dataSize(8bit) data */
   uint8_t res = ERR_OK;
-  xQueueHandle queue;
+  QueueHandle_t queue;
 
   if (payloadSize>RPHY_PAYLOAD_SIZE) {
     return ERR_OVERFLOW; /* more data than can fit into payload! */
@@ -65,7 +65,7 @@ uint8_t RMSG_QueuePut(uint8_t *buf, size_t bufSize, uint8_t payloadSize, bool fr
       res = ERR_BUSY;
     }
   } else {
-    if (FRTOS1_xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT)!=pdTRUE) {
+    if (xQueueSendToBack(queue, buf, RMSG_QUEUE_PUT_WAIT)!=pdTRUE) {
       res = ERR_BUSY;
     }
   }
@@ -76,7 +76,7 @@ uint8_t RMSG_GetTxMsg(uint8_t *buf, size_t bufSize) {
   if (bufSize<RPHY_BUFFER_SIZE) {
     return ERR_OVERFLOW; /* not enough space in buffer */
   }
-  if (FRTOS1_xQueueReceive(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
+  if (xQueueReceive(RMSG_MsgTxQueue, buf, 0)==pdPASS) {
     /* received message from queue */
     return ERR_OK;
   }

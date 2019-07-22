@@ -25,8 +25,8 @@
 /* three shell queues, one for each channel.
  * E.g. the command "radio send stdin help" will place "help" into the RSTDIO_RxStdIn queue, which then will be processed by the shell.
  *  */
-static xQueueHandle RSTDIO_RxStdInQ, RSTDIO_RxStdOutQ, RSTDIO_RxStdErrQ;
-static xQueueHandle RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
+static QueueHandle_t RSTDIO_RxStdInQ, RSTDIO_RxStdOutQ, RSTDIO_RxStdErrQ;
+static QueueHandle_t RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
 
 #define RSTDIO_PAYLOAD_SIZE       (RNWK_PAYLOAD_SIZE-1/*type*/-1/*size*/) /* data size we can transmit in one message. stdout string will be added */
 
@@ -37,7 +37,7 @@ static xQueueHandle RSTDIO_TxStdInQ, RSTDIO_TxStdOutQ, RSTDIO_TxStdErrQ;
 
 static RNWK_ShortAddrType RSTDIO_dstAddr; /* destination address */
 
-xQueueHandle GetQueueForType(RSTDIO_QueueType queueType) {
+QueueHandle_t GetQueueForType(RSTDIO_QueueType queueType) {
   switch(queueType) {
     case RSTDIO_QUEUE_RX_IN:  return RSTDIO_RxStdInQ;
     case RSTDIO_QUEUE_RX_OUT: return RSTDIO_RxStdOutQ;
@@ -56,9 +56,9 @@ xQueueHandle GetQueueForType(RSTDIO_QueueType queueType) {
  * \param data Pointer to the binary data
  * \param dataSize Size of data in bytes
  */
-static uint8_t AddToQueue(xQueueHandle queue, const unsigned char *data, size_t dataSize) {
+static uint8_t AddToQueue(QueueHandle_t queue, const unsigned char *data, size_t dataSize) {
   while(dataSize!=0) {
-    if (FRTOS1_xQueueSendToBack(queue, data, RSTDIO_QUEUE_TIMEOUT_MS/portTICK_RATE_MS)!=pdPASS) {
+    if (xQueueSendToBack(queue, data, pdMS_TO_TICKS(RSTDIO_QUEUE_TIMEOUT_MS))!=pdPASS) {
       return ERR_FAULT;
     }
     data++;
@@ -85,7 +85,7 @@ uint8_t RSTDIO_AddToQueue(RSTDIO_QueueType queueType, const unsigned char *data,
  * \param queue Queue to be used
  * \return '\0' if the queue is empty, otherwise it contains the character. 
  */
-static unsigned short RSTDIO_NofElements(xQueueHandle queue) {
+static unsigned short RSTDIO_NofElements(QueueHandle_t queue) {
   return (unsigned short)FRTOS1_uxQueueMessagesWaiting(queue);
 }
 
@@ -106,7 +106,7 @@ uint8_t RSTDIO_NofInQueue(RSTDIO_QueueType queueType) {
  * \brief Receives an a message character from the queue, and returns immediately if the queue is empty.
  * \return Message character, or '\0' if there was no message.
  */
-static unsigned char RSTDIO_ReceiveChar(xQueueHandle queue) {
+static unsigned char RSTDIO_ReceiveChar(QueueHandle_t queue) {
   unsigned char ch;
   portBASE_TYPE res;
 

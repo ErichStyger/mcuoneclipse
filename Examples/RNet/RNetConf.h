@@ -39,7 +39,7 @@
   /*!< Number items in the Tx message queue. The higher, the more items can be buffered. */
 #endif
 #ifndef RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS
-#define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS   (200/portTICK_RATE_MS)
+#define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS   (pdMS_TO_TICKS(200))
   /*!< Blocking time for putting items into the message queue before timeout. Use portMAX_DELAY for blocking. */
 #endif
 
