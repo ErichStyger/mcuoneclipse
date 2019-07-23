@@ -10,7 +10,6 @@
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuILI9341.h"
-
 #include "McuRB.h"
 #include <string.h> /* for memset() */
 #include "McuShell.h"

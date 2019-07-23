@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-
 #include "platform.h"
 #if PL_CONFIG_USE_SHELL
 #include "McuShell.h"

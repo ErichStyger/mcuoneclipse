@@ -9,22 +9,28 @@
 #if PL_CONFIG_USE_GUI_TOUCH_NAV
 #include "McuLib.h"
 #include "touch.h"
-#include "McuFT6206.h"
 #include "McuILI9341.h"
+#if PL_CONFIG_USE_FT6206
+  #include "McuFT6206.h"
+#endif
+#if PL_CONFIG_USE_STMPE610
+  #include "McuSTMPE610.h"
+#endif
 
-void TOUCH_Init(void) {
-}
-
-void TOUCH_Deinit(void) {
-}
-
+#if PL_CONFIG_USE_FT6206
 static void TOUCH_OrientationRotate(McuFT6206_TouchPoint *point) {
   /* Portrait180 */
   point->y = MCUILI9341_TFTHEIGHT-point->y;
   point->x = MCUILI9341_TFTWIDTH-point->x;
 }
+#endif
 
 int TOUCH_Poll(bool *pressed, int *x, int *y) {
+  /* defaults */
+  *pressed = false;
+  *x = 0;
+  *y = 0;
+#if PL_CONFIG_USE_FT6206
   uint8_t val, res;
   McuFT6206_TouchPoint point;
 
@@ -43,11 +49,22 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
       }
     }
   }
+#endif
+#if PL_CONFIG_USE_STMPE610
+  /* test only */
+  uint16_t version;
+  uint8_t id;
+
+//  McuSTMPE610_GetID(&id);
+//  McuSTMPE610_GetVersion(&version);
+#endif
   return 0; /* not touched */
-  /* default */
-  *pressed = false;
-  *x = 0;
-  *y = 0;
+}
+
+void TOUCH_Init(void) {
+}
+
+void TOUCH_Deinit(void) {
 }
 
 #endif /* PL_CONFIG_USE_TOUCH */

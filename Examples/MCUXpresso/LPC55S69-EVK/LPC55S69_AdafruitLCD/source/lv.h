@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-
 #ifndef SOURCES_LV_H_
 #define SOURCES_LV_H_
 

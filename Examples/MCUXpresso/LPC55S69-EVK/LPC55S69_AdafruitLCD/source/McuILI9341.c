@@ -116,18 +116,10 @@ static const uint8_t initlist[] = {
   0x00                                       // Sentinel at the end of the list
 };
 
-static uint8_t spi_write_bytes(uint8_t *data, size_t nofBytes) {
-  while(nofBytes>0) {
-    McuSPI_WriteByte(*data);
-    data++;
-    nofBytes--;
-  }
-  return ERR_OK;
-}
-
 static uint8_t McuILI9341_Write8Cmd(uint8_t cmd) {
   SET_CMD_MODE();
-  return spi_write_bytes(&cmd, 1);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, cmd);
+  return ERR_OK;
 }
 
 uint8_t McuILI9341_WriteCommandArgs(uint8_t cmd, uint8_t *args, uint8_t nofArgs) {
@@ -138,7 +130,7 @@ uint8_t McuILI9341_WriteCommandArgs(uint8_t cmd, uint8_t *args, uint8_t nofArgs)
      return res;
    }
    SET_DATA_MODE(); /* go back to data mode */
-   spi_write_bytes(args, nofArgs);
+   MCUSPI_WriteBytes(McuSPI_ConfigLCD, args, nofArgs);
    return ERR_OK;
 }
 
@@ -173,13 +165,13 @@ uint8_t McuILI9341_DisplayOn(bool on) {
 /* read a byte from the configuration memory (NOT from the display memory) */
 static uint8_t spi_readcommand8(uint8_t cmd, uint8_t index, uint8_t *data) {
   SET_CMD_MODE();
-  McuSPI_WriteByte(0xD9); /* undocumented code? */
+  McuSPI_WriteByte(McuSPI_ConfigLCD, 0xD9); /* undocumented code? */
   SET_DATA_MODE();
-  McuSPI_WriteByte(0x10+index);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, 0x10+index);
   SET_CMD_MODE();
-  McuSPI_WriteByte(cmd);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, cmd);
   SET_DATA_MODE();
-  McuSPI_ReadByte(data);
+  McuSPI_ReadByte(McuSPI_ConfigLCD, data);
   return ERR_OK;
 }
 
@@ -207,23 +199,23 @@ uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
   SELECT_DISPLAY();
 
   SET_CMD_MODE();
-  McuSPI_WriteByte(MCUILI9341_CASET);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, MCUILI9341_CASET);
   SET_DATA_MODE();
-  McuSPI_WriteByte(x0 >> 8);
-  McuSPI_WriteByte(x0 & 0xFF);         // XSTART
-  McuSPI_WriteByte(x1 >> 8);
-  McuSPI_WriteByte(x1 & 0xFF);         // XEND
+  McuSPI_WriteByte(McuSPI_ConfigLCD, x0 >> 8);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, x0 & 0xFF);         // XSTART
+  McuSPI_WriteByte(McuSPI_ConfigLCD, x1 >> 8);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, x1 & 0xFF);         // XEND
 
   SET_CMD_MODE();
-  McuSPI_WriteByte(MCUILI9341_PASET); // Row addr set
+  McuSPI_WriteByte(McuSPI_ConfigLCD, MCUILI9341_PASET); // Row addr set
   SET_DATA_MODE();
-  McuSPI_WriteByte(y0 >> 8);
-  McuSPI_WriteByte(y0);                // YSTART
-  McuSPI_WriteByte(y1 >> 8);
-  McuSPI_WriteByte(y1);                // YEND
+  McuSPI_WriteByte(McuSPI_ConfigLCD, y0 >> 8);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, y0);                // YSTART
+  McuSPI_WriteByte(McuSPI_ConfigLCD, y1 >> 8);
+  McuSPI_WriteByte(McuSPI_ConfigLCD, y1);                // YEND
 
   SET_CMD_MODE();
-  McuSPI_WriteByte(MCUILI9341_RAMWR); // write to RAM}
+  McuSPI_WriteByte(McuSPI_ConfigLCD, MCUILI9341_RAMWR); // write to RAM}
 
   DESELECT_DISPLAY();
 
@@ -233,7 +225,7 @@ uint8_t McuILI9341_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 uint8_t McuILI9341_WritePixelData(uint16_t *pixels, size_t nofPixels) {
   SELECT_DISPLAY();
   SET_DATA_MODE();
-  spi_write_bytes((uint8_t*)pixels, 2*nofPixels);
+  MCUSPI_WriteBytes(McuSPI_ConfigLCD, (uint8_t*)pixels, 2*nofPixels);
   DESELECT_DISPLAY();
   return ERR_OK;
 }
@@ -246,7 +238,7 @@ uint8_t McuILI9341_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
   McuILI9341_SetWindow(x, y, x, y);
   SELECT_DISPLAY();
   SET_DATA_MODE();
-  spi_write_bytes((uint8_t*)&color, 2);
+  MCUSPI_WriteBytes(McuSPI_ConfigLCD, (uint8_t*)&color, 2);
   DESELECT_DISPLAY();
   return ERR_OK;
 }
@@ -260,7 +252,7 @@ uint8_t McuILI9341_DrawBox(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint1
   SELECT_DISPLAY();
   SET_DATA_MODE();
   for(int i=0; i<w*h; i++) {
-    spi_write_bytes((uint8_t*)&color, 2);
+    MCUSPI_WriteBytes(McuSPI_ConfigLCD, (uint8_t*)&color, 2);
   }
   DESELECT_DISPLAY();
   return ERR_OK;

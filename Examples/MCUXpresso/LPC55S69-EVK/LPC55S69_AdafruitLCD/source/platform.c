@@ -36,6 +36,9 @@
 #if PL_CONFIG_USE_FT6206
   #include "McuFT6206.h"
 #endif
+#if PL_CONFIG_USE_STMPE610
+  #include "McuSTMPE610.h"
+#endif
 #include "McuSPI.h"
 #include "lcd.h"
 #include "McuILI9341.h"
@@ -46,9 +49,9 @@ void PL_Init(void) {
 
   /* initialize McuLib modules */
   McuLib_Init();
+  McuWait_Init();
   McuRTOS_Init();
   McuUtility_Init();
-  McuWait_Init();
   McuArmTools_Init();
   McuCriticalSection_Init();
   McuRB_Init();
@@ -72,6 +75,7 @@ void PL_Init(void) {
 #endif
 
   /* initialize my own modules */
+  McuWait_Waitms(500); /* give hardware time to power-up */
   McuSPI_Init();
   McuILI9341_Init();
 #if PL_CONFIG_USE_SHELL
@@ -84,6 +88,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_GUI_TOUCH_NAV
   TOUCH_Init();
+#endif
+#if PL_CONFIG_USE_STMPE610
+  McuSTMPE610_Init();
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();
