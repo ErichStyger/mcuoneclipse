@@ -1,10 +1,11 @@
 //*****************************************************************************
-// MIMXRT1062 startup code for use with MCUXpresso IDE
+// MIMXRT1052 startup code for use with MCUXpresso IDE
 //
-// Version : 190818
+// Version : 210918
 //*****************************************************************************
 //
 // Copyright 2016-2018 NXP
+// All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //*****************************************************************************
@@ -179,7 +180,7 @@ WEAK void PWM1_1_IRQHandler(void);
 WEAK void PWM1_2_IRQHandler(void);
 WEAK void PWM1_3_IRQHandler(void);
 WEAK void PWM1_FAULT_IRQHandler(void);
-WEAK void FLEXSPI2_IRQHandler(void);
+WEAK void Reserved123_IRQHandler(void);
 WEAK void FLEXSPI_IRQHandler(void);
 WEAK void SEMC_IRQHandler(void);
 WEAK void USDHC1_IRQHandler(void);
@@ -224,12 +225,6 @@ WEAK void PWM4_1_IRQHandler(void);
 WEAK void PWM4_2_IRQHandler(void);
 WEAK void PWM4_3_IRQHandler(void);
 WEAK void PWM4_FAULT_IRQHandler(void);
-WEAK void ENET2_IRQHandler(void);
-WEAK void ENET2_1588_Timer_IRQHandler(void);
-WEAK void CAN3_IRQHandler(void);
-WEAK void Reserved171_IRQHandler(void);
-WEAK void FLEXIO3_IRQHandler(void);
-WEAK void GPIO6_7_8_9_IRQHandler(void);
 
 //*****************************************************************************
 // Forward declaration of the driver IRQ handlers. These are aliased
@@ -344,7 +339,7 @@ void PWM1_1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM1_2_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM1_3_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM1_FAULT_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void FLEXSPI2_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
+void Reserved123_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void FLEXSPI_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void SEMC_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void USDHC1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
@@ -389,12 +384,6 @@ void PWM4_1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM4_2_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM4_3_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PWM4_FAULT_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void ENET2_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void ENET2_1588_Timer_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void CAN3_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void Reserved171_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void FLEXIO3_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void GPIO6_7_8_9_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 
 //*****************************************************************************
 // The entry point for the application.
@@ -441,7 +430,7 @@ void (* const g_pfnVectors[])(void) = {
     PendSV_Handler,                    // The PendSV handler
     SysTick_Handler,                   // The SysTick handler
 
-    // Chip Level - MIMXRT1062
+    // Chip Level - MIMXRT1052
     DMA0_DMA16_IRQHandler,            // 16 : DMA channel 0/16 transfer complete
     DMA1_DMA17_IRQHandler,            // 17 : DMA channel 1/17 transfer complete
     DMA2_DMA18_IRQHandler,            // 18 : DMA channel 2/18 transfer complete
@@ -508,7 +497,7 @@ void (* const g_pfnVectors[])(void) = {
     TEMP_LOW_HIGH_IRQHandler,         // 79 : TempSensor low/high interrupt
     TEMP_PANIC_IRQHandler,            // 80 : TempSensor panic interrupt
     USB_PHY1_IRQHandler,              // 81 : USBPHY (UTMI0), Interrupt
-    USB_PHY2_IRQHandler,              // 82 : USBPHY (UTMI1), Interrupt
+    USB_PHY2_IRQHandler,              // 82 : USBPHY (UTMI0), Interrupt
     ADC1_IRQHandler,                  // 83 : ADC1 interrupt
     ADC2_IRQHandler,                  // 84 : ADC2 interrupt
     DCDC_IRQHandler,                  // 85 : DCDC interrupt
@@ -549,7 +538,7 @@ void (* const g_pfnVectors[])(void) = {
     PWM1_2_IRQHandler,                // 120: PWM1 capture 2, compare 2, or reload 0 interrupt
     PWM1_3_IRQHandler,                // 121: PWM1 capture 3, compare 3, or reload 0 interrupt
     PWM1_FAULT_IRQHandler,            // 122: PWM1 fault or reload error interrupt
-    FLEXSPI2_IRQHandler,              // 123: FlexSPI2 interrupt
+    Reserved123_IRQHandler,           // 123: Reserved interrupt
     FLEXSPI_IRQHandler,               // 124: FlexSPI0 interrupt
     SEMC_IRQHandler,                  // 125: Reserved interrupt
     USDHC1_IRQHandler,                // 126: USDHC1 interrupt
@@ -594,12 +583,6 @@ void (* const g_pfnVectors[])(void) = {
     PWM4_2_IRQHandler,                // 165: PWM4 capture 2, compare 2, or reload 0 interrupt
     PWM4_3_IRQHandler,                // 166: PWM4 capture 3, compare 3, or reload 0 interrupt
     PWM4_FAULT_IRQHandler,            // 167: PWM4 fault or reload error interrupt
-    ENET2_IRQHandler,                 // 168: ENET2 interrupt
-    ENET2_1588_Timer_IRQHandler,      // 169: ENET2_1588_Timer interrupt
-    CAN3_IRQHandler,                  // 170: CAN3 interrupt
-    Reserved171_IRQHandler,           // 171: Reserved interrupt
-    FLEXIO3_IRQHandler,               // 172: FLEXIO3 interrupt
-    GPIO6_7_8_9_IRQHandler,           // 173: GPIO6, GPIO7, GPIO8, GPIO9 interrupt
 
 }; /* End of g_pfnVectors */
 
@@ -1198,8 +1181,8 @@ WEAK void PWM1_FAULT_IRQHandler(void)
 {   PWM1_FAULT_DriverIRQHandler();
 }
 
-WEAK void FLEXSPI2_IRQHandler(void)
-{   FLEXSPI2_DriverIRQHandler();
+WEAK void Reserved123_IRQHandler(void)
+{   Reserved123_DriverIRQHandler();
 }
 
 WEAK void FLEXSPI_IRQHandler(void)
@@ -1376,30 +1359,6 @@ WEAK void PWM4_3_IRQHandler(void)
 
 WEAK void PWM4_FAULT_IRQHandler(void)
 {   PWM4_FAULT_DriverIRQHandler();
-}
-
-WEAK void ENET2_IRQHandler(void)
-{   ENET2_DriverIRQHandler();
-}
-
-WEAK void ENET2_1588_Timer_IRQHandler(void)
-{   ENET2_1588_Timer_DriverIRQHandler();
-}
-
-WEAK void CAN3_IRQHandler(void)
-{   CAN3_DriverIRQHandler();
-}
-
-WEAK void Reserved171_IRQHandler(void)
-{   Reserved171_DriverIRQHandler();
-}
-
-WEAK void FLEXIO3_IRQHandler(void)
-{   FLEXIO3_DriverIRQHandler();
-}
-
-WEAK void GPIO6_7_8_9_IRQHandler(void)
-{   GPIO6_7_8_9_DriverIRQHandler();
 }
 
 //*****************************************************************************

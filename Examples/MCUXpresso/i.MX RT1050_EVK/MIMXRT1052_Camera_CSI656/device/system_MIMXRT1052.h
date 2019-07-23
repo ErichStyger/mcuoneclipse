@@ -1,19 +1,19 @@
 /*
 ** ###################################################################
-**     Processors:          MIMXRT1062CVJ5A
-**                          MIMXRT1062CVL5A
-**                          MIMXRT1062DVJ6A
-**                          MIMXRT1062DVL6A
+**     Processors:          MIMXRT1052CVJ5B
+**                          MIMXRT1052CVL5B
+**                          MIMXRT1052DVJ6B
+**                          MIMXRT1052DVL6B
 **
-**     Compilers:           Keil ARM C/C++ Compiler
-**                          Freescale C/C++ for Embedded ARM
+**     Compilers:           Freescale C/C++ for Embedded ARM
 **                          GNU C Compiler
 **                          IAR ANSI C/C++ Compiler for ARM
+**                          Keil ARM C/C++ Compiler
 **                          MCUXpresso Compiler
 **
-**     Reference manual:    IMXRT1060RM Rev. 0, 08/2018
-**     Version:             rev. 0.1, 2017-01-10
-**     Build:               b180819
+**     Reference manual:    IMXRT1050RM Rev.2.1, 12/2018
+**     Version:             rev. 1.2, 2018-11-27
+**     Build:               b181205
 **
 **     Abstract:
 **         Provides a system configuration function and a global variable that
@@ -22,6 +22,7 @@
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
 **     Copyright 2016-2018 NXP
+**     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
 **
@@ -31,23 +32,31 @@
 **     Revisions:
 **     - rev. 0.1 (2017-01-10)
 **         Initial version.
+**     - rev. 1.0 (2018-09-21)
+**         Update interrupt vector table and dma request source.
+**         Update register BEE_ADDR_OFFSET1's bitfield name to ADDR_OFFSET1.
+**         Split GPIO_COMBINED_IRQS to GPIO_COMBINED_LOW_IRQS and GPIO_COMBINED_HIGH_IRQS.
+**     - rev. 1.1 (2018-11-16)
+**         Update header files to align with IMXRT1050RM Rev.1.
+**     - rev. 1.2 (2018-11-27)
+**         Update header files to align with IMXRT1050RM Rev.2.1.
 **
 ** ###################################################################
 */
 
 /*!
- * @file MIMXRT1062
- * @version 0.1
- * @date 2017-01-10
- * @brief Device specific configuration file for MIMXRT1062 (header file)
+ * @file MIMXRT1052
+ * @version 1.2
+ * @date 2018-11-27
+ * @brief Device specific configuration file for MIMXRT1052 (header file)
  *
  * Provides a system configuration function and a global variable that contains
  * the system frequency. It configures the device and initializes the oscillator
  * (PLL) that is part of the microcontroller device.
  */
 
-#ifndef _SYSTEM_MIMXRT1062_H_
-#define _SYSTEM_MIMXRT1062_H_                    /**< Symbol preventing repeated inclusion */
+#ifndef _SYSTEM_MIMXRT1052_H_
+#define _SYSTEM_MIMXRT1052_H_                    /**< Symbol preventing repeated inclusion */
 
 #ifdef __cplusplus
 extern "C" {
@@ -115,4 +124,4 @@ void SystemInitHook (void);
 }
 #endif
 
-#endif  /* _SYSTEM_MIMXRT1062_H_ */
+#endif  /* _SYSTEM_MIMXRT1052_H_ */

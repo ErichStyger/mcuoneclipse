@@ -1,12 +1,13 @@
 /*
- * Copyright 2018 NXP
+ * Copyright (c) 2016, Freescale Semiconductor, Inc.
+ * Copyright 2016-2017 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef __EVKMIMXRT1060_FLEXSPI_NOR_CONFIG__
-#define __EVKMIMXRT1060_FLEXSPI_NOR_CONFIG__
+#ifndef __EVKBIMXRT1050_FLEXSPI_NOR_CONFIG__
+#define __EVKBIMXRT1050_FLEXSPI_NOR_CONFIG__
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -84,9 +85,9 @@ typedef enum _FlexSpiSerialClockFreq
     kFlexSpiSerialClk_75MHz = 4,
     kFlexSpiSerialClk_80MHz = 5,
     kFlexSpiSerialClk_100MHz = 6,
-    kFlexSpiSerialClk_120MHz = 7,
-    kFlexSpiSerialClk_133MHz = 8,
-    kFlexSpiSerialClk_166MHz = 9,
+    kFlexSpiSerialClk_133MHz = 7,
+    kFlexSpiSerialClk_166MHz = 8,
+    kFlexSpiSerialClk_200MHz = 9,
 } flexspi_serial_clk_freq_t;
 
 //!@brief FlexSPI clock configuration type
@@ -265,4 +266,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* __EVKMIMXRT1060_FLEXSPI_NOR_CONFIG__ */
+#endif /* __EVKBIMXRT1050_FLEXSPI_NOR_CONFIG__ */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2017 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -10,7 +10,6 @@
 #ifndef FSL_COMPONENT_ID
 #define FSL_COMPONENT_ID "platform.drivers.clock"
 #endif
-
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -365,9 +364,6 @@ uint32_t CLOCK_GetFreq(clock_name_t name)
             freq = CLOCK_GetPllFreq(kCLOCK_PllEnet);
             break;
         case kCLOCK_EnetPll1Clk:
-            freq = CLOCK_GetPllFreq(kCLOCK_PllEnet2);
-            break;
-        case kCLOCK_EnetPll2Clk:
             freq = CLOCK_GetPllFreq(kCLOCK_PllEnet25M);
             break;
         case kCLOCK_AudioPllClk:
@@ -796,8 +792,7 @@ void CLOCK_DeinitVideoPll(void)
  */
 void CLOCK_InitEnetPll(const clock_enet_pll_config_t *config)
 {
-    uint32_t enet_pll = CCM_ANALOG_PLL_ENET_DIV_SELECT(config->loopDivider) |
-                        CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT(config->loopDivider1);
+    uint32_t enet_pll = CCM_ANALOG_PLL_ENET_DIV_SELECT(config->loopDivider);
 
     CCM_ANALOG->PLL_ENET = (CCM_ANALOG->PLL_ENET & (~CCM_ANALOG_PLL_ENET_BYPASS_CLK_SRC_MASK)) |
                            CCM_ANALOG_PLL_ENET_BYPASS_MASK | CCM_ANALOG_PLL_ENET_BYPASS_CLK_SRC(config->src);
@@ -807,19 +802,13 @@ void CLOCK_InitEnetPll(const clock_enet_pll_config_t *config)
         enet_pll |= CCM_ANALOG_PLL_ENET_ENABLE_MASK;
     }
 
-    if (config->enableClkOutput1)
-    {
-        enet_pll |= CCM_ANALOG_PLL_ENET_ENET2_REF_EN_MASK;
-    }
-
     if (config->enableClkOutput25M)
     {
         enet_pll |= CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK;
     }
 
     CCM_ANALOG->PLL_ENET =
-        (CCM_ANALOG->PLL_ENET & (~(CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK | CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_MASK |
-                                   CCM_ANALOG_PLL_ENET_POWERDOWN_MASK))) |
+        (CCM_ANALOG->PLL_ENET & (~(CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK | CCM_ANALOG_PLL_ENET_POWERDOWN_MASK))) |
         enet_pll;
 
     /* Wait for stable */
@@ -1017,12 +1006,6 @@ uint32_t CLOCK_GetPllFreq(clock_pll_t pll)
         case kCLOCK_PllEnet:
             divSelect =
                 (CCM_ANALOG->PLL_ENET & CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK) >> CCM_ANALOG_PLL_ENET_DIV_SELECT_SHIFT;
-            freq = enetRefClkFreq[divSelect];
-            break;
-
-        case kCLOCK_PllEnet2:
-            divSelect = (CCM_ANALOG->PLL_ENET & CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_MASK) >>
-                        CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_SHIFT;
             freq = enetRefClkFreq[divSelect];
             break;
 

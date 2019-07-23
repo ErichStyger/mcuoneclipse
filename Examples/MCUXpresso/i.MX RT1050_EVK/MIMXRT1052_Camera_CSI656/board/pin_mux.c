@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2017-2018 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -14,8 +14,8 @@
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
 product: Pins v4.1
-processor: MIMXRT1062xxxxA
-package_id: MIMXRT1062DVL6A
+processor: MIMXRT1052xxxxB
+package_id: MIMXRT1052DVL6B
 mcu_data: ksdk2_0
 processor_version: 0.0.0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********

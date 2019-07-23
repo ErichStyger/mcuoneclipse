@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2017 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -39,8 +39,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief CLOCK driver version 2.1.6. */
-#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 1, 6))
+/*! @brief CLOCK driver version 2.1.5. */
+#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 1, 5))
 
 /* analog pll definition */
 #define CCM_ANALOG_PLL_BYPASS_SHIFT (16U)
@@ -156,9 +156,9 @@ extern volatile uint32_t g_rtcXtalFreq;
     }
 
 /*! @brief Clock ip name array for ENET. */
-#define ENET_CLOCKS                                 \
-    {                                               \
-        kCLOCK_Enet, kCLOCK_IpInvalid, kCLOCK_Enet2 \
+#define ENET_CLOCKS \
+    {               \
+        kCLOCK_Enet \
     }
 
 /*! @brief Clock ip name array for EWM. */
@@ -168,21 +168,21 @@ extern volatile uint32_t g_rtcXtalFreq;
     }
 
 /*! @brief Clock ip name array for FLEXCAN. */
-#define FLEXCAN_CLOCKS                                          \
-    {                                                           \
-        kCLOCK_IpInvalid, kCLOCK_Can1, kCLOCK_Can2, kCLOCK_Can3 \
+#define FLEXCAN_CLOCKS                             \
+    {                                              \
+        kCLOCK_IpInvalid, kCLOCK_Can1, kCLOCK_Can2 \
     }
 
 /*! @brief Clock ip name array for FLEXCAN Peripheral clock. */
-#define FLEXCAN_PERIPH_CLOCKS                                      \
-    {                                                              \
-        kCLOCK_IpInvalid, kCLOCK_Can1S, kCLOCK_Can2S, kCLOCK_Can3S \
+#define FLEXCAN_PERIPH_CLOCKS                        \
+    {                                                \
+        kCLOCK_IpInvalid, kCLOCK_Can1S, kCLOCK_Can2S \
     }
 
 /*! @brief Clock ip name array for FLEXIO. */
-#define FLEXIO_CLOCKS                                                    \
-    {                                                                    \
-        kCLOCK_IpInvalid, kCLOCK_Flexio1, kCLOCK_Flexio2, kCLOCK_Flexio3 \
+#define FLEXIO_CLOCKS                                    \
+    {                                                    \
+        kCLOCK_IpInvalid, kCLOCK_Flexio1, kCLOCK_Flexio2 \
     }
 
 /*! @brief Clock ip name array for FLEXRAM. */
@@ -192,9 +192,9 @@ extern volatile uint32_t g_rtcXtalFreq;
     }
 
 /*! @brief Clock ip name array for FLEXSPI. */
-#define FLEXSPI_CLOCKS                                    \
-    {                                                     \
-        kCLOCK_FlexSpi, kCLOCK_IpInvalid, kCLOCK_FlexSpi2 \
+#define FLEXSPI_CLOCKS \
+    {                  \
+        kCLOCK_FlexSpi \
     }
 
 /*! @brief Clock ip name array for FLEXSPI EXSC. */
@@ -391,10 +391,9 @@ typedef enum _clock_name
 
     kCLOCK_EnetPll0Clk = 0x13U, /*!< Enet PLLCLK ref_enetpll0. */
     kCLOCK_EnetPll1Clk = 0x14U, /*!< Enet PLLCLK ref_enetpll1. */
-    kCLOCK_EnetPll2Clk = 0x15U, /*!< Enet PLLCLK ref_enetpll2. */
 
-    kCLOCK_AudioPllClk = 0x16U, /*!< Audio PLLCLK. */
-    kCLOCK_VideoPllClk = 0x17U, /*!< Video PLLCLK. */
+    kCLOCK_AudioPllClk = 0x15U, /*!< Audio PLLCLK. */
+    kCLOCK_VideoPllClk = 0x16U, /*!< Video PLLCLK. */
 } clock_name_t;
 
 #define kCLOCK_CoreSysClk kCLOCK_CpuClk             /*!< For compatible with other platforms without CCM. */
@@ -532,15 +531,6 @@ typedef enum _clock_ip_name
     kCLOCK_Timer2 = (6U << 8U) | CCM_CCGR6_CG14_SHIFT,  /*!< CCGR6, CG14  */
     kCLOCK_Timer3 = (6U << 8U) | CCM_CCGR6_CG15_SHIFT,  /*!< CCGR6, CG15  */
 
-    /* CCM CCGR7 */
-    kCLOCK_Enet2 = (7U << 8U) | CCM_CCGR7_CG0_SHIFT,     /*!< CCGR7, CG0   */
-    kCLOCK_FlexSpi2 = (7U << 8U) | CCM_CCGR7_CG1_SHIFT,  /*!< CCGR7, CG1   */
-    kCLOCK_Axbs_l = (7U << 8U) | CCM_CCGR7_CG2_SHIFT,    /*!< CCGR7, CG2   */
-    kCLOCK_Can3 = (7U << 8U) | CCM_CCGR7_CG3_SHIFT,      /*!< CCGR7, CG3   */
-    kCLOCK_Can3S = (7U << 8U) | CCM_CCGR7_CG4_SHIFT,     /*!< CCGR7, CG4   */
-    kCLOCK_Aips_lite = (7U << 8U) | CCM_CCGR7_CG5_SHIFT, /*!< CCGR7, CG5   */
-    kCLOCK_Flexio3 = (7U << 8U) | CCM_CCGR7_CG6_SHIFT,   /*!< CCGR7, CG6   */
-
 } clock_ip_name_t;
 
 /*! @brief OSC 24M sorce select */
@@ -602,10 +592,6 @@ typedef enum _clock_mux
                                      CCM_CBCMR_PERIPH_CLK2_SEL_SHIFT,
                                      CCM_CBCMR_PERIPH_CLK2_SEL_MASK,
                                      CCM_NO_BUSY_WAIT), /*!< periph clock2 mux name */
-    kCLOCK_Flexspi2Mux = CCM_TUPLE(CBCMR,
-                                   CCM_CBCMR_FLEXSPI2_CLK_SEL_SHIFT,
-                                   CCM_CBCMR_FLEXSPI2_CLK_SEL_MASK,
-                                   CCM_NO_BUSY_WAIT), /*!< flexspi2 mux name */
     kCLOCK_LpspiMux = CCM_TUPLE(
         CBCMR, CCM_CBCMR_LPSPI_CLK_SEL_SHIFT, CCM_CBCMR_LPSPI_CLK_SEL_MASK, CCM_NO_BUSY_WAIT), /*!< lpspi mux name */
 
@@ -686,8 +672,6 @@ typedef enum _clock_div
     kCLOCK_IpgDiv =
         CCM_TUPLE(CBCDR, CCM_CBCDR_IPG_PODF_SHIFT, CCM_CBCDR_IPG_PODF_MASK, CCM_NO_BUSY_WAIT), /*!< ipg div name */
 
-    kCLOCK_Flexspi2Div = CCM_TUPLE(
-        CBCMR, CCM_CBCMR_FLEXSPI2_PODF_SHIFT, CCM_CBCMR_FLEXSPI2_PODF_MASK, CCM_NO_BUSY_WAIT), /*!< flexspi2 div name */
     kCLOCK_LpspiDiv = CCM_TUPLE(
         CBCMR, CCM_CBCMR_LPSPI_PODF_SHIFT, CCM_CBCMR_LPSPI_PODF_MASK, CCM_NO_BUSY_WAIT), /*!< lpspi div name */
     kCLOCK_LcdifDiv = CCM_TUPLE(
@@ -816,6 +800,7 @@ typedef struct _clock_sys_pll_config
     uint16_t ss_stop;     /*!< Stop value to get frequency change. */
     uint8_t ss_enable;    /*!< Enable spread spectrum modulation */
     uint16_t ss_step;     /*!< Step value to get frequency change step. */
+
 } clock_sys_pll_config_t;
 
 /*! @brief PLL configuration for AUDIO and VIDEO */
@@ -842,20 +827,16 @@ typedef struct _clock_video_pll_config
 /*! @brief PLL configuration for ENET */
 typedef struct _clock_enet_pll_config
 {
-    bool enableClkOutput;    /*!< Power on and enable PLL clock output for ENET0 (ref_enetpll0). */
-    bool enableClkOutput25M; /*!< Power on and enable PLL clock output for ENET2 (ref_enetpll2). */
+    bool enableClkOutput; /*!< Power on and enable PLL clock output for ENET0 (ref_enetpll0). */
+
+    bool enableClkOutput25M; /*!< Power on and enable PLL clock output for ENET1 (ref_enetpll1). */
     uint8_t loopDivider;     /*!< Controls the frequency of the ENET0 reference clock.
                                   b00 25MHz
                                   b01 50MHz
                                   b10 100MHz (not 50% duty cycle)
                                   b11 125MHz */
     uint8_t src;             /*!< Pll clock source, reference _clock_pll_clk_src */
-    bool enableClkOutput1;   /*!< Power on and enable PLL clock output for ENET1 (ref_enetpll1). */
-    uint8_t loopDivider1;    /*!< Controls the frequency of the ENET1 reference clock.
-                                  b00 25MHz
-                                  b01 50MHz
-                                  b10 100MHz (not 50% duty cycle)
-                                  b11 125MHz */
+
 } clock_enet_pll_config_t;
 
 /*! @brief PLL name */
@@ -867,9 +848,9 @@ typedef enum _clock_pll
     kCLOCK_PllAudio = CCM_ANALOG_TUPLE(PLL_AUDIO, CCM_ANALOG_PLL_AUDIO_ENABLE_SHIFT), /*!< PLL Audio */
     kCLOCK_PllVideo = CCM_ANALOG_TUPLE(PLL_VIDEO, CCM_ANALOG_PLL_VIDEO_ENABLE_SHIFT), /*!< PLL Video */
 
-    kCLOCK_PllEnet = CCM_ANALOG_TUPLE(PLL_ENET, CCM_ANALOG_PLL_ENET_ENABLE_SHIFT),             /*!< PLL Enet0 */
-    kCLOCK_PllEnet2 = CCM_ANALOG_TUPLE(PLL_ENET, CCM_ANALOG_PLL_ENET_ENET2_REF_EN_SHIFT),      /*!< PLL Enet1 */
-    kCLOCK_PllEnet25M = CCM_ANALOG_TUPLE(PLL_ENET, CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_SHIFT), /*!< PLL Enet2 */
+    kCLOCK_PllEnet = CCM_ANALOG_TUPLE(PLL_ENET, CCM_ANALOG_PLL_ENET_ENABLE_SHIFT), /*!< PLL Enet0 */
+
+    kCLOCK_PllEnet25M = CCM_ANALOG_TUPLE(PLL_ENET, CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_SHIFT), /*!< PLL Enet1 */
 
     kCLOCK_PllUsb2 = CCM_ANALOG_TUPLE(PLL_USB2, CCM_ANALOG_PLL_USB2_ENABLE_SHIFT), /*!< PLL USB2 */
 
@@ -977,7 +958,7 @@ static inline void CLOCK_ControlGate(clock_ip_name_t name, clock_gate_value_t va
     uint32_t shift = ((uint32_t)name) & 0x1FU;
     volatile uint32_t *reg;
 
-    assert(index <= 7);
+    assert(index <= 6);
 
     reg = ((volatile uint32_t *)&CCM->CCGR0) + index;
     *reg = ((*reg) & ~(3U << shift)) | (((uint32_t)value) << shift);

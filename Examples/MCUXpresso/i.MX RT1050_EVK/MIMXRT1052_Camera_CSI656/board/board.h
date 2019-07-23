@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2017-2018 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -17,7 +17,7 @@
  * Definitions
  ******************************************************************************/
 /*! @brief The board name */
-#define BOARD_NAME "MIMXRT1060-EVK"
+#define BOARD_NAME "IMXRT1050-EVKB"
 
 /* The UART to use for debug messages. */
 #define BOARD_DEBUG_UART_TYPE kSerialPort_Uart
@@ -64,8 +64,8 @@
 #define BOARD_USER_BUTTON_IRQ_HANDLER GPIO5_Combined_0_15_IRQHandler
 #define BOARD_USER_BUTTON_NAME "SW8"
 
-/*! @brief The board flash size */
-#define BOARD_FLASH_SIZE (0x800000U)
+/*! @brief The hyper flash size */
+#define BOARD_FLASH_SIZE (0x4000000U)
 
 /*! @brief The ENET PHY address. */
 #define BOARD_ENET0_PHY_ADDRESS (0x02U) /* Phy address of enet port 0. */
@@ -101,7 +101,7 @@
     }
 #define BOARD_HAS_SDCARD (1U)
 #define BOARD_SD_POWER_RESET_GPIO (GPIO1)
-#define BOARD_SD_POWER_RESET_GPIO_PIN (19U)
+#define BOARD_SD_POWER_RESET_GPIO_PIN (5U)
 
 #define BOARD_USDHC_CARD_INSERT_CD_LEVEL (0U)
 
@@ -164,22 +164,6 @@
 #define BOARD_INITGT202SHIELD_IRQ_LABEL "IRQ"                  /*!< Label */
 #define BOARD_INITGT202SHIELD_IRQ_NAME "IRQ"                   /*!< Identifier name */
 #define BOARD_INITGT202SHIELD_IRQ_DIRECTION kGPIO_DigitalInput /*!< Direction */
-
-#define BOARD_INITSILEX2401SHIELD_PWRON_GPIO GPIO1                    /*!< GPIO device name: GPIO */
-#define BOARD_INITSILEX2401SHIELD_PWRON_PORT 1U                       /*!< PORT device index: 1 */
-#define BOARD_INITSILEX2401SHIELD_PWRON_GPIO_PIN 9U                   /*!< PIO4 pin index: 9 */
-#define BOARD_INITSILEX2401SHIELD_PWRON_PIN_NAME GPIO1_9              /*!< Pin name */
-#define BOARD_INITSILEX2401SHIELD_PWRON_LABEL "PWRON"                 /*!< Label */
-#define BOARD_INITSILEX2401SHIELD_PWRON_NAME "PWRON"                  /*!< Identifier name */
-#define BOARD_INITSILEX2401SHIELD_PWRON_DIRECTION kGPIO_DigitalOutput /*!< Direction */
-
-#define BOARD_INITSILEX2401SHIELD_IRQ_GPIO GPIO1                   /*!< GPIO device name: GPIO */
-#define BOARD_INITSILEX2401SHIELD_IRQ_PORT 1U                      /*!< PORT device index: 1 */
-#define BOARD_INITSILEX2401SHIELD_IRQ_GPIO_PIN 11U                 /*!< PIO1 pin index: 11 */
-#define BOARD_INITSILEX2401SHIELD_IRQ_PIN_NAME GPIO1_11            /*!< Pin name */
-#define BOARD_INITSILEX2401SHIELD_IRQ_LABEL "IRQ"                  /*!< Label */
-#define BOARD_INITSILEX2401SHIELD_IRQ_NAME "IRQ"                   /*!< Identifier name */
-#define BOARD_INITSILEX2401SHIELD_IRQ_DIRECTION kGPIO_DigitalInput /*!< Direction */
 
 /* @Brief Board accelerator sensor configuration */
 #define BOARD_ACCEL_I2C_BASEADDR LPI2C1
@@ -260,7 +244,6 @@ status_t BOARD_Camera_I2C_SendSCCB(
 status_t BOARD_Camera_I2C_ReceiveSCCB(
     uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize);
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
-
 void BOARD_SD_Pin_Config(uint32_t speed, uint32_t strength);
 void BOARD_MMC_Pin_Config(uint32_t speed, uint32_t strength);
 

@@ -294,7 +294,7 @@ void BOARD_InitCameraResource(void)
     CLOCK_SetDiv(kCLOCK_CsiDiv, 0);
 
     /*
-     * For RT1060, there is not dedicate clock gate for CSI MCLK, it use CSI
+     * For RT1050, there is not dedicate clock gate for CSI MCLK, it use CSI
      * clock gate.
      */
 

@@ -1,12 +1,12 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2017 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef __EVKMIMXRT1060_DCD_SDRAM_INIT__
-#define __EVKMIMXRT1060_DCD_SDRAM_INIT__
+#ifndef __EVKBIMXRT1050_DCD_SDRAM_INIT__
+#define __EVKBIMXRT1050_DCD_SDRAM_INIT__
 
 #include <stdint.h>
 
@@ -24,4 +24,4 @@
 #define DCD_VERSION (0x40)
 #define DCD_ARRAY_SIZE 1
 
-#endif /* __EVKMIMXRT1060_DCD_SDRAM_INIT__ */
+#endif /* __EVKBIMXRT1050_DCD_SDRAM_INIT__ */

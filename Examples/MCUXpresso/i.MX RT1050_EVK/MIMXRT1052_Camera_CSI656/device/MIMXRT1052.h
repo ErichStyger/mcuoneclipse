@@ -1,9 +1,9 @@
 /*
 ** ###################################################################
-**     Processors:          MIMXRT1062CVJ5A
-**                          MIMXRT1062CVL5A
-**                          MIMXRT1062DVJ6A
-**                          MIMXRT1062DVL6A
+**     Processors:          MIMXRT1052CVJ5B
+**                          MIMXRT1052CVL5B
+**                          MIMXRT1052DVJ6B
+**                          MIMXRT1052DVL6B
 **
 **     Compilers:           Freescale C/C++ for Embedded ARM
 **                          GNU C Compiler
@@ -11,12 +11,12 @@
 **                          Keil ARM C/C++ Compiler
 **                          MCUXpresso Compiler
 **
-**     Reference manual:    IMXRT1060RM Rev.1, 12/2018
-**     Version:             rev. 1.1, 2018-11-27
-**     Build:               b181127
+**     Reference manual:    IMXRT1050RM Rev.2.1, 12/2018
+**     Version:             rev. 1.2, 2018-11-27
+**     Build:               b181205
 **
 **     Abstract:
-**         CMSIS Peripheral Access Layer for MIMXRT1062
+**         CMSIS Peripheral Access Layer for MIMXRT1052
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
 **     Copyright 2016-2018 NXP
@@ -30,31 +30,35 @@
 **     Revisions:
 **     - rev. 0.1 (2017-01-10)
 **         Initial version.
-**     - rev. 1.0 (2018-11-16)
-**         Update header files to align with IMXRT1060RM Rev.0.
-**     - rev. 1.1 (2018-11-27)
-**         Update header files to align with IMXRT1060RM Rev.1.
+**     - rev. 1.0 (2018-09-21)
+**         Update interrupt vector table and dma request source.
+**         Update register BEE_ADDR_OFFSET1's bitfield name to ADDR_OFFSET1.
+**         Split GPIO_COMBINED_IRQS to GPIO_COMBINED_LOW_IRQS and GPIO_COMBINED_HIGH_IRQS.
+**     - rev. 1.1 (2018-11-16)
+**         Update header files to align with IMXRT1050RM Rev.1.
+**     - rev. 1.2 (2018-11-27)
+**         Update header files to align with IMXRT1050RM Rev.2.1.
 **
 ** ###################################################################
 */
 
 /*!
- * @file MIMXRT1062.h
- * @version 1.1
+ * @file MIMXRT1052.h
+ * @version 1.2
  * @date 2018-11-27
- * @brief CMSIS Peripheral Access Layer for MIMXRT1062
+ * @brief CMSIS Peripheral Access Layer for MIMXRT1052
  *
- * CMSIS Peripheral Access Layer for MIMXRT1062
+ * CMSIS Peripheral Access Layer for MIMXRT1052
  */
 
-#ifndef _MIMXRT1062_H_
-#define _MIMXRT1062_H_                           /**< Symbol preventing repeated inclusion */
+#ifndef _MIMXRT1052_H_
+#define _MIMXRT1052_H_                           /**< Symbol preventing repeated inclusion */
 
 /** Memory map major version (memory maps with equal major version number are
  * compatible) */
 #define MCU_MEM_MAP_VERSION 0x0100U
 /** Memory map minor version */
-#define MCU_MEM_MAP_VERSION_MINOR 0x0001U
+#define MCU_MEM_MAP_VERSION_MINOR 0x0002U
 
 
 /* ----------------------------------------------------------------------------
@@ -67,7 +71,7 @@
  */
 
 /** Interrupt Number Definitions */
-#define NUMBER_OF_INT_VECTORS 174                /**< Number of interrupts in the Vector table */
+#define NUMBER_OF_INT_VECTORS 168                /**< Number of interrupts in the Vector table */
 
 typedef enum IRQn {
   /* Auxiliary constants */
@@ -151,7 +155,7 @@ typedef enum IRQn {
   TEMP_LOW_HIGH_IRQn           = 63,               /**< TempSensor low/high interrupt */
   TEMP_PANIC_IRQn              = 64,               /**< TempSensor panic interrupt */
   USB_PHY1_IRQn                = 65,               /**< USBPHY (UTMI0), Interrupt */
-  USB_PHY2_IRQn                = 66,               /**< USBPHY (UTMI1), Interrupt */
+  USB_PHY2_IRQn                = 66,               /**< USBPHY (UTMI0), Interrupt */
   ADC1_IRQn                    = 67,               /**< ADC1 interrupt */
   ADC2_IRQn                    = 68,               /**< ADC2 interrupt */
   DCDC_IRQn                    = 69,               /**< DCDC interrupt */
@@ -192,7 +196,7 @@ typedef enum IRQn {
   PWM1_2_IRQn                  = 104,              /**< PWM1 capture 2, compare 2, or reload 0 interrupt */
   PWM1_3_IRQn                  = 105,              /**< PWM1 capture 3, compare 3, or reload 0 interrupt */
   PWM1_FAULT_IRQn              = 106,              /**< PWM1 fault or reload error interrupt */
-  FLEXSPI2_IRQn                = 107,              /**< FlexSPI2 interrupt */
+  Reserved123_IRQn             = 107,              /**< Reserved interrupt */
   FLEXSPI_IRQn                 = 108,              /**< FlexSPI0 interrupt */
   SEMC_IRQn                    = 109,              /**< Reserved interrupt */
   USDHC1_IRQn                  = 110,              /**< USDHC1 interrupt */
@@ -236,13 +240,7 @@ typedef enum IRQn {
   PWM4_1_IRQn                  = 148,              /**< PWM4 capture 1, compare 1, or reload 0 interrupt */
   PWM4_2_IRQn                  = 149,              /**< PWM4 capture 2, compare 2, or reload 0 interrupt */
   PWM4_3_IRQn                  = 150,              /**< PWM4 capture 3, compare 3, or reload 0 interrupt */
-  PWM4_FAULT_IRQn              = 151,              /**< PWM4 fault or reload error interrupt */
-  ENET2_IRQn                   = 152,              /**< ENET2 interrupt */
-  ENET2_1588_Timer_IRQn        = 153,              /**< ENET2_1588_Timer interrupt */
-  CAN3_IRQn                    = 154,              /**< CAN3 interrupt */
-  Reserved171_IRQn             = 155,              /**< Reserved interrupt */
-  FLEXIO3_IRQn                 = 156,              /**< FLEXIO3 interrupt */
-  GPIO6_7_8_9_IRQn             = 157               /**< GPIO6, GPIO7, GPIO8, GPIO9 interrupt */
+  PWM4_FAULT_IRQn              = 151               /**< PWM4 fault or reload error interrupt */
 } IRQn_Type;
 
 /*!
@@ -268,7 +266,7 @@ typedef enum IRQn {
 #define __FPU_PRESENT                  1         /**< Defines if an FPU is present or not */
 
 #include "core_cm7.h"                  /* Core Peripheral Access Layer */
-#include "system_MIMXRT1062.h"         /* Device specific configuration file */
+#include "system_MIMXRT1052.h"         /* Device specific configuration file */
 
 /*!
  * @}
@@ -313,7 +311,6 @@ typedef enum _dma_request_source
     kDmaRequestMuxLPUART5Rx         = 7|0x100U,    /**< LPUART5 Receive */
     kDmaRequestMuxLPUART7Tx         = 8|0x100U,    /**< LPUART7 Transmit */
     kDmaRequestMuxLPUART7Rx         = 9|0x100U,    /**< LPUART7 Receive */
-    kDmaRequestMuxCAN3              = 11|0x100U,   /**< CAN3 */
     kDmaRequestMuxCSI               = 12|0x100U,   /**< CSI */
     kDmaRequestMuxLPSPI1Rx          = 13|0x100U,   /**< LPSPI1 Receive */
     kDmaRequestMuxLPSPI1Tx          = 14|0x100U,   /**< LPSPI1 Transmit */
@@ -349,20 +346,18 @@ typedef enum _dma_request_source
     kDmaRequestMuxFlexPWM3ValueSub1 = 45|0x100U,   /**< FlexPWM3 Value sub-module1 */
     kDmaRequestMuxFlexPWM3ValueSub2 = 46|0x100U,   /**< FlexPWM3 Value sub-module2 */
     kDmaRequestMuxFlexPWM3ValueSub3 = 47|0x100U,   /**< FlexPWM3 Value sub-module3 */
-    kDmaRequestMuxQTIMER1CaptTimer0 = 48|0x100U,   /**< QTIMER1 Capture timer 0 */
-    kDmaRequestMuxQTIMER1CaptTimer1 = 49|0x100U,   /**< QTIMER1 Capture timer 1 */
-    kDmaRequestMuxQTIMER1CaptTimer2 = 50|0x100U,   /**< QTIMER1 Capture timer 2 */
-    kDmaRequestMuxQTIMER1CaptTimer3 = 51|0x100U,   /**< QTIMER1 Capture timer 3 */
-    kDmaRequestMuxQTIMER1Cmpld1Timer0Cmpld2Timer1 = 52|0x100U, /**< QTIMER1 cmpld1 in timer 0 or cmpld2 in timer 1 */
-    kDmaRequestMuxQTIMER1Cmpld1Timer1Cmpld2Timer0 = 53|0x100U, /**< QTIMER1 cmpld1 in timer 1 or cmpld2 in timer 0 */
-    kDmaRequestMuxQTIMER1Cmpld1Timer2Cmpld2Timer3 = 54|0x100U, /**< QTIMER1 cmpld1 in timer 2 or cmpld2 in timer 3 */
-    kDmaRequestMuxQTIMER1Cmpld1Timer3Cmpld2Timer2 = 55|0x100U, /**< QTIMER1 cmpld1 in timer 3 or cmpld2 in timer 2 */
-    kDmaRequestMuxQTIMER3CaptTimer0Cmpld1Timer0Cmpld2Timer1 = 56|0x100U, /**< QTIMER3 capture timer 0, cmpld1 in timer 0 or cmpld2 in timer 1 */
-    kDmaRequestMuxQTIMER3CaptTimer1Cmpld1Timer1Cmpld2Timer0 = 57|0x100U, /**< QTIMER3 capture timer 1, cmpld1 in timer 1 or cmpld2 in timer 0 */
-    kDmaRequestMuxQTIMER3CaptTimer2Cmpld1Timer2Cmpld2Timer3 = 58|0x100U, /**< QTIMER3 capture timer 2, cmpld1 in timer 2 or cmpld2 in timer 3 */
-    kDmaRequestMuxQTIMER3CaptTimer3Cmpld1Timer3Cmpld2Timer2 = 59|0x100U, /**< QTIMER3 capture timer 3, cmpld1 in timer 3 or cmpld2 in timer 2 */
-    kDmaRequestMuxFlexSPI2Rx        = 60|0x100U,   /**< FlexSPI2 Receive */
-    kDmaRequestMuxFlexSPI2Tx        = 61|0x100U,   /**< FlexSPI2 Transmit */
+    kDmaRequestMuxQTIMER1CaptTimer0 = 48|0x100U,   /**< TMR1 Capture timer 0 */
+    kDmaRequestMuxQTIMER1CaptTimer1 = 49|0x100U,   /**< TMR1 Capture timer 1 */
+    kDmaRequestMuxQTIMER1CaptTimer2 = 50|0x100U,   /**< TMR1 Capture timer 2 */
+    kDmaRequestMuxQTIMER1CaptTimer3 = 51|0x100U,   /**< TMR1 Capture timer 3 */
+    kDmaRequestMuxQTIMER1Cmpld1Timer0Cmpld2Timer1 = 52|0x100U, /**< TMR1 cmpld1 in timer 0 or cmpld2 in timer 1 */
+    kDmaRequestMuxQTIMER1Cmpld1Timer1Cmpld2Timer0 = 53|0x100U, /**< TMR1 cmpld1 in timer 1 or cmpld2 in timer 0 */
+    kDmaRequestMuxQTIMER1Cmpld1Timer2Cmpld2Timer3 = 54|0x100U, /**< TMR1 cmpld1 in timer 2 or cmpld2 in timer 3 */
+    kDmaRequestMuxQTIMER1Cmpld1Timer3Cmpld2Timer2 = 55|0x100U, /**< TMR1 cmpld1 in timer 3 or cmpld2 in timer 2 */
+    kDmaRequestMuxQTIMER3CaptTimer0Cmpld1Timer0Cmpld2Timer1 = 56|0x100U, /**< TMR3 capture timer 0, cmpld1 in timer 0 or cmpld2 in timer 1 */
+    kDmaRequestMuxQTIMER3CaptTimer1Cmpld1Timer1Cmpld2Timer0 = 57|0x100U, /**< TMR3 capture timer 1, cmpld1 in timer 1 or cmpld2 in timer 0 */
+    kDmaRequestMuxQTIMER3CaptTimer2Cmpld1Timer2Cmpld2Timer3 = 58|0x100U, /**< TMR3 capture timer 2, cmpld1 in timer 2 or cmpld2 in timer 3 */
+    kDmaRequestMuxQTIMER3CaptTimer3Cmpld1Timer3Cmpld2Timer2 = 59|0x100U, /**< TMR3 capture timer 3, cmpld1 in timer 3 or cmpld2 in timer 2 */
     kDmaRequestMuxFlexIO1Request2Request3 = 64|0x100U, /**< FlexIO1 Request2 and Request3 */
     kDmaRequestMuxFlexIO2Request2Request3 = 65|0x100U, /**< FlexIO2 Request2 and Request3 */
     kDmaRequestMuxLPUART2Tx         = 66|0x100U,   /**< LPUART2 Transmit */
@@ -408,20 +403,18 @@ typedef enum _dma_request_source
     kDmaRequestMuxFlexPWM4ValueSub1 = 109|0x100U,  /**< FlexPWM4 Value sub-module1 */
     kDmaRequestMuxFlexPWM4ValueSub2 = 110|0x100U,  /**< FlexPWM4 Value sub-module2 */
     kDmaRequestMuxFlexPWM4ValueSub3 = 111|0x100U,  /**< FlexPWM4 Value sub-module3 */
-    kDmaRequestMuxQTIMER2CaptTimer0 = 112|0x100U,  /**< QTIMER2 Capture timer 0 */
-    kDmaRequestMuxQTIMER2CaptTimer1 = 113|0x100U,  /**< QTIMER2 Capture timer 1 */
-    kDmaRequestMuxQTIMER2CaptTimer2 = 114|0x100U,  /**< QTIMER2 Capture timer 2 */
-    kDmaRequestMuxQTIMER2CaptTimer3 = 115|0x100U,  /**< QTIMER2 Capture timer 3 */
-    kDmaRequestMuxQTIMER2Cmpld1Timer0Cmpld2Timer1 = 116|0x100U, /**< QTIMER2 cmpld1 in timer 0 or cmpld2 in timer 1 */
-    kDmaRequestMuxQTIMER2Cmpld1Timer1Cmpld2Timer0 = 117|0x100U, /**< QTIMER2 cmpld1 in timer 1 or cmpld2 in timer 0 */
-    kDmaRequestMuxQTIMER2Cmpld1Timer2Cmpld2Timer3 = 118|0x100U, /**< QTIMER2 cmpld1 in timer 2 or cmpld2 in timer 3 */
-    kDmaRequestMuxQTIMER2Cmpld1Timer3Cmpld2Timer2 = 119|0x100U, /**< QTIMER2 cmpld1 in timer 3 or cmpld2 in timer 2 */
-    kDmaRequestMuxQTIMER4CaptTimer0Cmpld1Timer0Cmpld2Timer1 = 120|0x100U, /**< QTIMER4 capture timer 0, cmpld1 in timer 0 or cmpld2 in timer 1 */
-    kDmaRequestMuxQTIMER4CaptTimer1Cmpld1Timer1Cmpld2Timer0 = 121|0x100U, /**< QTIMER4 capture timer 1, cmpld1 in timer 1 or cmpld2 in timer 0 */
-    kDmaRequestMuxQTIMER4CaptTimer2Cmpld1Timer2Cmpld2Timer3 = 122|0x100U, /**< QTIMER4 capture timer 2, cmpld1 in timer 2 or cmpld2 in timer 3 */
-    kDmaRequestMuxQTIMER4CaptTimer3Cmpld1Timer3Cmpld2Timer2 = 123|0x100U, /**< QTIMER4 capture timer 3, cmpld1 in timer 3 or cmpld2 in timer 2 */
-    kDmaRequestMuxEnet2Timer0       = 124|0x100U,  /**< ENET2 Timer0 */
-    kDmaRequestMuxEnet2Timer1       = 125|0x100U,  /**< ENET2 Timer1 */
+    kDmaRequestMuxQTIMER2CaptTimer0 = 112|0x100U,  /**< TMR2 Capture timer 0 */
+    kDmaRequestMuxQTIMER2CaptTimer1 = 113|0x100U,  /**< TMR2 Capture timer 1 */
+    kDmaRequestMuxQTIMER2CaptTimer2 = 114|0x100U,  /**< TMR2 Capture timer 2 */
+    kDmaRequestMuxQTIMER2CaptTimer3 = 115|0x100U,  /**< TMR2 Capture timer 3 */
+    kDmaRequestMuxQTIMER2Cmpld1Timer0Cmpld2Timer1 = 116|0x100U, /**< TMR2 cmpld1 in timer 0 or cmpld2 in timer 1 */
+    kDmaRequestMuxQTIMER2Cmpld1Timer1Cmpld2Timer0 = 117|0x100U, /**< TMR2 cmpld1 in timer 1 or cmpld2 in timer 0 */
+    kDmaRequestMuxQTIMER2Cmpld1Timer2Cmpld2Timer3 = 118|0x100U, /**< TMR2 cmpld1 in timer 2 or cmpld2 in timer 3 */
+    kDmaRequestMuxQTIMER2Cmpld1Timer3Cmpld2Timer2 = 119|0x100U, /**< TMR2 cmpld1 in timer 3 or cmpld2 in timer 2 */
+    kDmaRequestMuxQTIMER4CaptTimer0Cmpld1Timer0Cmpld2Timer1 = 120|0x100U, /**< TMR4 capture timer 0, cmpld1 in timer 0 or cmpld2 in timer 1 */
+    kDmaRequestMuxQTIMER4CaptTimer1Cmpld1Timer1Cmpld2Timer0 = 121|0x100U, /**< TMR4 capture timer 1, cmpld1 in timer 1 or cmpld2 in timer 0 */
+    kDmaRequestMuxQTIMER4CaptTimer2Cmpld1Timer2Cmpld2Timer3 = 122|0x100U, /**< TMR4 capture timer 2, cmpld1 in timer 2 or cmpld2 in timer 3 */
+    kDmaRequestMuxQTIMER4CaptTimer3Cmpld1Timer3Cmpld2Timer2 = 123|0x100U, /**< TMR4 capture timer 3, cmpld1 in timer 3 or cmpld2 in timer 2 */
 } dma_request_source_t;
 
 /* @} */
@@ -578,47 +571,6 @@ typedef enum _iomuxc_sw_mux_ctl_pad
 *******************************************************************************/
 
 /*!
- * @brief Enumeration for the IOMUXC SW_MUX_CTL_PAD_1
- *
- * Defines the enumeration for the IOMUXC SW_MUX_CTL_PAD_1 collections.
- */
-typedef enum _iomuxc_sw_mux_ctl_pad_1
-{
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_00 = 0U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_01 = 1U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_02 = 2U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_03 = 3U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_04 = 4U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_05 = 5U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_06 = 6U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_07 = 7U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_08 = 8U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_09 = 9U,    /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_10 = 10U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_11 = 11U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_12 = 12U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B0_13 = 13U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_00 = 14U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_01 = 15U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_02 = 16U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_03 = 17U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_04 = 18U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_05 = 19U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_06 = 20U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-    kIOMUXC_SW_MUX_CTL_PAD_GPIO_SPI_B1_07 = 21U,   /**< IOMUXC SW_MUX_CTL_PAD_1 index */
-} iomuxc_sw_mux_ctl_pad_1_t;
-
-/* @} */
-
-/*!
- * @addtogroup iomuxc_pads
- * @{ */
-
-/*******************************************************************************
- * Definitions
-*******************************************************************************/
-
-/*!
  * @brief Enumeration for the IOMUXC SW_PAD_CTL_PAD
  *
  * Defines the enumeration for the IOMUXC SW_PAD_CTL_PAD collections.
@@ -750,47 +702,6 @@ typedef enum _iomuxc_sw_pad_ctl_pad
     kIOMUXC_SW_PAD_CTL_PAD_GPIO_SD_B1_10 = 122U,   /**< IOMUXC SW_PAD_CTL_PAD index */
     kIOMUXC_SW_PAD_CTL_PAD_GPIO_SD_B1_11 = 123U,   /**< IOMUXC SW_PAD_CTL_PAD index */
 } iomuxc_sw_pad_ctl_pad_t;
-
-/* @} */
-
-/*!
- * @addtogroup iomuxc_pads
- * @{ */
-
-/*******************************************************************************
- * Definitions
-*******************************************************************************/
-
-/*!
- * @brief Enumeration for the IOMUXC SW_PAD_CTL_PAD_1
- *
- * Defines the enumeration for the IOMUXC SW_PAD_CTL_PAD_1 collections.
- */
-typedef enum _iomuxc_sw_pad_ctl_pad_1
-{
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_00 = 0U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_01 = 1U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_02 = 2U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_03 = 3U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_04 = 4U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_05 = 5U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_06 = 6U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_07 = 7U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_08 = 8U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_09 = 9U,    /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_10 = 10U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_11 = 11U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_12 = 12U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B0_13 = 13U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_00 = 14U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_01 = 15U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_02 = 16U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_03 = 17U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_04 = 18U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_05 = 19U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_06 = 20U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-    kIOMUXC_SW_PAD_CTL_PAD_GPIO_SPI_B1_07 = 21U,   /**< IOMUXC SW_PAD_CTL_PAD_1 index */
-} iomuxc_sw_pad_ctl_pad_1_t;
 
 /* @} */
 
@@ -956,48 +867,6 @@ typedef enum _iomuxc_select_input
     kIOMUXC_XBAR1_IN19_SELECT_INPUT = 152U,        /**< IOMUXC select input index */
     kIOMUXC_XBAR1_IN21_SELECT_INPUT = 153U,        /**< IOMUXC select input index */
 } iomuxc_select_input_t;
-
-/*!
- * @brief Enumeration for the IOMUXC select input
- *
- * Defines the enumeration for the IOMUXC select input collections.
- */
-typedef enum _iomuxc_select_input_1
-{
-    kIOMUXC_ENET2_IPG_CLK_RMII_SELECT_INPUT = 0U,  /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_MDIO_SELECT_INPUT = 1U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_RXDATA_SELECT_INPUT_0 = 2U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_RXDATA_SELECT_INPUT_1 = 3U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_RXEN_SELECT_INPUT = 4U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_RXERR_SELECT_INPUT = 5U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_TIMER_SELECT_INPUT_0 = 6U, /**< IOMUXC select input index */
-    kIOMUXC_ENET2_IPP_IND_MAC0_TXCLK_SELECT_INPUT = 7U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_DQS_FA_SELECT_INPUT = 8U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FA_BIT0_SELECT_INPUT = 9U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FA_BIT1_SELECT_INPUT = 10U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FA_BIT2_SELECT_INPUT = 11U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FA_BIT3_SELECT_INPUT = 12U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FB_BIT0_SELECT_INPUT = 13U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FB_BIT1_SELECT_INPUT = 14U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FB_BIT2_SELECT_INPUT = 15U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_IO_FB_BIT3_SELECT_INPUT = 16U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_SCK_FA_SELECT_INPUT = 17U, /**< IOMUXC select input index */
-    kIOMUXC_FLEXSPI2_IPP_IND_SCK_FB_SELECT_INPUT = 18U, /**< IOMUXC select input index */
-    kIOMUXC_GPT1_IPP_IND_CAPIN1_SELECT_INPUT = 19U, /**< IOMUXC select input index */
-    kIOMUXC_GPT1_IPP_IND_CAPIN2_SELECT_INPUT = 20U, /**< IOMUXC select input index */
-    kIOMUXC_GPT1_IPP_IND_CLKIN_SELECT_INPUT = 21U, /**< IOMUXC select input index */
-    kIOMUXC_GPT2_IPP_IND_CAPIN1_SELECT_INPUT = 22U, /**< IOMUXC select input index */
-    kIOMUXC_GPT2_IPP_IND_CAPIN2_SELECT_INPUT = 23U, /**< IOMUXC select input index */
-    kIOMUXC_GPT2_IPP_IND_CLKIN_SELECT_INPUT = 24U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPG_CLK_SAI_MCLK_SELECT_INPUT_2 = 25U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPP_IND_SAI_RXBCLK_SELECT_INPUT = 26U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPP_IND_SAI_RXDATA_SELECT_INPUT_0 = 27U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPP_IND_SAI_RXSYNC_SELECT_INPUT = 28U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPP_IND_SAI_TXBCLK_SELECT_INPUT = 29U, /**< IOMUXC select input index */
-    kIOMUXC_SAI3_IPP_IND_SAI_TXSYNC_SELECT_INPUT = 30U, /**< IOMUXC select input index */
-    kIOMUXC_SEMC_I_IPP_IND_DQS4_SELECT_INPUT = 31U, /**< IOMUXC select input index */
-    kIOMUXC_CANFD_IPP_IND_CANRX_SELECT_INPUT = 32U, /**< IOMUXC select input index */
-} iomuxc_select_input_1_t;
 
 typedef enum _xbar_input_signal
 {
@@ -3240,76 +3109,38 @@ typedef struct {
 /** CAN - Register Layout Typedef */
 typedef struct {
   __IO uint32_t MCR;                               /**< Module Configuration Register, offset: 0x0 */
-  __IO uint32_t CTRL1;                             /**< Control 1 Register..Control 1 register, offset: 0x4 */
-  __IO uint32_t TIMER;                             /**< Free Running Timer Register..Free Running Timer, offset: 0x8 */
+  __IO uint32_t CTRL1;                             /**< Control 1 Register, offset: 0x4 */
+  __IO uint32_t TIMER;                             /**< Free Running Timer Register, offset: 0x8 */
        uint8_t RESERVED_0[4];
   __IO uint32_t RXMGMASK;                          /**< Rx Mailboxes Global Mask Register, offset: 0x10 */
-  __IO uint32_t RX14MASK;                          /**< Rx Buffer 14 Mask Register..Rx 14 Mask register, offset: 0x14 */
-  __IO uint32_t RX15MASK;                          /**< Rx Buffer 15 Mask Register..Rx 15 Mask register, offset: 0x18 */
-  __IO uint32_t ECR;                               /**< Error Counter Register..Error Counter, offset: 0x1C */
-  __IO uint32_t ESR1;                              /**< Error and Status 1 Register..Error and Status 1 register, offset: 0x20 */
-  __IO uint32_t IMASK2;                            /**< Interrupt Masks 2 Register..Interrupt Masks 2 register, offset: 0x24 */
-  __IO uint32_t IMASK1;                            /**< Interrupt Masks 1 Register..Interrupt Masks 1 register, offset: 0x28 */
-  __IO uint32_t IFLAG2;                            /**< Interrupt Flags 2 Register..Interrupt Flags 2 register, offset: 0x2C */
-  __IO uint32_t IFLAG1;                            /**< Interrupt Flags 1 Register..Interrupt Flags 1 register, offset: 0x30 */
-  __IO uint32_t CTRL2;                             /**< Control 2 Register..Control 2 register, offset: 0x34 */
-  __I  uint32_t ESR2;                              /**< Error and Status 2 Register..Error and Status 2 register, offset: 0x38 */
+  __IO uint32_t RX14MASK;                          /**< Rx Buffer 14 Mask Register, offset: 0x14 */
+  __IO uint32_t RX15MASK;                          /**< Rx Buffer 15 Mask Register, offset: 0x18 */
+  __IO uint32_t ECR;                               /**< Error Counter Register, offset: 0x1C */
+  __IO uint32_t ESR1;                              /**< Error and Status 1 Register, offset: 0x20 */
+  __IO uint32_t IMASK2;                            /**< Interrupt Masks 2 Register, offset: 0x24 */
+  __IO uint32_t IMASK1;                            /**< Interrupt Masks 1 Register, offset: 0x28 */
+  __IO uint32_t IFLAG2;                            /**< Interrupt Flags 2 Register, offset: 0x2C */
+  __IO uint32_t IFLAG1;                            /**< Interrupt Flags 1 Register, offset: 0x30 */
+  __IO uint32_t CTRL2;                             /**< Control 2 Register, offset: 0x34 */
+  __I  uint32_t ESR2;                              /**< Error and Status 2 Register, offset: 0x38 */
        uint8_t RESERVED_1[8];
   __I  uint32_t CRCR;                              /**< CRC Register, offset: 0x44 */
-  __IO uint32_t RXFGMASK;                          /**< Rx FIFO Global Mask Register..Legacy Rx FIFO Global Mask register, offset: 0x48 */
-  __I  uint32_t RXFIR;                             /**< Rx FIFO Information Register..Legacy Rx FIFO Information Register, offset: 0x4C */
-  __IO uint32_t CBT;                               /**< CAN Bit Timing Register, offset: 0x50 */
-       uint8_t RESERVED_2[4];
+  __IO uint32_t RXFGMASK;                          /**< Rx FIFO Global Mask Register, offset: 0x48 */
+  __I  uint32_t RXFIR;                             /**< Rx FIFO Information Register, offset: 0x4C */
+       uint8_t RESERVED_2[8];
   __I  uint32_t DBG1;                              /**< Debug 1 register, offset: 0x58 */
   __I  uint32_t DBG2;                              /**< Debug 2 register, offset: 0x5C */
        uint8_t RESERVED_3[32];
-  union {                                          /* offset: 0x80 */
-    struct {                                         /* offset: 0x80, array step: 0x18 */
-      __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 41 CS Register, array offset: 0x80, array step: 0x18 */
-      __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 41 ID Register, array offset: 0x84, array step: 0x18 */
-      __IO uint32_t WORD[4];                           /**< Message Buffer 0 WORD_16B Register..Message Buffer 41 WORD_16B Register, array offset: 0x88, array step: index*0x18, index2*0x4 */
-    } MB_16B[42];
-    struct {                                         /* offset: 0x80, array step: 0x28 */
-      __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 23 CS Register, array offset: 0x80, array step: 0x28 */
-      __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 23 ID Register, array offset: 0x84, array step: 0x28 */
-      __IO uint32_t WORD[8];                           /**< Message Buffer 0 WORD_32B Register..Message Buffer 23 WORD_32B Register, array offset: 0x88, array step: index*0x28, index2*0x4 */
-    } MB_32B[24];
-    struct {                                         /* offset: 0x80, array step: 0x48 */
-      __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 13 CS Register, array offset: 0x80, array step: 0x48 */
-      __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 13 ID Register, array offset: 0x84, array step: 0x48 */
-      __IO uint32_t WORD[16];                          /**< Message Buffer 0 WORD_64B Register..Message Buffer 13 WORD_64B Register, array offset: 0x88, array step: index*0x48, index2*0x4 */
-    } MB_64B[14];
-    struct {                                         /* offset: 0x80, array step: 0x10 */
-      __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 63 CS Register, array offset: 0x80, array step: 0x10 */
-      __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 63 ID Register, array offset: 0x84, array step: 0x10 */
-      __IO uint32_t WORD[2];                           /**< Message Buffer 0 WORD_8B Register..Message Buffer 63 WORD_8B Register, array offset: 0x88, array step: index*0x10, index2*0x4 */
-    } MB_8B[64];
-    struct {                                         /* offset: 0x80, array step: 0x10 */
-      __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 63 CS Register, array offset: 0x80, array step: 0x10 */
-      __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 63 ID Register, array offset: 0x84, array step: 0x10 */
-      __IO uint32_t WORD0;                             /**< Message Buffer 0 WORD0 Register..Message Buffer 63 WORD0 Register, array offset: 0x88, array step: 0x10 */
-      __IO uint32_t WORD1;                             /**< Message Buffer 0 WORD1 Register..Message Buffer 63 WORD1 Register, array offset: 0x8C, array step: 0x10 */
-    } MB[64];
-  };
+  struct {                                         /* offset: 0x80, array step: 0x10 */
+    __IO uint32_t CS;                                /**< Message Buffer 0 CS Register..Message Buffer 63 CS Register, array offset: 0x80, array step: 0x10 */
+    __IO uint32_t ID;                                /**< Message Buffer 0 ID Register..Message Buffer 63 ID Register, array offset: 0x84, array step: 0x10 */
+    __IO uint32_t WORD0;                             /**< Message Buffer 0 WORD0 Register..Message Buffer 63 WORD0 Register, array offset: 0x88, array step: 0x10 */
+    __IO uint32_t WORD1;                             /**< Message Buffer 0 WORD1 Register..Message Buffer 63 WORD1 Register, array offset: 0x8C, array step: 0x10 */
+  } MB[64];
        uint8_t RESERVED_4[1024];
   __IO uint32_t RXIMR[64];                         /**< Rx Individual Mask Registers, array offset: 0x880, array step: 0x4 */
        uint8_t RESERVED_5[96];
   __IO uint32_t GFWR;                              /**< Glitch Filter Width Registers, offset: 0x9E0 */
-       uint8_t RESERVED_6[524];
-  __IO uint32_t EPRS;                              /**< Enhanced CAN Bit Timing Prescalers, offset: 0xBF0 */
-  __IO uint32_t ENCBT;                             /**< Enhanced Nominal CAN Bit Timing, offset: 0xBF4 */
-  __IO uint32_t EDCBT;                             /**< Enhanced Data Phase CAN bit Timing, offset: 0xBF8 */
-  __IO uint32_t ETDC;                              /**< Enhanced Transceiver Delay Compensation, offset: 0xBFC */
-  __IO uint32_t FDCTRL;                            /**< CAN FD Control Register, offset: 0xC00 */
-  __IO uint32_t FDCBT;                             /**< CAN FD Bit Timing Register, offset: 0xC04 */
-  __I  uint32_t FDCRC;                             /**< CAN FD CRC Register, offset: 0xC08 */
-  __IO uint32_t ERFCR;                             /**< Enhanced Rx FIFO Control Register, offset: 0xC0C */
-  __IO uint32_t ERFIER;                            /**< Enhanced Rx FIFO Interrupt Enable register, offset: 0xC10 */
-  __IO uint32_t ERFSR;                             /**< Enhanced Rx FIFO Status Register, offset: 0xC14 */
-       uint8_t RESERVED_7[24];
-  __I  uint32_t HR_TIME_STAMP[64];                 /**< High Resolution Time Stamp, array offset: 0xC30, array step: 0x4 */
-       uint8_t RESERVED_8[8912];
-  __IO uint32_t ERFFEL[128];                       /**< Enhanced Rx FIFO Filter Element, array offset: 0x3000, array step: 0x4 */
 } CAN_Type;
 
 /* ----------------------------------------------------------------------------
@@ -3328,235 +3159,207 @@ typedef struct {
 #define CAN_MCR_MAXMB(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_MCR_MAXMB_SHIFT)) & CAN_MCR_MAXMB_MASK)
 #define CAN_MCR_IDAM_MASK                        (0x300U)
 #define CAN_MCR_IDAM_SHIFT                       (8U)
-/*! IDAM - ID Acceptance Mode
- *  0b00..Format A: One full ID (standard and extended) per ID Filter Table element.
- *  0b01..Format B: Two full standard IDs or two partial 14-bit (standard and extended) IDs per ID Filter Table element.
- *  0b10..Format C: Four partial 8-bit Standard IDs per ID Filter Table element.
- *  0b11..Format D: All frames rejected.
+/*! IDAM
+ *  0b00..Format A One full ID (standard or extended) per ID filter Table element.
+ *  0b01..Format B Two full standard IDs or two partial 14-bit extended IDs per ID filter Table element.
+ *  0b10..Format C Four partial 8-bit IDs (standard or extended) per ID filter Table element.
+ *  0b11..Format D All frames rejected.
  */
 #define CAN_MCR_IDAM(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_IDAM_SHIFT)) & CAN_MCR_IDAM_MASK)
-#define CAN_MCR_FDEN_MASK                        (0x800U)
-#define CAN_MCR_FDEN_SHIFT                       (11U)
-/*! FDEN - CAN FD operation enable
- *  0b1..CAN FD is enabled. FlexCAN is able to receive and transmit messages in both CAN FD and CAN 2.0 formats.
- *  0b0..CAN FD is disabled. FlexCAN is able to receive and transmit messages in CAN 2.0 format.
- */
-#define CAN_MCR_FDEN(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_FDEN_SHIFT)) & CAN_MCR_FDEN_MASK)
 #define CAN_MCR_AEN_MASK                         (0x1000U)
 #define CAN_MCR_AEN_SHIFT                        (12U)
-/*! AEN - Abort Enable
- *  0b0..Abort disabled.
- *  0b1..Abort enabled.
+/*! AEN
+ *  0b1..Abort enabled
+ *  0b0..Abort disabled
  */
 #define CAN_MCR_AEN(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_MCR_AEN_SHIFT)) & CAN_MCR_AEN_MASK)
 #define CAN_MCR_LPRIOEN_MASK                     (0x2000U)
 #define CAN_MCR_LPRIOEN_SHIFT                    (13U)
-/*! LPRIOEN - Local Priority Enable
- *  0b0..Local Priority disabled.
- *  0b1..Local Priority enabled.
+/*! LPRIOEN
+ *  0b1..Local Priority enabled
+ *  0b0..Local Priority disabled
  */
 #define CAN_MCR_LPRIOEN(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_MCR_LPRIOEN_SHIFT)) & CAN_MCR_LPRIOEN_MASK)
-#define CAN_MCR_DMA_MASK                         (0x8000U)
-#define CAN_MCR_DMA_SHIFT                        (15U)
-/*! DMA - DMA Enable
- *  0b0..DMA feature for Legacy RX FIFO or Enhanced Rx FIFO are disabled.
- *  0b1..DMA feature for Legacy RX FIFO or Enhanced Rx FIFO are enabled.
- */
-#define CAN_MCR_DMA(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_MCR_DMA_SHIFT)) & CAN_MCR_DMA_MASK)
 #define CAN_MCR_IRMQ_MASK                        (0x10000U)
 #define CAN_MCR_IRMQ_SHIFT                       (16U)
-/*! IRMQ - Individual Rx Masking And Queue Enable
- *  0b0..Individual Rx masking and queue feature are disabled. For backward compatibility with legacy applications, the reading of C/S word locks the MB even if it is EMPTY.
+/*! IRMQ
  *  0b1..Individual Rx masking and queue feature are enabled.
+ *  0b0..Individual Rx masking and queue feature are disabled.For backward compatibility, the reading of C/S word locks the MB even if it is EMPTY.
  */
 #define CAN_MCR_IRMQ(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_IRMQ_SHIFT)) & CAN_MCR_IRMQ_MASK)
 #define CAN_MCR_SRXDIS_MASK                      (0x20000U)
 #define CAN_MCR_SRXDIS_SHIFT                     (17U)
-/*! SRXDIS - Self Reception Disable
- *  0b0..Self reception enabled.
- *  0b1..Self reception disabled.
+/*! SRXDIS
+ *  0b1..Self reception disabled
+ *  0b0..Self reception enabled
  */
 #define CAN_MCR_SRXDIS(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_SRXDIS_SHIFT)) & CAN_MCR_SRXDIS_MASK)
-#define CAN_MCR_DOZE_MASK                        (0x40000U)
-#define CAN_MCR_DOZE_SHIFT                       (18U)
-/*! DOZE - Doze Mode Enable
- *  0b0..FlexCAN is not enabled to enter low-power mode when Doze mode is requested.
- *  0b1..FlexCAN is enabled to enter low-power mode when Doze mode is requested.
- */
-#define CAN_MCR_DOZE(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_DOZE_SHIFT)) & CAN_MCR_DOZE_MASK)
 #define CAN_MCR_WAKSRC_MASK                      (0x80000U)
 #define CAN_MCR_WAKSRC_SHIFT                     (19U)
-/*! WAKSRC - Wake Up Source
+/*! WAKSRC
  *  0b1..FLEXCAN uses the filtered FLEXCAN_RX input to detect recessive to dominant edges on the CAN bus
  *  0b0..FLEXCAN uses the unfiltered FLEXCAN_RX input to detect recessive to dominant edges on the CAN bus.
  */
 #define CAN_MCR_WAKSRC(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_WAKSRC_SHIFT)) & CAN_MCR_WAKSRC_MASK)
 #define CAN_MCR_LPMACK_MASK                      (0x100000U)
 #define CAN_MCR_LPMACK_SHIFT                     (20U)
-/*! LPMACK - Low-Power Mode Acknowledge
+/*! LPMACK
  *  0b1..FLEXCAN is either in Disable Mode, or Stop mode
  *  0b0..FLEXCAN not in any of the low power modes
  */
 #define CAN_MCR_LPMACK(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_LPMACK_SHIFT)) & CAN_MCR_LPMACK_MASK)
 #define CAN_MCR_WRNEN_MASK                       (0x200000U)
 #define CAN_MCR_WRNEN_SHIFT                      (21U)
-/*! WRNEN - Warning Interrupt Enable
- *  0b0..TWRNINT and RWRNINT bits are zero, independent of the values in the error counters.
- *  0b1..TWRNINT and RWRNINT bits are set when the respective error counter transitions from less than 96 to greater than or equal to 96.
+/*! WRNEN
+ *  0b1..TWRN_INT and RWRN_INT bits are set when the respective error counter transition from <96 to >= 96.
+ *  0b0..TWRN_INT and RWRN_INT bits are zero, independent of the values in the error counters.
  */
 #define CAN_MCR_WRNEN(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_MCR_WRNEN_SHIFT)) & CAN_MCR_WRNEN_MASK)
 #define CAN_MCR_SLFWAK_MASK                      (0x400000U)
 #define CAN_MCR_SLFWAK_SHIFT                     (22U)
-/*! SLFWAK - Self Wake Up
- *  0b0..FlexCAN Self Wake Up feature is disabled.
- *  0b1..FlexCAN Self Wake Up feature is enabled.
+/*! SLFWAK
+ *  0b1..FLEXCAN Self Wake Up feature is enabled
+ *  0b0..FLEXCAN Self Wake Up feature is disabled
  */
 #define CAN_MCR_SLFWAK(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_SLFWAK_SHIFT)) & CAN_MCR_SLFWAK_MASK)
 #define CAN_MCR_SUPV_MASK                        (0x800000U)
 #define CAN_MCR_SUPV_SHIFT                       (23U)
-/*! SUPV - Supervisor Mode
+/*! SUPV
  *  0b1..FlexCAN is in Supervisor Mode. Affected registers allow only Supervisor access. Unrestricted access behaves as though the access was done to an unimplemented register location
  *  0b0..FlexCAN is in User Mode. Affected registers allow both Supervisor and Unrestricted accesses
  */
 #define CAN_MCR_SUPV(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_SUPV_SHIFT)) & CAN_MCR_SUPV_MASK)
 #define CAN_MCR_FRZACK_MASK                      (0x1000000U)
 #define CAN_MCR_FRZACK_SHIFT                     (24U)
-/*! FRZACK - Freeze Mode Acknowledge
- *  0b0..FlexCAN not in Freeze mode, prescaler running.
- *  0b1..FlexCAN in Freeze mode, prescaler stopped.
+/*! FRZACK
+ *  0b1..FLEXCAN in Freeze Mode, prescaler stopped
+ *  0b0..FLEXCAN not in Freeze Mode, prescaler running
  */
 #define CAN_MCR_FRZACK(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_FRZACK_SHIFT)) & CAN_MCR_FRZACK_MASK)
 #define CAN_MCR_SOFTRST_MASK                     (0x2000000U)
 #define CAN_MCR_SOFTRST_SHIFT                    (25U)
-/*! SOFTRST - Soft Reset
- *  0b0..No reset request.
- *  0b1..Resets the registers affected by soft reset.
+/*! SOFTRST
+ *  0b1..Reset the registers
+ *  0b0..No reset request
  */
 #define CAN_MCR_SOFTRST(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_MCR_SOFTRST_SHIFT)) & CAN_MCR_SOFTRST_MASK)
 #define CAN_MCR_WAKMSK_MASK                      (0x4000000U)
 #define CAN_MCR_WAKMSK_SHIFT                     (26U)
-/*! WAKMSK - Wake Up Interrupt Mask
- *  0b0..Wake Up Interrupt is disabled.
- *  0b1..Wake Up Interrupt is enabled.
+/*! WAKMSK
+ *  0b1..Wake Up Interrupt is enabled
+ *  0b0..Wake Up Interrupt is disabled
  */
 #define CAN_MCR_WAKMSK(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_WAKMSK_SHIFT)) & CAN_MCR_WAKMSK_MASK)
 #define CAN_MCR_NOTRDY_MASK                      (0x8000000U)
 #define CAN_MCR_NOTRDY_SHIFT                     (27U)
-/*! NOTRDY - FlexCAN Not Ready
+/*! NOTRDY
  *  0b1..FLEXCAN module is either in Disable Mode, Stop Mode or Freeze Mode
  *  0b0..FLEXCAN module is either in Normal Mode, Listen-Only Mode or Loop-Back Mode
  */
 #define CAN_MCR_NOTRDY(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_MCR_NOTRDY_SHIFT)) & CAN_MCR_NOTRDY_MASK)
 #define CAN_MCR_HALT_MASK                        (0x10000000U)
 #define CAN_MCR_HALT_SHIFT                       (28U)
-/*! HALT - Halt FlexCAN
- *  0b0..No Freeze mode request.
- *  0b1..Enters Freeze mode if the FRZ bit is asserted.
+/*! HALT
+ *  0b1..Enters Freeze Mode if the FRZ bit is asserted.
+ *  0b0..No Freeze Mode request.
  */
 #define CAN_MCR_HALT(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_HALT_SHIFT)) & CAN_MCR_HALT_MASK)
 #define CAN_MCR_RFEN_MASK                        (0x20000000U)
 #define CAN_MCR_RFEN_SHIFT                       (29U)
-/*! RFEN - Legacy Rx FIFO Enable
- *  0b0..Legacy Rx FIFO not enabled.
- *  0b1..Legacy Rx FIFO enabled.
+/*! RFEN
+ *  0b1..FIFO enabled
+ *  0b0..FIFO not enabled
  */
 #define CAN_MCR_RFEN(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_RFEN_SHIFT)) & CAN_MCR_RFEN_MASK)
 #define CAN_MCR_FRZ_MASK                         (0x40000000U)
 #define CAN_MCR_FRZ_SHIFT                        (30U)
-/*! FRZ - Freeze Enable
- *  0b0..Not enabled to enter Freeze mode.
- *  0b1..Enabled to enter Freeze mode.
+/*! FRZ
+ *  0b1..Enabled to enter Freeze Mode
+ *  0b0..Not enabled to enter Freeze Mode
  */
 #define CAN_MCR_FRZ(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_MCR_FRZ_SHIFT)) & CAN_MCR_FRZ_MASK)
 #define CAN_MCR_MDIS_MASK                        (0x80000000U)
 #define CAN_MCR_MDIS_SHIFT                       (31U)
-/*! MDIS - Module Disable
- *  0b0..Enable the FlexCAN module.
- *  0b1..Disable the FlexCAN module.
+/*! MDIS
+ *  0b1..Disable the FLEXCAN module
+ *  0b0..Enable the FLEXCAN module
  */
 #define CAN_MCR_MDIS(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_MCR_MDIS_SHIFT)) & CAN_MCR_MDIS_MASK)
 /*! @} */
 
-/*! @name CTRL1 - Control 1 Register..Control 1 register */
+/*! @name CTRL1 - Control 1 Register */
 /*! @{ */
 #define CAN_CTRL1_PROPSEG_MASK                   (0x7U)
 #define CAN_CTRL1_PROPSEG_SHIFT                  (0U)
 #define CAN_CTRL1_PROPSEG(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_PROPSEG_SHIFT)) & CAN_CTRL1_PROPSEG_MASK)
 #define CAN_CTRL1_LOM_MASK                       (0x8U)
 #define CAN_CTRL1_LOM_SHIFT                      (3U)
-/*! LOM - Listen-Only Mode
- *  0b0..Listen-Only mode is deactivated.
- *  0b1..FlexCAN module operates in Listen-Only mode.
+/*! LOM
+ *  0b1..FLEXCAN module operates in Listen Only Mode
+ *  0b0..Listen Only Mode is deactivated
  */
 #define CAN_CTRL1_LOM(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_LOM_SHIFT)) & CAN_CTRL1_LOM_MASK)
 #define CAN_CTRL1_LBUF_MASK                      (0x10U)
 #define CAN_CTRL1_LBUF_SHIFT                     (4U)
-/*! LBUF - Lowest Buffer Transmitted First
- *  0b0..Buffer with highest priority is transmitted first.
- *  0b1..Lowest number buffer is transmitted first.
+/*! LBUF
+ *  0b1..Lowest number buffer is transmitted first
+ *  0b0..Buffer with highest priority is transmitted first
  */
 #define CAN_CTRL1_LBUF(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_LBUF_SHIFT)) & CAN_CTRL1_LBUF_MASK)
 #define CAN_CTRL1_TSYN_MASK                      (0x20U)
 #define CAN_CTRL1_TSYN_SHIFT                     (5U)
-/*! TSYN - Timer Sync
+/*! TSYN
  *  0b1..Timer Sync feature enabled
  *  0b0..Timer Sync feature disabled
  */
 #define CAN_CTRL1_TSYN(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_TSYN_SHIFT)) & CAN_CTRL1_TSYN_MASK)
 #define CAN_CTRL1_BOFFREC_MASK                   (0x40U)
 #define CAN_CTRL1_BOFFREC_SHIFT                  (6U)
-/*! BOFFREC - Bus Off Recovery
+/*! BOFFREC
  *  0b1..Automatic recovering from Bus Off state disabled
  *  0b0..Automatic recovering from Bus Off state enabled, according to CAN Spec 2.0 part B
  */
 #define CAN_CTRL1_BOFFREC(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_BOFFREC_SHIFT)) & CAN_CTRL1_BOFFREC_MASK)
 #define CAN_CTRL1_SMP_MASK                       (0x80U)
 #define CAN_CTRL1_SMP_SHIFT                      (7U)
-/*! SMP - CAN Bit Sampling
- *  0b0..Just one sample is used to determine the bit value.
- *  0b1..Three samples are used to determine the value of the received bit: the regular one (sample point) and 2 preceding samples; a majority rule is used.
+/*! SMP
+ *  0b1..Three samples are used to determine the value of the received bit: the regular one (sample point) and 2 preceding samples, a majority rule is used
+ *  0b0..Just one sample is used to determine the bit value
  */
 #define CAN_CTRL1_SMP(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_SMP_SHIFT)) & CAN_CTRL1_SMP_MASK)
 #define CAN_CTRL1_RWRNMSK_MASK                   (0x400U)
 #define CAN_CTRL1_RWRNMSK_SHIFT                  (10U)
-/*! RWRNMSK - Rx Warning Interrupt Mask
- *  0b0..Rx Warning Interrupt disabled.
- *  0b1..Rx Warning Interrupt enabled.
+/*! RWRNMSK
+ *  0b1..Rx Warning Interrupt enabled
+ *  0b0..Rx Warning Interrupt disabled
  */
 #define CAN_CTRL1_RWRNMSK(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_RWRNMSK_SHIFT)) & CAN_CTRL1_RWRNMSK_MASK)
 #define CAN_CTRL1_TWRNMSK_MASK                   (0x800U)
 #define CAN_CTRL1_TWRNMSK_SHIFT                  (11U)
-/*! TWRNMSK - Tx Warning Interrupt Mask
- *  0b0..Tx Warning Interrupt disabled.
- *  0b1..Tx Warning Interrupt enabled.
+/*! TWRNMSK
+ *  0b1..Tx Warning Interrupt enabled
+ *  0b0..Tx Warning Interrupt disabled
  */
 #define CAN_CTRL1_TWRNMSK(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_TWRNMSK_SHIFT)) & CAN_CTRL1_TWRNMSK_MASK)
 #define CAN_CTRL1_LPB_MASK                       (0x1000U)
 #define CAN_CTRL1_LPB_SHIFT                      (12U)
-/*! LPB - Loop Back Mode
- *  0b0..Loop Back disabled.
- *  0b1..Loop Back enabled.
+/*! LPB
+ *  0b1..Loop Back enabled
+ *  0b0..Loop Back disabled
  */
 #define CAN_CTRL1_LPB(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_LPB_SHIFT)) & CAN_CTRL1_LPB_MASK)
-#define CAN_CTRL1_CLKSRC_MASK                    (0x2000U)
-#define CAN_CTRL1_CLKSRC_SHIFT                   (13U)
-/*! CLKSRC - CAN Engine Clock Source
- *  0b0..The CAN engine clock source is the oscillator clock. Under this condition, the oscillator clock frequency must be lower than the bus clock.
- *  0b1..The CAN engine clock source is the peripheral clock.
- */
-#define CAN_CTRL1_CLKSRC(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_CLKSRC_SHIFT)) & CAN_CTRL1_CLKSRC_MASK)
 #define CAN_CTRL1_ERRMSK_MASK                    (0x4000U)
 #define CAN_CTRL1_ERRMSK_SHIFT                   (14U)
-/*! ERRMSK - Error Interrupt Mask
- *  0b0..Error interrupt disabled.
- *  0b1..Error interrupt enabled.
+/*! ERRMSK
+ *  0b1..Error interrupt enabled
+ *  0b0..Error interrupt disabled
  */
 #define CAN_CTRL1_ERRMSK(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_ERRMSK_SHIFT)) & CAN_CTRL1_ERRMSK_MASK)
 #define CAN_CTRL1_BOFFMSK_MASK                   (0x8000U)
 #define CAN_CTRL1_BOFFMSK_SHIFT                  (15U)
-/*! BOFFMSK - Bus Off Interrupt Mask
- *  0b0..Bus Off interrupt disabled.
- *  0b1..Bus Off interrupt enabled.
+/*! BOFFMSK
+ *  0b1..Bus Off interrupt enabled
+ *  0b0..Bus Off interrupt disabled
  */
 #define CAN_CTRL1_BOFFMSK(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_BOFFMSK_SHIFT)) & CAN_CTRL1_BOFFMSK_MASK)
 #define CAN_CTRL1_PSEG2_MASK                     (0x70000U)
@@ -3573,7 +3376,7 @@ typedef struct {
 #define CAN_CTRL1_PRESDIV(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL1_PRESDIV_SHIFT)) & CAN_CTRL1_PRESDIV_MASK)
 /*! @} */
 
-/*! @name TIMER - Free Running Timer Register..Free Running Timer */
+/*! @name TIMER - Free Running Timer Register */
 /*! @{ */
 #define CAN_TIMER_TIMER_MASK                     (0xFFFFU)
 #define CAN_TIMER_TIMER_SHIFT                    (0U)
@@ -3584,90 +3387,78 @@ typedef struct {
 /*! @{ */
 #define CAN_RXMGMASK_MG_MASK                     (0xFFFFFFFFU)
 #define CAN_RXMGMASK_MG_SHIFT                    (0U)
-/*! MG - Rx Mailboxes Global Mask Bits
+/*! MG
  *  0b00000000000000000000000000000001..The corresponding bit in the filter is checked against the one received
  *  0b00000000000000000000000000000000..the corresponding bit in the filter is "don't care"
  */
 #define CAN_RXMGMASK_MG(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_RXMGMASK_MG_SHIFT)) & CAN_RXMGMASK_MG_MASK)
 /*! @} */
 
-/*! @name RX14MASK - Rx Buffer 14 Mask Register..Rx 14 Mask register */
+/*! @name RX14MASK - Rx Buffer 14 Mask Register */
 /*! @{ */
 #define CAN_RX14MASK_RX14M_MASK                  (0xFFFFFFFFU)
 #define CAN_RX14MASK_RX14M_SHIFT                 (0U)
-/*! RX14M - Rx Buffer 14 Mask Bits
+/*! RX14M
  *  0b00000000000000000000000000000001..The corresponding bit in the filter is checked
  *  0b00000000000000000000000000000000..the corresponding bit in the filter is "don't care"
  */
 #define CAN_RX14MASK_RX14M(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_RX14MASK_RX14M_SHIFT)) & CAN_RX14MASK_RX14M_MASK)
 /*! @} */
 
-/*! @name RX15MASK - Rx Buffer 15 Mask Register..Rx 15 Mask register */
+/*! @name RX15MASK - Rx Buffer 15 Mask Register */
 /*! @{ */
 #define CAN_RX15MASK_RX15M_MASK                  (0xFFFFFFFFU)
 #define CAN_RX15MASK_RX15M_SHIFT                 (0U)
-/*! RX15M - Rx Buffer 15 Mask Bits
+/*! RX15M
  *  0b00000000000000000000000000000001..The corresponding bit in the filter is checked
  *  0b00000000000000000000000000000000..the corresponding bit in the filter is "don't care"
  */
 #define CAN_RX15MASK_RX15M(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_RX15MASK_RX15M_SHIFT)) & CAN_RX15MASK_RX15M_MASK)
 /*! @} */
 
-/*! @name ECR - Error Counter Register..Error Counter */
+/*! @name ECR - Error Counter Register */
 /*! @{ */
-#define CAN_ECR_TXERRCNT_MASK                    (0xFFU)
-#define CAN_ECR_TXERRCNT_SHIFT                   (0U)
-#define CAN_ECR_TXERRCNT(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ECR_TXERRCNT_SHIFT)) & CAN_ECR_TXERRCNT_MASK)
 #define CAN_ECR_TX_ERR_COUNTER_MASK              (0xFFU)
 #define CAN_ECR_TX_ERR_COUNTER_SHIFT             (0U)
 #define CAN_ECR_TX_ERR_COUNTER(x)                (((uint32_t)(((uint32_t)(x)) << CAN_ECR_TX_ERR_COUNTER_SHIFT)) & CAN_ECR_TX_ERR_COUNTER_MASK)
-#define CAN_ECR_RXERRCNT_MASK                    (0xFF00U)
-#define CAN_ECR_RXERRCNT_SHIFT                   (8U)
-#define CAN_ECR_RXERRCNT(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ECR_RXERRCNT_SHIFT)) & CAN_ECR_RXERRCNT_MASK)
 #define CAN_ECR_RX_ERR_COUNTER_MASK              (0xFF00U)
 #define CAN_ECR_RX_ERR_COUNTER_SHIFT             (8U)
 #define CAN_ECR_RX_ERR_COUNTER(x)                (((uint32_t)(((uint32_t)(x)) << CAN_ECR_RX_ERR_COUNTER_SHIFT)) & CAN_ECR_RX_ERR_COUNTER_MASK)
-#define CAN_ECR_TXERRCNT_FAST_MASK               (0xFF0000U)
-#define CAN_ECR_TXERRCNT_FAST_SHIFT              (16U)
-#define CAN_ECR_TXERRCNT_FAST(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_ECR_TXERRCNT_FAST_SHIFT)) & CAN_ECR_TXERRCNT_FAST_MASK)
-#define CAN_ECR_RXERRCNT_FAST_MASK               (0xFF000000U)
-#define CAN_ECR_RXERRCNT_FAST_SHIFT              (24U)
-#define CAN_ECR_RXERRCNT_FAST(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_ECR_RXERRCNT_FAST_SHIFT)) & CAN_ECR_RXERRCNT_FAST_MASK)
 /*! @} */
 
-/*! @name ESR1 - Error and Status 1 Register..Error and Status 1 register */
+/*! @name ESR1 - Error and Status 1 Register */
 /*! @{ */
 #define CAN_ESR1_WAKINT_MASK                     (0x1U)
 #define CAN_ESR1_WAKINT_SHIFT                    (0U)
-/*! WAKINT - Wake-Up Interrupt
+/*! WAKINT
  *  0b1..Indicates a recessive to dominant transition received on the CAN bus when the FLEXCAN module is in Stop Mode
  *  0b0..No such occurrence
  */
 #define CAN_ESR1_WAKINT(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_WAKINT_SHIFT)) & CAN_ESR1_WAKINT_MASK)
 #define CAN_ESR1_ERRINT_MASK                     (0x2U)
 #define CAN_ESR1_ERRINT_SHIFT                    (1U)
-/*! ERRINT - Error Interrupt
- *  0b0..No such occurrence.
- *  0b1..Indicates setting of any Error Bit in the Error and Status Register.
+/*! ERRINT
+ *  0b1..Indicates setting of any Error Bit in the Error and Status Register
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_ERRINT(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_ERRINT_SHIFT)) & CAN_ESR1_ERRINT_MASK)
 #define CAN_ESR1_BOFFINT_MASK                    (0x4U)
 #define CAN_ESR1_BOFFINT_SHIFT                   (2U)
-/*! BOFFINT - Bus Off Interrupt
- *  0b0..No such occurrence.
- *  0b1..FlexCAN module entered Bus Off state.
+/*! BOFFINT
+ *  0b1..FLEXCAN module entered 'Bus Off' state
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_BOFFINT(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BOFFINT_SHIFT)) & CAN_ESR1_BOFFINT_MASK)
 #define CAN_ESR1_RX_MASK                         (0x8U)
 #define CAN_ESR1_RX_SHIFT                        (3U)
-/*! RX - FlexCAN In Reception
- *  0b0..FlexCAN is not receiving a message.
- *  0b1..FlexCAN is receiving a message.
+/*! RX
+ *  0b1..FLEXCAN is transmitting a message
+ *  0b0..FLEXCAN is receiving a message
  */
 #define CAN_ESR1_RX(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_RX_SHIFT)) & CAN_ESR1_RX_MASK)
 #define CAN_ESR1_FLTCONF_MASK                    (0x30U)
 #define CAN_ESR1_FLTCONF_SHIFT                   (4U)
-/*! FLTCONF - Fault Confinement State
+/*! FLTCONF
  *  0b00..Error Active
  *  0b01..Error Passive
  *  0b1x..Bus off
@@ -3675,158 +3466,99 @@ typedef struct {
 #define CAN_ESR1_FLTCONF(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_FLTCONF_SHIFT)) & CAN_ESR1_FLTCONF_MASK)
 #define CAN_ESR1_TX_MASK                         (0x40U)
 #define CAN_ESR1_TX_SHIFT                        (6U)
-/*! TX - FlexCAN In Transmission
- *  0b0..FlexCAN is not transmitting a message.
- *  0b1..FlexCAN is transmitting a message.
+/*! TX
+ *  0b1..FLEXCAN is transmitting a message
+ *  0b0..FLEXCAN is receiving a message
  */
 #define CAN_ESR1_TX(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_TX_SHIFT)) & CAN_ESR1_TX_MASK)
 #define CAN_ESR1_IDLE_MASK                       (0x80U)
 #define CAN_ESR1_IDLE_SHIFT                      (7U)
-/*! IDLE - IDLE
- *  0b0..No such occurrence.
- *  0b1..CAN bus is now IDLE.
+/*! IDLE
+ *  0b1..CAN bus is now IDLE
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_IDLE(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_IDLE_SHIFT)) & CAN_ESR1_IDLE_MASK)
 #define CAN_ESR1_RXWRN_MASK                      (0x100U)
 #define CAN_ESR1_RXWRN_SHIFT                     (8U)
-/*! RXWRN - Rx Error Warning
- *  0b0..No such occurrence.
- *  0b1..RXERRCNT is greater than or equal to 96.
+/*! RXWRN
+ *  0b1..Rx_Err_Counter >= 96
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_RXWRN(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_RXWRN_SHIFT)) & CAN_ESR1_RXWRN_MASK)
 #define CAN_ESR1_TXWRN_MASK                      (0x200U)
 #define CAN_ESR1_TXWRN_SHIFT                     (9U)
-/*! TXWRN - TX Error Warning
- *  0b0..No such occurrence.
- *  0b1..TXERRCNT is greater than or equal to 96.
+/*! TXWRN
+ *  0b1..TX_Err_Counter >= 96
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_TXWRN(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_TXWRN_SHIFT)) & CAN_ESR1_TXWRN_MASK)
 #define CAN_ESR1_STFERR_MASK                     (0x400U)
 #define CAN_ESR1_STFERR_SHIFT                    (10U)
-/*! STFERR - Stuffing Error
- *  0b0..No such occurrence.
+/*! STFERR
  *  0b1..A Stuffing Error occurred since last read of this register.
+ *  0b0..No such occurrence.
  */
 #define CAN_ESR1_STFERR(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_STFERR_SHIFT)) & CAN_ESR1_STFERR_MASK)
 #define CAN_ESR1_FRMERR_MASK                     (0x800U)
 #define CAN_ESR1_FRMERR_SHIFT                    (11U)
-/*! FRMERR - Form Error
- *  0b0..No such occurrence.
- *  0b1..A Form Error occurred since last read of this register.
+/*! FRMERR
+ *  0b1..A Form Error occurred since last read of this register
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_FRMERR(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_FRMERR_SHIFT)) & CAN_ESR1_FRMERR_MASK)
 #define CAN_ESR1_CRCERR_MASK                     (0x1000U)
 #define CAN_ESR1_CRCERR_SHIFT                    (12U)
-/*! CRCERR - Cyclic Redundancy Check Error
- *  0b0..No such occurrence.
+/*! CRCERR
  *  0b1..A CRC error occurred since last read of this register.
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_CRCERR(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_CRCERR_SHIFT)) & CAN_ESR1_CRCERR_MASK)
 #define CAN_ESR1_ACKERR_MASK                     (0x2000U)
 #define CAN_ESR1_ACKERR_SHIFT                    (13U)
-/*! ACKERR - Acknowledge Error
- *  0b0..No such occurrence.
- *  0b1..An ACK error occurred since last read of this register.
+/*! ACKERR
+ *  0b1..An ACK error occurred since last read of this register
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_ACKERR(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_ACKERR_SHIFT)) & CAN_ESR1_ACKERR_MASK)
 #define CAN_ESR1_BIT0ERR_MASK                    (0x4000U)
 #define CAN_ESR1_BIT0ERR_SHIFT                   (14U)
-/*! BIT0ERR - Bit0 Error
- *  0b0..No such occurrence.
- *  0b1..At least one bit sent as dominant is received as recessive.
+/*! BIT0ERR
+ *  0b1..At least one bit sent as dominant is received as recessive
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_BIT0ERR(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BIT0ERR_SHIFT)) & CAN_ESR1_BIT0ERR_MASK)
 #define CAN_ESR1_BIT1ERR_MASK                    (0x8000U)
 #define CAN_ESR1_BIT1ERR_SHIFT                   (15U)
-/*! BIT1ERR - Bit1 Error
- *  0b0..No such occurrence.
- *  0b1..At least one bit sent as recessive is received as dominant.
+/*! BIT1ERR
+ *  0b1..At least one bit sent as recessive is received as dominant
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_BIT1ERR(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BIT1ERR_SHIFT)) & CAN_ESR1_BIT1ERR_MASK)
 #define CAN_ESR1_RWRNINT_MASK                    (0x10000U)
 #define CAN_ESR1_RWRNINT_SHIFT                   (16U)
-/*! RWRNINT - Rx Warning Interrupt Flag
- *  0b0..No such occurrence.
- *  0b1..The Rx error counter transitioned from less than 96 to greater than or equal to 96.
+/*! RWRNINT
+ *  0b1..The Rx error counter transition from < 96 to >= 96
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_RWRNINT(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_RWRNINT_SHIFT)) & CAN_ESR1_RWRNINT_MASK)
 #define CAN_ESR1_TWRNINT_MASK                    (0x20000U)
 #define CAN_ESR1_TWRNINT_SHIFT                   (17U)
-/*! TWRNINT - Tx Warning Interrupt Flag
- *  0b0..No such occurrence.
- *  0b1..The Tx error counter transitioned from less than 96 to greater than or equal to 96.
+/*! TWRNINT
+ *  0b1..The Tx error counter transition from < 96 to >= 96
+ *  0b0..No such occurrence
  */
 #define CAN_ESR1_TWRNINT(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_TWRNINT_SHIFT)) & CAN_ESR1_TWRNINT_MASK)
 #define CAN_ESR1_SYNCH_MASK                      (0x40000U)
 #define CAN_ESR1_SYNCH_SHIFT                     (18U)
-/*! SYNCH - CAN Synchronization Status
- *  0b0..FlexCAN is not synchronized to the CAN bus.
- *  0b1..FlexCAN is synchronized to the CAN bus.
+/*! SYNCH
+ *  0b1..FlexCAN is synchronized to the CAN bus
+ *  0b0..FlexCAN is not synchronized to the CAN bus
  */
 #define CAN_ESR1_SYNCH(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_SYNCH_SHIFT)) & CAN_ESR1_SYNCH_MASK)
-#define CAN_ESR1_BOFFDONEINT_MASK                (0x80000U)
-#define CAN_ESR1_BOFFDONEINT_SHIFT               (19U)
-/*! BOFFDONEINT - Bus Off Done Interrupt
- *  0b0..No such occurrence.
- *  0b1..FlexCAN module has completed Bus Off process.
- */
-#define CAN_ESR1_BOFFDONEINT(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BOFFDONEINT_SHIFT)) & CAN_ESR1_BOFFDONEINT_MASK)
-#define CAN_ESR1_ERRINT_FAST_MASK                (0x100000U)
-#define CAN_ESR1_ERRINT_FAST_SHIFT               (20U)
-/*! ERRINT_FAST - Error Interrupt for errors detected in the Data Phase of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..Indicates setting of any Error Bit detected in the Data Phase of CAN FD frames with the BRS bit set.
- */
-#define CAN_ESR1_ERRINT_FAST(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_ERRINT_FAST_SHIFT)) & CAN_ESR1_ERRINT_FAST_MASK)
-#define CAN_ESR1_ERROVR_MASK                     (0x200000U)
-#define CAN_ESR1_ERROVR_SHIFT                    (21U)
-/*! ERROVR - Error Overrun bit
- *  0b0..Overrun has not occurred.
- *  0b1..Overrun has occurred.
- */
-#define CAN_ESR1_ERROVR(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_ERROVR_SHIFT)) & CAN_ESR1_ERROVR_MASK)
-#define CAN_ESR1_STFERR_FAST_MASK                (0x4000000U)
-#define CAN_ESR1_STFERR_FAST_SHIFT               (26U)
-/*! STFERR_FAST - Stuffing Error in the Data Phase of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..A Stuffing Error occurred since last read of this register.
- */
-#define CAN_ESR1_STFERR_FAST(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_STFERR_FAST_SHIFT)) & CAN_ESR1_STFERR_FAST_MASK)
-#define CAN_ESR1_FRMERR_FAST_MASK                (0x8000000U)
-#define CAN_ESR1_FRMERR_FAST_SHIFT               (27U)
-/*! FRMERR_FAST - Form Error in the Data Phase of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..A Form Error occurred since last read of this register.
- */
-#define CAN_ESR1_FRMERR_FAST(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_FRMERR_FAST_SHIFT)) & CAN_ESR1_FRMERR_FAST_MASK)
-#define CAN_ESR1_CRCERR_FAST_MASK                (0x10000000U)
-#define CAN_ESR1_CRCERR_FAST_SHIFT               (28U)
-/*! CRCERR_FAST - Cyclic Redundancy Check Error in the CRC field of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..A CRC error occurred since last read of this register.
- */
-#define CAN_ESR1_CRCERR_FAST(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_CRCERR_FAST_SHIFT)) & CAN_ESR1_CRCERR_FAST_MASK)
-#define CAN_ESR1_BIT0ERR_FAST_MASK               (0x40000000U)
-#define CAN_ESR1_BIT0ERR_FAST_SHIFT              (30U)
-/*! BIT0ERR_FAST - Bit0 Error in the Data Phase of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..At least one bit sent as dominant is received as recessive.
- */
-#define CAN_ESR1_BIT0ERR_FAST(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BIT0ERR_FAST_SHIFT)) & CAN_ESR1_BIT0ERR_FAST_MASK)
-#define CAN_ESR1_BIT1ERR_FAST_MASK               (0x80000000U)
-#define CAN_ESR1_BIT1ERR_FAST_SHIFT              (31U)
-/*! BIT1ERR_FAST - Bit1 Error in the Data Phase of CAN FD frames with the BRS bit set
- *  0b0..No such occurrence.
- *  0b1..At least one bit sent as recessive is received as dominant.
- */
-#define CAN_ESR1_BIT1ERR_FAST(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_ESR1_BIT1ERR_FAST_SHIFT)) & CAN_ESR1_BIT1ERR_FAST_MASK)
 /*! @} */
 
-/*! @name IMASK2 - Interrupt Masks 2 Register..Interrupt Masks 2 register */
+/*! @name IMASK2 - Interrupt Masks 2 Register */
 /*! @{ */
-#define CAN_IMASK2_BUF63TO32M_MASK               (0xFFFFFFFFU)
-#define CAN_IMASK2_BUF63TO32M_SHIFT              (0U)
-#define CAN_IMASK2_BUF63TO32M(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_IMASK2_BUF63TO32M_SHIFT)) & CAN_IMASK2_BUF63TO32M_MASK)
 #define CAN_IMASK2_BUFHM_MASK                    (0xFFFFFFFFU)
 #define CAN_IMASK2_BUFHM_SHIFT                   (0U)
 /*! BUFHM
@@ -3836,11 +3568,8 @@ typedef struct {
 #define CAN_IMASK2_BUFHM(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IMASK2_BUFHM_SHIFT)) & CAN_IMASK2_BUFHM_MASK)
 /*! @} */
 
-/*! @name IMASK1 - Interrupt Masks 1 Register..Interrupt Masks 1 register */
+/*! @name IMASK1 - Interrupt Masks 1 Register */
 /*! @{ */
-#define CAN_IMASK1_BUF31TO0M_MASK                (0xFFFFFFFFU)
-#define CAN_IMASK1_BUF31TO0M_SHIFT               (0U)
-#define CAN_IMASK1_BUF31TO0M(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_IMASK1_BUF31TO0M_SHIFT)) & CAN_IMASK1_BUF31TO0M_MASK)
 #define CAN_IMASK1_BUFLM_MASK                    (0xFFFFFFFFU)
 #define CAN_IMASK1_BUFLM_SHIFT                   (0U)
 /*! BUFLM
@@ -3850,11 +3579,8 @@ typedef struct {
 #define CAN_IMASK1_BUFLM(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IMASK1_BUFLM_SHIFT)) & CAN_IMASK1_BUFLM_MASK)
 /*! @} */
 
-/*! @name IFLAG2 - Interrupt Flags 2 Register..Interrupt Flags 2 register */
+/*! @name IFLAG2 - Interrupt Flags 2 Register */
 /*! @{ */
-#define CAN_IFLAG2_BUF63TO32I_MASK               (0xFFFFFFFFU)
-#define CAN_IFLAG2_BUF63TO32I_SHIFT              (0U)
-#define CAN_IFLAG2_BUF63TO32I(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG2_BUF63TO32I_SHIFT)) & CAN_IFLAG2_BUF63TO32I_MASK)
 #define CAN_IFLAG2_BUFHI_MASK                    (0xFFFFFFFFU)
 #define CAN_IFLAG2_BUFHI_SHIFT                   (0U)
 /*! BUFHI
@@ -3864,15 +3590,8 @@ typedef struct {
 #define CAN_IFLAG2_BUFHI(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG2_BUFHI_SHIFT)) & CAN_IFLAG2_BUFHI_MASK)
 /*! @} */
 
-/*! @name IFLAG1 - Interrupt Flags 1 Register..Interrupt Flags 1 register */
+/*! @name IFLAG1 - Interrupt Flags 1 Register */
 /*! @{ */
-#define CAN_IFLAG1_BUF0I_MASK                    (0x1U)
-#define CAN_IFLAG1_BUF0I_SHIFT                   (0U)
-/*! BUF0I - Buffer MB0 Interrupt Or Clear Legacy FIFO bit
- *  0b0..The corresponding buffer has no occurrence of successfully completed transmission or reception when CAN_MCR[RFEN]=0.
- *  0b1..The corresponding buffer has successfully completed transmission or reception when CAN_MCR[RFEN]=0.
- */
-#define CAN_IFLAG1_BUF0I(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF0I_SHIFT)) & CAN_IFLAG1_BUF0I_MASK)
 #define CAN_IFLAG1_BUF4TO0I_MASK                 (0x1FU)
 #define CAN_IFLAG1_BUF4TO0I_SHIFT                (0U)
 /*! BUF4TO0I
@@ -3880,113 +3599,57 @@ typedef struct {
  *  0b00000..No such occurrence
  */
 #define CAN_IFLAG1_BUF4TO0I(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF4TO0I_SHIFT)) & CAN_IFLAG1_BUF4TO0I_MASK)
-#define CAN_IFLAG1_BUF4TO1I_MASK                 (0x1EU)
-#define CAN_IFLAG1_BUF4TO1I_SHIFT                (1U)
-#define CAN_IFLAG1_BUF4TO1I(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF4TO1I_SHIFT)) & CAN_IFLAG1_BUF4TO1I_MASK)
 #define CAN_IFLAG1_BUF5I_MASK                    (0x20U)
 #define CAN_IFLAG1_BUF5I_SHIFT                   (5U)
-/*! BUF5I - Buffer MB5 Interrupt Or "Frames available in Legacy Rx FIFO"
- *  0b0..No occurrence of MB5 completing transmission/reception when CAN_MCR[RFEN]=0, or of frame(s) available in the Legacy FIFO, when CAN_MCR[RFEN]=1
- *  0b1..MB5 completed transmission/reception when CAN_MCR[RFEN]=0, or frame(s) available in the Legacy Rx FIFO when CAN_MCR[RFEN]=1. It generates a DMA request in case of CAN_MCR[RFEN] and CAN_MCR[DMA] are enabled.
+/*! BUF5I
+ *  0b1..MB5 completed transmission/reception or frames available in the FIFO
+ *  0b0..No such occurrence
  */
 #define CAN_IFLAG1_BUF5I(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF5I_SHIFT)) & CAN_IFLAG1_BUF5I_MASK)
 #define CAN_IFLAG1_BUF6I_MASK                    (0x40U)
 #define CAN_IFLAG1_BUF6I_SHIFT                   (6U)
-/*! BUF6I - Buffer MB6 Interrupt Or "Legacy Rx FIFO Warning"
- *  0b0..No occurrence of MB6 completing transmission/reception when CAN_MCR[RFEN]=0, or of Legacy Rx FIFO almost full when CAN_MCR[RFEN]=1
- *  0b1..MB6 completed transmission/reception when CAN_MCR[RFEN]=0, or Legacy Rx FIFO almost full when CAN_MCR[RFEN]=1
+/*! BUF6I
+ *  0b1..MB6 completed transmission/reception or FIFO almost full
+ *  0b0..No such occurrence
  */
 #define CAN_IFLAG1_BUF6I(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF6I_SHIFT)) & CAN_IFLAG1_BUF6I_MASK)
 #define CAN_IFLAG1_BUF7I_MASK                    (0x80U)
 #define CAN_IFLAG1_BUF7I_SHIFT                   (7U)
-/*! BUF7I - Buffer MB7 Interrupt Or "Legacy Rx FIFO Overflow"
- *  0b0..No occurrence of MB7 completing transmission/reception when CAN_MCR[RFEN]=0, or of Legacy Rx FIFO overflow when CAN_MCR[RFEN]=1
- *  0b1..MB7 completed transmission/reception when CAN_MCR[RFEN]=0, or Legacy Rx FIFO overflow when CAN_MCR[RFEN]=1
+/*! BUF7I
+ *  0b1..MB7 completed transmission/reception or FIFO overflow
+ *  0b0..No such occurrence
  */
 #define CAN_IFLAG1_BUF7I(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF7I_SHIFT)) & CAN_IFLAG1_BUF7I_MASK)
 #define CAN_IFLAG1_BUF31TO8I_MASK                (0xFFFFFF00U)
 #define CAN_IFLAG1_BUF31TO8I_SHIFT               (8U)
-/*! BUF31TO8I - Buffer MBi Interrupt
+/*! BUF31TO8I
  *  0b000000000000000000000001..The corresponding MB has successfully completed transmission or reception
  *  0b000000000000000000000000..No such occurrence
  */
 #define CAN_IFLAG1_BUF31TO8I(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_IFLAG1_BUF31TO8I_SHIFT)) & CAN_IFLAG1_BUF31TO8I_MASK)
 /*! @} */
 
-/*! @name CTRL2 - Control 2 Register..Control 2 register */
+/*! @name CTRL2 - Control 2 Register */
 /*! @{ */
-#define CAN_CTRL2_TSTAMPCAP_MASK                 (0xC0U)
-#define CAN_CTRL2_TSTAMPCAP_SHIFT                (6U)
-/*! TSTAMPCAP - Time Stamp Capture Point
- *  0b00..The high resolution time stamp capture is disabled
- *  0b01..The high resolution time stamp is captured in the end of the CAN frame
- *  0b10..The high resolution time stamp is captured in the start of the CAN frame
- *  0b11..The high resolution time stamp is captured in the start of frame for classical CAN frames and in res bit for CAN FD frames
- */
-#define CAN_CTRL2_TSTAMPCAP(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_TSTAMPCAP_SHIFT)) & CAN_CTRL2_TSTAMPCAP_MASK)
-#define CAN_CTRL2_MBTSBASE_MASK                  (0x300U)
-#define CAN_CTRL2_MBTSBASE_SHIFT                 (8U)
-/*! MBTSBASE - Message Buffer Time Stamp Base
- *  0b00..Message Buffer Time Stamp base is CAN_TIMER
- *  0b01..Message Buffer Time Stamp base is lower 16-bits of high resolution timer
- *  0b10..Message Buffer Time Stamp base is upper 16-bits of high resolution timerT
- *  0b11..Reserved.
- */
-#define CAN_CTRL2_MBTSBASE(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_MBTSBASE_SHIFT)) & CAN_CTRL2_MBTSBASE_MASK)
-#define CAN_CTRL2_EDFLTDIS_MASK                  (0x800U)
-#define CAN_CTRL2_EDFLTDIS_SHIFT                 (11U)
-/*! EDFLTDIS - Edge Filter Disable
- *  0b0..Edge Filter is enabled
- *  0b1..Edge Filter is disabled
- */
-#define CAN_CTRL2_EDFLTDIS(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_EDFLTDIS_SHIFT)) & CAN_CTRL2_EDFLTDIS_MASK)
-#define CAN_CTRL2_ISOCANFDEN_MASK                (0x1000U)
-#define CAN_CTRL2_ISOCANFDEN_SHIFT               (12U)
-/*! ISOCANFDEN - ISO CAN FD Enable
- *  0b0..FlexCAN operates using the non-ISO CAN FD protocol.
- *  0b1..FlexCAN operates using the ISO CAN FD protocol (ISO 11898-1).
- */
-#define CAN_CTRL2_ISOCANFDEN(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_ISOCANFDEN_SHIFT)) & CAN_CTRL2_ISOCANFDEN_MASK)
-#define CAN_CTRL2_BTE_MASK                       (0x2000U)
-#define CAN_CTRL2_BTE_SHIFT                      (13U)
-/*! BTE - Bit Timing Expansion enable
- *  0b0..CAN Bit timing expansion is disabled.
- *  0b1..CAN bit timing expansion is enabled.
- */
-#define CAN_CTRL2_BTE(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_BTE_SHIFT)) & CAN_CTRL2_BTE_MASK)
-#define CAN_CTRL2_PREXCEN_MASK                   (0x4000U)
-#define CAN_CTRL2_PREXCEN_SHIFT                  (14U)
-/*! PREXCEN - Protocol Exception Enable
- *  0b0..Protocol Exception is disabled.
- *  0b1..Protocol Exception is enabled.
- */
-#define CAN_CTRL2_PREXCEN(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_PREXCEN_SHIFT)) & CAN_CTRL2_PREXCEN_MASK)
-#define CAN_CTRL2_TIMER_SRC_MASK                 (0x8000U)
-#define CAN_CTRL2_TIMER_SRC_SHIFT                (15U)
-/*! TIMER_SRC - Timer Source
- *  0b0..The Free Running Timer is clocked by the CAN bit clock, which defines the baud rate on the CAN bus.
- *  0b1..The Free Running Timer is clocked by an external time tick. The period can be either adjusted to be equal to the baud rate on the CAN bus, or a different value as required. See the device specific section for details about the external time tick.
- */
-#define CAN_CTRL2_TIMER_SRC(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_TIMER_SRC_SHIFT)) & CAN_CTRL2_TIMER_SRC_MASK)
 #define CAN_CTRL2_EACEN_MASK                     (0x10000U)
 #define CAN_CTRL2_EACEN_SHIFT                    (16U)
-/*! EACEN - Entire Frame Arbitration Field Comparison Enable For Rx Mailboxes
- *  0b0..Rx Mailbox filter's IDE bit is always compared and RTR is never compared despite mask bits.
+/*! EACEN
  *  0b1..Enables the comparison of both Rx Mailbox filter's IDE and RTR bit with their corresponding bits within the incoming frame. Mask bits do apply.
+ *  0b0..Rx Mailbox filter's IDE bit is always compared and RTR is never compared despite mask bits.
  */
 #define CAN_CTRL2_EACEN(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_EACEN_SHIFT)) & CAN_CTRL2_EACEN_MASK)
 #define CAN_CTRL2_RRS_MASK                       (0x20000U)
 #define CAN_CTRL2_RRS_SHIFT                      (17U)
-/*! RRS - Remote Request Storing
- *  0b0..Remote Response Frame is generated.
- *  0b1..Remote Request Frame is stored.
+/*! RRS
+ *  0b1..Remote Request Frame is stored
+ *  0b0..Remote Response Frame is generated
  */
 #define CAN_CTRL2_RRS(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_RRS_SHIFT)) & CAN_CTRL2_RRS_MASK)
 #define CAN_CTRL2_MRP_MASK                       (0x40000U)
 #define CAN_CTRL2_MRP_SHIFT                      (18U)
-/*! MRP - Mailboxes Reception Priority
- *  0b0..Matching starts from Legacy Rx FIFO or Enhanced Rx FIFO and continues on Mailboxes.
- *  0b1..Matching starts from Mailboxes and continues on Legacy Rx FIFO or Enhanced Rx FIFO .
+/*! MRP
+ *  0b1..Matching starts from Mailboxes and continues on Rx FIFO
+ *  0b0..Matching starts from Rx FIFO and continues on Mailboxes
  */
 #define CAN_CTRL2_MRP(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_MRP_SHIFT)) & CAN_CTRL2_MRP_MASK)
 #define CAN_CTRL2_TASD_MASK                      (0xF80000U)
@@ -4002,36 +3665,22 @@ typedef struct {
  *  0b0..Keep the write access restricted in some regions of FlexCAN memory
  */
 #define CAN_CTRL2_WRMFRZ(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_WRMFRZ_SHIFT)) & CAN_CTRL2_WRMFRZ_MASK)
-#define CAN_CTRL2_BOFFDONEMSK_MASK               (0x40000000U)
-#define CAN_CTRL2_BOFFDONEMSK_SHIFT              (30U)
-/*! BOFFDONEMSK - Bus Off Done Interrupt Mask
- *  0b0..Bus Off Done interrupt disabled.
- *  0b1..Bus Off Done interrupt enabled.
- */
-#define CAN_CTRL2_BOFFDONEMSK(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_BOFFDONEMSK_SHIFT)) & CAN_CTRL2_BOFFDONEMSK_MASK)
-#define CAN_CTRL2_ERRMSK_FAST_MASK               (0x80000000U)
-#define CAN_CTRL2_ERRMSK_FAST_SHIFT              (31U)
-/*! ERRMSK_FAST - Error Interrupt Mask for errors detected in the Data Phase of fast CAN FD frames
- *  0b0..ERRINT_FAST Error interrupt disabled.
- *  0b1..ERRINT_FAST Error interrupt enabled.
- */
-#define CAN_CTRL2_ERRMSK_FAST(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_CTRL2_ERRMSK_FAST_SHIFT)) & CAN_CTRL2_ERRMSK_FAST_MASK)
 /*! @} */
 
-/*! @name ESR2 - Error and Status 2 Register..Error and Status 2 register */
+/*! @name ESR2 - Error and Status 2 Register */
 /*! @{ */
 #define CAN_ESR2_IMB_MASK                        (0x2000U)
 #define CAN_ESR2_IMB_SHIFT                       (13U)
-/*! IMB - Inactive Mailbox
- *  0b0..If CAN_ESR2[VPS] is asserted, the CAN_ESR2[LPTM] is not an inactive Mailbox.
- *  0b1..If CAN_ESR2[VPS] is asserted, there is at least one inactive Mailbox. LPTM content is the number of the first one.
+/*! IMB
+ *  0b1..If ESR2[VPS] is asserted, there is at least one inactive Mailbox. LPTM content is the number of the first one.
+ *  0b0..If ESR2[VPS] is asserted, the ESR2[LPTM] is not an inactive Mailbox.
  */
 #define CAN_ESR2_IMB(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_ESR2_IMB_SHIFT)) & CAN_ESR2_IMB_MASK)
 #define CAN_ESR2_VPS_MASK                        (0x4000U)
 #define CAN_ESR2_VPS_SHIFT                       (14U)
-/*! VPS - Valid Priority Status
- *  0b0..Contents of IMB and LPTM are invalid.
- *  0b1..Contents of IMB and LPTM are valid.
+/*! VPS
+ *  0b1..Contents of IMB and LPTM are valid
+ *  0b0..Contents of IMB and LPTM are invalid
  */
 #define CAN_ESR2_VPS(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_ESR2_VPS_SHIFT)) & CAN_ESR2_VPS_MASK)
 #define CAN_ESR2_LPTM_MASK                       (0x7F0000U)
@@ -4049,48 +3698,22 @@ typedef struct {
 #define CAN_CRCR_MBCRC(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_CRCR_MBCRC_SHIFT)) & CAN_CRCR_MBCRC_MASK)
 /*! @} */
 
-/*! @name RXFGMASK - Rx FIFO Global Mask Register..Legacy Rx FIFO Global Mask register */
+/*! @name RXFGMASK - Rx FIFO Global Mask Register */
 /*! @{ */
 #define CAN_RXFGMASK_FGM_MASK                    (0xFFFFFFFFU)
 #define CAN_RXFGMASK_FGM_SHIFT                   (0U)
-/*! FGM - Legacy Rx FIFO Global Mask Bits
+/*! FGM
  *  0b00000000000000000000000000000001..The corresponding bit in the filter is checked
  *  0b00000000000000000000000000000000..The corresponding bit in the filter is "don't care"
  */
 #define CAN_RXFGMASK_FGM(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_RXFGMASK_FGM_SHIFT)) & CAN_RXFGMASK_FGM_MASK)
 /*! @} */
 
-/*! @name RXFIR - Rx FIFO Information Register..Legacy Rx FIFO Information Register */
+/*! @name RXFIR - Rx FIFO Information Register */
 /*! @{ */
 #define CAN_RXFIR_IDHIT_MASK                     (0x1FFU)
 #define CAN_RXFIR_IDHIT_SHIFT                    (0U)
 #define CAN_RXFIR_IDHIT(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_RXFIR_IDHIT_SHIFT)) & CAN_RXFIR_IDHIT_MASK)
-/*! @} */
-
-/*! @name CBT - CAN Bit Timing Register */
-/*! @{ */
-#define CAN_CBT_EPSEG2_MASK                      (0x1FU)
-#define CAN_CBT_EPSEG2_SHIFT                     (0U)
-#define CAN_CBT_EPSEG2(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_CBT_EPSEG2_SHIFT)) & CAN_CBT_EPSEG2_MASK)
-#define CAN_CBT_EPSEG1_MASK                      (0x3E0U)
-#define CAN_CBT_EPSEG1_SHIFT                     (5U)
-#define CAN_CBT_EPSEG1(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_CBT_EPSEG1_SHIFT)) & CAN_CBT_EPSEG1_MASK)
-#define CAN_CBT_EPROPSEG_MASK                    (0xFC00U)
-#define CAN_CBT_EPROPSEG_SHIFT                   (10U)
-#define CAN_CBT_EPROPSEG(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_CBT_EPROPSEG_SHIFT)) & CAN_CBT_EPROPSEG_MASK)
-#define CAN_CBT_ERJW_MASK                        (0x1F0000U)
-#define CAN_CBT_ERJW_SHIFT                       (16U)
-#define CAN_CBT_ERJW(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_CBT_ERJW_SHIFT)) & CAN_CBT_ERJW_MASK)
-#define CAN_CBT_EPRESDIV_MASK                    (0x7FE00000U)
-#define CAN_CBT_EPRESDIV_SHIFT                   (21U)
-#define CAN_CBT_EPRESDIV(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_CBT_EPRESDIV_SHIFT)) & CAN_CBT_EPRESDIV_MASK)
-#define CAN_CBT_BTF_MASK                         (0x80000000U)
-#define CAN_CBT_BTF_SHIFT                        (31U)
-/*! BTF - Bit Timing Format Enable
- *  0b0..Extended bit time definitions disabled.
- *  0b1..Extended bit time definitions enabled.
- */
-#define CAN_CBT_BTF(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_CBT_BTF_SHIFT)) & CAN_CBT_BTF_MASK)
 /*! @} */
 
 /*! @name DBG1 - Debug 1 register */
@@ -4127,31 +3750,7 @@ typedef struct {
 #define CAN_DBG2_APP(x)                          (((uint32_t)(((uint32_t)(x)) << CAN_DBG2_APP_SHIFT)) & CAN_DBG2_APP_MASK)
 /*! @} */
 
-/* The count of CAN_CS */
-#define CAN_CS_COUNT_MB16B                       (42U)
-
-/* The count of CAN_ID */
-#define CAN_ID_COUNT_MB16B                       (42U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB16B                     (42U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB16B2                    (4U)
-
-/* The count of CAN_CS */
-#define CAN_CS_COUNT_MB32B                       (24U)
-
-/* The count of CAN_ID */
-#define CAN_ID_COUNT_MB32B                       (24U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB32B                     (24U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB32B2                    (8U)
-
-/*! @name CS - Message Buffer 0 CS Register..Message Buffer 13 CS Register */
+/*! @name CS - Message Buffer 0 CS Register..Message Buffer 63 CS Register */
 /*! @{ */
 #define CAN_CS_TIME_STAMP_MASK                   (0xFFFFU)
 #define CAN_CS_TIME_STAMP_SHIFT                  (0U)
@@ -4171,21 +3770,12 @@ typedef struct {
 #define CAN_CS_CODE_MASK                         (0xF000000U)
 #define CAN_CS_CODE_SHIFT                        (24U)
 #define CAN_CS_CODE(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_CS_CODE_SHIFT)) & CAN_CS_CODE_MASK)
-#define CAN_CS_ESI_MASK                          (0x20000000U)
-#define CAN_CS_ESI_SHIFT                         (29U)
-#define CAN_CS_ESI(x)                            (((uint32_t)(((uint32_t)(x)) << CAN_CS_ESI_SHIFT)) & CAN_CS_ESI_MASK)
-#define CAN_CS_BRS_MASK                          (0x40000000U)
-#define CAN_CS_BRS_SHIFT                         (30U)
-#define CAN_CS_BRS(x)                            (((uint32_t)(((uint32_t)(x)) << CAN_CS_BRS_SHIFT)) & CAN_CS_BRS_MASK)
-#define CAN_CS_EDL_MASK                          (0x80000000U)
-#define CAN_CS_EDL_SHIFT                         (31U)
-#define CAN_CS_EDL(x)                            (((uint32_t)(((uint32_t)(x)) << CAN_CS_EDL_SHIFT)) & CAN_CS_EDL_MASK)
 /*! @} */
 
 /* The count of CAN_CS */
-#define CAN_CS_COUNT_MB64B                       (14U)
+#define CAN_CS_COUNT                             (64U)
 
-/*! @name ID - Message Buffer 0 ID Register..Message Buffer 13 ID Register */
+/*! @name ID - Message Buffer 0 ID Register..Message Buffer 63 ID Register */
 /*! @{ */
 #define CAN_ID_EXT_MASK                          (0x3FFFFU)
 #define CAN_ID_EXT_SHIFT                         (0U)
@@ -4197,226 +3787,6 @@ typedef struct {
 #define CAN_ID_PRIO_SHIFT                        (29U)
 #define CAN_ID_PRIO(x)                           (((uint32_t)(((uint32_t)(x)) << CAN_ID_PRIO_SHIFT)) & CAN_ID_PRIO_MASK)
 /*! @} */
-
-/* The count of CAN_ID */
-#define CAN_ID_COUNT_MB64B                       (14U)
-
-/*! @name WORD - Message Buffer 0 WORD_64B Register..Message Buffer 13 WORD_64B Register */
-/*! @{ */
-#define CAN_WORD_DATA_BYTE_3_MASK                (0xFFU)
-#define CAN_WORD_DATA_BYTE_3_SHIFT               (0U)
-#define CAN_WORD_DATA_BYTE_3(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_3_SHIFT)) & CAN_WORD_DATA_BYTE_3_MASK)
-#define CAN_WORD_DATA_BYTE_7_MASK                (0xFFU)
-#define CAN_WORD_DATA_BYTE_7_SHIFT               (0U)
-#define CAN_WORD_DATA_BYTE_7(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_7_SHIFT)) & CAN_WORD_DATA_BYTE_7_MASK)
-#define CAN_WORD_DATA_BYTE_11_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_11_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_11(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_11_SHIFT)) & CAN_WORD_DATA_BYTE_11_MASK)
-#define CAN_WORD_DATA_BYTE_15_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_15_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_15(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_15_SHIFT)) & CAN_WORD_DATA_BYTE_15_MASK)
-#define CAN_WORD_DATA_BYTE_19_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_19_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_19(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_19_SHIFT)) & CAN_WORD_DATA_BYTE_19_MASK)
-#define CAN_WORD_DATA_BYTE_23_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_23_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_23(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_23_SHIFT)) & CAN_WORD_DATA_BYTE_23_MASK)
-#define CAN_WORD_DATA_BYTE_27_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_27_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_27(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_27_SHIFT)) & CAN_WORD_DATA_BYTE_27_MASK)
-#define CAN_WORD_DATA_BYTE_31_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_31_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_31(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_31_SHIFT)) & CAN_WORD_DATA_BYTE_31_MASK)
-#define CAN_WORD_DATA_BYTE_35_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_35_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_35(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_35_SHIFT)) & CAN_WORD_DATA_BYTE_35_MASK)
-#define CAN_WORD_DATA_BYTE_39_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_39_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_39(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_39_SHIFT)) & CAN_WORD_DATA_BYTE_39_MASK)
-#define CAN_WORD_DATA_BYTE_43_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_43_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_43(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_43_SHIFT)) & CAN_WORD_DATA_BYTE_43_MASK)
-#define CAN_WORD_DATA_BYTE_47_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_47_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_47(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_47_SHIFT)) & CAN_WORD_DATA_BYTE_47_MASK)
-#define CAN_WORD_DATA_BYTE_51_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_51_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_51(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_51_SHIFT)) & CAN_WORD_DATA_BYTE_51_MASK)
-#define CAN_WORD_DATA_BYTE_55_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_55_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_55(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_55_SHIFT)) & CAN_WORD_DATA_BYTE_55_MASK)
-#define CAN_WORD_DATA_BYTE_59_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_59_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_59(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_59_SHIFT)) & CAN_WORD_DATA_BYTE_59_MASK)
-#define CAN_WORD_DATA_BYTE_63_MASK               (0xFFU)
-#define CAN_WORD_DATA_BYTE_63_SHIFT              (0U)
-#define CAN_WORD_DATA_BYTE_63(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_63_SHIFT)) & CAN_WORD_DATA_BYTE_63_MASK)
-#define CAN_WORD_DATA_BYTE_2_MASK                (0xFF00U)
-#define CAN_WORD_DATA_BYTE_2_SHIFT               (8U)
-#define CAN_WORD_DATA_BYTE_2(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_2_SHIFT)) & CAN_WORD_DATA_BYTE_2_MASK)
-#define CAN_WORD_DATA_BYTE_6_MASK                (0xFF00U)
-#define CAN_WORD_DATA_BYTE_6_SHIFT               (8U)
-#define CAN_WORD_DATA_BYTE_6(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_6_SHIFT)) & CAN_WORD_DATA_BYTE_6_MASK)
-#define CAN_WORD_DATA_BYTE_10_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_10_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_10(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_10_SHIFT)) & CAN_WORD_DATA_BYTE_10_MASK)
-#define CAN_WORD_DATA_BYTE_14_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_14_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_14(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_14_SHIFT)) & CAN_WORD_DATA_BYTE_14_MASK)
-#define CAN_WORD_DATA_BYTE_18_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_18_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_18(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_18_SHIFT)) & CAN_WORD_DATA_BYTE_18_MASK)
-#define CAN_WORD_DATA_BYTE_22_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_22_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_22(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_22_SHIFT)) & CAN_WORD_DATA_BYTE_22_MASK)
-#define CAN_WORD_DATA_BYTE_26_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_26_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_26(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_26_SHIFT)) & CAN_WORD_DATA_BYTE_26_MASK)
-#define CAN_WORD_DATA_BYTE_30_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_30_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_30(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_30_SHIFT)) & CAN_WORD_DATA_BYTE_30_MASK)
-#define CAN_WORD_DATA_BYTE_34_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_34_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_34(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_34_SHIFT)) & CAN_WORD_DATA_BYTE_34_MASK)
-#define CAN_WORD_DATA_BYTE_38_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_38_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_38(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_38_SHIFT)) & CAN_WORD_DATA_BYTE_38_MASK)
-#define CAN_WORD_DATA_BYTE_42_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_42_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_42(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_42_SHIFT)) & CAN_WORD_DATA_BYTE_42_MASK)
-#define CAN_WORD_DATA_BYTE_46_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_46_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_46(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_46_SHIFT)) & CAN_WORD_DATA_BYTE_46_MASK)
-#define CAN_WORD_DATA_BYTE_50_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_50_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_50(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_50_SHIFT)) & CAN_WORD_DATA_BYTE_50_MASK)
-#define CAN_WORD_DATA_BYTE_54_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_54_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_54(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_54_SHIFT)) & CAN_WORD_DATA_BYTE_54_MASK)
-#define CAN_WORD_DATA_BYTE_58_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_58_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_58(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_58_SHIFT)) & CAN_WORD_DATA_BYTE_58_MASK)
-#define CAN_WORD_DATA_BYTE_62_MASK               (0xFF00U)
-#define CAN_WORD_DATA_BYTE_62_SHIFT              (8U)
-#define CAN_WORD_DATA_BYTE_62(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_62_SHIFT)) & CAN_WORD_DATA_BYTE_62_MASK)
-#define CAN_WORD_DATA_BYTE_1_MASK                (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_1_SHIFT               (16U)
-#define CAN_WORD_DATA_BYTE_1(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_1_SHIFT)) & CAN_WORD_DATA_BYTE_1_MASK)
-#define CAN_WORD_DATA_BYTE_5_MASK                (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_5_SHIFT               (16U)
-#define CAN_WORD_DATA_BYTE_5(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_5_SHIFT)) & CAN_WORD_DATA_BYTE_5_MASK)
-#define CAN_WORD_DATA_BYTE_9_MASK                (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_9_SHIFT               (16U)
-#define CAN_WORD_DATA_BYTE_9(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_9_SHIFT)) & CAN_WORD_DATA_BYTE_9_MASK)
-#define CAN_WORD_DATA_BYTE_13_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_13_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_13(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_13_SHIFT)) & CAN_WORD_DATA_BYTE_13_MASK)
-#define CAN_WORD_DATA_BYTE_17_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_17_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_17(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_17_SHIFT)) & CAN_WORD_DATA_BYTE_17_MASK)
-#define CAN_WORD_DATA_BYTE_21_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_21_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_21(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_21_SHIFT)) & CAN_WORD_DATA_BYTE_21_MASK)
-#define CAN_WORD_DATA_BYTE_25_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_25_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_25(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_25_SHIFT)) & CAN_WORD_DATA_BYTE_25_MASK)
-#define CAN_WORD_DATA_BYTE_29_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_29_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_29(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_29_SHIFT)) & CAN_WORD_DATA_BYTE_29_MASK)
-#define CAN_WORD_DATA_BYTE_33_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_33_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_33(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_33_SHIFT)) & CAN_WORD_DATA_BYTE_33_MASK)
-#define CAN_WORD_DATA_BYTE_37_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_37_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_37(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_37_SHIFT)) & CAN_WORD_DATA_BYTE_37_MASK)
-#define CAN_WORD_DATA_BYTE_41_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_41_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_41(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_41_SHIFT)) & CAN_WORD_DATA_BYTE_41_MASK)
-#define CAN_WORD_DATA_BYTE_45_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_45_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_45(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_45_SHIFT)) & CAN_WORD_DATA_BYTE_45_MASK)
-#define CAN_WORD_DATA_BYTE_49_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_49_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_49(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_49_SHIFT)) & CAN_WORD_DATA_BYTE_49_MASK)
-#define CAN_WORD_DATA_BYTE_53_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_53_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_53(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_53_SHIFT)) & CAN_WORD_DATA_BYTE_53_MASK)
-#define CAN_WORD_DATA_BYTE_57_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_57_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_57(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_57_SHIFT)) & CAN_WORD_DATA_BYTE_57_MASK)
-#define CAN_WORD_DATA_BYTE_61_MASK               (0xFF0000U)
-#define CAN_WORD_DATA_BYTE_61_SHIFT              (16U)
-#define CAN_WORD_DATA_BYTE_61(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_61_SHIFT)) & CAN_WORD_DATA_BYTE_61_MASK)
-#define CAN_WORD_DATA_BYTE_0_MASK                (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_0_SHIFT               (24U)
-#define CAN_WORD_DATA_BYTE_0(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_0_SHIFT)) & CAN_WORD_DATA_BYTE_0_MASK)
-#define CAN_WORD_DATA_BYTE_4_MASK                (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_4_SHIFT               (24U)
-#define CAN_WORD_DATA_BYTE_4(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_4_SHIFT)) & CAN_WORD_DATA_BYTE_4_MASK)
-#define CAN_WORD_DATA_BYTE_8_MASK                (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_8_SHIFT               (24U)
-#define CAN_WORD_DATA_BYTE_8(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_8_SHIFT)) & CAN_WORD_DATA_BYTE_8_MASK)
-#define CAN_WORD_DATA_BYTE_12_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_12_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_12(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_12_SHIFT)) & CAN_WORD_DATA_BYTE_12_MASK)
-#define CAN_WORD_DATA_BYTE_16_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_16_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_16(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_16_SHIFT)) & CAN_WORD_DATA_BYTE_16_MASK)
-#define CAN_WORD_DATA_BYTE_20_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_20_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_20(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_20_SHIFT)) & CAN_WORD_DATA_BYTE_20_MASK)
-#define CAN_WORD_DATA_BYTE_24_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_24_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_24(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_24_SHIFT)) & CAN_WORD_DATA_BYTE_24_MASK)
-#define CAN_WORD_DATA_BYTE_28_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_28_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_28(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_28_SHIFT)) & CAN_WORD_DATA_BYTE_28_MASK)
-#define CAN_WORD_DATA_BYTE_32_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_32_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_32(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_32_SHIFT)) & CAN_WORD_DATA_BYTE_32_MASK)
-#define CAN_WORD_DATA_BYTE_36_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_36_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_36(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_36_SHIFT)) & CAN_WORD_DATA_BYTE_36_MASK)
-#define CAN_WORD_DATA_BYTE_40_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_40_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_40(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_40_SHIFT)) & CAN_WORD_DATA_BYTE_40_MASK)
-#define CAN_WORD_DATA_BYTE_44_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_44_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_44(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_44_SHIFT)) & CAN_WORD_DATA_BYTE_44_MASK)
-#define CAN_WORD_DATA_BYTE_48_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_48_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_48(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_48_SHIFT)) & CAN_WORD_DATA_BYTE_48_MASK)
-#define CAN_WORD_DATA_BYTE_52_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_52_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_52(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_52_SHIFT)) & CAN_WORD_DATA_BYTE_52_MASK)
-#define CAN_WORD_DATA_BYTE_56_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_56_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_56(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_56_SHIFT)) & CAN_WORD_DATA_BYTE_56_MASK)
-#define CAN_WORD_DATA_BYTE_60_MASK               (0xFF000000U)
-#define CAN_WORD_DATA_BYTE_60_SHIFT              (24U)
-#define CAN_WORD_DATA_BYTE_60(x)                 (((uint32_t)(((uint32_t)(x)) << CAN_WORD_DATA_BYTE_60_SHIFT)) & CAN_WORD_DATA_BYTE_60_MASK)
-/*! @} */
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB64B                     (14U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB64B2                    (16U)
-
-/* The count of CAN_CS */
-#define CAN_CS_COUNT_MB8B                        (64U)
-
-/* The count of CAN_ID */
-#define CAN_ID_COUNT_MB8B                        (64U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB8B                      (64U)
-
-/* The count of CAN_WORD */
-#define CAN_WORD_COUNT_MB8B2                     (2U)
-
-/* The count of CAN_CS */
-#define CAN_CS_COUNT                             (64U)
 
 /* The count of CAN_ID */
 #define CAN_ID_COUNT                             (64U)
@@ -4463,7 +3833,7 @@ typedef struct {
 /*! @{ */
 #define CAN_RXIMR_MI_MASK                        (0xFFFFFFFFU)
 #define CAN_RXIMR_MI_SHIFT                       (0U)
-/*! MI - Individual Mask Bits
+/*! MI
  *  0b00000000000000000000000000000001..The corresponding bit in the filter is checked
  *  0b00000000000000000000000000000000..the corresponding bit in the filter is "don't care"
  */
@@ -4480,268 +3850,6 @@ typedef struct {
 #define CAN_GFWR_GFWR(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_GFWR_GFWR_SHIFT)) & CAN_GFWR_GFWR_MASK)
 /*! @} */
 
-/*! @name EPRS - Enhanced CAN Bit Timing Prescalers */
-/*! @{ */
-#define CAN_EPRS_ENPRESDIV_MASK                  (0x3FFU)
-#define CAN_EPRS_ENPRESDIV_SHIFT                 (0U)
-#define CAN_EPRS_ENPRESDIV(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_EPRS_ENPRESDIV_SHIFT)) & CAN_EPRS_ENPRESDIV_MASK)
-#define CAN_EPRS_EDPRESDIV_MASK                  (0x3FF0000U)
-#define CAN_EPRS_EDPRESDIV_SHIFT                 (16U)
-#define CAN_EPRS_EDPRESDIV(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_EPRS_EDPRESDIV_SHIFT)) & CAN_EPRS_EDPRESDIV_MASK)
-/*! @} */
-
-/*! @name ENCBT - Enhanced Nominal CAN Bit Timing */
-/*! @{ */
-#define CAN_ENCBT_NTSEG1_MASK                    (0xFFU)
-#define CAN_ENCBT_NTSEG1_SHIFT                   (0U)
-#define CAN_ENCBT_NTSEG1(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ENCBT_NTSEG1_SHIFT)) & CAN_ENCBT_NTSEG1_MASK)
-#define CAN_ENCBT_NTSEG2_MASK                    (0x7F000U)
-#define CAN_ENCBT_NTSEG2_SHIFT                   (12U)
-#define CAN_ENCBT_NTSEG2(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ENCBT_NTSEG2_SHIFT)) & CAN_ENCBT_NTSEG2_MASK)
-#define CAN_ENCBT_NRJW_MASK                      (0x1FC00000U)
-#define CAN_ENCBT_NRJW_SHIFT                     (22U)
-#define CAN_ENCBT_NRJW(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ENCBT_NRJW_SHIFT)) & CAN_ENCBT_NRJW_MASK)
-/*! @} */
-
-/*! @name EDCBT - Enhanced Data Phase CAN bit Timing */
-/*! @{ */
-#define CAN_EDCBT_DTSEG1_MASK                    (0x1FU)
-#define CAN_EDCBT_DTSEG1_SHIFT                   (0U)
-#define CAN_EDCBT_DTSEG1(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_EDCBT_DTSEG1_SHIFT)) & CAN_EDCBT_DTSEG1_MASK)
-#define CAN_EDCBT_DTSEG2_MASK                    (0xF000U)
-#define CAN_EDCBT_DTSEG2_SHIFT                   (12U)
-#define CAN_EDCBT_DTSEG2(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_EDCBT_DTSEG2_SHIFT)) & CAN_EDCBT_DTSEG2_MASK)
-#define CAN_EDCBT_DRJW_MASK                      (0x3C00000U)
-#define CAN_EDCBT_DRJW_SHIFT                     (22U)
-#define CAN_EDCBT_DRJW(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_EDCBT_DRJW_SHIFT)) & CAN_EDCBT_DRJW_MASK)
-/*! @} */
-
-/*! @name ETDC - Enhanced Transceiver Delay Compensation */
-/*! @{ */
-#define CAN_ETDC_ETDCVAL_MASK                    (0xFFU)
-#define CAN_ETDC_ETDCVAL_SHIFT                   (0U)
-#define CAN_ETDC_ETDCVAL(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ETDC_ETDCVAL_SHIFT)) & CAN_ETDC_ETDCVAL_MASK)
-#define CAN_ETDC_ETDCOFF_MASK                    (0x7F0000U)
-#define CAN_ETDC_ETDCOFF_SHIFT                   (16U)
-#define CAN_ETDC_ETDCOFF(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ETDC_ETDCOFF_SHIFT)) & CAN_ETDC_ETDCOFF_MASK)
-#define CAN_ETDC_TDMDIS_MASK                     (0x80000000U)
-#define CAN_ETDC_TDMDIS_SHIFT                    (31U)
-/*! TDMDIS - Transceiver Delay Measurement Disable
- *  0b0..TDC measurement is enabled
- *  0b1..TDC measurement is disabled
- */
-#define CAN_ETDC_TDMDIS(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ETDC_TDMDIS_SHIFT)) & CAN_ETDC_TDMDIS_MASK)
-/*! @} */
-
-/*! @name FDCTRL - CAN FD Control Register */
-/*! @{ */
-#define CAN_FDCTRL_TDCVAL_MASK                   (0x3FU)
-#define CAN_FDCTRL_TDCVAL_SHIFT                  (0U)
-#define CAN_FDCTRL_TDCVAL(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_TDCVAL_SHIFT)) & CAN_FDCTRL_TDCVAL_MASK)
-#define CAN_FDCTRL_TDCOFF_MASK                   (0x1F00U)
-#define CAN_FDCTRL_TDCOFF_SHIFT                  (8U)
-#define CAN_FDCTRL_TDCOFF(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_TDCOFF_SHIFT)) & CAN_FDCTRL_TDCOFF_MASK)
-#define CAN_FDCTRL_TDCFAIL_MASK                  (0x4000U)
-#define CAN_FDCTRL_TDCFAIL_SHIFT                 (14U)
-/*! TDCFAIL - Transceiver Delay Compensation Fail
- *  0b0..Measured loop delay is in range.
- *  0b1..Measured loop delay is out of range.
- */
-#define CAN_FDCTRL_TDCFAIL(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_TDCFAIL_SHIFT)) & CAN_FDCTRL_TDCFAIL_MASK)
-#define CAN_FDCTRL_TDCEN_MASK                    (0x8000U)
-#define CAN_FDCTRL_TDCEN_SHIFT                   (15U)
-/*! TDCEN - Transceiver Delay Compensation Enable
- *  0b0..TDC is disabled
- *  0b1..TDC is enabled
- */
-#define CAN_FDCTRL_TDCEN(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_TDCEN_SHIFT)) & CAN_FDCTRL_TDCEN_MASK)
-#define CAN_FDCTRL_MBDSR0_MASK                   (0x30000U)
-#define CAN_FDCTRL_MBDSR0_SHIFT                  (16U)
-/*! MBDSR0 - Message Buffer Data Size for Region 0
- *  0b00..Selects 8 bytes per Message Buffer.
- *  0b01..Selects 16 bytes per Message Buffer.
- *  0b10..Selects 32 bytes per Message Buffer.
- *  0b11..Selects 64 bytes per Message Buffer.
- */
-#define CAN_FDCTRL_MBDSR0(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_MBDSR0_SHIFT)) & CAN_FDCTRL_MBDSR0_MASK)
-#define CAN_FDCTRL_MBDSR1_MASK                   (0x180000U)
-#define CAN_FDCTRL_MBDSR1_SHIFT                  (19U)
-/*! MBDSR1 - Message Buffer Data Size for Region 1
- *  0b00..Selects 8 bytes per Message Buffer.
- *  0b01..Selects 16 bytes per Message Buffer.
- *  0b10..Selects 32 bytes per Message Buffer.
- *  0b11..Selects 64 bytes per Message Buffer.
- */
-#define CAN_FDCTRL_MBDSR1(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_MBDSR1_SHIFT)) & CAN_FDCTRL_MBDSR1_MASK)
-#define CAN_FDCTRL_FDRATE_MASK                   (0x80000000U)
-#define CAN_FDCTRL_FDRATE_SHIFT                  (31U)
-/*! FDRATE - Bit Rate Switch Enable
- *  0b0..Transmit a frame in nominal rate. The BRS bit in the Tx MB has no effect.
- *  0b1..Transmit a frame with bit rate switching if the BRS bit in the Tx MB is recessive.
- */
-#define CAN_FDCTRL_FDRATE(x)                     (((uint32_t)(((uint32_t)(x)) << CAN_FDCTRL_FDRATE_SHIFT)) & CAN_FDCTRL_FDRATE_MASK)
-/*! @} */
-
-/*! @name FDCBT - CAN FD Bit Timing Register */
-/*! @{ */
-#define CAN_FDCBT_FPSEG2_MASK                    (0x7U)
-#define CAN_FDCBT_FPSEG2_SHIFT                   (0U)
-#define CAN_FDCBT_FPSEG2(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_FDCBT_FPSEG2_SHIFT)) & CAN_FDCBT_FPSEG2_MASK)
-#define CAN_FDCBT_FPSEG1_MASK                    (0xE0U)
-#define CAN_FDCBT_FPSEG1_SHIFT                   (5U)
-#define CAN_FDCBT_FPSEG1(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_FDCBT_FPSEG1_SHIFT)) & CAN_FDCBT_FPSEG1_MASK)
-#define CAN_FDCBT_FPROPSEG_MASK                  (0x7C00U)
-#define CAN_FDCBT_FPROPSEG_SHIFT                 (10U)
-#define CAN_FDCBT_FPROPSEG(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_FDCBT_FPROPSEG_SHIFT)) & CAN_FDCBT_FPROPSEG_MASK)
-#define CAN_FDCBT_FRJW_MASK                      (0x70000U)
-#define CAN_FDCBT_FRJW_SHIFT                     (16U)
-#define CAN_FDCBT_FRJW(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_FDCBT_FRJW_SHIFT)) & CAN_FDCBT_FRJW_MASK)
-#define CAN_FDCBT_FPRESDIV_MASK                  (0x3FF00000U)
-#define CAN_FDCBT_FPRESDIV_SHIFT                 (20U)
-#define CAN_FDCBT_FPRESDIV(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_FDCBT_FPRESDIV_SHIFT)) & CAN_FDCBT_FPRESDIV_MASK)
-/*! @} */
-
-/*! @name FDCRC - CAN FD CRC Register */
-/*! @{ */
-#define CAN_FDCRC_FD_TXCRC_MASK                  (0x1FFFFFU)
-#define CAN_FDCRC_FD_TXCRC_SHIFT                 (0U)
-#define CAN_FDCRC_FD_TXCRC(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_FDCRC_FD_TXCRC_SHIFT)) & CAN_FDCRC_FD_TXCRC_MASK)
-#define CAN_FDCRC_FD_MBCRC_MASK                  (0x7F000000U)
-#define CAN_FDCRC_FD_MBCRC_SHIFT                 (24U)
-#define CAN_FDCRC_FD_MBCRC(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_FDCRC_FD_MBCRC_SHIFT)) & CAN_FDCRC_FD_MBCRC_MASK)
-/*! @} */
-
-/*! @name ERFCR - Enhanced Rx FIFO Control Register */
-/*! @{ */
-#define CAN_ERFCR_ERFWM_MASK                     (0x1FU)
-#define CAN_ERFCR_ERFWM_SHIFT                    (0U)
-#define CAN_ERFCR_ERFWM(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFCR_ERFWM_SHIFT)) & CAN_ERFCR_ERFWM_MASK)
-#define CAN_ERFCR_NFE_MASK                       (0x3F00U)
-#define CAN_ERFCR_NFE_SHIFT                      (8U)
-#define CAN_ERFCR_NFE(x)                         (((uint32_t)(((uint32_t)(x)) << CAN_ERFCR_NFE_SHIFT)) & CAN_ERFCR_NFE_MASK)
-#define CAN_ERFCR_NEXIF_MASK                     (0x7F0000U)
-#define CAN_ERFCR_NEXIF_SHIFT                    (16U)
-#define CAN_ERFCR_NEXIF(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFCR_NEXIF_SHIFT)) & CAN_ERFCR_NEXIF_MASK)
-#define CAN_ERFCR_DMALW_MASK                     (0x7C000000U)
-#define CAN_ERFCR_DMALW_SHIFT                    (26U)
-#define CAN_ERFCR_DMALW(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFCR_DMALW_SHIFT)) & CAN_ERFCR_DMALW_MASK)
-#define CAN_ERFCR_ERFEN_MASK                     (0x80000000U)
-#define CAN_ERFCR_ERFEN_SHIFT                    (31U)
-/*! ERFEN - Enhanced Rx FIFO enable
- *  0b0..Enhanced Rx FIFO is disabled
- *  0b1..Enhanced Rx FIFO is enabled
- */
-#define CAN_ERFCR_ERFEN(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFCR_ERFEN_SHIFT)) & CAN_ERFCR_ERFEN_MASK)
-/*! @} */
-
-/*! @name ERFIER - Enhanced Rx FIFO Interrupt Enable register */
-/*! @{ */
-#define CAN_ERFIER_ERFDAIE_MASK                  (0x10000000U)
-#define CAN_ERFIER_ERFDAIE_SHIFT                 (28U)
-/*! ERFDAIE - Enhanced Rx FIFO Data Available Interrupt Enable
- *  0b0..Enhanced Rx FIFO Data Available Interrupt is disabled
- *  0b1..Enhanced Rx FIFO Data Available Interrupt is enabled
- */
-#define CAN_ERFIER_ERFDAIE(x)                    (((uint32_t)(((uint32_t)(x)) << CAN_ERFIER_ERFDAIE_SHIFT)) & CAN_ERFIER_ERFDAIE_MASK)
-#define CAN_ERFIER_ERFWMIIE_MASK                 (0x20000000U)
-#define CAN_ERFIER_ERFWMIIE_SHIFT                (29U)
-/*! ERFWMIIE - Enhanced Rx FIFO Watermark Indication Interrupt Enable
- *  0b0..Enhanced Rx FIFO Watermark Interrupt is disabled
- *  0b1..Enhanced Rx FIFO Watermark Interrupt is enabled
- */
-#define CAN_ERFIER_ERFWMIIE(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_ERFIER_ERFWMIIE_SHIFT)) & CAN_ERFIER_ERFWMIIE_MASK)
-#define CAN_ERFIER_ERFOVFIE_MASK                 (0x40000000U)
-#define CAN_ERFIER_ERFOVFIE_SHIFT                (30U)
-/*! ERFOVFIE - Enhanced Rx FIFO Overflow Interrupt Enable
- *  0b0..Enhanced Rx FIFO Overflow is disabled
- *  0b1..Enhanced Rx FIFO Overflow is enabled
- */
-#define CAN_ERFIER_ERFOVFIE(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_ERFIER_ERFOVFIE_SHIFT)) & CAN_ERFIER_ERFOVFIE_MASK)
-#define CAN_ERFIER_ERFUFWIE_MASK                 (0x80000000U)
-#define CAN_ERFIER_ERFUFWIE_SHIFT                (31U)
-/*! ERFUFWIE - Enhanced Rx FIFO Underflow Interrupt Enable
- *  0b0..Enhanced Rx FIFO Underflow interrupt is disabled
- *  0b1..Enhanced Rx FIFO Underflow interrupt is enabled
- */
-#define CAN_ERFIER_ERFUFWIE(x)                   (((uint32_t)(((uint32_t)(x)) << CAN_ERFIER_ERFUFWIE_SHIFT)) & CAN_ERFIER_ERFUFWIE_MASK)
-/*! @} */
-
-/*! @name ERFSR - Enhanced Rx FIFO Status Register */
-/*! @{ */
-#define CAN_ERFSR_ERFEL_MASK                     (0x3FU)
-#define CAN_ERFSR_ERFEL_SHIFT                    (0U)
-#define CAN_ERFSR_ERFEL(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFEL_SHIFT)) & CAN_ERFSR_ERFEL_MASK)
-#define CAN_ERFSR_ERFF_MASK                      (0x10000U)
-#define CAN_ERFSR_ERFF_SHIFT                     (16U)
-/*! ERFF - Enhanced Rx FIFO full
- *  0b0..Enhanced Rx FIFO is not full
- *  0b1..Enhanced Rx FIFO is full
- */
-#define CAN_ERFSR_ERFF(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFF_SHIFT)) & CAN_ERFSR_ERFF_MASK)
-#define CAN_ERFSR_ERFE_MASK                      (0x20000U)
-#define CAN_ERFSR_ERFE_SHIFT                     (17U)
-/*! ERFE - Enhanced Rx FIFO empty
- *  0b0..Enhanced Rx FIFO is not empty
- *  0b1..Enhanced Rx FIFO is empty
- */
-#define CAN_ERFSR_ERFE(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFE_SHIFT)) & CAN_ERFSR_ERFE_MASK)
-#define CAN_ERFSR_ERFCLR_MASK                    (0x8000000U)
-#define CAN_ERFSR_ERFCLR_SHIFT                   (27U)
-/*! ERFCLR - Enhanced Rx FIFO Clear
- *  0b0..No effect
- *  0b1..Clear Enhanced Rx FIFO content
- */
-#define CAN_ERFSR_ERFCLR(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFCLR_SHIFT)) & CAN_ERFSR_ERFCLR_MASK)
-#define CAN_ERFSR_ERFDA_MASK                     (0x10000000U)
-#define CAN_ERFSR_ERFDA_SHIFT                    (28U)
-/*! ERFDA - Enhanced Rx FIFO Data Available
- *  0b0..No such occurrence
- *  0b1..There is at least one message stored in Enhanced Rx FIFO
- */
-#define CAN_ERFSR_ERFDA(x)                       (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFDA_SHIFT)) & CAN_ERFSR_ERFDA_MASK)
-#define CAN_ERFSR_ERFWMI_MASK                    (0x20000000U)
-#define CAN_ERFSR_ERFWMI_SHIFT                   (29U)
-/*! ERFWMI - Enhanced Rx FIFO Watermark Indication
- *  0b0..No such occurrence
- *  0b1..The number of messages in FIFO is greater than the watermark
- */
-#define CAN_ERFSR_ERFWMI(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFWMI_SHIFT)) & CAN_ERFSR_ERFWMI_MASK)
-#define CAN_ERFSR_ERFOVF_MASK                    (0x40000000U)
-#define CAN_ERFSR_ERFOVF_SHIFT                   (30U)
-/*! ERFOVF - Enhanced Rx FIFO Overflow
- *  0b0..No such occurrence
- *  0b1..Enhanced Rx FIFO overflow
- */
-#define CAN_ERFSR_ERFOVF(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFOVF_SHIFT)) & CAN_ERFSR_ERFOVF_MASK)
-#define CAN_ERFSR_ERFUFW_MASK                    (0x80000000U)
-#define CAN_ERFSR_ERFUFW_SHIFT                   (31U)
-/*! ERFUFW - Enhanced Rx FIFO Underflow
- *  0b0..No such occurrence
- *  0b1..Enhanced Rx FIFO underflow
- */
-#define CAN_ERFSR_ERFUFW(x)                      (((uint32_t)(((uint32_t)(x)) << CAN_ERFSR_ERFUFW_SHIFT)) & CAN_ERFSR_ERFUFW_MASK)
-/*! @} */
-
-/*! @name HR_TIME_STAMP - High Resolution Time Stamp */
-/*! @{ */
-#define CAN_HR_TIME_STAMP_TS_MASK                (0xFFFFFFFFU)
-#define CAN_HR_TIME_STAMP_TS_SHIFT               (0U)
-#define CAN_HR_TIME_STAMP_TS(x)                  (((uint32_t)(((uint32_t)(x)) << CAN_HR_TIME_STAMP_TS_SHIFT)) & CAN_HR_TIME_STAMP_TS_MASK)
-/*! @} */
-
-/* The count of CAN_HR_TIME_STAMP */
-#define CAN_HR_TIME_STAMP_COUNT                  (64U)
-
-/*! @name ERFFEL - Enhanced Rx FIFO Filter Element */
-/*! @{ */
-#define CAN_ERFFEL_FEL_MASK                      (0xFFFFFFFFU)
-#define CAN_ERFFEL_FEL_SHIFT                     (0U)
-#define CAN_ERFFEL_FEL(x)                        (((uint32_t)(((uint32_t)(x)) << CAN_ERFFEL_FEL_SHIFT)) & CAN_ERFFEL_FEL_MASK)
-/*! @} */
-
-/* The count of CAN_ERFFEL */
-#define CAN_ERFFEL_COUNT                         (128U)
-
 
 /*!
  * @}
@@ -4757,21 +3865,25 @@ typedef struct {
 #define CAN2_BASE                                (0x401D4000u)
 /** Peripheral CAN2 base pointer */
 #define CAN2                                     ((CAN_Type *)CAN2_BASE)
-/** Peripheral CAN3 base address */
-#define CAN3_BASE                                (0x401D8000u)
-/** Peripheral CAN3 base pointer */
-#define CAN3                                     ((CAN_Type *)CAN3_BASE)
 /** Array initializer of CAN peripheral base addresses */
-#define CAN_BASE_ADDRS                           { 0u, CAN1_BASE, CAN2_BASE, CAN3_BASE }
+#define CAN_BASE_ADDRS                           { 0u, CAN1_BASE, CAN2_BASE }
 /** Array initializer of CAN peripheral base pointers */
-#define CAN_BASE_PTRS                            { (CAN_Type *)0u, CAN1, CAN2, CAN3 }
+#define CAN_BASE_PTRS                            { (CAN_Type *)0u, CAN1, CAN2 }
 /** Interrupt vectors for the CAN peripheral type */
-#define CAN_Rx_Warning_IRQS                      { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
-#define CAN_Tx_Warning_IRQS                      { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
-#define CAN_Wake_Up_IRQS                         { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
-#define CAN_Error_IRQS                           { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
-#define CAN_Bus_Off_IRQS                         { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
-#define CAN_ORed_Message_buffer_IRQS             { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn, CAN3_IRQn }
+#define CAN_Rx_Warning_IRQS                      { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+#define CAN_Tx_Warning_IRQS                      { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+#define CAN_Wake_Up_IRQS                         { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+#define CAN_Error_IRQS                           { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+#define CAN_Bus_Off_IRQS                         { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+#define CAN_ORed_Message_buffer_IRQS             { NotAvail_IRQn, CAN1_IRQn, CAN2_IRQn }
+/* Backward compatibility */
+#define CAN_ECR_TXERRCNT_MASK         CAN_ECR_TX_ERR_COUNTER_MASK
+#define CAN_ECR_TXERRCNT_SHIFT        CAN_ECR_TX_ERR_COUNTER_SHIFT
+#define CAN_ECR_TXERRCNT(x)           CAN_ECR_TX_ERR_COUNTER(x)
+#define CAN_ECR_RXERRCNT_MASK         CAN_ECR_RX_ERR_COUNTER_MASK
+#define CAN_ECR_RXERRCNT_SHIFT        CAN_ECR_RX_ERR_COUNTER_SHIFT
+#define CAN_ECR_RXERRCNT(x)           CAN_ECR_RX_ERR_COUNTER(x)
+
 
 /*!
  * @}
@@ -4820,7 +3932,7 @@ typedef struct {
   __IO uint32_t CCGR4;                             /**< CCM Clock Gating Register 4, offset: 0x78 */
   __IO uint32_t CCGR5;                             /**< CCM Clock Gating Register 5, offset: 0x7C */
   __IO uint32_t CCGR6;                             /**< CCM Clock Gating Register 6, offset: 0x80 */
-  __IO uint32_t CCGR7;                             /**< CCM Clock Gating Register 7, offset: 0x84 */
+       uint8_t RESERVED_4[4];
   __IO uint32_t CMEOR;                             /**< CCM Module Enable Overide Register, offset: 0x88 */
 } CCM_Type;
 
@@ -5003,15 +4115,6 @@ typedef struct {
  *  0b11..derive clock from PLL2 PFD2
  */
 #define CCM_CBCMR_LPSPI_CLK_SEL(x)               (((uint32_t)(((uint32_t)(x)) << CCM_CBCMR_LPSPI_CLK_SEL_SHIFT)) & CCM_CBCMR_LPSPI_CLK_SEL_MASK)
-#define CCM_CBCMR_FLEXSPI2_CLK_SEL_MASK          (0x300U)
-#define CCM_CBCMR_FLEXSPI2_CLK_SEL_SHIFT         (8U)
-/*! FLEXSPI2_CLK_SEL
- *  0b00..derive clock from PLL2 PFD2
- *  0b01..derive clock from PLL3 PFD0
- *  0b10..derive clock from PLL3 PFD1
- *  0b11..derive clock from PLL2 (pll2_main_clk)
- */
-#define CCM_CBCMR_FLEXSPI2_CLK_SEL(x)            (((uint32_t)(((uint32_t)(x)) << CCM_CBCMR_FLEXSPI2_CLK_SEL_SHIFT)) & CCM_CBCMR_FLEXSPI2_CLK_SEL_MASK)
 #define CCM_CBCMR_PERIPH_CLK2_SEL_MASK           (0x3000U)
 #define CCM_CBCMR_PERIPH_CLK2_SEL_SHIFT          (12U)
 /*! PERIPH_CLK2_SEL
@@ -5065,19 +4168,6 @@ typedef struct {
  *  0b111..divide by 8
  */
 #define CCM_CBCMR_LPSPI_PODF(x)                  (((uint32_t)(((uint32_t)(x)) << CCM_CBCMR_LPSPI_PODF_SHIFT)) & CCM_CBCMR_LPSPI_PODF_MASK)
-#define CCM_CBCMR_FLEXSPI2_PODF_MASK             (0xE0000000U)
-#define CCM_CBCMR_FLEXSPI2_PODF_SHIFT            (29U)
-/*! FLEXSPI2_PODF
- *  0b000..divide by 1
- *  0b001..divide by 2
- *  0b010..divide by 3
- *  0b011..divide by 4
- *  0b100..divide by 5
- *  0b101..divide by 6
- *  0b110..divide by 7
- *  0b111..divide by 8
- */
-#define CCM_CBCMR_FLEXSPI2_PODF(x)               (((uint32_t)(((uint32_t)(x)) << CCM_CBCMR_FLEXSPI2_PODF_SHIFT)) & CCM_CBCMR_FLEXSPI2_PODF_MASK)
 /*! @} */
 
 /*! @name CSCMR1 - CCM Serial Clock Multiplexer Register 1 */
@@ -5744,14 +4834,15 @@ typedef struct {
 #define CCM_CCOSR_CLKO2_SEL_SHIFT                (16U)
 /*! CLKO2_SEL
  *  0b00011..usdhc1_clk_root
+ *  0b00101..wrck_clk_root
  *  0b00110..lpi2c_clk_root
  *  0b01011..csi_clk_root
  *  0b01110..osc_clk
  *  0b10001..usdhc2_clk_root
  *  0b10010..sai1_clk_root
  *  0b10011..sai2_clk_root
- *  0b10100..sai3_clk_root (shared with ADC1 and ADC2 alt_clk root)
- *  0b10111..can_clk_root (FlexCAN, shared with CANFD)
+ *  0b10100..sai3_clk_root
+ *  0b10111..can_clk_root
  *  0b11011..flexspi_clk_root
  *  0b11100..uart_clk_root
  *  0b11101..spdif0_clk_root
@@ -6184,31 +5275,6 @@ typedef struct {
 #define CCM_CCGR6_CG15(x)                        (((uint32_t)(((uint32_t)(x)) << CCM_CCGR6_CG15_SHIFT)) & CCM_CCGR6_CG15_MASK)
 /*! @} */
 
-/*! @name CCGR7 - CCM Clock Gating Register 7 */
-/*! @{ */
-#define CCM_CCGR7_CG0_MASK                       (0x3U)
-#define CCM_CCGR7_CG0_SHIFT                      (0U)
-#define CCM_CCGR7_CG0(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG0_SHIFT)) & CCM_CCGR7_CG0_MASK)
-#define CCM_CCGR7_CG1_MASK                       (0xCU)
-#define CCM_CCGR7_CG1_SHIFT                      (2U)
-#define CCM_CCGR7_CG1(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG1_SHIFT)) & CCM_CCGR7_CG1_MASK)
-#define CCM_CCGR7_CG2_MASK                       (0x30U)
-#define CCM_CCGR7_CG2_SHIFT                      (4U)
-#define CCM_CCGR7_CG2(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG2_SHIFT)) & CCM_CCGR7_CG2_MASK)
-#define CCM_CCGR7_CG3_MASK                       (0xC0U)
-#define CCM_CCGR7_CG3_SHIFT                      (6U)
-#define CCM_CCGR7_CG3(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG3_SHIFT)) & CCM_CCGR7_CG3_MASK)
-#define CCM_CCGR7_CG4_MASK                       (0x300U)
-#define CCM_CCGR7_CG4_SHIFT                      (8U)
-#define CCM_CCGR7_CG4(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG4_SHIFT)) & CCM_CCGR7_CG4_MASK)
-#define CCM_CCGR7_CG5_MASK                       (0xC00U)
-#define CCM_CCGR7_CG5_SHIFT                      (10U)
-#define CCM_CCGR7_CG5(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG5_SHIFT)) & CCM_CCGR7_CG5_MASK)
-#define CCM_CCGR7_CG6_MASK                       (0x3000U)
-#define CCM_CCGR7_CG6_SHIFT                      (12U)
-#define CCM_CCGR7_CG6(x)                         (((uint32_t)(((uint32_t)(x)) << CCM_CCGR7_CG6_SHIFT)) & CCM_CCGR7_CG6_MASK)
-/*! @} */
-
 /*! @name CMEOR - CCM Module Enable Overide Register */
 /*! @{ */
 #define CCM_CMEOR_MOD_EN_OV_GPT_MASK             (0x20U)
@@ -6239,13 +5305,6 @@ typedef struct {
  *  0b1..override module enable signal
  */
 #define CCM_CMEOR_MOD_EN_OV_TRNG(x)              (((uint32_t)(((uint32_t)(x)) << CCM_CMEOR_MOD_EN_OV_TRNG_SHIFT)) & CCM_CMEOR_MOD_EN_OV_TRNG_MASK)
-#define CCM_CMEOR_MOD_EN_OV_CANFD_CPI_MASK       (0x400U)
-#define CCM_CMEOR_MOD_EN_OV_CANFD_CPI_SHIFT      (10U)
-/*! MOD_EN_OV_CANFD_CPI
- *  0b0..don't override module enable signal
- *  0b1..override module enable signal
- */
-#define CCM_CMEOR_MOD_EN_OV_CANFD_CPI(x)         (((uint32_t)(((uint32_t)(x)) << CCM_CMEOR_MOD_EN_OV_CANFD_CPI_SHIFT)) & CCM_CMEOR_MOD_EN_OV_CANFD_CPI_MASK)
 #define CCM_CMEOR_MOD_EN_OV_CAN2_CPI_MASK        (0x10000000U)
 #define CCM_CMEOR_MOD_EN_OV_CAN2_CPI_SHIFT       (28U)
 /*! MOD_EN_OV_CAN2_CPI
@@ -6771,6 +5830,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_SYS_BYPASS_MASK           (0x10000U)
 #define CCM_ANALOG_PLL_SYS_BYPASS_SHIFT          (16U)
 #define CCM_ANALOG_PLL_SYS_BYPASS(x)             (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_BYPASS_SHIFT)) & CCM_ANALOG_PLL_SYS_BYPASS_MASK)
+#define CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN_MASK    (0x40000U)
+#define CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN_SHIFT   (18U)
+#define CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN(x)      (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_SYS_LOCK_MASK             (0x80000000U)
 #define CCM_ANALOG_PLL_SYS_LOCK_SHIFT            (31U)
 #define CCM_ANALOG_PLL_SYS_LOCK(x)               (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_LOCK_SHIFT)) & CCM_ANALOG_PLL_SYS_LOCK_MASK)
@@ -6797,6 +5859,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_SYS_SET_BYPASS_MASK       (0x10000U)
 #define CCM_ANALOG_PLL_SYS_SET_BYPASS_SHIFT      (16U)
 #define CCM_ANALOG_PLL_SYS_SET_BYPASS(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_SET_BYPASS_SHIFT)) & CCM_ANALOG_PLL_SYS_SET_BYPASS_MASK)
+#define CCM_ANALOG_PLL_SYS_SET_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_SYS_SET_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_SYS_SET_PFD_OFFSET_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_SET_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_SYS_SET_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_SYS_SET_LOCK_MASK         (0x80000000U)
 #define CCM_ANALOG_PLL_SYS_SET_LOCK_SHIFT        (31U)
 #define CCM_ANALOG_PLL_SYS_SET_LOCK(x)           (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_SET_LOCK_SHIFT)) & CCM_ANALOG_PLL_SYS_SET_LOCK_MASK)
@@ -6823,6 +5888,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_SYS_CLR_BYPASS_MASK       (0x10000U)
 #define CCM_ANALOG_PLL_SYS_CLR_BYPASS_SHIFT      (16U)
 #define CCM_ANALOG_PLL_SYS_CLR_BYPASS(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_CLR_BYPASS_SHIFT)) & CCM_ANALOG_PLL_SYS_CLR_BYPASS_MASK)
+#define CCM_ANALOG_PLL_SYS_CLR_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_SYS_CLR_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_SYS_CLR_PFD_OFFSET_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_CLR_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_SYS_CLR_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_SYS_CLR_LOCK_MASK         (0x80000000U)
 #define CCM_ANALOG_PLL_SYS_CLR_LOCK_SHIFT        (31U)
 #define CCM_ANALOG_PLL_SYS_CLR_LOCK(x)           (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_CLR_LOCK_SHIFT)) & CCM_ANALOG_PLL_SYS_CLR_LOCK_MASK)
@@ -6849,6 +5917,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_SYS_TOG_BYPASS_MASK       (0x10000U)
 #define CCM_ANALOG_PLL_SYS_TOG_BYPASS_SHIFT      (16U)
 #define CCM_ANALOG_PLL_SYS_TOG_BYPASS(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_TOG_BYPASS_SHIFT)) & CCM_ANALOG_PLL_SYS_TOG_BYPASS_MASK)
+#define CCM_ANALOG_PLL_SYS_TOG_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_SYS_TOG_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_SYS_TOG_PFD_OFFSET_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_TOG_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_SYS_TOG_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_SYS_TOG_LOCK_MASK         (0x80000000U)
 #define CCM_ANALOG_PLL_SYS_TOG_LOCK_SHIFT        (31U)
 #define CCM_ANALOG_PLL_SYS_TOG_LOCK(x)           (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_SYS_TOG_LOCK_SHIFT)) & CCM_ANALOG_PLL_SYS_TOG_LOCK_MASK)
@@ -6908,6 +5979,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_AUDIO_BYPASS_MASK         (0x10000U)
 #define CCM_ANALOG_PLL_AUDIO_BYPASS_SHIFT        (16U)
 #define CCM_ANALOG_PLL_AUDIO_BYPASS(x)           (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_BYPASS_SHIFT)) & CCM_ANALOG_PLL_AUDIO_BYPASS_MASK)
+#define CCM_ANALOG_PLL_AUDIO_PFD_OFFSET_EN_MASK  (0x40000U)
+#define CCM_ANALOG_PLL_AUDIO_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_AUDIO_PFD_OFFSET_EN(x)    (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_AUDIO_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -6945,6 +6019,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_AUDIO_SET_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_AUDIO_SET_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_AUDIO_SET_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_SET_BYPASS_SHIFT)) & CCM_ANALOG_PLL_AUDIO_SET_BYPASS_MASK)
+#define CCM_ANALOG_PLL_AUDIO_SET_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_AUDIO_SET_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_AUDIO_SET_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_SET_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_AUDIO_SET_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_AUDIO_SET_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_AUDIO_SET_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -6982,6 +6059,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_AUDIO_CLR_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_AUDIO_CLR_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_AUDIO_CLR_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_CLR_BYPASS_SHIFT)) & CCM_ANALOG_PLL_AUDIO_CLR_BYPASS_MASK)
+#define CCM_ANALOG_PLL_AUDIO_CLR_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_AUDIO_CLR_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_AUDIO_CLR_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_CLR_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_AUDIO_CLR_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_AUDIO_CLR_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_AUDIO_CLR_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7019,6 +6099,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_AUDIO_TOG_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_AUDIO_TOG_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_AUDIO_TOG_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_TOG_BYPASS_SHIFT)) & CCM_ANALOG_PLL_AUDIO_TOG_BYPASS_MASK)
+#define CCM_ANALOG_PLL_AUDIO_TOG_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_AUDIO_TOG_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_AUDIO_TOG_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_AUDIO_TOG_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_AUDIO_TOG_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_AUDIO_TOG_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_AUDIO_TOG_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7070,6 +6153,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_VIDEO_BYPASS_MASK         (0x10000U)
 #define CCM_ANALOG_PLL_VIDEO_BYPASS_SHIFT        (16U)
 #define CCM_ANALOG_PLL_VIDEO_BYPASS(x)           (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_BYPASS_SHIFT)) & CCM_ANALOG_PLL_VIDEO_BYPASS_MASK)
+#define CCM_ANALOG_PLL_VIDEO_PFD_OFFSET_EN_MASK  (0x40000U)
+#define CCM_ANALOG_PLL_VIDEO_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_VIDEO_PFD_OFFSET_EN(x)    (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_VIDEO_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7107,6 +6193,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_VIDEO_SET_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_VIDEO_SET_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_VIDEO_SET_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_SET_BYPASS_SHIFT)) & CCM_ANALOG_PLL_VIDEO_SET_BYPASS_MASK)
+#define CCM_ANALOG_PLL_VIDEO_SET_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_VIDEO_SET_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_VIDEO_SET_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_SET_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_VIDEO_SET_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_VIDEO_SET_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_VIDEO_SET_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7144,6 +6233,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_VIDEO_CLR_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_VIDEO_CLR_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_VIDEO_CLR_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_CLR_BYPASS_SHIFT)) & CCM_ANALOG_PLL_VIDEO_CLR_BYPASS_MASK)
+#define CCM_ANALOG_PLL_VIDEO_CLR_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_VIDEO_CLR_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_VIDEO_CLR_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_CLR_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_VIDEO_CLR_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_VIDEO_CLR_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_VIDEO_CLR_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7181,6 +6273,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_VIDEO_TOG_BYPASS_MASK     (0x10000U)
 #define CCM_ANALOG_PLL_VIDEO_TOG_BYPASS_SHIFT    (16U)
 #define CCM_ANALOG_PLL_VIDEO_TOG_BYPASS(x)       (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_TOG_BYPASS_SHIFT)) & CCM_ANALOG_PLL_VIDEO_TOG_BYPASS_MASK)
+#define CCM_ANALOG_PLL_VIDEO_TOG_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_VIDEO_TOG_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_VIDEO_TOG_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_VIDEO_TOG_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_VIDEO_TOG_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_VIDEO_TOG_POST_DIV_SELECT_MASK (0x180000U)
 #define CCM_ANALOG_PLL_VIDEO_TOG_POST_DIV_SELECT_SHIFT (19U)
 /*! POST_DIV_SELECT
@@ -7214,15 +6309,6 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK      (0x3U)
 #define CCM_ANALOG_PLL_ENET_DIV_SELECT_SHIFT     (0U)
 #define CCM_ANALOG_PLL_ENET_DIV_SELECT(x)        (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK)
-#define CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_MASK (0xCU)
-#define CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_SHIFT (2U)
-/*! ENET2_DIV_SELECT
- *  0b00..25MHz
- *  0b01..50MHz
- *  0b10..100MHz (not 50% duty cycle)
- *  0b11..125MHz
- */
-#define CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_ENET2_DIV_SELECT_MASK)
 #define CCM_ANALOG_PLL_ENET_POWERDOWN_MASK       (0x1000U)
 #define CCM_ANALOG_PLL_ENET_POWERDOWN_SHIFT      (12U)
 #define CCM_ANALOG_PLL_ENET_POWERDOWN(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_POWERDOWN_SHIFT)) & CCM_ANALOG_PLL_ENET_POWERDOWN_MASK)
@@ -7241,9 +6327,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_BYPASS_MASK          (0x10000U)
 #define CCM_ANALOG_PLL_ENET_BYPASS_SHIFT         (16U)
 #define CCM_ANALOG_PLL_ENET_BYPASS(x)            (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_BYPASS_SHIFT)) & CCM_ANALOG_PLL_ENET_BYPASS_MASK)
-#define CCM_ANALOG_PLL_ENET_ENET2_REF_EN_MASK    (0x100000U)
-#define CCM_ANALOG_PLL_ENET_ENET2_REF_EN_SHIFT   (20U)
-#define CCM_ANALOG_PLL_ENET_ENET2_REF_EN(x)      (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_ENET2_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_ENET2_REF_EN_MASK)
+#define CCM_ANALOG_PLL_ENET_PFD_OFFSET_EN_MASK   (0x40000U)
+#define CCM_ANALOG_PLL_ENET_PFD_OFFSET_EN_SHIFT  (18U)
+#define CCM_ANALOG_PLL_ENET_PFD_OFFSET_EN(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK (0x200000U)
 #define CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_SHIFT (21U)
 #define CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN(x)   (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK)
@@ -7257,15 +6343,6 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_SET_DIV_SELECT_MASK  (0x3U)
 #define CCM_ANALOG_PLL_ENET_SET_DIV_SELECT_SHIFT (0U)
 #define CCM_ANALOG_PLL_ENET_SET_DIV_SELECT(x)    (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_DIV_SELECT_MASK)
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_DIV_SELECT_MASK (0xCU)
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_DIV_SELECT_SHIFT (2U)
-/*! ENET2_DIV_SELECT
- *  0b00..25MHz
- *  0b01..50MHz
- *  0b10..100MHz (not 50% duty cycle)
- *  0b11..125MHz
- */
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_DIV_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_ENET2_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_ENET2_DIV_SELECT_MASK)
 #define CCM_ANALOG_PLL_ENET_SET_POWERDOWN_MASK   (0x1000U)
 #define CCM_ANALOG_PLL_ENET_SET_POWERDOWN_SHIFT  (12U)
 #define CCM_ANALOG_PLL_ENET_SET_POWERDOWN(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_POWERDOWN_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_POWERDOWN_MASK)
@@ -7284,9 +6361,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_SET_BYPASS_MASK      (0x10000U)
 #define CCM_ANALOG_PLL_ENET_SET_BYPASS_SHIFT     (16U)
 #define CCM_ANALOG_PLL_ENET_SET_BYPASS(x)        (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_BYPASS_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_BYPASS_MASK)
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_REF_EN_MASK (0x100000U)
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_REF_EN_SHIFT (20U)
-#define CCM_ANALOG_PLL_ENET_SET_ENET2_REF_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_ENET2_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_ENET2_REF_EN_MASK)
+#define CCM_ANALOG_PLL_ENET_SET_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_ENET_SET_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_ENET_SET_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_ENET_SET_ENET_25M_REF_EN_MASK (0x200000U)
 #define CCM_ANALOG_PLL_ENET_SET_ENET_25M_REF_EN_SHIFT (21U)
 #define CCM_ANALOG_PLL_ENET_SET_ENET_25M_REF_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_SET_ENET_25M_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_SET_ENET_25M_REF_EN_MASK)
@@ -7300,15 +6377,6 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_CLR_DIV_SELECT_MASK  (0x3U)
 #define CCM_ANALOG_PLL_ENET_CLR_DIV_SELECT_SHIFT (0U)
 #define CCM_ANALOG_PLL_ENET_CLR_DIV_SELECT(x)    (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_DIV_SELECT_MASK)
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_DIV_SELECT_MASK (0xCU)
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_DIV_SELECT_SHIFT (2U)
-/*! ENET2_DIV_SELECT
- *  0b00..25MHz
- *  0b01..50MHz
- *  0b10..100MHz (not 50% duty cycle)
- *  0b11..125MHz
- */
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_DIV_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_ENET2_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_ENET2_DIV_SELECT_MASK)
 #define CCM_ANALOG_PLL_ENET_CLR_POWERDOWN_MASK   (0x1000U)
 #define CCM_ANALOG_PLL_ENET_CLR_POWERDOWN_SHIFT  (12U)
 #define CCM_ANALOG_PLL_ENET_CLR_POWERDOWN(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_POWERDOWN_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_POWERDOWN_MASK)
@@ -7327,9 +6395,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_CLR_BYPASS_MASK      (0x10000U)
 #define CCM_ANALOG_PLL_ENET_CLR_BYPASS_SHIFT     (16U)
 #define CCM_ANALOG_PLL_ENET_CLR_BYPASS(x)        (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_BYPASS_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_BYPASS_MASK)
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_REF_EN_MASK (0x100000U)
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_REF_EN_SHIFT (20U)
-#define CCM_ANALOG_PLL_ENET_CLR_ENET2_REF_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_ENET2_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_ENET2_REF_EN_MASK)
+#define CCM_ANALOG_PLL_ENET_CLR_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_ENET_CLR_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_ENET_CLR_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_ENET_CLR_ENET_25M_REF_EN_MASK (0x200000U)
 #define CCM_ANALOG_PLL_ENET_CLR_ENET_25M_REF_EN_SHIFT (21U)
 #define CCM_ANALOG_PLL_ENET_CLR_ENET_25M_REF_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_CLR_ENET_25M_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_CLR_ENET_25M_REF_EN_MASK)
@@ -7343,15 +6411,6 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_TOG_DIV_SELECT_MASK  (0x3U)
 #define CCM_ANALOG_PLL_ENET_TOG_DIV_SELECT_SHIFT (0U)
 #define CCM_ANALOG_PLL_ENET_TOG_DIV_SELECT(x)    (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_DIV_SELECT_MASK)
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_DIV_SELECT_MASK (0xCU)
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_DIV_SELECT_SHIFT (2U)
-/*! ENET2_DIV_SELECT
- *  0b00..25MHz
- *  0b01..50MHz
- *  0b10..100MHz (not 50% duty cycle)
- *  0b11..125MHz
- */
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_DIV_SELECT(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_ENET2_DIV_SELECT_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_ENET2_DIV_SELECT_MASK)
 #define CCM_ANALOG_PLL_ENET_TOG_POWERDOWN_MASK   (0x1000U)
 #define CCM_ANALOG_PLL_ENET_TOG_POWERDOWN_SHIFT  (12U)
 #define CCM_ANALOG_PLL_ENET_TOG_POWERDOWN(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_POWERDOWN_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_POWERDOWN_MASK)
@@ -7370,9 +6429,9 @@ typedef struct {
 #define CCM_ANALOG_PLL_ENET_TOG_BYPASS_MASK      (0x10000U)
 #define CCM_ANALOG_PLL_ENET_TOG_BYPASS_SHIFT     (16U)
 #define CCM_ANALOG_PLL_ENET_TOG_BYPASS(x)        (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_BYPASS_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_BYPASS_MASK)
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_REF_EN_MASK (0x100000U)
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_REF_EN_SHIFT (20U)
-#define CCM_ANALOG_PLL_ENET_TOG_ENET2_REF_EN(x)  (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_ENET2_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_ENET2_REF_EN_MASK)
+#define CCM_ANALOG_PLL_ENET_TOG_PFD_OFFSET_EN_MASK (0x40000U)
+#define CCM_ANALOG_PLL_ENET_TOG_PFD_OFFSET_EN_SHIFT (18U)
+#define CCM_ANALOG_PLL_ENET_TOG_PFD_OFFSET_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_PFD_OFFSET_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_PFD_OFFSET_EN_MASK)
 #define CCM_ANALOG_PLL_ENET_TOG_ENET_25M_REF_EN_MASK (0x200000U)
 #define CCM_ANALOG_PLL_ENET_TOG_ENET_25M_REF_EN_SHIFT (21U)
 #define CCM_ANALOG_PLL_ENET_TOG_ENET_25M_REF_EN(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_PLL_ENET_TOG_ENET_25M_REF_EN_SHIFT)) & CCM_ANALOG_PLL_ENET_TOG_ENET_25M_REF_EN_MASK)
@@ -7732,10 +6791,10 @@ typedef struct {
 #define CCM_ANALOG_MISC0_STOP_MODE_CONFIG_MASK   (0xC00U)
 #define CCM_ANALOG_MISC0_STOP_MODE_CONFIG_SHIFT  (10U)
 /*! STOP_MODE_CONFIG
- *  0b00..All analog except RTC powered down on stop mode assertion.
- *  0b01..Beside RTC, analog bandgap, 1p1 and 2p5 regulators are also on.
- *  0b10..Beside RTC, 1p1 and 2p5 regulators are also on, low-power bandgap is selected so that the normal analog bandgap together with the rest analog is powered down.
- *  0b11..Beside RTC, low-power bandgap is selected and the rest analog is powered down.
+ *  0b00..All analog except rtc powered down on stop mode assertion. XtalOsc=on, RCOsc=off;
+ *  0b01..Certain analog functions such as certain regulators left up. XtalOsc=on, RCOsc=off;
+ *  0b10..XtalOsc=off, RCOsc=on, Old BG=on, New BG=off.
+ *  0b11..XtalOsc=off, RCOsc=on, Old BG=off, New BG=on.
  */
 #define CCM_ANALOG_MISC0_STOP_MODE_CONFIG(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC0_STOP_MODE_CONFIG_SHIFT)) & CCM_ANALOG_MISC0_STOP_MODE_CONFIG_MASK)
 #define CCM_ANALOG_MISC0_DISCON_HIGH_SNVS_MASK   (0x1000U)
@@ -7823,10 +6882,10 @@ typedef struct {
 #define CCM_ANALOG_MISC0_SET_STOP_MODE_CONFIG_MASK (0xC00U)
 #define CCM_ANALOG_MISC0_SET_STOP_MODE_CONFIG_SHIFT (10U)
 /*! STOP_MODE_CONFIG
- *  0b00..All analog except RTC powered down on stop mode assertion.
- *  0b01..Beside RTC, analog bandgap, 1p1 and 2p5 regulators are also on.
- *  0b10..Beside RTC, 1p1 and 2p5 regulators are also on, low-power bandgap is selected so that the normal analog bandgap together with the rest analog is powered down.
- *  0b11..Beside RTC, low-power bandgap is selected and the rest analog is powered down.
+ *  0b00..All analog except rtc powered down on stop mode assertion. XtalOsc=on, RCOsc=off;
+ *  0b01..Certain analog functions such as certain regulators left up. XtalOsc=on, RCOsc=off;
+ *  0b10..XtalOsc=off, RCOsc=on, Old BG=on, New BG=off.
+ *  0b11..XtalOsc=off, RCOsc=on, Old BG=off, New BG=on.
  */
 #define CCM_ANALOG_MISC0_SET_STOP_MODE_CONFIG(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC0_SET_STOP_MODE_CONFIG_SHIFT)) & CCM_ANALOG_MISC0_SET_STOP_MODE_CONFIG_MASK)
 #define CCM_ANALOG_MISC0_SET_DISCON_HIGH_SNVS_MASK (0x1000U)
@@ -7914,10 +6973,10 @@ typedef struct {
 #define CCM_ANALOG_MISC0_CLR_STOP_MODE_CONFIG_MASK (0xC00U)
 #define CCM_ANALOG_MISC0_CLR_STOP_MODE_CONFIG_SHIFT (10U)
 /*! STOP_MODE_CONFIG
- *  0b00..All analog except RTC powered down on stop mode assertion.
- *  0b01..Beside RTC, analog bandgap, 1p1 and 2p5 regulators are also on.
- *  0b10..Beside RTC, 1p1 and 2p5 regulators are also on, low-power bandgap is selected so that the normal analog bandgap together with the rest analog is powered down.
- *  0b11..Beside RTC, low-power bandgap is selected and the rest analog is powered down.
+ *  0b00..All analog except rtc powered down on stop mode assertion. XtalOsc=on, RCOsc=off;
+ *  0b01..Certain analog functions such as certain regulators left up. XtalOsc=on, RCOsc=off;
+ *  0b10..XtalOsc=off, RCOsc=on, Old BG=on, New BG=off.
+ *  0b11..XtalOsc=off, RCOsc=on, Old BG=off, New BG=on.
  */
 #define CCM_ANALOG_MISC0_CLR_STOP_MODE_CONFIG(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC0_CLR_STOP_MODE_CONFIG_SHIFT)) & CCM_ANALOG_MISC0_CLR_STOP_MODE_CONFIG_MASK)
 #define CCM_ANALOG_MISC0_CLR_DISCON_HIGH_SNVS_MASK (0x1000U)
@@ -8005,10 +7064,10 @@ typedef struct {
 #define CCM_ANALOG_MISC0_TOG_STOP_MODE_CONFIG_MASK (0xC00U)
 #define CCM_ANALOG_MISC0_TOG_STOP_MODE_CONFIG_SHIFT (10U)
 /*! STOP_MODE_CONFIG
- *  0b00..All analog except RTC powered down on stop mode assertion.
- *  0b01..Beside RTC, analog bandgap, 1p1 and 2p5 regulators are also on.
- *  0b10..Beside RTC, 1p1 and 2p5 regulators are also on, low-power bandgap is selected so that the normal analog bandgap together with the rest analog is powered down.
- *  0b11..Beside RTC, low-power bandgap is selected and the rest analog is powered down.
+ *  0b00..All analog except rtc powered down on stop mode assertion. XtalOsc=on, RCOsc=off;
+ *  0b01..Certain analog functions such as certain regulators left up. XtalOsc=on, RCOsc=off;
+ *  0b10..XtalOsc=off, RCOsc=on, Old BG=on, New BG=off.
+ *  0b11..XtalOsc=off, RCOsc=on, Old BG=off, New BG=on.
  */
 #define CCM_ANALOG_MISC0_TOG_STOP_MODE_CONFIG(x) (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC0_TOG_STOP_MODE_CONFIG_SHIFT)) & CCM_ANALOG_MISC0_TOG_STOP_MODE_CONFIG_MASK)
 #define CCM_ANALOG_MISC0_TOG_DISCON_HIGH_SNVS_MASK (0x1000U)
@@ -8294,13 +7353,13 @@ typedef struct {
 #define CCM_ANALOG_MISC2_REG0_OK_MASK            (0x40U)
 #define CCM_ANALOG_MISC2_REG0_OK_SHIFT           (6U)
 #define CCM_ANALOG_MISC2_REG0_OK(x)              (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_REG0_OK_SHIFT)) & CCM_ANALOG_MISC2_REG0_OK_MASK)
-#define CCM_ANALOG_MISC2_PLL3_DISABLE_MASK       (0x80U)
-#define CCM_ANALOG_MISC2_PLL3_DISABLE_SHIFT      (7U)
-/*! PLL3_DISABLE
+#define CCM_ANALOG_MISC2_PLL3_disable_MASK       (0x80U)
+#define CCM_ANALOG_MISC2_PLL3_disable_SHIFT      (7U)
+/*! PLL3_disable
  *  0b0..PLL3 is being used by peripherals and is enabled when SoC is not in any low power mode
  *  0b1..PLL3 can be disabled when the SoC is not in any low power mode
  */
-#define CCM_ANALOG_MISC2_PLL3_DISABLE(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_PLL3_DISABLE_SHIFT)) & CCM_ANALOG_MISC2_PLL3_DISABLE_MASK)
+#define CCM_ANALOG_MISC2_PLL3_disable(x)         (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_PLL3_disable_SHIFT)) & CCM_ANALOG_MISC2_PLL3_disable_MASK)
 #define CCM_ANALOG_MISC2_REG1_BO_OFFSET_MASK     (0x700U)
 #define CCM_ANALOG_MISC2_REG1_BO_OFFSET_SHIFT    (8U)
 /*! REG1_BO_OFFSET
@@ -8409,13 +7468,13 @@ typedef struct {
 #define CCM_ANALOG_MISC2_SET_REG0_OK_MASK        (0x40U)
 #define CCM_ANALOG_MISC2_SET_REG0_OK_SHIFT       (6U)
 #define CCM_ANALOG_MISC2_SET_REG0_OK(x)          (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_SET_REG0_OK_SHIFT)) & CCM_ANALOG_MISC2_SET_REG0_OK_MASK)
-#define CCM_ANALOG_MISC2_SET_PLL3_DISABLE_MASK   (0x80U)
-#define CCM_ANALOG_MISC2_SET_PLL3_DISABLE_SHIFT  (7U)
-/*! PLL3_DISABLE
+#define CCM_ANALOG_MISC2_SET_PLL3_disable_MASK   (0x80U)
+#define CCM_ANALOG_MISC2_SET_PLL3_disable_SHIFT  (7U)
+/*! PLL3_disable
  *  0b0..PLL3 is being used by peripherals and is enabled when SoC is not in any low power mode
  *  0b1..PLL3 can be disabled when the SoC is not in any low power mode
  */
-#define CCM_ANALOG_MISC2_SET_PLL3_DISABLE(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_SET_PLL3_DISABLE_SHIFT)) & CCM_ANALOG_MISC2_SET_PLL3_DISABLE_MASK)
+#define CCM_ANALOG_MISC2_SET_PLL3_disable(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_SET_PLL3_disable_SHIFT)) & CCM_ANALOG_MISC2_SET_PLL3_disable_MASK)
 #define CCM_ANALOG_MISC2_SET_REG1_BO_OFFSET_MASK (0x700U)
 #define CCM_ANALOG_MISC2_SET_REG1_BO_OFFSET_SHIFT (8U)
 /*! REG1_BO_OFFSET
@@ -8524,13 +7583,13 @@ typedef struct {
 #define CCM_ANALOG_MISC2_CLR_REG0_OK_MASK        (0x40U)
 #define CCM_ANALOG_MISC2_CLR_REG0_OK_SHIFT       (6U)
 #define CCM_ANALOG_MISC2_CLR_REG0_OK(x)          (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_CLR_REG0_OK_SHIFT)) & CCM_ANALOG_MISC2_CLR_REG0_OK_MASK)
-#define CCM_ANALOG_MISC2_CLR_PLL3_DISABLE_MASK   (0x80U)
-#define CCM_ANALOG_MISC2_CLR_PLL3_DISABLE_SHIFT  (7U)
-/*! PLL3_DISABLE
+#define CCM_ANALOG_MISC2_CLR_PLL3_disable_MASK   (0x80U)
+#define CCM_ANALOG_MISC2_CLR_PLL3_disable_SHIFT  (7U)
+/*! PLL3_disable
  *  0b0..PLL3 is being used by peripherals and is enabled when SoC is not in any low power mode
  *  0b1..PLL3 can be disabled when the SoC is not in any low power mode
  */
-#define CCM_ANALOG_MISC2_CLR_PLL3_DISABLE(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_CLR_PLL3_DISABLE_SHIFT)) & CCM_ANALOG_MISC2_CLR_PLL3_DISABLE_MASK)
+#define CCM_ANALOG_MISC2_CLR_PLL3_disable(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_CLR_PLL3_disable_SHIFT)) & CCM_ANALOG_MISC2_CLR_PLL3_disable_MASK)
 #define CCM_ANALOG_MISC2_CLR_REG1_BO_OFFSET_MASK (0x700U)
 #define CCM_ANALOG_MISC2_CLR_REG1_BO_OFFSET_SHIFT (8U)
 /*! REG1_BO_OFFSET
@@ -8639,13 +7698,13 @@ typedef struct {
 #define CCM_ANALOG_MISC2_TOG_REG0_OK_MASK        (0x40U)
 #define CCM_ANALOG_MISC2_TOG_REG0_OK_SHIFT       (6U)
 #define CCM_ANALOG_MISC2_TOG_REG0_OK(x)          (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_TOG_REG0_OK_SHIFT)) & CCM_ANALOG_MISC2_TOG_REG0_OK_MASK)
-#define CCM_ANALOG_MISC2_TOG_PLL3_DISABLE_MASK   (0x80U)
-#define CCM_ANALOG_MISC2_TOG_PLL3_DISABLE_SHIFT  (7U)
-/*! PLL3_DISABLE
+#define CCM_ANALOG_MISC2_TOG_PLL3_disable_MASK   (0x80U)
+#define CCM_ANALOG_MISC2_TOG_PLL3_disable_SHIFT  (7U)
+/*! PLL3_disable
  *  0b0..PLL3 is being used by peripherals and is enabled when SoC is not in any low power mode
  *  0b1..PLL3 can be disabled when the SoC is not in any low power mode
  */
-#define CCM_ANALOG_MISC2_TOG_PLL3_DISABLE(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_TOG_PLL3_DISABLE_SHIFT)) & CCM_ANALOG_MISC2_TOG_PLL3_DISABLE_MASK)
+#define CCM_ANALOG_MISC2_TOG_PLL3_disable(x)     (((uint32_t)(((uint32_t)(x)) << CCM_ANALOG_MISC2_TOG_PLL3_disable_SHIFT)) & CCM_ANALOG_MISC2_TOG_PLL3_disable_MASK)
 #define CCM_ANALOG_MISC2_TOG_REG1_BO_OFFSET_MASK (0x700U)
 #define CCM_ANALOG_MISC2_TOG_REG1_BO_OFFSET_SHIFT (8U)
 /*! REG1_BO_OFFSET
@@ -16041,19 +15100,15 @@ typedef struct {
 #define ENET_BASE                                (0x402D8000u)
 /** Peripheral ENET base pointer */
 #define ENET                                     ((ENET_Type *)ENET_BASE)
-/** Peripheral ENET2 base address */
-#define ENET2_BASE                               (0x402D4000u)
-/** Peripheral ENET2 base pointer */
-#define ENET2                                    ((ENET_Type *)ENET2_BASE)
 /** Array initializer of ENET peripheral base addresses */
-#define ENET_BASE_ADDRS                          { ENET_BASE, 0u, ENET2_BASE }
+#define ENET_BASE_ADDRS                          { ENET_BASE }
 /** Array initializer of ENET peripheral base pointers */
-#define ENET_BASE_PTRS                           { ENET, (ENET_Type *)0u, ENET2 }
+#define ENET_BASE_PTRS                           { ENET }
 /** Interrupt vectors for the ENET peripheral type */
-#define ENET_Transmit_IRQS                       { ENET_IRQn, NotAvail_IRQn, ENET2_IRQn }
-#define ENET_Receive_IRQS                        { ENET_IRQn, NotAvail_IRQn, ENET2_IRQn }
-#define ENET_Error_IRQS                          { ENET_IRQn, NotAvail_IRQn, ENET2_IRQn }
-#define ENET_1588_Timer_IRQS                     { ENET_1588_Timer_IRQn, NotAvail_IRQn, ENET2_1588_Timer_IRQn }
+#define ENET_Transmit_IRQS                       { ENET_IRQn }
+#define ENET_Receive_IRQS                        { ENET_IRQn }
+#define ENET_Error_IRQS                          { ENET_IRQn }
+#define ENET_1588_Timer_IRQS                     { ENET_1588_Timer_IRQn }
 /* ENET Buffer Descriptor and Buffer Address Alignment. */
 #define ENET_BUFF_ALIGNMENT                      (64U)
 
@@ -16300,9 +15355,9 @@ typedef struct {
 
 /*! @name PIN - Pin State Register */
 /*! @{ */
-#define FLEXIO_PIN_PDI_MASK                      (0xFFFFFFFFU)  /* Merged from fields with different position or width, of widths (16, 32), largest definition used */
+#define FLEXIO_PIN_PDI_MASK                      (0xFFFFFFFFU)
 #define FLEXIO_PIN_PDI_SHIFT                     (0U)
-#define FLEXIO_PIN_PDI(x)                        (((uint32_t)(((uint32_t)(x)) << FLEXIO_PIN_PDI_SHIFT)) & FLEXIO_PIN_PDI_MASK)  /* Merged from fields with different position or width, of widths (16, 32), largest definition used */
+#define FLEXIO_PIN_PDI(x)                        (((uint32_t)(((uint32_t)(x)) << FLEXIO_PIN_PDI_SHIFT)) & FLEXIO_PIN_PDI_MASK)
 /*! @} */
 
 /*! @name SHIFTSTAT - Shifter Status Register */
@@ -16383,9 +15438,9 @@ typedef struct {
  *  0b1..Pin is active low
  */
 #define FLEXIO_SHIFTCTL_PINPOL(x)                (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCTL_PINPOL_SHIFT)) & FLEXIO_SHIFTCTL_PINPOL_MASK)
-#define FLEXIO_SHIFTCTL_PINSEL_MASK              (0x1F00U)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_SHIFTCTL_PINSEL_MASK              (0x1F00U)
 #define FLEXIO_SHIFTCTL_PINSEL_SHIFT             (8U)
-#define FLEXIO_SHIFTCTL_PINSEL(x)                (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCTL_PINSEL_SHIFT)) & FLEXIO_SHIFTCTL_PINSEL_MASK)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_SHIFTCTL_PINSEL(x)                (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCTL_PINSEL_SHIFT)) & FLEXIO_SHIFTCTL_PINSEL_MASK)
 #define FLEXIO_SHIFTCTL_PINCFG_MASK              (0x30000U)
 #define FLEXIO_SHIFTCTL_PINCFG_SHIFT             (16U)
 /*! PINCFG - Shifter Pin Configuration
@@ -16437,9 +15492,9 @@ typedef struct {
  *  0b1..Shifter N+1 Output
  */
 #define FLEXIO_SHIFTCFG_INSRC(x)                 (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCFG_INSRC_SHIFT)) & FLEXIO_SHIFTCFG_INSRC_MASK)
-#define FLEXIO_SHIFTCFG_PWIDTH_MASK              (0x1F0000U)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_SHIFTCFG_PWIDTH_MASK              (0x1F0000U)
 #define FLEXIO_SHIFTCFG_PWIDTH_SHIFT             (16U)
-#define FLEXIO_SHIFTCFG_PWIDTH(x)                (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCFG_PWIDTH_SHIFT)) & FLEXIO_SHIFTCFG_PWIDTH_MASK)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_SHIFTCFG_PWIDTH(x)                (((uint32_t)(((uint32_t)(x)) << FLEXIO_SHIFTCFG_PWIDTH_SHIFT)) & FLEXIO_SHIFTCFG_PWIDTH_MASK)
 /*! @} */
 
 /* The count of FLEXIO_SHIFTCFG */
@@ -16503,9 +15558,9 @@ typedef struct {
  *  0b1..Pin is active low
  */
 #define FLEXIO_TIMCTL_PINPOL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_PINPOL_SHIFT)) & FLEXIO_TIMCTL_PINPOL_MASK)
-#define FLEXIO_TIMCTL_PINSEL_MASK                (0x1F00U)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_TIMCTL_PINSEL_MASK                (0x1F00U)
 #define FLEXIO_TIMCTL_PINSEL_SHIFT               (8U)
-#define FLEXIO_TIMCTL_PINSEL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_PINSEL_SHIFT)) & FLEXIO_TIMCTL_PINSEL_MASK)  /* Merged from fields with different position or width, of widths (4, 5), largest definition used */
+#define FLEXIO_TIMCTL_PINSEL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_PINSEL_SHIFT)) & FLEXIO_TIMCTL_PINSEL_MASK)
 #define FLEXIO_TIMCTL_PINCFG_MASK                (0x30000U)
 #define FLEXIO_TIMCTL_PINCFG_SHIFT               (16U)
 /*! PINCFG - Timer Pin Configuration
@@ -16529,9 +15584,9 @@ typedef struct {
  *  0b1..Trigger active low
  */
 #define FLEXIO_TIMCTL_TRGPOL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_TRGPOL_SHIFT)) & FLEXIO_TIMCTL_TRGPOL_MASK)
-#define FLEXIO_TIMCTL_TRGSEL_MASK                (0x3F000000U)  /* Merged from fields with different position or width, of widths (5, 6), largest definition used */
+#define FLEXIO_TIMCTL_TRGSEL_MASK                (0x3F000000U)
 #define FLEXIO_TIMCTL_TRGSEL_SHIFT               (24U)
-#define FLEXIO_TIMCTL_TRGSEL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_TRGSEL_SHIFT)) & FLEXIO_TIMCTL_TRGSEL_MASK)  /* Merged from fields with different position or width, of widths (5, 6), largest definition used */
+#define FLEXIO_TIMCTL_TRGSEL(x)                  (((uint32_t)(((uint32_t)(x)) << FLEXIO_TIMCTL_TRGSEL_SHIFT)) & FLEXIO_TIMCTL_TRGSEL_MASK)
 /*! @} */
 
 /* The count of FLEXIO_TIMCTL */
@@ -16672,16 +15727,12 @@ typedef struct {
 #define FLEXIO2_BASE                             (0x401B0000u)
 /** Peripheral FLEXIO2 base pointer */
 #define FLEXIO2                                  ((FLEXIO_Type *)FLEXIO2_BASE)
-/** Peripheral FLEXIO3 base address */
-#define FLEXIO3_BASE                             (0x42020000u)
-/** Peripheral FLEXIO3 base pointer */
-#define FLEXIO3                                  ((FLEXIO_Type *)FLEXIO3_BASE)
 /** Array initializer of FLEXIO peripheral base addresses */
-#define FLEXIO_BASE_ADDRS                        { 0u, FLEXIO1_BASE, FLEXIO2_BASE, FLEXIO3_BASE }
+#define FLEXIO_BASE_ADDRS                        { 0u, FLEXIO1_BASE, FLEXIO2_BASE }
 /** Array initializer of FLEXIO peripheral base pointers */
-#define FLEXIO_BASE_PTRS                         { (FLEXIO_Type *)0u, FLEXIO1, FLEXIO2, FLEXIO3 }
+#define FLEXIO_BASE_PTRS                         { (FLEXIO_Type *)0u, FLEXIO1, FLEXIO2 }
 /** Interrupt vectors for the FLEXIO peripheral type */
-#define FLEXIO_IRQS                              { NotAvail_IRQn, FLEXIO1_IRQn, FLEXIO2_IRQn, FLEXIO3_IRQn }
+#define FLEXIO_IRQS                              { NotAvail_IRQn, FLEXIO1_IRQn, FLEXIO2_IRQn }
 
 /*!
  * @}
@@ -17506,32 +16557,20 @@ typedef struct {
 #define FLEXSPI_BASE                             (0x402A8000u)
 /** Peripheral FLEXSPI base pointer */
 #define FLEXSPI                                  ((FLEXSPI_Type *)FLEXSPI_BASE)
-/** Peripheral FLEXSPI2 base address */
-#define FLEXSPI2_BASE                            (0x402A4000u)
-/** Peripheral FLEXSPI2 base pointer */
-#define FLEXSPI2                                 ((FLEXSPI_Type *)FLEXSPI2_BASE)
 /** Array initializer of FLEXSPI peripheral base addresses */
-#define FLEXSPI_BASE_ADDRS                       { FLEXSPI_BASE, 0u, FLEXSPI2_BASE }
+#define FLEXSPI_BASE_ADDRS                       { FLEXSPI_BASE }
 /** Array initializer of FLEXSPI peripheral base pointers */
-#define FLEXSPI_BASE_PTRS                        { FLEXSPI, (FLEXSPI_Type *)0u, FLEXSPI2 }
+#define FLEXSPI_BASE_PTRS                        { FLEXSPI }
 /** Interrupt vectors for the FLEXSPI peripheral type */
-#define FLEXSPI_IRQS                             { FLEXSPI_IRQn, NotAvail_IRQn, FLEXSPI2_IRQn }
+#define FLEXSPI_IRQS                             { FLEXSPI_IRQn }
 /* FlexSPI AMBA address. */
 #define FlexSPI_AMBA_BASE                       (0x60000000U)
 /* FlexSPI ASFM address. */
-#define FlexSPI_ASFM_BASE                        (0x60000000U)
+#define FlexSPI_ASFM_BASE                        (0x00000000U)
 /* Base Address of AHB address space mapped to IP RX FIFO. */
 #define FlexSPI_ARDF_BASE                        (0x7FC00000U)
 /* Base Address of AHB address space mapped to IP TX FIFO. */
 #define FlexSPI_ATDF_BASE                        (0x7F800000U)
-/* FlexSPI2 AMBA address. */
-#define FlexSPI2_AMBA_BASE                       (0x70000000U)
-/* FlexSPI ASFM address. */
-#define FlexSPI2_ASFM_BASE                        (0x70000000U)
-/* Base Address of AHB address space mapped to IP RX FIFO. */
-#define FlexSPI2_ARDF_BASE                        (0x7F400000U)
-/* Base Address of AHB address space mapped to IP TX FIFO. */
-#define FlexSPI2_ATDF_BASE                        (0x7F000000U)
 
 
 /*!
@@ -17587,8 +16626,8 @@ typedef struct {
 #define GPC_CNTR_PDRAM0_PGE_MASK                 (0x400000U)
 #define GPC_CNTR_PDRAM0_PGE_SHIFT                (22U)
 /*! PDRAM0_PGE
- *  0b1..FlexRAM PDRAM0 domain will be power down once when CPU core is power down.
- *  0b0..FlexRAM PDRAM0 domain will keep power on even if CPU core is power down.
+ *  0b1..FlexRAM PDRAM0 domain (bank1-7) will be power down once when CPU core is power down.
+ *  0b0..FlexRAM PDRAM0 domain (bank1-7) will keep power on even if CPU core is power down.
  */
 #define GPC_CNTR_PDRAM0_PGE(x)                   (((uint32_t)(((uint32_t)(x)) << GPC_CNTR_PDRAM0_PGE_SHIFT)) & GPC_CNTR_PDRAM0_PGE_MASK)
 /*! @} */
@@ -18088,30 +17127,14 @@ typedef struct {
 #define GPIO5_BASE                               (0x400C0000u)
 /** Peripheral GPIO5 base pointer */
 #define GPIO5                                    ((GPIO_Type *)GPIO5_BASE)
-/** Peripheral GPIO6 base address */
-#define GPIO6_BASE                               (0x42000000u)
-/** Peripheral GPIO6 base pointer */
-#define GPIO6                                    ((GPIO_Type *)GPIO6_BASE)
-/** Peripheral GPIO7 base address */
-#define GPIO7_BASE                               (0x42004000u)
-/** Peripheral GPIO7 base pointer */
-#define GPIO7                                    ((GPIO_Type *)GPIO7_BASE)
-/** Peripheral GPIO8 base address */
-#define GPIO8_BASE                               (0x42008000u)
-/** Peripheral GPIO8 base pointer */
-#define GPIO8                                    ((GPIO_Type *)GPIO8_BASE)
-/** Peripheral GPIO9 base address */
-#define GPIO9_BASE                               (0x4200C000u)
-/** Peripheral GPIO9 base pointer */
-#define GPIO9                                    ((GPIO_Type *)GPIO9_BASE)
 /** Array initializer of GPIO peripheral base addresses */
-#define GPIO_BASE_ADDRS                          { 0u, GPIO1_BASE, GPIO2_BASE, GPIO3_BASE, GPIO4_BASE, GPIO5_BASE, GPIO6_BASE, GPIO7_BASE, GPIO8_BASE, GPIO9_BASE }
+#define GPIO_BASE_ADDRS                          { 0u, GPIO1_BASE, GPIO2_BASE, GPIO3_BASE, GPIO4_BASE, GPIO5_BASE }
 /** Array initializer of GPIO peripheral base pointers */
-#define GPIO_BASE_PTRS                           { (GPIO_Type *)0u, GPIO1, GPIO2, GPIO3, GPIO4, GPIO5, GPIO6, GPIO7, GPIO8, GPIO9 }
+#define GPIO_BASE_PTRS                           { (GPIO_Type *)0u, GPIO1, GPIO2, GPIO3, GPIO4, GPIO5 }
 /** Interrupt vectors for the GPIO peripheral type */
-#define GPIO_IRQS                                { NotAvail_IRQn, GPIO1_INT0_IRQn, GPIO1_INT1_IRQn, GPIO1_INT2_IRQn, GPIO1_INT3_IRQn, GPIO1_INT4_IRQn, GPIO1_INT5_IRQn, GPIO1_INT6_IRQn, GPIO1_INT7_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn }
-#define GPIO_COMBINED_LOW_IRQS                   { NotAvail_IRQn, GPIO1_Combined_0_15_IRQn, GPIO2_Combined_0_15_IRQn, GPIO3_Combined_0_15_IRQn, GPIO4_Combined_0_15_IRQn, GPIO5_Combined_0_15_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn }
-#define GPIO_COMBINED_HIGH_IRQS                  { NotAvail_IRQn, GPIO1_Combined_16_31_IRQn, GPIO2_Combined_16_31_IRQn, GPIO3_Combined_16_31_IRQn, GPIO4_Combined_16_31_IRQn, GPIO5_Combined_16_31_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn, GPIO6_7_8_9_IRQn }
+#define GPIO_IRQS                                { NotAvail_IRQn, GPIO1_INT0_IRQn, GPIO1_INT1_IRQn, GPIO1_INT2_IRQn, GPIO1_INT3_IRQn, GPIO1_INT4_IRQn, GPIO1_INT5_IRQn, GPIO1_INT6_IRQn, GPIO1_INT7_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn }
+#define GPIO_COMBINED_LOW_IRQS                   { NotAvail_IRQn, GPIO1_Combined_0_15_IRQn, GPIO2_Combined_0_15_IRQn, GPIO3_Combined_0_15_IRQn, GPIO4_Combined_0_15_IRQn, GPIO5_Combined_0_15_IRQn }
+#define GPIO_COMBINED_HIGH_IRQS                  { NotAvail_IRQn, GPIO1_Combined_16_31_IRQn, GPIO2_Combined_16_31_IRQn, GPIO3_Combined_16_31_IRQn, GPIO4_Combined_16_31_IRQn, GPIO5_Combined_16_31_IRQn }
 
 /*!
  * @}
@@ -19192,9 +18215,6 @@ typedef struct {
   __IO uint32_t SW_MUX_CTL_PAD[124];               /**< SW_MUX_CTL_PAD_GPIO_EMC_00 SW MUX Control Register..SW_MUX_CTL_PAD_GPIO_SD_B1_11 SW MUX Control Register, array offset: 0x14, array step: 0x4 */
   __IO uint32_t SW_PAD_CTL_PAD[124];               /**< SW_PAD_CTL_PAD_GPIO_EMC_00 SW PAD Control Register..SW_PAD_CTL_PAD_GPIO_SD_B1_11 SW PAD Control Register, array offset: 0x204, array step: 0x4 */
   __IO uint32_t SELECT_INPUT[154];                 /**< ANATOP_USB_OTG1_ID_SELECT_INPUT DAISY Register..XBAR1_IN23_SELECT_INPUT DAISY Register, array offset: 0x3F4, array step: 0x4 */
-  __IO uint32_t SW_MUX_CTL_PAD_1[22];              /**< SW_MUX_CTL_PAD_GPIO_SPI_B0_00 SW MUX Control Register..SW_MUX_CTL_PAD_GPIO_SPI_B1_07 SW MUX Control Register, array offset: 0x65C, array step: 0x4 */
-  __IO uint32_t SW_PAD_CTL_PAD_1[22];              /**< SW_PAD_CTL_PAD_GPIO_SPI_B0_00 SW PAD Control Register..SW_PAD_CTL_PAD_GPIO_SPI_B1_07 SW PAD Control Register, array offset: 0x6B4, array step: 0x4 */
-  __IO uint32_t SELECT_INPUT_1[33];                /**< ENET2_IPG_CLK_RMII_SELECT_INPUT DAISY Register..CANFD_IPP_IND_CANRX_SELECT_INPUT DAISY Register, array offset: 0x70C, array step: 0x4 */
 } IOMUXC_Type;
 
 /* ----------------------------------------------------------------------------
@@ -19208,21 +18228,19 @@ typedef struct {
 
 /*! @name SW_MUX_CTL_PAD - SW_MUX_CTL_PAD_GPIO_EMC_00 SW MUX Control Register..SW_MUX_CTL_PAD_GPIO_SD_B1_11 SW MUX Control Register */
 /*! @{ */
-#define IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_MASK      (0xFU)  /* Merged from fields with different position or width, of widths (3, 4), largest definition used */
+#define IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_MASK      (0x7U)
 #define IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_SHIFT     (0U)
 /*! MUX_MODE - MUX Mode Select Field.
- *  0b0000..Select mux mode: ALT0 mux port: USB_OTG1_PWR of instance: usb
- *  0b0001..Select mux mode: ALT1 mux port: QTIMER3_TIMER1 of instance: qtimer3
- *  0b0010..Select mux mode: ALT2 mux port: LPUART2_RTS_B of instance: lpuart2
- *  0b0011..Select mux mode: ALT3 mux port: LPI2C1_SDA of instance: lpi2c1
- *  0b0100..Select mux mode: ALT4 mux port: CCM_PMIC_READY of instance: ccm
- *  0b0101..Select mux mode: ALT5 mux port: GPIO1_IO17 of instance: gpio1
- *  0b0110..Select mux mode: ALT6 mux port: USDHC1_VSELECT of instance: usdhc1
- *  0b0111..Select mux mode: ALT7 mux port: KPP_COL07 of instance: kpp
- *  0b1000..Select mux mode: ALT8 mux port: ENET2_1588_EVENT0_IN of instance: enet2
- *  0b1001..Select mux mode: ALT9 mux port: FLEXIO3_FLEXIO01 of instance: flexio3
+ *  0b000..Select mux mode: ALT0 mux port: LPI2C4_SCL of instance: lpi2c4
+ *  0b001..Select mux mode: ALT1 mux port: CCM_PMIC_READY of instance: ccm
+ *  0b010..Select mux mode: ALT2 mux port: LPUART1_TX of instance: lpuart1
+ *  0b011..Select mux mode: ALT3 mux port: WDOG2_WDOG_B of instance: wdog2
+ *  0b100..Select mux mode: ALT4 mux port: FLEXPWM1_PWMX02 of instance: flexpwm1
+ *  0b101..Select mux mode: ALT5 mux port: GPIO1_IO12 of instance: gpio1
+ *  0b110..Select mux mode: ALT6 mux port: ENET_1588_EVENT1_OUT of instance: enet
+ *  0b111..Select mux mode: ALT7 mux port: NMI_GLUE_NMI of instance: nmi_glue
  */
-#define IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_SHIFT)) & IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_MASK)  /* Merged from fields with different position or width, of widths (3, 4), largest definition used */
+#define IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_SHIFT)) & IOMUXC_SW_MUX_CTL_PAD_MUX_MODE_MASK)
 #define IOMUXC_SW_MUX_CTL_PAD_SION_MASK          (0x10U)
 #define IOMUXC_SW_MUX_CTL_PAD_SION_SHIFT         (4U)
 /*! SION - Software Input On Field.
@@ -19325,115 +18343,6 @@ typedef struct {
 /* The count of IOMUXC_SELECT_INPUT */
 #define IOMUXC_SELECT_INPUT_COUNT                (154U)
 
-/*! @name SW_MUX_CTL_PAD_1 - SW_MUX_CTL_PAD_GPIO_SPI_B0_00 SW MUX Control Register..SW_MUX_CTL_PAD_GPIO_SPI_B1_07 SW MUX Control Register */
-/*! @{ */
-#define IOMUXC_SW_MUX_CTL_PAD_1_MUX_MODE_MASK    (0x7U)
-#define IOMUXC_SW_MUX_CTL_PAD_1_MUX_MODE_SHIFT   (0U)
-/*! MUX_MODE - MUX Mode Select Field.
- *  0b000..Select mux mode: ALT0 mux port: FLEXSPI2_B_DATA03 of instance: flexspi2
- */
-#define IOMUXC_SW_MUX_CTL_PAD_1_MUX_MODE(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_MUX_CTL_PAD_1_MUX_MODE_SHIFT)) & IOMUXC_SW_MUX_CTL_PAD_1_MUX_MODE_MASK)
-#define IOMUXC_SW_MUX_CTL_PAD_1_SION_MASK        (0x10U)
-#define IOMUXC_SW_MUX_CTL_PAD_1_SION_SHIFT       (4U)
-/*! SION - Software Input On Field.
- *  0b1..Force input path of pad GPIO_SPI_B1_07
- *  0b0..Input Path is determined by functionality
- */
-#define IOMUXC_SW_MUX_CTL_PAD_1_SION(x)          (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_MUX_CTL_PAD_1_SION_SHIFT)) & IOMUXC_SW_MUX_CTL_PAD_1_SION_MASK)
-/*! @} */
-
-/* The count of IOMUXC_SW_MUX_CTL_PAD_1 */
-#define IOMUXC_SW_MUX_CTL_PAD_1_COUNT            (22U)
-
-/*! @name SW_PAD_CTL_PAD_1 - SW_PAD_CTL_PAD_GPIO_SPI_B0_00 SW PAD Control Register..SW_PAD_CTL_PAD_GPIO_SPI_B1_07 SW PAD Control Register */
-/*! @{ */
-#define IOMUXC_SW_PAD_CTL_PAD_1_SRE_MASK         (0x1U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_SRE_SHIFT        (0U)
-/*! SRE - Slew Rate Field
- *  0b0..Slow Slew Rate
- *  0b1..Fast Slew Rate
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_SRE(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_SRE_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_SRE_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_DSE_MASK         (0x38U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_DSE_SHIFT        (3U)
-/*! DSE - Drive Strength Field
- *  0b000..output driver disabled;
- *  0b001..R0(150 Ohm @ 3.3V, 260 Ohm@1.8V)
- *  0b010..R0/2
- *  0b011..R0/3
- *  0b100..R0/4
- *  0b101..R0/5
- *  0b110..R0/6
- *  0b111..R0/7
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_DSE(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_DSE_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_DSE_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_SPEED_MASK       (0xC0U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_SPEED_SHIFT      (6U)
-/*! SPEED - Speed Field
- *  0b00..low(50MHz)
- *  0b01..medium(100MHz)
- *  0b10..medium(100MHz)
- *  0b11..max(200MHz)
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_SPEED(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_SPEED_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_SPEED_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_ODE_MASK         (0x800U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_ODE_SHIFT        (11U)
-/*! ODE - Open Drain Enable Field
- *  0b0..Open Drain Disabled
- *  0b1..Open Drain Enabled
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_ODE(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_ODE_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_ODE_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PKE_MASK         (0x1000U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PKE_SHIFT        (12U)
-/*! PKE - Pull / Keep Enable Field
- *  0b0..Pull/Keeper Disabled
- *  0b1..Pull/Keeper Enabled
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_PKE(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_PKE_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_PKE_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUE_MASK         (0x2000U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUE_SHIFT        (13U)
-/*! PUE - Pull / Keep Select Field
- *  0b0..Keeper
- *  0b1..Pull
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUE(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_PUE_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_PUE_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUS_MASK         (0xC000U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUS_SHIFT        (14U)
-/*! PUS - Pull Up / Down Config. Field
- *  0b00..100K Ohm Pull Down
- *  0b01..47K Ohm Pull Up
- *  0b10..100K Ohm Pull Up
- *  0b11..22K Ohm Pull Up
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_PUS(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_PUS_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_PUS_MASK)
-#define IOMUXC_SW_PAD_CTL_PAD_1_HYS_MASK         (0x10000U)
-#define IOMUXC_SW_PAD_CTL_PAD_1_HYS_SHIFT        (16U)
-/*! HYS - Hyst. Enable Field
- *  0b0..Hysteresis Disabled
- *  0b1..Hysteresis Enabled
- */
-#define IOMUXC_SW_PAD_CTL_PAD_1_HYS(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SW_PAD_CTL_PAD_1_HYS_SHIFT)) & IOMUXC_SW_PAD_CTL_PAD_1_HYS_MASK)
-/*! @} */
-
-/* The count of IOMUXC_SW_PAD_CTL_PAD_1 */
-#define IOMUXC_SW_PAD_CTL_PAD_1_COUNT            (22U)
-
-/*! @name SELECT_INPUT_1 - ENET2_IPG_CLK_RMII_SELECT_INPUT DAISY Register..CANFD_IPP_IND_CANRX_SELECT_INPUT DAISY Register */
-/*! @{ */
-#define IOMUXC_SELECT_INPUT_1_DAISY_MASK         (0x3U)  /* Merged from fields with different position or width, of widths (1, 2), largest definition used */
-#define IOMUXC_SELECT_INPUT_1_DAISY_SHIFT        (0U)
-/*! DAISY - Selecting Pads Involved in Daisy Chain.
- *  0b00..Selecting Pad: GPIO_SD_B0_00 for Mode: ALT9
- *  0b01..Selecting Pad: GPIO_EMC_39 for Mode: ALT9
- *  0b10..Selecting Pad: GPIO_AD_B0_09 for Mode: ALT9
- *  0b11..Selecting Pad: GPIO_B1_13 for Mode: ALT8
- */
-#define IOMUXC_SELECT_INPUT_1_DAISY(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_SELECT_INPUT_1_DAISY_SHIFT)) & IOMUXC_SELECT_INPUT_1_DAISY_MASK)  /* Merged from fields with different position or width, of widths (1, 2), largest definition used */
-/*! @} */
-
-/* The count of IOMUXC_SELECT_INPUT_1 */
-#define IOMUXC_SELECT_INPUT_1_COUNT              (33U)
-
 
 /*!
  * @}
@@ -19492,15 +18401,6 @@ typedef struct {
   __IO uint32_t GPR23;                             /**< GPR23 General Purpose Register, offset: 0x5C */
   __IO uint32_t GPR24;                             /**< GPR24 General Purpose Register, offset: 0x60 */
   __IO uint32_t GPR25;                             /**< GPR25 General Purpose Register, offset: 0x64 */
-  __IO uint32_t GPR26;                             /**< GPR26 General Purpose Register, offset: 0x68 */
-  __IO uint32_t GPR27;                             /**< GPR27 General Purpose Register, offset: 0x6C */
-  __IO uint32_t GPR28;                             /**< GPR28 General Purpose Register, offset: 0x70 */
-  __IO uint32_t GPR29;                             /**< GPR29 General Purpose Register, offset: 0x74 */
-  __IO uint32_t GPR30;                             /**< GPR30 General Purpose Register, offset: 0x78 */
-  __IO uint32_t GPR31;                             /**< GPR31 General Purpose Register, offset: 0x7C */
-  __IO uint32_t GPR32;                             /**< GPR32 General Purpose Register, offset: 0x80 */
-  __IO uint32_t GPR33;                             /**< GPR33 General Purpose Register, offset: 0x84 */
-  __IO uint32_t GPR34;                             /**< GPR34 General Purpose Register, offset: 0x88 */
 } IOMUXC_GPR_Type;
 
 /* ----------------------------------------------------------------------------
@@ -19577,17 +18477,10 @@ typedef struct {
 #define IOMUXC_GPR_GPR1_ENET1_CLK_SEL_MASK       (0x2000U)
 #define IOMUXC_GPR_GPR1_ENET1_CLK_SEL_SHIFT      (13U)
 /*! ENET1_CLK_SEL
- *  0b0..ENET1 TX reference clock driven by ref_enetpll. This clock is also output to pins via the IOMUX. ENET_REF_CLK1 function.
+ *  0b0..ENET1 TX reference clock driven by ref_enetpll0. This clock is also output to pins via the IOMUX. ENET_REF_CLK1 function.
  *  0b1..Gets ENET1 TX reference clock from the ENET1_TX_CLK pin. In this use case, an external OSC provides the clock for both the external PHY and the internal controller.
  */
 #define IOMUXC_GPR_GPR1_ENET1_CLK_SEL(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR1_ENET1_CLK_SEL_SHIFT)) & IOMUXC_GPR_GPR1_ENET1_CLK_SEL_MASK)
-#define IOMUXC_GPR_GPR1_ENET2_CLK_SEL_MASK       (0x4000U)
-#define IOMUXC_GPR_GPR1_ENET2_CLK_SEL_SHIFT      (14U)
-/*! ENET2_CLK_SEL
- *  0b0..ENET2 TX reference clock driven by ref_enetpll. This clock is also output to pins via the IOMUX. ENET2_REF_CLK function.
- *  0b1..Gets ENET2 TX reference clock from the ENET2_TX_CLK pin. In this use case, an external OSC provides the clock for both the external PHY and the internal controller.
- */
-#define IOMUXC_GPR_GPR1_ENET2_CLK_SEL(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR1_ENET2_CLK_SEL_SHIFT)) & IOMUXC_GPR_GPR1_ENET2_CLK_SEL_MASK)
 #define IOMUXC_GPR_GPR1_USB_EXP_MODE_MASK        (0x8000U)
 #define IOMUXC_GPR_GPR1_USB_EXP_MODE_SHIFT       (15U)
 /*! USB_EXP_MODE
@@ -19598,17 +18491,10 @@ typedef struct {
 #define IOMUXC_GPR_GPR1_ENET1_TX_CLK_DIR_MASK    (0x20000U)
 #define IOMUXC_GPR_GPR1_ENET1_TX_CLK_DIR_SHIFT   (17U)
 /*! ENET1_TX_CLK_DIR
- *  0b0..ENET1_TX_CLK output driver is disabled
- *  0b1..ENET1_TX_CLK output driver is enabled
+ *  0b0..ENET1_TX_CLK output driver is disabled and ENET_REF_CLK1 is a clock input.
+ *  0b1..ENET1_TX_CLK output driver is enabled and ENET_REF_CLK1 is an output driven by ref_enetpll0.
  */
 #define IOMUXC_GPR_GPR1_ENET1_TX_CLK_DIR(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR1_ENET1_TX_CLK_DIR_SHIFT)) & IOMUXC_GPR_GPR1_ENET1_TX_CLK_DIR_MASK)
-#define IOMUXC_GPR_GPR1_ENET2_TX_CLK_DIR_MASK    (0x40000U)
-#define IOMUXC_GPR_GPR1_ENET2_TX_CLK_DIR_SHIFT   (18U)
-/*! ENET2_TX_CLK_DIR
- *  0b0..ENET2_TX_CLK output driver is disabled
- *  0b1..ENET2_TX_CLK output driver is enabled
- */
-#define IOMUXC_GPR_GPR1_ENET2_TX_CLK_DIR(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR1_ENET2_TX_CLK_DIR_SHIFT)) & IOMUXC_GPR_GPR1_ENET2_TX_CLK_DIR_MASK)
 #define IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_MASK       (0x80000U)
 #define IOMUXC_GPR_GPR1_SAI1_MCLK_DIR_SHIFT      (19U)
 /*! SAI1_MCLK_DIR
@@ -19634,7 +18520,7 @@ typedef struct {
 #define IOMUXC_GPR_GPR1_EXC_MON_SHIFT            (22U)
 /*! EXC_MON
  *  0b0..OKAY response
- *  0b1..SLVError response (default)
+ *  0b1..SLVError response
  */
 #define IOMUXC_GPR_GPR1_EXC_MON(x)               (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR1_EXC_MON_SHIFT)) & IOMUXC_GPR_GPR1_EXC_MON_MASK)
 #define IOMUXC_GPR_GPR1_ENET_IPG_CLK_S_EN_MASK   (0x800000U)
@@ -19655,69 +18541,13 @@ typedef struct {
 
 /*! @name GPR2 - GPR2 General Purpose Register */
 /*! @{ */
-#define IOMUXC_GPR_GPR2_AXBS_L_AHBXL_HIGH_PRIORITY_MASK (0x1U)
-#define IOMUXC_GPR_GPR2_AXBS_L_AHBXL_HIGH_PRIORITY_SHIFT (0U)
-/*! AXBS_L_AHBXL_HIGH_PRIORITY
- *  0b0..AXBS_L AHBXL master does not have high priority
- *  0b1..AXBS_P AHBXL master has high priority
- */
-#define IOMUXC_GPR_GPR2_AXBS_L_AHBXL_HIGH_PRIORITY(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_L_AHBXL_HIGH_PRIORITY_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_L_AHBXL_HIGH_PRIORITY_MASK)
-#define IOMUXC_GPR_GPR2_AXBS_L_DMA_HIGH_PRIORITY_MASK (0x2U)
-#define IOMUXC_GPR_GPR2_AXBS_L_DMA_HIGH_PRIORITY_SHIFT (1U)
-/*! AXBS_L_DMA_HIGH_PRIORITY
- *  0b0..AXBS_L DMA master does not have high priority
- *  0b1..AXBS_L DMA master has high priority
- */
-#define IOMUXC_GPR_GPR2_AXBS_L_DMA_HIGH_PRIORITY(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_L_DMA_HIGH_PRIORITY_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_L_DMA_HIGH_PRIORITY_MASK)
-#define IOMUXC_GPR_GPR2_AXBS_L_FORCE_ROUND_ROBIN_MASK (0x4U)
-#define IOMUXC_GPR_GPR2_AXBS_L_FORCE_ROUND_ROBIN_SHIFT (2U)
-/*! AXBS_L_FORCE_ROUND_ROBIN
- *  0b0..AXBS_L masters are not arbitored in round robin, depending on DMA and AHBXL master priority settings.
- *  0b1..AXBS_L masters are arbitored in round robin
- */
-#define IOMUXC_GPR_GPR2_AXBS_L_FORCE_ROUND_ROBIN(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_L_FORCE_ROUND_ROBIN_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_L_FORCE_ROUND_ROBIN_MASK)
-#define IOMUXC_GPR_GPR2_AXBS_P_M0_HIGH_PRIORITY_MASK (0x8U)
-#define IOMUXC_GPR_GPR2_AXBS_P_M0_HIGH_PRIORITY_SHIFT (3U)
-/*! AXBS_P_M0_HIGH_PRIORITY
- *  0b0..AXBS_P M0 master doesn't have high priority
- *  0b1..AXBS_P M0 master has high priority
- */
-#define IOMUXC_GPR_GPR2_AXBS_P_M0_HIGH_PRIORITY(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_P_M0_HIGH_PRIORITY_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_P_M0_HIGH_PRIORITY_MASK)
-#define IOMUXC_GPR_GPR2_AXBS_P_M1_HIGH_PRIORITY_MASK (0x10U)
-#define IOMUXC_GPR_GPR2_AXBS_P_M1_HIGH_PRIORITY_SHIFT (4U)
-/*! AXBS_P_M1_HIGH_PRIORITY
- *  0b0..AXBS_P M1 master does not have high priority
- *  0b1..AXBS_P M1 master has high priority
- */
-#define IOMUXC_GPR_GPR2_AXBS_P_M1_HIGH_PRIORITY(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_P_M1_HIGH_PRIORITY_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_P_M1_HIGH_PRIORITY_MASK)
-#define IOMUXC_GPR_GPR2_AXBS_P_FORCE_ROUND_ROBIN_MASK (0x20U)
-#define IOMUXC_GPR_GPR2_AXBS_P_FORCE_ROUND_ROBIN_SHIFT (5U)
-/*! AXBS_P_FORCE_ROUND_ROBIN
- *  0b0..AXBS_P masters are not arbitored in round robin, depending on M0/M1 master priority settings.
- *  0b1..AXBS_P masters are arbitored in round robin
- */
-#define IOMUXC_GPR_GPR2_AXBS_P_FORCE_ROUND_ROBIN(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_AXBS_P_FORCE_ROUND_ROBIN_SHIFT)) & IOMUXC_GPR_GPR2_AXBS_P_FORCE_ROUND_ROBIN_MASK)
-#define IOMUXC_GPR_GPR2_CANFD_FILTER_BYPASS_MASK (0x40U)
-#define IOMUXC_GPR_GPR2_CANFD_FILTER_BYPASS_SHIFT (6U)
-/*! CANFD_FILTER_BYPASS
- *  0b0..enable CANFD filter
- *  0b1..disable CANFD filter
- */
-#define IOMUXC_GPR_GPR2_CANFD_FILTER_BYPASS(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_CANFD_FILTER_BYPASS_SHIFT)) & IOMUXC_GPR_GPR2_CANFD_FILTER_BYPASS_MASK)
 #define IOMUXC_GPR_GPR2_L2_MEM_EN_POWERSAVING_MASK (0x1000U)
 #define IOMUXC_GPR_GPR2_L2_MEM_EN_POWERSAVING_SHIFT (12U)
 /*! L2_MEM_EN_POWERSAVING
  *  0b0..none memory power saving features enabled, SHUTDOWN/DEEPSLEEP/LIGHTSLEEP will have no effect
- *  0b1..memory power saving features enabled, set SHUTDOWN/DEEPSLEEP/LIGHTSLEEP (priority high to low) to enable power saving levels
+ *  0b1..memory power saving features enabled, set SHUTDOWN/DEEPSLEEP/LIGHTSLEEP(priority high to low) to enable power saving levels
  */
 #define IOMUXC_GPR_GPR2_L2_MEM_EN_POWERSAVING(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_L2_MEM_EN_POWERSAVING_SHIFT)) & IOMUXC_GPR_GPR2_L2_MEM_EN_POWERSAVING_MASK)
-#define IOMUXC_GPR_GPR2_RAM_AUTO_CLK_GATING_EN_MASK (0x2000U)
-#define IOMUXC_GPR_GPR2_RAM_AUTO_CLK_GATING_EN_SHIFT (13U)
-/*! RAM_AUTO_CLK_GATING_EN
- *  0b0..disable automatically gate off RAM clock
- *  0b1..enable automatically gate off RAM clock
- */
-#define IOMUXC_GPR_GPR2_RAM_AUTO_CLK_GATING_EN(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR2_RAM_AUTO_CLK_GATING_EN_SHIFT)) & IOMUXC_GPR_GPR2_RAM_AUTO_CLK_GATING_EN_MASK)
 #define IOMUXC_GPR_GPR2_L2_MEM_DEEPSLEEP_MASK    (0x4000U)
 #define IOMUXC_GPR_GPR2_L2_MEM_DEEPSLEEP_SHIFT   (14U)
 /*! L2_MEM_DEEPSLEEP
@@ -19797,29 +18627,13 @@ typedef struct {
  *  0b1..Select [255:128] from snvs/ocotp key as dcp key
  */
 #define IOMUXC_GPR_GPR3_DCP_KEY_SEL(x)           (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_DCP_KEY_SEL_SHIFT)) & IOMUXC_GPR_GPR3_DCP_KEY_SEL_MASK)
-#define IOMUXC_GPR_GPR3_OCRAM2_CTL_MASK          (0xF00U)
-#define IOMUXC_GPR_GPR3_OCRAM2_CTL_SHIFT         (8U)
-#define IOMUXC_GPR_GPR3_OCRAM2_CTL(x)            (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_OCRAM2_CTL_SHIFT)) & IOMUXC_GPR_GPR3_OCRAM2_CTL_MASK)
-#define IOMUXC_GPR_GPR3_AXBS_L_HALT_REQ_MASK     (0x8000U)
-#define IOMUXC_GPR_GPR3_AXBS_L_HALT_REQ_SHIFT    (15U)
-/*! AXBS_L_HALT_REQ
- *  0b0..axbs_l normal run
- *  0b1..request to halt axbs_l
- */
-#define IOMUXC_GPR_GPR3_AXBS_L_HALT_REQ(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_AXBS_L_HALT_REQ_SHIFT)) & IOMUXC_GPR_GPR3_AXBS_L_HALT_REQ_MASK)
 #define IOMUXC_GPR_GPR3_OCRAM_STATUS_MASK        (0xF0000U)
 #define IOMUXC_GPR_GPR3_OCRAM_STATUS_SHIFT       (16U)
-#define IOMUXC_GPR_GPR3_OCRAM_STATUS(x)          (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_OCRAM_STATUS_SHIFT)) & IOMUXC_GPR_GPR3_OCRAM_STATUS_MASK)
-#define IOMUXC_GPR_GPR3_OCRAM2_STATUS_MASK       (0xF000000U)
-#define IOMUXC_GPR_GPR3_OCRAM2_STATUS_SHIFT      (24U)
-#define IOMUXC_GPR_GPR3_OCRAM2_STATUS(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_OCRAM2_STATUS_SHIFT)) & IOMUXC_GPR_GPR3_OCRAM2_STATUS_MASK)
-#define IOMUXC_GPR_GPR3_AXBS_L_HALTED_MASK       (0x80000000U)
-#define IOMUXC_GPR_GPR3_AXBS_L_HALTED_SHIFT      (31U)
-/*! AXBS_L_HALTED
- *  0b0..axbs_l is not halted
- *  0b1..axbs_l is in halted status
+/*! OCRAM_STATUS
+ *  0b0000..read data pipeline configuration valid
+ *  0b0001..read data pipeline control bit changed
  */
-#define IOMUXC_GPR_GPR3_AXBS_L_HALTED(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_AXBS_L_HALTED_SHIFT)) & IOMUXC_GPR_GPR3_AXBS_L_HALTED_MASK)
+#define IOMUXC_GPR_GPR3_OCRAM_STATUS(x)          (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR3_OCRAM_STATUS_SHIFT)) & IOMUXC_GPR_GPR3_OCRAM_STATUS_MASK)
 /*! @} */
 
 /*! @name GPR4 - GPR4 General Purpose Register */
@@ -19880,13 +18694,6 @@ typedef struct {
  *  0b1..stop request on
  */
 #define IOMUXC_GPR_GPR4_SAI3_STOP_REQ(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_SAI3_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR4_SAI3_STOP_REQ_MASK)
-#define IOMUXC_GPR_GPR4_ENET2_STOP_REQ_MASK      (0x100U)
-#define IOMUXC_GPR_GPR4_ENET2_STOP_REQ_SHIFT     (8U)
-/*! ENET2_STOP_REQ
- *  0b0..stop request off
- *  0b1..stop request on
- */
-#define IOMUXC_GPR_GPR4_ENET2_STOP_REQ(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_ENET2_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR4_ENET2_STOP_REQ_MASK)
 #define IOMUXC_GPR_GPR4_SEMC_STOP_REQ_MASK       (0x200U)
 #define IOMUXC_GPR_GPR4_SEMC_STOP_REQ_SHIFT      (9U)
 /*! SEMC_STOP_REQ
@@ -19922,20 +18729,6 @@ typedef struct {
  *  0b1..stop request on
  */
 #define IOMUXC_GPR_GPR4_FLEXIO2_STOP_REQ(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXIO2_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR4_FLEXIO2_STOP_REQ_MASK)
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_REQ_MASK    (0x4000U)
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_REQ_SHIFT   (14U)
-/*! FLEXIO3_STOP_REQ
- *  0b0..stop request off
- *  0b1..stop request on
- */
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_REQ(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXIO3_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR4_FLEXIO3_STOP_REQ_MASK)
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_REQ_MASK   (0x8000U)
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_REQ_SHIFT  (15U)
-/*! FLEXSPI2_STOP_REQ
- *  0b0..stop request off
- *  0b1..stop request on
- */
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_REQ(x)     (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXSPI2_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR4_FLEXSPI2_STOP_REQ_MASK)
 #define IOMUXC_GPR_GPR4_EDMA_STOP_ACK_MASK       (0x10000U)
 #define IOMUXC_GPR_GPR4_EDMA_STOP_ACK_SHIFT      (16U)
 /*! EDMA_STOP_ACK
@@ -19967,8 +18760,8 @@ typedef struct {
 #define IOMUXC_GPR_GPR4_ENET_STOP_ACK_MASK       (0x100000U)
 #define IOMUXC_GPR_GPR4_ENET_STOP_ACK_SHIFT      (20U)
 /*! ENET_STOP_ACK
- *  0b0..ENET1 stop acknowledge is not asserted
- *  0b1..ENET1 stop acknowledge is asserted
+ *  0b0..ENET stop acknowledge is not asserted
+ *  0b1..ENET stop acknowledge is asserted
  */
 #define IOMUXC_GPR_GPR4_ENET_STOP_ACK(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_ENET_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_ENET_STOP_ACK_MASK)
 #define IOMUXC_GPR_GPR4_SAI1_STOP_ACK_MASK       (0x200000U)
@@ -19992,13 +18785,6 @@ typedef struct {
  *  0b1..SAI3 stop acknowledge is asserted
  */
 #define IOMUXC_GPR_GPR4_SAI3_STOP_ACK(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_SAI3_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_SAI3_STOP_ACK_MASK)
-#define IOMUXC_GPR_GPR4_ENET2_STOP_ACK_MASK      (0x1000000U)
-#define IOMUXC_GPR_GPR4_ENET2_STOP_ACK_SHIFT     (24U)
-/*! ENET2_STOP_ACK
- *  0b0..ENET2 stop acknowledge is not asserted
- *  0b1..ENET2 stop acknowledge is asserted
- */
-#define IOMUXC_GPR_GPR4_ENET2_STOP_ACK(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_ENET2_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_ENET2_STOP_ACK_MASK)
 #define IOMUXC_GPR_GPR4_SEMC_STOP_ACK_MASK       (0x2000000U)
 #define IOMUXC_GPR_GPR4_SEMC_STOP_ACK_SHIFT      (25U)
 /*! SEMC_STOP_ACK
@@ -20034,20 +18820,6 @@ typedef struct {
  *  0b1..FLEXIO2 stop acknowledge is asserted (FLEXIO2 is in STOP mode)
  */
 #define IOMUXC_GPR_GPR4_FLEXIO2_STOP_ACK(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXIO2_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_FLEXIO2_STOP_ACK_MASK)
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_ACK_MASK    (0x40000000U)
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_ACK_SHIFT   (30U)
-/*! FLEXIO3_STOP_ACK
- *  0b0..FLEXIO3 stop acknowledge is not asserted
- *  0b1..FLEXIO3 stop acknowledge is asserted
- */
-#define IOMUXC_GPR_GPR4_FLEXIO3_STOP_ACK(x)      (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXIO3_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_FLEXIO3_STOP_ACK_MASK)
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_ACK_MASK   (0x80000000U)
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_ACK_SHIFT  (31U)
-/*! FLEXSPI2_STOP_ACK
- *  0b0..FLEXSPI2 stop acknowledge is not asserted
- *  0b1..FLEXSPI2 stop acknowledge is asserted
- */
-#define IOMUXC_GPR_GPR4_FLEXSPI2_STOP_ACK(x)     (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR4_FLEXSPI2_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR4_FLEXSPI2_STOP_ACK_MASK)
 /*! @} */
 
 /*! @name GPR5 - GPR5 General Purpose Register */
@@ -20069,31 +18841,17 @@ typedef struct {
 #define IOMUXC_GPR_GPR5_GPT2_CAPIN1_SEL_MASK     (0x800000U)
 #define IOMUXC_GPR_GPR5_GPT2_CAPIN1_SEL_SHIFT    (23U)
 /*! GPT2_CAPIN1_SEL
- *  0b0..source from GPT2_CAPTURE1
- *  0b1..source from ENET_1588_EVENT3_OUT (chnnal 3 of IEEE 1588 timer)
+ *  0b0..source from pad
+ *  0b1..source from enet1.ipp_do_mac0_timer[3]
  */
 #define IOMUXC_GPR_GPR5_GPT2_CAPIN1_SEL(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR5_GPT2_CAPIN1_SEL_SHIFT)) & IOMUXC_GPR_GPR5_GPT2_CAPIN1_SEL_MASK)
-#define IOMUXC_GPR_GPR5_GPT2_CAPIN2_SEL_MASK     (0x1000000U)
-#define IOMUXC_GPR_GPR5_GPT2_CAPIN2_SEL_SHIFT    (24U)
-/*! GPT2_CAPIN2_SEL
- *  0b0..source from GPT2_CAPTURE2
- *  0b1..source from ENET2_1588_EVENT3_OUT (chnnal 3 of IEEE 1588 timer)
- */
-#define IOMUXC_GPR_GPR5_GPT2_CAPIN2_SEL(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR5_GPT2_CAPIN2_SEL_SHIFT)) & IOMUXC_GPR_GPR5_GPT2_CAPIN2_SEL_MASK)
 #define IOMUXC_GPR_GPR5_ENET_EVENT3IN_SEL_MASK   (0x2000000U)
 #define IOMUXC_GPR_GPR5_ENET_EVENT3IN_SEL_SHIFT  (25U)
 /*! ENET_EVENT3IN_SEL
- *  0b0..event3 source input from ENET_1588_EVENT3_IN
- *  0b1..event3 source input from GPT2.GPT_COMPARE1
+ *  0b0..event3 source input from pad
+ *  0b1..event3 source input from gpt2.ipp_do_cmpout1
  */
 #define IOMUXC_GPR_GPR5_ENET_EVENT3IN_SEL(x)     (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR5_ENET_EVENT3IN_SEL_SHIFT)) & IOMUXC_GPR_GPR5_ENET_EVENT3IN_SEL_MASK)
-#define IOMUXC_GPR_GPR5_ENET2_EVENT3IN_SEL_MASK  (0x4000000U)
-#define IOMUXC_GPR_GPR5_ENET2_EVENT3IN_SEL_SHIFT (26U)
-/*! ENET2_EVENT3IN_SEL
- *  0b0..event3 source input from ENET2_1588_EVENT3_IN
- *  0b1..event3 source input from GPT2.GPT_COMPARE2
- */
-#define IOMUXC_GPR_GPR5_ENET2_EVENT3IN_SEL(x)    (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR5_ENET2_EVENT3IN_SEL_SHIFT)) & IOMUXC_GPR_GPR5_ENET2_EVENT3IN_SEL_MASK)
 #define IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT1_MASK    (0x10000000U)
 #define IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT1_SHIFT   (28U)
 /*! VREF_1M_CLK_GPT1
@@ -20919,6 +19677,21 @@ typedef struct {
 #define IOMUXC_GPR_GPR11_BEE_DE_RX_EN_MASK       (0xF00U)
 #define IOMUXC_GPR_GPR11_BEE_DE_RX_EN_SHIFT      (8U)
 #define IOMUXC_GPR_GPR11_BEE_DE_RX_EN(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_BEE_DE_RX_EN_SHIFT)) & IOMUXC_GPR_GPR11_BEE_DE_RX_EN_MASK)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R0_CTRL_MASK (0x30000U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R0_CTRL_SHIFT (16U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R0_CTRL(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R0_CTRL_SHIFT)) & IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R0_CTRL_MASK)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R1_CTRL_MASK (0xC0000U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R1_CTRL_SHIFT (18U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R1_CTRL(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R1_CTRL_SHIFT)) & IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R1_CTRL_MASK)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R2_CTRL_MASK (0x300000U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R2_CTRL_SHIFT (20U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R2_CTRL(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R2_CTRL_SHIFT)) & IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R2_CTRL_MASK)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R3_CTRL_MASK (0xC00000U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R3_CTRL_SHIFT (22U)
+#define IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R3_CTRL(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R3_CTRL_SHIFT)) & IOMUXC_GPR_GPR11_LOCK_M7_APC_AC_R3_CTRL_MASK)
+#define IOMUXC_GPR_GPR11_LOCK_BEE_DE_RX_EN_MASK  (0xF000000U)
+#define IOMUXC_GPR_GPR11_LOCK_BEE_DE_RX_EN_SHIFT (24U)
+#define IOMUXC_GPR_GPR11_LOCK_BEE_DE_RX_EN(x)    (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR11_LOCK_BEE_DE_RX_EN_SHIFT)) & IOMUXC_GPR_GPR11_LOCK_BEE_DE_RX_EN_MASK)
 /*! @} */
 
 /*! @name GPR12 - GPR12 General Purpose Register */
@@ -20958,20 +19731,6 @@ typedef struct {
  *  0b1..When this bit is equal to 1'b1 and ipg_stop is asserted, ACMP is not functional in Stop mode.
  */
 #define IOMUXC_GPR_GPR12_ACMP_IPG_STOP_MODE(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR12_ACMP_IPG_STOP_MODE_SHIFT)) & IOMUXC_GPR_GPR12_ACMP_IPG_STOP_MODE_MASK)
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_STOP_MODE_MASK (0x20U)
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_STOP_MODE_SHIFT (5U)
-/*! FLEXIO3_IPG_STOP_MODE
- *  0b0..FlexIO3 is functional in Stop mode.
- *  0b1..When this bit is equal to 1'b1 and ipg_stop is asserted, FlexIO3 is not functional in Stop mode.
- */
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_STOP_MODE(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR12_FLEXIO3_IPG_STOP_MODE_SHIFT)) & IOMUXC_GPR_GPR12_FLEXIO3_IPG_STOP_MODE_MASK)
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_DOZE_MASK   (0x40U)
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_DOZE_SHIFT  (6U)
-/*! FLEXIO3_IPG_DOZE
- *  0b0..FLEXIO3 is not in doze mode
- *  0b1..FLEXIO3 is in doze mode
- */
-#define IOMUXC_GPR_GPR12_FLEXIO3_IPG_DOZE(x)     (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR12_FLEXIO3_IPG_DOZE_SHIFT)) & IOMUXC_GPR_GPR12_FLEXIO3_IPG_DOZE_MASK)
 /*! @} */
 
 /*! @name GPR13 - GPR13 General Purpose Register */
@@ -20990,13 +19749,6 @@ typedef struct {
  *  0b1..Cacheable attribute is on for write transactions.
  */
 #define IOMUXC_GPR_GPR13_AWCACHE_USDHC(x)        (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR13_AWCACHE_USDHC_SHIFT)) & IOMUXC_GPR_GPR13_AWCACHE_USDHC_MASK)
-#define IOMUXC_GPR_GPR13_CANFD_STOP_REQ_MASK     (0x10U)
-#define IOMUXC_GPR_GPR13_CANFD_STOP_REQ_SHIFT    (4U)
-/*! CANFD_STOP_REQ
- *  0b0..stop request off
- *  0b1..stop request on
- */
-#define IOMUXC_GPR_GPR13_CANFD_STOP_REQ(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR13_CANFD_STOP_REQ_SHIFT)) & IOMUXC_GPR_GPR13_CANFD_STOP_REQ_MASK)
 #define IOMUXC_GPR_GPR13_CACHE_ENET_MASK         (0x80U)
 #define IOMUXC_GPR_GPR13_CACHE_ENET_SHIFT        (7U)
 /*! CACHE_ENET
@@ -21011,13 +19763,6 @@ typedef struct {
  *  0b1..Cacheable attribute is on for read/write transactions.
  */
 #define IOMUXC_GPR_GPR13_CACHE_USB(x)            (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR13_CACHE_USB_SHIFT)) & IOMUXC_GPR_GPR13_CACHE_USB_MASK)
-#define IOMUXC_GPR_GPR13_CANFD_STOP_ACK_MASK     (0x100000U)
-#define IOMUXC_GPR_GPR13_CANFD_STOP_ACK_SHIFT    (20U)
-/*! CANFD_STOP_ACK
- *  0b0..CANFD stop acknowledge is not asserted
- *  0b1..CANFD stop acknowledge is asserted
- */
-#define IOMUXC_GPR_GPR13_CANFD_STOP_ACK(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR13_CANFD_STOP_ACK_SHIFT)) & IOMUXC_GPR_GPR13_CANFD_STOP_ACK_MASK)
 /*! @} */
 
 /*! @name GPR14 - GPR14 General Purpose Register */
@@ -21278,97 +20023,6 @@ typedef struct {
 #define IOMUXC_GPR_GPR25_M7_APC_AC_R3_TOP_MASK   (0xFFFFFFF8U)
 #define IOMUXC_GPR_GPR25_M7_APC_AC_R3_TOP_SHIFT  (3U)
 #define IOMUXC_GPR_GPR25_M7_APC_AC_R3_TOP(x)     (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR25_M7_APC_AC_R3_TOP_SHIFT)) & IOMUXC_GPR_GPR25_M7_APC_AC_R3_TOP_MASK)
-/*! @} */
-
-/*! @name GPR26 - GPR26 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK (0xFFFFFFFFU)
-#define IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_SHIFT (0U)
-#define IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_SHIFT)) & IOMUXC_GPR_GPR26_GPIO_MUX1_GPIO_SEL_MASK)
-/*! @} */
-
-/*! @name GPR27 - GPR27 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK (0xFFFFFFFFU)
-#define IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_SHIFT (0U)
-#define IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_SHIFT)) & IOMUXC_GPR_GPR27_GPIO_MUX2_GPIO_SEL_MASK)
-/*! @} */
-
-/*! @name GPR28 - GPR28 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_MASK (0xFFFFFFFFU)
-#define IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_SHIFT (0U)
-#define IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_SHIFT)) & IOMUXC_GPR_GPR28_GPIO_MUX3_GPIO_SEL_MASK)
-/*! @} */
-
-/*! @name GPR29 - GPR29 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR29_GPIO_MUX4_GPIO_SEL_MASK (0xFFFFFFFFU)
-#define IOMUXC_GPR_GPR29_GPIO_MUX4_GPIO_SEL_SHIFT (0U)
-#define IOMUXC_GPR_GPR29_GPIO_MUX4_GPIO_SEL(x)   (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR29_GPIO_MUX4_GPIO_SEL_SHIFT)) & IOMUXC_GPR_GPR29_GPIO_MUX4_GPIO_SEL_MASK)
-/*! @} */
-
-/*! @name GPR30 - GPR30 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR30_FLEXSPI_REMAP_ADDR_START_MASK (0xFFFFF000U)
-#define IOMUXC_GPR_GPR30_FLEXSPI_REMAP_ADDR_START_SHIFT (12U)
-#define IOMUXC_GPR_GPR30_FLEXSPI_REMAP_ADDR_START(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR30_FLEXSPI_REMAP_ADDR_START_SHIFT)) & IOMUXC_GPR_GPR30_FLEXSPI_REMAP_ADDR_START_MASK)
-/*! @} */
-
-/*! @name GPR31 - GPR31 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR31_FLEXSPI_REMAP_ADDR_END_MASK (0xFFFFF000U)
-#define IOMUXC_GPR_GPR31_FLEXSPI_REMAP_ADDR_END_SHIFT (12U)
-#define IOMUXC_GPR_GPR31_FLEXSPI_REMAP_ADDR_END(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR31_FLEXSPI_REMAP_ADDR_END_SHIFT)) & IOMUXC_GPR_GPR31_FLEXSPI_REMAP_ADDR_END_MASK)
-/*! @} */
-
-/*! @name GPR32 - GPR32 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR32_FLEXSPI_REMAP_ADDR_OFFSET_MASK (0xFFFFF000U)
-#define IOMUXC_GPR_GPR32_FLEXSPI_REMAP_ADDR_OFFSET_SHIFT (12U)
-#define IOMUXC_GPR_GPR32_FLEXSPI_REMAP_ADDR_OFFSET(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR32_FLEXSPI_REMAP_ADDR_OFFSET_SHIFT)) & IOMUXC_GPR_GPR32_FLEXSPI_REMAP_ADDR_OFFSET_MASK)
-/*! @} */
-
-/*! @name GPR33 - GPR33 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_EN_MASK       (0x1U)
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_EN_SHIFT      (0U)
-/*! OCRAM2_TZ_EN
- *  0b0..The TrustZone feature is disabled. Entire OCRAM2 space is available for all access types (secure/non-secure/user/supervisor).
- *  0b1..The TrustZone feature is enabled. Access to address in the range specified by [ENDADDR:STARTADDR] follows the execution mode access policy described in CSU chapter.
- */
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_EN(x)         (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR33_OCRAM2_TZ_EN_SHIFT)) & IOMUXC_GPR_GPR33_OCRAM2_TZ_EN_MASK)
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_ADDR_MASK     (0xFEU)
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_ADDR_SHIFT    (1U)
-#define IOMUXC_GPR_GPR33_OCRAM2_TZ_ADDR(x)       (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR33_OCRAM2_TZ_ADDR_SHIFT)) & IOMUXC_GPR_GPR33_OCRAM2_TZ_ADDR_MASK)
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_EN_MASK  (0x10000U)
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_EN_SHIFT (16U)
-/*! LOCK_OCRAM2_TZ_EN
- *  0b0..Field is not locked
- *  0b1..Field is locked (read access only)
- */
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_EN(x)    (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_EN_SHIFT)) & IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_EN_MASK)
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_ADDR_MASK (0xFE0000U)
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_ADDR_SHIFT (17U)
-/*! LOCK_OCRAM2_TZ_ADDR
- *  0b0000000..Field is not locked
- *  0b0000001..Field is locked (read access only)
- */
-#define IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_ADDR(x)  (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_ADDR_SHIFT)) & IOMUXC_GPR_GPR33_LOCK_OCRAM2_TZ_ADDR_MASK)
-/*! @} */
-
-/*! @name GPR34 - GPR34 General Purpose Register */
-/*! @{ */
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_BOOT_PIN_SEL_MASK (0xFFU)
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_BOOT_PIN_SEL_SHIFT (0U)
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_BOOT_PIN_SEL(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR34_SIP_TEST_MUX_BOOT_PIN_SEL_SHIFT)) & IOMUXC_GPR_GPR34_SIP_TEST_MUX_BOOT_PIN_SEL_MASK)
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_QSPI_SIP_EN_MASK (0x100U)
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_QSPI_SIP_EN_SHIFT (8U)
-/*! SIP_TEST_MUX_QSPI_SIP_EN
- *  0b0..SIP_TEST_MUX is disabled
- *  0b1..SIP_TEST_MUX is enabled
- */
-#define IOMUXC_GPR_GPR34_SIP_TEST_MUX_QSPI_SIP_EN(x) (((uint32_t)(((uint32_t)(x)) << IOMUXC_GPR_GPR34_SIP_TEST_MUX_QSPI_SIP_EN_SHIFT)) & IOMUXC_GPR_GPR34_SIP_TEST_MUX_QSPI_SIP_EN_MASK)
 /*! @} */
 
 
@@ -22159,7 +20813,9 @@ typedef struct {
   __IO uint32_t CRC_STAT;                          /**< CRC Status Register, offset: 0x1A0 */
        uint8_t RESERVED_8[12];
   __I  uint32_t STAT;                              /**< LCD Interface Status Register, offset: 0x1B0 */
-       uint8_t RESERVED_9[460];
+       uint8_t RESERVED_9[76];
+  __IO uint32_t THRES;                             /**< LCDIF Threshold Register, offset: 0x200 */
+       uint8_t RESERVED_10[380];
   __IO uint32_t PIGEONCTRL0;                       /**< LCDIF Pigeon Mode Control0 Register, offset: 0x380 */
   __IO uint32_t PIGEONCTRL0_SET;                   /**< LCDIF Pigeon Mode Control0 Register, offset: 0x384 */
   __IO uint32_t PIGEONCTRL0_CLR;                   /**< LCDIF Pigeon Mode Control0 Register, offset: 0x388 */
@@ -22172,7 +20828,7 @@ typedef struct {
   __IO uint32_t PIGEONCTRL2_SET;                   /**< LCDIF Pigeon Mode Control2 Register, offset: 0x3A4 */
   __IO uint32_t PIGEONCTRL2_CLR;                   /**< LCDIF Pigeon Mode Control2 Register, offset: 0x3A8 */
   __IO uint32_t PIGEONCTRL2_TOG;                   /**< LCDIF Pigeon Mode Control2 Register, offset: 0x3AC */
-       uint8_t RESERVED_10[1104];
+       uint8_t RESERVED_11[1104];
   struct {                                         /* offset: 0x800, array step: 0x40 */
     __IO uint32_t PIGEON_0;                          /**< Panel Interface Signal Generator Register, array offset: 0x800, array step: 0x40 */
          uint8_t RESERVED_0[12];
@@ -22182,13 +20838,13 @@ typedef struct {
          uint8_t RESERVED_2[28];
   } PIGEON[12];
   __IO uint32_t LUT_CTRL;                          /**< Lookup Table Data Register., offset: 0xB00 */
-       uint8_t RESERVED_11[12];
-  __IO uint32_t LUT0_ADDR;                         /**< Lookup Table Control Register., offset: 0xB10 */
        uint8_t RESERVED_12[12];
-  __IO uint32_t LUT0_DATA;                         /**< Lookup Table Data Register., offset: 0xB20 */
+  __IO uint32_t LUT0_ADDR;                         /**< Lookup Table Control Register., offset: 0xB10 */
        uint8_t RESERVED_13[12];
-  __IO uint32_t LUT1_ADDR;                         /**< Lookup Table Control Register., offset: 0xB30 */
+  __IO uint32_t LUT0_DATA;                         /**< Lookup Table Data Register., offset: 0xB20 */
        uint8_t RESERVED_14[12];
+  __IO uint32_t LUT1_ADDR;                         /**< Lookup Table Control Register., offset: 0xB30 */
+       uint8_t RESERVED_15[12];
   __IO uint32_t LUT1_DATA;                         /**< Lookup Table Data Register., offset: 0xB40 */
 } LCDIF_Type;
 
@@ -23385,6 +22041,22 @@ typedef struct {
 #define LCDIF_STAT_PRESENT_MASK                  (0x80000000U)
 #define LCDIF_STAT_PRESENT_SHIFT                 (31U)
 #define LCDIF_STAT_PRESENT(x)                    (((uint32_t)(((uint32_t)(x)) << LCDIF_STAT_PRESENT_SHIFT)) & LCDIF_STAT_PRESENT_MASK)
+/*! @} */
+
+/*! @name THRES - LCDIF Threshold Register */
+/*! @{ */
+#define LCDIF_THRES_PANIC_MASK                   (0x1FFU)
+#define LCDIF_THRES_PANIC_SHIFT                  (0U)
+#define LCDIF_THRES_PANIC(x)                     (((uint32_t)(((uint32_t)(x)) << LCDIF_THRES_PANIC_SHIFT)) & LCDIF_THRES_PANIC_MASK)
+#define LCDIF_THRES_RSRVD1_MASK                  (0xFE00U)
+#define LCDIF_THRES_RSRVD1_SHIFT                 (9U)
+#define LCDIF_THRES_RSRVD1(x)                    (((uint32_t)(((uint32_t)(x)) << LCDIF_THRES_RSRVD1_SHIFT)) & LCDIF_THRES_RSRVD1_MASK)
+#define LCDIF_THRES_FASTCLOCK_MASK               (0x1FF0000U)
+#define LCDIF_THRES_FASTCLOCK_SHIFT              (16U)
+#define LCDIF_THRES_FASTCLOCK(x)                 (((uint32_t)(((uint32_t)(x)) << LCDIF_THRES_FASTCLOCK_SHIFT)) & LCDIF_THRES_FASTCLOCK_MASK)
+#define LCDIF_THRES_RSRVD2_MASK                  (0xFE000000U)
+#define LCDIF_THRES_RSRVD2_SHIFT                 (25U)
+#define LCDIF_THRES_RSRVD2(x)                    (((uint32_t)(((uint32_t)(x)) << LCDIF_THRES_RSRVD2_SHIFT)) & LCDIF_THRES_RSRVD2_MASK)
 /*! @} */
 
 /*! @name PIGEONCTRL0 - LCDIF Pigeon Mode Control0 Register */
@@ -26134,141 +24806,88 @@ typedef struct {
   __IO uint32_t SCS_SET;                           /**< Software Controllable Signals Register, offset: 0x64 */
   __IO uint32_t SCS_CLR;                           /**< Software Controllable Signals Register, offset: 0x68 */
   __IO uint32_t SCS_TOG;                           /**< Software Controllable Signals Register, offset: 0x6C */
-  __IO uint32_t CRC_ADDR;                          /**< OTP Controller CRC test address, offset: 0x70 */
-       uint8_t RESERVED_5[12];
-  __IO uint32_t CRC_VALUE;                         /**< OTP Controller CRC Value Register, offset: 0x80 */
-       uint8_t RESERVED_6[12];
+       uint8_t RESERVED_5[32];
   __I  uint32_t VERSION;                           /**< OTP Controller Version Register, offset: 0x90 */
-       uint8_t RESERVED_7[108];
-  __IO uint32_t TIMING2;                           /**< OTP Controller Timing Register, offset: 0x100 */
-       uint8_t RESERVED_8[764];
+       uint8_t RESERVED_6[108];
+  __IO uint32_t TIMING2;                           /**< OTP Controller Timing Register 2, offset: 0x100 */
+       uint8_t RESERVED_7[764];
   __IO uint32_t LOCK;                              /**< Value of OTP Bank0 Word0 (Lock controls), offset: 0x400 */
-       uint8_t RESERVED_9[12];
+       uint8_t RESERVED_8[12];
   __IO uint32_t CFG0;                              /**< Value of OTP Bank0 Word1 (Configuration and Manufacturing Info.), offset: 0x410 */
-       uint8_t RESERVED_10[12];
+       uint8_t RESERVED_9[12];
   __IO uint32_t CFG1;                              /**< Value of OTP Bank0 Word2 (Configuration and Manufacturing Info.), offset: 0x420 */
-       uint8_t RESERVED_11[12];
+       uint8_t RESERVED_10[12];
   __IO uint32_t CFG2;                              /**< Value of OTP Bank0 Word3 (Configuration and Manufacturing Info.), offset: 0x430 */
-       uint8_t RESERVED_12[12];
+       uint8_t RESERVED_11[12];
   __IO uint32_t CFG3;                              /**< Value of OTP Bank0 Word4 (Configuration and Manufacturing Info.), offset: 0x440 */
-       uint8_t RESERVED_13[12];
+       uint8_t RESERVED_12[12];
   __IO uint32_t CFG4;                              /**< Value of OTP Bank0 Word5 (Configuration and Manufacturing Info.), offset: 0x450 */
-       uint8_t RESERVED_14[12];
+       uint8_t RESERVED_13[12];
   __IO uint32_t CFG5;                              /**< Value of OTP Bank0 Word6 (Configuration and Manufacturing Info.), offset: 0x460 */
-       uint8_t RESERVED_15[12];
+       uint8_t RESERVED_14[12];
   __IO uint32_t CFG6;                              /**< Value of OTP Bank0 Word7 (Configuration and Manufacturing Info.), offset: 0x470 */
-       uint8_t RESERVED_16[12];
+       uint8_t RESERVED_15[12];
   __IO uint32_t MEM0;                              /**< Value of OTP Bank1 Word0 (Memory Related Info.), offset: 0x480 */
-       uint8_t RESERVED_17[12];
+       uint8_t RESERVED_16[12];
   __IO uint32_t MEM1;                              /**< Value of OTP Bank1 Word1 (Memory Related Info.), offset: 0x490 */
-       uint8_t RESERVED_18[12];
+       uint8_t RESERVED_17[12];
   __IO uint32_t MEM2;                              /**< Value of OTP Bank1 Word2 (Memory Related Info.), offset: 0x4A0 */
-       uint8_t RESERVED_19[12];
+       uint8_t RESERVED_18[12];
   __IO uint32_t MEM3;                              /**< Value of OTP Bank1 Word3 (Memory Related Info.), offset: 0x4B0 */
-       uint8_t RESERVED_20[12];
+       uint8_t RESERVED_19[12];
   __IO uint32_t MEM4;                              /**< Value of OTP Bank1 Word4 (Memory Related Info.), offset: 0x4C0 */
+       uint8_t RESERVED_20[12];
+  __IO uint32_t ANA0;                              /**< Value of OTP Bank1 Word5 (Analog Info.), offset: 0x4D0 */
        uint8_t RESERVED_21[12];
-  __IO uint32_t ANA0;                              /**< Value of OTP Bank1 Word5 (Memory Related Info.), offset: 0x4D0 */
+  __IO uint32_t ANA1;                              /**< Value of OTP Bank1 Word6 (Analog Info.), offset: 0x4E0 */
        uint8_t RESERVED_22[12];
-  __IO uint32_t ANA1;                              /**< Value of OTP Bank1 Word6 (General Purpose Customer Defined Info.), offset: 0x4E0 */
-       uint8_t RESERVED_23[12];
-  __IO uint32_t ANA2;                              /**< Value of OTP Bank1 Word7 (General Purpose Customer Defined Info.), offset: 0x4F0 */
-       uint8_t RESERVED_24[12];
-  __IO uint32_t OTPMK0;                            /**< Value of OTP Bank2 Word0 (OTPMK Key), offset: 0x500 */
-       uint8_t RESERVED_25[12];
-  __IO uint32_t OTPMK1;                            /**< Value of OTP Bank2 Word1 (OTPMK Key), offset: 0x510 */
-       uint8_t RESERVED_26[12];
-  __IO uint32_t OTPMK2;                            /**< Value of OTP Bank2 Word2 (OTPMK Key), offset: 0x520 */
-       uint8_t RESERVED_27[12];
-  __IO uint32_t OTPMK3;                            /**< Value of OTP Bank2 Word3 (OTPMK Key), offset: 0x530 */
-       uint8_t RESERVED_28[12];
-  __IO uint32_t OTPMK4;                            /**< Value of OTP Bank2 Word4 (OTPMK Key), offset: 0x540 */
-       uint8_t RESERVED_29[12];
-  __IO uint32_t OTPMK5;                            /**< Value of OTP Bank2 Word5 (OTPMK Key), offset: 0x550 */
-       uint8_t RESERVED_30[12];
-  __IO uint32_t OTPMK6;                            /**< Value of OTP Bank2 Word6 (OTPMK Key), offset: 0x560 */
-       uint8_t RESERVED_31[12];
-  __IO uint32_t OTPMK7;                            /**< Value of OTP Bank2 Word7 (OTPMK Key), offset: 0x570 */
-       uint8_t RESERVED_32[12];
+  __IO uint32_t ANA2;                              /**< Value of OTP Bank1 Word7 (Analog Info.), offset: 0x4F0 */
+       uint8_t RESERVED_23[140];
   __IO uint32_t SRK0;                              /**< Shadow Register for OTP Bank3 Word0 (SRK Hash), offset: 0x580 */
-       uint8_t RESERVED_33[12];
+       uint8_t RESERVED_24[12];
   __IO uint32_t SRK1;                              /**< Shadow Register for OTP Bank3 Word1 (SRK Hash), offset: 0x590 */
-       uint8_t RESERVED_34[12];
+       uint8_t RESERVED_25[12];
   __IO uint32_t SRK2;                              /**< Shadow Register for OTP Bank3 Word2 (SRK Hash), offset: 0x5A0 */
-       uint8_t RESERVED_35[12];
+       uint8_t RESERVED_26[12];
   __IO uint32_t SRK3;                              /**< Shadow Register for OTP Bank3 Word3 (SRK Hash), offset: 0x5B0 */
-       uint8_t RESERVED_36[12];
+       uint8_t RESERVED_27[12];
   __IO uint32_t SRK4;                              /**< Shadow Register for OTP Bank3 Word4 (SRK Hash), offset: 0x5C0 */
-       uint8_t RESERVED_37[12];
+       uint8_t RESERVED_28[12];
   __IO uint32_t SRK5;                              /**< Shadow Register for OTP Bank3 Word5 (SRK Hash), offset: 0x5D0 */
-       uint8_t RESERVED_38[12];
+       uint8_t RESERVED_29[12];
   __IO uint32_t SRK6;                              /**< Shadow Register for OTP Bank3 Word6 (SRK Hash), offset: 0x5E0 */
-       uint8_t RESERVED_39[12];
+       uint8_t RESERVED_30[12];
   __IO uint32_t SRK7;                              /**< Shadow Register for OTP Bank3 Word7 (SRK Hash), offset: 0x5F0 */
-       uint8_t RESERVED_40[12];
+       uint8_t RESERVED_31[12];
   __IO uint32_t SJC_RESP0;                         /**< Value of OTP Bank4 Word0 (Secure JTAG Response Field), offset: 0x600 */
-       uint8_t RESERVED_41[12];
+       uint8_t RESERVED_32[12];
   __IO uint32_t SJC_RESP1;                         /**< Value of OTP Bank4 Word1 (Secure JTAG Response Field), offset: 0x610 */
-       uint8_t RESERVED_42[12];
+       uint8_t RESERVED_33[12];
   __IO uint32_t MAC0;                              /**< Value of OTP Bank4 Word2 (MAC Address), offset: 0x620 */
-       uint8_t RESERVED_43[12];
+       uint8_t RESERVED_34[12];
   __IO uint32_t MAC1;                              /**< Value of OTP Bank4 Word3 (MAC Address), offset: 0x630 */
-       uint8_t RESERVED_44[12];
-  __IO uint32_t MAC2;                              /**< Value of OTP Bank4 Word4 (MAC2 Address), offset: 0x640 */
-       uint8_t RESERVED_45[12];
-  __IO uint32_t OTPMK_CRC32;                       /**< Value of OTP Bank4 Word5 (CRC Key), offset: 0x650 */
-       uint8_t RESERVED_46[12];
+       uint8_t RESERVED_35[12];
+  __IO uint32_t GP3;                               /**< Value of OTP Bank4 Word4 (MAC Address), offset: 0x640 */
+       uint8_t RESERVED_36[28];
   __IO uint32_t GP1;                               /**< Value of OTP Bank4 Word6 (General Purpose Customer Defined Info), offset: 0x660 */
-       uint8_t RESERVED_47[12];
+       uint8_t RESERVED_37[12];
   __IO uint32_t GP2;                               /**< Value of OTP Bank4 Word7 (General Purpose Customer Defined Info), offset: 0x670 */
-       uint8_t RESERVED_48[12];
+       uint8_t RESERVED_38[12];
   __IO uint32_t SW_GP1;                            /**< Value of OTP Bank5 Word0 (SW GP1), offset: 0x680 */
-       uint8_t RESERVED_49[12];
+       uint8_t RESERVED_39[12];
   __IO uint32_t SW_GP20;                           /**< Value of OTP Bank5 Word1 (SW GP2), offset: 0x690 */
-       uint8_t RESERVED_50[12];
+       uint8_t RESERVED_40[12];
   __IO uint32_t SW_GP21;                           /**< Value of OTP Bank5 Word2 (SW GP2), offset: 0x6A0 */
-       uint8_t RESERVED_51[12];
+       uint8_t RESERVED_41[12];
   __IO uint32_t SW_GP22;                           /**< Value of OTP Bank5 Word3 (SW GP2), offset: 0x6B0 */
-       uint8_t RESERVED_52[12];
+       uint8_t RESERVED_42[12];
   __IO uint32_t SW_GP23;                           /**< Value of OTP Bank5 Word4 (SW GP2), offset: 0x6C0 */
-       uint8_t RESERVED_53[12];
+       uint8_t RESERVED_43[12];
   __IO uint32_t MISC_CONF0;                        /**< Value of OTP Bank5 Word5 (Misc Conf), offset: 0x6D0 */
-       uint8_t RESERVED_54[12];
+       uint8_t RESERVED_44[12];
   __IO uint32_t MISC_CONF1;                        /**< Value of OTP Bank5 Word6 (Misc Conf), offset: 0x6E0 */
-       uint8_t RESERVED_55[12];
+       uint8_t RESERVED_45[12];
   __IO uint32_t SRK_REVOKE;                        /**< Value of OTP Bank5 Word7 (SRK Revoke), offset: 0x6F0 */
-       uint8_t RESERVED_56[268];
-  __IO uint32_t ROM_PATCH0;                        /**< Value of OTP Bank6 Word0 (ROM Patch), offset: 0x800 */
-       uint8_t RESERVED_57[12];
-  __IO uint32_t ROM_PATCH1;                        /**< Value of OTP Bank6 Word1 (ROM Patch), offset: 0x810 */
-       uint8_t RESERVED_58[12];
-  __IO uint32_t ROM_PATCH2;                        /**< Value of OTP Bank6 Word2 (ROM Patch), offset: 0x820 */
-       uint8_t RESERVED_59[12];
-  __IO uint32_t ROM_PATCH3;                        /**< Value of OTP Bank6 Word3 (ROM Patch), offset: 0x830 */
-       uint8_t RESERVED_60[12];
-  __IO uint32_t ROM_PATCH4;                        /**< Value of OTP Bank6 Word4 (ROM Patch), offset: 0x840 */
-       uint8_t RESERVED_61[12];
-  __IO uint32_t ROM_PATCH5;                        /**< Value of OTP Bank6 Word5 (ROM Patch), offset: 0x850 */
-       uint8_t RESERVED_62[12];
-  __IO uint32_t ROM_PATCH6;                        /**< Value of OTP Bank6 Word6 (ROM Patch), offset: 0x860 */
-       uint8_t RESERVED_63[12];
-  __IO uint32_t ROM_PATCH7;                        /**< Value of OTP Bank6 Word7 (ROM Patch), offset: 0x870 */
-       uint8_t RESERVED_64[12];
-  __IO uint32_t GP30;                              /**< Value of OTP Bank7 Word0 (GP3), offset: 0x880 */
-       uint8_t RESERVED_65[12];
-  __IO uint32_t GP31;                              /**< Value of OTP Bank7 Word1 (GP3), offset: 0x890 */
-       uint8_t RESERVED_66[12];
-  __IO uint32_t GP32;                              /**< Value of OTP Bank7 Word2 (GP3), offset: 0x8A0 */
-       uint8_t RESERVED_67[12];
-  __IO uint32_t GP33;                              /**< Value of OTP Bank7 Word3 (GP3), offset: 0x8B0 */
-       uint8_t RESERVED_68[12];
-  __IO uint32_t GP40;                              /**< Value of OTP Bank7 Word4 (GP4), offset: 0x8C0 */
-       uint8_t RESERVED_69[12];
-  __IO uint32_t GP41;                              /**< Value of OTP Bank7 Word5 (GP4), offset: 0x8D0 */
-       uint8_t RESERVED_70[12];
-  __IO uint32_t GP42;                              /**< Value of OTP Bank7 Word6 (GP4), offset: 0x8E0 */
-       uint8_t RESERVED_71[12];
-  __IO uint32_t GP43;                              /**< Value of OTP Bank7 Word7 (GP4), offset: 0x8F0 */
 } OCOTP_Type;
 
 /* ----------------------------------------------------------------------------
@@ -26285,9 +24904,6 @@ typedef struct {
 #define OCOTP_CTRL_ADDR_MASK                     (0x3FU)
 #define OCOTP_CTRL_ADDR_SHIFT                    (0U)
 #define OCOTP_CTRL_ADDR(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_ADDR_SHIFT)) & OCOTP_CTRL_ADDR_MASK)
-#define OCOTP_CTRL_RSVD0_MASK                    (0xC0U)
-#define OCOTP_CTRL_RSVD0_SHIFT                   (6U)
-#define OCOTP_CTRL_RSVD0(x)                      (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_RSVD0_SHIFT)) & OCOTP_CTRL_RSVD0_MASK)
 #define OCOTP_CTRL_BUSY_MASK                     (0x100U)
 #define OCOTP_CTRL_BUSY_SHIFT                    (8U)
 #define OCOTP_CTRL_BUSY(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_BUSY_SHIFT)) & OCOTP_CTRL_BUSY_MASK)
@@ -26297,20 +24913,8 @@ typedef struct {
 #define OCOTP_CTRL_RELOAD_SHADOWS_MASK           (0x400U)
 #define OCOTP_CTRL_RELOAD_SHADOWS_SHIFT          (10U)
 #define OCOTP_CTRL_RELOAD_SHADOWS(x)             (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_RELOAD_SHADOWS_SHIFT)) & OCOTP_CTRL_RELOAD_SHADOWS_MASK)
-#define OCOTP_CTRL_CRC_TEST_MASK                 (0x800U)
-#define OCOTP_CTRL_CRC_TEST_SHIFT                (11U)
-#define OCOTP_CTRL_CRC_TEST(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CRC_TEST_SHIFT)) & OCOTP_CTRL_CRC_TEST_MASK)
-#define OCOTP_CTRL_CRC_FAIL_MASK                 (0x1000U)
-#define OCOTP_CTRL_CRC_FAIL_SHIFT                (12U)
-#define OCOTP_CTRL_CRC_FAIL(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CRC_FAIL_SHIFT)) & OCOTP_CTRL_CRC_FAIL_MASK)
-#define OCOTP_CTRL_RSVD1_MASK                    (0xE000U)
-#define OCOTP_CTRL_RSVD1_SHIFT                   (13U)
-#define OCOTP_CTRL_RSVD1(x)                      (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_RSVD1_SHIFT)) & OCOTP_CTRL_RSVD1_MASK)
 #define OCOTP_CTRL_WR_UNLOCK_MASK                (0xFFFF0000U)
 #define OCOTP_CTRL_WR_UNLOCK_SHIFT               (16U)
-/*! WR_UNLOCK - WR_UNLOCK
- *  0b0011111001110111..Key needed to unlock HW_OCOTP_DATA register.
- */
 #define OCOTP_CTRL_WR_UNLOCK(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_WR_UNLOCK_SHIFT)) & OCOTP_CTRL_WR_UNLOCK_MASK)
 /*! @} */
 
@@ -26319,9 +24923,6 @@ typedef struct {
 #define OCOTP_CTRL_SET_ADDR_MASK                 (0x3FU)
 #define OCOTP_CTRL_SET_ADDR_SHIFT                (0U)
 #define OCOTP_CTRL_SET_ADDR(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_ADDR_SHIFT)) & OCOTP_CTRL_SET_ADDR_MASK)
-#define OCOTP_CTRL_SET_RSVD0_MASK                (0xC0U)
-#define OCOTP_CTRL_SET_RSVD0_SHIFT               (6U)
-#define OCOTP_CTRL_SET_RSVD0(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_RSVD0_SHIFT)) & OCOTP_CTRL_SET_RSVD0_MASK)
 #define OCOTP_CTRL_SET_BUSY_MASK                 (0x100U)
 #define OCOTP_CTRL_SET_BUSY_SHIFT                (8U)
 #define OCOTP_CTRL_SET_BUSY(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_BUSY_SHIFT)) & OCOTP_CTRL_SET_BUSY_MASK)
@@ -26331,15 +24932,6 @@ typedef struct {
 #define OCOTP_CTRL_SET_RELOAD_SHADOWS_MASK       (0x400U)
 #define OCOTP_CTRL_SET_RELOAD_SHADOWS_SHIFT      (10U)
 #define OCOTP_CTRL_SET_RELOAD_SHADOWS(x)         (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_RELOAD_SHADOWS_SHIFT)) & OCOTP_CTRL_SET_RELOAD_SHADOWS_MASK)
-#define OCOTP_CTRL_SET_CRC_TEST_MASK             (0x800U)
-#define OCOTP_CTRL_SET_CRC_TEST_SHIFT            (11U)
-#define OCOTP_CTRL_SET_CRC_TEST(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_CRC_TEST_SHIFT)) & OCOTP_CTRL_SET_CRC_TEST_MASK)
-#define OCOTP_CTRL_SET_CRC_FAIL_MASK             (0x1000U)
-#define OCOTP_CTRL_SET_CRC_FAIL_SHIFT            (12U)
-#define OCOTP_CTRL_SET_CRC_FAIL(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_CRC_FAIL_SHIFT)) & OCOTP_CTRL_SET_CRC_FAIL_MASK)
-#define OCOTP_CTRL_SET_RSVD1_MASK                (0xE000U)
-#define OCOTP_CTRL_SET_RSVD1_SHIFT               (13U)
-#define OCOTP_CTRL_SET_RSVD1(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_RSVD1_SHIFT)) & OCOTP_CTRL_SET_RSVD1_MASK)
 #define OCOTP_CTRL_SET_WR_UNLOCK_MASK            (0xFFFF0000U)
 #define OCOTP_CTRL_SET_WR_UNLOCK_SHIFT           (16U)
 #define OCOTP_CTRL_SET_WR_UNLOCK(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_SET_WR_UNLOCK_SHIFT)) & OCOTP_CTRL_SET_WR_UNLOCK_MASK)
@@ -26350,9 +24942,6 @@ typedef struct {
 #define OCOTP_CTRL_CLR_ADDR_MASK                 (0x3FU)
 #define OCOTP_CTRL_CLR_ADDR_SHIFT                (0U)
 #define OCOTP_CTRL_CLR_ADDR(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_ADDR_SHIFT)) & OCOTP_CTRL_CLR_ADDR_MASK)
-#define OCOTP_CTRL_CLR_RSVD0_MASK                (0xC0U)
-#define OCOTP_CTRL_CLR_RSVD0_SHIFT               (6U)
-#define OCOTP_CTRL_CLR_RSVD0(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_RSVD0_SHIFT)) & OCOTP_CTRL_CLR_RSVD0_MASK)
 #define OCOTP_CTRL_CLR_BUSY_MASK                 (0x100U)
 #define OCOTP_CTRL_CLR_BUSY_SHIFT                (8U)
 #define OCOTP_CTRL_CLR_BUSY(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_BUSY_SHIFT)) & OCOTP_CTRL_CLR_BUSY_MASK)
@@ -26362,15 +24951,6 @@ typedef struct {
 #define OCOTP_CTRL_CLR_RELOAD_SHADOWS_MASK       (0x400U)
 #define OCOTP_CTRL_CLR_RELOAD_SHADOWS_SHIFT      (10U)
 #define OCOTP_CTRL_CLR_RELOAD_SHADOWS(x)         (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_RELOAD_SHADOWS_SHIFT)) & OCOTP_CTRL_CLR_RELOAD_SHADOWS_MASK)
-#define OCOTP_CTRL_CLR_CRC_TEST_MASK             (0x800U)
-#define OCOTP_CTRL_CLR_CRC_TEST_SHIFT            (11U)
-#define OCOTP_CTRL_CLR_CRC_TEST(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_CRC_TEST_SHIFT)) & OCOTP_CTRL_CLR_CRC_TEST_MASK)
-#define OCOTP_CTRL_CLR_CRC_FAIL_MASK             (0x1000U)
-#define OCOTP_CTRL_CLR_CRC_FAIL_SHIFT            (12U)
-#define OCOTP_CTRL_CLR_CRC_FAIL(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_CRC_FAIL_SHIFT)) & OCOTP_CTRL_CLR_CRC_FAIL_MASK)
-#define OCOTP_CTRL_CLR_RSVD1_MASK                (0xE000U)
-#define OCOTP_CTRL_CLR_RSVD1_SHIFT               (13U)
-#define OCOTP_CTRL_CLR_RSVD1(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_RSVD1_SHIFT)) & OCOTP_CTRL_CLR_RSVD1_MASK)
 #define OCOTP_CTRL_CLR_WR_UNLOCK_MASK            (0xFFFF0000U)
 #define OCOTP_CTRL_CLR_WR_UNLOCK_SHIFT           (16U)
 #define OCOTP_CTRL_CLR_WR_UNLOCK(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_CLR_WR_UNLOCK_SHIFT)) & OCOTP_CTRL_CLR_WR_UNLOCK_MASK)
@@ -26381,9 +24961,6 @@ typedef struct {
 #define OCOTP_CTRL_TOG_ADDR_MASK                 (0x3FU)
 #define OCOTP_CTRL_TOG_ADDR_SHIFT                (0U)
 #define OCOTP_CTRL_TOG_ADDR(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_ADDR_SHIFT)) & OCOTP_CTRL_TOG_ADDR_MASK)
-#define OCOTP_CTRL_TOG_RSVD0_MASK                (0xC0U)
-#define OCOTP_CTRL_TOG_RSVD0_SHIFT               (6U)
-#define OCOTP_CTRL_TOG_RSVD0(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_RSVD0_SHIFT)) & OCOTP_CTRL_TOG_RSVD0_MASK)
 #define OCOTP_CTRL_TOG_BUSY_MASK                 (0x100U)
 #define OCOTP_CTRL_TOG_BUSY_SHIFT                (8U)
 #define OCOTP_CTRL_TOG_BUSY(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_BUSY_SHIFT)) & OCOTP_CTRL_TOG_BUSY_MASK)
@@ -26393,15 +24970,6 @@ typedef struct {
 #define OCOTP_CTRL_TOG_RELOAD_SHADOWS_MASK       (0x400U)
 #define OCOTP_CTRL_TOG_RELOAD_SHADOWS_SHIFT      (10U)
 #define OCOTP_CTRL_TOG_RELOAD_SHADOWS(x)         (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_RELOAD_SHADOWS_SHIFT)) & OCOTP_CTRL_TOG_RELOAD_SHADOWS_MASK)
-#define OCOTP_CTRL_TOG_CRC_TEST_MASK             (0x800U)
-#define OCOTP_CTRL_TOG_CRC_TEST_SHIFT            (11U)
-#define OCOTP_CTRL_TOG_CRC_TEST(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_CRC_TEST_SHIFT)) & OCOTP_CTRL_TOG_CRC_TEST_MASK)
-#define OCOTP_CTRL_TOG_CRC_FAIL_MASK             (0x1000U)
-#define OCOTP_CTRL_TOG_CRC_FAIL_SHIFT            (12U)
-#define OCOTP_CTRL_TOG_CRC_FAIL(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_CRC_FAIL_SHIFT)) & OCOTP_CTRL_TOG_CRC_FAIL_MASK)
-#define OCOTP_CTRL_TOG_RSVD1_MASK                (0xE000U)
-#define OCOTP_CTRL_TOG_RSVD1_SHIFT               (13U)
-#define OCOTP_CTRL_TOG_RSVD1(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_RSVD1_SHIFT)) & OCOTP_CTRL_TOG_RSVD1_MASK)
 #define OCOTP_CTRL_TOG_WR_UNLOCK_MASK            (0xFFFF0000U)
 #define OCOTP_CTRL_TOG_WR_UNLOCK_SHIFT           (16U)
 #define OCOTP_CTRL_TOG_WR_UNLOCK(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_CTRL_TOG_WR_UNLOCK_SHIFT)) & OCOTP_CTRL_TOG_WR_UNLOCK_MASK)
@@ -26421,9 +24989,6 @@ typedef struct {
 #define OCOTP_TIMING_WAIT_MASK                   (0xFC00000U)
 #define OCOTP_TIMING_WAIT_SHIFT                  (22U)
 #define OCOTP_TIMING_WAIT(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING_WAIT_SHIFT)) & OCOTP_TIMING_WAIT_MASK)
-#define OCOTP_TIMING_RSRVD0_MASK                 (0xF0000000U)
-#define OCOTP_TIMING_RSRVD0_SHIFT                (28U)
-#define OCOTP_TIMING_RSRVD0(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING_RSRVD0_SHIFT)) & OCOTP_TIMING_RSRVD0_MASK)
 /*! @} */
 
 /*! @name DATA - OTP Controller Write Data Register */
@@ -26438,9 +25003,6 @@ typedef struct {
 #define OCOTP_READ_CTRL_READ_FUSE_MASK           (0x1U)
 #define OCOTP_READ_CTRL_READ_FUSE_SHIFT          (0U)
 #define OCOTP_READ_CTRL_READ_FUSE(x)             (((uint32_t)(((uint32_t)(x)) << OCOTP_READ_CTRL_READ_FUSE_SHIFT)) & OCOTP_READ_CTRL_READ_FUSE_MASK)
-#define OCOTP_READ_CTRL_RSVD0_MASK               (0xFFFFFFFEU)
-#define OCOTP_READ_CTRL_RSVD0_SHIFT              (1U)
-#define OCOTP_READ_CTRL_RSVD0(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_READ_CTRL_RSVD0_SHIFT)) & OCOTP_READ_CTRL_RSVD0_MASK)
 /*! @} */
 
 /*! @name READ_FUSE_DATA - OTP Controller Read Data Register */
@@ -26467,9 +25029,6 @@ typedef struct {
 #define OCOTP_SW_STICKY_JTAG_BLOCK_RELEASE_MASK  (0x10U)
 #define OCOTP_SW_STICKY_JTAG_BLOCK_RELEASE_SHIFT (4U)
 #define OCOTP_SW_STICKY_JTAG_BLOCK_RELEASE(x)    (((uint32_t)(((uint32_t)(x)) << OCOTP_SW_STICKY_JTAG_BLOCK_RELEASE_SHIFT)) & OCOTP_SW_STICKY_JTAG_BLOCK_RELEASE_MASK)
-#define OCOTP_SW_STICKY_RSVD0_MASK               (0xFFFFFFE0U)
-#define OCOTP_SW_STICKY_RSVD0_SHIFT              (5U)
-#define OCOTP_SW_STICKY_RSVD0(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_SW_STICKY_RSVD0_SHIFT)) & OCOTP_SW_STICKY_RSVD0_MASK)
 /*! @} */
 
 /*! @name SCS - Software Controllable Signals Register */
@@ -26524,32 +25083,6 @@ typedef struct {
 #define OCOTP_SCS_TOG_LOCK(x)                    (((uint32_t)(((uint32_t)(x)) << OCOTP_SCS_TOG_LOCK_SHIFT)) & OCOTP_SCS_TOG_LOCK_MASK)
 /*! @} */
 
-/*! @name CRC_ADDR - OTP Controller CRC test address */
-/*! @{ */
-#define OCOTP_CRC_ADDR_DATA_START_ADDR_MASK      (0xFFU)
-#define OCOTP_CRC_ADDR_DATA_START_ADDR_SHIFT     (0U)
-#define OCOTP_CRC_ADDR_DATA_START_ADDR(x)        (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_ADDR_DATA_START_ADDR_SHIFT)) & OCOTP_CRC_ADDR_DATA_START_ADDR_MASK)
-#define OCOTP_CRC_ADDR_DATA_END_ADDR_MASK        (0xFF00U)
-#define OCOTP_CRC_ADDR_DATA_END_ADDR_SHIFT       (8U)
-#define OCOTP_CRC_ADDR_DATA_END_ADDR(x)          (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_ADDR_DATA_END_ADDR_SHIFT)) & OCOTP_CRC_ADDR_DATA_END_ADDR_MASK)
-#define OCOTP_CRC_ADDR_CRC_ADDR_MASK             (0xFF0000U)
-#define OCOTP_CRC_ADDR_CRC_ADDR_SHIFT            (16U)
-#define OCOTP_CRC_ADDR_CRC_ADDR(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_ADDR_CRC_ADDR_SHIFT)) & OCOTP_CRC_ADDR_CRC_ADDR_MASK)
-#define OCOTP_CRC_ADDR_OTPMK_CRC_MASK            (0x1000000U)
-#define OCOTP_CRC_ADDR_OTPMK_CRC_SHIFT           (24U)
-#define OCOTP_CRC_ADDR_OTPMK_CRC(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_ADDR_OTPMK_CRC_SHIFT)) & OCOTP_CRC_ADDR_OTPMK_CRC_MASK)
-#define OCOTP_CRC_ADDR_RSVD0_MASK                (0xFE000000U)
-#define OCOTP_CRC_ADDR_RSVD0_SHIFT               (25U)
-#define OCOTP_CRC_ADDR_RSVD0(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_ADDR_RSVD0_SHIFT)) & OCOTP_CRC_ADDR_RSVD0_MASK)
-/*! @} */
-
-/*! @name CRC_VALUE - OTP Controller CRC Value Register */
-/*! @{ */
-#define OCOTP_CRC_VALUE_DATA_MASK                (0xFFFFFFFFU)
-#define OCOTP_CRC_VALUE_DATA_SHIFT               (0U)
-#define OCOTP_CRC_VALUE_DATA(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_CRC_VALUE_DATA_SHIFT)) & OCOTP_CRC_VALUE_DATA_MASK)
-/*! @} */
-
 /*! @name VERSION - OTP Controller Version Register */
 /*! @{ */
 #define OCOTP_VERSION_STEP_MASK                  (0xFFFFU)
@@ -26563,20 +25096,17 @@ typedef struct {
 #define OCOTP_VERSION_MAJOR(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_VERSION_MAJOR_SHIFT)) & OCOTP_VERSION_MAJOR_MASK)
 /*! @} */
 
-/*! @name TIMING2 - OTP Controller Timing Register */
+/*! @name TIMING2 - OTP Controller Timing Register 2 */
 /*! @{ */
 #define OCOTP_TIMING2_RELAX_PROG_MASK            (0xFFFU)
 #define OCOTP_TIMING2_RELAX_PROG_SHIFT           (0U)
 #define OCOTP_TIMING2_RELAX_PROG(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING2_RELAX_PROG_SHIFT)) & OCOTP_TIMING2_RELAX_PROG_MASK)
-#define OCOTP_TIMING2_RSRVD0_MASK                (0xF000U)
-#define OCOTP_TIMING2_RSRVD0_SHIFT               (12U)
-#define OCOTP_TIMING2_RSRVD0(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING2_RSRVD0_SHIFT)) & OCOTP_TIMING2_RSRVD0_MASK)
 #define OCOTP_TIMING2_RELAX_READ_MASK            (0x3F0000U)
 #define OCOTP_TIMING2_RELAX_READ_SHIFT           (16U)
 #define OCOTP_TIMING2_RELAX_READ(x)              (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING2_RELAX_READ_SHIFT)) & OCOTP_TIMING2_RELAX_READ_MASK)
-#define OCOTP_TIMING2_RSRVD1_MASK                (0xFFC00000U)
-#define OCOTP_TIMING2_RSRVD1_SHIFT               (22U)
-#define OCOTP_TIMING2_RSRVD1(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING2_RSRVD1_SHIFT)) & OCOTP_TIMING2_RSRVD1_MASK)
+#define OCOTP_TIMING2_RELAX1_MASK                (0x1FC00000U)
+#define OCOTP_TIMING2_RELAX1_SHIFT               (22U)
+#define OCOTP_TIMING2_RELAX1(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_TIMING2_RELAX1_SHIFT)) & OCOTP_TIMING2_RELAX1_MASK)
 /*! @} */
 
 /*! @name LOCK - Value of OTP Bank0 Word0 (Lock controls) */
@@ -26593,9 +25123,6 @@ typedef struct {
 #define OCOTP_LOCK_SJC_RESP_MASK                 (0x40U)
 #define OCOTP_LOCK_SJC_RESP_SHIFT                (6U)
 #define OCOTP_LOCK_SJC_RESP(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_SJC_RESP_SHIFT)) & OCOTP_LOCK_SJC_RESP_MASK)
-#define OCOTP_LOCK_GP4_RLOCK_MASK                (0x80U)
-#define OCOTP_LOCK_GP4_RLOCK_SHIFT               (7U)
-#define OCOTP_LOCK_GP4_RLOCK(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_GP4_RLOCK_SHIFT)) & OCOTP_LOCK_GP4_RLOCK_MASK)
 #define OCOTP_LOCK_MAC_ADDR_MASK                 (0x300U)
 #define OCOTP_LOCK_MAC_ADDR_SHIFT                (8U)
 #define OCOTP_LOCK_MAC_ADDR(x)                   (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_MAC_ADDR_SHIFT)) & OCOTP_LOCK_MAC_ADDR_MASK)
@@ -26605,15 +25132,15 @@ typedef struct {
 #define OCOTP_LOCK_GP2_MASK                      (0x3000U)
 #define OCOTP_LOCK_GP2_SHIFT                     (12U)
 #define OCOTP_LOCK_GP2(x)                        (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_GP2_SHIFT)) & OCOTP_LOCK_GP2_MASK)
-#define OCOTP_LOCK_ROM_PATCH_MASK                (0x8000U)
-#define OCOTP_LOCK_ROM_PATCH_SHIFT               (15U)
-#define OCOTP_LOCK_ROM_PATCH(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_ROM_PATCH_SHIFT)) & OCOTP_LOCK_ROM_PATCH_MASK)
+#define OCOTP_LOCK_OTPMK_MSB_MASK                (0x8000U)
+#define OCOTP_LOCK_OTPMK_MSB_SHIFT               (15U)
+#define OCOTP_LOCK_OTPMK_MSB(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_OTPMK_MSB_SHIFT)) & OCOTP_LOCK_OTPMK_MSB_MASK)
 #define OCOTP_LOCK_SW_GP1_MASK                   (0x10000U)
 #define OCOTP_LOCK_SW_GP1_SHIFT                  (16U)
 #define OCOTP_LOCK_SW_GP1(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_SW_GP1_SHIFT)) & OCOTP_LOCK_SW_GP1_MASK)
-#define OCOTP_LOCK_OTPMK_MASK                    (0x20000U)
-#define OCOTP_LOCK_OTPMK_SHIFT                   (17U)
-#define OCOTP_LOCK_OTPMK(x)                      (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_OTPMK_SHIFT)) & OCOTP_LOCK_OTPMK_MASK)
+#define OCOTP_LOCK_OTPMK_LSB_MASK                (0x20000U)
+#define OCOTP_LOCK_OTPMK_LSB_SHIFT               (17U)
+#define OCOTP_LOCK_OTPMK_LSB(x)                  (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_OTPMK_LSB_SHIFT)) & OCOTP_LOCK_OTPMK_LSB_MASK)
 #define OCOTP_LOCK_ANALOG_MASK                   (0xC0000U)
 #define OCOTP_LOCK_ANALOG_SHIFT                  (18U)
 #define OCOTP_LOCK_ANALOG(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_ANALOG_SHIFT)) & OCOTP_LOCK_ANALOG_MASK)
@@ -26629,9 +25156,6 @@ typedef struct {
 #define OCOTP_LOCK_SW_GP2_RLOCK_MASK             (0x800000U)
 #define OCOTP_LOCK_SW_GP2_RLOCK_SHIFT            (23U)
 #define OCOTP_LOCK_SW_GP2_RLOCK(x)               (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_SW_GP2_RLOCK_SHIFT)) & OCOTP_LOCK_SW_GP2_RLOCK_MASK)
-#define OCOTP_LOCK_GP4_MASK                      (0x3000000U)
-#define OCOTP_LOCK_GP4_SHIFT                     (24U)
-#define OCOTP_LOCK_GP4(x)                        (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_GP4_SHIFT)) & OCOTP_LOCK_GP4_MASK)
 #define OCOTP_LOCK_GP3_MASK                      (0xC000000U)
 #define OCOTP_LOCK_GP3_SHIFT                     (26U)
 #define OCOTP_LOCK_GP3(x)                        (((uint32_t)(((uint32_t)(x)) << OCOTP_LOCK_GP3_SHIFT)) & OCOTP_LOCK_GP3_MASK)
@@ -26724,81 +25248,25 @@ typedef struct {
 #define OCOTP_MEM4_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_MEM4_BITS_SHIFT)) & OCOTP_MEM4_BITS_MASK)
 /*! @} */
 
-/*! @name ANA0 - Value of OTP Bank1 Word5 (Memory Related Info.) */
+/*! @name ANA0 - Value of OTP Bank1 Word5 (Analog Info.) */
 /*! @{ */
 #define OCOTP_ANA0_BITS_MASK                     (0xFFFFFFFFU)
 #define OCOTP_ANA0_BITS_SHIFT                    (0U)
 #define OCOTP_ANA0_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_ANA0_BITS_SHIFT)) & OCOTP_ANA0_BITS_MASK)
 /*! @} */
 
-/*! @name ANA1 - Value of OTP Bank1 Word6 (General Purpose Customer Defined Info.) */
+/*! @name ANA1 - Value of OTP Bank1 Word6 (Analog Info.) */
 /*! @{ */
 #define OCOTP_ANA1_BITS_MASK                     (0xFFFFFFFFU)
 #define OCOTP_ANA1_BITS_SHIFT                    (0U)
 #define OCOTP_ANA1_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_ANA1_BITS_SHIFT)) & OCOTP_ANA1_BITS_MASK)
 /*! @} */
 
-/*! @name ANA2 - Value of OTP Bank1 Word7 (General Purpose Customer Defined Info.) */
+/*! @name ANA2 - Value of OTP Bank1 Word7 (Analog Info.) */
 /*! @{ */
 #define OCOTP_ANA2_BITS_MASK                     (0xFFFFFFFFU)
 #define OCOTP_ANA2_BITS_SHIFT                    (0U)
 #define OCOTP_ANA2_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_ANA2_BITS_SHIFT)) & OCOTP_ANA2_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK0 - Value of OTP Bank2 Word0 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK0_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK0_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK0_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK0_BITS_SHIFT)) & OCOTP_OTPMK0_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK1 - Value of OTP Bank2 Word1 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK1_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK1_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK1_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK1_BITS_SHIFT)) & OCOTP_OTPMK1_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK2 - Value of OTP Bank2 Word2 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK2_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK2_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK2_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK2_BITS_SHIFT)) & OCOTP_OTPMK2_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK3 - Value of OTP Bank2 Word3 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK3_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK3_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK3_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK3_BITS_SHIFT)) & OCOTP_OTPMK3_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK4 - Value of OTP Bank2 Word4 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK4_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK4_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK4_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK4_BITS_SHIFT)) & OCOTP_OTPMK4_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK5 - Value of OTP Bank2 Word5 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK5_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK5_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK5_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK5_BITS_SHIFT)) & OCOTP_OTPMK5_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK6 - Value of OTP Bank2 Word6 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK6_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK6_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK6_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK6_BITS_SHIFT)) & OCOTP_OTPMK6_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK7 - Value of OTP Bank2 Word7 (OTPMK Key) */
-/*! @{ */
-#define OCOTP_OTPMK7_BITS_MASK                   (0xFFFFFFFFU)
-#define OCOTP_OTPMK7_BITS_SHIFT                  (0U)
-#define OCOTP_OTPMK7_BITS(x)                     (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK7_BITS_SHIFT)) & OCOTP_OTPMK7_BITS_MASK)
 /*! @} */
 
 /*! @name SRK0 - Shadow Register for OTP Bank3 Word0 (SRK Hash) */
@@ -26885,18 +25353,11 @@ typedef struct {
 #define OCOTP_MAC1_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_MAC1_BITS_SHIFT)) & OCOTP_MAC1_BITS_MASK)
 /*! @} */
 
-/*! @name MAC2 - Value of OTP Bank4 Word4 (MAC2 Address) */
+/*! @name GP3 - Value of OTP Bank4 Word4 (MAC Address) */
 /*! @{ */
-#define OCOTP_MAC2_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_MAC2_BITS_SHIFT                    (0U)
-#define OCOTP_MAC2_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_MAC2_BITS_SHIFT)) & OCOTP_MAC2_BITS_MASK)
-/*! @} */
-
-/*! @name OTPMK_CRC32 - Value of OTP Bank4 Word5 (CRC Key) */
-/*! @{ */
-#define OCOTP_OTPMK_CRC32_BITS_MASK              (0xFFFFFFFFU)
-#define OCOTP_OTPMK_CRC32_BITS_SHIFT             (0U)
-#define OCOTP_OTPMK_CRC32_BITS(x)                (((uint32_t)(((uint32_t)(x)) << OCOTP_OTPMK_CRC32_BITS_SHIFT)) & OCOTP_OTPMK_CRC32_BITS_MASK)
+#define OCOTP_GP3_BITS_MASK                      (0xFFFFFFFFU)
+#define OCOTP_GP3_BITS_SHIFT                     (0U)
+#define OCOTP_GP3_BITS(x)                        (((uint32_t)(((uint32_t)(x)) << OCOTP_GP3_BITS_SHIFT)) & OCOTP_GP3_BITS_MASK)
 /*! @} */
 
 /*! @name GP1 - Value of OTP Bank4 Word6 (General Purpose Customer Defined Info) */
@@ -26967,118 +25428,6 @@ typedef struct {
 #define OCOTP_SRK_REVOKE_BITS_MASK               (0xFFFFFFFFU)
 #define OCOTP_SRK_REVOKE_BITS_SHIFT              (0U)
 #define OCOTP_SRK_REVOKE_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_SRK_REVOKE_BITS_SHIFT)) & OCOTP_SRK_REVOKE_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH0 - Value of OTP Bank6 Word0 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH0_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH0_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH0_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH0_BITS_SHIFT)) & OCOTP_ROM_PATCH0_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH1 - Value of OTP Bank6 Word1 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH1_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH1_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH1_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH1_BITS_SHIFT)) & OCOTP_ROM_PATCH1_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH2 - Value of OTP Bank6 Word2 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH2_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH2_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH2_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH2_BITS_SHIFT)) & OCOTP_ROM_PATCH2_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH3 - Value of OTP Bank6 Word3 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH3_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH3_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH3_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH3_BITS_SHIFT)) & OCOTP_ROM_PATCH3_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH4 - Value of OTP Bank6 Word4 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH4_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH4_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH4_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH4_BITS_SHIFT)) & OCOTP_ROM_PATCH4_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH5 - Value of OTP Bank6 Word5 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH5_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH5_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH5_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH5_BITS_SHIFT)) & OCOTP_ROM_PATCH5_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH6 - Value of OTP Bank6 Word6 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH6_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH6_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH6_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH6_BITS_SHIFT)) & OCOTP_ROM_PATCH6_BITS_MASK)
-/*! @} */
-
-/*! @name ROM_PATCH7 - Value of OTP Bank6 Word7 (ROM Patch) */
-/*! @{ */
-#define OCOTP_ROM_PATCH7_BITS_MASK               (0xFFFFFFFFU)
-#define OCOTP_ROM_PATCH7_BITS_SHIFT              (0U)
-#define OCOTP_ROM_PATCH7_BITS(x)                 (((uint32_t)(((uint32_t)(x)) << OCOTP_ROM_PATCH7_BITS_SHIFT)) & OCOTP_ROM_PATCH7_BITS_MASK)
-/*! @} */
-
-/*! @name GP30 - Value of OTP Bank7 Word0 (GP3) */
-/*! @{ */
-#define OCOTP_GP30_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP30_BITS_SHIFT                    (0U)
-#define OCOTP_GP30_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP30_BITS_SHIFT)) & OCOTP_GP30_BITS_MASK)
-/*! @} */
-
-/*! @name GP31 - Value of OTP Bank7 Word1 (GP3) */
-/*! @{ */
-#define OCOTP_GP31_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP31_BITS_SHIFT                    (0U)
-#define OCOTP_GP31_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP31_BITS_SHIFT)) & OCOTP_GP31_BITS_MASK)
-/*! @} */
-
-/*! @name GP32 - Value of OTP Bank7 Word2 (GP3) */
-/*! @{ */
-#define OCOTP_GP32_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP32_BITS_SHIFT                    (0U)
-#define OCOTP_GP32_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP32_BITS_SHIFT)) & OCOTP_GP32_BITS_MASK)
-/*! @} */
-
-/*! @name GP33 - Value of OTP Bank7 Word3 (GP3) */
-/*! @{ */
-#define OCOTP_GP33_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP33_BITS_SHIFT                    (0U)
-#define OCOTP_GP33_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP33_BITS_SHIFT)) & OCOTP_GP33_BITS_MASK)
-/*! @} */
-
-/*! @name GP40 - Value of OTP Bank7 Word4 (GP4) */
-/*! @{ */
-#define OCOTP_GP40_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP40_BITS_SHIFT                    (0U)
-#define OCOTP_GP40_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP40_BITS_SHIFT)) & OCOTP_GP40_BITS_MASK)
-/*! @} */
-
-/*! @name GP41 - Value of OTP Bank7 Word5 (GP4) */
-/*! @{ */
-#define OCOTP_GP41_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP41_BITS_SHIFT                    (0U)
-#define OCOTP_GP41_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP41_BITS_SHIFT)) & OCOTP_GP41_BITS_MASK)
-/*! @} */
-
-/*! @name GP42 - Value of OTP Bank7 Word6 (GP4) */
-/*! @{ */
-#define OCOTP_GP42_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP42_BITS_SHIFT                    (0U)
-#define OCOTP_GP42_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP42_BITS_SHIFT)) & OCOTP_GP42_BITS_MASK)
-/*! @} */
-
-/*! @name GP43 - Value of OTP Bank7 Word7 (GP4) */
-/*! @{ */
-#define OCOTP_GP43_BITS_MASK                     (0xFFFFFFFFU)
-#define OCOTP_GP43_BITS_SHIFT                    (0U)
-#define OCOTP_GP43_BITS(x)                       (((uint32_t)(((uint32_t)(x)) << OCOTP_GP43_BITS_SHIFT)) & OCOTP_GP43_BITS_MASK)
 /*! @} */
 
 
@@ -32607,7 +30956,7 @@ typedef struct {
   __IO uint32_t BMCR0;                             /**< Master Bus (AXI) Control Register 0, offset: 0x8 */
   __IO uint32_t BMCR1;                             /**< Master Bus (AXI) Control Register 1, offset: 0xC */
   __IO uint32_t BR[9];                             /**< Base Register 0 (For SDRAM CS0 device)..Base Register 8 (For NAND device), array offset: 0x10, array step: 0x4 */
-  __IO uint32_t DLLCR;                             /**< DLL Control Register, offset: 0x34 */
+       uint8_t RESERVED_0[4];
   __IO uint32_t INTEN;                             /**< Interrupt Enable Register, offset: 0x38 */
   __IO uint32_t INTR;                              /**< Interrupt Enable Register, offset: 0x3C */
   __IO uint32_t SDRAMCR0;                          /**< SDRAM control register 0, offset: 0x40 */
@@ -32621,22 +30970,22 @@ typedef struct {
   __IO uint32_t NORCR0;                            /**< NOR control register 0, offset: 0x60 */
   __IO uint32_t NORCR1;                            /**< NOR control register 1, offset: 0x64 */
   __IO uint32_t NORCR2;                            /**< NOR control register 2, offset: 0x68 */
-  __IO uint32_t NORCR3;                            /**< NOR control register 3, offset: 0x6C */
+       uint32_t NORCR3;                            /**< NOR control register 3, offset: 0x6C */
   __IO uint32_t SRAMCR0;                           /**< SRAM control register 0, offset: 0x70 */
   __IO uint32_t SRAMCR1;                           /**< SRAM control register 1, offset: 0x74 */
   __IO uint32_t SRAMCR2;                           /**< SRAM control register 2, offset: 0x78 */
        uint32_t SRAMCR3;                           /**< SRAM control register 3, offset: 0x7C */
   __IO uint32_t DBICR0;                            /**< DBI-B control register 0, offset: 0x80 */
   __IO uint32_t DBICR1;                            /**< DBI-B control register 1, offset: 0x84 */
-       uint8_t RESERVED_0[8];
+       uint8_t RESERVED_1[8];
   __IO uint32_t IPCR0;                             /**< IP Command control register 0, offset: 0x90 */
   __IO uint32_t IPCR1;                             /**< IP Command control register 1, offset: 0x94 */
   __IO uint32_t IPCR2;                             /**< IP Command control register 2, offset: 0x98 */
   __IO uint32_t IPCMD;                             /**< IP Command register, offset: 0x9C */
   __IO uint32_t IPTXDAT;                           /**< TX DATA register (for IP Command), offset: 0xA0 */
-       uint8_t RESERVED_1[12];
-  __I  uint32_t IPRXDAT;                           /**< RX DATA register (for IP Command), offset: 0xB0 */
        uint8_t RESERVED_2[12];
+  __I  uint32_t IPRXDAT;                           /**< RX DATA register (for IP Command), offset: 0xB0 */
+       uint8_t RESERVED_3[12];
   __I  uint32_t STS0;                              /**< Status register 0, offset: 0xC0 */
        uint32_t STS1;                              /**< Status register 1, offset: 0xC4 */
   __I  uint32_t STS2;                              /**< Status register 2, offset: 0xC8 */
@@ -32650,7 +30999,7 @@ typedef struct {
        uint32_t STS10;                             /**< Status register 10, offset: 0xE8 */
        uint32_t STS11;                             /**< Status register 11, offset: 0xEC */
   __I  uint32_t STS12;                             /**< Status register 12, offset: 0xF0 */
-  __I  uint32_t STS13;                             /**< Status register 13, offset: 0xF4 */
+       uint32_t STS13;                             /**< Status register 13, offset: 0xF4 */
        uint32_t STS14;                             /**< Status register 14, offset: 0xF8 */
        uint32_t STS15;                             /**< Status register 15, offset: 0xFC */
 } SEMC_Type;
@@ -32680,7 +31029,7 @@ typedef struct {
 #define SEMC_MCR_DQSMD_SHIFT                     (2U)
 /*! DQSMD - DQS (read strobe) mode
  *  0b0..Dummy read strobe loopbacked internally
- *  0b1..Dummy read strobe loopbacked from DQS pad or DLL delay chain. Details information at descriptions of DQSSEL bit.
+ *  0b1..Dummy read strobe loopbacked from DQS pad
  */
 #define SEMC_MCR_DQSMD(x)                        (((uint32_t)(((uint32_t)(x)) << SEMC_MCR_DQSMD_SHIFT)) & SEMC_MCR_DQSMD_MASK)
 #define SEMC_MCR_WPOL0_MASK                      (0x40U)
@@ -32697,20 +31046,6 @@ typedef struct {
  *  0b1..High active
  */
 #define SEMC_MCR_WPOL1(x)                        (((uint32_t)(((uint32_t)(x)) << SEMC_MCR_WPOL1_SHIFT)) & SEMC_MCR_WPOL1_MASK)
-#define SEMC_MCR_DQSSEL_MASK                     (0x400U)
-#define SEMC_MCR_DQSSEL_SHIFT                    (10U)
-/*! DQSSEL - Select DQS source when DQSMD and DLLSEL both set.
- *  0b0..SDRAM/NOR/SRAM read clock source is from DQS pad in synchronous mode.
- *  0b1..SDRAM/NOR/SRAM read clock source is from DLL delay chain in synchronous mode.
- */
-#define SEMC_MCR_DQSSEL(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_MCR_DQSSEL_SHIFT)) & SEMC_MCR_DQSSEL_MASK)
-#define SEMC_MCR_DLLSEL_MASK                     (0x800U)
-#define SEMC_MCR_DLLSEL_SHIFT                    (11U)
-/*! DLLSEL - Select DLL delay chain clock input.
- *  0b0..DLL delay chain clock input is from NAND device's DQS pad. For NAND synchronous mode only.
- *  0b1..DLL delay chain clock input is from internal clock. For SDRAM, NOR and SRAM synchronous mode only.
- */
-#define SEMC_MCR_DLLSEL(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_MCR_DLLSEL_SHIFT)) & SEMC_MCR_DLLSEL_MASK)
 #define SEMC_MCR_CTO_MASK                        (0xFF0000U)
 #define SEMC_MCR_CTO_SHIFT                       (16U)
 #define SEMC_MCR_CTO(x)                          (((uint32_t)(((uint32_t)(x)) << SEMC_MCR_CTO_SHIFT)) & SEMC_MCR_CTO_MASK)
@@ -32804,20 +31139,6 @@ typedef struct {
  *  0b111..NOR/PSRAM Address bit 27
  */
 #define SEMC_IOCR_MUX_RDY(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_IOCR_MUX_RDY_SHIFT)) & SEMC_IOCR_MUX_RDY_MASK)
-#define SEMC_IOCR_MUX_CLKX0_MASK                 (0x1000000U)
-#define SEMC_IOCR_MUX_CLKX0_SHIFT                (24U)
-/*! MUX_CLKX0 - SEMC_CLKX0 function selection
- *  0b0..NOR clock
- *  0b1..SRAM clock
- */
-#define SEMC_IOCR_MUX_CLKX0(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_IOCR_MUX_CLKX0_SHIFT)) & SEMC_IOCR_MUX_CLKX0_MASK)
-#define SEMC_IOCR_MUX_CLKX1_MASK                 (0x2000000U)
-#define SEMC_IOCR_MUX_CLKX1_SHIFT                (25U)
-/*! MUX_CLKX1 - SEMC_CLKX1 function selection
- *  0b0..NOR clock
- *  0b1..SRAM clock
- */
-#define SEMC_IOCR_MUX_CLKX1(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_IOCR_MUX_CLKX1_SHIFT)) & SEMC_IOCR_MUX_CLKX1_MASK)
 /*! @} */
 
 /*! @name BMCR0 - Master Bus (AXI) Control Register 0 */
@@ -32905,25 +31226,6 @@ typedef struct {
 /* The count of SEMC_BR */
 #define SEMC_BR_COUNT                            (9U)
 
-/*! @name DLLCR - DLL Control Register */
-/*! @{ */
-#define SEMC_DLLCR_DLLEN_MASK                    (0x1U)
-#define SEMC_DLLCR_DLLEN_SHIFT                   (0U)
-#define SEMC_DLLCR_DLLEN(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_DLLCR_DLLEN_SHIFT)) & SEMC_DLLCR_DLLEN_MASK)
-#define SEMC_DLLCR_DLLRESET_MASK                 (0x2U)
-#define SEMC_DLLCR_DLLRESET_SHIFT                (1U)
-#define SEMC_DLLCR_DLLRESET(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_DLLCR_DLLRESET_SHIFT)) & SEMC_DLLCR_DLLRESET_MASK)
-#define SEMC_DLLCR_SLVDLYTARGET_MASK             (0x78U)
-#define SEMC_DLLCR_SLVDLYTARGET_SHIFT            (3U)
-#define SEMC_DLLCR_SLVDLYTARGET(x)               (((uint32_t)(((uint32_t)(x)) << SEMC_DLLCR_SLVDLYTARGET_SHIFT)) & SEMC_DLLCR_SLVDLYTARGET_MASK)
-#define SEMC_DLLCR_OVRDEN_MASK                   (0x100U)
-#define SEMC_DLLCR_OVRDEN_SHIFT                  (8U)
-#define SEMC_DLLCR_OVRDEN(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_DLLCR_OVRDEN_SHIFT)) & SEMC_DLLCR_OVRDEN_MASK)
-#define SEMC_DLLCR_OVRDVAL_MASK                  (0x7E00U)
-#define SEMC_DLLCR_OVRDVAL_SHIFT                 (9U)
-#define SEMC_DLLCR_OVRDVAL(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_DLLCR_OVRDVAL_SHIFT)) & SEMC_DLLCR_OVRDVAL_MASK)
-/*! @} */
-
 /*! @name INTEN - Interrupt Enable Register */
 /*! @{ */
 #define SEMC_INTEN_IPCMDDONEEN_MASK              (0x1U)
@@ -32998,13 +31300,6 @@ typedef struct {
  *  0b111..8
  */
 #define SEMC_SDRAMCR0_BL(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_SDRAMCR0_BL_SHIFT)) & SEMC_SDRAMCR0_BL_MASK)
-#define SEMC_SDRAMCR0_COL8_MASK                  (0x80U)
-#define SEMC_SDRAMCR0_COL8_SHIFT                 (7U)
-/*! COL8 - Column 8 selection bit
- *  0b0..Column address bit number is decided by COL field.
- *  0b1..Column address bit number is 8. COL field is ignored.
- */
-#define SEMC_SDRAMCR0_COL8(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_SDRAMCR0_COL8_SHIFT)) & SEMC_SDRAMCR0_COL8_MASK)
 #define SEMC_SDRAMCR0_COL_MASK                   (0x300U)
 #define SEMC_SDRAMCR0_COL_SHIFT                  (8U)
 /*! COL - Column address bit number
@@ -33023,13 +31318,6 @@ typedef struct {
  *  0b11..3
  */
 #define SEMC_SDRAMCR0_CL(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_SDRAMCR0_CL_SHIFT)) & SEMC_SDRAMCR0_CL_MASK)
-#define SEMC_SDRAMCR0_BANK2_MASK                 (0x4000U)
-#define SEMC_SDRAMCR0_BANK2_SHIFT                (14U)
-/*! BANK2 - 2 Bank selection bit
- *  0b0..SDRAM device has 4 banks.
- *  0b1..SDRAM device has 2 banks.
- */
-#define SEMC_SDRAMCR0_BANK2(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_SDRAMCR0_BANK2_SHIFT)) & SEMC_SDRAMCR0_BANK2_MASK)
 /*! @} */
 
 /*! @name SDRAMCR1 - SDRAM control register 1 */
@@ -33124,13 +31412,6 @@ typedef struct {
  *  0b1..16bit
  */
 #define SEMC_NANDCR0_PS(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR0_PS_SHIFT)) & SEMC_NANDCR0_PS_MASK)
-#define SEMC_NANDCR0_SYNCEN_MASK                 (0x2U)
-#define SEMC_NANDCR0_SYNCEN_SHIFT                (1U)
-/*! SYNCEN - Select NAND controller mode.
- *  0b0..Asynchronous mode is enabled.
- *  0b1..Synchronous mode is enabled.
- */
-#define SEMC_NANDCR0_SYNCEN(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR0_SYNCEN_SHIFT)) & SEMC_NANDCR0_SYNCEN_MASK)
 #define SEMC_NANDCR0_BL_MASK                     (0x70U)
 #define SEMC_NANDCR0_BL_SHIFT                    (4U)
 /*! BL - Burst Length
@@ -33224,21 +31505,6 @@ typedef struct {
 #define SEMC_NANDCR3_NDOPT3_MASK                 (0x4U)
 #define SEMC_NANDCR3_NDOPT3_SHIFT                (2U)
 #define SEMC_NANDCR3_NDOPT3(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_NDOPT3_SHIFT)) & SEMC_NANDCR3_NDOPT3_MASK)
-#define SEMC_NANDCR3_CLE_MASK                    (0x8U)
-#define SEMC_NANDCR3_CLE_SHIFT                   (3U)
-#define SEMC_NANDCR3_CLE(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_CLE_SHIFT)) & SEMC_NANDCR3_CLE_MASK)
-#define SEMC_NANDCR3_RDS_MASK                    (0xF0000U)
-#define SEMC_NANDCR3_RDS_SHIFT                   (16U)
-#define SEMC_NANDCR3_RDS(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_RDS_SHIFT)) & SEMC_NANDCR3_RDS_MASK)
-#define SEMC_NANDCR3_RDH_MASK                    (0xF00000U)
-#define SEMC_NANDCR3_RDH_SHIFT                   (20U)
-#define SEMC_NANDCR3_RDH(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_RDH_SHIFT)) & SEMC_NANDCR3_RDH_MASK)
-#define SEMC_NANDCR3_WDS_MASK                    (0xF000000U)
-#define SEMC_NANDCR3_WDS_SHIFT                   (24U)
-#define SEMC_NANDCR3_WDS(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_WDS_SHIFT)) & SEMC_NANDCR3_WDS_MASK)
-#define SEMC_NANDCR3_WDH_MASK                    (0xF0000000U)
-#define SEMC_NANDCR3_WDH_SHIFT                   (28U)
-#define SEMC_NANDCR3_WDH(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NANDCR3_WDH_SHIFT)) & SEMC_NANDCR3_WDH_MASK)
 /*! @} */
 
 /*! @name NORCR0 - NOR control register 0 */
@@ -33250,13 +31516,6 @@ typedef struct {
  *  0b1..16bit
  */
 #define SEMC_NORCR0_PS(x)                        (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR0_PS_SHIFT)) & SEMC_NORCR0_PS_MASK)
-#define SEMC_NORCR0_SYNCEN_MASK                  (0x2U)
-#define SEMC_NORCR0_SYNCEN_SHIFT                 (1U)
-/*! SYNCEN - Select NOR controller mode.
- *  0b0..Asynchronous mode is enabled.
- *  0b1..Synchronous mode is enabled.
- */
-#define SEMC_NORCR0_SYNCEN(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR0_SYNCEN_SHIFT)) & SEMC_NORCR0_SYNCEN_MASK)
 #define SEMC_NORCR0_BL_MASK                      (0x70U)
 #define SEMC_NORCR0_BL_SHIFT                     (4U)
 /*! BL - Burst Length
@@ -33286,13 +31545,6 @@ typedef struct {
  *  0b1..ADV# is High Active. In ASYNC mode, device sample address with ADV# fall edge; In SYNC mode, device sample address when ADV# is HIGH.
  */
 #define SEMC_NORCR0_ADVP(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR0_ADVP_SHIFT)) & SEMC_NORCR0_ADVP_MASK)
-#define SEMC_NORCR0_ADVH_MASK                    (0x800U)
-#define SEMC_NORCR0_ADVH_SHIFT                   (11U)
-/*! ADVH - ADV# level control during address hold state
- *  0b0..ADV# is high during address hold state.
- *  0b1..ADV# is low during address hold state.
- */
-#define SEMC_NORCR0_ADVH(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR0_ADVH_SHIFT)) & SEMC_NORCR0_ADVH_MASK)
 #define SEMC_NORCR0_COL_MASK                     (0xF000U)
 #define SEMC_NORCR0_COL_SHIFT                    (12U)
 /*! COL - Column Address bit width
@@ -33346,6 +31598,12 @@ typedef struct {
 
 /*! @name NORCR2 - NOR control register 2 */
 /*! @{ */
+#define SEMC_NORCR2_WDS_MASK                     (0xFU)
+#define SEMC_NORCR2_WDS_SHIFT                    (0U)
+#define SEMC_NORCR2_WDS(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR2_WDS_SHIFT)) & SEMC_NORCR2_WDS_MASK)
+#define SEMC_NORCR2_WDH_MASK                     (0xF0U)
+#define SEMC_NORCR2_WDH_SHIFT                    (4U)
+#define SEMC_NORCR2_WDH(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR2_WDH_SHIFT)) & SEMC_NORCR2_WDH_MASK)
 #define SEMC_NORCR2_TA_MASK                      (0xF00U)
 #define SEMC_NORCR2_TA_SHIFT                     (8U)
 #define SEMC_NORCR2_TA(x)                        (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR2_TA_SHIFT)) & SEMC_NORCR2_TA_MASK)
@@ -33361,19 +31619,6 @@ typedef struct {
 #define SEMC_NORCR2_CEITV_MASK                   (0xF000000U)
 #define SEMC_NORCR2_CEITV_SHIFT                  (24U)
 #define SEMC_NORCR2_CEITV(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR2_CEITV_SHIFT)) & SEMC_NORCR2_CEITV_MASK)
-#define SEMC_NORCR2_RDH_MASK                     (0xF0000000U)
-#define SEMC_NORCR2_RDH_SHIFT                    (28U)
-#define SEMC_NORCR2_RDH(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR2_RDH_SHIFT)) & SEMC_NORCR2_RDH_MASK)
-/*! @} */
-
-/*! @name NORCR3 - NOR control register 3 */
-/*! @{ */
-#define SEMC_NORCR3_ASSR_MASK                    (0xFU)
-#define SEMC_NORCR3_ASSR_SHIFT                   (0U)
-#define SEMC_NORCR3_ASSR(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR3_ASSR_SHIFT)) & SEMC_NORCR3_ASSR_MASK)
-#define SEMC_NORCR3_AHSR_MASK                    (0xF0U)
-#define SEMC_NORCR3_AHSR_SHIFT                   (4U)
-#define SEMC_NORCR3_AHSR(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_NORCR3_AHSR_SHIFT)) & SEMC_NORCR3_AHSR_MASK)
 /*! @} */
 
 /*! @name SRAMCR0 - SRAM control register 0 */
@@ -33385,13 +31630,6 @@ typedef struct {
  *  0b1..16bit
  */
 #define SEMC_SRAMCR0_PS(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR0_PS_SHIFT)) & SEMC_SRAMCR0_PS_MASK)
-#define SEMC_SRAMCR0_SYNCEN_MASK                 (0x2U)
-#define SEMC_SRAMCR0_SYNCEN_SHIFT                (1U)
-/*! SYNCEN - Select SRAM controller mode.
- *  0b0..Asynchronous mode is enabled.
- *  0b1..Synchronous mode is enabled.
- */
-#define SEMC_SRAMCR0_SYNCEN(x)                   (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR0_SYNCEN_SHIFT)) & SEMC_SRAMCR0_SYNCEN_MASK)
 #define SEMC_SRAMCR0_BL_MASK                     (0x70U)
 #define SEMC_SRAMCR0_BL_SHIFT                    (4U)
 /*! BL - Burst Length
@@ -33421,13 +31659,6 @@ typedef struct {
  *  0b1..ADV# is High Active. In ASYNC mode, device sample address with ADV# fall edge; In SYNC mode, device sample address when ADV# is HIGH.
  */
 #define SEMC_SRAMCR0_ADVP(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR0_ADVP_SHIFT)) & SEMC_SRAMCR0_ADVP_MASK)
-#define SEMC_SRAMCR0_ADVH_MASK                   (0x800U)
-#define SEMC_SRAMCR0_ADVH_SHIFT                  (11U)
-/*! ADVH - ADV# level control during address hold state
- *  0b0..ADV# is high during address hold state.
- *  0b1..ADV# is low during address hold state.
- */
-#define SEMC_SRAMCR0_ADVH(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR0_ADVH_SHIFT)) & SEMC_SRAMCR0_ADVH_MASK)
 #define SEMC_SRAMCR0_COL_MASK                    (0xF000U)
 #define SEMC_SRAMCR0_COL_SHIFT                   (12U)
 /*! COL - Column Address bit width
@@ -33502,9 +31733,6 @@ typedef struct {
 #define SEMC_SRAMCR2_CEITV_MASK                  (0xF000000U)
 #define SEMC_SRAMCR2_CEITV_SHIFT                 (24U)
 #define SEMC_SRAMCR2_CEITV(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR2_CEITV_SHIFT)) & SEMC_SRAMCR2_CEITV_MASK)
-#define SEMC_SRAMCR2_RDH_MASK                    (0xF0000000U)
-#define SEMC_SRAMCR2_RDH_SHIFT                   (28U)
-#define SEMC_SRAMCR2_RDH(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_SRAMCR2_RDH_SHIFT)) & SEMC_SRAMCR2_RDH_MASK)
 /*! @} */
 
 /*! @name DBICR0 - DBI-B control register 0 */
@@ -33566,15 +31794,21 @@ typedef struct {
 #define SEMC_DBICR1_WEH_MASK                     (0xF000U)
 #define SEMC_DBICR1_WEH_SHIFT                    (12U)
 #define SEMC_DBICR1_WEH(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_WEH_SHIFT)) & SEMC_DBICR1_WEH_MASK)
-#define SEMC_DBICR1_REL_MASK                     (0x3F0000U)
+#define SEMC_DBICR1_REL_MASK                     (0xF0000U)
 #define SEMC_DBICR1_REL_SHIFT                    (16U)
 #define SEMC_DBICR1_REL(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_REL_SHIFT)) & SEMC_DBICR1_REL_MASK)
-#define SEMC_DBICR1_REH_MASK                     (0xFC00000U)
-#define SEMC_DBICR1_REH_SHIFT                    (22U)
+#define SEMC_DBICR1_REH_MASK                     (0xF00000U)
+#define SEMC_DBICR1_REH_SHIFT                    (20U)
 #define SEMC_DBICR1_REH(x)                       (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_REH_SHIFT)) & SEMC_DBICR1_REH_MASK)
-#define SEMC_DBICR1_CEITV_MASK                   (0xF0000000U)
-#define SEMC_DBICR1_CEITV_SHIFT                  (28U)
+#define SEMC_DBICR1_CEITV_MASK                   (0xF000000U)
+#define SEMC_DBICR1_CEITV_SHIFT                  (24U)
 #define SEMC_DBICR1_CEITV(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_CEITV_SHIFT)) & SEMC_DBICR1_CEITV_MASK)
+#define SEMC_DBICR1_REL2_MASK                    (0x30000000U)
+#define SEMC_DBICR1_REL2_SHIFT                   (28U)
+#define SEMC_DBICR1_REL2(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_REL2_SHIFT)) & SEMC_DBICR1_REL2_MASK)
+#define SEMC_DBICR1_REH2_MASK                    (0xC0000000U)
+#define SEMC_DBICR1_REH2_SHIFT                   (30U)
+#define SEMC_DBICR1_REH2(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_DBICR1_REH2_SHIFT)) & SEMC_DBICR1_REH2_MASK)
 /*! @} */
 
 /*! @name IPCR0 - IP Command control register 0 */
@@ -33599,9 +31833,6 @@ typedef struct {
  *  0b111..4
  */
 #define SEMC_IPCR1_DATSZ(x)                      (((uint32_t)(((uint32_t)(x)) << SEMC_IPCR1_DATSZ_SHIFT)) & SEMC_IPCR1_DATSZ_MASK)
-#define SEMC_IPCR1_NAND_EXT_ADDR_MASK            (0xFF00U)
-#define SEMC_IPCR1_NAND_EXT_ADDR_SHIFT           (8U)
-#define SEMC_IPCR1_NAND_EXT_ADDR(x)              (((uint32_t)(((uint32_t)(x)) << SEMC_IPCR1_NAND_EXT_ADDR_SHIFT)) & SEMC_IPCR1_NAND_EXT_ADDR_MASK)
 /*! @} */
 
 /*! @name IPCR2 - IP Command control register 2 */
@@ -33690,22 +31921,6 @@ typedef struct {
 #define SEMC_STS12_NDADDR_MASK                   (0xFFFFFFFFU)
 #define SEMC_STS12_NDADDR_SHIFT                  (0U)
 #define SEMC_STS12_NDADDR(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_STS12_NDADDR_SHIFT)) & SEMC_STS12_NDADDR_MASK)
-/*! @} */
-
-/*! @name STS13 - Status register 13 */
-/*! @{ */
-#define SEMC_STS13_SLVLOCK_MASK                  (0x1U)
-#define SEMC_STS13_SLVLOCK_SHIFT                 (0U)
-#define SEMC_STS13_SLVLOCK(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_STS13_SLVLOCK_SHIFT)) & SEMC_STS13_SLVLOCK_MASK)
-#define SEMC_STS13_REFLOCK_MASK                  (0x2U)
-#define SEMC_STS13_REFLOCK_SHIFT                 (1U)
-#define SEMC_STS13_REFLOCK(x)                    (((uint32_t)(((uint32_t)(x)) << SEMC_STS13_REFLOCK_SHIFT)) & SEMC_STS13_REFLOCK_MASK)
-#define SEMC_STS13_SLVSEL_MASK                   (0xFCU)
-#define SEMC_STS13_SLVSEL_SHIFT                  (2U)
-#define SEMC_STS13_SLVSEL(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_STS13_SLVSEL_SHIFT)) & SEMC_STS13_SLVSEL_MASK)
-#define SEMC_STS13_REFSEL_MASK                   (0x3F00U)
-#define SEMC_STS13_REFSEL_SHIFT                  (8U)
-#define SEMC_STS13_REFSEL(x)                     (((uint32_t)(((uint32_t)(x)) << SEMC_STS13_REFSEL_SHIFT)) & SEMC_STS13_REFSEL_MASK)
 /*! @} */
 
 
@@ -35274,13 +33489,10 @@ typedef struct {
 #define SPDIF_STC_TXCLK_SOURCE_MASK              (0x700U)
 #define SPDIF_STC_TXCLK_SOURCE_SHIFT             (8U)
 /*! TxClk_Source
- *  0b000..XTALOSC input (XTALOSC clock)
+ *  0b000..REF_CLK_32K input (XTALOSC 32 kHz clock)
  *  0b001..tx_clk input (from SPDIF0_CLK_ROOT. See CCM.)
- *  0b010..tx_clk1 (from SAI1)
- *  0b011..tx_clk2 SPDIF_EXT_CLK, from pads
- *  0b100..tx_clk3 (from SAI2)
+ *  0b011..SPDIF_EXT_CLK, from pads
  *  0b101..ipg_clk input (frequency divided)
- *  0b110..tx_clk4 (from SAI3)
  */
 #define SPDIF_STC_TXCLK_SOURCE(x)                (((uint32_t)(((uint32_t)(x)) << SPDIF_STC_TXCLK_SOURCE_SHIFT)) & SPDIF_STC_TXCLK_SOURCE_MASK)
 #define SPDIF_STC_SYSCLK_DF_MASK                 (0xFF800U)
@@ -40517,7 +38729,7 @@ typedef struct {
 #define USB_ANALOG_DIGPROG_SILICON_REVISION_MASK (0xFFFFFFFFU)
 #define USB_ANALOG_DIGPROG_SILICON_REVISION_SHIFT (0U)
 /*! SILICON_REVISION
- *  0b00000000011011000000000000000000..Silicon revision 1.0
+ *  0b00000000011010100000000000000001..Silicon revision 1.1
  */
 #define USB_ANALOG_DIGPROG_SILICON_REVISION(x)   (((uint32_t)(((uint32_t)(x)) << USB_ANALOG_DIGPROG_SILICON_REVISION_SHIFT)) & USB_ANALOG_DIGPROG_SILICON_REVISION_MASK)
 /*! @} */
@@ -44322,5 +42534,5 @@ typedef struct {
  */ /* end of group SDK_Compatibility_Symbols */
 
 
-#endif  /* _MIMXRT1062_H_ */
+#endif  /* _MIMXRT1052_H_ */
 

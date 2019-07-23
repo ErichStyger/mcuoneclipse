@@ -7,7 +7,7 @@ might be smaller than the LCD panel, so part of the LCD panel might be blank.
 Hardware requirements
 =====================
 - Mini/micro USB cable
-- EVK-MIMXRT1060 board
+- EVKB-IMXRT1050 board
 - Personal Computer
 - RK043FN02H-CT LCD board
 - MT9M114 module

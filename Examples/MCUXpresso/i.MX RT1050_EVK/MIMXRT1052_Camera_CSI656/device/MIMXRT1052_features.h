@@ -1,6 +1,6 @@
 /*
 ** ###################################################################
-**     Version:             rev. 1.0, 2018-11-16
+**     Version:             rev. 1.1, 2018-11-16
 **     Build:               b181120
 **
 **     Abstract:
@@ -18,14 +18,18 @@
 **     Revisions:
 **     - rev. 0.1 (2017-01-10)
 **         Initial version.
-**     - rev. 1.0 (2018-11-16)
-**         Update feature files to align with IMXRT1060RM Rev.0.
+**     - rev. 1.0 (2018-09-21)
+**         Update interrupt vector table and dma request source.
+**         Update register BEE_ADDR_OFFSET1's bitfield name to ADDR_OFFSET1.
+**         Split GPIO_COMBINED_IRQS to GPIO_COMBINED_LOW_IRQS and GPIO_COMBINED_HIGH_IRQS.
+**     - rev. 1.1 (2018-11-16)
+**         Update feature files to align with IMXRT1050RM Rev.1.
 **
 ** ###################################################################
 */
 
-#ifndef _MIMXRT1062_FEATURES_H_
-#define _MIMXRT1062_FEATURES_H_
+#ifndef _MIMXRT1052_FEATURES_H_
+#define _MIMXRT1052_FEATURES_H_
 
 /* SOC module features */
 
@@ -54,17 +58,17 @@
 /* @brief ENC availability on the SoC. */
 #define FSL_FEATURE_SOC_ENC_COUNT (4)
 /* @brief ENET availability on the SoC. */
-#define FSL_FEATURE_SOC_ENET_COUNT (2)
+#define FSL_FEATURE_SOC_ENET_COUNT (1)
 /* @brief EWM availability on the SoC. */
 #define FSL_FEATURE_SOC_EWM_COUNT (1)
 /* @brief FLEXCAN availability on the SoC. */
-#define FSL_FEATURE_SOC_FLEXCAN_COUNT (3)
+#define FSL_FEATURE_SOC_FLEXCAN_COUNT (2)
 /* @brief FLEXIO availability on the SoC. */
-#define FSL_FEATURE_SOC_FLEXIO_COUNT (3)
+#define FSL_FEATURE_SOC_FLEXIO_COUNT (2)
 /* @brief FLEXRAM availability on the SoC. */
 #define FSL_FEATURE_SOC_FLEXRAM_COUNT (1)
 /* @brief FLEXSPI availability on the SoC. */
-#define FSL_FEATURE_SOC_FLEXSPI_COUNT (2)
+#define FSL_FEATURE_SOC_FLEXSPI_COUNT (1)
 /* @brief GPC availability on the SoC. */
 #define FSL_FEATURE_SOC_GPC_COUNT (1)
 /* @brief GPT availability on the SoC. */
@@ -72,7 +76,7 @@
 /* @brief I2S availability on the SoC. */
 #define FSL_FEATURE_SOC_I2S_COUNT (3)
 /* @brief IGPIO availability on the SoC. */
-#define FSL_FEATURE_SOC_IGPIO_COUNT (9)
+#define FSL_FEATURE_SOC_IGPIO_COUNT (5)
 /* @brief IOMUXC availability on the SoC. */
 #define FSL_FEATURE_SOC_IOMUXC_COUNT (1)
 /* @brief IOMUXC_GPR availability on the SoC. */
@@ -158,35 +162,23 @@
 /* @brief Message buffer size */
 #define FSL_FEATURE_FLEXCAN_HAS_MESSAGE_BUFFER_MAX_NUMBERn(x) (64)
 /* @brief Has doze mode support (register bit field MCR[DOZE]). */
-#define FSL_FEATURE_FLEXCAN_HAS_DOZE_MODE_SUPPORT (1)
+#define FSL_FEATURE_FLEXCAN_HAS_DOZE_MODE_SUPPORT (0)
 /* @brief Insatnce has doze mode support (register bit field MCR[DOZE]). */
-#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_DOZE_MODE_SUPPORTn(x) \
-    ((x) == CAN1 ? (0) : \
-    ((x) == CAN2 ? (0) : \
-    ((x) == CAN3 ? (1) : (-1))))
+#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_DOZE_MODE_SUPPORTn(x) (0)
 /* @brief Has a glitch filter on the receive pin (register bit field MCR[WAKSRC]). */
 #define FSL_FEATURE_FLEXCAN_HAS_GLITCH_FILTER (1)
 /* @brief Has extended interrupt mask and flag register (register IMASK2, IFLAG2). */
 #define FSL_FEATURE_FLEXCAN_HAS_EXTENDED_FLAG_REGISTER (1)
 /* @brief Instance has extended bit timing register (register CBT). */
-#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_EXTENDED_TIMING_REGISTERn(x) \
-    ((x) == CAN1 ? (0) : \
-    ((x) == CAN2 ? (0) : \
-    ((x) == CAN3 ? (1) : (-1))))
+#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_EXTENDED_TIMING_REGISTERn(x) (0)
 /* @brief Has a receive FIFO DMA feature (register bit field MCR[DMA]). */
-#define FSL_FEATURE_FLEXCAN_HAS_RX_FIFO_DMA (1)
+#define FSL_FEATURE_FLEXCAN_HAS_RX_FIFO_DMA (0)
 /* @brief Instance has a receive FIFO DMA feature (register bit field MCR[DMA]). */
-#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_RX_FIFO_DMAn(x) \
-    ((x) == CAN1 ? (0) : \
-    ((x) == CAN2 ? (0) : \
-    ((x) == CAN3 ? (1) : (-1))))
+#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_RX_FIFO_DMAn(x) (0)
 /* @brief Remove CAN Engine Clock Source Selection from unsupported part. */
 #define FSL_FEATURE_FLEXCAN_SUPPORT_ENGINE_CLK_SEL_REMOVE (1)
 /* @brief Instance remove CAN Engine Clock Source Selection from unsupported part. */
-#define FSL_FEATURE_FLEXCAN_INSTANCE_SUPPORT_ENGINE_CLK_SEL_REMOVEn(x) \
-    ((x) == CAN1 ? (1) : \
-    ((x) == CAN2 ? (1) : \
-    ((x) == CAN3 ? (0) : (-1))))
+#define FSL_FEATURE_FLEXCAN_INSTANCE_SUPPORT_ENGINE_CLK_SEL_REMOVEn(x) (1)
 /* @brief Is affected by errata with ID 5641 (Module does not transmit a message that is enabled to be transmitted at a specific moment during the arbitration process). */
 #define FSL_FEATURE_FLEXCAN_HAS_ERRATA_5641 (0)
 /* @brief Is affected by errata with ID 5829 (FlexCAN: FlexCAN does not transmit a message that is enabled to be transmitted in a specific moment during the arbitration process). */
@@ -196,12 +188,9 @@
 /* @brief Is affected by errata with ID 9595 (FlexCAN: Corrupt frame possible if the Freeze Mode or the Low-Power Mode are entered during a Bus-Off state). */
 #define FSL_FEATURE_FLEXCAN_HAS_ERRATA_9595 (1)
 /* @brief Has CAN with Flexible Data rate (CAN FD) protocol. */
-#define FSL_FEATURE_FLEXCAN_HAS_FLEXIBLE_DATA_RATE (1)
+#define FSL_FEATURE_FLEXCAN_HAS_FLEXIBLE_DATA_RATE (0)
 /* @brief CAN instance support Flexible Data rate (CAN FD) protocol. */
-#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_FLEXIBLE_DATA_RATEn(x) \
-    ((x) == CAN1 ? (0) : \
-    ((x) == CAN2 ? (0) : \
-    ((x) == CAN3 ? (1) : (-1))))
+#define FSL_FEATURE_FLEXCAN_INSTANCE_HAS_FLEXIBLE_DATA_RATEn(x) (0)
 /* @brief Has extra MB interrupt or common one. */
 #define FSL_FEATURE_FLEXCAN_HAS_EXTRA_MB_INT (1)
 
@@ -428,7 +417,7 @@
 /* @brief Lowest interrupt request number. */
 #define FSL_FEATURE_INTERRUPT_IRQ_MIN (-14)
 /* @brief Highest interrupt request number. */
-#define FSL_FEATURE_INTERRUPT_IRQ_MAX (157)
+#define FSL_FEATURE_INTERRUPT_IRQ_MAX (151)
 
 /* OCOTP module features */
 
@@ -527,9 +516,9 @@
 /* SEMC module features */
 
 /* @brief Has WDH time in NOR controller (register bit field NORCR2[WDH]). */
-#define FSL_FEATURE_SEMC_HAS_NOR_WDH_TIME (0)
+#define FSL_FEATURE_SEMC_HAS_NOR_WDH_TIME (1)
 /* @brief Has WDS time in NOR controller (register bit field NORCR2[WDS]).) */
-#define FSL_FEATURE_SEMC_HAS_NOR_WDS_TIME (0)
+#define FSL_FEATURE_SEMC_HAS_NOR_WDS_TIME (1)
 
 /* SNVS module features */
 
@@ -632,5 +621,5 @@
 /* @brief DMA_CH_MUX_REQ_95. */
 #define FSL_FEATURE_XBARA_OUTPUT_DMA_CH_MUX_REQ_95 (1)
 
-#endif /* _MIMXRT1062_FEATURES_H_ */
+#endif /* _MIMXRT1052_FEATURES_H_ */
 
