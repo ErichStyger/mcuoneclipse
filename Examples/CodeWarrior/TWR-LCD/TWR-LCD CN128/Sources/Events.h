@@ -70,6 +70,9 @@
 #include "IFsh1.h"
 #include "UIG1.h"
 #include "CS1.h"
+#include "MCUC1.h"
+#include "CLS1.h"
+#include "XF1.h"
 #include "KSDK1.h"
 
 
@@ -138,7 +141,7 @@ void EVNT1_AppHandleEvent(uint8_t event);
 ** ===================================================================
 */
 
-void KEY1_OnKeyPressed(byte keys);
+void KEY1_OnKeyPressed(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyPressed (module Events)
@@ -154,7 +157,7 @@ void KEY1_OnKeyPressed(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleased(byte keys);
+void KEY1_OnKeyReleased(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleased (module Events)
@@ -170,7 +173,7 @@ void KEY1_OnKeyReleased(byte keys);
 ** ===================================================================
 */
 
-void KEY1_OnKeyReleasedLong(byte keys);
+void KEY1_OnKeyReleasedLong(uint8_t keys);
 /*
 ** ===================================================================
 **     Event       :  KEY1_OnKeyReleasedLong (module Events)
@@ -248,7 +251,7 @@ void I2C1_OnTxChar(void);
 ** ===================================================================
 */
 
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName);
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vApplicationStackOverflowHook (module Events)
@@ -348,6 +351,48 @@ void Sensor1_OnADGive(void);
 **         Event called to return the mutual exclusive access to the
 **         A/D port
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void vOnPreSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void vOnPostSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -75,7 +75,7 @@ void EVNT1_AppHandleEvent(uint8_t event)
 ** ===================================================================
 */
 #if PL_USE_RTOS
-void FRTOS1_vApplicationStackOverflowHook(xTaskHandle pxTask, char *pcTaskName)
+void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 {
   /* This will get called if a stack overflow is detected during the context
      switch.  Set configCHECK_FOR_STACK_OVERFLOWS to 2 to also check for stack
@@ -247,7 +247,7 @@ void I2C1_OnTxChar(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyPressed(byte keys)
+void KEY1_OnKeyPressed(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   /* navigation switch on the TWR-LCD1: some we get from here */
@@ -295,7 +295,7 @@ void KEY1_OnKeyPressed(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleased(byte keys)
+void KEY1_OnKeyReleased(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   /* navigation switch on the TWR-LCD1: some we get from here */
@@ -344,7 +344,7 @@ void KEY1_OnKeyReleased(byte keys)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void KEY1_OnKeyReleasedLong(byte keys)
+void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
 #if PL_BOARD_TWR_CN128 && PL_TWR_LCD_REV_0
   if (keys&1) {
@@ -553,6 +553,75 @@ void Sensor1_OnADGet(void)
 void Sensor1_OnADGive(void)
 {
   AD_GiveDevice();
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void vOnPreSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used */
+#if 0
+  /* example for Kinetis (enable SetOperationMode() in CPU component): */
+  // Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
+  /* or to wait for interrupt: */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#elif 1
+  /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
+  Cpu_SetWaitMode();
+#elif 0
+  /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#else
+  #error "you *must* enter low power mode (wait for interrupt) here!"
+#endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
 }
 
 /* END Events */

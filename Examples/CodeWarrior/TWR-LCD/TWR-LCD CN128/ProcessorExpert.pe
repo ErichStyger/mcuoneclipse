@@ -3,8 +3,8 @@
   <Header>
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>24</ModificationStamp>
-    <Date>2017-01-20</Date>
+    <ModificationStamp>25</ModificationStamp>
+    <Date>2019-07-24</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -28,7 +28,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>93</ProjectCompNumb>
+    <ProjectCompNumb>96</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <UserInterface>CLASSIC</UserInterface>
@@ -41,6 +41,13 @@
     <ProjectMainModule>ProcessorExpert</ProjectMainModule>
     <SdkSourceFilesDirectory />
   </Options>
+  <UserFolder>
+    <UserFolderName />
+    <NodeName>Referenced_Components</NodeName>
+    <CompNumb>95</CompNumb>
+    <FolderType>Beans</FolderType>
+    <ExpandedAll>true</ExpandedAll>
+  </UserFolder>
   <CPU>
     <BeanType>MCF51CN128_80</BeanType>
     <Name>Cpu</Name>
@@ -6405,7 +6412,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>36</Count>
+      <Count>37</Count>
       <ItemId0>6</ItemId0>
       <Value0>true</Value0>
       <ItemId1>10</ItemId1>
@@ -6468,16 +6475,18 @@
       <Value29>true</Value29>
       <ItemId30>2</ItemId30>
       <Value30>true</Value30>
-      <ItemId31>74</ItemId31>
+      <ItemId31>75</ItemId31>
       <Value31>true</Value31>
-      <ItemId32>75</ItemId32>
+      <ItemId32>80</ItemId32>
       <Value32>true</Value32>
-      <ItemId33>80</ItemId33>
+      <ItemId33>88</ItemId33>
       <Value33>true</Value33>
-      <ItemId34>88</ItemId34>
+      <ItemId34>92</ItemId34>
       <Value34>true</Value34>
-      <ItemId35>92</ItemId35>
+      <ItemId35>93</ItemId35>
       <Value35>true</Value35>
+      <ItemId36>94</ItemId36>
+      <Value36>true</Value36>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -6544,7 +6553,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.520</BeanVersion>
+    <BeanVersion>01.579</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -6557,7 +6566,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V9.0.0</Value>
+        <Value>V10.2.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Utility</ItemSymbol>
@@ -8154,7 +8163,7 @@
         <ItemSymbol>KinetisSDK</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>StaticSourcesEnabled</ItemSymbol>
@@ -8337,6 +8346,98 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>16</Value>
         <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSCommonFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>FreeRTOS/Source/portable/Common</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DebugHelpersGrop</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>enabledBackwardCompatibility</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableLTODebugHelper</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>uxTopUsedPriority</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>freeRTOSMemorySchemeConstant</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TaskCAdditions</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CustomFreeRTOSConfig</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>// #include "CustomFreeRTOSSettings.h</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ResetMSP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useMPUsupport</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapBaseSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__HeapBase</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapLimitSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__HeapLimit</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>LinkerHeapSizeSymbolName</ItemSymbol>
+        <ReadOnly>true</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>__heap_size</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -9824,33 +9925,33 @@
         <ItemSymbol>vOnPreSleepProcessing</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPreSleepProcessingName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>vOnPreSleepProcessing</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessing</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessingName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value />
+        <Value>vOnPostSleepProcessing</Value>
       </ItemState>
     </Events>
   </Bean>
@@ -9864,7 +9965,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.148</BeanVersion>
+    <BeanVersion>01.160</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -9877,7 +9978,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
@@ -10600,6 +10701,78 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatNumHex</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatNumHex</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>map</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>map</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>map64</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>map64</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>constrain</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>constrain</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>random</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>random</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>randomSetSeed</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>randomSetSeed</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -10613,7 +10786,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.071</BeanVersion>
+    <BeanVersion>01.084</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10714,7 +10887,21 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>useCycleCounter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CortexTools</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
       </ItemState>
     </Properties>
     <Methods>
@@ -10797,6 +10984,28 @@
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>WaitLongCycles</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DeInit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>DeInit</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -12781,7 +12990,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.073</BeanVersion>
+    <BeanVersion>01.077</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13180,7 +13389,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -13292,7 +13501,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.073</BeanVersion>
+    <BeanVersion>01.077</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13691,7 +13900,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -13803,7 +14012,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.073</BeanVersion>
+    <BeanVersion>01.077</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14202,7 +14411,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -14314,7 +14523,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>02.195</BeanVersion>
+    <BeanVersion>02.197</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15219,7 +15428,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.158</BeanVersion>
+    <BeanVersion>01.160</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16550,6 +16759,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>WAIT1</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>useRAMBuffer</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -16813,7 +17030,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.114</BeanVersion>
+    <BeanVersion>01.115</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18363,7 +18580,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.064</BeanVersion>
+    <BeanVersion>01.066</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18437,7 +18654,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -18498,7 +18715,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.054</BeanVersion>
+    <BeanVersion>01.057</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18578,7 +18795,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
@@ -18685,7 +18902,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.697</BeanVersion>
+    <BeanVersion>01.699</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -20535,6 +20752,38 @@
         <UserReadOnly>false</UserReadOnly>
         <Value />
         <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SampleSpecificHighRefVoltageUnifiedGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SampleSpecificHighRefVoltageUnified0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <TypeSpecNameState>typeVREFHunified_select</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>0</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ADCOptGroup0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ADCoptPGA0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <TypeSpecNameState>typeADCoptPGA</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>0</EnumSymbVal>
       </ItemState>
     </Properties>
     <Methods>
@@ -23704,7 +23953,7 @@
                     <ItemSymbol>sdk</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>KSDK1</Value>
+                    <Value>MCUC1</Value>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SDKEnabled</ItemSymbol>
@@ -24141,7 +24390,7 @@
                     <ItemSymbol>sdk</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>KSDK1</Value>
+                    <Value>MCUC1</Value>
                   </ItemState>
                   <ItemState>
                     <ItemSymbol>SDKEnabled</ItemSymbol>
@@ -24560,7 +24809,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.192</BeanVersion>
+    <BeanVersion>01.207</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24638,6 +24887,12 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
       </ItemState>
     </Properties>
     <Methods>
@@ -24971,6 +25226,28 @@
         <UsrMethodName>Init</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>DrawMonoBitmapMask</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>DrawMonoBitmapMask</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events>
       <ItemState>
@@ -25039,7 +25316,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25108,6 +25385,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25168,6 +25466,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25181,7 +25503,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25250,6 +25572,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25310,6 +25653,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25323,7 +25690,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25392,6 +25759,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25452,6 +25840,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25465,7 +25877,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25534,6 +25946,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25594,6 +26027,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25607,7 +26064,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25676,6 +26133,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25736,6 +26214,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25749,7 +26251,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25818,6 +26320,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -25878,6 +26401,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -25891,7 +26438,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25960,6 +26507,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -26020,6 +26588,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -26033,7 +26625,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26102,6 +26694,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -26162,6 +26775,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -26175,7 +26812,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.125</BeanVersion>
+    <BeanVersion>01.130</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26244,6 +26881,27 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FoldersGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontSrcFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GFontConfigFolderName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
@@ -26304,6 +26962,30 @@
         <UsrMethodName>GetLineSpaceHeight</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -26317,7 +26999,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.195</BeanVersion>
+    <BeanVersion>01.199</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -26357,6 +27039,13 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Properties>
     <Methods>
@@ -26425,6 +27114,30 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>WriteString</UsrMethodName>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -29243,802 +29956,6 @@
     </Events>
   </Bean>
   <Bean>
-    <BeanType>FSShell</BeanType>
-    <Name>FSSH1</Name>
-    <CompNumb>74</CompNumb>
-    <CompEnabled>false</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>FSShell</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.231</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>EchoEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Prompt</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>"CMD&gt; "</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ProjectNameStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>TWR-LCD with CN128</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Utility</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>UTIL1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FSenabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FilePrintBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>32</Value>
-        <Base>DEC</Base>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FileCopyBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>32</Value>
-        <Base>DEC</Base>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FS</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>HasRTOS</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>UseRTOSDynamicMemory</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTOS</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FRTOS1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>TimeDateEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SWRTCenabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SWRTC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>TmDt1</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RTCEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>HWRTC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SilentModePrefixChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>#</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>MultiCommandEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>MaxSubCommandStringSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>32</Value>
-        <Base>DEC</Base>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>MultiCmdSeparationChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>;</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ConsoleEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>true</Value>
-        <Expanded>true</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Serial</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ConsoleSempahore</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Symbol</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>LDDConsoleEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>InputBufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>16</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SerialLDD</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>BlockingSend</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>StatusColonPos</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>13</Value>
-        <Base>DEC</Base>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>HelpSemicolonPos</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>26</Value>
-        <Base>DEC</Base>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RxBuffer</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <RegCompType />
-        <InheritedComponentState />
-        <Value />
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>USBCDDEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>USBCDC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value />
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SerialEnabled</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>true</Value>
-        <Expanded>false</Expanded>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>PrintPrompt</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>PrintPrompt</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum32s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum32s</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum16s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum16s</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendStr</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintDirectory</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>PrintDirectory</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CopyFile</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>CopyFile</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>DeleteFile</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>DeleteFile</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintFile</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>PrintFile</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>MakeDirectory</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>MakeDirectory</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ChangeDirectory</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>ChangeDirectory</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RenameFile</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>RenameFile</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>UnMountFileSystem</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>UnMountFileSystem</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>MountFileSystem</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>MountFileSystem</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CheckCardPresence</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>CheckCardPresence</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintDiskInfo</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>PrintDiskInfo</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintSector</ItemSymbol>
-        <ReadOnly>true</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>1</Index>
-        <Value>false</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
-        <UsrMethodName>PrintSector</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Date</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Date</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Time</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Time</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintStatus</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>PrintStatus</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ShellCmd</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ShellCmd</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReadLine</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReadLine</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>PrintCommandFailed</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>PrintCommandFailed</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ParseCommand</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ParseCommand</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum8u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum8u</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum8s</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum8s</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum16u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum16u</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendNum32u</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendNum32u</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>GetStdio</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>GetStdio</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReadAndParseCmd</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReadAndParseCmd</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>RequestSerial</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>RequestSerial</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReleaseSerial</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReleaseSerial</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Init</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendStatusStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendStatusStr</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendHelpStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendHelpStr</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReadChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>ReadChar</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>SendChar</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>SendChar</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>KeyPressed</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>KeyPressed</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Deinit</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Deinit</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>ReadAndParseLine</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>ReadAndParseLine</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>GetSemaphore</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>GetSemaphore</UsrMethodName>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-    </Methods>
-    <Events>
-      <ItemState>
-        <ItemSymbol>EventModule</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>Events</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnRequestRTC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnRequestRTCName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1_OnRequestRTC</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnReleaseRTC</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnReleaseRTCName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1_OnReleaseRTC</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnTimeSet</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnTimeSetName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1_OnTimeSet</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBlockReceived</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBlockReceivedName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1_OnBlockReceived</Value>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBlockSent</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBlockSentName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>FSSH1_OnBlockSent</Value>
-      </ItemState>
-    </Events>
-  </Bean>
-  <Bean>
     <BeanType>Term</BeanType>
     <Name>Term1</Name>
     <CompNumb>75</CompNumb>
@@ -32075,7 +31992,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.010</BeanVersion>
+    <BeanVersion>01.014</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -32096,7 +32013,7 @@
         <ItemSymbol>sdk</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>KSDK1</Value>
+        <Value>MCUC1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>useRTOScritical</ItemSymbol>
@@ -32141,6 +32058,28 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ExitCritical</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -32154,7 +32093,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.006</BeanVersion>
+    <BeanVersion>01.014</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -32187,8 +32126,805 @@
         <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionMajor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionMinor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>5</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionBuild</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
     </Properties>
-    <Methods />
+    <Methods>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events />
+  </Bean>
+  <Bean>
+    <BeanType>Shell</BeanType>
+    <Name>CLS1</Name>
+    <CompNumb>93</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>Shell</IconName>
+    <UserFolderName />
+    <Comment lines_count="0" />
+    <Template />
+    <BeanVersion>01.106</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CLS1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EchoEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Prompt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>"CMD&gt; "</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ProjectNameStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>My Project Name</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SilentModePrefixChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>#</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellDefaultBufferSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>48</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>BlockingSend</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Wait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ShellBlockingSendTimeoutMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>20</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>WaitTimeMs</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>5</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RTOSWait</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>StatusColonPos</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>13</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HelpSemicolonPos</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>26</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MultiCommandEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MaxSubCommandStringSize</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>32</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>MultiCmdSeparationChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>;</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HistoryEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NofHistoryItems</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>4</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>HistLength</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>32</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NextHistoryChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>\t</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PrevHistoryChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>\e</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ConsoleSempahore</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DefaultSerialEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Serial</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value />
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Utility</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>UTIL1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>XFormat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>XF1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CriticalSection</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CS1</Value>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>PrintPrompt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>PrintPrompt</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum8u</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum8u</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum8s</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum8s</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum16u</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum16u</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum16s</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum16s</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum32u</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum32u</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendNum32s</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendNum32s</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendCh</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendCh</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PrintMemory</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>PrintMemory</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>printfIO</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>printfIO</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>printf</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>printf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendData</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendData</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PrintStatus</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>PrintStatus</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ParseCommand</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ParseCommand</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IsHistoryCharacter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>IsHistoryCharacter</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadLine</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadLine</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PrintCommandFailed</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>PrintCommandFailed</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>IterateTable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>IterateTable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SetStdio</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SetStdio</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetStdio</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetStdio</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>RequestSerial</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>RequestSerial</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReleaseSerial</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReleaseSerial</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadAndParseWithCommandTable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadAndParseWithCommandTable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ParseWithCommandTable</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ParseWithCommandTable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>GetSemaphore</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>GetSemaphore</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendStatusStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendStatusStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendHelpStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendHelpStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendChar</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendChar</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>KeyPressed</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>KeyPressed</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SendCharFct</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SendCharFct</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+    </Methods>
+    <Events>
+      <ItemState>
+        <ItemSymbol>EventModule</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>Events</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnBeforeIterateCmd</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnBeforeIterateCmdName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CLS1_OnBeforeIterateCmd</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnAfterIterateCmd</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>no</LastUserSel>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>OnAfterIterateCmdName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>CLS1_OnAfterIterateCmd</Value>
+      </ItemState>
+    </Events>
+  </Bean>
+  <Bean>
+    <BeanType>XFormat</BeanType>
+    <Name>XF1</Name>
+    <CompNumb>94</CompNumb>
+    <CompEnabled>true</CompEnabled>
+    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
+    <IconName>XFormat</IconName>
+    <UserFolderName>Referenced_Components</UserFolderName>
+    <Comment lines_count="0" />
+    <Template>XFormat</Template>
+    <BeanVersion>01.025</BeanVersion>
+    <LightErrorsIgnored>false</LightErrorsIgnored>
+    <Properties>
+      <ItemState>
+        <ItemSymbol>DeviceName</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>XF1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>sdk</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>MCUC1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FloatingPointEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>XFormatStaticEnabled</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+    </Properties>
+    <Methods>
+      <ItemState>
+        <ItemSymbol>xvformat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xvformat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xformat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xformat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xsprintf</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xsprintf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>xsnprintf</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>xsnprintf</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Init</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+    </Methods>
     <Events />
   </Bean>
 </PEproject>
