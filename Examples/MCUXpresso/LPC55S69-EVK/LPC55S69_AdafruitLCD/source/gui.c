@@ -18,6 +18,9 @@
 #include "task.h"
 #include "McuILI9341.h"
 #include "McuFontDisplay.h"
+#if PL_CONFIG_USE_STMPE610
+  #include "McuSTMPE610.h"
+#endif
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -169,13 +172,11 @@ static void ErrMsg(void) {
 }
 
 static void GuiTask(void *p) {
-  uint32_t notifcationValue;
-
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
   if (McuILI9341_InitLCD()!=ERR_OK) {
     ErrMsg();
   }
-  McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
+  //McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
 #if PL_CONFIG_USE_STMPE610
   if (McuSTMPE610_InitController()!=ERR_OK) {
     ErrMsg();
@@ -184,6 +185,8 @@ static void GuiTask(void *p) {
   GUI_MainMenuCreate();
   for(;;) {
 #if 0
+    uint32_t notifcationValue;
+
     (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */
     if (notifcationValue!=0) {
       lv_area_t area;

@@ -21,6 +21,10 @@
 #define PL_CONFIG_USE_GUI_SCREEN_SAVER  (0) /* turn off if idle */
 #define PL_CONFIG_USE_TOASTER           (1 && PL_CONFIG_USE_GUI_SCREEN_SAVER)
 
+#if PL_CONFIG_USE_FT6206 && PL_CONFIG_USE_STMPE610
+  #error "only one touch controller can be active"
+#endif
+
 void PL_Init(void);
 void PL_Deinit(void);
 

@@ -132,6 +132,7 @@ uint8_t McuSTMPE610_FIFOBufSize(uint8_t *size);
 uint8_t McuSTMPE610_IsTouched(bool *touched);
 uint8_t McuSTMPE610_ReadTouchData(uint16_t *x, uint16_t *y, uint8_t *z);
 uint8_t McuSTMPE610_GetPoint(uint16_t *x, uint16_t *y, uint8_t *z);
+uint8_t McuSTMPE610_GetLastPoint(uint16_t *x, uint16_t *y, uint8_t *z);
 uint8_t McuSTMPE610_CheckAndSwitchSPIMode(void);
 uint8_t McuSTMPE610_InitController(void);
 

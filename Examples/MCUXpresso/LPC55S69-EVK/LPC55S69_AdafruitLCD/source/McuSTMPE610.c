@@ -114,6 +114,27 @@ uint8_t McuSTMPE610_GetPoint(uint16_t *x, uint16_t *y, uint8_t *z) {
   return ERR_OK;
 }
 
+uint8_t McuSTMPE610_GetLastPoint(uint16_t *x, uint16_t *y, uint8_t *z) {
+  uint16_t xp, yp;
+  uint8_t zp, res = ERR_OK;
+  bool empty;
+
+  do {
+    res = McuSTMPE610_GetPoint(&xp, &yp, &zp);
+    if (res!=ERR_OK) {
+      break;
+    }
+    res = McuSTMPE610_FIFOisEmpty(&empty);
+    if (res!=ERR_OK) {
+      break;
+    }
+  } while(!empty);
+  *x = xp;
+  *y = yp;
+  *z = zp;
+  return res;
+}
+
 uint8_t McuSTMPE610_CheckAndSwitchSPIMode(void) {
   /* see https://github.com/adafruit/Adafruit_CircuitPython_STMPE610/issues/3
    * The problem is that the device might use SPI Mode0 or Mode1, depending on power-up
