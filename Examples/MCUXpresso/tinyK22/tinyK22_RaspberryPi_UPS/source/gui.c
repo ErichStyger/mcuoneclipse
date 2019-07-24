@@ -1,5 +1,6 @@
 /*
- * gui.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
  *  Created on: 03.08.2018
  *      Author: Erich Styger

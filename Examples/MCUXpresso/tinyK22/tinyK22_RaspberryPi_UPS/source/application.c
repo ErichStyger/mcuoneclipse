@@ -1,6 +1,8 @@
 /*
- * application.c
- *      Author: Erich Styger
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 /* own modules and standard library */
