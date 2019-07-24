@@ -85,43 +85,43 @@ static void refresh_task(void *param) {
 }
 
 void GUI_TEMPHUM_CreateView(void) {
-    lv_obj_t *closeBtn;
-    refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
+  lv_obj_t *closeBtn;
+  refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
 
-    win = lv_win_create(lv_scr_act(), NULL);
-    lv_win_set_title(win, "SHT31");
-    closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
-    GUI_GroupPush();
-    GUI_AddObjToGroup(closeBtn);
-    lv_group_focus_obj(closeBtn);
-    /* Make the window content responsive */
-    lv_win_set_layout(win, LV_LAYOUT_PRETTY);
+  win = lv_win_create(lv_scr_act(), NULL);
+  lv_win_set_title(win, "SHT31");
+  closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
+  GUI_GroupPush();
+  GUI_AddObjToGroup(closeBtn);
+  lv_group_focus_obj(closeBtn);
+  /* Make the window content responsive */
+  lv_win_set_layout(win, LV_LAYOUT_PRETTY);
 
-    /* Create a chart with two data lines */
-    chart = lv_chart_create(win, NULL);
-    lv_obj_set_size(chart, LV_HOR_RES/2, LV_VER_RES/2);
+  /* Create a chart with two data lines */
+  chart = lv_chart_create(win, NULL);
+  lv_obj_set_size(chart, LV_HOR_RES/2, LV_VER_RES/2);
 
-    lv_obj_set_pos(chart, LV_DPI/10, LV_DPI/10);
+  lv_obj_set_pos(chart, LV_DPI/10, LV_DPI/10);
 
-    lv_chart_set_point_count(chart, CHART_POINT_NUM);
-    lv_chart_set_range(chart, 0, CHART_MAX_VALUE);
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
-    lv_chart_set_series_width(chart, 3);
-    temperature_ser =  lv_chart_add_series(chart, /*LV_COLOR_RED*/LV_COLOR_BLACK);
-    humidity_ser =  lv_chart_add_series(chart, /*LV_COLOR_GREEN*/LV_COLOR_BLACK);
+  lv_chart_set_point_count(chart, CHART_POINT_NUM);
+  lv_chart_set_range(chart, 0, CHART_MAX_VALUE);
+  lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
+  lv_chart_set_series_width(chart, 3);
+  temperature_ser =  lv_chart_add_series(chart, /*LV_COLOR_RED*/LV_COLOR_BLACK);
+  humidity_ser =  lv_chart_add_series(chart, /*LV_COLOR_GREEN*/LV_COLOR_BLACK);
 
-    /* Set the data series to zero */
-    uint16_t i;
-    for(i = 0; i<CHART_POINT_NUM; i++) {
-        lv_chart_set_next(chart, temperature_ser, 0);
-        lv_chart_set_next(chart, humidity_ser, 0);
-    }
-    /* label for values: */
-    chart_label = lv_label_create(win, NULL);
-    lv_label_set_recolor(chart_label, true);
-    lv_obj_align(chart_label, chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI/5, 0);
+  /* Set the data series to zero */
+  uint16_t i;
+  for(i = 0; i<CHART_POINT_NUM; i++) {
+      lv_chart_set_next(chart, temperature_ser, 0);
+      lv_chart_set_next(chart, humidity_ser, 0);
+  }
+  /* label for values: */
+  chart_label = lv_label_create(win, NULL);
+  lv_label_set_recolor(chart_label, true);
+  lv_obj_align(chart_label, chart, LV_ALIGN_OUT_RIGHT_TOP, LV_DPI/5, 0);
 
-    /* Refresh the chart and label manually at first */
-    refresh_task(NULL);
+  /* Refresh the chart and label manually at first */
+  refresh_task(NULL);
 }
 #endif /* PL_CONFIG_HAS_SGP30 */
