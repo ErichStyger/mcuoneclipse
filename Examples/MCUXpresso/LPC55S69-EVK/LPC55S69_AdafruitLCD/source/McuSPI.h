@@ -24,7 +24,7 @@ void McuSPI_SwitchConfig(McuSPI_Config newConfig);
 
 void McuSPI_WriteByte(McuSPI_Config config, uint8_t data);
 void MCUSPI_WriteBytes(McuSPI_Config config, uint8_t *data, size_t nofBytes);
-
+void McuSPI_WriteReadByte(McuSPI_Config config, uint8_t write, uint8_t *read);
 void McuSPI_ReadByte(McuSPI_Config config, uint8_t *data);
 
 void McuSPI_Deinit(void);

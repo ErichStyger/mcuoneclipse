@@ -9,7 +9,7 @@
 #define MCUSPICONFIG_H_
 
 #ifndef MCUSPI_CONFIG_USE_MUTEX
-  #define MCUSPI_CONFIG_USE_MUTEX    (1)
+  #define MCUSPI_CONFIG_USE_MUTEX    (1) /* required if sharing the SPI bus */
 #endif
   /*!< 1: Use mutex for shared SPI bus access. 0: SPI bus is not shared */
 
@@ -18,6 +18,5 @@
 #define DEVICE_SPI_MASTER_CLK_SRC     kCLOCK_Flexcomm8
 #define DEVICE_SPI_MASTER_CLK_FREQ    CLOCK_GetFreq(kCLOCK_HsLspi)
 #define DEVICE_SPI_MASTER_IRQHandler  FLEXCOMM8_IRQHandler
-
 
 #endif /* MCUSPICONFIG_H_ */

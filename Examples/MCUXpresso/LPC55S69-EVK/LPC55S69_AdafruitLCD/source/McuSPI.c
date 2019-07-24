@@ -24,7 +24,7 @@ static spi_master_config_t configs[] = {
       .polarity = kSPI_ClockPolarityActiveHigh,
       .phase = kSPI_ClockPhaseFirstEdge, /* data is valid at raising clock edge */
       .direction = kSPI_MsbFirst,
-      .baudRate_Bps = 12*1000000U,
+      .baudRate_Bps = 32*1000000U,
       .dataWidth = kSPI_Data8Bits,
       .sselNum = kSPI_Ssel1, /* \todo */
       .txWatermark = kSPI_TxFifo0,
@@ -42,7 +42,7 @@ static spi_master_config_t configs[] = {
       .polarity = kSPI_ClockPolarityActiveHigh,
       .phase = kSPI_ClockPhaseFirstEdge, /* data is valid at raising clock edge */
       .direction = kSPI_MsbFirst,
-      .baudRate_Bps = 1*1000000U, /* 1 MHz Max */
+      .baudRate_Bps = 1*1000000U, /* 1 MHz Max! */
       .dataWidth = kSPI_Data8Bits,
       .sselNum = kSPI_Ssel0,
       .txWatermark = kSPI_TxFifo0,
@@ -59,7 +59,7 @@ static spi_master_config_t configs[] = {
       .polarity = kSPI_ClockPolarityActiveHigh,
       .phase = kSPI_ClockPhaseSecondEdge, /* data is valid at falling clock edge */
       .direction = kSPI_MsbFirst,
-      .baudRate_Bps = 1*1000000U, /* 1 MHz Max */
+      .baudRate_Bps = 1*1000000U, /* 1 MHz Max! */
       .dataWidth = kSPI_Data8Bits,
       .sselNum = kSPI_Ssel0,
       .txWatermark = kSPI_TxFifo0,
@@ -104,13 +104,13 @@ void McuSPI_WriteByte(McuSPI_Config config, uint8_t data) {
 #endif
 }
 
-void McuSPI_ReadByte(McuSPI_Config config, uint8_t *data) {
+void McuSPI_WriteReadByte(McuSPI_Config config, uint8_t write, uint8_t *read) {
   spi_transfer_t xfer = {0};
-  uint8_t dummy = 0xff;
+  uint8_t tx = write;
 
   /*Start Transfer*/
-  xfer.txData   = &dummy;
-  xfer.rxData   = data;
+  xfer.txData   = &tx;
+  xfer.rxData   = read;
   xfer.dataSize = 1;
   xfer.configFlags = kSPI_FrameAssert; /* required to get CLK low after transfer */
 #if MCUSPI_CONFIG_USE_MUTEX
@@ -121,6 +121,10 @@ void McuSPI_ReadByte(McuSPI_Config config, uint8_t *data) {
 #if MCUSPI_CONFIG_USE_MUTEX
   xSemaphoreGiveRecursive(mutex);
 #endif
+}
+
+void McuSPI_ReadByte(McuSPI_Config config, uint8_t *data) {
+  McuSPI_WriteReadByte(config, 0xff, data);
 }
 
 void MCUSPI_WriteBytes(McuSPI_Config config, uint8_t *data, size_t nofBytes) {

@@ -175,12 +175,13 @@ static void GuiTask(void *p) {
   if (McuILI9341_InitLCD()!=ERR_OK) {
     ErrMsg();
   }
-  McuILI9341_ClearDisplay(MCUILI9341_GREEN);
-//  McuILI9341_ClearDisplay(MCUILI9341_BLUE);
-  GUI_MainMenuCreate();
+  McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
 #if PL_CONFIG_USE_STMPE610
-  McuSTMPE610_CheckAndSwitchSPIMode(); /* check SPI mode and change if necessary */
+  if (McuSTMPE610_InitController()!=ERR_OK) {
+    ErrMsg();
+  }
 #endif
+  GUI_MainMenuCreate();
   for(;;) {
 #if 0
     (void)xTaskNotifyWait(0UL, GUI_SET_ORIENTATION_LANDSCAPE|GUI_SET_ORIENTATION_LANDSCAPE180|GUI_SET_ORIENTATION_PORTRAIT|GUI_SET_ORIENTATION_PORTRAIT180, &notifcationValue, 0); /* check flags */

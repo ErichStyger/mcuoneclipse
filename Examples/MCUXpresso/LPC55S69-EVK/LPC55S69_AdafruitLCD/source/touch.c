@@ -52,11 +52,27 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
 #endif
 #if PL_CONFIG_USE_STMPE610
   /* test only */
-  uint16_t version;
-  uint8_t id;
+  bool empty;
+  uint8_t res, zd;
+  uint16_t xd, yd;
 
-//  McuSTMPE610_GetID(&id);
-//  McuSTMPE610_GetVersion(&version);
+  res = McuSTMPE610_FIFOisEmpty(&empty);
+  if (res==ERR_OK && !empty) {
+    res = McuSTMPE610_GetPoint(&xd, &yd, &zd);
+    if (res==ERR_OK) {
+      /* the STMPE610 delivers x and y in the range of 0...4096, and z is the pressure (the harder the press, the lower the number */
+      #define TS_MINX 150
+      #define TS_MINY 130
+      #define TS_MAXX 3800
+      #define TS_MAXY 4000
+      #define LCD_HEIGHT 320
+      #define LCD_WIDTH  240
+      *x = McuUtility_map(xd, TS_MINX, TS_MAXX, 0, LCD_WIDTH);
+      *y = McuUtility_map(xd, TS_MINY, TS_MAXY, 0, LCD_HEIGHT);
+      *pressed = true;
+      return 1; /* touched */
+    }
+  }
 #endif
   return 0; /* not touched */
 }

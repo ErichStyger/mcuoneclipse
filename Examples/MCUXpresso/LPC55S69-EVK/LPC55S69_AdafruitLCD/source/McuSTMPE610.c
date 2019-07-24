@@ -13,302 +13,6 @@
 
 static McuSPI_Config configSPI = -1;
 
-#if 0
-/*!
- *  @brief  Setups the HW
- *  @param  i2caddr
- *          I2C address (defaults to STMPE_ADDR)
- *  @return True if process is successful
- */
-boolean Adafruit_STMPE610::begin(uint8_t i2caddr) {
-  if (_CS != -1 && _CLK == -1) {
-    // hardware SPI
-    pinMode(_CS, OUTPUT);
-    digitalWrite(_CS, HIGH);
-
-    _spi->begin();
-    mySPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE0);
-    m_spiMode = SPI_MODE0;
-  } else if (_CS != -1) {
-    // software SPI
-    pinMode(_CLK, OUTPUT);
-    pinMode(_CS, OUTPUT);
-    pinMode(_MOSI, OUTPUT);
-    pinMode(_MISO, INPUT);
-  } else {
-    _wire->begin();
-    _i2caddr = i2caddr;
-  }
-
-  // try mode0
-  if (getVersion() != 0x811) {
-    if (_CS != -1 && _CLK == -1) {
-      // Serial.println("try MODE1");
-      mySPISettings = SPISettings(1000000, MSBFIRST, SPI_MODE1);
-      m_spiMode = SPI_MODE1;
-
-      if (getVersion() != 0x811) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-  writeRegister8(STMPE_SYS_CTRL1, STMPE_SYS_CTRL1_RESET);
-  delay(10);
-
-  for (uint8_t i = 0; i < 65; i++) {
-    readRegister8(i);
-  }
-
-  writeRegister8(STMPE_SYS_CTRL2, 0x0); // turn on clocks!
-  writeRegister8(STMPE_TSC_CTRL,
-                 STMPE_TSC_CTRL_XYZ | STMPE_TSC_CTRL_EN); // XYZ and enable!
-  // Serial.println(readRegister8(STMPE_TSC_CTRL), HEX);
-  writeRegister8(STMPE_INT_EN, STMPE_INT_EN_TOUCHDET);
-  writeRegister8(STMPE_ADC_CTRL1, STMPE_ADC_CTRL1_10BIT |
-                                      (0x6 << 4)); // 96 clocks per conversion
-  writeRegister8(STMPE_ADC_CTRL2, STMPE_ADC_CTRL2_6_5MHZ);
-  writeRegister8(STMPE_TSC_CFG, STMPE_TSC_CFG_4SAMPLE |
-                                    STMPE_TSC_CFG_DELAY_1MS |
-                                    STMPE_TSC_CFG_SETTLE_5MS);
-  writeRegister8(STMPE_TSC_FRACTION_Z, 0x6);
-  writeRegister8(STMPE_FIFO_TH, 1);
-  writeRegister8(STMPE_FIFO_STA, STMPE_FIFO_STA_RESET);
-  writeRegister8(STMPE_FIFO_STA, 0); // unreset
-  writeRegister8(STMPE_TSC_I_DRIVE, STMPE_TSC_I_DRIVE_50MA);
-  writeRegister8(STMPE_INT_STA, 0xFF); // reset all ints
-  writeRegister8(STMPE_INT_CTRL,
-                 STMPE_INT_CTRL_POL_HIGH | STMPE_INT_CTRL_ENABLE);
-
-  return true;
-}
-
-/*!
- *  @brief  Returns true if touched, false otherwise
- *  @return True if if touched, false otherwise
- */
-boolean Adafruit_STMPE610::touched() {
-  return (readRegister8(STMPE_TSC_CTRL) & 0x80);
-}
-
-/*!
- *  @brief  Checks if buffer is empty
- *  @return True if empty, false otherwise
- */
-boolean Adafruit_STMPE610::bufferEmpty() {
-  return (readRegister8(STMPE_FIFO_STA) & STMPE_FIFO_STA_EMPTY);
-}
-
-/*!
- *  @brief  Returns the FIFO buffer size
- *  @return The FIFO buffer size
- */
-uint8_t Adafruit_STMPE610::bufferSize() {
-  return readRegister8(STMPE_FIFO_SIZE);
-}
-
-/*!
- *  @brief  Returns the STMPE610 version number
- *  @return The STMPE610 version number
- */
-uint16_t Adafruit_STMPE610::getVersion() {
-  uint16_t v;
-  // Serial.print("get version");
-  v = readRegister8(0);
-  v <<= 8;
-  v |= readRegister8(1);
-  // Serial.print("Version: 0x"); Serial.println(v, HEX);
-  return v;
-}
-
-/*!
- *  @brief  Reads touchscreen data
- *  @param  *x
- *      The x coordinate
- *  @param  *y
- *      The y coordinate
- *  @param  *z
- *      The z coordinate
- */
-void Adafruit_STMPE610::readData(uint16_t *x, uint16_t *y, uint8_t *z) {
-  uint8_t data[4];
-
-  for (uint8_t i = 0; i < 4; i++) {
-    data[i] = readRegister8(0xD7); // _spi->transfer(0x00);
-    // Serial.print("0x"); Serial.print(data[i], HEX); Serial.print(" / ");
-  }
-  *x = data[0];
-  *x <<= 4;
-  *x |= (data[1] >> 4);
-  *y = data[1] & 0x0F;
-  *y <<= 8;
-  *y |= data[2];
-  *z = data[3];
-}
-
-/*!
- *  @brief  Returns point for touchscreen data
- *  @return The touch point using TS_Point
- */
-TS_Point Adafruit_STMPE610::getPoint() {
-  uint16_t x, y;
-  uint8_t z;
-
-  /* Making sure that we are reading all data before leaving */
-  while (!bufferEmpty()) {
-    readData(&x, &y, &z);
-  }
-
-  if (bufferEmpty())
-    writeRegister8(STMPE_INT_STA, 0xFF); // reset all ints
-
-  return TS_Point(x, y, z);
-}
-
-/*!
- *  @brief  Reads SPI data
- */
-uint8_t Adafruit_STMPE610::spiIn() {
-  if (_CLK == -1) {
-    uint8_t d = _spi->transfer(0);
-    return d;
-  } else
-    return shiftIn(_MISO, _CLK, MSBFIRST);
-}
-
-/*!
- *  @brief  Sends data through SPI
- *  @param  x
- *          Data to send (one byte)
- */
-void Adafruit_STMPE610::spiOut(uint8_t x) {
-  if (_CLK == -1) {
-    _spi->transfer(x);
-  } else
-    shiftOut(_MOSI, _CLK, MSBFIRST, x);
-}
-
-/*!
- *  @brief  Reads 8bit of data from specified register
- *  @param  reg
- *          The register
- *  @return Data in the register
- */
-uint8_t Adafruit_STMPE610::readRegister8(uint8_t reg) {
-  uint8_t x;
-  if (_CS == -1) {
-    // use i2c
-    _wire->beginTransmission(_i2caddr);
-    _wire->write((byte)reg);
-    _wire->endTransmission();
-    _wire->requestFrom(_i2caddr, (byte)1);
-    x = _wire->read();
-
-    // Serial.print("$"); Serial.print(reg, HEX);
-    // Serial.print(": 0x"); Serial.println(x, HEX);
-  } else {
-    if (_CLK == -1)
-      _spi->beginTransaction(mySPISettings);
-
-    digitalWrite(_CS, LOW);
-    spiOut(0x80 | reg);
-    spiOut(0x00);
-    x = spiIn();
-    digitalWrite(_CS, HIGH);
-
-    if (_CLK == -1)
-      SPI.endTransaction();
-  }
-
-  return x;
-}
-
-/*!
- *  @brief  Reads 16 bits of data from specified register
- *  @param  reg
- *          The register
- *  @return Data in the register
- */
-uint16_t Adafruit_STMPE610::readRegister16(uint8_t reg) {
-  uint16_t x = 0;
-  if (_CS == -1) {
-    // use i2c
-    _wire->beginTransmission(_i2caddr);
-    _wire->write((byte)reg);
-    _wire->endTransmission();
-    _wire->requestFrom(_i2caddr, (byte)2);
-    x = _wire->read();
-    x <<= 8;
-    x |= _wire->read();
-  }
-  if (_CLK == -1) {
-    // hardware SPI
-    if (_CLK == -1)
-      _spi->beginTransaction(mySPISettings);
-    digitalWrite(_CS, LOW);
-    spiOut(0x80 | reg);
-    spiOut(0x00);
-    x = spiIn();
-    x <<= 8;
-    x |= spiIn();
-    digitalWrite(_CS, HIGH);
-    if (_CLK == -1)
-      _spi->endTransaction();
-  }
-
-  // Serial.print("$"); Serial.print(reg, HEX);
-  // Serial.print(": 0x"); Serial.println(x, HEX);
-  return x;
-}
-
-/*!
- *  @brief  Writes 8 bit of data to specified register
- *  @param  reg
- *      The register
- *  @param  val
- *          Value to write
- */
-void Adafruit_STMPE610::writeRegister8(uint8_t reg, uint8_t val) {
-  if (_CS == -1) {
-    // use i2c
-    _wire->beginTransmission(_i2caddr);
-    _wire->write((byte)reg);
-    _wire->write(val);
-    _wire->endTransmission();
-  } else {
-    if (_CLK == -1)
-      _spi->beginTransaction(mySPISettings);
-    digitalWrite(_CS, LOW);
-    spiOut(reg);
-    spiOut(val);
-    digitalWrite(_CS, HIGH);
-    if (_CLK == -1)
-      _spi->endTransaction();
-  }
-}
-
-/*!
- *  @brief  TS_Point constructor
- */
-TS_Point::TS_Point() { x = y = 0; }
-
-/*!
- *  @brief  TS_Point constructor
- *  @param  x0
- *          Initial x
- *  @param  y0
- *          Initial y
- *  @param  z0
- *          Initial z
- */
-TS_Point::TS_Point(int16_t x0, int16_t y0, int16_t z0) {
-  x = x0;
-  y = y0;
-  z = z0;
-}
-#endif
-
 #define SELECT_CONTROLLER()    McuGPIO_SetLow(McuSTMPE610_CSPin)
 #define DESELECT_CONTROLLER()  McuGPIO_SetHigh(McuSTMPE610_CSPin);
 
@@ -327,6 +31,86 @@ uint8_t McuSTMPE610_ReadReg8(uint8_t addr, uint8_t *val) {
   McuSPI_WriteByte(configSPI, 0x80|addr); /* MSB to denote read operation */
   McuSPI_ReadByte(configSPI, val); /* read value */
   DESELECT_CONTROLLER();
+  return ERR_OK;
+}
+
+uint8_t McuSTMPE610_ReadReg16(uint8_t addr, uint16_t *val) {
+  uint8_t high, low;
+
+  SELECT_CONTROLLER();
+  McuSPI_WriteByte(configSPI, 0x80|addr); /* MSB to denote read operation */
+  McuSPI_WriteReadByte(configSPI, 0x80|(addr+1), &high); /* read value */
+  McuSPI_ReadByte(configSPI, &low); /* read value */
+  DESELECT_CONTROLLER();
+  *val = (high<<8)|low;
+  return ERR_OK;
+}
+
+uint8_t McuSTMPE610_FIFOisEmpty(bool *isEmpty) {
+  uint8_t val, res;
+
+  res = McuSTMPE610_ReadReg8(MCUSTMPE610_FIFO_STA_REG, &val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  *isEmpty = val & MCUSTMPE610_FIFO_STA_EMPTY;
+  return ERR_OK;
+}
+
+uint8_t McuSTMPE610_FIFOBufSize(uint8_t *size) {
+  return McuSTMPE610_ReadReg8(MCUSTMPE610_FIFO_SIZE_REG, size);
+}
+
+uint8_t McuSTMPE610_IsTouched(bool *touched) {
+  uint8_t val, res;
+
+  res = McuSTMPE610_ReadReg8(MCUSTMPE610_TSC_CTRL_REG, &val);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  *touched = val&MCUSTMPE610_TSC_CTRL_STA; /* bit set if touched */
+  return ERR_OK;
+}
+
+uint8_t McuSTMPE610_ReadTouchData(uint16_t *x, uint16_t *y, uint8_t *z) {
+  uint8_t data[4], res;
+  bool empty;
+
+  for (uint8_t i = 0; i < 4; i++) {
+    res = McuSTMPE610_ReadReg8(MCUSTMPE610_TSC_DATA_XYZ_REG+i, &data[i]);
+    if (res!=ERR_OK) {
+      return res;
+    }
+  }
+  *x = data[0];
+  *x <<= 4;
+  *x |= (data[1]>>4);
+  *y = data[1]&0x0F;
+  *y <<= 8;
+  *y |= data[2];
+  *z = data[3];
+  res = McuSTMPE610_FIFOisEmpty(&empty);
+  if (res==ERR_OK && empty) {
+    res = McuSTMPE610_WriteReg8(MCUSTMPE610_INT_STA_REG, 0xff); /* reset all interrupts */
+    if (res!=ERR_OK) {
+      return res;
+    }
+  }
+  return ERR_OK;
+}
+
+uint8_t McuSTMPE610_GetPoint(uint16_t *x, uint16_t *y, uint8_t *z) {
+  uint16_t xp, yp;
+  uint8_t zp;
+  uint8_t res;
+
+  res = McuSTMPE610_ReadTouchData(&xp, &yp, &zp);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  *x = xp;
+  *y = yp;
+  *z = zp;
   return ERR_OK;
 }
 
@@ -350,24 +134,38 @@ uint8_t McuSTMPE610_CheckAndSwitchSPIMode(void) {
 
 uint8_t McuSTMPE610_GetID(uint8_t *id) {
   /* should return MCUSTMPE610_CHIP_ID_DEFAULT as ID */
-//  McuSTMPE610_WriteReg8(MCUSTMPE610_SYS_CTRL1_REG, MCUSTMPE610_SYS_CTRL1_RESET); /* reset */
   return McuSTMPE610_ReadReg8(MCUSTMPE610_ID_VER_REG, id);
 }
 
 uint8_t McuSTMPE610_GetVersion(uint16_t *version) {
   /* should return 0x0811 as version */
-  uint8_t low=0, high=0, res=ERR_OK;
+  return McuSTMPE610_ReadReg16(MCUSTMPE610_CHIP_ID_REG, version);
+}
 
-  for(;;) { /* breaks */
-    res = McuSTMPE610_ReadReg8(MCUSTMPE610_CHIP_ID_REG, &high);
-    if (res!=ERR_OK) {
-      break;
-    }
-    res = McuSTMPE610_ReadReg8(MCUSTMPE610_CHIP_ID_REG+1, &low);
-    break;
-  } /* for */
-  *version = (high<<8) | low;
-  return res;
+uint8_t McuSTMPE610_InitController(void) {
+  uint16_t version;
+
+  if (McuSTMPE610_CheckAndSwitchSPIMode()!=ERR_OK) { /* device might be in SPI mode0 or mode1 */
+    return ERR_FAILED;
+  }
+  if (McuSTMPE610_GetVersion(&version)!=ERR_OK || version!=MCUSTMPE610_ID_VER_DEFAULT) {
+    return ERR_FAILED;
+  }
+  McuSTMPE610_WriteReg8(MCUSTMPE610_SYS_CTRL1_REG, MCUSTMPE610_SYS_CTRL1_RESET); /* reset */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_SYS_CTRL2_REG, 0x0); /* turn on clocks */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_TSC_CTRL_REG, MCUSTMPE610_TSC_CTRL_XYZ | MCUSTMPE610_TSC_CTRL_EN); /* XYZ enable */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_INT_EN_REG, MCUSTMPE610_INT_EN_TOUCHDET);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_ADC_CTRL1_REG, MCUSTMPE610_ADC_CTRL1_10BIT | (0x6 << 4)); /* 96 clocks per conversion */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_ADC_CTRL2_REG, MCUSTMPE610_ADC_CTRL2_6_5MHZ);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_TSC_CFG_REG, MCUSTMPE610_TSC_CFG_4SAMPLE | MCUSTMPE610_TSC_CFG_DELAY_1MS | MCUSTMPE610_TSC_CFG_SETTLE_5MS);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_TSC_FRACTION_Z_REG, 0x6);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_FIFO_TH_REG, 1);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_FIFO_STA_REG, MCUSTMPE610_FIFO_STA_RESET);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_FIFO_STA_REG, 0); /* unreset */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_TSC_I_DRIVE_REG, MCUSTMPE610_TSC_I_DRIVE_50MA);
+  McuSTMPE610_WriteReg8(MCUSTMPE610_INT_STA_REG, 0xFF); /* reset all ints */
+  McuSTMPE610_WriteReg8(MCUSTMPE610_INT_CTRL_REG, MCUSTMPE610_INT_CTRL_POL_HIGH | MCUSTMPE610_INT_CTRL_ENABLE);
+  return ERR_OK;
 }
 
 void McuSTMPE610_Deinit(void) {
