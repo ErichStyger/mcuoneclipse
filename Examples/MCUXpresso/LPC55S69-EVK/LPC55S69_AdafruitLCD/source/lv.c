@@ -70,53 +70,14 @@ lv_indev_t * LV_GetInputDevice(void) {
 
 /* Flush the content of the internal buffer the specific area on the display
  * You can use DMA or any hardware acceleration to do this operation in the background but
- * 'lv_flush_ready()' has to be called when finished
- * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
-static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p) {
+ * 'lv_disp_flush_ready()' has to be called when finished */
+static void ex_disp_flush(struct _disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p) {
   /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  McuILI9341_SetWindow(x1, y1, x2, y2);
-  McuILI9341_WritePixelData((uint16_t*)color_p, (x2-x1+1)*(y2-y1+1));
+  McuILI9341_SetWindow(area->x1, area->y1, area->x2, area->y2);
+  McuILI9341_WritePixelData((uint16_t*)color_p, (area->x2-area->x1+1)*(area->y2-area->y1+1));
   /* IMPORTANT!!!
    * Inform the graphics library that you are ready with the flushing*/
-  lv_flush_ready();
-}
-
-/* Write a pixel array (called 'map') to the a specific area on the display
- * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p) {
-  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  int32_t x, y;
-
-  for(;;) {
-    /* should not get here, NYI */
-  }
-  for(y = y1; y <= y2; y++) {
-      for(x = x1; x <= x2; x++) {
-        /* Put a pixel to the display.*/
-        LCD_SetPixel(x, y, color_p->full);
-        color_p++;
-      }
-  }
-  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-}
-
-/* Write a pixel array (called 'map') to the a specific area on the display
- * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_color_t color) {
-  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  int32_t x;
-  int32_t y;
-
-  for(;;) {
-    /* should not get here, NYI */
-  }
-  for(y = y1; y <= y2; y++) {
-    for(x = x1; x <= x2; x++) {
-      /* Put a pixel to the display.*/
-      LCD_SetPixel(x, y, color.full);
-    }
-  }
-  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
+  lv_disp_flush_ready(disp_drv);
 }
 
 #if USE_LV_GPU
@@ -150,7 +111,7 @@ static void ex_mem_fill(lv_color_t * dest, uint32_t length, lv_color_t color)
 #if PL_CONFIG_USE_GUI_TOUCH_NAV
 /* Read the touchpad and store it in 'data'
  * Return false if no more data read; true for ready again */
-static bool ex_tp_read(lv_indev_data_t * data) {
+static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data) {
     /* Read the touchpad */
 	int x=0, y=0, res;
 	bool pressed;
@@ -455,15 +416,18 @@ static bool encoder_read(lv_indev_data_t *data){
 }
 #endif
 
+static lv_disp_buf_t disp_buf;
+static lv_color_t buf[LV_HOR_RES_MAX * 10];                     /*Declare a buffer for 10 lines*/
+
 void LV_Init(void) {
   lv_disp_drv_t disp_drv;
 
   lv_init();
+  lv_disp_buf_init(&disp_buf, buf, NULL, LV_HOR_RES_MAX * 10);    /*Initialize the display buffer*/
   lv_disp_drv_init(&disp_drv);
   /*Set up the functions to access to your display*/
-  disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
-  disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
-  disp_drv.disp_map = ex_disp_map;                /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
+  disp_drv.flush_cb = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
+  disp_drv.buffer = &disp_buf;          /*Assign the buffer to the display*/
 
 #if USE_LV_GPU
   /*Optionally add functions to access the GPU. (Only in buffered mode, LV_VDB_SIZE != 0)*/
@@ -481,7 +445,7 @@ void LV_Init(void) {
   lv_indev_drv_init(&indev_drv);                  /*Basic initialization*/
 #if PL_CONFIG_USE_GUI_TOUCH_NAV /* touch pad */
   indev_drv.type = LV_INDEV_TYPE_POINTER;         /*The touchpad is pointer type device*/
-  indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
+  indev_drv.read_cb = ex_tp_read;                 /*Library ready your touchpad via this function*/
   inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 #elif PL_CONFIG_USE_GUI_KEY_NAV
   indev_drv.type = LV_INDEV_TYPE_ENCODER;

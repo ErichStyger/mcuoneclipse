@@ -73,6 +73,7 @@
 #define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"
 /* -------------------------------------------------*/
 /* LittlevGL */
+//#define LV_CONF_INCLUDE_SIMPLE
 #define LV_CONFIG_DISPLAY_WIDTH        (240)
 #define LV_CONFIG_DISPLAY_HEIGHT       (320)
 #define LV_CONFIG_COLOR_DEPTH          (16)

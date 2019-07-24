@@ -11,6 +11,7 @@
 #include "gui.h"
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
+#include "LittlevGL/lvgl/src/lv_objx/lv_btn.h"
 #include "McuRTOS.h"
 #include "leds.h"
 #include "McuLED.h"
@@ -20,6 +21,7 @@
 #include "McuFontDisplay.h"
 #if PL_CONFIG_USE_STMPE610
   #include "McuSTMPE610.h"
+  #include "TouchCalibrate.h"
 #endif
 
 static TaskHandle_t GUI_TaskHndl;
@@ -122,9 +124,22 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 }
 #endif
 
-static lv_res_t btn_click_sensor_action(struct _lv_obj_t *obj) {
-  //GUI_TEMPHUM_CreateView();
-  return LV_RES_OK;
+#if PL_CONFIG_USE_STMPE610
+static void btn_touchcalibrate_event_handler(lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    TouchCalib_CreateView();
+  } else if(event == LV_EVENT_VALUE_CHANGED) {
+//      printf("Toggled\n");
+  }
+}
+#endif
+
+static void btn_sensor_event_handler(lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+  //    printf("Clicked\n");
+  } else if(event == LV_EVENT_VALUE_CHANGED) {
+//      printf("Toggled\n");
+  }
 }
 
 void GUI_MainMenuCreate(void) {
@@ -137,6 +152,7 @@ void GUI_MainMenuCreate(void) {
   /* create window */
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
+
   //int size = lv_win_get_btn_size(gui_win);
   //lv_win_set_btn_size(gui_win, 8);
   lv_win_set_sb_mode(gui_win, LV_SB_MODE_OFF); /* no scroll bar */
@@ -147,8 +163,17 @@ void GUI_MainMenuCreate(void) {
 #endif
   lv_obj_t *btn;
   lv_obj_t *label;
+#if PL_CONFIG_USE_STMPE610
+  btn = lv_btn_create(gui_win, NULL);
+  label = lv_label_create(btn, NULL);
+  lv_label_set_text(label, "Touch Calibrate");
+  lv_obj_set_event_cb(btn, btn_touchcalibrate_event_handler);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT); /* set auto fit to text */
+#if PL_CONFIG_USE_GUI_KEY_NAV
+  GUI_AddObjToGroup(btn);
+#endif
+#endif
 
-#if 1
   btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn, 45, 20);
@@ -156,12 +181,11 @@ void GUI_MainMenuCreate(void) {
 #endif
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Sensor");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_sensor_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  lv_obj_set_event_cb(btn, btn_sensor_event_handler);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT); /* set auto fit to text */
 #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
 #endif
-#endif /* PL_CONFIG_USE_SHUTDOWN */
 }
 
 static void ErrMsg(void) {
