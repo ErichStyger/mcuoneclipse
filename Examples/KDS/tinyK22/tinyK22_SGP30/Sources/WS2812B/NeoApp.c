@@ -48,7 +48,7 @@
 
 static NEOA_AppMode NEOA_CurrAppMode = NEOA_APP_CLOCK;
 
-static uint8_t NEOA_BrightnessAuto, NEOA_BrightnessFix = 50; /* 0 (off) to 255 */
+static uint8_t NEOA_BrightnessAuto, NEOA_BrightnessFix = 20; /* 0 (off) to 255 */
 #if PL_CONFIG_HAS_TSL2561
   static bool NEOA_isAutoBrightness = TRUE;
 #endif
@@ -126,8 +126,6 @@ uint32_t NEOA_GammaBrightnessColor(uint32_t color) {
   }
   return color;
 }
-
-
 
 static void StopTask(NEOA_AppMode curr) {
   switch(curr) {
@@ -207,17 +205,17 @@ static void NeoTask(void* pvParameters) {
     }
 #if PL_CONFIG_HAS_TSL2561
     tickCnt = xTaskGetTickCount();
-    if (NEOA_GetIsAutoBrightness() && tickCnt-lastLightMeasurementTickCnt > pdMS_TO_TICKS(1000)) { /* every 2 seconds */
+    if (NEOA_GetIsAutoBrightness() && tickCnt-lastLightMeasurementTickCnt > pdMS_TO_TICKS(2000)) { /* every 2 seconds */
       lastLightMeasurementTickCnt = tickCnt;
       if (SENSOR_GetLux(&lux)==ERR_OK) {
         /* 1 lux is pretty dark, 50 is rather dark, 200 is about office light */
         if (NEOA_GetUseGammaCorrection()) { /* not sure if we should do this? */
           new_light_level = lux*2;
         } else {
-          new_light_level = lux*2;
+          new_light_level = (lux/2)-10;
         }
-        if (new_light_level>150) { /* cap it to avoid it goes too bright */
-          new_light_level = 150;
+        if (new_light_level>100) { /* cap it to avoid it goes too bright */
+          new_light_level = 100;
         } else if (new_light_level < 1) { /* avoid it getting to zero */
           new_light_level = 1;
         }
@@ -234,7 +232,7 @@ static void NeoTask(void* pvParameters) {
       }
     }
 #endif
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(200));
   }
 }
 
