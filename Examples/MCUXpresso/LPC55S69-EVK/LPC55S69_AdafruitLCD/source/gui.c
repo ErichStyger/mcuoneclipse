@@ -22,6 +22,7 @@
 #if PL_CONFIG_USE_STMPE610
   #include "McuSTMPE610.h"
   #include "TouchCalibrate.h"
+  #include "tpcal.h"
 #endif
 
 static TaskHandle_t GUI_TaskHndl;
@@ -128,6 +129,7 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 static void btn_touchcalibrate_event_handler(lv_obj_t *obj, lv_event_t event) {
   if(event == LV_EVENT_CLICKED) {
     TouchCalib_CreateView();
+    //tpcal_create();
   } else if(event == LV_EVENT_VALUE_CHANGED) {
 //      printf("Toggled\n");
   }

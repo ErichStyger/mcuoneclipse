@@ -112,22 +112,22 @@ static void ex_mem_fill(lv_color_t * dest, uint32_t length, lv_color_t color)
 /* Read the touchpad and store it in 'data'
  * Return false if no more data read; true for ready again */
 static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data) {
-    /* Read the touchpad */
-	int x=0, y=0, res;
+  /* Read the touchpad */
+  static int last_x = 0;
+  static int last_y = 0;
 	bool pressed;
 
-	res = TOUCH_Poll(&pressed, &x, &y);
-	if (res==1 && pressed) {
-		data->state = LV_INDEV_STATE_PR;
-#if PL_CONFIG_USE_GUI_SCREEN_SAVER
-		KeyPressForLCD();
-#endif
-	} else {
-		data->state = LV_INDEV_STATE_REL;
+	data->state = TOUCH_IsPressed() ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
+	if (data->state==LV_INDEV_STATE_PR) {
+	 (void)TOUCH_Poll(&pressed, &last_x, &last_y);
+  #if PL_CONFIG_USE_GUI_SCREEN_SAVER
+    KeyPressForLCD();
+  #endif
 	}
-	data->point.x = x;
-	data->point.y = y;
-  return false;   /* false: no more data to read because we are not buffering*/
+	/* Set the coordinates (if released use the last pressed coordinates) */
+	data->point.x = last_x;
+	data->point.y = last_y;
+	return TOUCH_HasMoreData();
 }
 #endif
 

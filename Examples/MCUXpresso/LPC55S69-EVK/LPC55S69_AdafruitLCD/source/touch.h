@@ -10,7 +10,9 @@
 
 #include <stdbool.h>
 
+bool TOUCH_HasMoreData(void);
 int TOUCH_Poll(bool *pressed, int *x, int *y);
+bool TOUCH_IsPressed(void);
 void TOUCH_Deinit(void);
 void TOUCH_Init(void);
 

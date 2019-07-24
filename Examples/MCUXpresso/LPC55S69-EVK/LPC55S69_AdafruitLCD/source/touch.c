@@ -88,6 +88,33 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
   return 0; /* not touched */
 }
 
+bool TOUCH_IsPressed(void) {
+  uint8_t res;
+#if PL_CONFIG_USE_STMPE610
+  bool touched;
+
+  res = McuSTMPE610_IsTouched(&touched);
+  return res==ERR_OK && touched;
+#elif PL_CONFIG_USE_FT6206
+  uint8_t val;
+
+  res = McuFT6206_ReadNofTouches(&val)
+  return res==ERR_OK && val>0;
+#endif
+}
+
+bool TOUCH_HasMoreData(void) {
+#if PL_CONFIG_USE_STMPE610
+  uint8_t res;
+  bool empty;
+
+  res = McuSTMPE610_FIFOisEmpty(&empty);
+  return res==ERR_OK && !empty;
+#elif PL_CONFIG_USE_FT6206
+  return false; /* we are not buffering data */
+#endif
+}
+
 void TOUCH_Init(void) {
 }
 

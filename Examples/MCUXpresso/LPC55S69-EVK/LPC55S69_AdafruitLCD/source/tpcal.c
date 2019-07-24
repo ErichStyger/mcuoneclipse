@@ -1,4 +1,4 @@
-#if 0
+#if 1
 /**
  * @file tpcal.c
  *
@@ -26,6 +26,7 @@
  *********************/
 #include "tpcal.h"
 #include <stdio.h>
+#include "TouchCalibrate.h"
 
 /*********************
  *      DEFINES
@@ -362,7 +363,7 @@ static void btn_event_cb(lv_obj_t * scr, lv_event_t event)
          * TODO Process 'p' points here to calibrate the touch pad
          * Offset will be: CIRCLE_SIZE/2 + CIRCLE_OFFSET
          */
-
+        TouchCalib_set_cal_data(point);
         /*
          * TODO: you can change the calibrate input callback here e.g:
          *  lv_indev_t *indev = lv_indev_get_act();

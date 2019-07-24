@@ -48,3 +48,7 @@ void TouchCalib_CreateView(void) {
   lv_obj_t * txt = lv_label_create(win, NULL);
   lv_label_set_text(txt, "Touch the markers\n\nto calibrate the touch screen!");
 }
+
+void TouchCalib_set_cal_data(lv_point_t points[4]) {
+
+}
