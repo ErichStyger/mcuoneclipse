@@ -75,7 +75,7 @@ static void waitAnyButton(void) {
     if (EVNT1_GetClearEvent(EVNT1_SNAKE_RIGHT)) {
       break;
     }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -398,18 +398,18 @@ static void SnakeTask(void *pvParameters) {
   resetGame();
   for(;;) {
     snake();
-    FRTOS1_vTaskDelay(time/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(time));
   }
 }
 
 void SNAKE_Init(void) {
-  if (FRTOS1_xTaskCreate(
+  if (xTaskCreate(
       SnakeTask,  /* pointer to the task */
         "Snake", /* task name for kernel awareness debugging */
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

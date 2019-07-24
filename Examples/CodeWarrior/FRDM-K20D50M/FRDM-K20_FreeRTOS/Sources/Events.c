@@ -252,7 +252,7 @@ void Cpu_OnSupervisorCall(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
 #if 1
   /* example for Kinetis (enable SetOperationMode() in CPU component): */
@@ -271,6 +271,24 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
 #else
   #error "you *must* enter low power mode (wait for interrupt) here!"
 #endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */
 }
 

@@ -94,7 +94,7 @@ static portTASK_FUNCTION(TraceTask, pvParameters) {
   (void)pvParameters;
   for(;;) {
     if (traceChannel==TRACE_TO_NONE) {
-      FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(1000));
     } else if (traceChannel==TRACE_TO_SHELL) {
       buf[0] = '\0';
       UTIL1_strcat(buf, sizeof(buf), (unsigned char*)" => ");
@@ -110,9 +110,9 @@ static portTASK_FUNCTION(TraceTask, pvParameters) {
         UTIL1_strcatNum16sFormatted(buf, sizeof(buf), z, ' ', 6);
         UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
         CLS1_SendStr(&buf[0], CLS1_GetStdio()->stdOut);
-        FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+        vTaskDelay(pdMS_TO_TICKS(100));
       }
-      FRTOS1_vTaskDelay(25/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(25));
     }
   }
 }

@@ -10,14 +10,14 @@
 #include "FRTOS1.h"
 
 static volatile bool SPI_DataReceivedFlag = FALSE;
-static xSemaphoreHandle SPI_mutex = NULL; /* Semaphore to protect SPI access */
+static SemaphoreHandle_t SPI_mutex = NULL; /* Semaphore to protect SPI access */
 
 void SPI_RequestSPIBus(void) {
-  (void)FRTOS1_xSemaphoreTakeRecursive(SPI_mutex, portMAX_DELAY);
+  (void)xSemaphoreTakeRecursive(SPI_mutex, portMAX_DELAY);
 }
 
 void SPI_ReleaseSPIBus(void) {
-  (void)FRTOS1_xSemaphoreGiveRecursive(SPI_mutex);
+  (void)xSemaphoreGiveRecursive(SPI_mutex);
 }
 
 void SPI_OnBlockReceived(LDD_TUserData *UserDataPtr) {
@@ -46,5 +46,5 @@ uint8_t SPI_ReadByte(void) {
 }
 
 void SPI_Init(void) {
-  SPI_mutex = FRTOS1_xSemaphoreCreateRecursiveMutex();
+  SPI_mutex = xSemaphoreCreateRecursiveMutex();
 }
