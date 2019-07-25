@@ -203,7 +203,7 @@ static void GuiTask(void *p) {
   if (McuILI9341_InitLCD()!=ERR_OK) {
     ErrMsg();
   }
-  McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
+  //McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
 #if PL_CONFIG_USE_STMPE610
   if (McuSTMPE610_InitController()!=ERR_OK) {
     ErrMsg();

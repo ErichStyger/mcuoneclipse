@@ -130,12 +130,9 @@ static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * dat
 	  last_y = y;
 	  data->point.x = x;
 	  data->point.y = y;
-	  McuShell_printf("touched: %d, x:%d, y:%d\r\n", pressed, x, y);
   #if PL_CONFIG_USE_GUI_SCREEN_SAVER
     KeyPressForLCD();
   #endif
-	} else {
-    McuShell_printf("released: x:%d, y:%d\r\n", last_x, last_y);
 	}
 	//return TOUCH_HasMoreData();
 	return false; /* no more data */

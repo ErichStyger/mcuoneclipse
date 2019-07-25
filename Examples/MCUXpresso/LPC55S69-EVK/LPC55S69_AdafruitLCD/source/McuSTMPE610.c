@@ -11,6 +11,8 @@
 #include "McuGPIO.h"
 #include "McuSPI.h"
 #include "McuUtility.h"
+#include "McuShell.h"
+#include "TouchCalibrate.h"
 
 static McuSPI_Config configSPI = -1;
 
@@ -133,6 +135,7 @@ uint8_t McuSTMPE610_GetLastPoint(uint16_t *x, uint16_t *y, uint8_t *z) {
   *x = xp;
   *y = yp;
   *z = zp;
+  McuShell_printf("touch last raw: x:%d, y:%d z:%d\r\n", xp, yp, zp);
   return res;
 }
 
@@ -144,6 +147,7 @@ uint8_t McuSTMPE610_GetCalibratedCoordinates(uint16_t *x, uint16_t *y, uint8_t *
   res = McuSTMPE610_GetLastPoint(&xd, &yd, &zd);
   if (res==ERR_OK) {
     TouchCalib_Calibrate(&xd, &yd);
+    McuShell_printf("touch calib: x:%d, y:%d z:%d\r\n", xd, yd, zd);
     *x = xd;
     *y = yd;
     *z = zd;
