@@ -15,6 +15,7 @@
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "lcd.h"
+#include "McuShell.h"
 #if PL_CONFIG_USE_GUI_TOUCH_NAV
   #include "touch.h"
 #endif
@@ -115,20 +116,29 @@ static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * dat
   /* Read the touchpad */
   static int last_x = 0;
   static int last_y = 0;
+  uint16_t x, y;
 	bool pressed;
 
-	data->state = TOUCH_IsPressed() ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
-	if (data->state==LV_INDEV_STATE_PR) {
-	  (void)TOUCH_Poll(&pressed, &last_x, &last_y);
+	/* set default state which is released with the last pressed coordinates */
+	data->state = LV_INDEV_STATE_REL;
+  data->point.x = last_x;
+  data->point.y = last_y;
+
+	if (TOUCH_IsPressed() && TOUCH_Poll(&pressed, &x, &y)==ERR_OK) {
+	  data->state = LV_INDEV_STATE_PR;
+	  last_x = x;
+	  last_y = y;
+	  data->point.x = x;
+	  data->point.y = y;
+	  McuShell_printf("touched: %d, x:%d, y:%d\r\n", pressed, x, y);
   #if PL_CONFIG_USE_GUI_SCREEN_SAVER
     KeyPressForLCD();
   #endif
+	} else {
+    McuShell_printf("released: x:%d, y:%d\r\n", last_x, last_y);
 	}
-	/* Set the coordinates (if released use the last pressed coordinates) */
-	data->point.x = last_x;
-	data->point.y = last_y;
 	//return TOUCH_HasMoreData();
-	return false;
+	return false; /* no more data */
 }
 #endif
 

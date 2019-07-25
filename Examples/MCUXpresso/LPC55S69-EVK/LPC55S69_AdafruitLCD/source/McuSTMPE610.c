@@ -146,7 +146,7 @@ uint8_t McuSTMPE610_GetCalibratedCoordinates(uint16_t *x, uint16_t *y, uint8_t *
     TouchCalib_Calibrate(&xd, &yd);
     *x = xd;
     *y = yd;
-    *z = yd;
+    *z = zd;
     return ERR_OK;
   }
   return res;

@@ -13,6 +13,17 @@
 #include "toaster.h"
 
 static lv_obj_t *win;
+static struct {
+  bool isCalibrated;
+  lv_point_t point[4];
+} cal_data =
+  {
+    .isCalibrated = true,
+    .point[0] = {.x=705,  .y=549},
+    .point[1] = {.x=3394, .y=527},
+    .point[2] = {.x=3395, .y=3466},
+    .point[3] = {.x=1587, .y=3433},
+  };
 
 /**
  * Called when the window's close button is clicked
@@ -50,30 +61,51 @@ void TouchCalib_CreateView(void) {
   lv_label_set_text(txt, "Touch the markers\n\nto calibrate the touch screen!");
 }
 
-static lv_point_t rawPoints[4];
-static bool isCalibrated = false;
-
 bool TouchCalib_IsCalibrated(void) {
-  return isCalibrated;
+  return cal_data.isCalibrated;
+}
+
+void TouchCalib_SetCalibrated(bool isCalibrated) {
+  cal_data.isCalibrated = isCalibrated;
 }
 
 void TouchCalib_set_cal_data(lv_point_t points[4]) {
-  memcpy(rawPoints, points, sizeof(rawPoints)); /* store data */
-  isCalibrated = true;
+  memcpy(cal_data.point, points, sizeof(cal_data.point)); /* store data */
+  cal_data.isCalibrated = true;
+}
+
+static int32_t int_ext(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x)  {
+  return y2 - (x2-x) / ((x2 - x1) / (y2 - y1));
 }
 
 void TouchCalib_Calibrate(uint16_t *x, uint16_t *y) {
-  #define LCD_HEIGHT 320
-  #define LCD_WIDTH  240
-  if (isCalibrated) {
-    int x1_saved = (rawPoints[0].x+rawPoints[3].x)/2;
-    int x2_saved = (rawPoints[1].x+rawPoints[2].x)/2;
-    int y1_saved = (rawPoints[0].y+rawPoints[1].y)/2;
-    int y2_saved = (rawPoints[2].y+rawPoints[2].y)/3;
+  if (cal_data.isCalibrated) {
+    /* see https://github.com/littlevgl/esp32_ili9341/issues/12 */
+    #define LCD_HOR_RES     240
+    #define LCD_VER_RES     320
+    #define CIRCLE_SIZE      20
+    #define CIRCLE_OFFSET    20
 
-    *x = ((*x - x1_saved) * LCD_WIDTH) / (x2_saved - x1_saved);
-    *y = ((*y - y1_saved) * LCD_HEIGHT) / (y2_saved - y1_saved);
+    int xval, yval;
+
+    xval = int_ext(cal_data.point[0].x, CIRCLE_OFFSET + CIRCLE_SIZE/2, cal_data.point[1].x, LCD_HOR_RES - CIRCLE_OFFSET + CIRCLE_SIZE/2, *x);
+    yval = int_ext(cal_data.point[1].y, CIRCLE_OFFSET + CIRCLE_SIZE/2, cal_data.point[2].y, LCD_VER_RES - CIRCLE_OFFSET + CIRCLE_SIZE/2, *y);
+    if (xval<0) {
+      xval = 0;
+    }
+    if (xval>LCD_HOR_RES-1) {
+      xval = LCD_HOR_RES-1;
+    }
+    if (yval<0) {
+      yval = 0;
+    }
+    if (yval>LCD_VER_RES-1) {
+      yval = LCD_VER_RES-1;
+    }
+    *x = xval;
+    *y = yval;
   } else {
+#if 0
     int ix, iy;
 
     /* the STMPE610 delivers x and y in the range of 0...4096, and z is the pressure (the harder the press, the lower the number */
@@ -84,8 +116,8 @@ void TouchCalib_Calibrate(uint16_t *x, uint16_t *y) {
 
     ix = *x;
     iy = *y;
-    ix = McuUtility_map(ix, TS_MINX, TS_MAXX, 0, LCD_WIDTH);
-    iy = McuUtility_map(iy, TS_MINY, TS_MAXY, 0, LCD_HEIGHT);
+    ix = McuUtility_map(ix, TS_MINX, TS_MAXX, 0, LCD_HOR_RES);
+    iy = McuUtility_map(iy, TS_MINY, TS_MAXY, 0, LCD_VER_RES);
     if (ix < 0) {
       ix = 0;
     } else if (ix > LCD_WIDTH-1) {
@@ -98,5 +130,6 @@ void TouchCalib_Calibrate(uint16_t *x, uint16_t *y) {
     }
     *x = ix;
     *y = iy;
+#endif
   }
 }

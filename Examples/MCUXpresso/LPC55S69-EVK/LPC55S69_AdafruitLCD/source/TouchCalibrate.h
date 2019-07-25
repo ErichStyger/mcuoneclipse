@@ -16,5 +16,6 @@ void TouchCalib_CreateView(void);
 void TouchCalib_set_cal_data(lv_point_t points[4]);
 void TouchCalib_Calibrate(uint16_t *x, uint16_t *y);
 bool TouchCalib_IsCalibrated(void);
+void TouchCalib_SetCalibrated(bool isCalibrated);
 
 #endif /* TOUCHCALIBRATE_H_ */

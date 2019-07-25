@@ -26,7 +26,7 @@ static void TOUCH_OrientationRotate(McuFT6206_TouchPoint *point) {
 }
 #endif
 
-int TOUCH_Poll(bool *pressed, int *x, int *y) {
+uint8_t TOUCH_Poll(bool *pressed, uint16_t *x, uint16_t *y) {
   /* defaults */
   *pressed = false;
   *x = 0;
@@ -68,11 +68,11 @@ int TOUCH_Poll(bool *pressed, int *x, int *y) {
       *x = xd;
       *y = yd;
       *pressed = true;
-      return 1; /* touched */
+      return ERR_OK; /* touched */
     }
   }
 #endif
-  return 0; /* not touched */
+  return ERR_IDLE; /* not touched */
 }
 
 bool TOUCH_IsPressed(void) {

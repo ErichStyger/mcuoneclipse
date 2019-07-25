@@ -128,12 +128,20 @@ void McuSPI_ReadByte(McuSPI_Config config, uint8_t *data) {
 }
 
 void MCUSPI_WriteBytes(McuSPI_Config config, uint8_t *data, size_t nofBytes) {
+  spi_transfer_t xfer = {0};
+  uint8_t destBuff;
+
+  xfer.txData   = data;
+  xfer.rxData   = &destBuff;
+  xfer.dataSize = 1;
+  xfer.configFlags = kSPI_FrameAssert; /* required to get CLK low after transfer */
 #if MCUSPI_CONFIG_USE_MUTEX
   xSemaphoreTakeRecursive(mutex, portMAX_DELAY);
 #endif
+  McuSPI_SwitchConfig(config);
   while(nofBytes>0) {
-    McuSPI_WriteByte(config, *data);
-    data++;
+    SPI_MasterTransferBlocking(DEVICE_SPI_MASTER, &xfer);
+    xfer.txData++;
     nofBytes--;
   }
 #if MCUSPI_CONFIG_USE_MUTEX

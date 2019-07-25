@@ -129,6 +129,7 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 static void btn_touchcalibrate_event_handler(lv_obj_t *obj, lv_event_t event) {
   if(event == LV_EVENT_CLICKED) {
     //TouchCalib_CreateView();
+    TouchCalib_SetCalibrated(false);
     tpcal_create();
   } else if(event == LV_EVENT_VALUE_CHANGED) {
 //      printf("Toggled\n");
@@ -202,7 +203,7 @@ static void GuiTask(void *p) {
   if (McuILI9341_InitLCD()!=ERR_OK) {
     ErrMsg();
   }
-  //McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
+  McuILI9341_ClearDisplay(MCUILI9341_GREEN); /* testing only to see a change on the screen */
 #if PL_CONFIG_USE_STMPE610
   if (McuSTMPE610_InitController()!=ERR_OK) {
     ErrMsg();
