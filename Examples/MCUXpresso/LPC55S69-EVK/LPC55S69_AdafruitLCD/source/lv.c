@@ -119,7 +119,7 @@ static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * dat
 
 	data->state = TOUCH_IsPressed() ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
 	if (data->state==LV_INDEV_STATE_PR) {
-	 (void)TOUCH_Poll(&pressed, &last_x, &last_y);
+	  (void)TOUCH_Poll(&pressed, &last_x, &last_y);
   #if PL_CONFIG_USE_GUI_SCREEN_SAVER
     KeyPressForLCD();
   #endif
@@ -127,7 +127,8 @@ static bool ex_tp_read(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * dat
 	/* Set the coordinates (if released use the last pressed coordinates) */
 	data->point.x = last_x;
 	data->point.y = last_y;
-	return TOUCH_HasMoreData();
+	//return TOUCH_HasMoreData();
+	return false;
 }
 #endif
 

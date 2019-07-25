@@ -128,8 +128,8 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 #if PL_CONFIG_USE_STMPE610
 static void btn_touchcalibrate_event_handler(lv_obj_t *obj, lv_event_t event) {
   if(event == LV_EVENT_CLICKED) {
-    TouchCalib_CreateView();
-    //tpcal_create();
+    //TouchCalib_CreateView();
+    tpcal_create();
   } else if(event == LV_EVENT_VALUE_CHANGED) {
 //      printf("Toggled\n");
   }
@@ -206,6 +206,13 @@ static void GuiTask(void *p) {
 #if PL_CONFIG_USE_STMPE610
   if (McuSTMPE610_InitController()!=ERR_OK) {
     ErrMsg();
+  }
+  if (!TouchCalib_IsCalibrated()) {
+    tpcal_create();
+  }
+  while(!TouchCalib_IsCalibrated()) {
+    LV_Task(); /* call this every 1-20 ms */
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 #endif
   GUI_MainMenuCreate();

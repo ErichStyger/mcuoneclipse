@@ -10,6 +10,7 @@
 #include "McuSTMPE610.h"
 #include "McuGPIO.h"
 #include "McuSPI.h"
+#include "McuUtility.h"
 
 static McuSPI_Config configSPI = -1;
 
@@ -133,6 +134,26 @@ uint8_t McuSTMPE610_GetLastPoint(uint16_t *x, uint16_t *y, uint8_t *z) {
   *y = yp;
   *z = zp;
   return res;
+}
+
+uint8_t McuSTMPE610_GetCalibratedCoordinates(uint16_t *x, uint16_t *y, uint8_t *z) {
+  uint8_t res;
+  uint16_t xd, yd;
+  uint8_t zd;
+
+  res = McuSTMPE610_GetLastPoint(&xd, &yd, &zd);
+  if (res==ERR_OK) {
+    TouchCalib_Calibrate(&xd, &yd);
+    *x = xd;
+    *y = yd;
+    *z = yd;
+    return ERR_OK;
+  }
+  return res;
+}
+
+uint8_t McuSTMPE610_GetRawCoordinates(uint16_t *x, uint16_t *y, uint8_t *z) {
+  return McuSTMPE610_GetLastPoint(x, y, z);
 }
 
 uint8_t McuSTMPE610_CheckAndSwitchSPIMode(void) {
