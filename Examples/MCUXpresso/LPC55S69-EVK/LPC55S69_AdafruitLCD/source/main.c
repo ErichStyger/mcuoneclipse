@@ -54,7 +54,6 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    /* Force the counter to be placed into memory. */
     APP_Run();
     return 0 ;
 }

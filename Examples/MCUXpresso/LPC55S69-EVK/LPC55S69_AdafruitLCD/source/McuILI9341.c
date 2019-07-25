@@ -270,7 +270,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
-  uint8_t buf[32], res;
+  uint8_t buf[48], res;
   uint8_t man, driver, id, mode;
 
   McuShell_SendStatusStr((unsigned char*)"ILI9341", (unsigned char*)"\r\n", io->stdOut);

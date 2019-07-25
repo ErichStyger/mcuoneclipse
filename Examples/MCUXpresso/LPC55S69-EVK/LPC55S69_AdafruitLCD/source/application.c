@@ -38,6 +38,8 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 
+  McuShell_SendStr((unsigned char*)"\r\n*** LPC55S69 with Adafruit LCD ***\r\n", McuShell_GetStdio()->stdOut);
+#if 0
   McuLED_On(LED_Red);
   McuWait_Waitms(100);
   McuLED_Off(LED_Red);
@@ -49,7 +51,7 @@ void APP_Run(void) {
   McuLED_On(LED_Blue);
   McuWait_Waitms(100);
   McuLED_Off(LED_Blue);
-
+#endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
