@@ -25,7 +25,7 @@
 
 #if PL_CONFIG_USE_GUI_SCREEN_SAVER
   static TimerHandle_t timerHndlLcdTimeout;
-  #define SCREEN_SAVER_TIMEOUT_MS (10*1000)
+  #define SCREEN_SAVER_TIMEOUT_MS (10*1000) /* number of milli-seconds */
 #endif
 
 static McuRB_Handle_t ringBufferHndl;
@@ -53,7 +53,7 @@ static void KeyPressForLCD(void) {
     TOASTER_StopScreenSaver();
     /* and turn LCD on */
   #else
-    McuSSD1306_DisplayOn(true);
+    McuILI9341_DisplayOn(true);
   #endif
   } else {
     if (xTimerReset(timerHndlLcdTimeout, 0)!=pdPASS) { /* reset timer, e.g. after key press or user input */
