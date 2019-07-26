@@ -44,53 +44,64 @@
 
 /* TODO: insert other definitions and declarations here. */
 /* The RGB LED connected to the No. 52 pin of RT1052 chip.  */
+/* The button connected to the No. 125 pin of RT1052 chip. */
 /*
  * __RT1052_PIN(52, GPIO1,  9),    // GPIO_AD_B0_09
+ * __RT1052_PIN(125, GPIO5,  0),   // WAKEUP
  * https://github.com/RT-Thread/rt-thread/blob/8ed3470d2a485c49ec4f5d4a5ec53e94edf7a2c8/bsp/imxrt1052-evk/drivers/drv_pin.c#L184
  */
 #define EXAMPLE_LED_GPIO        GPIO1
 #define EXAMPLE_LED_GPIO_PIN    (9U)
+
+#define EXAMPLE_SW02_GPIO       GPIO5
+#define EXAMPLE_SW02_GPIO_PIN   (0U)
 
 volatile uint32_t g_systickCounter;
 /* The PIN status */
 volatile bool g_pinSet = false;
 
 void SysTick_Handler(void) {
-    if (g_systickCounter != 0U) {
-        g_systickCounter--;
-    }
+  if (g_systickCounter != 0U) {
+    g_systickCounter--;
+  }
 }
 
 void SysTick_DelayTicks(uint32_t n) {
-    g_systickCounter = n;
-    while(g_systickCounter != 0U)
-    {
-    }
+  g_systickCounter = n;
+  while(g_systickCounter != 0U)
+  {
+  }
 }
 
 static void blinky(void) {
+  int cntr = 0;
   gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
+  gpio_pin_config_t sw_config = {kGPIO_DigitalInput, 0, kGPIO_NoIntmode};
   /* Init output LED GPIO. */
   GPIO_PinInit(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, &led_config);
+  GPIO_PinInit(EXAMPLE_SW02_GPIO, EXAMPLE_SW02_GPIO_PIN, &sw_config); /* internal pull-up is enabled in pin mux */
 
   /* Set systick reload value to generate 1ms interrupt */
   if(SysTick_Config(SystemCoreClock / 1000U)) {
       while(1) {
       }
   }
-
   while (1) {
-      /* Delay 1000 ms */
-      SysTick_DelayTicks(1000U);
-      if (g_pinSet) {
-          GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
-          g_pinSet = false;
-      } else     {
-          GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
-          g_pinSet = true;
-      }
+    /* Delay 1000 ms */
+    SysTick_DelayTicks(1000U);
+    if (GPIO_PinRead(EXAMPLE_SW02_GPIO, EXAMPLE_SW02_GPIO_PIN)!=0) {
+      cntr++; /* button not pressed */
+    } else {
+      cntr--; /* button pressed! */
+    }
+    if (g_pinSet) {
+        GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 0U);
+        g_pinSet = false;
+    } else     {
+        GPIO_PinWrite(EXAMPLE_LED_GPIO, EXAMPLE_LED_GPIO_PIN, 1U);
+        g_pinSet = true;
+    }
   }
-
 }
 
 /*

@@ -111,7 +111,7 @@
                <pin_label pin_num="E14" pin_signal="GPIO_AD_B0_06" label="JTAG_TMS/J21[7]/SWD_DIO"/>
                <pin_label pin_num="F12" pin_signal="GPIO_AD_B0_07" label="JTAG_TCK/J21[9]/SWD_CLK"/>
                <pin_label pin_num="F13" pin_signal="GPIO_AD_B0_08" label="JTAG_MOD"/>
-               <pin_label pin_num="F14" pin_signal="GPIO_AD_B0_09" label="JTAG_TDI/J21[5]/ENET_RST/J22[5]"/>
+               <pin_label pin_num="F14" pin_signal="GPIO_AD_B0_09" label="JTAG_TDI/J21[5]/ENET_RST/J22[5]" identifier="LED_R"/>
                <pin_label pin_num="G13" pin_signal="GPIO_AD_B0_10" label="JTAG_TDO/J21[13]/INT1_COMBO/ENET_INT/J22[6]/U32[11]" identifier="INT1_COMBO"/>
                <pin_label pin_num="G10" pin_signal="GPIO_AD_B0_11" label="JTAG_nTRST/J21[3]/INT2_COMBO/LCD_TOUCH_INT/J22[3]/U32[9]" identifier="INT2_COMBO"/>
                <pin_label pin_num="K14" pin_signal="GPIO_AD_B0_12" label="UART1_TXD" identifier="UART1_TXD"/>
@@ -195,7 +195,7 @@
                <pin_label pin_num="K5" pin_signal="NVCC_SD1" label="FLASH_VCC" identifier="FLASH_VCC"/>
                <pin_label pin_num="F5" pin_signal="NVCC_EMC0" label="DCDC_3V3"/>
                <pin_label pin_num="E6" pin_signal="NVCC_EMC1" label="DCDC_3V3"/>
-               <pin_label pin_num="L6" pin_signal="WAKEUP" label="SD_PWREN" identifier="SD_PWREN"/>
+               <pin_label pin_num="L6" pin_signal="WAKEUP" label="SD_PWREN" identifier="SD_PWREN;SW02"/>
                <pin_label pin_num="L1" pin_signal="DCDC_IN0" label="MCU_DCDC_IN_3V3"/>
                <pin_label pin_num="L2" pin_signal="DCDC_IN1" label="MCU_DCDC_IN_3V3"/>
                <pin_label pin_num="K4" pin_signal="DCDC_IN_Q" label="MCU_DCDC_IN_3V3"/>
@@ -228,6 +228,11 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
+                  <dependency resourceType="Peripheral" resourceId="GPIO5" description="Peripheral GPIO5 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -238,9 +243,26 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.igpio" description="Pins initialization requires the IGPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                </dependencies>
                <pins>
-                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09"/>
+                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="pull_keeper_select" value="no_init"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO5" signal="gpio_io, 00" pin_num="L6" pin_signal="WAKEUP">
+                     <pin_features>
+                        <pin_feature name="identifier" value="SW02"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="pull_up_down_config" value="Pull_Up_100K_Ohm"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
             <function name="BOARD_InitDEBUG_UARTPins">
