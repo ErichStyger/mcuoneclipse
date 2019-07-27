@@ -8,10 +8,9 @@
 !!GlobalInfo
 product: Peripherals v6.0
 processor: MIMXRT1052xxxxB
-package_id: MIMXRT1052DVL6B
+package_id: MIMXRT1052CVL5B
 mcu_data: ksdk2_0
 processor_version: 6.0.1
-board: IMXRT1050-EVKB
 functionalGroups:
 - name: BOARD_InitPeripherals
   called_from_default_init: true
