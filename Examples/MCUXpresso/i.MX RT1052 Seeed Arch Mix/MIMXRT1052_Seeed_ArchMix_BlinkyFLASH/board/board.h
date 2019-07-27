@@ -41,7 +41,7 @@
 /**
  * @brief	The board name 
  */
-#define BOARD_NAME "board"
+#define BOARD_NAME "Seeed Arch Mix i.MX RT1052"
 
 #if defined(__cplusplus)
 extern "C" {

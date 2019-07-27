@@ -13,6 +13,10 @@ XIP_BOOT_HEADER_DCD_ENABLE=1
 - add fsl_commmon.h from SDK components
 
 
+Flash drivers are in (*.cfx)
+C:\nxp\MCUXpressoIDE_11.0.0_2516\ide\plugins\com.nxp.mcuxpresso.tools.bin.win32_11.0.0.201905221151\binaries\Flash
+==> MIMXRT1050-EVK_IS25WP064A.cfx
+
 
 Arch Mix: IS25WP064
 

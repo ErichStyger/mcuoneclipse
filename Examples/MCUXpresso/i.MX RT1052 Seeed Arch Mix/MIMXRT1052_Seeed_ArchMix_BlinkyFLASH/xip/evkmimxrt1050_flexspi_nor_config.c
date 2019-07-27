@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "evkmimxrt1020_flexspi_nor_config.h"
+#include <xip/evkmimxrt1050_flexspi_nor_config.h>
 
 /*******************************************************************************
  * Code
