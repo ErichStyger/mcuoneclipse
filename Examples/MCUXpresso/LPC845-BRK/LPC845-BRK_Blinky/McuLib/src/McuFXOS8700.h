@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FXOS8700CQ
-**     Version     : Component 01.031, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.032, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2019-06-11, 16:42, # CodeGen: 536
 **     Abstract    :
 **         Implements a Driver for the MMA8451 accelerometer from Freescale.
 **     Settings    :
@@ -58,7 +58,7 @@
 **         Init                - uint8_t McuFXOS8700_Init(void);
 **         Deinit              - uint8_t McuFXOS8700_Deinit(void);
 **
-** * Copyright (c) 2013-2017, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -153,9 +153,9 @@ extern "C" {
 
 /* die temperature (needs to add an offset as not factory trimmed) */
 #define McuFXOS8700_DIE_TEMP  0x51 /* die temperature register, signed 8bit in C */
-#define McuFXOS8700_DIE_TEMP_OFFSET 24 /* offset to temperature reading as value on device is not calibrated */
+#define McuFXOS8700_DIE_TEMP_OFFSET   McuFXOS8700_CONFIG_TEMP_OFFSET /* offset to temperature reading as value on device is not calibrated */
 
-#define McuFXOS8700_I2C_ADDR   (0x1E) /* I2C slave device address as set in the properties */
+#define McuFXOS8700_I2C_ADDR          McuFXOS8700_CONFIG_I2C_DEVICE_ADDRESS /* I2C slave device address as set in the properties */
 
 
 

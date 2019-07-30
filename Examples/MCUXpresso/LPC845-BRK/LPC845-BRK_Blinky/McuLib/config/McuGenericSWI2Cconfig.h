@@ -24,7 +24,7 @@
 #endif
 
 #ifndef McuGenericSWI2C_CONFIG_DO_YIELD
-  #define McuGenericSWI2C_CONFIG_DO_YIELD    (1)
+  #define McuGenericSWI2C_CONFIG_DO_YIELD    (0)
     /*!< 1: if RTOS present, do a yield. 0: do not yield during waiting */
 #endif
 

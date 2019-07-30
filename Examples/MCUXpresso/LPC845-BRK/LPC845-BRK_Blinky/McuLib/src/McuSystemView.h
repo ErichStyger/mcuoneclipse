@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerSystemView
-**     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.070, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-24, 13:39, # CodeGen: 438
+**     Date/Time   : 2019-05-30, 10:44, # CodeGen: 534
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -17,7 +17,7 @@
 **          RAM Base                                       : 0x20000000
 **          ID Base                                        : 0x10000000
 **          ID Shift                                       : 2
-**          Number of tasks                                : 8
+**          Number of tasks                                : 10
 **          Static Buffer                                  : yes
 **          Post Mortem                                    : no
 **          Implicit Format for printf()                   : no
@@ -248,7 +248,7 @@ void McuSystemView_Init(void);
 **
 **     Description :
 **         Prints a string using printf() to the host which is
-**         processed target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string
@@ -278,7 +278,7 @@ void McuSystemView_Init(void);
 **
 **     Description :
 **         Prints a warning string using printf() to the host which is
-**         processed on the target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string
@@ -308,7 +308,7 @@ void McuSystemView_Init(void);
 **
 **     Description :
 **         Prints an error string using printf() to the host which is
-**         processed on the target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string

@@ -44,8 +44,12 @@
  *
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS   1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
-#define configGENERATE_RUN_TIME_STATS             1 /* 1: generate runtime statistics; 0: no runtime statistics */
+#ifndef configGENERATE_RUN_TIME_STATS_USE_TICKS
+  #define configGENERATE_RUN_TIME_STATS_USE_TICKS 1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
+#endif
+#ifndef configGENERATE_RUN_TIME_STATS
+  #define configGENERATE_RUN_TIME_STATS           1 /* 1: generate runtime statistics; 0: no runtime statistics */
+#endif
 #if configGENERATE_RUN_TIME_STATS
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
     #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   /* nothing */ /* default: use Tick counter as runtime counter */
@@ -67,7 +71,9 @@
 #define configUSE_TICK_HOOK_NAME                  McuRTOS_vApplicationTickHook
 #define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
 #define configUSE_MALLOC_FAILED_HOOK_NAME         McuRTOS_vApplicationMallocFailedHook
-#define configTICK_RATE_HZ                        (1000) /* frequency of tick interrupt */
+#ifndef configTICK_RATE_HZ
+  #define configTICK_RATE_HZ                      (1000) /* frequency of tick interrupt */
+#endif
 #define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
 #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
@@ -82,12 +88,18 @@
 #define configSYSTICK_USE_CORE_CLOCK              1 /* System Tick is using core clock  */
 #define configSYSTICK_CLOCK_DIVIDER               1 /* no divider */
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
-#define configMINIMAL_STACK_SIZE                  (200) /* stack size in addressable stack units */
+#ifndef configMINIMAL_STACK_SIZE
+  #define configMINIMAL_STACK_SIZE                (200) /* stack size in addressable stack units */
+#endif
 /*----------------------------------------------------------*/
 /* Heap Memory */
-#define configUSE_HEAP_SCHEME                     4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#ifndef configUSE_HEAP_SCHEME
+  #define configUSE_HEAP_SCHEME                   4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#endif /* configUSE_HEAP_SCHEME */
 #define configFRTOS_MEMORY_SCHEME                 configUSE_HEAP_SCHEME /* for backwards compatible only with legacy name */
-#define configTOTAL_HEAP_SIZE                     (8192) /* size of heap in bytes */
+#ifndef configTOTAL_HEAP_SIZE
+  #define configTOTAL_HEAP_SIZE                   (8192) /* size of heap in bytes */
+#endif /* configTOTAL_HEAP_SIZE */
 #define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #if configUSE_HEAP_SECTION_NAME
 #define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
@@ -98,7 +110,9 @@
 #define configUSE_NEWLIB_REENTRANT                (configUSE_HEAP_SCHEME==6) /* 1: a newlib reent structure will be allocated for each task; 0: no such reentr structure used */
 /*----------------------------------------------------------*/
 #define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
-#define configUSE_TRACE_FACILITY                  1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
+#ifndef configUSE_TRACE_FACILITY
+  #define configUSE_TRACE_FACILITY                1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
+#endif
 #define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
 #define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
@@ -113,13 +127,25 @@
 #define configUSE_COUNTING_SEMAPHORES             1
 #define configUSE_APPLICATION_TASK_TAG            0
 /* Tickless Idle Mode ----------------------------------------------------------*/
-#define configUSE_TICKLESS_IDLE                   1 /* set to 1 for tickless idle mode, 0 otherwise */
-#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP     2 /* number of ticks must be larger than this to enter tickless idle mode */
-#define configUSE_TICKLESS_IDLE_DECISION_HOOK     0 /* set to 1 to enable application hook, zero otherwise */
-#define configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME xEnterTicklessIdle /* function name of decision hook */
-#define configNUM_THREAD_LOCAL_STORAGE_POINTERS   0 /* number of tread local storage pointers, 0 to disable functionality */
+#ifndef configUSE_TICKLESS_IDLE
+  #define configUSE_TICKLESS_IDLE                 0 /* set to 1 for tickless idle mode, 0 otherwise */
+#endif
+#ifndef configEXPECTED_IDLE_TIME_BEFORE_SLEEP
+  #define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   2 /* number of ticks must be larger than this to enter tickless idle mode */
+#endif
+#ifndef configUSE_TICKLESS_IDLE_DECISION_HOOK
+  #define configUSE_TICKLESS_IDLE_DECISION_HOOK   0 /* set to 1 to enable application hook, zero otherwise */
+#endif
+#ifndef configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME
+  #define configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME xEnterTicklessIdle /* function name of decision hook */
+#endif
+#ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
+  #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 0 /* number of tread local storage pointers, 0 to disable functionality */
+#endif
 
-#define configMAX_PRIORITIES                      6 /* task priorities can be from 0 up to this value-1 */
+#ifndef configMAX_PRIORITIES
+  #define configMAX_PRIORITIES                    6 /* task priorities can be from 0 up to this value-1 */
+#endif
 #define configMAX_CO_ROUTINE_PRIORITIES           2 /* co-routine priorities can be from 0 up to this value-1 */
 
 #define configTASK_RETURN_ADDRESS                 0 /* return address of task is zero */
@@ -203,9 +229,23 @@ point support. */
  */
 #define configCLINT_BASE_ADDRESS   0x0
 
+/*---------------------------------------------------------------------------------------*/
+/* MPU and TrustZone settings */
+#ifndef configENABLE_FPU
+  #define configENABLE_FPU        (0)
+#endif /* configENABLE_FPU */
+
+#ifndef configENABLE_MPU
+  #define configENABLE_MPU        (0)
+#endif /* configENABLE_MPU */
+
+#ifndef configENABLE_TRUSTZONE
+  #define configENABLE_TRUSTZONE  (0)
+#endif /* configENABLE_TRUSTZONE */
+/*---------------------------------------------------------------------------------------*/
 
 /* custom include file: */
-/* #include "CustomFreeRTOSSettings.h */
+// #include "CustomFreeRTOSSettings.h
 
 
 #endif /* FREERTOS_CONFIG_H */

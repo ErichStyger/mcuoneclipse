@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 10:55, # CodeGen: 437
+**     Date/Time   : 2019-04-24, 10:23, # CodeGen: 503
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -55,6 +55,7 @@
 **         GiveLCD               - void McuSSD1306_GiveLCD(void);
 **         SetRowCol             - uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col);
 **         PrintString           - void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str);
+**         ClearLine             - void McuSSD1306_ClearLine(uint8_t line);
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
@@ -364,6 +365,7 @@ uint16_t McuSSD1306_ReadDataWord(void)
 */
 void McuSSD1306_WriteData(uint8_t data)
 {
+  SSD1306_WriteData(data);
 }
 
 /*
@@ -376,6 +378,20 @@ void McuSSD1306_WriteData(uint8_t data)
 */
 void McuSSD1306_OpenWindow(McuSSD1306_PixelDim x0, McuSSD1306_PixelDim y0, McuSSD1306_PixelDim x1, McuSSD1306_PixelDim y1)
 {
+  /* no windowing capabilities */
+}
+
+/*
+** ===================================================================
+**     Method      :  McuSSD1306_CloseWindow (component SSD1306)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+void McuSSD1306_CloseWindow(void)
+{
+  /* no windowing capabilities */
 }
 
 /*
@@ -398,6 +414,36 @@ void McuSSD1306_Clear(void)
     p++;
   }
   McuSSD1306_UpdateFull();
+}
+
+/*
+** ===================================================================
+**     Method      :  UpdateRegion (component SSD1306)
+**
+**     Description :
+**         Updates a region of the display. This is only a stub for
+**         this display as we are using windowing.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - y coordinate
+**         w               - width of the region
+**         h               - Height of the region
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
+{
+  int page, pageBeg, pageEnd, colStart;
+
+  pageBeg = y/8;
+  pageEnd = (y+h-1)/8;
+  colStart = x;
+  for(page = pageBeg; page<=pageEnd; page++) {
+    (void)SSD1306_SetPageStartAddr(page);
+    (void)SSD1306_SetColStartAddr(colStart);
+    SSD1306_WriteDataBlock(&McuSSD1306_DisplayBuf[0][0]+(page*McuSSD1306_DISPLAY_HW_NOF_COLUMNS+colStart), w);
+  }
 }
 
 /*
@@ -430,44 +476,6 @@ void McuSSD1306_UpdateFull(void)
   #error "unknown display type?"
 #endif
 }
-
-/*
-** ===================================================================
-**     Method      :  UpdateRegion (component SSD1306)
-**
-**     Description :
-**         Updates a region of the display. This is only a stub for
-**         this display as we are using windowing.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         x               - x coordinate
-**         y               - y coordinate
-**         w               - width of the region
-**         h               - Height of the region
-**     Returns     : Nothing
-** ===================================================================
-*/
-/*
-void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
-{
-  implemented as macro in McuSSD1306.h
-}
-*/
-
-/*
-** ===================================================================
-**     Method      :  McuSSD1306_CloseWindow (component SSD1306)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-/*
-void McuSSD1306_CloseWindow(void)
-{
-  implemented as macro in McuSSD1306.h
-}
-*/
 
 /*
 ** ===================================================================
@@ -794,7 +802,7 @@ uint8_t McuSSD1306_SetRowCol(uint8_t row, uint8_t col)
 */
 void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str)
 {
-  if (McuSSD1306_SetRowCol(line ,col)!=ERR_OK) {
+  if (McuSSD1306_SetRowCol(line, col)!=ERR_OK) {
     return; /* error! */
   }
   while(*str != '\0'){
@@ -810,6 +818,30 @@ void McuSSD1306_PrintString(uint8_t line, uint8_t col, uint8_t *str)
       SSD1306_PrintChar(*str);
       str++;
     }
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  ClearLine (component SSD1306)
+**
+**     Description :
+**         Clear a text line on the display
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         line            - Line number, starting with zero
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuSSD1306_ClearLine(uint8_t line)
+{
+  uint8_t i;
+
+  if (McuSSD1306_SetRowCol(line, 0)!=ERR_OK) {
+    return; /* error! */
+  }
+  for(i=0; i<McuSSD1306_DISPLAY_HW_NOF_COLUMNS; i++) {
+    SSD1306_WriteData(0); /* clear column */
   }
 }
 
@@ -932,7 +964,7 @@ void McuSSD1306_PutPixel(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD130
   if (color!=0) {
     val |= (1<<(y%8)); /* set pixel */
   } else {
-    val &= (1<<(y%8)); /* clear pixel */
+    val &= ~(1<<(y%8)); /* clear pixel */
   }
   McuSSD1306_DisplayBuf[y/8][x] = val; /* store value */
 }

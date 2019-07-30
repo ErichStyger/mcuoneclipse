@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.2.0
+ * FreeRTOS Kernel V10.2.1
  * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -459,7 +459,15 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 	/* Do not move these variables to function scope as doing so prevents the
 	code working with debuggers that need to remove the static qualifier. */
 	PRIVILEGED_DATA static uint32_t ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
+#if 1 /* << EST: prevent optimizations and removal of the following variable with -O1, -O2 or -O3, as used by NXP TAD */
+  PRIVILEGED_DATA static
+  #ifdef __GNUC__
+  __attribute__((used))
+  #endif
+  uint32_t ulTotalRunTime = 0UL;   /*< Holds the total amount of execution time as defined by the run time counter clock. */
+#else
 	PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;		/*< Holds the total amount of execution time as defined by the run time counter clock. */
+#endif
 
 #endif
 
@@ -2206,6 +2214,7 @@ void vTaskSuspendAll( void )
 	post in the FreeRTOS support forum before reporting this as a bug! -
 	http://goo.gl/wu4acr */
 	++uxSchedulerSuspended;
+	portMEMORY_BARRIER();
 }
 /*----------------------------------------------------------*/
 

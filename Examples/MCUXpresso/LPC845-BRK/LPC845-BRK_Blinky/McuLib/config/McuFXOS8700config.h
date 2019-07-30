@@ -12,6 +12,23 @@
 extern "C" {
 #endif
 
+#if !defined(McuFXOS8700_CONFIG_I2C_DEVICE_ADDRESS)
+  #define McuFXOS8700_CONFIG_I2C_DEVICE_ADDRESS  (0x1E)
+    /*!< I2C 7bit device address */
+    /*       SDA0  SDA1
+       0x1E  low   low
+       0x1D  high  low
+       0x1C  low   high
+       0x1F  high  high
+    */
+#endif
+
+#if !defined(McuFXOS8700_CONFIG_TEMP_OFFSET)
+  #define McuFXOS8700_CONFIG_TEMP_OFFSET  (24)
+    /*!< die temperature offset for real temperature calculation */
+#endif
+
+
 #if !defined(McuFXOS8700_CONFIG_PARSE_COMMAND_ENABLED)
   #define McuFXOS8700_CONFIG_PARSE_COMMAND_ENABLED  1
     /*!< 1: shell support enabled, 0: otherwise */
