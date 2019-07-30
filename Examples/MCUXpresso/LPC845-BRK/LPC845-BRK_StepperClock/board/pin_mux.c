@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v5.0
+product: Pins v6.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 5.0.0
+processor_version: 6.0.1
 pin_labels:
 - {pin_num: '14', pin_signal: PIO1_1/CAPT_X2, label: LED_BLUE, identifier: LEDpin2}
 - {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: LED_GREEN, identifier: LEDpin1}
@@ -62,6 +62,8 @@ void BOARD_InitPins(void)
 {
     /* Enables clock for IOCON.: enable */
     CLOCK_EnableClock(kCLOCK_Iocon);
+    /* Enables the clock for the GPIO1 module */
+    CLOCK_EnableClock(kCLOCK_Gpio1);
 
     GPIO->CLR[1] = ((GPIO->CLR[1] &
                      /* Mask bits to zero which are setting */
@@ -70,6 +72,8 @@ void BOARD_InitPins(void)
                     /* Clear output bits (bit 0 = PIOn_0, bit 1 = PIOn_1, etc.). Supported pins depends on the specific
                      * device and package. 0 = No operation. 1 = Clear output bit.: 0x01u */
                     | GPIO_CLR_CLRP(0x01u));
+    /* Enables the clock for the GPIO0 module */
+    CLOCK_EnableClock(kCLOCK_Gpio0);
 
     GPIO->DIR[0] = ((GPIO->DIR[0] &
                      /* Mask bits to zero which are setting */
@@ -78,6 +82,8 @@ void BOARD_InitPins(void)
                     /* Selects pin direction for pin PIOm_n (bit 0 = PIOn_0, bit 1 = PIOn_1, etc.). Supported pins
                      * depends on the specific device and package. 0 = input. 1 = output.: 0x00u */
                     | GPIO_DIR_DIRP(0x00u));
+    /* Enables the clock for the GPIO1 module */
+    CLOCK_EnableClock(kCLOCK_Gpio1);
 
     GPIO->DIR[1] = ((GPIO->DIR[1] &
                      /* Mask bits to zero which are setting */

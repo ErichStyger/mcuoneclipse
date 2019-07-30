@@ -11,17 +11,17 @@
 #include "board.h" /* defines the BOARD_LED_ macros */
 
 /* LEDs on LPC845-BRK */
-#define LED_GREEN_GPIO       GPIO
-#define LED_GREEN_PORT       1U
-#define LED_GREEN_PIN        0U
+#define LED_GREEN_GPIO      GPIO
+#define LED_GREEN_PORT      1U
+#define LED_GREEN_PIN       0U
 
 #define LED_BLUE_GPIO       GPIO
 #define LED_BLUE_PORT       1U
 #define LED_BLUE_PIN        1U
 
-#define LED_RED_GPIO       GPIO
-#define LED_RED_PORT       1U
-#define LED_RED_PIN        1U
+#define LED_RED_GPIO        GPIO
+#define LED_RED_PORT        1U
+#define LED_RED_PIN         2U
 
 McuLED_Handle_t LEDS_Blue, LEDS_Green, LEDS_Red;
 

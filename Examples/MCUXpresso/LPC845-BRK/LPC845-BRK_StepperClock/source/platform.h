@@ -12,4 +12,6 @@
 #define PL_CONFIG_USE_GUI (0)
 
 
+void PL_Init(void);
+
 #endif /* PLATFORM_H_ */

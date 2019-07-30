@@ -39,10 +39,7 @@
 #include "clock_config.h"
 #include "LPC845.h"
 
-#include "McuWait.h"
-#include "leds.h"
-#include "McuLED.h"
-#include "buttons.h"
+#include "application.h"
 
 /*
  * @brief   Application entry point.
@@ -53,37 +50,9 @@ int main(void) {
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    printf("Hello World\n");
-
-    GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0: used for push buttons */
-    GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1: used for LEDs */
-
-    /* initialize driver and modules */
-    /* init modules */
-    LEDS_Init();
-    McuLED_Init();
-    BTN_Init();
-    McuWait_Init();
+    printf("LPC845-BRK Stepper Clock Project\n");
+    APP_Run();
     for(;;) {
-      if (BTN_K1ButtonIsPressed()) { /* check push button */
-        McuLED_On(LEDS_Green);
-        while(BTN_K1ButtonIsPressed()) {}
-      }
-      if (BTN_K3ButtonIsPressed()) { /* check push button */
-        McuLED_On(LEDS_Red);
-        while(BTN_K3ButtonIsPressed()) {}
-      }
-      McuLED_On(LEDS_Green);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_Green);
-
-      McuLED_On(LEDS_Blue);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_Blue);
-
-      McuLED_On(LEDS_Red);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_Red);
     }
     return 0 ;
 }
