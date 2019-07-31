@@ -27,16 +27,6 @@ static void AppTask(void *pv) {
   }
 }
 
-#if (1 && !defined(McuLib_CONFIG_FPU_PRESENT)) || (defined(__FPU_PRESENT) && (__FPU_PRESENT==1)) /* __FPU_PRESENT can be defined in CMSIS-Core */
-  #define McuLib_CONFIG_FPU_PRESENT   (1)
-#else
-  #define McuLib_CONFIG_FPU_PRESENT   (0)
-#endif
-
-#if defined(__FPU_PRESENT)
-#error
-#endif
-
 void APP_Run(void) {
 	PL_Init();
   if (xTaskCreate(
