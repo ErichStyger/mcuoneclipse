@@ -14,7 +14,7 @@
 #if PL_CONFIG_USE_I2C
   #include "McuI2CSpy.h"
 #endif
-#include "ShellUart.h"
+#include "McuShellUart.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -37,7 +37,7 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
-  {&ShellUart_stdio,  ShellUart_DefaultShellBuffer,  sizeof(ShellUart_DefaultShellBuffer)},
+  {&McuShellUart_stdio,  McuShellUart_DefaultShellBuffer,  sizeof(McuShellUart_DefaultShellBuffer)},
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},

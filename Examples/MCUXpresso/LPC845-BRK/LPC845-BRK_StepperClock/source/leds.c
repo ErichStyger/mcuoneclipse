@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-
 #include "leds.h"
 #include "McuLED.h"
 #include "board.h" /* defines the BOARD_LED_ macros */

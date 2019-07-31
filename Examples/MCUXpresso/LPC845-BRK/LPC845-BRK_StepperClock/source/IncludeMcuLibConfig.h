@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
 /* header file is included with -include compiler option */
 
 /* LPC845-BRK */

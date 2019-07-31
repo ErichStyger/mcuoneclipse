@@ -1,8 +1,8 @@
 /*
- * platform.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 30.07.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -14,13 +14,13 @@
 #include "McuRTOS.h"
 #include "McuArmTools.h"
 #include "McuRTT.h"
+#include "McuShellUart.h"
 /* SDK */
 #include "fsl_gpio.h"
 /* application modules: */
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
-#include "ShellUart.h"
 
 void PL_Init(void) {
   /* SDK */
@@ -36,10 +36,10 @@ void PL_Init(void) {
   McuLED_Init();
   McuGPIO_Init();
   McuRTT_Init();
+  McuShellUart_Init();
 
   /* application modules: */
   LEDS_Init();
   BTN_Init();
-  ShellUart_Init();
   SHELL_Init();
 }
