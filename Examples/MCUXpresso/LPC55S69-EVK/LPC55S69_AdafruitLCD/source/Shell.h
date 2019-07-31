@@ -8,8 +8,6 @@
 #ifndef SHELL_H_
 #define SHELL_H_
 
-#include "McuShell.h"
-
 void SHELL_Init(void);
 void SHELL_Deinit(void);
 
