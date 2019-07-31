@@ -28,6 +28,8 @@
                <pin_label pin_num="16" pin_signal="PIO1_2/CAPT_X3" label="LED_RED" identifier="LEDpin3"/>
                <pin_label pin_num="6" pin_signal="PIO0_4/ADC_11" label="BTN_K3" identifier="BTNpin3"/>
                <pin_label pin_num="4" pin_signal="PIO0_12" label="BTN_K1" identifier="BTNpin1"/>
+               <pin_label pin_num="20" pin_signal="PIO0_24" label="USART0_RX"/>
+               <pin_label pin_num="19" pin_signal="PIO0_25" label="USART0_TX"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -40,6 +42,11 @@
                </options>
                <dependencies>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins.BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.swm" description="Pins initialization requires the SWM Driver in the project." problem_level="2" source="Pins.BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -74,6 +81,8 @@
                         <pin_feature name="mode" value="inactive"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="USART0" signal="RXD" pin_num="20" pin_signal="PIO0_24"/>
+                  <pin peripheral="USART0" signal="TXD" pin_num="19" pin_signal="PIO0_25"/>
                </pins>
             </function>
          </functions_list>

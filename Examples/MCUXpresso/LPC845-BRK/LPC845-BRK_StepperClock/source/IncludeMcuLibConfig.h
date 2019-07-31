@@ -10,3 +10,7 @@
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 #define McuLib_CONFIG_SDK_USE_FREERTOS  (1)
 
+/* -------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845-BRK Stepper Clock"
+/* -------------------------------------------------*/

@@ -18,11 +18,14 @@ pin_labels:
 - {pin_num: '16', pin_signal: PIO1_2/CAPT_X3, label: LED_RED, identifier: LEDpin3}
 - {pin_num: '6', pin_signal: PIO0_4/ADC_11, label: BTN_K3, identifier: BTNpin3}
 - {pin_num: '4', pin_signal: PIO0_12, label: BTN_K1, identifier: BTNpin1}
+- {pin_num: '20', pin_signal: PIO0_24, label: USART0_RX}
+- {pin_num: '19', pin_signal: PIO0_25, label: USART0_TX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
 
 #include "fsl_common.h"
+#include "fsl_swm.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -47,6 +50,8 @@ BOARD_InitPins:
   - {pin_num: '16', peripheral: GPIO, signal: 'PIO1, 2', pin_signal: PIO1_2/CAPT_X3, direction: OUTPUT}
   - {pin_num: '6', peripheral: GPIO, signal: 'PIO0, 4', pin_signal: PIO0_4/ADC_11, direction: INPUT, mode: inactive}
   - {pin_num: '4', peripheral: GPIO, signal: 'PIO0, 12', pin_signal: PIO0_12, direction: INPUT, mode: inactive}
+  - {pin_num: '20', peripheral: USART0, signal: RXD, pin_signal: PIO0_24}
+  - {pin_num: '19', peripheral: USART0, signal: TXD, pin_signal: PIO0_25}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -62,6 +67,8 @@ void BOARD_InitPins(void)
 {
     /* Enables clock for IOCON.: enable */
     CLOCK_EnableClock(kCLOCK_Iocon);
+    /* Enables clock for switch matrix.: enable */
+    CLOCK_EnableClock(kCLOCK_Swm);
     /* Enables the clock for the GPIO1 module */
     CLOCK_EnableClock(kCLOCK_Gpio1);
 
@@ -108,6 +115,15 @@ void BOARD_InitPins(void)
                      /* Selects function mode (on-chip pull-up/pull-down resistor control).: Inactive. Inactive (no
                       * pull-down/pull-up resistor enabled). */
                      | IOCON_PIO_MODE(PIO0_4_MODE_INACTIVE));
+
+    /* USART0_TXD connect to P0_25 */
+    SWM_SetMovablePinSelect(SWM0, kSWM_USART0_TXD, kSWM_PortPin_P0_25);
+
+    /* USART0_RXD connect to P0_24 */
+    SWM_SetMovablePinSelect(SWM0, kSWM_USART0_RXD, kSWM_PortPin_P0_24);
+
+    /* Disable clock for switch matrix. */
+    CLOCK_DisableClock(kCLOCK_Swm);
 }
 /***********************************************************************************************************************
  * EOF
