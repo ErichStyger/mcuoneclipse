@@ -27,6 +27,8 @@
             <pin_labels>
                <pin_label pin_num="L6" pin_signal="WAKEUP" label="SW02" identifier="SW02"/>
                <pin_label pin_num="F14" pin_signal="GPIO_AD_B0_09" label="LED_R" identifier="LED_R"/>
+               <pin_label pin_num="G13" pin_signal="GPIO_AD_B0_10" label="LED_G" identifier="LED_G"/>
+               <pin_label pin_num="G10" pin_signal="GPIO_AD_B0_11" label="LED_B" identifier="LED_B"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -60,15 +62,30 @@
                   </dependency>
                </dependencies>
                <pins>
-                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09">
-                     <pin_features>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="pull_keeper_enable" value="Disable"/>
-                     </pin_features>
-                  </pin>
                   <pin peripheral="GPIO5" signal="gpio_io, 00" pin_num="L6" pin_signal="WAKEUP">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO1" signal="gpio_io, 09" pin_num="F14" pin_signal="GPIO_AD_B0_09">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="gpio_init_state" value="true"/>
+                        <pin_feature name="pull_keeper_enable" value="Disable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO1" signal="gpio_io, 10" pin_num="G13" pin_signal="GPIO_AD_B0_10">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="gpio_init_state" value="true"/>
+                        <pin_feature name="pull_keeper_enable" value="Disable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO1" signal="gpio_io, 11" pin_num="G10" pin_signal="GPIO_AD_B0_11">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="gpio_init_state" value="true"/>
+                        <pin_feature name="pull_keeper_enable" value="Disable"/>
                      </pin_features>
                   </pin>
                </pins>

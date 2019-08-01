@@ -37,15 +37,25 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
+/* WAKEUP (coord L6), SW02 */
+#define BOARD_INITPINS_SW02_GPIO                                           GPIO5   /*!< GPIO device name: GPIO5 */
+#define BOARD_INITPINS_SW02_PORT                                           GPIO5   /*!< PORT device name: GPIO5 */
+#define BOARD_INITPINS_SW02_PIN                                               0U   /*!< GPIO5 pin index: 0 */
+
 /* GPIO_AD_B0_09 (coord F14), LED_R */
 #define BOARD_INITPINS_LED_R_GPIO                                          GPIO1   /*!< GPIO device name: GPIO1 */
 #define BOARD_INITPINS_LED_R_PORT                                          GPIO1   /*!< PORT device name: GPIO1 */
 #define BOARD_INITPINS_LED_R_PIN                                              9U   /*!< GPIO1 pin index: 9 */
 
-/* WAKEUP (coord L6), SW02 */
-#define BOARD_INITPINS_SW02_GPIO                                           GPIO5   /*!< GPIO device name: GPIO5 */
-#define BOARD_INITPINS_SW02_PORT                                           GPIO5   /*!< PORT device name: GPIO5 */
-#define BOARD_INITPINS_SW02_PIN                                               0U   /*!< GPIO5 pin index: 0 */
+/* GPIO_AD_B0_10 (coord G13), LED_G */
+#define BOARD_INITPINS_LED_G_GPIO                                          GPIO1   /*!< GPIO device name: GPIO1 */
+#define BOARD_INITPINS_LED_G_PORT                                          GPIO1   /*!< PORT device name: GPIO1 */
+#define BOARD_INITPINS_LED_G_PIN                                             10U   /*!< GPIO1 pin index: 10 */
+
+/* GPIO_AD_B0_11 (coord G10), LED_B */
+#define BOARD_INITPINS_LED_B_GPIO                                          GPIO1   /*!< GPIO device name: GPIO1 */
+#define BOARD_INITPINS_LED_B_PORT                                          GPIO1   /*!< PORT device name: GPIO1 */
+#define BOARD_INITPINS_LED_B_PIN                                             11U   /*!< GPIO1 pin index: 11 */
 
 
 /*!

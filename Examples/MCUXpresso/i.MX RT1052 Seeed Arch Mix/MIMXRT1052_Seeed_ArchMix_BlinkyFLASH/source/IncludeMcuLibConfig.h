@@ -11,7 +11,7 @@
 #define McuLib_CONFIG_CPU_IS_IMXRT    (1)
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
-#define McuLib_CONFIG_SDK_USE_FREERTOS  (0)
+#define McuLib_CONFIG_SDK_USE_FREERTOS  (1)
 
 /* -------------------------------------------------*/
 /* Shell */
