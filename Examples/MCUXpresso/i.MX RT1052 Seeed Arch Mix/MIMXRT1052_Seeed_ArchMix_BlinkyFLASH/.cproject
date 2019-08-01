@@ -282,16 +282,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.706680826.81225615" name="/" resourcePath="CMSIS">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.70796713" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.154190538" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.369884135"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.466938629" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.258242643"/>
-							<tool id="com.crt.advproject.gas.exe.debug.85649965" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.771846779"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.146036718" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1307899635"/>
-							<tool id="com.crt.advproject.link.exe.debug.1148743592" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.111760149"/>
-							<tool id="com.crt.advproject.tool.debug.debug.1910189193" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.662475561"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|minIni|fonts|LittlevGL|HD44780|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -623,9 +613,10 @@
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="0" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="512" type="RAM"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" id="SRAM_DTC" location="0x20000000" size="0x00020000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" id="SRAM_ITC" location="0x00000000" size="0x00020000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" id="SRAM_OC" location="0x20200000" size="0x00040000"/&gt;&#13;
+&lt;memoryInstance derived_from="Flash" driver="MIMXRT1050-EVK_IS25WP064A.cfx" edited="true" id="BOARD_FLASH" location="0x60000000" size="0x80000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_DTC" location="0x20000000" size="0x20000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM_ITC" location="0x0" size="0x20000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM_OC" location="0x20200000" size="0x40000"/&gt;&#13;
 &lt;/chip&gt;&#13;
 &lt;processor&gt;&#13;
 &lt;name gcc_name="cortex-m7"&gt;Cortex-M7&lt;/name&gt;&#13;
