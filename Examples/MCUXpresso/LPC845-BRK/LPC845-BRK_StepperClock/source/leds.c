@@ -26,7 +26,7 @@ McuLED_Handle_t LEDS_Blue, LEDS_Green, LEDS_Red;
 
 void LEDS_Deinit(void) {
   LEDS_Blue = McuLED_DeinitLed(LEDS_Blue);
-  LEDS_Green = McuLED_DeinitLed(LEDS_Green);
+  LEDS_Red = McuLED_DeinitLed(LEDS_Red);
   LEDS_Green = McuLED_DeinitLed(LEDS_Green);
 }
 
