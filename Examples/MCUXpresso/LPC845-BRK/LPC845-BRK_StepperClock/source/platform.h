@@ -11,7 +11,7 @@
 #define PL_CONFIG_USE_KBI     (0)
 #define PL_CONFIG_USE_GUI     (0)
 #define PL_CONFIG_USE_SHELL   (1)
-#define PL_CONFIG_USE_I2C     (0)
+#define PL_CONFIG_USE_I2C     (1)
 #define PL_CONFIG_USE_USB_CDC (0)
 
 

@@ -15,6 +15,7 @@
   #include "McuI2CSpy.h"
 #endif
 #include "McuShellUart.h"
+#include "McuTimeDate.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -26,6 +27,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_I2C
   McuI2CSpy_ParseCommand,
 #endif
+  McuTimeDate_ParseCommand,
   NULL /* Sentinel */
 };
 

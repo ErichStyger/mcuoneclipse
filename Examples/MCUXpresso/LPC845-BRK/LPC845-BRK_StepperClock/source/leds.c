@@ -37,18 +37,18 @@ void LEDS_Init(void) {
   McuLED_GetDefaultConfig(&config);
   config.isLowActive = true;
 
-  config.hw.pin = LED_BLUE_PIN;
-  config.hw.port = LED_BLUE_PORT;
   config.hw.gpio = LED_BLUE_GPIO;
+  config.hw.port = LED_BLUE_PORT;
+  config.hw.pin = LED_BLUE_PIN;
   LEDS_Blue = McuLED_InitLed(&config);
 
-  config.hw.pin = LED_GREEN_PIN;
-  config.hw.port = LED_GREEN_PORT;
   config.hw.gpio = LED_GREEN_GPIO;
+  config.hw.port = LED_GREEN_PORT;
+  config.hw.pin = LED_GREEN_PIN;
   LEDS_Green = McuLED_InitLed(&config);
 
-  config.hw.pin = LED_RED_PIN;
-  config.hw.port = LED_RED_PORT;
   config.hw.gpio = LED_RED_GPIO;
+  config.hw.port = LED_RED_PORT;
+  config.hw.pin = LED_RED_PIN;
   LEDS_Red = McuLED_InitLed(&config);
 }

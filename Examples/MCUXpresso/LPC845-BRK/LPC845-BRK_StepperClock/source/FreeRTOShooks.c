@@ -8,6 +8,8 @@
 #include "McuLibconfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "McuTimeDate.h"
+
 /*
 ** ===================================================================
 **     Event       :  McuRTOS_vApplicationStackOverflowHook (module Events)
@@ -85,6 +87,7 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 void McuRTOS_vApplicationTickHook(void)
 {
   /* Hook called for every RTOS tick. */
+  McuTimeDate_AddTick();
 }
 
 /*
