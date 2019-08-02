@@ -74,6 +74,8 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PinInit(config->hw.gpio, config->hw.port, config->hw.pin, &pin_config);
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PinInit(config->hw.gpio, config->hw.pin, &pin_config);
 #endif
 
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP

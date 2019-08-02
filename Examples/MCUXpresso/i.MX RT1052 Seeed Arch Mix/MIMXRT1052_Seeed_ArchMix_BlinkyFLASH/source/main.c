@@ -46,16 +46,16 @@
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
+  /* Init board hardware. */
+  BOARD_InitBootPins();
+  BOARD_InitBootClocks();
+  BOARD_InitBootPeripherals();
 
-    printf("Hello World\n");
-    APP_Run();
+  printf("Hello World\n");
+  APP_Run();
 
-    while(1) {
-        __asm volatile ("nop");
-    }
-    return 0 ;
+  while(1) {
+    __asm volatile ("nop");
+  }
+  return 0;
 }
