@@ -223,7 +223,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  time", buf, io->stdOut);
 
-  McuUtility_Num8uToStr(buf, sizeof(buf), (uint8_t)McuExtRTC_CONFIG_DEVICE);
+  McuUtility_Num16uToStr(buf, sizeof(buf), McuExtRTC_CONFIG_DEVICE);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", Addr 0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), McuExtRTC_CONFIG_DEVICE_ADDRESS);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");

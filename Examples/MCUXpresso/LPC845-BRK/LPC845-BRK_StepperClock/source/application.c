@@ -21,6 +21,7 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 }
 
 static void AppTask(void *pv) {
+  PL_InitFromTask();
   for(;;) {
     McuLED_Toggle(LEDS_Green);
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -32,7 +33,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      300/sizeof(StackType_t), /* task stack size */
+      500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
@@ -52,26 +53,4 @@ void APP_Run(void) {
   }
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }
-
-	for(;;) {
-    if (BTN_K1ButtonIsPressed()) { /* check push button */
-      McuLED_On(LEDS_Green);
-      while(BTN_K1ButtonIsPressed()) {}
-    }
-    if (BTN_K3ButtonIsPressed()) { /* check push button */
-      McuLED_On(LEDS_Red);
-      while(BTN_K3ButtonIsPressed()) {}
-    }
-    McuLED_On(LEDS_Green);
-    McuWait_Waitms(100);
-    McuLED_Off(LEDS_Green);
-
-    McuLED_On(LEDS_Blue);
-    McuWait_Waitms(100);
-    McuLED_Off(LEDS_Blue);
-
-    McuLED_On(LEDS_Red);
-    McuWait_Waitms(100);
-    McuLED_Off(LEDS_Red);
-	}
 }

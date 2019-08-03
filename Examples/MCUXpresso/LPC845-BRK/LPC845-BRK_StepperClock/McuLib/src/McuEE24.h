@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : 24AA_EEPROM
-**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 09:41, # CodeGen: 561
+**     Date/Time   : 2019-08-03, 11:51, # CodeGen: 566
 **     Abstract    :
 **         Driver for Microchip 24_AA/LC EEPROMs
 **     Settings    :
@@ -41,6 +41,8 @@
 **         GetSelectedDevice - uint8_t McuEE24_GetSelectedDevice(void);
 **         Test              - uint8_t McuEE24_Test(void);
 **         ParseCommand      - uint8_t McuEE24_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit            - void McuEE24_Deinit(void);
+**         Init              - void McuEE24_Init(void);
 **
 ** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -126,7 +128,7 @@
 
 #ifndef __BWUserType_McuEE24_Address
 #define __BWUserType_McuEE24_Address
-  typedef  McuEE24_ADDRT McuEE24_Address; /* A type large enough to hold the address, depending on the EEPROM used. */
+  typedef  McuEE24_ADDRT McuEE24_Address; /* A type large enought to hold the address, depending on the EEPROM used. */
 #endif
 
 #define McuEE24_PARSE_COMMAND_ENABLED  1  /* set to 1 if method ParseCommand() is present, 0 otherwise */
@@ -317,6 +319,30 @@ uint8_t McuEE24_WriteBlockPage(McuEE24_Address addr, uint8_t *data, uint16_t dat
 **
 **     Description :
 **         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+
+void McuEE24_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component 24AA_EEPROM)
+**
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void McuEE24_Init(void);
+/*
+** ===================================================================
+**     Method      :  Init (component 24AA_EEPROM)
+**
+**     Description :
+**         Driver initialization
+**     Parameters  : None
+**     Returns     : Nothing
 ** ===================================================================
 */
 

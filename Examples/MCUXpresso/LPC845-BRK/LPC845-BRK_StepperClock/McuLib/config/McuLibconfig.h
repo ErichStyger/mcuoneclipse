@@ -62,13 +62,13 @@
   #define McuLib_CONFIG_CORTEX_M      (4)
     /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #endif
-#if (1 && !defined(McuLib_CONFIG_FPU_PRESENT)) || (defined(__FPU_PRESENT) && (__FPU_PRESENT==1)) /* __FPU_PRESENT can be defined in CMSIS-Core */
+#if (1 && !defined(McuLib_CONFIG_FPU_PRESENT) && McuLib_CONFIG_CORTEX_M!=0) || (defined(__FPU_PRESENT) && (__FPU_PRESENT==1)) /* __FPU_PRESENT can be defined in CMSIS-Core */
   #define McuLib_CONFIG_FPU_PRESENT   (1)
 #else
   #define McuLib_CONFIG_FPU_PRESENT   (0)
 #endif
     /*!< 1: floating point unit present, 0: otherwise */
-#if (1 && !defined(McuLib_CONFIG_FPU_USED)) || (defined(__FPU_USED) && (__FPU_USED==1)) /* __FPU_USED can be defined in CMSIS-Core */
+#if (1 && !defined(McuLib_CONFIG_FPU_USED) && McuLib_CONFIG_CORTEX_M!=0) || (defined(__FPU_USED) && (__FPU_USED==1)) /* __FPU_USED can be defined in CMSIS-Core */
   #define McuLib_CONFIG_FPU_USED      (1)
 #else
   #define McuLib_CONFIG_FPU_USED      (0)

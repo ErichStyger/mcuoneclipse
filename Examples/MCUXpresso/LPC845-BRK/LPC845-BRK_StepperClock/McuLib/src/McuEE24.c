@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : 24AA_EEPROM
-**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 09:41, # CodeGen: 561
+**     Date/Time   : 2019-08-03, 11:51, # CodeGen: 566
 **     Abstract    :
 **         Driver for Microchip 24_AA/LC EEPROMs
 **     Settings    :
@@ -41,6 +41,8 @@
 **         GetSelectedDevice - uint8_t McuEE24_GetSelectedDevice(void);
 **         Test              - uint8_t McuEE24_Test(void);
 **         ParseCommand      - uint8_t McuEE24_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         Deinit            - void McuEE24_Deinit(void);
+**         Init              - void McuEE24_Init(void);
 **
 ** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -831,6 +833,36 @@ uint8_t McuEE24_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     *handled = TRUE;
   }
   return ERR_OK;
+}
+
+/*
+** ===================================================================
+**     Method      :  Deinit (component 24AA_EEPROM)
+**
+**     Description :
+**         Driver de-initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuEE24_Deinit(void)
+{
+  /* nothing needed */
+}
+
+/*
+** ===================================================================
+**     Method      :  Init (component 24AA_EEPROM)
+**
+**     Description :
+**         Driver initialization
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuEE24_Init(void)
+{
+  /* nothing needed */
 }
 
 /* END McuEE24. */
