@@ -7,11 +7,11 @@
 
 /* header file is included with -include compiler option */
 
-/* LPC845-BRK */
+/* McuLib configuration for the LPC845-BRK */
 
-#define McuLib_CONFIG_CPU_IS_KINETIS  (0)
-#define McuLib_CONFIG_CPU_IS_LPC      (1)
-#define McuLib_CONFIG_CORTEX_M        (0)
+#define McuLib_CONFIG_CPU_IS_LPC      (1)  /* LPC845 */
+#define McuLib_CONFIG_CORTEX_M        (0)  /* LPC845 is a Cortex-M0+ */
+#define McuLib_CONFIG_CPU_IS_KINETIS  (0)  /* disabling the default Kinetis */
 
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
@@ -63,3 +63,9 @@
   #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 #endif
 /* -------------------------------------------------*/
+#define McuExtRTC_CONFIG_DEVICE                 3231  /* RTC device used */
+#define McuEE24_CONFIG_DEVICE_ID                32    /* AT24C32 */
+#define McuEE24_CONFIG_DEVICE_I2C_ADDRESS_BITS  (7)   /* device is on address 0x57 */
+#define McuEE24_CONFIG_HAS_WP_PIN               (0)   /* no WP Pin */
+#define McuEE24_CONFIG_DO_ACKNOWLEDGE_POLLING   (0)   /* no acknowledge polling */
+#define McuEE24_CONFIG_USE_TIMEOUT              (0)   /* no timeout */

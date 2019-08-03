@@ -53,10 +53,21 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   assert(config!=NULL);
   memset(&pin_config, 0, sizeof(pin_config)); /* init all fields */
   if (config->isInput) {
+  #if McuLib_CONFIG_CPU_IS_IMXRT
+    pin_config.direction = kGPIO_DigitalInput;
+  #else
     pin_config.pinDirection = kGPIO_DigitalInput;
+  #endif
   } else {
+  #if McuLib_CONFIG_CPU_IS_IMXRT
+  pin_config.direction = kGPIO_DigitalOutput;
+  #else
     pin_config.pinDirection = kGPIO_DigitalOutput;
+  #endif
   }
+#if McuLib_CONFIG_CPU_IS_IMXRT
+  pin_config.interruptMode = kGPIO_NoIntmode; /* no interrupts */
+#endif
   pin_config.outputLogic = !config->isLowOnInit;
 #if McuLib_CONFIG_CPU_IS_KINETIS
   GPIO_PinInit(config->hw.gpio, config->hw.pin, &pin_config);
@@ -76,7 +87,9 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
     handle->isInput = config->isInput;
     handle->hw.gpio = config->hw.gpio;
     handle->hw.pin = config->hw.pin;
+  #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
     handle->hw.port = config->hw.port;
+  #endif
   }
   return handle;
 }
@@ -99,6 +112,8 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
   GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 0U);
 #endif
 }
 
@@ -110,6 +125,8 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
   GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #endif
 }
 
@@ -121,6 +138,8 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
   GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortToggle(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
 #endif
 }
 
@@ -133,12 +152,16 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
     GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
     GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #endif
   }
 }
@@ -151,6 +174,8 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
 #elif McuLib_CONFIG_CPU_IS_LPC
   return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
 #endif
   return false;
 }

@@ -12,7 +12,7 @@
 #define MinINI_CONFIG_FS_TYPE_TINY_FS  (2) /* TinyFS File System */
 
 #ifndef MinINI_CONFIG_FS
-  #define MinINI_CONFIG_FS      (CONFIG_FS_TYPE_GENERIC)
+  #define MinINI_CONFIG_FS      (MinINI_CONFIG_FS_TYPE_GENERIC)
     /*!< File System integration used, one of MinINI_CONFIG_FS_TYPE_GENERIC, MinINI_CONFIG_FS_TYPE_FAT_FS, MinINI_CONFIG_FS_TYPE_TINY_FS */
 #endif
 

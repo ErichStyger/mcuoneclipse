@@ -16,6 +16,8 @@
 #endif
 #include "McuShellUart.h"
 #include "McuTimeDate.h"
+#include "McuExtRTC.h"
+#include "McuEE24.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -28,6 +30,8 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuI2CSpy_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
+  McuExtRTC_ParseCommand,
+  McuEE24_ParseCommand,
   NULL /* Sentinel */
 };
 

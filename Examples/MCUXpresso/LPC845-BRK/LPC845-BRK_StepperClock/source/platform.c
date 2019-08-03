@@ -18,6 +18,7 @@
 #include "McuGenericI2C.h"
 #include "McuI2CSpy.h"
 #include "McuTimeDate.h"
+#include "McuExtRTC.h"
 
 /* SDK */
 #include "fsl_gpio.h"
@@ -50,6 +51,7 @@ void PL_Init(void) {
   McuShellUart_Init();
   McuI2CSpy_Init();
   McuTimeDate_Init();
+  McuExtRTC_Init();
 
   /* application modules: */
   LEDS_Init();
