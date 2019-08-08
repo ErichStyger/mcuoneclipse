@@ -22,14 +22,18 @@ typedef struct {
   McuGPIO_Handle_t pin[4]; /* the 4 winding of the motor */
 } McuULN2003_Motor_t;
 
-#define McuULN2003_NOF_STEP_STEPS       (4)
+#define McuULN2003_NOF_STEP_STEPS       (8)
 
 static const bool disableTable[McuULN2003_NOF_MOTOR_GPIO_PINS] = { false, false, false, false};
 static const bool stepTable[McuULN2003_NOF_STEP_STEPS][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
-    {true,  false, true,  false},
+    {true,  false, false, false},
+    {true,  true,  false, false},
+    {false, true,  false, false},
     {false, true,  true,  false},
-    {false, true,  false, true},
-    {true,  false, false, true}
+    {false, false, true,  false},
+    {false, false, true,  true },
+    {false, false, false, true },
+    {true,  false, false, true }
 };
 
 /* default configuration, used for initializing the config */
@@ -122,30 +126,39 @@ McuULN2003_Handle_t McuULN2003_DeinitMotor(McuULN2003_Handle_t motor) {
   return NULL;
 }
 
-static void SetStep(McuULN2003_Motor_t *motor, const bool w[4]) {
+static void SetStep(McuULN2003_Motor_t *motor, const bool w[McuULN2003_NOF_MOTOR_GPIO_PINS]) {
   for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) { /* for all pins */
     McuGPIO_SetValue(motor->pin[i], w[i]);
   }
 }
 
-void Disable(McuULN2003_Motor_t *motor) {
-  SetStep(motor, disableTable);
+void McuULN2003_Disable(McuULN2003_Handle_t motor) {
+  SetStep((McuULN2003_Motor_t *)motor, disableTable);
 }
 
-void IncStep(McuULN2003_Motor_t *motor) {
+void McuULN2003_IncStep(McuULN2003_Handle_t motor) {
+  McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+
   for(int i=0; i<McuULN2003_NOF_STEP_STEPS; i++) {
-    SetStep(motor, stepTable[i]);
+    SetStep(m, stepTable[i]);
+    McuWait_Waitms(1);
   }
-  motor->pos++;
+  m->pos++;
 }
 
-void DecStep(McuULN2003_Motor_t *motor) {
+void McuULN2003_DecStep(McuULN2003_Handle_t motor) {
+  McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+
   for(int i=McuULN2003_NOF_STEP_STEPS-1; i>=0; i--) {
-    SetStep(motor, stepTable[i]);
+    SetStep(m, stepTable[i]);
   }
-  motor->pos--;
+  m->pos--;
 }
 
+void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos) {
+  McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+  m->pos = pos;
+}
 
 void forward(uint32_t delayms, uint32_t steps) {
   while(steps>0) {
