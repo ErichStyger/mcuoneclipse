@@ -28,6 +28,8 @@
 #include "buttons.h"
 #include "Shell.h"
 #include "i2clib.h"
+#include "McuULN2003.h"
+#include "stepper.h"
 
 void PL_InitFromTask(void) {
   (void)McuTimeDate_Init(); /* uses I2C */
@@ -67,4 +69,6 @@ void PL_Init(void) {
   LEDS_Init();
   BTN_Init();
   SHELL_Init();
+  McuULN2003_Init();
+  STEPPER_Init();
 }
