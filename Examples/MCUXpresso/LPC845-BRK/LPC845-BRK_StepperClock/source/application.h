@@ -1,8 +1,8 @@
 /*
- * application.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 30.07.2019
- *      Author: Erich Styger Local
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef APPLICATION_H_

@@ -137,7 +137,6 @@ static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
 }
 
 static void StartDebounce(uint32_t buttons, bool fromISR) {
-  BaseType_t res;
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
   if (data.state==MCUDBMC_STATE_IDLE) {
@@ -145,11 +144,10 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
     data.state = MCUDBMC_STATE_START;
     McuDbnc_Process(&data);
     if (fromISR) {
-      res = xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
+      (void)xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
     } else {
-      res = xTimerStart(data.timer, pdMS_TO_TICKS(100));
+      (void)xTimerStart(data.timer, pdMS_TO_TICKS(100));
     }
-    assert(res==pdPASS);
     if (fromISR) {
       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
@@ -161,7 +159,7 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
 #if McuLib_CONFIG_SDK_USE_FREERTOS
 static void PollButtons(void) {
   if (McuBtn_IsOn(btnK1)) {
-	StartDebounce(BTN_K1, false);
+	  StartDebounce(BTN_K1, false);
   }
   if (McuBtn_IsOn(btnK3)) {
     StartDebounce(BTN_K3, false);

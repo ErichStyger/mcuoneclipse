@@ -22,7 +22,9 @@
 
 //#define INI_READONLY
 
-#define NDEBUG
+#ifndef NDEBUG
+  #define NDEBUG
+#endif
 
 #define INI_USE_GLOBAL_BUFFER   0 /* 0: use stack for buffer; 1: use global memory for buffer */
 

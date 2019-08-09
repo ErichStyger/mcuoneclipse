@@ -11,13 +11,14 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
-#if PL_CONFIG_USE_I2C
+#if PL_CONFIG_USE_I2C_SPY
   #include "McuI2CSpy.h"
 #endif
 #include "McuShellUart.h"
 #include "McuTimeDate.h"
 #include "McuExtRTC.h"
 #include "McuEE24.h"
+#include "stepper.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -26,12 +27,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
-#if PL_CONFIG_USE_I2C
+#if PL_CONFIG_USE_I2C_SPY
   McuI2CSpy_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
   McuExtRTC_ParseCommand,
   McuEE24_ParseCommand,
+  STEPPER_ParseCommand,
   NULL /* Sentinel */
 };
 

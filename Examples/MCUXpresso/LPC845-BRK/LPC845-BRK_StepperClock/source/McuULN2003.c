@@ -132,7 +132,7 @@ static void SetStep(McuULN2003_Motor_t *motor, const bool w[McuULN2003_NOF_MOTOR
   }
 }
 
-void McuULN2003_Disable(McuULN2003_Handle_t motor) {
+void McuULN2003_PowerOff(McuULN2003_Handle_t motor) {
   SetStep((McuULN2003_Motor_t *)motor, disableTable);
 }
 
@@ -160,19 +160,26 @@ void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos) {
   m->pos = pos;
 }
 
-void forward(uint32_t delayms, uint32_t steps) {
-  while(steps>0) {
-    for(int i=0; i<4; i++) {
+int32_t McuULN2003_GetPos(McuULN2003_Handle_t motor) {
+  return ((McuULN2003_Motor_t*)motor)->pos;
+}
 
+void McuULN2003_Step(McuULN2003_Handle_t motor, int32_t steps) {
+  if (steps>0) {
+    while(steps>0) {
+      McuULN2003_IncStep(motor);
+      steps--;
     }
-    steps--;
+  } else {
+    while(steps<0) {
+      McuULN2003_DecStep(motor);
+      steps++;
+    }
   }
 }
 
 void McuULN2003_Deinit(void) {
-
 }
 
 void McuULN2003_Init(void) {
-
 }

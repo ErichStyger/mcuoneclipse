@@ -7,7 +7,8 @@
 
 /* header file is included with -include compiler option */
 
-/* McuLib configuration for the LPC845-BRK */
+#ifndef INCLUDEMCULIBCONFIG_H_
+#define INCLUDEMCULIBCONFIG_H_
 
 #define McuLib_CONFIG_CPU_IS_LPC      (1)  /* LPC845 */
 #define McuLib_CONFIG_CORTEX_M        (0)  /* LPC845 is a Cortex-M0+ */
@@ -83,3 +84,5 @@
 #define McuEE24_CONFIG_HAS_WP_PIN               (0)   /* no WP Pin */
 #define McuEE24_CONFIG_DO_ACKNOWLEDGE_POLLING   (0)   /* no acknowledge polling */
 #define McuEE24_CONFIG_USE_TIMEOUT              (0)   /* no timeout */
+
+#endif /* INCLUDEMCULIBCONFIG_H_ */

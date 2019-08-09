@@ -22,12 +22,13 @@ void McuULN2003_GetDefaultConfig(McuULN2003_Config_t *config);
 McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config);
 McuULN2003_Handle_t McuULN2003_DeinitMotor(McuULN2003_Handle_t motor);
 
-void McuULN2003_Disable(McuULN2003_Handle_t motor);
+void McuULN2003_PowerOff(McuULN2003_Handle_t motor);
 
 void McuULN2003_IncStep(McuULN2003_Handle_t motor);
-
 void McuULN2003_DecStep(McuULN2003_Handle_t motor);
+void McuULN2003_Step(McuULN2003_Handle_t motor, int32_t steps);
 
+int32_t McuULN2003_GetPos(McuULN2003_Handle_t motor);
 void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos);
 
 void McuULN2003_Deinit(void);
