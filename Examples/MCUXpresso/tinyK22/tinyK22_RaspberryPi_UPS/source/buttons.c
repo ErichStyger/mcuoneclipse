@@ -1,9 +1,10 @@
 /*
- * buttons.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 28.05.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "platform.h"
 #include "buttons.h"
 #include "McuButton.h"
@@ -145,13 +146,13 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
   }
 }
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
 static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
   /* called with TIMER_PERIOD_MS during debouncing */
   McuDbnc_Process(&data);
 }
 
 static void StartDebounce(uint32_t buttons, bool fromISR) {
-  BaseType_t res;
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
   if (data.state==MCUDBMC_STATE_IDLE) {
@@ -159,16 +160,16 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
     data.state = MCUDBMC_STATE_START;
     McuDbnc_Process(&data);
     if (fromISR) {
-      res = xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
+      (void)xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
     } else {
-      res = xTimerStart(data.timer, pdMS_TO_TICKS(100));
+      (void)xTimerStart(data.timer, pdMS_TO_TICKS(100));
     }
-    assert(res==pdPASS);
     if (fromISR) {
       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
   }
 }
+#endif
 
 #if !PL_CONFIG_USE_KBI
 static void PollButtons(void) {
@@ -292,7 +293,7 @@ void BTN_Init(void) {
   NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTB_IRQn);
   #endif
-#else /* use task for button polling */
+#elif McuLib_CONFIG_SDK_USE_FREERTOS /* use task for button polling */
   if (xTaskCreate(
       BtnTask,  /* pointer to the task */
       "Btn", /* task name for kernel awareness debugging */
@@ -305,6 +306,7 @@ void BTN_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 #endif
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   data.timer = xTimerCreate(
         "tmrDbnc", /* name */
         pdMS_TO_TICKS(TIMER_PERIOD_MS), /* period/time */
@@ -314,6 +316,7 @@ void BTN_Init(void) {
   if (data.timer==NULL) {
     for(;;); /* failure! */
   }
+#endif
 }
 
 void BTN_Deinit(void) {
