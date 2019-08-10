@@ -57,6 +57,7 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
       vPortYieldFromISR();
     }
   }
+  USART_ClearStatusFlags(McuShellUart_CONFIG_UART_DEVICE, flags);
   __DSB();
 }
 

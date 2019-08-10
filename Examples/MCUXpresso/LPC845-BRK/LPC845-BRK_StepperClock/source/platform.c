@@ -55,9 +55,9 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_I2C_SPY
   McuI2CSpy_Init();
 #endif
-#if PL_CONFIG_USE_HW_I2C
+#if PL_CONFIG_USE_I2C && PL_CONFIG_USE_HW_I2C
   I2CLIB_Init();
-#else
+#elif PL_CONFIG_USE_I2C
   McuGenericSWI2C_Init();
 #endif
 #if PL_HAS_EXT_I2C_RTC
@@ -70,7 +70,11 @@ void PL_Init(void) {
   /* application modules: */
   LEDS_Init();
   BTN_Init();
+#if PL_CONFIG_USE_SHELL
   SHELL_Init();
+#endif
+#if PL_HAS_STEPPER
   McuULN2003_Init();
   STEPPER_Init();
+#endif
 }

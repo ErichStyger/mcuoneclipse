@@ -12,8 +12,9 @@
 #define PL_CONFIG_USE_I2C       (1)
 #define PL_CONFIG_USE_I2C_SPY   (0 && PL_CONFIG_USE_I2C)
 
-#define PL_HAS_EXT_I2C_RTC    (1 && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
-#define PL_HAS_EXT_EEPROM     (1) /* AT24C32 */
+#define PL_HAS_EXT_I2C_RTC      (1 && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
+#define PL_HAS_EXT_EEPROM       (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
+#define PL_HAS_STEPPER          (1)
 
 /* NYI */
 #define PL_CONFIG_USE_KBI     (0)

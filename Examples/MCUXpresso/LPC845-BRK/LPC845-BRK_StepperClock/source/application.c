@@ -12,6 +12,7 @@
 #include "buttons.h"
 #include "leds.h"
 
+#if 0
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS 100
 static SemaphoreHandle_t mutex;
@@ -19,6 +20,7 @@ static SemaphoreHandle_t mutex;
 static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
 }
+#endif
 
 static void AppTask(void *pv) {
   PL_InitFromTask();
@@ -40,6 +42,7 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
+#if 0
   timerHndl = xTimerCreate("timer0", pdMS_TO_TICKS(TIMER_PERIOD_MS), pdTRUE, (void *)0, vTimerCallback);
   if (timerHndl==NULL) {
     for(;;); /* failure! */
@@ -47,10 +50,13 @@ void APP_Run(void) {
   if (xTimerStart(timerHndl, 0)!=pdPASS) {
     for(;;); /* failure! */
   }
+#endif
+#if 0
   mutex = xSemaphoreCreateMutex();
   if (mutex!=NULL) {
-    vQueueAddToRegistry(mutex, "Mutex");
+    vQueueAddToRegistry(mutex, "ExampleMutex");
   }
+#endif
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }
 }

@@ -53,6 +53,7 @@ int main(void) {
     printf("LPC845-BRK StepperClock Project\n");
     APP_Run();
     for(;;) {
+      __asm("nop");
     }
     return 0 ;
 }
