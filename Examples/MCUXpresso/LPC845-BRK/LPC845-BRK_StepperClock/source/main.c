@@ -50,7 +50,6 @@ int main(void) {
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    printf("LPC845-BRK StepperClock Project\n");
     APP_Run();
     for(;;) {
       __asm("nop");

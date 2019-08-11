@@ -48,7 +48,9 @@ void PL_Init(void) {
   McuUtility_Init();
   McuLED_Init();
   McuGPIO_Init();
+#if PL_CONFIG_USE_RTT
   McuRTT_Init();
+#endif
   McuShellUart_Init();
 
   McuGenericI2C_Init();
@@ -73,7 +75,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
-#if PL_HAS_STEPPER
+#if PL_USE_STEPPER
   McuULN2003_Init();
   STEPPER_Init();
 #endif

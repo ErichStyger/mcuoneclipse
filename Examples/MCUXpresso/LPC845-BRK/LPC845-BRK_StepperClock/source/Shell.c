@@ -33,7 +33,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuTimeDate_ParseCommand,
   McuExtRTC_ParseCommand,
   McuEE24_ParseCommand,
+#if PL_USE_STEPPER
   STEPPER_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -46,11 +48,25 @@ typedef struct {
 static const SHELL_IODesc ios[] =
 {
   {&McuShellUart_stdio,  McuShellUart_DefaultShellBuffer,  sizeof(McuShellUart_DefaultShellBuffer)},
+#if PL_CONFIG_USE_RTT
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
+#endif
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
 #endif
 };
+
+void SHELL_SendChar(unsigned char ch) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendCh(ch, ios[i].stdio->stdOut);
+  }
+}
+
+void SHELL_SendString(unsigned char *str) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendStr(str, ios[i].stdio->stdOut);
+  }
+}
 
 static void ShellTask(void *pv) {
   int i;
