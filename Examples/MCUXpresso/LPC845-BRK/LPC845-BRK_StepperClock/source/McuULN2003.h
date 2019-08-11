@@ -22,8 +22,9 @@ typedef void *McuULN2003_Handle_t;
 #define McuULN2003_NOF_MOTOR_GPIO_PINS  (4)
 
 typedef struct {
-  McuULN2003_StepMode stepMode;
-  McuGPIO_HwPin_t hw[McuULN2003_NOF_MOTOR_GPIO_PINS];
+  McuULN2003_StepMode stepMode; /* half or full steps */
+  bool inverted; /* if direction is inverted */
+  McuGPIO_HwPin_t hw[McuULN2003_NOF_MOTOR_GPIO_PINS]; /* hardware pins */
 } McuULN2003_Config_t;
 
 void McuULN2003_GetDefaultConfig(McuULN2003_Config_t *config);

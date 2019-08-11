@@ -20,6 +20,7 @@
 typedef struct {
   int32_t pos; /* actual position */
   McuULN2003_StepMode stepMode; /* full or half stepping mode */
+  bool inverted; /* if motor direction is inverted */
   uint8_t tablePos; /* current pos in the stepper logic table */
   McuGPIO_Handle_t pin[McuULN2003_NOF_MOTOR_GPIO_PINS]; /* the 4 winding of the motor */
 } McuULN2003_Motor_t;
@@ -75,6 +76,7 @@ static const bool stepTableFullStepsBw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuU
 static const McuULN2003_Config_t defaultConfig =
 {
     .stepMode = McuULN2003_STEP_MODE_HALF,
+    .inverted = false,
     .hw[0] = {
       .gpio = NULL,
   #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -133,6 +135,7 @@ McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
     memset(handle, 0, sizeof(McuULN2003_Motor_t)); /* init all fields */
     handle->pos = 0;
     handle->stepMode = config->stepMode;
+    handle->inverted = config->inverted;
     handle->tablePos = 0;
     McuGPIO_GetDefaultConfig(&gpio_config);
     for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) {
@@ -189,17 +192,17 @@ static void McuULN2003_TableMakeStep(McuULN2003_Handle_t motor, bool forward) {
   size_t maxTableIndex;
 
   if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
-    if (forward) {
+    if ((forward && !m->inverted) || (!forward && m->inverted)) {
       table = stepTableHalfStepsFw;
     } else {
       table = stepTableHalfStepsBw;
     }
     maxTableIndex = McuULN2003_NOF_STEPS_HALF_STEP_MODE;
   } else { /* McuULN2003_STEP_MODE_FULL */
-    if (forward) {
+    if ((forward && !m->inverted) || (!forward && m->inverted)) {
       table = stepTableFullStepsFw;
     } else {
-      table = stepTableHalfStepsBw;
+      table = stepTableFullStepsBw;
     }
     maxTableIndex = McuULN2003_NOF_STEPS_FULL_STEP_MODE;
   }
@@ -232,40 +235,30 @@ bool McuULN2003_MoveCallback(McuULN2003_Handle_t motor, int32_t targetPos) {
 
 void McuULN2003_IncStep(McuULN2003_Handle_t motor) {
   McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+  int32_t pos = m->pos+1;
 
-  if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
-    for(int i=0; i<McuULN2003_NOF_STEPS_HALF_STEP_MODE; i++) {
-      SetStep(m, stepTableHalfStepsFw[i]);
-      m->tablePos = i;
+  do {
+    McuULN2003_TableMakeStep(motor, true);
+    if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
       McuULN2003_DELAY_HALF_STEP_MODE();
-    }
-  } else { /* McuULN2003_STEP_MODE_FULL */
-    for(int i=0; i<McuULN2003_NOF_STEPS_FULL_STEP_MODE; i++) {
-      m->tablePos = i;
-      SetStep(m, stepTableFullStepsFw[i]);
+    } else { /* McuULN2003_STEP_MODE_FULL */
       McuULN2003_DELAY_FULL_STEP_MODE();
     }
-  }
-  m->pos++;
+  } while(m->pos!=pos);
 }
 
 void McuULN2003_DecStep(McuULN2003_Handle_t motor) {
   McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+  int32_t pos = m->pos-1;
 
-  if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
-    for(int i=0; i<McuULN2003_NOF_STEPS_HALF_STEP_MODE; i++) {
-      m->tablePos = i;
-      SetStep(m, stepTableHalfStepsBw[i]);
+  do {
+    McuULN2003_TableMakeStep(motor, false);
+    if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
       McuULN2003_DELAY_HALF_STEP_MODE();
-    }
-  } else { /* McuULN2003_STEP_MODE_FULL */
-    for(int i=0; i<McuULN2003_NOF_STEPS_FULL_STEP_MODE; i++) {
-      m->tablePos = i;
-      SetStep(m, stepTableFullStepsBw[i]);
+    } else { /* McuULN2003_STEP_MODE_FULL */
       McuULN2003_DELAY_FULL_STEP_MODE();
     }
-  }
-  m->pos--;
+  } while(m->pos!=pos);
 }
 
 void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos) {

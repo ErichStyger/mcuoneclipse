@@ -15,7 +15,7 @@
 
 static void AppTask(void *pv) {
   PL_InitFromTask();
-  SHELL_SendString((unsigned char*)"\r\n**************************\r\n* LPC845-BRK StepperClock *\r\n**************************\r\n");
+  SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK StepperClock *\r\n***************************\r\n");
   for(;;) {
     McuLED_Toggle(LEDS_Green);
     vTaskDelay(pdMS_TO_TICKS(100));

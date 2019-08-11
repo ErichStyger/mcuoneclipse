@@ -69,14 +69,14 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"curr pos: ");
   McuUtility_strcatNum32s(buf, sizeof(buf), McuULN2003_GetPos(motorHour));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", goto pos: ");
-  McuUtility_strcatNum32s(buf, sizeof(buf), targetPosMinute);
+  McuUtility_strcatNum32s(buf, sizeof(buf), targetPosHour);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  h pos", buf, io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"curr pos: ");
   McuUtility_strcatNum32s(buf, sizeof(buf), McuULN2003_GetPos(motorMinute));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", goto pos: ");
-  McuUtility_strcatNum32s(buf, sizeof(buf), targetPosHour);
+  McuUtility_strcatNum32s(buf, sizeof(buf), targetPosMinute);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  m pos", buf, io->stdOut);
 
@@ -111,8 +111,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Set stepper pos to zero (12:00 position)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  show <time>", (unsigned char*)"Show time on clock\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  step (h|m) <steps>", (unsigned char*)"perform a number of steps for hour or minute\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  goto (h|m) <pos>", (unsigned char*)"go to a position for hour or minute\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  step (h|m) <steps>", (unsigned char*)"perform a number of incremental steps for hour or minute\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  goto (h|m) <pos>", (unsigned char*)"background goto position for hour or minute\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -220,6 +220,7 @@ void STEPPER_Init(void) {
   config.hw[3].gpio = GPIO;
   config.hw[3].port = 0U;
   config.hw[3].pin = 20U;
+  config.inverted = true;
   motorMinute = McuULN2003_InitMotor(&config);
 
   McuULN2003_PowerOff(motorMinute);
