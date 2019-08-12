@@ -12,6 +12,7 @@
 #include "McuWait.h"
 #include "leds.h"
 #include "shutdown.h"
+#include "McuSHT31.h"
 
 static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initiate a shutdown */
 #if TINYK22_HAT_VERSION==5
@@ -58,8 +59,9 @@ void RGPIO_ConnectSCL(bool yes) {
 #if PL_CONFIG_USE_POWER_ON
 void RGPIO_PowerOn(void) {
   RGPIO_ConnectSCL(true);
-  /* drive SCL low here */
-  McuWait_WaitOSms(100);
+  /* drive SCL low here: to make it simple, just send a command to the temperature sensor */
+  (void)McuSHT31_Reset();
+  McuWait_WaitOSms(500);
   RGPIO_ConnectSCL(false);
 }
 #endif
