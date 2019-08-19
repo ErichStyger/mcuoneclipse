@@ -92,8 +92,9 @@ void SHELL_Init(void) {
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
-    ) != pdPASS) {
-     for(;;){} /* error! probably out of memory */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
   }
   McuShell_SetStdio(McuRTT_GetStdio());
 }
