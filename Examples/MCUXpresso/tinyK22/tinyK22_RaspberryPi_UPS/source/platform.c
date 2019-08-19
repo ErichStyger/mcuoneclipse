@@ -37,7 +37,9 @@
 #include "McuDebounce.h"
 #include "McuI2CSpy.h"
 #include "i2clib.h"
-#include "virtual_com.h"
+#if PL_CONFIG_USE_USB_CDC
+  #include "virtual_com.h"
+#endif
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */

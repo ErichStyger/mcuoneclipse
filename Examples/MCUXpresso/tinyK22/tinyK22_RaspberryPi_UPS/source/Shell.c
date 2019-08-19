@@ -11,16 +11,16 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
-#include "McuSHT31.h"
-#include "RaspyUART.h"
-#include "RaspyGPIO.h"
-#include "gateway.h"
-#if PL_CONFIG_USE_I2C
+#if PL_CONFIG_USE_I2C_SPY
   #include "McuI2CSpy.h"
 #endif
 #if PL_CONFIG_USE_USB_CDC
   #include "virtual_com.h"
 #endif
+#include "McuSHT31.h"
+#include "RaspyUART.h"
+#include "RaspyGPIO.h"
+#include "gateway.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -28,6 +28,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuRTOS_ParseCommand,
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
+#endif
+#if PL_CONFIG_USE_I2C_SPY
+  McuI2CSpy_ParseCommand,
 #endif
 #if MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
   McuSHT31_ParseCommand,
@@ -37,9 +40,6 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_RASPBERRY
   RGPIO_ParseCommand,
-#endif
-#if PL_CONFIG_USE_I2C
-  McuI2CSpy_ParseCommand,
 #endif
 #if PL_CONFIG_USE_GATEWAY
   GATEWAY_ParseCommand,
@@ -55,7 +55,9 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
+#if PL_CONFIG_USE_RTT
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
+#endif
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
 #endif
@@ -64,6 +66,18 @@ static const SHELL_IODesc ios[] =
   {&GATEWAY_stdioHostToShell, GATEWAY_HostToShellBuffer, sizeof(GATEWAY_HostToShellBuffer)},
 #endif
 };
+
+void SHELL_SendChar(unsigned char ch) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendCh(ch, ios[i].stdio->stdOut);
+  }
+}
+
+void SHELL_SendString(unsigned char *str) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendStr(str, ios[i].stdio->stdOut);
+  }
+}
 
 static void ShellTask(void *pv) {
   int i;
@@ -89,8 +103,9 @@ void SHELL_Init(void) {
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
-    ) != pdPASS) {
-     for(;;){} /* error! probably out of memory */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
   }
   McuShell_SetStdio(McuRTT_GetStdio());
 }

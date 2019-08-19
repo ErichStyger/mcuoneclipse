@@ -765,10 +765,10 @@ void USB_APPInit(void)
   s_cdcVcom.deviceHandle = NULL;
 
   if (kStatus_USB_Success != USB_DeviceInit(CONTROLLER_ID, USB_DeviceCallback, &s_cdcVcom.deviceHandle)) {
-      usb_echo("USB device vcom failed\r\n");
+      usb_echo("USB device VCOM failed\r\n");
       return;
   } else {
-      usb_echo("USB device CDC virtual com demo\r\n");
+      usb_echo("USB device CDC virtual COM running\r\n");
   }
 
   McuRB_GetDefaultconfig(&config);
