@@ -161,6 +161,7 @@ int main(void) {
   for(;;) {
     /* Delay 1000 ms */
     SysTick_DelayTicks(1000U);
+    SWO_PrintString("blinky\n", 0);
     blinkFLASH();
   }
   return 0 ;
