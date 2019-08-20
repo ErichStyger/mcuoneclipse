@@ -30,6 +30,7 @@
 #include "i2clib.h"
 #include "McuULN2003.h"
 #include "stepper.h"
+#include "magnets.h"
 
 void PL_InitFromTask(void) {
   (void)McuTimeDate_Init(); /* uses I2C */
@@ -78,5 +79,8 @@ void PL_Init(void) {
 #if PL_USE_STEPPER
   McuULN2003_Init();
   STEPPER_Init();
+#endif
+#if PL_USE_HALL_SENSOR
+  MAG_Init();
 #endif
 }

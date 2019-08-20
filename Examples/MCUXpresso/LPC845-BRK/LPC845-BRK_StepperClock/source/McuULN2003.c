@@ -145,7 +145,7 @@ McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
       gpio_config.hw.port = config->hw[i].port;
     #endif
       gpio_config.hw.pin  = config->hw[i].pin;
-      gpio_config.isLowOnInit = true;
+      gpio_config.isHighOnInit = false;
       handle->pin[i] = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
     }
   }

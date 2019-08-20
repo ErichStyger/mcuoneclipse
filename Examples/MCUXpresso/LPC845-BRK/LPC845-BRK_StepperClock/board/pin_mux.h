@@ -51,6 +51,27 @@ void BOARD_InitBootPins(void);
  * Inactive (no pull-down/pull-up resistor enabled).
  */
 #define PIO0_4_MODE_INACTIVE 0x00u
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO1_0_MODE_INACTIVE 0x00u
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO1_1_MODE_INACTIVE 0x00u
+/*!
+ * @brief
+ * Selects function mode (on-chip pull-up/pull-down resistor control).
+ * : Inactive.
+ * Inactive (no pull-down/pull-up resistor enabled).
+ */
+#define PIO1_2_MODE_INACTIVE 0x00u
 
 /*! @name PIO1_0 (number 11), LED_GREEN
   @{ */
@@ -126,6 +147,36 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BTNpin1_NAME "BTNpin1"                    /*!<@brief Identifier name */
 #define BOARD_INITPINS_BTNpin1_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
                                                                  /* @} */
+
+/*! @name PIO0_16 (number 15), MAG_HH
+  @{ */
+#define BOARD_INITPINS_MAG_HH_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_MAG_HH_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
+#define BOARD_INITPINS_MAG_HH_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_MAG_HH_GPIO_PIN 16U                      /*!<@brief PIO0 pin index: 16 */
+#define BOARD_INITPINS_MAG_HH_PORT 0U                           /*!<@brief PORT device name: 0U */
+#define BOARD_INITPINS_MAG_HH_PIN 16U                           /*!<@brief 0U pin index: 16 */
+#define BOARD_INITPINS_MAG_HH_CHANNEL 16                        /*!<@brief GPIO PIO0 channel: 16 */
+#define BOARD_INITPINS_MAG_HH_PIN_NAME PIO0_16                  /*!<@brief Pin name */
+#define BOARD_INITPINS_MAG_HH_LABEL "MAG_HH"                    /*!<@brief Label */
+#define BOARD_INITPINS_MAG_HH_NAME "MAG_HH"                     /*!<@brief Identifier name */
+#define BOARD_INITPINS_MAG_HH_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
+                                                                /* @} */
+
+/*! @name PIO0_17 (number 48), MAG_MM
+  @{ */
+#define BOARD_INITPINS_MAG_MM_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
+#define BOARD_INITPINS_MAG_MM_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
+#define BOARD_INITPINS_MAG_MM_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
+#define BOARD_INITPINS_MAG_MM_GPIO_PIN 17U                      /*!<@brief PIO0 pin index: 17 */
+#define BOARD_INITPINS_MAG_MM_PORT 0U                           /*!<@brief PORT device name: 0U */
+#define BOARD_INITPINS_MAG_MM_PIN 17U                           /*!<@brief 0U pin index: 17 */
+#define BOARD_INITPINS_MAG_MM_CHANNEL 17                        /*!<@brief GPIO PIO0 channel: 17 */
+#define BOARD_INITPINS_MAG_MM_PIN_NAME PIO0_17                  /*!<@brief Pin name */
+#define BOARD_INITPINS_MAG_MM_LABEL "MAG_MM"                    /*!<@brief Label */
+#define BOARD_INITPINS_MAG_MM_NAME "MAG_MM"                     /*!<@brief Identifier name */
+#define BOARD_INITPINS_MAG_MM_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
+                                                                /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

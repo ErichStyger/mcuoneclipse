@@ -31,6 +31,8 @@
                <pin_label pin_num="4" pin_signal="PIO0_12" label="BTN_K1" identifier="BTNpin1"/>
                <pin_label pin_num="20" pin_signal="PIO0_24" label="USART0_RX"/>
                <pin_label pin_num="19" pin_signal="PIO0_25" label="USART0_TX"/>
+               <pin_label pin_num="15" pin_signal="PIO0_16" label="MAG_HH" identifier="MAG_HH"/>
+               <pin_label pin_num="48" pin_signal="PIO0_17/ADC_9/DACOUT_0" label="MAG_MM" identifier="MAG_MM"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -58,16 +60,19 @@
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
                         <pin_feature name="gpio_init_state" value="false"/>
+                        <pin_feature name="mode" value="inactive"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO1, 1" pin_num="14" pin_signal="PIO1_1/CAPT_X2">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="mode" value="inactive"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO1, 2" pin_num="16" pin_signal="PIO1_2/CAPT_X3">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="mode" value="inactive"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 4" pin_num="6" pin_signal="PIO0_4/ADC_11">
@@ -84,6 +89,16 @@
                   </pin>
                   <pin peripheral="USART0" signal="RXD" pin_num="20" pin_signal="PIO0_24"/>
                   <pin peripheral="USART0" signal="TXD" pin_num="19" pin_signal="PIO0_25"/>
+                  <pin peripheral="GPIO" signal="PIO0, 16" pin_num="15" pin_signal="PIO0_16">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 17" pin_num="48" pin_signal="PIO0_17/ADC_9/DACOUT_0">
+                     <pin_features>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
