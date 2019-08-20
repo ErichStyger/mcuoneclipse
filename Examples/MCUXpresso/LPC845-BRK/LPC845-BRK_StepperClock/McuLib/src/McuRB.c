@@ -54,7 +54,11 @@ McuRB_Handle_t McuRB_InitRB(McuRB_Config_t *config) {
     memset(handle, 0, sizeof(McuRB_t)); /* init all fields */
     handle->elementSize = config->elementSize;
     handle->maxElements = config->nofElements;
+#if MCURB_CONFIG_USE_FREERTOS_HEAP
+    handle->data = pvPortMalloc(handle->maxElements*handle->elementSize);
+#else
     handle->data = malloc(handle->maxElements*handle->elementSize);
+#endif
     assert(handle->data!=NULL);
   }
   return handle;
@@ -70,7 +74,11 @@ McuRB_Handle_t McuRB_DeinitRB(McuRB_Handle_t rb) {
   free(handle->data);
 #endif
   handle->data = NULL;
+#if MCURB_CONFIG_USE_FREERTOS_HEAP
+  vPortFree(rb);
+#else
   free(rb);
+#endif
   return NULL;
 }
 

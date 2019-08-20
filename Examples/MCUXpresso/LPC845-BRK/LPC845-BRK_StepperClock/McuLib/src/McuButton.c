@@ -67,7 +67,6 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
     /* create GPIO pin */
     McuGPIO_GetDefaultConfig(&gpioConfig);
     gpioConfig.isInput = true;
-    gpioConfig.isLowOnInit = false;
     memcpy(&gpioConfig.hw, &config->hw, sizeof(gpioConfig.hw));
     handle->gpio = McuGPIO_InitGPIO(&gpioConfig);
   }

@@ -33,7 +33,7 @@ typedef struct {
 
 typedef struct {
   bool isInput;
-  bool isLowOnInit;
+  bool isHighOnInit;
   McuGPIO_HwPin_t hw;
 } McuGPIO_Config_t;
 
@@ -44,13 +44,18 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config);
 McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio);
 
 void McuGPIO_SetAsInput(McuGPIO_Handle_t gpio);
-void McuGPIO_SetAsOutput(McuGPIO_Handle_t gpio);
+void McuGPIO_SetAsOutput(McuGPIO_Handle_t gpio, bool setHigh);
+bool McuGPIO_IsInput(McuGPIO_Handle_t gpio);
+bool McuGPIO_IsOutput(McuGPIO_Handle_t gpio);
 void McuGPIO_SetLow(McuGPIO_Handle_t gpio);
 void McuGPIO_SetHigh(McuGPIO_Handle_t gpio);
 void McuGPIO_Toggle(McuGPIO_Handle_t gpio);
 bool McuGPIO_IsLow(McuGPIO_Handle_t gpio);
 bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio);
 void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val);
+bool McuGPIO_GetValue(McuGPIO_Handle_t gpio);
+
+void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_t bufSize);
 
 /* driver initialization */
 void McuGPIO_Init(void);

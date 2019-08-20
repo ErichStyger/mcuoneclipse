@@ -9,22 +9,23 @@
 
 #include "McuLibconfig.h"
 #include "McuGPIO.h"
-#include "fsl_gpio.h"
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  #include "fsl_port.h"
-#endif
+#include "McuUtility.h"
 #include <stddef.h>
 #include <string.h> /* for memset */
 #include <assert.h>
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   #include "McuRTOS.h"
 #endif
+#include "fsl_gpio.h"
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  #include "fsl_port.h"
+#endif
 
 /* default configuration, used for initializing the config */
 static const McuGPIO_Config_t defaultConfig =
 {
     .isInput = true,
-    .isLowOnInit = true,
+    .isHighOnInit = false,
     .hw = {
       .gpio = NULL,
     #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -46,36 +47,74 @@ void McuGPIO_GetDefaultConfig(McuGPIO_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
-McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
+static void McuGPIO_ConfigureDirection(bool isInput, bool isHighOnInit, McuGPIO_HwPin_t *hw) {
   gpio_pin_config_t pin_config; /* config for the SDK */
-  McuGPIO_t *handle;
 
-  assert(config!=NULL);
   memset(&pin_config, 0, sizeof(pin_config)); /* init all fields */
-  if (config->isInput) {
-  #if McuLib_CONFIG_CPU_IS_IMXRT
+  if (isInput) {
+#if McuLib_CONFIG_CPU_IS_IMXRT
     pin_config.direction = kGPIO_DigitalInput;
-  #else
+#else
     pin_config.pinDirection = kGPIO_DigitalInput;
-  #endif
+#endif
   } else {
-  #if McuLib_CONFIG_CPU_IS_IMXRT
-  pin_config.direction = kGPIO_DigitalOutput;
-  #else
+#if McuLib_CONFIG_CPU_IS_IMXRT
+    pin_config.direction = kGPIO_DigitalOutput;
+#else
     pin_config.pinDirection = kGPIO_DigitalOutput;
-  #endif
+#endif
   }
 #if McuLib_CONFIG_CPU_IS_IMXRT
   pin_config.interruptMode = kGPIO_NoIntmode; /* no interrupts */
 #endif
-  pin_config.outputLogic = !config->isLowOnInit;
+  pin_config.outputLogic = isHighOnInit;
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PinInit(config->hw.gpio, config->hw.pin, &pin_config);
+  GPIO_PinInit(hw->gpio, hw->pin, &pin_config);
+#elif McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(hw->gpio, hw->port, hw->pin, &pin_config);
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  GPIO_PinInit(hw->gpio, hw->pin, &pin_config);
+#endif
+}
+
+void McuGPIO_SetAsInput(McuGPIO_Handle_t gpio) {
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+
+  assert(gpio!=NULL);
+  McuGPIO_ConfigureDirection(true, false /* don't care */, &pin->hw);
+  pin->isInput = true;
+}
+
+void McuGPIO_SetAsOutput(McuGPIO_Handle_t gpio, bool setHigh) {
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+
+  assert(gpio!=NULL);
+  McuGPIO_ConfigureDirection(false, setHigh, &pin->hw);
+  pin->isInput = false;
+}
+
+bool McuGPIO_IsInput(McuGPIO_Handle_t gpio) {
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+  return pin->isInput;
+}
+
+bool McuGPIO_IsOutput(McuGPIO_Handle_t gpio) {
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+  return !pin->isInput;
+}
+
+McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
+  McuGPIO_t *handle;
+
+  assert(config!=NULL);
+  McuGPIO_ConfigureDirection(config->isInput, config->isHighOnInit, &config->hw);
+#if McuLib_CONFIG_CPU_IS_KINETIS
   PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PinInit(config->hw.gpio, config->hw.port, config->hw.pin, &pin_config);
+  /* \todo */
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  /* \todo */
 #endif
-
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   handle = (McuGPIO_t*)pvPortMalloc(sizeof(McuGPIO_t)); /* get a new device descriptor */
 #else
@@ -166,6 +205,10 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
   }
 }
 
+bool McuGPIO_GetValue(McuGPIO_Handle_t gpio) {
+  return McuGPIO_IsHigh(gpio);
+}
+
 bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
@@ -182,6 +225,33 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
 
 bool McuGPIO_IsLow(McuGPIO_Handle_t gpio) {
   return !McuGPIO_IsHigh(gpio);
+}
+
+void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_t bufSize) {
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+
+  *buf = '\0';
+  if (McuGPIO_IsOutput(gpio)) {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)"Output");
+  } else {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)"Input");
+  }
+  if (McuGPIO_IsHigh(gpio)) {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)", HIGH");
+  } else {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)", LOW");
+  }
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", gpio:0x");
+  McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.gpio); /* write address */
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", port:0x");
+  McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.port); /* write address */
+#elif McuLib_CONFIG_CPU_IS_LPC
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", port:");
+  McuUtility_strcatNum32u(buf, bufSize, (uint32_t)pin->hw.port); /* write port number */
+#endif
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", pin:");
+  McuUtility_strcatNum32u(buf, bufSize, (uint32_t)pin->hw.pin); /* write pin number */
 }
 
 void McuGPIO_Init(void) {
