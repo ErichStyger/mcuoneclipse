@@ -12,13 +12,29 @@
 #include "buttons.h"
 #include "leds.h"
 #include "Shell.h"
+#if PL_USE_HALL_SENSOR
+  #include "magnets.h"
+#endif
 
 static void AppTask(void *pv) {
   PL_InitFromTask();
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK StepperClock *\r\n***************************\r\n");
   for(;;) {
-    McuLED_Toggle(LEDS_Green);
     vTaskDelay(pdMS_TO_TICKS(100));
+  #if PL_USE_HALL_SENSOR
+    if (MAG_TriggeredHH()) {
+      McuLED_Toggle(LEDS_Red);
+    } else {
+      McuLED_Off(LEDS_Red);
+    }
+    if (MAG_TriggeredMM()) {
+      McuLED_Toggle(LEDS_Blue);
+    } else {
+      McuLED_Off(LEDS_Blue);
+    }
+  #else
+    McuLED_Toggle(LEDS_Green);
+  #endif
   }
 }
 

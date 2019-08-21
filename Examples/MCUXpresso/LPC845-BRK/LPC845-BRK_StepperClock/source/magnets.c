@@ -22,6 +22,14 @@
 
 static McuGPIO_Handle_t MAG_HHpin, MAG_MMpin;
 
+bool MAG_TriggeredHH(void) {
+  return McuGPIO_IsLow(MAG_HHpin);
+}
+
+bool MAG_TriggeredMM(void) {
+  return McuGPIO_IsLow(MAG_MMpin);
+}
+
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[64];
 
