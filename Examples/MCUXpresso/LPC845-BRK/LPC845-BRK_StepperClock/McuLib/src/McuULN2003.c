@@ -1,11 +1,10 @@
 /*
- * McuULN2003.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 31.07.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "platform.h"
 #include "McuULN2003config.h"
 #include "McuULN2003.h"
 #include "McuGPIO.h"
@@ -232,7 +231,6 @@ bool McuULN2003_MoveCallback(McuULN2003_Handle_t motor, int32_t targetPos) {
   return true; /* reached position */
 }
 
-
 void McuULN2003_IncStep(McuULN2003_Handle_t motor) {
   McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
   int32_t pos = m->pos+1;
@@ -285,7 +283,9 @@ void McuULN2003_Step(McuULN2003_Handle_t motor, int32_t steps) {
 }
 
 void McuULN2003_Deinit(void) {
+  /* nothing needed */
 }
 
 void McuULN2003_Init(void) {
+  /* nothing needed */
 }

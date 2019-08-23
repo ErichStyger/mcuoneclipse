@@ -1,12 +1,16 @@
 /*
- * McuULN2003.h
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
- *  Created on: 31.07.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCUULN2003_H_
 #define MCUULN2003_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "McuGPIO.h"
 
@@ -47,5 +51,9 @@ void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos);
 
 void McuULN2003_Deinit(void);
 void McuULN2003_Init(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MCUULN2003_H_ */
