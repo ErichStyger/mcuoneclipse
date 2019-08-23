@@ -66,7 +66,7 @@ void PL_Init(void) {
 #if PL_HAS_EXT_I2C_RTC
   McuExtRTC_Init();
 #endif
-#if PL_HAS_EXT_EEPROM
+#if PL_CONFIG_USE_EXT_EEPROM
   McuEE24_Init();
 #endif
 
@@ -76,11 +76,11 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
-#if PL_USE_STEPPER
+#if PL_CONFIG_USE_STEPPER
   McuULN2003_Init();
   STEPPER_Init();
 #endif
-#if PL_USE_HALL_SENSOR
+#if PL_CONFIG_USE_HALL_SENSOR
   MAG_Init();
 #endif
 }

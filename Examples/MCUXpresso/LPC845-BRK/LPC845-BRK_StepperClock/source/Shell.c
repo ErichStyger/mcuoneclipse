@@ -34,10 +34,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuTimeDate_ParseCommand,
   McuExtRTC_ParseCommand,
   McuEE24_ParseCommand,
-#if PL_USE_STEPPER
+#if PL_CONFIG_USE_STEPPER
   STEPPER_ParseCommand,
 #endif
-#if PL_USE_HALL_SENSOR
+#if PL_CONFIG_USE_HALL_SENSOR
   MAG_ParseCommand,
 #endif
   NULL /* Sentinel */

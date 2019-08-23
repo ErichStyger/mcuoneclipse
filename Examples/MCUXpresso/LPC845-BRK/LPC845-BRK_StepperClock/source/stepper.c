@@ -6,9 +6,10 @@
  */
 
 #include "platform.h"
-#if PL_USE_STEPPER
+#if PL_CONFIG_USE_STEPPER
 #include "stepper.h"
 #include "McuULN2003.h"
+#include "magnets.h"
 
 static McuULN2003_Handle_t motorMinute;
 static McuULN2003_Handle_t motorHour;
@@ -17,6 +18,9 @@ static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS   1
 #define STEPPER_CLOCK_360_STEPS_HH   (385u) /* number of steps for a full turn on the clock for the hours */
 #define STEPPER_CLOCK_360_STEPS_MM   (385u) /* number of steps for a full turn on the clock for the minutes */
+
+#define STEPPER_CLOCK_HH_ZERO_OFFSET (10)   /* offset from the zero position */
+#define STEPPER_CLOCK_MM_ZERO_OFFSET (15)   /* offset from the zero position */
 
 typedef struct {
   int32_t targetPos;
@@ -51,6 +55,43 @@ static void STEPPER_ShowTime(uint8_t hour, uint8_t minute) {
 void STEPPER_Deint(void) {
   motorHour = McuULN2003_DeinitMotor(motorHour);
   motorMinute = McuULN2003_DeinitMotor(motorMinute);
+}
+
+uint8_t STEPPER_ZeroHourHand(void) {
+  int i;
+  uint8_t res = ERR_FAILED;
+
+  McuULN2003_Step(motorHour, STEPPER_CLOCK_360_STEPS_HH/50);
+  for(i=0; i<STEPPER_CLOCK_360_STEPS_HH+(STEPPER_CLOCK_360_STEPS_HH/50); i++) {
+    McuULN2003_IncStep(motorHour);
+    if (MAG_TriggeredHH()) {
+      res = ERR_OK;
+      McuULN2003_Step(motorHour, STEPPER_CLOCK_HH_ZERO_OFFSET);
+      McuULN2003_SetPos(motorHour, 0);
+      break;
+    }
+  }
+  McuULN2003_PowerOff(motorHour);
+  return res;
+}
+
+
+uint8_t STEPPER_ZeroMinuteHand(void) {
+  int i;
+  uint8_t res = ERR_FAILED;
+
+  McuULN2003_Step(motorMinute, STEPPER_CLOCK_360_STEPS_MM/50);
+  for(i=0; i<STEPPER_CLOCK_360_STEPS_MM+(STEPPER_CLOCK_360_STEPS_MM/50); i++) {
+    McuULN2003_IncStep(motorMinute);
+    if (MAG_TriggeredMM()) {
+      res = ERR_OK;
+      McuULN2003_Step(motorMinute, STEPPER_CLOCK_MM_ZERO_OFFSET);
+      McuULN2003_SetPos(motorMinute, 0);
+      break;
+    }
+  }
+  McuULN2003_PowerOff(motorMinute);
+  return res;
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
@@ -113,11 +154,15 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  show <time>", (unsigned char*)"Show time on clock\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  step (h|m) <steps>", (unsigned char*)"perform a number of incremental steps for hour or minute\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  goto (h|m) <pos>", (unsigned char*)"background goto position for hour or minute\r\n", io->stdOut);
+#if PL_CONFIG_USE_HALL_SENSOR
+  McuShell_SendHelpStr((unsigned char*)"  zero (h|m)", (unsigned char*)"Move hour or minute to zero position\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
+  uint8_t res = ERR_OK;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "stepper help")==0) {
     *handled = TRUE;
@@ -130,6 +175,20 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     McuULN2003_SetPos(motorHour, 0);
     McuULN2003_SetPos(motorMinute, 0);
     return ERR_OK;
+#if PL_CONFIG_USE_HALL_SENSOR
+  } else if (McuUtility_strcmp((char*)cmd, "stepper zero h")==0) {
+    *handled = TRUE;
+    res = STEPPER_ZeroHourHand();
+    if (res!=ERR_OK) {
+      McuShell_SendStr((unsigned char*)"failed to find zero position\r\n", io->stdErr);
+    }
+  } else if (McuUtility_strcmp((char*)cmd, "stepper zero m")==0) {
+    *handled = TRUE;
+    res = STEPPER_ZeroMinuteHand();
+    if (res!=ERR_OK) {
+      McuShell_SendStr((unsigned char*)"failed to find zero position\r\n", io->stdErr);
+    }
+#endif
   } else if (McuUtility_strncmp((char*)cmd, "stepper show ", sizeof("stepper show ")-1)==0) {
     uint8_t hour, minute, second, hsec;
 
@@ -181,7 +240,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     *handled = TRUE;
     return ERR_OK;
   }
-  return ERR_OK;
+  return res;
 }
 
 void STEPPER_Init(void) {
@@ -203,7 +262,7 @@ void STEPPER_Init(void) {
   config.hw[3].gpio = GPIO;
   config.hw[3].port = 0U;
   config.hw[3].pin = 26U;
-  motorHour = McuULN2003_InitMotor(&config);
+  motorMinute = McuULN2003_InitMotor(&config);
 
   config.hw[0].gpio = GPIO;
   config.hw[0].port = 0U;
@@ -221,7 +280,7 @@ void STEPPER_Init(void) {
   config.hw[3].port = 0U;
   config.hw[3].pin = 20U;
   config.inverted = true;
-  motorMinute = McuULN2003_InitMotor(&config);
+  motorHour = McuULN2003_InitMotor(&config);
 
   McuULN2003_PowerOff(motorMinute);
   McuULN2003_PowerOff(motorHour);
@@ -234,4 +293,4 @@ void STEPPER_Init(void) {
     for(;;); /* failure! */
   }
 }
-#endif /* PL_USE_STEPPER */
+#endif /* PL_CONFIG_USE_STEPPER */

@@ -6,7 +6,7 @@
  */
 
 #include "platform.h"
-#if PL_USE_HALL_SENSOR
+#if PL_CONFIG_USE_HALL_SENSOR
 #include "magnets.h"
 #include "McuGPIO.h"
 
@@ -16,9 +16,9 @@
 #define MAG_HH_PIN        16U
 
 /* sensor for minute */
-#define MAG_MM_GPIO     GPIO
-#define MAG_MM_PORT     0U
-#define MAG_MM_PIN      17U
+#define MAG_MM_GPIO       GPIO
+#define MAG_MM_PORT       0U
+#define MAG_MM_PIN        17U
 
 static McuGPIO_Handle_t MAG_HHpin, MAG_MMpin;
 
@@ -63,7 +63,6 @@ uint8_t MAG_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
-
 void MAG_Deinit(void) {
   MAG_HHpin = McuGPIO_DeinitGPIO(MAG_HHpin);
   MAG_MMpin = McuGPIO_DeinitGPIO(MAG_MMpin);
@@ -87,4 +86,4 @@ void MAG_Init(void) {
   MAG_MMpin = McuGPIO_InitGPIO(&gpioConfig);
 }
 
-#endif /* PL_USE_HALL_SENSOR */
+#endif /* PL_CONFIG_USE_HALL_SENSOR */
