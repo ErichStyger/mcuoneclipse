@@ -20,6 +20,7 @@
 #include "McuEE24.h"
 #include "stepper.h"
 #include "magnets.h"
+#include "application.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -40,6 +41,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_HALL_SENSOR
   MAG_ParseCommand,
 #endif
+  APP_ParseCommand,
   NULL /* Sentinel */
 };
 
