@@ -11,6 +11,11 @@
 #include "McuShell.h"
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
+uint8_t STEPPER_ZeroHourHand(void);
+uint8_t STEPPER_ZeroMinuteHand(void);
+
+void STEPPER_ShowTime(uint8_t hour, uint8_t minute);
+
 void STEPPER_Init(void);
 
 #endif /* STEPPER_H_ */

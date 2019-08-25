@@ -12,6 +12,8 @@
 #include "buttons.h"
 #include "leds.h"
 #include "Shell.h"
+#include "McuTimeDate.h"
+#include "stepper.h"
 #if PL_CONFIG_USE_HALL_SENSOR
   #include "magnets.h"
 #endif
@@ -52,11 +54,23 @@ static void AppTask(void *pv) {
 #if PL_CONFIG_USE_HALL_SENSOR
   bool mmMag, hhMag;
 #endif
+  uint8_t oldHH=-1, oldMM = -1;
+  TIMEREC time;
 
   PL_InitFromTask();
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK StepperClock *\r\n***************************\r\n");
+  (void)STEPPER_ZeroHourHand();
+  (void)STEPPER_ZeroMinuteHand();
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(200));
+    if (clockIsOn) {
+      McuTimeDate_GetTime(&time);
+      if (time.Hour!=oldHH || time.Min != oldMM) {
+        STEPPER_ShowTime(time.Hour, time.Min);
+        oldHH = time.Hour;
+        oldMM = time.Min;
+      }
+    }
   #if PL_CONFIG_USE_HALL_SENSOR
     mmMag = MAG_TriggeredHH();
     hhMag = MAG_TriggeredMM();

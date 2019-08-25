@@ -19,8 +19,8 @@ static TimerHandle_t timerHndl;
 #define STEPPER_CLOCK_360_STEPS_HH   (385u) /* number of steps for a full turn on the clock for the hours */
 #define STEPPER_CLOCK_360_STEPS_MM   (385u) /* number of steps for a full turn on the clock for the minutes */
 
-#define STEPPER_CLOCK_HH_ZERO_OFFSET (10)   /* offset from the zero position */
-#define STEPPER_CLOCK_MM_ZERO_OFFSET (15)   /* offset from the zero position */
+#define STEPPER_CLOCK_HH_ZERO_OFFSET (13)   /* offset from the zero position */
+#define STEPPER_CLOCK_MM_ZERO_OFFSET (8)   /* offset from the zero position */
 
 typedef struct {
   int32_t targetPos;
@@ -42,7 +42,7 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
   }
 }
 
-static void STEPPER_ShowTime(uint8_t hour, uint8_t minute) {
+void STEPPER_ShowTime(uint8_t hour, uint8_t minute) {
   int32_t posHour, posMinute;
 
   posMinute = (minute*STEPPER_CLOCK_360_STEPS_MM)/60;
@@ -61,7 +61,10 @@ uint8_t STEPPER_ZeroHourHand(void) {
   int i;
   uint8_t res = ERR_FAILED;
 
-  McuULN2003_Step(motorHour, STEPPER_CLOCK_360_STEPS_HH/50);
+  while(MAG_TriggeredHH()) {
+    McuULN2003_IncStep(motorHour);
+  }
+  McuULN2003_Step(motorHour, STEPPER_CLOCK_360_STEPS_HH/3);
   for(i=0; i<STEPPER_CLOCK_360_STEPS_HH+(STEPPER_CLOCK_360_STEPS_HH/50); i++) {
     McuULN2003_IncStep(motorHour);
     if (MAG_TriggeredHH()) {
@@ -80,7 +83,10 @@ uint8_t STEPPER_ZeroMinuteHand(void) {
   int i;
   uint8_t res = ERR_FAILED;
 
-  McuULN2003_Step(motorMinute, STEPPER_CLOCK_360_STEPS_MM/50);
+  while(MAG_TriggeredMM()) {
+    McuULN2003_IncStep(motorMinute);
+  }
+  McuULN2003_Step(motorMinute, STEPPER_CLOCK_360_STEPS_MM/3);
   for(i=0; i<STEPPER_CLOCK_360_STEPS_MM+(STEPPER_CLOCK_360_STEPS_MM/50); i++) {
     McuULN2003_IncStep(motorMinute);
     if (MAG_TriggeredMM()) {
