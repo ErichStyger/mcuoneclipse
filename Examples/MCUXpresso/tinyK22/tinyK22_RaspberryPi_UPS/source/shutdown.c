@@ -8,6 +8,7 @@
 #include "shutdown.h"
 #include "McuWait.h"
 #include "RaspyGPIO.h"
+#include "buttons.h"
 
 /* $ gpoio readall to show status on Pi */
 /* content of /boot/config.txt, see https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README
@@ -130,7 +131,7 @@ Below the mapping for V3 & V4:
 
 static bool isShutDownButtonPressed(void) {
 #if !PL_CONFIG_USE_GUI_KEY_NAV /* handled in GUI */
-  return GPIO_PinRead(PINS_HATNAVPUSH_GPIO, PINS_HATNAVPUSH_PIN)==0; /* push button is low active */
+  return BTN_CenterButtonIsPressed();
 #else
   return false;
 #endif

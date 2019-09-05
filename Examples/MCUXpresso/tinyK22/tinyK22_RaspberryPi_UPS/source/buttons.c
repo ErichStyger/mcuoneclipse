@@ -23,6 +23,10 @@ bool BTN_DownButtonIsPressed(void) {
   return McuBtn_IsOn(btnDown);
 }
 
+bool BTN_CenterButtonIsPressed(void) {
+  return McuBtn_IsOn(btnCenter);
+}
+
 static uint32_t GetButtons(void) {
   uint32_t val = 0;
 

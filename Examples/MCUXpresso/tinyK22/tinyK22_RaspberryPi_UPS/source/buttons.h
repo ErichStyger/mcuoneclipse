@@ -17,6 +17,7 @@
 #define BTN_CENTER  (1<<4)
 
 bool BTN_DownButtonIsPressed(void);
+bool BTN_CenterButtonIsPressed(void);
 
 void BTN_Deinit(void);
 
