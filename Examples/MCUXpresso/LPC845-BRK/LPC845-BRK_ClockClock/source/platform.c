@@ -32,6 +32,9 @@
 //#include "McuULN2003.h"
 //#include "stepper.h"
 //#include "magnets.h"
+#if PL_CONFIG_USE_X12_STEPPER
+  #include "X12.h"
+#endif
 
 void PL_InitFromTask(void) {
   (void)McuTimeDate_Init(); /* uses I2C */
@@ -78,6 +81,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
+#endif
+#if PL_CONFIG_USE_X12_STEPPER
+  X12_Init();
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuULN2003_Init();

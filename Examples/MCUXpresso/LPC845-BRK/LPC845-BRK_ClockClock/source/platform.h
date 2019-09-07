@@ -14,9 +14,10 @@
 #define PL_CONFIG_USE_I2C_SPY       (0 && PL_CONFIG_USE_I2C) /* using shell component to scan I2C bus */
 #define PL_CONFIG_USE_HALL_SENSOR   (0) /* using magnets and hall sensors */
 
-#define PL_CONFIG_USE_EXT_I2C_RTC      (1 && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
-#define PL_CONFIG_USE_EXT_EEPROM       (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
+#define PL_CONFIG_USE_EXT_I2C_RTC      (0 && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
+#define PL_CONFIG_USE_EXT_EEPROM       (0 && PL_CONFIG_USE_I2C) /* AT24C32 */
 #define PL_CONFIG_USE_STEPPER          (0)
+#define PL_CONFIG_USE_X12_STEPPER      (1)
 #define PL_CONFIG_USE_BUTTON           (0)
 
 /* NYI */

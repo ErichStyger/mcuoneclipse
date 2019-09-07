@@ -1,11 +1,4 @@
 /*
- * Copyright  2019 NXP
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
-/*
  * How to set up clock using clock driver functions:
  *
  * 1. Setup clock sources.
@@ -17,11 +10,11 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v5.0
+product: Clocks v6.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 5.0.0
+processor_version: 6.0.2
 board: LPC845BREAKOUT
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -56,7 +49,9 @@ name: BOARD_BootClockFRO18M
 called_from_default_init: true
 outputs:
 - {id: FROHF_clock.outFreq, value: 18 MHz}
+- {id: LowPower_clock.outFreq, value: 10 kHz}
 - {id: System_clock.outFreq, value: 18 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
 settings:
 - {id: SYSCON.ADCCLKSEL.sel, value: NO_CLOCK}
 - {id: SYSCON.CLKOUTSEL.sel, value: NO_CLOCK}
@@ -79,13 +74,13 @@ void BOARD_BootClockFRO18M(void)
 {
     /*!< Set up the clock sources */
     /*!< Set up FRO */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);      /*!< Ensure FRO is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO);          /*!< Ensure FRO is on  */
-    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut18M);   /*!< Set up FRO freq */
-    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc); /*!< Set FRO clock source */
-    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);       /*!< Ensure Main osc is on */
-    CLOCK_Select(kEXT_Clk_From_SysOsc);         /*!<select external clock source to sys_osc */
-    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);  /*!< select fro for main clock */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);                   /*!< Ensure FRO is on  */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO);                      /*!< Ensure FRO is on  */
+    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut18M);                    /*!< Set up FRO freq */
+    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc);                    /*!< Set FRO clock source */
+    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);                  /*!< Ensure Main osc is on */
+    CLOCK_Select(kEXT_Clk_From_SysOsc);                     /*!<select external clock source to sys_osc */
+    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);            /*!< select fro for main clock */
     CLOCK_SetCoreSysClkDiv(1U);
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFRO18M_CORE_CLOCK;
@@ -99,7 +94,9 @@ void BOARD_BootClockFRO18M(void)
 name: BOARD_BootClockFRO24M
 outputs:
 - {id: FROHF_clock.outFreq, value: 24 MHz}
+- {id: LowPower_clock.outFreq, value: 10 kHz}
 - {id: System_clock.outFreq, value: 24 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
 settings:
 - {id: SYSCON.ADCCLKSEL.sel, value: NO_CLOCK}
 - {id: SYSCON.CLKOUTSEL.sel, value: NO_CLOCK}
@@ -122,13 +119,13 @@ void BOARD_BootClockFRO24M(void)
 {
     /*!< Set up the clock sources */
     /*!< Set up FRO */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);      /*!< Ensure FRO is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO);          /*!< Ensure FRO is on  */
-    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut24M);   /*!< Set up FRO freq */
-    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc); /*!< Set FRO clock source */
-    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);       /*!< Ensure Main osc is on */
-    CLOCK_Select(kEXT_Clk_From_SysOsc);         /*!<select external clock source to sys_osc */
-    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);  /*!< select fro for main clock */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);                   /*!< Ensure FRO is on  */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO);                      /*!< Ensure FRO is on  */
+    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut24M);                    /*!< Set up FRO freq */
+    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc);                    /*!< Set FRO clock source */
+    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);                  /*!< Ensure Main osc is on */
+    CLOCK_Select(kEXT_Clk_From_SysOsc);                     /*!<select external clock source to sys_osc */
+    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);            /*!< select fro for main clock */
     CLOCK_SetCoreSysClkDiv(1U);
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFRO24M_CORE_CLOCK;
@@ -142,7 +139,9 @@ void BOARD_BootClockFRO24M(void)
 name: BOARD_BootClockFRO30M
 outputs:
 - {id: FROHF_clock.outFreq, value: 30 MHz}
+- {id: LowPower_clock.outFreq, value: 10 kHz}
 - {id: System_clock.outFreq, value: 30 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
 settings:
 - {id: SYSCON.ADCCLKSEL.sel, value: NO_CLOCK}
 - {id: SYSCON.CLKOUTSEL.sel, value: NO_CLOCK}
@@ -163,13 +162,13 @@ void BOARD_BootClockFRO30M(void)
 {
     /*!< Set up the clock sources */
     /*!< Set up FRO */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);      /*!< Ensure FRO is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO);          /*!< Ensure FRO is on  */
-    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut30M);   /*!< Set up FRO freq */
-    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc); /*!< Set FRO clock source */
-    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);       /*!< Ensure Main osc is on */
-    CLOCK_Select(kEXT_Clk_From_SysOsc);         /*!<select external clock source to sys_osc */
-    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);  /*!< select fro for main clock */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);                   /*!< Ensure FRO is on  */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO);                      /*!< Ensure FRO is on  */
+    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut30M);                    /*!< Set up FRO freq */
+    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc);                    /*!< Set FRO clock source */
+    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);                  /*!< Ensure Main osc is on */
+    CLOCK_Select(kEXT_Clk_From_SysOsc);                     /*!<select external clock source to sys_osc */
+    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcFro);            /*!< select fro for main clock */
     CLOCK_SetCoreSysClkDiv(1U);
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFRO30M_CORE_CLOCK;
@@ -183,8 +182,10 @@ void BOARD_BootClockFRO30M(void)
 name: BOARD_BootClockPll24M
 outputs:
 - {id: FROHF_clock.outFreq, value: 24 MHz}
+- {id: LowPower_clock.outFreq, value: 10 kHz}
 - {id: SYSPLL_clock.outFreq, value: 24 MHz}
 - {id: System_clock.outFreq, value: 24 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
 settings:
 - {id: SYSCON.ADCCLKSEL.sel, value: NO_CLOCK}
 - {id: SYSCON.CLKOUTSEL.sel, value: NO_CLOCK}
@@ -207,18 +208,19 @@ void BOARD_BootClockPll24M(void)
 {
     /*!< Set up the clock sources */
     /*!< Set up FRO */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);      /*!< Ensure FRO is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_FRO);          /*!< Ensure FRO is on  */
-    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut24M);   /*!< Set up FRO freq */
-    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc); /*!< Set FRO clock source */
-    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);       /*!< Ensure Main osc is on */
-    CLOCK_Select(kEXT_Clk_From_SysOsc);         /*!<select external clock source to sys_osc */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO_OUT);                   /*!< Ensure FRO is on  */
+    POWER_DisablePD(kPDRUNCFG_PD_FRO);                      /*!< Ensure FRO is on  */
+    CLOCK_SetFroOscFreq(kCLOCK_FroOscOut24M);                    /*!< Set up FRO freq */
+    CLOCK_SetFroOutClkSrc(kCLOCK_FroSrcFroOsc);                    /*!< Set FRO clock source */
+    POWER_DisablePD(kPDRUNCFG_PD_SYSOSC);                  /*!< Ensure Main osc is on */
+    CLOCK_Select(kEXT_Clk_From_SysOsc);                     /*!<select external clock source to sys_osc */
     clock_sys_pll_t config;
-    config.src = kCLOCK_SysPllSrcFRO;             /*!< select FRO for SYSPLL */
-    config.targetFreq = 24000000U;                /*!< set pll target freq */
-    CLOCK_InitSystemPll(&config);                 /*!< set parameters */
-    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcSysPll); /*!< select syspll for main clock */
+    config.src = kCLOCK_SysPllSrcFRO;                   /*!< select FRO for SYSPLL */
+    config.targetFreq = 24000000U;                     /*!< set pll target freq */
+    CLOCK_InitSystemPll(&config);                           /*!< set parameters */
+    CLOCK_SetMainClkSrc(kCLOCK_MainClkSrcSysPll);             /*!< select syspll for main clock */
     CLOCK_SetCoreSysClkDiv(1U);
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKPLL24M_CORE_CLOCK;
 }
+
