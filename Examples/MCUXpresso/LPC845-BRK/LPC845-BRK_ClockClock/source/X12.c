@@ -24,6 +24,15 @@
 #define X12_RESET_PORT       0U
 #define X12_RESET_PIN        18U
 
+#define X12_B_STEP_GPIO      GPIO
+#define X12_B_STEP_PORT      0U
+#define X12_B_STEP_PIN       19U
+
+#define X12_B_DIR_GPIO       GPIO
+#define X12_B_DIR_PORT       0U
+#define X12_B_DIR_PIN        20U
+
+
 typedef struct {
   int32_t pos;
   McuGPIO_Handle_t dir;
@@ -80,6 +89,17 @@ void X12_Test(void) {
     for(i=0; i<4000; i++) {
       X12_Step(&device.m[0]);
     }
+    X12_SetForward(&device.m[1]);
+    for(i=0; i<1000; i++) {
+      X12_Step(&device.m[1]);
+    }
+    McuWait_Waitms(10);
+    X12_SetBackward(&device.m[1]);
+    McuWait_Waitms(1);
+    for(i=0; i<2000; i++) {
+      X12_Step(&device.m[1]);
+    }
+
   }
 }
 
@@ -96,6 +116,7 @@ void X12_Init(void) {
   gpio_config.isHighOnInit = false; /* there is an external pull-down for the reset pin too */
   device.reset = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
 
+  /* motor 0 */
   gpio_config.hw.gpio = X12_A_DIR_GPIO;
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   gpio_config.hw.port = X12_A_DIR_PORT;
@@ -109,6 +130,21 @@ void X12_Init(void) {
 #endif
   gpio_config.hw.pin  = X12_A_STEP_PIN;
   device.m[0].step = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
+
+  /* motor 1 */
+  gpio_config.hw.gpio = X12_B_DIR_GPIO;
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+  gpio_config.hw.port = X12_B_DIR_PORT;
+#endif
+  gpio_config.hw.pin  = X12_B_DIR_PIN;
+  device.m[1].dir = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
+
+  gpio_config.hw.gpio = X12_B_STEP_GPIO;
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+  gpio_config.hw.port = X12_B_STEP_PORT;
+#endif
+  gpio_config.hw.pin  = X12_B_STEP_PIN;
+  device.m[1].step = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
 
   X12_Test();
 }

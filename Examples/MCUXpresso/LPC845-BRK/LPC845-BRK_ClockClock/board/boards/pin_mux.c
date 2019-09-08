@@ -53,6 +53,8 @@ BOARD_InitSWD_DEBUGPins:
   - {pin_num: '15', peripheral: GPIO, signal: 'PIO0, 16', pin_signal: PIO0_16}
   - {pin_num: '48', peripheral: GPIO, signal: 'PIO0, 17', pin_signal: PIO0_17/ADC_9/DACOUT_0}
   - {pin_num: '47', peripheral: GPIO, signal: 'PIO0, 18', pin_signal: PIO0_18/ADC_8}
+  - {pin_num: '46', peripheral: GPIO, signal: 'PIO0, 19', pin_signal: PIO0_19/ADC_7}
+  - {pin_num: '45', peripheral: GPIO, signal: 'PIO0, 20', pin_signal: PIO0_20/ADC_6}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
