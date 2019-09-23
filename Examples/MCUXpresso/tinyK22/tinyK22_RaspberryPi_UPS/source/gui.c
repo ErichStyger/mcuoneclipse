@@ -21,10 +21,16 @@
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
-#include "gui_tempHum.h"
-#include "gui_ups.h"
-#include "gui_uart.h"
-#include "RaspyUART.h"
+#if PL_CONFIG_USE_SHT31
+  #include "gui_tempHum.h"
+#endif
+#if PL_CONFIG_USE_UPS
+  #include "gui_ups.h"
+#endif
+#if PL_CONFIG_USE_GATEWAY
+  #include "gui_uart.h"
+  #include "RaspyUART.h"
+#endif
 
 static TaskHandle_t GUI_TaskHndl;
 

@@ -131,7 +131,7 @@ void doOLED(void) {
 
   McuSSD1306_Clear();
   for(;;) {
-    GPIO_PortToggle(BOARD_LEDBLUE_GPIO, (1<<BOARD_LEDBLUE_PIN));
+    //GPIO_PortToggle(BOARD_LEDBLUE_GPIO, (1<<BOARD_LEDBLUE_PIN));
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"Counter: ");
     McuUtility_strcatNum32u(buf, sizeof(buf), cntr);
     cntr++;

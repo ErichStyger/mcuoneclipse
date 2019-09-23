@@ -55,12 +55,14 @@ void PL_Init(void) {
   McuXFormat_Init();
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
-#if PL_CONFIG_USE_HW_I2C
+  #if PL_CONFIG_USE_HW_I2C
   I2CLIB_Init();
-#else
+  #else
   McuGenericSWI2C_Init();
-#endif
+  #endif
+  #if PL_CONFIG_USE_I2C_SPY
   McuI2CSpy_Init();
+  #endif
 #endif
 #if PL_CONFIG_USE_OLED
   //McuWait_Waitms(100); /* display needs some time to power up */

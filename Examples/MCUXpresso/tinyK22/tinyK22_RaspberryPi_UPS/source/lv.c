@@ -20,9 +20,13 @@
   #include "toaster.h"
 #endif
 
-static TimerHandle_t timerHndlLcdTimeout;
+#if PL_CONFIG_USE_GUI_SCREENSAVER
+  static TimerHandle_t timerHndlLcdTimeout;
+#endif
+
 static McuRB_Handle_t ringBufferHndl;
 
+#if PL_CONFIG_USE_GUI_SCREENSAVER
 static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
   /* timer callback to turn off LCD backlight */
 #if PL_CONFIG_USE_TOASTER
@@ -31,8 +35,11 @@ static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
   McuSSD1306_DisplayOn(false);
 #endif
 }
+#endif
 
 static void KeyPressForLCD(void) {
+#if PL_CONFIG_USE_GUI_SCREENSAVER
+
   /* called for each key press. It turns on the LCD if it is dormant or resets the LCD backlight timeout timer */
   if (xTimerIsTimerActive(timerHndlLcdTimeout)==pdFALSE) {
     /* timer is not active: start it */
@@ -50,6 +57,7 @@ static void KeyPressForLCD(void) {
       for(;;); /* failure?!? */
     }
   }
+#endif
 }
 
 static lv_indev_t *inputDevicePtr;
@@ -474,6 +482,7 @@ void LV_Init(void) {
 #endif
   inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
 
+#if PL_CONFIG_USE_GUI_SCREENSAVER
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
     pdMS_TO_TICKS(15*1000), /* period/time */
@@ -486,6 +495,7 @@ void LV_Init(void) {
   if (xTimerStart(timerHndlLcdTimeout, 0)!=pdPASS) {
     for(;;); /* failure!?! */
   }
+#endif
 
   McuRB_Config_t config;
 
