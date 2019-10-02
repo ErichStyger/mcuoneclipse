@@ -54,7 +54,7 @@
 // After coming out of reset the bootloader will spin in a peripheral detection
 // loop for this amount of time. A zero value means no time out.
 #if DEBUG
-#define BL_DEFAULT_PERIPHERAL_DETECT_TIMEOUT 0
+#define BL_DEFAULT_PERIPHERAL_DETECT_TIMEOUT 5000
 #else
 #define BL_DEFAULT_PERIPHERAL_DETECT_TIMEOUT 5000
 #endif // DEBUG

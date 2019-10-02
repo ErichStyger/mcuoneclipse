@@ -42,11 +42,17 @@
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
-class C {
-  int a;
+class Car {
+  private: int price;
   public:
-  	  void f(int b) {
-  		  this->a = b;
+      Car(void) { // Constructor
+        price = 1000;
+      }
+      ~Car(void) { // Constructor
+        price = -1;
+      }
+  	  void SetPrice(int price) {
+  		  this->price = price;
   	  }
 };
 
@@ -54,7 +60,14 @@ struct S {
 	int a;
 };
 
-S s;
+Car c; // global object
+S s; // global struct
+
+static void test(void) {
+  Car c;
+
+  c.SetPrice(3000);
+}
 
 /*
  * @brief   Application entry point.
@@ -68,10 +81,8 @@ int main(void) {
     BOARD_InitDebugConsole();
 
     PRINTF("Hello World\n");
-    C c;
-
-    c.f(3);
-
+    test();
+    exit(0); // shall call global destructors */
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
