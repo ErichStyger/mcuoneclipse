@@ -481,7 +481,7 @@ void BOARD_BootClockRUN(void)
     /* Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
 #if 1 /* enable SWO */
-    *((uint32_t *)(0x400E0600)) = (1 << 11);  /* enable TPIU clock */
+    //*((uint32_t *)(0x400E0600)) = (1 << 11);  /* enable TPIU clock */
     CLOCK_EnableClock(kCLOCK_Trace);
 #endif
 }
