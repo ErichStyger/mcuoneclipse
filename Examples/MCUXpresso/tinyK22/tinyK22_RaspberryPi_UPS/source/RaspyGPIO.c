@@ -196,7 +196,7 @@ void RGPIO_Init(void) {
   config.hw.port = PINS_GP_1_PORT;
   config.hw.pin = PINS_GP_1_PIN;
   config.isInput = true;
-  config.isLowOnInit = true;
+  config.isHighOnInit = false;
   RGPIO_state = McuGPIO_InitGPIO(&config);
 #endif
 
@@ -206,7 +206,7 @@ void RGPIO_Init(void) {
   config.hw.port = PINS_WAKE_RASPY_PORT;
   config.hw.pin = PINS_WAKE_RASPY_PIN;
   config.isInput = false;
-  config.isLowOnInit = true;
+  config.isHighOnInit = false;
   RGPIO_wake_gpio = McuGPIO_InitGPIO(&config);
 
   /* shutdown pin to request a power-off: output pin */
@@ -214,7 +214,7 @@ void RGPIO_Init(void) {
   config.hw.port = PINS_GP_0_PORT;
   config.hw.pin = PINS_GP_0_PIN;
   config.isInput = false;
-  config.isLowOnInit = false; /* a falling edge causes a power-down */
+  config.isHighOnInit = true; /* a falling edge causes a power-down */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
 #else /* V3 & V4 */
   /* shutdown pin to request a power-off: output pin */
@@ -222,7 +222,7 @@ void RGPIO_Init(void) {
   config.hw.port = PINS_ALERT_PORT;
   config.hw.pin = PINS_ALERT_PIN;
   config.isInput = false;
-  config.isLowOnInit = false; /* a falling edge causes a power-down */
+  config.isHighOnInit = true; /* a falling edge causes a power-down */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
   /* note: the RED LED is used by the Raspy to indicate a successful shutdown */
 #endif
