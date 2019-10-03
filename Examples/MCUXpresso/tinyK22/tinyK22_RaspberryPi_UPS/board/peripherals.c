@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v5.0
+product: Peripherals v6.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 5.0.0
+processor_version: 6.0.1
 board: FRDM-K22F
 functionalGroups:
 - name: BOARD_InitPeripherals
