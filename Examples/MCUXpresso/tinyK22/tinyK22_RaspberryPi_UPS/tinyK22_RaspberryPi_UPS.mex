@@ -139,8 +139,18 @@
                         <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="UART0" signal="RX" pin_num="63" pin_signal="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT"/>
-                  <pin peripheral="UART0" signal="TX" pin_num="64" pin_signal="PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN"/>
+                  <pin peripheral="UART0" signal="RX" pin_num="63" pin_signal="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT">
+                     <pin_features>
+                        <pin_feature name="pull_select" value="up"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="UART0" signal="TX" pin_num="64" pin_signal="PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN">
+                     <pin_features>
+                        <pin_feature name="pull_select" value="up"/>
+                        <pin_feature name="pull_enable" value="enable"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
             <function name="BOARD_InitLEDsPins">
@@ -820,6 +830,7 @@
          </clock_configurations>
       </clocks>
       <dcdx name="DCDx" version="2.0" enabled="false" update_project_code="true">
+         <generated_project_files/>
          <dcdx_profile>
             <processor_version>N/A</processor_version>
          </dcdx_profile>
@@ -848,6 +859,7 @@
          </components>
       </periphs>
       <tee name="TEE" version="1.0" enabled="false" update_project_code="true">
+         <generated_project_files/>
          <tee_profile>
             <processor_version>N/A</processor_version>
          </tee_profile>

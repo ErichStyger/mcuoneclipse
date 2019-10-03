@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016, 2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -90,7 +90,7 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 
 #define USB_ASSIGN_VALUE_ADDRESS_LONG_BY_BYTE(n, m)      \
     {                                                    \
-        *((uint8_t *)&(n)) = *((uint8_t *)&(m));         \
+        *((uint8_t *)&(n))     = *((uint8_t *)&(m));     \
         *((uint8_t *)&(n) + 1) = *((uint8_t *)&(m) + 1); \
         *((uint8_t *)&(n) + 2) = *((uint8_t *)&(m) + 2); \
         *((uint8_t *)&(n) + 3) = *((uint8_t *)&(m) + 3); \
@@ -98,13 +98,13 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 
 #define USB_ASSIGN_VALUE_ADDRESS_SHORT_BY_BYTE(n, m)     \
     {                                                    \
-        *((uint8_t *)&(n)) = *((uint8_t *)&(m));         \
+        *((uint8_t *)&(n))     = *((uint8_t *)&(m));     \
         *((uint8_t *)&(n) + 1) = *((uint8_t *)&(m) + 1); \
     }
 
 #define USB_ASSIGN_MACRO_VALUE_ADDRESS_LONG_BY_BYTE(n, m) \
     {                                                     \
-        *((uint8_t *)&(n)) = (uint8_t)m;                  \
+        *((uint8_t *)&(n))     = (uint8_t)m;              \
         *((uint8_t *)&(n) + 1) = (uint8_t)(m >> 8);       \
         *((uint8_t *)&(n) + 2) = (uint8_t)(m >> 16);      \
         *((uint8_t *)&(n) + 3) = (uint8_t)(m >> 24);      \
@@ -112,7 +112,7 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 
 #define USB_ASSIGN_MACRO_VALUE_ADDRESS_SHORT_BY_BYTE(n, m) \
     {                                                      \
-        *((uint8_t *)&(n)) = (uint8_t)m;                   \
+        *((uint8_t *)&(n))     = (uint8_t)m;               \
         *((uint8_t *)&(n) + 1) = (uint8_t)(m >> 8);        \
     }
 
@@ -183,7 +183,7 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 #define USB_SHORT_TO_LITTLE_ENDIAN_DATA(n, m)                       \
     {                                                               \
         *((uint8_t *)&(m) + 1) = ((((uint16_t)(n)) >> 8U) & 0xFFU); \
-        *((uint8_t *)&(m)) = ((((uint16_t)(n))) & 0xFFU);           \
+        *((uint8_t *)&(m))     = ((((uint16_t)(n))) & 0xFFU);       \
     }
 
 #define USB_SHORT_FROM_LITTLE_ENDIAN_DATA(n) ((uint32_t)(((*((uint8_t *)&(n) + 1)) << 8U) | ((*((uint8_t *)&(n))))))
@@ -255,7 +255,7 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 #define USB_SHORT_TO_LITTLE_ENDIAN_DATA(n, m)                       \
     {                                                               \
         *((uint8_t *)&(m) + 1) = ((((uint16_t)(n)) >> 8U) & 0xFFU); \
-        *((uint8_t *)&(m)) = ((((uint16_t)(n))) & 0xFFU);           \
+        *((uint8_t *)&(m))     = ((((uint16_t)(n))) & 0xFFU);       \
     }
 
 #define USB_SHORT_FROM_LITTLE_ENDIAN_DATA(n) ((uint32_t)(((*((uint8_t *)&(n) + 1)) << 8U) | ((*((uint8_t *)&(n))))))
@@ -334,9 +334,9 @@ _Pragma("diag_suppress=Pm120")
 
 #if ((defined(FSL_FEATURE_L2CACHE_LINESIZE_BYTE)) && (defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)))
 #define USB_CACHE_LINESIZE MAX(FSL_FEATURE_L2CACHE_LINESIZE_BYTE, FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
-#elif(defined(FSL_FEATURE_L2CACHE_LINESIZE_BYTE))
+#elif (defined(FSL_FEATURE_L2CACHE_LINESIZE_BYTE))
 #define USB_CACHE_LINESIZE MAX(FSL_FEATURE_L2CACHE_LINESIZE_BYTE, 0)
-#elif(defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE))
+#elif (defined(FSL_FEATURE_L1DCACHE_LINESIZE_BYTE))
 #define USB_CACHE_LINESIZE MAX(0, FSL_FEATURE_L1DCACHE_LINESIZE_BYTE)
 #else
 #define USB_CACHE_LINESIZE 4
@@ -355,7 +355,7 @@ _Pragma("diag_suppress=Pm120")
 
 #define USB_DATA_ALIGN_SIZE MAX(USB_CACHE_LINESIZE, USB_DATA_ALIGN)
 
-#define USB_DATA_ALIGN_SIZE_MULTIPLE(n) ((n + USB_DATA_ALIGN_SIZE - 1) & (~(USB_DATA_ALIGN_SIZE - 1)))
+#define USB_DATA_ALIGN_SIZE_MULTIPLE(n) ((n + USB_DATA_ALIGN_SIZE - 1U) & (~(USB_DATA_ALIGN_SIZE - 1U)))
 
 #if defined(USB_STACK_USE_DEDICATED_RAM) && (USB_STACK_USE_DEDICATED_RAM == USB_STACK_DEDICATED_RAM_TYPE_BDT_GLOBAL)
 

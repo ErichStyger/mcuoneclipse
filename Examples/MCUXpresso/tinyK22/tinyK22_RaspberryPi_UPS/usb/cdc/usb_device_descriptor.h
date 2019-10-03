@@ -147,19 +147,6 @@
 * API
 ******************************************************************************/
 /*!
- * @brief USB device callback function.
- *
- * This function handles the usb device specific requests.
- *
- * @param handle          The USB device handle.
- * @param event           The USB device event type.
- * @param param           The parameter of the device specific request.
- *
- * @return A USB error code or kStatus_USB_Success.
- */
-extern usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *param);
-
-/*!
  * @brief USB device set speed function.
  *
  * This function sets the speed of the USB device.
@@ -177,5 +164,40 @@ extern usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event,
  * @return A USB error code or kStatus_USB_Success.
  */
 extern usb_status_t USB_DeviceSetSpeed(usb_device_handle handle, uint8_t speed);
-
+/*!
+ * @brief USB device get device descriptor function.
+ *
+ * This function gets the device descriptor of the USB device.
+ *
+ * @param handle The USB device handle.
+ * @param deviceDescriptor The pointer to the device descriptor structure.
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+extern usb_status_t USB_DeviceGetDeviceDescriptor(usb_device_handle handle,
+                                                  usb_device_get_device_descriptor_struct_t *deviceDescriptor);
+/*!
+ * @brief USB device get string descriptor function.
+ *
+ * This function gets the string descriptor of the USB device.
+ *
+ * @param handle The USB device handle.
+ * @param stringDescriptor Pointer to the string descriptor structure.
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+usb_status_t USB_DeviceGetStringDescriptor(usb_device_handle handle,
+                                           usb_device_get_string_descriptor_struct_t *stringDescriptor);
+/*!
+ * @brief USB device get configuration descriptor function.
+ *
+ * This function gets the configuration descriptor of the USB device.
+ *
+ * @param handle The USB device handle.
+ * @param configurationDescriptor The pointer to the configuration descriptor structure.
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+extern usb_status_t USB_DeviceGetConfigurationDescriptor(
+    usb_device_handle handle, usb_device_get_configuration_descriptor_struct_t *configurationDescriptor);
 #endif /* _USB_DEVICE_DESCRIPTOR_H_ */

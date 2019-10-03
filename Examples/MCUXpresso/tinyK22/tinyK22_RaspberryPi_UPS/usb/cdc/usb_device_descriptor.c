@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016, 2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -9,6 +9,7 @@
 #include "usb.h"
 #include "usb_device.h"
 
+#include "usb_device_class.h"
 #include "usb_device_cdc_acm.h"
 
 #include "usb_device_descriptor.h"
@@ -16,8 +17,59 @@
 /*******************************************************************************
 * Variables
 ******************************************************************************/
-uint8_t g_currentConfigure = 0;
-uint8_t g_interface[USB_CDC_VCOM_INTERFACE_COUNT];
+/* Define endpoint for communication class */
+usb_device_endpoint_struct_t g_UsbDeviceCdcVcomCicEndpoints[USB_CDC_VCOM_ENDPOINT_CIC_COUNT] = {
+    {
+        USB_CDC_VCOM_INTERRUPT_IN_ENDPOINT | (USB_IN << 7U), USB_ENDPOINT_INTERRUPT,
+        FS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE, FS_CDC_VCOM_INTERRUPT_IN_INTERVAL,
+    },
+};
+
+/* Define endpoint for data class */
+usb_device_endpoint_struct_t g_UsbDeviceCdcVcomDicEndpoints[USB_CDC_VCOM_ENDPOINT_DIC_COUNT] = {
+    {
+        USB_CDC_VCOM_BULK_IN_ENDPOINT | (USB_IN << 7U), USB_ENDPOINT_BULK, FS_CDC_VCOM_BULK_IN_PACKET_SIZE, 0U,
+    },
+    {
+        USB_CDC_VCOM_BULK_OUT_ENDPOINT | (USB_OUT << 7U), USB_ENDPOINT_BULK, FS_CDC_VCOM_BULK_OUT_PACKET_SIZE, 0U,
+    }};
+
+/* Define interface for communication class */
+usb_device_interface_struct_t g_UsbDeviceCdcVcomCommunicationInterface[] = {
+    {0,
+     {
+         USB_CDC_VCOM_ENDPOINT_CIC_COUNT, g_UsbDeviceCdcVcomCicEndpoints,
+     },
+     NULL}};
+
+/* Define interface for data class */
+usb_device_interface_struct_t g_UsbDeviceCdcVcomDataInterface[] = {
+    {0,
+     {
+         USB_CDC_VCOM_ENDPOINT_DIC_COUNT, g_UsbDeviceCdcVcomDicEndpoints,
+     },
+     NULL}};
+
+/* Define interfaces for virtual com */
+usb_device_interfaces_struct_t g_UsbDeviceCdcVcomInterfaces[USB_CDC_VCOM_INTERFACE_COUNT] = {
+    {USB_CDC_VCOM_CIC_CLASS, USB_CDC_VCOM_CIC_SUBCLASS, USB_CDC_VCOM_CIC_PROTOCOL, USB_CDC_VCOM_COMM_INTERFACE_INDEX,
+     g_UsbDeviceCdcVcomCommunicationInterface,
+     sizeof(g_UsbDeviceCdcVcomCommunicationInterface) / sizeof(usb_device_interfaces_struct_t)},
+    {USB_CDC_VCOM_DIC_CLASS, USB_CDC_VCOM_DIC_SUBCLASS, USB_CDC_VCOM_DIC_PROTOCOL, USB_CDC_VCOM_DATA_INTERFACE_INDEX,
+     g_UsbDeviceCdcVcomDataInterface, sizeof(g_UsbDeviceCdcVcomDataInterface) / sizeof(usb_device_interfaces_struct_t)},
+};
+
+/* Define configurations for virtual com */
+usb_device_interface_list_t g_UsbDeviceCdcVcomInterfaceList[USB_DEVICE_CONFIGURATION_COUNT] = {
+    {
+        USB_CDC_VCOM_INTERFACE_COUNT, g_UsbDeviceCdcVcomInterfaces,
+    },
+};
+
+/* Define class information for virtual com */
+usb_device_class_struct_t g_UsbDeviceCdcVcomConfig = {
+    g_UsbDeviceCdcVcomInterfaceList, kUSB_DeviceClassTypeCdc, USB_DEVICE_CONFIGURATION_COUNT,
+};
 
 /* Define device descriptor */
 USB_DMA_INIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE)
@@ -204,151 +256,87 @@ usb_language_list_t g_UsbDeviceLanguageList = {
 * Code
 ******************************************************************************/
 /*!
- * @brief Get the descriptor.
+ * @brief USB device get device descriptor function.
  *
- * The function is used to get the descriptor, including the device descriptor, configuration descriptor, and string
- * descriptor, etc.
+ * This function gets the device descriptor of the USB device.
  *
- * @param handle              The device handle.
- * @param setup               The setup packet buffer address.
- * @param length              It is an OUT parameter, return the data length need to be sent to host.
- * @param buffer              It is an OUT parameter, return the data buffer address.
+ * @param handle The USB device handle.
+ * @param deviceDescriptor The pointer to the device descriptor structure.
  *
  * @return A USB error code or kStatus_USB_Success.
  */
-usb_status_t USB_DeviceGetDescriptor(usb_device_handle handle,
-                                     usb_setup_struct_t *setup,
-                                     uint32_t *length,
-                                     uint8_t **buffer)
+usb_status_t USB_DeviceGetDeviceDescriptor(usb_device_handle handle,
+                                           usb_device_get_device_descriptor_struct_t *deviceDescriptor)
 {
-    uint8_t descriptorType = (uint8_t)((setup->wValue & 0xFF00U) >> 8U);
-    uint8_t descriptorIndex = (uint8_t)((setup->wValue & 0x00FFU));
-    usb_status_t ret = kStatus_USB_Success;
-    if (USB_REQUEST_STANDARD_GET_DESCRIPTOR != setup->bRequest)
-    {
-        return kStatus_USB_InvalidRequest;
-    }
-    switch (descriptorType)
-    {
-        case USB_DESCRIPTOR_TYPE_STRING:
-        {
-            if (descriptorIndex == 0)
-            {
-                *buffer = (uint8_t *)g_UsbDeviceLanguageList.languageString;
-                *length = g_UsbDeviceLanguageList.stringLength;
-            }
-            else
-            {
-                uint8_t langId = 0;
-                uint8_t langIndex = USB_DEVICE_STRING_COUNT;
-
-                for (; langId < USB_DEVICE_LANGUAGE_COUNT; langId++)
-                {
-                    if (setup->wIndex == g_UsbDeviceLanguageList.languageList[langId].languageId)
-                    {
-                        if (descriptorIndex < USB_DEVICE_STRING_COUNT)
-                        {
-                            langIndex = descriptorIndex;
-                        }
-                        break;
-                    }
-                }
-
-                if (USB_DEVICE_STRING_COUNT == langIndex)
-                {
-                    langId = 0;
-                }
-                *buffer = (uint8_t *)g_UsbDeviceLanguageList.languageList[langId].string[langIndex];
-                *length = g_UsbDeviceLanguageList.languageList[langId].length[langIndex];
-            }
-        }
-        break;
-        case USB_DESCRIPTOR_TYPE_DEVICE:
-        {
-            *buffer = g_UsbDeviceDescriptor;
-            *length = USB_DESCRIPTOR_LENGTH_DEVICE;
-        }
-        break;
-        case USB_DESCRIPTOR_TYPE_CONFIGURE:
-        {
-            *buffer = g_UsbDeviceConfigurationDescriptor;
-            *length = USB_DESCRIPTOR_LENGTH_CONFIGURATION_ALL;
-        }
-        break;
-        default:
-            ret = kStatus_USB_InvalidRequest;
-            break;
-    } /* End Switch */
-    return ret;
-}
-
-/*!
- * @brief Set the device configuration.
- *
- * The function is used to set the device configuration.
- *
- * @param handle              The device handle.
- * @param configure           The configuration value.
- *
- * @return A USB error code or kStatus_USB_Success.
- */
-usb_status_t USB_DeviceSetConfigure(usb_device_handle handle, uint8_t configure)
-{
-    if (!configure)
-    {
-        return kStatus_USB_Error;
-    }
-    g_currentConfigure = configure;
-    return USB_DeviceCallback(handle, kUSB_DeviceEventSetConfiguration, &configure);
-}
-
-/*!
- * @brief Get the device configuration.
- *
- * The function is used to get the device configuration.
- *
- * @param handle The device handle.
- * @param configure It is an OUT parameter, save the current configuration value.
- *
- * @return A USB error code or kStatus_USB_Success.
- */
-usb_status_t USB_DeviceGetConfigure(usb_device_handle handle, uint8_t *configure)
-{
-    *configure = g_currentConfigure;
+    deviceDescriptor->buffer = g_UsbDeviceDescriptor;
+    deviceDescriptor->length = USB_DESCRIPTOR_LENGTH_DEVICE;
     return kStatus_USB_Success;
 }
 
 /*!
- * @brief Set an interface alternate setting.
+ * @brief USB device get configuration descriptor function.
  *
- * The function is used to set an interface alternate setting.
+ * This function gets the configuration descriptor of the USB device.
  *
- * @param handle The device handle.
- * @param interface The interface index.
- * @param alternateSetting The new alternate setting value.
+ * @param handle The USB device handle.
+ * @param configurationDescriptor The pointer to the configuration descriptor structure.
  *
  * @return A USB error code or kStatus_USB_Success.
  */
-usb_status_t USB_DeviceSetInterface(usb_device_handle handle, uint8_t interface, uint8_t alternateSetting)
+usb_status_t USB_DeviceGetConfigurationDescriptor(
+    usb_device_handle handle, usb_device_get_configuration_descriptor_struct_t *configurationDescriptor)
 {
-    g_interface[interface] = alternateSetting;
-    return USB_DeviceCallback(handle, kUSB_DeviceEventSetInterface, &interface);
+    if (USB_CDC_VCOM_CONFIGURE_INDEX > configurationDescriptor->configuration)
+    {
+        configurationDescriptor->buffer = g_UsbDeviceConfigurationDescriptor;
+        configurationDescriptor->length = USB_DESCRIPTOR_LENGTH_CONFIGURATION_ALL;
+        return kStatus_USB_Success;
+    }
+    return kStatus_USB_InvalidRequest;
 }
 
 /*!
- * @brief Get an interface alternate setting.
+ * @brief USB device get string descriptor function.
  *
- * The function is used to get an interface alternate setting.
+ * This function gets the string descriptor of the USB device.
  *
- * @param handle The device handle.
- * @param interface The interface index.
- * @param alternateSetting It is an OUT parameter, save the new alternate setting value of the interface.
+ * @param handle The USB device handle.
+ * @param stringDescriptor Pointer to the string descriptor structure.
  *
  * @return A USB error code or kStatus_USB_Success.
  */
-usb_status_t USB_DeviceGetInterface(usb_device_handle handle, uint8_t interface, uint8_t *alternateSetting)
+usb_status_t USB_DeviceGetStringDescriptor(usb_device_handle handle,
+                                           usb_device_get_string_descriptor_struct_t *stringDescriptor)
 {
-    *alternateSetting = g_interface[interface];
+    if (stringDescriptor->stringIndex == 0U)
+    {
+        stringDescriptor->buffer = (uint8_t *)g_UsbDeviceLanguageList.languageString;
+        stringDescriptor->length = g_UsbDeviceLanguageList.stringLength;
+    }
+    else
+    {
+        uint8_t languageId = 0U;
+        uint8_t languageIndex = USB_DEVICE_STRING_COUNT;
+
+        for (; languageId < USB_DEVICE_LANGUAGE_COUNT; languageId++)
+        {
+            if (stringDescriptor->languageId == g_UsbDeviceLanguageList.languageList[languageId].languageId)
+            {
+                if (stringDescriptor->stringIndex < USB_DEVICE_STRING_COUNT)
+                {
+                    languageIndex = stringDescriptor->stringIndex;
+                }
+                break;
+            }
+        }
+
+        if (USB_DEVICE_STRING_COUNT == languageIndex)
+        {
+            return kStatus_USB_InvalidRequest;
+        }
+        stringDescriptor->buffer = (uint8_t *)g_UsbDeviceLanguageList.languageList[languageId].string[languageIndex];
+        stringDescriptor->length = g_UsbDeviceLanguageList.languageList[languageId].length[languageIndex];
+    }
     return kStatus_USB_Success;
 }
 
@@ -381,55 +369,100 @@ usb_status_t USB_DeviceSetSpeed(usb_device_handle handle, uint8_t speed)
     {
         if (ptr1->common.bDescriptorType == USB_DESCRIPTOR_TYPE_ENDPOINT)
         {
-            if ((USB_CDC_VCOM_INTERRUPT_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & 0x0FU)) &&
-                ((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
-                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN))
+            if (USB_SPEED_HIGH == speed)
             {
-                if (USB_SPEED_HIGH == speed)
+                if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN) &&
+                     (USB_CDC_VCOM_INTERRUPT_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
                 {
                     ptr1->endpoint.bInterval = HS_CDC_VCOM_INTERRUPT_IN_INTERVAL;
                     USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(HS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE,
                                                        ptr1->endpoint.wMaxPacketSize);
                 }
-                else
-                {
-                    ptr1->endpoint.bInterval = FS_CDC_VCOM_INTERRUPT_IN_INTERVAL;
-                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE,
-                                                       ptr1->endpoint.wMaxPacketSize);
-                }
-            }
-            else if ((USB_CDC_VCOM_BULK_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & 0x0FU)) && 
-                     ((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
-                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN))
-            {
-                if (USB_SPEED_HIGH == speed)
+                else if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN) &&
+                         (USB_CDC_VCOM_BULK_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
                 {
                     USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(HS_CDC_VCOM_BULK_IN_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
                 }
-                else
-                {
-                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_BULK_IN_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
-                }
-            }
-            else if ((USB_CDC_VCOM_BULK_OUT_ENDPOINT == (ptr1->endpoint.bEndpointAddress & 0x0FU)) &&
-                     ((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
-                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_OUT)
-                     )
-            {
-                if (USB_SPEED_HIGH == speed)
+                else if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_OUT) &&
+                         (USB_CDC_VCOM_BULK_OUT_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
                 {
                     USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(HS_CDC_VCOM_BULK_OUT_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
                 }
                 else
                 {
-                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_BULK_OUT_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
                 }
             }
             else
             {
+                if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN) &&
+                      (USB_CDC_VCOM_INTERRUPT_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
+                {
+                    ptr1->endpoint.bInterval = FS_CDC_VCOM_INTERRUPT_IN_INTERVAL;
+                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE,
+                                                       ptr1->endpoint.wMaxPacketSize);
+                }
+                else if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_IN) &&
+                      (USB_CDC_VCOM_BULK_IN_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
+                {
+                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_BULK_IN_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
+                }
+                else if (((ptr1->endpoint.bEndpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK) ==
+                     USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_OUT) &&
+                    (USB_CDC_VCOM_BULK_OUT_ENDPOINT == (ptr1->endpoint.bEndpointAddress & USB_ENDPOINT_NUMBER_MASK)))
+                {
+                    USB_SHORT_TO_LITTLE_ENDIAN_ADDRESS(FS_CDC_VCOM_BULK_OUT_PACKET_SIZE, ptr1->endpoint.wMaxPacketSize);
+                }
+                else
+                {
+                }
             }
         }
         ptr1 = (usb_descriptor_union_t *)((uint8_t *)ptr1 + ptr1->common.bLength);
     }
+
+    for (int i = 0; i < USB_CDC_VCOM_ENDPOINT_CIC_COUNT; i++)
+    {
+        if (USB_SPEED_HIGH == speed)
+        {
+            g_UsbDeviceCdcVcomCicEndpoints[i].maxPacketSize = HS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE;
+            g_UsbDeviceCdcVcomCicEndpoints[i].interval = HS_CDC_VCOM_INTERRUPT_IN_INTERVAL;
+        }
+        else
+        {
+            g_UsbDeviceCdcVcomCicEndpoints[i].maxPacketSize = FS_CDC_VCOM_INTERRUPT_IN_PACKET_SIZE;
+            g_UsbDeviceCdcVcomCicEndpoints[i].interval = FS_CDC_VCOM_INTERRUPT_IN_INTERVAL;
+        }
+    }
+    for (int i = 0; i < USB_CDC_VCOM_ENDPOINT_DIC_COUNT; i++)
+    {
+        if (USB_SPEED_HIGH == speed)
+        {
+            if (g_UsbDeviceCdcVcomDicEndpoints[i].endpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK)
+            {
+                g_UsbDeviceCdcVcomDicEndpoints[i].maxPacketSize = HS_CDC_VCOM_BULK_IN_PACKET_SIZE;
+            }
+            else
+            {
+                g_UsbDeviceCdcVcomDicEndpoints[i].maxPacketSize = HS_CDC_VCOM_BULK_OUT_PACKET_SIZE;
+            }
+        }
+        else
+        {
+            if (g_UsbDeviceCdcVcomDicEndpoints[i].endpointAddress & USB_DESCRIPTOR_ENDPOINT_ADDRESS_DIRECTION_MASK)
+            {
+                g_UsbDeviceCdcVcomDicEndpoints[i].maxPacketSize = FS_CDC_VCOM_BULK_IN_PACKET_SIZE;
+            }
+            else
+            {
+                g_UsbDeviceCdcVcomDicEndpoints[i].maxPacketSize = FS_CDC_VCOM_BULK_OUT_PACKET_SIZE;
+            }
+        }
+    }
+
     return kStatus_USB_Success;
 }

@@ -1459,6 +1459,7 @@ void USB_DeviceKhciIsrFunction(void *deviceHandle)
     khciState = (usb_device_khci_state_struct_t *)(handle->controllerHandle);
 
     status = khciState->registerBase->ISTAT;
+    status &= khciState->registerBase->INTEN;
 #if defined(FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED) && (FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED > 0U) && \
     defined(USB_DEVICE_CONFIG_KEEP_ALIVE_MODE) && (USB_DEVICE_CONFIG_KEEP_ALIVE_MODE > 0U) &&             \
     defined(FSL_FEATURE_USB_KHCI_USB_RAM) && (FSL_FEATURE_USB_KHCI_USB_RAM > 0U)
@@ -1505,7 +1506,9 @@ void USB_DeviceKhciIsrFunction(void *deviceHandle)
         USB_DeviceKhciInterruptResume(khciState);
     }
 
-    if (khciState->registerBase->USBTRC0 & USB_USBTRC0_USB_RESUME_INT_MASK)
+    /* Check for Asynchronous Resume interrupt if it was enabled */
+    if ((khciState->registerBase->USBTRC0 & USB_USBTRC0_USB_RESUME_INT_MASK) &&
+        (khciState->registerBase->USBTRC0 & USB_USBTRC0_USBRESMEN_MASK))
     {
         USB_DeviceKhciInterruptResume(khciState);
     }

@@ -41,6 +41,9 @@
 #define PL_CONFIG_HAS_AMG8833       (0)
 #define PL_CONFIG_HAS_RTC_DS3231    (0)
 
+/* ESP32 related */
+#define PL_CONFIG_USE_ESP32           (0)
+
 void PL_Init(void);
 void PL_Deinit(void);
 

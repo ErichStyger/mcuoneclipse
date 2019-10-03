@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v5.0
+product: Pins v6.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 5.0.0
+processor_version: 6.0.1
 board: FRDM-K22F
 pin_labels:
 - {pin_num: '22', pin_signal: PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK, label: 'J11[4]/SWD_CLK_TGTMCU'}
@@ -110,8 +110,8 @@ BOARD_InitPins:
     gpio_init_state: 'true'}
   - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX}
   - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
-  - {pin_num: '63', peripheral: UART0, signal: RX, pin_signal: ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT}
-  - {pin_num: '64', peripheral: UART0, signal: TX, pin_signal: PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN}
+  - {pin_num: '63', peripheral: UART0, signal: RX, pin_signal: ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT, pull_select: up, pull_enable: enable}
+  - {pin_num: '64', peripheral: UART0, signal: TX, pin_signal: PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN, pull_select: up, pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -148,8 +148,24 @@ void BOARD_InitPins(void)
     /* PORTD6 (pin 63) is configured as UART0_RX */
     PORT_SetPinMux(PORTD, 6U, kPORT_MuxAlt3);
 
+    PORTD->PCR[6] = ((PORTD->PCR[6] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp));
+
     /* PORTD7 (pin 64) is configured as UART0_TX */
     PORT_SetPinMux(PORTD, 7U, kPORT_MuxAlt3);
+
+    PORTD->PCR[7] = ((PORTD->PCR[7] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp));
 
     SIM->SOPT5 = ((SIM->SOPT5 &
                    /* Mask bits to zero which are setting */

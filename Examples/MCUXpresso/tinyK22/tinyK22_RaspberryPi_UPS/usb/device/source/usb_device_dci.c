@@ -1422,7 +1422,7 @@ usb_status_t USB_DeviceDcdDeinitModule(usb_device_handle handle)
 void USB_DeviceTaskFunction(void *deviceHandle)
 {
     usb_device_struct_t *handle = (usb_device_struct_t *)deviceHandle;
-    static usb_device_callback_message_struct_t message;
+    usb_device_callback_message_struct_t message;
 
     if (deviceHandle)
     {

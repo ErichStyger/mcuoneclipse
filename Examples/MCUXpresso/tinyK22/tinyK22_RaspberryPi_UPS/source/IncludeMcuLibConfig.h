@@ -17,10 +17,11 @@
 
 /* ------------------- RTOS ---------------------------*/
 /* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
-#define configTOTAL_HEAP_SIZE   (16*1024)
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
-
+#define configTOTAL_HEAP_SIZE                       (54*1024)
+#define configUSE_HEAP_SECTION_NAME                 (1)
+#define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 /* ------------------- I2C ---------------------------*/
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
