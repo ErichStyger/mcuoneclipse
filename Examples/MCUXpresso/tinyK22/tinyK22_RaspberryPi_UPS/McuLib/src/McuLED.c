@@ -61,9 +61,9 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   gpio_config.hw.port = config->hw.port;
   gpio_config.hw.pin  = config->hw.pin;
   if (config->isLowActive) {
-    gpio_config.isLowOnInit = config->isOnInit;
+    gpio_config.isHighOnInit = !config->isOnInit;
   } else {
-    gpio_config.isLowOnInit = !config->isOnInit;
+    gpio_config.isHighOnInit = config->isOnInit;
   }
   gpio = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
 #if MCULED_CONFIG_USE_FREERTOS_HEAP

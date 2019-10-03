@@ -100,32 +100,64 @@
 #ifndef configTOTAL_HEAP_SIZE
   #define configTOTAL_HEAP_SIZE                   (8192) /* size of heap in bytes */
 #endif /* configTOTAL_HEAP_SIZE */
-#define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
-#if configUSE_HEAP_SECTION_NAME
-#define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
+#ifndef configUSE_HEAP_SECTION_NAME
+  #define configUSE_HEAP_SECTION_NAME             0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+#endif
+#ifndef configUSE_HEAP_SECTION_NAME
+  #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for KDS/gcc, ".bss.$SRAM_LOWER.FreeRTOS" for MCUXpresso or "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
-#define configSUPPORT_DYNAMIC_ALLOCATION          1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
-#define configSUPPORT_STATIC_ALLOCATION           0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#ifndef configSUPPORT_DYNAMIC_ALLOCATION
+  #define configSUPPORT_DYNAMIC_ALLOCATION        1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
+#endif
+#ifndef configSUPPORT_STATIC_ALLOCATION
+  #define configSUPPORT_STATIC_ALLOCATION         0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#endif
 #define configUSE_NEWLIB_REENTRANT                (configUSE_HEAP_SCHEME==6) /* 1: a newlib reent structure will be allocated for each task; 0: no such reentr structure used */
 /*----------------------------------------------------------*/
-#define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
+#ifndef configMAX_TASK_NAME_LEN
+  #define configMAX_TASK_NAME_LEN                 12 /* task name length in bytes */
+#endif
 #ifndef configUSE_TRACE_FACILITY
   #define configUSE_TRACE_FACILITY                1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
 #endif
-#define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
+#ifndef configUSE_STATS_FORMATTING_FUNCTIONS
+  #define configUSE_STATS_FORMATTING_FUNCTIONS    (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
+#endif
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
-#define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION   (0 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
-#define configUSE_CO_ROUTINES                     0
-#define configUSE_MUTEXES                         1
-#define configCHECK_FOR_STACK_OVERFLOW            1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
-#define configCHECK_FOR_STACK_OVERFLOW_NAME       McuRTOS_vApplicationStackOverflowHook
-#define configUSE_RECURSIVE_MUTEXES               1
-#define configQUEUE_REGISTRY_SIZE                 5
-#define configUSE_QUEUE_SETS                      1
-#define configUSE_COUNTING_SEMAPHORES             1
-#define configUSE_APPLICATION_TASK_TAG            0
+#ifndef configIDLE_SHOULD_YIELD
+  #define configIDLE_SHOULD_YIELD                 1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
+#endif
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+  #define configUSE_PORT_OPTIMISED_TASK_SELECTION (0 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
+#endif
+#ifndef configUSE_CO_ROUTINES
+  #define configUSE_CO_ROUTINES                   0
+#endif
+#ifndef configUSE_MUTEXES
+  #define configUSE_MUTEXES                       1
+#endif
+#ifndef configCHECK_FOR_STACK_OVERFLOW
+  #define configCHECK_FOR_STACK_OVERFLOW          1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
+#endif
+#ifndef configCHECK_FOR_STACK_OVERFLOW_NAME
+  #define configCHECK_FOR_STACK_OVERFLOW_NAME     McuRTOS_vApplicationStackOverflowHook
+#endif
+#ifndef configUSE_RECURSIVE_MUTEXES
+  #define configUSE_RECURSIVE_MUTEXES             1
+#endif
+#ifndef configQUEUE_REGISTRY_SIZE
+  #define configQUEUE_REGISTRY_SIZE               5
+#endif
+#ifndef configUSE_QUEUE_SETS
+  #define configUSE_QUEUE_SETS                    1
+#endif
+#ifndef configUSE_COUNTING_SEMAPHORES
+  #define configUSE_COUNTING_SEMAPHORES           1
+#endif
+#ifndef configUSE_APPLICATION_TASK_TAG
+  #define configUSE_APPLICATION_TASK_TAG          0
+#endif
 /* Tickless Idle Mode ----------------------------------------------------------*/
 #ifndef configUSE_TICKLESS_IDLE
   #define configUSE_TICKLESS_IDLE                 0 /* set to 1 for tickless idle mode, 0 otherwise */
@@ -148,18 +180,35 @@
 #endif
 #define configMAX_CO_ROUTINE_PRIORITIES           2 /* co-routine priorities can be from 0 up to this value-1 */
 
+/* the following needs to be defined (present) or not (not present)! */
 #define configTASK_RETURN_ADDRESS                 0 /* return address of task is zero */
 
-#define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
+#ifndef configRECORD_STACK_HIGH_ADDRESS
+  #define configRECORD_STACK_HIGH_ADDRESS         1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
+#endif
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          1 /* 1: enable software timers; 0: software timers disabled */
-#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U) /* e.g. (configMAX_PRIORITIES-1U) */
-#define configTIMER_QUEUE_LENGTH                  10 /* size of queue for the timer task */
-#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE) /* e.g. (configMINIMAL_STACK_SIZE) */
-#define INCLUDE_xEventGroupSetBitFromISR          1 /* 1: function is included; 0: do not include function */
-#define INCLUDE_xTimerPendFunctionCall            1 /* 1: function is included; 0: do not include function */
-#define configUSE_DAEMON_TASK_STARTUP_HOOK        0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
+#ifndef configUSE_TIMERS
+  #define configUSE_TIMERS                        1 /* 1: enable software timers; 0: software timers disabled */
+#endif
+#ifndef configTIMER_TASK_PRIORITY
+  #define configTIMER_TASK_PRIORITY               (configMAX_PRIORITIES-1U) /* e.g. (configMAX_PRIORITIES-1U) */
+#endif
+#ifndef configTIMER_QUEUE_LENGTH
+  #define configTIMER_QUEUE_LENGTH                10 /* size of queue for the timer task */
+#endif
+#ifndef configTIMER_TASK_STACK_DEPTH
+  #define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE) /* e.g. (configMINIMAL_STACK_SIZE) */
+#endif
+#ifndef INCLUDE_xEventGroupSetBitFromISR
+  #define INCLUDE_xEventGroupSetBitFromISR        1 /* 1: function is included; 0: do not include function */
+#endif
+#ifndef INCLUDE_xTimerPendFunctionCall
+  #define INCLUDE_xTimerPendFunctionCall          1 /* 1: function is included; 0: do not include function */
+#endif
+#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
+  #define configUSE_DAEMON_TASK_STARTUP_HOOK      0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
+#endif
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even
 if floating point hardware is otherwise supported by the FreeRTOS port in use.

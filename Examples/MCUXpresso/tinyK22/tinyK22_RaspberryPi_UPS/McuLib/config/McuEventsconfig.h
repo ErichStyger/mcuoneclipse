@@ -14,6 +14,9 @@
 /*! List of events */
 #define McuEvents_INIT /* Example event */ 0
 
-#define McuEvents_CONFIG_NOF_EVENTS    1 /*!< Number of events supported */
+#ifndef McuEvents_CONFIG_NOF_EVENTS
+  #define McuEvents_CONFIG_NOF_EVENTS    1
+    /*!< Number of events supported */
+#endif
 
 #endif /* __McuEvents_CONFIG_H */

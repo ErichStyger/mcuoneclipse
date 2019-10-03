@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 08:49, # CodeGen: 444
+**     Date/Time   : 2019-08-27, 17:30, # CodeGen: 580
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -27,8 +27,7 @@
 **            Length                                       : 32
 **            Separator                                    : ;
 **          Utility                                        : McuUtility
-**          Default Serial                                 : Enabled
-**            Console Interface                            : McuRTT
+**          Default Serial                                 : Disabled
 **          Semaphore                                      : no
 **          Critical Section                               : McuCriticalSection
 **          History                                        : yes

@@ -208,13 +208,15 @@ void McuWait_WaitCycles(uint16_t cycles)
     /* wait */
   }
 #else
-  while(cycles > 100) {
+  int32_t counter = cycles;
+
+  while(counter > 100) {
     McuWait_Wait100Cycles();
-    cycles -= 100;
+    counter -= 100;
   }
-  while(cycles > 10) {
+  while(counter > 10) {
     McuWait_Wait10Cycles();
-    cycles -= 10;
+    counter -= 10;
   }
 #endif
   /*lint -restore */
