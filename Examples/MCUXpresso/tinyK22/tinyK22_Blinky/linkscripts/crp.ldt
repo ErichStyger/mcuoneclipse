@@ -1,0 +1,24 @@
+
+<#-- Bootloader applications set BOOTLOADER_CONFIG_ADDRESS in user.ldt  -->
+<#if BOOTLOADER_CONFIG_OFFSET?? >
+        /*************************************************************************************************/
+        /* Bootloader configuration data, to be placed at offset 0x340 from the start of the application */
+        . = ${BOOTLOADER_CONFIG_OFFSET} ;
+        PROVIDE(__BOOTLOADER_CONFIG_START__ = .) ;
+        KEEP(*(.BootloaderConfig))
+        PROVIDE(__BOOTLOADER_CONFIG_END__ = .) ;
+        /*************************************************************************************************/
+</#if>
+
+        /* original crp.ldt follows, copied from <MCUXpresso IDE Installation Path>\ide\Wizards\linker\crp.ldt: */
+<#if CRP_ADDRESS?? >
+        /* Code Read Protection data */
+        . = ${CRP_ADDRESS} ;
+        PROVIDE(__CRP_WORD_START__ = .) ;
+        KEEP(*(.crp))
+        PROVIDE(__CRP_WORD_END__ = .) ;
+        ASSERT(!(__CRP_WORD_START__ == __CRP_WORD_END__), "Linker CRP Enabled, but no CRP_WORD provided within application");
+        /* End of Code Read Protection */
+<#elseif crpError??>
+        ${crpError}
+</#if>

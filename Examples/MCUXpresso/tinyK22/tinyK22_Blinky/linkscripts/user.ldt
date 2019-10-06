@@ -1,0 +1,11 @@
+<#-- This file is included into the main .ld file -->
+<#-- For Bootloader applications, the build configuration name starts with "BL_", e.g. "BL_0xA000" -->
+<#if buildConfig?upper_case?starts_with("BL_")>
+    <#assign BOOTLOADER_APPLICATION_OFFSET =  buildConfig?substring(3)>
+    <#assign BOOTLOADER_CONFIG_OFFSET      =  "0x340">
+/* ***********************************************************************************
+ * Configuration using Bootloader: ${buildConfig} */
+__BOOTLOADER_APPLICATION_OFFSET = ${BOOTLOADER_APPLICATION_OFFSET}; /* Application offset for bootloader */
+__BOOTLOADER_CONFIG_OFFSET      = ${BOOTLOADER_CONFIG_OFFSET}; /* Offset of bootloader configuration */
+/* ***********************************************************************************/
+</#if>

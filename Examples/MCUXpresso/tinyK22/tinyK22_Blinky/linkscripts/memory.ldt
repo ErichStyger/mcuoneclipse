@@ -1,0 +1,51 @@
+<#include "user.ldt" >
+<#include "user_memory.ldt" ignore_missing=true>
+<#include "header.ldt" >
+
+<#if buildConfig?upper_case?starts_with("BL_")>
+MEMORY
+{ 
+  /* Define each memory region */
+<#list configMemory as memory>
+  <#if memory.name="PROGRAM_FLASH">
+  ${memory.name} (${memory.linkerMemoryAttributes}) : ORIGIN = ${memory.location}+__BOOTLOADER_APPLICATION_OFFSET, LENGTH = ${memory.size}-__BOOTLOADER_APPLICATION_OFFSET /* ${memory.sizek} (alias ${memory.alias}) */  
+  <#else>
+  ${memory.name} (${memory.linkerMemoryAttributes}) : ORIGIN = ${memory.location}, LENGTH = ${memory.size} /* ${memory.sizek} (alias ${memory.alias}) */  
+  </#if>
+</#list>
+} 
+
+  /* Define a symbol for the top of each memory region */
+<#list configMemory as memory>
+  <#if memory.name="PROGRAM_FLASH">
+  __base_${memory.name} = ${memory.location}+__BOOTLOADER_APPLICATION_OFFSET ; /* ${memory.name} */  
+  __base_${memory.alias} = ${memory.location}+__BOOTLOADER_APPLICATION_OFFSET ; /* ${memory.alias} */  
+  __top_${memory.name} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+  __top_${memory.alias} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+  <#else>
+  __base_${memory.name} = ${memory.location}  ; /* ${memory.name} */  
+  __base_${memory.alias} = ${memory.location} ; /* ${memory.alias} */  
+  __top_${memory.name} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+  __top_${memory.alias} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+  </#if>
+</#list>
+
+<#else>
+
+MEMORY
+{
+  /* Define each memory region */
+<#list configMemory as memory>
+  ${memory.name} (${memory.linkerMemoryAttributes}) : ORIGIN = ${memory.location}, LENGTH = ${memory.size} /* ${memory.sizek} (alias ${memory.alias}) */  
+</#list>
+}
+
+  /* Define a symbol for the top of each memory region */
+<#list configMemory as memory>
+  __base_${memory.name} = ${memory.location}  ; /* ${memory.name} */  
+  __base_${memory.alias} = ${memory.location} ; /* ${memory.alias} */  
+  __top_${memory.name} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+  __top_${memory.alias} = ${memory.location} + ${memory.size} ; /* ${memory.sizek} */  
+</#list>
+
+</#if>
