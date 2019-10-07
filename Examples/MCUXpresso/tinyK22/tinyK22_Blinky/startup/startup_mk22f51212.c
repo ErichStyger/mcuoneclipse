@@ -397,6 +397,8 @@ extern unsigned int __data_section_table_end;
 extern unsigned int __bss_section_table;
 extern unsigned int __bss_section_table_end;
 
+#include "fsl_common.h"
+
 //*****************************************************************************
 // Reset entry point for your code.
 // Sets up a simple runtime environment and initializes the C/C++
@@ -407,6 +409,12 @@ void ResetISR(void) {
 
     // Disable interrupts
     __asm volatile ("cpsid i");
+#if defined(BL_HAS_BOOTLOADER_CONFIG)
+  #define ISR_VECTOR_ADDRESS    (0xA000)
+
+  // Set VTOR register in SCB first thing we do.
+  SCB->VTOR = ISR_VECTOR_ADDRESS;
+#endif
 
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
