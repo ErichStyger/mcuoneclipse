@@ -68,7 +68,9 @@ int main(void) {
     while(1) {
       GPIO_PortSet(BOARD_LED_BLUE_GPIO, (1<<BOARD_LED_BLUE_PIN)); /* led off */
       delay();
+      delay();
       GPIO_PortClear(BOARD_LED_BLUE_GPIO, (1<<BOARD_LED_BLUE_PIN)); /* led on */
+      delay();
       delay();
     }
     return 0 ;

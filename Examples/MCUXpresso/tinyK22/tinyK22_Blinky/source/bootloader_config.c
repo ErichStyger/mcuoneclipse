@@ -76,9 +76,15 @@ __attribute__((section(".BootloaderConfig"))) const bootloader_config_t Bootload
 #else
     .tag = 0xFFFFFFFF, //!< No Magic Number
 #endif
+#if 1
+    .crcStartAddress = 0xa000, //!< Disable CRC check
+    .crcByteCount = 0x25C8, //!< Disable CRC check
+    .crcExpectedValue = 0x255d7c04, //!< Disable CRC check
+#else
     .crcStartAddress = 0xFFFFFFFF, //!< Disable CRC check
     .crcByteCount = 0xFFFFFFFF, //!< Disable CRC check
     .crcExpectedValue = 0xFFFFFFFF, //!< Disable CRC check
+#endif
     .enabledPeripherals = ENABLE_PERIPHERAL_UART, //ENABLE_PERIPHERAL_UART|ENABLE_PERIPHERAL_I2C|ENABLE_PERIPHERAL_SPI, //!< Enabled Peripheral: UART I2C SPI CAN USB-HID
     .i2cSlaveAddress = 0x10, //!< Use default I2C address(0x10)
     .peripheralDetectionTimeoutMs = 5000, //!< Use user-defined timeout(ms)

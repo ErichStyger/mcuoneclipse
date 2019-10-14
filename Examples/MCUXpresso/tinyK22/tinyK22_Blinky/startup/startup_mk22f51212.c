@@ -414,6 +414,8 @@ void ResetISR(void) {
 
   // Set VTOR register in SCB first thing we do.
   SCB->VTOR = ISR_VECTOR_ADDRESS;
+  __set_MSP(((uint32_t*)ISR_VECTOR_ADDRESS)[0]);
+  __set_PSP(((uint32_t*)ISR_VECTOR_ADDRESS)[0]);
 #endif
 
 #if defined (__USE_CMSIS)

@@ -54,6 +54,48 @@ void Cpu_OnNMIINT(void)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+**     Description :
+**         User event which will be called before accessing the I2C bus.
+**         Useful for starting a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GI2C1_OnRequestBus(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         User event which will be called after accessing the I2C bus.
+**         Useful for ending a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GI2C1_OnReleaseBus(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called in case of error condition
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GI2C1_OnError(void)
+{
+  /* Write your code here ... */
+}
+
+
 /* END Events */
 
 #ifdef __cplusplus

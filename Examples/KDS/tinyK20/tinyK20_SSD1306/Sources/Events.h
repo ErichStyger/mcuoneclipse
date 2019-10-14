@@ -65,6 +65,38 @@ extern "C" {
 void Cpu_OnNMIINT(void);
 
 
+void GI2C1_OnRequestBus(void);
+/*
+** ===================================================================
+**     Description :
+**         User event which will be called before accessing the I2C bus.
+**         Useful for starting a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GI2C1_OnReleaseBus(void);
+/*
+** ===================================================================
+**     Description :
+**         User event which will be called after accessing the I2C bus.
+**         Useful for ending a critical section.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void GI2C1_OnError(void);
+/*
+** ===================================================================
+**     Description :
+**         Event called in case of error condition
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
 /* END Events */
 
 #ifdef __cplusplus

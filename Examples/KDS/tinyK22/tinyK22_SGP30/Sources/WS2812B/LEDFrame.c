@@ -388,7 +388,7 @@ static uint8_t PrintStatus(CLS1_ConstStdIOType *io) {
   } else {
     UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"off, ");
   }
-  TmDt1_AddTimeString(buf, sizeof(buf), &LEDFRAME_alarmTime, (uint8_t*)TmDt1_DEFAULT_TIME_FORMAT_STR);
+  TmDt1_AddTimeString(buf, sizeof(buf), &LEDFRAME_alarmTime, (uint8_t*)TmDt1_CONFIG_DEFAULT_TIME_FORMAT_STR);
   UTIL1_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   CLS1_SendStatusStr((uint8_t*)"  alarm", buf, io->stdOut);
 
