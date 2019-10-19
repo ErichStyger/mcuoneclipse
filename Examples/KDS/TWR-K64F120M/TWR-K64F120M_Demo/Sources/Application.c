@@ -25,7 +25,7 @@
   #include "MMA1.h"
 #endif
 
-static xTimerHandle timerHndl;
+static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS TMOUT1_TICK_PERIOD_MS
 
 #if PL_HAS_KEYS
@@ -54,7 +54,7 @@ void APP_OnKeyReleasedLong(uint8_t keys) {
 }
 #endif /* PL_HAS_KEYS */
 
-static void vTimerCallback(xTimerHandle pxTimer) {
+static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
   TMOUT1_AddTick();
   TRG1_AddTick();
@@ -87,7 +87,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     LED3_Put(xmg>800||xmg<-800||ymg>800||ymg<-800);
 #endif
     LED4_Neg();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
@@ -101,13 +101,13 @@ void APP_Start(void) {
       configMINIMAL_STACK_SIZE, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
   /*lint -e527 */
   for(;;){} /* error! probably out of memory */
     /*lint +e527 */
   }
-  timerHndl = xTimerCreate("timer0", TIMER_PERIOD_MS/portTICK_RATE_MS, pdTRUE, (void *)0, vTimerCallback);
+  timerHndl = xTimerCreate("timer0", pdMS_TO_TICKS(TIMER_PERIOD_MS), pdTRUE, (void *)0, vTimerCallback);
   if (timerHndl==NULL) {
     for(;;); /* failure! */
   }

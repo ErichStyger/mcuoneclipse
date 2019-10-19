@@ -60,11 +60,11 @@ static void blinky_task2(void *param) {
   (void)param;
   for(;;) {
     GPIO_DRV_TogglePinOutput(LED_RED);
-    vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
     GPIO_DRV_TogglePinOutput(LED_RED);
 
     GPIO_DRV_TogglePinOutput(LED_GREEN);
-    vTaskDelay(100/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));
     GPIO_DRV_TogglePinOutput(LED_GREEN);
   } /* for */
 }
@@ -73,11 +73,11 @@ static void blinky_task1(void *param) {
   (void)param;
   for(;;) {
     GPIO_DRV_TogglePinOutput(LED_ORANGE);
-    vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
     GPIO_DRV_TogglePinOutput(LED_ORANGE);
 
     GPIO_DRV_TogglePinOutput(LED_BLUE);
-    vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
     GPIO_DRV_TogglePinOutput(LED_BLUE);
   } /* for */
 }
