@@ -85,7 +85,7 @@ bool TOUCH_IsPressed(void) {
 #elif PL_CONFIG_USE_FT6206
   uint8_t val;
 
-  res = McuFT6206_ReadNofTouches(&val)
+  res = McuFT6206_ReadNofTouches(&val);
   return res==ERR_OK && val>0;
 #endif
 }

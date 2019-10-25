@@ -190,30 +190,30 @@ static void I2CLIB_ReleaseBus(void) {
   sclPin = McuGPIO_InitGPIO(&config);
 
   /* Drive SDA low first to simulate a start */
-  McuGPIO_Low(sdaPin);
+  McuGPIO_SetLow(sdaPin);
   McuWait_Waitus(10);
   /* Send 9 pulses on SCL and keep SDA high */
   for (i = 0; i < 9; i++) {
-      McuGPIO_Low(sclPin);
+    McuGPIO_SetLow(sclPin);
       McuWait_Waitus(10);
 
-      McuGPIO_High(sdaPin);
+      McuGPIO_SetHigh(sdaPin);
       McuWait_Waitus(10);
 
-      McuGPIO_High(sclPin);
+      McuGPIO_SetHigh(sclPin);
       McuWait_Waitus(20);
   }
   /* Send stop */
-  McuGPIO_Low(sclPin);
+  McuGPIO_SetLow(sclPin);
   McuWait_Waitus(10);
 
-  McuGPIO_Low(sdaPin);
+  McuGPIO_SetLow(sdaPin);
   McuWait_Waitus(10);
 
-  McuGPIO_Low(sclPin);
+  McuGPIO_SetLow(sclPin);
   McuWait_Waitus(10);
 
-  McuGPIO_High(sdaPin);
+  McuGPIO_SetHigh(sdaPin);
   McuWait_Waitus(10);
   /* cleanup */
   sdaPin = McuGPIO_DeinitGPIO(sdaPin);
