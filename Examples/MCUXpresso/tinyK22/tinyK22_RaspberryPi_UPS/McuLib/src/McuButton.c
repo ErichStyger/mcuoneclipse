@@ -38,6 +38,24 @@ void McuBtn_GetDefaultConfig(McuBtn_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
+void McuBtn_DisablePullResistor(McuBtn_Handle_t btn) {
+  McuBtn_t *button;
+
+  button = (McuBtn_t*)btn;
+  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_DISABLE);
+}
+
+void McuBtn_EnablePullResistor(McuBtn_Handle_t btn) {
+  McuBtn_t *button;
+
+  button = (McuBtn_t*)btn;
+  if (button->isLowActive) {
+    McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+  } else {
+	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+  }
+}
+
 bool McuBtn_IsOn(McuBtn_Handle_t btn) {
   McuBtn_t *button;
 

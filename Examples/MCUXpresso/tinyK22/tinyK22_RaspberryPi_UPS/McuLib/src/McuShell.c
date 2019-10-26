@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-27, 17:30, # CodeGen: 580
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -114,6 +114,15 @@
 #include <ctype.h> /* for isalnum*/
 
 #include "McuShell.h"
+#include "McuXFormat.h"
+#include "McuUtility.h"
+#include "McuCriticalSection.h"
+  #include "McuWait.h"
+
+#if McuShell_DEFAULT_SERIAL
+  #include McuShell_CONFIG_DEFAULT_SERIAL_INCLUDE
+#endif
+
 
 uint8_t McuShell_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 #if McuShell_HISTORY_ENABLED

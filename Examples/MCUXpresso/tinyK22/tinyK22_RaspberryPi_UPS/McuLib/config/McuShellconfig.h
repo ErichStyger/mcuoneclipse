@@ -42,8 +42,6 @@
       /*!< Include for the functions below */
   #endif
 
-  #include McuShell_CONFIG_DEFAULT_SERIAL_INCLUDE
-
   #ifndef McuShell_CONFIG_DEFAULT_SERIAL_RECEIVE_FCT_NAME
     #define McuShell_CONFIG_DEFAULT_SERIAL_RECEIVE_FCT_NAME McuSerial_RecvChar
       /*!< Function name to read a character and returning ERR_OK if it was successful */

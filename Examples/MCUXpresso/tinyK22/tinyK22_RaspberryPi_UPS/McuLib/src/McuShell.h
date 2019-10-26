@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-27, 17:30, # CodeGen: 580
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -160,11 +160,6 @@
 #define McuShell_DEFAULT_SHELL_BUFFER_SIZE  McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  /* default buffer size for shell command parsing */
 
 /* Include inherited components */
-#include "McuWait.h"
-#include "McuLib.h"
-#include "McuUtility.h"
-#include "McuXFormat.h"
-#include "McuCriticalSection.h"
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */

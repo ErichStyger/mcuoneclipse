@@ -1,6 +1,6 @@
 /**
  * \file
- * \brief Configuration header file for I2CSpy
+ * \brief Configuration header file for external I2C RTC devices
  *
  * This header file is used to configure settings the External I2C RTC module.
  */

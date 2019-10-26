@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 08:15, # CodeGen: 554
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -465,7 +465,7 @@ void WPpin1_Init(void)
         #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
           IOCON_PinMuxSet(WPpin1_CONFIG_PORT_NAME, WPpin1_CONFIG_PIN_NUMBER, port_pin_config);
         #else
-          IOCON_PinMuxSet(WPpin1_CONFIG_PORT_NAME, WPpin1_CONFIG_PIN_NUMBER, port_pin_config);
+          IOCON_PinMuxSet(IOCON, WPpin1_CONFIG_PORT_NAME, WPpin1_CONFIG_PIN_NUMBER, port_pin_config);
         #endif
       #else
         PORT_SetPinMux(WPpin1_CONFIG_PORT_NAME, WPpin1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */

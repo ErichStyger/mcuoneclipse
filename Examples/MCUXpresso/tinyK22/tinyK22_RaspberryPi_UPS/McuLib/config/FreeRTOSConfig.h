@@ -103,7 +103,7 @@
 #ifndef configUSE_HEAP_SECTION_NAME
   #define configUSE_HEAP_SECTION_NAME             0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
 #endif
-#ifndef configUSE_HEAP_SECTION_NAME
+#ifndef configHEAP_SECTION_NAME_STRING
   #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for KDS/gcc, ".bss.$SRAM_LOWER.FreeRTOS" for MCUXpresso or "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
