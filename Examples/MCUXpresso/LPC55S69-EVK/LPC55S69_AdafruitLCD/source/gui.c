@@ -19,6 +19,7 @@
 #include "task.h"
 #include "McuILI9341.h"
 #include "McuFontDisplay.h"
+#include "Shell.h"
 #if PL_CONFIG_USE_STMPE610
   #include "McuSTMPE610.h"
   #include "TouchCalibrate.h"
@@ -137,59 +138,56 @@ static void btn_touchcalibrate_event_handler(lv_obj_t *obj, lv_event_t event) {
 }
 #endif
 
-static void btn_sensor_event_handler(lv_obj_t *obj, lv_event_t event) {
+static void event_handler(lv_obj_t *obj, lv_event_t event) {
   if(event == LV_EVENT_CLICKED) {
-  //    printf("Clicked\n");
+    SHELL_SendString((unsigned char*)"Clicked\n");
   } else if(event == LV_EVENT_VALUE_CHANGED) {
-//      printf("Toggled\n");
+    SHELL_SendString((unsigned char*)"Toggled\n");
   }
 }
 
 void GUI_MainMenuCreate(void) {
-  lv_obj_t *gui_win;
-#define AUTO_POS (1) /* automatically place GUI elements */
+	lv_obj_t * label;
 
 #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
 #endif
+
   /* create window */
+  lv_obj_t *gui_win;
+
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
 
-  //int size = lv_win_get_btn_size(gui_win);
-  //lv_win_set_btn_size(gui_win, 8);
-  lv_win_set_sb_mode(gui_win, LV_SB_MODE_OFF); /* no scroll bar */
+  /* Add control button to the header */
+  lv_obj_t *close_btn = lv_win_add_btn(gui_win, LV_SYMBOL_CLOSE);           /* Add close button and use built-in close action */
+  //lv_obj_set_event_cb(close_btn, lv_win_close_event_cb);
+  lv_win_add_btn(gui_win, LV_SYMBOL_SETTINGS);        /*Add a setup button*/
 
-  /* Make the window content responsive */
-#if AUTO_POS
-  lv_win_set_layout(gui_win, LV_LAYOUT_PRETTY); /* this will arrange the buttons */
-#endif
-  lv_obj_t *btn;
-  lv_obj_t *label;
-#if PL_CONFIG_USE_STMPE610
-  btn = lv_btn_create(gui_win, NULL);
-  label = lv_label_create(btn, NULL);
-  lv_label_set_text(label, "Touch Calibrate");
-  lv_obj_set_event_cb(btn, btn_touchcalibrate_event_handler);
-  lv_btn_set_fit(btn, LV_FIT_TIGHT); /* set auto fit to text */
+  lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);
+	lv_obj_set_event_cb(btn1, event_handler);
+	lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);
+
+	label = lv_label_create(btn1, NULL);
+	lv_label_set_text(label, "Sensor");
 #if PL_CONFIG_USE_GUI_KEY_NAV
-  GUI_AddObjToGroup(btn);
-#endif
+  GUI_AddObjToGroup(btn1);
 #endif
 
-  btn = lv_btn_create(gui_win, NULL);
-#if !AUTO_POS
-  lv_obj_set_size(btn, 45, 20);
-  lv_obj_set_pos(btn, 5, 0);
-#endif
-  label = lv_label_create(btn, NULL);
-  lv_label_set_text(label, "Sensor");
-  lv_obj_set_event_cb(btn, btn_sensor_event_handler);
-  lv_btn_set_fit(btn, LV_FIT_TIGHT); /* set auto fit to text */
+	lv_obj_t * btn2 = lv_btn_create(lv_scr_act(), NULL);
+	lv_obj_set_event_cb(btn2, event_handler);
+	lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+	lv_btn_set_toggle(btn2, true);
+	lv_btn_toggle(btn2);
+	lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);
+
+	label = lv_label_create(btn2, NULL);
+	lv_label_set_text(label, "LED");
 #if PL_CONFIG_USE_GUI_KEY_NAV
-  GUI_AddObjToGroup(btn);
+  GUI_AddObjToGroup(btn2);
 #endif
 }
+
 
 static void ErrMsg(void) {
   for(;;) { /* error */

@@ -51,6 +51,18 @@ static const SHELL_IODesc ios[] =
 #endif
 };
 
+void SHELL_SendChar(unsigned char ch) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendCh(ch, ios[i].stdio->stdOut);
+  }
+}
+
+void SHELL_SendString(unsigned char *str) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendStr(str, ios[i].stdio->stdOut);
+  }
+}
+
 static void ShellTask(void *pv) {
   int i;
 
