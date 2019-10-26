@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,7 +9,7 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (5)  /* 3, 4 or 5 */
+#define TINYK22_HAT_VERSION  (3)  /* 3, 4 or 5 */
 #define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5))
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
@@ -138,32 +137,37 @@
    * - dedicated power-down pin and power-down-status pins
    */
 
-  /* for shutdown signal to Raspberry Pi: */
+  /* Used as shutdown request signal from tinyK22 to Raspberry Pi: */
   #define PINS_GP_0_GPIO        GPIOA
   #define PINS_GP_0_PORT        PORTA
   #define PINS_GP_0_PIN         1u
 
-  /* for signal from Raspberry Pi to tinyK22 that shutdown is completed: */
+  /* Used as signal from Raspberry Pi to tinyK22 to indicate shutdown is completed: */
   #define PINS_GP_1_GPIO        GPIOA
   #define PINS_GP_1_PORT        PORTA
   #define PINS_GP_1_PIN         2u
 
-  /* Extra GPIO pin: */
-  #define PINS_GP_2_GPIO        GPIOA
-  #define PINS_GP_2_PORT        PORTA
-  #define PINS_GP_2_PIN         4u
-
-  /* Wake_Raspi pin: */
+  /* Wake_Raspi pin: HIGH active, connected to Raspberry Pi I2C to be able to wake it up.
+   * Pin is connected to a FET which turns on the I2C between Pi and tinyK22 */
+  /* HAT V5:  PTA5 <-> T1, HIGH to be able to wake Pi up with I2C SCL line */
   #define PINS_WAKE_RASPY_GPIO  GPIOA
   #define PINS_WAKE_RASPY_PORT  PORTA
   #define PINS_WAKE_RASPY_PIN   5u
 
   /* Extra GPIO pin: */
+  /* HAT V5:  PTA4 <-> Raspy Header Pin #13 (BCM27, wPi2, GPIO.2) */
+  #define PINS_GP_2_GPIO        GPIOA
+  #define PINS_GP_2_PORT        PORTA
+  #define PINS_GP_2_PIN         4u
+
+  /* Extra GPIO pin: */
+  /* HAT V5:  PTB17 <-> Raspy Header Pin #15 (BCM22, wPi3, GPIO.3) */
   #define PINS_GP_3_GPIO        GPIOB
   #define PINS_GP_3_PORT        PORTB
   #define PINS_GP_3_PIN         17u
 
   /* Extra GPIO pin: */
+  /* HAT V5:  PTB18 <-> Raspy Header Pin #16 (BCM23, wPi4, GPIO.4) */
   #define PINS_GP_4_GPIO        GPIOB
   #define PINS_GP_4_PORT        PORTB
   #define PINS_GP_4_PIN         18u
@@ -196,7 +200,8 @@
 #define PINS_HATLEDRED_PORT     PORTC
 #define PINS_HATLEDRED_PIN      11U
 
-/* SHT pin, used for Raspy Powerdown (only pre-V5 boards), connected to Raspy Header Pin #7 (BCM4, wPi7, GPIO.7) */
+/* SHT pin, used by tinyK22 to request Pi poweroff (only pre-V5 boards), connected to Raspy Header Pin #7 (BCM4, wPi7, GPIO.7) */
+/* HAT V3,V4,V5:  PTD3 <-> Raspy Header Pin #7 (BCM4, wPi7, GPIO.7) */
 #define PINS_ALERT_GPIO     GPIOD
 #define PINS_ALERT_PORT     PORTD
 #define PINS_ALERT_PIN      3U
@@ -224,5 +229,7 @@
 #define LV_CONFIG_DISPLAY_HEIGHT       (64)
 #define LV_CONFIG_COLOR_DEPTH          (1)
 #define LV_CONFIG_DPI                  (25)
+#define LV_USE_THEME_MONO              (1)
+
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -1,8 +1,10 @@
 /*
- * RaspyGPIO.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 20.07.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Handles GPIO pin connection to Raspberry Pi.
+ * See shutdown.c for required overlays on the Pi.
  */
 
 #include "platform.h"
@@ -13,6 +15,7 @@
 #include "leds.h"
 #include "shutdown.h"
 #include "McuSHT31.h"
+#include "McuUtility.h"
 
 static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initiate a shutdown */
 #if TINYK22_HAT_VERSION==5
@@ -191,17 +194,33 @@ void RGPIO_Init(void) {
 
   McuGPIO_GetDefaultConfig(&config);
 #if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
-  /* status pin which is used by Raspy to signal that the shutdown has been finished: input pin */
+  /* status pin which is used by Raspberry to signal to tinyK22 that the shutdown has been finished: input pin */
+#if TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4
+  /* configure gpio-poweroff to use the Red LED to indicate power-off in /boot/config.txt:
+   # State: Pin from Raspy which goes HIGH after a power down. Disable this for power-up functionality.
+   # Board V3 & V4: Using physical 40, BCM21 (Red LED)
+   dtoverlay=gpio-poweroff,gpiopin=21
+   */
+  /* nothing needed as using the (already) configured red LED for this */
+#elif TINYK22_HAT_VERSION==5
+  /* enabling the gpio-poweroff overlays will prevent the ability to boot by driving GPIO3 (SCL)low!
+  # State: Pin from Raspy which goes HIGH after a power down. Disable this for power-up functionality.
+  # Board V5: Using tinyGP_1 (physical 12, BCM18)
+  #dtoverlay=gpio-poweroff,gpiopin=18
+   */
   config.hw.gpio = PINS_GP_1_GPIO;
   config.hw.port = PINS_GP_1_PORT;
   config.hw.pin = PINS_GP_1_PIN;
+#else
+  #error "unknown configuration or not supported"
+#endif
   config.isInput = true;
   config.isHighOnInit = false;
   RGPIO_state = McuGPIO_InitGPIO(&config);
-#endif
+#endif /* PL_CONFIG_USE_POWER_DOWN_STATE_PIN */
 
 #if TINYK22_HAT_VERSION==5
-  /* wakeup pin which controls the connection of the I2C SCL signal: output pin */
+  /* wake-up pin which controls the connection of the I2C SCL signal: output pin */
   config.hw.gpio = PINS_WAKE_RASPY_GPIO;
   config.hw.port = PINS_WAKE_RASPY_PORT;
   config.hw.pin = PINS_WAKE_RASPY_PIN;
@@ -216,13 +235,13 @@ void RGPIO_Init(void) {
   config.isInput = false;
   config.isHighOnInit = true; /* a falling edge causes a power-down */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
-#else /* V3 & V4 */
-  /* shutdown pin to request a power-off: output pin */
+#else /* V3 & V4: we cannot wake-up the Pi, only request a power-off */
+  /* power-off request pin: output pin */
   config.hw.gpio = PINS_ALERT_GPIO;
   config.hw.port = PINS_ALERT_PORT;
   config.hw.pin = PINS_ALERT_PIN;
   config.isInput = false;
-  config.isHighOnInit = true; /* a falling edge causes a power-down */
+  config.isHighOnInit = true; /* a falling edge causes a power-off */
   RGPIO_shutdown = McuGPIO_InitGPIO(&config);
   /* note: the RED LED is used by the Raspy to indicate a successful shutdown */
 #endif

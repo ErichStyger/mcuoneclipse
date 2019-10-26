@@ -1,9 +1,13 @@
 /*
- * shutdown.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 11.04.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Implements shutdown and restart a Pi using GPIO pins.
+ * See
+ * https://mcuoneclipse.com/2019/05/05/building-a-raspberry-pi-ups-and-serial-login-console-with-tinyk22-nxp-k22fn512/
  */
+
 #include "platform.h"
 #include "shutdown.h"
 #include "McuWait.h"
@@ -61,44 +65,19 @@ Params: gpio_pin                GPIO pin to trigger on (default 3)
                                 Note that the default pin (GPIO3) has an
                                 external pullup.
 
-#if PL_CONFIG_USE_POWER_ON // enabling gpio-poweroff will prevent the ability to power-on. But then we do not have a pin to indicate the power-off
 #################################################
-# State: Pin from Raspy which goes HIGH after a power down. Disable this if you want a power-on functionality
-# Board V3 & V4: Using pyhsical 40, BCM21 (Red LED)
+# State: Pin from Raspy which goes HIGH after a power down. Disable this for power-up functionality.
+# Board V3 & V4: Using physical 40, BCM21 (Red LED)
 #dtoverlay=gpio-poweroff,gpiopin=21
 # Board V5: Using tinyGP_1 (physical 12, BCM18)
 #dtoverlay=gpio-poweroff,gpiopin=18
 
 ##################################################
-# Shutdown: Pin to request shutdown (pulling pin LOW) and power-up.
+# Shutdown: Pin to request shutdown (pulling pin LOW)
 # Board V3 & V4: BCM4 (SHT30 Alert)
 #dtoverlay=gpio-shutdown,gpio_pin=4,gpio_pull=up
 # Board V5: using tinyGP_0, (physical 11, BCM17)
-dtoverlay=gpio-shutdown,gpio_pin=17,gpio_pull=up
-
-#enable login console
-enable_uart=1
-
-#else
-#################################################
-# State: Pin from Raspy which goes HIGH after a power down. Disable this if you want a power-on functionality
-# Board V3 & V4: Using pyhsical 40, BCM21 (Red LED)
-#dtoverlay=gpio-poweroff,gpiopin=21
-# Board V5: Using tinyGP_1 (physical 12, BCM18)
-dtoverlay=gpio-poweroff,gpiopin=18
-
-##################################################
-# Shutdown: Pin to request shutdown (pulling pin LOW) and power-up:
-# Board V3 & V4: BCM4 (SHT30 Alert)
-#dtoverlay=gpio-shutdown,gpio_pin=4,gpio_pull=up
-# Board V5: using tinyGP_0, (physical 11, BCM17)
-dtoverlay=gpio-shutdown,gpio_pin=17,gpio_pull=up
-
-#enable login console
-enable_uart=1
-
-#endif
-
+#dtoverlay=gpio-shutdown,gpio_pin=17,gpio_pull=up
 
 Below the mapping for V3 & V4:
 +-----+-----+---------+------+---+---Pi 3+--+---+------+---------+-----+-----+
