@@ -117,7 +117,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[32], val, res;
 
-  McuShell_SendStatusStr((unsigned char*)"FT6206", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"FT6206", (unsigned char*)"Capacitive touch controller\r\n", io->stdOut);
 
   res = McuFT6206_ReadVendorID(&val); /* expect MCUFT62XX_VENDID */
   if (res==ERR_OK) {

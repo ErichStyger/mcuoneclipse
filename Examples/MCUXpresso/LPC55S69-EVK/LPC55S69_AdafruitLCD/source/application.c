@@ -19,8 +19,6 @@
 
 #include "McuGenericI2C.h"
 
-static SemaphoreHandle_t mutex;
-
 static void AppTask(void *pv) {
   for(;;) {
     McuLED_Toggle(LED_Green);
@@ -28,18 +26,10 @@ static void AppTask(void *pv) {
   }
 }
 
-static TimerHandle_t timerHndl;
-#define TIMER_PERIOD_MS 100
-
-static void vTimerCallback(TimerHandle_t pxTimer) {
-  /* TIMER_PERIOD_MS ms timer */
-}
-
 void APP_Run(void) {
   PL_Init(); /* init modules */
-
   McuShell_SendStr((unsigned char*)"\r\n*** LPC55S69 with Adafruit LCD ***\r\n", McuShell_GetStdio()->stdOut);
-#if 0
+#if 0 /* test code for LED */
   McuLED_On(LED_Red);
   McuWait_Waitms(100);
   McuLED_Off(LED_Red);
@@ -61,17 +51,6 @@ void APP_Run(void) {
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
-  }
-  timerHndl = xTimerCreate("timer0", pdMS_TO_TICKS(TIMER_PERIOD_MS), pdTRUE, (void *)0, vTimerCallback);
-  if (timerHndl==NULL) {
-    for(;;); /* failure! */
-  }
-  if (xTimerStart(timerHndl, 0)!=pdPASS) {
-    for(;;); /* failure! */
-  }
-  mutex = xSemaphoreCreateMutex();
-  if (mutex!=NULL) {
-    vQueueAddToRegistry(mutex, "Mutex");
   }
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }

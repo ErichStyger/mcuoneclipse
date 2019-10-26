@@ -38,7 +38,7 @@ uint8_t TOUCH_Poll(bool *pressed, uint16_t *x, uint16_t *y) {
   if (McuFT6206_ReadNofTouches(&val)==ERR_OK) {
     if (val>0) { /* there are touches */
       res = McuFT6206_ReadPoint(0, &point);
-      if (point.z>0) {
+      if (point.z>0) { /* z indicates how strong it was pressed */
         val = 0;
       }
       if (res==ERR_OK && point.z>0) {
@@ -46,7 +46,7 @@ uint8_t TOUCH_Poll(bool *pressed, uint16_t *x, uint16_t *y) {
         *pressed = true;
         *x = point.x;
         *y = point.y;
-        return 1; /* touched */
+        return ERR_OK; /* touched */
       }
     }
   }

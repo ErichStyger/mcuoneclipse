@@ -317,11 +317,12 @@ lv_calendar_date_t * lv_calendar_get_showed_date(const lv_obj_t * calendar)
  * Get the the pressed date.
  * @param calendar pointer to a calendar object
  * @return pointer to an `lv_calendar_date_t` variable containing the pressed date.
+ * `NULL` if not date pressed (e.g. the header)
  */
 lv_calendar_date_t * lv_calendar_get_pressed_date(const lv_obj_t * calendar)
 {
     lv_calendar_ext_t * ext = lv_obj_get_ext_attr(calendar);
-    return &ext->pressed_date;
+    return ext->pressed_date.year != 0 ? &ext->pressed_date : NULL;
 }
 
 /**
@@ -786,7 +787,7 @@ static void draw_days(lv_obj_t * calendar, const lv_area_t * mask)
             }
 
             label_area.x1 =
-                calendar->coords.x1 + (w * day) / 7 + style_bg->body.padding.left + style_bg->body.padding.right;
+                calendar->coords.x1 + (w * day) / 7 + style_bg->body.padding.left;
             label_area.x2 = label_area.x1 + box_w - 1;
 
             /*Draw the "today box"*/

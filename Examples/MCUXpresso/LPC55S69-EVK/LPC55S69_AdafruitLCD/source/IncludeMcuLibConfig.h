@@ -85,5 +85,9 @@
 #define LV_CONFIG_DPI                  (50)
 #define LV_CONFIG_COLOR_16_SWAP        (1)
 
+/* -------------------------------------------------*/
+/* FT6206 capacitive touch controller */
+#define MCUFT6206_CONFIG_DEFAULT_THRESHOLD   (40)
+
 #endif /* INCLUDEMCULIBCONFIG_H_ */
 
