@@ -20,14 +20,15 @@
 #define PL_CONFIG_USE_UPS                 (1 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY             (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing UART gateway to Raspberry Pi */
 #define PL_CONFIG_USE_RASPY_UART          (1 && PL_CONFIG_USE_RASPBERRY) /* uses UART to Raspy as interface for joystick, led and sensor values */
-#define PL_CONFIG_USE_SHUTDOWN            (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */
 #define PL_CONFIG_USE_SHELL               (1) /* if shell is enabled, uses RTT */
+#define PL_CONFIG_USE_USB_CDC             (1)
+#define PL_CONFIG_USE_SHUTDOWN            (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */
+#define PL_CONFIG_USE_POWER_ON            (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION==5) /* ability to power up Raspy, only possible with Rev5 of the board. See shutdown.c for Raspy settings! */
+
 #define PL_CONFIG_USE_GUI                 (1 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
 #define PL_CONFIG_USE_GUI_SCREENSAVER     (1 && PL_CONFIG_USE_GUI)
-#define PL_CONFIG_USE_TOASTER             (1 && PL_CONFIG_USE_GUI_SCREENSAVER) /* flying toaster screensaver, otherwise blanks screen */
+#define PL_CONFIG_USE_TOASTER             (1 && PL_CONFIG_USE_GUI_SCREENSAVER) /* flying toaster screen saver, otherwise blanks screen */
 #define PL_CONFIG_USE_GUI_KEY_NAV         (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)
-#define PL_CONFIG_USE_USB_CDC             (1)
-#define PL_CONFIG_USE_POWER_ON            (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION==5) /* ability to power up Raspy, only possible with Rev5 of the board. See shutdown.c for Raspy settings! */
 
 #define PL_CONFIG_USE_POWER_DOWN_STATE_PIN  (1 && PL_CONFIG_USE_RASPBERRY && !PL_CONFIG_USE_POWER_ON && TINYK22_HAT_VERSION==5) /* Raspy can indicate power down with a state pin. Not possible with wake-up functionality. On pre-V5 uses red LED instead. */
 #define PL_CONFIG_USE_POWER_DOWN_RED_LED    (1 && PL_CONFIG_USE_RASPBERRY && (TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4 || !PL_CONFIG_USE_POWER_ON)) /* uses the red HAT led as power down indicator */
@@ -41,7 +42,7 @@
 #define PL_CONFIG_HAS_RTC_DS3231    (0)
 
 /* ESP32 related */
-#define PL_CONFIG_USE_ESP32           (0)
+#define PL_CONFIG_USE_ESP32         (0)
 
 void PL_Init(void);
 void PL_Deinit(void);

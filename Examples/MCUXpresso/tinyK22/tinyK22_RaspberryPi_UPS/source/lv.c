@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -62,7 +61,7 @@ static void KeyPressForLCD(void) {
 
 static lv_indev_t *inputDevicePtr;
 
-lv_indev_t * LV_GetInputDevice(void) {
+lv_indev_t *LV_GetInputDevice(void) {
   return inputDevicePtr;
 }
 
@@ -70,10 +69,15 @@ lv_indev_t * LV_GetInputDevice(void) {
  * You can use DMA or any hardware acceleration to do this operation in the background but
  * 'lv_flush_ready()' has to be called when finished
  * This function is required only when LV_VDB_SIZE != 0 in lv_conf.h*/
-static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t * color_p) {
+static void myDispFlush(lv_disp_drv_t *disp_drv, const lv_area_t *area, lv_color_t *color_p) {
   /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
   int32_t x, y;
+  int32_t x1, y1, x2, y2;
 
+  x1 = area->x1;
+  y1 = area->y1;
+  x2 = area->x2;
+  y2 = area->y2;
   for(y = y1; y <= y2; y++) {
     for(x = x1; x <= x2; x++) {
       /* Put a pixel to the display. */
@@ -84,68 +88,8 @@ static void ex_disp_flush(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const 
   LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
   /* IMPORTANT!!!
    * Inform the graphics library that you are ready with the flushing*/
-  lv_flush_ready();
+  lv_disp_flush_ready(disp_drv);
 }
-
-/* Write a pixel array (called 'map') to the a specific area on the display
- * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_map(int32_t x1, int32_t y1, int32_t x2, int32_t y2, const lv_color_t *color_p) {
-  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  int32_t x, y;
-
-  for(y = y1; y <= y2; y++) {
-      for(x = x1; x <= x2; x++) {
-        /* Put a pixel to the display.*/
-        LCD_SetPixel(x, y, color_p->full);
-        color_p++;
-      }
-  }
-  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-}
-
-/* Write a pixel array (called 'map') to the a specific area on the display
- * This function is required only when LV_VDB_SIZE == 0 in lv_conf.h*/
-static void ex_disp_fill(int32_t x1, int32_t y1, int32_t x2, int32_t y2,  lv_color_t color) {
-  /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
-  int32_t x;
-  int32_t y;
-
-  for(y = y1; y <= y2; y++) {
-    for(x = x1; x <= x2; x++) {
-      /* Put a pixel to the display.*/
-      LCD_SetPixel(x, y, color.full);
-    }
-  }
-  LCD_UpdateRegion(x1, y1, x2-x1+1, y2-y1+1);
-}
-
-#if USE_LV_GPU
-
-/* If your MCU has hardware accelerator (GPU) then you can use it to blend to memories using opacity
- * It can be used only in buffered mode (LV_VDB_SIZE != 0 in lv_conf.h)*/
-static void ex_mem_blend(lv_color_t * dest, const lv_color_t * src, uint32_t length, lv_opa_t opa)
-{
-    /*It's an example code which should be done by your GPU*/
-
-    int32_t i;
-    for(i = 0; i < length; i++) {
-        dest[i] = lv_color_mix(dest[i], src[i], opa);
-    }
-}
-
-/* If your MCU has hardware accelerator (GPU) then you can use it to fill a memory with a color
- * It can be used only in buffered mode (LV_VDB_SIZE != 0 in lv_conf.h)*/
-static void ex_mem_fill(lv_color_t * dest, uint32_t length, lv_color_t color)
-{
-    /*It's an example code which should be done by your GPU*/
-
-    int32_t i;
-    for(i = 0; i < length; i++) {
-        dest[i] = color;
-    }
-}
-
-#endif
 
 #if 0
 /* Read the touchpad and store it in 'data'
@@ -321,8 +265,7 @@ static bool keyboard_read(lv_indev_data_t *data)  {
   return McuRB_NofElements(ringBufferHndl)!=0;   /* return true if we have more data */
 }
 #endif
-
-static bool encoder_read(lv_indev_data_t *data){
+static bool encoder_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
   uint16_t keyData;
 
   memset(data, 0, sizeof(lv_indev_data_t)); /* initialize all fields */
@@ -446,21 +389,24 @@ static bool encoder_read(lv_indev_data_t *data){
   return McuRB_NofElements(ringBufferHndl)!=0;   /* return true if we have more data */
 }
 
+
+/*A static or global variable to store the buffers*/
+static lv_disp_buf_t disp_buf;
+
+/*Static or global buffer(s). The second buffer is optional*/
+static lv_color_t buf_1[LV_CONFIG_DISPLAY_WIDTH * 10];
+static lv_color_t buf_2[LV_CONFIG_DISPLAY_WIDTH * 10];
+
 void LV_Init(void) {
   lv_disp_drv_t disp_drv;
 
   lv_init();
   lv_disp_drv_init(&disp_drv);
-  /*Set up the functions to access to your display*/
-  disp_drv.disp_flush = ex_disp_flush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
-  disp_drv.disp_fill = ex_disp_fill;              /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
-  disp_drv.disp_map = ex_disp_map;                /*Used in unbuffered mode (LV_VDB_SIZE == 0  in lv_conf.h)*/
 
-#if USE_LV_GPU
-  /*Optionally add functions to access the GPU. (Only in buffered mode, LV_VDB_SIZE != 0)*/
-  disp_drv.mem_blend = ex_mem_blend;              /*Blend two color array using opacity*/
-  disp_drv.mem_fill = ex_mem_fill;                /*Fill a memory array with a color*/
-#endif
+  lv_disp_buf_init(&disp_buf, buf_1, buf_2, LV_CONFIG_DISPLAY_WIDTH*10);
+  disp_drv.buffer = &disp_buf;
+  /*Set up the functions to access to your display*/
+  disp_drv.flush_cb = myDispFlush;            /*Used in buffered mode (LV_VDB_SIZE != 0  in lv_conf.h)*/
 
   /*Finally register the driver*/
   lv_disp_drv_register(&disp_drv);
@@ -475,7 +421,7 @@ void LV_Init(void) {
   indev_drv.read = ex_tp_read;                 /*Library ready your touchpad via this function*/
 #elif 1
   indev_drv.type = LV_INDEV_TYPE_ENCODER;
-  indev_drv.read = encoder_read;
+  indev_drv.read_cb = encoder_read;
 #else /* keyboard input */
   indev_drv.type = LV_INDEV_TYPE_KEYPAD;
   indev_drv.read = keyboard_read;

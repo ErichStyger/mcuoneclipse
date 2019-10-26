@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
- *  Created on: 03.08.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "platform.h"
 #if PL_CONFIG_USE_GUI
 
@@ -18,6 +17,7 @@
 #include "McuSSD1306.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
+#include "McuUtility.h"
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
@@ -49,7 +49,7 @@ typedef struct {
 static GUI_Group_t groups;
 
 /* style modification callback for the focus of an element */
-static void style_mod_cb(lv_style_t *style) {
+static void style_mod_cb(struct _lv_group_t *grp, lv_style_t *style) {
 #if LV_COLOR_DEPTH != 1
     /*Make the style to be a little bit orange*/
     style->body.border.opa = LV_OPA_COVER;
@@ -129,39 +129,45 @@ void GUI_ChangeOrientation(McuSSD1306_DisplayOrientation orientation) {
 }
 
 #if PL_CONFIG_USE_UPS
-static lv_res_t btn_click_ups_action(struct _lv_obj_t *obj) {
-  GUI_UPS_CreateView();
-  return LV_RES_OK;
+static void btn_click_ups_action(struct _lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    GUI_UPS_CreateView();
+  }
 }
 #endif
 
 #if PL_CONFIG_USE_GATEWAY
-static lv_res_t btn_click_uart_action(struct _lv_obj_t *obj) {
-  GUI_UART_CreateView();
-  return LV_RES_OK;
+static void btn_click_uart_action(struct _lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    GUI_UART_CreateView();
+  }
 }
 #endif
 
 #if PL_CONFIG_USE_SHT31
-static lv_res_t btn_click_sht31_action(struct _lv_obj_t *obj) {
-  GUI_TEMPHUM_CreateView();
-  return LV_RES_OK;
+static void btn_click_sht31_action(struct _lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    GUI_TEMPHUM_CreateView();
+  }
 }
 #endif
 
 #if PL_CONFIG_USE_SHUTDOWN
 static lv_obj_t *mboxShutdown, *mboxShutdownWait;
 
-static lv_res_t mbox_shutdownWait_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "OK")==0) {
+static void mbox_shutdownWait_apply_action(lv_obj_t *mbox, lv_event_t event) {
+  if (event == LV_EVENT_DELETE && mbox==mboxShutdownWait) {
+    #if PL_CONFIG_USE_GUI_KEY_NAV
       GUI_GroupPull();
+    #endif
+      mboxShutdownWait = NULL;
+  } else if (event == LV_EVENT_VALUE_CHANGED) {
+    const char *txt = lv_mbox_get_active_btn_text(mbox);
+    if (McuUtility_strcmp(txt, "\221OK")==0) {
       lv_obj_del(mboxShutdownWait);
       mboxShutdownWait = NULL;
-      return LV_RES_INV; /* close/delete message box */
     }
   }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
 static void Btn_shutdown_CreateWaitBox(void) {
@@ -173,64 +179,70 @@ static void Btn_shutdown_CreateWaitBox(void) {
 #endif
   /*Add OK button*/
   static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxShutdownWait, btns, mbox_shutdownWait_apply_action);
+  lv_mbox_add_btns(mboxShutdownWait, btns);
+  lv_obj_set_event_cb(mboxShutdownWait, mbox_shutdownWait_apply_action);
   lv_obj_set_width(mboxShutdownWait, 100);
   lv_obj_align(mboxShutdownWait, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
   GUI_AddObjToGroup(mboxShutdownWait);
+#endif
   lv_group_focus_obj(mboxShutdownWait);
 }
 
-static lv_res_t mbox_shutdown_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "Yes")==0) {
+static void mbox_shutdown_apply_action(lv_obj_t *mbox, lv_event_t event) {
+  if (event == LV_EVENT_DELETE && mbox==mboxShutdown) {
+    #if PL_CONFIG_USE_GUI_KEY_NAV
+      GUI_GroupPull();
+    #endif
+      mboxShutdown = NULL;
+  } else if (event == LV_EVENT_VALUE_CHANGED) {
+    const char *txt = lv_mbox_get_active_btn_text(mbox);
+    if (McuUtility_strcmp(txt, "\221Yes")==0) {
       SHUTDOWN_RequestPowerOff(); /* request shutdown to Linux */
-      GUI_GroupPull();
-      lv_obj_del(mboxShutdown);
-      mboxShutdown = NULL;
       Btn_shutdown_CreateWaitBox();
-      return LV_RES_INV; /* close/delete message box */
-    } else if (McuUtility_strcmp(txt, "Cancel")==0) {
-      GUI_GroupPull();
+    } else if (McuUtility_strcmp(txt, "\221Cancel")==0) {
       lv_obj_del(mboxShutdown);
-      mboxShutdown = NULL;
-      return LV_RES_INV; /* close/delete message box */
     }
   }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
-static lv_res_t btn_click_shutdown_action(struct _lv_obj_t *obj) {
-  mboxShutdown = lv_mbox_create(lv_scr_act(), NULL);
-  lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
-  /*Add two buttons*/
-  static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxShutdown, btns, mbox_shutdown_apply_action);
-  lv_obj_set_width(mboxShutdown, 80);
-  lv_obj_align(mboxShutdown, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
+static void btn_click_shutdown_action(struct _lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    mboxShutdown = lv_mbox_create(lv_scr_act(), NULL);
+    lv_mbox_set_text(mboxShutdown, "Shutdown Raspy?");  /*Set the text*/
+    /*Add two buttons*/
+    static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
+    lv_mbox_add_btns(mboxShutdown, btns);
+    lv_obj_set_event_cb(mboxShutdown, mbox_shutdown_apply_action);
+    lv_obj_set_width(mboxShutdown, 100);
+    lv_obj_align(mboxShutdown, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
-  GUI_GroupPush();
-  GUI_AddObjToGroup(mboxShutdown);
-  lv_group_focus_obj(mboxShutdown);
-
-  return LV_RES_OK;
+  #if PL_CONFIG_USE_GUI_KEY_NAV
+    GUI_GroupPush();
+    GUI_AddObjToGroup(mboxShutdown);
+  #endif
+    lv_group_focus_obj(mboxShutdown);
+  }
 }
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 
 #if PL_CONFIG_USE_POWER_ON
 static lv_obj_t *mboxPoweron, *mboxPoweronWait;
 
-static lv_res_t mbox_poweronWait_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "OK")==0) {
+static void mbox_poweronWait_apply_action(lv_obj_t *mbox, lv_event_t event) {
+  if (event == LV_EVENT_DELETE && mbox==mboxPoweronWait) {
+    #if PL_CONFIG_USE_GUI_KEY_NAV
       GUI_GroupPull();
-      lv_obj_del(mboxPoweronWait);
+    #endif
       mboxPoweronWait = NULL;
-      return LV_RES_INV; /* close/delete message box */
+  } else if (event == LV_EVENT_VALUE_CHANGED) {
+    const char *txt = lv_mbox_get_active_btn_text(mbox);
+    if (McuUtility_strcmp(txt, "\221OK")==0) {
+      lv_obj_del(mboxPoweronWait);
     }
   }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
 static void Btn_poweron_CreateWaitBox(void) {
@@ -238,48 +250,52 @@ static void Btn_poweron_CreateWaitBox(void) {
   lv_mbox_set_text(mboxPoweronWait, "Poweron in progress.");  /* Set the text */
   /*Add OK button*/
   static const char * btns[] ={"\221OK", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxPoweronWait, btns, mbox_poweronWait_apply_action);
+  lv_mbox_add_btns(mboxPoweronWait, btns);
+  lv_obj_set_event_cb(mboxPoweronWait, mbox_poweronWait_apply_action);
   lv_obj_set_width(mboxPoweronWait, 100);
   lv_obj_align(mboxPoweronWait, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
   GUI_AddObjToGroup(mboxPoweronWait);
+#endif
   lv_group_focus_obj(mboxPoweronWait);
 }
 
-static lv_res_t mbox_poweron_apply_action(lv_obj_t *mbox, const char *txt) {
-  if (txt!=NULL) {
-    if (McuUtility_strcmp(txt, "Yes")==0) {
-      SHUTDOWN_RequestPowerOn(); /* request powerone to Linux */
+static void mbox_poweron_apply_action(lv_obj_t *mbox, lv_event_t event) {
+  if (event == LV_EVENT_DELETE && mbox==mboxPoweron) {
+    #if PL_CONFIG_USE_GUI_KEY_NAV
       GUI_GroupPull();
-      lv_obj_del(mboxPoweron);
+    #endif
       mboxPoweron = NULL;
+  } else if (event == LV_EVENT_VALUE_CHANGED) {
+    const char *txt = lv_mbox_get_active_btn_text(mbox);
+    if (McuUtility_strcmp(txt, "\221Yes")==0) {
+      SHUTDOWN_RequestPowerOn(); /* request power-on to Linux */
       Btn_poweron_CreateWaitBox();
-      return LV_RES_INV; /* close/delete message box */
-    } else if (McuUtility_strcmp(txt, "Cancel")==0) {
-      GUI_GroupPull();
+    } else if (McuUtility_strcmp(txt, "\221Cancel")==0) {
       lv_obj_del(mboxPoweron);
-      mboxPoweron = NULL;
-      return LV_RES_INV; /* close/delete message box */
     }
   }
-  return LV_RES_OK; /*Return OK if the message box is not deleted*/
 }
 
-static lv_res_t btn_click_poweron_action(struct _lv_obj_t *obj) {
-  mboxPoweron = lv_mbox_create(lv_scr_act(), NULL);
-  lv_mbox_set_text(mboxPoweron, "Poweron Raspy?");  /*Set the text*/
-  /*Add two buttons*/
-  static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
-  lv_mbox_add_btns(mboxPoweron, btns, mbox_poweron_apply_action);
-  lv_obj_set_width(mboxPoweron, 80);
-  lv_obj_align(mboxPoweron, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
+static void btn_click_poweron_action(struct _lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    mboxPoweron = lv_mbox_create(lv_scr_act(), NULL);
+    lv_mbox_set_text(mboxPoweron, "Poweron Raspy?");  /*Set the text*/
+    /*Add two buttons*/
+    static const char * btns[] ={"\221Yes", "\221Cancel", ""}; /*Button description. '\221' lv_btnm like control char*/
+    lv_mbox_add_btns(mboxPoweron, btns);
+    lv_obj_set_event_cb(mboxPoweron, mbox_poweron_apply_action);
+    lv_obj_set_width(mboxPoweron, 100);
+    lv_obj_align(mboxPoweron, lv_scr_act(), LV_ALIGN_CENTER, 0, 0); /*Align to center */
 
-  GUI_GroupPush();
-  GUI_AddObjToGroup(mboxPoweron);
-  lv_group_focus_obj(mboxPoweron);
-
-  return LV_RES_OK;
+#if PL_CONFIG_USE_GUI_KEY_NAV
+    GUI_GroupPush();
+    GUI_AddObjToGroup(mboxPoweron);
+#endif
+    lv_group_focus_obj(mboxPoweron);
+  }
 }
 
 #endif /* #if PL_CONFIG_USE_POWER_ON */
@@ -294,8 +310,7 @@ void GUI_MainMenuCreate(void) {
   /* create window */
   gui_win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(gui_win, "Main Menu");
-  //int size = lv_win_get_btn_size(gui_win);
-  //lv_win_set_btn_size(gui_win, 8);
+  lv_win_set_btn_size(gui_win, 15);
   lv_win_set_sb_mode(gui_win, LV_SB_MODE_OFF); /* no scroll bar */
 
   /* Make the window content responsive */
@@ -311,20 +326,26 @@ void GUI_MainMenuCreate(void) {
   lv_obj_set_size(btn, 45, 20);
   lv_obj_set_pos(btn, 5, 0);
 #endif
+  lv_obj_set_event_cb(btn, btn_click_shutdown_action);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Shutdown");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_shutdown_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 
 #if PL_CONFIG_USE_POWER_ON
   btn = lv_btn_create(gui_win, NULL);
+  lv_obj_set_event_cb(btn, btn_click_poweron_action);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Poweron");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_poweron_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 
 #if PL_CONFIG_USE_SHT31
@@ -336,9 +357,11 @@ void GUI_MainMenuCreate(void) {
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "SHT31");
   //lv_obj_set_free_num(btn, 1);   /*Set a unique number for the button*/
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_sht31_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  lv_obj_set_event_cb(btn, btn_click_sht31_action);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_SHT31 */
 
 #if PL_CONFIG_USE_UPS
@@ -349,9 +372,11 @@ void GUI_MainMenuCreate(void) {
 #endif
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "UPS");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_ups_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  lv_obj_set_event_cb(btn, btn_click_ups_action);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_UPS */
 
 #if PL_CONFIG_USE_GATEWAY
@@ -362,28 +387,12 @@ void GUI_MainMenuCreate(void) {
 #endif
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "UART");
-  lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, btn_click_uart_action);
-  lv_btn_set_fit(btn, true, true); /* set auto fit to text */
+  lv_obj_set_event_cb(btn, btn_click_uart_action);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
+#endif
 #endif /* PL_CONFIG_USE_GATEWAY */
-
-
-#if 0
-  /* create list of objects */
-  lv_obj_t *list1;
-  lv_obj_t *obj;
-
-  list1 = lv_list_create(gui_win, NULL);
-  /*Add list elements*/
-
-//  obj = lv_list_add(list1, SYMBOL_FILE, "About", Btn_About_click_action);
-//  GUI_AddObjToGroup(obj);
-#if 1 || PL_CONFIG_HAS_MMA8451
-  obj = lv_list_add(list1, SYMBOL_FILE, "Accel", Btn_Accel_click_action);
-  GUI_AddObjToGroup(obj);
-#endif
-  lv_obj_set_size(list1, 100, 40); /* fixed size */
-#endif
 }
 
 
@@ -405,29 +414,29 @@ static void GuiTask(void *p) {
         area.y1 = 0;
         area.x2 = McuGDisplaySSD1306_GetWidth()-1;
         area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-        lv_inv_area(&area);
-        lv_refr_now();
+        lv_inv_area(NULL, &area);
+        lv_inv_area(NULL, &area);
       } else if (notifcationValue&GUI_SET_ORIENTATION_LANDSCAPE180) {
         McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
         area.x1 = 0;
         area.y1 = 0;
         area.x2 = McuGDisplaySSD1306_GetWidth()-1;
         area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-        lv_inv_area(&area);
+        lv_inv_area(NULL, &area);
       } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT) {
         McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT);
         area.x1 = 0;
         area.y1 = 0;
         area.x2 = McuGDisplaySSD1306_GetWidth()-1;
         area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-        lv_inv_area(&area);
+        lv_inv_area(NULL, &area);
       } else if (notifcationValue&GUI_SET_ORIENTATION_PORTRAIT180) {
         McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_PORTRAIT180);
         area.x1 = 0;
         area.y1 = 0;
         area.x2 = McuGDisplaySSD1306_GetWidth()-1;
         area.y2 = McuGDisplaySSD1306_GetHeight()-1;
-        lv_inv_area(&area);
+        lv_inv_area(NULL, &area);
         lv_obj_invalidate(lv_scr_act());
       }
     }
@@ -459,7 +468,7 @@ void GUI_Init(void) {
   // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
   // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 3*1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
   }
   timerHndl = xTimerCreate(  /* timer to handle periodic things */

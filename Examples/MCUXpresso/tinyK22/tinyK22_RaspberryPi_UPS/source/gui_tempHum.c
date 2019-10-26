@@ -1,8 +1,7 @@
 /*
- * gui_tempHum.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 06.08.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -35,20 +34,23 @@ static lv_task_t *refr_task;
  * @param btn pointer to the close button
  * @return LV_ACTION_RES_INV because the window is deleted in the function
  */
-static lv_res_t win_close_action(lv_obj_t *btn) {
-  GUI_GroupPull();
-  lv_obj_del(win);
-  win = NULL;
-  lv_task_del(refr_task);
-  refr_task = NULL;
-  return LV_RES_INV;
+static void win_close_action(lv_obj_t *btn, lv_event_t event) {
+  if (event==LV_EVENT_RELEASED) {
+  #if PL_CONFIG_USE_GUI_KEY_NAV
+    GUI_GroupPull();
+  #endif
+    lv_obj_del(win);
+    win = NULL;
+    lv_task_del(refr_task);
+    refr_task = NULL;
+  }
 }
 
 /**
  * Called periodically to monitor the LED.
  * @param param unused
  */
-static void refresh_task(void *param) {
+static void refresh_task(struct _lv_task_t *param) {
   unsigned char buf[48];
   float temperature, humidity;
   int16_t chart_tvalue;
@@ -90,9 +92,13 @@ void GUI_TEMPHUM_CreateView(void) {
 
   win = lv_win_create(lv_scr_act(), NULL);
   lv_win_set_title(win, "SHT31");
-  closeBtn = lv_win_add_btn(win, SYMBOL_CLOSE, win_close_action);
+  lv_win_set_btn_size(win, 15);
+  closeBtn = lv_win_add_btn(win, LV_SYMBOL_CLOSE);
+  lv_obj_set_event_cb(closeBtn, win_close_action);
+#if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
   GUI_AddObjToGroup(closeBtn);
+#endif
   lv_group_focus_obj(closeBtn);
   /* Make the window content responsive */
   lv_win_set_layout(win, LV_LAYOUT_PRETTY);

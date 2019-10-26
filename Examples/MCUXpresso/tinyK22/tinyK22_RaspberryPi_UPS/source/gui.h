@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,7 +11,7 @@
 #include "McuGDisplaySSD1306.h"
 
 #if PL_CONFIG_USE_GUI_KEY_NAV
-  #include "LittlevGL/lvgl/lv_core/lv_group.h"
+  #include "LittlevGL/lvgl/src/lv_core/lv_group.h"
 
   lv_group_t *GUI_GroupPeek(void);
   void GUI_GroupPull(void);
