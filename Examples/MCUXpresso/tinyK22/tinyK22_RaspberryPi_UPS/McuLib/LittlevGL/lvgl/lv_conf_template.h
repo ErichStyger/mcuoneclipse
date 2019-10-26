@@ -7,38 +7,21 @@
  * COPY THIS FILE AS `lv_conf.h` NEXT TO the `lvgl` FOLDER
  */
 
-#if 1 /*Set it to "1" to enable content*/
+#if 0 /*Set it to "1" to enable content*/
 
 #ifndef LV_CONF_H
 #define LV_CONF_H
 /* clang-format off */
 
-#include "McuLib.h"
 #include <stdint.h>
 
 /*====================
    Graphical settings
  *====================*/
 
-#ifndef LV_CONFIG_DISPLAY_WIDTH
-  #define LV_CONFIG_DISPLAY_WIDTH        (64)
-#endif
-#ifndef LV_CONFIG_DISPLAY_HEIGHT
-  #define LV_CONFIG_DISPLAY_HEIGHT       (32)
-#endif
-#ifndef LV_CONFIG_COLOR_DEPTH
-  #define LV_CONFIG_COLOR_DEPTH          (8)
-#endif
-#ifndef LV_CONFIG_DPI
-  #define LV_CONFIG_DPI                  (25)
-#endif
-#ifndef LV_CONFIG_COLOR_16_SWAP
-  #define LV_CONFIG_COLOR_16_SWAP        (0)
-#endif
-
 /* Maximal horizontal and vertical resolution to support by the library.*/
-#define LV_HOR_RES_MAX          (LV_CONFIG_DISPLAY_WIDTH)
-#define LV_VER_RES_MAX          (LV_CONFIG_DISPLAY_HEIGHT)
+#define LV_HOR_RES_MAX          (480)
+#define LV_VER_RES_MAX          (320)
 
 /* Color depth:
  * - 1:  1 byte per pixel
@@ -46,11 +29,11 @@
  * - 16: RGB565
  * - 32: ARGB8888
  */
-#define LV_COLOR_DEPTH     LV_CONFIG_COLOR_DEPTH
+#define LV_COLOR_DEPTH     16
 
 /* Swap the 2 bytes of RGB565 color.
  * Useful if the display has a 8 bit interface (e.g. SPI)*/
-#define LV_COLOR_16_SWAP   LV_CONFIG_COLOR_16_SWAP
+#define LV_COLOR_16_SWAP   0
 
 /* 1: Enable screen transparency.
  * Useful for OSD or other overlapping GUIs.
@@ -70,7 +53,7 @@
 /* Dot Per Inch: used to initialize default sizes.
  * E.g. a button with width = LV_DPI / 2 -> half inch wide
  * (Not so important, you can adjust it to modify default sizes and spaces)*/
-#define LV_DPI              LV_CONFIG_DPI     /*[px]*/
+#define LV_DPI              100     /*[px]*/
 
 /* Type of coordinates. Should be `int16_t` (or `int32_t` for extreme cases) */
 typedef int16_t lv_coord_t;
@@ -83,7 +66,7 @@ typedef int16_t lv_coord_t;
  * The graphical objects and other related data are stored here. */
 
 /* 1: use custom malloc/free, 0: use the built-in `lv_mem_alloc` and `lv_mem_free` */
-#define LV_MEM_CUSTOM      McuLib_CONFIG_SDK_USE_FREERTOS
+#define LV_MEM_CUSTOM      0
 #if LV_MEM_CUSTOM == 0
 /* Size of the memory used by `lv_mem_alloc` in bytes (>= 2kB)*/
 #  define LV_MEM_SIZE    (32U * 1024U)
@@ -98,9 +81,9 @@ typedef int16_t lv_coord_t;
 /* Automatically defrag. on free. Defrag. means joining the adjacent free cells. */
 #  define LV_MEM_AUTO_DEFRAG  1
 #else       /*LV_MEM_CUSTOM*/
-#  define LV_MEM_CUSTOM_INCLUDE "FreeRTOS.h"   /*Header for the dynamic memory function*/
-#  define LV_MEM_CUSTOM_ALLOC   pvPortMalloc   /*Wrapper to malloc*/
-#  define LV_MEM_CUSTOM_FREE    vPortFree      /*Wrapper to free*/
+#  define LV_MEM_CUSTOM_INCLUDE <stdlib.h>   /*Header for the dynamic memory function*/
+#  define LV_MEM_CUSTOM_ALLOC   malloc       /*Wrapper to malloc*/
+#  define LV_MEM_CUSTOM_FREE    free         /*Wrapper to free*/
 #endif     /*LV_MEM_CUSTOM*/
 
 /* Garbage Collector settings
@@ -141,7 +124,7 @@ typedef int16_t lv_coord_t;
  *==================*/
 
 /*1: Enable the Animations */
-#define LV_USE_ANIMATION        0
+#define LV_USE_ANIMATION        1
 #if LV_USE_ANIMATION
 
 /*Declare the type of the user data of animations (can be e.g. `void *`, `int`, `struct`)*/
@@ -159,7 +142,7 @@ typedef void * lv_group_user_data_t;
 #endif  /*LV_USE_GROUP*/
 
 /* 1: Enable GPU interface*/
-#define LV_USE_GPU              0
+#define LV_USE_GPU              1
 
 /* 1: Enable file system (might be required for images */
 #define LV_USE_FILESYSTEM       1
@@ -252,27 +235,13 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 #define LV_THEME_LIVE_UPDATE    0   /*1: Allow theme switching at run time. Uses 8..10 kB of RAM*/
 
 #define LV_USE_THEME_TEMPL      0   /*Just for test*/
-#ifndef LV_USE_THEME_DEFAULT
-  #define LV_USE_THEME_DEFAULT    0   /*Built mainly from the built-in styles. Consumes very few RAM*/
-#endif
-#ifndef LV_USE_THEME_ALIEN
-  #define LV_USE_THEME_ALIEN      0   /*Dark futuristic theme*/
-#endif
-#ifndef LV_USE_THEME_NIGHT
-  #define LV_USE_THEME_NIGHT      0   /*Dark elegant theme*/
-#endif
-#ifndef LV_USE_THEME_MONO
-  #define LV_USE_THEME_MONO       0   /*Mono color theme for monochrome displays*/
-#endif
-#ifndef LV_USE_THEME_MATERIAL
-  #define LV_USE_THEME_MATERIAL   0   /*Flat theme with bold colors and light shadows*/
-#endif
-#ifndef LV_USE_THEME_ZEN
-  #define LV_USE_THEME_ZEN        0   /*Peaceful, mainly light theme */
-#endif
-#ifndef LV_USE_THEME_NEMO
-  #define LV_USE_THEME_NEMO       0   /*Water-like theme based on the movie "Finding Nemo"*/
-#endif
+#define LV_USE_THEME_DEFAULT    0   /*Built mainly from the built-in styles. Consumes very few RAM*/
+#define LV_USE_THEME_ALIEN      0   /*Dark futuristic theme*/
+#define LV_USE_THEME_NIGHT      0   /*Dark elegant theme*/
+#define LV_USE_THEME_MONO       0   /*Mono color theme for monochrome displays*/
+#define LV_USE_THEME_MATERIAL   0   /*Flat theme with bold colors and light shadows*/
+#define LV_USE_THEME_ZEN        0   /*Peaceful, mainly light theme */
+#define LV_USE_THEME_NEMO       0   /*Water-like theme based on the movie "Finding Nemo"*/
 
 /*==================
  *    FONT USAGE
@@ -452,7 +421,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Preload (dependencies: lv_arc, lv_anim)*/
-#define LV_USE_PRELOAD      0
+#define LV_USE_PRELOAD      1
 #if LV_USE_PRELOAD != 0
 #  define LV_PRELOAD_DEF_ARC_LENGTH   60      /*[deg]*/
 #  define LV_PRELOAD_DEF_SPIN_TIME    1000    /*[ms]*/
