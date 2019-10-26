@@ -1,8 +1,7 @@
 /*
- * toaster.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 23.04.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef TOASTER_H_

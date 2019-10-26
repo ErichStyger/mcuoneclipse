@@ -1,10 +1,13 @@
 /*
- * toaster.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 23.04.2019
- *      Author: Erich Styger
- *  Credits to Adafruit making great products!
- *  https://learn.adafruit.com/animated-flying-toaster-oled-jewelry
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ *****************************************
+ * Idea and image files from Adafruit:
+ * https://learn.adafruit.com/animated-flying-toaster-oled-jewelry
+ * Animated pendant for Adafruit Pro Trinket and SSD1306 OLED display,
+ * inspired by the After Dark "Flying Toasters" screensaver.
  */
 
 #include "platform.h"

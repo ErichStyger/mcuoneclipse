@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,8 +17,9 @@
 #define PL_CONFIG_USE_GUI_KEY_NAV       (0)
 #define PL_CONFIG_USE_GUI_TOUCH_NAV     (1 && (PL_CONFIG_USE_FT6206 || PL_CONFIG_USE_STMPE610)) /* if using touch on display */
 #define PL_CONFIG_USE_GUI_KEYPAD_NAV    (0) /* keyboard on LCD */
-#define PL_CONFIG_USE_GUI_SCREEN_SAVER  (1) /* By default, it turns off the display */
-#define PL_CONFIG_USE_TOASTER           (1 && PL_CONFIG_USE_GUI_SCREEN_SAVER) /* Not yet implemented! */
+#define PL_CONFIG_USE_GUI_SCREEN_SAVER  (0) /* By default, it turns off the display */
+#define PL_CONFIG_USE_TOASTER           (0 && PL_CONFIG_USE_GUI_SCREEN_SAVER) /* Not yet implemented! */
+#define PL_CONFIG_USE_GUI_SYSMON        (1)
 
 #if PL_CONFIG_USE_FT6206 && PL_CONFIG_USE_STMPE610
   #error "only one touch controller can be active"

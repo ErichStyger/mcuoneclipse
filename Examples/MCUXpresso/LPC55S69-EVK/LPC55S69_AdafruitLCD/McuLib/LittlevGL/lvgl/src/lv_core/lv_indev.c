@@ -620,7 +620,18 @@ static void indev_encoder_proc(lv_indev_t * i, lv_indev_data_t * data)
         else if(g->editing) {
             /*Ignore long pressed enter release because it comes from mode switch*/
             if(!i->proc.long_pr_sent || lv_ll_is_empty(&g->obj_ll)) {
+#if 0
                 indev_obj_act->signal_cb(indev_obj_act, LV_SIGNAL_RELEASED, NULL);
+#else /* << EST: need this to close a modal dialog box! */
+                lv_res_t res;
+
+                res = indev_obj_act->signal_cb(indev_obj_act, LV_SIGNAL_RELEASED, NULL);
+                if (res==LV_RES_INV) { /* object has been disposed! */
+                  return;
+                } else if (indev_obj_act->par == (struct _lv_obj_t *)0xbbbbbbbb) { /* HACK! Object has been deleted! */
+                  return;
+                }
+#endif
                 if(indev_reset_check(&i->proc)) return;
 
                 lv_event_send(indev_obj_act, LV_EVENT_SHORT_CLICKED, NULL);

@@ -25,6 +25,7 @@
   #include "TouchCalibrate.h"
   #include "tpcal.h"
 #endif
+#include "sysmon.h"
 
 static TaskHandle_t GUI_TaskHndl;
 
@@ -146,6 +147,12 @@ static void event_handler(lv_obj_t *obj, lv_event_t event) {
   }
 }
 
+static void btn_click_SysMon_action(lv_obj_t *obj, lv_event_t event) {
+  if(event == LV_EVENT_CLICKED) {
+    GUI_SysMon_Create();
+  }
+}
+
 void GUI_MainMenuCreate(void) {
 	lv_obj_t * label;
 
@@ -166,7 +173,7 @@ void GUI_MainMenuCreate(void) {
 
   lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);
 	lv_obj_set_event_cb(btn1, event_handler);
-	lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);
+	lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -60);
 
 	label = lv_label_create(btn1, NULL);
 	lv_label_set_text(label, "Sensor");
@@ -174,9 +181,9 @@ void GUI_MainMenuCreate(void) {
   GUI_AddObjToGroup(btn1);
 #endif
 
-	lv_obj_t * btn2 = lv_btn_create(lv_scr_act(), NULL);
+	lv_obj_t *btn2 = lv_btn_create(lv_scr_act(), NULL);
 	lv_obj_set_event_cb(btn2, event_handler);
-	lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+	lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 20);
 	lv_btn_set_toggle(btn2, true);
 	lv_btn_toggle(btn2);
 	lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);
@@ -186,6 +193,19 @@ void GUI_MainMenuCreate(void) {
 #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn2);
 #endif
+
+  lv_obj_t *btn;
+  btn = lv_btn_create(lv_scr_act(), NULL);
+  lv_obj_set_event_cb(btn, btn_click_SysMon_action);
+  lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+
+  label = lv_label_create(btn, NULL);
+  lv_label_set_text(label, "SysMon");
+#if PL_CONFIG_USE_GUI_KEY_NAV
+  GUI_AddObjToGroup(btn);
+#endif
+
 }
 
 
