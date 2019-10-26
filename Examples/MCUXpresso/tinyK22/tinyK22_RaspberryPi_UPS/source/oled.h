@@ -1,7 +1,7 @@
 /*
- * oled.h
+ * Copyright (c) 2019, Erich Styger
  *
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef OLED_H_

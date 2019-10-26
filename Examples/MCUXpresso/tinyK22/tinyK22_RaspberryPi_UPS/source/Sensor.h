@@ -1,8 +1,7 @@
 /*
- * Sensor.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 14.10.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef SOURCES_SENSOR_H_

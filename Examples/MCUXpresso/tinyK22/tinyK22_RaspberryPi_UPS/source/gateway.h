@@ -1,8 +1,7 @@
 /*
- * doGateWay.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 18.03.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef UARTGATEWAY_H_

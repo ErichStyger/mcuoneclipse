@@ -1,8 +1,7 @@
 /*
- * gui_tempHum.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 06.08.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef GUI_UART_H_

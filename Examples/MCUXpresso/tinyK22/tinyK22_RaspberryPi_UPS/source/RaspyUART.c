@@ -1,8 +1,7 @@
 /*
- * RaspyUART.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 24.05.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -11,6 +10,7 @@
 #include "McuRTOS.h"
 #include "leds.h"
 #include "McuLED.h"
+#include "McuUtility.h"
 #include "gateway.h"
 #include "Sensor.h"
 #include "buttons.h"

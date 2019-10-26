@@ -1,8 +1,7 @@
 /*
- * doGateWay.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 18.03.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
@@ -13,6 +12,7 @@
 #include "McuRB.h"
 #include "McuRTOS.h"
 #include "Shell.h"
+#include "McuUtility.h"
 
 /* OpenSDA UART to Host: LPUART */
 /* UART to Linux/Raspberry Pi: UART0 */

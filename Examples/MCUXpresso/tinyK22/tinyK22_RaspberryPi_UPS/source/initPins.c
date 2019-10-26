@@ -1,7 +1,9 @@
 /*
- * InitPins.c
+ * Copyright (c) 2019, Erich Styger
  *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "InitPins.h"
 #include "fsl_gpio.h"
 #include "pin_mux.h"

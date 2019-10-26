@@ -1,8 +1,7 @@
 /*
- * RaspyUART.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 24.05.2019
- *      Author: Erich Styger Local
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef RASPYUART_H_

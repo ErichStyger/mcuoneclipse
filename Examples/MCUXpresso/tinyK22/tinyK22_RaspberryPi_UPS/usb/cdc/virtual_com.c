@@ -66,6 +66,7 @@ usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *
 
 #include "McuRTOS.h"
 #include "McuRB.h"
+#include "McuWait.h"
 
 #define ENABLED_USB_CDC_LOGGING  (0)
 

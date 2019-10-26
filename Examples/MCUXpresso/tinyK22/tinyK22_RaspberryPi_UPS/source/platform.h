@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -30,7 +29,7 @@
 #define PL_CONFIG_USE_USB_CDC             (1)
 #define PL_CONFIG_USE_POWER_ON            (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION==5) /* ability to power up Raspy, only possible with Rev5 of the board. See shutdown.c for Raspy settings! */
 
-#define PL_CONFIG_USE_POWER_DOWN_STATE_PIN  (1 && PL_CONFIG_USE_RASPBERRY && !PL_CONFIG_USE_POWER_ON) /* raspy can indicate power down with a state pin. Not possible with wake-up functionality */
+#define PL_CONFIG_USE_POWER_DOWN_STATE_PIN  (1 && PL_CONFIG_USE_RASPBERRY && !PL_CONFIG_USE_POWER_ON && TINYK22_HAT_VERSION==5) /* Raspy can indicate power down with a state pin. Not possible with wake-up functionality. On pre-V5 uses red LED instead. */
 #define PL_CONFIG_USE_POWER_DOWN_RED_LED    (1 && PL_CONFIG_USE_RASPBERRY && (TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4 || !PL_CONFIG_USE_POWER_ON)) /* uses the red HAT led as power down indicator */
 
 #define PL_CONFIG_USE_HW_I2C                (USE_HW_I2C) /* defined in IncludeMcuLibConfig.h */
