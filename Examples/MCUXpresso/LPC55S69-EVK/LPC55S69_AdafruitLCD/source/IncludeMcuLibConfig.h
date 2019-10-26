@@ -16,7 +16,7 @@
 #define McuLib_CONFIG_CORTEX_M          (33)
 
 /* ------------------- RTOS ---------------------------*/
-#define configTOTAL_HEAP_SIZE                 (16*1024)
+#define configTOTAL_HEAP_SIZE                 (32*1024)
 #define McuLib_CONFIG_SDK_USE_FREERTOS        (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS  (0)  /* \todo */
 #define configRUN_FREERTOS_SECURE_ONLY        (0)

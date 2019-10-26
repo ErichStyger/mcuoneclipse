@@ -21,6 +21,8 @@
   void GUI_RemoveObjFromGroup(lv_obj_t *obj);
 #endif
 
+void GUI_SwitchToMainScreen(void);
+
 void GUI_ChangeOrientation(McuGDisplaySSD1306_DisplayOrientation orientation);
 
 void GUI_Init(void);

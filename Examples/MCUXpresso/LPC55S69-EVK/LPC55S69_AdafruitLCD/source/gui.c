@@ -29,6 +29,7 @@
 #include "demo/demo.h"
 
 static TaskHandle_t GUI_TaskHndl;
+static lv_obj_t *main_screen;
 
 #if 0
 /* task notification bits */
@@ -160,12 +161,20 @@ static void btn_click_Demo_action(lv_obj_t *obj, lv_event_t event) {
   }
 }
 
+void GUI_SwitchToMainScreen(void) {
+  lv_scr_load(main_screen); /* load the screen */
+}
+
 void GUI_MainMenuCreate(void) {
 	lv_obj_t * label;
 
 #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
 #endif
+
+  /* create main screen */
+  main_screen = lv_obj_create(NULL, NULL);
+  lv_scr_load(main_screen); /* load the screen */
 
   /* create window */
   lv_obj_t *gui_win;
@@ -180,7 +189,7 @@ void GUI_MainMenuCreate(void) {
 
   lv_obj_t *btn1 = lv_btn_create(lv_scr_act(), NULL);
 	lv_obj_set_event_cb(btn1, event_handler);
-	lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -120);
+	lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -110);
 
 	label = lv_label_create(btn1, NULL);
 	lv_label_set_text(label, "Sensor");
@@ -190,7 +199,7 @@ void GUI_MainMenuCreate(void) {
 
 	lv_obj_t *btn2 = lv_btn_create(lv_scr_act(), NULL);
 	lv_obj_set_event_cb(btn2, event_handler);
-	lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, -80);
+	lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, -70);
 	lv_btn_set_toggle(btn2, true);
 	lv_btn_toggle(btn2);
 	lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);
@@ -205,8 +214,8 @@ void GUI_MainMenuCreate(void) {
 
   btn = lv_btn_create(lv_scr_act(), NULL);
   lv_obj_set_event_cb(btn, btn_click_SysMon_action);
-  lv_obj_align(btn, NULL, LV_ALIGN_CENTER, 0, -40);
-  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+  lv_obj_align(btn, NULL, LV_ALIGN_CENTER, 0, -30);
+  lv_btn_set_fit2(btn, LV_FIT_NONE, LV_FIT_TIGHT);
 
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "SysMon");
@@ -216,8 +225,8 @@ void GUI_MainMenuCreate(void) {
 
   btn = lv_btn_create(lv_scr_act(), NULL);
   lv_obj_set_event_cb(btn, btn_click_Demo_action);
-  lv_obj_align(btn, NULL, LV_ALIGN_CENTER, 0, 0);
-  lv_btn_set_fit(btn, LV_FIT_TIGHT);
+  lv_obj_align(btn, NULL, LV_ALIGN_CENTER, 0, 10);
+  lv_btn_set_fit2(btn, LV_FIT_NONE, LV_FIT_TIGHT);
 
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "Demo");
@@ -322,7 +331,7 @@ void GUI_Init(void) {
   // lv_style_btn_rel.body.padding.hor = LV_DPI / 8;
   // lv_style_btn_rel.body.padding.ver = LV_DPI / 12;
 
-  if (xTaskCreate(GuiTask, "Gui", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
+  if (xTaskCreate(GuiTask, "Gui", 4000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &GUI_TaskHndl) != pdPASS) {
     for(;;){} /* error */
   }
   timerHndl = xTimerCreate(  /* timer to handle periodic things */

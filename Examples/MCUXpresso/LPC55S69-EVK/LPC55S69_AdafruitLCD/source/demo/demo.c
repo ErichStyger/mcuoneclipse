@@ -7,7 +7,11 @@
  *      INCLUDES
  *********************/
 #include "demo.h"
+#include "gui.h"
 #include "LittlevGL/lvgl/lvgl.h"
+
+#define LV_DEMO_WALLPAPER (1)
+
 #if 1 || LV_USE_DEMO
 
 /*********************
@@ -29,6 +33,7 @@ static void kb_hide_anim_end(lv_anim_t * a);
 #endif
 static void list_create(lv_obj_t * parent);
 static void chart_create(lv_obj_t * parent);
+static void exit_create(lv_obj_t *parent);
 static void slider_event_handler(lv_obj_t * slider, lv_event_t event);
 static void list_btn_event_handler(lv_obj_t * slider, lv_event_t event);
 #if LV_DEMO_SLIDE_SHOW
@@ -38,6 +43,7 @@ static void tab_switcher(lv_task_t * task);
 /**********************
  *  STATIC VARIABLES
  **********************/
+static lv_obj_t *demo_screen;
 static lv_obj_t * chart;
 static lv_obj_t * ta;
 static lv_obj_t * kb;
@@ -63,6 +69,10 @@ LV_IMG_DECLARE(img_bubble_pattern)
  */
 void GUI_Demo_Create(void)
 {
+  /* create new screen */
+  demo_screen = lv_obj_create(NULL, NULL);
+  lv_scr_load(demo_screen); /* load the screen */
+
     lv_coord_t hres = lv_disp_get_hor_res(NULL);
     lv_coord_t vres = lv_disp_get_ver_res(NULL);
 
@@ -105,6 +115,7 @@ void GUI_Demo_Create(void)
     lv_obj_t * tab1 = lv_tabview_add_tab(tv, "Write");
     lv_obj_t * tab2 = lv_tabview_add_tab(tv, "List");
     lv_obj_t * tab3 = lv_tabview_add_tab(tv, "Chart");
+    lv_obj_t * tab4 = lv_tabview_add_tab(tv, "Exit");
 
 #if LV_DEMO_WALLPAPER == 0
     /*Blue bg instead of wallpaper*/
@@ -120,6 +131,7 @@ void GUI_Demo_Create(void)
     write_create(tab1);
     list_create(tab2);
     chart_create(tab3);
+    exit_create(tab4);
 
 #if LV_DEMO_SLIDE_SHOW
     lv_task_create(tab_switcher, 3000, LV_TASK_PRIO_MID, tv);
@@ -404,6 +416,30 @@ static void chart_create(lv_obj_t * parent)
     lv_slider_set_value(slider, 700, false);
     slider_event_handler(slider, LV_EVENT_VALUE_CHANGED);          /*Simulate a user value set the refresh the chart*/
 }
+
+/**
+ * Called when the Exit button is clicked
+ * @param btn pointer to the close button
+ * @return LV_ACTION_RES_INV because the window is deleted in the function
+ */
+static void Btn_Exit_click_action(struct _lv_obj_t *obj, lv_event_t event) {
+	/* delete main menu window and all its objects */
+  if(event == LV_EVENT_CLICKED) {
+    GUI_SwitchToMainScreen(); /* switch back to main screen ... */
+    lv_obj_del(demo_screen);  /* and delete current demo screen */
+  }
+}
+
+
+static void exit_create(lv_obj_t *parent) {
+	lv_obj_t *label;
+
+	lv_obj_t *btn = lv_btn_create(parent, NULL);             /*Add to the active window */
+  lv_obj_set_event_cb(btn, Btn_Exit_click_action);
+	label = lv_label_create(btn, NULL);                  /*Put on 'btn'*/
+	lv_label_set_text(label, "Exit");
+}
+
 
 /**
  * Called when a new value on the slider on the Chart tab is set
