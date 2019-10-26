@@ -237,7 +237,7 @@ void TOASTER_StopScreenSaver(void) {
   stopScreenSaver = true;
 }
 
-static void refresh_task(void *param) {
+static void refresh_task(struct _lv_task_t *param) {
   if (stopScreenSaver) {
     lv_obj_del(win);
     win = NULL;
