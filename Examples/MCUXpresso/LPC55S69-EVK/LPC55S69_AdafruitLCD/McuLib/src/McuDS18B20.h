@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : DS18B20
-**     Version     : Component 01.018, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.019, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-12, 17:26, # CodeGen: 466
+**     Date/Time   : 2019-10-14, 06:52, # CodeGen: 585
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.

@@ -9,6 +9,7 @@
 #define MCUFT6206_H_
 
 #include "platform.h"
+#include "McuFT6206config.h"
 #include <stdint.h>
 
 #if MCUFT6206_CONFIG_PARSE_COMMAND_ENABLED

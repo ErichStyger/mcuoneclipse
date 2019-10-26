@@ -13,7 +13,9 @@
 extern "C" {
 #endif
 
-#include "McuShell.h"
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
+  #include "McuShell.h"
+#endif
 
 /*!
  * \brief Returns the current battery voltage
@@ -60,12 +62,28 @@ uint8_t McuLC_GetCurrentDirection(McuLC_CurrentDirection *pDir);
  */
 uint8_t McuLC_SetCurrentDirection(McuLC_CurrentDirection dir);
 
-uint8_t McuLC_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+/*!
+ * \brief Sets the device power mode (normal or sleep mode)
+ * \param sleepMode true to put device into sleep mode, false for normal operational mode
+ * \return Error code, ERR_OK if everything is ok
+ */
+uint8_t McuLC_SetPowerMode(bool sleepMode);
 
 /*!
  * \brief Wake up the device from sleep mode. Uses bit-banging. If other devices are on the bus, this method has to be called before anything else!
  */
 void McuLC_Wakeup(void); /* must be done before any other I2C communication on the bus! */
+
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
+/*!
+ * \brief Module command line parser
+ * \param cmd Pointer to string to be parsed
+ * \param handled set to true if command was recognized
+ * \param io standard I/O handler
+ * \return Error code, ERR_OK if everything is ok
+ */
+uint8_t McuLC_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+#endif
 
 /*!
  * \brief Driver initialization. I2C bus must be operational for this.

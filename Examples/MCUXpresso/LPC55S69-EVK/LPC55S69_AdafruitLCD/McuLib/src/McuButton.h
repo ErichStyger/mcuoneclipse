@@ -31,6 +31,9 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config);
 
 McuBtn_Handle_t McuBtn_DeinitButton(McuBtn_Handle_t button);
 
+void McuBtn_DisablePullResistor(McuBtn_Handle_t btn);
+void McuBtn_EnablePullResistor(McuBtn_Handle_t btn);
+
 bool McuBtn_IsOn(McuBtn_Handle_t btn);
 
 void McuBtn_Deinit(void);

@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,6 +10,7 @@
 #include "McuSPI.h"
 #include "McuWait.h"
 #include "McuSPI.h"
+#include "McuUtility.h"
 
 /* ILI9341 register and commands */
 #define MCUILI9341_NOP        0x00     /*!< No-op register */
@@ -347,7 +347,7 @@ void McuILI9341_Init(void) {
 
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = false;
-  config.isLowOnInit = false;
+  config.isHighOnInit = true;
 
   /* initialize TFT CS (is LOW active) */
   config.hw.pin = MCUILI9341_CS_PIN;

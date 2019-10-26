@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,6 +7,7 @@
 #include "McuFT6206config.h"
 #include "McuFT6206.h"
 #include "McuGenericI2C.h"
+#include "McuUtility.h"
 
 #define MCUFT62XX_I2C_ADDR          0x38
 #define MCUFT62XX_G_FT5201ID        0xA8

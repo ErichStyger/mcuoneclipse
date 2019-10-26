@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,9 +11,11 @@
 #include "McuRTT.h"
 #include "McuArmTools.h"
 #include "McuILI9341.h"
-#include "McuFT6206.h"
 #if PL_CONFIG_USE_I2C
   #include "McuI2CSpy.h"
+#endif
+#if PL_CONFIG_USE_FT6206
+  #include "McuFT6206.h"
 #endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -28,7 +29,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuI2CSpy_ParseCommand,
 #endif
 #if MCUFT6206_CONFIG_PARSE_COMMAND_ENABLED
-  FT6206_ParseCommand,
+  McuFT6206_ParseCommand,
 #endif
 #if MCUILI9341_CONFIG_PARSE_COMMAND_ENABLED
   McuILI9341_ParseCommand,

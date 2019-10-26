@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -17,6 +16,5 @@
   #define MCUFT6206_CONFIG_DEFAULT_THRESHOLD        (128)
 #endif
   /*! Default touch screen threshold */
-
 
 #endif /* MCUFT6206CONFIG_H_ */

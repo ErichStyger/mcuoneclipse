@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -71,6 +70,12 @@
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "LittlevGL on NXP LPC55S69"
+/* -------------------------------------------------*/
+/* RTT */
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP		(1*1024)
+#define McuRTT_CONFIG_BLOCKING_SEND         	(1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS	(20)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS		(5)
 /* -------------------------------------------------*/
 /* LittlevGL */
 //#define LV_CONF_INCLUDE_SIMPLE

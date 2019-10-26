@@ -6,7 +6,7 @@
 **     Component   : GenericI2C
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 08:49, # CodeGen: 444
+**     Date/Time   : 2019-06-11, 17:17, # CodeGen: 537
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -205,10 +205,11 @@ uint8_t McuGenericI2C_UnselectSlave(void)
 uint8_t McuGenericI2C_ReadBlockGeneric(void* data, uint16_t dataSize, McuGenericI2C_EnumSendFlags flags, McuGenericI2C_EnumStartFlags flagsStart, McuGenericI2C_EnumAckFlags flagsAck)
 {
   uint8_t res = ERR_OK;
-  uint16_t nof;
 
 #if McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE
   for(;;) { /* breaks */
+    uint16_t nof;
+
     res = McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM(data, dataSize, &nof, flagsStart, flagsAck);
     if (res!=ERR_OK) {
     #if McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT

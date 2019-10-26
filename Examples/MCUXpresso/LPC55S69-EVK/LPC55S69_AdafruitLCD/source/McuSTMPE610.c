@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -224,7 +223,7 @@ void McuSTMPE610_Init(void) {
 
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = false;
-  config.isLowOnInit = false;
+  config.isHighOnInit = true;
 
   /* initialize STEMPE610 CS (is LOW active) */
   config.hw.pin = MCUSTMPE610_CS_PIN;

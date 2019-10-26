@@ -86,11 +86,11 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_FT6206
   McuFT6206_Init();
 #endif
-#if PL_CONFIG_USE_GUI_TOUCH_NAV
-  TOUCH_Init();
-#endif
 #if PL_CONFIG_USE_STMPE610
   McuSTMPE610_Init();
+#endif
+#if PL_CONFIG_USE_GUI_TOUCH_NAV
+  TOUCH_Init();
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();
