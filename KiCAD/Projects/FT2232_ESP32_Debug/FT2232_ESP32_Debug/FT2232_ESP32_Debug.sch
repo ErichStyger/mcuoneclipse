@@ -167,7 +167,7 @@ Wire Wire Line
 Wire Wire Line
 	8050 1700 8050 1600
 $Comp
-L ft2232_breakout:FT2232_Breakout U1
+L FT2232_ESP32_Debug-rescue:FT2232_Breakout-ft2232_breakout U1
 U 1 1 5DB741E2
 P 4700 1900
 F 0 "U1" H 4675 2875 50  0000 C CNN
@@ -275,8 +275,6 @@ Text GLabel 7500 1900 2    50   Output ~ 0
 TDO
 Text GLabel 7500 2000 2    50   Input ~ 0
 TDI
-Text GLabel 7500 2100 2    50   Output ~ 0
-Reset
 Wire Wire Line
 	8050 1800 8350 1800
 Connection ~ 8050 1800
@@ -299,4 +297,5 @@ Wire Wire Line
 	10450 1350 10450 1500
 Wire Wire Line
 	9950 1350 9950 1500
+NoConn ~ 7500 2100
 $EndSCHEMATC
