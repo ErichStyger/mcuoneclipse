@@ -1,0 +1,20 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# RS485_PWR_4pin
+#
+DEF RS485_PWR_4pin U 0 40 Y Y 1 F N
+F0 "U" -50 300 50 H V C CNN
+F1 "RS485_PWR_4pin" -50 200 50 H V C CNN
+F2 "StepperClock:Conn_Green_RS485" -100 400 50 H I C CNN
+F3 "" -100 400 50 H I C CNN
+DRAW
+S -100 150 150 -250 0 1 0 f
+X Vcc 4 -250 -200 150 R 50 50 0 0 W
+X B 1 -250 100 150 R 50 50 1 1 P
+X A 2 -250 0 150 R 50 50 1 1 P
+X GND 3 -250 -100 150 R 50 50 1 1 W
+ENDDRAW
+ENDDEF
+#
+#End Library
