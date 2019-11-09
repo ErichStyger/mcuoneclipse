@@ -79,7 +79,7 @@ static void refresh_task(struct _lv_task_t *param) {
   lv_chart_set_next(chart, temperature_ser, chart_tvalue);
   lv_chart_set_next(chart, humidity_ser, chart_hvalue);
 
-  McuXFormat_xsnprintf((char*)buf, sizeof(buf), "%s%s T: %.1fC%s\n%s%s RH: %.1f%%%s",
+  McuXFormat_xsnprintf((char*)buf, sizeof(buf), "%s%s T: %.1fC%s %s%s RH: %.1f%%%s",
     LV_TXT_COLOR_CMD, TEMPERATURE_LABEL_COLOR, temperature, LV_TXT_COLOR_CMD,
     LV_TXT_COLOR_CMD, HUMIDITY_LABEL_COLOR,    humidity, LV_TXT_COLOR_CMD
     );
