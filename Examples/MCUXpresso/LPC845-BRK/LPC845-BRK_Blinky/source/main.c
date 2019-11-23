@@ -44,17 +44,17 @@
 #include "McuLED.h"
 #include "buttons.h"
 
+
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
+ 	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    printf("Hello World\n");
-
+//    printf("Hello World\n");
     GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0: used for push buttons */
     GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1: used for LEDs */
 

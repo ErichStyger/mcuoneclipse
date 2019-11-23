@@ -48,6 +48,8 @@
 #include "CS1.h"
 #include "KIN1.h"
 #include "SYS1.h"
+#include "FC1.h"
+#include "TU1.h"
 
 #ifdef __cplusplus
 extern "C" {
