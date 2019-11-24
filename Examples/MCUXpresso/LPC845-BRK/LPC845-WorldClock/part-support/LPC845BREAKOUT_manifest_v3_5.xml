@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.5" api_version="2.0.0" configuration="4e0f496e52d6e5d372cd738f20c592cf" id="SDK_2.x_LPC845BREAKOUT" name="LPC845BREAKOUT" brief="This is SDK version 2.6.0 manifest file. It describes the content of the LPC845BREAKOUT and additional settings for tools that support SDK version 2.6.0">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <externalDefinitions>
+        <definition extID="lpcxpresso845max"/>
+    </externalDefinitions>
+    <ksdk id="MCUXpresso260" name="MCUXpresso260" version="2.6.0" revision="228 2019-06-14"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.0.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="LPC845M301JBD48" id="lpc845breakout" name="LPC845BREAKOUT" href="http://www.nxp.com/products/" version="1.0.0">
+            <description>The LPC845 Breakout is an development platform for LPC845 MCU</description>
+            <image path="docs/images" type="image">
+                <files mask="LPC845BREAKOUT.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The LPC845 breakout board provides a powerful and flexible development system for NXP's low end Cortex-M0+-based LPC84x Family of MCUs, delivered in an ultra-low-cost evaluation board. This breakout board can be used with a range of development tools, including the MCUXpresso IDE toolchain. The LPCXpresso845 Breakout board is developed by NXP to enable evaluation of and prototyping with the LPC84x family of MCUs. The LPC845 breakout board features an on-board CMSIS-DAP debug and VCOM port, RGB user LEDs, capacitive touch button, user potentiometer and allows an easy prototyping experience with access to 38 LPC845 port pins.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="LPC84x" platform="LPC" id="LPC845" name="LPC845" full_name="LPC845" href="http://www.nxp.com/lpc" version="1.0.0">
+            <description>The LPC84x are ARM Cortex-M0+ based microcontrollers for embedded applications.</description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">The LPC84x are an ARM Cortex-M0+ based, low-cost 32-bit MCU family operating at CPU frequencies of up to 30 MHz. The LPC84x support up to 64 KB of flash memory and 16 KB of SRAM.The peripheral complement of the LPC84x includes a CRC engine, four I2C-bus interfaces, up to five USARTs, up to two SPI interfaces, Capacitive Touch Interface (Cap Touch), one multi-rate timer, self-wake-up timer, SCTimer/PWM, one general purpose 32-bit counter/timer, a DMA, one 12-bit ADC, two 10-bit DACs, one analog comparator,function-configurable I/O ports through a switch matrix, an input pattern match engine,and up to 54 general-purpose I/O pins.</content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="false" type="cm0plus" id="core0_LPC845" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00010000" type="Flash" access="RO" id="PROGRAM_FLASH_LPC845" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="10000000" size="00004000" type="RAM" access="RW" id="SRAM_LPC845" name="SRAM"/>
+            </memory>
+            <total_memory flash_size_kb="64" ram_size_kb="16"/>
+            <package id="LPC845M301JBD64" name="LPC845M301JBD64"/>
+            <package id="LPC845M301JBD48" name="LPC845M301JBD48"/>
+            <package id="LPC845M301JHI48" name="LPC845M301JHI48"/>
+            <package id="LPC845M301JHI33" name="LPC845M301JHI33"/>
+            <evaluation_boards>
+                <evaluation_board name="lpc845breakout"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.LPC845" name="internal.wiretype"/>
+                        <params value="false" id="internal.has_swo.release.LPC845" name="internal.has_swo"/>
+                        <params value="true" id="vector.catch.release.LPC845" name="vector.catch"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_LPC845">
+                            <driverBinary path="devices/LPC845/mcuxpresso" type="binary">
+<files mask="LPC84x_64.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="true"/>
+                <linker property="crp_address" value="0x2fc"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="true"/>
+                <linker property="crp_address" value="0x2fc"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="LPC845" id="device.LPC845_debugger.LPC845" name="LPC845_debugger" version="1.0.0">
+            <source path="devices/LPC845" target_path="src" type="xml">
+                <files mask="LPC845.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
