@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
-<stringAttribute key="InstructionTraceInfo" value="eJzFVE1P6zAQvCPxHyzfoXE/QpAICNJWQmpK1QY4IpNsS8CxK9sB3r9/duNUDU0RByR8slezs+vZsS+uPguG3kGqXPAQk1MPI+CpyHK+CvF9Mj4J8NXl8dEF6AL08xA0zZmygYTKFegxUF1KUCimr0I+1DyGJc55M1AlGNLp4n42u5snoyG2RKMkvqEK0HWWGSIV4hOC0cxsgWub2LGg4WPyBTTo+YHvB8TfAWtZQoW/3SO1+DPvnHRb8aPkZh/ve97gbJd/SZlyCfFeAjkANKp96C/Yrh/0e6Tne+05iaQpjEvOgTU7Gpz7/eBAkqkSCQmLfPViNsVacINAtnCraJGaiPQtxNOSsWqPkaGYw2qhDY1R/s8WdhNf1uayl2h07wCpuSaV1PSr0LQsnkGGuF+psSjXayE1ZCgq1jHV6YsbN4r+pQwiUXJt4ZuYTbCSOXujIdXUnmt90STnb2R7iulnTJXRjgzwtq4zajtNVdmxVIdWEvIdyc976f4OTa+i6Wy1dDabSbHMmfkhnIrKjeMpSuYT9EBZCVs9OofwnZ0B18B9/27esi5+ZGz3umtjPwqZOWNXnTR/rE2o+av9B5anheoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
-<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink621000000"/>
+<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink801000403"/>
 <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
 <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 621000000"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 801000403"/>
+<mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
 <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="2"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="SEGGER"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link OpenSDA"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link (unknown)"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB"/>
 <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.base.address" value="0x0"/>
 <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.executable" value="hex"/>
@@ -27,7 +27,7 @@
 <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="false;GDBServer/RTOSPlugin_FreeRTOS"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=801000403"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
@@ -37,13 +37,13 @@
 <stringAttribute key="disconnect" value="Run"/>
 <stringAttribute key="launch.config.handler" value="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler"/>
 <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="true"/>
-<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="monitor reset"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="SEGGER J-Link probes"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDeviceId" value="org.eclipse.cdt.debug.gdbjtag.core.jtagdevice.genericDevice"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
@@ -61,9 +61,13 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForSymbols" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useRemoteTarget" value="true"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="arm-none-eabi-gdb"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
+<stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
+<stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
