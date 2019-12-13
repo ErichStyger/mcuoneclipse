@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -10,7 +9,8 @@
 
 #define PL_CONFIG_USE_SHELL         (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT           (0) /* use SEGGER RTT (only possible with a J-Link */
-#define PL_CONFIG_USE_I2C           (0) /* use I2C bus */
+#define PL_CONFIG_USE_I2C           (1) /* use I2C bus */
+#define PL_CONFIG_USE_HW_I2C        (0)
 #define PL_CONFIG_USE_I2C_SPY       (0 && PL_CONFIG_USE_I2C) /* using shell component to scan I2C bus */
 #define PL_CONFIG_USE_HALL_SENSOR   (0) /* using magnets and hall sensors */
 

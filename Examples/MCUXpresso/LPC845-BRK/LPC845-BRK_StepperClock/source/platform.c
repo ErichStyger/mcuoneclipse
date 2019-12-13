@@ -56,9 +56,6 @@ void PL_Init(void) {
   McuShellUart_Init();
 
   McuGenericI2C_Init();
-#if PL_CONFIG_USE_I2C_SPY
-  McuI2CSpy_Init();
-#endif
 #if PL_CONFIG_USE_I2C && PL_CONFIG_USE_HW_I2C
   I2CLIB_Init();
 #elif PL_CONFIG_USE_I2C
@@ -69,6 +66,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_EXT_EEPROM
   McuEE24_Init();
+#endif
+#if PL_CONFIG_USE_I2C_SPY
+  McuI2CSpy_Init();
 #endif
 
   /* application modules: */
