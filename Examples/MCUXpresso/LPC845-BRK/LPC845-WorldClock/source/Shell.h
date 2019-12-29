@@ -7,7 +7,8 @@
 #ifndef SHELL_H_
 #define SHELL_H_
 
-#include <McuShell.h>
+#include "McuShell.h"
+#include <stdbool.h>
 
 void SHELL_SendString(unsigned char *str);
 void SHELL_SendChar(unsigned char ch);

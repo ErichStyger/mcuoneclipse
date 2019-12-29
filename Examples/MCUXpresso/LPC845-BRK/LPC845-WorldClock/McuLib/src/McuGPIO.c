@@ -23,29 +23,29 @@
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* LPC845 specific defines, not available in SDK */
-  #define IOCON_PIO_CLKDIV0 0x00u      /*!<@brief IOCONCLKDIV0 */
-  #define IOCON_PIO_HYS_EN 0x20u       /*!<@brief Enable hysteresis */
-  #define IOCON_PIO_INV_DI 0x00u       /*!<@brief Input not invert */
+  #define McuGPIO_IOCON_PIO_CLKDIV0 0x00u      /*!<@brief IOCONCLKDIV0 */
+  #define McuGPIO_IOCON_PIO_HYS_EN 0x20u       /*!<@brief Enable hysteresis */
+  #define McuGPIO_IOCON_PIO_INV_DI 0x00u       /*!<@brief Input not invert */
 
-  #define IOCON_PIO_MODE_PULL_INACTIVE  (0x0u<<3) /* Inactive (no pull-down/pull-up resistor enabled) */
-  #define IOCON_PIO_MODE_PULL_DOWN      (0x1u<<3) /* Pull-down enabled */
-  #define IOCON_PIO_MODE_PULL_UP        (0x2u<<3) /* Pull-up enabled */
-  #define IOCON_PIO_MODE_PULL_REPEATER  (0x3u<<3) /* Repeater mode */
+  #define McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE  (0x0u<<3) /* Inactive (no pull-down/pull-up resistor enabled) */
+  #define McuGPIO_IOCON_PIO_MODE_PULL_DOWN      (0x1u<<3) /* Pull-down enabled */
+  #define McuGPIO_IOCON_PIO_MODE_PULL_UP        (0x2u<<3) /* Pull-up enabled */
+  #define McuGPIO_IOCON_PIO_MODE_PULL_REPEATER  (0x3u<<3) /* Repeater mode */
 
-  #define IOCON_PIO_OD_DI 0x00u        /*!<@brief Disables Open-drain function */
-  #define IOCON_PIO_SMODE_BYPASS 0x00u /*!<@brief Bypass input filter */
+  #define McuGPIO_IOCON_PIO_OD_DI 0x00u        /*!<@brief Disables Open-drain function */
+  #define McuGPIO_IOCON_PIO_SMODE_BYPASS 0x00u /*!<@brief Bypass input filter */
 
-  #define IOCON_PIO_DEFAULTS  \
+  #define McuGPIO_IOCON_PIO_DEFAULTS  \
                 /* Enable hysteresis */ \
-                IOCON_PIO_HYS_EN | \
+                McuGPIO_IOCON_PIO_HYS_EN | \
                 /* Input not invert */ \
-                IOCON_PIO_INV_DI | \
+                McuGPIO_IOCON_PIO_INV_DI | \
                 /* Disables Open-drain function */ \
-                IOCON_PIO_OD_DI | \
+                McuGPIO_IOCON_PIO_OD_DI | \
                 /* Bypass input filter */ \
-                IOCON_PIO_SMODE_BYPASS | \
+                McuGPIO_IOCON_PIO_SMODE_BYPASS | \
                 /* IOCONCLKDIV0 */ \
-                IOCON_PIO_CLKDIV0
+                McuGPIO_IOCON_PIO_CLKDIV0
 #endif
 
 /* default configuration, used for initializing the config */
@@ -141,27 +141,12 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
-  const uint32_t IOCON_config = (IOCON_PIO_MODE_PULL_INACTIVE | IOCON_PIO_DEFAULTS);
+  const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
 
   assert(config->hw.iocon!=-1); /* must be set! */
   IOCON_PinMuxSet(IOCON, config->hw.iocon, IOCON_config);
-#elif McuLib_CONFIG_CPU_IS_LPC
-#if 0
-  const uint32_t IOCON_config = (
-                                       IOCON_PIO_FUNC1 |
-                                       /* No addition pin function */
-                                       IOCON_PIO_MODE_INACT |
-                                       /* Standard mode, output slew rate control is enabled */
-                                       IOCON_PIO_SLEW_STANDARD |
-                                       /* Input function is not inverted */
-                                       IOCON_PIO_INV_DI |
-                                       /* Enables digital function */
-                                       IOCON_PIO_DIGITAL_EN |
-                                       /* Open drain is disabled */
-                                       IOCON_PIO_OPENDRAIN_DI);
-  /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
-  IOCON_PinMuxSet(IOCON, config->hw.port, config->hw.pin, IOCON_config);
-#endif
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==33 /* LPC55S69 */
+  /* \todo */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   /* \todo */
 #endif
@@ -344,13 +329,13 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   uint32_t IOCON_config;
 
   if (pull == McuGPIO_PULL_DISABLE) {
-    IOCON_config = (IOCON_PIO_MODE_PULL_INACTIVE | IOCON_PIO_DEFAULTS);
+    IOCON_config = ( McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE |  McuGPIO_IOCON_PIO_DEFAULTS);
   } else if (pull == McuGPIO_PULL_UP) {
-    IOCON_config = (IOCON_PIO_MODE_PULL_UP | IOCON_PIO_DEFAULTS);
+    IOCON_config = ( McuGPIO_IOCON_PIO_MODE_PULL_UP |  McuGPIO_IOCON_PIO_DEFAULTS);
   } else if (pull == McuGPIO_PULL_DOWN) {
-    IOCON_config = (IOCON_PIO_MODE_PULL_DOWN | IOCON_PIO_DEFAULTS);
+    IOCON_config = ( McuGPIO_IOCON_PIO_MODE_PULL_DOWN |  McuGPIO_IOCON_PIO_DEFAULTS);
   } else {
-    IOCON_config = (IOCON_PIO_MODE_PULL_INACTIVE | IOCON_PIO_DEFAULTS);
+    IOCON_config = ( McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE |  McuGPIO_IOCON_PIO_DEFAULTS);
   }
   IOCON_PinMuxSet(IOCON, pin->hw.iocon, IOCON_config);
 #elif McuLib_CONFIG_CPU_IS_LPC

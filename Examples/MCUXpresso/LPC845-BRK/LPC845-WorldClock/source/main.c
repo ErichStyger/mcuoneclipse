@@ -45,13 +45,12 @@
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    //BOARD_InitDebugConsole();
+  /* Init board hardware. */
+  BOARD_InitBootPins();
+  BOARD_InitBootClocks();
+  BOARD_InitBootPeripherals();
+  //BOARD_InitDebugConsole();
 
-    APP_Run();
-    return 0;
+  APP_Run();
+  return 0;
 }

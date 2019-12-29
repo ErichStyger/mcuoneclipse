@@ -8,7 +8,14 @@
 #define RS485_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 #include "McuShell.h"
+
+#define RS485_BROADCAST_ADDRESS (0x00) /* special broadcast address */
+
+uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs);
+
+uint8_t RS485_GetAddress(void);
 
 uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 

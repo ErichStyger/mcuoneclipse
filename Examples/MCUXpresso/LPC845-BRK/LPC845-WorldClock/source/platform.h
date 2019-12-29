@@ -7,7 +7,14 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_BOARD_VERSION     (1) /* 1: V0.1, 10: V1.0 */
+/* hardware versions:
+ * V0.1: world clock (4 clocks, 2x2)
+ * V1.0: 1x4 clocks */
+#if 0
+  #define PL_CONFIG_BOARD_VERSION   (10) /* 1: V0.1, 10: V1.0 */
+#else
+  #define PL_CONFIG_BOARD_VERSION   (1) /* 1: V0.1, 10: V1.0 */
+#endif
 
 #define PL_CONFIG_USE_SHELL         (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT           (1) /* use SEGGER RTT (only possible with a J-Link */

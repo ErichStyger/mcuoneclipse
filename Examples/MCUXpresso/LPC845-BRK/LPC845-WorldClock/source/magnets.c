@@ -132,7 +132,9 @@ void MAG_Init(void) {
   gpioConfig.hw.iocon = MAG1_IOCON;
   gpioConfig.isInput = true;
   MAG_MagSensor[MAG_MAG1] = McuGPIO_InitGPIO(&gpioConfig);
-  //McuGPIO_SetPullResistor(MAG_MagSensor[MAG_MAG1], McuGPIO_PULL_UP); // no internal pull-up!
+#if PL_CONFIG_BOARD_VERSION==10 /* Pin used on V0.1 has no internal pull-up capability */
+  McuGPIO_SetPullResistor(MAG_MagSensor[MAG_MAG1], McuGPIO_PULL_UP);
+#endif
 
   gpioConfig.hw.gpio = MAG2_GPIO;
   gpioConfig.hw.port = MAG2_PORT;
@@ -181,18 +183,6 @@ void MAG_Init(void) {
   gpioConfig.isInput = true;
   MAG_MagSensor[MAG_MAG7] = McuGPIO_InitGPIO(&gpioConfig);
   McuGPIO_SetPullResistor(MAG_MagSensor[MAG_MAG7], McuGPIO_PULL_UP);
-
-#if 0
-  for(;;) {
-    for(int i=0;i<MAG_NOF_MAG; i++) {
-      if (MAG_IsTriggered(i)) {
-        printf("sensor %i: low\n", i);
-      } else {
-        printf("sensor %i: high\n", i);
-      }
-    }
-  }
-#endif
 }
 
 #endif /* PL_CONFIG_USE_MAG_SENSOR */
