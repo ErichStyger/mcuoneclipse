@@ -5427,6 +5427,7 @@ void McuRTOS_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t McuRTOS_RunTimeCounter;
   McuRTOS_RunTimeCounter = 0;
 #endif
 }
@@ -5450,6 +5451,7 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t McuRTOS_RunTimeCounter;
   return McuRTOS_RunTimeCounter;
   #endif
 #else
