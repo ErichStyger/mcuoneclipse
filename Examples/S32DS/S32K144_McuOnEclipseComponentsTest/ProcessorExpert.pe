@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>116</ProjectCompNumb>
+    <ProjectCompNumb>122</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -14993,7 +14993,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>GenericSWSPI</BeanType>
     <Name>SPI1</Name>
     <CompNumb>80</CompNumb>
@@ -15036,11 +15036,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>Clock1</Name>
           <CompNumb>86</CompNumb>
@@ -15553,11 +15553,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>Input1</Name>
           <CompNumb>85</CompNumb>
@@ -16043,11 +16043,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>Output1</Name>
           <CompNumb>87</CompNumb>
@@ -16698,7 +16698,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>FreeRTOS</BeanType>
     <Name>FreeRTOS</Name>
     <CompNumb>5</CompNumb>
@@ -16708,7 +16708,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.568</BeanVersion>
+    <BeanVersion>01.579</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16721,7 +16721,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V10.1.1</Value>
+        <Value>V10.2.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDK</ItemSymbol>
@@ -16896,14 +16896,6 @@
         <Value>true</Value>
       </ItemState>
       <ItemState>
-        <ItemSymbol>EnableLTODebugHelper</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>DebugHelpersGrop</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -16911,6 +16903,22 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>EnableGDBDebugHelper</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>enabledBackwardCompatibility</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>EnableLTODebugHelper</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
@@ -17426,19 +17434,19 @@
         <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
-        <ItemSymbol>TimerTaskPriority</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>TimerTaskQueueLength</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>10</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>TimerTaskPriority</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -19129,10 +19137,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>true</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPreSleepProcessingName</ItemSymbol>
@@ -19145,10 +19153,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>vOnPostSleepProcessingName</ItemSymbol>
@@ -19159,7 +19167,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>McuLibConfig</BeanType>
     <Name>MCUC1</Name>
     <CompNumb>8</CompNumb>
@@ -19169,7 +19177,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.013</BeanVersion>
+    <BeanVersion>01.014</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19187,6 +19195,33 @@
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Index>5</Index>
         <EnumSymbVal>S32KSDK</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionMajor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>2</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionMinor</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>5</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkVersionBuild</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>ConfigFilesFolderName</ItemSymbol>
@@ -19232,7 +19267,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>SeggerRTT</BeanType>
     <Name>RTT1</Name>
     <CompNumb>14</CompNumb>
@@ -19242,7 +19277,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.087</BeanVersion>
+    <BeanVersion>01.089</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -19675,7 +19710,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>Utility</BeanType>
     <Name>UTIL1</Name>
     <CompNumb>6</CompNumb>
@@ -20548,7 +20583,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>RingBuffer</BeanType>
     <Name>RNG1</Name>
     <CompNumb>10</CompNumb>
@@ -20869,7 +20904,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>SeggerSystemView</BeanType>
     <Name>SYS1</Name>
     <CompNumb>15</CompNumb>
@@ -20879,7 +20914,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.068</BeanVersion>
+    <BeanVersion>01.070</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -21251,7 +21286,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>CriticalSection</BeanType>
     <Name>CS1</Name>
     <CompNumb>11</CompNumb>
@@ -21261,7 +21296,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.013</BeanVersion>
+    <BeanVersion>01.014</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -21353,7 +21388,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>XFormat</BeanType>
     <Name>XF1</Name>
     <CompNumb>7</CompNumb>
@@ -21476,7 +21511,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>Shell</BeanType>
     <Name>CLS1</Name>
     <CompNumb>13</CompNumb>
@@ -21486,7 +21521,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.106</BeanVersion>
+    <BeanVersion>01.107</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -21943,6 +21978,17 @@
         <UsrMethodName>ReleaseSerial</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ReadAndParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadAndParseWithCommandTableExt</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ReadAndParseWithCommandTable</ItemSymbol>
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -21952,6 +21998,17 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ReadAndParseWithCommandTable</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ParseWithCommandTableExt</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>ParseWithCommandTable</ItemSymbol>
@@ -22106,7 +22163,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>Wait</BeanType>
     <Name>WAIT1</Name>
     <CompNumb>9</CompNumb>
@@ -22116,7 +22173,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.083</BeanVersion>
+    <BeanVersion>01.085</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22327,6 +22384,17 @@
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>1</Index>
+        <Value>false</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>no</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>DeInit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -22341,7 +22409,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>SSD1306</BeanType>
     <Name>LCD1</Name>
     <CompNumb>20</CompNumb>
@@ -22351,7 +22419,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.042</BeanVersion>
+    <BeanVersion>01.044</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -22745,6 +22813,17 @@
         <UsrMethodName>PrintString</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ClearLine</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ClearLine</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Deinit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -22809,7 +22888,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>GenericI2C</BeanType>
     <Name>GI2C1</Name>
     <CompNumb>21</CompNumb>
@@ -23260,7 +23339,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>GenericSWI2C</BeanType>
     <Name>I2C1</Name>
     <CompNumb>23</CompNumb>
@@ -23303,11 +23382,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>SDA1</Name>
           <CompNumb>26</CompNumb>
@@ -23793,11 +23872,11 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>SCL1</Name>
           <CompNumb>27</CompNumb>
@@ -24534,7 +24613,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>FontDisplay</BeanType>
     <Name>FDisp1</Name>
     <CompNumb>40</CompNumb>
@@ -24700,7 +24779,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>GFont</BeanType>
     <Name>GFONT1</Name>
     <CompNumb>36</CompNumb>
@@ -24901,7 +24980,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>GDisplay</BeanType>
     <Name>GDisp1</Name>
     <CompNumb>37</CompNumb>
@@ -24911,7 +24990,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.206</BeanVersion>
+    <BeanVersion>01.207</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -25164,6 +25243,17 @@
         <UsrMethodName>DrawMonoBitmap</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>DrawMonoBitmapMask</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>DrawMonoBitmapMask</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>DrawColorBitmap</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -25398,7 +25488,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>HardFault</BeanType>
     <Name>HF1</Name>
     <CompNumb>60</CompNumb>
@@ -25478,7 +25568,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>MMA8451Q</BeanType>
     <Name>MMA1</Name>
     <CompNumb>72</CompNumb>
@@ -25964,7 +26054,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>KinetisTools</BeanType>
     <Name>KIN1</Name>
     <CompNumb>67</CompNumb>
@@ -26202,7 +26292,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
     <BeanType>nRF24L01</BeanType>
     <Name>RF1</Name>
     <CompNumb>77</CompNumb>
@@ -26239,9 +26329,9 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>0</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>CE1</Name>
           <CompNumb>78</CompNumb>
@@ -26476,11 +26566,11 @@
         <ItemSymbol>CSN</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Index>2</Index>
+        <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</RegCompRepository>
+        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/C:\nxp\S32DS_ARM_v2018.R1\McuOnEclipse</Repository>
+          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>CSN1</Name>
           <CompNumb>88</CompNumb>

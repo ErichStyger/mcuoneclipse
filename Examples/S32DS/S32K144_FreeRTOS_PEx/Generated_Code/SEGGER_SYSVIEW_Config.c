@@ -96,7 +96,9 @@ Revision: $Rev: 3734 $
 #endif
 
 // The target device name
-#define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
+#ifndef SYSVIEW_DEVICE_NAME
+  #define SYSVIEW_DEVICE_NAME     "Cortex" /* device name, configured in properties */
+#endif
 
 // System Frequency. SystemcoreClock is used in most CMSIS compatible projects.
 #if SYSVIEW_USING_FREERTOS

@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :

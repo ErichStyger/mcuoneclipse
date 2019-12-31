@@ -21,7 +21,6 @@
   #endif
 #endif
 
-
 #ifndef SDA1_CONFIG_PORT_NAME
   #if MCUC1_CONFIG_CPU_IS_IMXRT
     #define SDA1_CONFIG_PORT_NAME       GPIO1

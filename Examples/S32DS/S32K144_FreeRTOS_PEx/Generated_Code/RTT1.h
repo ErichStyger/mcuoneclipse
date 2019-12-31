@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerRTT
-**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -54,11 +54,11 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-** * (c) Copyright Segger, 2018
+** * (c) Copyright Segger, 2019
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2018, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

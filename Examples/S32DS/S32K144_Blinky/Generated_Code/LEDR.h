@@ -4,9 +4,9 @@
 **     Project     : S32K144_Blinky
 **     Processor   : S32K144_100
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:47, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 07:58, # CodeGen: 1
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -82,7 +82,11 @@
 #define LEDR_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define LEDR_On() LEDpin2_ClrVal()
+#if LEDR_CONFIG_IS_LOW_ACTIVE
+  #define LEDR_On() LEDpin2_ClrVal()
+#else
+  #define LEDR_On() LEDpin2_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -94,7 +98,11 @@
 ** ===================================================================
 */
 
-#define LEDR_Off() LEDpin2_SetVal()
+#if LEDR_CONFIG_IS_LOW_ACTIVE
+  #define LEDR_Off() LEDpin2_SetVal()
+#else
+  #define LEDR_Off() LEDpin2_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -118,7 +126,11 @@
 ** ===================================================================
 */
 
-#define LEDR_Get() (!(LEDpin2_GetVal()))
+#if LEDR_CONFIG_IS_LOW_ACTIVE
+  #define LEDR_Get() (!(LEDpin2_GetVal()))
+#else
+  #define LEDR_Get() LEDpin2_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : GDisplay
-**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.207, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -21,35 +21,36 @@
 **          Watchdog                                       : Disabled
 **          RTOS                                           : Disabled
 **     Contents    :
-**         PutPixel          - void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor...
-**         SetPixel          - void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
-**         ClrPixel          - void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
-**         Clear             - void GDisp1_Clear(void);
-**         DrawBox           - void GDisp1_DrawBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
-**         DrawFilledBox     - void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y,...
-**         DrawHLine         - void GDisp1_DrawHLine(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
-**         DrawVLine         - void GDisp1_DrawVLine(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
-**         DrawLine          - void GDisp1_DrawLine(GDisp1_PixelDim xstart, GDisp1_PixelDim ystart,...
-**         DrawCircle        - void GDisp1_DrawCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
-**         DrawFilledCircle  - void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
-**         DrawBarChart      - void GDisp1_DrawBarChart(GDisp1_PixelDim x, GDisp1_PixelDim y,...
-**         DrawMonoBitmap    - void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
-**         DrawColorBitmap   - void GDisp1_DrawColorBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image);
-**         Draw65kBitmap     - void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
-**         Draw256BitmapLow  - void GDisp1_Draw256BitmapLow(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
-**         Draw256BitmapHigh - void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
-**         UpdateFull        - void GDisp1_UpdateFull(void);
-**         UpdateRegion      - void GDisp1_UpdateRegion(GDisp1_PixelDim x, GDisp1_PixelDim y,...
-**         GetWidth          - GDisp1_PixelDim GDisp1_GetWidth(void);
-**         GetHeight         - GDisp1_PixelDim GDisp1_GetHeight(void);
-**         GetLongerSide     - GDisp1_PixelDim GDisp1_GetLongerSide(void);
-**         GetShorterSide    - GDisp1_PixelDim GDisp1_GetShorterSide(void);
-**         GetDisplay        - void GDisp1_GetDisplay(void);
-**         GiveDisplay       - void GDisp1_GiveDisplay(void);
-**         Deinit            - void GDisp1_Deinit(void);
-**         Init              - void GDisp1_Init(void);
+**         PutPixel           - void GDisp1_PutPixel(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelColor...
+**         SetPixel           - void GDisp1_SetPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
+**         ClrPixel           - void GDisp1_ClrPixel(GDisp1_PixelDim x, GDisp1_PixelDim y);
+**         Clear              - void GDisp1_Clear(void);
+**         DrawBox            - void GDisp1_DrawBox(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
+**         DrawFilledBox      - void GDisp1_DrawFilledBox(GDisp1_PixelDim x, GDisp1_PixelDim y,...
+**         DrawHLine          - void GDisp1_DrawHLine(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
+**         DrawVLine          - void GDisp1_DrawVLine(GDisp1_PixelDim x, GDisp1_PixelDim y, GDisp1_PixelDim...
+**         DrawLine           - void GDisp1_DrawLine(GDisp1_PixelDim xstart, GDisp1_PixelDim ystart,...
+**         DrawCircle         - void GDisp1_DrawCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
+**         DrawFilledCircle   - void GDisp1_DrawFilledCircle(GDisp1_PixelDim x0, GDisp1_PixelDim y0,...
+**         DrawBarChart       - void GDisp1_DrawBarChart(GDisp1_PixelDim x, GDisp1_PixelDim y,...
+**         DrawMonoBitmap     - void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
+**         DrawMonoBitmapMask - void GDisp1_DrawMonoBitmapMask(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE...
+**         DrawColorBitmap    - void GDisp1_DrawColorBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image);
+**         Draw65kBitmap      - void GDisp1_Draw65kBitmap(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
+**         Draw256BitmapLow   - void GDisp1_Draw256BitmapLow(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
+**         Draw256BitmapHigh  - void GDisp1_Draw256BitmapHigh(GDisp1_PixelDim x1, GDisp1_PixelDim y1,...
+**         UpdateFull         - void GDisp1_UpdateFull(void);
+**         UpdateRegion       - void GDisp1_UpdateRegion(GDisp1_PixelDim x, GDisp1_PixelDim y,...
+**         GetWidth           - GDisp1_PixelDim GDisp1_GetWidth(void);
+**         GetHeight          - GDisp1_PixelDim GDisp1_GetHeight(void);
+**         GetLongerSide      - GDisp1_PixelDim GDisp1_GetLongerSide(void);
+**         GetShorterSide     - GDisp1_PixelDim GDisp1_GetShorterSide(void);
+**         GetDisplay         - void GDisp1_GetDisplay(void);
+**         GiveDisplay        - void GDisp1_GiveDisplay(void);
+**         Deinit             - void GDisp1_Deinit(void);
+**         Init               - void GDisp1_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -95,7 +96,7 @@
   #include "FreeRTOS.h"
   #include "semphr.h"
 
-  static xSemaphoreHandle GDisp1_displayMutex;
+  static SemaphoreHandle_t GDisp1_displayMutex;
 #endif
 static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-6-5 RGB value */
  0x0000, 0x000A, 0x0014, 0xF81E, 0x0120, 0x012A, 0x0134, 0xF93E,
@@ -423,6 +424,59 @@ void GDisp1_DrawMonoBitmap(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image, G
     for(;;) {
       pixel = (GDisp1_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
       GDisp1_PutPixel(x0, y0, (GDisp1_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      if (i==0 && x0!=xe) { /* next byte inside the row */
+        data++;
+        i = 7;
+      } else {
+        i--;
+      }
+      if (x0==xe) { /* reached end of line, next row */
+        data++; /* next data byte */
+        break;
+      }
+      x0++;
+    } /* for */
+    if (y0==ye) break; /* reached end */
+    y0++;
+  } /* for */
+}
+
+/*
+** ===================================================================
+**     Method      :  DrawMonoBitmapMask (component GDisplay)
+**
+**     Description :
+**         Draws a B/W bitmap, but only the pixels which are set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x position of left upper corner
+**         y               - y position of left upper corner
+**         image           - Pointer to image structure and
+**                           information.
+**         pixelColor      - Color to be used for pixels
+**                           (pixel set)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void GDisp1_DrawMonoBitmapMask(GDisp1_PixelDim x, GDisp1_PixelDim y, PIMAGE image, GDisp1_PixelColor pixelColor)
+{
+  GDisp1_PixelDim x0, y0, xe, ye;
+  GDisp1_PixelColor pixel;
+  uint8_t i;
+  const uint8_t *data;
+
+  data = image->pixmap;
+  y0 = y;
+  ye = (GDisp1_PixelDim)(y+image->height-1);
+  xe = (GDisp1_PixelDim)(x+image->width-1);
+  for(;;) {
+    i=7;
+    x0 = x;
+    for(;;) {
+      pixel = (GDisp1_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
+      if (pixel) { /* only draw if pixel is set, everything else is transparent */
+        GDisp1_PutPixel(x0, y0, pixelColor);
+      }
       if (i==0 && x0!=xe) { /* next byte inside the row */
         data++;
         i = 7;

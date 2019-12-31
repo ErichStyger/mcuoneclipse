@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : SSD1306
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -53,6 +53,7 @@
 **         GiveLCD         - void LCD1_GiveLCD(void);
 **         SetRowCol       - uint8_t LCD1_SetRowCol(uint8_t row, uint8_t col);
 **         PrintString     - void LCD1_PrintString(uint8_t line, uint8_t col, uint8_t *str);
+**         ClearLine       - void LCD1_ClearLine(uint8_t line);
 **         Deinit          - void LCD1_Deinit(void);
 **         Init            - void LCD1_Init(void);
 **
@@ -362,6 +363,7 @@ uint16_t LCD1_ReadDataWord(void)
 */
 void LCD1_WriteData(uint8_t data)
 {
+  SSD1306_WriteData(data);
 }
 
 /*
@@ -374,6 +376,20 @@ void LCD1_WriteData(uint8_t data)
 */
 void LCD1_OpenWindow(LCD1_PixelDim x0, LCD1_PixelDim y0, LCD1_PixelDim x1, LCD1_PixelDim y1)
 {
+  /* no windowing capabilities */
+}
+
+/*
+** ===================================================================
+**     Method      :  LCD1_CloseWindow (component SSD1306)
+**
+**     Description :
+**         This method is internal. It is used by Processor Expert only.
+** ===================================================================
+*/
+void LCD1_CloseWindow(void)
+{
+  /* no windowing capabilities */
 }
 
 /*
@@ -396,6 +412,36 @@ void LCD1_Clear(void)
     p++;
   }
   LCD1_UpdateFull();
+}
+
+/*
+** ===================================================================
+**     Method      :  UpdateRegion (component SSD1306)
+**
+**     Description :
+**         Updates a region of the display. This is only a stub for
+**         this display as we are using windowing.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x coordinate
+**         y               - y coordinate
+**         w               - width of the region
+**         h               - Height of the region
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_PixelDim h)
+{
+  int page, pageBeg, pageEnd, colStart;
+
+  pageBeg = y/8;
+  pageEnd = (y+h-1)/8;
+  colStart = x;
+  for(page = pageBeg; page<=pageEnd; page++) {
+    (void)SSD1306_SetPageStartAddr(page);
+    (void)SSD1306_SetColStartAddr(colStart);
+    SSD1306_WriteDataBlock(&LCD1_DisplayBuf[0][0]+(page*LCD1_DISPLAY_HW_NOF_COLUMNS+colStart), w);
+  }
 }
 
 /*
@@ -428,44 +474,6 @@ void LCD1_UpdateFull(void)
   #error "unknown display type?"
 #endif
 }
-
-/*
-** ===================================================================
-**     Method      :  UpdateRegion (component SSD1306)
-**
-**     Description :
-**         Updates a region of the display. This is only a stub for
-**         this display as we are using windowing.
-**     Parameters  :
-**         NAME            - DESCRIPTION
-**         x               - x coordinate
-**         y               - y coordinate
-**         w               - width of the region
-**         h               - Height of the region
-**     Returns     : Nothing
-** ===================================================================
-*/
-/*
-void LCD1_UpdateRegion(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelDim w, LCD1_PixelDim h)
-{
-  implemented as macro in LCD1.h
-}
-*/
-
-/*
-** ===================================================================
-**     Method      :  LCD1_CloseWindow (component SSD1306)
-**
-**     Description :
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-/*
-void LCD1_CloseWindow(void)
-{
-  implemented as macro in LCD1.h
-}
-*/
 
 /*
 ** ===================================================================
@@ -718,7 +726,7 @@ uint8_t LCD1_SetRowCol(uint8_t row, uint8_t col)
 */
 void LCD1_PrintString(uint8_t line, uint8_t col, uint8_t *str)
 {
-  if (LCD1_SetRowCol(line ,col)!=ERR_OK) {
+  if (LCD1_SetRowCol(line, col)!=ERR_OK) {
     return; /* error! */
   }
   while(*str != '\0'){
@@ -734,6 +742,30 @@ void LCD1_PrintString(uint8_t line, uint8_t col, uint8_t *str)
       SSD1306_PrintChar(*str);
       str++;
     }
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  ClearLine (component SSD1306)
+**
+**     Description :
+**         Clear a text line on the display
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         line            - Line number, starting with zero
+**     Returns     : Nothing
+** ===================================================================
+*/
+void LCD1_ClearLine(uint8_t line)
+{
+  uint8_t i;
+
+  if (LCD1_SetRowCol(line, 0)!=ERR_OK) {
+    return; /* error! */
+  }
+  for(i=0; i<LCD1_DISPLAY_HW_NOF_COLUMNS; i++) {
+    SSD1306_WriteData(0); /* clear column */
   }
 }
 
@@ -851,7 +883,7 @@ void LCD1_PutPixel(LCD1_PixelDim x, LCD1_PixelDim y, LCD1_PixelColor color)
   if (color!=0) {
     val |= (1<<(y%8)); /* set pixel */
   } else {
-    val &= (1<<(y%8)); /* clear pixel */
+    val &= ~(1<<(y%8)); /* clear pixel */
   }
   LCD1_DisplayBuf[y/8][x] = val; /* store value */
 }

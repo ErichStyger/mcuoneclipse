@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerRTT
-**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -54,11 +54,11 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-** * (c) Copyright Segger, 2018
+** * (c) Copyright Segger, 2019
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2018, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -99,6 +99,7 @@
 /* MODULE RTT1. */
 
 #include "RTT1.h"
+#include "WAIT1.h"
 
 /* default standard I/O struct */
 CLS1_ConstStdIOType RTT1_stdio = {
@@ -292,18 +293,28 @@ void RTT1_StdIOReadChar(uint8_t *c)
 */
 void RTT1_StdIOSendChar(uint8_t ch)
 {
-  int timeoutMs = 5;
+#if RTT1_CONFIG_BLOCKING_SEND
+  #if RTT1_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0 && RTT1_CONFIG_BLOCKING_SEND_WAIT_MS>0
+  int timeoutMs = RTT1_CONFIG_BLOCKING_SEND_TIMEOUT_MS;
+  #endif
 
   for(;;) { /* will break */
     if (RTT1_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
       break; /* was able to send character, get out of waiting loop */
     }
-    WAIT1_WaitOSms(1);
+  #if RTT1_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    WAIT1_WaitOSms(RTT1_CONFIG_BLOCKING_SEND_WAIT_MS);
+    #if RTT1_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if(timeoutMs<=0) {
       break; /* timeout */
     }
-    timeoutMs -= 1;
+    timeoutMs -= RTT1_CONFIG_BLOCKING_SEND_WAIT_MS;
+    #endif
+  #endif
   } /* for */
+#else
+  (void)RTT1_Write(0, &ch, 1); /* non blocking send, might loose characters */
+#endif
 }
 
 /*

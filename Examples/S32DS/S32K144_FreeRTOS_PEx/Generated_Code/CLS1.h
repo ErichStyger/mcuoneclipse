@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : Shell
-**     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.107, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -27,40 +27,42 @@
 **          History                                        : no
 **          Kinetis SDK                                    : MCUC1
 **     Contents    :
-**         PrintPrompt                  - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
-**         SendNum8u                    - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum8s                    - void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum16u                   - void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum16s                   - void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum32u                   - void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum32s                   - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendCh                       - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
-**         SendStr                      - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
-**         PrintMemory                  - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
-**         printfIO                     - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
-**         printf                       - unsigned CLS1_printf(const char *fmt, ...);
-**         SendData                     - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
-**         PrintStatus                  - uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
-**         ParseCommand                 - uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled,...
-**         IsHistoryCharacter           - bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx,...
-**         ReadLine                     - bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
-**         PrintCommandFailed           - void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
-**         IterateTable                 - uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled,...
-**         SetStdio                     - uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
-**         GetStdio                     - CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
-**         RequestSerial                - void CLS1_RequestSerial(void);
-**         ReleaseSerial                - void CLS1_ReleaseSerial(void);
-**         ReadAndParseWithCommandTable - uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize,...
-**         ParseWithCommandTable        - uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType...
-**         GetSemaphore                 - void* CLS1_GetSemaphore(void);
-**         SendStatusStr                - void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
-**         SendHelpStr                  - void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
-**         ReadChar                     - void CLS1_ReadChar(uint8_t *c);
-**         SendChar                     - void CLS1_SendChar(uint8_t ch);
-**         KeyPressed                   - bool CLS1_KeyPressed(void);
-**         SendCharFct                  - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
-**         Init                         - void CLS1_Init(void);
-**         Deinit                       - void CLS1_Deinit(void);
+**         PrintPrompt                     - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
+**         SendNum8u                       - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum8s                       - void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum16u                      - void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum16s                      - void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum32u                      - void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum32s                      - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendCh                          - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
+**         SendStr                         - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
+**         PrintMemory                     - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
+**         printfIO                        - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
+**         printf                          - unsigned CLS1_printf(const char *fmt, ...);
+**         SendData                        - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
+**         PrintStatus                     - uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
+**         ParseCommand                    - uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled,...
+**         IsHistoryCharacter              - bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx,...
+**         ReadLine                        - bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
+**         PrintCommandFailed              - void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
+**         IterateTable                    - uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled,...
+**         SetStdio                        - uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
+**         GetStdio                        - CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
+**         RequestSerial                   - void CLS1_RequestSerial(void);
+**         ReleaseSerial                   - void CLS1_ReleaseSerial(void);
+**         ReadAndParseWithCommandTableExt - uint8_t CLS1_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t...
+**         ReadAndParseWithCommandTable    - uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize,...
+**         ParseWithCommandTableExt        - uint8_t CLS1_ParseWithCommandTableExt(const uint8_t *cmd, CLS1_ConstStdIOType...
+**         ParseWithCommandTable           - uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType...
+**         GetSemaphore                    - void* CLS1_GetSemaphore(void);
+**         SendStatusStr                   - void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
+**         SendHelpStr                     - void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
+**         ReadChar                        - void CLS1_ReadChar(uint8_t *c);
+**         SendChar                        - void CLS1_SendChar(uint8_t ch);
+**         KeyPressed                      - bool CLS1_KeyPressed(void);
+**         SendCharFct                     - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
+**         Init                            - void CLS1_Init(void);
+**         Deinit                          - void CLS1_Deinit(void);
 **
 ** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -150,10 +152,6 @@
 #define CLS1_DEFAULT_SHELL_BUFFER_SIZE  CLS1_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  /* default buffer size for shell command parsing */
 
 /* Include inherited components */
-#include "MCUC1.h"
-#include "UTIL1.h"
-#include "XF1.h"
-#include "CS1.h"
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */
@@ -167,11 +165,6 @@
 #define CLS1_SILENT_PREFIX_CHAR    '#' /* with this char as first character in the cmd, printing is silent. Use a space to disable it */
 #define CLS1_NO_SILENT_PREFIX_CHAR ' ' /* used for no silent prefix char */
 #define CLS1_SILENT_PREFIX_CHAR_ENABLED (CLS1_SILENT_PREFIX_CHAR != CLS1_NO_SILENT_PREFIX_CHAR)
-
-/* multi command support */
-#define CLS1_MULTI_CMD_ENABLED   0 /* 1: enabled, 0: disabled */
-#define CLS1_MULTI_CMD_SIZE      0 /* max size of each command */
-#define CLS1_MULTI_CMD_CHAR      ';' /* separation character */
 
 /* settings for local echo */
 #define CLS1_ECHO_ENABLED  0           /* 1: enabled, 0: disabled */
@@ -763,6 +756,57 @@ uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr, uint8
 **                           32bit address with a pointer to a buffer
 **                           and a buffer size.
 **       * io              - Pointer to I/O to be used
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t CLS1_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t cmdBufSize, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback, bool silent);
+/*
+** ===================================================================
+**     Method      :  ReadAndParseWithCommandTableExt (component Shell)
+**
+**     Description :
+**         Reads characters from the default input channel and appends
+**         it to the buffer. Once a new line has been detected, the
+**         line will be parsed using the handlers in the table.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**       * parseCallback   - Pointer to callback
+**                           table provided by the user application to
+**                           parse commands. The table has a NULL
+**                           sentinel.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t CLS1_ParseWithCommandTableExt(const uint8_t *cmd, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback, bool silent);
+/*
+** ===================================================================
+**     Method      :  ParseWithCommandTableExt (component Shell)
+**
+**     Description :
+**         Parses a shell command. It handles first the internal
+**         commands and will call the provided callback.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * io              - Pointer to I/O callbacks
+**       * parseCallback   - Pointer to callback
+**                           which will be called to parse commands in
+**                           the user application, or NULL if not used.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================

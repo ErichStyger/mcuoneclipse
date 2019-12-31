@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : CriticalSection
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void CS1_Deinit(void);
 **         Init             - void CS1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -95,7 +95,11 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_CriticalVariable() /* nothing needed */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_CriticalVariable() /* nothing needed */
+  #else
+    #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #endif
 #endif
 /*
 ** ===================================================================
@@ -113,8 +117,14 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_EnterCritical()   taskENTER_CRITICAL_FROM_ISR() /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_EnterCritical() \
-    do {                                  \
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_EnterCritical() \
+      do {                                  \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts \todo */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_EnterCritical() \
+      do {                                  \
       /*lint -save  -esym(529,cpuSR) Symbol 'cpuSR' not subsequently referenced. */\
       __asm (                             \
       "mrs   r0, PRIMASK     \n\t"        \
@@ -123,7 +133,8 @@ extern "C" {
       : [output] "=m" (cpuSR) :: "r0");   \
       __asm ("" ::: "memory");            \
       /*lint -restore Symbol 'cpuSR' not subsequently referenced. */\
-    } while(0)
+      } while(0)
+    #endif
 #endif
 /*
 ** ===================================================================
@@ -141,13 +152,21 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_ExitCritical()   taskEXIT_CRITICAL_FROM_ISR(0) /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_ExitCritical() \
-   do{                                  \
+
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_ExitCritical() \
+      do {                                  \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts \todo */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_ExitCritical() \
+     do{                                  \
      __asm (                            \
      "ldrb r0, %[input]    \n\t"        \
      "msr PRIMASK,r0        \n\t"       \
      ::[input] "m" (cpuSR) : "r0");     \
-   } while(0)
+     } while(0)
+  #endif
 #endif
 /*
 ** ===================================================================

@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : SeggerSystemView
-**     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.070, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
@@ -248,7 +248,7 @@ void SYS1_Init(void);
 **
 **     Description :
 **         Prints a string using printf() to the host which is
-**         processed target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string
@@ -278,7 +278,7 @@ void SYS1_Init(void);
 **
 **     Description :
 **         Prints a warning string using printf() to the host which is
-**         processed on the target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string
@@ -308,7 +308,7 @@ void SYS1_Init(void);
 **
 **     Description :
 **         Prints an error string using printf() to the host which is
-**         processed on the target
+**         processed first on the target
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **       * s               - Pointer to string

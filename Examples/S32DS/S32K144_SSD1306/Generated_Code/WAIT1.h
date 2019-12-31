@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : Wait
-**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.085, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -25,9 +25,8 @@
 **         Waitns         - void WAIT1_Waitns(uint16_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
-**         DeInit         - void WAIT1_DeInit(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -242,18 +241,6 @@ void WAIT1_Init(void);
 **
 **     Description :
 **         Driver initialization routine.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void WAIT1_DeInit(void);
-/*
-** ===================================================================
-**     Method      :  DeInit (component Wait)
-**
-**     Description :
-**         Driver de-initialization routine
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

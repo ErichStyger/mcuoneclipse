@@ -88,18 +88,18 @@ Revision: $Rev: 9599 $
 /* Channel 0 settings from properties */ /* << EST */
 #define SEGGER_RTT_CHANNEL_0_ENABLED              (1) /* 1: initialize channel; 0: do not initialize channel */
 #define SEGGER_RTT_CHANNEL_0_NAME                 "Terminal"
-#define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_UP       (512)
-#define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_DOWN     (64)
+#define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_UP       (RTT1_CONFIG_RTT_BUFFER_SIZE_UP)
+#define SEGGER_RTT_CHANNEL_0_BUFFER_SIZE_DOWN     (RTT1_CONFIG_RTT_BUFFER_SIZE_DOWN)
 #define SEGGER_RTT_CHANNEL_0_MODE_UP              SEGGER_RTT_MODE_NO_BLOCK_SKIP
 #define SEGGER_RTT_CHANNEL_0_MODE_DOWN            SEGGER_RTT_MODE_NO_BLOCK_SKIP
 
 #define SEGGER_RTT_MAX_NUM_UP_BUFFERS             (2)     // Max. number of up-buffers (T->H) available on this target    (Default: 2)
 #define SEGGER_RTT_MAX_NUM_DOWN_BUFFERS           (2)     // Max. number of down-buffers (H->T) available on this target  (Default: 2)
 
-#define BUFFER_SIZE_UP                            (512)  // Size of the buffer for terminal output of target, up to host (Default: 1k)
-#define BUFFER_SIZE_DOWN                          (64)    // Size of the buffer for terminal input to target from host (Usually keyboard input) (Default: 16)
+#define BUFFER_SIZE_UP                            (RTT1_CONFIG_RTT_BUFFER_SIZE_UP)  // Size of the buffer for terminal output of target, up to host (Default: 1k)
+#define BUFFER_SIZE_DOWN                          (RTT1_CONFIG_RTT_BUFFER_SIZE_DOWN)    // Size of the buffer for terminal input to target from host (Usually keyboard input) (Default: 16)
 
-#define SEGGER_RTT_PRINTF_BUFFER_SIZE             (64)    // Size of buffer for RTT printf to bulk-send chars via RTT     (Default: 64)
+#define SEGGER_RTT_PRINTF_BUFFER_SIZE             (RTT1_CONFIG_RTT_BUFFER_SIZE_PRINTF)    // Size of buffer for RTT printf to bulk-send chars via RTT     (Default: 64)
 #define SEGGER_RTT_MODE_DEFAULT                   SEGGER_RTT_MODE_NO_BLOCK_SKIP // Mode for pre-initialized terminal channel (buffer 0)
 
 /*********************************************************************

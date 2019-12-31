@@ -45,15 +45,40 @@
 #endif
 
 /* configuration of function names used for low level I2C functions */
-#include "I2C1.h" /* interface of low level I2C driver */
-#define GI2C1_CONFIG_RECV_BLOCK                        I2C1_RecvBlock
-#define GI2C1_CONFIG_SEND_BLOCK                        I2C1_SendBlock
-#if GI2C1_CONFIG_SUPPORT_STOP_NO_START
-#define GI2C1_CONFIG_SEND_BLOCK_CONTINUE               I2C1_SendBlockContinue
+#ifndef GI2C1_CONFIG_INTERFACE_HEADER_FILE
+  #define GI2C1_CONFIG_INTERFACE_HEADER_FILE "I2C1.h"
 #endif
-#define GI2C1_CONFIG_SEND_STOP                         I2C1_SendStop
-#define GI2C1_CONFIG_SELECT_SLAVE                      I2C1_SelectSlave
-#define GI2C1_CONFIG_RECV_BLOCK_CUSTOM                 I2C1_RecvBlockCustom
-#define GI2C1_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (defined(I2C1_RECVBLOCKCUSTOM_AVAILABLE) && (I2C1_RECVBLOCKCUSTOM_AVAILABLE==1))
+#include GI2C1_CONFIG_INTERFACE_HEADER_FILE /* interface of low level I2C driver */
+
+#ifndef GI2C1_CONFIG_RECV_BLOCK
+  #define GI2C1_CONFIG_RECV_BLOCK                        I2C1_RecvBlock
+#endif
+
+#ifndef GI2C1_CONFIG_SEND_BLOCK
+  #define GI2C1_CONFIG_SEND_BLOCK                        I2C1_SendBlock
+#endif
+
+#if GI2C1_CONFIG_SUPPORT_STOP_NO_START
+  #ifndef GI2C1_CONFIG_SEND_BLOCK_CONTINUE
+    #define GI2C1_CONFIG_SEND_BLOCK_CONTINUE             I2C1_SendBlockContinue
+  #endif
+#endif
+
+#ifndef GI2C1_CONFIG_SEND_STOP
+  #define GI2C1_CONFIG_SEND_STOP                         I2C1_SendStop
+#endif
+
+#ifndef GI2C1_CONFIG_SELECT_SLAVE
+  #define GI2C1_CONFIG_SELECT_SLAVE                      I2C1_SelectSlave
+#endif
+
+#ifndef GI2C1_CONFIG_RECV_BLOCK_CUSTOM
+  #define GI2C1_CONFIG_RECV_BLOCK_CUSTOM                 I2C1_RecvBlockCustom
+#endif
+
+#ifndef GI2C1_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE
+  #define GI2C1_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (defined(I2C1_RECVBLOCKCUSTOM_AVAILABLE) && (I2C1_RECVBLOCKCUSTOM_AVAILABLE))
+#endif
+
 
 #endif /* __GI2C1_CONFIG_H */

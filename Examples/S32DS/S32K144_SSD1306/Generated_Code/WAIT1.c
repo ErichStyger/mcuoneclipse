@@ -4,9 +4,9 @@
 **     Project     : S32K144_SSD1306
 **     Processor   : S32K144_100
 **     Component   : Wait
-**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.085, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -25,9 +25,8 @@
 **         Waitns         - void WAIT1_Waitns(uint16_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
-**         DeInit         - void WAIT1_DeInit(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -81,16 +80,25 @@
 ** ===================================================================
 */
 #ifdef __GNUC__
+#if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
-  __attribute__((naked))
   #else
-  __attribute__((naked, no_instrument_function))
+    __attribute__((no_instrument_function))
   #endif
+#else
+  #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+    __attribute__((naked))
+  #else
+    __attribute__((naked, no_instrument_function))
+  #endif
+#endif
 #endif
 void WAIT1_Wait10Cycles(void)
 {
   /* This function will wait 10 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
+
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
   /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
   /* Compiler is GNUC */
   __asm (
@@ -100,6 +108,15 @@ void WAIT1_Wait10Cycles(void)
    "nop   \n\t" /* [1] */
    "bx lr \n\t" /* [3] */
   );
+#elif MCUC1_CONFIG_CPU_IS_RISC_V
+  /* \todo */
+  __asm ( /* assuming [4] for overhead */
+   "nop   \n\t" /* [1] */
+   "nop   \n\t" /* [1] */
+   "nop   \n\t" /* [1] */
+   "nop   \n\t" /* [1] */
+  );
+#endif
   /*lint -restore */
 }
 
@@ -114,16 +131,24 @@ void WAIT1_Wait10Cycles(void)
 ** ===================================================================
 */
 #ifdef __GNUC__
-#ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
-  __attribute__((naked))
-#else
-  __attribute__((naked, no_instrument_function))
-#endif
+  #if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+    #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+    #else
+      __attribute__((no_instrument_function))
+    #endif
+  #else
+    #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
+      __attribute__((naked))
+    #else
+      __attribute__((naked, no_instrument_function))
+    #endif
+  #endif
 #endif
 void WAIT1_Wait100Cycles(void)
 {
   /* This function will spend 100 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
   __asm (
    /* bl to here:               [4] */
    "push {r0}   \n\t"        /* [2] */
@@ -146,6 +171,15 @@ void WAIT1_Wait100Cycles(void)
    "pop {r0}    \n\t"        /* [2] */
    "bx lr       \n\t"        /* [3] */
   );
+#elif MCUC1_CONFIG_CPU_IS_RISC_V
+  /* \todo */
+  __asm ( /* assuming [10] for overhead */
+    "  li a5,20        \n\t"
+    "Loop:             \n\t"
+    "  addi a5,a5,-1   \n\t"
+    "  bgtz a5, Loop   \n\t"
+  );
+#endif
   /*lint -restore */
 }
 
@@ -172,13 +206,15 @@ void WAIT1_WaitCycles(uint16_t cycles)
     /* wait */
   }
 #else
-  while(cycles > 100) {
+  int32_t counter = cycles;
+
+  while(counter > 100) {
     WAIT1_Wait100Cycles();
-    cycles -= 100;
+    counter -= 100;
   }
-  while(cycles > 10) {
+  while(counter > 10) {
     WAIT1_Wait10Cycles();
-    cycles -= 10;
+    counter -= 10;
   }
 #endif
   /*lint -restore */
@@ -304,24 +340,6 @@ void WAIT1_Init(void)
   KIN1_InitCycleCounter();
   KIN1_ResetCycleCounter();
   KIN1_EnableCycleCounter();
-#endif
-}
-
-/*
-** ===================================================================
-**     Method      :  DeInit (component Wait)
-**
-**     Description :
-**         Driver de-initialization routine
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-void WAIT1_DeInit(void)
-{
-#if WAIT1_CONFIG_USE_CYCLE_COUNTER
-  /* disable hardware cycle counter */
-  KIN1_DisableCycleCounter();
 #endif
 }
 

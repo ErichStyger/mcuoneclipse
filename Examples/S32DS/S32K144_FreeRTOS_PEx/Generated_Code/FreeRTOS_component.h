@@ -4,14 +4,14 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : FreeRTOS
-**     Version     : Component 01.568, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FreeRTOS
-**          RTOS Version                                   : V10.1.1
+**          RTOS Version                                   : V10.2.1
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -215,7 +215,7 @@
 **         Deinit                               - void FreeRTOS_Deinit(void);
 **         Init                                 - void FreeRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2018 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
 **  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
@@ -497,7 +497,7 @@ extern "C" {
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.

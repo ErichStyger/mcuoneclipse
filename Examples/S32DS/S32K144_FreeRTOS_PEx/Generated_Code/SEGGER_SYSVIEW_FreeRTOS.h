@@ -83,7 +83,9 @@ Notes:
 #if 0 /* << EST */
 #define SYSVIEW_FREERTOS_MAX_NOF_TASKS  8
 #else /* << EST */
-#define SYSVIEW_FREERTOS_MAX_NOF_TASKS    8
+#ifndef SYSVIEW_FREERTOS_MAX_NOF_TASKS
+  #define SYSVIEW_FREERTOS_MAX_NOF_TASKS    8
+#endif
 #endif
 /*********************************************************************
 *

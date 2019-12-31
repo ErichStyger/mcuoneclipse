@@ -21,7 +21,6 @@
   #endif
 #endif
 
-
 #ifndef LEDpin3_CONFIG_PORT_NAME
   #if MCUC1_CONFIG_CPU_IS_IMXRT
     #define LEDpin3_CONFIG_PORT_NAME       GPIO1

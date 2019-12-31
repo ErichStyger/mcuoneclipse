@@ -6,7 +6,7 @@
 **     Component   : GenericI2C
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:52, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:14, # CodeGen: 3
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -91,7 +91,7 @@
 #endif /* NULL */
 
 #if GI2C1_CONFIG_USE_MUTEX
-static xSemaphoreHandle GI2C1_busSem = NULL; /* Semaphore to protect I2C bus access */
+static SemaphoreHandle_t GI2C1_busSem = NULL; /* Semaphore to protect I2C bus access */
 #endif
 /*
 ** ===================================================================
@@ -202,10 +202,11 @@ uint8_t GI2C1_UnselectSlave(void)
 uint8_t GI2C1_ReadBlockGeneric(void* data, uint16_t dataSize, GI2C1_EnumSendFlags flags, GI2C1_EnumStartFlags flagsStart, GI2C1_EnumAckFlags flagsAck)
 {
   uint8_t res = ERR_OK;
-  uint16_t nof;
 
 #if GI2C1_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE
   for(;;) { /* breaks */
+    uint16_t nof;
+
     res = GI2C1_CONFIG_RECV_BLOCK_CUSTOM(data, dataSize, &nof, flagsStart, flagsAck);
     if (res!=ERR_OK) {
     #if GI2C1_CONFIG_USE_ON_ERROR_EVENT

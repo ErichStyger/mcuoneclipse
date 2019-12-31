@@ -6,7 +6,7 @@
 **     Component   : XFormat
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -784,6 +784,7 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'P':
             param.flags |=  FLAG_UPPER;
+            // fall through
             /* no break */
             /*lint -fallthrough */
 
@@ -833,9 +834,8 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
           case  'X':
             /* no break */
             param.flags |= FLAG_UPPER;
-
+            // fall through
             /* no break */
-
             /* lint -fallthrough */
 
             /*
@@ -874,6 +874,7 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'S':
             param.flags |= FLAG_UPPER;
+            // fall through
             /* no break */
             /*lint -fallthrough */
 
@@ -892,6 +893,7 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'C':
             param.flags |= FLAG_UPPER;
+            // fall through
             /* no break */
             /* lint -fallthrough */
 

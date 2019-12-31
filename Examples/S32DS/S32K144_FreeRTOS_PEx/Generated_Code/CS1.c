@@ -4,9 +4,9 @@
 **     Project     : S32K144_FreeRTOS_PEx
 **     Processor   : S32K144_100
 **     Component   : CriticalSection
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-26, 15:50, # CodeGen: 0
+**     Date/Time   : 2019-12-31, 08:10, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void CS1_Deinit(void);
 **         Init             - void CS1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
