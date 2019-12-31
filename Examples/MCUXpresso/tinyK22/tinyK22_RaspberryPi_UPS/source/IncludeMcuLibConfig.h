@@ -15,7 +15,6 @@
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
 /* ------------------- RTOS ---------------------------*/
-/* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
 #define configTOTAL_HEAP_SIZE                       (54*1024)
