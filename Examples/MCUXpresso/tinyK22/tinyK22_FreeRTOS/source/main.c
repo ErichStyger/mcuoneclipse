@@ -42,24 +42,40 @@
 #include "McuWait.h"
 #include "McuRTOS.h"
 #include "McuLED.h"
+#include "McuRTOS.h"
 #include "platform.h"
 #include "leds.h"
+
+static void AppTask(void *pv) {
+  for(;;) {
+    McuLED_Toggle(tinyLED);
+    vTaskDelay(pdMS_TO_TICKS(500));
+  } /* for */
+}
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
+  /* Init board hardware. */
+  BOARD_InitBootPins();
+  BOARD_InitBootClocks();
+  BOARD_InitBootPeripherals();
 
-    PL_Init();
-    McuLED_On(tinyLED);
-    McuWait_Waitms(100);
-    McuLED_Off(tinyLED);
-     while(1) {
-        __asm volatile ("nop");
-    }
-    return 0 ;
+  PL_Init();
+  McuLED_On(tinyLED);
+  McuWait_Waitms(100);
+  McuLED_Off(tinyLED);
+  if (xTaskCreate(
+      AppTask,  /* pointer to the task */
+      "App", /* task name for kernel awareness debugging */
+      300/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+  vTaskStartScheduler();
+  return 0 ;
 }
