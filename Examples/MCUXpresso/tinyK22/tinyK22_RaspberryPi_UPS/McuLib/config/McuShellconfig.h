@@ -66,4 +66,17 @@
   #define McuShell_CONFIG_PROJECT_NAME_STRING              "My Project Name"
 #endif
 
+#ifndef McuShell_CONFIG_MULTI_CMD_ENABLED
+  #define McuShell_CONFIG_MULTI_CMD_ENABLED                (0) /* 1: enabled, 0: disabled */
+#endif
+
+#ifndef McuShell_CONFIG_MULTI_CMD_SIZE
+  #define McuShell_CONFIG_MULTI_CMD_SIZE                   (32) /* max size of each command */
+#endif
+
+#ifndef McuShell_CONFIG_MULTI_CMD_CHAR
+  #define McuShell_CONFIG_MULTI_CMD_CHAR                   ';' /* separation character */
+#endif
+
+
 #endif /* __McuShell_CONFIG_H */

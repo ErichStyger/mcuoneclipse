@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2019, Erich Styger
  *
- * Configuration header file for ULN2003 stepper motor driver
+ * Configuration header file for X12.017 quad-stepper motor driver
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef MCUULN2003_CONFIG_H_
-#define MCUULN2003_CONFIG_H_
+#ifndef MCU_X12_017_CONFIG_H_
+#define MCU_X12_017_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,8 +15,8 @@ extern "C" {
 
 #include "McuLibconfig.h"
 
-#ifndef MCUULN2003_CONFIG_USE_FREERTOS_HEAP
-  #define MCUULN2003_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)
+#ifndef McuX12_017_CONFIG_USE_FREERTOS_HEAP
+  #define McuX12_017_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
@@ -24,4 +24,4 @@ extern "C" {
 }  /* extern "C" */
 #endif
 
-#endif /* MCUULN2003_CONFIG_H_ */
+#endif /* MCU_X12_017_CONFIG_H_ */
