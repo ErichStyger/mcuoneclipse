@@ -39,8 +39,11 @@
 #include "clock_config.h"
 #include "MK22F51212.h"
 /* TODO: insert other include files here. */
-
-/* TODO: insert other definitions and declarations here. */
+#include "McuWait.h"
+#include "McuRTOS.h"
+#include "McuLED.h"
+#include "platform.h"
+#include "leds.h"
 
 /*
  * @brief   Application entry point.
@@ -51,15 +54,11 @@ int main(void) {
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    printf("Hello World\n");
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
+    PL_Init();
+    McuLED_On(tinyLED);
+    McuWait_Waitms(100);
+    McuLED_Off(tinyLED);
+     while(1) {
         __asm volatile ("nop");
     }
     return 0 ;
