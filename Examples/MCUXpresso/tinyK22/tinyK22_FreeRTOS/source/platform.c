@@ -16,6 +16,7 @@
 #include "leds.h"
 #include "McuRTT.h"
 #include "McuSystemView.h"
+#include "McuPercepio.h"
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -28,6 +29,9 @@ void PL_Init(void) {
   McuRTT_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
+#elif configUSE_PERCEPIO_TRACE_HOOKS
+  McuPercepio_Startup();
+  //vTraceEnable(TRC_START);
 #endif
   McuGPIO_Init();
   McuLED_Init();

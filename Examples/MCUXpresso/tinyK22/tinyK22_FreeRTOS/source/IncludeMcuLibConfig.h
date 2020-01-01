@@ -24,8 +24,12 @@
 
 
 /* Segger SystemViewer: */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
 #define SYSVIEW_APP_NAME                            "FreeRTOS on tinyK22"
 #define SYSVIEW_DEVICE_NAME                         "NXP K22FN512"
+
+/* Percepio Tracealyzer */
+#define configUSE_PERCEPIO_TRACE_HOOKS                  (1)
+#define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
