@@ -29,7 +29,7 @@
  */
  
 /**
- * @file    tinyK22_FreeRTOS.c
+ * @file    main.c
  * @brief   Application entry point.
  */
 #include <stdio.h>

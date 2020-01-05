@@ -45,10 +45,10 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 #ifndef configGENERATE_RUN_TIME_STATS_USE_TICKS
-  #define configGENERATE_RUN_TIME_STATS_USE_TICKS 0 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
+  #define configGENERATE_RUN_TIME_STATS_USE_TICKS 1 /* 1: Use the RTOS tick counter as runtime counter. 0: use extra timer */
 #endif
 #ifndef configGENERATE_RUN_TIME_STATS
-  #define configGENERATE_RUN_TIME_STATS           0 /* 1: generate runtime statistics; 0: no runtime statistics */
+  #define configGENERATE_RUN_TIME_STATS           1 /* 1: generate runtime statistics; 0: no runtime statistics */
 #endif
 #if configGENERATE_RUN_TIME_STATS
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
