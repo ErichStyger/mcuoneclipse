@@ -99,6 +99,9 @@
    * right: PTA12
    * push:  PTB16
    */
+  #define CONFIG_I2C_USE_PORT_B     (0) /* PTB0, PTB1 */
+  #define CONFIG_I2C_USE_PORT_E     (1) /* PTE0, PTE1 */
+#if CONFIG_I2C_USE_PORT_B
   #define SCL1_CONFIG_GPIO_NAME     GPIOB
   #define SCL1_CONFIG_PORT_NAME     PORTB
   #define SCL1_CONFIG_PIN_NUMBER    0u
@@ -106,7 +109,15 @@
   #define SDA1_CONFIG_GPIO_NAME     GPIOB
   #define SDA1_CONFIG_PORT_NAME     PORTB
   #define SDA1_CONFIG_PIN_NUMBER    1u
+#elif CONFIG_I2C_USE_PORT_E
+  #define SCL1_CONFIG_GPIO_NAME     GPIOE
+  #define SCL1_CONFIG_PORT_NAME     PORTE
+  #define SCL1_CONFIG_PIN_NUMBER    0u
 
+  #define SDA1_CONFIG_GPIO_NAME     GPIOE
+  #define SDA1_CONFIG_PORT_NAME     PORTE
+  #define SDA1_CONFIG_PIN_NUMBER    1u
+#endif
   #define PINS_HATNAVUP_GPIO      GPIOB
   #define PINS_HATNAVUP_PORT      PORTB
   #define PINS_HATNAVUP_PIN       3u
