@@ -11,7 +11,6 @@ processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
 processor_version: 7.0.1
-board: FRDM-K22F
 functionalGroups:
 - name: BOARD_InitPeripherals
   UUID: b2d928ad-a58f-45c2-aad3-5be74f6b6873

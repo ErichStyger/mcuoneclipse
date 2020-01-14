@@ -12,7 +12,6 @@ processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
 processor_version: 7.0.1
-board: FRDM-K22F
 pin_labels:
 - {pin_num: '22', pin_signal: PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK, label: 'J11[4]/SWD_CLK_TGTMCU'}
 - {pin_num: '23', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, label: 'J2[4]/RED_LED', identifier: LEDRGB_RED}
@@ -55,8 +54,6 @@ pin_labels:
 - {pin_num: '1', pin_signal: ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT, label: 'J2[18]/UART1_TX_TGTMCU', identifier: DEBUG_UART_TX;RTC_CLKOUT;CLKOUT32K}
 - {pin_num: '2', pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/I2C1_SCL/SPI1_SIN, label: 'J2[20]/UART1_RX_TGTMCU', identifier: DEBUG_UART_RX}
 - {pin_num: '4', pin_signal: VSS4, label: GND}
-- {pin_num: '31', pin_signal: VSS31, label: GND}
-- {pin_num: '47', pin_signal: VSS47, label: GND}
 - {pin_num: '16', pin_signal: VSSA, label: VSSA}
 - {pin_num: '15', pin_signal: VREFL, label: VREFL}
 - {pin_num: '14', pin_signal: VREFH, label: 'J2[16]/VREFH'}
@@ -70,9 +67,7 @@ pin_labels:
 - {pin_num: '17', pin_signal: VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1_SE18, label: 'J2[1]'}
 - {pin_num: '21', pin_signal: VBAT, label: VBAT}
 - {pin_num: '13', pin_signal: VDDA, label: P3V3_K22F}
-- {pin_num: '30', pin_signal: VDD30, label: P3V3_K22F}
 - {pin_num: '3', pin_signal: VDD3, label: P3V3_K22F}
-- {pin_num: '48', pin_signal: VDD48, label: P3V3_K22F}
 - {pin_num: '7', pin_signal: VOUT33, label: USB_VOUT33, identifier: USB_VOUT33}
 - {pin_num: '5', pin_signal: USB0_DP, label: USB_DP, identifier: USB_DP}
 - {pin_num: '6', pin_signal: USB0_DM, label: USB_DN, identifier: USB_DN}

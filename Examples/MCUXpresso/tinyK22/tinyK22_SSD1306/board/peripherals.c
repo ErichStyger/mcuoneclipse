@@ -6,14 +6,15 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v5.0
+product: Peripherals v7.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 5.0.0
+processor_version: 7.0.1
 board: FRDM-K22F
 functionalGroups:
 - name: BOARD_InitPeripherals
+  UUID: b2d928ad-a58f-45c2-aad3-5be74f6b6873
   called_from_default_init: true
   selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -23,6 +24,13 @@ component:
 - type: 'system'
 - type_id: 'system'
 - global_system_definitions: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'msg'
+- type_id: 'msg_6e2baaf3b97dbeef01c0043275f9a0e7'
+- global_messages: []
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 

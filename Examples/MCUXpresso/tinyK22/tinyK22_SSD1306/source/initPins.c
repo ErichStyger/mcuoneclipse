@@ -8,6 +8,7 @@
 #include "fsl_port.h"
 
 void InitPins(void) {
+#if 0
   /* turn on clocking for all the GPIO ports we are going to use */
   CLOCK_EnableClock(kCLOCK_PortA);
   CLOCK_EnableClock(kCLOCK_PortB);
@@ -68,4 +69,5 @@ void InitPins(void) {
   /* Mux the UART0 to the Raspberr Pi */
   PORT_SetPinMux(PORTD, 6U, kPORT_MuxAlt3); /* PORTD6 (pin 63) is configured as UART0_RX */
   PORT_SetPinMux(PORTD, 7U, kPORT_MuxAlt3); /* PORTD7 (pin 64) is configured as UART0_TX */
+#endif
 }

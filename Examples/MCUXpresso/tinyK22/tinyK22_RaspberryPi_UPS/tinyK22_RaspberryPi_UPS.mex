@@ -3,7 +3,6 @@
    <common>
       <processor>MK22FN512xxx12</processor>
       <package>MK22FN512VLH12</package>
-      <board>FRDM-K22F</board>
       <mcu_data>ksdk2_0</mcu_data>
       <cores selected="core0">
          <core name="Cortex-M4F" id="core0" description="M4 core"/>
@@ -64,8 +63,6 @@
                <pin_label pin_num="1" pin_signal="ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT" label="J2[18]/UART1_TX_TGTMCU" identifier="DEBUG_UART_TX;RTC_CLKOUT;CLKOUT32K"/>
                <pin_label pin_num="2" pin_signal="ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/I2C1_SCL/SPI1_SIN" label="J2[20]/UART1_RX_TGTMCU" identifier="DEBUG_UART_RX"/>
                <pin_label pin_num="4" pin_signal="VSS4" label="GND"/>
-               <pin_label pin_num="31" pin_signal="VSS31" label="GND"/>
-               <pin_label pin_num="47" pin_signal="VSS47" label="GND"/>
                <pin_label pin_num="16" pin_signal="VSSA" label="VSSA"/>
                <pin_label pin_num="15" pin_signal="VREFL" label="VREFL"/>
                <pin_label pin_num="14" pin_signal="VREFH" label="J2[16]/VREFH"/>
@@ -79,9 +76,7 @@
                <pin_label pin_num="17" pin_signal="VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1_SE18" label="J2[1]"/>
                <pin_label pin_num="21" pin_signal="VBAT" label="VBAT"/>
                <pin_label pin_num="13" pin_signal="VDDA" label="P3V3_K22F"/>
-               <pin_label pin_num="30" pin_signal="VDD30" label="P3V3_K22F"/>
                <pin_label pin_num="3" pin_signal="VDD3" label="P3V3_K22F"/>
-               <pin_label pin_num="48" pin_signal="VDD48" label="P3V3_K22F"/>
                <pin_label pin_num="7" pin_signal="VOUT33" label="USB_VOUT33" identifier="USB_VOUT33"/>
                <pin_label pin_num="5" pin_signal="USB0_DP" label="USB_DP" identifier="USB_DP"/>
                <pin_label pin_num="6" pin_signal="USB0_DM" label="USB_DN" identifier="USB_DN"/>
@@ -856,7 +851,7 @@
             <component name="system" uuid="071c2923-9e75-4bab-b206-47c4b289672c" type_id="system">
                <config_set_global name="global_system_definitions"/>
             </component>
-            <component name="msg" uuid="64bc2e48-0598-4439-81d0-6fe78227cd31" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="c61d35fc-c510-432e-979e-d1db9032eb96" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
          </components>
