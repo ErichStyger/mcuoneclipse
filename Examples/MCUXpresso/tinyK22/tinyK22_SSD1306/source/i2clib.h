@@ -1,8 +1,7 @@
 /*
- * i2clib.h
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 08.06.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef I2CLIB_H_

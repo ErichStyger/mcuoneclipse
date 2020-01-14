@@ -1,8 +1,9 @@
 /*
- * oled.c
+ * Copyright (c) 2019, Erich Styger
  *
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "platform.h"
 #if PL_CONFIG_USE_OLED
 #include "oled.h"

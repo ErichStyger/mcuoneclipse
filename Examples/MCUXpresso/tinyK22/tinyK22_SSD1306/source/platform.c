@@ -1,9 +1,9 @@
 /*
- * platform.c
+ * Copyright (c) 2019, Erich Styger
  *
- *  Created on: 20.04.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "Platform.h"
 #include "initPins.h"
 #include "McuLib.h"
