@@ -12,7 +12,7 @@
 #define PL_CONFIG_USE_RASPBERRY           (1) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS             (1) /* using buttons (navigation switch) */
 #define PL_CONFIG_USE_KBI                 (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
-#define PL_CONFIG_USE_I2C                 (1) /* if I2C is enabled */
+#define PL_CONFIG_USE_I2C                 (0) /* if I2C is enabled */
 #define PL_CONFIG_USE_I2C_SPY             (1 && PL_CONFIG_USE_I2C)
 #define PL_CONFIG_USE_RTT                 (1)
 #define PL_CONFIG_USE_SHT31               (1 && PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
