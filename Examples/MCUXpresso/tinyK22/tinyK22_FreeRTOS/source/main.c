@@ -43,13 +43,32 @@
 /*
  * @brief   Application entry point.
  */
+int arr[] = {1,2,3};
+int *p = arr;
+
 int main(void) {
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
 
+  //int *p;
+  //p = malloc(10);
+  //free(p);
+  __asan_init();
+  arr[0] = *p;
+  *p = 0;
+  for(;;) {}
+  //p = malloc(10);
+  //p = malloc(100);
+  //p = malloc(1024);
   APP_Run();
 
   return 0 ;
 }
+
+
+
+
+
+
