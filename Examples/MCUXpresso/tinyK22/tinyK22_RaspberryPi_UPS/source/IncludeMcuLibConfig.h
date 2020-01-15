@@ -9,14 +9,14 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (3)  /* 3, 4 or 5 */
+#define TINYK22_HAT_VERSION  (4)  /* 3, 4 or 5 */
 #define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5))
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
+#define McuLib_CONFIG_SDK_USE_FREERTOS       				(1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS 				(1)
 #define configTOTAL_HEAP_SIZE                       (54*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
@@ -98,6 +98,9 @@
    * right: PTA12
    * push:  PTB16
    */
+  #define CONFIG_I2C_USE_PORT_B     (1) /* PTB0, PTB1 */
+  #define CONFIG_I2C_USE_PORT_E     (0) /* PTE0, PTE1 */
+#if CONFIG_I2C_USE_PORT_B
   #define SCL1_CONFIG_GPIO_NAME     GPIOB
   #define SCL1_CONFIG_PORT_NAME     PORTB
   #define SCL1_CONFIG_PIN_NUMBER    0u
@@ -105,7 +108,15 @@
   #define SDA1_CONFIG_GPIO_NAME     GPIOB
   #define SDA1_CONFIG_PORT_NAME     PORTB
   #define SDA1_CONFIG_PIN_NUMBER    1u
+#elif CONFIG_I2C_USE_PORT_E
+  #define SCL1_CONFIG_GPIO_NAME     GPIOE
+  #define SCL1_CONFIG_PORT_NAME     PORTE
+  #define SCL1_CONFIG_PIN_NUMBER    0u
 
+  #define SDA1_CONFIG_GPIO_NAME     GPIOE
+  #define SDA1_CONFIG_PORT_NAME     PORTE
+  #define SDA1_CONFIG_PIN_NUMBER    1u
+#endif
   #define PINS_HATNAVUP_GPIO      GPIOB
   #define PINS_HATNAVUP_PORT      PORTB
   #define PINS_HATNAVUP_PIN       3u
@@ -205,6 +216,11 @@
 #define PINS_ALERT_PORT     PORTD
 #define PINS_ALERT_PIN      3U
 /* -------------------------------------------------*/
+/* SHT pin, used for Raspy Powerdown */
+#define PINS_ALERT_GPIO     GPIOD
+#define PINS_ALERT_PORT     PORTD
+#define PINS_ALERT_PIN      3U
+/* -------------------------------------------------*/
 /* LPUART to OpenSDA */
 #define PINS_LPUART0_RX_PORT PORTC
 #define PINS_LPUART0_RX_PIN  3U
@@ -232,3 +248,4 @@
 
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
+

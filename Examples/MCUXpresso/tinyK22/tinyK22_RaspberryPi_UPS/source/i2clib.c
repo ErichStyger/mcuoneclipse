@@ -13,9 +13,16 @@
 #include "McuFXOS8700.h"
 #include "McuWait.h"
 
-#define I2C_MASTER_BASEADDR     I2C0
-#define I2C_MASTER_CLK_SRC      I2C0_CLK_SRC
-#define I2C_MASTER_CLK_FREQ     CLOCK_GetFreq(I2C0_CLK_SRC)
+#if CONFIG_I2C_USE_PORT_B /* I2C on PBB uses  I2C0 */
+  #define I2C_MASTER_BASEADDR     I2C0
+  #define I2C_MASTER_CLK_SRC      I2C0_CLK_SRC
+  #define I2C_MASTER_CLOCKING     kCLOCK_PortB
+#elif CONFIG_I2C_USE_PORT_E  /* I2C on PTE uses I2C1 */
+  #define I2C_MASTER_BASEADDR     I2C1
+  #define I2C_MASTER_CLK_SRC      I2C1_CLK_SRC
+  #define I2C_MASTER_CLOCKING     kCLOCK_PortE
+#endif
+#define I2C_MASTER_CLK_FREQ     CLOCK_GetFreq(I2C_MASTER_CLK_SRC)
 #define I2C_BAUDRATE            400000U
 
 #define I2C_MASTER_SDA_GPIO    SDA1_CONFIG_GPIO_NAME
@@ -140,7 +147,7 @@ static void I2CLIB_ReleaseBus(void) {
 
   pin_config.pinDirection = kGPIO_DigitalOutput;
   pin_config.outputLogic = 1U;
-  CLOCK_EnableClock(kCLOCK_PortB);
+  CLOCK_EnableClock(I2C_MASTER_CLOCKING);
   PORT_SetPinConfig(I2C_MASTER_SCL_PORT, I2C_MASTER_SCL_PIN, &i2c_pin_config);
   PORT_SetPinConfig(I2C_MASTER_SDA_PORT, I2C_MASTER_SDA_PIN, &i2c_pin_config);
 
@@ -178,11 +185,14 @@ static void I2CLIB_ReleaseBus(void) {
 }
 
 static void I2CLIB_ConfigurePins(void) {
-  /* Port B Clock Gate Control: Clock enabled */
-  CLOCK_EnableClock(kCLOCK_PortB);
+  CLOCK_EnableClock(I2C_MASTER_CLOCKING);
 
   /* I2C SCL Pin */
+#if CONFIG_I2C_USE_PORT_B
   PORT_SetPinMux(I2C_MASTER_SCL_PORT, I2C_MASTER_SCL_PIN, kPORT_MuxAlt2);
+#elif CONFIG_I2C_USE_PORT_E
+  PORT_SetPinMux(I2C_MASTER_SCL_PORT, I2C_MASTER_SCL_PIN, kPORT_MuxAlt6);
+#endif
   I2C_MASTER_SCL_PORT->PCR[I2C_MASTER_SCL_PIN] = ((I2C_MASTER_SCL_PORT->PCR[I2C_MASTER_SCL_PIN] &
                     /* Mask bits to zero which are setting */
                     (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
@@ -193,7 +203,11 @@ static void I2CLIB_ConfigurePins(void) {
                    | PORT_PCR_ODE(kPORT_OpenDrainEnable));
 
   /* I2C SDA Pin */
+#if CONFIG_I2C_USE_PORT_B
   PORT_SetPinMux(I2C_MASTER_SDA_PORT, I2C_MASTER_SDA_PIN, kPORT_MuxAlt2);
+#elif CONFIG_I2C_USE_PORT_E
+  PORT_SetPinMux(I2C_MASTER_SCL_PORT, I2C_MASTER_SDA_PIN, kPORT_MuxAlt6);
+#endif
   I2C_MASTER_SDA_PORT->PCR[I2C_MASTER_SDA_PIN] = ((I2C_MASTER_SDA_PORT->PCR[I2C_MASTER_SDA_PIN] &
                     /* Mask bits to zero which are setting */
                     (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
