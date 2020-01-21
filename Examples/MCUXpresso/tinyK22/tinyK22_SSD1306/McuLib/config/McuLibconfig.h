@@ -55,6 +55,13 @@
   #define McuLib_CONFIG_CPU_IS_RISC_V_RV32M1_RI5CY      (1 && McuLib_CONFIG_CPU_IS_RISC_V)
     /*!< 1: VEGA Board: RISC-V RV32M1 RI5CY, 0: other core */
 #endif
+#ifndef McuLib_CONFIG_CPU_IS_ESP32
+  #ifndef __XTENSA__
+    #define __XTENSA__ 0
+  #endif
+  #define McuLib_CONFIG_CPU_IS_ESP32                    (__XTENSA__)
+    /*!< 1: ESP32 CPU family, 0: otherwise. The ESP32 compiler defines __XTENSA__ with a value of 1 */
+#endif
 
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
@@ -62,13 +69,13 @@
   #define McuLib_CONFIG_CORTEX_M      (4)
     /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #endif
-#if (1 && !defined(McuLib_CONFIG_FPU_PRESENT)) || (defined(__FPU_PRESENT) && (__FPU_PRESENT==1)) /* __FPU_PRESENT can be defined in CMSIS-Core */
+#if (1 && !defined(McuLib_CONFIG_FPU_PRESENT) && McuLib_CONFIG_CORTEX_M!=0) || (defined(__FPU_PRESENT) && (__FPU_PRESENT==1)) /* __FPU_PRESENT can be defined in CMSIS-Core */
   #define McuLib_CONFIG_FPU_PRESENT   (1)
 #else
   #define McuLib_CONFIG_FPU_PRESENT   (0)
 #endif
     /*!< 1: floating point unit present, 0: otherwise */
-#if (1 && !defined(McuLib_CONFIG_FPU_USED)) || (defined(__FPU_USED) && (__FPU_USED==1)) /* __FPU_USED can be defined in CMSIS-Core */
+#if (1 && !defined(McuLib_CONFIG_FPU_USED) && McuLib_CONFIG_CORTEX_M!=0) || (defined(__FPU_USED) && (__FPU_USED==1)) /* __FPU_USED can be defined in CMSIS-Core */
   #define McuLib_CONFIG_FPU_USED      (1)
 #else
   #define McuLib_CONFIG_FPU_USED      (0)
@@ -116,7 +123,10 @@
 
 /* specify the SDK and API used */
 #ifndef McuLib_CONFIG_SDK_VERSION_USED
-#if McuLib_CONFIG_CPU_IS_STM32
+#if McuLib_CONFIG_CPU_IS_ESP32
+  #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_GENERIC
+    /*!< identify the version of SDK/API used. For ESP32 we are using a generic SDK (actually the IDF one) */
+#elif McuLib_CONFIG_CPU_IS_STM32
   #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_GENERIC
     /*!< identify the version of SDK/API used. For STM32 we are using a generic SDK (actually the CubeMX one) */
 #else
