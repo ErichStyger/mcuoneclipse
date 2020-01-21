@@ -27,9 +27,13 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - InputRB1: subdriver of McuOneWire
 - LEDpin1, LEDpin2, LEDpin3, LEDpin4: subdrivers for McuLED1, McuLED2, McuLED3 and McuLED4
 - McuArmTools: various ARM Cortex utilities
+- McuButton: Push button driver
 - McuCriticalSection: critical section handling
+- McuDebounce: Debouncing for McuButton
 - McuDS18B20: Driver for the DS18B20 One-Wire temperature sensor library
+- McuEE24: Driver for EEproms of type 24AA and 24LC. Supports 24AA08, 24LC08, 24AA16, 24LC16, 24AA32, 24LC32, 24AA256, 24LC256, 24FC256, 24AA512, 24LC512, 24FC256, 24AA1025, 24LC1025, 24FC1025
 - McuEvents: event handling using a bit array
+- McuExtRTC: driver for external I2C realtime clock (RTC). Supports DS1307, DS3231, DS3232 and DS1342
 - McuFontDisplay: Font rendering for graphical displays
 - McuFXOS8700: Driver for the NXP FXOS8700 accelerometer/magnetometer
 - McuGDisplay: Driver for graphical displays
@@ -59,9 +63,11 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuTimeDate: Realtime clock implementation for software, hardware and external I2C RTC
 - McuTimeout: generic driver for timeout handling
 - McuTrigger: generic interrupt callback handling
+- McuULN2003: stepper motor driver using the ULN2003
 - McuUtility: various safe string manipulation and other utility functions
 - McuWait: Realtime synchronization waiting routines
 - McuXFormat: tiny formatting and printing, similar to sprintf
 - Output1: subdriver of McuGenericSWSPI
 - SCL1, SDA1: subdrivers for McuGenericSWI2C
+- WPpin1: Write Protect pin for McuEE24
 

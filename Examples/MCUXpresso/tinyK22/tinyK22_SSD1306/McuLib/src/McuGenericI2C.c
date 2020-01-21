@@ -6,7 +6,7 @@
 **     Component   : GenericI2C
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 08:49, # CodeGen: 444
+**     Date/Time   : 2019-06-11, 17:17, # CodeGen: 537
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -425,7 +425,6 @@ uint8_t McuGenericI2C_ReadAddressWait(uint8_t i2cAddr, uint8_t *memAddr, uint8_t
 uint8_t McuGenericI2C_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize)
 {
   return McuGenericI2C_ReadAddressWait(i2cAddr, memAddr, memAddrSize, 0, data, dataSize);
-  //return I2CLIB_ReadAddress(i2cAddr, memAddr, memAddrSize, data, dataSize);
 }
 
 /*

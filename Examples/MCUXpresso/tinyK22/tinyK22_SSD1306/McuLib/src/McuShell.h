@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
+**     Date/Time   : 2019-11-12, 11:56, # CodeGen: 591
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -23,19 +23,12 @@
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Enabled
-**            Length                                       : 32
-**            Separator                                    : ;
+**          Multi Command                                  : Disabled
 **          Utility                                        : McuUtility
-**          Default Serial                                 : Enabled
-**            Console Interface                            : McuRTT
+**          Default Serial                                 : Disabled
 **          Semaphore                                      : no
 **          Critical Section                               : McuCriticalSection
-**          History                                        : yes
-**            Number of History Items                      : 4
-**            Stored Characters                            : 32
-**            Char for Next                                : \t
-**            Char for Previous                            : \e
+**          History                                        : no
 **          Kinetis SDK                                    : McuLib
 **     Contents    :
 **         PrintPrompt                  - void McuShell_PrintPrompt(McuShell_ConstStdIOType *io);
@@ -161,31 +154,19 @@
 #define McuShell_DEFAULT_SHELL_BUFFER_SIZE  McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE  /* default buffer size for shell command parsing */
 
 /* Include inherited components */
-#include "McuWait.h"
-#include "McuLib.h"
-#include "McuRTT.h"
-#include "McuUtility.h"
-#include "McuXFormat.h"
-#include "McuCriticalSection.h"
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */
 
 /* settings for command line history */
-#define McuShell_HISTORY_ENABLED   1   /* 1: enabled, 0: disabled */
-#define McuShell_NOF_HISTORY       4   /* number of items in history */
-#define McuShell_HIST_LEN          32  /* history buffer size */
-#define McuShell_HISTORY_PREV_CHAR '\e' /* character for 'previous' in history */
-#define McuShell_HISTORY_NEXT_CHAR '\t' /* character for 'next' in history */
+#define McuShell_HISTORY_ENABLED  0    /* 1: enabled, 0: disabled */
+#define McuShell_NOF_HISTORY      0    /* number of items in history */
+#define McuShell_HIST_LEN         0    /* history buffer size */
+
 /* settings for silent prefix char */
 #define McuShell_SILENT_PREFIX_CHAR    '#' /* with this char as first character in the cmd, printing is silent. Use a space to disable it */
 #define McuShell_NO_SILENT_PREFIX_CHAR ' ' /* used for no silent prefix char */
 #define McuShell_SILENT_PREFIX_CHAR_ENABLED (McuShell_SILENT_PREFIX_CHAR != McuShell_NO_SILENT_PREFIX_CHAR)
-
-/* multi command support */
-#define McuShell_MULTI_CMD_ENABLED   1 /* 1: enabled, 0: disabled */
-#define McuShell_MULTI_CMD_SIZE      32 /* max size of each command */
-#define McuShell_MULTI_CMD_CHAR      ';' /* separation character */
 
 /* settings for local echo */
 #define McuShell_ECHO_ENABLED  0       /* 1: enabled, 0: disabled */

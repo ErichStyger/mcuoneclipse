@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-23, 08:34, # CodeGen: 494
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -76,7 +76,7 @@
 #include "Clock1.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if Clock1_CONFIG_DO_PIN_MUXING
-    #if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+    #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
       #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
     #else /* normal Kinetis or LPC */
       #include "fsl_port.h" /* include SDK header file for port muxing */
@@ -442,7 +442,7 @@ void Clock1_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if Clock1_CONFIG_DO_PIN_MUXING
-      #if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33 /* e.g. LPC55xx */
+      #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
         #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
         #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
         #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
@@ -462,7 +462,11 @@ void Clock1_Init(void)
                                       IOCON_PIO_DIGITAL_EN |
                                       /* Open drain is disabled */
                                       IOCON_PIO_OPENDRAIN_DI);
-        IOCON_PinMuxSet(IOCON, Clock1_CONFIG_PORT_NAME, Clock1_CONFIG_PIN_NUMBER, port_pin_config);
+        #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
+          IOCON_PinMuxSet(Clock1_CONFIG_PORT_NAME, Clock1_CONFIG_PIN_NUMBER, port_pin_config);
+        #else
+          IOCON_PinMuxSet(IOCON, Clock1_CONFIG_PORT_NAME, Clock1_CONFIG_PIN_NUMBER, port_pin_config);
+        #endif
       #else
         PORT_SetPinMux(Clock1_CONFIG_PORT_NAME, Clock1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
       #endif

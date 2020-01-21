@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.062, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.063, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-16, 06:57, # CodeGen: 357
+**     Date/Time   : 2019-08-03, 11:40, # CodeGen: 565
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -21,12 +21,12 @@
 **          Set Time and Date                              : 
 **            Software RTC                                 : yes
 **            Internal RTC                                 : no
-**            External RTC                                 : no
+**            External RTC                                 : yes
 **          Get Time and Date                              : Software RTC
 **          Init()                                         : 
 **            Defaults                                     : 
 **              Time                                       : 17:51:31
-**              Date                                       : 2018-08-01
+**              Date                                       : 2019-08-01
 **            Call Init() in startup                       : yes
 **            Software RTC Initialization                  : Init from Defaults
 **          System                                         : 
@@ -66,7 +66,7 @@
 **         DeInit                      - void McuTimeDate_DeInit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -118,6 +118,17 @@
 #include "McuLib.h"
 #include "McuShell.h"
 
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
+  #define McuTimeDate_HAS_SEC100_IN_TIMEREC                 (0) /* Bean version have no Sec100!  */
+#else
+  #define McuTimeDate_HAS_SEC100_IN_TIMEREC                 (1) /* non-Bean version have Sec100  */
+#endif
+/* internal configuration for the API used: */
+#define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD          (0)  /* set to 1 if using HW RTC using LDD driver, 0 otherwise */
+#define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN         (0)  /* set to 1 if using HW RTC using normal bean driver, 0 otherwise */
+
+
+#define McuTimeDate_PARSE_COMMAND_ENABLED    McuTimeDate_CONFIG_PARSE_COMMAND_ENABLED
 
 /* user events */
 #define McuTimeDate_ON_DATE_GET_EVENT                       0 /* 1: enabled user event */
@@ -160,7 +171,7 @@ static const TIMEREC McuTimeDate_DefaultTime = {
 #endif
 };
 static const DATEREC McuTimeDate_DefaultDate = {
-  2018, /* year */
+  2019, /* year */
   8,  /* month */
   1 /* day */
 };

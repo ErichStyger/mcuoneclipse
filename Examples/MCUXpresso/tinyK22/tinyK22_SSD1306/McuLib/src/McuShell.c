@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 08:49, # CodeGen: 444
+**     Date/Time   : 2019-11-12, 11:56, # CodeGen: 591
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -23,19 +23,12 @@
 **            RTOS Wait                                    : yes
 **          Status Colon Pos                               : 13
 **          Help Semicolon Pos                             : 26
-**          Multi Command                                  : Enabled
-**            Length                                       : 32
-**            Separator                                    : ;
+**          Multi Command                                  : Disabled
 **          Utility                                        : McuUtility
-**          Default Serial                                 : Enabled
-**            Console Interface                            : McuRTT
+**          Default Serial                                 : Disabled
 **          Semaphore                                      : no
 **          Critical Section                               : McuCriticalSection
-**          History                                        : yes
-**            Number of History Items                      : 4
-**            Stored Characters                            : 32
-**            Char for Next                                : \t
-**            Char for Previous                            : \e
+**          History                                        : no
 **          Kinetis SDK                                    : McuLib
 **     Contents    :
 **         PrintPrompt                  - void McuShell_PrintPrompt(McuShell_ConstStdIOType *io);
@@ -115,6 +108,15 @@
 #include <ctype.h> /* for isalnum*/
 
 #include "McuShell.h"
+#include "McuXFormat.h"
+#include "McuUtility.h"
+#include "McuCriticalSection.h"
+  #include "McuWait.h"
+
+#if McuShell_DEFAULT_SERIAL
+  #include McuShell_CONFIG_DEFAULT_SERIAL_INCLUDE
+#endif
+
 
 uint8_t McuShell_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 #if McuShell_HISTORY_ENABLED
@@ -716,8 +718,8 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
 #if McuShell_SILENT_PREFIX_CHAR_ENABLED
   bool silent = FALSE;
 #endif
-#if McuShell_MULTI_CMD_ENABLED
-  uint8_t buf[McuShell_MULTI_CMD_SIZE];
+#if McuShell_CONFIG_MULTI_CMD_ENABLED
+  uint8_t buf[McuShell_CONFIG_MULTI_CMD_SIZE];
   uint8_t i;
   bool parseBuffer, finished;
 #endif
@@ -728,7 +730,7 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
   if (*cmd=='\0') { /* empty command */
     return ERR_OK;
   }
-#if McuShell_MULTI_CMD_ENABLED
+#if McuShell_CONFIG_MULTI_CMD_ENABLED
   parseBuffer = FALSE;
   finished = FALSE;
   i = 0;
@@ -746,7 +748,7 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
       cmd++;
     }
   #endif
-    if (buf[i-1] == McuShell_MULTI_CMD_CHAR) { /* found separator */
+    if (buf[i-1] == McuShell_CONFIG_MULTI_CMD_CHAR) { /* found separator */
       buf[i-1] = '\0';
       parseBuffer = TRUE;
     } else if (buf[i-1]=='\0') {

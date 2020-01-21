@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.577, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-23, 09:05, # CodeGen: 497
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.2.0
+**          RTOS Version                                   : V10.2.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -278,7 +278,7 @@
 
 #include "portTicks.h"                 /* interface to tick counter */
 
-
+#include "McuUtility.h"
 #if configHEAP_SCHEME_IDENTIFICATION
   /* special variable identifying the used heap scheme */
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
@@ -888,7 +888,7 @@ portBASE_TYPE McuRTOS_xTaskResumeFromISR(xTaskHandle pxTaskToResume)
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.
@@ -5427,6 +5427,7 @@ void McuRTOS_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t McuRTOS_RunTimeCounter;
   McuRTOS_RunTimeCounter = 0;
 #endif
 }
@@ -5450,6 +5451,7 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t McuRTOS_RunTimeCounter;
   return McuRTOS_RunTimeCounter;
   #endif
 #else

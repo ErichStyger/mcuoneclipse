@@ -29,11 +29,11 @@ size_t McuRB_NofElements(McuRB_Handle_t rb);
 /* return number of free elements in ring buffer */
 size_t McuRB_NofFreeElements(McuRB_Handle_t rb);
 
-/* put an element into the ring buffer. Returns 0 if OK, non-zero if buffer is full. */
-int McuRB_Put(McuRB_Handle_t rb, void *data);
+/* put an element into the ring buffer. Returns ERR_OK if OK. */
+uint8_t McuRB_Put(McuRB_Handle_t rb, void *data);
 
-/* get an element from the ring buffer. Returns 0 if OK, non-zero if buffer is empty. */
-int McuRB_Get(McuRB_Handle_t rb, void *data);
+/* get an element from the ring buffer. Returns ERR_OK if OKy. */
+uint8_t McuRB_Get(McuRB_Handle_t rb, void *data);
 
 /* return a default ring buffer configuration */
 void McuRB_GetDefaultconfig(McuRB_Config_t *config);

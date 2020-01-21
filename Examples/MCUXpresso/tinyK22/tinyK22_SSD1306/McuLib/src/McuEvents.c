@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SimpleEvents
-**     Version     : Component 01.057, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.058, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2019-10-14, 06:52, # CodeGen: 585
 **     Abstract    :
 **
 **     Settings    :
@@ -23,7 +23,7 @@
 **         GetClearEvent - bool McuEvents_GetClearEvent(uint8_t event);
 **         HandleEvent   - void McuEvents_HandleEvent(void);
 **
-** * Copyright (c) 2011-2017, Erich Styger
+** * Copyright (c) 2011-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
