@@ -9,6 +9,8 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
+#define McuLib_USE_ASAN                             (1) /* if using address sanitizer */
+
 #define McuLib_CONFIG_SDK_VERSION_USED              McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
 /* ------------------- RTOS ---------------------------*/
