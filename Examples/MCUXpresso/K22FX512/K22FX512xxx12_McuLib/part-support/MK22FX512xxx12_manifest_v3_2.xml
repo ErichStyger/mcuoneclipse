@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.2" api_version="2.0.0" configuration="37a56ad9de34c87b03ad447ef2d490cd" id="SDK_2.x_MK22FX512xxx12" name="SDK version 2.3.1 package for MK22FX512xxx12 device" brief="This is SDK version 2.3.1 manifest file. It describes the content of the SDK version 2.3.1 package for MK22FX512xxx12 device and additional settings for tools that support SDK version 2.3.1">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <ksdk id="KSDK231" name="KSDK231" version="2.3.1"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="1.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.cpp.link.option.other" type="stringList" user_name="">
+                <value>-Map="${BuildArtifactFileBaseName}.map"</value>
+                <value>--gc-sections</value>
+                <value>-print-memory-usage</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.other" type="stringList" user_name="">
+                <value>-Map="${BuildArtifactFileBaseName}.map"</value>
+                <value>--gc-sections</value>
+                <value>-print-memory-usage</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="10.1.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MK21FN1M0AVMC12" id="twrk21f120m" name="TWR-K21F120M" href="http://www.nxp.com/twr-k21f120m" version="1.0.0">
+            <description>
+TWR-K21F120MA: TWR-K21F120MA: Kinetis K21 120 MHz Tower System Module
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="TWR-K21F120M.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The TWR-K21F120MA is a development board for the Kinetis® K21 and K22 120 MHz 32-bit ARM® Cortex®-M4 MCUs with floating point unit.
+
+The board provides rapid prototyping for applications requiring high feature integration, as low as 240uA/MHz low-power consumption and mid/high flash memory density (up to 1 MB) that need to support multiple communication stacks.
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="K2x" platform="Kinetis" id="MK21FN1M0Axxx12" name="MK21FA12" full_name="MK21FN1M0Axxx12" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>
+K21_120: Kinetis K21-120 MHZ, Full-Speed USB, Anti-Tamper Microcontrollers based on ARM® Cortex®-M4
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="USB_KHCI_COUNT" value="1"/>
+                <metadata key="USB_KHCI_Controller_number" value="1"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The Kinetis K21 120 MHz MCU family targets cost-sensitive applications requiring low-power functionality.
+&lt;ul&gt;
+&lt;li&gt;Features hardware encryption and tamper detection&lt;/li&gt;
+&lt;li&gt;Includes a rich suite of analog, communication, timing and control peripherals to accommodate a wide range of requirements&lt;/li&gt;
+&lt;li&gt;Maximizes board space and enhances performance with minimum-length interconnections&lt;/li&gt;
+&lt;li&gt;Provides performance efficiency with industry-leading low power&lt;/li&gt;
+&lt;li&gt;Delivers significant BOM savings through smart on-chip integration&lt;/li&gt;
+&lt;li&gt;Shares the comprehensive enablement and scalability of the Kinetis portfolio&lt;/li&gt;
+&lt;/ul&gt;  
+        </content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="vendor.device.type" value="Kinetis"/>
+                <metadata key="vendor.device.family" value="K2x"/>
+            </metadataSet>
+            <core fpu="true" type="cm4" id="core0_MK21FN1M0Axxx12" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00100000" type="Flash" access="RO" id="PROGRAM_FLASH_MK21FN1M0Axxx12" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00010000" type="RAM" access="RW" id="SRAM_UPPER_MK21FN1M0Axxx12" name="SRAM_UPPER"/>
+                <memoryBlock addr="1FFF0000" size="00010000" type="RAM" access="RW" id="SRAM_LOWER_MK21FN1M0Axxx12" name="SRAM_LOWER"/>
+                <memoryBlock addr="14000000" size="00001000" type="RAM" access="RW" id="FLEX_RAM_MK21FN1M0Axxx12" name="FLEX_RAM"/>
+            </memory>
+            <total_memory flash_size_kb="1024" ram_size_kb="4"/>
+            <package id="MK21FN1M0AVLQ12" name="MK21FN1M0AVLQ12"/>
+            <package id="MK21FN1M0AVMC12" name="MK21FN1M0AVMC12"/>
+            <package id="MK21FN1M0AVMD12" name="MK21FN1M0AVMD12"/>
+            <evaluation_boards>
+                <evaluation_board name="twrk21f120m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD*,JTAG" id="internal.wiretype.release.MK21FN1M0Axxx12" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.MK21FN1M0Axxx12" name="internal.has_swo"/>
+                        <params value="kinetisconnect.scp" id="internal.connect.script.debug.mcuxpresso.MK21FN1M0Axxx12" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MK21FN1M0Axxx12">
+                            <driverBinary path="devices/MK21FA12/mcuxpresso" type="binary">
+<files mask="FTFE_4K.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+        <device family="K2x" platform="Kinetis" id="MK22FX512xxx12" name="MK22F12" full_name="MK22FX512xxx12" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>
+K22_120: Kinetis® K22-120 MHz, Cost Effective, Full-Speed USB Microcontrollers (MCUs) based on ARM® Cortex®-M4 Core
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="USB_KHCI_COUNT" value="1"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+Kinetis® K22 MCUs have been optimized for cost-sensitive applications requiring low power flexibility and processing efficiency.
+&lt;ul&gt;
+&lt;li&gt;Delivers industry-leading low power while providing significant bill-of-materials savings through smart on-chip integration&lt;/li&gt;
+&lt;li&gt;Includes options that support crystal-less USB design for reduced system cost and board space&lt;/li&gt;
+&lt;li&gt;Provides scalability with various levels of integration, offering a rich suite of analog, communication, timing and control peripherals to accommodate a wide range of requirements&lt;/li&gt;
+&lt;li&gt;Shares the comprehensive enablement and scalability of the Kinetis portfolio&lt;/li&gt;
+&lt;ul&gt;  
+        </content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="vendor.device.type" value="Kinetis"/>
+                <metadata key="vendor.device.family" value="K2x"/>
+            </metadataSet>
+            <core fpu="true" type="cm4" id="core0_MK22FX512xxx12" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00080000" type="Flash" access="RO" id="PROGRAM_FLASH_MK22FX512xxx12" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="10000000" size="00020000" type="DFlash" access="RO" id="FLEX_NVM_MK22FX512xxx12" name="FLEX_NVM"/>
+                <memoryBlock addr="20000000" size="00010000" type="RAM" access="RW" id="SRAM_UPPER_MK22FX512xxx12" name="SRAM_UPPER"/>
+                <memoryBlock addr="1FFF0000" size="00010000" type="RAM" access="RW" id="SRAM_LOWER_MK22FX512xxx12" name="SRAM_LOWER"/>
+                <memoryBlock addr="14000000" size="00001000" type="RAM" access="RW" id="FLEX_RAM_MK22FX512xxx12" name="FLEX_RAM"/>
+            </memory>
+            <total_memory flash_size_kb="512" ram_size_kb="4"/>
+            <package id="MK22FX512VLH12" name="MK22FX512VLH12"/>
+            <package id="MK22FX512VLK12" name="MK22FX512VLK12"/>
+            <package id="MK22FX512VLL12" name="MK22FX512VLL12"/>
+            <package id="MK22FX512VLQ12" name="MK22FX512VLQ12"/>
+            <package id="MK22FX512VMC12" name="MK22FX512VMC12"/>
+            <package id="MK22FX512VMD12" name="MK22FX512VMD12"/>
+            <evaluation_boards>
+                <evaluation_board name="twrk21f120m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD*,JTAG" id="internal.wiretype.release.MK22FX512xxx12" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.MK22FX512xxx12" name="internal.has_swo"/>
+                        <params value="kinetisconnect.scp" id="internal.connect.script.debug.mcuxpresso.MK22FX512xxx12" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MK22FX512xxx12">
+                            <driverBinary path="devices/MK22F12/mcuxpresso" type="binary">
+<files mask="FTFE_4K.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MK21FN1M0Axxx12" id="platform.devices.MK21FA12_debugger.MK21FA12" name="MK21FA12_debugger" version="1.0.0">
+            <source path="devices/MK21FA12" target_path="TARGET_PATH" type="xml">
+                <files mask="MK21FA12.xml"/>
+            </source>
+        </component>
+        <component user_visible="true" type="debugger" devices="MK21FN1M0Axxx12" id="platform.devices.MK21FA12_flash.MK21FA12" name="MK21FA12_flash" version="1.0.0">
+            <source path="devices/MK21FA12/mcuxpresso" target_path="TARGET_PATH" type="binary" toolchain="mcuxpresso">
+                <files mask="FTFE_4K.cfx"/>
+            </source>
+        </component>
+        <component user_visible="true" type="debugger" devices="MK22FX512xxx12" id="platform.devices.MK22F12_debugger.MK22F12" name="MK22F12_debugger" version="1.0.0">
+            <source path="devices/MK22F12" target_path="TARGET_PATH" type="xml">
+                <files mask="MK22F12.xml"/>
+            </source>
+        </component>
+        <component user_visible="true" type="debugger" devices="MK22FX512xxx12" id="platform.devices.MK22F12_flash.MK22F12" name="MK22F12_flash" version="1.0.0">
+            <source path="devices/MK22F12/mcuxpresso" target_path="TARGET_PATH" type="binary" toolchain="mcuxpresso">
+                <files mask="FTFE_4K.cfx"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
