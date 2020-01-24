@@ -13,7 +13,7 @@
 #if PL_CONFIG_USE_I2C_SPY
   #include "McuI2CSpy.h"
 #endif
-#if PL_CONFIG_USE_UART
+#if PL_CONFIG_USE_SHELL_UART
   #include "McuShellUart.h"
 #endif
 #if PL_CONFIG_USE_RTC
@@ -36,6 +36,9 @@
 #endif
 #if PL_CONFIG_USE_MAG_SENSOR
   #include "magnets.h"
+#endif
+#if PL_CONFIG_USE_MATRIX
+  #include "matrix.h"
 #endif
 #include "nvmc.h"
 #include "application.h"
@@ -71,6 +74,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_RS485
   RS485_ParseCommand,
 #endif
+#if PL_CONFIG_USE_MATRIX
+  MATRIX_ParseCommand,
+#endif
   APP_ParseCommand,
   NULL /* Sentinel */
 };
@@ -83,7 +89,7 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
-#if PL_CONFIG_USE_UART
+#if PL_CONFIG_USE_SHELL_UART
   {&McuShellUart_stdio,  McuShellUart_DefaultShellBuffer,  sizeof(McuShellUart_DefaultShellBuffer)},
 #endif
 #if PL_CONFIG_USE_RTT
@@ -93,6 +99,16 @@ static const SHELL_IODesc ios[] =
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
 #endif
 };
+
+bool SHELL_HasStdIoInput(void) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    if (ios[i].stdio->keyPressed()) {
+      return true;
+    }
+  }
+  return false; /* no input waiting */
+}
+
 
 void SHELL_SendChar(unsigned char ch) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
@@ -106,14 +122,14 @@ void SHELL_SendString(unsigned char *str) {
   }
 }
 
-uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io) {
-  return McuShell_ParseWithCommandTable(command, io, CmdParserTable);
+uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io, bool silent) {
+  return McuShell_ParseWithCommandTableExt(command, io, CmdParserTable, silent);
 }
 
 static void ShellTask(void *pv) {
   int i;
 
-  McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
+  //McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
@@ -122,7 +138,12 @@ static void ShellTask(void *pv) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-    vTaskDelay(pdMS_TO_TICKS(20));
+#if PL_CONFIG_USE_STEPPER
+    (void)STEPPER_CheckAndExecuteQueue(ios[0].stdio);
+#endif
+    if (!SHELL_HasStdIoInput()) {
+      vTaskDelay(pdMS_TO_TICKS(20));
+    }
   }
 }
 
@@ -130,7 +151,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      900/sizeof(StackType_t), /* task stack size */
+      1100/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

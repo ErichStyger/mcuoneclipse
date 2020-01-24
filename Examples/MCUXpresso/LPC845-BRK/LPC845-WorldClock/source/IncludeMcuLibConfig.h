@@ -37,14 +37,18 @@ Instructions:
 /* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define configTOTAL_HEAP_SIZE                       (8*1024)
-//#define configUSE_HEAP_SECTION_NAME                 (1)
-//#define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
+#define SYSVIEW_DEVICE_NAME                  "Stepper Clock Device"
+#define configTOTAL_HEAP_SIZE                (8*1024)
+//#define configUSE_HEAP_SECTION_NAME        (1)
+//#define configHEAP_SECTION_NAME_STRING     ".bss.$SRAM_LOWER.FreeRTOS"
 #define configMINIMAL_STACK_SIZE             (200/sizeof(StackType_t))
 #define configTIMER_TASK_STACK_DEPTH         (400/sizeof(StackType_t))
+#define configUSE_TIMERS                     (0)
+#define INCLUDE_xTimerPendFunctionCall       (0)
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845 Stepper Clock"
-#define McuShell_MULTI_CMD_ENABLED          (0)
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 Stepper Board"
+#define McuShell_MULTI_CMD_ENABLED                    (0)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

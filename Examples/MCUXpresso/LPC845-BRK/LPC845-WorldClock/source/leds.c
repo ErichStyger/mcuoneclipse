@@ -4,19 +4,34 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
 #include "leds.h"
 #include "McuLED.h"
-#include "board.h" /* defines the BOARD_LED_ macros */
 
-/* LEDs on the board */
-#define LED_BLUE_GPIO       GPIO
-#define LED_BLUE_PORT       0U
-#define LED_BLUE_PIN        19U
+/* LED on the board */
+#if PL_CONFIG_IS_CLIENT /* blue led */
+  #define LED_BLUE_GPIO       GPIO
+  #define LED_BLUE_PORT       0U
+  #define LED_BLUE_PIN        19U
+#elif PL_CONFIG_IS_SERVER
+  /* LEDs on LPC845-BRK */
+  #define LED_GREEN_GPIO      GPIO
+  #define LED_GREEN_PORT      1U
+  #define LED_GREEN_PIN       0U
 
-McuLED_Handle_t LEDS_Blue;
+  #define LED_BLUE_GPIO       GPIO
+  #define LED_BLUE_PORT       1U
+  #define LED_BLUE_PIN        1U
+
+  #define LED_RED_GPIO        GPIO
+  #define LED_RED_PORT        1U
+  #define LED_RED_PIN         2U
+#endif
+
+McuLED_Handle_t LEDS_Led;
 
 void LEDS_Deinit(void) {
-  LEDS_Blue = McuLED_DeinitLed(LEDS_Blue);
+  LEDS_Led = McuLED_DeinitLed(LEDS_Led);
 }
 
 void LEDS_Init(void) {
@@ -29,5 +44,5 @@ void LEDS_Init(void) {
   config.hw.gpio = LED_BLUE_GPIO;
   config.hw.port = LED_BLUE_PORT;
   config.hw.pin = LED_BLUE_PIN;
-  LEDS_Blue = McuLED_InitLed(&config);
+  LEDS_Led = McuLED_InitLed(&config);
 }

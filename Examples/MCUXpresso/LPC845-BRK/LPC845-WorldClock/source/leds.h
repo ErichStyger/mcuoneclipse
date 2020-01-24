@@ -10,7 +10,7 @@
 #include "McuLED.h"
 
 /* led handles */
-extern McuLED_Handle_t LEDS_Blue;
+extern McuLED_Handle_t LEDS_Led;
 
 void LEDS_Deinit(void);
 void LEDS_Init(void);

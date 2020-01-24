@@ -6,7 +6,6 @@
  * Driver for the X12.017 Quad-Stepper motor driver
  */
 
-#include "platform.h"
 #include "McuX12_017config.h"
 #include "McuX12_017.h"
 #include "McuLib.h"

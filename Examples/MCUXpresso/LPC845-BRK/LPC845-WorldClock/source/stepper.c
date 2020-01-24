@@ -22,82 +22,50 @@
 #include "McuUtility.h"
 #include "McuWait.h"
 #include "leds.h"
+#include "Shell.h"
 
-static TimerHandle_t timerHndl;
-#define TIMER_PERIOD_MS   1
+#include "fsl_ctimer.h"
+#include "fsl_sctimer.h"
+
+#define STEPPER_USE_FREERTOS_TIMER  (0)
+
+#define STEPPER_CMD_QUEUE_LENGTH    (8) /* number of items in stepper command queue */
+static bool STEPPER_ExecuteQueue = false;
+
+typedef enum {
+  SCT_CHANNEL_MASK_0 = (1<<0),
+  SCT_CHANNEL_MASK_1 = (1<<1),
+  SCT_CHANNEL_MASK_2 = (1<<2),
+  SCT_CHANNEL_MASK_3 = (1<<3),
+  SCT_CHANNEL_MASK_4 = (1<<4),
+  SCT_CHANNEL_MASK_5 = (1<<5),
+  SCT_CHANNEL_MASK_6 = (1<<6),
+  SCT_CHANNEL_MASK_7 = (1<<7)
+} SCT_CHANNEL_MASK_e;
 
 typedef struct STEPPER_Motor_t {
   McuX12_017_Handle_t device; /* X12.017 device */
   McuX12_017_Motor_e mot; /* motor id */
   MAG_MagSensor_e mag; /* magnet sensor for motor */
   int32_t doSteps; /* != 0: steps to do */
+  int16_t delay; /* shortest delay: 0 */
+  int16_t delayCntr; /* in the range of delay..0, step will be done at counter of 0 */
+  /* acceleration and de-acceleration */
+  //const uint16_t (*accelTable)[2]; /* acceleration table */
+  //uint16_t nofAccelTableEntries; /* number of entries in acceTable */
+  int32_t accelStepCntr; /* current counter of steps since start */
+  bool speedup, slowdown;
+  /* queue */
+  QueueHandle_t queue; /* queue for the motor */
 } STEPPER_Motor_t;
 
 typedef struct STEPPER_Clock_t {
   STEPPER_Motor_t mot[STEPPER_NOF_CLOCK_MOTORS]; /* [0]: hh, inner motor, higher hand, [1]: outer motor, lower hand */
 } STEPPER_Clock_t;
 
-static STEPPER_Clock_t STEPPER_Clocks[STEPPER_NOF_CLOCKS] =
-{ /* x -> horizontal, y -> vertical */
-  [0]= {
-      .mot[0] = {
-          .device  = NULL,
-          .mot=X12_017_M1,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-      .mot[1] = {
-          .device = NULL,
-          .mot=X12_017_M0,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-    },
-  [1]= {
-      .mot[0] = {
-          .device = NULL,
-          .mot=X12_017_M3,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-      .mot[1] = {
-          .device = NULL,
-          .mot=X12_017_M2,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-    },
-  [2]= {
-      .mot[0] = {
-          .device = NULL,
-          .mot=X12_017_M1,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-      .mot[1] = {
-          .device = NULL,
-          .mot=X12_017_M0,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-    },
-  [3]= {
-      .mot[0] = {
-          .device = NULL,
-          .mot=X12_017_M3,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-      .mot[1] = {
-          .device = NULL,
-          .mot=X12_017_M2,
-          .mag = MAG_MAG0,
-          .doSteps = 0,
-          },
-    },
-};
+static STEPPER_Clock_t STEPPER_Clocks[STEPPER_NOF_CLOCKS];
 
-bool STEPPER_JobIsFinished(void) {
+bool STEPPER_IsIdle(void) {
   for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
       if (STEPPER_Clocks[i].mot[j].doSteps!=0) { /* still steps to do? */
@@ -108,35 +76,121 @@ bool STEPPER_JobIsFinished(void) {
   return true; /* finished */
 }
 
-static void vTimerCallback(TimerHandle_t pxTimer) {
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-       if (STEPPER_Clocks[i].mot[j].doSteps > 0) {
-         McuX12_017_SingleStep(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[j].mot, 1);
-         STEPPER_Clocks[i].mot[j].doSteps--;
-       } else if (STEPPER_Clocks[i].mot[j].doSteps < 0)  {
-         McuX12_017_SingleStep(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[j].mot, -1);
-         STEPPER_Clocks[i].mot[j].doSteps++;
-       }
+#define STEPPER_StartTimer()        SCTIMER_StartTimer(SCT0, kSCTIMER_Counter_L);
+#define STEPPER_StopTimer()         SCTIMER_StopTimer(SCT0, kSCTIMER_Counter_L);
+#define STEPPER_ACCEL_HIGHEST_POS   (300)
+
+static void AccelDelay(STEPPER_Motor_t *mot, int32_t steps) {
+  if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
+    if (steps<=50) {
+      mot->delayCntr += 10;
+    } else if (steps<=100) {
+      mot->delayCntr += 7;
+    } else if (steps<=150) {
+      mot->delayCntr += 5;
+    } else if (steps<=250) {
+      mot->delayCntr += 3;
+    } else if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
+      mot->delayCntr += 1;
     }
-  }
-  /* check if we can stop timer */
-  if (STEPPER_JobIsFinished()) {
-    (void)xTimerStop(timerHndl, 0);
   }
 }
 
+static bool STEPPER_TimerClockCallback(STEPPER_Motor_t *mot) {
+  if (mot->delayCntr==0) { /* delay expired */
+    if (mot->doSteps!=0) { /* a step to do */
+      if (mot->doSteps > 0) {
+        McuX12_017_SingleStep(mot->device, mot->mot, 1);
+        mot->doSteps--;
+      } else if (mot->doSteps < 0)  {
+        McuX12_017_SingleStep(mot->device, mot->mot, -1);
+        mot->doSteps++;
+      }
+      mot->delayCntr = mot->delay; /* reload delay counter */
+      if (mot->speedup || mot->slowdown) {
+        int32_t stepsToGo;;
+
+        stepsToGo = mot->doSteps;
+        if (stepsToGo<0) { /* make it positive */
+          stepsToGo = -stepsToGo;
+        }
+        if (mot->speedup && stepsToGo>STEPPER_ACCEL_HIGHEST_POS) { /* accelerate */
+          if (mot->accelStepCntr<=STEPPER_ACCEL_HIGHEST_POS) {
+            mot->accelStepCntr++;
+          }
+          AccelDelay(mot, mot->accelStepCntr);
+        } else if (mot->slowdown && stepsToGo<STEPPER_ACCEL_HIGHEST_POS) { /* slow down */
+          if (mot->accelStepCntr>=0) {
+            mot->accelStepCntr--;
+          }
+          mot->accelStepCntr--;
+          AccelDelay(mot, mot->accelStepCntr);
+        }
+      }
+    } else {
+      return false; /* no work to do */
+    }
+  } else {
+    mot->delayCntr--; /* decrement delay counter */
+  }
+  return true; /* still work to do */
+}
+
+static void STEPPER_TimerCallback(void) {
+  bool workToDo = false;
+
+  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) { /* go through all motors */
+       workToDo |= STEPPER_TimerClockCallback(&STEPPER_Clocks[i].mot[j]);
+    } /* for */
+  }
+  /* check if we can stop timer */
+  if (!workToDo) {
+    STEPPER_StopTimer();
+  }
+}
+
+static void SCTIMER_Handler0(void) {
+  uint32_t flags;
+
+  flags = SCTIMER_GetStatusFlags(SCT0);
+  if (flags & SCT_CHANNEL_MASK_0) {
+    SCTIMER_ClearStatusFlags(SCT0, SCT_CHANNEL_MASK_0); /* Clear interrupt flag */
+    STEPPER_TimerCallback();
+  }
+}
+
+static void SCTMR_Init(void) {
+  uint32_t eventNumberOutput = 0;
+  sctimer_config_t sctimerInfo;
+  uint32_t matchValue;
+  status_t status;
+
+  SCTIMER_GetDefaultConfig(&sctimerInfo);
+  SCTIMER_Init(SCT0, &sctimerInfo);
+  matchValue = USEC_TO_COUNT(200, CLOCK_GetFreq(kCLOCK_CoreSysClk));
+  status = SCTIMER_CreateAndScheduleEvent(SCT0, kSCTIMER_MatchEventOnly, matchValue, 0 /* dummy I/O */, kSCTIMER_Counter_L /* dummy */, &eventNumberOutput);
+  if (status==kStatus_Fail || eventNumberOutput!=0) {
+    for(;;) {} /* should not happen! */
+  }
+  SCTIMER_SetupCounterLimitAction(SCT0, kSCTIMER_Counter_L, eventNumberOutput);
+  SCTIMER_SetCallback(SCT0, SCTIMER_Handler0, eventNumberOutput);
+  SCTIMER_EnableInterrupts(SCT0, (1<<eventNumberOutput));
+  NVIC_SetPriority(SCT0_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY+1); /* less urgent than RS-485 Rx interrupt! */
+  EnableIRQ(SCT0_IRQn); /* Enable at the NVIC */
+}
+
 void STEPPER_MoveAndWait(uint32_t waitMs) {
-  (void)xTimerStart(timerHndl, 0);
+  STEPPER_StartTimer();
   do {
     vTaskDelay(pdMS_TO_TICKS(waitMs));
-  } while (!STEPPER_JobIsFinished());
+  } while (!STEPPER_IsIdle());
 }
 
 /*!
  * \brief Move clock to absolute degree position
  */
-void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode) {
+void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
   int32_t steps, currPos, targetPos;
   STEPPER_Clock_t *clock;
 
@@ -169,10 +223,15 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, 
     }
   }
   clock->mot[motorIndex].doSteps = steps;
+  clock->mot[motorIndex].accelStepCntr = 0;
+  clock->mot[motorIndex].delay = delay;
+  clock->mot[motorIndex].speedup = speedUp;
+  clock->mot[motorIndex].slowdown = slowDown;
 }
 
 void STEPPER_MoveMotorStepsRel(STEPPER_Motor_t *motor, int32_t steps) {
   motor->doSteps = steps;
+  motor->accelStepCntr = 0;
 }
 
 /*!
@@ -192,7 +251,7 @@ void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree) {
 /*!
  * \brief Move clock by relative degree
  */
-void STEPPER_MoveClockHandDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree) {
+void STEPPER_MoveClockDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
   int32_t steps;
   STEPPER_Clock_t *clock;
 
@@ -203,8 +262,11 @@ void STEPPER_MoveClockHandDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorInd
     steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
   }
   clock->mot[motorIndex].doSteps = steps;
+  clock->mot[motorIndex].accelStepCntr = 0;
+  clock->mot[motorIndex].delay = delay;
+  clock->mot[motorIndex].speedup = speedUp;
+  clock->mot[motorIndex].slowdown = slowDown;
 }
-
 
 void STEPPER_Deinit(void) {
   McuX12_017_DeinitDevice(STEPPER_Clocks[0].mot[0].device);
@@ -212,9 +274,54 @@ void STEPPER_Deinit(void) {
 }
 
 #if PL_CONFIG_USE_MAG_SENSOR
-uint8_t STEPPER_ZeroHand(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors) {
+uint8_t STEPPER_MoveHandOnSensor(STEPPER_Motor_t *motors[], size_t nofMotors, bool onSensor, int32_t stepSize, int32_t timeoutms, uint32_t waitms) {
+  uint8_t res = ERR_OK;
   bool done;
-  int32_t timeout;
+
+  /* move hand over sensor */
+  for(;;) { /* breaks */
+    done = true;
+    for(int i=0; i<nofMotors; i++) { /* check if all motors are on sensor */
+      if (MAG_IsTriggered(motors[i]->mag)!=onSensor) {
+        done = false; /* not yet */
+        break;
+      }
+    }
+    if (done || timeoutms<0) { /* all hands on sensor */
+      break;
+    }
+    for(int i=0; i<nofMotors; i++) {
+      if (MAG_IsTriggered(motors[i]->mag)!=onSensor) {
+        STEPPER_MoveMotorStepsRel(motors[i], stepSize); /* make by 1 degree */
+      }
+    } /* for */
+    STEPPER_MoveAndWait(waitms);
+    timeoutms -= waitms;
+  }
+  if (timeoutms<0) {
+    res = ERR_UNDERFLOW;
+  }
+  return res;
+}
+#endif
+
+#if PL_CONFIG_USE_MAG_SENSOR
+void STEPPER_MoveByOffset(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors) {
+  /* here all hands are on the sensor: adjust with offset */
+   for(int i=0; i<nofMotors; i++) {
+     STEPPER_MoveMotorStepsRel(motors[i], offsets[i]);
+   } /* for */
+   STEPPER_MoveAndWait(10);
+}
+
+void STEPPER_SetZeroPosition(STEPPER_Motor_t *motors[], size_t nofMotors) {
+  /* set zero position */
+  for(int i=0; i<nofMotors; i++) {
+    X12_017_SetPos(motors[i]->device, motors[i]->mot, 0);
+  }
+}
+
+uint8_t STEPPER_ZeroHand(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors) {
   uint8_t res = ERR_OK;
 
   /* if hand is on sensor: move hand out of the sensor area */
@@ -225,67 +332,25 @@ uint8_t STEPPER_ZeroHand(STEPPER_Motor_t *motors[], int16_t offsets[], size_t no
   } /* for */
   STEPPER_MoveAndWait(10);
 
-  /* move hand over sensor */
-  timeout = 10000;
-  for(;;) { /* breaks */
-    done = true;
-    for(int i=0; i<nofMotors; i++) { /* check if all motors are on sensor */
-      if (!MAG_IsTriggered(motors[i]->mag)) {
-        done = false; /* not yet */
-        break;
-      }
-    }
-    if (done || timeout<0) { /* all hands on sensor */
-      break;
-    }
-    for(int i=0; i<nofMotors; i++) {
-      if (!MAG_IsTriggered(motors[i]->mag)) {
-        STEPPER_MoveMotorDegreeRel(motors[i], 1); /* make by 1 degree */
-      }
-    } /* for */
-    STEPPER_MoveAndWait(20);
-    timeout -= 20;
+  /* move forward in larger steps to find sensor */
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 10, 10000, 10)!=ERR_OK) {
+    res = ERR_FAILED;
   }
-  if (timeout<0) {
-    res = ERR_UNDERFLOW;
-  }
-  /* here all hands are on the sensor: adjust with offset */
 
   /* step back in micro-steps just to leave the sensor */
-  timeout = 10000;
-  for(;;) { /* breaks */
-    done = true;
-    for(int i=0; i<nofMotors; i++) {
-      if (MAG_IsTriggered(motors[i]->mag)) { /* check if all motors are not on sensor any more */
-        done = false; /* still one on the sensor */
-        break;
-      }
-    }
-    if (done) { /* all hands off the sensor */
-      break;
-    }
-    for(int i=0; i<nofMotors; i++) {
-      if (MAG_IsTriggered(motors[i]->mag)) {
-        STEPPER_MoveMotorStepsRel(motors[i], -1); /* step back */
-      }
-    } /* for */
-    STEPPER_MoveAndWait(20);
-    timeout -= 20;
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, false, -1, 10000, 10)!=ERR_OK) {
+    res = ERR_FAILED;
   }
-  if (timeout<0) {
-    res = ERR_UNDERFLOW;
+
+  /* step forward in micro-steps just to enter the sensor again */
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 1, 10000, 2)!=ERR_OK) {
+    res = ERR_FAILED;
   }
 
   /* here all hands are on the sensor: adjust with offset */
-  for(int i=0; i<nofMotors; i++) {
-    STEPPER_MoveMotorStepsRel(motors[i], offsets[i]);
-  } /* for */
-  STEPPER_MoveAndWait(10);
-
+  STEPPER_MoveByOffset(motors, offsets, nofMotors);
   /* set zero position */
-  for(int i=0; i<nofMotors; i++) {
-    X12_017_SetPos(motors[i]->device, motors[i]->mot, 0);
-  }
+  STEPPER_SetZeroPosition(motors, nofMotors);
   return res;
 }
 
@@ -299,12 +364,71 @@ uint8_t STEPPER_ZeroAllHands(void) {
     for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
       motors[c*STEPPER_NOF_CLOCK_MOTORS + m] = &STEPPER_Clocks[c].mot[m];
       offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
-   }
+    }
   }
   /* zero all of them */
   if (STEPPER_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS)!=ERR_OK) {
     res = ERR_FAILED;
   }
+  return res;
+}
+
+uint8_t STEPPER_SetOffsetFrom12(void) {
+  /* all hands shall be at 12-o-clock position */
+  uint8_t res = ERR_OK;
+  STEPPER_Motor_t *motors[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  int16_t offsets[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+
+  /* first zero position at current position and set delay */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+      X12_017_SetPos(STEPPER_Clocks[c].mot[m].device, STEPPER_Clocks[c].mot[m].mot, 0);
+      STEPPER_Clocks[c].mot[m].delay = 8;
+    }
+  }
+
+  /* fill in motor array information */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+      motors[c*STEPPER_NOF_CLOCK_MOTORS + m] = &STEPPER_Clocks[c].mot[m];
+    }
+  }
+  /* move forward in larger steps to find sensor */
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step back in micro-steps just to leave the sensor */
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step forward in micro-steps just to enter the sensor again */
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2)!=ERR_OK) {
+    res = ERR_FAILED;
+    return res;
+  }
+
+  /* store new offsets */
+  NVMC_Data_t data;
+
+  data = *NVMC_GetDataPtr(); /* struct copy */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+      data.zeroOffsets[c][m] = -X12_017_GetPos(STEPPER_Clocks[c].mot[m].device, STEPPER_Clocks[c].mot[m].mot);
+    }
+  }
+  res = NVMC_WriteConfig(&data);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  /* fill in motor array information */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+      offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
+    }
+  }
+  STEPPER_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]));
   return res;
 }
 #endif
@@ -325,11 +449,20 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"HH[pos:");
     McuUtility_strcatNum32sFormatted(buf, sizeof(buf), X12_017_GetPos(STEPPER_Clocks[i].mot[0].device, STEPPER_Clocks[i].mot[0].mot), ' ', 5);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", offs:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 0), ' ', 5);
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 0), ' ', 4);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", delay:");
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), STEPPER_Clocks[i].mot[0].delay, ' ', 2);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", #qItem:");
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), uxQueueMessagesWaiting(STEPPER_Clocks[i].mot[0].queue), ' ', 2);
+
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"] MM[pos:");
     McuUtility_strcatNum32sFormatted(buf, sizeof(buf), X12_017_GetPos(STEPPER_Clocks[i].mot[1].device, STEPPER_Clocks[i].mot[1].mot), ' ', 5);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", offs:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 1), ' ', 5);
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 1), ' ', 4);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", delay:");
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), STEPPER_Clocks[i].mot[1].delay, ' ', 2);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", #qItem:");
+    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), uxQueueMessagesWaiting(STEPPER_Clocks[i].mot[1].queue), ' ', 2);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"]\r\n");
 
     McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  clk[");
@@ -348,6 +481,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  X12.017[1]");
   McuShell_SendStatusStr(statStr, buf, io->stdOut);
 
+  if (STEPPER_ExecuteQueue) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: yes");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: no");
+  }
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  queue", buf, io->stdOut);
 #if 0
   int32_t pos;
   buf[0] = '\0';
@@ -374,17 +514,95 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  zero <c> <m>", (unsigned char*)"Move clock (0-3) and motor (0-1) to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  offs <c> <m> <v>", (unsigned char*)"Set offset value for clock (0-3) and motor (0-1)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  offs 12", (unsigned char*)"Calculate offset from 12-o-clock\r\n", io->stdOut);
 #endif
+  McuShell_SendHelpStr((unsigned char*)"  delay <m0>...<m7>", (unsigned char*)"Set delay for motors (0..7)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  step <c> <m> <steps>", (unsigned char*)"Perform a number of (blocking) steps for clock (0-3) and motor (0-1)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  goto <c> <m> <pos>", (unsigned char*)"Goto position (non-blocking) for clock (0-3) and motor (0-1)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  angle <c> <m> <deg> <md>", (unsigned char*)"Move clock (0-3) and motor (0-1) to angle (0..359) using mode (ccw, cw, short)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  m <c> <m> <a> <d> <md>", (unsigned char*)"Move the clock and motor to the angle with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  r <c> <m> <a> <d> <md>", (unsigned char*)"Relative angle move of clock and motor and delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  q <c> <m> <cmd>", (unsigned char*)"Queue a command for clock and motor\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute command in queue\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  idle", (unsigned char*)"Check if steppers are idle\r\n", io->stdOut);
   return ERR_OK;
+}
+
+static uint8_t ParseStepperCommand(const unsigned char *cmd, STEPPER_Clock_e *c, STEPPER_Hand_e *m, int32_t *v, uint8_t *d, STEPPER_MoveMode_e *mode, bool *speedUp, bool *slowDown) {
+  /* parse a string like <c> <m> <v> <d> <md> */
+  int32_t clk, mot, val, delay;
+
+  if (   McuUtility_xatoi(&cmd, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
+      && McuUtility_xatoi(&cmd, &mot)==ERR_OK && mot>=0 && mot<STEPPER_NOF_CLOCK_MOTORS
+      && McuUtility_xatoi(&cmd, &val)==ERR_OK
+      && McuUtility_xatoi(&cmd, &delay)==ERR_OK && delay>=0
+     )
+  {
+    if (*cmd==' ') {
+      cmd++;
+    }
+    if (*cmd=='\0') { /* mode is optional, set it to defaults */
+      *mode = STEPPER_MOVE_MODE_SHORT;
+      *speedUp = *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cw")==0) {
+      *mode = STEPPER_MOVE_MODE_CW;
+      *speedUp = *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cw")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = false; *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cW")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = true; *slowDown = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"CW")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = *slowDown = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cc")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cc")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = false; *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cC")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = true; *slowDown = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"CC")==0) {
+      *mode = STEPPER_MOVE_MODE_CCW;
+      *speedUp = *slowDown = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"sh")==0) {
+      *mode = STEPPER_MOVE_MODE_SHORT;
+      *speedUp = *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Sh")==0) {
+      *mode = STEPPER_MOVE_MODE_SHORT;
+      *speedUp = false; *slowDown = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"sH")==0) {
+      *mode = STEPPER_MOVE_MODE_SHORT;
+      *speedUp = true; *slowDown = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"SH")==0) {
+      *mode = STEPPER_MOVE_MODE_SHORT;
+      *speedUp = *slowDown = false;
+    } else {
+      return ERR_FAILED;
+    }
+    *c = clk;
+    *m = mot;
+    *v = val;
+    *d = delay;
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
 }
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   int32_t steps, clk, m;
   const unsigned char *p;
   uint8_t res = ERR_OK;
+  STEPPER_Clock_e clock;
+  STEPPER_Hand_e motor;
+  int32_t value;
+  uint8_t delay;
+  STEPPER_MoveMode_e mode;
+  bool speedUp, slowDown;
+
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "stepper help")==0) {
     *handled = TRUE;
@@ -419,6 +637,9 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
+  } else if (McuUtility_strcmp((char*)cmd, "stepper offs 12")==0) {
+    *handled = TRUE;
+    return STEPPER_SetOffsetFrom12();
   } else if (McuUtility_strncmp((char*)cmd, "stepper offs ", sizeof("stepper offs ")-1)==0) {
     int32_t val;
 
@@ -461,33 +682,44 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
-  } else if (McuUtility_strncmp((char*)cmd, "stepper angle ", sizeof("stepper angle ")-1)==0) {
-    int32_t angle;
-
+  } else if (McuUtility_strncmp((char*)cmd, "stepper m ", sizeof("stepper m ")-1)==0) { /* "stepper m <c> <m> <a> <d> <md> " */
     *handled = TRUE;
-    p = cmd + sizeof("stepper angle ")-1;
-    if (   McuUtility_xatoi(&p, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
-        && McuUtility_xatoi(&p, &m)==ERR_OK && m>=0 && m<STEPPER_NOF_CLOCK_MOTORS
-        && McuUtility_xatoi(&p, &angle)==ERR_OK && angle>=0 && angle<=359
-       )
-    {
-      STEPPER_MoveMode_e mode = STEPPER_MOVE_MODE_SHORT;
-
-      if (McuUtility_strcmp((char*)p, (char*)" cw")==0) {
-        mode = STEPPER_MOVE_MODE_CW;
-      } else if (McuUtility_strcmp((char*)p, (char*)" ccw")==0) {
-        mode = STEPPER_MOVE_MODE_CCW;
-      } else if (McuUtility_strcmp((char*)p, (char*)" short")==0) {
-        mode = STEPPER_MOVE_MODE_SHORT;
-      } else {
-        return ERR_FAILED;
-      }
-      STEPPER_MoveClockDegreeAbs(clk, m, angle, mode); /* lower right */
-      (void)xTimerStart(timerHndl, 0);
+    res = ParseStepperCommand(cmd+sizeof("stepper m ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
+    if (res==ERR_OK) {
+      STEPPER_MoveClockDegreeAbs(clock, motor, value, mode, delay, speedUp, slowDown);
+      STEPPER_StartTimer();
       return ERR_OK;
     } else {
       return ERR_FAILED;
     }
+  } else if (McuUtility_strncmp((char*)cmd, "stepper r ", sizeof("stepper r ")-1)==0) { /* "stepper r <c> <m> <s> <d> <md> " */
+    *handled = TRUE;
+    res = ParseStepperCommand(cmd+sizeof("stepper r ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
+    if (res==ERR_OK) {
+      STEPPER_MoveClockDegreeRel(clock, motor, value, mode, delay, speedUp, slowDown);
+      STEPPER_StartTimer();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "stepper delay ", sizeof("stepper delay ")-1)==0) {
+    int32_t i;
+    int32_t val;
+
+    *handled = TRUE;
+    p = cmd + sizeof("stepper delay ")-1;
+    i = 0;
+    while(*p!='\0') {
+      if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0)
+      {
+        STEPPER_Clocks[i/2].mot[i%2].delay = val;
+        i++;
+      } else {
+        res = ERR_FAILED;
+        break; /* get out here */
+      }
+    } /* while */
+    return res;
   } else if (McuUtility_strncmp((char*)cmd, "stepper goto ", sizeof("stepper goto ")-1)==0) {
     int32_t steps;
 
@@ -497,7 +729,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
       if (McuUtility_xatoi(&p, &m)==ERR_OK && m>=0 && m<STEPPER_NOF_CLOCK_MOTORS) {
         if (McuUtility_xatoi(&p, &steps)==ERR_OK) {
           STEPPER_Clocks[clk].mot[m].doSteps = steps;
-          (void)xTimerStart(timerHndl, 0);
+          STEPPER_Clocks[clk].mot[m].accelStepCntr = 0;
         }
       } else {
         return ERR_FAILED;
@@ -505,10 +737,78 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
+    STEPPER_StartTimer();
+    return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, "stepper q ", sizeof("stepper q ")-1)==0) {
+    *handled = TRUE;
+    unsigned char *ptr, *data;
+
+    p = cmd + sizeof("stepper q ")-1;
+    if (   McuUtility_xatoi(&p, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
+        && McuUtility_xatoi(&p, &m)==ERR_OK && m>=0 && m<STEPPER_NOF_CLOCK_MOTORS
+       )
+    {
+      data = (unsigned char*)p;
+      while(*data==' ') {
+        data++;
+      }
+      ptr = pvPortMalloc(McuUtility_strlen((char*)data));
+      if (ptr==NULL) {
+        return ERR_FAILED;
+      }
+      strcpy((char*)ptr, (char*)data); /* copy command */
+      if (xQueueSendToBack(STEPPER_Clocks[clk].mot[m].queue, &ptr, pdMS_TO_TICKS(100))!=pdTRUE) {
+        return ERR_FAILED;
+      }
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0) {
+    STEPPER_ExecuteQueue = true;
+    *handled = TRUE;
+  } else if (McuUtility_strcmp((char*)cmd, "stepper idle")==0) {
+    *handled = TRUE;
+    if (STEPPER_IsIdle()) {
+      McuShell_SendStr((unsigned char*)"idle\r\n", io->stdOut);
+    } else {
+      McuShell_SendStr((unsigned char*)"busy\r\n", io->stdOut);
+    }
     return ERR_OK;
   }
   return res;
 }
+
+uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+  uint8_t *cmd;
+  bool noCommandsInQueue = true;
+
+  if (STEPPER_ExecuteQueue) {
+    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+      for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+        if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
+          if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
+            noCommandsInQueue = false;
+            res = SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
+            vPortFree(cmd); /* free memory for command */
+          }
+        }
+      }
+    }
+    if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
+      STEPPER_ExecuteQueue = false;
+    }
+  }
+  return res;
+}
+
+#if 0
+void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], size_t nofTableEntries) {
+  motor->accelTable = table;
+  motor->nofAccelTableEntries = nofTableEntries;
+}
+#endif
 
 void STEPPER_Init(void) {
   McuX12_017_Config_t config;
@@ -587,23 +887,27 @@ void STEPPER_Init(void) {
   STEPPER_Clocks[0].mot[0].mot = X12_017_M1;
   STEPPER_Clocks[0].mot[0].mag = MAG_MAG1;
   STEPPER_Clocks[0].mot[0].doSteps = 0;
+  STEPPER_Clocks[0].mot[0].accelStepCntr = 0;
   /* M0: outer shaft */
   STEPPER_Clocks[0].mot[1].device = device;
   STEPPER_Clocks[0].mot[1].mot = X12_017_M0;
   STEPPER_Clocks[0].mot[1].mag = MAG_MAG0;
   STEPPER_Clocks[0].mot[1].doSteps = 0;
+  STEPPER_Clocks[0].mot[1].accelStepCntr = 0;
 
   /* M3: inner shaft */
   STEPPER_Clocks[1].mot[0].device = device;
   STEPPER_Clocks[1].mot[0].mot = X12_017_M3;
   STEPPER_Clocks[1].mot[0].mag = MAG_MAG2;
   STEPPER_Clocks[1].mot[0].doSteps = 0;
+  STEPPER_Clocks[1].mot[0].accelStepCntr = 0;
 
   /* M2: outer shaft */
   STEPPER_Clocks[1].mot[1].device = device;
   STEPPER_Clocks[1].mot[1].mot = X12_017_M2;
   STEPPER_Clocks[1].mot[1].mag = MAG_MAG3;
   STEPPER_Clocks[1].mot[1].doSteps = 0;
+  STEPPER_Clocks[1].mot[1].accelStepCntr = 0;
 
   /* initialize second X12.017 */
   config.hasReset = false; /* second device shares the reset line from the first */
@@ -652,36 +956,60 @@ void STEPPER_Init(void) {
   device = McuX12_017_InitDevice(&config);
 
   /* create clock descriptor */
-  /* M1: inner shaft */
-  STEPPER_Clocks[2].mot[0].device = device;
-  STEPPER_Clocks[2].mot[0].mot = X12_017_M1;
-  STEPPER_Clocks[2].mot[0].mag = MAG_MAG7;
-  STEPPER_Clocks[2].mot[0].doSteps = 0;
-
-  /* M0: outer shaft */
-  STEPPER_Clocks[2].mot[1].device = device;
-  STEPPER_Clocks[2].mot[1].mot = X12_017_M0;
-  STEPPER_Clocks[2].mot[1].mag = MAG_MAG6;
-  STEPPER_Clocks[2].mot[1].doSteps = 0;
-
   /* M3: inner shaft */
-  STEPPER_Clocks[3].mot[0].device = device;
-  STEPPER_Clocks[3].mot[0].mot = X12_017_M3;
-  STEPPER_Clocks[3].mot[0].mag = MAG_MAG4;
-  STEPPER_Clocks[3].mot[0].doSteps = 0;
+  STEPPER_Clocks[2].mot[0].device = device;
+  STEPPER_Clocks[2].mot[0].mot = X12_017_M3;
+  STEPPER_Clocks[2].mot[0].mag = MAG_MAG4;
+  STEPPER_Clocks[2].mot[0].doSteps = 0;
+  STEPPER_Clocks[2].mot[0].accelStepCntr = 0;
 
   /* M2: outer shaft */
+  STEPPER_Clocks[2].mot[1].device = device;
+  STEPPER_Clocks[2].mot[1].mot = X12_017_M2;
+  STEPPER_Clocks[2].mot[1].mag = MAG_MAG5;
+  STEPPER_Clocks[2].mot[1].doSteps = 0;
+  STEPPER_Clocks[2].mot[1].accelStepCntr = 0;
+
+  /* M1: inner shaft */
+  STEPPER_Clocks[3].mot[0].device = device;
+  STEPPER_Clocks[3].mot[0].mot = X12_017_M1;
+  STEPPER_Clocks[3].mot[0].mag = MAG_MAG7;
+  STEPPER_Clocks[3].mot[0].doSteps = 0;
+  STEPPER_Clocks[3].mot[0].accelStepCntr = 0;
+
+  /* M0: outer shaft */
   STEPPER_Clocks[3].mot[1].device = device;
-  STEPPER_Clocks[3].mot[1].mot = X12_017_M2;
-  STEPPER_Clocks[3].mot[1].mag = MAG_MAG5;
+  STEPPER_Clocks[3].mot[1].mot = X12_017_M0;
+  STEPPER_Clocks[3].mot[1].mag = MAG_MAG6;
   STEPPER_Clocks[3].mot[1].doSteps = 0;
+  STEPPER_Clocks[3].mot[1].accelStepCntr = 0;
 
+  /* set default acceleration table for all motors */
+  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+    //STEPPER_SetAccelTable(
+    //    &STEPPER_Clocks[i].mot[0],
+    //    STEPPER_DefaultAccelTable,
+    //    sizeof(STEPPER_DefaultAccelTable)/sizeof(STEPPER_DefaultAccelTable[0]));
+    STEPPER_Clocks[i].mot[0].delay = 0;
+    STEPPER_Clocks[i].mot[0].delayCntr = 0;
+    //STEPPER_SetAccelTable(
+    //    &STEPPER_Clocks[i].mot[1],
+    //    STEPPER_DefaultAccelTable,
+    //    sizeof(STEPPER_DefaultAccelTable)/sizeof(STEPPER_DefaultAccelTable[0]));
+    STEPPER_Clocks[i].mot[1].delay = 0;
+    STEPPER_Clocks[i].mot[1].delayCntr = 0;
+
+    STEPPER_Clocks[i].mot[0].queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
+    if (STEPPER_Clocks[i].mot[0].queue==NULL) {
+      for(;;){} /* out of memory? */
+    }
+    STEPPER_Clocks[i].mot[1].queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
+    if (STEPPER_Clocks[i].mot[1].queue==NULL) {
+      for(;;){} /* out of memory? */
+    }
+  } /* for */
   McuX12_017_ResetDriver(STEPPER_Clocks[0].mot[0].device); /* shared reset line with second device */
-
-  timerHndl = xTimerCreate("stepper", pdMS_TO_TICKS(TIMER_PERIOD_MS), pdTRUE, (void*)0, vTimerCallback);
-  if (timerHndl==NULL) {
-    for(;;); /* failure! */
-  }
+  SCTMR_Init();
 }
 
 #endif /* PL_CONFIG_USE_STEPPER */

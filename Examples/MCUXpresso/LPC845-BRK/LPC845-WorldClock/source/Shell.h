@@ -13,7 +13,7 @@
 void SHELL_SendString(unsigned char *str);
 void SHELL_SendChar(unsigned char ch);
 
-uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io);
+uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io, bool silent);
 
 void SHELL_Init(void);
 void SHELL_Deinit(void);

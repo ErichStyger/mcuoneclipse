@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -46,7 +45,7 @@
 #endif
 
 #ifndef McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH
-  #define McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH    (64)
+  #define McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH    (McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE)
 #endif
 
 #ifndef McuShellUart_CONFIG_UART_BAUDRATE

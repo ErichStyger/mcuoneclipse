@@ -77,7 +77,11 @@ static uint8_t NVMC_InitConfig(void) {
   }
   memset(&data, 0, sizeof(data)); /* initialize data */
   data.version = NVMC_VERSION_1_0;
-  data.addrRS485 = 10;
+#if PL_CONFIG_IS_SERVER
+  data.addrRS485 = 0x01;
+#else
+  data.addrRS485 = 0x0A;
+#endif
   for (int i=0; i<sizeof(data.zeroOffsets)/sizeof(data.zeroOffsets[0]); i++) {
     for(int j=0; j<sizeof(data.zeroOffsets[0])/sizeof(data.zeroOffsets[0][0]); j++) {
       data.zeroOffsets[i][j] = 0; /* default offset */
@@ -131,7 +135,6 @@ int16_t NVMC_GetStepperZeroOffset(uint8_t clock, uint8_t motor) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   const NVMC_Data_t *data;
   uint8_t buf[24];
-  uint8_t status[12];
 
   McuShell_SendStatusStr((unsigned char*)"nvmc", (unsigned char*)"Non-volatile memory configuration area\r\n", io->stdOut);
   if (NVMC_IsErased()) {
@@ -145,12 +148,14 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_chcat(buf, sizeof(buf), '.');
     McuUtility_strcatNum32u(buf, sizeof(buf), data->version%10);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    McuShell_SendStatusStr((unsigned char*)"  FLASH", buf, io->stdOut);
+    McuShell_SendStatusStr((unsigned char*)"  version", buf, io->stdOut);
 
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"addr: 0x");
     McuUtility_strcatNum8Hex(buf, sizeof(buf), data->addrRS485);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
     McuShell_SendStatusStr((unsigned char*)"  RS-458", buf, io->stdOut);
+#if PL_CONFIG_USE_STEPPER
+    uint8_t status[12];
 
     for (int i=0; i<sizeof(data->zeroOffsets)/sizeof(data->zeroOffsets[0]); i++) {
       buf[0] = '\0';
@@ -164,7 +169,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcat(status, sizeof(status), (unsigned char*)"]");
       McuShell_SendStatusStr(status, buf, io->stdOut);
     }
-
+#endif
   }
   return ERR_OK;
 }

@@ -12,6 +12,9 @@
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "McuArmTools.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #include "McuSystemView.h"
+#endif
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
@@ -39,6 +42,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_MATRIX
+  #include "matrix.h"
+#endif
 
 /* SDK */
 #include "fsl_gpio.h"
@@ -51,7 +57,7 @@
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
-#if PL_CONFIG_USE_UART
+#if PL_CONFIG_USE_SHELL_UART
   #include "McuShellUart.h"
 #endif
 #if PL_CONFIG_USE_I2C
@@ -89,8 +95,11 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif
-#if PL_CONFIG_USE_UART
+#if PL_CONFIG_USE_SHELL_UART
   McuShellUart_Init();
+#endif
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  McuSystemView_Init();
 #endif
 
 #if PL_CONFIG_USE_I2C
@@ -133,5 +142,8 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();
+#endif
+#if PL_CONFIG_USE_MATRIX
+  MATRIX_Init();
 #endif
 }

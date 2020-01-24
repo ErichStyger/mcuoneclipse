@@ -12,6 +12,7 @@
 #include "McuShell.h"
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io);
 
 #define STEPPER_NOF_CLOCKS        (4)
 #define STEPPER_NOF_CLOCK_MOTORS  (2)
@@ -35,8 +36,10 @@ typedef enum {
   STEPPER_CLOCK_3=3,
 } STEPPER_Clock_e;
 
-void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode);
-void STEPPER_MoveClockHandDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree);
+bool STEPPER_IsIdle(void);
+
+void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
+void STEPPER_MoveClockDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
 
 uint8_t STEPPER_ZeroAllHands(void);
 
