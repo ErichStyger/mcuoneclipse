@@ -27,7 +27,7 @@
 #include "fsl_ctimer.h"
 #include "fsl_sctimer.h"
 
-#define STEPPER_USE_FREERTOS_TIMER  (0)
+#define STEPPER_HAND_ZERO_DELAY   (6)
 
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* number of items in stepper command queue */
 static bool STEPPER_ExecuteQueue = false;
@@ -229,15 +229,16 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, 
   clock->mot[motorIndex].slowdown = slowDown;
 }
 
-void STEPPER_MoveMotorStepsRel(STEPPER_Motor_t *motor, int32_t steps) {
+void STEPPER_MoveMotorStepsRel(STEPPER_Motor_t *motor, int32_t steps, uint16_t delay) {
   motor->doSteps = steps;
   motor->accelStepCntr = 0;
+  motor->delay = delay;
 }
 
 /*!
  * \brief Move clock by relative degree
  */
-void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree) {
+void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree, uint16_t delay) {
   int32_t steps;
 
   if (degree>=0) {
@@ -245,7 +246,7 @@ void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree) {
   } else {
     steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
   }
-  STEPPER_MoveMotorStepsRel(motor, steps);
+  STEPPER_MoveMotorStepsRel(motor, steps, delay);
 }
 
 /*!
@@ -274,7 +275,7 @@ void STEPPER_Deinit(void) {
 }
 
 #if PL_CONFIG_USE_MAG_SENSOR
-uint8_t STEPPER_MoveHandOnSensor(STEPPER_Motor_t *motors[], size_t nofMotors, bool onSensor, int32_t stepSize, int32_t timeoutms, uint32_t waitms) {
+uint8_t STEPPER_MoveHandOnSensor(STEPPER_Motor_t *motors[], size_t nofMotors, bool onSensor, int32_t stepSize, int32_t timeoutms, uint32_t waitms, uint16_t delay) {
   uint8_t res = ERR_OK;
   bool done;
 
@@ -292,7 +293,7 @@ uint8_t STEPPER_MoveHandOnSensor(STEPPER_Motor_t *motors[], size_t nofMotors, bo
     }
     for(int i=0; i<nofMotors; i++) {
       if (MAG_IsTriggered(motors[i]->mag)!=onSensor) {
-        STEPPER_MoveMotorStepsRel(motors[i], stepSize); /* make by 1 degree */
+        STEPPER_MoveMotorStepsRel(motors[i], stepSize, delay); /* make by 1 degree */
       }
     } /* for */
     STEPPER_MoveAndWait(waitms);
@@ -306,10 +307,10 @@ uint8_t STEPPER_MoveHandOnSensor(STEPPER_Motor_t *motors[], size_t nofMotors, bo
 #endif
 
 #if PL_CONFIG_USE_MAG_SENSOR
-void STEPPER_MoveByOffset(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors) {
+void STEPPER_MoveByOffset(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors, uint16_t delay) {
   /* here all hands are on the sensor: adjust with offset */
    for(int i=0; i<nofMotors; i++) {
-     STEPPER_MoveMotorStepsRel(motors[i], offsets[i]);
+     STEPPER_MoveMotorStepsRel(motors[i], offsets[i], delay);
    } /* for */
    STEPPER_MoveAndWait(10);
 }
@@ -321,34 +322,34 @@ void STEPPER_SetZeroPosition(STEPPER_Motor_t *motors[], size_t nofMotors) {
   }
 }
 
-uint8_t STEPPER_ZeroHand(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors) {
+uint8_t STEPPER_ZeroHand(STEPPER_Motor_t *motors[], int16_t offsets[], size_t nofMotors, uint16_t delay) {
   uint8_t res = ERR_OK;
 
   /* if hand is on sensor: move hand out of the sensor area */
   for(int i=0; i<nofMotors; i++) {
     if (MAG_IsTriggered(motors[i]->mag)) { /* hand on sensor? */
-      STEPPER_MoveMotorDegreeRel(motors[i], 90);
+      STEPPER_MoveMotorDegreeRel(motors[i], 90, delay);
     }
   } /* for */
   STEPPER_MoveAndWait(10);
 
   /* move forward in larger steps to find sensor */
-  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 10, 10000, 10)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 10, 10000, 10, delay)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step back in micro-steps just to leave the sensor */
-  if (STEPPER_MoveHandOnSensor(motors, nofMotors, false, -1, 10000, 10)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, false, -1, 10000, 10, delay)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step forward in micro-steps just to enter the sensor again */
-  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 1, 10000, 2)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, nofMotors, true, 1, 10000, 2, delay)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* here all hands are on the sensor: adjust with offset */
-  STEPPER_MoveByOffset(motors, offsets, nofMotors);
+  STEPPER_MoveByOffset(motors, offsets, nofMotors, delay);
   /* set zero position */
   STEPPER_SetZeroPosition(motors, nofMotors);
   return res;
@@ -367,7 +368,7 @@ uint8_t STEPPER_ZeroAllHands(void) {
     }
   }
   /* zero all of them */
-  if (STEPPER_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS)!=ERR_OK) {
+  if (STEPPER_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
   return res;
@@ -394,17 +395,17 @@ uint8_t STEPPER_SetOffsetFrom12(void) {
     }
   }
   /* move forward in larger steps to find sensor */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step back in micro-steps just to leave the sensor */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step forward in micro-steps just to enter the sensor again */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2)!=ERR_OK) {
+  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
     return res;
   }
@@ -428,7 +429,7 @@ uint8_t STEPPER_SetOffsetFrom12(void) {
       offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
     }
   }
-  STEPPER_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]));
+  STEPPER_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]), STEPPER_HAND_ZERO_DELAY);
   return res;
 }
 #endif
@@ -630,7 +631,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
 
       motors[0] = &STEPPER_Clocks[clk].mot[m];
       offset = NVMC_GetStepperZeroOffset(clk, m);
-      res = STEPPER_ZeroHand(motors, &offset, 1);
+      res = STEPPER_ZeroHand(motors, &offset, 1, STEPPER_HAND_ZERO_DELAY);
       if (res!=ERR_OK) {
         McuShell_SendStr((unsigned char*)"failed to find magnet/zero position\r\n", io->stdErr);
       }
