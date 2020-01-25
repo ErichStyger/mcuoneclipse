@@ -36,6 +36,14 @@
 #if PL_CONFIG_USE_X12_STEPPER
   #include "McuX12_017.h"
 #endif
+#if PL_CONFIG_USE_X12_STEPPER
+  #include "McuX12_017.h"
+#endif
+
+/* SDK */
+#include "fsl_gpio.h"
+
+/* application modules: */
 #if PL_CONFIG_USE_RS485
   #include "rs485.h"
 #endif
@@ -45,15 +53,7 @@
 #if PL_CONFIG_USE_MATRIX
   #include "matrix.h"
 #endif
-
-/* SDK */
-#include "fsl_gpio.h"
-
-/* application modules: */
 #include "leds.h"
-#if PL_CONFIG_USE_BUTTON
-  #include "buttons.h"
-#endif
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
@@ -65,9 +65,6 @@
 #endif
 #if PL_CONFIG_USE_STEPPER
   #include "stepper.h"
-#endif
-#if PL_CONFIG_USE_X12_STEPPER
-  #include "McuX12_017.h"
 #endif
 #if PL_CONFIG_USE_MAG_SENSOR
   #include "magnets.h"
@@ -101,7 +98,6 @@ void PL_Init(void) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
-
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
 #endif
@@ -122,9 +118,6 @@ void PL_Init(void) {
 
   /* application modules: */
   LEDS_Init();
-#if PL_CONFIG_USE_BUTTON
-  BTN_Init();
-#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif

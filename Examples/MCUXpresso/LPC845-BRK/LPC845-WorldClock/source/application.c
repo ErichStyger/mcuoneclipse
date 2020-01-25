@@ -334,13 +334,13 @@ static void AppTask(void *pv) {
     if (clockIsOn) {
       res = McuTimeDate_GetTime(&time);
       if (res==ERR_OK && (time.Hour!=oldHH || time.Min != oldMM)) {
-  #if PL_CONFIG_USE_STEPPER
+  #if PL_CONFIG_WORLD_CLOCK
         uint8_t hour;
 
         hour = AdjustHourForTimeZone(time.Hour, -1); /* local time is GMT+1 */
-        SetTime(STEPPER_CLOCK_0, AdjustHourForTimeZone(hour, 0), time.Min); /* London, GMT+0, top left */
-        SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min); /* Beijing, GMT+8, top left */
-        SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min); /* Lucerne, GMT+1, top left */
+        SetTime(STEPPER_CLOCK_0, AdjustHourForTimeZone(hour, 0), time.Min);  /* London, GMT+0, top left */
+        SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min);  /* Beijing, GMT+8, top left */
+        SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min);  /* Lucerne, GMT+1, top left */
         SetTime(STEPPER_CLOCK_3, AdjustHourForTimeZone(hour, -4), time.Min); /* New York,, GMT-4, top left */
         STEPPER_MoveAndWait(5);
   #endif

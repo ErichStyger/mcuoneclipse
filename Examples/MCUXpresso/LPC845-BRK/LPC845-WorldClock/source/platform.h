@@ -11,8 +11,8 @@
 #define PL_CONFIG_IS_CLIENT         (!PL_CONFIG_IS_MASTER) /* otherwise it is the server */
 
 /* hardware versions:
- * V0.1: world clock (4 clocks, 2x2)
- * V1.0: 1x4 clocks */
+ * V0.1: initial version with 2x2 arrangement
+ * V1.0: second version with 1x4 arrangement, different pin assignment and better hall sensors */
 #if 1
   #define PL_CONFIG_BOARD_VERSION   (10) /* 1: V0.1, 10: V1.0 */
 #else
@@ -41,9 +41,6 @@
 #define PL_CONFIG_USE_MATRIX        (1 && PL_CONFIG_IS_MASTER)
 
 /* NYI or not applicable */
-#define PL_CONFIG_USE_KBI           (0)
-#define PL_CONFIG_USE_GUI           (0)
-#define PL_CONFIG_USE_BUTTON        (0)
 #define PL_CONFIG_USE_USB_CDC       (0) /* not supported on LPC845 */
 #define PL_CONFIG_USE_I2C_SPY       (0 && PL_CONFIG_USE_I2C) /* using shell component to scan I2C bus */
 
