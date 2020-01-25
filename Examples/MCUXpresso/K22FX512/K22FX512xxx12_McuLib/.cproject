@@ -158,7 +158,6 @@
 									<listOptionValue builtIn="false" value="../source"/>
 									<listOptionValue builtIn="false" value="../"/>
 									<listOptionValue builtIn="false" value="../startup"/>
-									<listOptionValue builtIn="false" value="../Sumo"/>
 									<listOptionValue builtIn="false" value="../McuLib/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/config/fonts"/>
 									<listOptionValue builtIn="false" value="../McuLib/src"/>
@@ -316,8 +315,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="minIni|FatFS|FreeRTOS/FreeRTOShooks.c|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Midi"/>
+						<entry excluding="fonts|LittlevGL|minIni|FatFS|FreeRTOS/FreeRTOShooks.c|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="application_old.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
@@ -385,7 +383,7 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/ADIS_Robot"/>
+			<resource resourceType="PROJECT" workspacePath="/K22FX512xxx12_McuLib"/>
 		</configuration>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/MK22FX512xxx12_SumoV2"/>
