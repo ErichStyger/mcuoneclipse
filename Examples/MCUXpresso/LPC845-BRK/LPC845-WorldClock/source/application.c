@@ -219,7 +219,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  demo square", (unsigned char*)"Demo with square\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo propeller", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo clap", (unsigned char*)"Demo like a snapper\r\n", io->stdOut);
-#if PL_CONFIG_BOARD_VERSION==1 /* world clock */
+#if PL_CONFIG_WORLD_CLOCK
   McuShell_SendHelpStr((unsigned char*)"  clocks", (unsigned char*)"[0] London    [3] New York\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"",         (unsigned char*)"[1] Beijing   [2] Lucerne\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  hands",  (unsigned char*)"[0] MM,inner  [1] HH,outer\r\n", io->stdOut);
@@ -305,11 +305,10 @@ static void AppTask(void *pv) {
   PL_InitFromTask();
 #if PL_CONFIG_USE_SHELL
 #if PL_CONFIG_IS_SERVER
-  SHELL_SendString((unsigned char*)"\r\n******************************\r\n* LPC845 Master *\r\n******************************\r\n");
+  SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Master *\r\n*****************\r\n");
 #endif
 #if PL_CONFIG_IS_CLIENT
-
-  SHELL_SendString((unsigned char*)"\r\n******************************\r\n* LPC845 Client *\r\n******************************\r\n");
+  SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Client *\r\n*****************\r\n");
 #endif
 #endif
 #if 0 && PL_CONFIG_USE_STEPPER

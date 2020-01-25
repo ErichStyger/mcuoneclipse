@@ -77,7 +77,7 @@ static uint8_t NVMC_InitConfig(void) {
   }
   memset(&data, 0, sizeof(data)); /* initialize data */
   data.version = NVMC_VERSION_1_0;
-#if PL_CONFIG_IS_SERVER
+#if PL_CONFIG_IS_MASTER
   data.addrRS485 = 0x01;
 #else
   data.addrRS485 = 0x0A;

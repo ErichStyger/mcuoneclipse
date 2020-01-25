@@ -264,7 +264,7 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
         }
       }
     }
-#if PL_CONFIG_IS_SERVER
+#if PL_CONFIG_IS_MASTER
   } else {
     /* not a command, print it ... */
     SHELL_SendString((unsigned char *)cmd);

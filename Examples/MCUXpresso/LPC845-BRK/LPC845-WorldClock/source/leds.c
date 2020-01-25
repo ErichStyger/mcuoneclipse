@@ -13,7 +13,7 @@
   #define LED_BLUE_GPIO       GPIO
   #define LED_BLUE_PORT       0U
   #define LED_BLUE_PIN        19U
-#elif PL_CONFIG_IS_SERVER
+#elif PL_CONFIG_IS_MASTER
   /* LEDs on LPC845-BRK */
   #define LED_GREEN_GPIO      GPIO
   #define LED_GREEN_PORT      1U
