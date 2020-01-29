@@ -19,6 +19,7 @@ static void NeoTask(void* pvParameters) {
   NEO_ClearAllPixel();
   cntr = 0;
   for(;;) {
+#if 0
      if (val==0xff) {
        inc = -1;
       } else if (val==0) {
@@ -38,15 +39,17 @@ static void NeoTask(void* pvParameters) {
      if (cntr>6*0xff) {
        cntr = 0;
      }
-#if 0
-     NEO_SetPixelRGB(0, 0, val, 0x00, 0x00);
-     NEO_SetPixelRGB(0, 1, 0x00, val, 0x00);
-     NEO_SetPixelRGB(0, 2, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 3, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 4, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 5, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 6, 0x00, 0x00, val);
-     NEO_SetPixelRGB(0, 7, 0x00, 0x00, val);
+#endif
+#if 1
+//     NEO_SetPixelRGB(0, 0, 0x0, 0x00, 0xff);
+//     NEO_SetPixelRGB(0, 14, 0x00, val, 0xff);
+     NEO_SetPixelRGB(0, 6, 0xff/4, 0x00, 0x00);
+ //    NEO_SetPixelRGB(0, 12, 0xff, 0x00, val);
+    // NEO_SetPixelRGB(0, 3, 0x00, 0x00, val);
+    // NEO_SetPixelRGB(0, 4, 0x00, 0x00, val);
+    // NEO_SetPixelRGB(0, 5, 0x00, 0x00, val);
+    // NEO_SetPixelRGB(0, 6, 0x00, 0x00, val);
+    // NEO_SetPixelRGB(0, 7, 0x00, 0x00, val);
 //    NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
 //    NEO_SetPixelRGB(0, 1, 0x00, 0xFF, 0x00);
 //    NEO_SetPixelRGB(0, 2, 0x00, 0x00, 0xff);
@@ -56,7 +59,7 @@ static void NeoTask(void* pvParameters) {
 //    NEO_SetPixelRGB(0, 6, 0x20, 0x40, 0xFF);
 //    NEO_SetPixelRGB(0, 7, 0xff, 0x60, 0x30);
 #endif
-    vTaskDelay(5/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
     NEO_TransferPixels();
     LED1_Neg();
   }
@@ -74,7 +77,7 @@ void APP_Run(void) {
         500/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

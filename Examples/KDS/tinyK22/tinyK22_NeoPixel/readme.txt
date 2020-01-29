@@ -12,3 +12,4 @@ https://mcuoneclipse.com/2015/08/03/tutorial-adafruit-ws2812b-neopixels-with-the
 
 https://mcuoneclipse.com/2014/11/10/neoshield-ws2812-rgb-led-shield-with-dma-and-nrf24l01/
 
+Output is on PTD (PTD0, PTD1, ...)

@@ -9,6 +9,7 @@
 #if PL_HAS_NEO_PIXEL
 #include "NeoPixel.h"
 #include "WAIT1.h"
+#include "UTIL1.h"
 #include "GDisp1.h"
 #include "PixelDMA.h"
 
