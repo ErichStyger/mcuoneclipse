@@ -28,7 +28,7 @@
  #include "matrix.h"
 #endif
 
-static bool clockIsOn = false;
+static bool clockIsOn = true;
 #define APP_DEFAULT_DELAY  (5)
 
 #if PL_CONFIG_USE_STEPPER

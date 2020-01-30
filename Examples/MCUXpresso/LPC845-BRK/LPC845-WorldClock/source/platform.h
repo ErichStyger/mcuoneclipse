@@ -13,7 +13,7 @@
 /* hardware versions:
  * V0.1: initial version with 2x2 arrangement
  * V1.0: second version with 1x4 arrangement, different pin assignment and better hall sensors */
-#if 1
+#if 0
   #define PL_CONFIG_BOARD_VERSION   (10) /* 1: V0.1, 10: V1.0 */
 #else
   #define PL_CONFIG_BOARD_VERSION   (1) /* 1: V0.1, 10: V1.0 */
