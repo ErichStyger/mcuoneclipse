@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "Platform.h"
+#include "platform.h"
 #include "McuLib.h"
 #include "McuRTOS.h"
 #include "McuArmTools.h"
@@ -17,6 +17,10 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
+#if PL_CONFIG_HAS_NEO_PIXEL
+  #include "NeoPixel.h"
+  #include "PixelDMA.h"
+#endif
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -36,8 +40,12 @@ void PL_Init(void) {
   McuGPIO_Init();
   McuLED_Init();
 
-  /* initialize my own modules */
+  /* initialize application modules */
   LEDS_Init();
+#if PL_CONFIG_HAS_NEO_PIXEL
+  PIXDMA_Init();
+  NEO_Init();
+#endif
 }
 
 void PL_Deinit(void) {

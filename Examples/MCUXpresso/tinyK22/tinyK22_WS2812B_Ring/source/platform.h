@@ -10,6 +10,7 @@
 /* configure the HW/Board version with TINYK22_HAT_VERSION in IncludeMcuLibConfig.h */
 
 #define PL_CONFIG_USE_RTT                 (1)
+#define PL_CONFIG_HAS_NEO_PIXEL           (1)
 
 void PL_Init(void);
 void PL_Deinit(void);
