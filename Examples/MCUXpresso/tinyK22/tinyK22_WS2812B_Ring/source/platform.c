@@ -17,6 +17,7 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
+#include "McuTimeout.h"
 #if PL_CONFIG_HAS_NEO_PIXEL
   #include "NeoPixel.h"
   #include "PixelDMA.h"
@@ -31,6 +32,7 @@ void PL_Init(void) {
   McuArmTools_Init();
   McuCriticalSection_Init();
   McuRTT_Init();
+  McuTimeout_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #elif configUSE_PERCEPIO_TRACE_HOOKS
