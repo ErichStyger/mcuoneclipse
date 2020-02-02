@@ -109,7 +109,6 @@ bool SHELL_HasStdIoInput(void) {
   return false; /* no input waiting */
 }
 
-
 void SHELL_SendChar(unsigned char ch) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     McuShell_SendCh(ch, ios[i].stdio->stdOut);

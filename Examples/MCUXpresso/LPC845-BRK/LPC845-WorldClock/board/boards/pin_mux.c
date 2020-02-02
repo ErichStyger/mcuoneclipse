@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v6.0
+product: Pins v7.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 6.0.2
+processor_version: 7.0.1
 board: LPC845BREAKOUT
 pin_labels:
 - {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: M2_STEP, identifier: M2_STEP}
@@ -386,7 +386,7 @@ void BOARD_InitMotorPins(void)
 BOARD_InitRS485:
 - options: {callFromInitBoot: 'true', coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '23', peripheral: GPIO, signal: 'PIO1, 4', pin_signal: PIO1_4/CAPT_X5, direction: OUTPUT}
+  - {pin_num: '23', peripheral: USART0, signal: RTS, pin_signal: PIO1_4/CAPT_X5, direction: OUTPUT}
   - {pin_num: '22', peripheral: USART0, signal: TXD, pin_signal: PIO0_15}
   - {pin_num: '24', peripheral: USART0, signal: RXD, pin_signal: PIO0_1/ACMP_I2/CLKIN}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -404,21 +404,15 @@ void BOARD_InitRS485(void)
 {
     /* Enables clock for switch matrix.: enable */
     CLOCK_EnableClock(kCLOCK_Swm);
-    /* Enables the clock for the GPIO1 module */
-    CLOCK_EnableClock(kCLOCK_Gpio1);
-
-    gpio_pin_config_t RS485_TXRX_EN_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U,
-    };
-    /* Initialize GPIO functionality on pin PIO1_4 (pin 23)  */
-    GPIO_PinInit(BOARD_INITRS485_RS485_TXRX_EN_GPIO, BOARD_INITRS485_RS485_TXRX_EN_PORT, BOARD_INITRS485_RS485_TXRX_EN_PIN, &RS485_TXRX_EN_config);
 
     /* USART0_TXD connect to P0_15 */
     SWM_SetMovablePinSelect(SWM0, kSWM_USART0_TXD, kSWM_PortPin_P0_15);
 
     /* USART0_RXD connect to P0_1 */
     SWM_SetMovablePinSelect(SWM0, kSWM_USART0_RXD, kSWM_PortPin_P0_1);
+
+    /* USART0_RTS connect to P1_4 */
+    SWM_SetMovablePinSelect(SWM0, kSWM_USART0_RTS, kSWM_PortPin_P1_4);
 
     /* Disable clock for switch matrix. */
     CLOCK_DisableClock(kCLOCK_Swm);

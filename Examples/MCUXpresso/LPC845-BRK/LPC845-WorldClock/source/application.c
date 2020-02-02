@@ -28,7 +28,11 @@
  #include "matrix.h"
 #endif
 
-static bool clockIsOn = true;
+#if PL_CONFIG_WORLD_CLOCK
+  static bool clockIsOn = false;
+#else
+  static bool clockIsOn = true;
+#endif
 #define APP_DEFAULT_DELAY  (5)
 
 #if PL_CONFIG_USE_STEPPER
@@ -282,7 +286,7 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 }
 #endif
 
-#if PL_CONFIG_USE_STEPPER
+#if PL_CONFIG_WORLD_CLOCK
 static uint8_t AdjustHourForTimeZone(uint8_t hour, int8_t gmtDelta) {
   int h;
 
@@ -323,7 +327,7 @@ static void AppTask(void *pv) {
   //DemoMakeClap();
   //DemoMakeTwelve();
 #endif
-#if PL_CONFIG_USE_STEPPER
+#if PL_CONFIG_WORLD_CLOCK
   if (clockIsOn) {
     vTaskDelay(pdMS_TO_TICKS(5000)); /* just some delay */
   }

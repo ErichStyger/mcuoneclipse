@@ -13,13 +13,13 @@
 /* hardware versions:
  * V0.1: initial version with 2x2 arrangement
  * V1.0: second version with 1x4 arrangement, different pin assignment and better hall sensors */
-#if 0
+#if 1
   #define PL_CONFIG_BOARD_VERSION   (10) /* 1: V0.1, 10: V1.0 */
 #else
   #define PL_CONFIG_BOARD_VERSION   (1) /* 1: V0.1, 10: V1.0 */
 #endif
 
-#define PL_CONFIG_WORLD_CLOCK       (1) /* clock showing different time zones */
+#define PL_CONFIG_WORLD_CLOCK       (0) /* clock showing different time zones */
 
 #define PL_CONFIG_USE_SHELL         (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT           (1 && PL_CONFIG_IS_CLIENT) /* use SEGGER RTT (only possible with a J-Link */

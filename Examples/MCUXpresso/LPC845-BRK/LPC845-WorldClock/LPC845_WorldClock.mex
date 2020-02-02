@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC845" version="1.6" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6.xsd" uuid="6e8357a3-fb9c-4e71-9373-f7aba8f84626" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC845" version="1.7" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.7 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.7.xsd" uuid="6e8357a3-fb9c-4e71-9373-f7aba8f84626" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC845</processor>
       <package>LPC845M301JBD48</package>
@@ -16,13 +16,13 @@
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
    </preferences>
    <tools>
-      <pins name="Pins" version="6.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="7.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/boards/pin_mux.c" update_enabled="true"/>
             <file path="board/boards/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>6.0.2</processor_version>
+            <processor_version>7.0.1</processor_version>
             <pin_labels>
                <pin_label pin_num="11" pin_signal="PIO1_0/CAPT_X1" label="M2_STEP" identifier="M2_STEP"/>
                <pin_label pin_num="14" pin_signal="PIO1_1/CAPT_X2" label="MAG_M0" identifier="MAG_M0"/>
@@ -303,11 +303,6 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_gpio" description="Pins initialization requires the LPC_GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitRS485">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.swm" description="Pins initialization requires the SWM Driver in the project." problem_level="2" source="Pins:BOARD_InitRS485">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -315,7 +310,7 @@
                   </dependency>
                </dependencies>
                <pins>
-                  <pin peripheral="GPIO" signal="PIO1, 4" pin_num="23" pin_signal="PIO1_4/CAPT_X5">
+                  <pin peripheral="USART0" signal="RTS" pin_num="23" pin_signal="PIO1_4/CAPT_X5">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
@@ -326,13 +321,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="6.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="7.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/boards/clock_config.c" update_enabled="true"/>
             <file path="board/boards/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>6.0.2</processor_version>
+            <processor_version>7.0.1</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockFRO18M">
@@ -503,13 +498,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="6.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="7.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/boards/peripherals.c" update_enabled="true"/>
             <file path="board/boards/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>6.0.2</processor_version>
+            <processor_version>7.0.1</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="51f71830-e1e0-435f-8867-a1437732eb04" called_from_default_init="true" id_prefix="" core="core0">
@@ -520,8 +515,11 @@
             </functional_group>
          </functional_groups>
          <components>
-            <component name="system" type_id="system_54b53072540eeeb8f8e9343e71f28176">
+            <component name="system" uuid="5d720192-d9e2-45f1-8d34-502eef4e0cd9" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
+            </component>
+            <component name="msg" uuid="94279220-fd16-4e9d-b0a0-133bc45e00ff" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+               <config_set_global name="global_messages"/>
             </component>
          </components>
       </periphs>
