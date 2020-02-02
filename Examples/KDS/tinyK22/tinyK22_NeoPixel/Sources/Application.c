@@ -44,6 +44,9 @@ static void NeoTask(void* pvParameters) {
 //     NEO_SetPixelRGB(0, 0, 0x0, 0x00, 0xff);
 //     NEO_SetPixelRGB(0, 14, 0x00, val, 0xff);
      NEO_SetPixelRGB(0, 6, 0xff/4, 0x00, 0x00);
+     NEO_SetPixelRGB(0, 13, 0x00, 0xff/4, 0x00);
+     NEO_SetPixelRGB(0, 20, 0x00, 0x00, 0xff/4);
+     NEO_SetPixelRGB(0, 27, 0xff/8, 0x00, 0x00);
  //    NEO_SetPixelRGB(0, 12, 0xff, 0x00, val);
     // NEO_SetPixelRGB(0, 3, 0x00, 0x00, val);
     // NEO_SetPixelRGB(0, 4, 0x00, 0x00, val);
