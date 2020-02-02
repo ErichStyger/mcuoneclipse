@@ -161,9 +161,9 @@
                   <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
-                  <clock_output id="Bus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Bus_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
                   <clock_output id="Core_clock.outFreq" value="120 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Flash_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="FlexBus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
@@ -182,9 +182,9 @@
                   <setting id="MCG_C2_RANGE0_FRDIV_CFG" value="High" locked="false"/>
                   <setting id="MCG_C5_PLLCLKEN0_CFG" value="Enabled" locked="false"/>
                   <setting id="SIM.OUTDIV1.scale" value="1" locked="true"/>
-                  <setting id="SIM.OUTDIV2.scale" value="4" locked="false"/>
-                  <setting id="SIM.OUTDIV3.scale" value="4" locked="false"/>
-                  <setting id="SIM.OUTDIV4.scale" value="6" locked="false"/>
+                  <setting id="SIM.OUTDIV2.scale" value="2" locked="true"/>
+                  <setting id="SIM.OUTDIV3.scale" value="4" locked="true"/>
+                  <setting id="SIM.OUTDIV4.scale" value="5" locked="true"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
@@ -217,7 +217,7 @@
             <component name="system" uuid="d2de9bdf-0ffd-477f-870b-54521c2d33ea" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
             </component>
-            <component name="msg" uuid="655e86f1-760c-4263-bb69-d60ca13e778b" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="dff08ef8-f7b7-4267-990a-166868c9ea9e" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
          </components>
