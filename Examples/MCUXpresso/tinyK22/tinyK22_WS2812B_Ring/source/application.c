@@ -14,6 +14,7 @@
 #include "platform.h"
 #include "leds.h"
 #include "fsl_pit.h"
+#include "NeoPixel.h"
 
 #if 0 /* using Cortex cycle counter */
 static uint32_t prevCycleCounter, cycleCntCounter = 0;
@@ -67,9 +68,12 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
 #endif
 
 static void AppTask(void *pv) {
+  NEO_ClearAllPixel();
   for(;;) {
+    NEO_SetPixelRGB(0, 6, 0xff/4, 0x00, 0x00);
     McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(500));
+    NEO_TransferPixels();
   } /* for */
 }
 

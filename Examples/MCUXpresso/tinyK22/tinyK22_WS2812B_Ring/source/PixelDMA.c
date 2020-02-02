@@ -12,6 +12,7 @@
 #include "fsl_ftm.h"
 #include "fsl_edma.h"
 #include "fsl_dmamux.h"
+#include "fsl_gpio.h"
 #include "PixelDMA.h"
 #include "McuTimeout.h"
 #include "McuWait.h"
@@ -138,11 +139,10 @@ static void InitDMA(void) {
    * PDOR (Port Data Output Register) will use the data
    * PDCR (Port Data Clear Register) will use 0xff to clear the bits
    */
-#if 0
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOD_PSOR); /* set destination address: address of PTD Set Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOD_PDOR); /* set destination address: address of PTD Data Output register */
-  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOD_PCOR); /* set destination address: address of PTD Clear Output register */
-#endif
+  CLOCK_EnableClock(kCLOCK_PortD);
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, (uint32_t)&GPIOD->PSOR); /* set destination address: address of PTD Set Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, (uint32_t)&GPIOD->PDOR); /* set destination address: address of PTD Data Output register */
+  DMA_PDD_SetDestinationAddress(DMA_BASE_PTR, DMA_PDD_CHANNEL_2, (uint32_t)&GPIOD->PCOR); /* set destination address: address of PTD Clear Output register */
   /* no destination address buffer module: we will stream data only once */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_0, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
   DMA_PDD_SetDestinationAddressModulo(DMA_BASE_PTR, DMA_PDD_CHANNEL_1, DMA_PDD_CIRCULAR_BUFFER_DISABLED); /* no circular buffer */
