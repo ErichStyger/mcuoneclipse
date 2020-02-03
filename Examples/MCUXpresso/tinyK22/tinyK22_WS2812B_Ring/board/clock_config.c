@@ -110,10 +110,9 @@ settings:
 - {id: MCG_C2_RANGE0_CFG, value: High}
 - {id: MCG_C2_RANGE0_FRDIV_CFG, value: High}
 - {id: MCG_C5_PLLCLKEN0_CFG, value: Enabled}
-- {id: SIM.OUTDIV1.scale, value: '1', locked: true}
-- {id: SIM.OUTDIV2.scale, value: '2', locked: true}
-- {id: SIM.OUTDIV3.scale, value: '4', locked: true}
-- {id: SIM.OUTDIV4.scale, value: '5', locked: true}
+- {id: SIM.OUTDIV2.scale, value: '2'}
+- {id: SIM.OUTDIV3.scale, value: '4'}
+- {id: SIM.OUTDIV4.scale, value: '5'}
 sources:
 - {id: OSC.OSC.outFreq, value: 8 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
