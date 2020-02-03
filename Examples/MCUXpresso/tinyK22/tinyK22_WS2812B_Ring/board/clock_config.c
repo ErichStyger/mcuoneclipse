@@ -104,8 +104,8 @@ settings:
 - {id: MCG.FRDIV.scale, value: '32'}
 - {id: MCG.IREFS.sel, value: MCG.FRDIV}
 - {id: MCG.PLLS.sel, value: MCG.PLL}
-- {id: MCG.PRDIV.scale, value: '3', locked: true}
-- {id: MCG.VDIV.scale, value: '45', locked: true}
+- {id: MCG.PRDIV.scale, value: '2'}
+- {id: MCG.VDIV.scale, value: '30'}
 - {id: MCG_C2_OSC_MODE_CFG, value: ModeOscLowPower}
 - {id: MCG_C2_RANGE0_CFG, value: High}
 - {id: MCG_C2_RANGE0_FRDIV_CFG, value: High}
@@ -135,8 +135,8 @@ const mcg_config_t mcgConfig_BOARD_BootClockRUN =
         .pll0Config =
             {
                 .enableMode = kMCG_PllEnableIndependent,/* MCGPLLCLK enabled independent of MCG clock mode, MCGPLLCLK disabled in STOP mode */
-                .prdiv = 0x2U,                    /* PLL Reference divider: divided by 3 */
-                .vdiv = 0x15U,                    /* VCO divider: multiplied by 45 */
+                .prdiv = 0x1U,                    /* PLL Reference divider: divided by 2 */
+                .vdiv = 0x6U,                     /* VCO divider: multiplied by 30 */
             },
     };
 const sim_clock_config_t simConfig_BOARD_BootClockRUN =
