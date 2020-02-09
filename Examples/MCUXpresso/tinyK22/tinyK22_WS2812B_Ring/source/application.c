@@ -68,12 +68,22 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
 #endif
 
 static void AppTask(void *pv) {
+  int i = 0;
+
   NEO_ClearAllPixel();
   for(;;) {
-    NEO_SetPixelRGB(0, 6, 0xff/4, 0x00, 0x00);
+    NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
+    NEO_SetPixelRGB(0, 1, 0, 0xff, 0x00);
+    //NEO_SetPixelRGB(0, 2, 0, 0x00, 0xff/4);
+    //NEO_SetPixelRGB(0, 3, 0xff/4, 0x00, 0x00);
+    //NEO_SetPixelRGB(0, 4, 0x00, 0xff/4, 0x00);
+    i++;
+    if (i==NEOC_NOF_LEDS_IN_LANE) {
+      i = 0;
+    }
+    NEO_TransferPixels();
     McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(500));
-    NEO_TransferPixels();
   } /* for */
 }
 

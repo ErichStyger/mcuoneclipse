@@ -44,6 +44,11 @@
 #include "McuLED.h"
 #include "buttons.h"
 
+int array[] = {1,2,5,3,10,4,7,6,9,5};
+/* gdb console:
+  source plot1d.gdb
+  plot1d array
+ */
 
 /*
  * @brief   Application entry point.
@@ -53,6 +58,10 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
+
+    if (array[0]!=0) {
+      array[0]++;
+    }
 
 //    printf("Hello World\n");
     GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0: used for push buttons */

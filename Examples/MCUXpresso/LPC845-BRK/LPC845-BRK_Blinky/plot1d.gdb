@@ -25,7 +25,7 @@ define plot1d_opt_range
   shell awk "/~/ {print $0}" < __plot1d.dump | sed -r "s/~\""|,|\{|\}|\""//g" > __plot1d.dat 
   shell echo set title "$arg0"; set yrange $arg2; plot "__plot1d.dat" with lines > __plot1d.gp
   shell gnuplot --persist __plot1d.gp
-#  shell rm -f __plot1d.dump __plot1d.dat __plot1d.gp
+  shell rm -f __plot1d.dump __plot1d.dat __plot1d.gp
 end
 
 # plot1d <expr>
