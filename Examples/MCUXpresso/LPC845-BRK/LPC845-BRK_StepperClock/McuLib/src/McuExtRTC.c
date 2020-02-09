@@ -6,7 +6,7 @@
 **     Component   : RTC_Maxim
 **     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 07:52, # CodeGen: 548
+**     Date/Time   : 2019-08-21, 18:32, # CodeGen: 568
 **     Abstract    :
 **          Driver for external I2C based realtime clocks (RTC)
 **     Settings    :
@@ -224,7 +224,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"  time", buf, io->stdOut);
 
   McuUtility_Num16uToStr(buf, sizeof(buf), McuExtRTC_CONFIG_DEVICE);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", Addr 0x");
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", I2C Addr 0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), McuExtRTC_CONFIG_DEVICE_ADDRESS);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  device", buf, io->stdOut);

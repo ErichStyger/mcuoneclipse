@@ -124,7 +124,7 @@ McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
   McuULN2003_Motor_t *handle;
 
   assert(config!=NULL);
-#if MCULED_CONFIG_USE_FREERTOS_HEAP
+#if MCUULN2003_CONFIG_USE_FREERTOS_HEAP
   handle = (McuULN2003_Motor_t*)pvPortMalloc(sizeof(McuULN2003_Motor_t)); /* get a new device descriptor */
 #else
   handle = (McuULN2003_Motor_t*)malloc(sizeof(McuULN2003_Motor_t)); /* get a new device descriptor */
@@ -158,7 +158,7 @@ McuULN2003_Handle_t McuULN2003_DeinitMotor(McuULN2003_Handle_t motor) {
   for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) {
     McuGPIO_DeinitGPIO(m->pin[i]);
   }
-#if MCULED_CONFIG_USE_FREERTOS_HEAP
+#if MCUULN2003_CONFIG_USE_FREERTOS_HEAP
   vPortFree(m);
 #else
   free(m);

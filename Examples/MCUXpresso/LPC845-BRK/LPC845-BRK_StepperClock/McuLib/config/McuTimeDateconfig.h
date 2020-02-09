@@ -68,4 +68,12 @@
     /*!< specifies method to get time and date */
 #endif
 
+/* default time and date format strings */
+#ifndef McuTimeDate_CONFIG_DEFAULT_TIME_FORMAT_STR
+  #define McuTimeDate_CONFIG_DEFAULT_TIME_FORMAT_STR  "hh:mm:ss,cc"
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR
+  #define McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR  "dd.mm.yyyy"
+#endif
+
 #endif /* __McuTimeDate_CONFIG_H */

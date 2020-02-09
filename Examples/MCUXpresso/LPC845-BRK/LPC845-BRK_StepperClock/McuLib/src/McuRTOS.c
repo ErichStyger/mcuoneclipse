@@ -6,7 +6,7 @@
 **     Component   : FreeRTOS
 **     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-05-18, 07:41, # CodeGen: 529
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -278,7 +278,7 @@
 
 #include "portTicks.h"                 /* interface to tick counter */
 
-
+#include "McuUtility.h"
 #if configHEAP_SCHEME_IDENTIFICATION
   /* special variable identifying the used heap scheme */
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;

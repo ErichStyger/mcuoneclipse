@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 06:49, # CodeGen: 543
+**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -446,7 +446,7 @@ void SDA1_Init(void)
         #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
         #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
         #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
-        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+        #define IOCON_PIO_MODE_PULLUP /*0x20u*/(0x2u<<3)   /*!<@brief Selects pull-up function */
         #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
         #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
@@ -465,7 +465,7 @@ void SDA1_Init(void)
         #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
           IOCON_PinMuxSet(SDA1_CONFIG_PORT_NAME, SDA1_CONFIG_PIN_NUMBER, port_pin_config);
         #else
-          IOCON_PinMuxSet(SDA1_CONFIG_PORT_NAME, SDA1_CONFIG_PIN_NUMBER, port_pin_config);
+          IOCON_PinMuxSet(IOCON, SDA1_CONFIG_PORT_NAME, SDA1_CONFIG_PIN_NUMBER, port_pin_config);
         #endif
       #else
         PORT_SetPinMux(SDA1_CONFIG_PORT_NAME, SDA1_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */

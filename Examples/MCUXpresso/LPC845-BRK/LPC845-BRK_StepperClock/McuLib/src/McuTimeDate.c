@@ -6,7 +6,7 @@
 **     Component   : GenericTimeDate
 **     Version     : Component 01.063, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 11:40, # CodeGen: 565
+**     Date/Time   : 2019-08-21, 18:32, # CodeGen: 568
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -185,7 +185,7 @@ static uint8_t DateCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
       /* update software real time clock */
       res = McuTimeDate_SetDate(year, month, day);
       if (res != ERR_OK) {
-        McuShell_SendStr((unsigned char*)"*** Failure setting time\r\n", io->stdErr);
+        McuShell_SendStr((unsigned char*)"*** Failure setting date\r\n", io->stdErr);
         res = ERR_FAILED;
       }
     } else {

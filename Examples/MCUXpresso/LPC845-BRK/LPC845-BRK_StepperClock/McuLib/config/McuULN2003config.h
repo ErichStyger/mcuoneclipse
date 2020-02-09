@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 2019, Erich Styger
- * All rights reserved.
  *
- * Configuration header file for McuLED
+ * Configuration header file for ULN2003 stepper motor driver
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */

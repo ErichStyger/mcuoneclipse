@@ -157,7 +157,7 @@ size_t xPortGetFreeHeapSize( void )
 #if 1 /* << EST */
 void vPortInitializeHeap(void) {
   xNextFreeByte = 0;
-  pucAlignedHeap = NULL
+  pucAlignedHeap = NULL;
 }
 #endif
 

@@ -63,6 +63,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuTimeDate: Realtime clock implementation for software, hardware and external I2C RTC
 - McuTimeout: generic driver for timeout handling
 - McuTrigger: generic interrupt callback handling
+- McuULN2003: stepper motor driver using the ULN2003
 - McuUtility: various safe string manipulation and other utility functions
 - McuWait: Realtime synchronization waiting routines
 - McuXFormat: tiny formatting and printing, similar to sprintf
