@@ -432,6 +432,24 @@ uint8_t STEPPER_SetOffsetFrom12(void) {
   STEPPER_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]), STEPPER_HAND_ZERO_DELAY);
   return res;
 }
+
+uint8_t STEPPER_Test(void) {
+  /* Test the stepper motors */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+   	  for(int i=0; i<12; i++) {
+		STEPPER_MoveClockDegreeRel(c, m, 30, STEPPER_MOVE_MODE_SHORT, 4, false, false);
+		STEPPER_MoveAndWait(50);
+      }
+   	  for(int i=0; i<12; i++) {
+		STEPPER_MoveClockDegreeRel(c, m, -30, STEPPER_MOVE_MODE_SHORT, 4, false, false);
+		STEPPER_MoveAndWait(50);
+      }
+    }
+  }
+  return ERR_OK;
+}
+
 #endif
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
@@ -511,6 +529,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"stepper", (unsigned char*)"Group of stepper commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a X12.017 driver reset\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test all stepper motors\r\n", io->stdOut);
 #if PL_CONFIG_USE_MAG_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  zero <c> <m>", (unsigned char*)"Move clock (0-3) and motor (0-1) to zero position using magnet sensor\r\n", io->stdOut);
@@ -641,6 +660,9 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if (McuUtility_strcmp((char*)cmd, "stepper offs 12")==0) {
     *handled = TRUE;
     return STEPPER_SetOffsetFrom12();
+  } else if (McuUtility_strcmp((char*)cmd, "stepper test")==0) {
+    *handled = TRUE;
+    return STEPPER_Test();
   } else if (McuUtility_strncmp((char*)cmd, "stepper offs ", sizeof("stepper offs ")-1)==0) {
     int32_t val;
 

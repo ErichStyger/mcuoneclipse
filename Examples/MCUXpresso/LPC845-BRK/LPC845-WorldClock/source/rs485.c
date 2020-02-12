@@ -238,7 +238,7 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
           } else {
             res = ERR_FAILED;
           }
-      #if PL_CONFIG_IS_CLIENT
+      #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
         } else if (McuUtility_strcmp((char*)p, (char*)"stepper idle")==0) {
           if (STEPPER_IsIdle()) {
             res = ERR_OK;  /* ERR_OK if board is idle */
