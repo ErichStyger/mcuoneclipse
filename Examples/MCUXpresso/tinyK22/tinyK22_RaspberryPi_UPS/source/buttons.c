@@ -12,6 +12,7 @@
 #include "RaspyUART.h"
 #include "lv.h"
 #include "McuRTT.h"
+#include "leds.h"
 #if PL_CONFIG_USE_KBI
   #include "fsl_port.h"
 #endif
@@ -66,6 +67,26 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
   switch(event) {
     case MCUDBNC_EVENT_PRESSED:
       SEGGER_printf("pressed: %d\r\n", buttons);
+    #if PL_CONFIG_PCB_TEST_MODE
+        if (buttons&BTN_UP) {
+          McuLED_On(hatRedLED);
+        }
+        if (buttons&BTN_DOWN) {
+          McuLED_On(hatBlueLED);
+        }
+        if (buttons&BTN_LEFT) {
+          McuLED_On(hatGreenLED);
+        }
+        if (buttons&BTN_RIGHT) {
+          McuLED_On(hatYellowLED);
+        }
+        if (buttons&BTN_CENTER) {
+          McuLED_On(hatRedLED);
+          McuLED_On(hatBlueLED);
+          McuLED_On(hatGreenLED);
+          McuLED_On(hatYellowLED);
+        }
+    #endif
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(buttons);
     #endif
@@ -119,6 +140,26 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
 
     case MCUDBNC_EVENT_RELEASED:
       SEGGER_printf("released: %d\r\n", buttons);
+#if PL_CONFIG_PCB_TEST_MODE
+    if (buttons&BTN_UP) {
+      McuLED_Off(hatRedLED);
+    }
+    if (buttons&BTN_DOWN) {
+      McuLED_Off(hatBlueLED);
+    }
+    if (buttons&BTN_LEFT) {
+      McuLED_Off(hatGreenLED);
+    }
+    if (buttons&BTN_RIGHT) {
+      McuLED_Off(hatYellowLED);
+    }
+    if (buttons&BTN_CENTER) {
+      McuLED_Off(hatRedLED);
+      McuLED_Off(hatBlueLED);
+      McuLED_Off(hatGreenLED);
+      McuLED_Off(hatYellowLED);
+    }
+#endif
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(0);
     #endif
@@ -229,7 +270,7 @@ void PORTB_IRQHandler(void) {
   __DSB();
 }
 
-#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
 void PORTA_IRQHandler(void) { /* left and right are on Port A */
   uint32_t flags;
 
@@ -289,7 +330,7 @@ void BTN_Init(void) {
   /* all buttons are on Port B */
   NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTB_IRQn);
-  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
   /* left and right are on Port A. up, down and push are on Port B */
   NVIC_SetPriority(PORTA_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTA_IRQn);
@@ -326,7 +367,7 @@ void BTN_Deinit(void) {
 #if PL_CONFIG_USE_KBI
   #if TINYK22_HAT_VERSION==3
     DisableIRQ(PORTB_IRQn); /* all buttons are on Port B */
-  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
     DisableIRQ(PORTA_IRQn); /* left and right are on Port A */
     DisableIRQ(PORTB_IRQn); /* up, down, push are on Port B */
   #endif

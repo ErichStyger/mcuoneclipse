@@ -69,6 +69,15 @@ static void AppTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(100));
     McuLED_Off(hatBlueLED);
   }
+#if PL_CONFIG_USE_SHT31
+  uint16_t status;
+  if (SHT31_ReadStatus(&status)!=ERR_OK) { /* just check if we can reach the sensor */
+    for(;;) {
+      vTaskDelay(pdMS_TO_TICKS(100));
+      McuLED_Off(hatRedLED);
+    }
+  }
+#endif
 #if PL_CONFIG_USE_UPS
   UPS_SetIsCharging(false);
 #endif

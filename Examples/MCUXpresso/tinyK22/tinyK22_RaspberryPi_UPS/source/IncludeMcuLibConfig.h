@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,8 +9,8 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (3)  /* 3, 4 or 5 */
-#define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5))
+#define TINYK22_HAT_VERSION  (5)  /* 3, 4, 5 or 6 */
+#define USE_HW_I2C           (1 && (TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6))
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 
@@ -84,7 +84,7 @@
   #define PINS_HATNAVPUSH_GPIO    GPIOB
   #define PINS_HATNAVPUSH_PORT    PORTB
   #define PINS_HATNAVPUSH_PIN     16u
-#elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5
+#elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
   /*
    * HAT V4 & V5:
    *
@@ -140,7 +140,7 @@
   #error "unknown configuration"
 #endif
 
-#if TINYK22_HAT_VERSION==5
+#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
   /* HAT V5 has additional GPIO pins available:
    * - can use the I2C bus without having the Raspberry powered
    * - pin to disconnect/connect the I2C bus in order to power up the Raspberry Pi

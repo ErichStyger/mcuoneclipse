@@ -31,7 +31,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_I2C_SPY
   McuI2CSpy_ParseCommand,
 #endif
-#if MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
+#if PL_CONFIG_USE_SHT31 && MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
   McuSHT31_ParseCommand,
 #endif
 #if PL_CONFIG_USE_RASPY_UART
