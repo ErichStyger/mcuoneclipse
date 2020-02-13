@@ -15,6 +15,7 @@
 #if PL_CONFIG_USE_SHELL
   #include "McuShell.h"
   #include "Shell.h"
+  #include "McuShellUart.h"
 #endif
 #include "McuTimeDate.h"
 #if PL_CONFIG_USE_STEPPER
@@ -24,7 +25,7 @@
   #include "magnets.h"
 #endif
 #include "fsl_iap.h"
-#if PL_CONFIG_IS_SERVER
+#if PL_CONFIG_IS_MASTER
  #include "matrix.h"
 #endif
 
@@ -33,6 +34,15 @@
 #else
   static bool clockIsOn = true;
 #endif
+
+typedef enum {
+  APP_INTERMEZZO_NONE = 0,
+  APP_INTERMEZZO_PARK = 1, /* move clock hands to park position */
+  APP_INTERMEZZO_FEW = 2,
+  APP_INTERMEZZO_NOF /* must be last in list */
+} APP_Intermezzo_e;
+
+static APP_Intermezzo_e APP_IntermezzoMode = APP_INTERMEZZO_NONE;
 #define APP_DEFAULT_DELAY  (5)
 
 #if PL_CONFIG_USE_STEPPER
@@ -50,7 +60,9 @@ static void MoveAllToZeroPosition(void) {
 static void DemoMakeTwelve(void) {
   MoveAllToZeroPosition();
 }
+#endif /* PL_CONFIG_USE_STEPPER */
 
+#if PL_CONFIG_USE_STEPPER
 static void DemoMakeSquare(void) {
   /* build a square with the hands: 0 index */
   STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* lower right */
@@ -78,7 +90,9 @@ static void DemoMakeSquare(void) {
     STEPPER_MoveAndWait(5);
   }
 }
+#endif /* PL_CONFIG_USE_STEPPER */
 
+#if PL_CONFIG_USE_STEPPER
 static void DemoMakePropeller(void) {
   /* build lines */
   STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
@@ -98,7 +112,9 @@ static void DemoMakePropeller(void) {
     STEPPER_MoveAndWait(5);
   }
 }
+#endif /* PL_CONFIG_USE_STEPPER */
 
+#if PL_CONFIG_USE_STEPPER
 static void DemoMakeClap(void) {
   /* build lines */
   STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
@@ -135,7 +151,41 @@ static void DemoMakeClap(void) {
     STEPPER_MoveAndWait(5);
   }
 }
+#endif /* PL_CONFIG_USE_STEPPER */
 
+#if PL_CONFIG_USE_STEPPER
+static void DemoRotateSquare(void) {
+  MoveAllToZeroPosition();
+
+  /* build a square with the hands: 0 index */
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* London */
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Beijing */
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* NY */
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Lucerne */
+  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveAndWait(50);
+
+  for(int i=0; i<360; i++) { /* motor 0 is inner shaft (HH) */
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_0, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_0, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_1, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_1, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_2, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_2, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_3, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_3, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveAndWait(2);
+  }
+}
+#endif /* PL_CONFIG_USE_STEPPER */
+
+#if PL_CONFIG_USE_STEPPER
 static void SetTime(STEPPER_Clock_e clock, uint8_t hour, uint8_t minute) {
   int32_t angleHour, angleMinute;
 
@@ -146,7 +196,9 @@ static void SetTime(STEPPER_Clock_e clock, uint8_t hour, uint8_t minute) {
   STEPPER_MoveClockDegreeAbs(clock, STEPPER_HAND_HH, angleHour, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
   STEPPER_MoveClockDegreeAbs(clock, STEPPER_HAND_MM, angleMinute, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 }
+#endif /* PL_CONFIG_USE_STEPPER */
 
+#if PL_CONFIG_USE_STEPPER
 static void ShowTime(STEPPER_Clock_e clock, uint8_t hour, uint8_t minute) {
   SetTime(clock, hour, minute);
   STEPPER_MoveAndWait(5);
@@ -161,8 +213,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint32_t id[4];
 
   McuShell_SendStatusStr((unsigned char*)"app", (unsigned char*)"Application settings\r\n", io->stdOut);
-#if PL_CONFIG_IS_SERVER
-  McuShell_SendStatusStr((unsigned char*)"  Mode", (unsigned char*)"server\r\n", io->stdOut);
+#if PL_CONFIG_IS_MASTER
+  McuShell_SendStatusStr((unsigned char*)"  Mode", (unsigned char*)"master\r\n", io->stdOut);
 #else
   McuShell_SendStatusStr((unsigned char*)"  Mode", (unsigned char*)"client\r\n", io->stdOut);
 #endif
@@ -174,6 +226,10 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"  board", buf, io->stdOut);
 
   McuShell_SendStatusStr((unsigned char*)"  clock", clockIsOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), APP_IntermezzoMode);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  intermezzo", buf, io->stdOut);
 
   res = IAP_ReadPartID(&val);
   if (res == kStatus_IAP_Success) {
@@ -208,21 +264,27 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  BootCode", buf, io->stdOut);
-
   return ERR_OK;
 }
+#endif
 
+#if PL_CONFIG_USE_SHELL
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  clock on|off", (unsigned char*)"Enable or disable the clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  intermezzo <nr>", (unsigned char*)"Set Intermezzo mode (0-2):\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"0: do nothing\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"1: park clocks and disable clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"2: few intermezzos\r\n", io->stdOut);
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"  time <c> <time>", (unsigned char*)"Show time on clock (0..3)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo twelve", (unsigned char*)"Move pointer to 12\r\n", io->stdOut);
-#endif
   McuShell_SendHelpStr((unsigned char*)"  demo square", (unsigned char*)"Demo with square\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  demo rotatesquare", (unsigned char*)"Demo with rotating square\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo propeller", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo clap", (unsigned char*)"Demo like a snapper\r\n", io->stdOut);
+#endif
 #if PL_CONFIG_WORLD_CLOCK
   McuShell_SendHelpStr((unsigned char*)"  clocks", (unsigned char*)"[0] London    [3] New York\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"",         (unsigned char*)"[1] Beijing   [2] Lucerne\r\n", io->stdOut);
@@ -230,11 +292,10 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
   return ERR_OK;
 }
+#endif
 
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
-#if PL_CONFIG_USE_STEPPER
   const unsigned char *p;
-#endif
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "app help")==0) {
     *handled = true;
@@ -248,6 +309,17 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   } else if (McuUtility_strcmp((char*)cmd, "app clock off")==0) {
     *handled = true;
     clockIsOn = false;
+  } else if (McuUtility_strncmp((char*)cmd, "app intermezzo ", sizeof("app intermezzo ")-1)==0) {
+    int32_t val;
+
+    *handled = TRUE;
+    p = cmd + sizeof("app intermezzo ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<APP_INTERMEZZO_NOF) {
+      APP_IntermezzoMode = val;
+    } else {
+      return ERR_FAILED;
+    }
+    return ERR_OK;
 #if PL_CONFIG_USE_STEPPER
   } else if (McuUtility_strcmp((char*)cmd, "app demo twelve")==0) {
     *handled = TRUE;
@@ -256,6 +328,9 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   } else if (McuUtility_strcmp((char*)cmd, "app demo square")==0) {
     *handled = TRUE;
     DemoMakeSquare();
+  } else if (McuUtility_strcmp((char*)cmd, "app demo rotatesquare")==0) {
+    *handled = TRUE;
+    DemoRotateSquare();
   } else if (McuUtility_strcmp((char*)cmd, "app demo propeller")==0) {
     *handled = TRUE;
     DemoMakePropeller();
@@ -284,7 +359,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   }
   return ERR_OK;
 }
-#endif
 
 #if PL_CONFIG_WORLD_CLOCK
 static uint8_t AdjustHourForTimeZone(uint8_t hour, int8_t gmtDelta) {
@@ -304,55 +378,71 @@ static void AppTask(void *pv) {
   uint8_t oldHH=-1, oldMM = -1;
   TIMEREC time;
   uint8_t res;
+  uint32_t timerMs = 0;
+#endif
+#if PL_CONFIG_USE_RTC && PL_CONFIG_USE_MATRIX
+  uint8_t intermezzo = 0;
 #endif
 
   PL_InitFromTask();
 #if PL_CONFIG_USE_SHELL
-#if PL_CONFIG_IS_SERVER
+  #if PL_CONFIG_IS_MASTER
   SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Master *\r\n*****************\r\n");
-#endif
-#if PL_CONFIG_IS_CLIENT
+  #elif PL_CONFIG_IS_CLIENT
   SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Client *\r\n*****************\r\n");
-#endif
+  #endif
 #endif
 #if 0 && PL_CONFIG_USE_STEPPER
   if (STEPPER_ZeroAllHands()!=ERR_OK) {
     SHELL_SendString((unsigned char*)"FAILED to zero all hands!\r\n");
   }
 #endif
-#if 1
-  //DemoRotateSquare();
-  //DemoMakeSquare();
-  //DemoMakePropeller();
-  //DemoMakeClap();
-  //DemoMakeTwelve();
-#endif
 #if PL_CONFIG_WORLD_CLOCK
   if (clockIsOn) {
-    vTaskDelay(pdMS_TO_TICKS(5000)); /* just some delay */
+    vTaskDelay(pdMS_TO_TICKS(3000)); /* just some delay */
   }
 #endif
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(200));
 #if PL_CONFIG_USE_RTC
+    timerMs += 200;
+    if (clockIsOn) {
+    #if PL_CONFIG_USE_MATRIX
+      if (APP_IntermezzoMode==APP_INTERMEZZO_FEW) {
+        if (timerMs==20*1000) { /* after 10 secs ... */
+          MATRIX_Intermezzo(&intermezzo); /* ... show next intermezzo */
+        }
+      } else if(APP_IntermezzoMode==APP_INTERMEZZO_PARK) {
+        MATRIX_MoveAllto12(5000, &McuShellUart_stdio);
+        clockIsOn = false; /* disable clock */
+        APP_IntermezzoMode = APP_INTERMEZZO_NONE;
+      }
+    #endif
+    }
     if (clockIsOn) {
       res = McuTimeDate_GetTime(&time);
       if (res==ERR_OK && (time.Hour!=oldHH || time.Min != oldMM)) {
-  #if PL_CONFIG_WORLD_CLOCK
+    #if PL_CONFIG_USE_MATRIX
+        MATRIX_DrawAllClockDelays(30,30);
+        MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+        MATRIX_ShowTime(time.Hour, time.Min);
+        timerMs = 0; /* reset timer */
+    #endif
+    #if PL_CONFIG_WORLD_CLOCK
         uint8_t hour;
 
         hour = AdjustHourForTimeZone(time.Hour, -1); /* local time is GMT+1 */
-        SetTime(STEPPER_CLOCK_0, AdjustHourForTimeZone(hour, 0), time.Min);  /* London, GMT+0, top left */
-        SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min);  /* Beijing, GMT+8, top left */
-        SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min);  /* Lucerne, GMT+1, top left */
+        SetTime(STEPPER_CLOCK_0, AdjustHourForTimeZone(hour, 0), time.Min); /* London, GMT+0, top left */
+        SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min); /* Beijing, GMT+8, top left */
+        SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min); /* Lucerne, GMT+1, top left */
         SetTime(STEPPER_CLOCK_3, AdjustHourForTimeZone(hour, -4), time.Min); /* New York,, GMT-4, top left */
         STEPPER_MoveAndWait(5);
-  #endif
+    #endif
         oldHH = time.Hour;
         oldMM = time.Min;
       }
     }
-#endif
+#endif /* PL_CONFIG_USE_RTC */
     McuLED_Toggle(LEDS_Led);
   }
 }

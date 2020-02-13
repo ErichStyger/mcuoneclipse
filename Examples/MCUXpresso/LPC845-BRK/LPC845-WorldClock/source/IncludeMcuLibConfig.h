@@ -37,7 +37,7 @@ Instructions:
 /* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define SYSVIEW_DEVICE_NAME                  "LPC845 Stepper Client"
+#define SYSVIEW_DEVICE_NAME                  "LPC845 Client"
 #define configTOTAL_HEAP_SIZE                (8*1024)
 //#define configUSE_HEAP_SECTION_NAME        (1)
 //#define configHEAP_SECTION_NAME_STRING     ".bss.$SRAM_LOWER.FreeRTOS"
@@ -47,7 +47,7 @@ Instructions:
 #define INCLUDE_xTimerPendFunctionCall       (0)
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 Stepper Client"
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 Client"
 #define McuShell_MULTI_CMD_ENABLED                    (0)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 

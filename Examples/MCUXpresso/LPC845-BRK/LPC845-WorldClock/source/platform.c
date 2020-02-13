@@ -54,6 +54,9 @@
   #include "matrix.h"
 #endif
 #include "leds.h"
+#if PL_CONFIG_USE_BUTTON
+  #include "buttons.h"
+#endif
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
@@ -71,7 +74,7 @@
 #endif
 
 void PL_InitFromTask(void) {
-#if PL_CONFIG_USE_RTC
+#if PL_CONFIG_USE_RTC && PL_CONFIG_USE_HW_I2C
   (void)McuTimeDate_Init(); /* might use I2C with interrupts */
 #endif
 }
@@ -118,6 +121,9 @@ void PL_Init(void) {
 
   /* application modules: */
   LEDS_Init();
+#if PL_CONFIG_USE_BUTTON
+  BTN_Init();
+#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
