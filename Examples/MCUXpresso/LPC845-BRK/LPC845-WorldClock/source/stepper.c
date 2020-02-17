@@ -433,18 +433,30 @@ uint8_t STEPPER_SetOffsetFrom12(void) {
   return res;
 }
 
-uint8_t STEPPER_Test(void) {
-  /* Test the stepper motors */
-  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-   	  for(int i=0; i<12; i++) {
-		STEPPER_MoveClockDegreeRel(c, m, 30, STEPPER_MOVE_MODE_SHORT, 4, false, false);
-		STEPPER_MoveAndWait(50);
+uint8_t STEPPER_Test(int8_t clock) {
+  /* Test the clock stepper motors. Pass -1 to run the test for all motors/clocks */
+  for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+    /* clockwise */
+    for(int i=0; i<4; i++) {
+      if (clock==-1) { /* all */
+        for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+          STEPPER_MoveClockDegreeRel(c, m, 90, STEPPER_MOVE_MODE_CW, 4, true, true);
+        }
+      } else {
+        STEPPER_MoveClockDegreeRel(clock, m, 90, STEPPER_MOVE_MODE_CW, 4, true, true);
       }
-   	  for(int i=0; i<12; i++) {
-		STEPPER_MoveClockDegreeRel(c, m, -30, STEPPER_MOVE_MODE_SHORT, 4, false, false);
-		STEPPER_MoveAndWait(50);
+      STEPPER_MoveAndWait(1000);
+    }
+    /* counter-clockwise */
+    for(int i=0; i<4; i++) {
+      if (clock==-1) { /* all */
+        for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+          STEPPER_MoveClockDegreeRel(c, m, -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
+        }
+      } else {
+        STEPPER_MoveClockDegreeRel(clock, m, -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
       }
+      STEPPER_MoveAndWait(1000);
     }
   }
   return ERR_OK;
@@ -529,7 +541,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"stepper", (unsigned char*)"Group of stepper commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a X12.017 driver reset\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test all stepper motors\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test <c>", (unsigned char*)"Test stepper motors of clock (0-3), or -1 for all\r\n", io->stdOut);
 #if PL_CONFIG_USE_MAG_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  zero <c> <m>", (unsigned char*)"Move clock (0-3) and motor (0-1) to zero position using magnet sensor\r\n", io->stdOut);
@@ -660,9 +672,13 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if (McuUtility_strcmp((char*)cmd, "stepper offs 12")==0) {
     *handled = TRUE;
     return STEPPER_SetOffsetFrom12();
-  } else if (McuUtility_strcmp((char*)cmd, "stepper test")==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "stepper test ", sizeof("stepper test ")-1)==0) {
     *handled = TRUE;
-    return STEPPER_Test();
+    p = cmd + sizeof("stepper test ")-1;
+    if (McuUtility_xatoi(&p, &clk)==ERR_OK && ((clk>=0 && clk<STEPPER_NOF_CLOCKS) || clk==-1)) {
+      return STEPPER_Test(clk);
+    }
+    return ERR_FAILED;
   } else if (McuUtility_strncmp((char*)cmd, "stepper offs ", sizeof("stepper offs ")-1)==0) {
     int32_t val;
 
