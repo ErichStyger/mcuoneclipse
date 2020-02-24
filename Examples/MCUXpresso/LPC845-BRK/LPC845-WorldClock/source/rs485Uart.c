@@ -79,12 +79,26 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
   BaseType_t xHigherPriorityTaskWoken;
+  static unsigned char prevChar = '\0';
+  static bool responseLine = false;
 
   flags = RS485Uart_CONFIG_UART_GET_FLAGS(RS485Uart_CONFIG_UART_DEVICE);
   /* If new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
     data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-    (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken);
+
+    /* only store into RS485UartResponseQueue if we have a line starting with '@' */
+    if (prevChar=='\n' && data=='@') {
+      responseLine = true;
+    }
+    if (responseLine) {
+      (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken);
+    }
+    prevChar = data;
+    if (responseLine && data=='\n') { /* end of line while on response line */
+      responseLine = false;
+    }
+
     (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken);
     if (xHigherPriorityTaskWoken != pdFALSE) {
       vPortYieldFromISR();
@@ -130,10 +144,11 @@ void RS485Uart_Init(void) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(RS485UartRxQueue, "RS485UartRxQueue");
-  RS485UartResponseQueue = xQueueCreate(RS485Uart_CONFIG_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
+
+  RS485UartResponseQueue = xQueueCreate(RS485Uart_CONFIG_UART_RESPONSE_QUEUE_LENGTH, sizeof(uint8_t));
   if (RS485UartResponseQueue==NULL) {
     for(;;){} /* out of memory? */
   }
-  vQueueAddToRegistry(RS485UartResponseQueue, "RS485UartRxQueue");
+  vQueueAddToRegistry(RS485UartResponseQueue, "RS485UartResponseQueue");
 }
 

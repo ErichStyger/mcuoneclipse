@@ -211,7 +211,9 @@ void NVMC_Init(void){
   }
   if (NVMC_IsErased()) { /* Flash erased? */
     if (NVMC_InitConfig()!=ERR_OK) { /* initialize it first */
+    #if PL_CONFIG_USE_SHELL
       SHELL_SendString((unsigned char*)"FATAL: NVMC_InitConfig() failed!\r\n");
+    #endif
       for(;;) {}
     }
   }

@@ -18,6 +18,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuWait.h"
@@ -184,6 +187,9 @@ void STEPPER_MoveAndWait(uint32_t waitMs) {
   STEPPER_StartTimer();
   do {
     vTaskDelay(pdMS_TO_TICKS(waitMs));
+#if PL_CONFIG_USE_WDT
+    WDT_Report(WDT_REPORT_ID_CURR_TASK, waitMs);
+#endif
   } while (!STEPPER_IsIdle());
 }
 

@@ -28,6 +28,9 @@
 #if PL_CONFIG_IS_MASTER
  #include "matrix.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 
 #if PL_CONFIG_WORLD_CLOCK
   static bool clockIsOn = false;
@@ -42,7 +45,9 @@ typedef enum {
   APP_INTERMEZZO_NOF /* must be last in list */
 } APP_Intermezzo_e;
 
-static APP_Intermezzo_e APP_IntermezzoMode = APP_INTERMEZZO_NONE;
+#if PL_CONFIG_USE_MATRIX
+  static APP_Intermezzo_e APP_IntermezzoMode = APP_INTERMEZZO_NONE;
+#endif
 #define APP_DEFAULT_DELAY  (5)
 
 #if PL_CONFIG_USE_STEPPER
@@ -227,9 +232,11 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   McuShell_SendStatusStr((unsigned char*)"  clock", clockIsOn?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 
+#if PL_CONFIG_USE_MATRIX
   McuUtility_Num32uToStr(buf, sizeof(buf), APP_IntermezzoMode);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  intermezzo", buf, io->stdOut);
+#endif
 
   res = IAP_ReadPartID(&val);
   if (res == kStatus_IAP_Success) {
@@ -273,10 +280,12 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  clock on|off", (unsigned char*)"Enable or disable the clock\r\n", io->stdOut);
+#if PL_CONFIG_USE_MATRIX
   McuShell_SendHelpStr((unsigned char*)"  intermezzo <nr>", (unsigned char*)"Set Intermezzo mode (0-2):\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"0: do nothing\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"1: park clocks and disable clock\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"2: few intermezzos\r\n", io->stdOut);
+#endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"  time <c> <time>", (unsigned char*)"Show time on clock (0..3)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo twelve", (unsigned char*)"Move pointer to 12\r\n", io->stdOut);
@@ -294,6 +303,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 }
 #endif
 
+#if PL_CONFIG_USE_SHELL
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
 
@@ -309,6 +319,7 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   } else if (McuUtility_strcmp((char*)cmd, "app clock off")==0) {
     *handled = true;
     clockIsOn = false;
+#if PL_CONFIG_USE_MATRIX
   } else if (McuUtility_strncmp((char*)cmd, "app intermezzo ", sizeof("app intermezzo ")-1)==0) {
     int32_t val;
 
@@ -320,6 +331,7 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
       return ERR_FAILED;
     }
     return ERR_OK;
+#endif
 #if PL_CONFIG_USE_STEPPER
   } else if (McuUtility_strcmp((char*)cmd, "app demo twelve")==0) {
     *handled = TRUE;
@@ -359,6 +371,7 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   }
   return ERR_OK;
 }
+#endif /* #if PL_CONFIG_USE_SHELL */
 
 #if PL_CONFIG_WORLD_CLOCK
 static uint8_t AdjustHourForTimeZone(uint8_t hour, int8_t gmtDelta) {
@@ -384,6 +397,9 @@ static void AppTask(void *pv) {
   uint8_t intermezzo = 0;
 #endif
 
+#if PL_CONFIG_USE_WDT
+  WDT_SetTaskHandle(WDT_REPORT_ID_TASK_APP, xTaskGetCurrentTaskHandle());
+#endif
   PL_InitFromTask();
 #if PL_CONFIG_USE_SHELL
   #if PL_CONFIG_IS_MASTER
@@ -404,6 +420,9 @@ static void AppTask(void *pv) {
 #endif
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(200));
+#if PL_CONFIG_USE_WDT
+  WDT_Report(WDT_REPORT_ID_TASK_APP, 200);
+#endif
 #if PL_CONFIG_USE_RTC
     timerMs += 200;
     if (clockIsOn) {
@@ -413,7 +432,11 @@ static void AppTask(void *pv) {
           MATRIX_Intermezzo(&intermezzo); /* ... show next intermezzo */
         }
       } else if(APP_IntermezzoMode==APP_INTERMEZZO_PARK) {
+      #if PL_CONFIG_USE_SHELL
         MATRIX_MoveAllto12(5000, &McuShellUart_stdio);
+      #else
+        MATRIX_MoveAllto12(5000, NULL);
+      #endif
         clockIsOn = false; /* disable clock */
         APP_IntermezzoMode = APP_INTERMEZZO_NONE;
       }

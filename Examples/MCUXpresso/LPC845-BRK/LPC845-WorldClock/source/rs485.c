@@ -17,12 +17,15 @@
 #if PL_CONFIG_IS_CLIENT
   #include "Stepper.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 
 typedef enum {
   RS485_RESPONSE_CONTINUE, /* continue scanning and parsing */
   RS485_RESPONSE_OK, /* ok response */
   RS485_RESPONSE_NOK, /* not ok response */
-  RS485_RESPONSE_TIMEOUT, /* timout */
+  RS485_RESPONSE_TIMEOUT, /* timeout */
 } RS485_Response_e;
 
 uint8_t RS485_GetAddress(void) {
@@ -167,6 +170,9 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr) {
       }
     } else { /* empty input buffer: wait */
       vTaskDelay(pdMS_TO_TICKS(10));
+    #if PL_CONFIG_USE_WDT
+      WDT_Report(WDT_REPORT_ID_CURR_TASK, 10);
+    #endif
       timeoutMs -= 10;
       if (timeoutMs<=0) {
         return RS485_RESPONSE_TIMEOUT;
@@ -188,7 +194,7 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   McuUtility_strcat(buf, sizeof(buf), cmd);
   McuUtility_chcat(buf, sizeof(buf), '\n');
 
-  int nofRetry = 3;
+  int nofRetry = 1;
   RS485_Response_e resp;
 
   for(;;) { /* breaks */
@@ -239,7 +245,7 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
             res = ERR_FAILED;
           }
       #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
-        } else if (McuUtility_strcmp((char*)p, (char*)"stepper idle")==0) { /* command is handled here to generate a direct response with address information */
+        } else if (McuUtility_strcmp((char*)p, (char*)"stepper idle")==0) {
           if (STEPPER_IsIdle()) {
             res = ERR_OK;  /* ERR_OK if board is idle */
           } else {
@@ -290,7 +296,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  addr <addr>", (unsigned char*)"Set RS-485 address\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  send <text>", (unsigned char*)"Send a text to the RS-485 bus\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  sendcmd <addr> <text>", (unsigned char*)"Send a command to the RS-485 address and check response\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  sendcmd <addr> <cmd>", (unsigned char*)"Send a shell command to the RS-485 address and check response\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -329,7 +335,7 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       while (*p==' ') { /* skip leading spaces */
         p++;
       }
-      return RS485_SendCommand(val, (unsigned char*)p, 3000);
+      return RS485_SendCommand(val, (unsigned char*)p, 10000); /* 10 seconds should be enough */
     }
     return ERR_FAILED;
   }
@@ -346,12 +352,18 @@ static uint8_t cmdBuf[McuShell_DEFAULT_SHELL_BUFFER_SIZE*3]; /* to print longer 
 
 static void RS485Task(void *pv) {
   (void)pv; /* not used */
+#if PL_CONFIG_USE_WDT
+  WDT_SetTaskHandle(WDT_REPORT_ID_TASK_RS485, xTaskGetCurrentTaskHandle());
+#endif
   //RS485Uart_SendString((unsigned char*)"Hello World!");
   cmdBuf[0] = '\0';
   for(;;) {
     McuShell_ReadAndParseWithCommandTableExt(cmdBuf, sizeof(cmdBuf), &RS485Uart_stdio, CmdParserTable, true);
     if (!RS485Uart_stdio.keyPressed()) { /* if nothing in input, give back some CPU time */
       vTaskDelay(pdMS_TO_TICKS(20));
+    #if PL_CONFIG_USE_WDT
+      WDT_Report(WDT_REPORT_ID_TASK_RS485, 20);
+    #endif
     }
   }
 }

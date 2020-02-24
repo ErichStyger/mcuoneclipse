@@ -72,6 +72,9 @@
 #if PL_CONFIG_USE_MAG_SENSOR
   #include "magnets.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 
 void PL_InitFromTask(void) {
 #if PL_CONFIG_USE_RTC && PL_CONFIG_USE_HW_I2C
@@ -144,5 +147,8 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_MATRIX
   MATRIX_Init();
+#endif
+#if PL_CONFIG_USE_WDT
+  WDT_Init();
 #endif
 }

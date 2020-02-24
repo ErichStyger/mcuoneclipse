@@ -40,6 +40,9 @@
 #if PL_CONFIG_USE_MATRIX
   #include "matrix.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 #include "nvmc.h"
 #include "application.h"
 
@@ -128,6 +131,9 @@ uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io, 
 static void ShellTask(void *pv) {
   int i;
 
+#if PL_CONFIG_USE_WDT
+  WDT_SetTaskHandle(WDT_REPORT_ID_TASK_SHELL, xTaskGetCurrentTaskHandle());
+#endif
   //McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
@@ -142,6 +148,9 @@ static void ShellTask(void *pv) {
 #endif
     if (!SHELL_HasStdIoInput()) {
       vTaskDelay(pdMS_TO_TICKS(20));
+    #if PL_CONFIG_USE_WDT
+      WDT_Report(WDT_REPORT_ID_TASK_SHELL, 20);
+    #endif
     }
   }
 }
