@@ -100,6 +100,7 @@ void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
   /* Write your code here ... */
+  //TmDt1_AddTick(); /* done by a FreeRTOS timer */
 }
 
 /*

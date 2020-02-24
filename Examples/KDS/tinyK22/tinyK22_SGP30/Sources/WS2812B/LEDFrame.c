@@ -575,6 +575,12 @@ uint8_t LEDFRAME_CheckAndUpdateClock(void) {
   if (res!=ERR_OK) {
     return ERR_FAILED;
   }
+  if ((time.Min%5)==0) { /* every 5 minutes update the time from the RTC to minimize clock drift */
+    res = TmDt1_SyncWithExternalRTC();
+    if (res!=ERR_OK) {
+      return ERR_FAILED;
+    }
+  }
   res = TmDt1_GetDate(&date); /* get current date */
   if (res!=ERR_OK) {
     return ERR_FAILED;

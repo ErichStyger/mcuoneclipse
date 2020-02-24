@@ -13,6 +13,7 @@
 #include "NeoPixel.h"
 #include "NeoApp.h"
 #include "LedDisp.h"
+#include "UTIL1.h"
 
 static TaskHandle_t ShadowBoxTaskHandle; /* task handle */
 

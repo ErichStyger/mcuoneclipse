@@ -48,6 +48,7 @@ static void ClockTask(void* pvParameters) {
 #endif
 
   (void)pvParameters; /* parameter not used */
+  vTaskDelay(pdMS_TO_TICKS(1000)); /* delay to give hardware time to power up */
 #if PL_CONFIG_HAS_MMA8451
   oldOrientation = ORI_GetCurrentOrientation();
   SetDisplayOrientation(oldOrientation);
