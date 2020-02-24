@@ -11,3 +11,7 @@ Loop{
 -	Change to normal modus
 -	Start Loop again
 }
+
+
+- The LED is configured in leds.c
+- LowPower.h configures the low power mode used

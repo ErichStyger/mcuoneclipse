@@ -7,9 +7,15 @@
 #include "leds.h"
 #include "McuLED.h"
 
-#define PINS_LEDBLUE_GPIO       GPIOC
-#define PINS_LEDBLUE_PORT       PORTC
-#define PINS_LEDBLUE_PIN        2U
+#if 1 /* tinyK22 */
+  #define PINS_LEDBLUE_GPIO       GPIOC
+  #define PINS_LEDBLUE_PORT       PORTC
+  #define PINS_LEDBLUE_PIN        2U
+#elif 1 /* FRDM-K22F */
+  #define PINS_LEDBLUE_GPIO       GPIOD
+  #define PINS_LEDBLUE_PORT       PORTD
+  #define PINS_LEDBLUE_PIN        5U
+#endif
 
 McuLED_Handle_t tinyLED;
 
@@ -20,8 +26,6 @@ void LEDS_Deinit(void) {
 
 void LEDS_Init(void) {
   McuLED_Config_t config;
-
-  McuLED_Init(); /* initialize LED module */
 
   /* initialize LEDs */
   McuLED_GetDefaultConfig(&config);

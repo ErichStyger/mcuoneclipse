@@ -11,7 +11,6 @@
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "McuArmTools.h"
-#include "platform.h"
 #include "leds.h"
 #include "fsl_pit.h"
 

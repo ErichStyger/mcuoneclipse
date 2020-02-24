@@ -21,8 +21,6 @@ void LEDS_Deinit(void) {
 void LEDS_Init(void) {
   McuLED_Config_t config;
 
-  McuLED_Init(); /* initialize LED module */
-
   /* initialize LEDs */
   McuLED_GetDefaultConfig(&config);
 

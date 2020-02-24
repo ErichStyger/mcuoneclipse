@@ -41,7 +41,6 @@ processor_version: 7.0.1
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
-#include "fsl_smc.h"
 #include "clock_config.h"
 
 /*******************************************************************************
@@ -65,14 +64,17 @@ extern uint32_t SystemCoreClock;
  ******************************************************************************/
 /*FUNCTION**********************************************************************
  *
- * Function Name : CLOCK_CONFIG_SetFllExtRefDiv
- * Description   : Configure FLL external reference divider (FRDIV).
- * Param frdiv   : The value to set FRDIV.
+ * Function Name : CLOCK_CONFIG_FllStableDelay
+ * Description   : This function is used to delay for FLL stable.
  *
  *END**************************************************************************/
-static void CLOCK_CONFIG_SetFllExtRefDiv(uint8_t frdiv)
+static void CLOCK_CONFIG_FllStableDelay(void)
 {
-    MCG->C1 = ((MCG->C1 & ~MCG_C1_FRDIV_MASK) | MCG_C1_FRDIV(frdiv));
+    uint32_t i = 30000U;
+    while (i--)
+    {
+        __NOP();
+    }
 }
 
 /*******************************************************************************
@@ -92,27 +94,25 @@ void BOARD_InitBootClocks(void)
 name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
-- {id: Bus_clock.outFreq, value: 60 MHz}
-- {id: Core_clock.outFreq, value: 120 MHz}
-- {id: Flash_clock.outFreq, value: 24 MHz}
-- {id: FlexBus_clock.outFreq, value: 30 MHz}
+- {id: Bus_clock.outFreq, value: 5.24288 MHz}
+- {id: Core_clock.outFreq, value: 10.48576 MHz}
+- {id: Flash_clock.outFreq, value: 10.48576/3 MHz}
+- {id: FlexBus_clock.outFreq, value: 5.24288 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
-- {id: MCGFFCLK.outFreq, value: 250 kHz}
-- {id: System_clock.outFreq, value: 120 MHz}
+- {id: MCGFFCLK.outFreq, value: 32.768 kHz}
+- {id: PLLFLLCLK.outFreq, value: 20.97152 MHz}
+- {id: System_clock.outFreq, value: 10.48576 MHz}
 settings:
-- {id: MCGMode, value: PEE}
-- {id: powerMode, value: HSRUN}
 - {id: MCG.FRDIV.scale, value: '32'}
-- {id: MCG.IREFS.sel, value: MCG.FRDIV}
-- {id: MCG.PLLS.sel, value: MCG.PLL}
 - {id: MCG.PRDIV.scale, value: '2'}
 - {id: MCG.VDIV.scale, value: '30'}
 - {id: MCG_C2_OSC_MODE_CFG, value: ModeOscLowPower}
 - {id: MCG_C2_RANGE0_CFG, value: High}
 - {id: MCG_C2_RANGE0_FRDIV_CFG, value: High}
-- {id: SIM.OUTDIV2.scale, value: '2'}
+- {id: SIM.OUTDIV1.scale, value: '2'}
+- {id: SIM.OUTDIV2.scale, value: '4'}
 - {id: SIM.OUTDIV3.scale, value: '4'}
-- {id: SIM.OUTDIV4.scale, value: '5'}
+- {id: SIM.OUTDIV4.scale, value: '6'}
 sources:
 - {id: OSC.OSC.outFreq, value: 8 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -123,7 +123,7 @@ sources:
  ******************************************************************************/
 const mcg_config_t mcgConfig_BOARD_BootClockRUN =
     {
-        .mcgMode = kMCG_ModePEE,                  /* PEE - PLL Engaged External */
+        .mcgMode = kMCG_ModeFEI,                  /* FEI - FLL Engaged Internal */
         .irclkEnableMode = MCG_IRCLK_DISABLE,     /* MCGIRCLK disabled */
         .ircs = kMCG_IrcSlow,                     /* Slow internal reference clock selected */
         .fcrdiv = 0x1U,                           /* Fast IRC divider: divided by 2 */
@@ -142,7 +142,7 @@ const sim_clock_config_t simConfig_BOARD_BootClockRUN =
     {
         .pllFllSel = SIM_PLLFLLSEL_MCGFLLCLK_CLK, /* PLLFLL select: MCGFLLCLK clock */
         .er32kSrc = SIM_OSC32KSEL_OSC32KCLK_CLK,  /* OSC32KSEL select: OSC32KCLK clock */
-        .clkdiv1 = 0x1340000U,                    /* SIM_CLKDIV1 - OUTDIV1: /1, OUTDIV2: /2, OUTDIV3: /4, OUTDIV4: /5 */
+        .clkdiv1 = 0x13350000U,                   /* SIM_CLKDIV1 - OUTDIV1: /2, OUTDIV2: /4, OUTDIV3: /4, OUTDIV4: /6 */
     };
 const osc_config_t oscConfig_BOARD_BootClockRUN =
     {
@@ -161,23 +161,26 @@ const osc_config_t oscConfig_BOARD_BootClockRUN =
  ******************************************************************************/
 void BOARD_BootClockRUN(void)
 {
-    /* Set HSRUN power mode */
-    SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
-    SMC_SetPowerModeHsrun(SMC);
-    while (SMC_GetPowerModeState(SMC) != kSMC_PowerStateHsrun)
-    {
-    }
     /* Set the system clock dividers in SIM to safe value. */
     CLOCK_SetSimSafeDivs();
     /* Initializes OSC0 according to board configuration. */
     CLOCK_InitOsc0(&oscConfig_BOARD_BootClockRUN);
     CLOCK_SetXtal0Freq(oscConfig_BOARD_BootClockRUN.freq);
-    /* Configure FLL external reference divider (FRDIV). */
-    CLOCK_CONFIG_SetFllExtRefDiv(mcgConfig_BOARD_BootClockRUN.frdiv);
-    /* Set MCG to PEE mode. */
-    CLOCK_BootToPeeMode(mcgConfig_BOARD_BootClockRUN.oscsel,
-                        kMCG_PllClkSelPll0,
-                        &mcgConfig_BOARD_BootClockRUN.pll0Config);
+    /* Configure the Internal Reference clock (MCGIRCLK). */
+    CLOCK_SetInternalRefClkConfig(mcgConfig_BOARD_BootClockRUN.irclkEnableMode,
+                                  mcgConfig_BOARD_BootClockRUN.ircs, 
+                                  mcgConfig_BOARD_BootClockRUN.fcrdiv);
+    /* Set MCG to FEI mode. */
+#if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 2, 0)
+    CLOCK_BootToFeiMode(mcgConfig_BOARD_BootClockRUN.dmx32,
+                        mcgConfig_BOARD_BootClockRUN.drs,
+                        CLOCK_CONFIG_FllStableDelay);
+#else
+    CLOCK_BootToFeiMode(mcgConfig_BOARD_BootClockRUN.drs,
+                        CLOCK_CONFIG_FllStableDelay);
+#endif
+    /* Select the MCG external reference clock. */
+    CLOCK_SetExternalRefClkConfig(mcgConfig_BOARD_BootClockRUN.oscsel);
     /* Set the clock configuration in SIM module. */
     CLOCK_SetSimConfig(&simConfig_BOARD_BootClockRUN);
     /* Set SystemCoreClock variable. */
