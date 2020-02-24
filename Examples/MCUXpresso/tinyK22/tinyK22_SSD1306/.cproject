@@ -292,16 +292,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.2047746019.2132338453" name="/" resourcePath="McuLib/minIni">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1314745221" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1168432008" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.742827866"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.152309989" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.678694384"/>
-							<tool id="com.crt.advproject.gas.exe.debug.490884430" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.260378838"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1584881363" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.817426488"/>
-							<tool id="com.crt.advproject.link.exe.debug.173369233" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1280908334"/>
-							<tool id="com.crt.advproject.tool.debug.debug.2071326659" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1726536036"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="minIni|FatFS|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
@@ -654,7 +644,7 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
-		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
+		<sdkName>SDK_2.x_FRDM-K22F</sdkName>
 		<sdkVersion>2.6.0</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;platform.drivers.clock.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.lpuart.MK22F51212;platform.drivers.uart.MK22F51212;platform.drivers.adc16.MK22F51212;platform.drivers.dspi.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.i2c.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.rtc.MK22F51212;platform.drivers.smc.MK22F51212;component.serial_manager.MK22F51212;component.serial_manager_uart.MK22F51212;component.uart_adapter.MK22F51212;utility.debug_console.MK22F51212;device.MK22F51212_startup.MK22F51212;project_template.frdmk22f.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.ftm.MK22F51212;</sdkComponents>
 		<boardId>frdmk22f</boardId>
