@@ -67,12 +67,59 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
 }
 #endif
 
+typedef enum {
+  NEO_POS_LOW_12 = 0,
+  NEO_POS_LOW_3 = 10,
+  NEO_POS_LOW_6 = 20,
+  NEO_POS_LOW_9 = 30,
+  NEO_POS_HIGH_12 = 40,
+  NEO_POS_HIGH_9 = 50,
+  NEO_POS_HIGH_6 = 60,
+  NEO_POS_HIGH_3 = 70,
+} NEO_POS_e;
+
 static void AppTask(void *pv) {
   int i = 0;
   int color = 0;
+  uint8_t level;
 
   NEO_ClearAllPixel();
-  for(;;) {
+  NEO_TransferPixels();
+  //NEO_SetPixelRGB(0, 0, 0x00, 0xff, 0x00);
+
+  NEO_SetPixelRGB(0, 0, 0x00, 0xff/8, 0x00);
+  NEO_TransferPixels();
+
+  NEO_SetPixelRGB(0, 20, 0x00, 0xff/8, 0x00);
+  NEO_TransferPixels();
+
+  NEO_SetPixelRGB(0, 40+5, 0xff/8, 0x00, 0);
+  NEO_TransferPixels();
+
+  NEO_SetPixelRGB(0, 40+5+20, 0xff/8, 0, 0);
+  NEO_TransferPixels();
+
+  NEO_TransferPixels();
+
+
+  NEO_ClearAllPixel();
+  NEO_SetPixelRGB(0, 0, 0x00, 0, 0xff/8);
+  NEO_SetPixelRGB(0, 20, 0x00, 0, 0xff/8);
+  NEO_SetPixelRGB(0, 40+30, 0x00, 0, 0xff/8);
+  NEO_TransferPixels();
+
+  /* 12-6 both levels */
+  NEO_ClearAllPixel();
+  NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0x00, 0, 0xff); /* 12 lower */
+  NEO_SetPixelRGB(0, NEO_POS_LOW_6, 0x00, 0, 0xff); /* 6 lower */
+  NEO_SetPixelRGB(0, NEO_POS_HIGH_12, 0x00, 0, 0xff); /* 12 upper */
+  NEO_SetPixelRGB(0, NEO_POS_HIGH_6, 0x00, 0, 0xff); /* 6 upper */
+  NEO_TransferPixels();
+
+//NEO_SetPixelRGB(0, 40+0+10, 0xff, 0, 0x00);
+  //NEO_SetPixelRGB(0, 40+0+10+20, 0xff/8, 0, 0x00);
+ for(;;) {
+#if 0
     //NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
     //NEO_SetPixelRGB(0, 1, 0, 0xff, 0x00);
     //NEO_SetPixelRGB(0, 2, 0, 0x00, 0xff/4);
@@ -94,7 +141,66 @@ static void AppTask(void *pv) {
     if (i==NEOC_NOF_LEDS_IN_LANE) {
       i = 0;
     }
+#endif
+
+    for(i=0, level=0x20; i<5; i++, level+=0xff/5) {
+      NEO_ClearAllPixel();
+      NEO_SetPixelRGB(0, NEO_POS_LOW_12, level, 0, 0);
+      NEO_TransferPixels();
+      vTaskDelay(pdMS_TO_TICKS(2000));
+
+      NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0, level, 0);
+      NEO_TransferPixels();
+      vTaskDelay(pdMS_TO_TICKS(2000));
+
+      NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0, 0, level);
+      NEO_TransferPixels();
+      vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+
+    for(i=0, level=0x20; i<5; i++, level+=0xff/5) {
+      NEO_ClearAllPixel();
+      NEO_SetPixelRGB(0, NEO_POS_LOW_12, level, 0, 0);
+      NEO_SetPixelRGB(0, NEO_POS_LOW_6, level, 0, 0);
+      NEO_TransferPixels();
+      vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+
+    level = 0xff/5;
+    NEO_ClearAllPixel();
+    NEO_SetPixelRGB(0, NEO_POS_LOW_12, level, 0, 0);
+    NEO_SetPixelRGB(0, NEO_POS_LOW_6, 0, level, 0);
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_3, level, 0, 0);
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_9, 0, level, 0);
     NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+
+    level = 0xff/5;
+    NEO_ClearAllPixel();
+    NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0, 0, level);
+    NEO_SetPixelRGB(0, NEO_POS_LOW_6, level, level, 0);
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_3, 0, 0, level);
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_9, level, level, 0);
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+
+
+    level = 0xff/5;
+    NEO_ClearAllPixel();
+    NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0, 0, level);
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_3, 0, 0, level);
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    NEO_SetPixelRGB(0, NEO_POS_LOW_6, 0, 0, level);
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    NEO_SetPixelRGB(0, NEO_POS_HIGH_9, 0, 0, level);
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(2000));
+
+
     McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(100));
     color++;
