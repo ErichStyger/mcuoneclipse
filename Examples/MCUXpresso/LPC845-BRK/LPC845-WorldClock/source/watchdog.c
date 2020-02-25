@@ -63,18 +63,21 @@ void WDT_Report(WDT_ReportID_e id, uint32_t ms) {
       }
     }
   }
+  taskENTER_CRITICAL();
   if (id<WDT_REPORT_ID_NOF) {
     WDT_Recordings[id].ms += ms;
   } else { /* something wrong! */
     for(;;) {
-      /* wait for WDT to time out */
+      __asm("nop"); /* wait for WDT to time out */
     }
   }
+  taskEXIT_CRITICAL();
 }
 
 static void WDT_CheckHealth(void) {
   uint32_t min, max;
 
+  taskENTER_CRITICAL();
   for(int i=0; i<WDT_REPORT_ID_NOF; i++) {
     min = (WDT_HEALT_CHECK_TIME_SEC*WDT_ReportingBoundaries[i].reportMsPerSec)*WDT_ReportingBoundaries[i].minPercent/100;
     max = (WDT_HEALT_CHECK_TIME_SEC*WDT_ReportingBoundaries[i].reportMsPerSec)*WDT_ReportingBoundaries[i].maxPercent/100;
@@ -96,10 +99,11 @@ static void WDT_CheckHealth(void) {
       SHELL_SendString(buf);
   #endif
       for(;;) {
-        /* wait for WDT to time out */
+        __asm("nop"); /* wait for WDT to time out */
       }
     }
   }
+  taskEXIT_CRITICAL();
 }
 
 void WDT_IRQHandler(void) {
