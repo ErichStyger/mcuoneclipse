@@ -21,8 +21,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief FTM driver version 2.1.1. */
-#define FSL_FTM_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
+/*! @brief FTM driver version 2.2.1. */
+#define FSL_FTM_DRIVER_VERSION (MAKE_VERSION(2, 2, 1))
 /*@}*/
 
 /*!
@@ -55,7 +55,8 @@ typedef enum _ftm_pwm_mode
 {
     kFTM_EdgeAlignedPwm = 0U, /*!< Edge-aligned PWM */
     kFTM_CenterAlignedPwm,    /*!< Center-aligned PWM */
-    kFTM_CombinedPwm          /*!< Combined PWM */
+    kFTM_CombinedPwm,         /*!< Combined PWM */
+    kFTM_ComplementaryPwm     /*!< Complementary PWM */
 } ftm_pwm_mode_t;
 
 /*! @brief FTM PWM output pulse mode: high-true, low-true or no output */
@@ -79,6 +80,8 @@ typedef struct _ftm_chnl_pwm_signal_param
                                         Specifies the delay to the first edge in a PWM period.
                                         If unsure leave as 0; Should be specified as a
                                         percentage of the PWM period */
+    bool enableDeadtime;           /*!< true: The deadtime insertion in this pair of channels is enabled;
+                                        false: The deadtime insertion in this pair of channels is disabled. */
 } ftm_chnl_pwm_signal_param_t;
 
 /*! @brief Options to configure a FTM channel using precise setting.*/
@@ -309,7 +312,7 @@ typedef enum _ftm_status_flags
 /*!
  * @brief List of FTM Quad Decoder flags.
  */
-enum _ftm_quad_decoder_flags
+enum
 {
     kFTM_QuadDecoderCountingIncreaseFlag = FTM_QDCTRL_QUADIR_MASK, /*!< Counting direction is increasing (FTM counter
                                                                         increment), or the direction is decreasing. */
@@ -703,11 +706,11 @@ static inline void FTM_SetSoftwareCtrlEnable(FTM_Type *base, ftm_chnl_t chnlNumb
 {
     if (value)
     {
-        base->SWOCTRL |= (1U << chnlNumber);
+        base->SWOCTRL |= (1UL << (uint32_t)chnlNumber);
     }
     else
     {
-        base->SWOCTRL &= ~(1U << chnlNumber);
+        base->SWOCTRL &= ~(1UL << (uint32_t)chnlNumber);
     }
 }
 
@@ -722,11 +725,11 @@ static inline void FTM_SetSoftwareCtrlVal(FTM_Type *base, ftm_chnl_t chnlNumber,
 {
     if (value)
     {
-        base->SWOCTRL |= (1U << (chnlNumber + FTM_SWOCTRL_CH0OCV_SHIFT));
+        base->SWOCTRL |= (1UL << ((uint32_t)chnlNumber + FTM_SWOCTRL_CH0OCV_SHIFT));
     }
     else
     {
-        base->SWOCTRL &= ~(1U << (chnlNumber + FTM_SWOCTRL_CH0OCV_SHIFT));
+        base->SWOCTRL &= ~(1UL << ((uint32_t)chnlNumber + FTM_SWOCTRL_CH0OCV_SHIFT));
     }
 }
 
@@ -761,11 +764,11 @@ static inline void FTM_SetOutputMask(FTM_Type *base, ftm_chnl_t chnlNumber, bool
 {
     if (mask)
     {
-        base->OUTMASK |= (1U << chnlNumber);
+        base->OUTMASK |= (1UL << (uint32_t)chnlNumber);
     }
     else
     {
-        base->OUTMASK &= ~(1U << chnlNumber);
+        base->OUTMASK &= ~(1UL << (uint32_t)chnlNumber);
     }
 }
 
@@ -784,11 +787,11 @@ static inline void FTM_SetPwmOutputEnable(FTM_Type *base, ftm_chnl_t chnlNumber,
 {
     if (value)
     {
-        base->SC |= (1U << (chnlNumber + FTM_SC_PWMEN0_SHIFT));
+        base->SC |= (1UL << ((uint32_t)chnlNumber + FTM_SC_PWMEN0_SHIFT));
     }
     else
     {
-        base->SC &= ~(1U << (chnlNumber + FTM_SC_PWMEN0_SHIFT));
+        base->SC &= ~(1UL << ((uint32_t)chnlNumber + FTM_SC_PWMEN0_SHIFT));
     }
 }
 #endif
@@ -809,11 +812,13 @@ static inline void FTM_SetFaultControlEnable(FTM_Type *base, ftm_chnl_t chnlPair
 {
     if (value)
     {
-        base->COMBINE |= (1U << (FTM_COMBINE_FAULTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE |=
+            (1UL << (FTM_COMBINE_FAULTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
     else
     {
-        base->COMBINE &= ~(1U << (FTM_COMBINE_FAULTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE &=
+            ~(1UL << (FTM_COMBINE_FAULTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
 }
 
@@ -828,11 +833,11 @@ static inline void FTM_SetDeadTimeEnable(FTM_Type *base, ftm_chnl_t chnlPairNumb
 {
     if (value)
     {
-        base->COMBINE |= (1U << (FTM_COMBINE_DTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE |= (1UL << (FTM_COMBINE_DTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
     else
     {
-        base->COMBINE &= ~(1U << (FTM_COMBINE_DTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE &= ~(1UL << (FTM_COMBINE_DTEN0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
 }
 
@@ -847,11 +852,11 @@ static inline void FTM_SetComplementaryEnable(FTM_Type *base, ftm_chnl_t chnlPai
 {
     if (value)
     {
-        base->COMBINE |= (1U << (FTM_COMBINE_COMP0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE |= (1UL << (FTM_COMBINE_COMP0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
     else
     {
-        base->COMBINE &= ~(1U << (FTM_COMBINE_COMP0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * chnlPairNumber)));
+        base->COMBINE &= ~(1UL << (FTM_COMBINE_COMP0_SHIFT + (FTM_COMBINE_COMBINE1_SHIFT * (uint32_t)chnlPairNumber)));
     }
 }
 
@@ -866,11 +871,11 @@ static inline void FTM_SetInvertEnable(FTM_Type *base, ftm_chnl_t chnlPairNumber
 {
     if (value)
     {
-        base->INVCTRL |= (1U << chnlPairNumber);
+        base->INVCTRL |= (1UL << (uint32_t)chnlPairNumber);
     }
     else
     {
-        base->INVCTRL &= ~(1U << chnlPairNumber);
+        base->INVCTRL &= ~(1UL << (uint32_t)chnlPairNumber);
     }
 }
 

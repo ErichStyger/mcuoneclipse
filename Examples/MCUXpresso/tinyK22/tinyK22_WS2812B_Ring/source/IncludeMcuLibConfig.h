@@ -28,11 +28,17 @@
 
 /* Segger SystemViewer: */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
-#define SYSVIEW_APP_NAME                            "FreeRTOS on tinyK22"
+#define SYSVIEW_APP_NAME                            "tinyK22 LedRing"
 #define SYSVIEW_DEVICE_NAME                         "NXP K22FN512"
 
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
+
+/* -------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "tinyK22 LedRing"
+#define McuShell_MULTI_CMD_ENABLED                    (0)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

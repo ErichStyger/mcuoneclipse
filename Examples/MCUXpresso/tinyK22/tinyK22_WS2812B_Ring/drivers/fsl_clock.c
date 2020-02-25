@@ -368,11 +368,14 @@ uint32_t CLOCK_GetOsc0ErClkUndivFreq(void)
  */
 uint32_t CLOCK_GetOsc0ErClkDivFreq(void)
 {
+    uint8_t temp;
+
     if (OSC0->CR & OSC_CR_ERCLKEN_MASK)
     {
         /* Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock. */
         assert(g_xtal0Freq);
-        return g_xtal0Freq >> ((OSC0->DIV & OSC_DIV_ERPS_MASK) >> OSC_DIV_ERPS_SHIFT);
+        temp = OSC0->DIV & OSC_DIV_ERPS_MASK;
+        return g_xtal0Freq >> ((temp) >> OSC_DIV_ERPS_SHIFT);
     }
     else
     {
@@ -1244,6 +1247,26 @@ void CLOCK_DeinitOsc0(void)
 {
     OSC0->CR = 0U;
     MCG->C2 &= ~(uint8_t)OSC_MODE_MASK;
+}
+
+/*!
+ * brief Set the Slow IRC frequency based on the trimmed value
+ *
+ * param freq The Slow IRC frequency input clock frequency in Hz.
+ */
+void CLOCK_SetSlowIrcFreq(uint32_t freq)
+{
+    s_slowIrcFreq = freq;
+}
+
+/*!
+ * brief Set the Fast IRC frequency based on the trimmed value
+ *
+ * param freq The Fast IRC frequency input clock frequency in Hz.
+ */
+void CLOCK_SetFastIrcFreq(uint32_t freq)
+{
+    s_fastIrcFreq = freq;
 }
 
 /*!
@@ -2304,52 +2327,4 @@ status_t CLOCK_SetMcgConfig(const mcg_config_t *config)
         MCG->C5 &= ~(uint8_t)kMCG_PllEnableIndependent;
     }
     return kStatus_Success;
-}
-
-/*!
- * brief Use DWT to delay at least for some time.
- * Please note that, this API will calculate the microsecond period with the maximum devices
- * supported CPU frequency, so this API will only delay for at least the given microseconds, if precise
- * delay count was needed, please implement a new timer count to achieve this function.
- *
- * param delay_us  Delay time in unit of microsecond.
- */
-__attribute__((weak)) void SDK_DelayAtLeastUs(uint32_t delay_us)
-{
-    assert(0U != delay_us);
-    uint64_t count  = 0U;
-    uint32_t period = SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY / 1000000;
-
-    /* Make sure the DWT trace fucntion is enabled. */
-    if (CoreDebug_DEMCR_TRCENA_Msk != (CoreDebug_DEMCR_TRCENA_Msk & CoreDebug->DEMCR))
-    {
-        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    }
-
-    /* CYCCNT not supported on this device. */
-    assert(DWT_CTRL_NOCYCCNT_Msk != (DWT->CTRL & DWT_CTRL_NOCYCCNT_Msk));
-
-    /* If CYCCENT has already been enabled, read directly, otherwise, need enable it. */
-    if (DWT_CTRL_CYCCNTENA_Msk != (DWT_CTRL_CYCCNTENA_Msk & DWT->CTRL))
-    {
-        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-    }
-
-    /* Calculate the count ticks. */
-    count = DWT->CYCCNT;
-    count += (uint64_t)period * delay_us;
-
-    if (count > 0xFFFFFFFFUL)
-    {
-        count -= 0xFFFFFFFFUL;
-        /* wait for cyccnt overflow. */
-        while (count < DWT->CYCCNT)
-        {
-        }
-    }
-
-    /* Wait for cyccnt reach count value. */
-    while (count > DWT->CYCCNT)
-    {
-    }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -20,7 +20,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 0)) /*!< Driver version 2.0.0 */
+#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
 /*@}*/
 
 #if (defined(FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR) && FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR)

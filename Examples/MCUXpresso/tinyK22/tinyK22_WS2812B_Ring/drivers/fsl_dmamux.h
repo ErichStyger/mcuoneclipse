@@ -22,8 +22,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief DMAMUX driver version 2.0.3. */
-#define FSL_DMAMUX_DRIVER_VERSION (MAKE_VERSION(2, 0, 3))
+/*! @brief DMAMUX driver version 2.0.4. */
+#define FSL_DMAMUX_DRIVER_VERSION (MAKE_VERSION(2, 0, 4))
 /*@}*/
 
 /*******************************************************************************
@@ -153,7 +153,7 @@ static inline void DMAMUX_DisablePeriodTrigger(DMAMUX_Type *base, uint32_t chann
  */
 static inline void DMAMUX_EnableAlwaysOn(DMAMUX_Type *base, uint32_t channel, bool enable)
 {
-    assert(channel < FSL_FEATURE_DMAMUX_MODULE_CHANNEL);
+    assert(channel < (uint32_t)FSL_FEATURE_DMAMUX_MODULE_CHANNEL);
 
     if (enable)
     {

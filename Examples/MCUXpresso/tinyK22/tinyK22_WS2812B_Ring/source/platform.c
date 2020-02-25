@@ -28,6 +28,9 @@
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
 #endif
+#if PL_CONFIG_USE_SHELL_UART
+  #include "McuShellUart.h"
+#endif
 
 void PL_Init(void) {
   /* initialize clocking */
@@ -61,6 +64,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_RS485
   RS485_Init();
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
 #endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();

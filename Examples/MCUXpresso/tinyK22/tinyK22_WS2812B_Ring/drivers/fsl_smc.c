@@ -145,12 +145,12 @@ void SMC_PostExitWaitModes(void)
  */
 status_t SMC_SetPowerModeRun(SMC_Type *base)
 {
-    uint8_t reg;
+    uint32_t reg;
 
     reg = base->PMCTRL;
     /* configure Normal RUN mode */
-    reg &= ~(uint8_t)SMC_PMCTRL_RUNM_MASK;
-    reg |= ((uint8_t)kSMC_RunNormal << SMC_PMCTRL_RUNM_SHIFT);
+    reg &= ~SMC_PMCTRL_RUNM_MASK;
+    reg |= ((uint32_t)kSMC_RunNormal << SMC_PMCTRL_RUNM_SHIFT);
     base->PMCTRL = reg;
 
     return kStatus_Success;
@@ -165,12 +165,12 @@ status_t SMC_SetPowerModeRun(SMC_Type *base)
  */
 status_t SMC_SetPowerModeHsrun(SMC_Type *base)
 {
-    uint8_t reg;
+    uint32_t reg;
 
-    reg = base->PMCTRL;
+    reg =(base->PMCTRL);
     /* configure High Speed RUN mode */
     reg &= ~SMC_PMCTRL_RUNM_MASK;
-    reg |= ((uint8_t)kSMC_Hsrun << SMC_PMCTRL_RUNM_SHIFT);
+    reg |= ((uint32_t)kSMC_Hsrun << SMC_PMCTRL_RUNM_SHIFT);
     base->PMCTRL = reg;
 
     return kStatus_Success;
@@ -203,20 +203,20 @@ status_t SMC_SetPowerModeWait(SMC_Type *base)
  */
 status_t SMC_SetPowerModeStop(SMC_Type *base, smc_partial_stop_option_t option)
 {
-    uint8_t reg;
+    uint32_t reg;
 
 #if (defined(FSL_FEATURE_SMC_HAS_PSTOPO) && FSL_FEATURE_SMC_HAS_PSTOPO)
     /* configure the Partial Stop mode in Normal Stop mode */
     reg = base->STOPCTRL;
-    reg &= ~(uint8_t)SMC_STOPCTRL_PSTOPO_MASK;
-    reg |= ((uint8_t)option << SMC_STOPCTRL_PSTOPO_SHIFT);
+    reg &= ~SMC_STOPCTRL_PSTOPO_MASK;
+    reg |= ((uint32_t)option << SMC_STOPCTRL_PSTOPO_SHIFT);
     base->STOPCTRL = reg;
 #endif
 
     /* configure Normal Stop mode */
     reg = base->PMCTRL;
-    reg &= ~(uint8_t)SMC_PMCTRL_STOPM_MASK;
-    reg |= ((uint8_t)kSMC_StopNormal << SMC_PMCTRL_STOPM_SHIFT);
+    reg &= ~SMC_PMCTRL_STOPM_MASK;
+    reg |= ((uint32_t)kSMC_StopNormal << SMC_PMCTRL_STOPM_SHIFT);
     base->PMCTRL = reg;
 
     /* Set the SLEEPDEEP bit to enable deep sleep mode (stop mode) */
@@ -252,7 +252,7 @@ status_t SMC_SetPowerModeVlpr(SMC_Type *base
 {
     uint8_t reg;
 
-    reg = base->PMCTRL;
+    reg = (uint8_t)(base->PMCTRL);
 #if (defined(FSL_FEATURE_SMC_HAS_LPWUI) && FSL_FEATURE_SMC_HAS_LPWUI)
     /* configure whether the system remains in VLP mode on an interrupt */
     if (wakeupMode)
@@ -301,12 +301,12 @@ status_t SMC_SetPowerModeVlpw(SMC_Type *base)
  */
 status_t SMC_SetPowerModeVlps(SMC_Type *base)
 {
-    uint8_t reg;
+    uint32_t reg;
 
     /* configure VLPS mode */
     reg = base->PMCTRL;
-    reg &= ~(uint8_t)SMC_PMCTRL_STOPM_MASK;
-    reg |= ((uint8_t)kSMC_StopVlps << SMC_PMCTRL_STOPM_SHIFT);
+    reg &= ~SMC_PMCTRL_STOPM_MASK;
+    reg |= ((uint32_t)kSMC_StopVlps << SMC_PMCTRL_STOPM_SHIFT);
     base->PMCTRL = reg;
 
     /* Set the SLEEPDEEP bit to enable deep sleep mode */
@@ -361,11 +361,11 @@ status_t SMC_SetPowerModeLls(SMC_Type *base
 #if (defined(FSL_FEATURE_SMC_HAS_LPOPO) && FSL_FEATURE_SMC_HAS_LPOPO)
     if (config->enableLpoClock)
     {
-        base->STOPCTRL &= ~SMC_STOPCTRL_LPOPO_MASK;
+        base->STOPCTRL &= ~(uint8_t)SMC_STOPCTRL_LPOPO_MASK;
     }
     else
     {
-        base->STOPCTRL |= SMC_STOPCTRL_LPOPO_MASK;
+        base->STOPCTRL |= (uint8_t)SMC_STOPCTRL_LPOPO_MASK;
     }
 #endif /* FSL_FEATURE_SMC_HAS_LPOPO */
 
@@ -411,7 +411,7 @@ status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t
         if (true == config->enablePorDetectInVlls0)
         {
 #if (defined(FSL_FEATURE_SMC_USE_VLLSCTRL_REG) && FSL_FEATURE_SMC_USE_VLLSCTRL_REG)
-            base->VLLSCTRL &= ~SMC_VLLSCTRL_PORPO_MASK;
+            base->VLLSCTRL &= ~(uint8_t)SMC_VLLSCTRL_PORPO_MASK;
 #else
             base->STOPCTRL &= ~(uint8_t)SMC_STOPCTRL_PORPO_MASK;
 #endif
@@ -463,7 +463,7 @@ status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t
 /* configure the VLLS sub-mode */
 #if (defined(FSL_FEATURE_SMC_USE_VLLSCTRL_REG) && FSL_FEATURE_SMC_USE_VLLSCTRL_REG)
     reg = base->VLLSCTRL;
-    reg &= ~SMC_VLLSCTRL_VLLSM_MASK;
+    reg &= ~(uint8_t)SMC_VLLSCTRL_VLLSM_MASK;
     reg |= ((uint8_t)config->subMode << SMC_VLLSCTRL_VLLSM_SHIFT);
     base->VLLSCTRL = reg;
 #else
@@ -474,7 +474,7 @@ status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t
     base->STOPCTRL = reg;
 #else
     reg = base->STOPCTRL;
-    reg &= ~SMC_STOPCTRL_VLLSM_MASK;
+    reg &= ~(uint8_t)SMC_STOPCTRL_VLLSM_MASK;
     reg |= ((uint8_t)config->subMode << SMC_STOPCTRL_VLLSM_SHIFT);
     base->STOPCTRL = reg;
 #endif /* FSL_FEATURE_SMC_HAS_LLS_SUBMODE */
@@ -483,7 +483,7 @@ status_t SMC_SetPowerModeVlls(SMC_Type *base, const smc_power_mode_vlls_config_t
 #if (defined(FSL_FEATURE_SMC_HAS_LPOPO) && FSL_FEATURE_SMC_HAS_LPOPO)
     if (config->enableLpoClock)
     {
-        base->STOPCTRL &= ~SMC_STOPCTRL_LPOPO_MASK;
+        base->STOPCTRL &= ~(uint8_t)SMC_STOPCTRL_LPOPO_MASK;
     }
     else
     {

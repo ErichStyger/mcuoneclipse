@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
 **     Version:             rev. 2.15, 2016-03-21
-**     Build:               b190109
+**     Build:               b190822
 **
 **     Abstract:
 **         Chip specific module features.
@@ -299,8 +299,12 @@
 #define FSL_FEATURE_FLASH_PFLASH_PROTECTION_REGION_COUNT (32)
 /* @brief Has FlexNVM memory. */
 #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+/* @brief Has FlexNVM alias. */
+#define FSL_FEATURE_FLASH_HAS_FLEX_NVM_ALIAS (0)
 /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
 #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
+/* @brief FlexNVM alias start address. (Valid only if FlexNVM alias is available.) */
+#define FSL_FEATURE_FLASH_FLEX_NVM_ALIAS_START_ADDRESS (0x00000000)
 /* @brief FlexNVM block count. */
 #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
 /* @brief FlexNVM block size. */
@@ -475,12 +479,8 @@
 
 /* GPIO module features */
 
-/* @brief Has fast (single cycle) access capability via a dedicated memory region. */
-#define FSL_FEATURE_GPIO_HAS_FAST_GPIO (0)
-/* @brief Has port input disable register (PIDR). */
-#define FSL_FEATURE_GPIO_HAS_INPUT_DISABLE (0)
-/* @brief Has dedicated interrupt vector. */
-#define FSL_FEATURE_GPIO_HAS_PORT_INTERRUPT_VECTOR (1)
+/* @brief Has GPIO attribute checker register (GACR). */
+#define FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER (0)
 
 /* I2C module features */
 
@@ -533,6 +533,10 @@
 #define FSL_FEATURE_SAI_HAS_MCR (1)
 /* @brief Has register of MDR */
 #define FSL_FEATURE_SAI_HAS_MDR (1)
+/* @brief Has DIV bit fields of MCR register (register bit fields MCR[DIV]. */
+#define FSL_FEATURE_SAI_HAS_MCR_MCLK_POST_DIV (0)
+/* @brief Support Channel Mode (register bit fields TCR4[CHMOD]). */
+#define FSL_FEATURE_SAI_HAS_CHANNEL_MODE (0)
 
 /* LLWU module features */
 

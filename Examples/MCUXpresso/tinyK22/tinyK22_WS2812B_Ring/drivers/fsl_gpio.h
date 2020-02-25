@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -22,8 +22,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief GPIO driver version 2.3.2. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 3, 2))
+/*! @brief GPIO driver version 2.4.1. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 4, 1))
 /*@}*/
 
 /*! @brief GPIO direction definition */
@@ -273,7 +273,13 @@ static inline void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t pin, gpi
 
     base->ICR[pin] = (base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config);
 }
-
+/*!
+ * brief Clears GPIO pin interrupt status flags.
+ *
+ * param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * param mask GPIO pin number macro
+ */
+void GPIO_GpioClearInterruptFlags(GPIO_Type *base, uint32_t mask);
 /*!
  * @brief Reads the GPIO DMA request flags.
  *        The corresponding flag will be cleared automatically at the completion of the requested
@@ -324,11 +330,11 @@ static inline void GPIO_SetMultipleInterruptPinsConfig(GPIO_Type *base, uint32_t
 
 #if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
 /*!
- * @brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
- * words. Each 32-bit data port includes a GACR register, which defines the byte-level
- * attributes required for a successful access to the GPIO programming model. The attribute controls for the 4 data
- * bytes in the GACR follow a standard little endian
- * data convention.
+ * brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
+ * words/8-bit Bytes. Each 32-bit/8-bit data port includes a GACR register, which defines the byte-level
+ * attributes required for a successful access to the GPIO programming model. If the GPIO module's GACR register
+ * organized as 32-bit words, the attribute controls for the 4 data bytes in the GACR follow a standard little
+ * endian data convention.
  *
  * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
  * @param mask GPIO pin number macro

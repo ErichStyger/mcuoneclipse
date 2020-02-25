@@ -11,6 +11,9 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
+#if PL_CONFIG_USE_SHELL_UART
+  #include "McuShellUart.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -28,8 +31,14 @@ typedef struct {
   size_t bufSize;
 } SHELL_IODesc;
 
+#if PL_CONFIG_USE_SHELL_UART
+#endif
+
 static const SHELL_IODesc ios[] =
 {
+#if PL_CONFIG_USE_SHELL_UART
+  {&McuShellUart_stdio,  McuShellUart_DefaultShellBuffer,  sizeof(McuShellUart_DefaultShellBuffer)},
+#endif
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},

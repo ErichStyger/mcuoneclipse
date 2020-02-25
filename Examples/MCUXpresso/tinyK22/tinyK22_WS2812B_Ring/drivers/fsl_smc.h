@@ -20,8 +20,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief SMC driver version 2.0.5. */
-#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 5))
+/*! @brief SMC driver version 2.0.6. */
+#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 6))
 /*@}*/
 
 /*!
@@ -221,7 +221,7 @@ extern "C" {
  */
 static inline void SMC_GetVersionId(SMC_Type *base, smc_version_id_t *versionId)
 {
-    *((uint32_t *)versionId) = base->VERID;
+    *((uint32_t *)(uint32_t)versionId) = base->VERID;
 }
 #endif /* FSL_FEATURE_SMC_HAS_VERID */
 

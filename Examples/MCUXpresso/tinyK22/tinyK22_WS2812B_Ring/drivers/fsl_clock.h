@@ -58,8 +58,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief CLOCK driver version 2.3.0. */
-#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 3, 0))
+/*! @brief CLOCK driver version 2.5.0. */
+#define FSL_CLOCK_DRIVER_VERSION (MAKE_VERSION(2, 5, 0))
 /*@}*/
 
 /* Definition for delay API in clock driver, users can redefine it to the real application. */
@@ -1208,6 +1208,26 @@ static inline void CLOCK_SetXtal32Freq(uint32_t freq)
 /* @} */
 
 /*!
+ * @name IRCs frequency
+ * @{
+ */
+
+/*!
+ * @brief Set the Slow IRC frequency based on the trimmed value
+ *
+ * @param freq The Slow IRC frequency input clock frequency in Hz.
+ */
+void CLOCK_SetSlowIrcFreq(uint32_t freq);
+
+/*!
+ * @brief Set the Fast IRC frequency based on the trimmed value
+ *
+ * @param freq The Fast IRC frequency input clock frequency in Hz.
+ */
+void CLOCK_SetFastIrcFreq(uint32_t freq);
+/* @} */
+
+/*!
  * @name MCG auto-trim machine.
  * @{
  */
@@ -1500,16 +1520,6 @@ status_t CLOCK_BootToPeeMode(mcg_oscsel_t oscsel, mcg_pll_clk_select_t pllcs, mc
  * function.
  */
 status_t CLOCK_SetMcgConfig(mcg_config_t const *config);
-
-/*!
- * @brief Use DWT to delay at least for some time.
- *  Please note that, this API will calculate the microsecond period with the maximum
- *  supported CPU frequency, so this API will only delay for at least the given microseconds, if precise
- *  delay count was needed, please implement a new timer count to achieve this function.
- *
- * @param delay_us  Delay time in unit of microsecond.
- */
-void SDK_DelayAtLeastUs(uint32_t delay_us);
 
 /*@}*/
 

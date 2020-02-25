@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -24,11 +24,11 @@
  ******************************************************************************/
 
 /*!
- * @brief Get instance number for EDMA.
+ * @brief Get instance offset.
  *
- * @param base EDMA peripheral base address.
+ * @param instance EDMA peripheral instance number.
  */
-static uint32_t EDMA_GetInstance(DMA_Type *base);
+static uint32_t EDMA_GetInstanceOffset(uint32_t instance);
 
 /*******************************************************************************
  * Variables
@@ -388,7 +388,7 @@ void EDMA_DisableChannelInterrupts(DMA_Type *base, uint32_t channel, uint32_t ma
     /* Disable error interrupt */
     if (0U != (mask & (uint32_t)kEDMA_ErrorInterruptEnable))
     {
-        base->EEI &= (uint32_t)(~(0x1U << channel));
+        base->EEI &= (~((uint32_t)0x1U << channel));
     }
 
     /* Disable Major interrupt */
@@ -749,21 +749,23 @@ void EDMA_ClearChannelStatusFlags(DMA_Type *base, uint32_t channel, uint32_t mas
     }
 }
 
-static uint8_t Get_StartInstance(void)
+static uint32_t EDMA_GetInstanceOffset(uint32_t instance)
 {
-    static uint8_t StartInstanceNum;
+    static uint8_t startInstanceNum;
 
 #if defined(DMA0)
-    StartInstanceNum = (uint8_t)EDMA_GetInstance(DMA0);
+    startInstanceNum = (uint8_t)EDMA_GetInstance(DMA0);
 #elif defined(DMA1)
-    StartInstanceNum = EDMA_GetInstance(DMA1);
+    startInstanceNum = (uint8_t)EDMA_GetInstance(DMA1);
 #elif defined(DMA2)
-    StartInstanceNum = EDMA_GetInstance(DMA2);
+    startInstanceNum = (uint8_t)EDMA_GetInstance(DMA2);
 #elif defined(DMA3)
-    StartInstanceNum = EDMA_GetInstance(DMA3);
+    startInstanceNum = (uint8_t)EDMA_GetInstance(DMA3);
 #endif
 
-    return StartInstanceNum;
+    assert(startInstanceNum <= instance);
+
+    return instance - startInstanceNum;
 }
 
 /*!
@@ -784,7 +786,6 @@ void EDMA_CreateHandle(edma_handle_t *handle, DMA_Type *base, uint32_t channel)
 
     uint32_t edmaInstance;
     uint32_t channelIndex;
-    uint8_t StartInstance;
     edma_tcd_t *tcdRegs;
 
     /* Zero the handle */
@@ -793,9 +794,8 @@ void EDMA_CreateHandle(edma_handle_t *handle, DMA_Type *base, uint32_t channel)
     handle->base    = base;
     handle->channel = (uint8_t)channel;
     /* Get the DMA instance number */
-    edmaInstance               = EDMA_GetInstance(base);
-    StartInstance              = Get_StartInstance();
-    channelIndex               = ((edmaInstance - StartInstance) * (uint32_t)FSL_FEATURE_EDMA_MODULE_CHANNEL) + channel;
+    edmaInstance = EDMA_GetInstance(base);
+    channelIndex = (EDMA_GetInstanceOffset(edmaInstance) * (uint32_t)FSL_FEATURE_EDMA_MODULE_CHANNEL) + channel;
     s_EDMAHandle[channelIndex] = handle;
 
     /* Enable NVIC interrupt */
@@ -865,30 +865,32 @@ void EDMA_SetCallback(edma_handle_t *handle, edma_callback callback, void *userD
 }
 
 /*!
- * brief Prepares the eDMA transfer structure.
+ * brief Prepares the eDMA transfer structure configurations.
  *
  * This function prepares the transfer configuration structure according to the user input.
  *
  * param config The user configuration structure of type edma_transfer_t.
  * param srcAddr eDMA transfer source address.
  * param srcWidth eDMA transfer source address width(bytes).
+ * param srcOffset source address offset.
  * param destAddr eDMA transfer destination address.
  * param destWidth eDMA transfer destination address width(bytes).
+ * param destOffset destination address offset.
  * param bytesEachRequest eDMA transfer bytes per channel request.
  * param transferBytes eDMA transfer bytes to be transferred.
- * param type eDMA transfer type.
  * note The data address and the data width must be consistent. For example, if the SRC
  *       is 4 bytes, the source address must be 4 bytes aligned, or it results in
  *       source address error (SAE).
  */
-void EDMA_PrepareTransfer(edma_transfer_config_t *config,
-                          void *srcAddr,
-                          uint32_t srcWidth,
-                          void *destAddr,
-                          uint32_t destWidth,
-                          uint32_t bytesEachRequest,
-                          uint32_t transferBytes,
-                          edma_transfer_type_t type)
+void EDMA_PrepareTransferConfig(edma_transfer_config_t *config,
+                                void *srcAddr,
+                                uint32_t srcWidth,
+                                int16_t srcOffset,
+                                void *destAddr,
+                                uint32_t destWidth,
+                                int16_t destOffset,
+                                uint32_t bytesEachRequest,
+                                uint32_t transferBytes)
 {
     assert(config != NULL);
     assert(srcAddr != NULL);
@@ -964,25 +966,67 @@ void EDMA_PrepareTransfer(edma_transfer_config_t *config,
             assert(false);
             break;
     }
+
+    config->destOffset = destOffset;
+    config->srcOffset  = srcOffset;
+}
+
+/*!
+ * brief Prepares the eDMA transfer structure.
+ *
+ * This function prepares the transfer configuration structure according to the user input.
+ *
+ * param config The user configuration structure of type edma_transfer_t.
+ * param srcAddr eDMA transfer source address.
+ * param srcWidth eDMA transfer source address width(bytes).
+ * param destAddr eDMA transfer destination address.
+ * param destWidth eDMA transfer destination address width(bytes).
+ * param bytesEachRequest eDMA transfer bytes per channel request.
+ * param transferBytes eDMA transfer bytes to be transferred.
+ * param type eDMA transfer type.
+ * note The data address and the data width must be consistent. For example, if the SRC
+ *       is 4 bytes, the source address must be 4 bytes aligned, or it results in
+ *       source address error (SAE).
+ */
+void EDMA_PrepareTransfer(edma_transfer_config_t *config,
+                          void *srcAddr,
+                          uint32_t srcWidth,
+                          void *destAddr,
+                          uint32_t destWidth,
+                          uint32_t bytesEachRequest,
+                          uint32_t transferBytes,
+                          edma_transfer_type_t type)
+{
+    assert(config != NULL);
+
+    int16_t srcOffset = 0, destOffset = 0;
+
     switch (type)
     {
         case kEDMA_MemoryToMemory:
-            config->destOffset = (int16_t)destWidth;
-            config->srcOffset  = (int16_t)srcWidth;
+            destOffset = (int16_t)destWidth;
+            srcOffset  = (int16_t)srcWidth;
             break;
         case kEDMA_MemoryToPeripheral:
-            config->destOffset = 0;
-            config->srcOffset  = (int16_t)srcWidth;
+            destOffset = 0;
+            srcOffset  = (int16_t)srcWidth;
             break;
         case kEDMA_PeripheralToMemory:
-            config->destOffset = (int16_t)destWidth;
-            config->srcOffset  = 0;
+            destOffset = (int16_t)destWidth;
+            srcOffset  = 0;
+            break;
+        case kEDMA_PeripheralToPeripheral:
+            destOffset = 0;
+            srcOffset  = 0;
             break;
         default:
             /* All the cases have been listed above, the default clause should not be reached. */
             assert(false);
             break;
     }
+
+    EDMA_PrepareTransferConfig(config, srcAddr, srcWidth, srcOffset, destAddr, destWidth, destOffset, bytesEachRequest,
+                               transferBytes);
 }
 
 /*!
@@ -1002,7 +1046,7 @@ status_t EDMA_SubmitTransfer(edma_handle_t *handle, const edma_transfer_config_t
 {
     assert(handle != NULL);
     assert(config != NULL);
-    uint32_t tmpCSR = 0;
+    uint32_t tmpCSR = 0UL;
 
     edma_tcd_t *tcdRegs = (edma_tcd_t *)(uint32_t)&handle->base->TCD[handle->channel];
 
@@ -1014,7 +1058,7 @@ status_t EDMA_SubmitTransfer(edma_handle_t *handle, const edma_transfer_config_t
             this check mechanism, EDMA_CreatHandle will clear CSR register.
         */
         tmpCSR = tcdRegs->CSR;
-        if ((tmpCSR != 0U) && ((tmpCSR & DMA_CSR_DONE_MASK) == 0U))
+        if ((tmpCSR != 0UL) && ((tmpCSR & DMA_CSR_DONE_MASK) == 0UL))
         {
             return kStatus_EDMA_Busy;
         }
@@ -1073,7 +1117,8 @@ status_t EDMA_SubmitTransfer(edma_handle_t *handle, const edma_transfer_config_t
         if (currentTcd != previousTcd)
         {
             /* Enable scatter/gather feature in the previous TCD block. */
-            csr = (uint16_t)((handle->tcdPool[previousTcd].CSR | DMA_CSR_ESG_MASK) & ~DMA_CSR_DREQ_MASK);
+            csr = handle->tcdPool[previousTcd].CSR | ((uint16_t)DMA_CSR_ESG_MASK);
+            csr &= ~((uint16_t)DMA_CSR_DREQ_MASK);
             handle->tcdPool[previousTcd].CSR = csr;
             /*
                 Check if the TCD block in the registers is the previous one (points to current TCD block). It
@@ -1118,7 +1163,7 @@ status_t EDMA_SubmitTransfer(edma_handle_t *handle, const edma_transfer_config_t
                     So shall configure TCD registers.
                 */
             }
-            else if (tcdRegs->DLAST_SGA != 0U)
+            else if (tcdRegs->DLAST_SGA != 0UL)
             {
                 /* The current TCD block has been linked successfully. */
                 return kStatus_Success;
@@ -1360,11 +1405,11 @@ void EDMA_HandleIRQ(edma_handle_t *handle)
 #if defined(DMA0)
 void DMA0_04_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[0]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[4]);
     }
@@ -1377,11 +1422,11 @@ void DMA0_04_DriverIRQHandler(void)
 
 void DMA0_15_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[1]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[5]);
     }
@@ -1394,11 +1439,11 @@ void DMA0_15_DriverIRQHandler(void)
 
 void DMA0_26_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[2]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[6]);
     }
@@ -1411,11 +1456,11 @@ void DMA0_26_DriverIRQHandler(void)
 
 void DMA0_37_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[3]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[7]);
     }
@@ -1432,11 +1477,11 @@ void DMA0_37_DriverIRQHandler(void)
 #if defined(DMA0)
 void DMA1_04_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[8]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[12]);
     }
@@ -1449,11 +1494,11 @@ void DMA1_04_DriverIRQHandler(void)
 
 void DMA1_15_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[9]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[13]);
     }
@@ -1466,11 +1511,11 @@ void DMA1_15_DriverIRQHandler(void)
 
 void DMA1_26_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[10]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[14]);
     }
@@ -1483,11 +1528,11 @@ void DMA1_26_DriverIRQHandler(void)
 
 void DMA1_37_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[11]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[15]);
     }
@@ -1501,11 +1546,11 @@ void DMA1_37_DriverIRQHandler(void)
 #else
 void DMA1_04_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[0]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[4]);
     }
@@ -1518,11 +1563,11 @@ void DMA1_04_DriverIRQHandler(void)
 
 void DMA1_15_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[1]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[5]);
     }
@@ -1535,11 +1580,11 @@ void DMA1_15_DriverIRQHandler(void)
 
 void DMA1_26_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[2]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[6]);
     }
@@ -1552,11 +1597,11 @@ void DMA1_26_DriverIRQHandler(void)
 
 void DMA1_37_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[3]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[7]);
     }
@@ -1578,11 +1623,11 @@ void DMA1_37_DriverIRQHandler(void)
 
 void DMA0_08_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[0]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[8]);
     }
@@ -1595,11 +1640,11 @@ void DMA0_08_DriverIRQHandler(void)
 
 void DMA0_19_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[1]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[9]);
     }
@@ -1612,11 +1657,11 @@ void DMA0_19_DriverIRQHandler(void)
 
 void DMA0_210_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[2]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[10]);
     }
@@ -1629,11 +1674,11 @@ void DMA0_210_DriverIRQHandler(void)
 
 void DMA0_311_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[3]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[11]);
     }
@@ -1646,11 +1691,11 @@ void DMA0_311_DriverIRQHandler(void)
 
 void DMA0_412_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[4]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[12]);
     }
@@ -1663,11 +1708,11 @@ void DMA0_412_DriverIRQHandler(void)
 
 void DMA0_513_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[5]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[13]);
     }
@@ -1680,11 +1725,11 @@ void DMA0_513_DriverIRQHandler(void)
 
 void DMA0_614_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[6]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[14]);
     }
@@ -1697,11 +1742,11 @@ void DMA0_614_DriverIRQHandler(void)
 
 void DMA0_715_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[7]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[15]);
     }
@@ -1715,11 +1760,11 @@ void DMA0_715_DriverIRQHandler(void)
 #if defined(DMA1)
 void DMA1_08_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[16]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 8U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 8U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[24]);
     }
@@ -1732,11 +1777,11 @@ void DMA1_08_DriverIRQHandler(void)
 
 void DMA1_19_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[17]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 9U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 9U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[25]);
     }
@@ -1749,11 +1794,11 @@ void DMA1_19_DriverIRQHandler(void)
 
 void DMA1_210_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[18]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 10U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 10U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[26]);
     }
@@ -1766,11 +1811,11 @@ void DMA1_210_DriverIRQHandler(void)
 
 void DMA1_311_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[19]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 11U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 11U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[27]);
     }
@@ -1783,11 +1828,11 @@ void DMA1_311_DriverIRQHandler(void)
 
 void DMA1_412_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[20]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 12U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 12U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[28]);
     }
@@ -1800,11 +1845,11 @@ void DMA1_412_DriverIRQHandler(void)
 
 void DMA1_513_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[21]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 13U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 13U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[29]);
     }
@@ -1817,11 +1862,11 @@ void DMA1_513_DriverIRQHandler(void)
 
 void DMA1_614_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[22]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 14U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 14U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[30]);
     }
@@ -1834,11 +1879,11 @@ void DMA1_614_DriverIRQHandler(void)
 
 void DMA1_715_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[23]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA1, 15U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA1, 15U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[31]);
     }
@@ -1859,11 +1904,11 @@ void DMA1_715_DriverIRQHandler(void)
 
 void DMA0_DMA16_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[0]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 16U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 16U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[16]);
     }
@@ -1876,11 +1921,11 @@ void DMA0_DMA16_DriverIRQHandler(void)
 
 void DMA1_DMA17_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[1]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 17U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 17U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[17]);
     }
@@ -1893,11 +1938,11 @@ void DMA1_DMA17_DriverIRQHandler(void)
 
 void DMA2_DMA18_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[2]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 18U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 18U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[18]);
     }
@@ -1910,11 +1955,11 @@ void DMA2_DMA18_DriverIRQHandler(void)
 
 void DMA3_DMA19_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[3]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 19U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 19U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[19]);
     }
@@ -1927,11 +1972,11 @@ void DMA3_DMA19_DriverIRQHandler(void)
 
 void DMA4_DMA20_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[4]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 20U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 20U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[20]);
     }
@@ -1944,11 +1989,11 @@ void DMA4_DMA20_DriverIRQHandler(void)
 
 void DMA5_DMA21_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[5]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 21U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 21U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[21]);
     }
@@ -1961,11 +2006,11 @@ void DMA5_DMA21_DriverIRQHandler(void)
 
 void DMA6_DMA22_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[6]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 22U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 22U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[22]);
     }
@@ -1978,11 +2023,11 @@ void DMA6_DMA22_DriverIRQHandler(void)
 
 void DMA7_DMA23_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[7]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 23U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 23U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[23]);
     }
@@ -1995,11 +2040,11 @@ void DMA7_DMA23_DriverIRQHandler(void)
 
 void DMA8_DMA24_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[8]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 24U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 24U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[24]);
     }
@@ -2012,11 +2057,11 @@ void DMA8_DMA24_DriverIRQHandler(void)
 
 void DMA9_DMA25_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[9]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 25U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 25U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[25]);
     }
@@ -2029,11 +2074,11 @@ void DMA9_DMA25_DriverIRQHandler(void)
 
 void DMA10_DMA26_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[10]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 26U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 26U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[26]);
     }
@@ -2046,11 +2091,11 @@ void DMA10_DMA26_DriverIRQHandler(void)
 
 void DMA11_DMA27_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[11]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 27U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 27U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[27]);
     }
@@ -2063,11 +2108,11 @@ void DMA11_DMA27_DriverIRQHandler(void)
 
 void DMA12_DMA28_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[12]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 28U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 28U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[28]);
     }
@@ -2080,11 +2125,11 @@ void DMA12_DMA28_DriverIRQHandler(void)
 
 void DMA13_DMA29_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[13]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 29U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 29U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[29]);
     }
@@ -2097,11 +2142,11 @@ void DMA13_DMA29_DriverIRQHandler(void)
 
 void DMA14_DMA30_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[14]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 30U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 30U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[30]);
     }
@@ -2114,11 +2159,11 @@ void DMA14_DMA30_DriverIRQHandler(void)
 
 void DMA15_DMA31_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[15]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 31U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 31U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[31]);
     }
@@ -2138,11 +2183,11 @@ void DMA15_DMA31_DriverIRQHandler(void)
 
 void DMA0_0_4_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 0U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[0]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 4U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[4]);
     }
@@ -2155,11 +2200,11 @@ void DMA0_0_4_DriverIRQHandler(void)
 
 void DMA0_1_5_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 1U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[1]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 5U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[5]);
     }
@@ -2172,11 +2217,11 @@ void DMA0_1_5_DriverIRQHandler(void)
 
 void DMA0_2_6_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 2U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[2]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 6U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[6]);
     }
@@ -2189,11 +2234,11 @@ void DMA0_2_6_DriverIRQHandler(void)
 
 void DMA0_3_7_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 3U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[3]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 7U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[7]);
     }
@@ -2206,11 +2251,11 @@ void DMA0_3_7_DriverIRQHandler(void)
 
 void DMA0_8_12_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 8U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[8]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 12U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[12]);
     }
@@ -2223,11 +2268,11 @@ void DMA0_8_12_DriverIRQHandler(void)
 
 void DMA0_9_13_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 9U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[9]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 13U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[13]);
     }
@@ -2240,11 +2285,11 @@ void DMA0_9_13_DriverIRQHandler(void)
 
 void DMA0_10_14_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 10U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[10]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 14U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[14]);
     }
@@ -2257,11 +2302,11 @@ void DMA0_10_14_DriverIRQHandler(void)
 
 void DMA0_11_15_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 11U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[11]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 15U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[15]);
     }
@@ -2274,11 +2319,11 @@ void DMA0_11_15_DriverIRQHandler(void)
 
 void DMA0_16_20_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 16U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 16U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[16]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 20U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 20U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[20]);
     }
@@ -2291,11 +2336,11 @@ void DMA0_16_20_DriverIRQHandler(void)
 
 void DMA0_17_21_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 17U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 17U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[17]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 21U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 21U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[21]);
     }
@@ -2308,11 +2353,11 @@ void DMA0_17_21_DriverIRQHandler(void)
 
 void DMA0_18_22_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 18U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 18U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[18]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 22U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 22U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[22]);
     }
@@ -2325,11 +2370,11 @@ void DMA0_18_22_DriverIRQHandler(void)
 
 void DMA0_19_23_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 19U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 19U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[19]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 23U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 23U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[23]);
     }
@@ -2342,11 +2387,11 @@ void DMA0_19_23_DriverIRQHandler(void)
 
 void DMA0_24_28_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 24U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 24U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[24]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 28U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 28U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[28]);
     }
@@ -2359,11 +2404,11 @@ void DMA0_24_28_DriverIRQHandler(void)
 
 void DMA0_25_29_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 25U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 25U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[25]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 29U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 29U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[29]);
     }
@@ -2376,11 +2421,11 @@ void DMA0_25_29_DriverIRQHandler(void)
 
 void DMA0_26_30_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 26U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 26U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[26]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 30U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 30U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[30]);
     }
@@ -2393,11 +2438,11 @@ void DMA0_26_30_DriverIRQHandler(void)
 
 void DMA0_27_31_DriverIRQHandler(void)
 {
-    if ((EDMA_GetChannelStatusFlags(DMA0, 27U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 27U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[27]);
     }
-    if ((EDMA_GetChannelStatusFlags(DMA0, 31U) & kEDMA_InterruptFlag) != 0U)
+    if ((EDMA_GetChannelStatusFlags(DMA0, 31U) & (uint32_t)kEDMA_InterruptFlag) != 0U)
     {
         EDMA_HandleIRQ(s_EDMAHandle[31]);
     }

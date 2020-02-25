@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -24,7 +24,10 @@
   #define McuShellUart_CONFIG_UART_INIT                     USART_Init
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
-#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FX512 */
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#if 0
+  /* UART0 on K22FX512 */
   #include "fsl_uart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
@@ -40,6 +43,26 @@
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+#else
+  /* LPUART on K22FN512 */
+  #include "fsl_lpuart.h"
+  #define McuShellUart_CONFIG_UART_DEVICE                   LPUART0
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_SetLpuartClock(1U)
+  #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           LPUART_WriteBlocking
+  #define McuShellUart_CONFIG_UART_GET_FLAGS                LPUART_GetStatusFlags
+  #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kLPUART_RxDataRegFullFlag|kLPUART_RxOverrunFlag)
+  #define McuShellUart_CONFIG_UART_READ_BYTE                LPUART_ReadByte
+  #define McuShellUart_CONFIG_UART_CONFIG_STRUCT            lpuart_config_t
+  #define McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG       LPUART_GetDefaultConfig
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS        LPUART_EnableInterrupts
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kLPUART_RxDataRegFullInterruptEnable)
+  #define McuShellUart_CONFIG_UART_IRQ_NUMBER               LPUART0_IRQn
+  #define McuShellUart_CONFIG_UART_INIT                     LPUART_Init
+  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_PllFllSelClk
+  #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
+#endif
 #else
   /* you have to put your config here */
 #endif

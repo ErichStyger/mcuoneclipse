@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -23,7 +23,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief eDMA driver version */
-#define FSL_EDMA_DRIVER_VERSION (MAKE_VERSION(2, 1, 7)) /*!< Version 2.1.7. */
+#define FSL_EDMA_DRIVER_VERSION (MAKE_VERSION(2, 3, 0)) /*!< Version 2.3.0. */
 /*@}*/
 
 /*! @brief Compute the offset unit from DCHPRI3 */
@@ -93,16 +93,16 @@ typedef enum _edma_channel_link_type
     kEDMA_MajorLink,       /*!< Channel link while major loop count exhausted */
 } edma_channel_link_type_t;
 
-/*!@brief eDMA channel status flags. */
-enum _edma_channel_status_flags
+/*!@brief _edma_channel_status_flags eDMA channel status flags. */
+enum
 {
     kEDMA_DoneFlag      = 0x1U, /*!< DONE flag, set while transfer finished, CITER value exhausted*/
     kEDMA_ErrorFlag     = 0x2U, /*!< eDMA error flag, an error occurred in a transfer */
     kEDMA_InterruptFlag = 0x4U, /*!< eDMA interrupt flag, set while an interrupt occurred of this channel */
 };
 
-/*! @brief eDMA channel error status flags. */
-enum _edma_error_status_flags
+/*! @brief _edma_error_status_flags eDMA channel error status flags. */
+enum
 {
     kEDMA_DestinationBusErrorFlag    = DMA_ES_DBE_MASK, /*!< Bus error on destination address */
     kEDMA_SourceBusErrorFlag         = DMA_ES_SBE_MASK, /*!< Bus error on the source address */
@@ -132,13 +132,14 @@ typedef enum _edma_interrupt_enable
 /*! @brief eDMA transfer type */
 typedef enum _edma_transfer_type
 {
-    kEDMA_MemoryToMemory = 0x0U, /*!< Transfer from memory to memory */
-    kEDMA_PeripheralToMemory,    /*!< Transfer from peripheral to memory */
-    kEDMA_MemoryToPeripheral,    /*!< Transfer from memory to peripheral */
+    kEDMA_MemoryToMemory = 0x0U,  /*!< Transfer from memory to memory */
+    kEDMA_PeripheralToMemory,     /*!< Transfer from peripheral to memory */
+    kEDMA_MemoryToPeripheral,     /*!< Transfer from memory to peripheral */
+    kEDMA_PeripheralToPeripheral, /*!< Transfer from Peripheral to peripheral */
 } edma_transfer_type_t;
 
-/*! @brief eDMA transfer status */
-enum _edma_transfer_status
+/*! @brief _edma_transfer_status eDMA transfer status */
+enum
 {
     kStatus_EDMA_QueueFull = MAKE_STATUS(kStatusGroup_EDMA, 0), /*!< TCD queue is full. */
     kStatus_EDMA_Busy      = MAKE_STATUS(kStatusGroup_EDMA, 1), /*!< Channel is busy and can't handle the
@@ -444,7 +445,8 @@ static inline void EDMA_EnableAsyncRequest(DMA_Type *base, uint32_t channel, boo
 {
     assert(channel < (uint32_t)FSL_FEATURE_DMAMUX_MODULE_CHANNEL);
 
-    base->EARS = (base->EARS & (uint32_t)(~(1U << channel))) | ((true == enable ? 1U : 0U) << channel);
+    base->EARS &= ~((uint32_t)1U << channel);
+    base->EARS |= ((uint32_t)(true == enable ? 1U : 0U) << channel);
 }
 #endif /* FSL_FEATURE_EDMA_ASYNCHRO_REQUEST_CHANNEL_COUNT */
 
@@ -780,6 +782,34 @@ void EDMA_InstallTCDMemory(edma_handle_t *handle, edma_tcd_t *tcdPool, uint32_t 
  * @param userData A parameter for the callback function.
  */
 void EDMA_SetCallback(edma_handle_t *handle, edma_callback callback, void *userData);
+
+/*!
+ * @brief Prepares the eDMA transfer structure configurations.
+ *
+ * This function prepares the transfer configuration structure according to the user input.
+ *
+ * @param config The user configuration structure of type edma_transfer_t.
+ * @param srcAddr eDMA transfer source address.
+ * @param srcWidth eDMA transfer source address width(bytes).
+ * @param srcOffset source address offset.
+ * @param destAddr eDMA transfer destination address.
+ * @param destWidth eDMA transfer destination address width(bytes).
+ * @param destOffset destination address offset.
+ * @param bytesEachRequest eDMA transfer bytes per channel request.
+ * @param transferBytes eDMA transfer bytes to be transferred.
+ * @note The data address and the data width must be consistent. For example, if the SRC
+ *       is 4 bytes, the source address must be 4 bytes aligned, or it results in
+ *       source address error (SAE).
+ */
+void EDMA_PrepareTransferConfig(edma_transfer_config_t *config,
+                                void *srcAddr,
+                                uint32_t srcWidth,
+                                int16_t srcOffset,
+                                void *destAddr,
+                                uint32_t destWidth,
+                                int16_t destOffset,
+                                uint32_t bytesEachRequest,
+                                uint32_t transferBytes);
 
 /*!
  * @brief Prepares the eDMA transfer structure.
