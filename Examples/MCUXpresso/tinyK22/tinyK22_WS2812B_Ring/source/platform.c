@@ -24,6 +24,7 @@
 #endif
 #if PL_CONFIG_USE_RS485
   #include "rs485.h"
+  #include "rs485Uart.h"
 #endif
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
@@ -64,6 +65,7 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_RS485
   RS485_Init();
+  RS485Uart_Init();
 #endif
 #if PL_CONFIG_USE_SHELL_UART
   McuShellUart_Init();
