@@ -61,6 +61,8 @@ BOARD_InitPins:
   - {pin_num: '64', peripheral: GPIOD, signal: 'GPIO, 7', pin_signal: PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN, direction: OUTPUT}
   - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX}
   - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX}
+  - {pin_num: '40', peripheral: UART0, signal: TX, pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b}
+  - {pin_num: '39', peripheral: UART0, signal: RX, pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -73,6 +75,8 @@ BOARD_InitPins:
  * END ****************************************************************************************************************/
 void BOARD_InitPins(void)
 {
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port D Clock Gate Control: Clock enabled */
@@ -141,6 +145,12 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTD7 (pin 64)  */
     GPIO_PinInit(BOARD_INITPINS_LANE7_GPIO, BOARD_INITPINS_LANE7_PIN, &LANE7_config);
 
+    /* PORTB16 (pin 39) is configured as UART0_RX */
+    PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt3);
+
+    /* PORTB17 (pin 40) is configured as UART0_TX */
+    PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt3);
+
     /* PORTC2 (pin 45) is configured as PTC2 */
     PORT_SetPinMux(BOARD_INITPINS_LED_BLUE_PORT, BOARD_INITPINS_LED_BLUE_PIN, kPORT_MuxAsGpio);
 
@@ -173,6 +183,13 @@ void BOARD_InitPins(void)
 
     /* PORTD7 (pin 64) is configured as PTD7 */
     PORT_SetPinMux(BOARD_INITPINS_LANE7_PORT, BOARD_INITPINS_LANE7_PIN, kPORT_MuxAsGpio);
+
+    SIM->SOPT5 = ((SIM->SOPT5 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                  /* UART 0 transmit data source select: UART0_TX pin. */
+                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
 }
 /***********************************************************************************************************************
  * EOF

@@ -16,6 +16,8 @@
 #define PL_CONFIG_USE_SHELL               (1)  /* if using the Shell */
 #define PL_CONFIG_USE_USB_CDC             (0)
 
+#define PL_CONFIG_IS_CLIENT (1)
+
 void PL_Init(void);
 void PL_Deinit(void);
 
