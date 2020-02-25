@@ -14,6 +14,9 @@
 #include "leds.h"
 #include "fsl_pit.h"
 
+#define HOST_RX_QUEUE_LENGTH    (512)
+static QueueHandle_t hostRxQueue;
+
 #if 0 /* using Cortex cycle counter */
 static uint32_t prevCycleCounter, cycleCntCounter = 0;
 
@@ -98,5 +101,17 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
+  hostRxQueue = xQueueCreate(HOST_RX_QUEUE_LENGTH, sizeof(uint8_t));
+  if (hostRxQueue==NULL) {
+    for(;;){} /* out of memory? */
+  }
+  vQueueAddToRegistry(hostRxQueue, "HostRxQueue");
+
+  char ch;
+  ch = 'h';
+  xQueueSend(hostRxQueue, &ch, 0);
+  ch = 'e';
+  xQueueSend(hostRxQueue, &ch, 0);
+
   vTaskStartScheduler();
 }

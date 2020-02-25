@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -83,6 +83,7 @@ static void AppTask(void *pv) {
   int color = 0;
   uint8_t level;
 
+#if PL_CONFIG_USE_NEO_PIXEL
   NEO_ClearAllPixel();
   NEO_TransferPixels();
   //NEO_SetPixelRGB(0, 0, 0x00, 0xff, 0x00);
@@ -118,8 +119,9 @@ static void AppTask(void *pv) {
 
 //NEO_SetPixelRGB(0, 40+0+10, 0xff, 0, 0x00);
   //NEO_SetPixelRGB(0, 40+0+10+20, 0xff/8, 0, 0x00);
+#endif
  for(;;) {
-#if 0
+#if 0 && PL_CONFIG_USE_NEO_PIXEL
     //NEO_SetPixelRGB(0, 0, 0xff, 0x00, 0x00);
     //NEO_SetPixelRGB(0, 1, 0, 0xff, 0x00);
     //NEO_SetPixelRGB(0, 2, 0, 0x00, 0xff/4);
@@ -143,6 +145,7 @@ static void AppTask(void *pv) {
     }
 #endif
 
+#if PL_CONFIG_USE_NEO_PIXEL
     for(i=0, level=0x20; i<5; i++, level+=0xff/5) {
       NEO_ClearAllPixel();
       NEO_SetPixelRGB(0, NEO_POS_LOW_12, level, 0, 0);
@@ -200,8 +203,9 @@ static void AppTask(void *pv) {
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(2000));
 
-
+#endif
     McuLED_Toggle(tinyLED);
+
     vTaskDelay(pdMS_TO_TICKS(100));
     color++;
     if (color==3) {

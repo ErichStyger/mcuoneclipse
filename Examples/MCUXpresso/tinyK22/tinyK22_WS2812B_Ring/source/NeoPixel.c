@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
-#if PL_CONFIG_HAS_NEO_PIXEL
+#if PL_CONFIG_USE_NEO_PIXEL
 #include "NeoPixel.h"
 #include "McuWait.h"
 #include "McuUtility.h"

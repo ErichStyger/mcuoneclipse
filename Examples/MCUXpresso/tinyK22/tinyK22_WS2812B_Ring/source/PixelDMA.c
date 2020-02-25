@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
 
-#if PL_CONFIG_HAS_NEO_PIXEL
+#if PL_CONFIG_USE_NEO_PIXEL
 #include <stdint.h>
 #include <stddef.h>
 #include "fsl_ftm.h"
@@ -25,6 +25,7 @@
  * 0.90us for a 1
  * 1.25us Period
  * See https://mcuoneclipse.com/2015/08/05/tutorial-adafruit-ws2812b-neopixels-with-the-freescale-frdm-k64f-board-part-5-dma/
+ * It uses the 8bit port of GPIOD for the data, so 8bits in parallel.
  * */
 #define FTM_CH0_TICKS 0x10 /* go high, start bit */
 #define FTM_CH1_TICKS 0x25 /* data bit, go low for 0, stay high for 1 */
@@ -309,4 +310,4 @@ void PIXDMA_Init(void) {
   InitTimer(); /* timer setup */
   InitDMA();
 }
-#endif /* PL_CONFIG_HAS_NEO_PIXEL */
+#endif /* PL_CONFIG_USE_NEO_PIXEL */

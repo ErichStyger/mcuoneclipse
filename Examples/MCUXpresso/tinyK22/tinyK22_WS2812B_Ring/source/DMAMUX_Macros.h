@@ -1,8 +1,7 @@
 /*
- * DMAMUX_Macros.h
+ * Copyright (c) 2020, Erich Styger
  *
- *  Created on: 02.02.2020
- *      Author: Erich Styger Local
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef DMAMUX_MACROS_H_

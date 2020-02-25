@@ -58,7 +58,7 @@ int main(void) {
   __asan_init();
   arr[0] = *p;
   *p = 0;
-  for(;;) {}
+  //for(;;) {}
   //p = malloc(10);
   //p = malloc(100);
   //p = malloc(1024);

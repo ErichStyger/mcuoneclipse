@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -18,12 +18,23 @@
 #include "McuSystemView.h"
 #include "McuPercepio.h"
 #include "McuTimeout.h"
-#if PL_CONFIG_HAS_NEO_PIXEL
+#if PL_CONFIG_USE_NEO_PIXEL
   #include "NeoPixel.h"
   #include "PixelDMA.h"
 #endif
+#if PL_CONFIG_USE_RS485
+  #include "rs485.h"
+#endif
+#if PL_CONFIG_USE_SHELL
+  #include "Shell.h"
+#endif
 
 void PL_Init(void) {
+  /* initialize clocking */
+#if PL_CONFIG_USE_RS485
+  CLOCK_EnableClock(kCLOCK_PortB); /* EN for RS-485 */
+#endif
+
   /* initialize McuLib modules */
   McuLib_Init();
   McuWait_Init();
@@ -44,9 +55,15 @@ void PL_Init(void) {
 
   /* initialize application modules */
   LEDS_Init();
-#if PL_CONFIG_HAS_NEO_PIXEL
+#if PL_CONFIG_USE_NEO_PIXEL
   PIXDMA_Init();
   NEO_Init();
+#endif
+#if PL_CONFIG_USE_RS485
+  RS485_Init();
+#endif
+#if PL_CONFIG_USE_SHELL
+  SHELL_Init();
 #endif
 }
 

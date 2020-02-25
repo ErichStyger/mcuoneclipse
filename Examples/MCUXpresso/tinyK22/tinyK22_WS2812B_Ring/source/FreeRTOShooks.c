@@ -1,4 +1,9 @@
 /*
+ * Copyright (c) 2020, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+/*
  * FreeRTOShooks.c
  *
  *  This is a default FreeRTOS hooks file you can use in your application.
