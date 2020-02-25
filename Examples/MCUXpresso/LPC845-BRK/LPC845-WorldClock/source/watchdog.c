@@ -15,6 +15,8 @@
 #include "McuUtility.h"
 #include "Shell.h"
 
+#define WDT_DISABLED_FOR_DEBUG (0)  /* set to 1 for easier debugging */
+
 static uint16_t WDT_State = 0; /* additional watchdog protection with state variable */
 
 typedef struct {
@@ -27,12 +29,12 @@ typedef struct {
 #define WDT_HEALT_CHECK_TIME_SEC (2)  /* interval for checking health */
 
 static WDT_Reports WDT_ReportingBoundaries[WDT_REPORT_ID_NOF] = {
-    {.id=WDT_REPORT_ID_TASK_APP,   .str=(const unsigned char*)"AppTask",   .reportMsPerSec = 1000, .minPercent=80, .maxPercent=120},
+    {.id=WDT_REPORT_ID_TASK_APP,   .str=(const unsigned char*)"AppTask",   .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #if PL_CONFIG_USE_RS485
-    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"RS485Task", .reportMsPerSec = 1000,  .minPercent=80, .maxPercent=120},
+    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"RS485Task", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
   #if PL_CONFIG_USE_SHELL
-    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000,  .minPercent=80, .maxPercent=120},
+    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
 };
 
@@ -140,7 +142,11 @@ static void WDT_b(void) {
       __asm("nop");
     }
   }
+#if WDT_DISABLED_FOR_DEBUG
+  #warning "Watchdog is disabled!"
+#else
   WWDT_Refresh(WWDT);
+#endif
   if (WDT_State!=0x8888) {
     for(;;) { /* getting here in case of run-away code?!? */
       __asm("nop");
@@ -152,11 +158,6 @@ static void WDT_b(void) {
 static void WatchdogTask(void *pv) {
   uint32_t ms = 0;
 
-  /* init recordings */
-  for(int i=0; i<WDT_REPORT_ID_NOF; i++) {
-    WDT_Recordings[i].ms = 0;
-    WDT_Recordings[i].task = NULL;
-  }
   for(;;) {
     WDT_State = 0x5555;
     WDT_a();
@@ -175,6 +176,11 @@ void WDT_Init(void) {
   wwdt_config_t config;
   uint32_t wdtFreq;
 
+  /* init recordings */
+  for(int i=0; i<WDT_REPORT_ID_NOF; i++) {
+    WDT_Recordings[i].ms = 0;
+    WDT_Recordings[i].task = NULL;
+  }
   if (xTaskCreate(
       WatchdogTask,  /* pointer to the task */
       "Watchdog", /* task name for kernel awareness debugging */
@@ -214,8 +220,9 @@ void WDT_Init(void) {
    config.enableWatchdogReset = true;
    /* Setup watchdog clock frequency(Hz). */
    config.clockFreq_Hz = CLOCK_GetFreq(kCLOCK_WdtOsc);
+#if !WDT_DISABLED_FOR_DEBUG
    WWDT_Init(WWDT, &config);
-
+#endif
    NVIC_EnableIRQ(WDT_IRQn);
 }
 

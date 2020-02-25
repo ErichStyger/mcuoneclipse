@@ -415,7 +415,10 @@ static void AppTask(void *pv) {
 #endif
 #if PL_CONFIG_WORLD_CLOCK
   if (clockIsOn) {
-    vTaskDelay(pdMS_TO_TICKS(3000)); /* just some delay */
+    vTaskDelay(pdMS_TO_TICKS(2000)); /* just some delay */
+  #if PL_CONFIG_USE_WDT
+    WDT_Report(WDT_REPORT_ID_TASK_APP, 2000);
+  #endif
   }
 #endif
   for(;;) {
