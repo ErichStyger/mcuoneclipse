@@ -190,13 +190,11 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
       }
   }
 #endif
-#if 1
-  /* If new data arrived. */
+  /* new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
     count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
 	while(count!=0) {
 		data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-#if 1
 		if (data!=0) { /* could happen especially after power-up, ignore it */
 		  /* only store into RS485UartResponseQueue if we have a line starting with '@' */
 		  if (prevChar=='\n' && data=='@') {
@@ -211,24 +209,10 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
 		  }
 		  (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
 		}
-  	    if (data!=0) {
-		  McuRTT_SendChar(data);
-  	    } else {
-  		  McuRTT_SendChar('?');
-  	    }
- // 	    McuRTT_SendChar(':');
- // 	    McuRTT_SendChar('0'+rxCount);
-#else
-  	    if (data!=0) {
-		  McuRTT_SendChar(data);
-  	    } else {
-  		  McuRTT_SendChar('?');
-  	    }
-#endif
   	    count--;
 	}
   }
-#endif
+
   RS485Uart_CONFIG_CLEAR_STATUS_FLAGS(RS485Uart_CONFIG_UART_DEVICE, flags);
   if (xHigherPriorityTaskWoken1 != pdFALSE || xHigherPriorityTaskWoken2 != pdFALSE) {
     vPortYieldFromISR();
@@ -261,12 +245,8 @@ static void InitUart(void) {
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
 #endif
 #endif
-  UART_EnableRxFIFO(RS485Uart_CONFIG_UART_DEVICE, false);
+  UART_EnableRxFIFO(RS485Uart_CONFIG_UART_DEVICE, false); /* disable UART Rx FIFO */
   RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE,
-		  //kUART_FramingErrorFlag |
-		  //kUART_RxDataRegFullFlag |
-		  //kUART_RxOverrunFlag
-		  //kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable
 		  RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS
 		  );
   NVIC_SetPriority(RS485Uart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
