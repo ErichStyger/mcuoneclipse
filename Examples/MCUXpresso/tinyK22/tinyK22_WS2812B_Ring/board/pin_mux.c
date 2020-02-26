@@ -22,6 +22,9 @@ pin_labels:
 - {pin_num: '62', pin_signal: ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK, label: LANE5, identifier: LANE5}
 - {pin_num: '61', pin_signal: PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0, label: LANE4, identifier: LANE5;LANE4}
 - {pin_num: '60', pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/LPUART0_TX/I2C0_SDA, label: LANE3, identifier: LANE3}
+- {pin_num: '37', pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3, label: RS458_RTS}
+- {pin_num: '40', pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, label: RS485_TX}
+- {pin_num: '39', pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN, label: RS485_RX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -63,6 +66,7 @@ BOARD_InitPins:
   - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX}
   - {pin_num: '40', peripheral: UART0, signal: TX, pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b}
   - {pin_num: '39', peripheral: UART0, signal: RX, pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN}
+  - {pin_num: '37', peripheral: UART0, signal: RTS, pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -150,6 +154,9 @@ void BOARD_InitPins(void)
 
     /* PORTB17 (pin 40) is configured as UART0_TX */
     PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt3);
+
+    /* PORTB2 (pin 37) is configured as UART0_RTS_b */
+    PORT_SetPinMux(PORTB, 2U, kPORT_MuxAlt3);
 
     /* PORTC2 (pin 45) is configured as PTC2 */
     PORT_SetPinMux(BOARD_INITPINS_LED_BLUE_PORT, BOARD_INITPINS_LED_BLUE_PIN, kPORT_MuxAsGpio);

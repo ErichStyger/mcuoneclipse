@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.107, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-11-12, 11:56, # CodeGen: 591
+**     Date/Time   : 2019-12-21, 16:19, # CodeGen: 594
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -31,40 +31,42 @@
 **          History                                        : no
 **          Kinetis SDK                                    : McuLib
 **     Contents    :
-**         PrintPrompt                  - void McuShell_PrintPrompt(McuShell_ConstStdIOType *io);
-**         SendNum8u                    - void McuShell_SendNum8u(uint8_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendNum8s                    - void McuShell_SendNum8s(int8_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendNum16u                   - void McuShell_SendNum16u(uint16_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendNum16s                   - void McuShell_SendNum16s(int16_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendNum32u                   - void McuShell_SendNum32u(uint32_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendNum32s                   - void McuShell_SendNum32s(int32_t val, McuShell_StdIO_OutErr_FctType io);
-**         SendCh                       - void McuShell_SendCh(uint8_t ch, McuShell_StdIO_OutErr_FctType io);
-**         SendStr                      - void McuShell_SendStr(const uint8_t *str, McuShell_StdIO_OutErr_FctType io);
-**         PrintMemory                  - uint8_t McuShell_PrintMemory(void *hndl, uint32_t startAddr, uint32_t...
-**         printfIO                     - unsigned McuShell_printfIO(McuShell_ConstStdIOType *io, const char *fmt, ...);
-**         printf                       - unsigned McuShell_printf(const char *fmt, ...);
-**         SendData                     - void McuShell_SendData(const uint8_t *data, uint16_t dataSize,...
-**         PrintStatus                  - uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io);
-**         ParseCommand                 - uint8_t McuShell_ParseCommand(const uint8_t *cmd, bool *handled,...
-**         IsHistoryCharacter           - bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t...
-**         ReadLine                     - bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
-**         PrintCommandFailed           - void McuShell_PrintCommandFailed(const uint8_t *cmd, McuShell_ConstStdIOType...
-**         IterateTable                 - uint8_t McuShell_IterateTable(const uint8_t *cmd, bool *handled,...
-**         SetStdio                     - uint8_t McuShell_SetStdio(McuShell_ConstStdIOTypePtr stdio);
-**         GetStdio                     - McuShell_ConstStdIOTypePtr McuShell_GetStdio(void);
-**         RequestSerial                - void McuShell_RequestSerial(void);
-**         ReleaseSerial                - void McuShell_ReleaseSerial(void);
-**         ReadAndParseWithCommandTable - uint8_t McuShell_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t...
-**         ParseWithCommandTable        - uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd,...
-**         GetSemaphore                 - void* McuShell_GetSemaphore(void);
-**         SendStatusStr                - void McuShell_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
-**         SendHelpStr                  - void McuShell_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
-**         ReadChar                     - void McuShell_ReadChar(uint8_t *c);
-**         SendChar                     - void McuShell_SendChar(uint8_t ch);
-**         KeyPressed                   - bool McuShell_KeyPressed(void);
-**         SendCharFct                  - void McuShell_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
-**         Init                         - void McuShell_Init(void);
-**         Deinit                       - void McuShell_Deinit(void);
+**         PrintPrompt                     - void McuShell_PrintPrompt(McuShell_ConstStdIOType *io);
+**         SendNum8u                       - void McuShell_SendNum8u(uint8_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendNum8s                       - void McuShell_SendNum8s(int8_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendNum16u                      - void McuShell_SendNum16u(uint16_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendNum16s                      - void McuShell_SendNum16s(int16_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendNum32u                      - void McuShell_SendNum32u(uint32_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendNum32s                      - void McuShell_SendNum32s(int32_t val, McuShell_StdIO_OutErr_FctType io);
+**         SendCh                          - void McuShell_SendCh(uint8_t ch, McuShell_StdIO_OutErr_FctType io);
+**         SendStr                         - void McuShell_SendStr(const uint8_t *str, McuShell_StdIO_OutErr_FctType io);
+**         PrintMemory                     - uint8_t McuShell_PrintMemory(void *hndl, uint32_t startAddr, uint32_t...
+**         printfIO                        - unsigned McuShell_printfIO(McuShell_ConstStdIOType *io, const char *fmt, ...);
+**         printf                          - unsigned McuShell_printf(const char *fmt, ...);
+**         SendData                        - void McuShell_SendData(const uint8_t *data, uint16_t dataSize,...
+**         PrintStatus                     - uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io);
+**         ParseCommand                    - uint8_t McuShell_ParseCommand(const uint8_t *cmd, bool *handled,...
+**         IsHistoryCharacter              - bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t...
+**         ReadLine                        - bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
+**         PrintCommandFailed              - void McuShell_PrintCommandFailed(const uint8_t *cmd, McuShell_ConstStdIOType...
+**         IterateTable                    - uint8_t McuShell_IterateTable(const uint8_t *cmd, bool *handled,...
+**         SetStdio                        - uint8_t McuShell_SetStdio(McuShell_ConstStdIOTypePtr stdio);
+**         GetStdio                        - McuShell_ConstStdIOTypePtr McuShell_GetStdio(void);
+**         RequestSerial                   - void McuShell_RequestSerial(void);
+**         ReleaseSerial                   - void McuShell_ReleaseSerial(void);
+**         ReadAndParseWithCommandTableExt - uint8_t McuShell_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t...
+**         ReadAndParseWithCommandTable    - uint8_t McuShell_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t...
+**         ParseWithCommandTableExt        - uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd,...
+**         ParseWithCommandTable           - uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd,...
+**         GetSemaphore                    - void* McuShell_GetSemaphore(void);
+**         SendStatusStr                   - void McuShell_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
+**         SendHelpStr                     - void McuShell_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
+**         ReadChar                        - void McuShell_ReadChar(uint8_t *c);
+**         SendChar                        - void McuShell_SendChar(uint8_t ch);
+**         KeyPressed                      - bool McuShell_KeyPressed(void);
+**         SendCharFct                     - void McuShell_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
+**         Init                            - void McuShell_Init(void);
+**         Deinit                          - void McuShell_Deinit(void);
 **
 ** * Copyright (c) 2014-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
@@ -695,7 +697,7 @@ uint8_t McuShell_IterateTable(const uint8_t *cmd, bool *handled, McuShell_ConstS
 
 /*
 ** ===================================================================
-**     Method      :  ParseWithCommandTable (component Shell)
+**     Method      :  ParseWithCommandTableExt (component Shell)
 **
 **     Description :
 **         Parses a shell command. It handles first the internal
@@ -707,16 +709,18 @@ uint8_t McuShell_IterateTable(const uint8_t *cmd, bool *handled, McuShell_ConstS
 **       * parseCallback   - Pointer to callback
 **                           which will be called to parse commands in
 **                           the user application, or NULL if not used.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
 */
-uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOType *io, McuShell_ConstParseCommandCallback *parseCallback)
+uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdIOType *io, McuShell_ConstParseCommandCallback *parseCallback, bool silent)
 {
   uint8_t res = ERR_OK;
   bool handled;
 #if McuShell_SILENT_PREFIX_CHAR_ENABLED
-  bool silent = FALSE;
+  bool silentPrefix = FALSE;
 #endif
 #if McuShell_CONFIG_MULTI_CMD_ENABLED
   uint8_t buf[McuShell_CONFIG_MULTI_CMD_SIZE];
@@ -743,7 +747,7 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
     cmd++; i++;
   #if McuShell_SILENT_PREFIX_CHAR_ENABLED
     if (i==1 && buf[0]==McuShell_SILENT_PREFIX_CHAR) { /* first character is silent character */
-      silent |= (bool)(buf[0]==McuShell_SILENT_PREFIX_CHAR);
+      silentPrefix |= (bool)(buf[0]==McuShell_SILENT_PREFIX_CHAR);
       buf[0] = *cmd; /* skip silent character */
       cmd++;
     }
@@ -771,8 +775,8 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
   } /* for */
 #else
   #if McuShell_SILENT_PREFIX_CHAR_ENABLED
-  silent = (bool)(*cmd==McuShell_SILENT_PREFIX_CHAR);
-  if (silent) {
+  silentPrefix = (bool)(*cmd==McuShell_SILENT_PREFIX_CHAR);
+  if (silentPrefix) {
     cmd++; /* skip silent character */
   }
   #endif
@@ -784,13 +788,38 @@ uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOTy
   }
 #endif
 #if McuShell_SILENT_PREFIX_CHAR_ENABLED
-  if (!silent) {
+  if (!silentPrefix && !silent) {
     McuShell_PrintPrompt(io);
   }
 #else
-  McuShell_PrintPrompt(io);
+  if (!silent) {
+    McuShell_PrintPrompt(io);
+  }
 #endif
   return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  ParseWithCommandTable (component Shell)
+**
+**     Description :
+**         Parses a shell command. It handles first the internal
+**         commands and will call the provided callback.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * io              - Pointer to I/O callbacks
+**       * parseCallback   - Pointer to callback
+**                           which will be called to parse commands in
+**                           the user application, or NULL if not used.
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd, McuShell_ConstStdIOType *io, McuShell_ConstParseCommandCallback *parseCallback)
+{
+  return McuShell_ParseWithCommandTableExt(cmd, io, parseCallback, FALSE);
 }
 
 /*
@@ -831,6 +860,65 @@ McuShell_ConstStdIOTypePtr McuShell_GetStdio(void)
 
 /*
 ** ===================================================================
+**     Method      :  ReadAndParseWithCommandTableExt (component Shell)
+**
+**     Description :
+**         Reads characters from the default input channel and appends
+**         it to the buffer. Once a new line has been detected, the
+**         line will be parsed using the handlers in the table.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**       * parseCallback   - Pointer to callback
+**                           table provided by the user application to
+**                           parse commands. The table has a NULL
+**                           sentinel.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuShell_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t cmdBufSize, McuShell_ConstStdIOType *io, McuShell_ConstParseCommandCallback *parseCallback, bool silent)
+{
+  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
+  uint8_t res = ERR_OK;
+  size_t len;
+
+  if (io==NULL) { /* no I/O handler? */
+    return ERR_FAILED;
+  }
+  len = McuUtility_strlen((const char*)cmdBuf);
+  if (McuShell_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
+    len = McuUtility_strlen((const char*)cmdBuf); /* length of buffer string */
+    if (len==0) { /* error case */
+      return ERR_FAILED;
+    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
+      cmdBuf[0] = '\0';
+    }
+    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
+      (void)McuShell_ParseWithCommandTableExt(cmdBuf, io, parseCallback, silent);
+      cmdBuf[0] = '\0'; /* start again */
+      res = ERR_OVERFLOW;
+    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
+      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
+      res = McuShell_ParseWithCommandTableExt(cmdBuf, io, parseCallback, silent);
+      cmdBuf[0] = '\0';                /* start again */
+    } else {
+      /* continue to append to buffer */
+    }
+  }
+  return res;
+}
+
+/*
+** ===================================================================
 **     Method      :  ReadAndParseWithCommandTable (component Shell)
 **
 **     Description :
@@ -856,34 +944,7 @@ McuShell_ConstStdIOTypePtr McuShell_GetStdio(void)
 */
 uint8_t McuShell_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, McuShell_ConstStdIOType *io, McuShell_ConstParseCommandCallback *parseCallback)
 {
-  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
-  uint8_t res = ERR_OK;
-  size_t len;
-
-  if (io==NULL) { /* no I/O handler? */
-    return ERR_FAILED;
-  }
-  len = McuUtility_strlen((const char*)cmdBuf);
-  if (McuShell_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
-    len = McuUtility_strlen((const char*)cmdBuf); /* length of buffer string */
-    if (len==0) { /* error case */
-      return ERR_FAILED;
-    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
-      cmdBuf[0] = '\0';
-    }
-    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
-      (void)McuShell_ParseWithCommandTable(cmdBuf, io, parseCallback);
-      cmdBuf[0] = '\0'; /* start again */
-      res = ERR_OVERFLOW;
-    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
-      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
-      res = McuShell_ParseWithCommandTable(cmdBuf, io, parseCallback);
-      cmdBuf[0] = '\0';                /* start again */
-    } else {
-      /* continue to append to buffer */
-    }
-  }
-  return res;
+  return McuShell_ReadAndParseWithCommandTableExt(cmdBuf, cmdBufSize, io, parseCallback, FALSE);
 }
 
 /*

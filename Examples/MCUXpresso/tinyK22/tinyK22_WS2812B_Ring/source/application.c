@@ -16,6 +16,12 @@
 #include "fsl_pit.h"
 #include "NeoPixel.h"
 
+#if PL_CONFIG_USE_SHELL
+uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  return ERR_OK;
+}
+#endif
+
 #if 0 /* using Cortex cycle counter */
 static uint32_t prevCycleCounter, cycleCntCounter = 0;
 

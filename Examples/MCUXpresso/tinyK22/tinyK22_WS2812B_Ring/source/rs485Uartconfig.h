@@ -9,7 +9,7 @@
 
 #include "platform.h"
 
-#define RS485Uart_CONFIG_USE_HW_OE_RTS  (0)  /* 1: Use LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
+#define RS485Uart_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
 
 /* UART configuration items */
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */

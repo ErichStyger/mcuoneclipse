@@ -4013,7 +4013,7 @@ char* McuRTOS_pcTimerGetTimerName(TimerHandle_t xTimer)
 **                           structure. 
 **         ulParameter2    - The value of the
 **                           callback function's second parameter. 
-**         xTicksToWait    -  	Calling this function
+**         xTicksToWait    -    Calling this function
 **                           will result in a message being sent to the
 **                           timer daemon task on a queue. xTicksToWait
 **                           is the amount of time the calling task
@@ -4072,7 +4072,7 @@ BaseType_t McuRTOS_xTimerPendFunctionCall(PendedFunction_t xFunctionToPend, void
 **                           execute from the timer service/ daemon task.
 **                           The function must conform to the
 **                           PendedFunction_t prototype as shown above. 
-**       * pvParameter1    -  	The value of the
+**       * pvParameter1    -    The value of the
 **                           callback function's first parameter. The
 **                           parameter has a void * type to allow it to
 **                           be used to pass any type. For example,
@@ -4333,10 +4333,10 @@ void McuRTOS_vTaskNotifyGiveFromISR(TaskHandle_t xTaskToNotify, BaseType_t *pxHi
 **                           one of the values documented in the table
 **                           below in order to perform the associated
 **                           action. 
-**                           - eNoAction: 	The subject task receives the
+**                           - eNoAction:   The subject task receives the
 **                           event, but its notification value is not
 **                           updated. In this case ulValue is not used.
-**                           - eSetBits: 	The notification value of the
+**                           - eSetBits:  The notification value of the
 **                           subject task will be bitwise ORed with
 **                           ulValue. For example, if ulValue is set to
 **                           0x01, then bit 0 will get set within the
@@ -4346,18 +4346,18 @@ void McuRTOS_vTaskNotifyGiveFromISR(TaskHandle_t xTaskToNotify, BaseType_t *pxHi
 **                           In this way the RTOS task notification
 **                           mechanism can be used as a light weight
 **                           alternative to an event group.
-**                           - eIncrement: 	The notification value of
+**                           - eIncrement:  The notification value of
 **                           the subject task will be incremented by one,
 **                           making the call to xTaskNotify() equivalent
 **                           to a call to xTaskNotifyGive(). In this
 **                           case ulValue is not used.
-**                           - eSetValueWithOverwrite: 	The notification
+**                           - eSetValueWithOverwrite:  The notification
 **                           value of the subject task is
 **                           unconditionally set to ulValue. In this way
 **                           the RTOS task notification mechanism is
 **                           being used as a light weight alternative to
 **                           xQueueOverwrite().
-**                           - eSetValueWithoutOverwrite: 	If the
+**                           - eSetValueWithoutOverwrite:   If the
 **                           subject task does not already have a
 **                           notification pending then its notification
 **                           value will be set to ulValue. If the
@@ -4426,10 +4426,10 @@ BaseType_t McuRTOS_xTaskNotify(TaskHandle_t xTaskToNotify, uint32_t ulValue, eNo
 **                           one of the values documented in the table
 **                           below in order to perform the associated
 **                           action. 
-**                           - eNoAction: 	The subject task receives the
+**                           - eNoAction:   The subject task receives the
 **                           event, but its notification value is not
 **                           updated. In this case ulValue is not used.
-**                           - eSetBits: 	The notification value of the
+**                           - eSetBits:  The notification value of the
 **                           subject task will be bitwise ORed with
 **                           ulValue. For example, if ulValue is set to
 **                           0x01, then bit 0 will get set within the
@@ -4439,18 +4439,18 @@ BaseType_t McuRTOS_xTaskNotify(TaskHandle_t xTaskToNotify, uint32_t ulValue, eNo
 **                           In this way the RTOS task notification
 **                           mechanism can be used as a light weight
 **                           alternative to an event group.
-**                           - eIncrement: 	The notification value of
+**                           - eIncrement:  The notification value of
 **                           the subject task will be incremented by one,
 **                           making the call to xTaskNotify() equivalent
 **                           to a call to xTaskNotifyGive(). In this
 **                           case ulValue is not used.
-**                           - eSetValueWithOverwrite: 	The notification
+**                           - eSetValueWithOverwrite:  The notification
 **                           value of the subject task is
 **                           unconditionally set to ulValue. In this way
 **                           the RTOS task notification mechanism is
 **                           being used as a light weight alternative to
 **                           xQueueOverwrite().
-**                           - eSetValueWithoutOverwrite: 	If the
+**                           - eSetValueWithoutOverwrite:   If the
 **                           subject task does not already have a
 **                           notification pending then its notification
 **                           value will be set to ulValue. If the
