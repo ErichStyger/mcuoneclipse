@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -43,7 +43,9 @@
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
 #endif
-#include "nvmc.h"
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
 #include "application.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =

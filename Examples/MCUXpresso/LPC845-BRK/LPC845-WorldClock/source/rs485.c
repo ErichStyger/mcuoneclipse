@@ -12,9 +12,11 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "Shell.h"
-#include "nvmc.h"
 #include "McuWait.h"
-#if PL_CONFIG_IS_CLIENT
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
+#if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
   #include "Stepper.h"
 #endif
 #if PL_CONFIG_USE_WDT
@@ -29,7 +31,11 @@ typedef enum {
 } RS485_Response_e;
 
 uint8_t RS485_GetAddress(void) {
+#if PL_CONFIG_USE_NVMC
   return NVMC_GetRS485Addr();
+#else
+  return 2; /* just a valid address and not the broadcast one (0) */
+#endif
 }
 
 static void RS485_SendChar(unsigned char ch) {
@@ -294,7 +300,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rs", (unsigned char*)"Group of RS-458 commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+#if PL_CONFIG_USE_NVMC
   McuShell_SendHelpStr((unsigned char*)"  addr <addr>", (unsigned char*)"Set RS-485 address\r\n", io->stdOut);
+#endif
   McuShell_SendHelpStr((unsigned char*)"  send <text>", (unsigned char*)"Send a text to the RS-485 bus\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  sendcmd <addr> <cmd>", (unsigned char*)"Send a shell command to the RS-485 address and check response\r\n", io->stdOut);
   return ERR_OK;
@@ -303,7 +311,6 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
   int32_t val;
-  NVMC_Data_t data;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "rs help")==0) {
     *handled = TRUE;
@@ -311,7 +318,9 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "rs status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+#if PL_CONFIG_USE_NVMC
   } else if (McuUtility_strncmp((char*)cmd, "rs addr ", sizeof("rs addr ")-1)==0) {
+    NVMC_Data_t data;
     *handled = true;
     if (NVMC_IsErased()) {
       McuShell_SendStr((unsigned char*)"FLASH is erased, initialize it first!\r\n", io->stdErr);
@@ -324,6 +333,7 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       return NVMC_WriteConfig(&data);
     }
     return ERR_FAILED;
+#endif
   } else if (McuUtility_strncmp((char*)cmd, "rs send ", sizeof("rs send ")-1)==0) {
     *handled = true;
     RS485_SendStr((unsigned char*)cmd+sizeof("rs send ")-1);

@@ -29,7 +29,7 @@
  */
  
 /**
- * @file    LPC845_StepperClock.c
+ * @file    main.c
  * @brief   Application entry point.
  */
 #include <stdio.h>

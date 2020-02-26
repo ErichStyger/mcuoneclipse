@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -104,7 +104,7 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
       vPortYieldFromISR();
     }
   }
-  USART_ClearStatusFlags(RS485Uart_CONFIG_UART_DEVICE, flags);
+  RS485Uart_CONFIG_CLEAR_STATUS_FLAGS(RS485Uart_CONFIG_UART_DEVICE, flags);
   __DSB();
 }
 

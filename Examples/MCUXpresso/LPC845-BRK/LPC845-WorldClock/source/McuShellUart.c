@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -57,7 +57,7 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
       vPortYieldFromISR();
     }
   }
-  USART_ClearStatusFlags(McuShellUart_CONFIG_UART_DEVICE, flags);
+  McuShellUART_CONFIG_CLEAR_STATUS_FLAGS(McuShellUart_CONFIG_UART_DEVICE, flags);
   __DSB();
 }
 

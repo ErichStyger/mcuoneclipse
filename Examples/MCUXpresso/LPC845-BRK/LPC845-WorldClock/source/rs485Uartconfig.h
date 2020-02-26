@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,7 +9,7 @@
 
 #include "platform.h"
 
-#define RS485Uart_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
+#define RS485Uart_CONFIG_USE_HW_OE_RTS  (0)  /* 1: Use LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
 
 /* UART configuration items */
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
@@ -44,8 +44,11 @@
   #define RS485Uart_CONFIG_UART_INIT                     USART_Init
   #define RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define RS485Uart_CONFIG_UART_IRQ_HANDLER              USART1_IRQHandler
+  #define RS485Uart_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #endif
-#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FX512 */
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+
+#if 0 /* K22FX512 */
   #include "fsl_uart.h"
   #define RS485Uart_CONFIG_UART_DEVICE                   UART0
   #define RS485Uart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
@@ -61,6 +64,26 @@
   #define RS485Uart_CONFIG_UART_INIT                     UART_Init
   #define RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define RS485Uart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+  #define RS485Uart_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+#elif 1 /* K22FN512 */
+  #include "fsl_uart.h"
+  #define RS485Uart_CONFIG_UART_DEVICE                   UART0
+  #define RS485Uart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+  #define RS485Uart_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
+  #define RS485Uart_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
+  #define RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
+  #define RS485Uart_CONFIG_UART_READ_BYTE                UART_ReadByte
+  #define RS485Uart_CONFIG_UART_CONFIG_STRUCT            uart_config_t
+  #define RS485Uart_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
+  #define RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
+  #define RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
+  #define RS485Uart_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
+  #define RS485Uart_CONFIG_UART_INIT                     UART_Init
+  #define RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_PllFllSelClk
+  #define RS485Uart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+  #define RS485Uart_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+#endif
+
 #else
   /* you have to put your config here */
 #endif
