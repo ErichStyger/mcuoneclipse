@@ -358,7 +358,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   NULL /* Sentinel */
 };
 
-static uint8_t cmdBuf[McuShell_DEFAULT_SHELL_BUFFER_SIZE*3]; /* to print longer lines */
+static uint8_t cmdBuf[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* command line from the RS-485 bus */
 
 static void RS485Task(void *pv) {
   (void)pv; /* not used */

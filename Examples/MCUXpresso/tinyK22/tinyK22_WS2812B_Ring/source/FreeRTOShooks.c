@@ -13,6 +13,10 @@
 #include "McuLibconfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "platform.h"
+#if PL_CONFIG_USE_RTC
+  #include "McuTimeDate.h"
+#endif
 #include "McuTimeout.h"
 
 /*
@@ -99,6 +103,9 @@ void McuRTOS_vApplicationTickHook(void)
     McuTimeout_AddTick();
     cntr = 0;
   }
+#if PL_CONFIG_USE_RTC
+  McuTimeDate_AddTick();
+#endif
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,6 +12,7 @@
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "McuArmTools.h"
+#include "McuTimeout.h"
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "McuSystemView.h"
 #endif
@@ -75,6 +76,10 @@
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
 #endif
+#if PL_CONFIG_USE_NEO_PIXEL
+  #include "NeoPixel.h"
+  #include "PixelDMA.h"
+#endif
 
 void PL_InitFromTask(void) {
 #if PL_CONFIG_USE_RTC && PL_CONFIG_USE_HW_I2C
@@ -84,10 +89,15 @@ void PL_InitFromTask(void) {
 
 void PL_Init(void) {
   /* SDK */
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0 (PIO0_19): used LED */
   GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1, used by motor driver signals */
-
-  /* McuLib modules: */
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+  #if PL_CONFIG_USE_RS485
+  CLOCK_EnableClock(kCLOCK_PortB); /* EN for RS-485 */
+  #endif
+#endif
+  /* McuLib modules */
   McuLib_Init();
   McuRTOS_Init();
   McuArmTools_Init();
@@ -98,11 +108,12 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif
-#if PL_CONFIG_USE_SHELL_UART
-  McuShellUart_Init();
-#endif
+  McuTimeout_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
+#elif configUSE_PERCEPIO_TRACE_HOOKS
+  McuPercepio_Startup();
+  //vTraceEnable(TRC_START);
 #endif
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
@@ -127,6 +138,9 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_BUTTON
   BTN_Init();
 #endif
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
+#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
@@ -150,5 +164,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_WDT
   WDT_Init();
+#endif
+#if PL_CONFIG_USE_NEO_PIXEL
+  PIXDMA_Init();
+  NEO_Init();
 #endif
 }

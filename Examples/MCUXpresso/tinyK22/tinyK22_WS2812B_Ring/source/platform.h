@@ -41,6 +41,9 @@
 #define PL_CONFIG_USE_EXT_EEPROM    (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
 #define PL_CONFIG_USE_MATRIX        (0 && PL_CONFIG_IS_MASTER && PL_CONFIG_USE_RS485)
 
+
+#define PL_CONFIG_USE_NEO_PIXEL     (0)
+
 /* NYI or not applicable */
 #define PL_CONFIG_USE_KBI           (0)
 #define PL_CONFIG_USE_GUI           (0)
@@ -48,8 +51,7 @@
 #define PL_CONFIG_USE_USB_CDC       (0) /* not supported on LPC845 */
 #define PL_CONFIG_USE_I2C_SPY       (0 && PL_CONFIG_USE_I2C) /* using shell component to scan I2C bus */
 
-
+void PL_InitFromTask(void);
 void PL_Init(void);
-void PL_Deinit(void);
 
 #endif /* PLATFORM_H_ */

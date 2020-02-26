@@ -10,8 +10,6 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 
-#include "McuRTT.h"
-
 #if !RS485Uart_CONFIG_USE_HW_OE_RTS
 #include "McuGPIO.h"
 
@@ -115,15 +113,6 @@ McuShell_ConstStdIOType RS485Uart_stdio = {
 
 uint8_t RS485Uart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
-#if 0
-static void RTT_Send(const char *str) {
-	while(*str!='\0') {
-		McuRTT_SendChar(*str);
-		str++;
-	}
-}
-#endif
-
 void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
@@ -133,63 +122,7 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t count;
 
   flags = RS485Uart_CONFIG_UART_GET_FLAGS(RS485Uart_CONFIG_UART_DEVICE);
-#if 0
-  /* error handling */
-  if (flags&kUART_FramingErrorFlag) {
-      /* Read base->D to clear framing error flag, otherwise the RX does not work. */
-      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U) {
-          (void)RS485Uart_CONFIG_UART_DEVICE->D;
-      }
-      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
-      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
-      RTT_Send("FrmOvr");
-  }
-  /* If RX parity error */
-  if (flags&kUART_ParityErrorFlag) {
-      /* Read base->D to clear parity error flag, otherwise the RX does not work. */
-      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U) {
-        (void)RS485Uart_CONFIG_UART_DEVICE->D;
-      }
-      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
-      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
-      RTT_Send("parity");
-  }
-  /* If RX overrun. */
-  if (flags&kUART_RxOverrunFlag)  {
-      /* Read base->D to clear overrun flag, otherwise the RX does not work. */
-      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U)
-      {
-          (void)RS485Uart_CONFIG_UART_DEVICE->D;
-      }
-      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
-      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
-      RTT_Send("RxOvr");
-  }
-  /* If IDLE line was detected. */
-  if ((flags&kUART_IdleLineFlag) && ((UART_C2_ILIE_MASK & RS485Uart_CONFIG_UART_DEVICE->C2) != 0U)) {
-      RTT_Send("Idle");
-  }
 
-  if (flags&kUART_FramingErrorFlag) {
-      RTT_Send("Framing");
-  }
-  if ((flags&kUART_TxDataRegEmptyFlag)) {
-    //  RTT_Send("TxEmpty");
-  }
-#endif
-
-#if 0
-  /* Receive data register full */
-  if ((flags&kUART_RxDataRegFullFlag) && ((UART_C2_RIE_MASK & RS485Uart_CONFIG_UART_DEVICE->C2) != 0U))
-  {
-	  count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
-      while (count != 0U) {
-    	  data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-    	  count--;
-    	  McuRTT_SendChar(data);
-      }
-  }
-#endif
   /* new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
     count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
@@ -231,19 +164,18 @@ static void InitUart(void) {
   config.enableTx     = true;
   config.enableRxRTS  = true; /* using RTS pin to control the transceiver */
   config.enableTxCTS  = false;
-  //config.rxFifoWatermark = 4; /* up to 8 for UART0 */
 
   /* Initialize the USART with configuration. */
   RS485Uart_CONFIG_UART_INIT(RS485Uart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
 #if RS485Uart_CONFIG_USE_HW_OE_RTS
-#if McuLib_CONFIG_CPU_IS_KINETIS /* Kinetis K22FN512 */
+  #if McuLib_CONFIG_CPU_IS_KINETIS /* Kinetis K22FN512 */
   RS485Uart_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSPOL(1); /* TXRTSPOL: 1: transmitter RTS polarity is active high */
   RS485Uart_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSE(1);   /* TXRTSE: Transmitter request-to-send enable, 1: RTS asserted before start bit is transmitted and deasserted after stop bit */
-#elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+  #elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OESEL(1); /* if enabled, use RTS signal for RS-485 transceiver */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OEPOL(1); /* 1: the output enable signal is high active */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
-#endif
+  #endif
 #endif
   UART_EnableRxFIFO(RS485Uart_CONFIG_UART_DEVICE, false); /* disable UART Rx FIFO */
   RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE,

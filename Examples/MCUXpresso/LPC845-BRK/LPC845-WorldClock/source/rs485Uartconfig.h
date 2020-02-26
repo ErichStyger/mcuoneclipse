@@ -9,7 +9,7 @@
 
 #include "platform.h"
 
-#define RS485Uart_CONFIG_USE_HW_OE_RTS  (0)  /* 1: Use LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
+#define RS485Uart_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
 
 /* UART configuration items */
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
@@ -29,6 +29,7 @@
   #define RS485Uart_CONFIG_UART_INIT                     USART_Init
   #define RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define RS485Uart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
+  #define RS485Uart_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif PL_CONFIG_IS_MASTER
   #define RS485Uart_CONFIG_UART_DEVICE                   USART1
   #define RS485Uart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_Select(kUART1_Clk_From_MainClk) /* Select the main clock as source clock of USART0. */

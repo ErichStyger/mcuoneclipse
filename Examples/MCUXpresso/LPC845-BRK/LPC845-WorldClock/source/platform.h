@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -40,6 +40,8 @@
 #define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_RTC && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
 #define PL_CONFIG_USE_EXT_EEPROM    (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
 #define PL_CONFIG_USE_MATRIX        (1 && PL_CONFIG_IS_MASTER && PL_CONFIG_USE_RS485)
+
+#define PL_CONFIG_USE_NEO_PIXEL     (0)
 
 /* NYI or not applicable */
 #define PL_CONFIG_USE_KBI           (0)

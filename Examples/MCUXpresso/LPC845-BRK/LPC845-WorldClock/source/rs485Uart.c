@@ -10,6 +10,44 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 
+#if !RS485Uart_CONFIG_USE_HW_OE_RTS
+#include "McuGPIO.h"
+
+/* RTS pin to enable Tx mode on transceiver (HIGH active) */
+#define RS485_TX_EN_GPIO       GPIOC
+#define RS485_TX_EN_PORT       PORTC
+#define RS485_TX_EN_PIN        2U
+
+static McuGPIO_Handle_t RS485_TxEn;
+
+void RS485Uart_GPIO_RxEnable(void) {
+  McuGPIO_SetLow(RS485_TxEn);
+}
+
+void RS485Uart_GPIO_TxEnable(void) {
+  McuGPIO_SetHigh(RS485_TxEn);
+}
+
+static void RS485Uart_GPIO_Deinit(void) {
+  RS485_TxEn = McuGPIO_DeinitGPIO(RS485_TxEn);
+}
+
+static void RS485Uart_GPIO_Init(void) {
+  McuGPIO_Config_t config;
+
+  McuGPIO_GetDefaultConfig(&config);
+
+  config.hw.gpio  = RS485_TX_EN_GPIO;
+  config.hw.port  = RS485_TX_EN_PORT;
+  config.hw.pin   = RS485_TX_EN_PIN;
+  config.isInput = false;
+  config.isHighOnInit = false; /* Tx disabled */
+  RS485_TxEn = McuGPIO_InitGPIO(&config);
+
+  RS485_GPIO_RxEnable();
+}
+#endif /* RS485Uart_CONFIG_USE_HW_OE_RTS */
+
 static QueueHandle_t RS485UartRxQueue; /* queue for the shell */
 static QueueHandle_t RS485UartResponseQueue; /* queue for the OK or NOK response */
 
@@ -83,7 +121,7 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   static bool responseLine = false;
 
   flags = RS485Uart_CONFIG_UART_GET_FLAGS(RS485Uart_CONFIG_UART_DEVICE);
-  /* If new data arrived. */
+  /* new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
     data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
 
@@ -121,12 +159,19 @@ static void InitUart(void) {
   /* Initialize the USART with configuration. */
   RS485Uart_CONFIG_UART_INIT(RS485Uart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
 #if RS485Uart_CONFIG_USE_HW_OE_RTS
+  #if McuLib_CONFIG_CPU_IS_KINETIS /* Kinetis K22FN512 */
+  RS485Uart_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSPOL(1); /* TXRTSPOL: 1: transmitter RTS polarity is active high */
+  RS485Uart_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSE(1);   /* TXRTSE: Transmitter request-to-send enable, 1: RTS asserted before start bit is transmitted and deasserted after stop bit */
+  #elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OESEL(1); /* if enabled, use RTS signal for RS-485 transceiver */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OEPOL(1); /* 1: the output enable signal is high active */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
+  #endif
 #endif
-  RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE, RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
-  NVIC_SetPriority(RS485Uart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE,
+		  RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS
+		  );
+  NVIC_SetPriority(RS485Uart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
   EnableIRQ(RS485Uart_CONFIG_UART_IRQ_NUMBER);
 }
 
@@ -135,6 +180,9 @@ void RS485Uart_Deinit(void) {
   RS485UartRxQueue = NULL;
   vQueueDelete(RS485UartResponseQueue);
   RS485UartResponseQueue = NULL;
+#if !RS485Uart_CONFIG_USE_HW_OE_RTS
+  RS485Uart_GPIO_Deinit();
+#endif
 }
 
 void RS485Uart_Init(void) {
