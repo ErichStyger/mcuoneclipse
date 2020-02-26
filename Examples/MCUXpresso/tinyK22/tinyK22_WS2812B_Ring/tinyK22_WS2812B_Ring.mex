@@ -207,18 +207,18 @@
                   <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
-                  <clock_output id="Bus_clock.outFreq" value="48 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Core_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="19.2 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FlexBus_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Bus_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Core_clock.outFreq" value="120 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Flash_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FlexBus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
-                  <clock_output id="LPUARTCLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
+                  <clock_output id="LPUARTCLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
                   <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
                   <clock_output id="MCGIRCLK.outFreq" value="2 MHz" locked="false" accuracy=""/>
                   <clock_output id="OSCERCLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
                   <clock_output id="OSCERCLK_UNDIV.outFreq" value="8 MHz" locked="false" accuracy=""/>
-                  <clock_output id="PLLFLLCLK.outFreq" value="96 MHz" locked="false" accuracy=""/>
-                  <clock_output id="System_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PLLFLLCLK.outFreq" value="120 MHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="120 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="MCGMode" value="PEE" locked="false"/>
@@ -229,6 +229,7 @@
                   <setting id="MCG.IREFS.sel" value="MCG.FRDIV" locked="false"/>
                   <setting id="MCG.PLLS.sel" value="MCG.PLL" locked="false"/>
                   <setting id="MCG.PRDIV.scale" value="2" locked="false"/>
+                  <setting id="MCG.VDIV.scale" value="30" locked="false"/>
                   <setting id="MCG_C1_IRCLKEN_CFG" value="Enabled" locked="false"/>
                   <setting id="MCG_C1_IREFSTEN_CFG" value="Enabled" locked="false"/>
                   <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscLowPower" locked="false"/>
@@ -237,7 +238,7 @@
                   <setting id="MCG_C5_PLLCLKEN0_CFG" value="Enabled" locked="false"/>
                   <setting id="OSC_CR_ERCLKEN_CFG" value="Enabled" locked="false"/>
                   <setting id="OSC_CR_ERCLKEN_UNDIV_CFG" value="Enabled" locked="false"/>
-                  <setting id="SIM.LPUARTSRCSEL.sel" value="SIM.PLLFLLSEL" locked="false"/>
+                  <setting id="SIM.LPUARTSRCSEL.sel" value="OSC.OSCERCLK" locked="false"/>
                   <setting id="SIM.OUTDIV2.scale" value="2" locked="false"/>
                   <setting id="SIM.OUTDIV3.scale" value="4" locked="false"/>
                   <setting id="SIM.OUTDIV4.scale" value="5" locked="false"/>
@@ -343,7 +344,7 @@
             <component name="system" uuid="d2de9bdf-0ffd-477f-870b-54521c2d33ea" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions"/>
             </component>
-            <component name="msg" uuid="baa473c6-ee1c-496b-baa4-9b17cbd96931" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
+            <component name="msg" uuid="c711c079-d2aa-402e-848d-e5f401b8ec76" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
                <config_set_global name="global_messages"/>
             </component>
          </components>

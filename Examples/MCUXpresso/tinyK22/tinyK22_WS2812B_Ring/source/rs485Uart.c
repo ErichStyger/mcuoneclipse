@@ -226,7 +226,7 @@ static void InitUart(void) {
 
   RS485Uart_CONFIG_UART_SET_UART_CLOCK();
   RS485Uart_CONFIG_UART_GET_DEFAULT_CONFIG(&config);
-  config.baudRate_Bps = 38400;//RS485Uart_CONFIG_UART_BAUDRATE;
+  config.baudRate_Bps = RS485Uart_CONFIG_UART_BAUDRATE;
   config.enableRx     = true;
   config.enableTx     = true;
   config.enableRxRTS  = true; /* using RTS pin to control the transceiver */
