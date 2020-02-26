@@ -90,6 +90,36 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_LANE7_PIN 7U     /*!<@brief PORTD pin index: 7 */
                                         /* @} */
 
+/*! @name PORTC4 (number 49), LPUART_TX
+  @{ */
+#define BOARD_INITPINS_LPUART_TX_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_INITPINS_LPUART_TX_PIN 4U     /*!<@brief PORTC pin index: 4 */
+                                            /* @} */
+
+/*! @name PORTC3 (number 46), LPUART_RX
+  @{ */
+#define BOARD_INITPINS_LPUART_RX_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_INITPINS_LPUART_RX_PIN 3U     /*!<@brief PORTC pin index: 3 */
+                                            /* @} */
+
+/*! @name PORTB17 (number 40), RS485_TX
+  @{ */
+#define BOARD_INITPINS_RS485_TX_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INITPINS_RS485_TX_PIN 17U    /*!<@brief PORTB pin index: 17 */
+                                           /* @} */
+
+/*! @name PORTB16 (number 39), RS485_RX
+  @{ */
+#define BOARD_INITPINS_RS485_RX_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INITPINS_RS485_RX_PIN 16U    /*!<@brief PORTB pin index: 16 */
+                                           /* @} */
+
+/*! @name PORTB2 (number 37), RS458_RTS
+  @{ */
+#define BOARD_INITPINS_RS458_RTS_PORT PORTB /*!<@brief PORT device name: PORTB */
+#define BOARD_INITPINS_RS458_RTS_PIN 2U     /*!<@brief PORTB pin index: 2 */
+                                            /* @} */
+
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

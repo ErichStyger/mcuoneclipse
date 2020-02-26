@@ -10,6 +10,8 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 
+#include "McuRTT.h"
+
 #if !RS485Uart_CONFIG_USE_HW_OE_RTS
 #include "McuGPIO.h"
 
@@ -113,36 +115,124 @@ McuShell_ConstStdIOType RS485Uart_stdio = {
 
 uint8_t RS485Uart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
+#if 0
+static void RTT_Send(const char *str) {
+	while(*str!='\0') {
+		McuRTT_SendChar(*str);
+		str++;
+	}
+}
+#endif
+
 void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
-  BaseType_t xHigherPriorityTaskWoken;
+  BaseType_t xHigherPriorityTaskWoken1 = false, xHigherPriorityTaskWoken2 = false;
   static unsigned char prevChar = '\0';
   static bool responseLine = false;
+  uint8_t count;
 
   flags = RS485Uart_CONFIG_UART_GET_FLAGS(RS485Uart_CONFIG_UART_DEVICE);
+#if 0
+  /* error handling */
+  if (flags&kUART_FramingErrorFlag) {
+      /* Read base->D to clear framing error flag, otherwise the RX does not work. */
+      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U) {
+          (void)RS485Uart_CONFIG_UART_DEVICE->D;
+      }
+      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
+      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
+      RTT_Send("FrmOvr");
+  }
+  /* If RX parity error */
+  if (flags&kUART_ParityErrorFlag) {
+      /* Read base->D to clear parity error flag, otherwise the RX does not work. */
+      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U) {
+        (void)RS485Uart_CONFIG_UART_DEVICE->D;
+      }
+      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
+      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
+      RTT_Send("parity");
+  }
+  /* If RX overrun. */
+  if (flags&kUART_RxOverrunFlag)  {
+      /* Read base->D to clear overrun flag, otherwise the RX does not work. */
+      while ((RS485Uart_CONFIG_UART_DEVICE->S1 & UART_S1_RDRF_MASK) != 0U)
+      {
+          (void)RS485Uart_CONFIG_UART_DEVICE->D;
+      }
+      /* Flush FIFO date, otherwise FIFO pointer will be in unknown state. */
+      RS485Uart_CONFIG_UART_DEVICE->CFIFO |= UART_CFIFO_RXFLUSH_MASK;
+      RTT_Send("RxOvr");
+  }
+  /* If IDLE line was detected. */
+  if ((flags&kUART_IdleLineFlag) && ((UART_C2_ILIE_MASK & RS485Uart_CONFIG_UART_DEVICE->C2) != 0U)) {
+      RTT_Send("Idle");
+  }
+
+  if (flags&kUART_FramingErrorFlag) {
+      RTT_Send("Framing");
+  }
+  if ((flags&kUART_TxDataRegEmptyFlag)) {
+    //  RTT_Send("TxEmpty");
+  }
+#endif
+
+#if 0
+  /* Receive data register full */
+  if ((flags&kUART_RxDataRegFullFlag) && ((UART_C2_RIE_MASK & RS485Uart_CONFIG_UART_DEVICE->C2) != 0U))
+  {
+	  count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
+      while (count != 0U) {
+    	  data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
+    	  count--;
+    	  McuRTT_SendChar(data);
+      }
+  }
+#endif
+#if 1
   /* If new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
-    data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-
-    /* only store into RS485UartResponseQueue if we have a line starting with '@' */
-    if (prevChar=='\n' && data=='@') {
-      responseLine = true;
-    }
-    if (responseLine) {
-      (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken);
-    }
-    prevChar = data;
-    if (responseLine && data=='\n') { /* end of line while on response line */
-      responseLine = false;
-    }
-
-    (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken);
-    if (xHigherPriorityTaskWoken != pdFALSE) {
-      vPortYieldFromISR();
-    }
+    count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
+	while(count!=0) {
+		data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
+#if 1
+		if (data!=0) { /* could happen especially after power-up, ignore it */
+		  /* only store into RS485UartResponseQueue if we have a line starting with '@' */
+		  if (prevChar=='\n' && data=='@') {
+			responseLine = true;
+		  }
+		  if (responseLine) {
+			(void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken1);
+		  }
+		  prevChar = data;
+		  if (responseLine && data=='\n') { /* end of line while on response line */
+			responseLine = false;
+		  }
+		  (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
+		}
+  	    if (data!=0) {
+		  McuRTT_SendChar(data);
+  	    } else {
+  		  McuRTT_SendChar('?');
+  	    }
+ // 	    McuRTT_SendChar(':');
+ // 	    McuRTT_SendChar('0'+rxCount);
+#else
+  	    if (data!=0) {
+		  McuRTT_SendChar(data);
+  	    } else {
+  		  McuRTT_SendChar('?');
+  	    }
+#endif
+  	    count--;
+	}
   }
+#endif
   RS485Uart_CONFIG_CLEAR_STATUS_FLAGS(RS485Uart_CONFIG_UART_DEVICE, flags);
+  if (xHigherPriorityTaskWoken1 != pdFALSE || xHigherPriorityTaskWoken2 != pdFALSE) {
+    vPortYieldFromISR();
+  }
   __DSB();
 }
 
@@ -152,11 +242,12 @@ static void InitUart(void) {
 
   RS485Uart_CONFIG_UART_SET_UART_CLOCK();
   RS485Uart_CONFIG_UART_GET_DEFAULT_CONFIG(&config);
-  config.baudRate_Bps = RS485Uart_CONFIG_UART_BAUDRATE;
+  config.baudRate_Bps = 38400;//RS485Uart_CONFIG_UART_BAUDRATE;
   config.enableRx     = true;
   config.enableTx     = true;
   config.enableRxRTS  = true; /* using RTS pin to control the transceiver */
   config.enableTxCTS  = false;
+  //config.rxFifoWatermark = 4; /* up to 8 for UART0 */
 
   /* Initialize the USART with configuration. */
   RS485Uart_CONFIG_UART_INIT(RS485Uart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
@@ -170,8 +261,15 @@ static void InitUart(void) {
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
 #endif
 #endif
-  RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE, RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
-  NVIC_SetPriority(RS485Uart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  UART_EnableRxFIFO(RS485Uart_CONFIG_UART_DEVICE, false);
+  RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE,
+		  //kUART_FramingErrorFlag |
+		  //kUART_RxDataRegFullFlag |
+		  //kUART_RxOverrunFlag
+		  //kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable
+		  RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS
+		  );
+  NVIC_SetPriority(RS485Uart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
   EnableIRQ(RS485Uart_CONFIG_UART_IRQ_NUMBER);
 }
 
