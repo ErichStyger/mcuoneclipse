@@ -35,14 +35,14 @@
 
 /* master only: */
 #define PL_CONFIG_USE_SHELL_UART    (1 && PL_CONFIG_IS_MASTER) /* using UART for USB-CDC to host */
-#define PL_CONFIG_USE_I2C           (0 && PL_CONFIG_IS_MASTER) /* use I2C bus */
+#define PL_CONFIG_USE_I2C           (1 && PL_CONFIG_IS_MASTER) /* use I2C bus */
 #define PL_CONFIG_USE_HW_I2C        (CONFIG_USE_HW_I2C) /* set in IncludMcuLibConfig.h! */
 #define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_RTC && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
 #define PL_CONFIG_USE_EXT_EEPROM    (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
 #define PL_CONFIG_USE_MATRIX        (0 && PL_CONFIG_IS_MASTER && PL_CONFIG_USE_RS485)
 
 
-#define PL_CONFIG_USE_NEO_PIXEL     (0)
+#define PL_CONFIG_USE_NEO_PIXEL     (1) /* 1: using NeoPixels/WS2812B */
 
 /* NYI or not applicable */
 #define PL_CONFIG_USE_KBI           (0)

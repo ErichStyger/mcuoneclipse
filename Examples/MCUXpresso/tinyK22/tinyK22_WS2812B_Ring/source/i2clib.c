@@ -6,11 +6,11 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_HW_I2C
+#include "i2clibconfig.h"
 #include "McuLib.h"
 #include "i2clib.h"
 #include "fsl_i2c.h"
 #include "McuGPIO.h"
-//#include "McuFXOS8700.h"
 #include "McuWait.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
@@ -19,86 +19,7 @@
   #include "fsl_iocon.h"
 #endif
 
-#ifndef I2CLIB_SDA_GPIO
-  #define I2CLIB_SDA_GPIO         GPIO
-#endif
-#ifndef I2CLIB_SDA_GPIO_PORT
-  #define I2CLIB_SDA_GPIO_PORT    1
-#endif
-#ifndef I2CLIB_SDA_GPIO_PIN
-  #define I2CLIB_SDA_GPIO_PIN     21
-#endif
-
-#ifndef I2CLIB_SCL_GPIO
-  #define I2CLIB_SCL_GPIO         GPIO
-#endif
-#ifndef I2CLIB_SCL_GPIO_PORT
-  #define I2CLIB_SCL_GPIO_PORT    1
-#endif
-#ifndef I2CLIB_SCL_GPIO_PIN
-  #define I2CLIB_SCL_GPIO_PIN     20
-#endif
-
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  #define I2C_MASTER_BASEADDR     I2C0
-  #define I2C_MASTER_CLK_SRC      I2C0_CLK_SRC
-  #define I2C_MASTER_CLK_FREQ     CLOCK_GetFreq(I2C0_CLK_SRC)
-#elif McuLib_CONFIG_CPU_IS_LPC
-  #define I2C_MASTER_BASEADDR     I2C0
-  #define I2C_MASTER_CLK_FREQ     12000000
-#endif
-#define I2C_BAUDRATE            400000U
-
-#define I2C_ADD_DELAY     (1)  /* needed for FXOS sensor? */
-#define I2C_ADD_DELAY_US  (10)
-
 static uint8_t i2cSlaveDeviceAddr;
-
-#if 0 /* not used */
-uint8_t I2CLIB_ReadAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize) {
-  i2c_master_transfer_t masterXfer;
-  status_t res;
-
-  memset(&masterXfer, 0, sizeof(masterXfer));
-  /* subAddress = memory address on device, data = data pointer.
-    start + slaveaddress(w) + subAddress + repeated start + slaveaddress(r) + rx data buffer + stop */
-  masterXfer.slaveAddress = i2cAddr;
-  masterXfer.direction = kI2C_Read;
-  masterXfer.subaddress = *memAddr;
-  masterXfer.subaddressSize = memAddrSize; /* assuming 1! */
-  masterXfer.data = data;
-  masterXfer.dataSize = dataSize;
-  masterXfer.flags = kI2C_TransferDefaultFlag;
-
-  res = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
-  if (res!=kStatus_Success) {
-    return ERR_FAILED;
-  }
-  return ERR_OK;
-}
-
-uint8_t I2CLIB_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t memAddrSize, uint8_t *data, uint16_t dataSize) {
-  i2c_master_transfer_t masterXfer;
-  status_t res;
-
-  memset(&masterXfer, 0, sizeof(masterXfer));
-  /* subAddress = memory address in device, data = data pointer.
-    start + slaveaddress(w) + subAddress + length of data buffer + data buffer + stop*/
-  masterXfer.slaveAddress = i2cAddr;
-  masterXfer.direction = kI2C_Write;
-  masterXfer.subaddress = *memAddr;
-  masterXfer.subaddressSize = memAddrSize;
-  masterXfer.data = data;
-  masterXfer.dataSize = dataSize;
-  masterXfer.flags = kI2C_TransferDefaultFlag;
-
-  res = I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
-  if (res!=kStatus_Success) {
-    return ERR_FAILED;
-  }
-  return ERR_OK;
-}
-#endif
 
 uint8_t I2CLIB_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   status_t status;
@@ -163,7 +84,7 @@ static void I2CLIB_ReleaseBus(void) {
 
   /* muxing */
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  /* \todo done in McuGPIO already ! */
+  /* Muxing is done inside McuGPIO for Kinetis */
 #elif McuLib_CONFIG_CPU_IS_LPC  /*! \todo make it generic for LPC too */
   /*
    * Bit 3:0 FUNC
@@ -172,7 +93,7 @@ static void I2CLIB_ReleaseBus(void) {
    */
   //IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] &= 0xFFF1; /* scl */
   //IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] &= 0xFFF1; /* sda */
-  BOARD_InitI2cPinsAsGPIO();
+  BOARD_InitI2cPinsAsGPIO(); /* mux pins using Pins tool */
 #endif
 
   McuGPIO_GetDefaultConfig(&config);
@@ -193,14 +114,14 @@ static void I2CLIB_ReleaseBus(void) {
   McuWait_Waitus(10);
   /* Send 9 pulses on SCL and keep SDA high */
   for (i = 0; i < 9; i++) {
-      McuGPIO_SetLow(sclPin);
-      McuWait_Waitus(10);
+    McuGPIO_SetLow(sclPin);
+    McuWait_Waitus(10);
 
-      McuGPIO_SetHigh(sdaPin);
-      McuWait_Waitus(10);
+    McuGPIO_SetHigh(sdaPin);
+    McuWait_Waitus(10);
 
-      McuGPIO_SetHigh(sclPin);
-      McuWait_Waitus(20);
+    McuGPIO_SetHigh(sclPin);
+    McuWait_Waitus(20);
   }
   /* Send stop */
   McuGPIO_SetLow(sclPin);
@@ -222,12 +143,10 @@ static void I2CLIB_ReleaseBus(void) {
 /* mux as I2C pins */
 static void I2CLIB_ConfigurePins(void) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  /* Port B Clock Gate Control: Clock enabled */
-  CLOCK_EnableClock(kCLOCK_PortB);
-
+  /* clock enable has to be done outside (e.g. in Pins tool or in platform.c) */
   /* I2C SCL Pin */
-  PORT_SetPinMux(I2CLIB_SCL_GPIO_PORT, I2CLIB_SDA_GPIO_PIN, kPORT_MuxAlt2);
-  I2C_MASTER_SCL_PORT->PCR[I2CLIB_SCL_GPIO_PIN] = ((I2CLIB_SCL_GPIO_PORT->PCR[I2CLIB_SCL_GPIO_PIN] &
+  PORT_SetPinMux(I2CLIB_SCL_GPIO_PORT, I2CLIB_SCL_GPIO_PIN, I2CLIB_CONFIG_SCL_GPIO_MUXING);
+  I2CLIB_SCL_GPIO_PORT->PCR[I2CLIB_SCL_GPIO_PIN] = ((I2CLIB_SCL_GPIO_PORT->PCR[I2CLIB_SCL_GPIO_PIN] &
                     /* Mask bits to zero which are setting */
                     (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
                    /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
@@ -237,7 +156,7 @@ static void I2CLIB_ConfigurePins(void) {
                    | PORT_PCR_ODE(kPORT_OpenDrainEnable));
 
   /* I2C SDA Pin */
-  PORT_SetPinMux(I2CLIB_SDA_GPIO_PORT, I2CLIB_SDA_GPIO_PIN, kPORT_MuxAlt2);
+  PORT_SetPinMux(I2CLIB_SDA_GPIO_PORT, I2CLIB_SDA_GPIO_PIN, I2CLIB_CONFIG_SDA_GPIO_MUXING);
   I2CLIB_SDA_GPIO_PORT->PCR[I2CLIB_SDA_GPIO_PIN] = ((I2CLIB_SDA_GPIO_PORT->PCR[I2CLIB_SDA_GPIO_PIN] &
                     /* Mask bits to zero which are setting */
                     (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
@@ -247,7 +166,7 @@ static void I2CLIB_ConfigurePins(void) {
                     * configured as a digital output. */
                    | PORT_PCR_ODE(kPORT_OpenDrainEnable));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  BOARD_InitI2cPins();
+  BOARD_InitI2cPins(); /* Mux GPIO pins using the Pins tool */
 #if 0
   #define IOCON_PIO_FUNC5 0x05u         /*!<@brief Selects pin function 5 */
 

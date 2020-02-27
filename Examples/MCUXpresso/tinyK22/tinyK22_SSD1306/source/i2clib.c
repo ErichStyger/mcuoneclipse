@@ -206,7 +206,7 @@ static void I2CLIB_ConfigurePins(void) {
 #if CONFIG_I2C_USE_PORT_B
   PORT_SetPinMux(I2C_MASTER_SDA_PORT, I2C_MASTER_SDA_PIN, kPORT_MuxAlt2);
 #elif CONFIG_I2C_USE_PORT_E
-  PORT_SetPinMux(I2C_MASTER_SCL_PORT, I2C_MASTER_SDA_PIN, kPORT_MuxAlt6);
+  PORT_SetPinMux(I2C_MASTER_SDA_PORT, I2C_MASTER_SDA_PIN, kPORT_MuxAlt6);
 #endif
   I2C_MASTER_SDA_PORT->PCR[I2C_MASTER_SDA_PIN] = ((I2C_MASTER_SDA_PORT->PCR[I2C_MASTER_SDA_PIN] &
                     /* Mask bits to zero which are setting */

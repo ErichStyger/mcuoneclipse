@@ -92,9 +92,14 @@ void PL_Init(void) {
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0 (PIO0_19): used LED */
   GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1, used by motor driver signals */
-#elif McuLib_CONFIG_CPU_IS_KINETIS
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #if PL_CONFIG_USE_RS485
   CLOCK_EnableClock(kCLOCK_PortB); /* EN for RS-485 */
+  #endif
+  #if CONFIG_I2C_USE_PORT_B
+  CLOCK_EnableClock(kCLOCK_PortB); /* PTB0, PTB1 for I2C */
+  #elif CONFIG_I2C_USE_PORT_E
+  CLOCK_EnableClock(kCLOCK_PortE); /* PTE0, PTE1 for I2C */
   #endif
 #endif
   /* McuLib modules */

@@ -6,6 +6,7 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_HW_I2C
+#include "McuLib.h"
 #include "i2clib.h"
 #include "fsl_i2c.h"
 #include "fsl_gpio.h"
