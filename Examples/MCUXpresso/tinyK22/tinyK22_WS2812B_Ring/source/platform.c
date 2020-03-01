@@ -66,6 +66,7 @@
 #endif
 #if PL_CONFIG_USE_I2C
   #include "i2clib.h"
+  #include "i2clibconfig.h"
 #endif
 #if PL_CONFIG_USE_STEPPER
   #include "stepper.h"
@@ -75,6 +76,9 @@
 #endif
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
+#endif
+#if PL_CONFIG_USE_CLOCK
+  #include "Clock.h"
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL
   #include "NeoPixel.h"
@@ -169,6 +173,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_WDT
   WDT_Init();
+#endif
+#if PL_CONFIG_USE_CLOCK
+  CLOCK_Init();
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL
   PIXDMA_Init();

@@ -126,24 +126,24 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   /* new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
     count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
-	while(count!=0) {
-		data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-		if (data!=0) { /* could happen especially after power-up, ignore it */
-		  /* only store into RS485UartResponseQueue if we have a line starting with '@' */
-		  if (prevChar=='\n' && data=='@') {
-			responseLine = true;
-		  }
-		  if (responseLine) {
-			(void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken1);
-		  }
-		  prevChar = data;
-		  if (responseLine && data=='\n') { /* end of line while on response line */
-			responseLine = false;
-		  }
-		  (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
-		}
-  	    count--;
-	}
+    while(count!=0) {
+      data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
+      if (data!=0) { /* could happen especially after power-up, ignore it */
+        /* only store into RS485UartResponseQueue if we have a line starting with '@' */
+        if (prevChar=='\n' && data=='@') {
+          responseLine = true;
+        }
+        if (responseLine) {
+          (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken1);
+        }
+        prevChar = data;
+        if (responseLine && data=='\n') { /* end of line while on response line */
+          responseLine = false;
+        }
+        (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
+      }
+    count--;
+    }
   }
 
   RS485Uart_CONFIG_CLEAR_STATUS_FLAGS(RS485Uart_CONFIG_UART_DEVICE, flags);

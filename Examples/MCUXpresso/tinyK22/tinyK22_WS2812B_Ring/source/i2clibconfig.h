@@ -31,10 +31,10 @@
   #if CONFIG_I2C_USE_PORT_E
     #define I2CLIB_SCL_GPIO         GPIOE
     #define I2CLIB_SCL_GPIO_PORT    PORTE
-    #define I2CLIB_SCL_GPIO_PIN     0u
+    #define I2CLIB_SCL_GPIO_PIN     1u
     #define I2CLIB_SDA_GPIO         GPIOE
     #define I2CLIB_SDA_GPIO_PORT    PORTE
-    #define I2CLIB_SDA_GPIO_PIN     1u
+    #define I2CLIB_SDA_GPIO_PIN     0u
 
     #define I2C_MASTER_BASEADDR     I2C1
     #define I2C_MASTER_CLK_SRC      I2C1_CLK_SRC
@@ -61,7 +61,7 @@
 
 #define I2C_BAUDRATE            400000U
 
-#define I2C_ADD_DELAY     (0)  /* needed for FXOS sensor? */
+#define I2C_ADD_DELAY     (1)  /* needed for FXOS sensor? As well for RTC: otherwise the address is not on the bus? */
 #define I2C_ADD_DELAY_US  (10)
 
 

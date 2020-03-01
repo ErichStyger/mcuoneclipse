@@ -29,6 +29,7 @@
   #define RS485Uart_CONFIG_UART_INIT                     USART_Init
   #define RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define RS485Uart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
+  #define RS485Uart_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif PL_CONFIG_IS_MASTER
   #define RS485Uart_CONFIG_UART_DEVICE                   USART1
   #define RS485Uart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_Select(kUART1_Clk_From_MainClk) /* Select the main clock as source clock of USART0. */

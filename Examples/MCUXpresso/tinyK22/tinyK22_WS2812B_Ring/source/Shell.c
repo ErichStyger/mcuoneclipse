@@ -46,6 +46,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_CLOCK
+  #include "clock.h"
+#endif
 #include "application.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -81,6 +84,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_MATRIX
   MATRIX_ParseCommand,
+#endif
+#if PL_CONFIG_USE_CLOCK
+  CLOCK_ParseCommand,
 #endif
   APP_ParseCommand,
   NULL /* Sentinel */

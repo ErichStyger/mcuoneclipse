@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
 #include "leds.h"
 #include "McuLED.h"
 
@@ -15,17 +16,12 @@ McuLED_Handle_t tinyLED;
 
 void LEDS_Deinit(void) {
   tinyLED = McuLED_DeinitLed(tinyLED);
-  McuLED_Deinit(); /* de-initialize LED module */
 }
 
 void LEDS_Init(void) {
   McuLED_Config_t config;
 
-  McuLED_Init(); /* initialize LED module */
-
-  /* initialize LEDs */
   McuLED_GetDefaultConfig(&config);
-
   config.isLowActive = true;
   config.hw.pin = PINS_LEDBLUE_PIN;
   config.hw.port = PINS_LEDBLUE_PORT;
