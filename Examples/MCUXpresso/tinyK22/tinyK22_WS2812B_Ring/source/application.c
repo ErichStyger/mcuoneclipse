@@ -210,8 +210,6 @@ static void AppTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(2000));
 
 #endif
-    McuLED_Toggle(tinyLED);
-
     vTaskDelay(pdMS_TO_TICKS(100));
     color++;
     if (color==3) {
@@ -222,9 +220,6 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   PL_Init();
-  McuLED_On(tinyLED);
-  McuWait_Waitms(100);
-  McuLED_Off(tinyLED);
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -236,4 +231,5 @@ void APP_Run(void) {
      for(;;){} /* error! probably out of memory */
   }
   vTaskStartScheduler();
+  for(;;) { /* should not get here */ }
 }

@@ -89,6 +89,12 @@
   /* you have to put your config here */
 #endif
 
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
+  #define RS485Uart_CONFIG_HAS_FIFO  (0)
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+  #define RS485Uart_CONFIG_HAS_FIFO  (1)  /* UART0 on Kinetis has FIFO which needs to be disabled in the code */
+#endif
+
 #ifndef RS485Uart_CONFIG_UART_RX_QUEUE_LENGTH
   #if PL_CONFIG_IS_MASTER
     #define RS485Uart_CONFIG_UART_RX_QUEUE_LENGTH        (3*1024)

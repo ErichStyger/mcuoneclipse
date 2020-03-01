@@ -14,7 +14,7 @@
   #include "watchdog.h"
 #endif
 
-#define MATRIX_BOARD_ARRANGEMENT  (0)  /* 0: first clock (3x8, black with red hands) or 1: second clock: (3x8, green hands) */
+#define MATRIX_BOARD_ARRANGEMENT  (1)  /* 0: first clock (3x8, black with red hands) or 1: second clock: (3x8, green hands) */
 
 #define MATRIX_NOF_CLOCKS_Y       (3)  /* number of clocks in y direction */
 #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
