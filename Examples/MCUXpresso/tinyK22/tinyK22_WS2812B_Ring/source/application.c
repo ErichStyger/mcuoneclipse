@@ -22,56 +22,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 }
 #endif
 
-#if 0 /* using Cortex cycle counter */
-static uint32_t prevCycleCounter, cycleCntCounter = 0;
-
-void AppConfigureTimerForRuntimeStats(void) {
-  cycleCntCounter = 0;
-  McuArmTools_InitCycleCounter();
-  prevCycleCounter = McuArmTools_GetCycleCounter();
-}
-
-uint32_t AppGetRuntimeCounterValueFromISR(void) {
-  uint32_t newCntr, diff;
-
-  newCntr = McuArmTools_GetCycleCounter();
-  diff = newCntr-prevCycleCounter;
-  prevCycleCounter = newCntr;
-  cycleCntCounter += diff>>12; /* scale down the counter */
-  return cycleCntCounter;
-}
-#else /* using PIT timer */
-static uint32_t perfCounter = 0;
-
-#define PIT_BASEADDR       PIT
-#define PIT_SOURCE_CLOCK   CLOCK_GetFreq(kCLOCK_BusClk)
-#define PIT_CHANNEL        kPIT_Chnl_0
-#define PIT_HANDLER        PIT0_IRQHandler
-#define PIT_IRQ_ID         PIT0_IRQn
-
-void PIT_HANDLER(void) {
-  PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
-  perfCounter++;
-  __DSB();
-}
-
-void AppConfigureTimerForRuntimeStats(void) {
-  pit_config_t config;
-
-  PIT_GetDefaultConfig(&config);
-  config.enableRunInDebug = false;
-  PIT_Init(PIT_BASEADDR, &config);
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(100U, PIT_SOURCE_CLOCK));
-  PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
-  NVIC_SetPriority(PIT_IRQ_ID, 0);
-  EnableIRQ(PIT_IRQ_ID);
-  PIT_StartTimer(PIT_BASEADDR, PIT_CHANNEL);
-}
-
-uint32_t AppGetRuntimeCounterValueFromISR(void) {
-  return perfCounter;
-}
-#endif
 
 typedef enum {
   NEO_POS_LOW_12 = 0,
