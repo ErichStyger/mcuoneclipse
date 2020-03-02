@@ -8,7 +8,7 @@
 #define PLATFORM_H_
 
 /* configure the HW/Board version with TINYK22_HAT_VERSION in IncludeMcuLibConfig.h */
-#define PL_CONFIG_PCB_TEST_MODE           (1) /* 1: used for testing a new PCB */
+#define PL_CONFIG_PCB_TEST_MODE           (0) /* 1: used for testing a new PCB */
 
 #define PL_CONFIG_USE_RASPBERRY           (1 && !PL_CONFIG_PCB_TEST_MODE) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS             (1) /* using buttons (navigation switch) */
@@ -18,7 +18,7 @@
 #define PL_CONFIG_USE_RTT                 (1)
 #define PL_CONFIG_USE_SHT31               (1 && PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_OLED                (1 && PL_CONFIG_USE_I2C && !PL_CONFIG_PCB_TEST_MODE) /* if using OLED */
-#define PL_CONFIG_USE_UPS                 (1 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
+#define PL_CONFIG_USE_UPS                 (0 && PL_CONFIG_USE_I2C && PL_CONFIG_USE_RASPBERRY) /* if using UPS HAT */
 #define PL_CONFIG_USE_GATEWAY             (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing UART gateway to Raspberry Pi */
 #define PL_CONFIG_USE_RASPY_UART          (1 && PL_CONFIG_USE_RASPBERRY) /* uses UART to Raspy as interface for joystick, led and sensor values */
 #define PL_CONFIG_USE_SHELL               (1) /* if shell is enabled, uses RTT */
