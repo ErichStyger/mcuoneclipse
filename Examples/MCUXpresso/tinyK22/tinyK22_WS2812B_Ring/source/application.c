@@ -142,7 +142,6 @@ static void AppTask(void *pv) {
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(2000));
 
-
     level = 0xff/5;
     NEO_ClearAllPixel();
     NEO_SetPixelRGB(0, NEO_POS_LOW_12, 0, 0, level);
@@ -157,7 +156,6 @@ static void AppTask(void *pv) {
     NEO_SetPixelRGB(0, NEO_POS_HIGH_9, 0, 0, level);
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(2000));
-
 #endif
 
     STEPPER_ShowLEDs();

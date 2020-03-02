@@ -416,10 +416,15 @@ static void ClockTask(void *pv) {
 #endif
   PL_InitFromTask();
 #if PL_CONFIG_USE_SHELL
-  #if PL_CONFIG_IS_MASTER
+
+  #if McuLib_CONFIG_CPU_IS_LPC && PL_CONFIG_IS_MASTER
   SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Master *\r\n*****************\r\n");
-  #elif PL_CONFIG_IS_CLIENT
+  #elif McuLib_CONFIG_CPU_IS_LPC && PL_CONFIG_IS_CLIENT
   SHELL_SendString((unsigned char*)"\r\n*****************\r\n* LPC845 Client *\r\n*****************\r\n");
+  #elif McuLib_CONFIG_CPU_IS_KINETIS && PL_CONFIG_IS_CLIENT
+  SHELL_SendString((unsigned char*)"\r\n******************\r\n* tinyK22 Client *\r\n******************\r\n");
+  #elif McuLib_CONFIG_CPU_IS_KINETIS && PL_CONFIG_IS_MASTER
+  SHELL_SendString((unsigned char*)"\r\n******************\r\n* tinyK22 Master *\r\n******************\r\n");
   #endif
 #endif
 #if 0 && PL_CONFIG_USE_STEPPER

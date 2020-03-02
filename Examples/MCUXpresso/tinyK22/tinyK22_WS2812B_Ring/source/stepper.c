@@ -938,18 +938,12 @@ void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], s
 #include "NeoPixel.h"
 
 void STEPPER_ShowLEDs(void) {
-  int32_t pos;
-
   NEO_ClearAllPixel();
+
   int i = 0;
  // for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    pos = NEOSR_GetPos(STEPPER_Clocks[i].mot[0].device);
-    pos %= STEPPER_CLOCK_360_STEPS;
-    if (pos<0) {
-      pos = STEPPER_CLOCK_360_STEPS-pos;
-    }
-    pos = pos/(STEPPER_CLOCK_360_STEPS/40);
-    NEO_SetPixelRGB(0, pos, 0x00, 0xff/8, 0x00);
+  NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[0].device);
+  NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[1].device);
  // } /* for */
   NEO_TransferPixels();
 }
@@ -1134,9 +1128,18 @@ void STEPPER_Init(void) {
 
   NEOSR_GetDefaultConfig(&config);
 
+  config.ledLane = 0;
+  config.ledStartPos = 0;
+  config.ledCw = true;
   STEPPER_Clocks[0].mot[0].device = NEOSR_InitDevice(&config);
+  config.ledStartPos = 40;
+  config.ledCw = false;
   STEPPER_Clocks[0].mot[1].device = NEOSR_InitDevice(&config);
+  config.ledStartPos = 80;
+  config.ledCw = true;
   STEPPER_Clocks[1].mot[0].device = NEOSR_InitDevice(&config);
+  config.ledStartPos = 120;
+  config.ledCw = false;
   STEPPER_Clocks[1].mot[1].device = NEOSR_InitDevice(&config);
   STEPPER_Clocks[2].mot[0].device = NEOSR_InitDevice(&config);
   STEPPER_Clocks[2].mot[1].device = NEOSR_InitDevice(&config);
