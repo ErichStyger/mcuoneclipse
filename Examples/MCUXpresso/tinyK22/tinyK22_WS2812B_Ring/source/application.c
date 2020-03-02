@@ -22,7 +22,6 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 }
 #endif
 
-
 typedef enum {
   NEO_POS_LOW_12 = 0,
   NEO_POS_LOW_3 = 10,
@@ -39,7 +38,7 @@ static void AppTask(void *pv) {
   int color = 0;
   uint8_t level;
 
-#if PL_CONFIG_USE_NEO_PIXEL
+#if 0 && PL_CONFIG_USE_NEO_PIXEL
   NEO_ClearAllPixel();
   NEO_TransferPixels();
   //NEO_SetPixelRGB(0, 0, 0x00, 0xff, 0x00);
@@ -101,7 +100,7 @@ static void AppTask(void *pv) {
     }
 #endif
 
-#if PL_CONFIG_USE_NEO_PIXEL
+#if 0 && PL_CONFIG_USE_NEO_PIXEL
     for(i=0, level=0x20; i<5; i++, level+=0xff/5) {
       NEO_ClearAllPixel();
       NEO_SetPixelRGB(0, NEO_POS_LOW_12, level, 0, 0);
@@ -160,16 +159,15 @@ static void AppTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(2000));
 
 #endif
-    vTaskDelay(pdMS_TO_TICKS(100));
-    color++;
-    if (color==3) {
-      color = 0;
-    }
+
+    STEPPER_ShowLEDs();
+    vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
 }
 
 void APP_Run(void) {
   PL_Init();
+#if 1
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -180,6 +178,7 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
+#endif
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }
 }
