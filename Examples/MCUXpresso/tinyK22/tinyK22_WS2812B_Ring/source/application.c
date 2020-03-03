@@ -15,6 +15,7 @@
 #include "leds.h"
 #include "fsl_pit.h"
 #include "NeoPixel.h"
+#include "stepper.h"
 
 #if PL_CONFIG_USE_SHELL
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
@@ -157,7 +158,7 @@ static void AppTask(void *pv) {
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(2000));
 #endif
-
+    (void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
     STEPPER_ShowLEDs();
     vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
@@ -169,7 +170,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      300/sizeof(StackType_t), /* task stack size */
+      900/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

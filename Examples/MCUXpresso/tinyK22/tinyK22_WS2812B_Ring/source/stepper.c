@@ -230,7 +230,7 @@ static void Timer_Init(void) {
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(100U, PIT_SOURCE_CLOCK));
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
   NVIC_SetPriority(PIT_IRQ_ID, 0);
   EnableIRQ(PIT_IRQ_ID);
@@ -261,10 +261,11 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, 
   degree %= 360;
   targetPos = (STEPPER_CLOCK_360_STEPS*degree)/360;
 #if PL_CONFIG_USE_X12_STEPPER
-  currPos = X12_017_GetPos(clock->mot[motorIndex].device, clock->mot[motorIndex].mot)%STEPPER_CLOCK_360_STEPS;
+  currPos = X12_017_GetPos(clock->mot[motorIndex].device, clock->mot[motorIndex].mot);
 #else
-  currPos = 0; /* \todo */
+  currPos = NEOSR_GetPos(clock->mot[motorIndex].device);
 #endif
+  currPos %= STEPPER_CLOCK_360_STEPS;
   if (currPos<0) { /* make it positive */
     currPos = STEPPER_CLOCK_360_STEPS+currPos;
   }
@@ -1131,10 +1132,16 @@ void STEPPER_Init(void) {
   config.ledLane = 0;
   config.ledStartPos = 0;
   config.ledCw = true;
-  STEPPER_Clocks[0].mot[0].device = NEOSR_InitDevice(&config);
+  config.ledRed = 0xff/8;
+  config.ledGreen = 0;
+  config.ledBlue = 0;
+  STEPPER_Clocks[0].mot[1].device = NEOSR_InitDevice(&config);
   config.ledStartPos = 40;
   config.ledCw = false;
-  STEPPER_Clocks[0].mot[1].device = NEOSR_InitDevice(&config);
+  config.ledRed = 0;
+  config.ledGreen = 0;
+  config.ledBlue = 0xff/8;
+  STEPPER_Clocks[0].mot[0].device = NEOSR_InitDevice(&config);
   config.ledStartPos = 80;
   config.ledCw = true;
   STEPPER_Clocks[1].mot[0].device = NEOSR_InitDevice(&config);

@@ -25,7 +25,10 @@ static const NEOSR_Config_t defaultConfig =
 {
   .ledCw = true,
   .ledLane = 0,
-  .ledStartPos = 0
+  .ledStartPos = 0,
+  .ledRed = 0,
+  .ledGreen = 0,
+  .ledBlue = 0,
 };
 
 typedef struct {
@@ -33,6 +36,7 @@ typedef struct {
   bool ledCw;      /* clock-wise */
   int ledLane;     /* LED lane */
   int ledStartPos; /* LED starting position in lane */
+  uint8_t ledRed, ledGreen, ledBlue; /* colors */
 } NEOSR_Device_t;
 
 void NEOSR_GetDefaultConfig(NEOSR_Config_t *config) {
@@ -63,6 +67,9 @@ NEOSR_Handle_t NEOSR_InitDevice(NEOSR_Config_t *config) {
     handle->ledCw = config->ledCw;
     handle->ledLane = config->ledLane;
     handle->ledStartPos = config->ledStartPos;
+    handle->ledRed = config->ledRed;
+    handle->ledGreen = config->ledGreen;
+    handle->ledBlue = config->ledBlue;
   }
   return handle;
 }
@@ -83,25 +90,76 @@ void NEOSR_SingleStep(NEOSR_Handle_t device, int step) {
   handle->pos += step;
 }
 
-void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
+static void NEOSR_SetPixels(NEOSR_Device_t *dev, int32_t centerPos, uint8_t trailPercent, uint8_t centerPercent, uint8_t headPercent) {
   int32_t pos;
+
+  /* trailing */
+  if (trailPercent!=0) {
+    if (dev->ledCw) {
+      pos = centerPos-1;
+      if (pos < dev->ledStartPos) {
+        pos = pos+NEOSR_NOF_LED-1;
+      }
+    } else {
+      pos = centerPos+1;
+      if (pos > dev->ledStartPos+NEOSR_NOF_LED-1) {
+        pos = dev->ledStartPos;
+      }
+    }
+    NEO_SetPixelRGB(dev->ledLane, pos, dev->ledRed*100/trailPercent, dev->ledGreen*100/trailPercent, dev->ledBlue*100/trailPercent);
+  }
+  /* center */
+  if (centerPercent!=0) {
+    NEO_SetPixelRGB(dev->ledLane, centerPos, dev->ledRed*100/centerPercent, dev->ledGreen*100/centerPercent, dev->ledBlue*100/centerPercent);
+  }
+  /* head */
+  if (headPercent!=0) {
+    if (dev->ledCw) {
+      pos = centerPos+1;
+      if (pos > dev->ledStartPos+NEOSR_NOF_LED-1) {
+        pos = dev->ledStartPos;
+      }
+    } else {
+      pos = centerPos-1;
+      if (pos < dev->ledStartPos) {
+        pos = dev->ledStartPos+NEOSR_NOF_LED-1;
+      }
+    }
+    NEO_SetPixelRGB(dev->ledLane, pos, dev->ledRed*100/headPercent, dev->ledGreen*100/headPercent, dev->ledBlue*100/headPercent);
+  }
+}
+
+void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
+  int32_t pos, rotorPos;
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
 
-  pos = dev->pos;
-  if (pos<0) {
-    pos = -pos;
-    pos %= NEOSR_NOF_360-1;
-    pos = NEOSR_NOF_360-pos;
+  rotorPos = dev->pos;
+  if (rotorPos<0) {
+    rotorPos = -rotorPos;
+    rotorPos %= NEOSR_NOF_360;
+    rotorPos = NEOSR_NOF_360-rotorPos;
   }
   /* pos is now positive */
-  pos %= NEOSR_NOF_360-1;
-  if (pos<(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2) || pos>=(STEPPER_CLOCK_360_STEPS-STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2)) { /* less than half the distance */
+  rotorPos %= NEOSR_NOF_360;
+  if (rotorPos<(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2) || rotorPos>=(STEPPER_CLOCK_360_STEPS-STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2)) { /* less than half the distance */
     pos = 0;
   } else {
-    pos -= (STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2);
+    pos = rotorPos-(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED/2);
     pos = pos/(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED) + 1;
   }
-  /* pos is now the LED position on the ring */
+#if 1
+  /* distribute color */
+  int x, d, p;
+
+  x = pos*STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED;
+  d = rotorPos-x; /* difference */
+  if (d<0) {  /* LED is ahead: dimm trailing */
+    p = (-d*100)/(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED);
+  } else { /* LED is behind: dim the one ahead */
+    p = (d*100)/(STEPPER_CLOCK_360_STEPS/NEOSR_NOF_LED);
+  }
+#endif
+  /* pos is now the LED position on the ring. pos2 is for the dimmed one */
   if (dev->ledCw) {
     pos = dev->ledStartPos + pos;
   } else {
@@ -111,7 +169,15 @@ void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
       pos = dev->ledStartPos + NEOSR_NOF_LED - pos;
     }
   }
-  NEO_SetPixelRGB(dev->ledLane, pos, 0x00, 0xff/8, 0x00);
+#if 1
+  if (d>0) { /* led pos behind */
+    NEOSR_SetPixels(dev, pos, 0, 100-p, p);
+  } else { /* led pos ahead */
+    NEOSR_SetPixels(dev, pos, p, 100-p, 0);
+  }
+#else
+  NEO_SetPixelRGB(dev->ledLane, pos, dev->ledRed, dev->ledGreen, dev->ledBlue);
+#endif
 }
 
 void NEOSR_Init(void) {

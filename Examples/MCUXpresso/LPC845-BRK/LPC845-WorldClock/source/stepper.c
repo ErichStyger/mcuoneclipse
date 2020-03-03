@@ -33,7 +33,7 @@
 #define STEPPER_HAND_ZERO_DELAY   (6)
 
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* number of items in stepper command queue */
-static bool STEPPER_ExecuteQueue = false;
+static bool STEPPER_ExecuteQueue = false; /* only a flag: if the execute command comes from RS-485, it will be executed as part of the shell loop */
 
 typedef enum {
   SCT_CHANNEL_MASK_0 = (1<<0),

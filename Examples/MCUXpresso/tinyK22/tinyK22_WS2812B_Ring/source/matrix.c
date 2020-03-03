@@ -10,6 +10,7 @@
 #include "McuUtility.h"
 #include "McuWait.h"
 #include "Stepper.h"
+#include "Shell.h"
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
 #endif
@@ -56,8 +57,8 @@ typedef struct {
       {.enabled = false, .addr = 0x21},
       {.enabled = false, .addr = 0x22},
       {.enabled = false, .addr = 0x23},
-      {.enabled = true, .addr = 0x24},
-      {.enabled = false,  .addr = 0x25},
+      {.enabled = true,  .addr = 0x24},
+      {.enabled = false, .addr = 0x25},
     };
 #endif
 
@@ -252,6 +253,11 @@ static uint8_t MATRIX_SendToQueue(void) {
               break;
           }
           RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000); /* queue the commands */
+#if PL_CONFIG_USE_STEPPER_EMUL
+          if (clockMatrix[x][y].addr==0x24) {
+            SHELL_ParseCommand(buf, NULL, true);
+          }
+#endif
         }
       }
     }
@@ -262,6 +268,9 @@ static uint8_t MATRIX_SendToQueue(void) {
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
   RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000); /* execute the queue */
+#if PL_CONFIG_USE_STEPPER_EMUL
+  SHELL_ParseCommand("stepper exq", NULL, true);
+#endif
   return ERR_OK;
 }
 

@@ -11,6 +11,4 @@ OpenSDA UART: LPUART Rx PTC3, Tx PTC4
 Open Points
 -----------
 - buffering/timeout for RTT shell output
-- move with zero delay does not work?
-stepper m 0 1 0 0 cc
 
