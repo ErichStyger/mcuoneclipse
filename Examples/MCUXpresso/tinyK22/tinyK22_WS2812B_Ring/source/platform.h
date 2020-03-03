@@ -26,7 +26,7 @@
 #define PL_CONFIG_USE_RTT           (1 && (PL_CONFIG_IS_CLIENT || PL_CONFIG_IS_TINYK22)) /* use SEGGER RTT (only possible with a J-Link */
 #define PL_CONFIG_USE_RTC           (1) /* 1: enable RTC; 0: disable it */
 #define PL_CONFIG_USE_RS485         (1 && PL_CONFIG_USE_SHELL) /* RS-485 connection, 1: enabled, 0: disabled: it requires the shell to parse the commands */
-#define PL_CONFIG_USE_NVMC          (0) /* using non-volatile configuration memory */
+#define PL_CONFIG_USE_NVMC          (1) /* using non-volatile configuration memory */
 #define PL_CONFIG_USE_WDT           (0) /* if using watchdog timer */
 
 /* client only: */

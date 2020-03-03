@@ -11,4 +11,7 @@ OpenSDA UART: LPUART Rx PTC3, Tx PTC4
 Open Points
 -----------
 - buffering/timeout for RTT shell output
+- LED timer too fast/slow?
+- flash programming
+- watchdog
 
