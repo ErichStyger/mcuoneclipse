@@ -44,7 +44,7 @@
 #define PL_CONFIG_USE_EXT_EEPROM    (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
 #define PL_CONFIG_USE_MATRIX        (1 && PL_CONFIG_IS_MASTER && PL_CONFIG_USE_RS485)
 
-#define PL_CONFIG_USE_NEO_PIXEL     (1) /* 1: using NeoPixels/WS2812B */
+#define PL_CONFIG_USE_NEO_PIXEL     (1 && PL_CONFIG_IS_TINYK22) /* 1: using NeoPixels/WS2812B */
 #define PL_CONFIG_USE_CLOCK         (1)
 
 /* NYI or not applicable */

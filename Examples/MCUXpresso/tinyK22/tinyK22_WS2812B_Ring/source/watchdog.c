@@ -110,7 +110,7 @@ static void WDT_CheckHealth(void) {
 }
 
 #if McuLib_CONFIG_CPU_IS_LPC
-#void WDT_IRQHandler(void) {
+void WDT_IRQHandler(void) {
   uint32_t wdtStatus = WWDT_GetStatusFlags(WWDT);
 
   McuLED_Toggle(LEDS_Led);

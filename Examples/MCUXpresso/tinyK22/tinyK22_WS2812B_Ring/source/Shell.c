@@ -134,7 +134,13 @@ void SHELL_SendString(unsigned char *str) {
 
 uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io, bool silent) {
   if (io==NULL) {
+#if PL_CONFIG_USE_SHELL_UART
     io = &McuShellUart_stdio;
+#elif PL_CONFIG_USE_RTT
+    io = &McuRTT_stdio;
+#else
+  #error "no shell std IO?"
+#endif
   }
   return McuShell_ParseWithCommandTableExt(command, io, CmdParserTable, silent);
 }

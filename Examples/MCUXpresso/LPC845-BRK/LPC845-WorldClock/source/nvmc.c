@@ -1,24 +1,37 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
 
 #include "platform.h"
 #if PL_CONFIG_USE_NVMC
 #include <string.h>
 #include "nvmc.h"
-#include "fsl_iap.h"
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
+  #include "fsl_iap.h"
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
+  #include "fsl_flash.h"
+  #include "fsl_smc.h"
+  #include "McuWait.h"
+#endif
 #include "McuLib.h"
 #include "McuUtility.h"
 #include "Shell.h"
 
-/* note: the flash memory has been reduced for the linker file (project settings, managed linker file) */
-#define FLASH_NVM_ADDR_START      (0xFC00) /* LPC845 has 64k FLASH (0x10000), last 1k page is used for NVM */
-#define FLASH_NVM_SECTOR_START    (FLASH_NVM_ADDR_START/1024) /* sector size is 1k */
+/* Note: the flash memory has been reduced for the linker file (project settings, managed linker file) */
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
+  #define FLASH_NVM_ADDR_START      (0xFC00) /* LPC845 has 64k FLASH (0x10000), last 1k page is used for NVM */
+  #define FLASH_NVM_SECTOR_START    (FLASH_NVM_ADDR_START/1024) /* sector size is 1k */
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
+  #define FLASH_NVM_ADDR_START    ((0+0x80000)-FLASH_NVM_BLOCK_SIZE) /* last block in FLASH, start address of configuration data in flash */
+  #define FLASH_NVM_BLOCK_SIZE    0x800 /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
+  /*! @brief Flash driver Structure */
+  static flash_config_t s_flashDriver;
+#endif
 
 static uint8_t NVMC_Erase(void) {
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   uint32_t startSector = FLASH_NVM_SECTOR_START; /* sector is 1k in size */
   uint32_t endSector = FLASH_NVM_SECTOR_START;
   status_t res;
@@ -41,9 +54,97 @@ static uint8_t NVMC_Erase(void) {
     return ERR_FAILED;
   }
   return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
+  uint32_t pflashSectorSize = 0;
+  status_t status;
+  uint8_t res = ERR_OK;
+
+  /* need to switch to normal RUN mode for flash programming,
+   * with Fcore=60MHz Fbus=Fflash=20MHz
+   * see https://community.nxp.com/thread/377633
+   */
+  status = SMC_SetPowerModeRun(SMC);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+  McuWait_Waitms(1); /* give time to switch clock, otherwise flash programming might fail below */
+
+  /* erase */
+  FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize);
+  for(;;) { /* breaks, switch back to HSRUN if things fail */
+    status = FLASH_Erase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_ApiEraseKey);
+    if (status!=kStatus_FTFx_Success || pflashSectorSize!=FLASH_NVM_BLOCK_SIZE) {
+      res = ERR_FAILED;
+      break;
+    }
+    /* Verify sector if it's been erased. */
+    status = FLASH_VerifyErase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_MarginValueUser);
+    if (status!=kStatus_FTFx_Success) {
+      res = ERR_FAILED;
+      break;
+    }
+    break;
+  } /* for */
+  status = SMC_SetPowerModeHsrun(SMC);
+  if (status!=kStatus_Success) {
+    res = ERR_FAILED;
+  }
+  return res;
+#endif
 }
 
+#if McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
+uint8_t NVMC_SetBlockFlash(uint32_t addr, void *data, size_t dataSize) {
+  static uint32_t buf[FLASH_NVM_BLOCK_SIZE/4]; /* backup buffer */
+  int i;
+  status_t status;
+  uint8_t *p, *q;
+  uint8_t res = ERR_OK;
+
+  /* make backup of current content */
+  for(i=0;i<sizeof(buf)/4; i++) {
+    buf[i] = ((uint32_t*)FLASH_NVM_ADDR_START)[i];
+  }
+
+  if (NVMC_Erase()!=ERR_OK) {
+    return ERR_FAILED;
+  }
+  /* copy new data into backup */
+  p = ((uint8_t*)buf)+(addr-FLASH_NVM_ADDR_START);
+  q = (uint8_t*)data;
+  for(i=0;i<dataSize; i++) {
+    *p = *q;
+    p++; q++;
+  }
+  /* need to switch to normal RUN mode for flash programming,
+   * with Fcore=60MHz Fbus=Fflash=20MHz
+   * see https://community.nxp.com/thread/377633
+   */
+  status = SMC_SetPowerModeRun(SMC);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+  McuWait_Waitms(1); /* give time to switch clock, otherwise flash programming might fail below */
+
+  /* program */
+  for(;;) { /* breaks, switch back to HSRUN if things fail */
+    status = FLASH_Program(&s_flashDriver, FLASH_NVM_ADDR_START, (uint8_t*)buf, sizeof(buf));
+    if (status!=kStatus_FTFx_Success) {
+      res = ERR_FAILED;
+      break;
+    }
+    break;
+  } /* for */
+  status = SMC_SetPowerModeHsrun(SMC);
+  if (status!=kStatus_Success) {
+    res = ERR_FAILED;
+  }
+  return res;
+}
+#endif
+
 uint8_t NVMC_WriteConfig(NVMC_Data_t *data) {
+#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   uint32_t startSector = FLASH_NVM_SECTOR_START;
   uint32_t endSector = FLASH_NVM_SECTOR_START;
   status_t res;
@@ -66,6 +167,9 @@ uint8_t NVMC_WriteConfig(NVMC_Data_t *data) {
   if (res!=kStatus_IAP_Success) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
+  return NVMC_SetBlockFlash(FLASH_NVM_ADDR_START, (uint32_t*)data, sizeof(NVMC_Data_t));
+#endif
   return ERR_OK;
 }
 
@@ -204,6 +308,16 @@ void NVMC_Deinit(void) {
 }
 
 void NVMC_Init(void){
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  status_t result;    /* Return code from each flash driver function */
+
+  memset(&s_flashDriver, 0, sizeof(flash_config_t));
+  /* Setup flash driver structure for device and initialize variables. */
+  result = FLASH_Init(&s_flashDriver);
+  if (result!=kStatus_FTFx_Success) {
+   for(;;) { /* error */ }
+  }
+#endif
   if(sizeof(NVMC_Data_t) != 64) {
     /* data size (number of bytes) shall be 64, 128, 256, 512, 1024 bytes */
     SHELL_SendString((unsigned char*)"FATAL: wrong size of NVMC_Data_t!\r\n");

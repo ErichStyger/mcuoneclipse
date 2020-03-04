@@ -17,6 +17,7 @@
 #if PL_CONFIG_USE_RTC
   #include "McuTimeDate.h"
 #endif
+#include "McuTimeout.h"
 
 /*
 ** ===================================================================
@@ -95,6 +96,13 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 void McuRTOS_vApplicationTickHook(void)
 {
   /* Hook called for every RTOS tick. */
+  static int cntr = 0;
+
+  cntr++;
+  if (cntr==McuTimeout_TICK_PERIOD_MS) {
+    McuTimeout_AddTick();
+    cntr = 0;
+  }
 #if PL_CONFIG_USE_RTC
   McuTimeDate_AddTick();
 #endif

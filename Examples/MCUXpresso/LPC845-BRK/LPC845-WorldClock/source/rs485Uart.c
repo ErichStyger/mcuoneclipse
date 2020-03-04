@@ -116,33 +116,44 @@ uint8_t RS485Uart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* def
 void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
-  BaseType_t xHigherPriorityTaskWoken;
+  BaseType_t xHigherPriorityTaskWoken1 = false, xHigherPriorityTaskWoken2 = false;
   static unsigned char prevChar = '\0';
   static bool responseLine = false;
+  uint8_t count;
 
   flags = RS485Uart_CONFIG_UART_GET_FLAGS(RS485Uart_CONFIG_UART_DEVICE);
+
   /* new data arrived. */
   if (flags&RS485Uart_CONFIG_UART_HW_RX_READY_FLAGS) {
-    data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-
-    /* only store into RS485UartResponseQueue if we have a line starting with '@' */
-    if (prevChar=='\n' && data=='@') {
-      responseLine = true;
-    }
-    if (responseLine) {
-      (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken);
-    }
-    prevChar = data;
-    if (responseLine && data=='\n') { /* end of line while on response line */
-      responseLine = false;
-    }
-
-    (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken);
-    if (xHigherPriorityTaskWoken != pdFALSE) {
-      vPortYieldFromISR();
+#if RS485Uart_CONFIG_HAS_FIFO
+    count = RS485Uart_CONFIG_UART_DEVICE->RCFIFO;
+#else
+    count = 1;
+#endif
+    while(count!=0) {
+      data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
+      if (data!=0) { /* could happen especially after power-up, ignore it */
+        /* only store into RS485UartResponseQueue if we have a line starting with '@' */
+        if (prevChar=='\n' && data=='@') {
+          responseLine = true;
+        }
+        if (responseLine) {
+          (void)xQueueSendFromISR(RS485UartResponseQueue, &data, &xHigherPriorityTaskWoken1);
+        }
+        prevChar = data;
+        if (responseLine && data=='\n') { /* end of line while on response line */
+          responseLine = false;
+        }
+        (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
+      }
+      count--;
     }
   }
+
   RS485Uart_CONFIG_CLEAR_STATUS_FLAGS(RS485Uart_CONFIG_UART_DEVICE, flags);
+  if (xHigherPriorityTaskWoken1 != pdFALSE || xHigherPriorityTaskWoken2 != pdFALSE) {
+    vPortYieldFromISR();
+  }
   __DSB();
 }
 
@@ -155,7 +166,10 @@ static void InitUart(void) {
   config.baudRate_Bps = RS485Uart_CONFIG_UART_BAUDRATE;
   config.enableRx     = true;
   config.enableTx     = true;
-
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  config.enableRxRTS  = true; /* using RTS pin to control the transceiver */
+  config.enableTxCTS  = false;
+#endif
   /* Initialize the USART with configuration. */
   RS485Uart_CONFIG_UART_INIT(RS485Uart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(RS485Uart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
 #if RS485Uart_CONFIG_USE_HW_OE_RTS
@@ -167,6 +181,9 @@ static void InitUart(void) {
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OEPOL(1); /* 1: the output enable signal is high active */
   RS485Uart_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
   #endif
+#endif
+#if RS485Uart_CONFIG_HAS_FIFO
+  UART_EnableRxFIFO(RS485Uart_CONFIG_UART_DEVICE, false); /* disable UART Rx FIFO */
 #endif
   RS485Uart_CONFIG_UART_ENABLE_INTERRUPTS(RS485Uart_CONFIG_UART_DEVICE,
 		  RS485Uart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS

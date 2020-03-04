@@ -66,6 +66,7 @@
 #endif
 #if PL_CONFIG_USE_I2C
   #include "i2clib.h"
+  #include "i2clibconfig.h"
 #endif
 #if PL_CONFIG_USE_STEPPER
   #include "stepper.h"
@@ -75,6 +76,9 @@
 #endif
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
+#endif
+#if PL_CONFIG_USE_CLOCK
+  #include "Clock.h"
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL
   #include "NeoPixel.h"
@@ -92,9 +96,14 @@ void PL_Init(void) {
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   GPIO_PortInit(GPIO, 0); /* ungate the clocks for GPIO_0 (PIO0_19): used LED */
   GPIO_PortInit(GPIO, 1); /* ungate the clocks for GPIO_1, used by motor driver signals */
-#elif McuLib_CONFIG_CPU_IS_KINETIS
+#elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #if PL_CONFIG_USE_RS485
   CLOCK_EnableClock(kCLOCK_PortB); /* EN for RS-485 */
+  #endif
+  #if CONFIG_I2C_USE_PORT_B
+  CLOCK_EnableClock(kCLOCK_PortB); /* PTB0, PTB1 for I2C */
+  #elif CONFIG_I2C_USE_PORT_E
+  CLOCK_EnableClock(kCLOCK_PortE); /* PTE0, PTE1 for I2C */
   #endif
 #endif
   /* McuLib modules */
@@ -164,6 +173,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_WDT
   WDT_Init();
+#endif
+#if PL_CONFIG_USE_CLOCK
+  CLOCK_Init();
 #endif
 #if PL_CONFIG_USE_NEO_PIXEL
   PIXDMA_Init();

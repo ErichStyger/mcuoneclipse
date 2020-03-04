@@ -7,8 +7,11 @@
 #include "platform.h"
 #if PL_CONFIG_USE_WDT
 #include "watchdog.h"
+#if McuLib_CONFIG_CPU_IS_LPC
 #include "fsl_wwdt.h"
 #include "fsl_power.h"
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#endif
 #include "leds.h"
 #include "McuRTOS.h"
 #include "McuWait.h"
@@ -34,7 +37,7 @@ static WDT_Reports WDT_ReportingBoundaries[WDT_REPORT_ID_NOF] = {
     {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"RS485Task", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
   #if PL_CONFIG_USE_SHELL
-    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
+    {.id=WDT_REPORT_ID_TASK_SHELL, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
 };
 
@@ -106,6 +109,7 @@ static void WDT_CheckHealth(void) {
   taskEXIT_CRITICAL();
 }
 
+#if McuLib_CONFIG_CPU_IS_LPC
 void WDT_IRQHandler(void) {
   uint32_t wdtStatus = WWDT_GetStatusFlags(WWDT);
 
@@ -129,6 +133,8 @@ void WDT_IRQHandler(void) {
      */
   }
 }
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#endif
 
 /* extra safety checks, idea by Jack Ganssle, see "Great Watchdog Timers for Embedded Systems" */
 static void WDT_a(void) {
@@ -149,7 +155,10 @@ static void WDT_b(void) {
 #if WDT_DISABLED_FOR_DEBUG
   #warning "Watchdog is disabled!"
 #else
+#if McuLib_CONFIG_CPU_IS_LPC
   WWDT_Refresh(WWDT);
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#endif
 #endif
   if (WDT_State!=0x8888) {
     for(;;) { /* getting here in case of run-away code?!? */
@@ -177,8 +186,11 @@ static void WatchdogTask(void *pv) {
 }
 
 void WDT_Init(void) {
+#if McuLib_CONFIG_CPU_IS_LPC
   wwdt_config_t config;
   uint32_t wdtFreq;
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#endif
 
   /* init recordings */
   for(int i=0; i<WDT_REPORT_ID_NOF; i++) {
@@ -196,9 +208,9 @@ void WDT_Init(void) {
      for(;;){} /* error! probably out of memory */
   }
 
+#if McuLib_CONFIG_CPU_IS_LPC
   CLOCK_InitWdtOsc(kCLOCK_WdtAnaFreq600KHZ, 2U);
   POWER_DisablePD(kPDRUNCFG_PD_WDT_OSC);
-
   /* Check if reset was because of Watchdog */
   if (WWDT_GetStatusFlags(WWDT) & kWWDT_TimeoutFlag) {
   #if PL_CONFIG_USE_SHELL
@@ -210,24 +222,26 @@ void WDT_Init(void) {
     }
   }
   /* The WDT divides the input frequency into it by 4 */
-   wdtFreq = CLOCK_GetFreq(kCLOCK_WdtOsc)/4;
-   WWDT_GetDefaultConfig(&config);
-   /*
-    * Set watchdog feed time constant to approximately 4s
-    * Set watchdog warning time to 512 ticks after feed time constant
-    * Set watchdog window time to 1s
-    */
-   config.timeoutValue = MSEC_TO_COUNT(4000, wdtFreq);
-   config.warningValue = MSEC_TO_COUNT(3000, wdtFreq); /* warning interrupt after this time */
-   config.windowValue  = MSEC_TO_COUNT(4000, wdtFreq); /* kick has to happen below that value */
-   /* Configure WWDT to reset on timeout */
-   config.enableWatchdogReset = true;
-   /* Setup watchdog clock frequency(Hz). */
-   config.clockFreq_Hz = CLOCK_GetFreq(kCLOCK_WdtOsc);
-#if !WDT_DISABLED_FOR_DEBUG
-   WWDT_Init(WWDT, &config);
-#endif
+  wdtFreq = CLOCK_GetFreq(kCLOCK_WdtOsc)/4;
+  WWDT_GetDefaultConfig(&config);
+  /*
+   * Set watchdog feed time constant to approximately 4s
+   * Set watchdog warning time to 512 ticks after feed time constant
+   * Set watchdog window time to 4s
+   */
+  config.timeoutValue = MSEC_TO_COUNT(4000, wdtFreq);
+  config.warningValue = MSEC_TO_COUNT(3000, wdtFreq); /* warning interrupt after this time */
+  config.windowValue  = MSEC_TO_COUNT(4000, wdtFreq); /* kick has to happen below that value */
+  /* Configure WWDT to reset on timeout */
+  config.enableWatchdogReset = true;
+  /* Setup watchdog clock frequency(Hz). */
+  config.clockFreq_Hz = CLOCK_GetFreq(kCLOCK_WdtOsc);
+  #if !WDT_DISABLED_FOR_DEBUG
+  WWDT_Init(WWDT, &config);
+  #endif
    NVIC_EnableIRQ(WDT_IRQn);
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+#endif
 }
 
 #endif /* PL_CONFIG_USE_WDT */

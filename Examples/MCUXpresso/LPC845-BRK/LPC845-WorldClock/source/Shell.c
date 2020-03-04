@@ -46,6 +46,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_CLOCK
+  #include "clock.h"
+#endif
 #include "application.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -81,6 +84,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_MATRIX
   MATRIX_ParseCommand,
+#endif
+#if PL_CONFIG_USE_CLOCK
+  CLOCK_ParseCommand,
 #endif
   APP_ParseCommand,
   NULL /* Sentinel */
@@ -127,6 +133,15 @@ void SHELL_SendString(unsigned char *str) {
 }
 
 uint8_t SHELL_ParseCommand(unsigned char *command, McuShell_ConstStdIOType *io, bool silent) {
+  if (io==NULL) {
+#if PL_CONFIG_USE_SHELL_UART
+    io = &McuShellUart_stdio;
+#elif PL_CONFIG_USE_RTT
+    io = &McuRTT_stdio;
+#else
+  #error "no shell std IO?"
+#endif
+  }
   return McuShell_ParseWithCommandTableExt(command, io, CmdParserTable, silent);
 }
 
@@ -145,7 +160,7 @@ static void ShellTask(void *pv) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-#if PL_CONFIG_USE_STEPPER && !PL_CONFIG_USE_STEPPER_EMUL
+#if PL_CONFIG_USE_STEPPER && !PL_CONFIG_USE_STEPPER_EMUL /* for LED stepper emulation, we call this from the App/LED task */
     (void)STEPPER_CheckAndExecuteQueue(ios[0].stdio);
 #endif
     if (!SHELL_HasStdIoInput()) {
