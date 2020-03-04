@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -12,6 +12,8 @@
   #include "fsl_iap.h"
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #include "fsl_flash.h"
+  #include "fsl_smc.h"
+  #include "McuWait.h"
 #endif
 #include "McuLib.h"
 #include "McuUtility.h"
@@ -23,7 +25,7 @@
   #define FLASH_NVM_SECTOR_START    (FLASH_NVM_ADDR_START/1024) /* sector size is 1k */
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #define FLASH_NVM_ADDR_START    ((0+0x80000)-FLASH_NVM_BLOCK_SIZE) /* last block in FLASH, start address of configuration data in flash */
-  #define FLASH_NVM_BLOCK_SIZE    0x1000
+  #define FLASH_NVM_BLOCK_SIZE    0x800 /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
   /*! @brief Flash driver Structure */
   static flash_config_t s_flashDriver;
 #endif
@@ -51,23 +53,44 @@ static uint8_t NVMC_Erase(void) {
   if (res!=kStatus_IAP_Success) {
     return ERR_FAILED;
   }
+  return ERR_OK;
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   uint32_t pflashSectorSize = 0;
   status_t status;
+  uint8_t res = ERR_OK;
+
+  /* need to switch to normal RUN mode for flash programming,
+   * with Fcore=60MHz Fbus=Fflash=20MHz
+   * see https://community.nxp.com/thread/377633
+   */
+  status = SMC_SetPowerModeRun(SMC);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+  McuWait_Waitms(1); /* give time to switch clock, otherwise flash programming might fail below */
 
   /* erase */
   FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize);
-  status = FLASH_Erase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_ApiEraseKey);
-  if (status!=kStatus_FTFx_Success) {
-    return ERR_FAILED;
+  for(;;) { /* breaks, switch back to HSRUN if things fail */
+    status = FLASH_Erase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_ApiEraseKey);
+    if (status!=kStatus_FTFx_Success || pflashSectorSize!=FLASH_NVM_BLOCK_SIZE) {
+      res = ERR_FAILED;
+      break;
+    }
+    /* Verify sector if it's been erased. */
+    status = FLASH_VerifyErase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_MarginValueUser);
+    if (status!=kStatus_FTFx_Success) {
+      res = ERR_FAILED;
+      break;
+    }
+    break;
+  } /* for */
+  status = SMC_SetPowerModeHsrun(SMC);
+  if (status!=kStatus_Success) {
+    res = ERR_FAILED;
   }
-  /* Verify sector if it's been erased. */
-  status = FLASH_VerifyErase(&s_flashDriver, FLASH_NVM_ADDR_START, pflashSectorSize, kFTFx_MarginValueUser);
-  if (status!=kStatus_FTFx_Success) {
-    return ERR_FAILED;
-  }
+  return res;
 #endif
-  return ERR_OK;
 }
 
 #if McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
@@ -76,11 +99,13 @@ uint8_t NVMC_SetBlockFlash(uint32_t addr, void *data, size_t dataSize) {
   int i;
   status_t status;
   uint8_t *p, *q;
+  uint8_t res = ERR_OK;
 
   /* make backup of current content */
   for(i=0;i<sizeof(buf)/4; i++) {
     buf[i] = ((uint32_t*)FLASH_NVM_ADDR_START)[i];
   }
+
   if (NVMC_Erase()!=ERR_OK) {
     return ERR_FAILED;
   }
@@ -91,11 +116,30 @@ uint8_t NVMC_SetBlockFlash(uint32_t addr, void *data, size_t dataSize) {
     *p = *q;
     p++; q++;
   }
-  status = FLASH_Program(&s_flashDriver, FLASH_NVM_ADDR_START, (uint8_t*)buf, sizeof(buf));
-  if (status!=kStatus_FTFx_Success) {
+  /* need to switch to normal RUN mode for flash programming,
+   * with Fcore=60MHz Fbus=Fflash=20MHz
+   * see https://community.nxp.com/thread/377633
+   */
+  status = SMC_SetPowerModeRun(SMC);
+  if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
-  return ERR_OK;
+  McuWait_Waitms(1); /* give time to switch clock, otherwise flash programming might fail below */
+
+  /* program */
+  for(;;) { /* breaks, switch back to HSRUN if things fail */
+    status = FLASH_Program(&s_flashDriver, FLASH_NVM_ADDR_START, (uint8_t*)buf, sizeof(buf));
+    if (status!=kStatus_FTFx_Success) {
+      res = ERR_FAILED;
+      break;
+    }
+    break;
+  } /* for */
+  status = SMC_SetPowerModeHsrun(SMC);
+  if (status!=kStatus_Success) {
+    res = ERR_FAILED;
+  }
+  return res;
 }
 #endif
 
