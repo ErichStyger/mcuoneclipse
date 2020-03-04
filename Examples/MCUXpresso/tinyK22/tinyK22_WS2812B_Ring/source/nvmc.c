@@ -22,7 +22,7 @@
   #define FLASH_NVM_ADDR_START      (0xFC00) /* LPC845 has 64k FLASH (0x10000), last 1k page is used for NVM */
   #define FLASH_NVM_SECTOR_START    (FLASH_NVM_ADDR_START/1024) /* sector size is 1k */
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
-  #define FLASH_NVM_ADDR_START    0x10000000 /* DFLASH, NVRM_Config, start address of configuration data in flash */
+  #define FLASH_NVM_ADDR_START    ((0+0x80000)-FLASH_NVM_BLOCK_SIZE) /* last block in FLASH, start address of configuration data in flash */
   #define FLASH_NVM_BLOCK_SIZE    0x1000
   /*! @brief Flash driver Structure */
   static flash_config_t s_flashDriver;

@@ -945,6 +945,7 @@ void STEPPER_ShowLEDs(void) {
  // for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
   NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[0].device);
   NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[1].device);
+  /* \todo Add more rings */
  // } /* for */
   NEO_TransferPixels();
 }

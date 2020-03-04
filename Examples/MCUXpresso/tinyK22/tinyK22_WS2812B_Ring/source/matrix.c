@@ -269,7 +269,7 @@ static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
   RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000); /* execute the queue */
 #if PL_CONFIG_USE_STEPPER_EMUL
-  SHELL_ParseCommand("stepper exq", NULL, true);
+  SHELL_ParseCommand((unsigned char*)"stepper exq", NULL, true);
 #endif
   return ERR_OK;
 }
@@ -888,6 +888,15 @@ static uint8_t MATRIX_Demo6(const McuShell_StdIOType *io) {
   return ERR_OK;
 }
 
+static uint8_t MATRIX_Demo7(const McuShell_StdIOType *io) {
+  MATRIX_DrawAllClockDelays(10, 10);
+  MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+  MATRIX_DrawAllClockHands(270, 180);
+  MATRIX_SendAndExecute(5000);
+  MATRIX_MoveAllto12(10000, io);
+  return ERR_OK;
+}
+
 static uint8_t Intermezzo0(void) {
   MATRIX_DrawAllClockDelays(40, 40);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
@@ -981,6 +990,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  demo 4", (unsigned char*)"Demo turning clap\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 5", (unsigned char*)"Demo with squares\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 6", (unsigned char*)"Demo fast clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  demo 7", (unsigned char*)"Demo moving hand around\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  intermezzo <nr>", (unsigned char*)"Play Intermezzo\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  delay <delay>", (unsigned char*)"Set default delay\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  time <time>", (unsigned char*)"Show time\r\n", io->stdOut);
@@ -1021,6 +1031,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "matrix demo 6")==0) {
     *handled = true;
     return MATRIX_Demo6(io);
+  } else if (McuUtility_strcmp((char*)cmd, "matrix demo 7")==0) {
+    *handled = true;
+    return MATRIX_Demo7(io);
   } else if (McuUtility_strcmp((char*)cmd, "matrix 12")==0) {
     *handled = true;
     return MATRIX_MoveAllto12(10000, io);
