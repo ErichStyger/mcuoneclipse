@@ -37,7 +37,7 @@ static WDT_Reports WDT_ReportingBoundaries[WDT_REPORT_ID_NOF] = {
     {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"RS485Task", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
   #if PL_CONFIG_USE_SHELL
-    {.id=WDT_REPORT_ID_TASK_RS485, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
+    {.id=WDT_REPORT_ID_TASK_SHELL, .str=(const unsigned char*)"ShellTask", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=130},
   #endif
 };
 
@@ -188,9 +188,9 @@ static void WatchdogTask(void *pv) {
 void WDT_Init(void) {
 #if McuLib_CONFIG_CPU_IS_LPC
   wwdt_config_t config;
+  uint32_t wdtFreq;
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 #endif
-  uint32_t wdtFreq;
 
   /* init recordings */
   for(int i=0; i<WDT_REPORT_ID_NOF; i++) {
