@@ -23,9 +23,20 @@ $CMP LPC845M301JBD48E
 D NXP LPC845 in LQFP48 package
 $ENDCMP
 #
+$CMP MK22FN512VLH12
+D NXP MK22FN512VLH12
+K NXP, tinyK22, K22, K22FN512
+$ENDCMP
+#
 $CMP MS_X12.017
 D switec QuadDriver for miniature stepper motors
 K X12.017, stepper motor, driver
+$ENDCMP
+#
+$CMP Micro-SD-Card
+D Micro SD card as on tinyK22 or FRDM-K22F
+K micro, SD, SD-Card
+F https://www.mouser.ch/ProductDetail/Molex/105027-0001/?qs=sGAEpiMZZMtDT69Hefc2iUx3kUxhRikE
 $ENDCMP
 #
 $CMP RS485_PWR_4pin
@@ -43,6 +54,11 @@ $ENDCMP
 #
 $CMP SWD_JTAG_10pin
 D 10pin 1.27pitch SWD/JTAG Header
+$ENDCMP
+#
+$CMP UsbMicro
+D USB, Micro
+K USB, Micro
 $ENDCMP
 #
 $CMP VID28-XX
