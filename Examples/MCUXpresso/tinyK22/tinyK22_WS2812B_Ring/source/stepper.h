@@ -45,7 +45,7 @@ uint8_t STEPPER_ZeroAllHands(void);
 
 void STEPPER_MoveAndWait(uint32_t waitMs);
 
-void STEPPER_ShowLEDs(void);
+void STEPPER_SetLEDs(void);
 
 void STEPPER_Deinit(void);
 void STEPPER_Init(void);

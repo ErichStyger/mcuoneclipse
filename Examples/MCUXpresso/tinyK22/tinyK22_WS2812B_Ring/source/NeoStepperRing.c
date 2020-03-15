@@ -129,9 +129,39 @@ static void NEOSR_SetPixels(NEOSR_Device_t *dev, int32_t centerPos, uint8_t trai
   }
 }
 
+static void Illuminate(NEOSR_Handle_t device) {
+  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+  int ledPos;
+  int pos;
+
+  pos = dev->pos;
+  /* make pos fit within 0...NEOSR_NOF_360 */
+  if (pos<0) {
+    pos = -pos;
+    pos %= NEOSR_NOF_360;
+    pos = NEOSR_NOF_360-pos;
+  }
+  /* pos is now positive */
+  pos %= NEOSR_NOF_360;
+  /* pos is now within 0..NEOSR_NOF_360 */
+  ledPos = pos/(NEOSR_NOF_360/NEOSR_NOF_LED);
+
+  ledPos = dev->ledStartPos + pos;
+  /*
+   *  stepper pos  ... 4319 | 0 107 | 108 | ...
+   *  led pos                    53|54-161 | 162..(+108) |
+   *  led index        39       0        1
+   *
+   */
+  NEO_SetPixelRGB(dev->ledLane, ledPos, dev->ledRed, dev->ledGreen, dev->ledBlue);
+}
+
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
+  Illuminate(device);
+#if 0
   int32_t pos, rotorPos;
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+
 
   rotorPos = dev->pos;
   if (rotorPos<0) {
@@ -177,6 +207,7 @@ void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
   }
 #else
   NEO_SetPixelRGB(dev->ledLane, pos, dev->ledRed, dev->ledGreen, dev->ledBlue);
+#endif
 #endif
 }
 
