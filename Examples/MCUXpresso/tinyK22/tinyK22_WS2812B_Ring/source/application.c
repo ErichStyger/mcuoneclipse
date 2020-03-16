@@ -17,6 +17,8 @@
 #include "NeoPixel.h"
 #include "stepper.h"
 
+#include "NeoStepperRing.h"
+
 #if PL_CONFIG_USE_SHELL
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   return ERR_OK;
@@ -77,7 +79,9 @@ static void AppTask(void *pv) {
 //NEO_SetPixelRGB(0, 40+0+10, 0xff, 0, 0x00);
   //NEO_SetPixelRGB(0, 40+0+10+20, 0xff/8, 0, 0x00);
 #endif
- for(;;) {
+
+  int stepperPos = 0;
+  for(;;) {
 #if 0 && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
    NEO_ClearAllPixel();
    NEO_SetPixelRGB(0, i, 0xff/4, 0x00, 0x00);
@@ -166,10 +170,15 @@ static void AppTask(void *pv) {
     (void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
 #if 1 && PL_CONFIG_USE_STEPPER_EMUL
     NEO_ClearAllPixel();
-    STEPPER_SetLEDs();
+    //STEPPER_SetLEDs();
+    NEOSR_IlluminatePos(stepperPos, 0, 0, 0x0, 0x0, 0xff);
     NEO_TransferPixels();
+    stepperPos++;
+    if (stepperPos==STEPPER_CLOCK_360_STEPS) {
+      stepperPos = 0;
+    }
 #endif
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(20));
   } /* for */
 }
 

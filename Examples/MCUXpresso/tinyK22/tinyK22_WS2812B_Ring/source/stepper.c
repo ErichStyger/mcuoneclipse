@@ -939,6 +939,7 @@ void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], s
 #include "NeoPixel.h"
 
 void STEPPER_SetLEDs(void) {
+#if 0
   int i = 0;
   //for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
     NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[0].device);
@@ -948,7 +949,9 @@ void STEPPER_SetLEDs(void) {
     NEOSR_SetRotorPixel(STEPPER_Clocks[2].mot[0].device);
     NEOSR_SetRotorPixel(STEPPER_Clocks[3].mot[0].device);
   //} /* for */
+#endif
 }
+
 #endif
 
 void STEPPER_Init(void) {
