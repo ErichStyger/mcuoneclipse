@@ -34,6 +34,7 @@ void NEOSR_SingleStep(NEOSR_Handle_t device, int step);
 
 void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRed, int ledGreen, int ledBlue);
 
+void NEOSR_Deinit(void);
 void NEOSR_Init(void);
 
 #endif /* NEOSTEPPERRING_H_ */

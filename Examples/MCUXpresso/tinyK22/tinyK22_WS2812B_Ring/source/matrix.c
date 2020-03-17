@@ -14,6 +14,7 @@
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
 #endif
+#include "StepperBoard.h"
 
 #define MATRIX_BOARD_ARRANGEMENT  (1)  /* 0: first clock (3x8, black with red hands) or 1: second clock: (3x8, green hands) */
 
@@ -38,29 +39,12 @@ typedef struct {
 typedef struct {
   bool enabled; /* if board is enabled or not */
   uint8_t addr; /* RS-485 address of the board */
+#if PL_CONFIG_USE_STEPPER_EMUL
+  STEPBOARD_Handle_t board; /* board handle */
+#endif
 } MATRIX_Board;
 
-#if MATRIX_BOARD_ARRANGEMENT==0
-  static const MATRIX_Board MATRIX_Boards[MATRIX_NOF_BOARDS] =
-    {
-      {.enabled = true, .addr = 0x10},
-      {.enabled = true, .addr = 0x11},
-      {.enabled = true, .addr = 0x12},
-      {.enabled = true, .addr = 0x13},
-      {.enabled = true, .addr = 0x14},
-      {.enabled = true, .addr = 0x15},
-    };
-#elif MATRIX_BOARD_ARRANGEMENT==1
-  static const MATRIX_Board MATRIX_Boards[MATRIX_NOF_BOARDS] =
-    {
-      {.enabled = false, .addr = 0x20},
-      {.enabled = false, .addr = 0x21},
-      {.enabled = false, .addr = 0x22},
-      {.enabled = false, .addr = 0x23},
-      {.enabled = true,  .addr = 0x24},
-      {.enabled = false, .addr = 0x25},
-    };
-#endif
+static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
 
 static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
 {
@@ -95,8 +79,8 @@ static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_
 
 static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
-    if (MATRIX_Boards[i].addr==addr) {
-      return MATRIX_Boards[i].enabled;
+    if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
+      return STEPBOARD_IsEnabled(MATRIX_Boards[i]);
     }
   }
   return false;
@@ -187,8 +171,8 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   for(;;) { /* breaks */
     for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
-        if (MATRIX_Boards[i].enabled) {
-          res = RS485_SendCommand(MATRIX_Boards[i].addr, (unsigned char*)"stepper idle", 1000, false); /* ask board if it is idle */
+        if (STEPBOARD_IsEnabled(MATRIX_Boards[i])) {
+          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"stepper idle", 1000, false); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -1087,6 +1071,76 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 #endif
 
 void MATRIX_Init(void) {
+#if 0
+#if MATRIX_BOARD_ARRANGEMENT==0
+  static const MATRIX_Board MATRIX_Boards[MATRIX_NOF_BOARDS] =
+    {
+      {.enabled = true, .addr = 0x10},
+      {.enabled = true, .addr = 0x11},
+      {.enabled = true, .addr = 0x12},
+      {.enabled = true, .addr = 0x13},
+      {.enabled = true, .addr = 0x14},
+      {.enabled = true, .addr = 0x15},
+    };
+#elif MATRIX_BOARD_ARRANGEMENT==1
+    {
+      {.enabled = false, .addr = 0x20},
+      {.enabled = false, .addr = 0x21},
+      {.enabled = false, .addr = 0x22},
+      {.enabled = false, .addr = 0x23},
+      {.enabled = true,  .addr = 0x24},
+      {.enabled = false, .addr = 0x25},
+    };
+#endif
+#endif
+  STEPBOARD_Config_t config;
+
+  STEPBOARD_GetDefaultConfig(&config);
+
+#if MATRIX_BOARD_ARRANGEMENT==0
+  config.addr = 0x10;
+  MATRIX_Boards[0] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x11;
+  MATRIX_Boards[1] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x12;
+  MATRIX_Boards[2] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x13;
+  MATRIX_Boards[3] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x14;
+  MATRIX_Boards[4] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x15;
+  MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
+#elif MATRIX_BOARD_ARRANGEMENT==1
+  config.addr = 0x20;
+  config.enabled = false;
+  MATRIX_Boards[0] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x21;
+  config.enabled = false;
+  MATRIX_Boards[1] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x22;
+  config.enabled = false;
+  MATRIX_Boards[2] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x23;
+  config.enabled = false;
+  MATRIX_Boards[3] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x24;
+  config.enabled = true;
+  MATRIX_Boards[4] = STEPBOARD_InitDevice(&config);
+
+  config.addr = 0x25;
+  config.enabled = false;
+  MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
+#endif
+
   MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);

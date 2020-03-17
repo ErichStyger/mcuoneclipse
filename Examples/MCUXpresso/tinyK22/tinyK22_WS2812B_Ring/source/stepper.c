@@ -58,7 +58,7 @@ typedef struct STEPPER_Motor_t {
   McuX12_017_Handle_t device; /* X12.017 device */
   McuX12_017_Motor_e mot; /* motor id */
 #elif PL_CONFIG_USE_STEPPER_EMUL
-  NEOSR_Handle_t device; /* virtual stepper motor with LED ring */
+  NEOSR_Handle_t device; /* virtual stepper motor as LED ring */
 #endif
 #if PL_CONFIG_USE_MAG_SENSOR
   MAG_MagSensor_e mag; /* magnet sensor for motor */
@@ -227,7 +227,7 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 10;
+  uint32_t delta = 2;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
@@ -339,6 +339,7 @@ void STEPPER_MoveClockDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, 
 
 void STEPPER_Deinit(void) {
 #if PL_CONFIG_USE_X12_STEPPER
+  /* having two IC's for the motor driver/device */
   McuX12_017_DeinitDevice(STEPPER_Clocks[0].mot[0].device);
   McuX12_017_DeinitDevice(STEPPER_Clocks[2].mot[0].device);
 #endif

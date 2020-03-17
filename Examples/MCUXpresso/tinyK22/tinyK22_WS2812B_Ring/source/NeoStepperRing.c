@@ -33,6 +33,7 @@ static const NEOSR_Config_t defaultConfig =
   .ledBlue = 0,
 };
 
+/* device for a single LED ring */
 typedef struct {
   int pos; /* stepper motor position */
   bool ledCw;      /* clock-wise */
@@ -181,6 +182,10 @@ void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
   NEOSR_IlluminatePos(dev->pos, dev->ledLane, dev->ledStartPos, dev->ledRed, dev->ledGreen, dev->ledBlue);
 }
 
+void NEOSR_Deinit(void) {
+  /* nothing needed */
+}
+
 void NEOSR_Init(void) {
-  /* tbd */
+  /* nothing needed */
 }

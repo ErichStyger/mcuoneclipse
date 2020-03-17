@@ -84,6 +84,7 @@
   #include "NeoPixel.h"
   #include "PixelDMA.h"
 #endif
+#include "StepperBoard.h"
 
 void PL_InitFromTask(void) {
 #if PL_CONFIG_USE_RTC && PL_CONFIG_USE_HW_I2C
@@ -181,4 +182,5 @@ void PL_Init(void) {
   PIXDMA_Init();
   NEO_Init();
 #endif
+  STEPBOARD_Init();
 }
