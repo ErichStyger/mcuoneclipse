@@ -156,9 +156,9 @@ uint8_t NEO_OrPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t gr
   }
   NEO_GetPixelRGB(x, y, &r, &g, &b);
   r |= red;
+  g |= green;
   b |= blue;
-  g |= blue;
-  NEO_SetPixelRGB(x, y, red, green, blue);
+  NEO_SetPixelRGB(x, y, r, g, b);
   return ERR_OK;
 }
 

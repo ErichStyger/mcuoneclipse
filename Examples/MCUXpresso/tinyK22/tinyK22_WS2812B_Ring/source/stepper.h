@@ -12,7 +12,7 @@
 #include "McuShell.h"
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
-uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io);
+//uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io);
 
 #define STEPPER_NOF_CLOCKS        (4)
 #define STEPPER_NOF_CLOCK_MOTORS  (2)

@@ -40,6 +40,7 @@
 
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* number of items in stepper command queue */
 static bool STEPPER_ExecuteQueue = false;
+static TaskHandle_t StepperQueueTaskHandle;
 
 typedef enum {
   SCT_CHANNEL_MASK_0 = (1<<0),
@@ -891,6 +892,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     }
   } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0) {
     STEPPER_ExecuteQueue = true;
+    vTaskResume(StepperQueueTaskHandle);
     *handled = TRUE;
   } else if (McuUtility_strcmp((char*)cmd, "stepper idle")==0) {
     *handled = TRUE;
@@ -903,8 +905,8 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   }
   return res;
 }
-
-uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io) {
+#if 0
+static uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io) {
   uint8_t res = ERR_OK;
   uint8_t *cmd;
   bool noCommandsInQueue = true;
@@ -927,7 +929,7 @@ uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io) {
   }
   return res;
 }
-
+#endif
 #if 0
 void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], size_t nofTableEntries) {
   motor->accelTable = table;
@@ -939,20 +941,43 @@ void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], s
 #include "NeoPixel.h"
 
 void STEPPER_SetLEDs(void) {
-#if 0
-  int i = 0;
-  //for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
     NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[0].device);
-    //NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[1].device);
-
-    NEOSR_SetRotorPixel(STEPPER_Clocks[1].mot[0].device);
-    NEOSR_SetRotorPixel(STEPPER_Clocks[2].mot[0].device);
-    NEOSR_SetRotorPixel(STEPPER_Clocks[3].mot[0].device);
-  //} /* for */
-#endif
+    NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[1].device);
+  } /* for */
 }
-
 #endif
+
+static void StepperQueueTask(void *pv) {
+  uint8_t *cmd;
+  bool noCommandsInQueue = true;
+  uint8_t res;
+  McuShell_ConstStdIOType *io = McuShell_GetStdio();
+
+  for(;;) {
+    //vTaskSuspend(NULL);
+   // do {
+    noCommandsInQueue = true;
+    if (STEPPER_ExecuteQueue) {
+      for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+        for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+          if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
+            if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
+              noCommandsInQueue = false;
+              res = SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
+              vPortFree(cmd); /* free memory for command */
+            }
+          }
+        }
+      } /* for */
+      if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
+        STEPPER_ExecuteQueue = false;
+      }
+    }
+    vTaskDelay(pdMS_TO_TICKS(20));
+   // } while(!(noCommandsInQueue && STEPPER_IsIdle()));
+  } /* for */
+}
 
 void STEPPER_Init(void) {
 #if PL_CONFIG_USE_X12_STEPPER
@@ -1137,24 +1162,24 @@ void STEPPER_Init(void) {
   config.ledLane = 0;
   config.ledStartPos = 0;
   config.ledCw = true;
-  config.ledRed = 0;
+  config.ledRed = 0xff;
   config.ledGreen = 0;
-  config.ledBlue = 0xff/4;
+  config.ledBlue = 0x00;
   STEPPER_Clocks[0].mot[0].device = NEOSR_InitDevice(&config);
 
   config.ledLane = 0;
   config.ledStartPos = 0;
   config.ledCw = true;
-  config.ledRed = 0xff/4;
+  config.ledRed = 0;
   config.ledGreen = 0;
-  config.ledBlue = 0;
+  config.ledBlue = 0xff;
   STEPPER_Clocks[0].mot[1].device = NEOSR_InitDevice(&config);
 
   /* clock 1 */
   config.ledLane = 0;
   config.ledStartPos = 40;
   config.ledCw = true;
-  config.ledRed = 0xff/4;
+  config.ledRed = 0xff;
   config.ledGreen = 0;
   config.ledBlue = 0;
   STEPPER_Clocks[1].mot[0].device = NEOSR_InitDevice(&config);
@@ -1164,14 +1189,14 @@ void STEPPER_Init(void) {
   config.ledCw = true;
   config.ledRed = 0;
   config.ledGreen = 0;
-  config.ledBlue = 0xff/4;
+  config.ledBlue = 0xff;
   STEPPER_Clocks[1].mot[1].device = NEOSR_InitDevice(&config);
 
   /* clock 2 */
   config.ledLane = 0;
   config.ledStartPos = 80;
   config.ledCw = true;
-  config.ledRed = 0xff/4;
+  config.ledRed = 0xff;
   config.ledGreen = 0;
   config.ledBlue = 0;
   STEPPER_Clocks[2].mot[0].device = NEOSR_InitDevice(&config);
@@ -1181,14 +1206,14 @@ void STEPPER_Init(void) {
   config.ledCw = true;
   config.ledRed = 0;
   config.ledGreen = 0;
-  config.ledBlue = 0xff/4;
+  config.ledBlue = 0xff;
   STEPPER_Clocks[2].mot[1].device = NEOSR_InitDevice(&config);
 
   /* clock 3 */
   config.ledLane = 0;
   config.ledStartPos = 120;
   config.ledCw = true;
-  config.ledRed = 0xff/4;
+  config.ledRed = 0xff;
   config.ledGreen = 0;
   config.ledBlue = 0;
   STEPPER_Clocks[3].mot[0].device = NEOSR_InitDevice(&config);
@@ -1198,7 +1223,7 @@ void STEPPER_Init(void) {
   config.ledCw = true;
   config.ledRed = 0;
   config.ledGreen = 0;
-  config.ledBlue = 0xff/4;
+  config.ledBlue = 0xff;
   STEPPER_Clocks[3].mot[1].device = NEOSR_InitDevice(&config);
 #endif /* #if PL_CONFIG_USE_X12_STEPPER */
 
@@ -1221,15 +1246,29 @@ void STEPPER_Init(void) {
     if (STEPPER_Clocks[i].mot[0].queue==NULL) {
       for(;;){} /* out of memory? */
     }
+    vQueueAddToRegistry(STEPPER_Clocks[i].mot[0].queue, "Queue0");
+
     STEPPER_Clocks[i].mot[1].queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
     if (STEPPER_Clocks[i].mot[1].queue==NULL) {
       for(;;){} /* out of memory? */
     }
+    vQueueAddToRegistry(STEPPER_Clocks[i].mot[0].queue, "Queue1");
   } /* for */
 #if PL_CONFIG_USE_X12_STEPPER
   McuX12_017_ResetDriver(STEPPER_Clocks[0].mot[0].device); /* shared reset line with second device */
 #endif
   Timer_Init();
+  if (xTaskCreate(
+      StepperQueueTask,  /* pointer to the task */
+      "StepperQueue", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+3,  /* initial priority */
+      &StepperQueueTaskHandle /* optional task handle to create */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
+  }
 }
 
 #endif /* PL_CONFIG_USE_STEPPER */

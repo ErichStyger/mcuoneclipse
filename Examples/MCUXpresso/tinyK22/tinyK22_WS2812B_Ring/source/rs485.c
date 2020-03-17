@@ -192,6 +192,11 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   unsigned char buf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   uint8_t res = ERR_OK;
 
+#if PL_CONFIG_USE_STEPPER_EMUL
+  if (dstAddr==0x24 || dstAddr==0) { /* \todo */
+    SHELL_ParseCommand(cmd, NULL, true);
+  }
+#endif
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)("@"));
   McuUtility_strcatNum8u(buf, sizeof(buf), dstAddr); /* add destination address */
   McuUtility_chcat(buf, sizeof(buf), ' ');

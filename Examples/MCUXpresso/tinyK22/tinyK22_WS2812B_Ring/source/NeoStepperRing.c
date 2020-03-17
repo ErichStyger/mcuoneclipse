@@ -20,6 +20,7 @@
 #define NEOSR_NOF_LED        (40)  /* number of LEDs in ring */
 #define NEOSR_NOF_360        (STEPPER_CLOCK_360_STEPS) /* number of steps for 360 degree */
 #define NEOSR_STEPS_FOR_LED  (NEOSR_NOF_360/NEOSR_NOF_LED) /* number of steps for each LED */
+#define NEOSR_LED_WIDTH      (NEOSR_STEPS_FOR_LED + 50) /* width for LED */
 
 /* default configuration, used for initializing the config */
 static const NEOSR_Config_t defaultConfig =
@@ -96,10 +97,13 @@ static int ScaleRange(int ledPos, int startPos, int endPos) {
   int percentage, diff;
   int a, b;
 
+  if (startPos<0) {
+    startPos += STEPPER_CLOCK_360_STEPS; /* make it positive */
+    endPos += STEPPER_CLOCK_360_STEPS; /* adjust end pos too */
+    ledPos += NEOSR_NOF_LED;
+  }
   if (ledPos<0) {
     ledPos = NEOSR_NOF_LED+ledPos;
-  } else if (ledPos>=NEOSR_NOF_LED) {
-    ledPos = ledPos%NEOSR_NOF_LED;
   }
   /* calculate start and end position of LED */
   a = ledPos*NEOSR_STEPS_FOR_LED;
@@ -120,10 +124,9 @@ static int ScaleRange(int ledPos, int startPos, int endPos) {
   return percentage;
 }
 
-void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRed, int ledGreen, int ledBlue) {
+void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRed, int ledGreen, int ledBlue) {
   int ledPos, pos;
   int dist[3];
-  const int width = NEOSR_STEPS_FOR_LED; /* one led width */
 
   stepperPos += NEOSR_STEPS_FOR_LED/2; /* adjust by half a LED, because 0 is at the middle of the 12-o-clock LED */
   /* make pos fit within 0...NEOSR_NOF_360 */
@@ -141,9 +144,9 @@ void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRe
    *  led pos                    53|54-161 | 162..(+108) |
    *  led index        39       0        1
    */
-  dist[0] = ScaleRange(ledPos-1, stepperPos-width/2, stepperPos+width/2-1);
-  dist[1] = ScaleRange(ledPos, stepperPos-width/2, stepperPos+width/2-1);
-  dist[2] = ScaleRange(ledPos+1, stepperPos-width/2, stepperPos+width/2-1);
+  dist[0] = ScaleRange(ledPos-1, stepperPos-NEOSR_LED_WIDTH/2, stepperPos+NEOSR_LED_WIDTH/2-1);
+  dist[1] = ScaleRange(ledPos, stepperPos-NEOSR_LED_WIDTH/2, stepperPos+NEOSR_LED_WIDTH/2-1);
+  dist[2] = ScaleRange(ledPos+1, stepperPos-NEOSR_LED_WIDTH/2, stepperPos+NEOSR_LED_WIDTH/2-1);
 
   uint8_t r,g,b;
 
@@ -154,13 +157,13 @@ void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRe
   if (pos<0) {
     pos = NEOSR_NOF_LED-1;
   }
-  NEO_SetPixelRGB(ledLane, pos, r, g, b);
+  NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
   r = NEO_GammaCorrect8(ledRed*dist[1]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[1]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[1]/0xff);
   pos = ledPos;
-  NEO_SetPixelRGB(ledLane, pos, r, g, b);
+  NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
   r = NEO_GammaCorrect8(ledRed*dist[2]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[2]/0xff);
@@ -169,38 +172,13 @@ void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRe
   if (pos>NEOSR_NOF_LED-1) {
     pos = 0;
   }
-  NEO_SetPixelRGB(ledLane, pos, r, g, b);
-}
-
-static void Illuminate(NEOSR_Handle_t device) {
-  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
-  int ledPos;
-  int pos;
-
-  pos = dev->pos;
-  /* make pos fit within 0...NEOSR_NOF_360 */
-  if (pos<0) {
-    pos = -pos;
-    pos %= NEOSR_NOF_360;
-    pos = NEOSR_NOF_360-pos;
-  }
-  /* pos is now positive */
-  pos %= NEOSR_NOF_360;
-  /* pos is now within 0..NEOSR_NOF_360 */
-  ledPos = pos/(NEOSR_NOF_360/NEOSR_NOF_LED);
-
-  ledPos = dev->ledStartPos + pos;
-  /*
-   *  stepper pos  ... 4319 | 0 107 | 108 | ...
-   *  led pos                    53|54-161 | 162..(+108) |
-   *  led index        39       0        1
-   *
-   */
-  NEO_SetPixelRGB(dev->ledLane, ledPos, dev->ledRed, dev->ledGreen, dev->ledBlue);
+  NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 }
 
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
-  Illuminate(device);
+  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+
+  NEOSR_IlluminatePos(dev->pos, dev->ledLane, dev->ledStartPos, dev->ledRed, dev->ledGreen, dev->ledBlue);
 }
 
 void NEOSR_Init(void) {

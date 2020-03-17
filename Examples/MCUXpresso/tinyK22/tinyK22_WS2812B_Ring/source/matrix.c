@@ -253,11 +253,6 @@ static uint8_t MATRIX_SendToQueue(void) {
               break;
           }
           RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000); /* queue the commands */
-#if PL_CONFIG_USE_STEPPER_EMUL
-          if (clockMatrix[x][y].addr==0x24) {
-            SHELL_ParseCommand(buf, NULL, true);
-          }
-#endif
         }
       }
     }
@@ -268,9 +263,6 @@ static uint8_t MATRIX_SendToQueue(void) {
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
   RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000); /* execute the queue */
-#if PL_CONFIG_USE_STEPPER_EMUL
-  SHELL_ParseCommand((unsigned char*)"stepper exq", NULL, true);
-#endif
   return ERR_OK;
 }
 
@@ -489,7 +481,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
     return MATRIX_FailedDemo(res);
   }
   /* move to park position */
-  res = MATRIX_MoveAllto12(10000, io);
+  res = MATRIX_MoveAllto12(20000, io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }

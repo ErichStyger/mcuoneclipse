@@ -39,6 +39,7 @@ Instructions:
 #define configTOTAL_HEAP_SIZE                       (32*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
+#define configQUEUE_REGISTRY_SIZE                   (32)
 
 /* performance counter: */
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)

@@ -167,18 +167,18 @@ static void AppTask(void *pv) {
     NEO_TransferPixels();
     vTaskDelay(pdMS_TO_TICKS(2000));
 #endif
-    (void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
+    //(void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
 #if 1 && PL_CONFIG_USE_STEPPER_EMUL
     NEO_ClearAllPixel();
-    //STEPPER_SetLEDs();
-    NEOSR_IlluminatePos(stepperPos, 0, 0, 0x0, 0x0, 0xff);
+    STEPPER_SetLEDs();
+    //NEOSR_IlluminatePos(stepperPos, 0, 0, 0x0, 0x0, 0xff);
     NEO_TransferPixels();
     stepperPos++;
     if (stepperPos==STEPPER_CLOCK_360_STEPS) {
       stepperPos = 0;
     }
 #endif
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(5));
   } /* for */
 }
 
