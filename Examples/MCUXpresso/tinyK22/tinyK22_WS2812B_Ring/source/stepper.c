@@ -227,11 +227,13 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
+  uint32_t delta = 12;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U, PIT_SOURCE_CLOCK));
+  /* note: the LPC is running on 200us, but the K22 is a bit faster, so running slower */
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U+delta, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
   NVIC_SetPriority(PIT_IRQ_ID, 0);
   EnableIRQ(PIT_IRQ_ID);
@@ -905,31 +907,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   }
   return res;
 }
-#if 0
-static uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io) {
-  uint8_t res = ERR_OK;
-  uint8_t *cmd;
-  bool noCommandsInQueue = true;
 
-  if (STEPPER_ExecuteQueue) {
-    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-      for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-        if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
-          if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
-            noCommandsInQueue = false;
-            res = SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
-            vPortFree(cmd); /* free memory for command */
-          }
-        }
-      }
-    }
-    if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
-      STEPPER_ExecuteQueue = false;
-    }
-  }
-  return res;
-}
-#endif
 #if 0
 void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], size_t nofTableEntries) {
   motor->accelTable = table;
@@ -951,12 +929,9 @@ void STEPPER_SetLEDs(void) {
 static void StepperQueueTask(void *pv) {
   uint8_t *cmd;
   bool noCommandsInQueue = true;
-  uint8_t res;
   McuShell_ConstStdIOType *io = McuShell_GetStdio();
 
   for(;;) {
-    //vTaskSuspend(NULL);
-   // do {
     noCommandsInQueue = true;
     if (STEPPER_ExecuteQueue) {
       for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
@@ -964,7 +939,7 @@ static void StepperQueueTask(void *pv) {
           if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
             if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
               noCommandsInQueue = false;
-              res = SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
+              (void)SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
               vPortFree(cmd); /* free memory for command */
             }
           }
@@ -975,7 +950,6 @@ static void StepperQueueTask(void *pv) {
       }
     }
     vTaskDelay(pdMS_TO_TICKS(20));
-   // } while(!(noCommandsInQueue && STEPPER_IsIdle()));
   } /* for */
 }
 

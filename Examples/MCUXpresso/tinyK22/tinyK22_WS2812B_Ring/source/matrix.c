@@ -188,7 +188,7 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
     for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
         if (MATRIX_Boards[i].enabled) {
-          res = RS485_SendCommand(MATRIX_Boards[i].addr, (unsigned char*)"stepper idle", 1000); /* ask board if it is idle */
+          res = RS485_SendCommand(MATRIX_Boards[i].addr, (unsigned char*)"stepper idle", 1000, false); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -252,7 +252,7 @@ static uint8_t MATRIX_SendToQueue(void) {
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cc");
               break;
           }
-          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000); /* queue the commands */
+          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000, true); /* queue the commands */
         }
       }
     }
@@ -262,7 +262,7 @@ static uint8_t MATRIX_SendToQueue(void) {
 
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
-  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000); /* execute the queue */
+  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000, true); /* execute the queue */
   return ERR_OK;
 }
 
@@ -382,11 +382,11 @@ uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
     McuShell_SendStr((unsigned char*)("MoveAllto12: failed executing!\r\n"), io->stdErr);
     return res;
   }
-  res = MATRIX_WaitForIdle(2000);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)("MoveAllto12: failed waiting for idle!\r\n"), io->stdErr);
-    return res;
-  }
+  //res = MATRIX_WaitForIdle(2000);
+  //if (res!=ERR_OK) {
+  //  McuShell_SendStr((unsigned char*)("MoveAllto12: failed waiting for idle!\r\n"), io->stdErr);
+  //  return res;
+  //}
   return ERR_OK;
 }
 
@@ -529,7 +529,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
     }
   }
   /* execute */
-  res = MATRIX_WaitForIdle(10000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
     McuShell_SendStr((unsigned char*)"Failed Demo1: Point 3\r\n", io->stdErr);
     return MATRIX_FailedDemo(res);
@@ -539,13 +539,13 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
     McuShell_SendStr((unsigned char*)"Failed Demo1: Point 4\r\n", io->stdErr);
     return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_WaitForIdle(10000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
    McuShell_SendStr((unsigned char*)"Failed Demo1: Point 5\r\n", io->stdErr);
    return MATRIX_FailedDemo(res);
   }
   /* move to park position */
-  res = MATRIX_MoveAllto12(10000, io);
+  res = MATRIX_MoveAllto12(20000, io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -556,16 +556,10 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
   int angle0, angle1;
   uint8_t res;
 
-  /* init at 12 */
- // res = MATRIX_MoveAllto12(10000, io);
- // if (res!=ERR_OK) {
- //   return res;
- // }
-  /* move all clocks to '|' position */
   (void)MATRIX_DrawAllClockHands(0, 180);
   res = MATRIX_SendToQueue(); /* queue command */
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   /* configure delays */
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
@@ -582,25 +576,23 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
     (void)MATRIX_DrawAllClockHands(angle0, angle1);
     res = MATRIX_SendToQueue(); /* queue command */
     if (res!=ERR_OK) {
-      return res;
+      return MATRIX_FailedDemo(res);
     }
   }
 
   /* execute */
   res = MATRIX_WaitForIdle(10000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   res = MATRIX_WaitForIdle(10000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-  /* move to park position */
-  //return MATRIX_MoveAllto12(10000, io);
   return ERR_OK;
 }
 
@@ -620,20 +612,20 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
   }
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_WaitForIdle(1000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-////////////////////////
-  res = MATRIX_WaitForIdle(5000);
+
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
@@ -649,7 +641,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
   }
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
@@ -659,23 +651,22 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
   }
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   /* execute */
-  res = MATRIX_WaitForIdle(1000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   /* move to park position */
-  res = MATRIX_WaitForIdle(10000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-  //return MATRIX_MoveAllto12(10000, io);
   return ERR_OK;
 }
 
@@ -689,47 +680,41 @@ static uint8_t MATRIX_Demo4(const McuShell_StdIOType *io) {
   MATRIX_DrawAllClockHands(180, 180);
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed sending to the queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(0, 0);
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed sending to the queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(0, 90);
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed sending to the queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(270, 0);
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed sending to the queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   /* execute */
   res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed executing queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_WaitForIdle(8000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed waiting\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   /* move to park position */
-  res = MATRIX_WaitForIdle(10000);
+  res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   return MATRIX_MoveAllto12(10000, io);
 }
@@ -752,12 +737,17 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
   }
   res = MATRIX_SendToQueue(); /* queue commands */
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed sending to the queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   /* execute */
   res = MATRIX_ExecQueue();
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
   res = MATRIX_WaitForIdle(9000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CW, STEPPER_MOVE_MODE_CCW);
   for(int x=0; x<MATRIX_NOF_CLOCKS_X; x+=2) {
@@ -770,8 +760,17 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 2, 225-1, 225+1);
   }
   res = MATRIX_SendToQueue(); /* queue commands */
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
   res = MATRIX_ExecQueue();
-  res = MATRIX_WaitForIdle(9000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
+  res = MATRIX_WaitForIdle(20000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CCW, STEPPER_MOVE_MODE_CW);
   for(int x=0; x<MATRIX_NOF_CLOCKS_X; x+=2) {
@@ -790,21 +789,18 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
   /* execute */
   res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed executing queue\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
   res = MATRIX_WaitForIdle(8000);
   if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Demo4: failed waiting\r\n", io->stdErr);
-    return res;
+    return MATRIX_FailedDemo(res);
   }
 
   /* move to park position */
   res = MATRIX_WaitForIdle(10000);
   if (res!=ERR_OK) {
-    return res;
+    return MATRIX_FailedDemo(res);
   }
-  //return MATRIX_MoveAllto12(10000, io);
   return ERR_OK;
 }
 
@@ -842,28 +838,44 @@ static uint8_t MATRIX_Demo(const McuShell_StdIOType *io) {
 
   MATRIX_Demo5(io);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_ShowTime(20, 34);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
   MATRIX_Delay(3000);
 
   MATRIX_Demo3(io);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_ShowTemperature(22);
   MATRIX_Delay(3000);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_Demo2(io);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
 
   MATRIX_ShowTime(20, 35);
   res = MATRIX_WaitForIdle(15000);
+  if (res!=ERR_OK) {
+    return MATRIX_FailedDemo(res);
+  }
   MATRIX_Delay(3000);
 
-//  MATRIX_Demo5(io);
   MATRIX_MoveAllto12(10000, io);
-
   return res;
 }
 
