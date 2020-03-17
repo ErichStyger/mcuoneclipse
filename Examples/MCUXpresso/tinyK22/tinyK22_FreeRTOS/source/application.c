@@ -14,9 +14,6 @@
 #include "leds.h"
 #include "fsl_pit.h"
 
-#define HOST_RX_QUEUE_LENGTH    (512)
-static QueueHandle_t hostRxQueue;
-
 #if 0 /* using Cortex cycle counter */
 static uint32_t prevCycleCounter, cycleCntCounter = 0;
 
@@ -88,9 +85,11 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   PL_Init();
+  /* just some LED test code */
   McuLED_On(tinyLED);
   McuWait_Waitms(100);
   McuLED_Off(tinyLED);
+  /* creating task */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -101,17 +100,6 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-  hostRxQueue = xQueueCreate(HOST_RX_QUEUE_LENGTH, sizeof(uint8_t));
-  if (hostRxQueue==NULL) {
-    for(;;){} /* out of memory? */
-  }
-  vQueueAddToRegistry(hostRxQueue, "HostRxQueue");
-
-  char ch;
-  ch = 'h';
-  xQueueSend(hostRxQueue, &ch, 0);
-  ch = 'e';
-  xQueueSend(hostRxQueue, &ch, 0);
 
   vTaskStartScheduler();
 }
