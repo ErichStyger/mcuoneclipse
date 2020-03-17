@@ -36,9 +36,9 @@
   #include "fsl_pit.h"
 #endif
 
-#define STEPPER_HAND_ZERO_DELAY   (6)
+#define STEPPER_HAND_ZERO_DELAY     (6)
 
-#define STEPPER_CMD_QUEUE_LENGTH    (8) /* number of items in stepper command queue */
+#define STEPPER_CMD_QUEUE_LENGTH    (8) /* maximum number of items in stepper command queue */
 static bool STEPPER_ExecuteQueue = false;
 static TaskHandle_t StepperQueueTaskHandle;
 
@@ -227,7 +227,7 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 12;
+  uint32_t delta = 10;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
@@ -920,11 +920,30 @@ void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], s
 
 void STEPPER_SetLEDs(void) {
   for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[0].device);
-    NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[1].device);
+    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+      NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[j].device);
+    }
   } /* for */
 }
 #endif
+
+void STEPPER_NormalizePosition(void) {
+  int32_t pos;
+
+  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+  #if PL_CONFIG_USE_X12_STEPPER
+      pos = X12_017_GetPos(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[1].mot);
+      pos %= STEPPER_CLOCK_360_STEPS;
+      NEOSR_SetPos(STEPPER_Clocks[i].mot[j].device, pos);
+  #elif PL_CONFIG_USE_STEPPER_EMUL
+      pos = NEOSR_GetPos(STEPPER_Clocks[i].mot[j].device);
+      pos %= STEPPER_CLOCK_360_STEPS;
+      NEOSR_SetPos(STEPPER_Clocks[i].mot[j].device, pos);
+  #endif
+    }
+  } /* for */
+}
 
 static void StepperQueueTask(void *pv) {
   uint8_t *cmd;
@@ -947,6 +966,7 @@ static void StepperQueueTask(void *pv) {
       } /* for */
       if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
         STEPPER_ExecuteQueue = false;
+        STEPPER_NormalizePosition();
       }
     }
     vTaskDelay(pdMS_TO_TICKS(20));
