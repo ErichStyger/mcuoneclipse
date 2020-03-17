@@ -306,16 +306,10 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.1652255002.2076009589" name="main.c" rcbsApplicability="disable" resourcePath="source/main.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1505299104.211178827">
-						<tool id="com.crt.advproject.gcc.exe.debug.1505299104.211178827" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104">
-							<option id="gnu.c.compiler.option.misc.other.1503215886" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fsanitize=kernel-address -fasan-shadow-offset=32" valueType="string"/>
-							<inputType id="com.crt.advproject.compiler.input.153412952" superClass="com.crt.advproject.compiler.input"/>
-						</tool>
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1310859509" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.2036853455" name="Resource Custom Build Step Input Type">
-								<additionalInput kind="additionalinputdependency" paths=""/>
-							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.2137016653" name="Resource Custom Build Step Output Type"/>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1652255002.1151758142" name="asan_test.c" rcbsApplicability="disable" resourcePath="source/asan_test.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1505299104.2075178225">
+						<tool id="com.crt.advproject.gcc.exe.debug.1505299104.2075178225" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104">
+							<option id="gnu.c.compiler.option.misc.other.576220189" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fsanitize=kernel-address -fasan-shadow-offset=32" valueType="string"/>
+							<inputType id="com.crt.advproject.compiler.input.792861548" superClass="com.crt.advproject.compiler.input"/>
 						</tool>
 					</fileInfo>
 					<sourceEntries>
@@ -694,5 +688,12 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/tinyK22_FreeRTOS_ASAN"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/tinyK22_FreeRTOS_ASAN"/>
+		</configuration>
+	</storageModule>
 </cproject>

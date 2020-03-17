@@ -17,6 +17,7 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
+#include "asan_test.h"
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -38,6 +39,7 @@ void PL_Init(void) {
 
   /* initialize my own modules */
   LEDS_Init();
+  ASAN_TEST_Init();
 }
 
 void PL_Deinit(void) {

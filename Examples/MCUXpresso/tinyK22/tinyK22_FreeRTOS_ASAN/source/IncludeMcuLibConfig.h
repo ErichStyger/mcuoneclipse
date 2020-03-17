@@ -21,7 +21,7 @@
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 
 /* performance counter: */
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (0)
+#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)
 #define configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR   AppGetRuntimeCounterValueFromISR
 #define configCONFIGURE_TIMER_FOR_RUNTIME_STATS     AppConfigureTimerForRuntimeStats
 

@@ -66,18 +66,7 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
 #endif
 
 static void AppTask(void *pv) {
-  uint8_t *pa[10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-  size_t idx = 0;
-
   for(;;) {
-    if (pa[idx]!=NULL) {
-      vPortFree(pa[idx]);
-    }
-    pa[idx] = pvPortMalloc(20);
-    idx++;
-    if (idx==10) {
-      idx = 0;
-    }
     McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(500));
   } /* for */
@@ -100,6 +89,5 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-
   vTaskStartScheduler();
 }

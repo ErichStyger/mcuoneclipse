@@ -1,10 +1,11 @@
 /*
- * asan.c
+ * Copyright (c) 2020, Erich Styger
  *
- *  Created on: 11.01.2020
- *      Author: Erich Styger Local
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
+
+#include "asan.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
