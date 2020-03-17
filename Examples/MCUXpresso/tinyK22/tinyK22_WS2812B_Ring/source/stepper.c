@@ -933,7 +933,7 @@ void STEPPER_NormalizePosition(void) {
   for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
   #if PL_CONFIG_USE_X12_STEPPER
-      pos = X12_017_GetPos(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[1].mot);
+      pos = X12_017_GetPos(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[j].mot);
       pos %= STEPPER_CLOCK_360_STEPS;
       NEOSR_SetPos(STEPPER_Clocks[i].mot[j].device, pos);
   #elif PL_CONFIG_USE_STEPPER_EMUL
