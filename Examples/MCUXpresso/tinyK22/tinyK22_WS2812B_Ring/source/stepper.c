@@ -39,9 +39,7 @@
 #include "StepperBoard.h"
 
 #define STEPPER_HAND_ZERO_DELAY     (6)
-
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* maximum number of items in stepper command queue */
-static bool STEPPER_ExecuteQueue = false;
 
 typedef enum {
   SCT_CHANNEL_MASK_0 = (1<<0),
@@ -596,10 +594,16 @@ uint8_t STEPPER_Test(int8_t clock) {
 
 #endif
 
-void STEPPER_GetStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize) {
+QueueHandle_t STEPPER_GetQueue(STEPPER_Handle_t stepper) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
-  McuUtility_strcpy(buf, bufSize, (unsigned char*)"pos:");
+   return device->queue;
+}
+
+void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
+  McuUtility_strcat(buf, bufSize, (unsigned char*)"pos:");
   McuUtility_strcatNum32sFormatted(buf, bufSize, device->pos, ' ', 5);
 #if 0 && PL_CONFIG_USE_NVMC
   McuUtility_strcat(buf, bufSize, (unsigned char*)", offs:");
@@ -635,13 +639,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr(statStr, buf, io->stdOut);
 #endif
 
-  if (STEPPER_ExecuteQueue) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: yes");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: no");
-  }
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  queue", buf, io->stdOut);
   return ERR_OK;
 }
 
@@ -656,93 +653,14 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  offs <c> <m> <v>", (unsigned char*)"Set offset value for clock (0-3) and motor (0-1)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  offs 12", (unsigned char*)"Calculate offset from 12-o-clock\r\n", io->stdOut);
 #endif
-  McuShell_SendHelpStr((unsigned char*)"  delay <m0>...<m7>", (unsigned char*)"Set delay for motors (0..7)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  step <c> <m> <steps>", (unsigned char*)"Perform a number of (blocking) steps for clock (0-3) and motor (0-1)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  goto <c> <m> <pos>", (unsigned char*)"Goto position (non-blocking) for clock (0-3) and motor (0-1)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  m <c> <m> <a> <d> <md>", (unsigned char*)"Move the clock and motor to the angle with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  r <c> <m> <a> <d> <md>", (unsigned char*)"Relative angle move of clock and motor and delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  q <c> <m> <cmd>", (unsigned char*)"Queue a command for clock and motor\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute command in queue\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  idle", (unsigned char*)"Check if steppers are idle\r\n", io->stdOut);
   return ERR_OK;
-}
-
-static uint8_t ParseStepperCommand(const unsigned char *cmd, STEPPER_Clock_e *c, STEPPER_Hand_e *m, int32_t *v, uint8_t *d, STEPPER_MoveMode_e *mode, bool *speedUp, bool *slowDown) {
-  /* parse a string like <c> <m> <v> <d> <md> */
-  int32_t clk, mot, val, delay;
-
-  if (   McuUtility_xatoi(&cmd, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
-      && McuUtility_xatoi(&cmd, &mot)==ERR_OK && mot>=0 && mot<STEPPER_NOF_CLOCK_MOTORS
-      && McuUtility_xatoi(&cmd, &val)==ERR_OK
-      && McuUtility_xatoi(&cmd, &delay)==ERR_OK && delay>=0
-     )
-  {
-    if (*cmd==' ') {
-      cmd++;
-    }
-    if (*cmd=='\0') { /* mode is optional, set it to defaults */
-      *mode = STEPPER_MOVE_MODE_SHORT;
-      *speedUp = *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"cw")==0) {
-      *mode = STEPPER_MOVE_MODE_CW;
-      *speedUp = *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cw")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = false; *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"cW")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = true; *slowDown = false;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"CW")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = *slowDown = false;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"cc")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cc")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = false; *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"cC")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = true; *slowDown = false;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"CC")==0) {
-      *mode = STEPPER_MOVE_MODE_CCW;
-      *speedUp = *slowDown = false;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"sh")==0) {
-      *mode = STEPPER_MOVE_MODE_SHORT;
-      *speedUp = *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"Sh")==0) {
-      *mode = STEPPER_MOVE_MODE_SHORT;
-      *speedUp = false; *slowDown = true;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"sH")==0) {
-      *mode = STEPPER_MOVE_MODE_SHORT;
-      *speedUp = true; *slowDown = false;
-    } else if (McuUtility_strcmp((char*)cmd, (char*)"SH")==0) {
-      *mode = STEPPER_MOVE_MODE_SHORT;
-      *speedUp = *slowDown = false;
-    } else {
-      return ERR_FAILED;
-    }
-    *c = clk;
-    *m = mot;
-    *v = val;
-    *d = delay;
-    return ERR_OK;
-  } else {
-    return ERR_FAILED;
-  }
 }
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   int32_t steps, clk, m;
   const unsigned char *p;
   uint8_t res = ERR_OK;
-  STEPPER_Clock_e clock;
-  STEPPER_Hand_e motor;
-  int32_t value;
-  uint8_t delay;
-  STEPPER_MoveMode_e mode;
-  bool speedUp, slowDown;
-
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "stepper help")==0) {
     *handled = TRUE;
@@ -833,46 +751,6 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
-  } else if (McuUtility_strncmp((char*)cmd, "stepper m ", sizeof("stepper m ")-1)==0) { /* "stepper m <c> <m> <a> <d> <md> " */
-    *handled = TRUE;
-    res = ParseStepperCommand(cmd+sizeof("stepper m ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
-    if (res==ERR_OK) {
-      STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(STEPBOARD_GetBoard(), clock, motor), value, mode, delay, speedUp, slowDown);
-      STEPPER_START_TIMER();
-      return ERR_OK;
-    } else {
-      return ERR_FAILED;
-    }
-  } else if (McuUtility_strncmp((char*)cmd, "stepper r ", sizeof("stepper r ")-1)==0) { /* "stepper r <c> <m> <s> <d> <md> " */
-    *handled = TRUE;
-    res = ParseStepperCommand(cmd+sizeof("stepper r ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
-    if (res==ERR_OK) {
-      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(STEPBOARD_GetBoard(),clock, motor), value, mode, delay, speedUp, slowDown);
-      STEPPER_START_TIMER();
-      return ERR_OK;
-    } else {
-      return ERR_FAILED;
-    }
-#if 0
-  } else if (McuUtility_strncmp((char*)cmd, "stepper delay ", sizeof("stepper delay ")-1)==0) {
-    int32_t i;
-    int32_t val;
-
-    *handled = TRUE;
-    p = cmd + sizeof("stepper delay ")-1;
-    i = 0;
-    while(*p!='\0') {
-      if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0)
-      {
-        STEPPER_Clocks[i/2].mot[i%2].delay = val;
-        i++;
-      } else {
-        res = ERR_FAILED;
-        break; /* get out here */
-      }
-    } /* while */
-    return res;
-#endif
 #if 0
   } else if (McuUtility_strncmp((char*)cmd, "stepper goto ", sizeof("stepper goto ")-1)==0) {
     int32_t steps;
@@ -893,35 +771,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     }
     STEPPER_START_TIMER();
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "stepper q ", sizeof("stepper q ")-1)==0) {
-    *handled = TRUE;
-    unsigned char *ptr, *data;
-
-    p = cmd + sizeof("stepper q ")-1;
-    if (   McuUtility_xatoi(&p, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
-        && McuUtility_xatoi(&p, &m)==ERR_OK && m>=0 && m<STEPPER_NOF_CLOCK_MOTORS
-       )
-    {
-      data = (unsigned char*)p;
-      while(*data==' ') {
-        data++;
-      }
-      ptr = pvPortMalloc(McuUtility_strlen((char*)data));
-      if (ptr==NULL) {
-        return ERR_FAILED;
-      }
-      strcpy((char*)ptr, (char*)data); /* copy command */
-      if (xQueueSendToBack(STEPPER_Clocks[clk].mot[m].queue, &ptr, pdMS_TO_TICKS(100))!=pdTRUE) {
-        return ERR_FAILED;
-      }
-      return ERR_OK;
-    } else {
-      return ERR_FAILED;
-    }
 #endif
-  } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0) {
-    STEPPER_ExecuteQueue = true;
-    *handled = TRUE;
 #if 0
   } else if (McuUtility_strcmp((char*)cmd, "stepper idle")==0) {
     *handled = TRUE;

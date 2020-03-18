@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "McuShell.h"
+#include "McuRTOS.h"
 
 typedef void *STEPPER_Handle_t;
 
@@ -56,8 +57,10 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPE
 void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
 
 uint8_t STEPPER_ZeroAllHands(void);
+void STEPPER_NormalizePosition(STEPPER_Handle_t stepper);
 
-void STEPPER_GetStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize);
+void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize);
+QueueHandle_t STEPPER_GetQueue(STEPPER_Handle_t stepper);
 
 void *STEPPER_GetDevice(STEPPER_Handle_t stepper);
 

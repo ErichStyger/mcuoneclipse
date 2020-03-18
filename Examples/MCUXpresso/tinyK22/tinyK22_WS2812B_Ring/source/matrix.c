@@ -17,6 +17,8 @@
 #include "StepperBoard.h"
 #include "NeoStepperRing.h"
 
+static bool MATRIX_ExecuteQueue = false;
+
 #define MATRIX_BOARD_ARRANGEMENT  (1)  /* 0: first clock (3x8, black with red hands) or 1: second clock: (3x8, green hands) */
 
 #if MATRIX_BOARD_ARRANGEMENT==0
@@ -24,13 +26,15 @@
   #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
   #define MATRIX_NOF_BOARDS         (6)
 #elif MATRIX_BOARD_ARRANGEMENT==1
-  #define MATRIX_NOF_CLOCKS_Y       (1)    /* number of clocks in y direction */
-  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x direction */
+  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
+  #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
+  #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
   #define MATRIX_NOF_BOARDS         (1)
 #endif
 
 #define MATRIX_NOF_CLOCKS_BOARD_X (4)  /* number of clocks on PCB in x direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Y (1)  /* number of clocks on PCB in y direction */
+#define MATRIX_NOF_CLOCKS_BOARD_Z (2)  /* number of clocks on PCB in y direction */
 #define MATRIX_BOARD_CLOCK_NR_INC (0)  /* 1: clocks are numbered 0,1,2,3 on board */
 
 #define MATRIX_NOF_BOARDS_Y       (MATRIX_NOF_CLOCKS_Y/MATRIX_NOF_CLOCKS_BOARD_Y) /* number of boards in Y (rows) direction */
@@ -94,6 +98,28 @@ STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
     }
   }
   return NULL;
+}
+
+static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
+  STEPPER_Handle_t stepper;
+  uint8_t addr;
+  STEPBOARD_Handle_t board;
+
+  if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y || z>=MATRIX_NOF_CLOCKS_Z) {
+    return NULL;
+  }
+  addr = clockMatrix[x][y].addr;
+  board = MATRIX_AddrGetBoard(addr);
+  stepper = STEPBOARD_GetStepper(board, clockMatrix[x][y].nr, z);
+  return stepper;
+}
+
+static uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
+  return clockMatrix[x][y].addr;
+}
+
+static uint8_t MATRIX_GetPos(int32_t x, int32_t y, int32_t z) {
+  return clockMatrix[x][y].nr;
 }
 
 static void MATRIX_Delay(int32_t ms) {
@@ -975,24 +1001,111 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  arrangement", buf, io->stdOut);
 
-  for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
-    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-      for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-        STEPPER_GetStatus(STEPBOARD_GetStepper(MATRIX_Boards[b], i, j), buf, sizeof(buf));
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_Handle_t stepper;
+        uint8_t addr, nr;
+
+        stepper = MATRIX_GetStepper(x, y, z);
+        addr = MATRIX_GetAddress(x, y, z);
+        nr = MATRIX_GetPos(x, y, z);
+        buf[0] = '\0';
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"addr:");
+        McuUtility_strcatNum8u(buf, sizeof(buf), addr);
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", nr:");
+        McuUtility_strcatNum8u(buf, sizeof(buf), nr);
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", Stepper ");
+        STEPPER_StrCatStatus(stepper, buf, sizeof(buf));
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-        McuUtility_strcpy(statusStr, sizeof(statusStr), (unsigned char*)"  [");
-        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), b);
-        McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)",");
-        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), i);
-        McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)",");
-        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), j);
+
+        McuUtility_strcpy(statusStr, sizeof(statusStr), (unsigned char*)"  M[");
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), x);
+        McuUtility_chcat(statusStr, sizeof(statusStr), ',');
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), y);
+        McuUtility_chcat(statusStr, sizeof(statusStr), ',');
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), z);
         McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)"]");
         McuShell_SendStatusStr(statusStr, buf, io->stdOut);
       }
     }
   } /* for */
 
+  if (MATRIX_ExecuteQueue) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: yes");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: no");
+  }
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  queue", buf, io->stdOut);
+
   return ERR_OK;
+}
+
+static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t *yp, int32_t *zp, int32_t *vp, uint8_t *dp, STEPPER_MoveMode_e *modep, bool *speedUpp, bool *slowDownp) {
+  /* parse a string like <x> <y> <z> <v> <d> <md> */
+  int32_t x, y, z, v, d;
+
+  if (   McuUtility_xatoi(&cmd, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+      && McuUtility_xatoi(&cmd, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+      && McuUtility_xatoi(&cmd, &z)==ERR_OK && z>=0 && z<MATRIX_NOF_CLOCKS_Z
+      && McuUtility_xatoi(&cmd, &v)==ERR_OK
+      && McuUtility_xatoi(&cmd, &d)==ERR_OK && d>=0
+     )
+  {
+    if (*cmd==' ') {
+      cmd++;
+    }
+    if (*cmd=='\0') { /* mode is optional, set it to defaults */
+      *modep = STEPPER_MOVE_MODE_SHORT;
+      *speedUpp = *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cw")==0) {
+      *modep = STEPPER_MOVE_MODE_CW;
+      *speedUpp = *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cw")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = false; *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cW")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = true; *slowDownp = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"CW")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = *slowDownp = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cc")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Cc")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = false; *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"cC")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = true; *slowDownp = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"CC")==0) {
+      *modep = STEPPER_MOVE_MODE_CCW;
+      *speedUpp = *slowDownp = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"sh")==0) {
+      *modep = STEPPER_MOVE_MODE_SHORT;
+      *speedUpp = *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"Sh")==0) {
+      *modep = STEPPER_MOVE_MODE_SHORT;
+      *speedUpp = false; *slowDownp = true;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"sH")==0) {
+      *modep = STEPPER_MOVE_MODE_SHORT;
+      *speedUpp = true; *slowDownp = false;
+    } else if (McuUtility_strcmp((char*)cmd, (char*)"SH")==0) {
+      *modep = STEPPER_MOVE_MODE_SHORT;
+      *speedUpp = *slowDownp = false;
+    } else {
+      return ERR_FAILED;
+    }
+    *xp = x;
+    *yp = y;
+    *zp = z;
+    *vp = v;
+    *dp = d;
+    return ERR_OK;
+  }
+  return ERR_FAILED;
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
@@ -1012,11 +1125,20 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  delay <delay>", (unsigned char*)"Set default delay\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  time <time>", (unsigned char*)"Show time\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  temp <temp>", (unsigned char*)"Show temperature\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a command for clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
+  uint8_t res;
+  int32_t x, y, z, v;
+  uint8_t d;
+  bool speedUp, slowDown;
+  STEPPER_MoveMode_e mode;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "matrix help")==0) {
     *handled = true;
@@ -1094,6 +1216,68 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+  } else if (McuUtility_strncmp((char*)cmd, "matrix r ", sizeof("matrix r ")-1)==0) { /* "matrix r <x> <y> <z> <a> <d> <md> " */
+    *handled = TRUE;
+    res = ParseMatrixCommand(cmd+sizeof("matrix r ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
+    if (res==ERR_OK) {
+      STEPPER_MoveClockDegreeRel(MATRIX_GetStepper(x, y, z), v, mode, d, speedUp, slowDown);
+      STEPPER_StartTimer();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "matrix a ", sizeof("matrix a ")-1)==0) { /* "matrix a <x> <y> <z> <a> <d> <md> " */
+    *handled = TRUE;
+    res = ParseMatrixCommand(cmd+sizeof("matrix a ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
+    if (res==ERR_OK) {
+      STEPPER_MoveClockDegreeAbs(MATRIX_GetStepper(x, y, z), v, mode, d, speedUp, slowDown);
+      STEPPER_StartTimer();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "matrix q ", sizeof("matrix q ")-1)==0) {
+    *handled = TRUE;
+    unsigned char *ptr, *data;
+    STEPPER_Handle_t stepper;
+
+
+    p = cmd + sizeof("matrix q ")-1;
+    if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+        && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+        && McuUtility_xatoi(&p, &z)==ERR_OK && z>=0 && z<MATRIX_NOF_CLOCKS_Z
+       )
+    {
+      data = (unsigned char*)p;
+      while(*data==' ') {
+        data++;
+      }
+      ptr = pvPortMalloc(McuUtility_strlen((char*)data));
+      if (ptr==NULL) {
+        return ERR_FAILED;
+      }
+#if 0
+      uint8_t addr;
+      STEPBOARD_Handle_t board;
+      /* for queuing, store it to the physical location (ring or stepper) */
+      addr = clockMatrix[x][y].addr;
+      board = MATRIX_AddrGetBoard(addr);
+      stepper = STEPBOARD_GetStepper(board, x, z); /* assuming horizontal board orientation */
+#else
+      stepper = MATRIX_GetStepper(x, y, z);
+#endif
+      strcpy((char*)ptr, (char*)data); /* copy command */
+      if (xQueueSendToBack(STEPPER_GetQueue(stepper), &ptr, pdMS_TO_TICKS(100))!=pdTRUE) {
+        return ERR_FAILED;
+      }
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0
+      || McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
+    MATRIX_ExecuteQueue = true;
+    *handled = TRUE;
   }
   return ERR_OK;
 }
@@ -1136,28 +1320,58 @@ static void MatrixQueueTask(void *pv) {
   uint8_t *cmd;
   bool noCommandsInQueue = true;
   McuShell_ConstStdIOType *io = McuShell_GetStdio();
+  STEPPER_Handle_t stepper;
+  uint8_t command[96];
 
   for(;;) {
-#if 0
     noCommandsInQueue = true;
-    if (STEPPER_ExecuteQueue) {
-      for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-        for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-          if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
-            if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
-              noCommandsInQueue = false;
-              (void)SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
-              vPortFree(cmd); /* free memory for command */
+    if (MATRIX_ExecuteQueue) {
+      for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+        for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+          for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+            stepper = MATRIX_GetStepper(x, y, z);
+            if (STEPPER_IsIdle(stepper)) { /* no steps to do? */
+              if (xQueueReceive(STEPPER_GetQueue(stepper), &cmd, 0)==pdPASS) { /* check queue */
+                noCommandsInQueue = false;
+                McuUtility_strcpy(command, sizeof(command), (unsigned char*)"matrix ");
+                if ((cmd[0]=='a' || cmd[0]=='r') && cmd[1] == ' ') {
+                  McuUtility_chcat(command, sizeof(command), cmd[0]);
+                  McuUtility_chcat(command, sizeof(command), ' ');
+                  McuUtility_strcatNum8u(command, sizeof(command), x);
+                  McuUtility_chcat(command, sizeof(command), ' ');
+                  McuUtility_strcatNum8u(command, sizeof(command), y);
+                  McuUtility_chcat(command, sizeof(command), ' ');
+                  McuUtility_strcatNum8u(command, sizeof(command), z);
+                  McuUtility_chcat(command, sizeof(command), ' ');
+                  McuUtility_strcat(command, sizeof(command), cmd+2);
+                } else { /* error? */
+                  McuUtility_strcat(command, sizeof(command), cmd);
+                }
+                McuShell_SendStr(command, io->stdOut);
+                McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+                if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
+                  McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
+                }
+                vPortFree(cmd); /* free memory for command */
+              }
             }
+          } /* all motors on clock */
+        } /* all clocks on board */
+      } /* for all boards */
+      if (noCommandsInQueue) { /* nothing pending in queues */
+        bool allIdle = true;
+        for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
+          if (STEPBOARD_IsIdle(MATRIX_Boards[b])) {
+            STEPBOARD_NormalizePosition(MATRIX_Boards[b]);
+          } else {
+            allIdle = false;
           }
         }
-      } /* for */
-      if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
-        STEPPER_ExecuteQueue = false;
-        STEPPER_NormalizePosition();
+        if (allIdle) {
+          MATRIX_ExecuteQueue = false;
+        }
       }
     }
-#endif
     vTaskDelay(pdMS_TO_TICKS(20));
   } /* for */
 }

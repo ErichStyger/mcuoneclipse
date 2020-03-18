@@ -184,7 +184,7 @@ void SHELL_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
-  McuShell_SetStdio(McuRTT_GetStdio());
+  McuShell_SetStdio(ios[0].stdio); /* default */
 }
 
 void SHELL_Deinit(void) {}
