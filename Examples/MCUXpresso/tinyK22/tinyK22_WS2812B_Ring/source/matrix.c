@@ -27,9 +27,9 @@ static bool MATRIX_ExecuteQueue = false;
   #define MATRIX_NOF_BOARDS         (6)
 #elif MATRIX_BOARD_ARRANGEMENT==1
   #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-  #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
+  #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
   #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-  #define MATRIX_NOF_BOARDS         (1)
+  #define MATRIX_NOF_BOARDS         (2)
 #endif
 
 #define MATRIX_NOF_CLOCKS_BOARD_X (4)  /* number of clocks on PCB in x direction */
@@ -62,7 +62,8 @@ static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y]
   [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
   [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
 #elif MATRIX_BOARD_ARRANGEMENT==1
-  [0][0]={.addr=0x24, .nr=3, .enabled=true}, [1][0]={.addr=0x24, .nr=2, .enabled=true}, [2][0]={.addr=0x24, .nr=1, .enabled=true}, [3][0]={.addr=0x24, .nr=0, .enabled=true},
+  [0][0]={.addr=0x22, .nr=3, .enabled=true}, [1][0]={.addr=0x22, .nr=2, .enabled=true}, [2][0]={.addr=0x22, .nr=1, .enabled=true}, [3][0]={.addr=0x22, .nr=0, .enabled=true},
+  [0][1]={.addr=0x24, .nr=3, .enabled=true}, [1][1]={.addr=0x24, .nr=2, .enabled=true}, [2][1]={.addr=0x24, .nr=1, .enabled=true}, [3][1]={.addr=0x24, .nr=0, .enabled=true},
 
   /* first 3 boards on the left */
 //  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
@@ -1407,7 +1408,7 @@ void MATRIX_Init(void) {
   STEPBOARD_GetDefaultConfig(&stepBoardConfig);
   NEOSR_GetDefaultConfig(&stepperRingConfig);
 
-  /* ----------------- board --------------------- */
+  /* ----------------- board 0 --------------------- */
   /* setup ring */
   stepperRingConfig.ledLane = 0;
   stepperRingConfig.ledStartPos = 0;
@@ -1499,6 +1500,101 @@ void MATRIX_Init(void) {
   stepBoardConfig.stepper[3][1] = stepper[7];
 
   MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
+  /* ----------------- board 1--------------------- */
+  /* setup ring */
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 0;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 0;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 40;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 40;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 80;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 80;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 120;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 1;
+  stepperRingConfig.ledStartPos = 120;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
+
+  /* setup stepper */
+  stepperConfig.stepFn = NEOSR_SingleStep;
+
+  stepperConfig.device = ring[0];
+  stepper[0] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[1];
+  stepper[1] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[2];
+  stepper[2] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[3];
+  stepper[3] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[4];
+  stepper[4] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[5];
+  stepper[5] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[6];
+  stepper[6] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[7];
+  stepper[7] = STEPPER_InitDevice(&stepperConfig);
+
+  /* setup board */
+  stepBoardConfig.addr = 0x22;
+  stepBoardConfig.enabled = true;
+  stepBoardConfig.stepper[0][0] = stepper[0];
+  stepBoardConfig.stepper[0][1] = stepper[1];
+  stepBoardConfig.stepper[1][0] = stepper[2];
+  stepBoardConfig.stepper[1][1] = stepper[3];
+  stepBoardConfig.stepper[2][0] = stepper[4];
+  stepBoardConfig.stepper[2][1] = stepper[5];
+  stepBoardConfig.stepper[3][0] = stepper[6];
+  stepBoardConfig.stepper[3][1] = stepper[7];
+
+  MATRIX_Boards[1] = STEPBOARD_InitDevice(&stepBoardConfig);
+
+
+  /* ---------------------------------------------------------- */
 
   STEPBOARD_SetBoard(MATRIX_Boards[0]);
   /* ---------------------------------------------------------- */
