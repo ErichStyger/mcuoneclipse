@@ -38,6 +38,7 @@
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
 #endif
+#include "StepperBoard.h"
 
 #if PL_CONFIG_WORLD_CLOCK
   static bool clockIsOn = false;
@@ -59,12 +60,14 @@ typedef enum {
 
 #if PL_CONFIG_USE_STEPPER
 static void MoveAllToZeroPosition(void) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
+
   /* move back to zero position */
   for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    STEPPER_MoveClockDegreeAbs(i, STEPPER_HAND_HH, 0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveClockDegreeAbs(i, STEPPER_HAND_MM, 0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, i, STEPPER_HAND_HH), 0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, i, STEPPER_HAND_MM), 0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
   }
-  STEPPER_MoveAndWait(10);
+  STEPBOARD_MoveAndWait(board, 10);
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
@@ -76,144 +79,154 @@ static void DemoMakeTwelve(void) {
 
 #if PL_CONFIG_USE_STEPPER
 static void DemoMakeSquare(void) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
+
   /* build a square with the hands: 0 index */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* lower right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* upper right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* lower left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* upper left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveAndWait(50);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* lower right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH), 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* upper right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH),  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* lower left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM),   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH), 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* upper left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM),  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPBOARD_MoveAndWait(board, 50);
 
   for(int i=0; i<360; i++) { /* motor 0 is inner shaft (HH) */
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH, 360-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* lower right */
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 270+i, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH), 360-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* lower right */
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 270+i, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH, 270-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* upper right */
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM, 180+i, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH), 270-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* upper right */
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM), 180+i, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH, 90-i,  STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* lower left */
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM, 0+i,   STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH), 90-i,  STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* lower left */
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM), 0+i,   STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH, 180-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* upper left */
-    STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM, 90+i,  STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveAndWait(5);
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH), 180-i, STEPPER_MOVE_MODE_CCW, APP_DEFAULT_DELAY, true, true); /* upper left */
+    STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM), 90+i,  STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPBOARD_MoveAndWait(board, 5);
   }
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
 static void DemoMakePropeller(void) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
+
   /* build lines */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveAndWait(50);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPBOARD_MoveAndWait(board, 50);
   for(int i=0; i<360; i++) { /* motor 0 is inner shaft (HH) */
     for(int c=0; c<STEPPER_NOF_CLOCKS; c++) { /* move each by 1 degree */
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
     }
-    STEPPER_MoveAndWait(5);
+    STEPBOARD_MoveAndWait(board, 5);
   }
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
 static void DemoMakeClap(void) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
+
   /* build lines */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper right */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper left */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveAndWait(50);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper right */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* lower left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true); /* upper left */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPBOARD_MoveAndWait(board, 50);
   /* clap to the right */
   for(int i=0; i<90; i++) {
     for(int c=0; c<STEPPER_NOF_CLOCKS; c++) { /* move each by 1 degree */
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_MM, -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_MM), -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
     }
-    STEPPER_MoveAndWait(5);
+    STEPBOARD_MoveAndWait(board, 5);
   }
   /* clap to the left */
   for(int i=0; i<180; i++) {
     for(int c=0; c<STEPPER_NOF_CLOCKS; c++) { /* move each by 1 degree */
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_HH, -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_HH), -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
     }
-    STEPPER_MoveAndWait(5);
+    STEPBOARD_MoveAndWait(board, 5);
   }
   /* back to starting position */
   for(int i=0; i<90; i++) {
     for(int c=0; c<STEPPER_NOF_CLOCKS; c++) { /* move each by 1 degree */
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-      STEPPER_MoveClockDegreeRel(c, STEPPER_HAND_MM, -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, c, STEPPER_HAND_MM), -1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
     }
-    STEPPER_MoveAndWait(5);
+    STEPBOARD_MoveAndWait(board, 5);
   }
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
 static void DemoRotateSquare(void) {
-  MoveAllToZeroPosition();
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
 
+  MoveAllToZeroPosition();
   /* build a square with the hands: 0 index */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_HH,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* London */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_0, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Beijing */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_1, STEPPER_HAND_MM,  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_HH, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* NY */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_2, STEPPER_HAND_MM, 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_HH,   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Lucerne */
-  STEPPER_MoveClockDegreeAbs(STEPPER_CLOCK_3, STEPPER_HAND_MM, 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveAndWait(50);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH),  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* London */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Beijing */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM),  90, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH), 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* NY */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM), 180, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH),   0, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true); /* Lucerne */
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM), 270, STEPPER_MOVE_MODE_SHORT, APP_DEFAULT_DELAY, true, true);
+  STEPBOARD_MoveAndWait(board, 50);
 
   for(int i=0; i<360; i++) { /* motor 0 is inner shaft (HH) */
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_0, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_0, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_0, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_1, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_1, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_1, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_2, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_2, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_2, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_3, STEPPER_HAND_HH, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveClockDegreeRel(STEPPER_CLOCK_3, STEPPER_HAND_MM, 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-    STEPPER_MoveAndWait(2);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_HH), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(board, STEPPER_CLOCK_3, STEPPER_HAND_MM), 1, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+    STEPBOARD_MoveAndWait(board, 2);
   }
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
 static void SetTime(STEPPER_Clock_e clock, uint8_t hour, uint8_t minute) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
   int32_t angleHour, angleMinute;
 
   minute %= 60; /* make it 0..59 */
   hour %= 12; /* make it 0..11 */
   angleMinute = (360/60)*minute;
   angleHour = (360/12)*hour + ((360/12)*minute)/60;
-  STEPPER_MoveClockDegreeAbs(clock, STEPPER_HAND_HH, angleHour, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
-  STEPPER_MoveClockDegreeAbs(clock, STEPPER_HAND_MM, angleMinute, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, clock, STEPPER_HAND_HH), angleHour, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
+  STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(board, clock, STEPPER_HAND_MM), angleMinute, STEPPER_MOVE_MODE_CW, APP_DEFAULT_DELAY, true, true);
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
 static void ShowTime(STEPPER_Clock_e clock, uint8_t hour, uint8_t minute) {
+  STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
+
   SetTime(clock, hour, minute);
-  STEPPER_MoveAndWait(5);
+  STEPBOARD_MoveAndWait(board, 5);
 }
 #endif /* PL_CONFIG_USE_STEPPER */
 
@@ -481,7 +494,7 @@ static void ClockTask(void *pv) {
         SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min); /* Beijing, GMT+8, top left */
         SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min); /* Lucerne, GMT+1, top left */
         SetTime(STEPPER_CLOCK_3, AdjustHourForTimeZone(hour, -4), time.Min); /* New York,, GMT-4, top left */
-        STEPPER_MoveAndWait(5);
+        STEPBOARD_MoveAndWait(board, 5);
     #endif
         oldHH = time.Hour;
         oldMM = time.Min;

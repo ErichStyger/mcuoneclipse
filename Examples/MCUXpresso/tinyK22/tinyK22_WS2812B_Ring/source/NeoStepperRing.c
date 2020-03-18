@@ -35,7 +35,7 @@ static const NEOSR_Config_t defaultConfig =
 
 /* device for a single LED ring */
 typedef struct {
-  int pos; /* stepper motor position */
+  int pos; /* stepper motor position */ /*!\todo needed? have it in the stepper */
   bool ledCw;      /* clock-wise */
   int ledLane;     /* LED lane */
   int ledStartPos; /* LED starting position in lane */

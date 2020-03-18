@@ -6,6 +6,7 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_STEPPER
+#include "stepperConfig.h"
 #include "stepper.h"
 #if PL_CONFIG_USE_X12_STEPPER
   #include "McuX12_017.h"
@@ -28,19 +29,19 @@
 #include "McuWait.h"
 #include "leds.h"
 #include "Shell.h"
-
+#include "matrix.h"
 #if McuLib_CONFIG_CPU_IS_LPC
   #include "fsl_ctimer.h"
   #include "fsl_sctimer.h"
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_pit.h"
 #endif
+#include "StepperBoard.h"
 
 #define STEPPER_HAND_ZERO_DELAY     (6)
 
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* maximum number of items in stepper command queue */
 static bool STEPPER_ExecuteQueue = false;
-static TaskHandle_t StepperQueueTaskHandle;
 
 typedef enum {
   SCT_CHANNEL_MASK_0 = (1<<0),
@@ -53,6 +54,70 @@ typedef enum {
   SCT_CHANNEL_MASK_7 = (1<<7)
 } SCT_CHANNEL_MASK_e;
 
+
+/* default configuration, used for initializing the config */
+static const STEPPER_Config_t defaultConfig =
+{
+  .device = NULL,
+  .stepFn = NULL,
+};
+
+/* device for a single LED ring */
+typedef struct {
+  void *device; /* point to the actual motor device */
+  void (*stepFn)(void *device, int step); /* function pointer to perform a single step forward (1) or backward (-1) */
+  int32_t pos; /* current position */
+  int32_t doSteps; /* != 0: steps to do */
+  int16_t delay; /* shortest delay: 0 */
+  int16_t delayCntr; /* in the range of delay..0, step will be done at counter of 0 */
+  int32_t accelStepCntr; /* current counter of steps since start */
+  bool speedup, slowdown;
+  QueueHandle_t queue; /* queue for the motor */
+} STEPPER_Device_t;
+
+void STEPPER_GetDefaultConfig(STEPPER_Config_t *config) {
+  memcpy(config, &defaultConfig, sizeof(*config));
+}
+
+STEPPER_Handle_t STEPPER_(STEPPER_Handle_t device) {
+#if STEPPER_CONFIG_USE_FREERTOS_HEAP
+  vPortFree(device);
+#else
+  free(device);
+#endif
+  return NULL;
+}
+
+STEPPER_Handle_t STEPPER_InitDevice(STEPPER_Config_t *config) {
+  STEPPER_Device_t *handle;
+
+#if STEPPER_CONFIG_USE_FREERTOS_HEAP
+  handle = (STEPPER_Device_t*)pvPortMalloc(sizeof(STEPPER_Device_t)); /* get a new device descriptor */
+#else
+  handle = (STEPPER_Device_t*)malloc(sizeof(STEPPER_Device_t)); /* get a new device descriptor */
+#endif
+  assert(handle!=NULL);
+  if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
+    memset(handle, 0, sizeof(STEPPER_Device_t)); /* init all fields */
+    handle->device = config->device;
+    handle->stepFn = config->stepFn;
+    handle->pos = 0;
+    handle->doSteps = 0;
+    handle->delay = 0;
+    handle->delayCntr = 0;
+    handle->speedup = false;
+    handle->slowdown = false;
+    handle->queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
+    if (handle->queue==NULL) {
+      for(;;){} /* out of memory? */
+    }
+    vQueueAddToRegistry(handle->queue, "Squeue");
+  }
+  return handle;
+}
+
+
+#if 0
 typedef struct STEPPER_Motor_t {
 #if PL_CONFIG_USE_X12_STEPPER
   McuX12_017_Handle_t device; /* X12.017 device */
@@ -78,23 +143,12 @@ typedef struct STEPPER_Motor_t {
 typedef struct STEPPER_Clock_t {
   STEPPER_Motor_t mot[STEPPER_NOF_CLOCK_MOTORS]; /* [0]: hh, inner motor, higher hand, [1]: outer motor, lower hand */
 } STEPPER_Clock_t;
-
-static STEPPER_Clock_t STEPPER_Clocks[STEPPER_NOF_CLOCKS];
-
-bool STEPPER_IsIdle(void) {
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-      if (STEPPER_Clocks[i].mot[j].doSteps!=0) { /* still steps to do? */
-        return false; /* yes, not finished */
-      }
-    }
-  }
-  return true; /* finished */
-}
+#endif
+//static STEPPER_Clock_t STEPPER_Clocks[STEPPER_NOF_CLOCKS];
 
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
-  #define STEPPER_StartTimer()        SCTIMER_StartTimer(SCT0, kSCTIMER_Counter_L)
-  #define STEPPER_StopTimer()         SCTIMER_StopTimer(SCT0, kSCTIMER_Counter_L)
+  #define STEPPER_START_TIMER()        SCTIMER_StartTimer(SCT0, kSCTIMER_Counter_L)
+  #define STEPPER_STOP_TIMER()         SCTIMER_StopTimer(SCT0, kSCTIMER_Counter_L)
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   #define PIT_BASEADDR       PIT
   #define PIT_SOURCE_CLOCK   CLOCK_GetFreq(kCLOCK_BusClk)
@@ -102,12 +156,20 @@ bool STEPPER_IsIdle(void) {
   #define PIT_HANDLER        PIT0_IRQHandler
   #define PIT_IRQ_ID         PIT0_IRQn
 
-  #define STEPPER_StartTimer()        PIT_StartTimer(PIT_BASEADDR, PIT_CHANNEL)
-  #define STEPPER_StopTimer()         PIT_StopTimer(PIT_BASEADDR, PIT_CHANNEL)
+  #define STEPPER_START_TIMER()        PIT_StartTimer(PIT_BASEADDR, PIT_CHANNEL)
+  #define STEPPER_STOP_TIMER()         PIT_StopTimer(PIT_BASEADDR, PIT_CHANNEL)
 #endif
 #define STEPPER_ACCEL_HIGHEST_POS   (300)
 
-static void AccelDelay(STEPPER_Motor_t *mot, int32_t steps) {
+void STEPPER_StopTimer(void) {
+  STEPPER_STOP_TIMER();
+}
+
+void STEPPER_StartTimer(void) {
+  STEPPER_START_TIMER();
+}
+
+static void AccelDelay(STEPPER_Device_t *mot, int32_t steps) {
   if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
     if (steps<=50) {
       mot->delayCntr += 10;
@@ -123,22 +185,23 @@ static void AccelDelay(STEPPER_Motor_t *mot, int32_t steps) {
   }
 }
 
-static bool STEPPER_TimerClockCallback(STEPPER_Motor_t *mot) {
+bool STEPPER_IsIdle(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *mot = (STEPPER_Device_t*)stepper;
+  return mot->doSteps==0;
+}
+
+bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *mot = (STEPPER_Device_t*)stepper;
+
   if (mot->delayCntr==0) { /* delay expired */
     if (mot->doSteps!=0) { /* a step to do */
       if (mot->doSteps > 0) {
-#if PL_CONFIG_USE_X12_STEPPER
-        McuX12_017_SingleStep(mot->device, mot->mot, 1);
-#elif PL_CONFIG_USE_STEPPER_EMUL
-        NEOSR_SingleStep(mot->device, 1);
-#endif
+        mot->pos++;
+        mot->stepFn(mot->device, 1);
         mot->doSteps--;
       } else if (mot->doSteps < 0)  {
-#if PL_CONFIG_USE_X12_STEPPER
-        McuX12_017_SingleStep(mot->device, mot->mot, -1);
-#elif PL_CONFIG_USE_STEPPER_EMUL
-        NEOSR_SingleStep(mot->device, -1);
-#endif
+        mot->pos--;
+        mot->stepFn(mot->device, -1);
         mot->doSteps++;
       }
       mot->delayCntr = mot->delay; /* reload delay counter */
@@ -171,6 +234,7 @@ static bool STEPPER_TimerClockCallback(STEPPER_Motor_t *mot) {
   return true; /* still work to do */
 }
 
+#if 0
 static void STEPPER_TimerCallback(void) {
   bool workToDo = false;
 
@@ -182,9 +246,10 @@ static void STEPPER_TimerCallback(void) {
   }
   /* check if we can stop timer */
   if (!workToDo) {
-    STEPPER_StopTimer();
+    STEPPER_STOP_TIMER();
   }
 }
+#endif
 
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
 static void SCTIMER_Handler0(void) {
@@ -199,7 +264,11 @@ static void SCTIMER_Handler0(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 void PIT_HANDLER(void) {
   PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
+#if PL_CONFIG_USE_MATRIX
+  MATRIX_TimerCallback();
+#else
   STEPPER_TimerCallback();
+#endif
   __DSB();
 }
 #endif
@@ -240,34 +309,19 @@ static void Timer_Init(void) {
 }
 #endif
 
-void STEPPER_MoveAndWait(uint32_t waitMs) {
-  STEPPER_StartTimer();
-  do {
-    vTaskDelay(pdMS_TO_TICKS(waitMs));
-#if PL_CONFIG_USE_WDT
-    WDT_Report(WDT_REPORT_ID_CURR_TASK, waitMs);
-#endif
-  } while (!STEPPER_IsIdle());
-}
-
 /*!
  * \brief Move clock to absolute degree position
  */
-void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
+void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
   int32_t steps, currPos, targetPos;
-  STEPPER_Clock_t *clock;
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
-  clock = &STEPPER_Clocks[clk];
   if (degree<0) {
 	  degree = 360+degree;
   }
   degree %= 360;
   targetPos = (STEPPER_CLOCK_360_STEPS*degree)/360;
-#if PL_CONFIG_USE_X12_STEPPER
-  currPos = X12_017_GetPos(clock->mot[motorIndex].device, clock->mot[motorIndex].mot);
-#else
-  currPos = NEOSR_GetPos(clock->mot[motorIndex].device);
-#endif
+  currPos = device->pos;
   currPos %= STEPPER_CLOCK_360_STEPS;
   if (currPos<0) { /* make it positive */
     currPos = STEPPER_CLOCK_360_STEPS+currPos;
@@ -290,23 +344,25 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, 
       steps = -(-STEPPER_CLOCK_360_STEPS-steps);
     }
   }
-  clock->mot[motorIndex].doSteps = steps;
-  clock->mot[motorIndex].accelStepCntr = 0;
-  clock->mot[motorIndex].delay = delay;
-  clock->mot[motorIndex].speedup = speedUp;
-  clock->mot[motorIndex].slowdown = slowDown;
+  device->doSteps = steps;
+  device->accelStepCntr = 0;
+  device->delay = delay;
+  device->speedup = speedUp;
+  device->slowdown = slowDown;
 }
 
-void STEPPER_MoveMotorStepsRel(STEPPER_Motor_t *motor, int32_t steps, uint16_t delay) {
-  motor->doSteps = steps;
-  motor->accelStepCntr = 0;
-  motor->delay = delay;
+void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t delay) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
+  device->doSteps = steps;
+  device->accelStepCntr = 0;
+  device->delay = delay;
 }
 
 /*!
  * \brief Move clock by relative degree
  */
-void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree, uint16_t delay) {
+void STEPPER_MoveMotorDegreeRel(STEPPER_Handle_t stepper, int32_t degree, uint16_t delay) {
   int32_t steps;
 
   if (degree>=0) {
@@ -314,27 +370,32 @@ void STEPPER_MoveMotorDegreeRel(STEPPER_Motor_t *motor, int32_t degree, uint16_t
   } else {
     steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
   }
-  STEPPER_MoveMotorStepsRel(motor, steps, delay);
+  STEPPER_MoveMotorStepsRel(stepper, steps, delay);
 }
 
 /*!
  * \brief Move clock by relative degree
  */
-void STEPPER_MoveClockDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
+void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   int32_t steps;
-  STEPPER_Clock_t *clock;
 
-  clock = &STEPPER_Clocks[clk];
   if (degree>=0) {
     steps = (STEPPER_CLOCK_360_STEPS*degree)/360;
   } else {
     steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
   }
-  clock->mot[motorIndex].doSteps = steps;
-  clock->mot[motorIndex].accelStepCntr = 0;
-  clock->mot[motorIndex].delay = delay;
-  clock->mot[motorIndex].speedup = speedUp;
-  clock->mot[motorIndex].slowdown = slowDown;
+  device->doSteps = steps;
+  device->accelStepCntr = 0;
+  device->delay = delay;
+  device->speedup = speedUp;
+  device->slowdown = slowDown;
+}
+
+void *STEPPER_GetDevice(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
+  return device->device;
 }
 
 void STEPPER_Deinit(void) {
@@ -535,9 +596,23 @@ uint8_t STEPPER_Test(int8_t clock) {
 
 #endif
 
+void STEPPER_GetStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
+  McuUtility_strcpy(buf, bufSize, (unsigned char*)"pos:");
+  McuUtility_strcatNum32sFormatted(buf, bufSize, device->pos, ' ', 5);
+#if 0 && PL_CONFIG_USE_NVMC
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", offs:");
+  McuUtility_strcatNum16sFormatted(buf, bufSize, NVMC_GetStepperZeroOffset(i, 0), ' ', 4);
+#endif
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", delay:");
+  McuUtility_strcatNum16sFormatted(buf, bufSize, device->delay, ' ', 2);
+  McuUtility_strcat(buf, bufSize, (unsigned char*)", #qItem:");
+  McuUtility_strcatNum16sFormatted(buf, bufSize, uxQueueMessagesWaiting(device->queue), ' ', 2);
+}
+
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[128];
-  unsigned char statStr[16];
 
   McuShell_SendStatusStr((unsigned char*)"stepper", (unsigned char*)"Stepper clock settings\r\n", io->stdOut);
 
@@ -546,44 +621,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  steps", buf, io->stdOut);
 
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    buf[0] = '\0';
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"HH[pos:");
-#if PL_CONFIG_USE_X12_STEPPER
-    McuUtility_strcatNum32sFormatted(buf, sizeof(buf), X12_017_GetPos(STEPPER_Clocks[i].mot[0].device, STEPPER_Clocks[i].mot[0].mot), ' ', 5);
-#elif PL_CONFIG_USE_STEPPER_EMUL
-    McuUtility_strcatNum32sFormatted(buf, sizeof(buf), NEOSR_GetPos(STEPPER_Clocks[i].mot[0].device), ' ', 5);
-#endif
-#if PL_CONFIG_USE_NVMC
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", offs:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 0), ' ', 4);
-#endif
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", delay:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), STEPPER_Clocks[i].mot[0].delay, ' ', 2);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", #qItem:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), uxQueueMessagesWaiting(STEPPER_Clocks[i].mot[0].queue), ' ', 2);
-
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"] MM[pos:");
-#if PL_CONFIG_USE_X12_STEPPER
-    McuUtility_strcatNum32sFormatted(buf, sizeof(buf), X12_017_GetPos(STEPPER_Clocks[i].mot[1].device, STEPPER_Clocks[i].mot[1].mot), ' ', 5);
-#elif PL_CONFIG_USE_STEPPER_EMUL
-    McuUtility_strcatNum32sFormatted(buf, sizeof(buf), NEOSR_GetPos(STEPPER_Clocks[i].mot[1].device), ' ', 5);
-#endif
-#if PL_CONFIG_USE_NVMC
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", offs:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), NVMC_GetStepperZeroOffset(i, 1), ' ', 4);
-#endif
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", delay:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), STEPPER_Clocks[i].mot[1].delay, ' ', 2);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", #qItem:");
-    McuUtility_strcatNum16sFormatted(buf, sizeof(buf), uxQueueMessagesWaiting(STEPPER_Clocks[i].mot[1].queue), ' ', 2);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"]\r\n");
-
-    McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  clk[");
-    McuUtility_strcatNum32s(statStr, sizeof(statStr), i);
-    McuUtility_strcat(statStr, sizeof(statStr), (unsigned char*)"]");
-    McuShell_SendStatusStr(statStr, buf, io->stdOut);
-  }
 #if PL_CONFIG_USE_X12_STEPPER
   McuX12_017_GetDeviceStatusString(STEPPER_Clocks[0].mot[X12_017_M0].device, buf, sizeof(buf));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
@@ -605,21 +642,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  queue", buf, io->stdOut);
-#if 0
-  int32_t pos;
-  buf[0] = '\0';
-  pos = STEPPER_MotorGetPos(motorHour);
-  pos %= STEPPER_CLOCK_360_STEPS_HH;
-  val = pos/(STEPPER_CLOCK_360_STEPS_HH/12);
-  McuUtility_strcatNum32sFormatted(buf, sizeof(buf), val, '0', 2);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)":");
-  pos = STEPPER_MotorGetPos(motorMinute);
-  pos %= STEPPER_CLOCK_360_STEPS_MM;
-  val = pos/(STEPPER_CLOCK_360_STEPS_MM/60);
-  McuUtility_strcatNum32sFormatted(buf, sizeof(buf), val, '0', 2);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  time", buf, io->stdOut);
-#endif
   return ERR_OK;
 }
 
@@ -815,8 +837,8 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     *handled = TRUE;
     res = ParseStepperCommand(cmd+sizeof("stepper m ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
-      STEPPER_MoveClockDegreeAbs(clock, motor, value, mode, delay, speedUp, slowDown);
-      STEPPER_StartTimer();
+      STEPPER_MoveClockDegreeAbs(STEPBOARD_GetStepper(STEPBOARD_GetBoard(), clock, motor), value, mode, delay, speedUp, slowDown);
+      STEPPER_START_TIMER();
       return ERR_OK;
     } else {
       return ERR_FAILED;
@@ -825,12 +847,13 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     *handled = TRUE;
     res = ParseStepperCommand(cmd+sizeof("stepper r ")-1, &clock, &motor, &value, &delay, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
-      STEPPER_MoveClockDegreeRel(clock, motor, value, mode, delay, speedUp, slowDown);
-      STEPPER_StartTimer();
+      STEPPER_MoveClockDegreeRel(STEPBOARD_GetStepper(STEPBOARD_GetBoard(),clock, motor), value, mode, delay, speedUp, slowDown);
+      STEPPER_START_TIMER();
       return ERR_OK;
     } else {
       return ERR_FAILED;
     }
+#if 0
   } else if (McuUtility_strncmp((char*)cmd, "stepper delay ", sizeof("stepper delay ")-1)==0) {
     int32_t i;
     int32_t val;
@@ -849,6 +872,8 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
       }
     } /* while */
     return res;
+#endif
+#if 0
   } else if (McuUtility_strncmp((char*)cmd, "stepper goto ", sizeof("stepper goto ")-1)==0) {
     int32_t steps;
 
@@ -866,7 +891,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
-    STEPPER_StartTimer();
+    STEPPER_START_TIMER();
     return ERR_OK;
   } else if (McuUtility_strncmp((char*)cmd, "stepper q ", sizeof("stepper q ")-1)==0) {
     *handled = TRUE;
@@ -893,10 +918,11 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     } else {
       return ERR_FAILED;
     }
+#endif
   } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0) {
     STEPPER_ExecuteQueue = true;
-    vTaskResume(StepperQueueTaskHandle);
     *handled = TRUE;
+#if 0
   } else if (McuUtility_strcmp((char*)cmd, "stepper idle")==0) {
     *handled = TRUE;
     if (STEPPER_IsIdle()) {
@@ -905,6 +931,7 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
       McuShell_SendStr((unsigned char*)"busy\r\n", io->stdOut);
     }
     return ERR_OK;
+#endif
   }
   return res;
 }
@@ -916,62 +943,11 @@ void STEPPER_SetAccelTable(STEPPER_Motor_t *motor, const uint16_t (*table)[2], s
 }
 #endif
 
-#if PL_CONFIG_USE_STEPPER_EMUL
-#include "NeoPixel.h"
 
-void STEPPER_SetLEDs(void) {
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-      NEOSR_SetRotorPixel(STEPPER_Clocks[i].mot[j].device);
-    }
-  } /* for */
-}
-#endif
+void STEPPER_NormalizePosition(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
-void STEPPER_NormalizePosition(void) {
-  int32_t pos;
-
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-  #if PL_CONFIG_USE_X12_STEPPER
-      pos = X12_017_GetPos(STEPPER_Clocks[i].mot[j].device, STEPPER_Clocks[i].mot[j].mot);
-      pos %= STEPPER_CLOCK_360_STEPS;
-      NEOSR_SetPos(STEPPER_Clocks[i].mot[j].device, pos);
-  #elif PL_CONFIG_USE_STEPPER_EMUL
-      pos = NEOSR_GetPos(STEPPER_Clocks[i].mot[j].device);
-      pos %= STEPPER_CLOCK_360_STEPS;
-      NEOSR_SetPos(STEPPER_Clocks[i].mot[j].device, pos);
-  #endif
-    }
-  } /* for */
-}
-
-static void StepperQueueTask(void *pv) {
-  uint8_t *cmd;
-  bool noCommandsInQueue = true;
-  McuShell_ConstStdIOType *io = McuShell_GetStdio();
-
-  for(;;) {
-    noCommandsInQueue = true;
-    if (STEPPER_ExecuteQueue) {
-      for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-        for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-          if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
-            if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
-              noCommandsInQueue = false;
-              (void)SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
-              vPortFree(cmd); /* free memory for command */
-            }
-          }
-        }
-      } /* for */
-      if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
-        STEPPER_ExecuteQueue = false;
-        STEPPER_NormalizePosition();
-      }
-    }
-    vTaskDelay(pdMS_TO_TICKS(20));
-  } /* for */
+  device->pos %= STEPPER_CLOCK_360_STEPS;
 }
 
 void STEPPER_Init(void) {
@@ -1149,121 +1125,12 @@ void STEPPER_Init(void) {
   STEPPER_Clocks[3].mot[1].doSteps = 0;
   STEPPER_Clocks[3].mot[1].accelStepCntr = 0;
 #elif PL_CONFIG_USE_STEPPER_EMUL
-  NEOSR_Config_t config;
-
-  NEOSR_GetDefaultConfig(&config);
-
-  /* clock 0 */
-  config.ledLane = 0;
-  config.ledStartPos = 0;
-  config.ledCw = true;
-  config.ledRed = 0xff;
-  config.ledGreen = 0;
-  config.ledBlue = 0x00;
-  STEPPER_Clocks[0].mot[0].device = NEOSR_InitDevice(&config);
-
-  config.ledLane = 0;
-  config.ledStartPos = 0;
-  config.ledCw = true;
-  config.ledRed = 0;
-  config.ledGreen = 0;
-  config.ledBlue = 0xff;
-  STEPPER_Clocks[0].mot[1].device = NEOSR_InitDevice(&config);
-
-  /* clock 1 */
-  config.ledLane = 0;
-  config.ledStartPos = 40;
-  config.ledCw = true;
-  config.ledRed = 0xff;
-  config.ledGreen = 0;
-  config.ledBlue = 0;
-  STEPPER_Clocks[1].mot[0].device = NEOSR_InitDevice(&config);
-
-  config.ledLane = 0;
-  config.ledStartPos = 40;
-  config.ledCw = true;
-  config.ledRed = 0;
-  config.ledGreen = 0;
-  config.ledBlue = 0xff;
-  STEPPER_Clocks[1].mot[1].device = NEOSR_InitDevice(&config);
-
-  /* clock 2 */
-  config.ledLane = 0;
-  config.ledStartPos = 80;
-  config.ledCw = true;
-  config.ledRed = 0xff;
-  config.ledGreen = 0;
-  config.ledBlue = 0;
-  STEPPER_Clocks[2].mot[0].device = NEOSR_InitDevice(&config);
-
-  config.ledLane = 0;
-  config.ledStartPos = 80;
-  config.ledCw = true;
-  config.ledRed = 0;
-  config.ledGreen = 0;
-  config.ledBlue = 0xff;
-  STEPPER_Clocks[2].mot[1].device = NEOSR_InitDevice(&config);
-
-  /* clock 3 */
-  config.ledLane = 0;
-  config.ledStartPos = 120;
-  config.ledCw = true;
-  config.ledRed = 0xff;
-  config.ledGreen = 0;
-  config.ledBlue = 0;
-  STEPPER_Clocks[3].mot[0].device = NEOSR_InitDevice(&config);
-
-  config.ledLane = 0;
-  config.ledStartPos = 120;
-  config.ledCw = true;
-  config.ledRed = 0;
-  config.ledGreen = 0;
-  config.ledBlue = 0xff;
-  STEPPER_Clocks[3].mot[1].device = NEOSR_InitDevice(&config);
 #endif /* #if PL_CONFIG_USE_X12_STEPPER */
 
-  /* set default acceleration table for all motors */
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-    //STEPPER_SetAccelTable(
-    //    &STEPPER_Clocks[i].mot[0],
-    //    STEPPER_DefaultAccelTable,
-    //    sizeof(STEPPER_DefaultAccelTable)/sizeof(STEPPER_DefaultAccelTable[0]));
-    STEPPER_Clocks[i].mot[0].delay = 0;
-    STEPPER_Clocks[i].mot[0].delayCntr = 0;
-    //STEPPER_SetAccelTable(
-    //    &STEPPER_Clocks[i].mot[1],
-    //    STEPPER_DefaultAccelTable,
-    //    sizeof(STEPPER_DefaultAccelTable)/sizeof(STEPPER_DefaultAccelTable[0]));
-    STEPPER_Clocks[i].mot[1].delay = 0;
-    STEPPER_Clocks[i].mot[1].delayCntr = 0;
-
-    STEPPER_Clocks[i].mot[0].queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
-    if (STEPPER_Clocks[i].mot[0].queue==NULL) {
-      for(;;){} /* out of memory? */
-    }
-    vQueueAddToRegistry(STEPPER_Clocks[i].mot[0].queue, "Queue0");
-
-    STEPPER_Clocks[i].mot[1].queue = xQueueCreate(STEPPER_CMD_QUEUE_LENGTH, sizeof(uint8_t*));
-    if (STEPPER_Clocks[i].mot[1].queue==NULL) {
-      for(;;){} /* out of memory? */
-    }
-    vQueueAddToRegistry(STEPPER_Clocks[i].mot[0].queue, "Queue1");
-  } /* for */
 #if PL_CONFIG_USE_X12_STEPPER
   McuX12_017_ResetDriver(STEPPER_Clocks[0].mot[0].device); /* shared reset line with second device */
 #endif
   Timer_Init();
-  if (xTaskCreate(
-      StepperQueueTask,  /* pointer to the task */
-      "StepperQueue", /* task name for kernel awareness debugging */
-      600/sizeof(StackType_t), /* task stack size */
-      (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+3,  /* initial priority */
-      &StepperQueueTaskHandle /* optional task handle to create */
-    ) != pdPASS)
-  {
-    for(;;){} /* error! probably out of memory */
-  }
 }
 
 #endif /* PL_CONFIG_USE_STEPPER */

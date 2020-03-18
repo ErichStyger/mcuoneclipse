@@ -15,12 +15,19 @@
   #include "watchdog.h"
 #endif
 #include "StepperBoard.h"
+#include "NeoStepperRing.h"
 
 #define MATRIX_BOARD_ARRANGEMENT  (1)  /* 0: first clock (3x8, black with red hands) or 1: second clock: (3x8, green hands) */
 
-#define MATRIX_NOF_CLOCKS_Y       (3)  /* number of clocks in y direction */
-#define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
-#define MATRIX_NOF_BOARDS         (6)
+#if MATRIX_BOARD_ARRANGEMENT==0
+  #define MATRIX_NOF_CLOCKS_Y       (3)    /* number of clocks in y direction */
+  #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
+  #define MATRIX_NOF_BOARDS         (6)
+#elif MATRIX_BOARD_ARRANGEMENT==1
+  #define MATRIX_NOF_CLOCKS_Y       (1)    /* number of clocks in y direction */
+  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x direction */
+  #define MATRIX_NOF_BOARDS         (1)
+#endif
 
 #define MATRIX_NOF_CLOCKS_BOARD_X (4)  /* number of clocks on PCB in x direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Y (1)  /* number of clocks on PCB in y direction */
@@ -35,14 +42,6 @@ typedef struct {
   uint8_t nr;   /* clock number, 0..3 */
   bool enabled; /* if enabled or not */
 } MatrixClock_t;
-
-typedef struct {
-  bool enabled; /* if board is enabled or not */
-  uint8_t addr; /* RS-485 address of the board */
-#if PL_CONFIG_USE_STEPPER_EMUL
-  STEPBOARD_Handle_t board; /* board handle */
-#endif
-} MATRIX_Board;
 
 static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
 
@@ -59,15 +58,17 @@ static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y]
   [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
   [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
 #elif MATRIX_BOARD_ARRANGEMENT==1
+  [0][0]={.addr=0x24, .nr=3, .enabled=true}, [1][0]={.addr=0x24, .nr=2, .enabled=true}, [2][0]={.addr=0x24, .nr=1, .enabled=true}, [3][0]={.addr=0x24, .nr=0, .enabled=true},
+
   /* first 3 boards on the left */
-  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
-  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
-  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+//  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
+//  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
+//  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
 
   /* second 3 boards on the right */
-  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
-  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
-  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
+//  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
+//  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
+//  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
 #endif
 };
 
@@ -84,6 +85,15 @@ static bool MATRIX_BoardIsEnabled(uint8_t addr) {
     }
   }
   return false;
+}
+
+STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
+  for(int i=0; i<MATRIX_NOF_BOARDS; i++){
+    if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
+      return MATRIX_Boards[i];
+    }
+  }
+  return NULL;
 }
 
 static void MATRIX_Delay(int32_t ms) {
@@ -951,7 +961,8 @@ uint8_t MATRIX_Intermezzo(uint8_t *nr) {
 
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
-  uint8_t buf[32];
+  uint8_t buf[128];
+  uint8_t statusStr[16];
 
   McuShell_SendStatusStr((unsigned char*)"matrix", (unsigned char*)"Matrix settings\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"x*y: ");
@@ -963,6 +974,24 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_Num8uToStr(buf, sizeof(buf), MATRIX_BOARD_ARRANGEMENT);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  arrangement", buf, io->stdOut);
+
+  for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
+    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+      for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+        STEPPER_GetStatus(STEPBOARD_GetStepper(MATRIX_Boards[b], i, j), buf, sizeof(buf));
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+        McuUtility_strcpy(statusStr, sizeof(statusStr), (unsigned char*)"  [");
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), b);
+        McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)",");
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), i);
+        McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)",");
+        McuUtility_strcatNum8u(statusStr, sizeof(statusStr), j);
+        McuUtility_strcat(statusStr, sizeof(statusStr), (unsigned char*)"]");
+        McuShell_SendStatusStr(statusStr, buf, io->stdOut);
+      }
+    }
+  } /* for */
+
   return ERR_OK;
 }
 
@@ -1070,33 +1099,70 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 }
 #endif
 
-void MATRIX_Init(void) {
+void MATRIX_TimerCallback(void) {
+  bool workToDo = false;
+  STEPPER_Handle_t stepper;
+
+  /* go through all boards and update steps */
+  for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
+    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+       for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) { /* go through all motors */
+         stepper = STEPBOARD_GetStepper(MATRIX_Boards[b], i, j);
+         workToDo |= STEPPER_TimerClockCallback(stepper);
+      } /* for */
+    }
+  }
+  /* check if we can stop timer */
+  if (!workToDo) {
+    STEPPER_StopTimer();
+  }
+}
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+#include "NeoPixel.h"
+void MATRIX_SetLEDs(void) {
+  for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
+    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+      for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+        NEOSR_SetRotorPixel(STEPPER_GetDevice(STEPBOARD_GetStepper(MATRIX_Boards[b], i, j)));
+      }
+    }
+  } /* for */
+}
+#endif
+
+
+static void MatrixQueueTask(void *pv) {
+  uint8_t *cmd;
+  bool noCommandsInQueue = true;
+  McuShell_ConstStdIOType *io = McuShell_GetStdio();
+
+  for(;;) {
 #if 0
-#if MATRIX_BOARD_ARRANGEMENT==0
-  static const MATRIX_Board MATRIX_Boards[MATRIX_NOF_BOARDS] =
-    {
-      {.enabled = true, .addr = 0x10},
-      {.enabled = true, .addr = 0x11},
-      {.enabled = true, .addr = 0x12},
-      {.enabled = true, .addr = 0x13},
-      {.enabled = true, .addr = 0x14},
-      {.enabled = true, .addr = 0x15},
-    };
-#elif MATRIX_BOARD_ARRANGEMENT==1
-    {
-      {.enabled = false, .addr = 0x20},
-      {.enabled = false, .addr = 0x21},
-      {.enabled = false, .addr = 0x22},
-      {.enabled = false, .addr = 0x23},
-      {.enabled = true,  .addr = 0x24},
-      {.enabled = false, .addr = 0x25},
-    };
+    noCommandsInQueue = true;
+    if (STEPPER_ExecuteQueue) {
+      for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+        for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+          if (STEPPER_Clocks[i].mot[j].doSteps==0) { /* no steps to do? */
+            if (xQueueReceive(STEPPER_Clocks[i].mot[j].queue, &cmd, 0)==pdPASS) { /* check queue */
+              noCommandsInQueue = false;
+              (void)SHELL_ParseCommand(cmd, io, true); /* parse and execute it */
+              vPortFree(cmd); /* free memory for command */
+            }
+          }
+        }
+      } /* for */
+      if (noCommandsInQueue && STEPPER_IsIdle()) { /* nothing pending in queues */
+        STEPPER_ExecuteQueue = false;
+        STEPPER_NormalizePosition();
+      }
+    }
 #endif
-#endif
-  STEPBOARD_Config_t config;
+    vTaskDelay(pdMS_TO_TICKS(20));
+  } /* for */
+}
 
-  STEPBOARD_GetDefaultConfig(&config);
-
+void MATRIX_Init(void) {
 #if MATRIX_BOARD_ARRANGEMENT==0
   config.addr = 0x10;
   MATRIX_Boards[0] = STEPBOARD_InitDevice(&config);
@@ -1116,9 +1182,114 @@ void MATRIX_Init(void) {
   config.addr = 0x15;
   MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
 #elif MATRIX_BOARD_ARRANGEMENT==1
-  config.addr = 0x20;
-  config.enabled = false;
-  MATRIX_Boards[0] = STEPBOARD_InitDevice(&config);
+  NEOSR_Config_t stepperRingConfig;
+  STEPPER_Config_t stepperConfig;
+  STEPBOARD_Config_t stepBoardConfig;
+  NEOSR_Handle_t ring[8];
+  STEPPER_Handle_t stepper[8];
+
+  /* get default configurations */
+  STEPPER_GetDefaultConfig(&stepperConfig);
+  STEPBOARD_GetDefaultConfig(&stepBoardConfig);
+  NEOSR_GetDefaultConfig(&stepperRingConfig);
+
+  /* ----------------- board --------------------- */
+  /* setup ring */
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 0;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 0;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 40;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 40;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 80;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 80;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 120;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
+  stepperRingConfig.ledLane = 0;
+  stepperRingConfig.ledStartPos = 120;
+  stepperRingConfig.ledCw = true;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
+
+  /* setup stepper */
+  stepperConfig.stepFn = NEOSR_SingleStep;
+
+  stepperConfig.device = ring[0];
+  stepper[0] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[1];
+  stepper[1] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[2];
+  stepper[2] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[3];
+  stepper[3] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[4];
+  stepper[4] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[5];
+  stepper[5] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[6];
+  stepper[6] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[7];
+  stepper[7] = STEPPER_InitDevice(&stepperConfig);
+
+  /* setup board */
+  stepBoardConfig.addr = 0x24;
+  stepBoardConfig.enabled = true;
+  stepBoardConfig.stepper[0][0] = stepper[0];
+  stepBoardConfig.stepper[0][1] = stepper[1];
+  stepBoardConfig.stepper[1][0] = stepper[2];
+  stepBoardConfig.stepper[1][1] = stepper[3];
+  stepBoardConfig.stepper[2][0] = stepper[4];
+  stepBoardConfig.stepper[2][1] = stepper[5];
+  stepBoardConfig.stepper[3][0] = stepper[6];
+  stepBoardConfig.stepper[3][1] = stepper[7];
+
+  MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
+
+  STEPBOARD_SetBoard(MATRIX_Boards[0]);
+  /* ---------------------------------------------------------- */
+
+#if 0
 
   config.addr = 0x21;
   config.enabled = false;
@@ -1141,9 +1312,24 @@ void MATRIX_Init(void) {
   MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
 #endif
 
+#endif
+
   MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+
+  if (xTaskCreate(
+      MatrixQueueTask,  /* pointer to the task */
+      "StepperQueue", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+3,  /* initial priority */
+      NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
+  }
+
 }
 
 #endif /* PL_CONFIG_USE_MATRIX */

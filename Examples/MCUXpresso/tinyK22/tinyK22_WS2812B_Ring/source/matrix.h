@@ -18,6 +18,10 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
 uint8_t MATRIX_DrawAllClockDelays(uint8_t delay0, uint8_t delay1);
 uint8_t MATRIX_ShowTime(uint8_t hour, uint8_t minute);
 
+void MATRIX_SetLEDs(void);
+
+void MATRIX_TimerCallback(void);
+
 uint8_t MATRIX_Intermezzo(uint8_t *nr);
 
 void MATRIX_Init(void);

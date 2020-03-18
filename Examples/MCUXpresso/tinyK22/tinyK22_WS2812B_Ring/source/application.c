@@ -37,9 +37,9 @@ typedef enum {
 } NEO_POS_e;
 
 static void AppTask(void *pv) {
-  int i = 0;
-  int color = 0;
-  uint8_t level;
+  //int i = 0;
+  //int color = 0;
+  //uint8_t level;
 
   NEO_ClearAllPixel();
 #if 0 && PL_CONFIG_USE_NEO_PIXEL
@@ -170,7 +170,7 @@ static void AppTask(void *pv) {
     //(void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
 #if 1 && PL_CONFIG_USE_STEPPER_EMUL
     NEO_ClearAllPixel();
-    STEPPER_SetLEDs();
+    MATRIX_SetLEDs();
     //NEOSR_IlluminatePos(stepperPos, 0, 0, 0x0, 0x0, 0xff);
     NEO_TransferPixels();
     stepperPos++;
