@@ -28,6 +28,7 @@ int32_t NEOSR_GetPos(NEOSR_Handle_t device);
 void NEOSR_SetPos(NEOSR_Handle_t device, int32_t pos);
 int32_t NEOSR_GetPos(NEOSR_Handle_t device);
 
+void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint8_t blue);
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device);
 
 void NEOSR_SingleStep(NEOSR_Handle_t device, int step);

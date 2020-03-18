@@ -77,7 +77,7 @@ void STEPPER_GetDefaultConfig(STEPPER_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
-STEPPER_Handle_t STEPPER_(STEPPER_Handle_t device) {
+STEPPER_Handle_t STEPPER_DeinitDevice(STEPPER_Handle_t device) {
 #if STEPPER_CONFIG_USE_FREERTOS_HEAP
   vPortFree(device);
 #else

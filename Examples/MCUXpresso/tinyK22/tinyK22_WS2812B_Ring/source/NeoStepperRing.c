@@ -176,6 +176,14 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRe
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 }
 
+void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint8_t blue) {
+  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+
+  dev->ledRed = red;
+  dev->ledGreen = green;
+  dev->ledBlue = blue;
+}
+
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
 
