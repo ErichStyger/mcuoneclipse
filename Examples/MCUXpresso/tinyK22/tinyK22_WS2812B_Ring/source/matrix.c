@@ -1505,56 +1505,56 @@ void MATRIX_Init(void) {
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 0;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[0] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 0;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[1] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 40;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[2] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 40;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[3] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 80;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[4] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 80;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[5] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 120;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[6] = NEOSR_InitDevice(&stepperRingConfig);
   stepperRingConfig.ledLane = 1;
   stepperRingConfig.ledStartPos = 120;
   stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = 0xff/4;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[7] = NEOSR_InitDevice(&stepperRingConfig);
@@ -1592,35 +1592,11 @@ void MATRIX_Init(void) {
   stepBoardConfig.stepper[3][1] = stepper[7];
 
   MATRIX_Boards[1] = STEPBOARD_InitDevice(&stepBoardConfig);
-
-
   /* ---------------------------------------------------------- */
-
+  /* default */
   STEPBOARD_SetBoard(MATRIX_Boards[0]);
   /* ---------------------------------------------------------- */
 
-#if 0
-
-  config.addr = 0x21;
-  config.enabled = false;
-  MATRIX_Boards[1] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x22;
-  config.enabled = false;
-  MATRIX_Boards[2] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x23;
-  config.enabled = false;
-  MATRIX_Boards[3] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x24;
-  config.enabled = true;
-  MATRIX_Boards[4] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x25;
-  config.enabled = false;
-  MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
-#endif
 
 #endif
 

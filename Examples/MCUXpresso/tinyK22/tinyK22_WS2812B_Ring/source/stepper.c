@@ -56,8 +56,8 @@ typedef enum {
 /* default configuration, used for initializing the config */
 static const STEPPER_Config_t defaultConfig =
 {
-  .device = NULL,
-  .stepFn = NULL,
+  .device = NULL, /* motor or LED device */
+  .stepFn = NULL, /* callback to increment or decrement steps */
 };
 
 /* device for a single LED ring */
@@ -113,36 +113,6 @@ STEPPER_Handle_t STEPPER_InitDevice(STEPPER_Config_t *config) {
   }
   return handle;
 }
-
-
-#if 0
-typedef struct STEPPER_Motor_t {
-#if PL_CONFIG_USE_X12_STEPPER
-  McuX12_017_Handle_t device; /* X12.017 device */
-  McuX12_017_Motor_e mot; /* motor id */
-#elif PL_CONFIG_USE_STEPPER_EMUL
-  NEOSR_Handle_t device; /* virtual stepper motor as LED ring */
-#endif
-#if PL_CONFIG_USE_MAG_SENSOR
-  MAG_MagSensor_e mag; /* magnet sensor for motor */
-#endif
-  int32_t doSteps; /* != 0: steps to do */
-  int16_t delay; /* shortest delay: 0 */
-  int16_t delayCntr; /* in the range of delay..0, step will be done at counter of 0 */
-  /* acceleration and de-acceleration */
-  //const uint16_t (*accelTable)[2]; /* acceleration table */
-  //uint16_t nofAccelTableEntries; /* number of entries in acceTable */
-  int32_t accelStepCntr; /* current counter of steps since start */
-  bool speedup, slowdown;
-  /* queue */
-  QueueHandle_t queue; /* queue for the motor */
-} STEPPER_Motor_t;
-
-typedef struct STEPPER_Clock_t {
-  STEPPER_Motor_t mot[STEPPER_NOF_CLOCK_MOTORS]; /* [0]: hh, inner motor, higher hand, [1]: outer motor, lower hand */
-} STEPPER_Clock_t;
-#endif
-//static STEPPER_Clock_t STEPPER_Clocks[STEPPER_NOF_CLOCKS];
 
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
   #define STEPPER_START_TIMER()        SCTIMER_StartTimer(SCT0, kSCTIMER_Counter_L)
@@ -231,23 +201,6 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
   }
   return true; /* still work to do */
 }
-
-#if 0
-static void STEPPER_TimerCallback(void) {
-  bool workToDo = false;
-
-  /* go through all motors and update steps */
-  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) { /* go through all motors */
-       workToDo |= STEPPER_TimerClockCallback(&STEPPER_Clocks[i].mot[j]);
-    } /* for */
-  }
-  /* check if we can stop timer */
-  if (!workToDo) {
-    STEPPER_STOP_TIMER();
-  }
-}
-#endif
 
 #if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
 static void SCTIMER_Handler0(void) {
