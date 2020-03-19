@@ -247,6 +247,7 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
   return ERR_OK;
 }
 
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   bool boardIsIdle[MATRIX_NOF_BOARDS];
   uint8_t res;
@@ -501,6 +502,9 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   }
 #endif
 }
+#endif /* PL_CONFIG_IS_MASTER */
+
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_FailedDemo(uint8_t res) {
   return res; /* used to set a breakpoint in case of failure */
 }
@@ -1033,6 +1037,7 @@ uint8_t MATRIX_Intermezzo(uint8_t *nr) {
   }
   return ERR_FAILED;
 }
+#endif /* PL_CONFIG_IS_MASTER */
 
 #if PL_CONFIG_USE_MAG_SENSOR
 
@@ -1119,60 +1124,63 @@ static uint8_t MATRIX_ZeroHand(STEPPER_Handle_t *motors[], int16_t offsets[], si
   return res;
 }
 
-#if 0
 static uint8_t MATRIX_ZeroAllHands(void) {
   uint8_t res = ERR_OK;
   STEPPER_Handle_t *motors[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
   int16_t offsets[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  int i;
 
   /* fill in motor array information */
-  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-      motors[c*STEPPER_NOF_CLOCK_MOTORS + m] = &STEPPER_Clocks[c].mot[m];
-      offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
+  i = 0;
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        motors[i] = MATRIX_GetStepper(x, y, z);
+        offsets[i] = NVMC_GetStepperZeroOffset(x, z);
+        i++;
+      }
     }
   }
   /* zero all of them */
-  if (STEPPER_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+  if (MATRIX_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
   return res;
 }
-#endif
 
-#if 0
 static uint8_t MATRIX_SetOffsetFrom12(void) {
   /* all hands shall be at 12-o-clock position */
   uint8_t res = ERR_OK;
   STEPPER_Handle_t *motors[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
   int16_t offsets[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  STEPPER_Handle_t stepper;
+  int i;
 
   /* first zero position at current position and set delay */
-  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-      X12_017_SetPos(STEPPER_Clocks[c].mot[m].device, STEPPER_Clocks[c].mot[m].mot, 0);
-      STEPPER_Clocks[c].mot[m].delay = 8;
+  i = 0;
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        stepper = MATRIX_GetStepper(x, y, z);
+        STEPPER_SetPos(stepper, 0);
+        motors[i] = stepper;
+        i++;
+      }
     }
   }
 
-  /* fill in motor array information */
-  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-      motors[c*STEPPER_NOF_CLOCK_MOTORS + m] = &STEPPER_Clocks[c].mot[m];
-    }
-  }
   /* move forward in larger steps to find sensor */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step back in micro-steps just to leave the sensor */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
   }
 
   /* step forward in micro-steps just to enter the sensor again */
-  if (STEPPER_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
     res = ERR_FAILED;
     return res;
   }
@@ -1181,9 +1189,12 @@ static uint8_t MATRIX_SetOffsetFrom12(void) {
   NVMC_Data_t data;
 
   data = *NVMC_GetDataPtr(); /* struct copy */
-  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-      data.zeroOffsets[c][m] = -X12_017_GetPos(STEPPER_Clocks[c].mot[m].device, STEPPER_Clocks[c].mot[m].mot);
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        stepper = MATRIX_GetStepper(x, y, z);
+        data.zeroOffsets[x][z] = -STEPPER_GetPos(stepper);
+      }
     }
   }
   res = NVMC_WriteConfig(&data);
@@ -1196,10 +1207,9 @@ static uint8_t MATRIX_SetOffsetFrom12(void) {
       offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
     }
   }
-  STEPPER_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]), STEPPER_HAND_ZERO_DELAY);
+  MATRIX_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]), STEPPER_HAND_ZERO_DELAY);
   return res;
 }
-#endif
 
 #if 0
 static uint8_t MATRIX_Test(int8_t clock) {
@@ -1375,6 +1385,7 @@ static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+#if PL_CONFIG_IS_MASTER
   McuShell_SendHelpStr((unsigned char*)"  12", (unsigned char*)"Set matrix to 12:00 position\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo", (unsigned char*)"General longer demo\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 0", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
@@ -1389,6 +1400,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  delay <delay>", (unsigned char*)"Set default delay\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  time <time>", (unsigned char*)"Show time\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  temp <temp>", (unsigned char*)"Show temperature\r\n", io->stdOut);
+#endif
 #if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <r> <g> <b>", (unsigned char*)"Set RGB color\r\n", io->stdOut);
 #endif
@@ -1400,7 +1412,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  zero <x> <y> <z>", (unsigned char*)"Move clock to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  offs <x> <y> <z> <v>", (unsigned char*)"Set offset value for clock\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  offs 12", (unsigned char*)"Calculate offset from 12-o-clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  offs 12", (unsigned char*)"Calculate offset from 12-o-clock for all\r\n", io->stdOut);
 #endif
   return ERR_OK;
 }
@@ -1419,6 +1431,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "matrix status")==0)) {
     *handled = true;
     return PrintStatus(io);
+#if PL_CONFIG_IS_MASTER
   } else if (McuUtility_strcmp((char*)cmd, "matrix demo")==0) {
     *handled = true;
     return MATRIX_Demo(io);
@@ -1489,6 +1502,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+#endif /* PL_CONFIG_IS_MASTER */
   } else if (McuUtility_strncmp((char*)cmd, "matrix r ", sizeof("matrix r ")-1)==0) { /* "matrix r <x> <y> <z> <a> <d> <md> " */
     *handled = TRUE;
     res = ParseMatrixCommand(cmd+sizeof("matrix r ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
@@ -1561,11 +1575,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     MATRIX_ExecuteQueue = true;
     *handled = TRUE;
 #if PL_CONFIG_USE_MAG_SENSOR
-#if 0
   } else if (McuUtility_strcmp((char*)cmd, "matrix zero all")==0) {
     *handled = TRUE;
-    return STEPPER_ZeroAllHands();
-#endif
+    return MATRIX_ZeroAllHands();
   } else if (McuUtility_strncmp((char*)cmd, "matrix zero ", sizeof("matrix zero ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("matrix zero ")-1;
@@ -1586,11 +1598,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
-#if 0
   } else if (McuUtility_strcmp((char*)cmd, "matrix offs 12")==0) {
     *handled = TRUE;
-    return STEPPER_SetOffsetFrom12();
-#endif
+    return MATRIX_SetOffsetFrom12();
 #if 0
   } else if (McuUtility_strncmp((char*)cmd, "matrix test ", sizeof("matrix test ")-1)==0) {
     *handled = TRUE;

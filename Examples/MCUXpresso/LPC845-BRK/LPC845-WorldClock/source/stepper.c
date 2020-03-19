@@ -446,6 +446,11 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   return res;
 }
 
+int32_t STEPPER_GetPos(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+  return device->pos;
+}
+
 void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   device->pos = pos;
