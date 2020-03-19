@@ -1211,36 +1211,26 @@ static uint8_t MATRIX_SetOffsetFrom12(void) {
   return res;
 }
 
-#if 0
-static uint8_t MATRIX_Test(int8_t clock) {
+static uint8_t MATRIX_Test(void) {
   /* Test the clock stepper motors. Pass -1 to run the test for all motors/clocks */
-  for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
-    /* clockwise */
-    for(int i=0; i<4; i++) {
-      if (clock==-1) { /* all */
-        for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-          STEPPER_MoveClockDegreeRel(c, m, 90, STEPPER_MOVE_MODE_CW, 4, true, true);
-        }
-      } else {
-        STEPPER_MoveClockDegreeRel(clock, m, 90, STEPPER_MOVE_MODE_CW, 4, true, true);
+  for (int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+    for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_MoveClockDegreeRel(MATRIX_GetStepper(x, y, z), 90, STEPPER_MOVE_MODE_CW, 4, true, true);
+        STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
       }
-      STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
     }
-    /* counter-clockwise */
-    for(int i=0; i<4; i++) {
-      if (clock==-1) { /* all */
-        for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
-          STEPPER_MoveClockDegreeRel(c, m, -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
-        }
-      } else {
-        STEPPER_MoveClockDegreeRel(clock, m, -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
+  }
+  for (int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+    for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_MoveClockDegreeRel(MATRIX_GetStepper(x, y, z), -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
+        STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
       }
-      STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
     }
   }
   return ERR_OK;
 }
-#endif
 
 #endif
 
@@ -1385,6 +1375,7 @@ static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test the stepper on the board\r\n", io->stdOut);
 #if PL_CONFIG_IS_MASTER
   McuShell_SendHelpStr((unsigned char*)"  12", (unsigned char*)"Set matrix to 12:00 position\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo", (unsigned char*)"General longer demo\n", io->stdOut);
@@ -1601,39 +1592,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "matrix offs 12")==0) {
     *handled = TRUE;
     return MATRIX_SetOffsetFrom12();
-#if 0
-  } else if (McuUtility_strncmp((char*)cmd, "matrix test ", sizeof("matrix test ")-1)==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "matrix test")==0) {
     *handled = TRUE;
-    p = cmd + sizeof("matrix test ")-1;
-    if (McuUtility_xatoi(&p, &clk)==ERR_OK && ((clk>=0 && clk<STEPPER_NOF_CLOCKS) || clk==-1)) {
-      return STEPPER_Test(clk);
-    }
-    return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "matrix offs ", sizeof("matrix offs ")-1)==0) {
-    int32_t val;
-
-    *handled = TRUE;
-    p = cmd + sizeof("matrix offs ")-1;
-    if (   McuUtility_xatoi(&p, &clk)==ERR_OK && clk>=0 && clk<STEPPER_NOF_CLOCKS
-        && McuUtility_xatoi(&p, &m)==ERR_OK && m>=0 && m<STEPPER_NOF_CLOCK_MOTORS
-        && McuUtility_xatoi(&p, &val)==ERR_OK
-       )
-    {
-  #if PL_CONFIG_USE_NVMC
-      NVMC_Data_t data;
-
-      if (NVMC_IsErased()) {
-        McuShell_SendStr((unsigned char*)"FLASH is erased, initialize it first!\r\n", io->stdErr);
-        return ERR_FAILED;
-      }
-      data = *NVMC_GetDataPtr(); /* struct copy */
-      data.zeroOffsets[clk][m] = val;
-      return NVMC_WriteConfig(&data);
-  #endif
-    } else {
-      return ERR_FAILED;
-    }
-#endif
+    return MATRIX_Test();
 #endif
   }
   return ERR_OK;
