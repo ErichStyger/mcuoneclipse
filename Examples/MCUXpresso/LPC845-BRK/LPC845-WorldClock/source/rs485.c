@@ -17,7 +17,7 @@
   #include "nvmc.h"
 #endif
 #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
-  #include "Stepper.h"
+  #include "StepperBoard.h"
 #endif
 #if PL_CONFIG_USE_WDT
   #include "watchdog.h"
@@ -187,11 +187,16 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr) {
   } /* for */
 }
 
-uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs) {
+uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs, bool intern) {
   /* example: send "#@16:0 cmd stepper zero all" */
   unsigned char buf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   uint8_t res = ERR_OK;
 
+#if PL_CONFIG_USE_STEPPER_EMUL
+  if (intern && (dstAddr==0x24 || dstAddr==0)) { /* \todo */
+    SHELL_ParseCommand(cmd, NULL, true);
+  }
+#endif
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)("@"));
   McuUtility_strcatNum8u(buf, sizeof(buf), dstAddr); /* add destination address */
   McuUtility_chcat(buf, sizeof(buf), ' ');
@@ -252,7 +257,7 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
           }
       #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
         } else if (McuUtility_strcmp((char*)p, (char*)"stepper idle")==0) {
-          if (STEPPER_IsIdle()) {
+          if (STEPBOARD_IsIdle(STEPBOARD_GetBoard())) {
             res = ERR_OK;  /* ERR_OK if board is idle */
           } else {
             res = ERR_FAILED;
@@ -345,7 +350,7 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       while (*p==' ') { /* skip leading spaces */
         p++;
       }
-      return RS485_SendCommand(val, (unsigned char*)p, 10000); /* 10 seconds should be enough */
+      return RS485_SendCommand(val, (unsigned char*)p, 10000, true); /* 10 seconds should be enough */
     }
     return ERR_FAILED;
   }

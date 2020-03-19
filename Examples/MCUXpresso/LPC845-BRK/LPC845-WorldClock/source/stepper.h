@@ -10,12 +10,27 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "McuShell.h"
+#include "McuRTOS.h"
+
+typedef void *STEPPER_Handle_t;
+
+typedef struct STEPPER_Config_t {
+  void *device; /* point to the motor device */
+  void (*stepFn)(void *device, int step); /* function pointer to perform a single step forward (1) or backward (-1) */
+} STEPPER_Config_t;
+
+void STEPPER_GetDefaultConfig(STEPPER_Config_t *config);
+
+STEPPER_Handle_t STEPPER_InitDevice(STEPPER_Config_t *config);
+
+void STEPPER_StopTimer(void);
+void STEPPER_StartTimer(void);
+bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper);
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
-uint8_t STEPPER_CheckAndExecuteQueue(const McuShell_StdIOType *io);
 
-#define STEPPER_NOF_CLOCKS        (4)
-#define STEPPER_NOF_CLOCK_MOTORS  (2)
+#define STEPPER_NOF_CLOCKS        (4)    /* number of clocks on a board */
+#define STEPPER_NOF_CLOCK_MOTORS  (2)    /* number of motors for each clock */
 #define STEPPER_CLOCK_360_STEPS   (4320) /* number of steps for a full turn on the clock */
 
 typedef enum {
@@ -36,16 +51,20 @@ typedef enum {
   STEPPER_CLOCK_3=3,
 } STEPPER_Clock_e;
 
-bool STEPPER_IsIdle(void);
+bool STEPPER_IsIdle(STEPPER_Handle_t stepper);
 
-void STEPPER_MoveClockDegreeAbs(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
-void STEPPER_MoveClockDegreeRel(STEPPER_Clock_e clk, STEPPER_Hand_e motorIndex, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
+void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
+void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
+void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t delay);
+void STEPPER_MoveMotorDegreeRel(STEPPER_Handle_t stepper, int32_t degree, uint16_t delay);
 
-uint8_t STEPPER_ZeroAllHands(void);
+void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos);
+void STEPPER_NormalizePosition(STEPPER_Handle_t stepper);
 
-void STEPPER_MoveAndWait(uint32_t waitMs);
+void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize);
+QueueHandle_t STEPPER_GetQueue(STEPPER_Handle_t stepper);
 
-void STEPPER_ShowLEDs(void);
+void *STEPPER_GetDevice(STEPPER_Handle_t stepper);
 
 void STEPPER_Deinit(void);
 void STEPPER_Init(void);

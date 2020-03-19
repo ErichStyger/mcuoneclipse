@@ -160,9 +160,6 @@ static void ShellTask(void *pv) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-#if PL_CONFIG_USE_STEPPER && !PL_CONFIG_USE_STEPPER_EMUL /* for LED stepper emulation, we call this from the App/LED task */
-    (void)STEPPER_CheckAndExecuteQueue(ios[0].stdio);
-#endif
     if (!SHELL_HasStdIoInput()) {
       vTaskDelay(pdMS_TO_TICKS(20));
     #if PL_CONFIG_USE_WDT
@@ -176,7 +173,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      1100/sizeof(StackType_t), /* task stack size */
+      1200/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
@@ -184,7 +181,7 @@ void SHELL_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
-  McuShell_SetStdio(McuRTT_GetStdio());
+  McuShell_SetStdio(ios[0].stdio); /* default */
 }
 
 void SHELL_Deinit(void) {}

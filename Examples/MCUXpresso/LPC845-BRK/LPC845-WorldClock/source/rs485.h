@@ -13,7 +13,7 @@
 
 #define RS485_BROADCAST_ADDRESS (0x00) /* special broadcast address */
 
-uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs);
+uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs, bool intern);
 
 uint8_t RS485_GetAddress(void);
 
