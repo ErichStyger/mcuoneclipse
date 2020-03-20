@@ -45,7 +45,7 @@
 #define PL_CONFIG_USE_MATRIX        (1)
 
 #define PL_CONFIG_USE_NEO_PIXEL     (1 && PL_CONFIG_IS_TINYK22) /* 1: using NeoPixels/WS2812B */
-#define PL_CONFIG_USE_CLOCK         (0)  /* 1: application implements a clock */
+#define PL_CONFIG_USE_CLOCK         (1)  /* 1: application implements a clock */
 
 /* NYI or not applicable */
 #define PL_CONFIG_USE_KBI           (0)

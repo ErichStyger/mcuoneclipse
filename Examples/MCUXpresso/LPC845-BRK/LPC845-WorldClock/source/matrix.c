@@ -39,74 +39,76 @@ static bool MATRIX_ExecuteQueue = false;
   #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
   #define MATRIX_NOF_BOARDS         (6)
 #elif MATRIX_BOARD_ARRANGEMENT==1
-
-#if 1
-  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-  #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
-  #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-  #define MATRIX_NOF_BOARDS         (1)
-#elif 1
-  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-  #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
-  #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-  #define MATRIX_NOF_BOARDS         (2)
+  #if PL_CONFIG_IS_MASTER
+    #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
+    #define MATRIX_NOF_BOARDS         (2)  /* number of boards in matrix */
+  #elif PL_CONFIG_IS_CLIENT /* only single board with 4 clocks */
+    #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
+    #define MATRIX_NOF_BOARDS         (1)  /* number of boards in matrix */
+  #endif
 #endif
 
-#endif
-
+/* settings for a single board: */
 #define MATRIX_NOF_CLOCKS_BOARD_X (4)  /* number of clocks on PCB in x direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Y (1)  /* number of clocks on PCB in y direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Z (2)  /* number of clocks on PCB in y direction */
-#define MATRIX_BOARD_CLOCK_NR_INC (0)  /* 1: clocks are numbered 0,1,2,3 on board */
 
 #define MATRIX_NOF_BOARDS_Y       (MATRIX_NOF_CLOCKS_Y/MATRIX_NOF_CLOCKS_BOARD_Y) /* number of boards in Y (rows) direction */
 #define MATRIX_NOF_BOARDS_X       (MATRIX_NOF_CLOCKS_X/MATRIX_NOF_CLOCKS_BOARD_X) /* number of boards in X (columns) direction */
-#define MATRIX_CLOCKS_NOF_HAND    (2)  /* number of hands per clock */
 
-typedef struct {
-  uint8_t addr; /* RS-485 address */
-  uint8_t nr;   /* clock number, 0..3 */
-  bool enabled; /* if enabled or not */
-} MatrixClock_t;
-
+/* list of boards */
 static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
 
-static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
-{
-#if MATRIX_BOARD_ARRANGEMENT==0
-  /* first 3 boards on the left */
-  [0][0]={.addr=0x12, .nr=3, .enabled=true}, [1][0]={.addr=0x12, .nr=2, .enabled=true}, [2][0]={.addr=0x12, .nr=1, .enabled=true}, [3][0]={.addr=0x12, .nr=0, .enabled=true},
-  [0][1]={.addr=0x11, .nr=3, .enabled=true}, [1][1]={.addr=0x11, .nr=2, .enabled=true}, [2][1]={.addr=0x11, .nr=1, .enabled=true}, [3][1]={.addr=0x11, .nr=0, .enabled=true},
-  [0][2]={.addr=0x10, .nr=3, .enabled=true}, [1][2]={.addr=0x10, .nr=2, .enabled=true}, [2][2]={.addr=0x10, .nr=1, .enabled=true}, [3][2]={.addr=0x10, .nr=0, .enabled=true},
+#if PL_CONFIG_IS_MASTER
+  typedef struct {
+    uint8_t addr; /* RS-485 address */
+    uint8_t nr;   /* clock number, 0..3 */
+    struct {
+      uint8_t x, y; /* coordinates on the board */
+    } board;
+    bool enabled; /* if enabled or not */
+  } MatrixClock_t;
 
-  /* second 3 boards on the right */
-  [4][0]={.addr=0x14, .nr=3, .enabled=true}, [5][0]={.addr=0x14, .nr=2, .enabled=true}, [6][0]={.addr=0x14, .nr=1, .enabled=true}, [7][0]={.addr=0x14, .nr=0, .enabled=true},
-  [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
-  [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
-#elif MATRIX_BOARD_ARRANGEMENT==1
-#if MATRIX_NOF_BOARDS==1
-  [0][0]={.addr=0x24, .nr=3, .enabled=true}, [1][0]={.addr=0x24, .nr=2, .enabled=true}, [2][0]={.addr=0x24, .nr=1, .enabled=true}, [3][0]={.addr=0x24, .nr=0, .enabled=true},
-#elif MATRIX_NOF_BOARDS==2
-  [0][0]={.addr=0x22, .nr=3, .enabled=true}, [1][0]={.addr=0x22, .nr=2, .enabled=true}, [2][0]={.addr=0x22, .nr=1, .enabled=true}, [3][0]={.addr=0x22, .nr=0, .enabled=true},
-  [0][1]={.addr=0x24, .nr=3, .enabled=true}, [1][1]={.addr=0x24, .nr=2, .enabled=true}, [2][1]={.addr=0x24, .nr=1, .enabled=true}, [3][1]={.addr=0x24, .nr=0, .enabled=true},
-#endif
-  /* first 3 boards on the left */
-//  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
-//  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
-//  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+  static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
+  {
+  #if MATRIX_BOARD_ARRANGEMENT==0
+    /* first 3 boards on the left */
+    [0][0]={.addr=0x12, .nr=3, .enabled=true}, [1][0]={.addr=0x12, .nr=2, .enabled=true}, [2][0]={.addr=0x12, .nr=1, .enabled=true}, [3][0]={.addr=0x12, .nr=0, .enabled=true},
+    [0][1]={.addr=0x11, .nr=3, .enabled=true}, [1][1]={.addr=0x11, .nr=2, .enabled=true}, [2][1]={.addr=0x11, .nr=1, .enabled=true}, [3][1]={.addr=0x11, .nr=0, .enabled=true},
+    [0][2]={.addr=0x10, .nr=3, .enabled=true}, [1][2]={.addr=0x10, .nr=2, .enabled=true}, [2][2]={.addr=0x10, .nr=1, .enabled=true}, [3][2]={.addr=0x10, .nr=0, .enabled=true},
 
-  /* second 3 boards on the right */
-//  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
-//  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
-//  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
-#endif
-};
+    /* second 3 boards on the right */
+    [4][0]={.addr=0x14, .nr=3, .enabled=true}, [5][0]={.addr=0x14, .nr=2, .enabled=true}, [6][0]={.addr=0x14, .nr=1, .enabled=true}, [7][0]={.addr=0x14, .nr=0, .enabled=true},
+    [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
+    [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
+  #elif MATRIX_BOARD_ARRANGEMENT==1
+    [0][0]={.addr=0x20, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    [0][1]={.addr=0x21, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .board.x=3, .board.y=0, .enabled=true},
 
-/* map of clocks with their hand position */
-static int16_t MATRIX_angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND]; /* two hands per clock */
-/* map of clocks with their speed delay */
-static int8_t MATRIX_delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND]; /* two motors per clock */
-static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND];
+    /* first 3 boards on the left */
+  //  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
+  //  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
+  //  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+
+    /* second 3 boards on the right */
+  //  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
+  //  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
+  //  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
+  #endif
+  };
+
+  /* map of clocks with their hand position */
+  static int16_t MATRIX_angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two hands per clock */
+  /* map of clocks with their speed delay */
+  static int8_t MATRIX_delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two motors per clock */
+  static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z];
+#else
+  static int const mapXBoardPosNr[] = {3, 2, 1, 0}; /* map steppers on x position for boards. This reflects the X (horizontal) order of steppers */
+#endif /* PL_CONFIG_IS_MASTER */
 
 #if !PL_CONFIG_USE_STEPPER_EMUL
 typedef struct {
@@ -126,6 +128,7 @@ static void X12_SingleStep(void *dev, int step) {
 }
 #endif /* !PL_CONFIG_USE_STEPPER_EMUL */
 
+#if PL_CONFIG_IS_MASTER
 static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
     if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
@@ -134,6 +137,7 @@ static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   }
   return false;
 }
+#endif
 
 STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
@@ -146,15 +150,24 @@ STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
 
 static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
   STEPPER_Handle_t stepper;
-  uint8_t addr;
   STEPBOARD_Handle_t board;
 
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y || z>=MATRIX_NOF_CLOCKS_Z) {
     return NULL;
   }
-  addr = clockMatrix[x][y].addr;
-  board = MATRIX_AddrGetBoard(addr);
+#if PL_CONFIG_IS_MASTER
+  board = MATRIX_AddrGetBoard(clockMatrix[x][y].addr);
+  if (board==NULL) {
+    return NULL;
+  }
   stepper = STEPBOARD_GetStepper(board, clockMatrix[x][y].nr, z);
+#else
+  board = STEPBOARD_GetBoard();
+  if (board==NULL) {
+    return NULL;
+  }
+  stepper = STEPBOARD_GetStepper(board, mapXBoardPosNr[x], z);
+#endif
   return stepper;
 }
 
@@ -165,13 +178,22 @@ void MATRIX_RotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t gre
 #endif
 
 static uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
+#if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].addr;
+#else
+  return RS485_GetAddress();
+#endif
 }
 
 static uint8_t MATRIX_GetPos(int32_t x, int32_t y, int32_t z) {
+#if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].nr;
+#else
+  return mapXBoardPosNr[x];
+#endif
 }
 
+#if PL_CONFIG_IS_MASTER
 static void MATRIX_Delay(int32_t ms) {
   while (ms>100) { /* wait in smaller pieces to keep watchdog task informed */
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -186,10 +208,9 @@ static void MATRIX_Delay(int32_t ms) {
   WDT_Report(WDT_REPORT_ID_CURR_TASK, ms);
 #endif
 }
+#endif
 
-/*!
- * \brief Changes the clock position
- */
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_DrawClockHands(uint8_t x, uint8_t y, int16_t angle0, int16_t angle1) {
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y) {
     return ERR_FRAMING;
@@ -246,6 +267,7 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
   }
   return ERR_OK;
 }
+#endif /* PL_CONFIG_IS_MASTER */
 
 #if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
@@ -259,7 +281,7 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
     for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
         if (STEPBOARD_IsEnabled(MATRIX_Boards[i])) {
-          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"stepper idle", 1000, false); /* ask board if it is idle */
+          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"idle", 1000, false); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -289,29 +311,28 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   return ERR_OK;
 }
 
-static uint8_t MATRIX_SendToQueue(void) {
+static uint8_t MATRIX_QueueToRemote(void) {
   /* assuming that the clocks are organized horizontally, and that the clocks are in 3,2,1,0 order! */
   uint8_t buf[McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE];
 
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) { /* every clock row */
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
-      for(int h=0; h<MATRIX_CLOCKS_NOF_HAND; h++) {
-        if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) {
-          /*  stepper q <c> <m> stepper m <c> <m> <a> <d> <md> */
-          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"stepper q ");
-          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
+          /*  matrix q <x> <y> <z> a <angle> <delay> <mode> */
+          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"matrix q ");
+          //McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].board.x); /* <x> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum8u(buf, sizeof(buf), h); /* <m> */
-          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" stepper m ");
-          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].board.y); /* <y> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum8u(buf, sizeof(buf), h); /* <m> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), z); /* <z> */
+          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" a ");
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_angleMap[x][y][z]); /* <a> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_angleMap[x][y][h]); /* <a> */
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_delayMap[x][y][z]); /* <d> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_delayMap[x][y][h]); /* <d> */
-          McuUtility_chcat(buf, sizeof(buf), ' ');
-          switch(MATRIX_moveMap[x][y][h]) {
+          switch(MATRIX_moveMap[x][y][z]) {
             default:
             case STEPPER_MOVE_MODE_SHORT:
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"sh");
@@ -333,7 +354,7 @@ static uint8_t MATRIX_SendToQueue(void) {
 
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
-  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000, true); /* execute the queue */
+  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true); /* execute the queue */
   return ERR_OK;
 }
 
@@ -419,7 +440,7 @@ static uint8_t MATRIX_SendAndExecute(int32_t timeoutMs) {
   if (res!=ERR_OK) {
     return res;
   }
-  res = MATRIX_SendToQueue();
+  res = MATRIX_QueueToRemote();
   if (res!=ERR_OK) {
     return res;
   }
@@ -525,7 +546,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 90, 270);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -535,7 +556,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -580,7 +601,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
   }
   (void)MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   (void)MATRIX_DrawAllClockDelays(6, 6);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     McuShell_SendStr((unsigned char*)"Failed Demo1: Point 1\r\n", io->stdErr);
     return MATRIX_FailedDemo(res);
@@ -595,7 +616,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
         (void)MATRIX_DrawClockHands(x, y, angle0, angle1);
       }
     }
-    res = MATRIX_SendToQueue(); /* queue command */
+    res = MATRIX_QueueToRemote(); /* queue command */
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"Failed Demo1: Point 2\r\n", io->stdErr);
       return MATRIX_FailedDemo(res);
@@ -630,7 +651,7 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
   uint8_t res;
 
   (void)MATRIX_DrawAllClockHands(0, 180);
-  res = MATRIX_SendToQueue(); /* queue command */
+  res = MATRIX_QueueToRemote(); /* queue command */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -647,7 +668,7 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
     angle0 = (angle0+90)%360;
     angle1 = (angle1+90)%360;
     (void)MATRIX_DrawAllClockHands(angle0, angle1);
-    res = MATRIX_SendToQueue(); /* queue command */
+    res = MATRIX_QueueToRemote(); /* queue command */
     if (res!=ERR_OK) {
       return MATRIX_FailedDemo(res);
     }
@@ -683,7 +704,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -712,7 +733,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 180, 0);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -722,7 +743,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -751,26 +772,26 @@ static uint8_t MATRIX_Demo4(const McuShell_StdIOType *io) {
   MATRIX_DrawAllClockDelays(8, 8);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CCW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(180, 180);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(0, 0);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(0, 90);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(270, 0);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -808,7 +829,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315, 315);
     MATRIX_DrawClockHands(x+1, 2, 225, 225);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -832,7 +853,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315-1, 315+1);
     MATRIX_DrawClockHands(x+1, 2, 225-1, 225+1);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -855,7 +876,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315, 315);
     MATRIX_DrawClockHands(x+1, 2, 225, 225);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   res = MATRIX_ExecQueue();
   res = MATRIX_WaitForIdle(9000);
 
@@ -1397,7 +1418,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
   McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a command for clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
 #if PL_CONFIG_USE_MAG_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
@@ -1787,7 +1808,7 @@ static void InitLedRings(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x24;
+  stepBoardConfig.addr = 0x20;
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -1881,7 +1902,7 @@ static void InitLedRings(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x22;
+  stepBoardConfig.addr = 0x21;
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -2070,7 +2091,7 @@ static void InitSteppers(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x24; /*! \todo */
+  stepBoardConfig.addr = RS485_GetAddress();
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -2100,10 +2121,11 @@ void MATRIX_Init(void) {
   STEPBOARD_SetBoard(MATRIX_Boards[0]);
   /* ---------------------------------------------------------- */
 
-  MATRIX_DrawAllClockHands(0, 0);
+#if PL_CONFIG_IS_MASTER
+ MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
-
+#endif
   if (xTaskCreate(
       MatrixQueueTask,  /* pointer to the task */
       "StepperQueue", /* task name for kernel awareness debugging */

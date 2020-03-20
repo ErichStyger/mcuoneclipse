@@ -24,7 +24,7 @@
 
 #define PL_CONFIG_USE_SHELL         (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT           (1 && (PL_CONFIG_IS_CLIENT || PL_CONFIG_IS_TINYK22)) /* use SEGGER RTT (only possible with a J-Link */
-#define PL_CONFIG_USE_RTC           (0) /* 1: enable RTC; 0: disable it */
+#define PL_CONFIG_USE_RTC           (1) /* 1: enable RTC; 0: disable it */
 #define PL_CONFIG_USE_RS485         (1 && PL_CONFIG_USE_SHELL) /* RS-485 connection, 1: enabled, 0: disabled: it requires the shell to parse the commands */
 #define PL_CONFIG_USE_NVMC          (1) /* using non-volatile configuration memory */
 #define PL_CONFIG_USE_WDT           (0) /* if using watchdog timer */
@@ -42,10 +42,10 @@
 #define PL_CONFIG_USE_HW_I2C        (CONFIG_USE_HW_I2C) /* set in IncludMcuLibConfig.h! */
 #define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_RTC && PL_CONFIG_USE_I2C) /* DS3231 with AT24C32 */
 #define PL_CONFIG_USE_EXT_EEPROM    (1 && PL_CONFIG_USE_I2C) /* AT24C32 */
-#define PL_CONFIG_USE_MATRIX        (1 && PL_CONFIG_IS_MASTER && PL_CONFIG_USE_RS485)
+#define PL_CONFIG_USE_MATRIX        (1)
 
 #define PL_CONFIG_USE_NEO_PIXEL     (1 && PL_CONFIG_IS_TINYK22) /* 1: using NeoPixels/WS2812B */
-#define PL_CONFIG_USE_CLOCK         (1)
+#define PL_CONFIG_USE_CLOCK         (1)  /* 1: application implements a clock */
 
 /* NYI or not applicable */
 #define PL_CONFIG_USE_KBI           (0)

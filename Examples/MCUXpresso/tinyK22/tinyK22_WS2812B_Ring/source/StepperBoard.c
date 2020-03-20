@@ -74,6 +74,21 @@ STEPPER_Handle_t STEPBOARD_GetStepper(STEPBOARD_Handle_t board, int clock, int m
   return handle->stepper[clock][motor];
 }
 
+bool STEPBOARD_ItemsInQueue(STEPBOARD_Handle_t board) {
+  STEPBOARD_Device_t *handle = (STEPBOARD_Device_t*)board;
+  QueueHandle_t queue;
+
+  for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
+    for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
+      queue = STEPPER_GetQueue(handle->stepper[i][j]);
+      if (uxQueueMessagesWaiting(queue)!=0) { /* still things queued up? */
+        return true; /* yes */
+      }
+    }
+  }
+  return false; /* nothing in queues */
+}
+
 bool STEPBOARD_IsIdle(STEPBOARD_Handle_t board) {
   STEPBOARD_Device_t *handle = (STEPBOARD_Device_t*)board;
 

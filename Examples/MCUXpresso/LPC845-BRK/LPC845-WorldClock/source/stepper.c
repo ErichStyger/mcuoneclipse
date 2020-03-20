@@ -334,7 +334,6 @@ void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPE
 
 void *STEPPER_GetDevice(STEPPER_Handle_t stepper) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
-
   return device->device;
 }
 
@@ -343,8 +342,7 @@ void STEPPER_Deinit(void) {
 
 QueueHandle_t STEPPER_GetQueue(STEPPER_Handle_t stepper) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
-
-   return device->queue;
+  return device->queue;
 }
 
 void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize) {
@@ -366,7 +364,6 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[128];
 
   McuShell_SendStatusStr((unsigned char*)"stepper", (unsigned char*)"Stepper clock settings\r\n", io->stdOut);
-
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"360 degree steps: ");
   McuUtility_strcatNum32s(buf, sizeof(buf), STEPPER_CLOCK_360_STEPS);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
@@ -382,8 +379,6 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 }
 
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
-  //int32_t steps, clk, m;
-  //const unsigned char *p;
   uint8_t res = ERR_OK;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "stepper help")==0) {

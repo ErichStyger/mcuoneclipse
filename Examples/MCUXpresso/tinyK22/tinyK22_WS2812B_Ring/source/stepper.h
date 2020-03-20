@@ -55,8 +55,11 @@ bool STEPPER_IsIdle(STEPPER_Handle_t stepper);
 
 void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
 void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown);
+void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t delay);
+void STEPPER_MoveMotorDegreeRel(STEPPER_Handle_t stepper, int32_t degree, uint16_t delay);
 
-uint8_t STEPPER_ZeroAllHands(void);
+void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos);
+int32_t STEPPER_GetPos(STEPPER_Handle_t stepper);
 void STEPPER_NormalizePosition(STEPPER_Handle_t stepper);
 
 void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize);

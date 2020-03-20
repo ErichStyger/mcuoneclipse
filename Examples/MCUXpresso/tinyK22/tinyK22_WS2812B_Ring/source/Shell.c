@@ -160,9 +160,6 @@ static void ShellTask(void *pv) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-#if PL_CONFIG_USE_STEPPER && !PL_CONFIG_USE_STEPPER_EMUL /* for LED stepper emulation, we call this from the App/LED task */
-    (void)STEPPER_CheckAndExecuteQueue(ios[0].stdio);
-#endif
     if (!SHELL_HasStdIoInput()) {
       vTaskDelay(pdMS_TO_TICKS(20));
     #if PL_CONFIG_USE_WDT

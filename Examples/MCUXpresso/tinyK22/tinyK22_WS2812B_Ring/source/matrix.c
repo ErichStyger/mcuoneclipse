@@ -15,7 +15,20 @@
   #include "watchdog.h"
 #endif
 #include "StepperBoard.h"
-#include "NeoStepperRing.h"
+#if PL_CONFIG_USE_STEPPER_EMUL
+  #include "NeoStepperRing.h"
+#endif
+#if PL_CONFIG_USE_X12_STEPPER
+  #include "McuX12_017.h"
+#endif
+#if PL_CONFIG_USE_MAG_SENSOR
+  #include "magnets.h"
+#endif
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
+
+#define STEPPER_HAND_ZERO_DELAY     (6)
 
 static bool MATRIX_ExecuteQueue = false;
 
@@ -26,75 +39,96 @@ static bool MATRIX_ExecuteQueue = false;
   #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
   #define MATRIX_NOF_BOARDS         (6)
 #elif MATRIX_BOARD_ARRANGEMENT==1
-
-#if 1
-  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-  #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
-  #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-  #define MATRIX_NOF_BOARDS         (1)
-#elif 1
-  #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-  #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
-  #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-  #define MATRIX_NOF_BOARDS         (2)
+  #if PL_CONFIG_IS_MASTER
+    #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
+    #define MATRIX_NOF_BOARDS         (2)  /* number of boards in matrix */
+  #elif PL_CONFIG_IS_CLIENT /* only single board with 4 clocks */
+    #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
+    #define MATRIX_NOF_BOARDS         (1)  /* number of boards in matrix */
+  #endif
 #endif
 
-#endif
-
+/* settings for a single board: */
 #define MATRIX_NOF_CLOCKS_BOARD_X (4)  /* number of clocks on PCB in x direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Y (1)  /* number of clocks on PCB in y direction */
 #define MATRIX_NOF_CLOCKS_BOARD_Z (2)  /* number of clocks on PCB in y direction */
-#define MATRIX_BOARD_CLOCK_NR_INC (0)  /* 1: clocks are numbered 0,1,2,3 on board */
 
 #define MATRIX_NOF_BOARDS_Y       (MATRIX_NOF_CLOCKS_Y/MATRIX_NOF_CLOCKS_BOARD_Y) /* number of boards in Y (rows) direction */
 #define MATRIX_NOF_BOARDS_X       (MATRIX_NOF_CLOCKS_X/MATRIX_NOF_CLOCKS_BOARD_X) /* number of boards in X (columns) direction */
-#define MATRIX_CLOCKS_NOF_HAND    (2)  /* number of hands per clock */
 
-typedef struct {
-  uint8_t addr; /* RS-485 address */
-  uint8_t nr;   /* clock number, 0..3 */
-  bool enabled; /* if enabled or not */
-} MatrixClock_t;
-
+/* list of boards */
 static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
 
-static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
-{
-#if MATRIX_BOARD_ARRANGEMENT==0
-  /* first 3 boards on the left */
-  [0][0]={.addr=0x12, .nr=3, .enabled=true}, [1][0]={.addr=0x12, .nr=2, .enabled=true}, [2][0]={.addr=0x12, .nr=1, .enabled=true}, [3][0]={.addr=0x12, .nr=0, .enabled=true},
-  [0][1]={.addr=0x11, .nr=3, .enabled=true}, [1][1]={.addr=0x11, .nr=2, .enabled=true}, [2][1]={.addr=0x11, .nr=1, .enabled=true}, [3][1]={.addr=0x11, .nr=0, .enabled=true},
-  [0][2]={.addr=0x10, .nr=3, .enabled=true}, [1][2]={.addr=0x10, .nr=2, .enabled=true}, [2][2]={.addr=0x10, .nr=1, .enabled=true}, [3][2]={.addr=0x10, .nr=0, .enabled=true},
+#if PL_CONFIG_IS_MASTER
+  typedef struct {
+    uint8_t addr; /* RS-485 address */
+    uint8_t nr;   /* clock number, 0..3 */
+    struct {
+      uint8_t x, y; /* coordinates on the board */
+    } board;
+    bool enabled; /* if enabled or not */
+  } MatrixClock_t;
 
-  /* second 3 boards on the right */
-  [4][0]={.addr=0x14, .nr=3, .enabled=true}, [5][0]={.addr=0x14, .nr=2, .enabled=true}, [6][0]={.addr=0x14, .nr=1, .enabled=true}, [7][0]={.addr=0x14, .nr=0, .enabled=true},
-  [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
-  [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
-#elif MATRIX_BOARD_ARRANGEMENT==1
-#if MATRIX_NOF_BOARDS==1
-  [0][0]={.addr=0x24, .nr=3, .enabled=true}, [1][0]={.addr=0x24, .nr=2, .enabled=true}, [2][0]={.addr=0x24, .nr=1, .enabled=true}, [3][0]={.addr=0x24, .nr=0, .enabled=true},
-#elif MATRIX_NOF_BOARDS==2
-  [0][0]={.addr=0x22, .nr=3, .enabled=true}, [1][0]={.addr=0x22, .nr=2, .enabled=true}, [2][0]={.addr=0x22, .nr=1, .enabled=true}, [3][0]={.addr=0x22, .nr=0, .enabled=true},
-  [0][1]={.addr=0x24, .nr=3, .enabled=true}, [1][1]={.addr=0x24, .nr=2, .enabled=true}, [2][1]={.addr=0x24, .nr=1, .enabled=true}, [3][1]={.addr=0x24, .nr=0, .enabled=true},
+  static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
+  {
+  #if MATRIX_BOARD_ARRANGEMENT==0
+    /* first 3 boards on the left */
+    [0][0]={.addr=0x12, .nr=3, .enabled=true}, [1][0]={.addr=0x12, .nr=2, .enabled=true}, [2][0]={.addr=0x12, .nr=1, .enabled=true}, [3][0]={.addr=0x12, .nr=0, .enabled=true},
+    [0][1]={.addr=0x11, .nr=3, .enabled=true}, [1][1]={.addr=0x11, .nr=2, .enabled=true}, [2][1]={.addr=0x11, .nr=1, .enabled=true}, [3][1]={.addr=0x11, .nr=0, .enabled=true},
+    [0][2]={.addr=0x10, .nr=3, .enabled=true}, [1][2]={.addr=0x10, .nr=2, .enabled=true}, [2][2]={.addr=0x10, .nr=1, .enabled=true}, [3][2]={.addr=0x10, .nr=0, .enabled=true},
+
+    /* second 3 boards on the right */
+    [4][0]={.addr=0x14, .nr=3, .enabled=true}, [5][0]={.addr=0x14, .nr=2, .enabled=true}, [6][0]={.addr=0x14, .nr=1, .enabled=true}, [7][0]={.addr=0x14, .nr=0, .enabled=true},
+    [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
+    [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
+  #elif MATRIX_BOARD_ARRANGEMENT==1
+    [0][0]={.addr=0x20, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    [0][1]={.addr=0x21, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+
+    /* first 3 boards on the left */
+  //  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
+  //  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
+  //  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+
+    /* second 3 boards on the right */
+  //  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
+  //  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
+  //  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
+  #endif
+  };
+
+  /* map of clocks with their hand position */
+  static int16_t MATRIX_angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two hands per clock */
+  /* map of clocks with their speed delay */
+  static int8_t MATRIX_delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two motors per clock */
+  static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z];
+#else
+  static int const mapXBoardPosNr[] = {3, 2, 1, 0}; /* map steppers on x position for boards. This reflects the X (horizontal) order of steppers */
+#endif /* PL_CONFIG_IS_MASTER */
+
+#if !PL_CONFIG_USE_STEPPER_EMUL
+typedef struct {
+  McuX12_017_Handle_t x12device;
+  McuX12_017_Motor_e x12motor;
+#if PL_CONFIG_USE_MAG_SENSOR
+  MAG_MagSensor_e mag;
 #endif
-  /* first 3 boards on the left */
-//  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
-//  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
-//  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+} X12_Stepper_t;
 
-  /* second 3 boards on the right */
-//  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
-//  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
-//  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
-#endif
-};
+static X12_Stepper_t x12Steppers[8]; /* the 8 stepper motors on a board */
 
-/* map of clocks with their hand position */
-static int16_t MATRIX_angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND]; /* two hands per clock */
-/* map of clocks with their speed delay */
-static int8_t MATRIX_delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND]; /* two motors per clock */
-static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_CLOCKS_NOF_HAND];
+static void X12_SingleStep(void *dev, int step) {
+  X12_Stepper_t *device = (X12_Stepper_t*)dev;
 
+  McuX12_017_SingleStep(device->x12device, device->x12motor, step);
+}
+#endif /* !PL_CONFIG_USE_STEPPER_EMUL */
+
+#if PL_CONFIG_IS_MASTER
 static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
     if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
@@ -103,6 +137,7 @@ static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   }
   return false;
 }
+#endif
 
 STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
@@ -115,34 +150,53 @@ STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
 
 static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
   STEPPER_Handle_t stepper;
-  uint8_t addr;
   STEPBOARD_Handle_t board;
 
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y || z>=MATRIX_NOF_CLOCKS_Z) {
     return NULL;
   }
-  addr = clockMatrix[x][y].addr;
-  board = MATRIX_AddrGetBoard(addr);
+#if PL_CONFIG_IS_MASTER
+  board = MATRIX_AddrGetBoard(clockMatrix[x][y].addr);
+  if (board==NULL) {
+    return NULL;
+  }
   stepper = STEPBOARD_GetStepper(board, clockMatrix[x][y].nr, z);
+#else
+  board = STEPBOARD_GetBoard();
+  if (board==NULL) {
+    return NULL;
+  }
+  stepper = STEPBOARD_GetStepper(board, mapXBoardPosNr[x], z);
+#endif
   return stepper;
 }
 
-
+#if PL_CONFIG_USE_STEPPER_EMUL
 void MATRIX_RotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue) {
   NEOSR_SetRotorColor(STEPPER_GetDevice(MATRIX_GetStepper(x, y, z)), red, green, blue);
 }
+#endif
 
 static uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
+#if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].addr;
+#else
+  return RS485_GetAddress();
+#endif
 }
 
 static uint8_t MATRIX_GetPos(int32_t x, int32_t y, int32_t z) {
+#if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].nr;
+#else
+  return mapXBoardPosNr[x];
+#endif
 }
 
+#if PL_CONFIG_IS_MASTER
 static void MATRIX_Delay(int32_t ms) {
   while (ms>100) { /* wait in smaller pieces to keep watchdog task informed */
-  vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(100));
 #if PL_CONFIG_USE_WDT
   WDT_Report(WDT_REPORT_ID_CURR_TASK, 100);
 #endif
@@ -154,10 +208,9 @@ static void MATRIX_Delay(int32_t ms) {
   WDT_Report(WDT_REPORT_ID_CURR_TASK, ms);
 #endif
 }
+#endif
 
-/*!
- * \brief Changes the clock position
- */
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_DrawClockHands(uint8_t x, uint8_t y, int16_t angle0, int16_t angle1) {
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y) {
     return ERR_FRAMING;
@@ -214,7 +267,9 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
   }
   return ERR_OK;
 }
+#endif /* PL_CONFIG_IS_MASTER */
 
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   bool boardIsIdle[MATRIX_NOF_BOARDS];
   uint8_t res;
@@ -226,7 +281,7 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
     for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
         if (STEPBOARD_IsEnabled(MATRIX_Boards[i])) {
-          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"stepper idle", 1000, false); /* ask board if it is idle */
+          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"idle", 1000, false); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -256,29 +311,28 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   return ERR_OK;
 }
 
-static uint8_t MATRIX_SendToQueue(void) {
+static uint8_t MATRIX_QueueToRemote(void) {
   /* assuming that the clocks are organized horizontally, and that the clocks are in 3,2,1,0 order! */
   uint8_t buf[McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE];
 
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) { /* every clock row */
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
-      for(int h=0; h<MATRIX_CLOCKS_NOF_HAND; h++) {
-        if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) {
-          /*  stepper q <c> <m> stepper m <c> <m> <a> <d> <md> */
-          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"stepper q ");
-          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
+          /*  matrix q <x> <y> <z> a <angle> <delay> <mode> */
+          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"matrix q ");
+          //McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].board.x); /* <x> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum8u(buf, sizeof(buf), h); /* <m> */
-          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" stepper m ");
-          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].board.y); /* <y> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum8u(buf, sizeof(buf), h); /* <m> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), z); /* <z> */
+          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" a ");
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_angleMap[x][y][z]); /* <a> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_angleMap[x][y][h]); /* <a> */
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_delayMap[x][y][z]); /* <d> */
           McuUtility_chcat(buf, sizeof(buf), ' ');
-          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_delayMap[x][y][h]); /* <d> */
-          McuUtility_chcat(buf, sizeof(buf), ' ');
-          switch(MATRIX_moveMap[x][y][h]) {
+          switch(MATRIX_moveMap[x][y][z]) {
             default:
             case STEPPER_MOVE_MODE_SHORT:
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"sh");
@@ -300,7 +354,7 @@ static uint8_t MATRIX_SendToQueue(void) {
 
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
-  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"stepper exq", 1000, true); /* execute the queue */
+  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true); /* execute the queue */
   return ERR_OK;
 }
 
@@ -386,7 +440,7 @@ static uint8_t MATRIX_SendAndExecute(int32_t timeoutMs) {
   if (res!=ERR_OK) {
     return res;
   }
-  res = MATRIX_SendToQueue();
+  res = MATRIX_QueueToRemote();
   if (res!=ERR_OK) {
     return res;
   }
@@ -469,6 +523,9 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   }
 #endif
 }
+#endif /* PL_CONFIG_IS_MASTER */
+
+#if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_FailedDemo(uint8_t res) {
   return res; /* used to set a breakpoint in case of failure */
 }
@@ -489,7 +546,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 90, 270);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -499,7 +556,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -544,7 +601,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
   }
   (void)MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   (void)MATRIX_DrawAllClockDelays(6, 6);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     McuShell_SendStr((unsigned char*)"Failed Demo1: Point 1\r\n", io->stdErr);
     return MATRIX_FailedDemo(res);
@@ -559,7 +616,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
         (void)MATRIX_DrawClockHands(x, y, angle0, angle1);
       }
     }
-    res = MATRIX_SendToQueue(); /* queue command */
+    res = MATRIX_QueueToRemote(); /* queue command */
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"Failed Demo1: Point 2\r\n", io->stdErr);
       return MATRIX_FailedDemo(res);
@@ -594,7 +651,7 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
   uint8_t res;
 
   (void)MATRIX_DrawAllClockHands(0, 180);
-  res = MATRIX_SendToQueue(); /* queue command */
+  res = MATRIX_QueueToRemote(); /* queue command */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -611,7 +668,7 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
     angle0 = (angle0+90)%360;
     angle1 = (angle1+90)%360;
     (void)MATRIX_DrawAllClockHands(angle0, angle1);
-    res = MATRIX_SendToQueue(); /* queue command */
+    res = MATRIX_QueueToRemote(); /* queue command */
     if (res!=ERR_OK) {
       return MATRIX_FailedDemo(res);
     }
@@ -647,7 +704,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -676,7 +733,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 180, 0);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -686,7 +743,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
       (void)MATRIX_DrawClockHands(x, y, 0, 180);
     }
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -715,26 +772,26 @@ static uint8_t MATRIX_Demo4(const McuShell_StdIOType *io) {
   MATRIX_DrawAllClockDelays(8, 8);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CCW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(180, 180);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(0, 0);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(0, 90);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
 
   MATRIX_DrawAllClockHands(270, 0);
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -772,7 +829,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315, 315);
     MATRIX_DrawClockHands(x+1, 2, 225, 225);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -796,7 +853,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315-1, 315+1);
     MATRIX_DrawClockHands(x+1, 2, 225-1, 225+1);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -819,7 +876,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 1, 315, 315);
     MATRIX_DrawClockHands(x+1, 2, 225, 225);
   }
-  res = MATRIX_SendToQueue(); /* queue commands */
+  res = MATRIX_QueueToRemote(); /* queue commands */
   res = MATRIX_ExecQueue();
   res = MATRIX_WaitForIdle(9000);
 
@@ -1001,6 +1058,202 @@ uint8_t MATRIX_Intermezzo(uint8_t *nr) {
   }
   return ERR_FAILED;
 }
+#endif /* PL_CONFIG_IS_MASTER */
+
+#if PL_CONFIG_USE_MAG_SENSOR
+
+static void MATRIX_MoveByOffset(STEPPER_Handle_t *motors[], int16_t offsets[], size_t nofMotors, uint16_t delay) {
+  /* here all hands are on the sensor: adjust with offset */
+   for(int i=0; i<nofMotors; i++) {
+     STEPPER_MoveMotorStepsRel(motors[i], offsets[i], delay);
+   } /* for */
+   STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 10);
+}
+
+static void MATRIX_SetZeroPosition(STEPPER_Handle_t *motors[], size_t nofMotors) {
+  /* set zero position */
+  for(int i=0; i<nofMotors; i++) {
+    STEPPER_SetPos(motors[i], 0);
+  }
+}
+
+static uint8_t MATRIX_MoveHandOnSensor(STEPPER_Handle_t *motors[], size_t nofMotors, bool onSensor, int32_t stepSize, int32_t timeoutms, uint32_t waitms, uint16_t delay) {
+  uint8_t res = ERR_OK;
+  bool done;
+  X12_Stepper_t *s;
+
+  /* move hand over sensor */
+  for(;;) { /* breaks */
+    done = true;
+    for(int i=0; i<nofMotors; i++) { /* check if all motors are on sensor */
+      s = STEPPER_GetDevice(motors[i]);
+      if (MAG_IsTriggered(s->mag)!=onSensor) {
+        done = false; /* not yet */
+        break;
+      }
+    }
+    if (done || timeoutms<0) { /* all hands on sensor */
+      break;
+    }
+    for(int i=0; i<nofMotors; i++) {
+      s = STEPPER_GetDevice(motors[i]);
+      if (MAG_IsTriggered(s->mag)!=onSensor) {
+        STEPPER_MoveMotorStepsRel(motors[i], stepSize, delay); /* make by 1 degree */
+      }
+    } /* for */
+    STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), waitms);
+    timeoutms -= waitms;
+  }
+  if (timeoutms<0) {
+    res = ERR_UNDERFLOW;
+  }
+  return res;
+}
+
+static uint8_t MATRIX_ZeroHand(STEPPER_Handle_t *motors[], int16_t offsets[], size_t nofMotors, uint16_t delay) {
+  uint8_t res = ERR_OK;
+  X12_Stepper_t *s;
+
+  /* if hand is on sensor: move hand out of the sensor area */
+  for(int i=0; i<nofMotors; i++) {
+    s = STEPPER_GetDevice(motors[i]);
+    if (MAG_IsTriggered(s->mag)) { /* hand on sensor? */
+      STEPPER_MoveMotorDegreeRel(motors[i], 90, delay); /* move away from sensor */
+    }
+  } /* for */
+  STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 10);
+
+  /* move forward in larger steps to find sensor */
+  if (MATRIX_MoveHandOnSensor(motors, nofMotors, true, 10, 10000, 10, delay)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step back in micro-steps just to leave the sensor */
+  if (MATRIX_MoveHandOnSensor(motors, nofMotors, false, -1, 10000, 10, delay)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step forward in micro-steps just to enter the sensor again */
+  if (MATRIX_MoveHandOnSensor(motors, nofMotors, true, 1, 10000, 2, delay)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* here all hands are on the sensor: adjust with offset */
+  MATRIX_MoveByOffset(motors, offsets, nofMotors, delay);
+  /* set zero position */
+  MATRIX_SetZeroPosition(motors, nofMotors);
+  return res;
+}
+
+static uint8_t MATRIX_ZeroAllHands(void) {
+  uint8_t res = ERR_OK;
+  STEPPER_Handle_t *motors[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  int16_t offsets[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  int i;
+
+  /* fill in motor array information */
+  i = 0;
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        motors[i] = MATRIX_GetStepper(x, y, z);
+        offsets[i] = NVMC_GetStepperZeroOffset(x, z);
+        i++;
+      }
+    }
+  }
+  /* zero all of them */
+  if (MATRIX_ZeroHand(motors, offsets, STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+  return res;
+}
+
+static uint8_t MATRIX_SetOffsetFrom12(void) {
+  /* all hands shall be at 12-o-clock position */
+  uint8_t res = ERR_OK;
+  STEPPER_Handle_t *motors[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  int16_t offsets[STEPPER_NOF_CLOCKS*STEPPER_NOF_CLOCK_MOTORS];
+  STEPPER_Handle_t stepper;
+  int i;
+
+  /* first zero position at current position and set delay */
+  i = 0;
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        stepper = MATRIX_GetStepper(x, y, z);
+        STEPPER_SetPos(stepper, 0);
+        motors[i] = stepper;
+        i++;
+      }
+    }
+  }
+
+  /* move forward in larger steps to find sensor */
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -10, 10000, 5, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step back in micro-steps just to leave the sensor */
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), false, 1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+
+  /* step forward in micro-steps just to enter the sensor again */
+  if (MATRIX_MoveHandOnSensor(motors, sizeof(motors)/sizeof(motors[0]), true, -1, 10000, 2, STEPPER_HAND_ZERO_DELAY)!=ERR_OK) {
+    res = ERR_FAILED;
+    return res;
+  }
+
+  /* store new offsets */
+  NVMC_Data_t data;
+
+  data = *NVMC_GetDataPtr(); /* struct copy */
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        stepper = MATRIX_GetStepper(x, y, z);
+        data.zeroOffsets[x][z] = -STEPPER_GetPos(stepper);
+      }
+    }
+  }
+  res = NVMC_WriteConfig(&data);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  /* fill in motor array information */
+  for(int c=0; c<STEPPER_NOF_CLOCKS; c++) {
+    for (int m=0; m<STEPPER_NOF_CLOCK_MOTORS; m++) {
+      offsets[c*STEPPER_NOF_CLOCK_MOTORS + m] = NVMC_GetStepperZeroOffset(c, m);
+    }
+  }
+  MATRIX_MoveByOffset(motors, offsets, sizeof(motors)/sizeof(motors[0]), STEPPER_HAND_ZERO_DELAY);
+  return res;
+}
+
+static uint8_t MATRIX_Test(void) {
+  /* Test the clock stepper motors. Pass -1 to run the test for all motors/clocks */
+  for (int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+    for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_MoveClockDegreeRel(MATRIX_GetStepper(x, y, z), 90, STEPPER_MOVE_MODE_CW, 4, true, true);
+        STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
+      }
+    }
+  }
+  for (int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+    for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+      for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_MoveClockDegreeRel(MATRIX_GetStepper(x, y, z), -90, STEPPER_MOVE_MODE_CCW, 4, true, true);
+        STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 1000);
+      }
+    }
+  }
+  return ERR_OK;
+}
+
+#endif
 
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
@@ -1047,6 +1300,21 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       }
     }
   } /* for */
+#if 0 /*! \todo not ported yet */
+#if PL_CONFIG_USE_X12_STEPPER
+  McuX12_017_GetDeviceStatusString(STEPPER_Clocks[0].mot[X12_017_M0].device, buf, sizeof(buf));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  X12.017[0]");
+  McuShell_SendStatusStr(statStr, buf, io->stdOut);
+#endif
+
+#if PL_CONFIG_USE_X12_STEPPER
+  McuX12_017_GetDeviceStatusString(STEPPER_Clocks[2].mot[X12_017_M0].device, buf, sizeof(buf));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  X12.017[1]");
+  McuShell_SendStatusStr(statStr, buf, io->stdOut);
+#endif
+#endif
 
   if (MATRIX_ExecuteQueue) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: yes");
@@ -1128,6 +1396,8 @@ static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test the stepper on the board\r\n", io->stdOut);
+#if PL_CONFIG_IS_MASTER
   McuShell_SendHelpStr((unsigned char*)"  12", (unsigned char*)"Set matrix to 12:00 position\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo", (unsigned char*)"General longer demo\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 0", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
@@ -1142,11 +1412,20 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  delay <delay>", (unsigned char*)"Set default delay\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  time <time>", (unsigned char*)"Show time\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  temp <temp>", (unsigned char*)"Show temperature\r\n", io->stdOut);
+#endif
+#if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <r> <g> <b>", (unsigned char*)"Set RGB color\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), uppercase mode letter is without accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a command for clock\r\n", io->stdOut);
+#endif
+  McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
+#if PL_CONFIG_USE_MAG_SENSOR
+  McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  zero <x> <y> <z>", (unsigned char*)"Move clock to zero position using magnet sensor\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  offs <x> <y> <z> <v>", (unsigned char*)"Set offset value for clock\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  offs 12", (unsigned char*)"Calculate offset from 12-o-clock for all\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 
@@ -1164,6 +1443,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "matrix status")==0)) {
     *handled = true;
     return PrintStatus(io);
+#if PL_CONFIG_IS_MASTER
   } else if (McuUtility_strcmp((char*)cmd, "matrix demo")==0) {
     *handled = true;
     return MATRIX_Demo(io);
@@ -1234,6 +1514,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+#endif /* PL_CONFIG_IS_MASTER */
   } else if (McuUtility_strncmp((char*)cmd, "matrix r ", sizeof("matrix r ")-1)==0) { /* "matrix r <x> <y> <z> <a> <d> <md> " */
     *handled = TRUE;
     res = ParseMatrixCommand(cmd+sizeof("matrix r ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
@@ -1282,6 +1563,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+#if PL_CONFIG_USE_STEPPER_EMUL
   } else if (McuUtility_strncmp((char*)cmd, "matrix color ", sizeof("matrix color ")-1)==0) {
     int32_t r,g,b;
 
@@ -1300,10 +1582,41 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
-  } else if (McuUtility_strcmp((char*)cmd, "stepper exq")==0
-      || McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
+#endif
+  } else if (McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
     MATRIX_ExecuteQueue = true;
     *handled = TRUE;
+#if PL_CONFIG_USE_MAG_SENSOR
+  } else if (McuUtility_strcmp((char*)cmd, "matrix zero all")==0) {
+    *handled = TRUE;
+    return MATRIX_ZeroAllHands();
+  } else if (McuUtility_strncmp((char*)cmd, "matrix zero ", sizeof("matrix zero ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("matrix zero ")-1;
+    if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+        && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+        && McuUtility_xatoi(&p, &z)==ERR_OK && z>=0 && z<MATRIX_NOF_CLOCKS_Z
+       )
+    {
+      STEPPER_Handle_t *motors[1];
+      int16_t offset;
+
+      motors[0] = MATRIX_GetStepper(x, y, z);
+      offset = NVMC_GetStepperZeroOffset(x, z);
+      res = MATRIX_ZeroHand(motors, &offset, 1, STEPPER_HAND_ZERO_DELAY);
+      if (res!=ERR_OK) {
+        McuShell_SendStr((unsigned char*)"failed to find magnet/zero position\r\n", io->stdErr);
+      }
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strcmp((char*)cmd, "matrix offs 12")==0) {
+    *handled = TRUE;
+    return MATRIX_SetOffsetFrom12();
+  } else if (McuUtility_strcmp((char*)cmd, "matrix test")==0) {
+    *handled = TRUE;
+    return MATRIX_Test();
+#endif
   }
   return ERR_OK;
 }
@@ -1317,7 +1630,7 @@ void MATRIX_TimerCallback(void) {
   for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
     for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
        for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) { /* go through all motors */
-         stepper = STEPBOARD_GetStepper(MATRIX_Boards[b], i, j);
+         stepper = STEPBOARD_GetStepper(MATRIX_Boards[b], i, j); // stepper = MATRIX_GetStepper(x, y, z);
          workToDo |= STEPPER_TimerClockCallback(stepper);
       } /* for */
     }
@@ -1340,7 +1653,6 @@ void MATRIX_SetLEDs(void) {
   } /* for */
 }
 #endif
-
 
 static void MatrixQueueTask(void *pv) {
   uint8_t *cmd;
@@ -1402,31 +1714,13 @@ static void MatrixQueueTask(void *pv) {
   } /* for */
 }
 
-void MATRIX_Init(void) {
-#if MATRIX_BOARD_ARRANGEMENT==0
-  config.addr = 0x10;
-  MATRIX_Boards[0] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x11;
-  MATRIX_Boards[1] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x12;
-  MATRIX_Boards[2] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x13;
-  MATRIX_Boards[3] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x14;
-  MATRIX_Boards[4] = STEPBOARD_InitDevice(&config);
-
-  config.addr = 0x15;
-  MATRIX_Boards[5] = STEPBOARD_InitDevice(&config);
-#elif MATRIX_BOARD_ARRANGEMENT==1
+#if PL_CONFIG_USE_STEPPER_EMUL
+static void InitLedRings(void) {
   NEOSR_Config_t stepperRingConfig;
-  STEPPER_Config_t stepperConfig;
-  STEPBOARD_Config_t stepBoardConfig;
   NEOSR_Handle_t ring[8];
+  STEPPER_Config_t stepperConfig;
   STEPPER_Handle_t stepper[8];
+  STEPBOARD_Config_t stepBoardConfig;
 
   /* get default configurations */
   STEPPER_GetDefaultConfig(&stepperConfig);
@@ -1514,7 +1808,7 @@ void MATRIX_Init(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x24;
+  stepBoardConfig.addr = 0x20;
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -1526,7 +1820,7 @@ void MATRIX_Init(void) {
   stepBoardConfig.stepper[3][1] = stepper[7];
 
   MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
-#endif
+#endif /* MATRIX_NOF_BOARDS */
 #if MATRIX_NOF_BOARDS>=2
   /* ----------------- board 1--------------------- */
   /* setup ring */
@@ -1608,7 +1902,7 @@ void MATRIX_Init(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x22;
+  stepBoardConfig.addr = 0x21;
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -1620,16 +1914,218 @@ void MATRIX_Init(void) {
   stepBoardConfig.stepper[3][1] = stepper[7];
 
   MATRIX_Boards[1] = STEPBOARD_InitDevice(&stepBoardConfig);
+#endif /* MATRIX_NOF_BOARDS */
+}
+#endif /* PL_CONFIG_USE_STEPPER_EMUL */
+
+#if !PL_CONFIG_USE_STEPPER_EMUL
+static void InitSteppers(void) {
+  McuX12_017_Config_t x12config;
+  McuX12_017_Handle_t x12device[2];
+  STEPPER_Config_t stepperConfig;
+  STEPPER_Handle_t stepper[8];
+  STEPBOARD_Config_t stepBoardConfig;
+
+  /* get default configurations */
+  McuX12_017_GetDefaultConfig(&x12config);
+  STEPPER_GetDefaultConfig(&stepperConfig);
+  STEPBOARD_GetDefaultConfig(&stepBoardConfig);
+
+  /* -------- X12.017 devices: two on each board -------------- */
+  /* initialize first X12.017 */
+  /* DRV_RESET: PIO0_14 */
+  x12config.hasReset = true;
+  x12config.hw_reset.gpio = GPIO;
+  x12config.hw_reset.port = 0U;
+  x12config.hw_reset.pin  = 14U;
+
+  /* M0_DIR: PIO1_9 */
+  x12config.motor[X12_017_M0].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M0].hw_dir.port = 1U;
+  x12config.motor[X12_017_M0].hw_dir.pin  = 9U;
+
+  /* M0_STEP: PIO0_12 */
+  x12config.motor[X12_017_M0].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M0].hw_step.port = 0U;
+  x12config.motor[X12_017_M0].hw_step.pin  = 12U;
+
+  /* M1_DIR: PIO0_13 */
+  x12config.motor[X12_017_M1].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M1].hw_dir.port = 0U;
+  x12config.motor[X12_017_M1].hw_dir.pin  = 13U;
+
+  /* M1_STEP: PIO1_8 */
+  x12config.motor[X12_017_M1].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M1].hw_step.port = 1U;
+  x12config.motor[X12_017_M1].hw_step.pin  = 8U;
+
+  /* M2_DIR: PIO0_4 */
+  x12config.motor[X12_017_M2].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M2].hw_dir.port = 0U;
+  x12config.motor[X12_017_M2].hw_dir.pin  = 4U;
+
+  /* M2_STEP: PIO0_28 */
+  x12config.motor[X12_017_M2].isInverted = true;
+  x12config.motor[X12_017_M2].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M2].hw_step.port = 0U;
+  x12config.motor[X12_017_M2].hw_step.pin  = 28U;
+
+#if PL_CONFIG_BOARD_VERSION==1 /* PIO0_11 needs external pull-up! */
+  /* M3_DIR: PIO0_11 */
+  x12config.motor[X12_017_M3].isInverted = true;
+  x12config.motor[X12_017_M3].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_dir.port = 0U;
+  x12config.motor[X12_017_M3].hw_dir.pin  = 11U;
+#else
+  /* M3_DIR: PIO0_27 */
+  x12config.motor[X12_017_M3].isInverted = true;
+  x12config.motor[X12_017_M3].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_dir.port = 0U;
+  x12config.motor[X12_017_M3].hw_dir.pin  = 27U;
+#endif
+
+#if PL_CONFIG_BOARD_VERSION==1
+  /* M3_STEP: PIO1_0 */
+  x12config.motor[X12_017_M3].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_step.port = 1U;
+  x12config.motor[X12_017_M3].hw_step.pin  = 0U;
+#else
+  /* M3_STEP: PIO0_26 */
+  x12config.motor[X12_017_M3].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_step.port = 0U;
+  x12config.motor[X12_017_M3].hw_step.pin  = 26U;
+#endif
+  x12device[0] = McuX12_017_InitDevice(&x12config);
+
+  /* initialize second X12.017 */
+  x12config.hasReset = false; /* second device shares the reset line from the first */
+  /* M4_DIR: PIO0_0 */
+  x12config.motor[X12_017_M0].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M0].hw_dir.port = 0U;
+  x12config.motor[X12_017_M0].hw_dir.pin  = 0U;
+
+  /* M4_STEP: PIO1_7 */
+  x12config.motor[X12_017_M0].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M0].hw_step.port = 1U;
+  x12config.motor[X12_017_M0].hw_step.pin  = 7U;
+
+  /* M5_DIR: PIO0_6 */
+  x12config.motor[X12_017_M1].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M1].hw_dir.port = 0U;
+  x12config.motor[X12_017_M1].hw_dir.pin  = 6U;
+
+  /* M5_STEP: PIO0_7 */
+  x12config.motor[X12_017_M1].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M1].hw_step.port = 0U;
+  x12config.motor[X12_017_M1].hw_step.pin  = 7U;
+
+  /* M6_DIR: PIO0_8 */
+  x12config.motor[X12_017_M2].isInverted = true;
+  x12config.motor[X12_017_M2].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M2].hw_dir.port = 0U;
+  x12config.motor[X12_017_M2].hw_dir.pin  = 8U;
+
+  /* M6_STEP: PIO0_9 */
+  x12config.motor[X12_017_M2].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M2].hw_step.port = 0U;
+  x12config.motor[X12_017_M2].hw_step.pin  = 9U;
+
+  /* M7_DIR: PIO1_5 */
+  x12config.motor[X12_017_M3].isInverted = true;
+  x12config.motor[X12_017_M3].hw_dir.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_dir.port = 1U;
+  x12config.motor[X12_017_M3].hw_dir.pin  = 5U;
+
+  /* M7_STEP: PIO1_6 */
+  x12config.motor[X12_017_M3].hw_step.gpio = GPIO;
+  x12config.motor[X12_017_M3].hw_step.port = 1U;
+  x12config.motor[X12_017_M3].hw_step.pin  = 6U;
+
+  x12device[1] = McuX12_017_InitDevice(&x12config);
+
+  /* setup the 8 stepper motors */
+  x12Steppers[0].x12device = x12device[0];
+  x12Steppers[0].x12motor = X12_017_M1;
+  x12Steppers[1].x12device = x12device[0];
+  x12Steppers[1].x12motor = X12_017_M0;
+  x12Steppers[2].x12device = x12device[0];
+  x12Steppers[2].x12motor = X12_017_M3;
+  x12Steppers[3].x12device = x12device[0];
+  x12Steppers[3].x12motor = X12_017_M2;
+  x12Steppers[4].x12device = x12device[1];
+  x12Steppers[4].x12motor = X12_017_M3;
+  x12Steppers[5].x12device = x12device[1];
+  x12Steppers[5].x12motor = X12_017_M2;
+  x12Steppers[6].x12device = x12device[1];
+  x12Steppers[6].x12motor = X12_017_M1;
+  x12Steppers[7].x12device = x12device[1];
+  x12Steppers[7].x12motor = X12_017_M0;
+#if PL_CONFIG_USE_MAG_SENSOR
+  x12Steppers[0].mag = MAG_MAG1;
+  x12Steppers[1].mag = MAG_MAG0;
+  x12Steppers[2].mag = MAG_MAG2;
+  x12Steppers[3].mag = MAG_MAG3;
+  x12Steppers[4].mag = MAG_MAG4;
+  x12Steppers[5].mag = MAG_MAG5;
+  x12Steppers[6].mag = MAG_MAG7;
+  x12Steppers[7].mag = MAG_MAG6;
+#endif
+  /* initialize stepper, 4 for each X12 driver */
+  stepperConfig.stepFn = X12_SingleStep;
+
+  stepperConfig.device = &x12Steppers[0];
+  stepper[0] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[1];
+  stepper[1] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[2];
+  stepper[2] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[3];
+  stepper[3] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[4];
+  stepper[4] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[5];
+  stepper[5] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[6];
+  stepper[6] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = &x12Steppers[7];
+  stepper[7] = STEPPER_InitDevice(&stepperConfig);
+
+  /* setup board */
+  stepBoardConfig.addr = RS485_GetAddress();
+  stepBoardConfig.enabled = true;
+  stepBoardConfig.stepper[0][0] = stepper[0];
+  stepBoardConfig.stepper[0][1] = stepper[1];
+  stepBoardConfig.stepper[1][0] = stepper[2];
+  stepBoardConfig.stepper[1][1] = stepper[3];
+  stepBoardConfig.stepper[2][0] = stepper[4];
+  stepBoardConfig.stepper[2][1] = stepper[5];
+  stepBoardConfig.stepper[3][0] = stepper[6];
+  stepBoardConfig.stepper[3][1] = stepper[7];
+
+  MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
+
+#if PL_CONFIG_USE_X12_STEPPER
+  McuX12_017_ResetDriver(x12device[0]); /* shared reset line with second device */
+#endif
+}
+#endif /* PL_CONFIG_USE_STEPPER_EMUL */
+
+void MATRIX_Init(void) {
+#if PL_CONFIG_USE_STEPPER_EMUL
+  InitLedRings();
+#else
+  InitSteppers();
 #endif
   /* ---------------------------------------------------------- */
   /* default */
   STEPBOARD_SetBoard(MATRIX_Boards[0]);
   /* ---------------------------------------------------------- */
-#endif
-  MATRIX_DrawAllClockHands(0, 0);
+
+#if PL_CONFIG_IS_MASTER
+ MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
-
+#endif
   if (xTaskCreate(
       MatrixQueueTask,  /* pointer to the task */
       "StepperQueue", /* task name for kernel awareness debugging */
@@ -1642,5 +2138,4 @@ void MATRIX_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
-
 #endif /* PL_CONFIG_USE_MATRIX */

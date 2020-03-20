@@ -461,7 +461,7 @@ static void ClockTask(void *pv) {
 #if PL_CONFIG_USE_RTC
     timerMs += 200;
     if (clockIsOn) {
-    #if PL_CONFIG_USE_MATRIX
+    #if PL_CONFIG_IS_MASTER
       if (APP_IntermezzoMode==APP_INTERMEZZO_FEW) {
         if (timerMs==20*1000) { /* after 10 secs ... */
           MATRIX_Intermezzo(&intermezzo); /* ... show next intermezzo */
@@ -480,7 +480,7 @@ static void ClockTask(void *pv) {
     if (clockIsOn) {
       res = McuTimeDate_GetTime(&time);
       if (res==ERR_OK && (time.Hour!=oldHH || time.Min != oldMM)) {
-    #if PL_CONFIG_USE_MATRIX
+    #if PL_CONFIG_IS_MASTER
         MATRIX_DrawAllClockDelays(30,30);
         MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
         MATRIX_ShowTime(time.Hour, time.Min);

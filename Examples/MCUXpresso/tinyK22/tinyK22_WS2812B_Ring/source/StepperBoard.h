@@ -23,7 +23,7 @@ void STEPBOARD_GetDefaultConfig(STEPBOARD_Config_t *config);
 
 bool STEPBOARD_IsIdle(STEPBOARD_Handle_t board);
 
-
+bool STEPBOARD_ItemsInQueue(STEPBOARD_Handle_t board);
 uint8_t STEPBOARD_GetAddress(STEPBOARD_Handle_t board);
 bool STEPBOARD_IsEnabled(STEPBOARD_Handle_t board);
 STEPPER_Handle_t STEPBOARD_GetStepper(STEPBOARD_Handle_t board, int clock, int motor);

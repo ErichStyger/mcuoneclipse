@@ -6,8 +6,8 @@
 
 #include "platform.h"
 #include "application.h"
-#include "McuWait.h"
 #include "McuRTOS.h"
+#include "McuWait.h"
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "McuArmTools.h"
@@ -16,8 +16,8 @@
 #include "fsl_pit.h"
 #include "NeoPixel.h"
 #include "stepper.h"
-
 #include "NeoStepperRing.h"
+#include "matrix.h"
 
 #if PL_CONFIG_USE_SHELL
 uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
@@ -184,7 +184,6 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   PL_Init();
-#if 1
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -195,7 +194,6 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-#endif
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }
 }
