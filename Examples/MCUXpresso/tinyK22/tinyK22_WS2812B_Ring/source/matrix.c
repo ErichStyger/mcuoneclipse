@@ -41,9 +41,9 @@ static bool MATRIX_ExecuteQueue = false;
 #elif MATRIX_BOARD_ARRANGEMENT==1
   #if PL_CONFIG_IS_MASTER
     #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-    #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (5)  /* number of clocks in y (vertical) direction */
     #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-    #define MATRIX_NOF_BOARDS         (2)  /* number of boards in matrix */
+    #define MATRIX_NOF_BOARDS         (5)  /* number of boards in matrix */
   #elif PL_CONFIG_IS_CLIENT /* only single board with 4 clocks */
     #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
     #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
@@ -88,16 +88,9 @@ static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
   #elif MATRIX_BOARD_ARRANGEMENT==1
     [0][0]={.addr=0x20, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .board.x=3, .board.y=0, .enabled=true},
     [0][1]={.addr=0x21, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .board.x=3, .board.y=0, .enabled=true},
-
-    /* first 3 boards on the left */
-  //  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
-  //  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
-  //  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
-
-    /* second 3 boards on the right */
-  //  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
-  //  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
-  //  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
+    [0][2]={.addr=0x22, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    [0][3]={.addr=0x23, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][3]={.addr=0x23, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][3]={.addr=0x23, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][3]={.addr=0x23, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    [0][4]={.addr=0x24, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][4]={.addr=0x24, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][4]={.addr=0x24, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][4]={.addr=0x24, .nr=0, .board.x=3, .board.y=0, .enabled=true},
   #endif
   };
 
@@ -1281,8 +1274,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
         addr = MATRIX_GetAddress(x, y, z);
         nr = MATRIX_GetPos(x, y, z);
         buf[0] = '\0';
-        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"addr:");
-        McuUtility_strcatNum8u(buf, sizeof(buf), addr);
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"addr:0x");
+        McuUtility_strcatNum8Hex(buf, sizeof(buf), addr);
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", nr:");
         McuUtility_strcatNum8u(buf, sizeof(buf), nr);
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", Stepper ");
@@ -1715,7 +1708,7 @@ static void MatrixQueueTask(void *pv) {
 }
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-static void InitLedRings(void) {
+static void CreateLedRings(int boardNo, uint8_t addr, int ledLane, int ledStartPos) {
   NEOSR_Config_t stepperRingConfig;
   NEOSR_Handle_t ring[8];
   STEPPER_Config_t stepperConfig;
@@ -1727,64 +1720,26 @@ static void InitLedRings(void) {
   STEPBOARD_GetDefaultConfig(&stepBoardConfig);
   NEOSR_GetDefaultConfig(&stepperRingConfig);
 
-  /* ----------------- board 0 --------------------- */
-#if MATRIX_NOF_BOARDS>=1
   /* setup ring */
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 0;
+  stepperRingConfig.ledLane = ledLane;
+  stepperRingConfig.ledStartPos = ledStartPos;
   stepperRingConfig.ledCw = true;
   stepperRingConfig.ledRed = 0xff;
   stepperRingConfig.ledGreen = 0;
   stepperRingConfig.ledBlue = 0x00;
   ring[0] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
   ring[1] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
+
+  stepperRingConfig.ledStartPos = ledStartPos+40;
   ring[2] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
   ring[3] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
+
+  stepperRingConfig.ledStartPos = ledStartPos+80;
   ring[4] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
   ring[5] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
+
+  stepperRingConfig.ledStartPos = ledStartPos+120;
   ring[6] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
   ring[7] = NEOSR_InitDevice(&stepperRingConfig);
 
   /* setup stepper */
@@ -1808,7 +1763,7 @@ static void InitLedRings(void) {
   stepper[7] = STEPPER_InitDevice(&stepperConfig);
 
   /* setup board */
-  stepBoardConfig.addr = 0x20;
+  stepBoardConfig.addr = addr;
   stepBoardConfig.enabled = true;
   stepBoardConfig.stepper[0][0] = stepper[0];
   stepBoardConfig.stepper[0][1] = stepper[1];
@@ -1819,101 +1774,24 @@ static void InitLedRings(void) {
   stepBoardConfig.stepper[3][0] = stepper[6];
   stepBoardConfig.stepper[3][1] = stepper[7];
 
-  MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
+  MATRIX_Boards[boardNo] = STEPBOARD_InitDevice(&stepBoardConfig);
+}
+
+static void InitLedRings(void) {
+#if MATRIX_NOF_BOARDS>=1
+  CreateLedRings(0, 0x20, 0, 0);
 #endif /* MATRIX_NOF_BOARDS */
 #if MATRIX_NOF_BOARDS>=2
-  /* ----------------- board 1--------------------- */
-  /* setup ring */
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
-
-  /* setup stepper */
-  stepperConfig.stepFn = NEOSR_SingleStep;
-
-  stepperConfig.device = ring[0];
-  stepper[0] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[1];
-  stepper[1] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[2];
-  stepper[2] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[3];
-  stepper[3] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[4];
-  stepper[4] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[5];
-  stepper[5] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[6];
-  stepper[6] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[7];
-  stepper[7] = STEPPER_InitDevice(&stepperConfig);
-
-  /* setup board */
-  stepBoardConfig.addr = 0x21;
-  stepBoardConfig.enabled = true;
-  stepBoardConfig.stepper[0][0] = stepper[0];
-  stepBoardConfig.stepper[0][1] = stepper[1];
-  stepBoardConfig.stepper[1][0] = stepper[2];
-  stepBoardConfig.stepper[1][1] = stepper[3];
-  stepBoardConfig.stepper[2][0] = stepper[4];
-  stepBoardConfig.stepper[2][1] = stepper[5];
-  stepBoardConfig.stepper[3][0] = stepper[6];
-  stepBoardConfig.stepper[3][1] = stepper[7];
-
-  MATRIX_Boards[1] = STEPBOARD_InitDevice(&stepBoardConfig);
+  CreateLedRings(1, 0x21, 1, 0);
+#endif /* MATRIX_NOF_BOARDS */
+#if MATRIX_NOF_BOARDS>=3
+  CreateLedRings(2, 0x22, 2, 0);
+#endif /* MATRIX_NOF_BOARDS */
+#if MATRIX_NOF_BOARDS>=3
+  CreateLedRings(3, 0x23, 3, 0);
+#endif /* MATRIX_NOF_BOARDS */
+#if MATRIX_NOF_BOARDS>=3
+  CreateLedRings(4, 0x24, 4, 0);
 #endif /* MATRIX_NOF_BOARDS */
 }
 #endif /* PL_CONFIG_USE_STEPPER_EMUL */
