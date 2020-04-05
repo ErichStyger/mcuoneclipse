@@ -39,11 +39,11 @@ static bool MATRIX_ExecuteQueue = false;
   #define MATRIX_NOF_CLOCKS_X       (2*4)  /* number of clocks in x direction */
   #define MATRIX_NOF_BOARDS         (6)
 #elif MATRIX_BOARD_ARRANGEMENT==1
-  #if PL_CONFIG_IS_MASTER
+  #if PL_CONFIG_IS_MASTER /* master is able to control multiple clock boards: change X, Y and NOF_Boards */
     #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
-    #define MATRIX_NOF_CLOCKS_Y       (2)  /* number of clocks in y (vertical) direction */
+    #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
     #define MATRIX_NOF_CLOCKS_Z       (2)  /* number of clocks in z direction */
-    #define MATRIX_NOF_BOARDS         (2)  /* number of boards in matrix */
+    #define MATRIX_NOF_BOARDS         (1)  /* number of boards in matrix */
   #elif PL_CONFIG_IS_CLIENT /* only single board with 4 clocks */
     #define MATRIX_NOF_CLOCKS_X       (4)  /* number of clocks in x (horizontal) direction */
     #define MATRIX_NOF_CLOCKS_Y       (1)  /* number of clocks in y (vertical) direction */
@@ -60,8 +60,24 @@ static bool MATRIX_ExecuteQueue = false;
 #define MATRIX_NOF_BOARDS_Y       (MATRIX_NOF_CLOCKS_Y/MATRIX_NOF_CLOCKS_BOARD_Y) /* number of boards in Y (rows) direction */
 #define MATRIX_NOF_BOARDS_X       (MATRIX_NOF_CLOCKS_X/MATRIX_NOF_CLOCKS_BOARD_X) /* number of boards in X (columns) direction */
 
-/* list of boards */
-static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
+#if PL_CONFIG_USE_STEPPER
+  /* list of boards */
+  static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
+#else /* used in case no steppers and no LED rings are used */
+  typedef struct {
+    bool enabled;
+    uint8_t addr;
+  } MATRIX_BoardList_t;
+
+  static const MATRIX_BoardList_t boards[MATRIX_NOF_BOARDS] = {
+      {.enabled = true, .addr=BOARD_ADDR_00},
+      {.enabled = true, .addr=BOARD_ADDR_01},
+ //     {.enabled = true, .addr=BOARD_ADDR_02},
+ //     {.enabled = true, .addr=BOARD_ADDR_03},
+ //     {.enabled = true, .addr=BOARD_ADDR_04},
+  };
+#endif
+
 
 #if PL_CONFIG_IS_MASTER
   typedef struct {
@@ -72,6 +88,15 @@ static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
     } board;
     bool enabled; /* if enabled or not */
   } MatrixClock_t;
+
+  typedef enum {
+    BOARD_ADDR_00=0x20, /* first board */
+    BOARD_ADDR_01=0x21, /* second board */
+    BOARD_ADDR_02=0x22,
+    BOARD_ADDR_03=0x23,
+    BOARD_ADDR_04=0x24,
+    BOARD_ADDR_05=0x25,
+  } MATRIX_BOARD_ADDR_e;
 
   static const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
   {
@@ -86,18 +111,23 @@ static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
     [4][1]={.addr=0x15, .nr=3, .enabled=true}, [5][1]={.addr=0x15, .nr=2, .enabled=true}, [6][1]={.addr=0x15, .nr=1, .enabled=true}, [7][1]={.addr=0x15, .nr=0, .enabled=true},
     [4][2]={.addr=0x13, .nr=3, .enabled=true}, [5][2]={.addr=0x13, .nr=2, .enabled=true}, [6][2]={.addr=0x13, .nr=1, .enabled=true}, [7][2]={.addr=0x13, .nr=0, .enabled=true},
   #elif MATRIX_BOARD_ARRANGEMENT==1
-    [0][0]={.addr=0x20, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .board.x=3, .board.y=0, .enabled=true},
-    [0][1]={.addr=0x21, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    [0][0]={.addr=BOARD_ADDR_00, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=BOARD_ADDR_00, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=BOARD_ADDR_00, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=BOARD_ADDR_00, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [0][1]={.addr=BOARD_ADDR_01, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][1]={.addr=BOARD_ADDR_01, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][1]={.addr=BOARD_ADDR_01, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][1]={.addr=BOARD_ADDR_01, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    //[0][2]={.addr=0x22, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    //[0][3]={.addr=0x23, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][3]={.addr=0x23, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][3]={.addr=0x23, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][3]={.addr=0x23, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+    //[0][4]={.addr=0x24, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][4]={.addr=0x24, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][4]={.addr=0x24, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][4]={.addr=0x24, .nr=0, .board.x=3, .board.y=0, .enabled=true},
 
-    /* first 3 boards on the left */
-  //  [0][0]={.addr=0x20, .nr=3, .enabled=true}, [1][0]={.addr=0x20, .nr=2, .enabled=true}, [2][0]={.addr=0x20, .nr=1, .enabled=true}, [3][0]={.addr=0x20, .nr=0, .enabled=true},
-  //  [0][1]={.addr=0x21, .nr=3, .enabled=true}, [1][1]={.addr=0x21, .nr=2, .enabled=true}, [2][1]={.addr=0x21, .nr=1, .enabled=true}, [3][1]={.addr=0x21, .nr=0, .enabled=true},
-  //  [0][2]={.addr=0x22, .nr=3, .enabled=true}, [1][2]={.addr=0x22, .nr=2, .enabled=true}, [2][2]={.addr=0x22, .nr=1, .enabled=true}, [3][2]={.addr=0x22, .nr=0, .enabled=true},
+ //   [4][0]={.addr=0x25, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [5][0]={.addr=0x25, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [6][0]={.addr=0x25, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [7][0]={.addr=0x25, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [4][1]={.addr=0x26, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [5][1]={.addr=0x26, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [6][1]={.addr=0x26, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [7][1]={.addr=0x26, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [4][2]={.addr=0x27, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [5][2]={.addr=0x27, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [6][2]={.addr=0x27, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [7][2]={.addr=0x27, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [4][3]={.addr=0x28, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [5][3]={.addr=0x28, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [6][3]={.addr=0x28, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [7][3]={.addr=0x28, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [4][4]={.addr=0x29, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [5][4]={.addr=0x29, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [6][4]={.addr=0x29, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [7][4]={.addr=0x29, .nr=0, .board.x=3, .board.y=0, .enabled=true},
 
-    /* second 3 boards on the right */
-  //  [4][0]={.addr=0x23, .nr=3, .enabled=true}, [5][0]={.addr=0x23, .nr=2, .enabled=true}, [6][0]={.addr=0x23, .nr=1, .enabled=true}, [7][0]={.addr=0x23, .nr=0, .enabled=true},
-  //  [4][1]={.addr=0x24, .nr=3, .enabled=true}, [5][1]={.addr=0x24, .nr=2, .enabled=true}, [6][1]={.addr=0x24, .nr=1, .enabled=true}, [7][1]={.addr=0x24, .nr=0, .enabled=true},
-  //  [4][2]={.addr=0x25, .nr=3, .enabled=true}, [5][2]={.addr=0x25, .nr=2, .enabled=true}, [6][2]={.addr=0x25, .nr=1, .enabled=true}, [7][2]={.addr=0x25, .nr=0, .enabled=true},
+ //   [8][0]={.addr=0x30, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [9][0]={.addr=0x30, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [10][0]={.addr=0x30, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [11][0]={.addr=0x30, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [8][1]={.addr=0x31, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [9][1]={.addr=0x31, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [10][1]={.addr=0x31, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [11][1]={.addr=0x31, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [8][2]={.addr=0x32, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [9][2]={.addr=0x32, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [10][2]={.addr=0x32, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [11][2]={.addr=0x32, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [8][3]={.addr=0x33, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [9][3]={.addr=0x33, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [10][3]={.addr=0x33, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [11][3]={.addr=0x33, .nr=0, .board.x=3, .board.y=0, .enabled=true},
+ //   [8][4]={.addr=0x34, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [9][4]={.addr=0x34, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [10][4]={.addr=0x34, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [11][4]={.addr=0x34, .nr=0, .board.x=3, .board.y=0, .enabled=true},
   #endif
   };
 
@@ -110,6 +140,7 @@ static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
   static int const mapXBoardPosNr[] = {3, 2, 1, 0}; /* map steppers on x position for boards. This reflects the X (horizontal) order of steppers */
 #endif /* PL_CONFIG_IS_MASTER */
 
+#if PL_CONFIG_USE_STEPPER
 #if !PL_CONFIG_USE_STEPPER_EMUL
 typedef struct {
   McuX12_017_Handle_t x12device;
@@ -127,18 +158,26 @@ static void X12_SingleStep(void *dev, int step) {
   McuX12_017_SingleStep(device->x12device, device->x12motor, step);
 }
 #endif /* !PL_CONFIG_USE_STEPPER_EMUL */
+#endif
 
 #if PL_CONFIG_IS_MASTER
 static bool MATRIX_BoardIsEnabled(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
+#if PL_CONFIG_USE_STEPPER
     if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
       return STEPBOARD_IsEnabled(MATRIX_Boards[i]);
     }
+#else
+    if (boards[i].addr==addr) {
+      return boards[i].enabled;
+    }
+#endif
   }
   return false;
 }
 #endif
 
+#if PL_CONFIG_USE_STEPPER
 STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
   for(int i=0; i<MATRIX_NOF_BOARDS; i++){
     if (STEPBOARD_GetAddress(MATRIX_Boards[i])==addr) {
@@ -147,7 +186,9 @@ STEPBOARD_Handle_t MATRIX_AddrGetBoard(uint8_t addr) {
   }
   return NULL;
 }
+#endif
 
+#if PL_CONFIG_USE_STEPPER
 static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
   STEPPER_Handle_t stepper;
   STEPBOARD_Handle_t board;
@@ -170,6 +211,7 @@ static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
 #endif
   return stepper;
 }
+#endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
 void MATRIX_RotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue) {
@@ -177,7 +219,7 @@ void MATRIX_RotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t gre
 }
 #endif
 
-static uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
+uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
 #if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].addr;
 #else
@@ -185,7 +227,7 @@ static uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
 #endif
 }
 
-static uint8_t MATRIX_GetPos(int32_t x, int32_t y, int32_t z) {
+uint8_t MATRIX_GetPos(int32_t x, int32_t y, int32_t z) {
 #if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].nr;
 #else
@@ -273,6 +315,8 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
 static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   bool boardIsIdle[MATRIX_NOF_BOARDS];
   uint8_t res;
+  uint8_t addr;
+  bool isEnabled;
 
   for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
     boardIsIdle[i] = false;
@@ -280,8 +324,15 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   for(;;) { /* breaks */
     for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
-        if (STEPBOARD_IsEnabled(MATRIX_Boards[i])) {
-          res = RS485_SendCommand(STEPBOARD_GetAddress(MATRIX_Boards[i]), (unsigned char*)"idle", 1000, false); /* ask board if it is idle */
+  #if PL_CONFIG_USE_STEPPER
+        isEnabled = STEPBOARD_IsEnabled(MATRIX_Boards[i]);
+        addr = STEPBOARD_GetAddress(MATRIX_Boards[i]);
+  #else
+        isEnabled = boards[i].enabled;
+        addr = boards[i].addr;
+  #endif
+        if (isEnabled) {
+          res = RS485_SendCommand(addr, (unsigned char*)"idle", 1000, false); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -290,6 +341,9 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
         }
       }
     } /* for */
+    while(MATRIX_ExecuteQueue) {
+      MATRIX_Delay(50); /* need to wait until we are not busy any more */
+    }
     /* check if all are idle now */
     for(int i=0; /* breaks */; i++) {
       if (i==MATRIX_NOF_BOARDS) {
@@ -344,7 +398,35 @@ static uint8_t MATRIX_QueueToRemote(void) {
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cc");
               break;
           }
-          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000, true); /* queue the commands */
+          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000, true); /* queue the command for the remote boards */
+    #if PL_CONFIG_USE_STEPPER_EMUL
+          /* build a command for the LED rings */
+          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"matrix q ");
+          //McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].nr); /* <c> */
+          McuUtility_strcatNum8u(buf, sizeof(buf), x); /* <x> */
+          McuUtility_chcat(buf, sizeof(buf), ' ');
+          McuUtility_strcatNum8u(buf, sizeof(buf), y); /* <y> */
+          McuUtility_chcat(buf, sizeof(buf), ' ');
+          McuUtility_strcatNum8u(buf, sizeof(buf), z); /* <z> */
+          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" a ");
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_angleMap[x][y][z]); /* <a> */
+          McuUtility_chcat(buf, sizeof(buf), ' ');
+          McuUtility_strcatNum16u(buf, sizeof(buf), MATRIX_delayMap[x][y][z]); /* <d> */
+          McuUtility_chcat(buf, sizeof(buf), ' ');
+          switch(MATRIX_moveMap[x][y][z]) {
+            default:
+            case STEPPER_MOVE_MODE_SHORT:
+              McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"sh");
+              break;
+            case STEPPER_MOVE_MODE_CW:
+              McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cw");
+              break;
+            case STEPPER_MOVE_MODE_CCW:
+              McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cc");
+              break;
+          }
+          RS485_SendCommand(RS485_GetAddress(), buf, 1000, true); /* queue the command for the remote boards */
+    #endif
         }
       }
     }
@@ -433,22 +515,30 @@ static void DrawNumber(MClockDigit_t *digit, uint8_t xPos, uint8_t yPos) {
   }
 }
 
-static uint8_t MATRIX_SendAndExecute(int32_t timeoutMs) {
+static uint8_t MATRIX_SendRemoteExecuteAndWait(const McuShell_StdIOType *io) {
   uint8_t res;
 
-  res = MATRIX_WaitForIdle(timeoutMs);
+  res = MATRIX_ExecQueue();
   if (res!=ERR_OK) {
+    //McuShell_SendStr((unsigned char*)("MATRIX_SendRemoteExecuteAndWait: failed executing!\r\n"), io->stdErr);
     return res;
   }
+  res = MATRIX_WaitForIdle(30000);
+  if (res!=ERR_OK) {
+    //McuShell_SendStr((unsigned char*)("MATRIX_SendRemoteExecuteAndWait: failed waiting for idle!\r\n"), io->stdErr);
+    return res;
+  }
+  return res;
+}
+
+static uint8_t MATRIX_SendToRemoteQueueExecuteAndWait(int32_t timeoutMs) {
+  uint8_t res;
+
   res = MATRIX_QueueToRemote();
   if (res!=ERR_OK) {
     return res;
   }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return res;
-  }
-  return ERR_OK;
+  return MATRIX_SendRemoteExecuteAndWait(NULL);
 }
 
 uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
@@ -469,17 +559,7 @@ uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
     McuShell_SendStr((unsigned char*)("MoveAllto12: failed setting mode!\r\n"), io->stdErr);
     return res;
   }
-  res = MATRIX_SendAndExecute(timeoutMs);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)("MoveAllto12: failed executing!\r\n"), io->stdErr);
-    return res;
-  }
-  //res = MATRIX_WaitForIdle(2000);
-  //if (res!=ERR_OK) {
-  //  McuShell_SendStr((unsigned char*)("MoveAllto12: failed waiting for idle!\r\n"), io->stdErr);
-  //  return res;
-  //}
-  return ERR_OK;
+  return MATRIX_SendRemoteExecuteAndWait(io);
 }
 
 void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
@@ -488,7 +568,7 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   DrawNumber(&clockDigits[1], 2, 0);
   DrawNumber(&clockDigits[2], 4, 0);
   DrawNumber(&clockDigits[3], 6, 0);
-  (void)MATRIX_SendAndExecute(3000);
+  (void)MATRIX_SendToRemoteQueueExecuteAndWait(3000);
   MATRIX_Delay(4000);
   MATRIX_MoveAllto12(10000, io);
 
@@ -496,7 +576,7 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   DrawNumber(&clockDigits[5], 2, 0);
   DrawNumber(&clockDigits[6], 4, 0);
   DrawNumber(&clockDigits[7], 6, 0);
-  (void)MATRIX_SendAndExecute(3000);
+  (void)MATRIX_SendToRemoteQueueExecuteAndWait(3000);
   MATRIX_Delay(4000);
   MATRIX_MoveAllto12(10000, io);
 
@@ -504,7 +584,7 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   DrawNumber(&clockDigits[9], 2, 0);
   DrawNumber(&clockDigits[8], 4, 0);
   DrawNumber(&clockDigits[9], 6, 0);
-  (void)MATRIX_SendAndExecute(3000);
+  (void)MATRIX_SendToRemoteQueueExecuteAndWait(3000);
   MATRIX_Delay(4000);
   MATRIX_MoveAllto12(10000, io);
 #if 0
@@ -561,16 +641,7 @@ static uint8_t MATRIX_Demo0(const McuShell_StdIOType *io) {
     return MATRIX_FailedDemo(res);
   }
   /* execute */
-  res = MATRIX_WaitForIdle(1000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  /* execute */
-  res = MATRIX_WaitForIdle(20000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -600,6 +671,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
     }
   }
   (void)MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+
   (void)MATRIX_DrawAllClockDelays(6, 6);
   res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
@@ -623,17 +695,7 @@ static uint8_t MATRIX_Demo1(const McuShell_StdIOType *io) {
     }
   }
   /* execute */
-  res = MATRIX_WaitForIdle(20000);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Failed Demo1: Point 3\r\n", io->stdErr);
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)"Failed Demo1: Point 4\r\n", io->stdErr);
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_WaitForIdle(20000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
    McuShell_SendStr((unsigned char*)"Failed Demo1: Point 5\r\n", io->stdErr);
    return MATRIX_FailedDemo(res);
@@ -673,21 +735,9 @@ static uint8_t MATRIX_Demo2(const McuShell_StdIOType *io) {
       return MATRIX_FailedDemo(res);
     }
   }
-
   /* execute */
-  res = MATRIX_WaitForIdle(10000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_WaitForIdle(10000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  return ERR_OK;
+  res = MATRIX_SendRemoteExecuteAndWait(io);
+  return res;
 }
 
 static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
@@ -708,16 +758,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_WaitForIdle(20000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-
-  res = MATRIX_WaitForIdle(20000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -748,16 +789,7 @@ static uint8_t MATRIX_Demo3(const McuShell_StdIOType *io) {
     return MATRIX_FailedDemo(res);
   }
   /* execute */
-  res = MATRIX_WaitForIdle(20000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  /* move to park position */
-  res = MATRIX_WaitForIdle(20000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -789,22 +821,16 @@ static uint8_t MATRIX_Demo4(const McuShell_StdIOType *io) {
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
-
   MATRIX_DrawAllClockHands(270, 0);
   res = MATRIX_QueueToRemote(); /* queue commands */
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
   /* execute */
-  res = MATRIX_ExecQueue();
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_WaitForIdle(20000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-
   /* move to park position */
   res = MATRIX_WaitForIdle(20000);
   if (res!=ERR_OK) {
@@ -815,8 +841,6 @@ static uint8_t MATRIX_Demo4(const McuShell_StdIOType *io) {
 
 static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
   uint8_t res;
-
-  //MATRIX_MoveAllto12(10000, io);
 
   MATRIX_DrawAllClockDelays(10, 10);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CCW, STEPPER_MOVE_MODE_CW);
@@ -834,11 +858,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     return MATRIX_FailedDemo(res);
   }
   /* execute */
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_WaitForIdle(9000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -857,11 +877,7 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_WaitForIdle(20000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -877,21 +893,8 @@ static uint8_t MATRIX_Demo5(const McuShell_StdIOType *io) {
     MATRIX_DrawClockHands(x+1, 2, 225, 225);
   }
   res = MATRIX_QueueToRemote(); /* queue commands */
-  res = MATRIX_ExecQueue();
-  res = MATRIX_WaitForIdle(9000);
-
   /* execute */
-  res = MATRIX_ExecQueue();
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-  res = MATRIX_WaitForIdle(8000);
-  if (res!=ERR_OK) {
-    return MATRIX_FailedDemo(res);
-  }
-
-  /* move to park position */
-  res = MATRIX_WaitForIdle(10000);
+  res = MATRIX_SendRemoteExecuteAndWait(io);
   if (res!=ERR_OK) {
     return MATRIX_FailedDemo(res);
   }
@@ -903,7 +906,7 @@ uint8_t MATRIX_ShowTime(uint8_t hour, uint8_t minute) {
   DrawNumber(&clockDigits[hour%10], 2, 0);
   DrawNumber(&clockDigits[minute/10], 4, 0);
   DrawNumber(&clockDigits[minute%10], 6, 0);
-  return MATRIX_SendAndExecute(5000);
+  return MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 }
 
 uint8_t MATRIX_ShowTemperature(uint8_t temperature) {
@@ -924,7 +927,7 @@ uint8_t MATRIX_ShowTemperature(uint8_t temperature) {
   (void)MATRIX_DrawClockHands(7, 1, 225, 225);
   (void)MATRIX_DrawClockHands(6, 2,   0,  90);
   (void)MATRIX_DrawClockHands(7, 2, 270, 270);
-  return MATRIX_SendAndExecute(5000);
+  return MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 }
 
 static uint8_t MATRIX_Demo(const McuShell_StdIOType *io) {
@@ -990,7 +993,7 @@ static uint8_t MATRIX_Demo7(const McuShell_StdIOType *io) {
   MATRIX_DrawAllClockDelays(10, 10);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   MATRIX_DrawAllClockHands(270, 180);
-  MATRIX_SendAndExecute(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
   MATRIX_MoveAllto12(10000, io);
   return ERR_OK;
 }
@@ -999,14 +1002,12 @@ static uint8_t Intermezzo0(void) {
   MATRIX_DrawAllClockDelays(40, 40);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   MATRIX_DrawAllClockHands(0, 90);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   MATRIX_DrawAllClockDelays(30, 30);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CCW, STEPPER_MOVE_MODE_CCW);
   MATRIX_DrawAllClockHands(90, 270);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   return ERR_OK;
 }
@@ -1015,13 +1016,11 @@ static uint8_t Intermezzo1(void) {
   MATRIX_DrawAllClockDelays(40, 40);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   MATRIX_DrawAllClockHands(0, 90);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   MATRIX_DrawAllClockHands(315, 45);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   return ERR_OK;
 }
@@ -1030,13 +1029,11 @@ static uint8_t Intermezzo2(void) {
   MATRIX_DrawAllClockDelays(40, 40);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
   MATRIX_DrawAllClockHands(0, 180);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_CW, STEPPER_MOVE_MODE_CW);
   MATRIX_DrawAllClockHands(180, 0);
-  MATRIX_SendAndExecute(5000);
-  MATRIX_WaitForIdle(5000);
+  MATRIX_SendToRemoteQueueExecuteAndWait(5000);
 
   return ERR_OK;
 }
@@ -1258,7 +1255,9 @@ static uint8_t MATRIX_Test(void) {
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[128];
+#if PL_CONFIG_USE_STEPPER
   uint8_t statusStr[16];
+#endif
 
   McuShell_SendStatusStr((unsigned char*)"matrix", (unsigned char*)"Matrix settings\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"x*y: ");
@@ -1271,6 +1270,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  arrangement", buf, io->stdOut);
 
+#if PL_CONFIG_USE_STEPPER
   for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
     for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
@@ -1281,8 +1281,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
         addr = MATRIX_GetAddress(x, y, z);
         nr = MATRIX_GetPos(x, y, z);
         buf[0] = '\0';
-        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"addr:");
-        McuUtility_strcatNum8u(buf, sizeof(buf), addr);
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"addr:0x");
+        McuUtility_strcatNum8Hex(buf, sizeof(buf), addr);
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", nr:");
         McuUtility_strcatNum8u(buf, sizeof(buf), nr);
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", Stepper ");
@@ -1300,6 +1300,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       }
     }
   } /* for */
+#endif
 #if 0 /*! \todo not ported yet */
 #if PL_CONFIG_USE_X12_STEPPER
   McuX12_017_GetDeviceStatusString(STEPPER_Clocks[0].mot[X12_017_M0].device, buf, sizeof(buf));
@@ -1327,6 +1328,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   return ERR_OK;
 }
 
+#if PL_CONFIG_USE_STEPPER
 static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t *yp, int32_t *zp, int32_t *vp, uint8_t *dp, STEPPER_MoveMode_e *modep, bool *speedUpp, bool *slowDownp) {
   /* parse a string like <x> <y> <z> <v> <d> <md> */
   int32_t x, y, z, v, d;
@@ -1392,6 +1394,7 @@ static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t
   }
   return ERR_FAILED;
 }
+#endif
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
@@ -1416,10 +1419,12 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <r> <g> <b>", (unsigned char*)"Set RGB color\r\n", io->stdOut);
 #endif
+#if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
+#endif
 #if PL_CONFIG_USE_MAG_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  zero <x> <y> <z>", (unsigned char*)"Move clock to zero position using magnet sensor\r\n", io->stdOut);
@@ -1431,11 +1436,13 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 
 uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
+#if PL_CONFIG_USE_STEPPER
   uint8_t res;
   int32_t x, y, z, v;
   uint8_t d;
   bool speedUp, slowDown;
   STEPPER_MoveMode_e mode;
+#endif
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "matrix help")==0) {
     *handled = true;
@@ -1515,6 +1522,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
       return ERR_FAILED;
     }
 #endif /* PL_CONFIG_IS_MASTER */
+#if PL_CONFIG_USE_STEPPER
   } else if (McuUtility_strncmp((char*)cmd, "matrix r ", sizeof("matrix r ")-1)==0) { /* "matrix r <x> <y> <z> <a> <d> <md> " */
     *handled = TRUE;
     res = ParseMatrixCommand(cmd+sizeof("matrix r ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
@@ -1550,7 +1558,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
       while(*data==' ') {
         data++;
       }
-      ptr = pvPortMalloc(McuUtility_strlen((char*)data));
+      ptr = pvPortMalloc(McuUtility_strlen((char*)data)+1);
       if (ptr==NULL) {
         return ERR_FAILED;
       }
@@ -1563,6 +1571,7 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+#endif
 #if PL_CONFIG_USE_STEPPER_EMUL
   } else if (McuUtility_strncmp((char*)cmd, "matrix color ", sizeof("matrix color ")-1)==0) {
     int32_t r,g,b;
@@ -1622,15 +1631,16 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 }
 #endif
 
+#if PL_CONFIG_USE_STEPPER
 void MATRIX_TimerCallback(void) {
   bool workToDo = false;
   STEPPER_Handle_t stepper;
 
   /* go through all boards and update steps */
-  for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
-    for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
-       for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) { /* go through all motors */
-         stepper = STEPBOARD_GetStepper(MATRIX_Boards[b], i, j); // stepper = MATRIX_GetStepper(x, y, z);
+  for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) { /* go through all motors */
+         stepper = MATRIX_GetStepper(x, y, z);
          workToDo |= STEPPER_TimerClockCallback(stepper);
       } /* for */
     }
@@ -1640,6 +1650,7 @@ void MATRIX_TimerCallback(void) {
     STEPPER_StopTimer();
   }
 }
+#endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
 #include "NeoPixel.h"
@@ -1654,6 +1665,7 @@ void MATRIX_SetLEDs(void) {
 }
 #endif
 
+#if PL_CONFIG_USE_STEPPER
 static void MatrixQueueTask(void *pv) {
   uint8_t *cmd;
   bool noCommandsInQueue = true;
@@ -1685,8 +1697,8 @@ static void MatrixQueueTask(void *pv) {
                 } else { /* error? */
                   McuUtility_strcat(command, sizeof(command), cmd);
                 }
-                McuShell_SendStr(command, io->stdOut);
-                McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+                //McuShell_SendStr(command, io->stdOut);
+                //McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
                 if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
                   McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
                 }
@@ -1713,9 +1725,10 @@ static void MatrixQueueTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(20));
   } /* for */
 }
+#endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-static void InitLedRings(void) {
+static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int ledLane, int ledStartPos) {
   NEOSR_Config_t stepperRingConfig;
   NEOSR_Handle_t ring[8];
   STEPPER_Config_t stepperConfig;
@@ -1727,198 +1740,97 @@ static void InitLedRings(void) {
   STEPBOARD_GetDefaultConfig(&stepBoardConfig);
   NEOSR_GetDefaultConfig(&stepperRingConfig);
 
-  /* ----------------- board 0 --------------------- */
+  /* setup ring */
+  stepperRingConfig.ledLane = ledLane;
+  stepperRingConfig.ledStartPos = ledStartPos;
+  stepperRingConfig.ledCw = false;
+  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledGreen = 0;
+  stepperRingConfig.ledBlue = 0x00;
+  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
+  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
+
+  stepperRingConfig.ledStartPos = ledStartPos+40;
+  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
+  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
+
+  stepperRingConfig.ledStartPos = ledStartPos+80;
+  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
+  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
+
+  stepperRingConfig.ledStartPos = ledStartPos+120;
+  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
+  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
+
+  /* setup stepper */
+  stepperConfig.stepFn = NEOSR_SingleStep;
+
+  stepperConfig.device = ring[0];
+  stepper[0] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[1];
+  stepper[1] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[2];
+  stepper[2] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[3];
+  stepper[3] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[4];
+  stepper[4] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[5];
+  stepper[5] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[6];
+  stepper[6] = STEPPER_InitDevice(&stepperConfig);
+  stepperConfig.device = ring[7];
+  stepper[7] = STEPPER_InitDevice(&stepperConfig);
+
+  /* setup board */
+  stepBoardConfig.addr = addr;
+  stepBoardConfig.enabled = boardEnabled;
+  stepBoardConfig.stepper[0][0] = stepper[7];
+  stepBoardConfig.stepper[0][1] = stepper[6];
+  stepBoardConfig.stepper[1][0] = stepper[5];
+  stepBoardConfig.stepper[1][1] = stepper[4];
+  stepBoardConfig.stepper[2][0] = stepper[3];
+  stepBoardConfig.stepper[2][1] = stepper[2];
+  stepBoardConfig.stepper[3][0] = stepper[1];
+  stepBoardConfig.stepper[3][1] = stepper[0];
+
+  MATRIX_Boards[boardNo] = STEPBOARD_InitDevice(&stepBoardConfig);
+}
+
+static void InitLedRings(void) {
 #if MATRIX_NOF_BOARDS>=1
-  /* setup ring */
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 0;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
-
-  /* setup stepper */
-  stepperConfig.stepFn = NEOSR_SingleStep;
-
-  stepperConfig.device = ring[0];
-  stepper[0] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[1];
-  stepper[1] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[2];
-  stepper[2] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[3];
-  stepper[3] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[4];
-  stepper[4] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[5];
-  stepper[5] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[6];
-  stepper[6] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[7];
-  stepper[7] = STEPPER_InitDevice(&stepperConfig);
-
-  /* setup board */
-  stepBoardConfig.addr = 0x20;
-  stepBoardConfig.enabled = true;
-  stepBoardConfig.stepper[0][0] = stepper[0];
-  stepBoardConfig.stepper[0][1] = stepper[1];
-  stepBoardConfig.stepper[1][0] = stepper[2];
-  stepBoardConfig.stepper[1][1] = stepper[3];
-  stepBoardConfig.stepper[2][0] = stepper[4];
-  stepBoardConfig.stepper[2][1] = stepper[5];
-  stepBoardConfig.stepper[3][0] = stepper[6];
-  stepBoardConfig.stepper[3][1] = stepper[7];
-
-  MATRIX_Boards[0] = STEPBOARD_InitDevice(&stepBoardConfig);
-#endif /* MATRIX_NOF_BOARDS */
+  CreateLedRings(0, BOARD_ADDR_00, true, 0, 0);
+#endif
 #if MATRIX_NOF_BOARDS>=2
-  /* ----------------- board 1--------------------- */
-  /* setup ring */
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[0] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 0;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[1] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[2] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 40;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[3] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[4] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 80;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[5] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[6] = NEOSR_InitDevice(&stepperRingConfig);
-  stepperRingConfig.ledLane = 1;
-  stepperRingConfig.ledStartPos = 120;
-  stepperRingConfig.ledCw = true;
-  stepperRingConfig.ledRed = 0xff/4;
-  stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
-  ring[7] = NEOSR_InitDevice(&stepperRingConfig);
+  CreateLedRings(1, BOARD_ADDR_01, true, 1, 0);
+#endif
+#if MATRIX_NOF_BOARDS>=3
+  CreateLedRings(2, BOARD_ADDR_02, true, 2, 0);
+#endif
+#if MATRIX_NOF_BOARDS>=4
+  CreateLedRings(3, BOARD_ADDR_03, true, 3, 0);
+#endif
+#if MATRIX_NOF_BOARDS>=5
+  CreateLedRings(4, BOARD_ADDR_04, true, 4, 0);
+#endif
 
-  /* setup stepper */
-  stepperConfig.stepFn = NEOSR_SingleStep;
+#if 0
+  CreateLedRings(5, 0x25, false, 0, 4*40);
+  CreateLedRings(6, 0x26, false, 1, 4*40);
+  CreateLedRings(7, 0x27, false, 2, 4*40);
+  CreateLedRings(8, 0x28, false, 3, 4*40);
+  CreateLedRings(9, 0x29, false, 4, 4*40);
 
-  stepperConfig.device = ring[0];
-  stepper[0] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[1];
-  stepper[1] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[2];
-  stepper[2] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[3];
-  stepper[3] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[4];
-  stepper[4] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[5];
-  stepper[5] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[6];
-  stepper[6] = STEPPER_InitDevice(&stepperConfig);
-  stepperConfig.device = ring[7];
-  stepper[7] = STEPPER_InitDevice(&stepperConfig);
-
-  /* setup board */
-  stepBoardConfig.addr = 0x21;
-  stepBoardConfig.enabled = true;
-  stepBoardConfig.stepper[0][0] = stepper[0];
-  stepBoardConfig.stepper[0][1] = stepper[1];
-  stepBoardConfig.stepper[1][0] = stepper[2];
-  stepBoardConfig.stepper[1][1] = stepper[3];
-  stepBoardConfig.stepper[2][0] = stepper[4];
-  stepBoardConfig.stepper[2][1] = stepper[5];
-  stepBoardConfig.stepper[3][0] = stepper[6];
-  stepBoardConfig.stepper[3][1] = stepper[7];
-
-  MATRIX_Boards[1] = STEPBOARD_InitDevice(&stepBoardConfig);
-#endif /* MATRIX_NOF_BOARDS */
+  CreateLedRings(10, 0x30, false, 0, 8*40);
+  CreateLedRings(11, 0x31, false, 1, 8*40);
+  CreateLedRings(12, 0x32, false, 2, 8*40);
+  CreateLedRings(13, 0x33, false, 3, 8*40);
+  CreateLedRings(14, 0x34, false, 4, 8*40);
+#endif
 }
 #endif /* PL_CONFIG_USE_STEPPER_EMUL */
 
-#if !PL_CONFIG_USE_STEPPER_EMUL
+#if PL_CONFIG_USE_X12_STEPPER
 static void InitSteppers(void) {
   McuX12_017_Config_t x12config;
   McuX12_017_Handle_t x12device[2];
@@ -2113,23 +2025,26 @@ static void InitSteppers(void) {
 void MATRIX_Init(void) {
 #if PL_CONFIG_USE_STEPPER_EMUL
   InitLedRings();
-#else
+#elif PL_CONFIG_USE_X12_STEPPER
   InitSteppers();
 #endif
+#if PL_CONFIG_USE_STEPPER
   /* ---------------------------------------------------------- */
   /* default */
   STEPBOARD_SetBoard(MATRIX_Boards[0]);
   /* ---------------------------------------------------------- */
+#endif
 
 #if PL_CONFIG_IS_MASTER
- MATRIX_DrawAllClockHands(0, 0);
+  MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
 #endif
+#if PL_CONFIG_USE_STEPPER
   if (xTaskCreate(
       MatrixQueueTask,  /* pointer to the task */
       "StepperQueue", /* task name for kernel awareness debugging */
-      600/sizeof(StackType_t), /* task stack size */
+      800/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+3,  /* initial priority */
       NULL /* optional task handle to create */
@@ -2137,5 +2052,6 @@ void MATRIX_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
+#endif
 }
 #endif /* PL_CONFIG_USE_MATRIX */

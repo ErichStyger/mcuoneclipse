@@ -6,6 +6,7 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_RS485
+#include "rs485.h"
 #include "McuGPIO.h"
 #include "rs485Uart.h"
 #include "McuShell.h"
@@ -193,8 +194,11 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   uint8_t res = ERR_OK;
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-  if (intern && (dstAddr==0x24 || dstAddr==0)) { /* \todo */
-    SHELL_ParseCommand(cmd, NULL, true);
+  if (intern && (dstAddr==RS485_GetAddress() || dstAddr==RS485_BROADCAST_ADDRESS)) {
+    SHELL_ParseCommand(cmd, NULL, true); /* parse it for the LED rings */
+    if (dstAddr!=RS485_BROADCAST_ADDRESS) { /* only for us */
+      return ERR_OK;
+    }
   }
 #endif
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)("@"));
@@ -394,7 +398,7 @@ void RS485_Init(void) {
       "RS-485", /* task name for kernel awareness debugging */
       1000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+3,  /* initial priority */
+      tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {

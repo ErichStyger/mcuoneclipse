@@ -20,7 +20,7 @@ typedef struct {
   STEPPER_Handle_t stepper[STEPPER_NOF_CLOCKS][STEPPER_NOF_CLOCK_MOTORS];
 } STEPBOARD_Device_t;
 
-/* default configuration, used for initializing the config */
+/* default configuration, used for initializing the configuration */
 static const STEPBOARD_Config_t defaultConfig =
 {
   .addr = 0x0, .enabled = true,

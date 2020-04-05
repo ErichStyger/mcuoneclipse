@@ -7,9 +7,11 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#include "McuLibConfig.h" 
+
 #define PL_CONFIG_IS_MASTER         (0) /* otherwise it is the client */
 #define PL_CONFIG_IS_CLIENT         (!PL_CONFIG_IS_MASTER) /* otherwise it is the master */
-#define PL_CONFIG_IS_TINYK22        (0)
+#define PL_CONFIG_IS_TINYK22        (McuLib_CONFIG_CPU_IS_KINETIS)
 
 /* hardware versions:
  * V0.1: initial version with 2x2 arrangement
