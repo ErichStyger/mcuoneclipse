@@ -233,6 +233,7 @@
 #else
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1306)
 #endif
+#define McuSSD1306_CONFIG_INIT_DELAY_MS (500)  /* extra delay to give hardware time for power-up */
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
 #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
 /* -------------------------------------------------*/
