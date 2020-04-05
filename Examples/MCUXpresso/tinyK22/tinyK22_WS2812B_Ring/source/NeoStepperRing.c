@@ -125,20 +125,20 @@ static int ScaleRange(int ledPos, int startPos, int endPos) {
   return percentage;
 }
 
-void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRed, int ledGreen, int ledBlue) {
+void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, bool cw, int ledRed, int ledGreen, int ledBlue) {
   int ledPos, pos;
   int dist[3];
 
   stepperPos += NEOSR_STEPS_FOR_LED/2; /* adjust by half a LED, because 0 is at the middle of the 12-o-clock LED */
-  /* make pos fit within 0...NEOSR_NOF_360 */
+  /* make stepperPos fit within 0...NEOSR_NOF_360 */
   if (stepperPos<0) {
     stepperPos = -stepperPos;
     stepperPos %= NEOSR_NOF_360;
     stepperPos = NEOSR_NOF_360-stepperPos;
   }
-  /* pos is now positive */
+  /* stepperPos is now positive */
   stepperPos %= NEOSR_NOF_360;
-  /* pos is now within 0..NEOSR_NOF_360 */
+  /* stepperPos is now within 0..NEOSR_NOF_360 */
   ledPos = stepperPos/NEOSR_STEPS_FOR_LED;
   /*
    *  stepper pos  ... 4319 | 0 107 | 108 | ...
@@ -151,6 +151,7 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRe
 
   uint8_t r,g,b;
 
+  /* perform a gamma correction */
   r = NEO_GammaCorrect8(ledRed*dist[0]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[0]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[0]/0xff);
@@ -158,12 +159,18 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRe
   if (pos<0) {
     pos = NEOSR_NOF_LED-1;
   }
+  if (!cw && pos!=0) { /* counter-clockwise order of LEDs */
+    pos = NEOSR_NOF_LED-pos;
+  }
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
   r = NEO_GammaCorrect8(ledRed*dist[1]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[1]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[1]/0xff);
   pos = ledPos;
+  if (!cw && pos!=0) { /* counter-clockwise order of LEDs */
+    pos = NEOSR_NOF_LED-pos;
+  }
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
   r = NEO_GammaCorrect8(ledRed*dist[2]/0xff);
@@ -172,6 +179,9 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, int ledRe
   pos = ledPos+1;
   if (pos>NEOSR_NOF_LED-1) {
     pos = 0;
+  }
+  if (!cw && pos!=0) { /* counter-clockwise order of LEDs */
+    pos = NEOSR_NOF_LED-pos;
   }
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 }
@@ -187,7 +197,7 @@ void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
 
-  NEOSR_IlluminatePos(dev->pos, dev->ledLane, dev->ledStartPos, dev->ledRed, dev->ledGreen, dev->ledBlue);
+  NEOSR_IlluminatePos(dev->pos, dev->ledLane, dev->ledStartPos, dev->ledCw, dev->ledRed, dev->ledGreen, dev->ledBlue);
 }
 
 void NEOSR_Deinit(void) {

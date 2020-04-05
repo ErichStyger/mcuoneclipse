@@ -236,7 +236,7 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 2;
+  uint32_t delta = 4;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;

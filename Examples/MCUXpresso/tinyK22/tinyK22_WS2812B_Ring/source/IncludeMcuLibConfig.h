@@ -36,10 +36,10 @@ Instructions:
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configUSE_HEAP_SCHEME                       4 /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
-#define configTOTAL_HEAP_SIZE                       (32*1024)
+#define configTOTAL_HEAP_SIZE                       (48*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
-#define configQUEUE_REGISTRY_SIZE                   (32)
+#define configQUEUE_REGISTRY_SIZE                   (64)
 
 /* performance counter: */
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)

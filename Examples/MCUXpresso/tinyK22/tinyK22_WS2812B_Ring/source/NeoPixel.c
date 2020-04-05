@@ -194,7 +194,6 @@ NEO_PixelColor NEO_BrightnessPercentColor(NEO_PixelColor rgbColor, uint8_t perce
   return rgbColor;
 }
 
-
 uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t percent) {
   uint8_t red, green, blue;
   uint32_t dRed, dGreen, dBlue;
@@ -211,6 +210,7 @@ uint8_t NEO_DimmPercentPixel(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t perc
 }
 
 uint8_t NEO_ClearAllPixel(void) {
+#if 0
   NEO_PixelIdxT lane, pos;
   uint8_t res;
 
@@ -222,6 +222,9 @@ uint8_t NEO_ClearAllPixel(void) {
       }
     }
   }
+#else
+  memset(transmitBuf, 0, sizeof(transmitBuf));
+#endif
   return ERR_OK;
 }
 

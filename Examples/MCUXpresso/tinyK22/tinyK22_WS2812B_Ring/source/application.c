@@ -81,6 +81,7 @@ static void AppTask(void *pv) {
 #endif
 
   int stepperPos = 0;
+  int i = 0;
   for(;;) {
 #if 0 && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
    NEO_ClearAllPixel();
@@ -107,7 +108,7 @@ static void AppTask(void *pv) {
      i = 0;
    }
    NEO_TransferPixels();
-   //vTaskDelay(pdMS_TO_TICKS(100));
+   vTaskDelay(pdMS_TO_TICKS(10));
 #endif
 
 #if 0 && PL_CONFIG_USE_NEO_PIXEL
@@ -171,7 +172,6 @@ static void AppTask(void *pv) {
 #if 1 && PL_CONFIG_USE_STEPPER_EMUL
     NEO_ClearAllPixel();
     MATRIX_SetLEDs();
-    //NEOSR_IlluminatePos(stepperPos, 0, 0, 0x0, 0x0, 0xff);
     NEO_TransferPixels();
     stepperPos++;
     if (stepperPos==STEPPER_CLOCK_360_STEPS) {

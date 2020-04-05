@@ -13,7 +13,7 @@
 typedef void *NEOSR_Handle_t;
 
 typedef struct NEOSR_Config_t {
-  bool ledCw;      /* if leds are in cc or ccw */
+  bool ledCw;      /* if leds are organized cw (clockwise) or ccw (counter-clockwise) */
   int ledLane;     /* LED lane */
   int ledStartPos; /* LED starting position in lane */
   uint8_t ledRed, ledGreen, ledBlue; /* colors */
@@ -33,7 +33,7 @@ void NEOSR_SetRotorPixel(NEOSR_Handle_t device);
 
 void NEOSR_SingleStep(NEOSR_Handle_t device, int step);
 
-void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, int ledRed, int ledGreen, int ledBlue);
+void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, bool cw, int ledRed, int ledGreen, int ledBlue);
 
 void NEOSR_Deinit(void);
 void NEOSR_Init(void);
