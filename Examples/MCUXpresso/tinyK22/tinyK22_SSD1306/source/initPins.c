@@ -8,9 +8,9 @@
 #include "fsl_port.h"
 
 void InitPins(void) {
+  CLOCK_EnableClock(kCLOCK_PortA); /* used for I2C */
 #if 0
   /* turn on clocking for all the GPIO ports we are going to use */
-  CLOCK_EnableClock(kCLOCK_PortA);
   CLOCK_EnableClock(kCLOCK_PortB);
   CLOCK_EnableClock(kCLOCK_PortC);
   CLOCK_EnableClock(kCLOCK_PortD);

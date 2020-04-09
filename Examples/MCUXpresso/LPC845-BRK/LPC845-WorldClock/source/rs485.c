@@ -35,12 +35,16 @@ uint8_t RS485_GetAddress(void) {
 #if PL_CONFIG_USE_NVMC
   return NVMC_GetRS485Addr();
 #else
-  return 2; /* just a valid address and not the broadcast one (0) */
+  return 2; /* just a valid address and not the broadcast one (RS485_BROADCAST_ADDRESS) */
 #endif
 }
 
 static void RS485_SendChar(unsigned char ch) {
   RS485Uart_stdio.stdOut(ch);
+}
+
+static void RS485_NullSend(unsigned char ch) {
+  /* do nothing */
 }
 
 static void RS485_ReadChar(uint8_t *c) {
@@ -57,6 +61,14 @@ McuShell_ConstStdIOType RS485_stdio = {
     (McuShell_StdIO_OutErr_FctType)RS485_SendChar,  /* stderr */
     RS485_CharPresent /* if input is not empty */
   };
+
+McuShell_ConstStdIOType RS485_stdioBroadcast = {
+    (McuShell_StdIO_In_FctType)RS485_ReadChar, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)RS485_NullSend,  /* stdout */
+    (McuShell_StdIO_OutErr_FctType)RS485_NullSend,  /* stderr */
+    RS485_CharPresent /* if input is not empty */
+  };
+
 
 static void RS485_SendStr(unsigned char *str) {
   while(*str!='\0') {
@@ -188,10 +200,12 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr) {
   } /* for */
 }
 
-uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs, bool intern) {
+uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs, bool intern, uint32_t nofRetry) {
   /* example: send "#@16:0 cmd stepper zero all" */
   unsigned char buf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   uint8_t res = ERR_OK;
+  RS485_Response_e resp;
+  unsigned char ch;
 
 #if PL_CONFIG_USE_STEPPER_EMUL
   if (intern && (dstAddr==RS485_GetAddress() || dstAddr==RS485_BROADCAST_ADDRESS)) {
@@ -209,28 +223,35 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   McuUtility_strcat(buf, sizeof(buf), cmd);
   McuUtility_chcat(buf, sizeof(buf), '\n');
 
-  int nofRetry = 1;
-  RS485_Response_e resp;
-
   for(;;) { /* breaks */
     RS458Uart_ClearResponseQueue();
     RS485_SendStr(buf);
-    if (dstAddr==0) {
-      /* do not wait for a OK/NOK response for broadcasts */
-      res = ERR_OK;
-      break; /* leave loop */
-    }
-    resp = WaitForResponse(timeoutMs, dstAddr);
-    if (resp==RS485_RESPONSE_OK) {
-      res = ERR_OK;
-      break; /* leave loop */
+    if (dstAddr==RS485_BROADCAST_ADDRESS) {
+      /* do not wait for a OK/NOK response for broadcasts: instead check if there is anything coming back (which would be an error message) */
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    #if PL_CONFIG_USE_WDT
+      WDT_Report(WDT_REPORT_ID_CURR_TASK, 100);
+    #endif
+      ch = RS458Uart_GetResponseQueueChar();
+      if (ch=='\0') { /* nothing? no error. */
+        res = ERR_OK;
+        break; /* leave loop */
+      } else {
+        /* retry then ... */
+      }
+    } else {
+      resp = WaitForResponse(timeoutMs, dstAddr);
+      if (resp==RS485_RESPONSE_OK) {
+        res = ERR_OK;
+        break; /* leave loop */
+      }
     }
     /* NOK or timeout */
-    nofRetry--; /* try again */
     if (nofRetry==0) { /* tried enough */
       res = ERR_FAILED;
       break; /* leave loop */
     }
+    nofRetry--; /* try again */
   }
   return res;
 }
@@ -239,13 +260,14 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
   const unsigned char *p;
   int32_t addr, srcAddr, command;
   uint8_t buf[16];
+  static uint8_t lastError = ERR_OK;
 
   /* command is for example. "#@1 0 cmd #help" with the hash tag removed by the shell parser */
   *handled = TRUE;
   if (*cmd=='@') {
     p = cmd+1; /* skip '@' */
     if (   McuUtility_xatoi(&p, &addr)==ERR_OK
-        && (addr==RS485_GetAddress() || addr==0) /* broadcast */ /* matching destination address */
+        && (addr==RS485_GetAddress() || addr==RS485_BROADCAST_ADDRESS) /* broadcast */ /* matching destination address */
         && McuUtility_xatoi(&p, &srcAddr)==ERR_OK /* get source address */
         )
     { /* check for "@<DST_ADDR>:<SRC_ADDR>" */
@@ -267,15 +289,22 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
             res = ERR_FAILED;
           }
       #endif
+        } else if (McuUtility_strcmp((char*)p, (char*)"lastError")==0) {
+          res = lastError;  /* report back last error */
         } else { /* pass as-is */
-          res = SHELL_ParseCommand((unsigned char*)p, &RS485_stdio, true);
+          if (addr==RS485_BROADCAST_ADDRESS) {
+            res = SHELL_ParseCommand((unsigned char*)p, &RS485_stdioBroadcast, true); /* do not write anything back if broadcast */
+          } else {
+            res = SHELL_ParseCommand((unsigned char*)p, &RS485_stdio, true);
+          }
+          lastError = res; /* remember error status if we get asked about it */
         } /* if */
         /* send response back */
         McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"@");
         McuUtility_strcatNum8u(buf, sizeof(buf), srcAddr);
         McuUtility_chcat(buf, sizeof(buf), ' ');
         McuUtility_strcatNum8u(buf, sizeof(buf), RS485_GetAddress());
-        if (addr!=0) { /* do *not* send response for broadcast messages */
+        if (addr!=RS485_BROADCAST_ADDRESS) { /* normal message, send response. For broadcasts it is up to the caller to check the last error */
           if (res==ERR_OK) {
             McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" OK\n");
           } else {
@@ -354,7 +383,7 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       while (*p==' ') { /* skip leading spaces */
         p++;
       }
-      return RS485_SendCommand(val, (unsigned char*)p, 10000, true); /* 10 seconds should be enough */
+      return RS485_SendCommand(val, (unsigned char*)p, 10000, true, 0); /* 10 seconds should be enough */
     }
     return ERR_FAILED;
   }

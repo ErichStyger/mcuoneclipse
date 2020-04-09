@@ -7,7 +7,6 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
-#include "platform.h"
 #include <stdint.h>
 #include "McuShell.h"
 #include "stepper.h"

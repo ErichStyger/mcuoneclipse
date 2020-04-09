@@ -6,8 +6,10 @@
 
 #include "platform.h"
 #if PL_CONFIG_USE_MATRIX
-#include "matrixconfig.h"
-#include "matrix.h"
+#if PL_CONFIG_IS_MASTER
+  #include "matrixconfig.h"
+  #include "matrix.h"
+#endif
 #include "rs485.h"
 #include "McuUtility.h"
 #include "McuWait.h"
@@ -260,7 +262,7 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
         addr = MATRIX_BoardList[i].addr;
   #endif
         if (isEnabled) {
-          res = RS485_SendCommand(addr, (unsigned char*)"idle", 1000, false); /* ask board if it is idle */
+          res = RS485_SendCommand(addr, (unsigned char*)"idle", 1000, false, 0); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
@@ -326,7 +328,7 @@ static uint8_t MATRIX_QueueToRemote(void) {
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cc");
               break;
           }
-          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000, true); /* queue the command for the remote boards */
+          RS485_SendCommand(clockMatrix[x][y].addr, buf, 1000, true, 1); /* queue the command for the remote boards */
     #if PL_CONFIG_USE_STEPPER_EMUL
           /* build a command for the LED rings */
           McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"matrix q ");
@@ -364,7 +366,39 @@ static uint8_t MATRIX_QueueToRemote(void) {
 
 static uint8_t MATRIX_ExecQueue(void) {
   /* send broadcast execute queue command */
-  RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true); /* execute the queue */
+  (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
+  /* check with lastEror if all have received the message */
+
+  bool boardHasError[MATRIX_NOF_BOARDS];
+  uint8_t res;
+  uint8_t addr;
+  bool isEnabled;
+
+  for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
+    boardHasError[i] = false;
+  }
+  for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
+    if (!boardHasError[i]) { /* ask board if it is still not idle */
+#if PL_CONFIG_USE_STEPPER
+      isEnabled = STEPBOARD_IsEnabled(MATRIX_Boards[i]);
+      addr = STEPBOARD_GetAddress(MATRIX_Boards[i]);
+#else
+      isEnabled = MATRIX_BoardList[i].enabled;
+      addr = MATRIX_BoardList[i].addr;
+#endif
+      if (isEnabled) {
+        res = RS485_SendCommand(addr, (unsigned char*)"lastError", 1000, false, 0); /* ask board if there was an error */
+        if (res==ERR_OK) { /* no error */
+          boardHasError[i] = false;
+        } else { /* send command again! */
+          boardHasError[i] = true;
+          (void)RS485_SendCommand(addr, (unsigned char*)"matrix exq", 1000, true, 1); /* execute the queue */
+        }
+      } else { /* board is not enabled, so it is considered to be fine */
+        boardHasError[i] = false;
+      }
+    }
+  } /* for */
   return ERR_OK;
 }
 
@@ -451,6 +485,7 @@ static uint8_t MATRIX_SendRemoteExecuteAndWait(const McuShell_StdIOType *io) {
     //McuShell_SendStr((unsigned char*)("MATRIX_SendRemoteExecuteAndWait: failed executing!\r\n"), io->stdErr);
     return res;
   }
+  MATRIX_Delay(500); /* give the clocks some time to start executing */
   res = MATRIX_WaitForIdle(30000);
   if (res!=ERR_OK) {
     //McuShell_SendStr((unsigned char*)("MATRIX_SendRemoteExecuteAndWait: failed waiting for idle!\r\n"), io->stdErr);
