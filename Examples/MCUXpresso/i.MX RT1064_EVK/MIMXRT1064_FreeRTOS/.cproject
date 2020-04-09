@@ -94,21 +94,23 @@
 									<listOptionValue builtIn="false" value="../xip"/>
 									<listOptionValue builtIn="false" value="../utilities"/>
 									<listOptionValue builtIn="false" value="../startup"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/config"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/config/fonts"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/FatFS"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/fonts"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/SEGGER_RTT"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/SEGGER_Sysview"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/src"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/TraceRecorder"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/TraceRecorder/config"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/TraceRecorder/include"/>
-									<listOptionValue builtIn="false" value="../McuOnEclipse/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="../McuLib"/>
+									<listOptionValue builtIn="false" value="../McuLib/config"/>
+									<listOptionValue builtIn="false" value="../McuLib/config/fonts"/>
+									<listOptionValue builtIn="false" value="../McuLib/fonts"/>
+									<listOptionValue builtIn="false" value="../McuLib/src"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
+									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
+									<listOptionValue builtIn="false" value="../McuLib/HD44780"/>
 								</option>
-								<option id="gnu.c.compiler.option.include.files.322626268" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.files.322626268" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/source/IncludeMcuLibConfig.h&quot;"/>
+								</option>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.126569573" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.optimization.flags.757328725" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" useByScannerDiscovery="false" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.1797349950" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level" useByScannerDiscovery="false"/>
@@ -274,7 +276,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/McuSharpMemoryDisplay.c|FatFS|src/McuFatFS.c|src/McuUSB.c|src/McuQuadCounter.c|src/McuSDCard.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuOnEclipse"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>

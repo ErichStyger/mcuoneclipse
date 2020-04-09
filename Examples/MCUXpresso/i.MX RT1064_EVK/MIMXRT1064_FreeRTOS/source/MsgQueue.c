@@ -10,19 +10,19 @@
 #include "Freertos.h"
 #include "queue.h"
 
-static xQueueHandle MSG_UartRxQueue; /* stored UART Rx items */
-static xQueueHandle MSG_UartTxQueue; /* items to send to UART Tx */
+static QueueHandle_t MSG_UartRxQueue; /* stored UART Rx items */
+static QueueHandle_t MSG_UartTxQueue; /* items to send to UART Tx */
 
 #define MSG_QUEUE_LENGTH      128 /* items in queue, that's my buffer size */
 #define MSG_QUEUE_ITEM_SIZE   1  /* each item is a single character */
 
-static void SendChar(xQueueHandle queue, unsigned char ch) {
+static void SendChar(QueueHandle_t queue, unsigned char ch) {
   if (xQueueSendToBack(queue, &ch, pdMS_TO_TICKS(100))!=pdPASS) {
      /* to avoid blocking, we drop characters after 100 ms */
   }
 }
 
-static void SendString(xQueueHandle queue, const unsigned char *str) {
+static void SendString(QueueHandle_t queue, const unsigned char *str) {
   while(*str!='\0') {
     SendChar(queue, *str);
     str++;
@@ -45,7 +45,7 @@ void MSG_SendCharTxQueue(unsigned char ch) {
   SendChar(MSG_UartTxQueue, ch);
 }
 
-static unsigned char ReceiveChar(xQueueHandle queue) {
+static unsigned char ReceiveChar(QueueHandle_t queue) {
   unsigned char ch;
   portBASE_TYPE res;
 

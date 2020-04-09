@@ -10,9 +10,9 @@
 #include "fsl_debug_console_conf.h"
 #include "fsl_io.h"
 #ifdef FSL_RTOS_FREE_RTOS
-#include <McuOnEclipse/FreeRTOS/Source/include/FreeRTOS.h>
-#include <McuOnEclipse/FreeRTOS/Source/include/task.h>
-#include <McuOnEclipse/FreeRTOS/Source/include/semphr.h>
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 #endif
 /*******************************************************************************
  * Definitions
