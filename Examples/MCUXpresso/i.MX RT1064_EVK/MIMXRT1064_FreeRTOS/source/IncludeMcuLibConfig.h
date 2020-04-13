@@ -42,4 +42,20 @@ Instructions:
 /* performance counter: see https://mcuoneclipse.com/2018/08/02/tutorial-using-runtime-statistics-with-amazon-freertos-v10/ */
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (0)
 
+/* Segger SystemViewer: */
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
+#define SYSVIEW_APP_NAME                            "i.MX RT1064 with FreeRTOS"
+#define SYSVIEW_DEVICE_NAME                         "NXP i.MX RT1064"
+
+/* -------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "i.MX RT1064 with FreeRTOS"
+#define McuShell_MULTI_CMD_ENABLED                    (0)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
+
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (100)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
+
 #endif /* INCLUDEMCULIBCONFIG_H_ */
