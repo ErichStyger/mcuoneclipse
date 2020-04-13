@@ -60,6 +60,11 @@ Instructions:
 #define McuShell_CONFIG_PROJECT_NAME_STRING           "tinyK22 LedRing"
 #define McuShell_MULTI_CMD_ENABLED                    (0)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
+
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (100)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* ------------------- I2C ---------------------------*/
 #define CONFIG_USE_HW_I2C                             (1) /* if using HW I2C, otherwise use software bit banging */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)

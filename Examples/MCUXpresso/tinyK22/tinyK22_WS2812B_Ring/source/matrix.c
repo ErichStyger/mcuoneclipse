@@ -355,7 +355,7 @@ static uint8_t MATRIX_QueueToRemote(void) {
               McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"cc");
               break;
           }
-          RS485_SendCommand(RS485_GetAddress(), buf, 1000, true); /* queue the command for the remote boards */
+          RS485_SendCommand(RS485_GetAddress(), buf, 1000, true, 1); /* queue the command for the remote boards */
     #endif
         }
       }
@@ -1377,7 +1377,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  temp <temp>", (unsigned char*)"Show temperature\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
-  McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <r> <g> <b>", (unsigned char*)"Set RGB color\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <rgb>", (unsigned char*)"Set RGB color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
@@ -1694,6 +1694,7 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   STEPPER_Config_t stepperConfig;
   STEPPER_Handle_t stepper[8];
   STEPBOARD_Config_t stepBoardConfig;
+  const uint8_t rgbRed = 0xff;
 
   /* get default configurations */
   STEPPER_GetDefaultConfig(&stepperConfig);
@@ -1704,9 +1705,9 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   stepperRingConfig.ledLane = ledLane;
   stepperRingConfig.ledStartPos = ledStartPos;
   stepperRingConfig.ledCw = false;
-  stepperRingConfig.ledRed = 0xff;
+  stepperRingConfig.ledRed = rgbRed;
   stepperRingConfig.ledGreen = 0;
-  stepperRingConfig.ledBlue = 0x00;
+  stepperRingConfig.ledBlue = 0;
   ring[0] = NEOSR_InitDevice(&stepperRingConfig);
   ring[1] = NEOSR_InitDevice(&stepperRingConfig);
 
@@ -1772,6 +1773,38 @@ static void InitLedRings(void) {
 #endif
 #if MATRIX_NOF_BOARDS>=5
   CreateLedRings(4, BOARD_ADDR_04, true, 4, 0);
+#endif
+
+#if MATRIX_NOF_BOARDS>=6
+  CreateLedRings(5, BOARD_ADDR_05, true, 0, 4*40);
+#endif
+#if MATRIX_NOF_BOARDS>=7
+  CreateLedRings(6, BOARD_ADDR_06, true, 1, 4*40);
+#endif
+#if MATRIX_NOF_BOARDS>=8
+  CreateLedRings(7, BOARD_ADDR_07, true, 2, 4*40);
+#endif
+#if MATRIX_NOF_BOARDS>=9
+  CreateLedRings(8, BOARD_ADDR_08, true, 3, 4*40);
+#endif
+#if MATRIX_NOF_BOARDS>=10
+  CreateLedRings(9, BOARD_ADDR_09, true, 4, 4*40);
+#endif
+
+#if MATRIX_NOF_BOARDS>=11
+  CreateLedRings(10, BOARD_ADDR_10, true, 0, 8*40);
+#endif
+#if MATRIX_NOF_BOARDS>=12
+  CreateLedRings(11, BOARD_ADDR_11, true, 1, 8*40);
+#endif
+#if MATRIX_NOF_BOARDS>=13
+  CreateLedRings(12, BOARD_ADDR_12, true, 2, 8*40);
+#endif
+#if MATRIX_NOF_BOARDS>=14
+  CreateLedRings(13, BOARD_ADDR_13, true, 3, 8*40);
+#endif
+#if MATRIX_NOF_BOARDS>=15
+  CreateLedRings(14, BOARD_ADDR_14, true, 4, 8*40);
 #endif
 }
 #endif /* PL_CONFIG_USE_STEPPER_EMUL */

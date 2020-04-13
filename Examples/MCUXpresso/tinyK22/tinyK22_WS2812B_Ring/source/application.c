@@ -41,6 +41,7 @@ static void AppTask(void *pv) {
   //int color = 0;
   //uint8_t level;
 
+  vTaskDelay(pdMS_TO_TICKS(1000)); /* wait a second to turn on the LEDs, just to avoid the current rush with the motors */
   NEO_ClearAllPixel();
 #if 0 && PL_CONFIG_USE_NEO_PIXEL
   NEO_ClearAllPixel();
@@ -82,9 +83,9 @@ static void AppTask(void *pv) {
 
   int stepperPos = 0;
   int i = 0;
+  NEO_ClearAllPixel();
   for(;;) {
 #if 0 && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
-   NEO_ClearAllPixel();
    NEO_SetPixelRGB(0, i, 0xff/4, 0x00, 0x00);
    //NEO_SetPixelRGB(0, 0, 0x00, 0xff, 0x00);
    //NEO_SetPixelRGB(0, 1, 0, 0xff, 0x00);
@@ -108,7 +109,7 @@ static void AppTask(void *pv) {
      i = 0;
    }
    NEO_TransferPixels();
-   vTaskDelay(pdMS_TO_TICKS(10));
+   vTaskDelay(pdMS_TO_TICKS(20));
 #endif
 
 #if 0 && PL_CONFIG_USE_NEO_PIXEL
@@ -178,7 +179,7 @@ static void AppTask(void *pv) {
       stepperPos = 0;
     }
 #endif
-    vTaskDelay(pdMS_TO_TICKS(5));
+    vTaskDelay(pdMS_TO_TICKS(20));
   } /* for */
 }
 
