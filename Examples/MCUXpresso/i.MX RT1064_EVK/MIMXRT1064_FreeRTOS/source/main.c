@@ -53,7 +53,6 @@ int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
- // BOARD_InitDebugConsole();
 
   /* now run the application */
   APP_Run();

@@ -1,10 +1,10 @@
 /*
- * Application.c
+ * Copyright (c) 2020, Erich Styger
  *
- *  Created on: 29.12.2018
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
 #include "Application.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
@@ -19,6 +19,58 @@
 #include <stdio.h>
 #include "leds.h"
 
+#if configGENERATE_RUN_TIME_STATS && !configGENERATE_RUN_TIME_STATS_USE_TICKS
+#include "fsl_gpt.h"
+
+uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
+
+void GPT2_IRQHandler(void) {
+  /* Clear interrupt flag.*/
+  GPT_ClearStatusFlags(GPT2, kGPT_OutputCompare1Flag);
+  McuRTOS_RunTimeCounter++; /* increment runtime counter */
+#if defined __CORTEX_M && (__CORTEX_M == 4U || __CORTEX_M == 7U)
+  __DSB();
+#endif
+}
+
+static void AppConfigureTimerForRuntimeStats(void) {
+  uint32_t gptFreq;
+  gpt_config_t gptConfig;
+
+  GPT_GetDefaultConfig(&gptConfig);
+
+  /* Initialize GPT module */
+  GPT_Init(GPT2, &gptConfig);
+
+  /* Divide GPT clock source frequency by 3 inside GPT module */
+  GPT_SetClockDivider(GPT2, 3);
+
+  /* Get GPT clock frequency */
+  gptFreq = CLOCK_GetFreq(kCLOCK_PerClk);
+
+  /* GPT frequency is divided by 3 inside module */
+  gptFreq /= 3;
+
+  /* Set GPT module to 10x of the FreeRTOS tick counter */
+  gptFreq = USEC_TO_COUNT(100, gptFreq); /* FreeRTOS tick is 1 kHz */
+  GPT_SetOutputCompareValue(GPT2, kGPT_OutputCompare_Channel1, gptFreq);
+
+  /* Enable GPT Output Compare1 interrupt */
+  GPT_EnableInterrupts(GPT2, kGPT_OutputCompare1InterruptEnable);
+
+  /* Enable at the Interrupt */
+  EnableIRQ(GPT2_IRQn);
+
+  GPT_StartTimer(GPT2);
+}
+#endif
+
+static TimerHandle_t timerHndlLcdTimeout;
+
+static void vTimerCallback(TimerHandle_t pxTimer) {
+  McuLED_Toggle(LEDS_Led);
+}
+
 static void AppTask(void *p) {
   for(;;) {
     McuLED_Toggle(LEDS_Led);
@@ -27,18 +79,7 @@ static void AppTask(void *p) {
 }
 
 void APP_Run(void) {
-  /* initialize McuLibrary */
-  McuUtility_Init();
-  McuArmTools_Init();
-  McuWait_Init();
-  McuHardFault_Init();
-  McuLED_Init();
-
-  /* initialize application modules */
-  LEDS_Init();
-  SHELL_Init();
-  //printf("hello world!\r\n"); /* uses semihosting */
-  //*((int*)0x70000000) = 5; /* force a hard fault */
+  PL_Init();
 
 #if 1 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */
@@ -63,5 +104,21 @@ void APP_Run(void) {
   if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
 	  for(;;) {}
 	}
+
+  timerHndlLcdTimeout = xTimerCreate(
+    "timer", /* name */
+    pdMS_TO_TICKS(15*1000), /* period/time */
+    pdFALSE, /* auto reload */
+    (void*)1, /* timer ID */
+    vTimerCallback); /* callback */
+  if (timerHndlLcdTimeout==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndlLcdTimeout, 0)!=pdPASS) {
+    for(;;); /* failure!?! */
+  }
+#if configGENERATE_RUN_TIME_STATS && !configGENERATE_RUN_TIME_STATS_USE_TICKS
+  AppConfigureTimerForRuntimeStats();
+#endif
   vTaskStartScheduler();
 }
