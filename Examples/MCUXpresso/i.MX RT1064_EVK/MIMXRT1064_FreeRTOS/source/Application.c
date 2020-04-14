@@ -74,7 +74,8 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 static void AppTask(void *p) {
   for(;;) {
     McuLED_Toggle(LEDS_Led);
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    McuWait_Waitms(10); /* burning some CPU cylcles here */
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
