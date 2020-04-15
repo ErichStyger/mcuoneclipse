@@ -58,9 +58,8 @@ static void AppConfigureTimerForRuntimeStats(void) {
   /* Enable GPT Output Compare1 interrupt */
   GPT_EnableInterrupts(GPT2, kGPT_OutputCompare1InterruptEnable);
 
-  /* Enable at the Interrupt */
+  /* Enable at the Interrupt and start timer */
   EnableIRQ(GPT2_IRQn);
-
   GPT_StartTimer(GPT2);
 }
 #endif
