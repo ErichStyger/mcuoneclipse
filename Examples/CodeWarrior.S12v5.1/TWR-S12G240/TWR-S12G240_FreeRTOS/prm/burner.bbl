@@ -1,3 +1,13 @@
+/* intel hex */
+OPENFILE "%ABS_FILE%.hex"
+format=intel
+busWidth=1
+origin=0
+len=0x1000000
+destination=0
+SENDBYTE 1 "%ABS_FILE%"
+CLOSE
+
 /* logical s-record file */
 OPENFILE "%ABS_FILE%.s19"
 format=motorola

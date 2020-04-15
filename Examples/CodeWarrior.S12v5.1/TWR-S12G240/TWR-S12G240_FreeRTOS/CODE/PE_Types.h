@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.14
 **     Compiler    : CodeWarrior HC12 C Compiler
-**     Date/Time   : 04.09.2018, 14:00
+**     Date/Time   : 14.04.2020, 09:46
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros

@@ -7,7 +7,7 @@
 **     Version   : Component 01.000, Driver 02.06, CPU db: 3.00.010
 **     Datasheet : MC9S12GRMV1 Rev. 0.50 March 4, 2011
 **     Compiler  : CodeWarrior HC12 C Compiler
-**     Date/Time : 04.09.2018, 20:29
+**     Date/Time : 14.04.2020, 09:46
 **     Abstract  :
 **         This component "MC9S12G240_100" implements properties, methods,
 **         and events of the CPU.

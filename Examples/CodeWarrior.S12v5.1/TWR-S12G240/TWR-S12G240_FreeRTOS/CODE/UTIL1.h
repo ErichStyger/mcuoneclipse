@@ -6,7 +6,7 @@
 **     Component   : Utility
 **     Version     : Component 01.158, Driver 01.00, CPU db: 3.00.010
 **     Compiler    : CodeWarrior HC12 C Compiler
-**     Date/Time   : 04.09.2018, 14:00
+**     Date/Time   : 14.04.2020, 09:46
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :

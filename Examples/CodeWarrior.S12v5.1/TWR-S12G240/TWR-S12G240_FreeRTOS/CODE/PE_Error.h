@@ -6,7 +6,7 @@
 **     Component   : PE_Error
 **     Version     : Driver 01.01
 **     Compiler    : CodeWarrior HC12 C Compiler
-**     Date/Time   : 04.09.2018, 14:00
+**     Date/Time   : 14.04.2020, 09:46
 **     Abstract    :
 **         This component "PE_Error" contains internal definitions
 **         of the error constants.
