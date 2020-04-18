@@ -35,7 +35,7 @@ static const NEOSR_Config_t defaultConfig =
 
 /* device for a single LED ring */
 typedef struct {
-  int pos; /* stepper motor position */ /*!\todo needed? have it in the stepper */
+  //int pos; /* stepper motor position */ /*!\todo needed? have it in the stepper */
   bool ledCw;      /* clock-wise */
   int ledLane;     /* LED lane */
   int ledStartPos; /* LED starting position in lane */
@@ -66,7 +66,7 @@ NEOSR_Handle_t NEOSR_InitDevice(NEOSR_Config_t *config) {
   assert(handle!=NULL);
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(NEOSR_Device_t)); /* init all fields */
-    handle->pos = 0;
+//    handle->pos = 0;
     handle->ledCw = config->ledCw;
     handle->ledLane = config->ledLane;
     handle->ledStartPos = config->ledStartPos;
@@ -77,21 +77,21 @@ NEOSR_Handle_t NEOSR_InitDevice(NEOSR_Config_t *config) {
   return handle;
 }
 
-int32_t NEOSR_GetPos(NEOSR_Handle_t device) {
-  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
-  return dev->pos;
-}
+//int32_t NEOSR_GetPos(NEOSR_Handle_t device) {
+//  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+//  return dev->pos;
+//}
 
-void NEOSR_SetPos(NEOSR_Handle_t device, int32_t pos) {
-  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
-  dev->pos = pos;
-}
+//void NEOSR_SetPos(NEOSR_Handle_t device, int32_t pos) {
+//  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+//  dev->pos = pos;
+//}
 
-void NEOSR_SingleStep(NEOSR_Handle_t device, int step) {
-  NEOSR_Device_t *handle = (NEOSR_Device_t*)device;
-
-  handle->pos += step;
-}
+//void NEOSR_SingleStep(NEOSR_Handle_t device, int step) {
+//  NEOSR_Device_t *handle = (NEOSR_Device_t*)device;
+//
+//  handle->pos += step;
+//}
 
 /* return a scale between 0 and 0xff, depending on how much there is an overlap */
 static int ScaleRange(int ledPos, int startPos, int endPos) {
@@ -183,7 +183,9 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, bool cw, 
   if (!cw && pos!=0) { /* counter-clockwise order of LEDs */
     pos = NEOSR_NOF_LED-pos;
   }
-  NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
+  if (r!=0 || g!=0 || b!=0) { /* ORing makes only sense if it is not zero */
+    NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
+  }
 }
 
 void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint8_t blue) {
@@ -194,10 +196,10 @@ void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint
   dev->ledBlue = blue;
 }
 
-void NEOSR_SetRotorPixel(NEOSR_Handle_t device) {
+void NEOSR_SetRotorPixel(NEOSR_Handle_t device, int32_t stepperPos) {
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
 
-  NEOSR_IlluminatePos(dev->pos, dev->ledLane, dev->ledStartPos, dev->ledCw, dev->ledRed, dev->ledGreen, dev->ledBlue);
+  NEOSR_IlluminatePos(stepperPos, dev->ledLane, dev->ledStartPos, dev->ledCw, dev->ledRed, dev->ledGreen, dev->ledBlue);
 }
 
 void NEOSR_Deinit(void) {

@@ -23,15 +23,13 @@ void NEOSR_GetDefaultConfig(NEOSR_Config_t *config);
 
 NEOSR_Handle_t NEOSR_InitDevice(NEOSR_Config_t *config);
 
-int32_t NEOSR_GetPos(NEOSR_Handle_t device);
-
-void NEOSR_SetPos(NEOSR_Handle_t device, int32_t pos);
-int32_t NEOSR_GetPos(NEOSR_Handle_t device);
+//void NEOSR_SetPos(NEOSR_Handle_t device, int32_t pos);
+//int32_t NEOSR_GetPos(NEOSR_Handle_t device);
 
 void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint8_t blue);
-void NEOSR_SetRotorPixel(NEOSR_Handle_t device);
+void NEOSR_SetRotorPixel(NEOSR_Handle_t device, int32_t stepperPos);
 
-void NEOSR_SingleStep(NEOSR_Handle_t device, int step);
+//void NEOSR_SingleStep(NEOSR_Handle_t device, int step);
 
 void NEOSR_IlluminatePos(int stepperPos, int ledStartPos, int ledLane, bool cw, int ledRed, int ledGreen, int ledBlue);
 

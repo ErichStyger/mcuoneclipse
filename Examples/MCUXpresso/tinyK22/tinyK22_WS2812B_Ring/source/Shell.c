@@ -128,7 +128,18 @@ void SHELL_SendChar(unsigned char ch) {
 
 void SHELL_SendString(unsigned char *str) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+#if PL_CONFIG_USE_RTT
+    if (ios[i].stdio==&McuRTT_stdio) { /* only send to RTT if there is enough space available to avoid slowing down things */
+      unsigned int rttUpSize = SEGGER_RTT_GetUpBufferFreeSize(0);
+      if (rttUpSize>32) {
+        McuShell_SendStr(str, ios[i].stdio->stdOut);
+      }
+    } else {
+      McuShell_SendStr(str, ios[i].stdio->stdOut);
+    }
+#else
     McuShell_SendStr(str, ios[i].stdio->stdOut);
+#endif
   }
 }
 

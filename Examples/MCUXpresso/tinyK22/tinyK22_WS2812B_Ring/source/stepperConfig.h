@@ -9,6 +9,8 @@
 
 #include "McuLibconfig.h"
 
+#define STEPPER_CONFIG_IS_LED_RING  (1) /* temporary only */
+
 #ifndef STEPPER_CONFIG_USE_FREERTOS_HEAP
   #define STEPPER_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */

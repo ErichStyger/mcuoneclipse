@@ -20,15 +20,18 @@ Example commands
 ================
 In terminal with RS-485-2-USB converter (virtual address 0x2):
 ----------------------------------------
-@0x10 0x29 cmd rs help
+@0x10 2 cmd rs help
 
 @x20 2 cmd matrix q 0 0 1 a 90 10 sh
 @x20 2 cmd matrix q 0 0 0 a 270 10 sh
 @x0 2 cmd matrix exq
 
-In tinyK22 (address 0x1):
+From Master (tinyK22) (address 0x1):
 -----------------
-rs sendcmd 0x10 rs help
+rs sendcmd 0x20 rs help
 
-Example clock move:
+Example hand immediate move (without leds):
 rs sendcmd 0x20 matrix r 0 0 0 180 10 cw
+
+rs sendcmd 0x20 matrix q 0 0 0 r 90 8 cc
+rs sendcmd 0x20 matrix exq

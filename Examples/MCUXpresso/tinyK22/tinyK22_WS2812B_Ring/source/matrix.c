@@ -1380,9 +1380,12 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <rgb>", (unsigned char*)"Set RGB color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
-  McuShell_SendHelpStr((unsigned char*)"  r <x> <y> <z> <a> <d> <md>", (unsigned char*)"Relative angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  a <x> <y> <z> <a> <d> <md>", (unsigned char*)"Absolute angle move of clock with delay using mode (cc, cw, sh), lowercase mode letter is with accel control\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  q <x> <y> <z> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<xyz>: coordinate, separated by space, e.g. 0 0 1\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<md>: mode (cc, cw, sh), lowercase mode letter is with accel control for start/stop, e.g. Cw\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<d>: delay, 0 is no delay\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  r <xyz> <a> <d> <md>", (unsigned char*)"Relative angle move\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  a <xyz> <a> <d> <md>", (unsigned char*)"Absolute angle move\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  q <xyz> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_MAG_SENSOR
@@ -1618,7 +1621,10 @@ void MATRIX_SetLEDs(void) {
   for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
     for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
       for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-        NEOSR_SetRotorPixel(STEPPER_GetDevice(STEPBOARD_GetStepper(MATRIX_Boards[b], i, j)));
+        STEPPER_Handle_t stepper;
+
+        stepper = STEPBOARD_GetStepper(MATRIX_Boards[b], i, j);
+        NEOSR_SetRotorPixel(STEPPER_GetDevice(stepper), STEPPER_GetPos(stepper));
       }
     }
   } /* for */
@@ -1694,7 +1700,7 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   STEPPER_Config_t stepperConfig;
   STEPPER_Handle_t stepper[8];
   STEPBOARD_Config_t stepBoardConfig;
-  const uint8_t rgbRed = 0xff;
+  const uint8_t rgbRed = 0xff/4;
 
   /* get default configurations */
   STEPPER_GetDefaultConfig(&stepperConfig);
@@ -1724,7 +1730,7 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   ring[7] = NEOSR_InitDevice(&stepperRingConfig);
 
   /* setup stepper */
-  stepperConfig.stepFn = NEOSR_SingleStep;
+  stepperConfig.stepFn = NULL;//NEOSR_SingleStep;
 
   stepperConfig.device = ring[0];
   stepper[0] = STEPPER_InitDevice(&stepperConfig);
