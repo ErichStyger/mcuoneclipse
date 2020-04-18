@@ -45,7 +45,6 @@ typedef enum {
   SCT_CHANNEL_MASK_7 = (1<<7)
 } SCT_CHANNEL_MASK_e;
 
-
 /* default configuration, used for initializing the config */
 static const STEPPER_Config_t defaultConfig =
 {
@@ -130,11 +129,11 @@ void STEPPER_StartTimer(void) {
   STEPPER_START_TIMER();
 }
 
-#if STEPPER_CONFIG_IS_LED_RING
-  #define STEP_SIZE  (12)
-#else
+//#if STEPPER_CONFIG_IS_LED_RING
+//  #define STEP_SIZE  (12)
+//#else
   #define STEP_SIZE  (1)
-#endif
+//#endif
 
 static void AccelDelay(STEPPER_Device_t *mot, int32_t steps) {
   if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
@@ -159,49 +158,48 @@ bool STEPPER_IsIdle(STEPPER_Handle_t stepper) {
 
 bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
   STEPPER_Device_t *mot = (STEPPER_Device_t*)stepper;
+  int n;
 
-  if (mot->delayCntr==0) { /* delay expired */
-    if (mot->doSteps!=0) { /* a step to do */
-      if (mot->doSteps > 0) {
-        mot->pos += STEP_SIZE;
-        if (mot->stepFn!=NULL) {
-          mot->stepFn(mot->device, STEP_SIZE);
-        }
-        mot->doSteps -= STEP_SIZE;
-      } else if (mot->doSteps < 0)  {
-        mot->pos -= STEP_SIZE;
-        if (mot->stepFn!=NULL) {
-          mot->stepFn(mot->device, -STEP_SIZE);
-        }
-        mot->doSteps += STEP_SIZE;
-      }
-      mot->delayCntr = mot->delay*STEP_SIZE; /* reload delay counter */
-      if (mot->speedup || mot->slowdown) {
-        int32_t stepsToGo;;
-
-        stepsToGo = mot->doSteps;
-        if (stepsToGo<0) { /* make it positive */
-          stepsToGo = -stepsToGo;
-        }
-        if (mot->speedup && stepsToGo>STEPPER_ACCEL_HIGHEST_POS) { /* accelerate */
-          if (mot->accelStepCntr<=STEPPER_ACCEL_HIGHEST_POS) {
-            mot->accelStepCntr += STEP_SIZE;
-          }
-          AccelDelay(mot, mot->accelStepCntr);
-        } else if (mot->slowdown && stepsToGo<STEPPER_ACCEL_HIGHEST_POS) { /* slow down */
-          if (mot->accelStepCntr>=0) {
-            mot->accelStepCntr -= STEP_SIZE;
-          }
-          //mot->accelStepCntr -= 1;
-          AccelDelay(mot, mot->accelStepCntr);
-        }
-      } /* speed up or slow down */
-    } else {
-      return false; /* no work to do */
-    }
-  } else {
-    mot->delayCntr -= STEP_SIZE; /* decrement delay counter */
+  if (mot->doSteps==0) {
+    return false; /* no work to do */
   }
+  if (mot->delayCntr!=0) { /* delay going on? */
+    mot->delayCntr -= STEP_SIZE; /* decrement delay counter */
+    return true; /* still work go do */
+  }
+  if (mot->doSteps > 0) { /* forward */
+    n = STEP_SIZE; /* number of steps in one iteration */
+  } else { /* backward */
+    n = -STEP_SIZE;
+  }
+  mot->pos += n; /* update position */
+  if (mot->stepFn!=NULL) { /* call driver */
+    mot->stepFn(mot->device, n);
+  }
+  mot->doSteps -= n; /* update remaining steps */
+  mot->delayCntr = mot->delay*STEP_SIZE; /* reload delay counter */
+#if 1
+  /* check if we have to speed up or slow down */
+  if (mot->speedup || mot->slowdown) {
+    int32_t stepsToGo; /* where we are in the sequence */
+
+    stepsToGo = mot->doSteps;
+    if (stepsToGo<0) { /* make it positive */
+      stepsToGo = -stepsToGo;
+    }
+    if (mot->speedup && stepsToGo>STEPPER_ACCEL_HIGHEST_POS) { /* accelerate */
+      if (mot->accelStepCntr<=STEPPER_ACCEL_HIGHEST_POS) {
+        mot->accelStepCntr += STEP_SIZE;
+      }
+      AccelDelay(mot, mot->accelStepCntr);
+    } else if (mot->slowdown && stepsToGo<STEPPER_ACCEL_HIGHEST_POS) { /* slow down */
+      if (mot->accelStepCntr>=0) {
+        mot->accelStepCntr -= STEP_SIZE;
+      }
+      AccelDelay(mot, mot->accelStepCntr);
+    }
+  } /* speed up or slow down */
+#endif
   return true; /* still work to do */
 }
 
@@ -232,7 +230,7 @@ static void Timer_Init(void) {
 
   SCTIMER_GetDefaultConfig(&sctimerInfo);
   SCTIMER_Init(SCT0, &sctimerInfo);
-  matchValue = USEC_TO_COUNT(200, CLOCK_GetFreq(kCLOCK_CoreSysClk));
+  matchValue = USEC_TO_COUNT(STEPPER_TIME_STEP_US, CLOCK_GetFreq(kCLOCK_CoreSysClk));
   status = SCTIMER_CreateAndScheduleEvent(SCT0, kSCTIMER_MatchEventOnly, matchValue, 0 /* dummy I/O */, kSCTIMER_Counter_L /* dummy */, &eventNumberOutput);
   if (status==kStatus_Fail || eventNumberOutput!=0) {
     for(;;) {} /* should not happen! */
@@ -246,18 +244,12 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 0;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
   /* note: the LPC is running on 200us, but the K22 is a bit faster, so running slower */
-#if STEPPER_CONFIG_IS_LED_RING
-  /* \todo Timer is off about 25% (too fast?) */
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(12*(200U+100)+delta, PIT_SOURCE_CLOCK));
-#else
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U+delta, PIT_SOURCE_CLOCK));
-#endif
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(STEPPER_TIME_STEP_US, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
   NVIC_SetPriority(PIT_IRQ_ID, 1); /* \todo not 0, in order not to interrupt the DMA? */
   EnableIRQ(PIT_IRQ_ID);
@@ -340,9 +332,13 @@ void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPE
   } else {
     steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
   }
+  if (mode==STEPPER_MOVE_MODE_CCW) { /* invert direction */
+    steps = -steps;
+  }
   device->doSteps = steps;
   device->accelStepCntr = 0;
   device->delay = delay;
+  device->delayCntr = delay;
   device->speedup = speedUp;
   device->slowdown = slowDown;
 }

@@ -14,4 +14,10 @@
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
+#ifndef NEOSR_CONFIG_USE_GAMMA_CORRECTION
+  #define NEOSR_CONFIG_USE_GAMMA_CORRECTION   (0)
+    /*!< 1: use gamma correction, 0: do not use gamma correction */
+#endif
+
+
 #endif /* NEOSTEPPERRINGCONFIG_H_ */

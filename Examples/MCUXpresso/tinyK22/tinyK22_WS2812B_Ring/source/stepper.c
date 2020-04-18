@@ -45,7 +45,6 @@ typedef enum {
   SCT_CHANNEL_MASK_7 = (1<<7)
 } SCT_CHANNEL_MASK_e;
 
-
 /* default configuration, used for initializing the config */
 static const STEPPER_Config_t defaultConfig =
 {
@@ -130,11 +129,11 @@ void STEPPER_StartTimer(void) {
   STEPPER_START_TIMER();
 }
 
-#if STEPPER_CONFIG_IS_LED_RING
-  #define STEP_SIZE  (12)
-#else
+//#if STEPPER_CONFIG_IS_LED_RING
+//  #define STEP_SIZE  (12)
+//#else
   #define STEP_SIZE  (1)
-#endif
+//#endif
 
 static void AccelDelay(STEPPER_Device_t *mot, int32_t steps) {
   if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
@@ -179,7 +178,7 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
   }
   mot->doSteps -= n; /* update remaining steps */
   mot->delayCntr = mot->delay*STEP_SIZE; /* reload delay counter */
-#if 0
+#if 1
   /* check if we have to speed up or slow down */
   if (mot->speedup || mot->slowdown) {
     int32_t stepsToGo; /* where we are in the sequence */
@@ -231,7 +230,7 @@ static void Timer_Init(void) {
 
   SCTIMER_GetDefaultConfig(&sctimerInfo);
   SCTIMER_Init(SCT0, &sctimerInfo);
-  matchValue = USEC_TO_COUNT(200, CLOCK_GetFreq(kCLOCK_CoreSysClk));
+  matchValue = USEC_TO_COUNT(STEPPER_TIME_STEP_US, CLOCK_GetFreq(kCLOCK_CoreSysClk));
   status = SCTIMER_CreateAndScheduleEvent(SCT0, kSCTIMER_MatchEventOnly, matchValue, 0 /* dummy I/O */, kSCTIMER_Counter_L /* dummy */, &eventNumberOutput);
   if (status==kStatus_Fail || eventNumberOutput!=0) {
     for(;;) {} /* should not happen! */
@@ -245,18 +244,12 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 0;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
   /* note: the LPC is running on 200us, but the K22 is a bit faster, so running slower */
-#if STEPPER_CONFIG_IS_LED_RING
-  /* \todo Timer is off about 25% (too fast?) */
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(12*(200U+100)+delta, PIT_SOURCE_CLOCK));
-#else
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U+delta, PIT_SOURCE_CLOCK));
-#endif
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(STEPPER_TIME_STEP_US, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
   NVIC_SetPriority(PIT_IRQ_ID, 1); /* \todo not 0, in order not to interrupt the DMA? */
   EnableIRQ(PIT_IRQ_ID);

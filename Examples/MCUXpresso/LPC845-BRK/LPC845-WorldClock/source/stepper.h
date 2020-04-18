@@ -12,6 +12,8 @@
 #include "McuShell.h"
 #include "McuRTOS.h"
 
+#include "stepperConfig.h"
+
 typedef void *STEPPER_Handle_t;
 
 typedef struct STEPPER_Config_t {
@@ -31,7 +33,6 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
 
 #define STEPPER_NOF_CLOCKS        (4)    /* number of clocks on a board */
 #define STEPPER_NOF_CLOCK_MOTORS  (2)    /* number of motors for each clock */
-#define STEPPER_CLOCK_360_STEPS   (4320) /* number of steps for a full turn on the clock */
 
 typedef enum {
   STEPPER_MOVE_MODE_SHORT,  /* shortest move to position */

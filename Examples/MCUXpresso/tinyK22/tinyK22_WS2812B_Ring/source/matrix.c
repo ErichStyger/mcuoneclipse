@@ -329,7 +329,7 @@ static const unsigned char*GetModeString(STEPPER_MoveMode_e mode, bool speedUp, 
   return str;
 }
 
-static void QueueMoveCommand(int x, int y, int z, int angle, int delay, STEPPER_MoveMode_e mode, bool speedUp, bool slowDown) {
+static void QueueMoveCommand(int x, int y, int z, int angle, int delay, STEPPER_MoveMode_e mode, bool speedUp, bool slowDown, bool absolute) {
   uint8_t buf[McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE];
 
   /*  matrix q <x> <y> <z> a <angle> <delay> <mode> */
@@ -339,7 +339,7 @@ static void QueueMoveCommand(int x, int y, int z, int angle, int delay, STEPPER_
   McuUtility_strcatNum8u(buf, sizeof(buf), clockMatrix[x][y].board.y); /* <y> */
   McuUtility_chcat(buf, sizeof(buf), ' ');
   McuUtility_strcatNum8u(buf, sizeof(buf), z); /* <z> */
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" a ");
+  McuUtility_strcat(buf, sizeof(buf), absolute?(unsigned char*)" a ":(unsigned char*)" r ");
   McuUtility_strcatNum16u(buf, sizeof(buf), angle); /* <a> */
   McuUtility_chcat(buf, sizeof(buf), ' ');
   McuUtility_strcatNum16u(buf, sizeof(buf), delay); /* <d> */
@@ -354,7 +354,7 @@ static void QueueMoveCommand(int x, int y, int z, int angle, int delay, STEPPER_
   McuUtility_strcatNum8u(buf, sizeof(buf), y); /* <y> */
   McuUtility_chcat(buf, sizeof(buf), ' ');
   McuUtility_strcatNum8u(buf, sizeof(buf), z); /* <z> */
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" a ");
+  McuUtility_strcat(buf, sizeof(buf), absolute?(unsigned char*)" a ":(unsigned char*)" r ");
   McuUtility_strcatNum16u(buf, sizeof(buf), angle); /* <a> */
   McuUtility_chcat(buf, sizeof(buf), ' ');
   McuUtility_strcatNum16u(buf, sizeof(buf), delay); /* <d> */
@@ -369,7 +369,7 @@ static uint8_t MATRIX_SendToRemoteQueue(void) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
         if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
-          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], false, false);
+          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], false, false, true);
         }
       }
     }
@@ -1378,6 +1378,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<md>: mode (cc, cw, sh), lowercase mode letter is with accel control for start/stop, e.g. Cw\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<d>: delay, 0 is no delay\r\n", io->stdOut);
 #if PL_CONFIG_USE_STEPPER_EMUL
+  McuShell_SendHelpStr((unsigned char*)"  R <xyz> <a> <d> <md>", (unsigned char*)"Relative angle move for LED and motor\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  A <xyz> <a> <d> <md>", (unsigned char*)"Absolute angle move for LED and motor\r\n", io->stdOut);
 #endif
   McuShell_SendHelpStr((unsigned char*)"  r <xyz> <a> <d> <md>", (unsigned char*)"Relative angle move\r\n", io->stdOut);
@@ -1487,11 +1488,14 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 #endif /* PL_CONFIG_IS_MASTER */
 #if PL_CONFIG_USE_STEPPER
   #if PL_CONFIG_USE_STEPPER_EMUL
-  } else if (McuUtility_strncmp((char*)cmd, "matrix A ", sizeof("matrix A ")-1)==0) { /* "matrix R <x> <y> <z> <a> <d> <md> " */
+  } else if (McuUtility_strncmp((char*)cmd, "matrix A ", sizeof("matrix A ")-1)==0   /* "matrix A <x> <y> <z> <a> <d> <md> " */
+          || McuUtility_strncmp((char*)cmd, "matrix R ", sizeof("matrix R ")-1)==0       /* "matrix R <x> <y> <z> <a> <d> <md> " */
+            )
+  {
     *handled = TRUE;
     res = ParseMatrixCommand(cmd+sizeof("matrix A ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
-      QueueMoveCommand(x, y, z, v, d, mode, speedUp, slowDown);
+      QueueMoveCommand(x, y, z, v, d, mode, speedUp, slowDown, cmd[7]=='A');
       (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
       MATRIX_ExecuteQueue = true; /* trigger queue execution */
       return ERR_OK;
@@ -1713,7 +1717,7 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   STEPPER_Config_t stepperConfig;
   STEPPER_Handle_t stepper[8];
   STEPBOARD_Config_t stepBoardConfig;
-  const uint8_t rgbRed = 0xff/4;
+  const uint8_t rgbRed = 0x5;
 
   /* get default configurations */
   STEPPER_GetDefaultConfig(&stepperConfig);

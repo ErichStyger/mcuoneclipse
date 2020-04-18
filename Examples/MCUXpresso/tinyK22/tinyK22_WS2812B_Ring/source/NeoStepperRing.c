@@ -20,7 +20,7 @@
 #define NEOSR_NOF_LED        (40)  /* number of LEDs in ring */
 #define NEOSR_NOF_360        (STEPPER_CLOCK_360_STEPS) /* number of steps for 360 degree */
 #define NEOSR_STEPS_FOR_LED  (NEOSR_NOF_360/NEOSR_NOF_LED) /* number of steps for each LED */
-#define NEOSR_LED_WIDTH      (NEOSR_STEPS_FOR_LED + 50) /* width for LED */
+#define NEOSR_LED_WIDTH      (NEOSR_STEPS_FOR_LED /*+ 50*/) /* width which shall be illuminated for the hand */
 
 /* default configuration, used for initializing the config */
 static const NEOSR_Config_t defaultConfig =
@@ -118,7 +118,7 @@ static int ScaleRange(int ledPos, int startPos, int endPos) {
   }
   if (b>=startPos && a<=endPos) { /* they do overlap */
     diff = endPos-startPos+1;
-    percentage = diff*0xff/NEOSR_STEPS_FOR_LED;
+    percentage = diff*0xff/(NEOSR_STEPS_FOR_LED-1);
   } else {
     percentage = 0; /* no overlap */
   }
@@ -151,10 +151,16 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, bool cw, 
 
   uint8_t r,g,b;
 
+#if NEOSR_CONFIG_USE_GAMMA_CORRECTION
   /* perform a gamma correction */
   r = NEO_GammaCorrect8(ledRed*dist[0]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[0]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[0]/0xff);
+#else
+  r = ledRed*dist[0]/0xff;
+  g = ledGreen*dist[0]/0xff;
+  b = ledBlue*dist[0]/0xff;
+#endif
   pos = ledPos-1;
   if (pos<0) {
     pos = NEOSR_NOF_LED-1;
@@ -164,18 +170,30 @@ void NEOSR_IlluminatePos(int stepperPos, int ledLane, int ledStartPos, bool cw, 
   }
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
+#if NEOSR_CONFIG_USE_GAMMA_CORRECTION
   r = NEO_GammaCorrect8(ledRed*dist[1]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[1]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[1]/0xff);
+#else
+  r = ledRed*dist[1]/0xff;
+  g = ledGreen*dist[1]/0xff;
+  b = ledBlue*dist[1]/0xff;
+#endif
   pos = ledPos;
   if (!cw && pos!=0) { /* counter-clockwise order of LEDs */
     pos = NEOSR_NOF_LED-pos;
   }
   NEO_OrPixelRGB(ledLane, ledStartPos+pos, r, g, b);
 
+#if NEOSR_CONFIG_USE_GAMMA_CORRECTION
   r = NEO_GammaCorrect8(ledRed*dist[2]/0xff);
   g = NEO_GammaCorrect8(ledGreen*dist[2]/0xff);
   b = NEO_GammaCorrect8(ledBlue*dist[2]/0xff);
+#else
+  r = ledRed*dist[2]/0xff;
+  g = ledGreen*dist[2]/0xff;
+  b = ledBlue*dist[2]/0xff;
+#endif
   pos = ledPos+1;
   if (pos>NEOSR_NOF_LED-1) {
     pos = 0;

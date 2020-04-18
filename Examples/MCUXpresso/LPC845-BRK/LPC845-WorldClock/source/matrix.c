@@ -1713,7 +1713,7 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
   STEPPER_Config_t stepperConfig;
   STEPPER_Handle_t stepper[8];
   STEPBOARD_Config_t stepBoardConfig;
-  const uint8_t rgbRed = 0xff/4;
+  const uint8_t rgbRed = 0x5;
 
   /* get default configurations */
   STEPPER_GetDefaultConfig(&stepperConfig);
