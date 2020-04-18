@@ -223,13 +223,14 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   McuUtility_chcat(buf, sizeof(buf), '\n');
 
   for(;;) { /* breaks */
-    RS458Uart_ClearResponseQueue();
+    RS458Uart_ClearResponseQueue(); /* clear up if there is something pending */
     RS485_SendStr(buf);
     if (dstAddr==RS485_BROADCAST_ADDRESS) {
       /* do not wait for a OK/NOK response for broadcast messages. The caller has to check with 'lastError' */
       res = ERR_OK;
       break; /* leave loop */
     } else {
+      vTaskDelay(pdMS_TO_TICKS(20)); /* give some time for a response */
       resp = WaitForResponse(timeoutMs, dstAddr);
       if (resp==RS485_RESPONSE_OK) {
         res = ERR_OK;

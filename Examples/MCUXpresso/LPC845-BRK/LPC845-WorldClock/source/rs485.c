@@ -205,7 +205,6 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   unsigned char buf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   uint8_t res = ERR_OK;
   RS485_Response_e resp;
-  unsigned char ch;
 
 #if PL_CONFIG_USE_STEPPER_EMUL
   if (intern && (dstAddr==RS485_GetAddress() || dstAddr==RS485_BROADCAST_ADDRESS)) {
@@ -224,22 +223,14 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   McuUtility_chcat(buf, sizeof(buf), '\n');
 
   for(;;) { /* breaks */
-    RS458Uart_ClearResponseQueue();
+    RS458Uart_ClearResponseQueue(); /* clear up if there is something pending */
     RS485_SendStr(buf);
     if (dstAddr==RS485_BROADCAST_ADDRESS) {
-      /* do not wait for a OK/NOK response for broadcasts: instead check if there is anything coming back (which would be an error message) */
-      vTaskDelay(pdMS_TO_TICKS(1000));
-    #if PL_CONFIG_USE_WDT
-      WDT_Report(WDT_REPORT_ID_CURR_TASK, 100);
-    #endif
-      ch = RS458Uart_GetResponseQueueChar();
-      if (ch=='\0') { /* nothing? no error. */
-        res = ERR_OK;
-        break; /* leave loop */
-      } else {
-        /* retry then ... */
-      }
+      /* do not wait for a OK/NOK response for broadcast messages. The caller has to check with 'lastError' */
+      res = ERR_OK;
+      break; /* leave loop */
     } else {
+      vTaskDelay(pdMS_TO_TICKS(20)); /* give some time for a response */
       resp = WaitForResponse(timeoutMs, dstAddr);
       if (resp==RS485_RESPONSE_OK) {
         res = ERR_OK;
@@ -252,7 +243,7 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
       break; /* leave loop */
     }
     nofRetry--; /* try again */
-  }
+  } /* for */
   return res;
 }
 

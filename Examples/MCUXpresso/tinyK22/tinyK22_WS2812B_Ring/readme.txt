@@ -10,10 +10,9 @@ OpenSDA UART: LPUART Rx PTC3, Tx PTC4
 
 Open Points
 -----------
-- buffering/timeout for RTT shell output
-- LED timer too fast/slow?
-- flash programming
-- watchdog
+- LED timer too fast?
+- flash programming K22
+- watchdog K22
 
 
 Example commands
@@ -35,3 +34,17 @@ rs sendcmd 0x20 matrix r 0 0 0 180 10 cw
 
 rs sendcmd 0x20 matrix q 0 0 0 r 90 8 cc
 rs sendcmd 0x20 matrix exq
+
+
+Issues:
+-------
+rs sendcmd 0x20 matrix r 0 0 0 180 10 cc
+rs sendcmd 0x20 matrix r 0 0 0 180 10 cw
+sollten anders drehen? beide drehen cw
+
+Wenn ein rs Kommando geschickt wird mit einem Fehler, dann haben die NeoPixels kurz eine falsche Farbe?
+CMD> rs sendcmd 0x20 matrix 12
+*** Failed or unknown command: matrix 12
+*** Type help to get a list of available commands
+*** Failed or unknown command: rs sendcmd 0x20 matrix 12
+*** Type help to get a list of available commands

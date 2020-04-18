@@ -130,18 +130,24 @@ void STEPPER_StartTimer(void) {
   STEPPER_START_TIMER();
 }
 
+#if STEPPER_CONFIG_IS_LED_RING
+  #define STEP_SIZE  (12)
+#else
+  #define STEP_SIZE  (1)
+#endif
+
 static void AccelDelay(STEPPER_Device_t *mot, int32_t steps) {
   if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
     if (steps<=50) {
-      mot->delayCntr += 10;
+      mot->delayCntr += 10*STEP_SIZE;
     } else if (steps<=100) {
-      mot->delayCntr += 7;
+      mot->delayCntr += 7*STEP_SIZE;
     } else if (steps<=150) {
-      mot->delayCntr += 5;
+      mot->delayCntr += 5*STEP_SIZE;
     } else if (steps<=250) {
-      mot->delayCntr += 3;
+      mot->delayCntr += 3*STEP_SIZE;
     } else if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
-      mot->delayCntr += 1;
+      mot->delayCntr += 1*STEP_SIZE;
     }
   }
 }
@@ -157,15 +163,19 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
   if (mot->delayCntr==0) { /* delay expired */
     if (mot->doSteps!=0) { /* a step to do */
       if (mot->doSteps > 0) {
-        mot->pos++;
-        mot->stepFn(mot->device, 1);
-        mot->doSteps--;
+        mot->pos += STEP_SIZE;
+        if (mot->stepFn!=NULL) {
+          mot->stepFn(mot->device, STEP_SIZE);
+        }
+        mot->doSteps -= STEP_SIZE;
       } else if (mot->doSteps < 0)  {
-        mot->pos--;
-        mot->stepFn(mot->device, -1);
-        mot->doSteps++;
+        mot->pos -= STEP_SIZE;
+        if (mot->stepFn!=NULL) {
+          mot->stepFn(mot->device, -STEP_SIZE);
+        }
+        mot->doSteps += STEP_SIZE;
       }
-      mot->delayCntr = mot->delay; /* reload delay counter */
+      mot->delayCntr = mot->delay*STEP_SIZE; /* reload delay counter */
       if (mot->speedup || mot->slowdown) {
         int32_t stepsToGo;;
 
@@ -175,22 +185,22 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
         }
         if (mot->speedup && stepsToGo>STEPPER_ACCEL_HIGHEST_POS) { /* accelerate */
           if (mot->accelStepCntr<=STEPPER_ACCEL_HIGHEST_POS) {
-            mot->accelStepCntr++;
+            mot->accelStepCntr += STEP_SIZE;
           }
           AccelDelay(mot, mot->accelStepCntr);
         } else if (mot->slowdown && stepsToGo<STEPPER_ACCEL_HIGHEST_POS) { /* slow down */
           if (mot->accelStepCntr>=0) {
-            mot->accelStepCntr--;
+            mot->accelStepCntr -= STEP_SIZE;
           }
-          mot->accelStepCntr--;
+          //mot->accelStepCntr -= 1;
           AccelDelay(mot, mot->accelStepCntr);
         }
-      }
+      } /* speed up or slow down */
     } else {
       return false; /* no work to do */
     }
   } else {
-    mot->delayCntr--; /* decrement delay counter */
+    mot->delayCntr -= STEP_SIZE; /* decrement delay counter */
   }
   return true; /* still work to do */
 }
@@ -236,15 +246,20 @@ static void Timer_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_KINETIS
 static void Timer_Init(void) {
   pit_config_t config;
-  uint32_t delta = 4;
+  uint32_t delta = 0;
 
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
   /* note: the LPC is running on 200us, but the K22 is a bit faster, so running slower */
+#if STEPPER_CONFIG_IS_LED_RING
+  /* \todo Timer is off about 25% (too fast?) */
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(12*(200U+100)+delta, PIT_SOURCE_CLOCK));
+#else
   PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(200U+delta, PIT_SOURCE_CLOCK));
+#endif
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
-  NVIC_SetPriority(PIT_IRQ_ID, 0);
+  NVIC_SetPriority(PIT_IRQ_ID, 1); /* \todo not 0, in order not to interrupt the DMA? */
   EnableIRQ(PIT_IRQ_ID);
 }
 #endif

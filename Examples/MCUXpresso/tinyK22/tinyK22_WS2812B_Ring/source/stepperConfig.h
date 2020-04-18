@@ -9,7 +9,8 @@
 
 #include "McuLibconfig.h"
 
-#define STEPPER_CONFIG_IS_LED_RING  (1) /* temporary only */
+#include "platform.h"
+#define STEPPER_CONFIG_IS_LED_RING  (PL_CONFIG_USE_STEPPER_EMUL) /* temporary only */
 
 #ifndef STEPPER_CONFIG_USE_FREERTOS_HEAP
   #define STEPPER_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)

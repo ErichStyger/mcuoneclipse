@@ -48,6 +48,12 @@
   /* LPUART on K22FN512 */
   #include "fsl_lpuart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   LPUART0
+/*! LPUARTSRC - LPUART clock source select
+ *  0b00..Clock disabled
+ *  0b01..MCGFLLCLK , or MCGPLLCLK , or IRC48M clock as selected by SOPT2[PLLFLLSEL].
+ *  0b10..OSCERCLK clock
+ *  0b11..MCGIRCLK clock
+ */
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_SetLpuartClock(1U)
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           LPUART_WriteBlocking
   #define McuShellUart_CONFIG_UART_GET_FLAGS                LPUART_GetStatusFlags
