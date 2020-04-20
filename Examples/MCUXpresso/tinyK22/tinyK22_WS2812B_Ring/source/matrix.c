@@ -1496,8 +1496,10 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     res = ParseMatrixCommand(cmd+sizeof("matrix A ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
       QueueMoveCommand(x, y, z, v, d, mode, speedUp, slowDown, cmd[7]=='A');
+      /* send execute to the device: */
       (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
-      MATRIX_ExecuteQueue = true; /* trigger queue execution */
+      /* send it to the master too: */
+      (void)RS485_SendCommand(RS485_GetAddress(), (unsigned char*)"matrix exq", 1000, true, 0);
       return ERR_OK;
     } else {
       return ERR_FAILED;
@@ -1695,7 +1697,11 @@ static void MatrixQueueTask(void *pv) {
         bool allIdle = true;
         for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
           if (STEPBOARD_IsIdle(MATRIX_Boards[b])) {
-            STEPBOARD_NormalizePosition(MATRIX_Boards[b]);
+            //STEPBOARD_NormalizePosition(MATRIX_Boards[b]); /* \todo could get a race condition here! */
+            /* system seems idle but is not:
+             * matrix R 0 4 0 360 0 CW
+             * matrix r 0 4 0 360 0 CC
+             */
           } else {
             allIdle = false;
           }

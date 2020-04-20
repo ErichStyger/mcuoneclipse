@@ -119,7 +119,10 @@ STEPPER_Handle_t STEPPER_InitDevice(STEPPER_Config_t *config) {
   #define STEPPER_START_TIMER()        PIT_StartTimer(PIT_BASEADDR, PIT_CHANNEL)
   #define STEPPER_STOP_TIMER()         PIT_StopTimer(PIT_BASEADDR, PIT_CHANNEL)
 #endif
-#define STEPPER_ACCEL_HIGHEST_POS   (300)
+
+/* the degree of the move at the beginning and end which is used for acceleration and de-acceleration */
+#define STEPPER_ACCELERATION_RANGE_DEGREE   (25)
+#define STEPS_TO_DEGREE(steps)              (((steps)*360u)/STEPPER_CLOCK_360_STEPS)
 
 void STEPPER_StopTimer(void) {
   STEPPER_STOP_TIMER();
@@ -129,24 +132,23 @@ void STEPPER_StartTimer(void) {
   STEPPER_START_TIMER();
 }
 
-//#if STEPPER_CONFIG_IS_LED_RING
-//  #define STEP_SIZE  (12)
-//#else
-  #define STEP_SIZE  (1)
-//#endif
+#define STEP_SIZE  (1)
 
-static void AccelDelay(STEPPER_Device_t *mot, int32_t steps) {
-  if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
-    if (steps<=50) {
-      mot->delayCntr += 10*STEP_SIZE;
-    } else if (steps<=100) {
-      mot->delayCntr += 7*STEP_SIZE;
-    } else if (steps<=150) {
-      mot->delayCntr += 5*STEP_SIZE;
-    } else if (steps<=250) {
-      mot->delayCntr += 3*STEP_SIZE;
-    } else if (steps<=STEPPER_ACCEL_HIGHEST_POS) {
-      mot->delayCntr += 1*STEP_SIZE;
+static void AccelDelay(STEPPER_Device_t *dev, int32_t degree) {
+  /* this defines the acceleration/de-acceleration ramp depending on the step counter (at the beginning or at the end)
+   * The delayCntr will be increased to have a slow start with a slow end.
+   */
+  if (degree<=STEPPER_ACCELERATION_RANGE_DEGREE) {
+    if (degree<=2) {
+      dev->delayCntr += 10;
+    } else if (degree<=5) {
+      dev->delayCntr += 7;
+    } else if (degree<=10) {
+      dev->delayCntr += 5;
+    } else if (degree<=15) {
+      dev->delayCntr += 3;
+    } else if (degree<=STEPPER_ACCELERATION_RANGE_DEGREE) {
+      dev->delayCntr += 1;
     }
   }
 }
@@ -167,6 +169,7 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
     mot->delayCntr -= STEP_SIZE; /* decrement delay counter */
     return true; /* still work go do */
   }
+  /* do the step */
   if (mot->doSteps > 0) { /* forward */
     n = STEP_SIZE; /* number of steps in one iteration */
   } else { /* backward */
@@ -178,7 +181,7 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
   }
   mot->doSteps -= n; /* update remaining steps */
   mot->delayCntr = mot->delay*STEP_SIZE; /* reload delay counter */
-#if 1
+
   /* check if we have to speed up or slow down */
   if (mot->speedup || mot->slowdown) {
     int32_t stepsToGo; /* where we are in the sequence */
@@ -187,19 +190,18 @@ bool STEPPER_TimerClockCallback(STEPPER_Handle_t stepper) {
     if (stepsToGo<0) { /* make it positive */
       stepsToGo = -stepsToGo;
     }
-    if (mot->speedup && stepsToGo>STEPPER_ACCEL_HIGHEST_POS) { /* accelerate */
-      if (mot->accelStepCntr<=STEPPER_ACCEL_HIGHEST_POS) {
-        mot->accelStepCntr += STEP_SIZE;
+    if (mot->speedup && STEPS_TO_DEGREE(stepsToGo)>STEPPER_ACCELERATION_RANGE_DEGREE) { /* accelerate if we are starting up */
+      if (STEPS_TO_DEGREE(mot->accelStepCntr)<=STEPPER_ACCELERATION_RANGE_DEGREE) {
+        mot->accelStepCntr += STEP_SIZE; /* increase acceleration step counter position up to the cap value */
       }
-      AccelDelay(mot, mot->accelStepCntr);
-    } else if (mot->slowdown && stepsToGo<STEPPER_ACCEL_HIGHEST_POS) { /* slow down */
+      AccelDelay(mot, STEPS_TO_DEGREE(mot->accelStepCntr));
+    } else if (mot->slowdown && STEPS_TO_DEGREE(stepsToGo)<STEPPER_ACCELERATION_RANGE_DEGREE) { /* slow down at the end */
       if (mot->accelStepCntr>=0) {
-        mot->accelStepCntr -= STEP_SIZE;
+        mot->accelStepCntr -= STEP_SIZE; /* decrease the current de-accleration counter down to zero */
       }
-      AccelDelay(mot, mot->accelStepCntr);
+      AccelDelay(mot, STEPS_TO_DEGREE(mot->accelStepCntr));
     }
   } /* speed up or slow down */
-#endif
   return true; /* still work to do */
 }
 
@@ -304,6 +306,8 @@ void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t
   device->doSteps = steps;
   device->accelStepCntr = 0;
   device->delay = delay;
+  device->speedup = false;
+  device->slowdown = false;
 }
 
 /*!
@@ -464,6 +468,11 @@ void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos) {
 
 void STEPPER_NormalizePosition(STEPPER_Handle_t stepper) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+//  if (device->doSteps!=0) {
+//    for(;;) {
+//      __asm("nop");
+//    }
+//  }
   device->pos %= STEPPER_CLOCK_360_STEPS;
 }
 

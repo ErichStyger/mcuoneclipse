@@ -48,3 +48,5 @@ CMD> rs sendcmd 0x20 matrix 12
 *** Type help to get a list of available commands
 *** Failed or unknown command: rs sendcmd 0x20 matrix 12
 *** Type help to get a list of available commands
+
+Problem: STEPBOARD_NormalizePosition() kann race condition generieren! (disabled for now)

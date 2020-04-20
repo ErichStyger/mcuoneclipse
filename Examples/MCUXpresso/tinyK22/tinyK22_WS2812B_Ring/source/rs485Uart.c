@@ -117,7 +117,7 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
   BaseType_t xHigherPriorityTaskWoken1 = false, xHigherPriorityTaskWoken2 = false;
-  static unsigned char prevChar = '\0';
+  static unsigned char prevChar = '\n';
   static bool responseLine = false;
   uint8_t count;
 
@@ -132,7 +132,7 @@ void RS485Uart_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
     while(count!=0) {
       data = RS485Uart_CONFIG_UART_READ_BYTE(RS485Uart_CONFIG_UART_DEVICE);
-      if (data!=0) { /* could happen especially after power-up, ignore it */
+      if (data!=0) { /* data==0 could happen especially after power-up, ignore it */
         /* only store into RS485UartResponseQueue if we have a line starting with '@' */
         if (prevChar=='\n' && data=='@') {
           responseLine = true;

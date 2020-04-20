@@ -36,6 +36,8 @@ typedef enum {
   NEO_POS_HIGH_3 = 70,
 } NEO_POS_e;
 
+#define TEST_MODE  (0)
+
 static void AppTask(void *pv) {
   //int i = 0;
   //int color = 0;
@@ -84,9 +86,53 @@ static void AppTask(void *pv) {
   int stepperPos = 0;
   int i = 0;
   NEO_ClearAllPixel();
+
+#if 1 && TEST_MODE && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
+  uint8_t cR, cG, cB;
+
+  cR = 0x10;
+  cG = 0;
+  cB = 0;
+  i = 0;
   for(;;) {
-#if 0 && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
-   NEO_SetPixelRGB(0, i, 0xff/4, 0x00, 0x00);
+    NEO_ClearAllPixel();
+    for(int lane=0; lane<NEOC_NOF_LANES; lane++) {
+      NEO_SetPixelRGB(lane, i, cR, cG, cB);
+    }
+  //  i++;
+  //  if (i==40/*NEOC_NOF_LEDS_IN_LANE*/) {
+  //    i = 0;
+  //  }
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(20));
+  }
+#endif
+
+#if 0 && TEST_MODE && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
+  uint8_t cR, cG, cB;
+
+  cR = 0x10;
+  cG = 0x10;
+  cB = 0x10;
+  for(;;) {
+    NEO_ClearAllPixel();
+    for(int lane=0; lane<NEOC_NOF_LANES; lane++) {
+      NEO_SetPixelRGB(lane, i, cR, cG, cB);
+    }
+    i++;
+    if (i==40/*NEOC_NOF_LEDS_IN_LANE*/) {
+      i = 0;
+    }
+    NEO_TransferPixels();
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+#endif
+
+#if 0 && TEST_MODE && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */
+  for(;;) {
+   for(int lane=0; lane<NEOC_NOF_LANES; lane++) {
+     NEO_SetPixelRGB(lane, i, 0xff/16, 0x00, 0x00);
+   }
    //NEO_SetPixelRGB(0, 0, 0x00, 0xff, 0x00);
    //NEO_SetPixelRGB(0, 1, 0, 0xff, 0x00);
    //NEO_SetPixelRGB(0, 2, 0, 0x00, 0xff/4);
@@ -105,13 +151,14 @@ static void AppTask(void *pv) {
 //     NEO_SetPixelRGB(0, NEOC_NOF_LEDS_IN_LANE-1, 0, 0x00, 0x00);
 //   }
    i++;
-   if (i==NEOC_NOF_LEDS_IN_LANE) {
+   if (i==40/*NEOC_NOF_LEDS_IN_LANE*/) {
      i = 0;
    }
    NEO_TransferPixels();
-   vTaskDelay(pdMS_TO_TICKS(20));
+   vTaskDelay(pdMS_TO_TICKS(50));
+  }
 #endif
-
+  for(;;) {
 #if 0 && PL_CONFIG_USE_NEO_PIXEL
     for(i=0, level=0x20; i<5; i++, level+=0xff/5) {
       NEO_ClearAllPixel();
@@ -170,7 +217,7 @@ static void AppTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(2000));
 #endif
     //(void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
-#if 1 && PL_CONFIG_USE_STEPPER_EMUL
+#if !TEST_MODE && PL_CONFIG_USE_STEPPER_EMUL
     NEO_ClearAllPixel();
     MATRIX_SetLEDs();
     NEO_TransferPixels();

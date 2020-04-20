@@ -20,7 +20,7 @@
 #endif
 
 /* time for a full round */
-#define STEPPER_TIME_360_DEGREE_MS  (4000U)
+#define STEPPER_TIME_360_DEGREE_MS  (3000U)
 /* period needed for a single step in microseconds */
 #define STEPPER_TIME_STEP_US        ((STEPPER_TIME_360_DEGREE_MS*1000U)/STEPPER_CLOCK_360_STEPS)
 

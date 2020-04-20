@@ -184,7 +184,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      1200/sizeof(StackType_t), /* task stack size */
+      1500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
