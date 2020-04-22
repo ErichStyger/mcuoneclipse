@@ -420,7 +420,7 @@ static void ClockTask(void *pv) {
   uint8_t res;
   uint32_t timerMs = 0;
 #endif
-#if PL_CONFIG_USE_RTC && PL_CONFIG_USE_MATRIX
+#if PL_CONFIG_USE_RTC && PL_CONFIG_USE_MATRIX && PL_CONFIG_IS_MASTER
   uint8_t intermezzo = 0;
 #endif
 

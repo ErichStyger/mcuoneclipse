@@ -35,18 +35,17 @@ rs sendcmd 0x20 matrix r 0 0 0 180 10 cw
 rs sendcmd 0x20 matrix q 0 0 0 r 90 8 cc
 rs sendcmd 0x20 matrix exq
 
+matrix R 0 0 0 90 2 cw
+matrix R 0 0 0 90 2 CC
+matrix R 0 0 0 360 1 CW
 
 Issues:
 -------
-rs sendcmd 0x20 matrix r 0 0 0 180 10 cc
-rs sendcmd 0x20 matrix r 0 0 0 180 10 cw
-sollten anders drehen? beide drehen cw
-
-Wenn ein rs Kommando geschickt wird mit einem Fehler, dann haben die NeoPixels kurz eine falsche Farbe?
-CMD> rs sendcmd 0x20 matrix 12
-*** Failed or unknown command: matrix 12
-*** Type help to get a list of available commands
-*** Failed or unknown command: rs sendcmd 0x20 matrix 12
-*** Type help to get a list of available commands
-
-Problem: STEPBOARD_NormalizePosition() kann race condition generieren! (disabled for now)
+- Problem: STEPBOARD_NormalizePosition() kann race condition generieren! (disabled for now)
+- need to use semaphore to matrix queue execution task instead of global variable
+- matrix R 0 4 0 360 3 CW
+  led is behind, while
+  matrix R 0 4 0 360 3 CC
+  is ahead?
+ - sometimes communication errors? Resistors?
+ - measure current

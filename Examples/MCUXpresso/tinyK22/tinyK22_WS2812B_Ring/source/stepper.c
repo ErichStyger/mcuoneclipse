@@ -253,7 +253,7 @@ static void Timer_Init(void) {
   /* note: the LPC is running on 200us, but the K22 is a bit faster, so running slower */
   PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(STEPPER_TIME_STEP_US, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
-  NVIC_SetPriority(PIT_IRQ_ID, 1); /* \todo not 0, in order not to interrupt the DMA? */
+  NVIC_SetPriority(PIT_IRQ_ID, 1); /* not 0, in order not to interrupt the DMA? */
   EnableIRQ(PIT_IRQ_ID);
 }
 #endif

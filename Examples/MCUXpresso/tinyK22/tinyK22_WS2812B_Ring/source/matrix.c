@@ -1496,10 +1496,10 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     res = ParseMatrixCommand(cmd+sizeof("matrix A ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
       QueueMoveCommand(x, y, z, v, d, mode, speedUp, slowDown, cmd[7]=='A');
-      /* send execute to the device: */
-      (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
-      /* send it to the master too: */
+      /* send it to the ourselve as master first. RS485_SendCommand() below will wait for the OK which adds time. */
       (void)RS485_SendCommand(RS485_GetAddress(), (unsigned char*)"matrix exq", 1000, true, 0);
+      /* send execute to the deviceon the bus: */
+      (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
       return ERR_OK;
     } else {
       return ERR_FAILED;
@@ -1684,9 +1684,13 @@ static void MatrixQueueTask(void *pv) {
                 }
                 //McuShell_SendStr(command, io->stdOut);
                 //McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-                if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
+                bool handled = false;
+                if (MATRIX_ParseCommand(command, &handled, io) !=ERR_OK || !handled) { /* parse and execute it */
                   McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
                 }
+              //  if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
+              //    McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
+              //  }
                 vPortFree(cmd); /* free memory for command */
               }
             }
@@ -1711,7 +1715,7 @@ static void MatrixQueueTask(void *pv) {
         }
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(5));
   } /* for */
 }
 #endif
