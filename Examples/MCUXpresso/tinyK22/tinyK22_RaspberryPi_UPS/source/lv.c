@@ -390,7 +390,7 @@ static bool encoder_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
 }
 
 
-/*A static or global variable to store the buffers*/
+/* A static or global variable to store the buffers*/
 static lv_disp_buf_t disp_buf;
 
 /*Static or global buffer(s). The second buffer is optional*/

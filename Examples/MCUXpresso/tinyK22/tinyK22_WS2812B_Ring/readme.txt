@@ -49,3 +49,4 @@ Issues:
   is ahead?
  - sometimes communication errors? Resistors?
  - measure current
+ - set to 120 MHz
