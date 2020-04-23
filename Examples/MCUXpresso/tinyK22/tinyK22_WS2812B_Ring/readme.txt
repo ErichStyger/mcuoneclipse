@@ -49,4 +49,5 @@ Issues:
   is ahead?
  - sometimes communication errors? Resistors?
  - measure current
- - set to 120 MHz
+ - after POR, DMA blinky? Goes away after shell interaction? happened after switching from 96 MHz to 120 MHz?
+ 

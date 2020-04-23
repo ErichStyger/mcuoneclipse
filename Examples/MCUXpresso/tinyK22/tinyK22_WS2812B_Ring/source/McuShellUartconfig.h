@@ -54,7 +54,7 @@
  *  0b10..OSCERCLK clock
  *  0b11..MCGIRCLK clock
  */
-  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_SetLpuartClock(1U)
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /*CLOCK_SetLpuartClock(1U)*/ /* do it in the clocks tool! */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           LPUART_WriteBlocking
   #define McuShellUart_CONFIG_UART_GET_FLAGS                LPUART_GetStatusFlags
   #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kLPUART_RxDataRegFullFlag|kLPUART_RxOverrunFlag)
@@ -65,7 +65,7 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kLPUART_RxDataRegFullInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               LPUART0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     LPUART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_PllFllSelClk
+  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Osc0ErClkUndiv /*kCLOCK_PllFllSelClk*/ /* has to match Clocks setting! */
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
 #endif
