@@ -27,17 +27,11 @@
  * See https://mcuoneclipse.com/2015/08/05/tutorial-adafruit-ws2812b-neopixels-with-the-freescale-frdm-k64f-board-part-5-dma/
  * It uses the 8bit port of GPIOD for the data, so 8bits in parallel.
  * */
-#if 0
+/* values for a 60 MHz FTM0 clock and a 120 core clock! */
 #define FTM_CH0_TICKS 0x10 /* go high, start bit */
-#define FTM_CH1_TICKS 0x25 /* data bit, go low for 0, stay high for 1 */
-#define FTM_CH2_TICKS 0x45 /* end of 1 bit, go low */
+#define FTM_CH1_TICKS 0x25 /* data bit, go low for 0 after 0.35us, stay high for 1 */
+#define FTM_CH2_TICKS 0x45 /* end of 1 bit, go low after 0.9us */
 #define FTM_OVL_TICKS 0x4A /* end of 1.25 us cycle for a 0 or 1 bit */
-#else
-#define FTM_CH0_TICKS 0x10 /* go high, start bit */
-#define FTM_CH1_TICKS 0x20 /* data bit, go low for 0, stay high for 1 */
-#define FTM_CH2_TICKS 0x30 /* end of 1 bit, go low */
-#define FTM_OVL_TICKS 0x4A /* end of 1.25 us cycle for a 0 or 1 bit */
-#endif
 
 #define DMA_BASE_PTR      (DMA0) /*((DMA_MemMapPtr)0x40008000u)*/
 #define DMAMUX_BASE_PTR   (DMAMUX)

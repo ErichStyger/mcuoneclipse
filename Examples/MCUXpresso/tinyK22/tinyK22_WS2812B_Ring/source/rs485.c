@@ -230,7 +230,7 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
       res = ERR_OK;
       break; /* leave loop */
     } else {
-      vTaskDelay(pdMS_TO_TICKS(20)); /* give some time for a response */
+      vTaskDelay(pdMS_TO_TICKS(100)); /* give some time for a response */
       resp = WaitForResponse(timeoutMs, dstAddr);
       if (resp==RS485_RESPONSE_OK) {
         res = ERR_OK;

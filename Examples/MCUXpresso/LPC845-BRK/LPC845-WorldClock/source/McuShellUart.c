@@ -62,7 +62,7 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
 }
 
 static void InitUart(void) {
-  /* NOTE: Muxing of the UART pins needs to be done in the Pins tool! */
+  /* NOTE: Muxing of the UART pins and clocking of the UART needs to be done in the Pins/clocks tool! */
   McuShellUart_CONFIG_UART_CONFIG_STRUCT config;
 
   McuShellUart_CONFIG_UART_SET_UART_CLOCK();

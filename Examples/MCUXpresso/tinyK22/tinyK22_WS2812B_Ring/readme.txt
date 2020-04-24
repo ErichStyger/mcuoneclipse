@@ -49,5 +49,6 @@ Issues:
   is ahead?
  - sometimes communication errors? Resistors?
  - measure current
- - after POR, DMA blinky? Goes away after shell interaction? happened after switching from 96 MHz to 120 MHz?
- 
+- rs sendcmd 0x20 matrix a 0 0 0 0 0 SH
+  does a move even if on position (fixed on master)?
+   

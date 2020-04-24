@@ -248,11 +248,11 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
   uint8_t addr;
   bool isEnabled;
 
-  for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
+  for(int i=0; i<MATRIX_NOF_BOARDS; i++) { /* initialize array */
     boardIsIdle[i] = false;
   }
-  for(;;) { /* breaks */
-    for(int i=0; i<MATRIX_NOF_BOARDS; i++) {
+  for(;;) { /* breaks or returns */
+    for(int i=0; i<MATRIX_NOF_BOARDS; i++) { /* go through all boards */
       if (!boardIsIdle[i]) { /* ask board if it is still not idle */
   #if PL_CONFIG_USE_STEPPER
         isEnabled = STEPBOARD_IsEnabled(MATRIX_Boards[i]);
@@ -262,36 +262,33 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
         addr = MATRIX_BoardList[i].addr;
   #endif
         if (isEnabled) {
-          res = RS485_SendCommand(addr, (unsigned char*)"idle", 1000, false, 0); /* ask board if it is idle */
+          res = RS485_SendCommand(addr, (unsigned char*)"idle", 1000, false, 1); /* ask board if it is idle */
           if (res==ERR_OK) { /* board is idle */
             boardIsIdle[i] = true;
           }
-        } else { /* board is not enabled, so it is not busy */
+        } else { /* board is not enabled, so we consider it as idle */
           boardIsIdle[i] = true;
         }
       }
-    } /* for */
-    while(MATRIX_ExecuteQueue) {
-      MATRIX_Delay(100); /* need to wait until we are not busy any more */
-    }
-    /* check if all are idle now */
+    } /* for all boards */
+    /* check if all boards are idle now */
     for(int i=0; /* breaks */; i++) {
       if (i==MATRIX_NOF_BOARDS) {
         return ERR_OK; /* all boards are idle now */
       }
       if (!boardIsIdle[i]) {
-        break; /* at least one is still not idle: break loop */
+        break; /* at least one is still not idle: break this loop and check non-idle boards again */
       }
     } /* for */
-    MATRIX_Delay(100);
+    MATRIX_Delay(500); /* give boards time to get idle */
   #if PL_CONFIG_USE_WDT
-    WDT_Report(WDT_REPORT_ID_CURR_TASK, 50);
+    WDT_Report(WDT_REPORT_ID_CURR_TASK, 500);
   #endif
-    timeoutMs -= 100; /* more timeout if boards do not respond */
+    timeoutMs -= 500; /* more timeout if boards do not respond */
     if (timeoutMs<0) {
       return ERR_BUSY;
     }
-  } /* for */
+  } /* for which breaks or returns */
   return ERR_OK;
 }
 
@@ -377,13 +374,7 @@ static uint8_t MATRIX_SendToRemoteQueue(void) {
   return ERR_OK;
 }
 
-static uint8_t MATRIX_ExecuteRemoteQueue(void) {
-  /* send broadcast execute queue command */
-  (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
-  /* send it again, just to make sure if a board has not received it: */
-  (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
-  /* check with lastEror if all have received the message */
-
+static uint8_t MATRIX_CheckRemoteLastError(void) {
   bool boardHasError[MATRIX_NOF_BOARDS];
   uint8_t res;
   uint8_t addr;
@@ -402,7 +393,7 @@ static uint8_t MATRIX_ExecuteRemoteQueue(void) {
       addr = MATRIX_BoardList[i].addr;
 #endif
       if (isEnabled) {
-        res = RS485_SendCommand(addr, (unsigned char*)"lastError", 1000, false, 0); /* ask board if there was an error */
+        res = RS485_SendCommand(addr, (unsigned char*)"lastError", 1000, false, 1); /* ask board if there was an error */
         if (res==ERR_OK) { /* no error */
           boardHasError[i] = false;
         } else { /* send command again! */
@@ -415,6 +406,16 @@ static uint8_t MATRIX_ExecuteRemoteQueue(void) {
     }
   } /* for */
   return ERR_OK;
+}
+
+static uint8_t MATRIX_ExecuteRemoteQueue(void) {
+  /* send broadcast execute queue command */
+  (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
+  /* send it again, just to make sure if a board has not received it: */
+  (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
+  /* check with lastEror if all have received the message */
+
+  return MATRIX_CheckRemoteLastError();
 }
 
 typedef struct {
@@ -519,27 +520,6 @@ static uint8_t MATRIX_SendToRemoteQueueExecuteAndWait(const McuShell_StdIOType *
   return MATRIX_ExecuteRemoteQueueAndWait(io);
 }
 
-uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
-  uint8_t res;
-
-  res = MATRIX_DrawAllClockHands(0, 0);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)("MoveAllto12: failed drawing hands!\r\n"), io->stdErr);
-    return res;
-  }
-  res = MATRIX_DrawAllClockDelays(8, 8);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)("MoveAllto12: failed setting delays!\r\n"), io->stdErr);
-    return res;
-  }
-  res = MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
-  if (res!=ERR_OK) {
-    McuShell_SendStr((unsigned char*)("MoveAllto12: failed setting mode!\r\n"), io->stdErr);
-    return res;
-  }
-  return MATRIX_SendToRemoteQueueExecuteAndWait(io);
-}
-
 void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
   MATRIX_MoveAllto12(10000, io);
   DrawNumber(&clockDigits[0], 0, 0);
@@ -582,6 +562,41 @@ void MATRIX_WriteNumber(const McuShell_StdIOType *io) {
 #endif
 }
 #endif /* PL_CONFIG_IS_MASTER */
+
+uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
+#if PL_CONFIG_IS_MASTER
+  uint8_t res;
+
+  res = MATRIX_DrawAllClockHands(0, 0);
+  if (res!=ERR_OK) {
+    McuShell_SendStr((unsigned char*)("MoveAllto12: failed drawing hands!\r\n"), io->stdErr);
+    return res;
+  }
+  res = MATRIX_DrawAllClockDelays(8, 8);
+  if (res!=ERR_OK) {
+    McuShell_SendStr((unsigned char*)("MoveAllto12: failed setting delays!\r\n"), io->stdErr);
+    return res;
+  }
+  res = MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+  if (res!=ERR_OK) {
+    McuShell_SendStr((unsigned char*)("MoveAllto12: failed setting mode!\r\n"), io->stdErr);
+    return res;
+  }
+  return MATRIX_SendToRemoteQueueExecuteAndWait(io);
+#else
+  int x, y, z;
+
+  for(x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
+    for(y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
+      for(z=0; x<MATRIX_NOF_CLOCKS_Z; z++) {
+        STEPPER_MoveClockDegreeAbs(MATRIX_GetStepper(x, y, z), 0, STEPPER_MOVE_MODE_SHORT, 2, true, true);
+      }
+    }
+  }
+  STEPPER_StartTimer();
+  return ERR_OK;
+#endif
+}
 
 #if PL_CONFIG_IS_MASTER
 static uint8_t MATRIX_FailedDemo(uint8_t res) {
@@ -1353,8 +1368,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test the stepper on the board\r\n", io->stdOut);
-#if PL_CONFIG_IS_MASTER
   McuShell_SendHelpStr((unsigned char*)"  12", (unsigned char*)"Set matrix to 12:00 position\r\n", io->stdOut);
+#if PL_CONFIG_IS_MASTER
   McuShell_SendHelpStr((unsigned char*)"  demo", (unsigned char*)"General longer demo\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 0", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo 1", (unsigned char*)"Demo with clap effect\r\n", io->stdOut);
@@ -1385,6 +1400,10 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  a <xyz> <a> <d> <md>", (unsigned char*)"Absolute angle move\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  q <xyz> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
+#if PL_CONFIG_IS_MASTER
+  McuShell_SendHelpStr((unsigned char*)"  lasterror", (unsigned char*)"Check remotes for last error\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  waitidle", (unsigned char*)"Check remotes for idle state\r\n", io->stdOut);
+#endif
 #endif
 #if PL_CONFIG_USE_MAG_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero all", (unsigned char*)"Move all motors to zero position using magnet sensor\r\n", io->stdOut);
@@ -1411,6 +1430,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "matrix status")==0)) {
     *handled = true;
     return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "matrix 12")==0) {
+    *handled = true;
+    return MATRIX_MoveAllto12(10000, io);
 #if PL_CONFIG_IS_MASTER
   } else if (McuUtility_strcmp((char*)cmd, "matrix demo")==0) {
     *handled = true;
@@ -1442,9 +1464,6 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "matrix test 0")==0) {
     *handled = true;
     return MATRIX_Test0(io);
-  } else if (McuUtility_strcmp((char*)cmd, "matrix 12")==0) {
-    *handled = true;
-    return MATRIX_MoveAllto12(10000, io);
   } else if (McuUtility_strncmp((char*)cmd, "matrix intermezzo ", sizeof("matrix intermezzo ")-1)==0) {
     uint8_t nr;
 
@@ -1496,10 +1515,10 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     res = ParseMatrixCommand(cmd+sizeof("matrix A ")-1, &x, &y, &z, &v, &d, &mode, &speedUp, &slowDown);
     if (res==ERR_OK) {
       QueueMoveCommand(x, y, z, v, d, mode, speedUp, slowDown, cmd[7]=='A');
-      /* send execute to the device: */
-      (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
-      /* send it to the master too: */
+      /* send it to the ourselve as master first. RS485_SendCommand() below will wait for the OK which adds time. */
       (void)RS485_SendCommand(RS485_GetAddress(), (unsigned char*)"matrix exq", 1000, true, 0);
+      /* send execute to the deviceon the bus: */
+      (void)RS485_SendCommand(clockMatrix[x][y].addr, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
       return ERR_OK;
     } else {
       return ERR_FAILED;
@@ -1577,6 +1596,14 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
     MATRIX_ExecuteQueue = true;
     *handled = TRUE;
+#if PL_CONFIG_IS_MASTER
+  } else if (McuUtility_strcmp((char*)cmd, "matrix lasterror")==0) {
+    *handled = TRUE;
+    return MATRIX_CheckRemoteLastError();
+  } else if (McuUtility_strcmp((char*)cmd, "matrix waitidle")==0) {
+    *handled = TRUE;
+    return MATRIX_WaitForIdle(10000);
+#endif
 #if PL_CONFIG_USE_MAG_SENSOR
   } else if (McuUtility_strcmp((char*)cmd, "matrix zero all")==0) {
     *handled = TRUE;
@@ -1684,9 +1711,13 @@ static void MatrixQueueTask(void *pv) {
                 }
                 //McuShell_SendStr(command, io->stdOut);
                 //McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-                if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
+                bool handled = false;
+                if (MATRIX_ParseCommand(command, &handled, io) !=ERR_OK || !handled) { /* parse and execute it */
                   McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
                 }
+              //  if (SHELL_ParseCommand(command, io, true)!=ERR_OK) { /* parse and execute it */
+              //    McuShell_SendStr((unsigned char*)"Failed executing queued command!\r\n", io->stdErr);
+              //  }
                 vPortFree(cmd); /* free memory for command */
               }
             }
@@ -1711,7 +1742,7 @@ static void MatrixQueueTask(void *pv) {
         }
       }
     }
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(pdMS_TO_TICKS(5));
   } /* for */
 }
 #endif

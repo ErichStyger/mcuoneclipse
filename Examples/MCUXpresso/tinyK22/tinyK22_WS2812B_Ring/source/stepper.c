@@ -287,10 +287,12 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPE
     }
   } else { /* STEPPER_MOVE_MODE_SHORT */
     steps = targetPos-currPos;
-    if (steps>STEPPER_CLOCK_360_STEPS/2) {
-      steps = -(STEPPER_CLOCK_360_STEPS-steps);
-    } else if (steps < -(STEPPER_CLOCK_360_STEPS/2)) {
-      steps = -(-STEPPER_CLOCK_360_STEPS-steps);
+    if (steps!=0) {
+      if (steps>STEPPER_CLOCK_360_STEPS/2) { /* go counter-clockwise */
+        steps = -(STEPPER_CLOCK_360_STEPS-steps);
+      } else if (steps < -(STEPPER_CLOCK_360_STEPS/2)) { /* go clockwise */
+        steps = -(-STEPPER_CLOCK_360_STEPS-steps);
+      }
     }
   }
   device->doSteps = steps;

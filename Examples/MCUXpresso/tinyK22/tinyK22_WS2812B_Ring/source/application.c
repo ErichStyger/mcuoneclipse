@@ -83,7 +83,6 @@ static void AppTask(void *pv) {
   //NEO_SetPixelRGB(0, 40+0+10+20, 0xff/8, 0, 0x00);
 #endif
 
-  int stepperPos = 0;
   int i = 0;
   NEO_ClearAllPixel();
 
@@ -218,12 +217,10 @@ static void AppTask(void *pv) {
 #endif
     //(void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
 #if !TEST_MODE && PL_CONFIG_USE_STEPPER_EMUL
-    NEO_ClearAllPixel();
-    MATRIX_SetLEDs();
-    NEO_TransferPixels();
-    stepperPos++;
-    if (stepperPos==STEPPER_CLOCK_360_STEPS) {
-      stepperPos = 0;
+    if (MATRIX_UpdateLed()) {
+      NEO_ClearAllPixel();
+      MATRIX_SetLEDs();
+      NEO_TransferPixels();
     }
 #endif
     vTaskDelay(pdMS_TO_TICKS(20));
