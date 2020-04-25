@@ -7,9 +7,16 @@
 #ifndef MATRIX_H_
 #define MATRIX_H_
 
+#include "platform.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "McuShell.h"
 #include "stepper.h"
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+  bool MATRIX_IsUpdateLed(void);
+  void MATRIX_SetUpdateLed(bool enable);
+#endif
 
 uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 

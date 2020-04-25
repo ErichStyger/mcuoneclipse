@@ -34,10 +34,7 @@ Instructions:
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)  /* disabling the default Kinetis */
 
 /* ------------------- RTOS ---------------------------*/
-/* Note: set configTOTAL_HEAP_SIZE to 16k in FreeRTOSConfig.h */
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define SYSVIEW_DEVICE_NAME                  "LPC845 Client"
 #define configTOTAL_HEAP_SIZE                (8*1024)
 //#define configUSE_HEAP_SECTION_NAME        (1)
 //#define configHEAP_SECTION_NAME_STRING     ".bss.$SRAM_LOWER.FreeRTOS"
@@ -45,6 +42,14 @@ Instructions:
 #define configTIMER_TASK_STACK_DEPTH         (400/sizeof(StackType_t))
 #define configUSE_TIMERS                     (0)
 #define INCLUDE_xTimerPendFunctionCall       (0)
+/* -------------------------------------------------*/
+/* Segger SystemViewer: */
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
+#define SYSVIEW_APP_NAME                     "LPC845 Client"
+#define SYSVIEW_DEVICE_NAME                  "LPC845 Client"
+/* Percepio Tracealyzer */
+#define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
+#define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 Client"

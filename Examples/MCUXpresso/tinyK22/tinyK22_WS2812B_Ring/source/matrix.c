@@ -296,11 +296,11 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
         break; /* at least one is still not idle: break this loop and check non-idle boards again */
       }
     } /* for */
-    MATRIX_Delay(500); /* give boards time to get idle */
+    MATRIX_Delay(1000); /* give boards time to get idle */
   #if PL_CONFIG_USE_WDT
-    WDT_Report(WDT_REPORT_ID_CURR_TASK, 500);
+    WDT_Report(WDT_REPORT_ID_CURR_TASK, 1000);
   #endif
-    timeoutMs -= 500; /* more timeout if boards do not respond */
+    timeoutMs -= 1000; /* more timeout if boards do not respond */
     if (timeoutMs<0) {
       return ERR_BUSY;
     }
@@ -382,7 +382,7 @@ static uint8_t MATRIX_SendToRemoteQueue(void) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
         if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
-          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], false, false, true);
+          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], true, true, true);
         }
       }
     }

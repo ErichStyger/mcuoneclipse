@@ -83,7 +83,7 @@ static void AppTask(void *pv) {
   //NEO_SetPixelRGB(0, 40+0+10+20, 0xff/8, 0, 0x00);
 #endif
 
-  int i = 0;
+  //int i = 0;
   NEO_ClearAllPixel();
 
 #if 1 && TEST_MODE && PL_CONFIG_USE_NEO_PIXEL  /* testing a ring */

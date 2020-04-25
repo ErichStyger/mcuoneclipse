@@ -31,10 +31,16 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_STEPPER_EMUL
+  #include "NeoPixel.h"
+#endif
 
 #define STEPPER_HAND_ZERO_DELAY     (6)
 
 static bool MATRIX_ExecuteQueue = false;
+#if PL_CONFIG_USE_STEPPER_EMUL
+static bool MATRIX_UpdateLeds = true;
+#endif
 
 #if PL_CONFIG_IS_MASTER /* master is able to control multiple clock boards: change X, Y and NOF_Boards */
   /* configuration is in matrixconfig.h */
@@ -88,6 +94,16 @@ static void X12_SingleStep(void *dev, int step) {
   McuX12_017_SingleStep(device->x12device, device->x12motor, step);
 }
 #endif /* !PL_CONFIG_USE_STEPPER_EMUL */
+#endif
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+bool MATRIX_IsUpdateLed(void) {
+  return MATRIX_UpdateLeds;
+}
+
+void MATRIX_SetUpdateLed(bool enable) {
+  MATRIX_UpdateLeds = enable;
+}
 #endif
 
 #if PL_CONFIG_IS_MASTER
@@ -280,11 +296,11 @@ static uint8_t MATRIX_WaitForIdle(int32_t timeoutMs) {
         break; /* at least one is still not idle: break this loop and check non-idle boards again */
       }
     } /* for */
-    MATRIX_Delay(500); /* give boards time to get idle */
+    MATRIX_Delay(1000); /* give boards time to get idle */
   #if PL_CONFIG_USE_WDT
-    WDT_Report(WDT_REPORT_ID_CURR_TASK, 500);
+    WDT_Report(WDT_REPORT_ID_CURR_TASK, 1000);
   #endif
-    timeoutMs -= 500; /* more timeout if boards do not respond */
+    timeoutMs -= 1000; /* more timeout if boards do not respond */
     if (timeoutMs<0) {
       return ERR_BUSY;
     }
@@ -366,7 +382,7 @@ static uint8_t MATRIX_SendToRemoteQueue(void) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
         if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
-          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], false, false, true);
+          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], true, true, true);
         }
       }
     }
@@ -1284,6 +1300,15 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr(statStr, buf, io->stdOut);
 #endif
 #endif
+#if PL_CONFIG_USE_STEPPER_EMUL
+  if (MATRIX_UpdateLeds) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"update: on");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"update: off");
+  }
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  LEDs", buf, io->stdOut);
+#endif
 
   if (MATRIX_ExecuteQueue) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"execute: yes");
@@ -1387,6 +1412,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <rgb>", (unsigned char*)"Set RGB color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  led update on|off", (unsigned char*)"Do the LED update or not\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<xyz>: coordinate, separated by space, e.g. 0 0 1\r\n", io->stdOut);
@@ -1592,6 +1618,14 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     } else {
       return ERR_FAILED;
     }
+  } else if (McuUtility_strcmp((char*)cmd, "matrix led update on")==0) {
+    *handled = TRUE;
+    MATRIX_UpdateLeds = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "matrix led update off")==0) {
+    *handled = TRUE;
+    MATRIX_UpdateLeds = true;
+    return ERR_OK;
 #endif
   } else if (McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
     MATRIX_ExecuteQueue = true;

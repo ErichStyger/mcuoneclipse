@@ -1,4 +1,3 @@
-#include <clock.h>
 /*
  * Copyright (c) 2019, Erich Styger
   *
@@ -6,6 +5,7 @@
  */
 
 #include "platform.h"
+#include "clock.h"
 #if PL_CONFIG_USE_CLOCK
 #include "McuWait.h"
 #include "McuRTOS.h"

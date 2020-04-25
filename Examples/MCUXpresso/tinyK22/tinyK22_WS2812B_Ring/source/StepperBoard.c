@@ -13,6 +13,9 @@
 #if STEPBOARD_CONFIG_USE_FREERTOS_HEAP
   #include "McuRTOS.h"
 #endif
+#if PL_CONFIG_USE_WDT
+  #include "watchdog.h"
+#endif
 
 typedef struct {
   uint8_t addr;
@@ -121,7 +124,6 @@ void STEPBOARD_MoveAndWait(STEPBOARD_Handle_t board, uint32_t waitMs) {
 #endif
   } while (!STEPBOARD_IsIdle(board));
 }
-
 
 STEPBOARD_Handle_t STEPBOARD_DeinitDevice(STEPBOARD_Handle_t device) {
 #if STEPBOARD_CONFIG_USE_FREERTOS_HEAP

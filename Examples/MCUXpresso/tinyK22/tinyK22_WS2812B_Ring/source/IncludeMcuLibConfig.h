@@ -45,16 +45,15 @@ Instructions:
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)
 #define configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR   AppGetRuntimeCounterValueFromISR
 #define configCONFIGURE_TIMER_FOR_RUNTIME_STATS     AppConfigureTimerForRuntimeStats
-
+/* -------------------------------------------------*/
 /* Segger SystemViewer: */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
-#define SYSVIEW_APP_NAME                            "tinyK22 LedRing"
-#define SYSVIEW_DEVICE_NAME                         "NXP K22FN512"
-
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
+#define SYSVIEW_APP_NAME                     "tinyK22 LedRing"
+#define SYSVIEW_DEVICE_NAME                  "NXP K22FN512"
+/* -------------------------------------------------*/
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
-
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING           "tinyK22 LedRing"
