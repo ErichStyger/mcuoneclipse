@@ -14,7 +14,8 @@
 #include "stepper.h"
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-  bool MATRIX_UpdateLed(void);
+  bool MATRIX_IsUpdateLed(void);
+  void MATRIX_SetUpdateLed(bool enable);
 #endif
 
 uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);

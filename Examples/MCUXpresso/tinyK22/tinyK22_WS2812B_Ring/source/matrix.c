@@ -97,8 +97,12 @@ static void X12_SingleStep(void *dev, int step) {
 #endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-bool MATRIX_UpdateLed(void) {
+bool MATRIX_IsUpdateLed(void) {
   return MATRIX_UpdateLeds;
+}
+
+void MATRIX_SetUpdateLed(bool enable) {
+  MATRIX_UpdateLeds = enable;
 }
 #endif
 
@@ -1235,104 +1239,6 @@ static uint8_t MATRIX_Test(void) {
 
 #endif
 
-#if PL_CONFIG_USE_STEPPER_EMUL
-static void MATRIX_LedDemo0(void) {
-  NEO_PixelIdxT lane, pos;
-  uint8_t red, green, blue;
-
-  red = 0;
-  green = 0x3;
-  blue = 0;
-  NEO_ClearAllPixel();
-  for(pos=0;pos<NEO_NOF_LEDS_IN_LANE;pos++) {
-    for(lane=0;lane<NEO_NOF_LANES;lane++) {
-      (void)NEO_SetPixelRGB(lane, pos, red, green, blue);
-    }
-  }
-  NEO_TransferPixels();
-}
-#endif /* PL_CONFIG_USE_STEPPER_EMUL */
-
-#if PL_CONFIG_USE_STEPPER_EMUL
-static NEO_PixelColor Rainbow(int32_t numOfSteps, int32_t step) {
-  float r = 0.0;
-  float g = 0.0;
-  float b = 0.0;
-  float h = (double)step / numOfSteps;
-  int i = (int32_t)(h * 6);
-  float f = h * 6.0 - i;
-  float q = 1 - f;
-
-  switch (i % 6)  {
-      case 0:
-          r = 1;
-          g = f;
-          b = 0;
-          break;
-      case 1:
-          r = q;
-          g = 1;
-          b = 0;
-          break;
-      case 2:
-          r = 0;
-          g = 1;
-          b = f;
-          break;
-      case 3:
-          r = 0;
-          g = q;
-          b = 1;
-          break;
-      case 4:
-          r = f;
-          g = 0;
-          b = 1;
-          break;
-      case 5:
-          r = 1;
-          g = 0;
-          b = q;
-          break;
-  }
-  r *= 255;
-  g *= 255;
-  b *= 255;
-  return ((((int)r)<<16)|(((int)g)<<8))+(int)b;
-}
-static void MATRIX_LedDemo1(void) {
-  uint8_t rowStartStep[NEO_NOF_LANES]; /* rainbow color starting values */
-  NEO_PixelColor color;
-  NEO_PixelIdxT lane, pos;
-  uint8_t brightness = 2;
-  int val = 0;
-
-  for(int i=0; i<NEO_NOF_LANES;i++) {
-    rowStartStep[i] = val;
-    val+=20;
-    if(val>=0xff) {
-      val = 0;
-    }
-  }
-
-  NEO_ClearAllPixel();
-
-  for (int i=0; i<500; i++) {
-    for(lane=0; lane<NEO_NOF_LANES; lane++) {
-      color = Rainbow(256, rowStartStep[lane]);
-      color = NEO_BrightnessPercentColor(color, brightness);
-      rowStartStep[lane]++;
-      for(pos=0; pos<NEO_NOF_LEDS_IN_LANE; pos++) {
-        NEO_SetPixelColor(lane, pos, color);
-      }
-    }
-    NEO_TransferPixels();
-    vTaskDelay(pdMS_TO_TICKS(50));
-  }
-}
-#endif /* PL_CONFIG_USE_STEPPER_EMUL */
-
-
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[128];
@@ -1507,8 +1413,6 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <rgb>", (unsigned char*)"Set RGB color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  led update on|off", (unsigned char*)"Do the LED update or not\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  led demo 0", (unsigned char*)"LED color demo\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  led demo 1", (unsigned char*)"LED rainbow demo\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<xyz>: coordinate, separated by space, e.g. 0 0 1\r\n", io->stdOut);
@@ -1721,18 +1625,6 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "matrix led update off")==0) {
     *handled = TRUE;
     MATRIX_UpdateLeds = true;
-    return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, "matrix led demo 0")==0) {
-    *handled = TRUE;
-    MATRIX_UpdateLeds = false;
-    vTaskDelay(pdMS_TO_TICKS(100)); /* just finish update if already running */
-    MATRIX_LedDemo0();
-    return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, "matrix led demo 1")==0) {
-    *handled = TRUE;
-    MATRIX_UpdateLeds = false;
-    vTaskDelay(pdMS_TO_TICKS(100)); /* just finish update if already running */
-    MATRIX_LedDemo1();
     return ERR_OK;
 #endif
   } else if (McuUtility_strcmp((char*)cmd, "matrix exq")==0) {

@@ -50,6 +50,7 @@
   #include "clock.h"
 #endif
 #include "application.h"
+#include "demos.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -88,6 +89,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_CLOCK
   CLOCK_ParseCommand,
 #endif
+  DEMO_ParseCommand,
   APP_ParseCommand,
   NULL /* Sentinel */
 };

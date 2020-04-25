@@ -217,7 +217,7 @@ static void AppTask(void *pv) {
 #endif
     //(void)STEPPER_CheckAndExecuteQueue(McuShell_GetStdio());
 #if !TEST_MODE && PL_CONFIG_USE_STEPPER_EMUL
-    if (MATRIX_UpdateLed()) {
+    if (MATRIX_IsUpdateLed()) {
       NEO_ClearAllPixel();
       MATRIX_SetLEDs();
       NEO_TransferPixels();
