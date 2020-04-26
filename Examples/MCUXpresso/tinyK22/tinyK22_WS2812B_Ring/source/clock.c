@@ -72,12 +72,6 @@ static void MoveAllToZeroPosition(void) {
 #endif /* PL_CONFIG_USE_STEPPER */
 
 #if PL_CONFIG_USE_STEPPER
-static void DemoMakeTwelve(void) {
-  MoveAllToZeroPosition();
-}
-#endif /* PL_CONFIG_USE_STEPPER */
-
-#if PL_CONFIG_USE_STEPPER
 static void DemoMakeSquare(void) {
   STEPBOARD_Handle_t board = STEPBOARD_GetBoard();
 
@@ -315,7 +309,6 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"  time <c> <time>", (unsigned char*)"Show time on clock (0..3)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  demo twelve", (unsigned char*)"Move pointer to 12\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo square", (unsigned char*)"Demo with square\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo rotatesquare", (unsigned char*)"Demo with rotating square\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  demo propeller", (unsigned char*)"Demo with propeller\r\n", io->stdOut);
@@ -360,10 +353,6 @@ uint8_t CLOCK_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
     return ERR_OK;
 #endif
 #if PL_CONFIG_USE_STEPPER
-  } else if (McuUtility_strcmp((char*)cmd, "app demo twelve")==0) {
-    *handled = TRUE;
-    DemoMakeTwelve();
-    return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "app demo square")==0) {
     *handled = TRUE;
     DemoMakeSquare();

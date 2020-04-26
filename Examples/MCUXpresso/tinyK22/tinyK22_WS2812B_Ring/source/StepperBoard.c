@@ -110,7 +110,7 @@ void STEPBOARD_NormalizePosition(STEPBOARD_Handle_t board) {
 
   for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
     for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
-      STEPPER_NormalizePosition(handle->stepper[i][j]);
+      STEPPER_NormalizePos(handle->stepper[i][j]);
     }
   }
 }

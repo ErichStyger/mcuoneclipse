@@ -259,7 +259,9 @@ static void Timer_Init(void) {
 }
 #endif
 
-int32_t STEPPER_NormalizePos(STEPPER_Device_t *device) {
+int32_t STEPPER_NormalizePos(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
   int32_t currPos;
   McuCriticalSection_CriticalVariable()
 
@@ -285,7 +287,7 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPE
   int32_t angle;
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
-  currPos = STEPPER_NormalizePos(device);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
+  currPos = STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
   currDegree = (currPos*360)/STEPPER_CLOCK_360_STEPS; /* current angle: 0..359 */
   if (degree>=0) {
     targetDegree = degree%360;
@@ -343,9 +345,11 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPE
 void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t delay) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
+  (void)STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
   device->doSteps = steps;
   device->accelStepCntr = 0;
   device->delay = delay;
+  device->delayCntr = delay;
   device->speedup = false;
   device->slowdown = false;
 }
@@ -371,11 +375,8 @@ void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPE
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   int32_t steps;
 
-  if (degree>=0) {
-    steps = (STEPPER_CLOCK_360_STEPS*degree)/360;
-  } else {
-    steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
-  }
+  (void)STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
+  steps = (STEPPER_CLOCK_360_STEPS*degree)/360;
   if (mode==STEPPER_MOVE_MODE_CCW) { /* invert direction */
     steps = -steps;
   }
@@ -504,16 +505,6 @@ int32_t STEPPER_GetPos(STEPPER_Handle_t stepper) {
 void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   device->pos = pos;
-}
-
-void STEPPER_NormalizePosition(STEPPER_Handle_t stepper) {
-  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
-//  if (device->doSteps!=0) {
-//    for(;;) {
-//      __asm("nop");
-//    }
-//  }
-  device->pos %= STEPPER_CLOCK_360_STEPS;
 }
 
 void STEPPER_Init(void) {

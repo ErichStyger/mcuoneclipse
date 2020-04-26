@@ -61,7 +61,7 @@ void STEPPER_MoveMotorDegreeRel(STEPPER_Handle_t stepper, int32_t degree, uint16
 
 void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos);
 int32_t STEPPER_GetPos(STEPPER_Handle_t stepper);
-void STEPPER_NormalizePosition(STEPPER_Handle_t stepper);
+int32_t STEPPER_NormalizePos(STEPPER_Handle_t stepper);
 
 void STEPPER_StrCatStatus(STEPPER_Handle_t stepper, unsigned char *buf, size_t bufSize);
 QueueHandle_t STEPPER_GetQueue(STEPPER_Handle_t stepper);

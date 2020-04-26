@@ -14,13 +14,13 @@
 
 /* number of steps for a full round */
 #if STEPPER_CONFIG_IS_LED_RING
-  #define STEPPER_CLOCK_360_STEPS   (360U) /* number of steps for 360 degrees */
+  #define STEPPER_CLOCK_360_STEPS   (360) /* number of steps for 360 degrees */
 #else
-  #define STEPPER_CLOCK_360_STEPS   (4320U) /* number of steps for 360 degrees */
+  #define STEPPER_CLOCK_360_STEPS   (4320) /* number of steps for 360 degrees */
 #endif
 
 /* time for a full round */
-#define STEPPER_TIME_360_DEGREE_MS  (3000U)
+#define STEPPER_TIME_360_DEGREE_MS  (3000)
 /* period needed for a single step in microseconds */
 #define STEPPER_TIME_STEP_US        ((STEPPER_TIME_360_DEGREE_MS*1000U)/STEPPER_CLOCK_360_STEPS)
 

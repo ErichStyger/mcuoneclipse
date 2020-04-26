@@ -76,11 +76,6 @@ static void RS485_SendStr(unsigned char *str) {
   }
 }
 
-static const unsigned char *RS485_CmdMapper[] =
-{
-    /* 0 */ (const unsigned char*)"stepper zero all",
-};
-
 typedef enum {
   CMD_PARSER_INIT,
   CMD_PARSER_START_DETECTED, /* start '@' detected */
@@ -200,8 +195,27 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr) {
   } /* for */
 }
 
+static uint8_t CalcCRC(uint8_t *data, uint8_t dataSize) {
+  uint8_t crc, i, x, y;
+
+  crc = 0;
+  for(x=0;x<dataSize;x++){
+    y = data[x];
+    for(i=0;i<8;i++) { /* go through all bits of the data byte */
+      if((crc&0x01)^(y&0x01)) {
+        crc >>= 1;
+        crc ^= 0x8c;
+      } else {
+        crc >>= 1;
+      }
+      y >>= 1;
+    }
+  }
+  return crc;
+}
+
 uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs, bool intern, uint32_t nofRetry) {
-  /* example: send "#@16:0 cmd stepper zero all" */
+  /* example: send "@16 1 cmd stepper status" */
   unsigned char buf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   uint8_t res = ERR_OK;
   RS485_Response_e resp;
@@ -220,6 +234,8 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
   McuUtility_strcatNum8u(buf, sizeof(buf), RS485_GetAddress()); /* add src address */
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)(" cmd "));
   McuUtility_strcat(buf, sizeof(buf), cmd);
+  McuUtility_chcat(buf, sizeof(buf), ' ');
+  McuUtility_strcatNum8Hex(buf, sizeof(buf), CalcCRC(buf, strlen((char*)buf)));
   McuUtility_chcat(buf, sizeof(buf), '\n');
 
   for(;;) { /* breaks */
@@ -249,8 +265,9 @@ uint8_t RS485_SendCommand(uint8_t dstAddr, unsigned char *cmd, int32_t timeoutMs
 
 uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
-  int32_t addr, srcAddr, command;
+  int32_t addr, srcAddr;
   uint8_t buf[16];
+  uint8_t cmdBuf[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
   static uint8_t lastError = ERR_OK;
 
   /* command is for example. "#@1 0 cmd #help" with the hash tag removed by the shell parser */
@@ -264,32 +281,45 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
     { /* check for "@<DST_ADDR>:<SRC_ADDR>" */
       if (McuUtility_strncmp((char*)p, " cmd ", sizeof(" cmd ")-1)==0) {
         uint8_t res = ERR_FAILED;
+        uint8_t expected_crc, crc;
+        const unsigned char *crcp;
 
         p += sizeof(" cmd ")-1; /* skip cmd string */
-        if (McuUtility_xatoi(&p, &command)==ERR_OK) { /* short command with number, e.g. "@0x12 0 cmd 0" */
-          if (command >= 0 && command<sizeof(RS485_CmdMapper)/sizeof(RS485_CmdMapper[0])) {
-            res = SHELL_ParseCommand((unsigned char*)RS485_CmdMapper[command], &RS485_stdio, true);
-          } else {
-            res = ERR_FAILED;
-          }
-      #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
-        } else if (McuUtility_strcmp((char*)p, (char*)"idle")==0) {
-          if (!STEPBOARD_ItemsInQueue(STEPBOARD_GetBoard()) && STEPBOARD_IsIdle(STEPBOARD_GetBoard())) {
-            res = ERR_OK;  /* ERR_OK if board is idle */
-          } else {
-            res = ERR_FAILED;
-          }
-      #endif
-        } else if (McuUtility_strcmp((char*)p, (char*)"lastError")==0) {
-          res = lastError;  /* report back last error */
-        } else { /* pass as-is */
-          if (addr==RS485_BROADCAST_ADDRESS) {
-            res = SHELL_ParseCommand((unsigned char*)p, &RS485_stdioBroadcast, true); /* do not write anything back if broadcast */
-          } else {
-            res = SHELL_ParseCommand((unsigned char*)p, &RS485_stdio, true);
-          }
-          lastError = res; /* remember error status if we get asked about it */
-        } /* if */
+        /* check CRC: the last two bytes are the CRC */
+        expected_crc = CalcCRC((unsigned char*)cmd, strlen((char*)cmd)-2);
+        crcp = cmd+strlen((char*)cmd)-2;
+        res = McuUtility_ScanHex8uNumberNoPrefix(&crcp, &crc);
+        if (res!=ERR_OK || crc!=expected_crc) {
+          res = ERR_CRC;
+        }
+        if (res==ERR_OK) {
+          if (McuUtility_strncmp((char*)p, (char*)"lastError", sizeof("lastError")-1)==0) {
+            res = lastError;  /* report back last error */
+        #if PL_CONFIG_IS_CLIENT && PL_CONFIG_USE_STEPPER
+          } else if (McuUtility_strncmp((char*)p, (char*)"idle", sizeof("idle")-1)==0) {
+            if (!STEPBOARD_ItemsInQueue(STEPBOARD_GetBoard()) && STEPBOARD_IsIdle(STEPBOARD_GetBoard())) {
+              res = ERR_OK;  /* ERR_OK if board is idle */
+            } else {
+              res = ERR_FAILED;
+            }
+        #endif
+          } else { /* pass it shell parser */
+            size_t len;
+
+            /* copy command, without the prefix and the CRC at the end */
+            McuUtility_strcpy(cmdBuf, sizeof(cmdBuf), p);
+            len = strlen((char*)cmdBuf);
+            if (len>=3) { /* safety check */
+              cmdBuf[len-3] = '\0'; /* cut off CRC at the space position */
+            }
+            if (addr==RS485_BROADCAST_ADDRESS) {
+              res = SHELL_ParseCommand(cmdBuf, &RS485_stdioBroadcast, true); /* do not write anything back if broadcast */
+            } else {
+              res = SHELL_ParseCommand(cmdBuf, &RS485_stdio, true);
+            }
+            lastError = res; /* remember error status if we get asked about it */
+          } /* if */
+        }
         /* send response back */
         McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"@");
         McuUtility_strcatNum8u(buf, sizeof(buf), srcAddr);
@@ -297,10 +327,12 @@ uint8_t RS485_LowLevel_ParseCommand(const unsigned char *cmd, bool *handled, con
         McuUtility_strcatNum8u(buf, sizeof(buf), RS485_GetAddress());
         if (addr!=RS485_BROADCAST_ADDRESS) { /* normal message, send response. For broadcasts it is up to the caller to check the last error */
           if (res==ERR_OK) {
-            McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" OK\n");
+            McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" OK ");
           } else {
-            McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" NOK\n");
+            McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" NOK ");
           }
+          McuUtility_strcatNum8Hex(buf, sizeof(buf), CalcCRC(buf, strlen((char*)buf)));
+          McuUtility_chcat(buf, sizeof(buf), '\n');
           RS485_SendStr(buf);
         }
       }

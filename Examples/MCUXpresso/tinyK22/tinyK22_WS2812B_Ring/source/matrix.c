@@ -604,7 +604,7 @@ uint8_t MATRIX_MoveAllto12(int32_t timeoutMs, const McuShell_StdIOType *io) {
 
   for(x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
     for(y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
-      for(z=0; x<MATRIX_NOF_CLOCKS_Z; z++) {
+      for(z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
         STEPPER_MoveClockDegreeAbs(MATRIX_GetStepper(x, y, z), 0, STEPPER_MOVE_MODE_SHORT, 2, true, true);
       }
     }

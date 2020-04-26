@@ -31,6 +31,7 @@
   #include "fsl_pit.h"
 #endif
 #include "StepperBoard.h"
+#include "McuCriticalSection.h"
 
 #define STEPPER_CMD_QUEUE_LENGTH    (8) /* maximum number of items in stepper command queue */
 
@@ -258,41 +259,80 @@ static void Timer_Init(void) {
 }
 #endif
 
+int32_t STEPPER_NormalizePos(STEPPER_Handle_t stepper) {
+  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
+
+  int32_t currPos;
+  McuCriticalSection_CriticalVariable()
+
+  McuCriticalSection_EnterCritical();
+  currPos = device->pos;
+  if (currPos<0) {
+    currPos = (-currPos)%STEPPER_CLOCK_360_STEPS;
+    currPos = STEPPER_CLOCK_360_STEPS-currPos;
+  } else {
+    currPos %= STEPPER_CLOCK_360_STEPS;
+  }
+  device->pos = currPos;
+  McuCriticalSection_ExitCritical();
+  return currPos;
+}
+
 /*!
  * \brief Move clock to absolute degree position
  */
 void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
-  int32_t steps, currPos, targetPos;
+  int32_t currPos, steps;
+  int32_t currDegree, targetDegree;
+  int32_t angle;
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
-  if (degree<0) {
-	  degree = 360+degree;
+  currPos = STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
+  currDegree = (currPos*360)/STEPPER_CLOCK_360_STEPS; /* current angle: 0..359 */
+  if (degree>=0) {
+    targetDegree = degree%360;
+  } else {
+    targetDegree = 360-(-degree%360);
   }
-  degree %= 360;
-  targetPos = (STEPPER_CLOCK_360_STEPS*degree)/360;
-  currPos = device->pos;
-  currPos %= STEPPER_CLOCK_360_STEPS;
-  if (currPos<0) { /* make it positive */
-    currPos = STEPPER_CLOCK_360_STEPS+currPos;
+  if (mode==STEPPER_MOVE_MODE_SHORT) {
+    angle = targetDegree-currDegree;
+    if (angle>=0) {
+      if (angle<=180) {
+        mode = STEPPER_MOVE_MODE_CW;
+      } else {
+        mode = STEPPER_MOVE_MODE_CCW;
+      }
+    } else {
+      if (angle<=-180) {
+        mode = STEPPER_MOVE_MODE_CW;
+      } else {
+        mode = STEPPER_MOVE_MODE_CCW;
+      }
+    }
   }
   if (mode==STEPPER_MOVE_MODE_CW) {
-    steps = targetPos-currPos;
-    if (steps<0) {
-      steps = STEPPER_CLOCK_360_STEPS+steps;
+    if (currDegree<=targetDegree) {
+      angle = targetDegree-currDegree;
+    } else {
+      angle = 360-(currDegree-targetDegree);
+    }
+    steps = angle*(STEPPER_CLOCK_360_STEPS/360);
+    if (degree>=360) {
+      steps += (degree/360)*STEPPER_CLOCK_360_STEPS;
+    } else if (degree<=-360) {
+      steps += (-degree/360)*STEPPER_CLOCK_360_STEPS;
     }
   } else if (mode==STEPPER_MOVE_MODE_CCW) {
-    steps = targetPos-currPos;
-    if (steps>0) {
-      steps = -STEPPER_CLOCK_360_STEPS+steps;
+    if (targetDegree<=currDegree) {
+      angle = currDegree-targetDegree;
+    } else {
+      angle = 360-(targetDegree-currDegree);
     }
-  } else { /* STEPPER_MOVE_MODE_SHORT */
-    steps = targetPos-currPos;
-    if (steps!=0) {
-      if (steps>STEPPER_CLOCK_360_STEPS/2) { /* go counter-clockwise */
-        steps = -(STEPPER_CLOCK_360_STEPS-steps);
-      } else if (steps < -(STEPPER_CLOCK_360_STEPS/2)) { /* go clockwise */
-        steps = -(-STEPPER_CLOCK_360_STEPS-steps);
-      }
+    steps = -(angle*(STEPPER_CLOCK_360_STEPS/360));
+    if (degree>=360) {
+      steps -= (degree/360)*STEPPER_CLOCK_360_STEPS;
+    } else if (degree<=-360) {
+      steps -= (-degree/360)*STEPPER_CLOCK_360_STEPS;
     }
   }
   device->doSteps = steps;
@@ -305,9 +345,11 @@ void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPE
 void STEPPER_MoveMotorStepsRel(STEPPER_Handle_t stepper, int32_t steps, uint16_t delay) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
 
+  (void)STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
   device->doSteps = steps;
   device->accelStepCntr = 0;
   device->delay = delay;
+  device->delayCntr = delay;
   device->speedup = false;
   device->slowdown = false;
 }
@@ -333,11 +375,8 @@ void STEPPER_MoveClockDegreeRel(STEPPER_Handle_t stepper, int32_t degree, STEPPE
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   int32_t steps;
 
-  if (degree>=0) {
-    steps = (STEPPER_CLOCK_360_STEPS*degree)/360;
-  } else {
-    steps = -(STEPPER_CLOCK_360_STEPS*-degree)/360;
-  }
+  (void)STEPPER_NormalizePos(stepper);  /* make it normalized: 0..STEPPER_CLOCK_360_STEPS-1 */
+  steps = (STEPPER_CLOCK_360_STEPS*degree)/360;
   if (mode==STEPPER_MOVE_MODE_CCW) { /* invert direction */
     steps = -steps;
   }
@@ -466,16 +505,6 @@ int32_t STEPPER_GetPos(STEPPER_Handle_t stepper) {
 void STEPPER_SetPos(STEPPER_Handle_t stepper, int32_t pos) {
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
   device->pos = pos;
-}
-
-void STEPPER_NormalizePosition(STEPPER_Handle_t stepper) {
-  STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;
-//  if (device->doSteps!=0) {
-//    for(;;) {
-//      __asm("nop");
-//    }
-//  }
-  device->pos %= STEPPER_CLOCK_360_STEPS;
 }
 
 void STEPPER_Init(void) {
