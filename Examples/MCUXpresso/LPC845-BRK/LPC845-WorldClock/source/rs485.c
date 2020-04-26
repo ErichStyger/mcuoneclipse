@@ -416,7 +416,7 @@ void RS485_Init(void) {
   if (xTaskCreate(
       RS485Task,  /* pointer to the task */
       "RS-485", /* task name for kernel awareness debugging */
-      1000/sizeof(StackType_t), /* task stack size */
+      1100/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
