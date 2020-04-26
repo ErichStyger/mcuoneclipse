@@ -28,14 +28,14 @@ Instructions:
 #define INCLUDEMCULIBCONFIG_H_
 
 /* ------------------- SDK/Library ---------------------------*/
-#define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
-#define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC845 */
-#define McuLib_CONFIG_CORTEX_M          (0)  /* LPC845 is a Cortex-M0+ */
-#define McuLib_CONFIG_CPU_IS_KINETIS    (0)  /* disabling the default Kinetis */
+#define McuLib_CONFIG_SDK_VERSION_USED    McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+#define McuLib_CONFIG_CPU_IS_LPC         (1)  /* LPC845 */
+#define McuLib_CONFIG_CORTEX_M           (0)  /* LPC845 is a Cortex-M0+ */
+#define McuLib_CONFIG_CPU_IS_KINETIS     (0)  /* disabling the default Kinetis */
 
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
-#define configTOTAL_HEAP_SIZE                (8*1024)
+#define configTOTAL_HEAP_SIZE                (11*1024)
 //#define configUSE_HEAP_SECTION_NAME        (1)
 //#define configHEAP_SECTION_NAME_STRING     ".bss.$SRAM_LOWER.FreeRTOS"
 #define configMINIMAL_STACK_SIZE             (200/sizeof(StackType_t))

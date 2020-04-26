@@ -41,14 +41,23 @@ matrix R 0 0 0 360 1 CW
 
 Issues:
 -------
-- Problem: STEPBOARD_NormalizePosition() kann race condition generieren! (disabled for now)
 - need to use semaphore to matrix queue execution task instead of global variable
 - matrix R 0 4 0 360 3 CW
   led is behind, while
   matrix R 0 4 0 360 3 CC
   is ahead?
- - sometimes communication errors? Resistors?
- - measure current
-- rs sendcmd 0x20 matrix a 0 0 0 0 0 SH
-  does a move even if on position (fixed on master)?
+- sometimes communication errors? Resistors? Noise => crc implemented
+- measure current
+- RS485UartResponseQueue gets filled even if not sending commands
+- making RS485UartResponseQueue smaller?
+- line wrap on master side:
+CMD> rs sendcmd 0x27 matrix help
+matrix                    ; Group of matrix commands
+  help|status             ; Print help or status information
+  test                    ; Test the stepper on the board
+  12                      ; Set matrix to 12:00 position
+                          ; <xyz>: coordinate, separated by space, e.g. 0 0 1
+                          ; <md>: mode (cc, cw, sh), lowercase mode letter is with accel contro
+l for start/stop, e.g. Cw
+- inner shaft motor 1 (2nd from left) on board 0x27 problem?
    
