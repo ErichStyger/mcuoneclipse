@@ -12,6 +12,9 @@
 .type __gnu_mcount_nc, %function
 
 __gnu_mcount_nc:
+/* This function gets called at the entry of each called (callee) function.
+   It records the caller (who is calling the callee) and the callee (which gets called by the caller).
+ */
 #if 0 /* dummy version, doing nothing */
   mov    ip, lr
   pop    { lr }
@@ -23,6 +26,6 @@ __gnu_mcount_nc:
   bic r0, r0, #1                /* clear thumb bit */
   bl _mcount_internal           /* jump to internal _mcount() implementation */
   pop {r0, r1, r2, r3, ip, lr}  /* restore saved registers */
-  bx ip                         /* return to caller */
+  bx ip                         /* return to callee */
 #endif
 
