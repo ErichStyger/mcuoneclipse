@@ -19,4 +19,5 @@ Profiling (per file) option: -pg
  Do *not* instrument System Init (SDK\platform\devices)
 
  
- Rename SysTick_Handler() in osa1.c to OSA_SysTick_Handler().
+ Note: Rename SysTick_Handler() in osa1.c to OSA_SysTick_Handler().
+ 
