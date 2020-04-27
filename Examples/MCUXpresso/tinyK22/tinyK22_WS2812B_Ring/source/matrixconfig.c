@@ -9,7 +9,7 @@
 
 #if PL_CONFIG_IS_MASTER
 
-#if MATRIX_CONFIG_IS_8x3
+#if PL_MATRIX_CONFIG_IS_8x3
   const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
   {
     [0][0]={.addr=BOARD_ADDR_00, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=BOARD_ADDR_00, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=BOARD_ADDR_00, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=BOARD_ADDR_00, .nr=0, .board.x=3, .board.y=0, .enabled=true},
@@ -30,7 +30,7 @@
       {.enabled = true, .addr=BOARD_ADDR_06},
       {.enabled = true, .addr=BOARD_ADDR_07},
   };
-#elif MATRIX_CONFIG_IS_12x5
+#elif PL_MATRIX_CONFIG_IS_12x5
   const MatrixClock_t clockMatrix[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y] = /* information about how the clocks are organized */
   {
     [0][0]={.addr=BOARD_ADDR_00, .nr=3, .board.x=0, .board.y=0, .enabled=true}, [1][0]={.addr=BOARD_ADDR_00, .nr=2, .board.x=1, .board.y=0, .enabled=true}, [2][0]={.addr=BOARD_ADDR_00, .nr=1, .board.x=2, .board.y=0, .enabled=true}, [3][0]={.addr=BOARD_ADDR_00, .nr=0, .board.x=3, .board.y=0, .enabled=true},

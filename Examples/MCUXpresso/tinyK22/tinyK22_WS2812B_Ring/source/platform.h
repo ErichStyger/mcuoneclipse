@@ -13,6 +13,10 @@
 #define PL_CONFIG_IS_CLIENT         (!PL_CONFIG_IS_MASTER) /* otherwise it is the master */
 #define PL_CONFIG_IS_TINYK22        (McuLib_CONFIG_CPU_IS_KINETIS)
 
+/* clock organization: only one can be enabled! */
+#define PL_MATRIX_CONFIG_IS_8x3    (1) /* original 8x3 matrix configuration with 24 clocks */
+#define PL_MATRIX_CONFIG_IS_12x5   (0) /* new 8x3 matrix configuration with 60 clocks */
+
 /* hardware versions:
  * V0.1: initial version with 2x2 arrangement
  * V1.0: second version with 1x4 arrangement, different pin assignment and better hall sensors */
@@ -33,7 +37,7 @@
 
 /* client only: */
 #define PL_CONFIG_USE_MAG_SENSOR    (1 && PL_CONFIG_IS_CLIENT) /* using magnets and hall sensors */
-#define PL_CONFIG_USE_STEPPER_EMUL  (0 && PL_CONFIG_IS_TINYK22) /* follow stepper with LEDs on LED rings */
+#define PL_CONFIG_USE_STEPPER_EMUL  (1 && PL_CONFIG_IS_TINYK22) /* follow stepper with LEDs on LED rings */
 #define PL_CONFIG_USE_STEPPER       (1 && (PL_CONFIG_IS_CLIENT||PL_CONFIG_USE_STEPPER_EMUL)) /* enable stepper motors */
 #define PL_CONFIG_USE_X12_STEPPER   (1 && PL_CONFIG_USE_STEPPER && !PL_CONFIG_USE_STEPPER_EMUL) /* X12 stepper motors */
 #define PL_CONFIG_USE_ULN2003       (0 && PL_CONFIG_USE_STEPPER) /* ULN2003 stepper motors */

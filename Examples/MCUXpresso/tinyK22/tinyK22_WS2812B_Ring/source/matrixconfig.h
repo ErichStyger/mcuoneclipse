@@ -13,17 +13,13 @@
 
 #if PL_CONFIG_IS_MASTER
 
-/* clock organisation: only one can be enabled! */
-#define MATRIX_CONFIG_IS_8x3    (1) /* original 8x3 matrix configuration with 24 clocks */
-#define MATRIX_CONFIG_IS_12x5   (0) /* new 8x3 matrix configuration with 60 clocks */
-
 /* configuration for master: */
-#if MATRIX_CONFIG_IS_8x3
+#if PL_MATRIX_CONFIG_IS_8x3
   #define MATRIX_NOF_BOARDS         (6)   /* total number of boards in matrix */
   #define MATRIX_NOF_CLOCKS_X       (8)   /* number of clocks in x (horizontal) direction */
   #define MATRIX_NOF_CLOCKS_Y       (3)   /* number of clocks in y (vertical) direction */
   #define MATRIX_NOF_CLOCKS_Z       (2)   /* number of clocks in z direction */
-#elif MATRIX_CONFIG_IS_12x5
+#elif PL_MATRIX_CONFIG_IS_12x5
   #define MATRIX_NOF_BOARDS         (15)  /* total number of boards in matrix */
   #define MATRIX_NOF_CLOCKS_X       (12)  /* number of clocks in x (horizontal) direction */
   #define MATRIX_NOF_CLOCKS_Y       (5)   /* number of clocks in y (vertical) direction */
@@ -31,7 +27,7 @@
 #endif
 
 typedef enum {
-#if MATRIX_CONFIG_IS_8x3
+#if PL_MATRIX_CONFIG_IS_8x3
   BOARD_ADDR_00=0x20, /* first board top board */
   BOARD_ADDR_01=0x21,
   BOARD_ADDR_02=0x22,
@@ -39,7 +35,7 @@ typedef enum {
   BOARD_ADDR_05=0x25, /* second row, first board */
   BOARD_ADDR_06=0x26,
   BOARD_ADDR_07=0x27,
-#elif MATRIX_CONFIG_IS_12x5
+#elif PL_MATRIX_CONFIG_IS_12x5
   BOARD_ADDR_00=0x20, /* first board top board */
   BOARD_ADDR_01=0x21,
   BOARD_ADDR_02=0x22,

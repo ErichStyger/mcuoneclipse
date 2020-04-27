@@ -1853,6 +1853,16 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
 }
 
 static void InitLedRings(void) {
+#if PL_MATRIX_CONFIG_IS_8x3
+  CreateLedRings(0, BOARD_ADDR_00, true, 0, 0);
+  CreateLedRings(1, BOARD_ADDR_01, true, 1, 0);
+  CreateLedRings(2, BOARD_ADDR_02, true, 2, 0);
+
+  CreateLedRings(3, BOARD_ADDR_05, true, 0, 4*40);
+  CreateLedRings(4, BOARD_ADDR_06, true, 1, 4*40);
+  CreateLedRings(5, BOARD_ADDR_07, true, 2, 4*40);
+
+#elif PL_MATRIX_CONFIG_IS_12x5
 #if MATRIX_NOF_BOARDS>=1
   CreateLedRings(0, BOARD_ADDR_00, true, 0, 0);
 #endif
@@ -1899,6 +1909,7 @@ static void InitLedRings(void) {
 #endif
 #if MATRIX_NOF_BOARDS>=15
   CreateLedRings(14, BOARD_ADDR_14, true, 4, 8*40);
+#endif
 #endif
 }
 #endif /* PL_CONFIG_USE_STEPPER_EMUL */
