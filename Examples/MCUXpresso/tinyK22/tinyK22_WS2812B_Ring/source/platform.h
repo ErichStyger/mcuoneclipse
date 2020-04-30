@@ -14,8 +14,8 @@
 #define PL_CONFIG_IS_TINYK22        (McuLib_CONFIG_CPU_IS_KINETIS)
 
 /* clock organization: only one can be enabled! */
-#define PL_MATRIX_CONFIG_IS_8x3    (1) /* original 8x3 matrix configuration with 24 clocks */
-#define PL_MATRIX_CONFIG_IS_12x5   (0) /* new 8x3 matrix configuration with 60 clocks */
+#define PL_MATRIX_CONFIG_IS_8x3    (0) /* original 8x3 matrix configuration with 24 clocks */
+#define PL_MATRIX_CONFIG_IS_12x5   (1) /* new 8x3 matrix configuration with 60 clocks */
 
 /* hardware versions:
  * V0.1: initial version with 2x2 arrangement

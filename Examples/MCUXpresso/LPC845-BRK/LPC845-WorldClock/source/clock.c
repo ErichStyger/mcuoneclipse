@@ -470,7 +470,7 @@ static void ClockTask(void *pv) {
       res = McuTimeDate_GetTime(&time);
       if (res==ERR_OK && (time.Hour!=oldHH || time.Min != oldMM)) {
     #if PL_CONFIG_IS_MASTER
-        MATRIX_DrawAllClockDelays(30,30);
+        MATRIX_DrawAllClockDelays(8,8);
         MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
         MATRIX_ShowTime(time.Hour, time.Min);
         timerMs = 0; /* reset timer */
@@ -498,7 +498,7 @@ void CLOCK_Init(void) {
   if (xTaskCreate(
       ClockTask,  /* pointer to the task */
       "Clock", /* task name for kernel awareness debugging */
-      700/sizeof(StackType_t), /* task stack size */
+      900/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

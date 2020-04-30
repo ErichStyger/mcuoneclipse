@@ -9,6 +9,8 @@
 
 #include "McuLibconfig.h"
 
+#define NEOSR_NOF_RING_LED        (40)  /* number of LEDs in ring */
+
 #ifndef NEOSR_CONFIG_USE_FREERTOS_HEAP
   #define NEOSR_CONFIG_USE_FREERTOS_HEAP   (McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */

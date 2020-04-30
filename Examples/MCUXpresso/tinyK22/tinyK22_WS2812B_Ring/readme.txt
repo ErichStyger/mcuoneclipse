@@ -46,7 +46,6 @@ Issues:
   led is behind, while
   matrix R 0 4 0 360 3 CC
   is ahead?
-- sometimes communication errors? Resistors? Noise => crc implemented
 - measure current
 - RS485UartResponseQueue gets filled even if not sending commands
 - making RS485UartResponseQueue smaller?
@@ -60,4 +59,5 @@ matrix                    ; Group of matrix commands
                           ; <md>: mode (cc, cw, sh), lowercase mode letter is with accel contro
 l for start/stop, e.g. Cw
 - inner shaft motor 1 (2nd from left) on board 0x27 problem?
+- only checking for idle and lastError the boards which have received commands
    

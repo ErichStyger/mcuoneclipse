@@ -8,14 +8,19 @@
 #define MATRIX_H_
 
 #include "platform.h"
+#include "matrixconfig.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "McuShell.h"
 #include "stepper.h"
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-  bool MATRIX_IsUpdateLed(void);
-  void MATRIX_SetUpdateLed(bool enable);
+  bool MATRIX_GetLedFollowHands(void);
+  void MATRIX_SetLedFollowHands(bool enable);
+
+  void MATRIX_SetRotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue);
+  void MATRIX_SetRingPixelColor(int32_t x, int32_t y, uint8_t pos, uint8_t red, uint8_t green, uint8_t blue);
+  void MATRIX_SetRingColor(int32_t x, int32_t y, uint8_t red, uint8_t green, uint8_t blue);
 #endif
 
 uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
@@ -25,7 +30,7 @@ uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode
 uint8_t MATRIX_DrawAllClockDelays(uint8_t delay0, uint8_t delay1);
 uint8_t MATRIX_ShowTime(uint8_t hour, uint8_t minute);
 
-void MATRIX_SetLEDs(void);
+void MATRIX_SetRotorLEDs(void);
 
 void MATRIX_TimerCallback(void);
 

@@ -19,9 +19,6 @@
   #include "watchdog.h"
 #endif
 #include "StepperBoard.h"
-#if PL_CONFIG_USE_STEPPER_EMUL
-  #include "NeoStepperRing.h"
-#endif
 #if PL_CONFIG_USE_X12_STEPPER
   #include "McuX12_017.h"
 #endif
@@ -32,6 +29,7 @@
   #include "nvmc.h"
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
+  #include "NeoStepperRing.h"
   #include "NeoPixel.h"
 #endif
 
@@ -39,7 +37,7 @@
 
 static bool MATRIX_ExecuteQueue = false;
 #if PL_CONFIG_USE_STEPPER_EMUL
-static bool MATRIX_UpdateLeds = true;
+static bool MATRIX_UpdateRotorLeds = true;
 #endif
 
 #if PL_CONFIG_IS_MASTER /* master is able to control multiple clock boards: change X, Y and NOF_Boards */
@@ -62,18 +60,21 @@ static bool MATRIX_UpdateLeds = true;
 #if PL_CONFIG_USE_STEPPER
   /* list of boards */
   static STEPBOARD_Handle_t MATRIX_Boards[MATRIX_NOF_BOARDS];
-#else /* used in case no steppers and no LED rings are used */
+#else /* used in case no stepper and no LED rings are used */
   /* list of bards defined in matrixconfig.h */
 #endif
 
 #if PL_CONFIG_IS_MASTER
-  /* map of clocks with their hand position */
-  static int16_t MATRIX_angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two hands per clock */
-  /* map of clocks with their speed delay */
-  static int8_t MATRIX_delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two motors per clock */
-  static STEPPER_MoveMode_e MATRIX_moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z];
+  typedef struct {
+    int16_t angleMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* two hands per clock */
+    int8_t delayMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z]; /* map of clocks with their speed delay */
+    STEPPER_MoveMode_e moveMap[MATRIX_NOF_CLOCKS_X][MATRIX_NOF_CLOCKS_Y][MATRIX_NOF_CLOCKS_Z];
+  } MATRIX_Matrix_t;
+
+  static MATRIX_Matrix_t matrix; /* map of current matrix */
+  static MATRIX_Matrix_t prevMatrix; /* map of previous matrix, used to reduce communication traffic */
 #else
-  static int const mapXBoardPosNr[] = {3, 2, 1, 0}; /* map steppers on x position for boards. This reflects the X (horizontal) order of steppers */
+  static int const mapXBoardPosNr[] = {3, 2, 1, 0}; /* map stepper on x position for boards. This reflects the X (horizontal) order of steppers */
 #endif /* PL_CONFIG_IS_MASTER */
 
 #if PL_CONFIG_USE_STEPPER
@@ -97,12 +98,12 @@ static void X12_SingleStep(void *dev, int step) {
 #endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-bool MATRIX_IsUpdateLed(void) {
-  return MATRIX_UpdateLeds;
+bool MATRIX_GetUpdateRotorLed(void) {
+  return MATRIX_UpdateRotorLeds;
 }
 
-void MATRIX_SetUpdateLed(bool enable) {
-  MATRIX_UpdateLeds = enable;
+void MATRIX_SetUpdateRotorLed(bool enable) {
+  MATRIX_UpdateRotorLeds = enable;
 }
 #endif
 
@@ -160,8 +161,20 @@ static STEPPER_Handle_t MATRIX_GetStepper(int32_t x, int32_t y, int32_t z) {
 #endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-void MATRIX_RotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue) {
+void MATRIX_SetRotorColor(int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue) {
   NEOSR_SetRotorColor(STEPPER_GetDevice(MATRIX_GetStepper(x, y, z)), red, green, blue);
+}
+#endif
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+void MATRIX_SetRingPixelColor(int32_t x, int32_t y, uint8_t pos, uint8_t red, uint8_t green, uint8_t blue) {
+  NEOSR_SetRingPixelColor(STEPPER_GetDevice(MATRIX_GetStepper(x, y, 0)), pos, red, green, blue);
+}
+#endif
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+void MATRIX_SetRingColor(int32_t x, int32_t y, uint8_t red, uint8_t green, uint8_t blue) {
+  NEOSR_SetRingColor(STEPPER_GetDevice(MATRIX_GetStepper(x, y, 0)), red, green, blue);
 }
 #endif
 
@@ -203,16 +216,16 @@ static uint8_t MATRIX_DrawClockHands(uint8_t x, uint8_t y, int16_t angle0, int16
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y) {
     return ERR_FRAMING;
   }
-  MATRIX_angleMap[x][y][0] = angle0;
-  MATRIX_angleMap[x][y][1] = angle1;
+  matrix.angleMap[x][y][0] = angle0;
+  matrix.angleMap[x][y][1] = angle1;
   return ERR_OK;
 }
 
 static uint8_t MATRIX_DrawAllClockHands(int16_t angle0, int16_t angle1) {
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
-      MATRIX_angleMap[x][y][0] = angle0;
-      MATRIX_angleMap[x][y][1] = angle1;
+      matrix.angleMap[x][y][0] = angle0;
+      matrix.angleMap[x][y][1] = angle1;
     }
   }
   return ERR_OK;
@@ -222,16 +235,16 @@ static uint8_t MATRIX_DrawClockDelays(uint8_t x, uint8_t y, uint8_t delay0, uint
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y) {
     return ERR_FRAMING;
   }
-  MATRIX_delayMap[x][y][0] = delay0;
-  MATRIX_delayMap[x][y][1] = delay1;
+  matrix.delayMap[x][y][0] = delay0;
+  matrix.delayMap[x][y][1] = delay1;
   return ERR_OK;
 }
 
 uint8_t MATRIX_DrawAllClockDelays(uint8_t delay0, uint8_t delay1) {
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
-      MATRIX_delayMap[x][y][0] = delay0;
-      MATRIX_delayMap[x][y][1] = delay1;
+      matrix.delayMap[x][y][0] = delay0;
+      matrix.delayMap[x][y][1] = delay1;
     }
   }
   return ERR_OK;
@@ -241,16 +254,16 @@ static uint8_t MATRIX_DrawMoveMode(uint8_t x, uint8_t y, STEPPER_MoveMode_e mode
   if (x>=MATRIX_NOF_CLOCKS_X || y>=MATRIX_NOF_CLOCKS_Y) {
     return ERR_FRAMING;
   }
-  MATRIX_moveMap[x][y][0] = mode0;
-  MATRIX_moveMap[x][y][1] = mode1;
+  matrix.moveMap[x][y][0] = mode0;
+  matrix.moveMap[x][y][1] = mode1;
   return ERR_OK;
 }
 
 uint8_t MATRIX_DrawAllMoveMode(STEPPER_MoveMode_e mode0, STEPPER_MoveMode_e mode1) {
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
-      MATRIX_moveMap[x][y][0] = mode0;
-      MATRIX_moveMap[x][y][1] = mode1;
+      matrix.moveMap[x][y][0] = mode0;
+      matrix.moveMap[x][y][1] = mode1;
     }
   }
   return ERR_OK;
@@ -377,16 +390,24 @@ static void QueueMoveCommand(int x, int y, int z, int angle, int delay, STEPPER_
 #endif
 }
 
+static void MATRIX_CopyMatrix(MATRIX_Matrix_t *dst, MATRIX_Matrix_t *src) {
+  memcpy(dst, src, sizeof(MATRIX_Matrix_t));
+}
+
 static uint8_t MATRIX_SendToRemoteQueue(void) {
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) { /* every clock row */
     for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) { /* every PCB in column */
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
         if (MATRIX_BoardIsEnabled(clockMatrix[x][y].addr) && clockMatrix[x][y].enabled) { /* check if board and clock is enabled */
-          QueueMoveCommand(x, y, z, MATRIX_angleMap[x][y][z], MATRIX_delayMap[x][y][z], MATRIX_moveMap[x][y][z], true, true, true);
+          if (matrix.angleMap[x][y][z]!=prevMatrix.angleMap[x][y][z]) {
+            /* send only if there is a change */
+            QueueMoveCommand(x, y, z, matrix.angleMap[x][y][z], matrix.delayMap[x][y][z], matrix.moveMap[x][y][z], true, true, true);
+          }
         }
       }
     }
   }
+  MATRIX_CopyMatrix(&prevMatrix, &matrix); /* make backup */
   return ERR_OK;
 }
 
@@ -430,7 +451,6 @@ static uint8_t MATRIX_ExecuteRemoteQueue(void) {
   /* send it again, just to make sure if a board has not received it: */
   (void)RS485_SendCommand(RS485_BROADCAST_ADDRESS, (unsigned char*)"matrix exq", 1000, true, 0); /* execute the queue */
   /* check with lastEror if all have received the message */
-
   return MATRIX_CheckRemoteLastError();
 }
 
@@ -1239,22 +1259,11 @@ static uint8_t MATRIX_Test(void) {
 
 #endif
 
-#if PL_CONFIG_USE_SHELL
-static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+#if PL_CONFIG_USE_SHELL && PL_CONFIG_USE_STEPPER
+static uint8_t PrintStepperStatus(const McuShell_StdIOType *io) {
   uint8_t buf[128];
-#if PL_CONFIG_USE_STEPPER
   uint8_t statusStr[16];
-#endif
 
-  McuShell_SendStatusStr((unsigned char*)"matrix", (unsigned char*)"Matrix settings\r\n", io->stdOut);
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"x*y: ");
-  McuUtility_strcatNum8u(buf, sizeof(buf), MATRIX_NOF_CLOCKS_X);
-  McuUtility_chcat(buf, sizeof(buf), '*');
-  McuUtility_strcatNum8u(buf, sizeof(buf), MATRIX_NOF_CLOCKS_Y);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  clocks", buf, io->stdOut);
-
-#if PL_CONFIG_USE_STEPPER
   for(int x=0; x<MATRIX_NOF_CLOCKS_X; x++) {
     for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
       for(int z=0; z<MATRIX_NOF_CLOCKS_Z; z++) {
@@ -1284,30 +1293,30 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       }
     }
   } /* for */
-#endif
-#if 0 /*! \todo not ported yet */
-#if PL_CONFIG_USE_X12_STEPPER
-  McuX12_017_GetDeviceStatusString(STEPPER_Clocks[0].mot[X12_017_M0].device, buf, sizeof(buf));
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  X12.017[0]");
-  McuShell_SendStatusStr(statStr, buf, io->stdOut);
+  return ERR_OK;
+}
 #endif
 
-#if PL_CONFIG_USE_X12_STEPPER
-  McuX12_017_GetDeviceStatusString(STEPPER_Clocks[2].mot[X12_017_M0].device, buf, sizeof(buf));
+#if PL_CONFIG_USE_SHELL
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[32];
+
+  McuShell_SendStatusStr((unsigned char*)"matrix", (unsigned char*)"Matrix settings\r\n", io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"x*y: ");
+  McuUtility_strcatNum8u(buf, sizeof(buf), MATRIX_NOF_CLOCKS_X);
+  McuUtility_chcat(buf, sizeof(buf), '*');
+  McuUtility_strcatNum8u(buf, sizeof(buf), MATRIX_NOF_CLOCKS_Y);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuUtility_strcpy(statStr, sizeof(statStr), (unsigned char*)"  X12.017[1]");
-  McuShell_SendStatusStr(statStr, buf, io->stdOut);
-#endif
-#endif
+  McuShell_SendStatusStr((unsigned char*)"  clocks", buf, io->stdOut);
+
 #if PL_CONFIG_USE_STEPPER_EMUL
-  if (MATRIX_UpdateLeds) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"update: on");
+  if (MATRIX_UpdateRotorLeds) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"LED rotor: on");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"update: off");
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"LED rotor: off");
   }
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  LEDs", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  rotor", buf, io->stdOut);
 #endif
 
   if (MATRIX_ExecuteQueue) {
@@ -1392,6 +1401,9 @@ static uint8_t ParseMatrixCommand(const unsigned char *cmd, int32_t *xp, int32_t
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"matrix", (unsigned char*)"Group of matrix commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+#if PL_CONFIG_USE_STEPPER
+  McuShell_SendHelpStr((unsigned char*)"  stepper status", (unsigned char*)"Print stepper status information\r\n", io->stdOut);
+#endif
   McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test the stepper on the board\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  12", (unsigned char*)"Set matrix to 12:00 position\r\n", io->stdOut);
 #if PL_CONFIG_IS_MASTER
@@ -1411,8 +1423,11 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  temp <temp>", (unsigned char*)"Show temperature\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
-  McuShell_SendHelpStr((unsigned char*)"  color <x> <y> <z> <rgb>", (unsigned char*)"Set RGB color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  led update on|off", (unsigned char*)"Do the LED update or not\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  led rotor on|off", (unsigned char*)"Do the LED rotor update or not\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color rotor all <rgb>", (unsigned char*)"Set rotor color for all rotors, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color rotor <x> <y> <z> <rgb>", (unsigned char*)"Set rotor color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color ring <x> <y> <rgb>", (unsigned char*)"Set ring color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color pos <x> <y> <pix> <rgb>", (unsigned char*)"Set ring pixel color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<xyz>: coordinate, separated by space, e.g. 0 0 1\r\n", io->stdOut);
@@ -1427,7 +1442,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  q <xyz> <cmd>", (unsigned char*)"Queue a 'r' or 'a' command, e.g. 'matrix q 0 0 0 r 90 8 cc'\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  exq", (unsigned char*)"Execute commands in queue\r\n", io->stdOut);
 #if PL_CONFIG_IS_MASTER
-  McuShell_SendHelpStr((unsigned char*)"  lasterror", (unsigned char*)"Check remotes for last error\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  lastError", (unsigned char*)"Check remotes for last error\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  waitidle", (unsigned char*)"Check remotes for idle state\r\n", io->stdOut);
 #endif
 #endif
@@ -1449,6 +1464,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   bool speedUp, slowDown;
   STEPPER_MoveMode_e mode;
 #endif
+#if PL_CONFIG_USE_STEPPER_EMUL
+  int32_t r, g, b;
+#endif
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "matrix help")==0) {
     *handled = true;
@@ -1456,6 +1474,11 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "matrix status")==0)) {
     *handled = true;
     return PrintStatus(io);
+#if PL_CONFIG_USE_STEPPER
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "matrix stepper status")==0)) {
+    *handled = true;
+    return PrintStepperStatus(io);
+#endif
   } else if (McuUtility_strcmp((char*)cmd, "matrix 12")==0) {
     *handled = true;
     return MATRIX_MoveAllto12(10000, io);
@@ -1600,11 +1623,9 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     }
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
-  } else if (McuUtility_strncmp((char*)cmd, "matrix color ", sizeof("matrix color ")-1)==0) {
-    int32_t r,g,b;
-
+  } else if (McuUtility_strncmp((char*)cmd, "matrix color rotor ", sizeof("matrix color rotor ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("matrix color ")-1;
+    p = cmd + sizeof("matrix color rotor ")-1;
     if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
         && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
         && McuUtility_xatoi(&p, &z)==ERR_OK && z>=0 && z<MATRIX_NOF_CLOCKS_Z
@@ -1613,25 +1634,66 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
         && McuUtility_xatoi(&p, &b)==ERR_OK && b>=0 && b<=0xff
        )
     {
-      MATRIX_RotorColor(x, y, z, r, g, b);
+      MATRIX_SetRotorColor(x, y, z, r, g, b);
       return ERR_OK;
     } else {
       return ERR_FAILED;
     }
-  } else if (McuUtility_strcmp((char*)cmd, "matrix led update on")==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "matrix color pixel ", sizeof("matrix color pixel ")-1)==0) {
     *handled = TRUE;
-    MATRIX_UpdateLeds = true;
+    if (MATRIX_GetUpdateRotorLed()) {
+      McuShell_SendStr((unsigned char*)"matrix led rotor is enabled, disable it first.\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    p = cmd + sizeof("matrix color pixel ")-1;
+    if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+        && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+        && McuUtility_xatoi(&p, &z)==ERR_OK && z>=0 && z<NEOSR_NOF_RING_LED
+        && McuUtility_xatoi(&p, &r)==ERR_OK && r>=0 && r<=0xff
+        && McuUtility_xatoi(&p, &g)==ERR_OK && g>=0 && g<=0xff
+        && McuUtility_xatoi(&p, &b)==ERR_OK && b>=0 && b<=0xff
+       )
+    {
+      MATRIX_SetRingPixelColor(x, y, z, r, g, b);
+      NEO_TransferPixels();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "matrix color ring ", sizeof("matrix color ring ")-1)==0) {
+    *handled = TRUE;
+    if (MATRIX_GetUpdateRotorLed()) {
+      McuShell_SendStr((unsigned char*)"matrix led rotor is enabled, disable it first.\n", io->stdErr);
+      return ERR_FAILED;
+    }
+    p = cmd + sizeof("matrix color ring ")-1;
+    if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+        && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+        && McuUtility_xatoi(&p, &r)==ERR_OK && r>=0 && r<=0xff
+        && McuUtility_xatoi(&p, &g)==ERR_OK && g>=0 && g<=0xff
+        && McuUtility_xatoi(&p, &b)==ERR_OK && b>=0 && b<=0xff
+       )
+    {
+      MATRIX_SetRingColor(x, y, r, g, b);
+      NEO_TransferPixels();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strcmp((char*)cmd, "matrix led rotor on")==0) {
+    *handled = TRUE;
+    MATRIX_UpdateRotorLeds = true;
     return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, "matrix led update off")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "matrix led rotor off")==0) {
     *handled = TRUE;
-    MATRIX_UpdateLeds = true;
+    MATRIX_UpdateRotorLeds = false;
     return ERR_OK;
 #endif
   } else if (McuUtility_strcmp((char*)cmd, "matrix exq")==0) {
     MATRIX_ExecuteQueue = true;
     *handled = TRUE;
 #if PL_CONFIG_IS_MASTER
-  } else if (McuUtility_strcmp((char*)cmd, "matrix lasterror")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "matrix lastError")==0) {
     *handled = TRUE;
     return MATRIX_CheckRemoteLastError();
   } else if (McuUtility_strcmp((char*)cmd, "matrix waitidle")==0) {
@@ -1696,8 +1758,7 @@ void MATRIX_TimerCallback(void) {
 #endif
 
 #if PL_CONFIG_USE_STEPPER_EMUL
-#include "NeoPixel.h"
-void MATRIX_SetLEDs(void) {
+void MATRIX_SetRotorLEDs(void) {
   for(int b=0; b<MATRIX_NOF_BOARDS; b++) {
     for(int i=0; i<STEPPER_NOF_CLOCKS; i++) {
       for(int j=0; j<STEPPER_NOF_CLOCK_MOTORS; j++) {
@@ -1853,6 +1914,16 @@ static void CreateLedRings(int boardNo, uint8_t addr, bool boardEnabled, int led
 }
 
 static void InitLedRings(void) {
+#if PL_MATRIX_CONFIG_IS_8x3
+  CreateLedRings(0, BOARD_ADDR_00, true, 0, 0);
+  CreateLedRings(1, BOARD_ADDR_01, true, 1, 0);
+  CreateLedRings(2, BOARD_ADDR_02, true, 2, 0);
+
+  CreateLedRings(3, BOARD_ADDR_05, true, 0, 4*40);
+  CreateLedRings(4, BOARD_ADDR_06, true, 1, 4*40);
+  CreateLedRings(5, BOARD_ADDR_07, true, 2, 4*40);
+
+#elif PL_MATRIX_CONFIG_IS_12x5
 #if MATRIX_NOF_BOARDS>=1
   CreateLedRings(0, BOARD_ADDR_00, true, 0, 0);
 #endif
@@ -1899,6 +1970,7 @@ static void InitLedRings(void) {
 #endif
 #if MATRIX_NOF_BOARDS>=15
   CreateLedRings(14, BOARD_ADDR_14, true, 4, 8*40);
+#endif
 #endif
 }
 #endif /* PL_CONFIG_USE_STEPPER_EMUL */
@@ -2109,9 +2181,11 @@ void MATRIX_Init(void) {
 #endif
 
 #if PL_CONFIG_IS_MASTER
+  /* initialize matrix */
   MATRIX_DrawAllClockHands(0, 0);
   MATRIX_DrawAllClockDelays(0, 0);
   MATRIX_DrawAllMoveMode(STEPPER_MOVE_MODE_SHORT, STEPPER_MOVE_MODE_SHORT);
+  MATRIX_CopyMatrix(&prevMatrix, &matrix); /* make backup */
 #endif
 #if PL_CONFIG_USE_STEPPER
   if (xTaskCreate(
