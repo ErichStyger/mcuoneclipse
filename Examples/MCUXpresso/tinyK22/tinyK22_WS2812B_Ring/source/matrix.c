@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -190,6 +190,12 @@ void MATRIX_SetRingColor(int32_t x, int32_t y, uint8_t red, uint8_t green, uint8
 }
 #endif
 
+#if PL_CONFIG_USE_STEPPER_EMUL
+void MATRIX_SetHandLedOn(int32_t x, int32_t y, uint8_t z, bool on) {
+  NEOSR_SetHandLedOn(STEPPER_GetDevice(MATRIX_GetStepper(x, y, z)), on);
+}
+#endif
+
 uint8_t MATRIX_GetAddress(int32_t x, int32_t y, int32_t z) {
 #if PL_CONFIG_IS_MASTER
   return clockMatrix[x][y].addr;
@@ -232,6 +238,13 @@ static uint8_t MATRIX_DrawClockHands(uint8_t x, uint8_t y, int16_t angle0, int16
   matrix.angleMap[x][y][1] = angle1;
   return ERR_OK;
 }
+
+#if PL_CONFIG_USE_STEPPER_EMUL
+static void MATRIX_DrawClockLEDs(uint8_t x, uint8_t y, bool on0, bool on1) {
+  MATRIX_SetHandLedOn(x, y, 0, on0);
+  MATRIX_SetHandLedOn(x, y, 1, on1);
+}
+#endif
 
 static uint8_t MATRIX_DrawAllClockHands(int16_t angle0, int16_t angle1) {
   for(int y=0; y<MATRIX_NOF_CLOCKS_Y; y++) {
@@ -478,6 +491,7 @@ typedef struct {
   MClock_t digit[3][2]; /* a digit is built by 3 (vertical) and 2 (horizontal) clocks */
 } MClockDigit_t;
 
+/* angle of 225 is a special one ('disabled') */
 static MClockDigit_t clockDigits[10] = {
     [0].digit = {
         [0][0]={.hands={{180},{ 90}}}, [0][1]={.hands={{270},{180}}},
@@ -537,6 +551,9 @@ static void DrawNumber(MClockDigit_t *digit, uint8_t xPos, uint8_t yPos) {
   for(int y=0; y<3; y++) { /* every clock row */
     for(int x=0; x<2; x++) { /* every clock column */
       (void)MATRIX_DrawClockHands(xPos+x, yPos+y, digit->digit[y][x].hands[0].angle, digit->digit[y][x].hands[1].angle);
+    #if PL_CONFIG_USE_STEPPER_EMUL
+      MATRIX_DrawClockLEDs(xPos+x, yPos+y, digit->digit[y][x].hands[0].angle!=225, digit->digit[y][x].hands[1].angle!=225);
+    #endif
     }
   }
 }
@@ -921,23 +938,59 @@ uint8_t MATRIX_ShowTime(uint8_t hour, uint8_t minute) {
 }
 
 uint8_t MATRIX_ShowTemperature(uint8_t temperature) {
-  /* number */
+  /* numbers */
   DrawNumber(&clockDigits[temperature/10], 0, 0);
   DrawNumber(&clockDigits[temperature%10], 2, 0);
-  /* degree */
+  /* degree symbol */
   (void)MATRIX_DrawClockHands(4, 0, 180,  90);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(4, 0, true, true);
+#endif
   (void)MATRIX_DrawClockHands(5, 0, 270, 180);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(5, 0, true, true);
+#endif
   (void)MATRIX_DrawClockHands(4, 1,   0,  90);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(4, 1, true, true);
+#endif
   (void)MATRIX_DrawClockHands(5, 1, 270,   0);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(5, 1, true, true);
+#endif
   (void)MATRIX_DrawClockHands(4, 2, 225, 225);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(4, 2, false, false);
+#endif
   (void)MATRIX_DrawClockHands(5, 2, 225, 225);
-  /* C */
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(5, 2, false, false);
+#endif
+  /* letter C */
   (void)MATRIX_DrawClockHands(6, 0,  90, 180);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(6, 0, true, true);
+#endif
   (void)MATRIX_DrawClockHands(7, 0, 270, 270);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(7, 0, true, true);
+#endif
   (void)MATRIX_DrawClockHands(6, 1,   0, 180);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(6, 1, true, true);
+#endif
   (void)MATRIX_DrawClockHands(7, 1, 225, 225);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(7, 1, false, false);
+#endif
   (void)MATRIX_DrawClockHands(6, 2,   0,  90);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(6, 2, true, true);
+#endif
   (void)MATRIX_DrawClockHands(7, 2, 270, 270);
+#if PL_CONFIG_USE_STEPPER_EMUL
+  MATRIX_DrawClockLEDs(7, 2, true, true);
+#endif
   return MATRIX_SendToRemoteQueueExecuteAndWait(NULL);
 }
 
@@ -1436,10 +1489,11 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
 #if PL_CONFIG_USE_STEPPER_EMUL
   McuShell_SendHelpStr((unsigned char*)"  led follow hands on|off", (unsigned char*)"Follow hands with LEDs\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  led hand <xyz> on|off", (unsigned char*)"Turn hand led on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  color hand all <rgb>", (unsigned char*)"Set hand color for all, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  color hand <x> <y> <z> <rgb>", (unsigned char*)"Set hand color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  color ring <x> <y> <rgb>", (unsigned char*)"Set ring color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  color pos <x> <y> <pix> <rgb>", (unsigned char*)"Set ring pixel color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color hand <xyz> <rgb>", (unsigned char*)"Set hand color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color ring <xy> <rgb>", (unsigned char*)"Set ring color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  color pos <xy> <pix> <rgb>", (unsigned char*)"Set ring pixel color, <rgb> is three values <r> <g> <b>\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_STEPPER
   McuShell_SendHelpStr((unsigned char*)"", (unsigned char*)"<xyz>: coordinate, separated by space, e.g. 0 0 1\r\n", io->stdOut);
@@ -1701,6 +1755,25 @@ uint8_t MATRIX_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     {
       MATRIX_SetRingColor(x, y, r, g, b);
       NEO_TransferPixels();
+      return ERR_OK;
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "matrix led hand ", sizeof("matrix led hand ")-1)==0) {
+    *handled = TRUE;
+    p = cmd + sizeof("matrix led hand ")-1;
+    if (   McuUtility_xatoi(&p, &x)==ERR_OK && x>=0 && x<MATRIX_NOF_CLOCKS_X
+        && McuUtility_xatoi(&p, &y)==ERR_OK && y>=0 && y<MATRIX_NOF_CLOCKS_Y
+        && McuUtility_xatoi(&p, &z)==ERR_OK && z>=0 && z<MATRIX_NOF_CLOCKS_Z
+       )
+    {
+      if (McuUtility_strcmp((char*)p, (char*)" on")==0) {
+        MATRIX_SetHandLedOn(x, y, z, true);
+        return ERR_OK;
+      } else if (McuUtility_strcmp((char*)p, (char*)" off")==0) {
+        MATRIX_SetHandLedOn(x, y, z, false);
+        return ERR_OK;
+      }
       return ERR_OK;
     } else {
       return ERR_FAILED;

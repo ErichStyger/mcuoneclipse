@@ -27,6 +27,7 @@ static const NEOSR_Config_t defaultConfig =
   .ledCw = true,
   .ledLane = 0,
   .ledStartPos = 0,
+  .ledOn = true,
   .ledRed = 0,
   .ledGreen = 0,
   .ledBlue = 0,
@@ -68,7 +69,7 @@ NEOSR_Handle_t NEOSR_InitDevice(NEOSR_Config_t *config) {
     handle->ledCw = config->ledCw;
     handle->ledLane = config->ledLane;
     handle->ledStartPos = config->ledStartPos;
-    handle->ledOn = true;
+    handle->ledOn = config->ledOn;
     handle->ledRed = config->ledRed;
     handle->ledGreen = config->ledGreen;
     handle->ledBlue = config->ledBlue;
@@ -212,7 +213,19 @@ void NEOSR_SetRotorColor(NEOSR_Handle_t device, uint8_t red, uint8_t green, uint
 void NEOSR_SetRotorPixel(NEOSR_Handle_t device, int32_t stepperPos) {
   NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
 
-  NEOSR_IlluminatePos(stepperPos, dev->ledLane, dev->ledStartPos, dev->ledCw, dev->ledRed, dev->ledGreen, dev->ledBlue);
+  if (dev->ledOn) {
+    NEOSR_IlluminatePos(stepperPos, dev->ledLane, dev->ledStartPos, dev->ledCw, dev->ledRed, dev->ledGreen, dev->ledBlue);
+  }
+}
+
+void NEOSR_SetHandLedOn(NEOSR_Handle_t device, bool on) {
+  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+  dev->ledOn = on;
+}
+
+bool NEOSR_GetHandLedOn(NEOSR_Handle_t device) {
+  NEOSR_Device_t *dev = (NEOSR_Device_t*)device;
+  return dev->ledOn;
 }
 
 void NEOSR_Deinit(void) {
