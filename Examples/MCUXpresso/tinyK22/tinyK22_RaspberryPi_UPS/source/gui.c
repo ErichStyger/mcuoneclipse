@@ -401,6 +401,7 @@ static void GuiTask(void *p) {
 
   vTaskDelay(pdMS_TO_TICKS(100)); /* give hardware time to power up */
   McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
+  McuSSD1306_SetDisplayClockDiv(0xA0); /* to increase refresh rate and reduce acoustic noise with white background */
   OLED_Init(); /* initializes the needed McuLib components for the OLED */
   GUI_MainMenuCreate();
   for(;;) {
