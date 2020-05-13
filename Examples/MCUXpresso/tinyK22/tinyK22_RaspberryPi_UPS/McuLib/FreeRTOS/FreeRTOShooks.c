@@ -8,6 +8,7 @@
 #include "McuLibconfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "leds.h"
 /*
 ** ===================================================================
 **     Event       :  McuRTOS_vApplicationStackOverflowHook (module Events)
@@ -85,6 +86,12 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 void McuRTOS_vApplicationTickHook(void)
 {
   /* Hook called for every RTOS tick. */
+ // static int cnt = 0;
+ // cnt++;
+ // if (cnt>1000) {
+ //   cnt=0;
+ //   LEDS_Toggle(LEDS_LED_TINY);
+ // }
 }
 
 /*
@@ -103,6 +110,9 @@ void McuRTOS_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
+  //LEDS_Toggle(LEDS_LED_TINY);
+  //vTaskDelay(100);
+  //__asm("WFI");
   /* Write your code here ... */
 }
 

@@ -528,6 +528,7 @@ void McuSSD1306_ClearLine(uint8_t line);
 **     Returns     : Nothing
 ** ===================================================================
 */
+void McuSSD1306_SetDisplayClockDiv(uint8_t clockDiv);
 
 /* END McuSSD1306. */
 

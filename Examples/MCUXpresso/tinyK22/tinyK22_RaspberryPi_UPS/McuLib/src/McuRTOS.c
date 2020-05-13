@@ -6,7 +6,7 @@
 **     Component   : FreeRTOS
 **     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-10-25, 17:05, # CodeGen: 586
+**     Date/Time   : 2020-01-29, 06:51, # CodeGen: 595
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -5427,6 +5427,7 @@ void McuRTOS_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   McuRTOS_RunTimeCounter = 0;
 #endif
 }
@@ -5450,6 +5451,7 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   return McuRTOS_RunTimeCounter;
   #endif
 #else

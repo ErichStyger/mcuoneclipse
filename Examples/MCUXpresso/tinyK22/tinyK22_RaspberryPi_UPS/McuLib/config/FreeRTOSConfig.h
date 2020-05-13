@@ -65,9 +65,9 @@
 #endif
 #define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
 #define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
-#define configUSE_IDLE_HOOK                       1 /* 1: use Idle hook; 0: no Idle hook */
+#define configUSE_IDLE_HOOK                       0 /* 1: use Idle hook; 0: no Idle hook */
 #define configUSE_IDLE_HOOK_NAME                  McuRTOS_vApplicationIdleHook
-#define configUSE_TICK_HOOK                       1 /* 1: use Tick hook; 0: no Tick hook */
+#define configUSE_TICK_HOOK                       0 /* 1: use Tick hook; 0: no Tick hook */
 #define configUSE_TICK_HOOK_NAME                  McuRTOS_vApplicationTickHook
 #define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
 #define configUSE_MALLOC_FAILED_HOOK_NAME         McuRTOS_vApplicationMallocFailedHook

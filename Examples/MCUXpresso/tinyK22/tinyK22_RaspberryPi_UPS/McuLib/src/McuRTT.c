@@ -96,7 +96,6 @@
 /* MODULE McuRTT. */
 
 #include "McuRTT.h"
-#include "McuWait.h"
 
 /* default standard I/O struct */
 McuShell_ConstStdIOType McuRTT_stdio = {

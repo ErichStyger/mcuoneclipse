@@ -6,7 +6,7 @@
 **     Component   : XFormat
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2019-12-21, 16:19, # CodeGen: 594
 **     Abstract    :
 **
 **     Settings    :
@@ -784,6 +784,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'P':
             param.flags |=  FLAG_UPPER;
+            // fall through
             /* no break */
             /*lint -fallthrough */
 
@@ -833,9 +834,8 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
           case  'X':
             /* no break */
             param.flags |= FLAG_UPPER;
-
+            // fall through
             /* no break */
-
             /* lint -fallthrough */
 
             /*
@@ -874,6 +874,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'S':
             param.flags |= FLAG_UPPER;
+            // fall through
             /* no break */
             /*lint -fallthrough */
 
@@ -892,6 +893,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'C':
             param.flags |= FLAG_UPPER;
+            // fall through
             /* no break */
             /* lint -fallthrough */
 
