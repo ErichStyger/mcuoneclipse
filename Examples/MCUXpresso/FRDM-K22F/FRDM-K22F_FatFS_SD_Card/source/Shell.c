@@ -89,7 +89,7 @@ uint8_t SHELL_ParseCommand(const unsigned char *command, McuShell_ConstStdIOType
 }
 
 static void ShellTask(void *pv) {
-  McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
+  McuShell_SendStr((uint8_t*)"\nShell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }

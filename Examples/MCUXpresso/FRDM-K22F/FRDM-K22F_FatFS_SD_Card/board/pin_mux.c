@@ -321,10 +321,10 @@ void BOARD_InitButtonsPins(void)
 BOARD_InitDEBUG_UARTPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '2', peripheral: UART1, signal: RX, pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/I2C1_SCL/SPI1_SIN, slew_rate: fast, open_drain: disable, pull_select: down,
-    pull_enable: disable}
+  - {pin_num: '2', peripheral: UART1, signal: RX, pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/I2C1_SCL/SPI1_SIN, slew_rate: fast, open_drain: disable, pull_select: up,
+    pull_enable: enable}
   - {pin_num: '1', peripheral: UART1, signal: TX, pin_signal: ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT, identifier: DEBUG_UART_TX, direction: OUTPUT,
-    slew_rate: fast, open_drain: disable, pull_select: down, pull_enable: disable}
+    slew_rate: fast, open_drain: disable, pull_select: up, pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -340,8 +340,8 @@ void BOARD_InitDEBUG_UARTPins(void)
     /* Port E Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortE);
 
-    const port_pin_config_t DEBUG_UART_TX = {/* Internal pull-up/down resistor is disabled */
-                                             kPORT_PullDisable,
+    const port_pin_config_t DEBUG_UART_TX = {/* Internal pull-up resistor is enabled */
+                                             kPORT_PullUp,
                                              /* Fast slew rate is configured */
                                              kPORT_FastSlewRate,
                                              /* Passive filter is disabled */
@@ -357,8 +357,8 @@ void BOARD_InitDEBUG_UARTPins(void)
     /* PORTE0 (pin 1) is configured as UART1_TX */
     PORT_SetPinConfig(BOARD_DEBUG_UART_TX_PORT, BOARD_DEBUG_UART_TX_PIN, &DEBUG_UART_TX);
 
-    const port_pin_config_t DEBUG_UART_RX = {/* Internal pull-up/down resistor is disabled */
-                                             kPORT_PullDisable,
+    const port_pin_config_t DEBUG_UART_RX = {/* Internal pull-up resistor is enabled */
+                                             kPORT_PullUp,
                                              /* Fast slew rate is configured */
                                              kPORT_FastSlewRate,
                                              /* Passive filter is disabled */
