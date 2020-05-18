@@ -23,7 +23,7 @@
 #endif
 
 #if !defined(McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT)
-  #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT    (1)
+  #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT    (0)
     /*!< 1: generate user events for errors; 0: no error events */
   #define McuGenericI2C_CONFIG_ON_ERROR_EVENT   McuGenericI2C_OnError
   void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void); /* prototype */
