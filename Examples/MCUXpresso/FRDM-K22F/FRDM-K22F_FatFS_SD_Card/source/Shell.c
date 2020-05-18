@@ -135,13 +135,13 @@ void SHELL_Init(void) {
 }
 
 #if PL_CONFIG_USE_SD_CARD
-bool McuSDCard_CardPresent(void) {
+bool FatFS_IsDiskPresent(uint8_t drv) {
   return true;
 }
 #endif
 
 #if PL_CONFIG_USE_SD_CARD
-bool McuSDCard_isWriteProtected(void) {
+bool FatFS_IsWriteProtected(uint8_t drv) {
   return false;
 }
 #endif

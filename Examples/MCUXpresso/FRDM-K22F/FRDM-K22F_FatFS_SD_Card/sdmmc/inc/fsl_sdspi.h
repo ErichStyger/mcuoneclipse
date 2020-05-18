@@ -307,6 +307,48 @@ status_t SDSPI_EraseBlocks(sdspi_card_t *card, uint32_t startBlock, uint32_t blo
  */
 status_t SDSPI_SwitchToHighSpeed(sdspi_card_t *card);
 
+/*!
+ * @brief Read data from card
+ *
+ * @param host Host state.
+ * @param buffer Buffer to save data.
+ * @param size The data size to read.
+ * @retval kStatus_SDSPI_ResponseError Response is error.
+ * @retval kStatus_SDSPI_ExchangeFailed Exchange data over SPI failed.
+ * @retval kStatus_Success Operate successfully.
+ */
+status_t SDSPI_Read(sdspi_host_t *host, uint8_t *buffer, uint32_t size);
+
+/*!
+ * @brief Write data to card
+ *
+ * @param host Host state.
+ * @param buffer Data to send.
+ * @param size Data size.
+ * @param token The data token.
+ * @retval kStatus_SDSPI_WaitReadyFailed Card is busy error.
+ * @retval kStatus_SDSPI_ExchangeFailed Exchange data over SPI failed.
+ * @retval kStatus_InvalidArgument Invalid argument.
+ * @retval kStatus_SDSPI_ResponseError Response is error.
+ * @retval kStatus_Success Operate successfully.
+ */
+status_t SDSPI_Write(sdspi_host_t *host, uint8_t *buffer, uint32_t size, uint8_t token);
+
+/*!
+ * @brief Send command.
+ *
+ * @param host Host state.
+ * @param command The command to be wrote.
+ * @param arg command argument
+ * @param response response buffer
+ * @retval kStatus_SDSPI_WaitReadyFailed Wait ready failed.
+ * @retval kStatus_SDSPI_ExchangeFailed Exchange data over SPI failed.
+ * @retval kStatus_SDSPI_ResponseError Response is error.
+ * @retval kStatus_Fail Send command failed.
+ * @retval kStatus_Success Operate successfully.
+ */
+status_t SDSPI_SendCommand(sdspi_host_t *host, uint32_t command, uint32_t arg, uint8_t *response);
+
 /* @} */
 #if defined(__cplusplus)
 }

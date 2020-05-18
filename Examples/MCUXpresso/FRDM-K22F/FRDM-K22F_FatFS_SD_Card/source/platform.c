@@ -19,6 +19,8 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuArmTools.h"
+#include "McuTimeout.h"
+
 /* application modules */
 #include "leds.h"
 #if PL_CONFIG_USE_SHELL
@@ -47,6 +49,7 @@ void PL_Init(void) {
   McuUtility_Init();
   McuLED_Init();
   McuGPIO_Init();
+  McuTimeout_Init();
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif

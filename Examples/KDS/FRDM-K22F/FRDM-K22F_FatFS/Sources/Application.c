@@ -74,7 +74,7 @@ static void AppTask(void *pvParameters) {
   for(;;) {
     FRTOS1_vTaskDelay(5000/portTICK_PERIOD_MS);
     LED1_Neg(); /* Red LED */
-    LogToFile(i++);
+   // LogToFile(i++);
   }
 }
 

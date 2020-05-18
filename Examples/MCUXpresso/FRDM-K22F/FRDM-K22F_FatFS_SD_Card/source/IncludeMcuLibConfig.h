@@ -59,6 +59,7 @@ Instructions:
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (128)
 /* -------------------------------------------------*/
-
+/* FatFS */
+#define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "4:/" /* 4 is for the SPI SD card */
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

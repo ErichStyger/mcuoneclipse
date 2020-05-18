@@ -62,7 +62,7 @@ static uint32_t SDSPI_GenerateCRC7(uint8_t *buffer, uint32_t length, uint32_t cr
  * @retval kStatus_Fail Send command failed.
  * @retval kStatus_Success Operate successfully.
  */
-static status_t SDSPI_SendCommand(sdspi_host_t *host, uint32_t command, uint32_t arg, uint8_t *response);
+status_t SDSPI_SendCommand(sdspi_host_t *host, uint32_t command, uint32_t arg, uint8_t *response);
 
 /*!
  * @brief Send GO_IDLE command.
@@ -130,6 +130,7 @@ static status_t SDSPI_ReadOcr(sdspi_card_t *card);
  */
 static status_t SDSPI_SetBlockSize(sdspi_card_t *card, uint32_t blockSize);
 
+#if 0 /* << EST moved to interface */
 /*!
  * @brief Read data from card
  *
@@ -141,6 +142,7 @@ static status_t SDSPI_SetBlockSize(sdspi_card_t *card, uint32_t blockSize);
  * @retval kStatus_Success Operate successfully.
  */
 static status_t SDSPI_Read(sdspi_host_t *host, uint8_t *buffer, uint32_t size);
+#endif
 
 /*!
  * @brief Decode CSD register
@@ -195,21 +197,6 @@ static status_t SDSPI_SendScr(sdspi_card_t *card);
  * @retval kStatus_Success Operate successfully.
  */
 static status_t SDSPI_StopTransmission(sdspi_card_t *card);
-
-/*!
- * @brief Write data to card
- *
- * @param host Host state.
- * @param buffer Data to send.
- * @param size Data size.
- * @param token The data token.
- * @retval kStatus_SDSPI_WaitReadyFailed Card is busy error.
- * @retval kStatus_SDSPI_ExchangeFailed Exchange data over SPI failed.
- * @retval kStatus_InvalidArgument Invalid argument.
- * @retval kStatus_SDSPI_ResponseError Response is error.
- * @retval kStatus_Success Operate successfully.
- */
-static status_t SDSPI_Write(sdspi_host_t *host, uint8_t *buffer, uint32_t size, uint8_t token);
 
 /*!
  * @brief select function.
@@ -311,7 +298,7 @@ static uint16_t SDSPI_GenerateCRC16(uint8_t *buffer, uint32_t length, uint16_t c
 }
 #endif
 
-static status_t SDSPI_SendCommand(sdspi_host_t *host, uint32_t command, uint32_t arg, uint8_t *response)
+status_t SDSPI_SendCommand(sdspi_host_t *host, uint32_t command, uint32_t arg, uint8_t *response)
 {
     assert(host);
     assert(response);
@@ -798,7 +785,7 @@ static status_t SDSPI_StopTransmission(sdspi_card_t *card)
     return kStatus_Success;
 }
 
-static status_t SDSPI_Write(sdspi_host_t *host, uint8_t *buffer, uint32_t size, uint8_t token)
+status_t SDSPI_Write(sdspi_host_t *host, uint8_t *buffer, uint32_t size, uint8_t token)
 {
     assert(host);
     assert(host->exchange);
@@ -854,7 +841,7 @@ static status_t SDSPI_Write(sdspi_host_t *host, uint8_t *buffer, uint32_t size, 
     return kStatus_Success;
 }
 
-static status_t SDSPI_Read(sdspi_host_t *host, uint8_t *buffer, uint32_t size)
+status_t SDSPI_Read(sdspi_host_t *host, uint8_t *buffer, uint32_t size)
 {
     assert(host);
     assert(host->exchange);

@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 12:40, # CodeGen: 612
+**     Date/Time   : 2020-05-18, 14:07, # CodeGen: 614
 **     Abstract    :
 **
 **     Settings    :
@@ -150,22 +150,32 @@
 #define __McuFatFS_H
 
 /* MODULE McuFatFS. */
+
+#include "McuLib.h" /* SDK and API used */
+#include "McuFatFSconfig.h" /* configuration */
+
 /* Wrappers to FatFS types and constants */
 #define McuFatFS_FATFS            FATFS
 #define McuFatFS_DIR              DIR
 #define McuFatFS_FIL              FIL
 #define McuFatFS_FILINFO          FILINFO
-#define McuFatFS_FS_READONLY      FF_FS_READONLY /*_FS_READONLY*/
-#define McuFatFS_USE_LFN          FF_USE_LFN /* _USE_LFN */
-#define McuFatFS_MAX_LFN          FF_MAX_LFN /* _MAX_LFN */
-#define McuFatFS_FS_REENTRANT     FF_FS_REENTRANT /* _FS_REENTRANT */
-#define McuFatFS_MAX_SS           FF_MAX_SS /*_MAX_SS*/
-#define McuFatFS_FS_RPATH         FF_FS_RPATH /*_FS_RPATH */
 #define McuFatFS_FRESULT          FRESULT
 #define McuFatFS_DRESULT          DRESULT
-
-#include "McuLib.h" /* SDK and API used */
-#include "McuFatFSconfig.h" /* configuration */
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  #define McuFatFS_USE_LFN          _USE_LFN
+  #define McuFatFS_MAX_LFN          _MAX_LFN
+  #define McuFatFS_FS_REENTRANT     _FS_REENTRANT
+  #define McuFatFS_MAX_SS           _MAX_SS
+  #define McuFatFS_FS_RPATH         _FS_RPATH
+  #define McuFatFS_FS_READONLY      _FS_READONLY
+#else /* use newer defines in NXP SDK and FatFS */
+  #define McuFatFS_USE_LFN          FF_USE_LFN
+  #define McuFatFS_MAX_LFN          FF_MAX_LFN
+  #define McuFatFS_FS_REENTRANT     FF_FS_REENTRANT
+  #define McuFatFS_MAX_SS           FF_MAX_SS
+  #define McuFatFS_FS_RPATH         FF_FS_RPATH
+  #define McuFatFS_FS_READONLY      FF_FS_READONLY
+#endif
 
 #if McuFatFS_CONFIG_SHELL_ENABLED
   #include "McuShell.h"

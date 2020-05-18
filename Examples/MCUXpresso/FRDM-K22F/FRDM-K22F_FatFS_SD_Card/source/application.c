@@ -8,6 +8,13 @@
 #include "McuWait.h"
 #include "McuRTOS.h"
 #include "leds.h"
+#include "McuTimeout.h"
+
+static TimerHandle_t timerHndl;
+
+static void vTimerTimoutAddTick(TimerHandle_t pxTimer) {
+  McuTimeout_AddTick();
+}
 
 static void AppTask(void *pv) {
   for(;;) {
@@ -20,6 +27,7 @@ static void AppTask(void *pv) {
   }
 }
 
+
 void APP_Run(void) {
   BaseType_t result;
 
@@ -28,6 +36,19 @@ void APP_Run(void) {
   if (result!=pdPASS) {
     /* error! */
   }
+  timerHndl = xTimerCreate(  /* timer to handle periodic things */
+        "timeout", /* name */
+        pdMS_TO_TICKS(McuTimeout_TICK_PERIOD_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerTimoutAddTick); /* callback */
+  if (timerHndl==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerHndl, 0)!=pdPASS) { /* start the timer */
+    for(;;); /* failure!?! */
+  }
+
   vTaskStartScheduler();
   for(;;) {}
 }

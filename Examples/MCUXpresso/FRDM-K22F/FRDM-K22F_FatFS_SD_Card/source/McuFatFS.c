@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 12:40, # CodeGen: 612
+**     Date/Time   : 2020-05-18, 15:05, # CodeGen: 619
 **     Abstract    :
 **
 **     Settings    :
@@ -150,32 +150,16 @@
 
 #include "ff.h"
 #include "McuFatFS.h"
-#if 0
-  #include "McuSDCard.h"
-#else
-#define McuSDCard_BLOCK_SIZE   512      /* user defined block size */
-/*<< EST added: */
-#define MMC_GET_SDC_VERSION     15  /* 1 byte */
-#define MMC_GET_READ_BL_LEN     16  /* 2 bytes */
-#define MMC_GET_DRIVER_VERSION  17  /* 1 byte: return: 0 SPI driver, 1 LLD SDHC driver */
-#define MMC_GET_LLD_INFO        18  /* array: 1 byte subcommand, 1 byte bufSize, bufSize*bytes */
-  #define MMC_GET_LLD_CMD_HIGH_CAPACITY  0 /* return 1 byte, 0 for no, 1 for yes */
-  #define MMC_GET_LLD_CMD_HIGH_SPEED     1 /* return 1 byte, 0 for no, 1 for yes */
-  #define MMC_GET_LLD_CMD_LOW_VOLTAGE    2 /* return 1 byte, 0 for no, 1 for yes */
-  #define MMC_GET_LLD_CMD_DATA_WIDTHS    3 /* return 1 byte (bitset), 0x1: 1, 0x2: 4, 0x4: 8 */
-  #define MMC_GET_LLD_CMD_OPERATIONS     4 /* return 1 byte (bitset), 0x1: block read, 0x2: block write, 0x4: block erase, 0x8: write protection, 0x10: I/O */
-#define CT_SD1   (1<<0) /* LDD_SDHC_SD, Secure Digital memory card */
-#define CT_SD2   (1<<1) /* LDD_SDHC_SDIO, Secure Digital IO card */
-#define CT_BLOCK (1<<2)
-#define CT_MMC   (1<<3) /* LDD_SDHC_MMC, MultiMediaCard memory card */
-#define CT_SDC   (1<<4) /* LDD_SDHC_SDCOMBO, Combined Secure Digital memory and IO card */
-#define CT_ATA   (1<<5) /* LDD_SDHC_CE_ATA, Consumer Electronics ATA card */
 
-bool McuSDCard_CardPresent(void);
-bool McuSDCard_isWriteProtected(void);
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+#include "McuSDCard.h"
+#else
+
+/* implement the two callbacks below in the application */
+bool FatFS_IsDiskPresent(uint8_t drive);
+bool FatFS_IsWriteProtected(uint8_t drive);
 
 #endif
-
 
 
 /*-----------------------------------------------------------------------*/
@@ -193,8 +177,8 @@ static uint8_t StrToDriveNumber(uint8_t *drvStr) {
   }
   return drv;
 }
-#if 0
 /*-----------------------------------------------------------------------*/
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 /* Initialize a Drive                                                    */
 DSTATUS disk_initialize (
         uint8_t drv                     /* Physical drive number (0..) */
@@ -208,7 +192,9 @@ DSTATUS disk_initialize (
   } /* switch */
   return (DSTATUS)RES_PARERR;
 }
+#endif
 /*-----------------------------------------------------------------------*/
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 /* Return Disk Status                                                    */
 DSTATUS disk_status (
         uint8_t drv                     /* Physical drive number (0..) */
@@ -222,7 +208,9 @@ DSTATUS disk_status (
   } /* switch */
   return (DSTATUS)RES_PARERR;
 }
+#endif
 /*-----------------------------------------------------------------------*/
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 /* Read Sector(s)                                                        */
 DRESULT disk_read (
         uint8_t drv,                    /* Physical drive number (0..) */
@@ -239,7 +227,9 @@ DRESULT disk_read (
   } /* switch */
   return RES_PARERR;
 }
+#endif
 /*-----------------------------------------------------------------------*/
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 /* Write Sector(s)                                                       */
 #if _READONLY == 0
 DRESULT disk_write (
@@ -258,7 +248,9 @@ DRESULT disk_write (
   return RES_PARERR;
 }
 #endif /* _READONLY == 0 */
+#endif
 /*-----------------------------------------------------------------------*/
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 DRESULT disk_ioctl (
         uint8_t drv,                    /* Physical drive number (0..) */
         uint8_t ctrl,                   /* Control code */
@@ -370,7 +362,7 @@ static void PrintInASCII(uint8_t *buf, size_t bufSize, size_t LineLen, uint8_t n
 
 /*!
  * \brief Writes a directory listing of the given path
- * \param[in] dirPathPtr Pointer to a directory path string. Pass "\\" for the root directory
+ * \param[in] dirPathPtr Pointer to a directory path string. Pass e.g. "0:/" for the root directory
  * \param[in] io Callback to write directory output
  * \return Error code, otherwise ERR_OK
  */
@@ -521,7 +513,7 @@ static uint8_t DirCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *i
       /* ok, have now directory name */
     }
 #else
-    McuUtility_strcpy(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_SIZE_NAMEBUF(fileName), (unsigned char*)"\\"); /* use root */
+    McuUtility_strcpy(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_SIZE_NAMEBUF(fileName), (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING); /* use root */
 #endif
   }
   if (res == ERR_OK) {
@@ -710,7 +702,7 @@ static uint8_t CdCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *io
       McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     }
 #else
-    McuUtility_strcpy(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_SIZE_NAMEBUF(fileName), (unsigned char*)"\\"); /* use root */
+    McuUtility_strcpy(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_SIZE_NAMEBUF(fileName), (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING); /* use root */
 #endif
   }
   McuFatFS_FREE_NAMEBUF(fileName);
@@ -744,9 +736,10 @@ static uint8_t CreateCmd(const unsigned char *cmd, const McuShell_ConstStdIOType
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
-  McuShell_SendStatusStr((unsigned char*)"McuFatFS", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuFatFS", (unsigned char*)"FatFs status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  present", McuFatFS_isDiskPresent((uint8_t*)"0")?(unsigned char*)"drive0: yes\r\n":(unsigned char*)"drive0: no\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  protected", McuFatFS_isWriteProtected((uint8_t*)"0")?(unsigned char*)"drive0: yes\r\n":(unsigned char*)"drive0: no\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  default drive", (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING "\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -1464,14 +1457,17 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
   uint8_t drv;
 
   drv = StrToDriveNumber(drvStr);
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   switch(drv) {
-    case 4:
     case 0:
       return McuSDCard_isWriteProtected();
     default:
       break;
   } /* switch */
   return TRUE;
+#else
+  return FatFS_IsWriteProtected(drv);
+#endif
 }
 
 /*
@@ -1492,14 +1488,17 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
   uint8_t drv;
 
   drv = StrToDriveNumber(drvStr);
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   switch(drv) {
-    case 4:
     case 0:
       return McuSDCard_CardPresent();
     default:
       break;
   } /* switch */
   return FALSE;
+#else
+  return FatFS_IsDiskPresent(drv);
+#endif
 }
 
 /*
@@ -1686,10 +1685,11 @@ dword McuFatFS_f_size(FIL *fil)
 uint8_t McuFatFS_Init(void)
 {
   uint8_t res = ERR_OK;
-
-//  if (McuSDCard_Init(NULL)!=ERR_OK) {
-//    res = ERR_FAILED;
-//  }
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  if (McuSDCard_Init(NULL)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+#endif
   return res;
 }
 
@@ -1707,10 +1707,11 @@ uint8_t McuFatFS_Init(void)
 uint8_t McuFatFS_Deinit(void)
 {
   uint8_t res = ERR_OK;
-
-//  if (McuSDCard_Deinit(NULL)!=ERR_OK) {
-//    res = ERR_FAILED;
-//  }
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  if (McuSDCard_Deinit(NULL)!=ERR_OK) {
+    res = ERR_FAILED;
+  }
+#endif
   return res;
 }
 
@@ -1816,7 +1817,7 @@ uint8_t McuFatFS_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     return PrintCmd(cmd+sizeof("McuFatFS"), io);
   } else if (McuUtility_strcmp((char*)cmd, "McuFatFS diskinfo")==0) {
     *handled = TRUE;
-    return McuFatFS_PrintDiskInfo(NULL, io);
+    return McuFatFS_PrintDiskInfo((unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, io);
   } else if (McuUtility_strcmp((char*)cmd, "McuFatFS benchmark")==0) {
     *handled = TRUE;
     return McuFatFS_Benchmark(io);
@@ -1848,7 +1849,7 @@ uint8_t McuFatFS_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
 uint8_t McuFatFS_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS *fileSystemObject, const McuShell_StdIOType *io)
 {
   if (drive==NULL) { /* backward compatibility with drive numbers before (which could be zero or NULL) */
-    drive = (unsigned char*)"";
+    drive = (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING;
   }
   if (!(*cardMounted) && McuFatFS_isDiskPresent(drive)) {
     /* card inserted */
@@ -2013,7 +2014,7 @@ uint8_t McuFatFS_CopyFile(const uint8_t*srcFileName, const uint8_t *dstFileName,
   UINT br, bw;          /* file read/write counters */
   uint8_t res =  ERR_OK;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2097,7 +2098,7 @@ uint8_t McuFatFS_DeleteFile(const uint8_t *fileName, const McuShell_StdIOType *i
 {
   McuFatFS_FRESULT fres;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2128,7 +2129,7 @@ uint8_t McuFatFS_CreateFile(const uint8_t *fileName, const McuShell_StdIOType *i
   McuFatFS_FRESULT fres;
   FIL fp;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2295,7 +2296,7 @@ uint8_t McuFatFS_MakeDirectory(const uint8_t *dirName, const McuShell_StdIOType 
 {
   McuFatFS_FRESULT fres;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2365,7 +2366,7 @@ uint8_t McuFatFS_RenameFile(const uint8_t *srcFileName, const uint8_t *dstFileNa
 {
   McuFatFS_FRESULT fres;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2393,10 +2394,19 @@ uint8_t McuFatFS_RenameFile(const uint8_t *srcFileName, const uint8_t *dstFileNa
 ** ===================================================================
 */
 #if McuFatFS_USE_RTOS_DYNAMIC_MEMORY
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   #define SECTOR_BUF_SIZE0   McuSDCard_BLOCK_SIZE
 #else
+  #define SECTOR_BUF_SIZE0   512
+#endif
+#else
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   static uint8_t print_buf0[McuSDCard_BLOCK_SIZE];
   #define SECTOR_BUF_SIZE0   sizeof(print_buf0)
+#else
+  static uint8_t print_buf0[512];
+  #define SECTOR_BUF_SIZE0   sizeof(print_buf0)
+#endif
 #endif
 uint8_t McuFatFS_PrintSector(uint8_t drive, uint32_t sectorNo, const McuShell_StdIOType *io)
 {
@@ -2491,7 +2501,7 @@ uint8_t McuFatFS_PrintSector(uint8_t drive, uint32_t sectorNo, const McuShell_St
  * \param[in] io IO handler for output
  * \return Error code, ERR_OK for success.
  */
-uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
+uint8_t McuFatFS_PrintDiskInfo(uint8_t *drvStr, const McuShell_StdIOType *io)
 {
   /* see for details:
    * http://www.retroleum.co.uk/electronics-articles/basic-mmc-card-access/
@@ -2502,21 +2512,23 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
   int8_t val8;
   uint8_t buff[64];
   uint8_t driverVersion; /* 0: SPI, 1: SDHC_LDD */
+  uint8_t driveNr;
 
-  if (!McuFatFS_isDiskPresent(drive)) {
+  driveNr = StrToDriveNumber(drvStr);
+  if (!McuFatFS_isDiskPresent(drvStr)) {
     McuShell_SendStr((unsigned char*)"disk not present!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  if ((disk_initialize(StrToDriveNumber(drive))&STA_NOINIT)!=0) {
+  if ((disk_initialize(StrToDriveNumber(drvStr))&STA_NOINIT)!=0) {
     McuShell_SendStr((unsigned char*)"disk initialize failed!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  if (disk_ioctl(0, MMC_GET_DRIVER_VERSION, &driverVersion)!=RES_OK) {
+  if (disk_ioctl(driveNr, MMC_GET_DRIVER_VERSION, &driverVersion)!=RES_OK) {
     McuShell_SendStr((unsigned char*)"failed identification of driver version\r\n", io->stdErr);
     return ERR_FAILED;
   }
   McuShell_SendStatusStr((unsigned char*)"Card type", (unsigned char*)"", io->stdOut);
-  if (disk_ioctl(0, MMC_GET_TYPE, &val8)==RES_OK) {
+  if (disk_ioctl(driveNr, MMC_GET_TYPE, &val8)==RES_OK) {
     if (val8&CT_SD1) {
       McuShell_SendStr((unsigned char*)"SD1 ", io->stdOut);
     }
@@ -2541,7 +2553,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
   }
   if (driverVersion==0) { /* only SPI cards implement this */
     McuShell_SendStatusStr((unsigned char*)"SDC version", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, MMC_GET_SDC_VERSION, &val8)==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_SDC_VERSION, &val8)==RES_OK) {
       if (val8==1) {
         McuShell_SendStr((unsigned char*)"SDC ver 1.XX or MMC\r\n", io->stdOut);
       } else if (val8==2) {
@@ -2554,7 +2566,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
     }
   }
   McuShell_SendStatusStr((unsigned char*)"Sector count", (unsigned char*)"", io->stdOut);
-  if (disk_ioctl(0, GET_SECTOR_COUNT, &val32)==RES_OK) {
+  if (disk_ioctl(driveNr, GET_SECTOR_COUNT, &val32)==RES_OK) {
     McuUtility_Num32sToStr(buf, sizeof(buf), val32);
     McuShell_SendStr(buf, io->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -2562,7 +2574,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
     McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
   }
   McuShell_SendStatusStr((unsigned char*)"Sector size", (unsigned char*)"", io->stdOut);
-  if (disk_ioctl(0, GET_SECTOR_SIZE, &val16)==RES_OK) {
+  if (disk_ioctl(driveNr, GET_SECTOR_SIZE, &val16)==RES_OK) {
     McuUtility_Num16sToStr(buf, sizeof(buf), val16);
     McuShell_SendStr(buf, io->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -2570,7 +2582,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
     McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
   }
   McuShell_SendStatusStr((unsigned char*)"READ_BL_LEN", (unsigned char*)"", io->stdOut);
-  if (disk_ioctl(0, MMC_GET_READ_BL_LEN, &val16)==RES_OK) {
+  if (disk_ioctl(driveNr, MMC_GET_READ_BL_LEN, &val16)==RES_OK) {
     McuUtility_Num16sToStr(buf, sizeof(buf), val16);
     McuShell_SendStr(buf, io->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -2579,7 +2591,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
   }
   if (driverVersion==0) { /* only SPI cards implement this */
     McuShell_SendStatusStr((unsigned char*)"Block size", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, GET_BLOCK_SIZE, &val32)==RES_OK) {
+    if (disk_ioctl(driveNr, GET_BLOCK_SIZE, &val32)==RES_OK) {
       McuUtility_Num32sToStr(buf, sizeof(buf), val32);
       McuShell_SendStr(buf, io->stdOut);
       McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
@@ -2587,7 +2599,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
       McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
     }
     McuShell_SendStatusStr((unsigned char*)"CSD", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, MMC_GET_CSD, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_CSD, &buff[0])==RES_OK) {
       for(val8=0; val8<16; val8++) {
         buf[0] = '\0';
         McuUtility_strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
@@ -2599,7 +2611,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
       McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
     }
     McuShell_SendStatusStr((unsigned char*)"CID", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, MMC_GET_CID, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_CID, &buff[0])==RES_OK) {
       for(val8=0; val8<16; val8++) {
         buf[0] = '\0';
         McuUtility_strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
@@ -2619,7 +2631,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
       McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
     }
     McuShell_SendStatusStr((unsigned char*)"OCR", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, MMC_GET_OCR, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_OCR, &buff[0])==RES_OK) {
       for(val8=0; val8<4; val8++) {
         buf[0] = '\0';
         McuUtility_strcatNum8Hex(buf, sizeof(buf), (uint8_t)buff[val8]);
@@ -2631,7 +2643,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
       McuShell_SendStr((unsigned char*)"ERROR\r\n", io->stdOut);
     }
     McuShell_SendStatusStr((unsigned char*)"SD Status", (unsigned char*)"", io->stdOut);
-    if (disk_ioctl(0, MMC_GET_SDSTAT, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_SDSTAT, &buff[0])==RES_OK) {
       for(val8=0; val8<64; val8++) {
         buf[0] = '\0';
         if (val8!=0 && (val8%16)==0) { /* new line to make things readable */
@@ -2649,19 +2661,19 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
   if (driverVersion==1) { /* only LLD_SDHD cards implement this */
     buff[1] = sizeof(buf)-2; /* size of buffer */
     buff[0] = MMC_GET_LLD_CMD_HIGH_CAPACITY; /* cmd */
-    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
       McuShell_SendStatusStr((unsigned char*)"High capacity", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
     }
     buff[0] = MMC_GET_LLD_CMD_HIGH_SPEED; /* cmd */
-    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
       McuShell_SendStatusStr((unsigned char*)"High speed", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
     }
     buff[0] = MMC_GET_LLD_CMD_LOW_VOLTAGE; /* cmd */
-    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
       McuShell_SendStatusStr((unsigned char*)"Low voltage", (unsigned char*)(buff[2]!=0?"yes\r\n":"no\r\n"), io->stdOut);
     }
     buff[0] = MMC_GET_LLD_CMD_DATA_WIDTHS; /* cmd */
-    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
       McuShell_SendStatusStr((unsigned char*)"Data widths", (unsigned char*)"", io->stdOut);
       if (buff[2]&0x1) {
         McuShell_SendStr((unsigned char*)"1 ", io->stdOut);
@@ -2675,7 +2687,7 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drive, const McuShell_StdIOType *io)
       McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     }
     buff[0] = MMC_GET_LLD_CMD_OPERATIONS; /* cmd */
-    if (disk_ioctl(0, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
+    if (disk_ioctl(driveNr, MMC_GET_LLD_INFO, &buff[0])==RES_OK) {
       McuShell_SendStatusStr((unsigned char*)"Operations", (unsigned char*)"", io->stdOut);
       if (buff[2]&0x1) {
         McuShell_SendStr((unsigned char*)"BlockRead ", io->stdOut);
@@ -2721,7 +2733,7 @@ uint8_t McuFatFS_Benchmark(const McuShell_StdIOType *io)
   TIMEREC time, startTime;
   int32_t start_mseconds, mseconds;
 
-  if (McuFatFS_isWriteProtected((uint8_t*)"")) {
+  if (McuFatFS_isWriteProtected((uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING)) {
     McuShell_SendStr((unsigned char*)"disk is write protected!\r\n", io->stdErr);
     return ERR_FAILED;
   }

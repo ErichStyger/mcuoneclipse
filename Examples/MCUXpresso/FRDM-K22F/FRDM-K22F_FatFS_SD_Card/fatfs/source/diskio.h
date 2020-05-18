@@ -48,7 +48,7 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 #define STA_PROTECT		0x04	/* Write protected */
 
 
-/* Command code for disk_ioctrl fucntion */
+/* Command code for disk_ioctrl function */
 
 /* Generic command (Used by FatFs) */
 #define CTRL_SYNC			0	/* Complete pending write process (needed at FF_FS_READONLY == 0) */
@@ -65,10 +65,33 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
 /* MMC/SDC specific ioctl command */
 #define MMC_GET_TYPE		10	/* Get card type */
+/* << EST */
+#define CT_SD1   (1<<0) /* LDD_SDHC_SD, Secure Digital memory card */
+#define CT_SD2   (1<<1) /* LDD_SDHC_SDIO, Secure Digital IO card */
+#define CT_BLOCK (1<<2)
+#define CT_MMC   (1<<3) /* LDD_SDHC_MMC, MultiMediaCard memory card */
+#define CT_SDC   (1<<4) /* LDD_SDHC_SDCOMBO, Combined Secure Digital memory and IO card */
+#define CT_ATA   (1<<5) /* LDD_SDHC_CE_ATA, Consumer Electronics ATA card */
+/* << EST */
+
 #define MMC_GET_CSD			11	/* Get CSD */
 #define MMC_GET_CID			12	/* Get CID */
 #define MMC_GET_OCR			13	/* Get OCR */
 #define MMC_GET_SDSTAT		14	/* Get SD status */
+
+/* << EST */
+#define MMC_GET_SDC_VERSION     15  /* 1 byte */
+#define MMC_GET_READ_BL_LEN     16  /* 2 bytes */
+#define MMC_GET_DRIVER_VERSION  17  /* 1 byte: return: 0 SPI driver, 1 LLD SDHC driver */
+#define MMC_GET_LLD_INFO        18  /* array: 1 byte subcommand, 1 byte bufSize, bufSize*bytes */
+  #define MMC_GET_LLD_CMD_HIGH_CAPACITY  0 /* return 1 byte, 0 for no, 1 for yes */
+  #define MMC_GET_LLD_CMD_HIGH_SPEED     1 /* return 1 byte, 0 for no, 1 for yes */
+  #define MMC_GET_LLD_CMD_LOW_VOLTAGE    2 /* return 1 byte, 0 for no, 1 for yes */
+  #define MMC_GET_LLD_CMD_DATA_WIDTHS    3 /* return 1 byte (bitset), 0x1: 1, 0x2: 4, 0x4: 8 */
+  #define MMC_GET_LLD_CMD_OPERATIONS     4 /* return 1 byte (bitset), 0x1: block read, 0x2: block write, 0x4: block erase, 0x8: write protection, 0x10: I/O */
+/*<< EST */
+
+
 #define ISDIO_READ			55	/* Read data form SD iSDIO register */
 #define ISDIO_WRITE			56	/* Write data to SD iSDIO register */
 #define ISDIO_MRITE			57	/* Masked write data to SD iSDIO register */
