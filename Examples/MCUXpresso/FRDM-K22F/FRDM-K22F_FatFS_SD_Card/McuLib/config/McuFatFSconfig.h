@@ -13,5 +13,11 @@
     /*!< Delay time in milliseconds after insertion of the card detected */
 #endif
 
+#if !defined(McuFatFS_CONFIG_SHELL_ENABLED)
+  #define McuFatFS_CONFIG_SHELL_ENABLED    (1)
+    /*!< 1: Shell support is enabled; 0: no shell support enabled */
+#endif
+
+
 #endif /* __McuFatFS_CONFIG_H */
 
