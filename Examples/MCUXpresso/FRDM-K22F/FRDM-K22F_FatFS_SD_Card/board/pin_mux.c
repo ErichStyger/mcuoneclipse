@@ -107,6 +107,10 @@ BOARD_InitPins:
 - options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '24', peripheral: TPIU, signal: SWO, pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, identifier: '', pull_select: down, pull_enable: disable}
+  - {pin_num: '58', peripheral: SPI0, signal: SCK, pin_signal: ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FB_CS0_b/LPUART0_CTS_b}
+  - {pin_num: '60', peripheral: SPI0, signal: SIN, pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/LPUART0_TX/I2C0_SDA, identifier: ''}
+  - {pin_num: '59', peripheral: SPI0, signal: SOUT, pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/LPUART0_RX/I2C0_SCL, identifier: ''}
+  - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -121,6 +125,10 @@ void BOARD_InitPins(void)
 {
     /* Port A Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port C Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortC);
+    /* Port D Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortD);
 
     /* PORTA2 (pin 24) is configured as TRACE_SWO */
     PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt7);
@@ -135,6 +143,18 @@ void BOARD_InitPins(void)
 
                      /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
                      | PORT_PCR_PE(kPORT_PullDisable));
+
+    /* PORTC4 (pin 49) is configured as SPI0_PCS0 */
+    PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt2);
+
+    /* PORTD1 (pin 58) is configured as SPI0_SCK */
+    PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt2);
+
+    /* PORTD2 (pin 59) is configured as SPI0_SOUT */
+    PORT_SetPinMux(PORTD, 2U, kPORT_MuxAlt2);
+
+    /* PORTD3 (pin 60) is configured as SPI0_SIN */
+    PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt2);
 }
 
 /* clang-format off */

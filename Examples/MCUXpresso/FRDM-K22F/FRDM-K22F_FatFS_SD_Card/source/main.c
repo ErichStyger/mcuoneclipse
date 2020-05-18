@@ -50,6 +50,9 @@ int main(void) {
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
+    void main2(void);
+    main2();
+
     APP_Run();
     return 0 ;
 }
