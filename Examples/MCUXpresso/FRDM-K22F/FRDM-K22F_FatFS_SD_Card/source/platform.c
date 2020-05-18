@@ -30,6 +30,9 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
+#if PL_CONFIG_USE_SD_CARD
+  #include "McuFatFS.h"
+#endif
 
 void PL_Init(void) {
   /* clocking */
@@ -59,4 +62,7 @@ void PL_Init(void) {
   SHELL_Init();
 #endif
   LEDS_Init();
+#if PL_CONFIG_USE_SD_CARD
+  McuFatFS_Init();
+#endif
 }

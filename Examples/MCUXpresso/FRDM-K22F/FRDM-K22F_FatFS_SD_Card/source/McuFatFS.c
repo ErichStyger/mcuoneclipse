@@ -150,7 +150,9 @@
 
 #include "ff.h"
 #include "McuFatFS.h"
-//#include "McuSDCard.h"
+#if 0
+  #include "McuSDCard.h"
+#else
 #define McuSDCard_BLOCK_SIZE   512      /* user defined block size */
 /*<< EST added: */
 #define MMC_GET_SDC_VERSION     15  /* 1 byte */
@@ -169,7 +171,10 @@
 #define CT_SDC   (1<<4) /* LDD_SDHC_SDCOMBO, Combined Secure Digital memory and IO card */
 #define CT_ATA   (1<<5) /* LDD_SDHC_CE_ATA, Consumer Electronics ATA card */
 
-/* << EST end */
+bool McuSDCard_CardPresent(void);
+bool McuSDCard_isWriteProtected(void);
+
+#endif
 
 
 
@@ -1460,6 +1465,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
 
   drv = StrToDriveNumber(drvStr);
   switch(drv) {
+    case 4:
     case 0:
       return McuSDCard_isWriteProtected();
     default:
@@ -1487,6 +1493,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
 
   drv = StrToDriveNumber(drvStr);
   switch(drv) {
+    case 4:
     case 0:
       return McuSDCard_CardPresent();
     default:

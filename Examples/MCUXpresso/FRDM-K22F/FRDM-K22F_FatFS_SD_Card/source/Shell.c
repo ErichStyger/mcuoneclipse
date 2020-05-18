@@ -13,6 +13,9 @@
 #if PL_CONFIG_USE_SHELL_UART
   #include "McuShellUart.h"
 #endif
+#if PL_CONFIG_USE_SD_CARD
+  #include "McuFatFS.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -20,6 +23,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuRTOS_ParseCommand,
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
+#endif
+#if PL_CONFIG_USE_SD_CARD
+  McuFatFS_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -89,11 +95,20 @@ uint8_t SHELL_ParseCommand(const unsigned char *command, McuShell_ConstStdIOType
 }
 
 static void ShellTask(void *pv) {
+#if PL_CONFIG_USE_SD_CARD
+  bool cardMounted = false;
+  static McuFatFS_FATFS fileSystemObject;
+  const TCHAR driverNumberBuffer[] = {SDSPIDISK + '0', ':', '/', '\0'};
+#endif
+
   McuShell_SendStr((uint8_t*)"\nShell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
+#if PL_CONFIG_USE_SD_CARD
+    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)driverNumberBuffer/*volume*/, &fileSystemObject, McuShell_GetStdio());
+#endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
@@ -119,6 +134,17 @@ void SHELL_Init(void) {
   McuShell_SetStdio(ios[0].stdio); /* default */
 }
 
+#if PL_CONFIG_USE_SD_CARD
+bool McuSDCard_CardPresent(void) {
+  return true;
+}
+#endif
+
+#if PL_CONFIG_USE_SD_CARD
+bool McuSDCard_isWriteProtected(void) {
+  return false;
+}
+#endif
 void SHELL_Deinit(void) {}
 
 #endif /* PL_CONFIG_USE_SHELL */

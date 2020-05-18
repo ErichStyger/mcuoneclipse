@@ -13,6 +13,7 @@
 #define PL_CONFIG_USE_SHELL_UART    (1) /* if using (OpenSDA) UART */
 #define PL_CONFIG_USE_RTT           (1) /* if using RTT */
 #define PL_CONFIG_USE_USB_CDC       (0) /* if using USB CDC */
+#define PL_CONFIG_USE_SD_CARD       (1) /* if using SD card */
 
 void PL_Init(void);
 

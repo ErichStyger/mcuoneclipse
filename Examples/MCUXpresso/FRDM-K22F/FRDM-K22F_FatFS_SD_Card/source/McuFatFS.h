@@ -155,12 +155,12 @@
 #define McuFatFS_DIR              DIR
 #define McuFatFS_FIL              FIL
 #define McuFatFS_FILINFO          FILINFO
-#define McuFatFS_FS_READONLY      _FS_READONLY
-#define McuFatFS_USE_LFN          _USE_LFN
-#define McuFatFS_MAX_LFN          _MAX_LFN
-#define McuFatFS_FS_REENTRANT     _FS_REENTRANT
-#define McuFatFS_MAX_SS           _MAX_SS
-#define McuFatFS_FS_RPATH         _FS_RPATH
+#define McuFatFS_FS_READONLY      FF_FS_READONLY /*_FS_READONLY*/
+#define McuFatFS_USE_LFN          FF_USE_LFN /* _USE_LFN */
+#define McuFatFS_MAX_LFN          FF_MAX_LFN /* _MAX_LFN */
+#define McuFatFS_FS_REENTRANT     FF_FS_REENTRANT /* _FS_REENTRANT */
+#define McuFatFS_MAX_SS           FF_MAX_SS /*_MAX_SS*/
+#define McuFatFS_FS_RPATH         FF_FS_RPATH /*_FS_RPATH */
 #define McuFatFS_FRESULT          FRESULT
 #define McuFatFS_DRESULT          DRESULT
 
