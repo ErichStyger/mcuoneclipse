@@ -134,17 +134,6 @@ void SHELL_Init(void) {
   McuShell_SetStdio(ios[0].stdio); /* default */
 }
 
-#if PL_CONFIG_USE_SD_CARD
-bool FatFS_IsDiskPresent(uint8_t drv) {
-  return true;
-}
-#endif
-
-#if PL_CONFIG_USE_SD_CARD
-bool FatFS_IsWriteProtected(uint8_t drv) {
-  return false;
-}
-#endif
 void SHELL_Deinit(void) {}
 
 #endif /* PL_CONFIG_USE_SHELL */

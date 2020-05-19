@@ -34,11 +34,13 @@
 #endif
 #if PL_CONFIG_USE_SD_CARD
   #include "McuFatFS.h"
+  #include "fatfs_sdcard.h"
 #endif
 
 void PL_Init(void) {
   /* clocking */
   CLOCK_EnableClock(kCLOCK_PortA); /* used by leds */
+  CLOCK_EnableClock(kCLOCK_PortB); /* used by sd card detect */
   CLOCK_EnableClock(kCLOCK_PortD); /* used by leds */
 
   /* library modules */
@@ -67,5 +69,6 @@ void PL_Init(void) {
   LEDS_Init();
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
+  FatFS_SdCardInit();
 #endif
 }

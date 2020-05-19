@@ -156,8 +156,8 @@
 #else
 
 /* implement the two callbacks below in the application */
-bool FatFS_IsDiskPresent(uint8_t drive);
-bool FatFS_IsWriteProtected(uint8_t drive);
+bool FatFS_SdCardIsDiskPresent(uint8_t drive);
+bool FatFS_SdCardIsWriteProtected(uint8_t drive);
 
 #endif
 
@@ -1466,7 +1466,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
   } /* switch */
   return TRUE;
 #else
-  return FatFS_IsWriteProtected(drv);
+  return FatFS_SdCardIsWriteProtected(drv);
 #endif
 }
 
@@ -1497,7 +1497,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
   } /* switch */
   return FALSE;
 #else
-  return FatFS_IsDiskPresent(drv);
+  return FatFS_SdCardIsDiskPresent(drv);
 #endif
 }
 
