@@ -14,6 +14,7 @@
 #define PL_CONFIG_USE_RTT           (1) /* if using RTT */
 #define PL_CONFIG_USE_USB_CDC       (0) /* if using USB CDC */
 #define PL_CONFIG_USE_SD_CARD       (1) /* if using SD card */
+#define PL_CONFIG_USE_MININI        (1 && PL_CONFIG_USE_SD_CARD)
 
 void PL_Init(void);
 

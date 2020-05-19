@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 14:07, # CodeGen: 614
+**     Date/Time   : 2020-05-19, 09:10, # CodeGen: 621
 **     Abstract    :
 **
 **     Settings    :
@@ -110,7 +110,7 @@
 **         Deinit            - uint8_t McuFatFS_Deinit(void);
 **         Init              - uint8_t McuFatFS_Init(void);
 **
-** Copyright (c) 2014-2019,  Erich Styger
+** Copyright (c) 2014-2020,  Erich Styger
 ** Web: http://mcuoneclipse.com/
 ** SourceForge: https://sourceforge.net/projects/mcuoneclipse
 ** Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -176,6 +176,10 @@
   #define McuFatFS_FS_RPATH         FF_FS_RPATH
   #define McuFatFS_FS_READONLY      FF_FS_READONLY
 #endif
+
+/* prototypes for application callbacks */
+extern bool McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(uint8_t drive);
+extern bool McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(uint8_t drive);
 
 #if McuFatFS_CONFIG_SHELL_ENABLED
   #include "McuShell.h"

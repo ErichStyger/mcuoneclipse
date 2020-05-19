@@ -319,11 +319,11 @@ static status_t sdcardWaitCardInsert(void)
 }
 #endif
 
-bool FatFS_SdCardIsDiskPresent(uint8_t drv) {
+bool McuFatFS_IsDiskPresent(uint8_t drv) {
   return McuGPIO_IsHigh(FatFS_CardDetectPin); /* pin has internal pull-down. Pin is high if card is inserted */
 }
 
-bool FatFS_SdCardIsWriteProtected(uint8_t drv) {
+bool McuFatFS_IsWriteProtected(uint8_t drv) {
   return false; /* there is no way to detect write detection on the micro SD card */
 }
 

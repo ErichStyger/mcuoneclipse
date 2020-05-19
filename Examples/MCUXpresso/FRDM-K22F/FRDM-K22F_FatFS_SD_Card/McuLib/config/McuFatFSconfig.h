@@ -18,11 +18,20 @@
     /*!< 1: Shell support is enabled; 0: no shell support enabled */
 #endif
 
+#ifndef McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK
+  #define McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK    McuFatFS_IsDiskPresent
+    /*!< 1: callback name to be used to decide if a device is present or not */
+#endif
+
+#ifndef McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK
+  #define McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK    McuFatFS_IsWriteProtected
+    /*!< 1: callback name to be used to decide if a device is present or not */
+#endif
+
 #ifndef McuFatFS_CONFIG_DEFAULT_DRIVE_STRING
   #define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING    "0:/"
     /*!< default drive used for commands. The first letter defines the drive */
 #endif
-
 
 #endif /* __McuFatFS_CONFIG_H */
 

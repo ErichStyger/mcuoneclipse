@@ -10,9 +10,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-bool FatFS_SdCardIsDiskPresent(uint8_t drv);
+bool McuFatFS_IsDiskPresent(uint8_t drv);
 
-bool FatFS_SdCardIsWriteProtected(uint8_t drv);
+bool McuFatFS_IsWriteProtected(uint8_t drv);
 
 void FatFS_SdCardInit(void);
 

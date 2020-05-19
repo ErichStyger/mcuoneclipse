@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.210, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 15:05, # CodeGen: 619
+**     Date/Time   : 2020-05-19, 09:10, # CodeGen: 621
 **     Abstract    :
 **
 **     Settings    :
@@ -110,7 +110,7 @@
 **         Deinit            - uint8_t McuFatFS_Deinit(void);
 **         Init              - uint8_t McuFatFS_Init(void);
 **
-** Copyright (c) 2014-2019,  Erich Styger
+** Copyright (c) 2014-2020,  Erich Styger
 ** Web: http://mcuoneclipse.com/
 ** SourceForge: https://sourceforge.net/projects/mcuoneclipse
 ** Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -153,12 +153,6 @@
 
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 #include "McuSDCard.h"
-#else
-
-/* implement the two callbacks below in the application */
-bool FatFS_SdCardIsDiskPresent(uint8_t drive);
-bool FatFS_SdCardIsWriteProtected(uint8_t drive);
-
 #endif
 
 
@@ -739,7 +733,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"McuFatFS", (unsigned char*)"FatFs status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  present", McuFatFS_isDiskPresent((uint8_t*)"0")?(unsigned char*)"drive0: yes\r\n":(unsigned char*)"drive0: no\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  protected", McuFatFS_isWriteProtected((uint8_t*)"0")?(unsigned char*)"drive0: yes\r\n":(unsigned char*)"drive0: no\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  default drive", (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING "\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  default drv", (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING "\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -1466,7 +1460,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
   } /* switch */
   return TRUE;
 #else
-  return FatFS_SdCardIsWriteProtected(drv);
+  return McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(drv);
 #endif
 }
 
@@ -1497,7 +1491,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
   } /* switch */
   return FALSE;
 #else
-  return FatFS_SdCardIsDiskPresent(drv);
+  return McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(drv);
 #endif
 }
 
