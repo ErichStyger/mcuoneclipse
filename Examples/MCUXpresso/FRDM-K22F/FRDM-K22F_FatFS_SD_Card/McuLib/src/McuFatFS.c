@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 11:03, # CodeGen: 628
+**     Date/Time   : 2020-05-19, 15:07, # CodeGen: 643
 **     Abstract    :
 **
 **     Settings    :
@@ -15,7 +15,7 @@
 **          Tiny                                           : no
 **          Volumes                                        : 1
 **          Drives                                         : 1
-**            Drive0                                       : McuSDCard
+**            Drive0                                       : SDCard
 **          FS_MINIMIZE                                    : 0
 **          Maximum Sector Size                            : 512
 **          Relative Path                                  : Enabled with f_getcwd()
@@ -152,7 +152,7 @@
 #include "McuFatFS.h"
 
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-#include "McuSDCard.h"
+#include "SDCard.h"
 #endif
 
 
@@ -180,7 +180,7 @@ DSTATUS disk_initialize (
 {
   switch(drv) {
     case 0:
-      return McuSDCard_disk_initialize(drv);
+      return SDCard_disk_initialize(drv);
     default:
       break;
   } /* switch */
@@ -196,7 +196,7 @@ DSTATUS disk_status (
 {
   switch(drv) {
     case 0:
-      return McuSDCard_disk_status(drv);
+      return SDCard_disk_status(drv);
     default:
       break;
   } /* switch */
@@ -215,7 +215,7 @@ DRESULT disk_read (
 {
   switch(drv) {
     case 0:
-      return McuSDCard_disk_read(drv, buff, sector, count);
+      return SDCard_disk_read(drv, buff, sector, count);
     default:
       break;
   } /* switch */
@@ -235,7 +235,7 @@ DRESULT disk_write (
 {
   switch(drv) {
     case 0:
-      return McuSDCard_disk_write(drv, buff, sector, count);
+      return SDCard_disk_write(drv, buff, sector, count);
     default:
       break;
   } /* switch */
@@ -253,7 +253,7 @@ DRESULT disk_ioctl (
 {
   switch(drv) {
     case 0:
-      return McuSDCard_disk_ioctl(drv, ctrl, buff);
+      return SDCard_disk_ioctl(drv, ctrl, buff);
     default:
       break;
   } /* switch */
@@ -487,7 +487,7 @@ static uint8_t DirCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *i
 
   McuFatFS_INIT_NAMEBUF(fileName);
   if (*(cmd+sizeof("dir")-1)== ' ') { /* space after "dir": read name */
-    if (McuUtility_ReadEscapedName(cmd+sizeof("dir"), McuFatFS_PTR_NAMEBUF(fileName),
+    if (McuUtility_ReadEscapedName(cmd+sizeof("dir"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
           McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
        )
     {
@@ -511,7 +511,7 @@ static uint8_t DirCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *i
 #endif
   }
   if (res == ERR_OK) {
-    res = McuFatFS_PrintDirectory(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_PrintDirectory((const uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   }
   McuFatFS_FREE_NAMEBUF(fileName);
   return res;
@@ -526,14 +526,14 @@ static uint8_t CopyCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *
 
   McuFatFS_INIT_NAMEBUF(fileName);
   McuFatFS_INIT_NAMEBUF(fileName2);
-  if (   (McuUtility_ReadEscapedName(cmd+sizeof("copy"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (   (McuUtility_ReadEscapedName(cmd+sizeof("copy"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
           McuFatFS_SIZE_NAMEBUF(fileName), &lenRead, NULL, NULL)==ERR_OK)
       && *(cmd+sizeof("copy")+lenRead)==' '
-      && (McuUtility_ReadEscapedName(cmd+sizeof("copy")+lenRead+1, McuFatFS_PTR_NAMEBUF(fileName2),
+      && (McuUtility_ReadEscapedName(cmd+sizeof("copy")+lenRead+1, (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName2),
           McuFatFS_SIZE_NAMEBUF(fileName2), NULL, NULL, NULL)==ERR_OK)
      )
   {
-    res = McuFatFS_CopyFile(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_PTR_NAMEBUF(fileName2), io);
+    res = McuFatFS_CopyFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_PTR_NAMEBUF(fileName2), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"copy srcFileName dstFileName", io);
     res = ERR_FAILED;
@@ -549,11 +549,11 @@ static uint8_t DeleteCmd(const unsigned char *cmd, const McuShell_ConstStdIOType
   McuFatFS_DEF_NAMEBUF(fileName);
 
   McuFatFS_INIT_NAMEBUF(fileName);
-  if (McuUtility_ReadEscapedName(cmd+sizeof("delete"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (McuUtility_ReadEscapedName(cmd+sizeof("delete"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
         McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
      )
   {
-    res = McuFatFS_DeleteFile(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_DeleteFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"delete fileName", io);
     res = ERR_FAILED;
@@ -568,11 +568,11 @@ static uint8_t MkdirCmd(const unsigned char *cmd, const McuShell_ConstStdIOType 
   McuFatFS_DEF_NAMEBUF(fileName);
 
   McuFatFS_INIT_NAMEBUF(fileName);
-  if (McuUtility_ReadEscapedName(cmd+sizeof("mkdir"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (McuUtility_ReadEscapedName(cmd+sizeof("mkdir"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
         McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
      )
   {
-    res = McuFatFS_MakeDirectory(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_MakeDirectory((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"mkdir directoryName", io);
     res = ERR_FAILED;
@@ -590,11 +590,11 @@ static uint8_t RenameCmd(const unsigned char *cmd, const McuShell_ConstStdIOType
 
   McuFatFS_INIT_NAMEBUF(fileName);
   McuFatFS_INIT_NAMEBUF(fileName2);
-  if (   (McuUtility_ReadEscapedName(cmd+sizeof("rename"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (   (McuUtility_ReadEscapedName(cmd+sizeof("rename"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
           McuFatFS_SIZE_NAMEBUF(fileName), &lenRead, NULL, NULL)==ERR_OK)
       && *(cmd+sizeof("rename")+lenRead)==' '
       && (McuUtility_ReadEscapedName(cmd+sizeof("rename")+lenRead+1,
-          McuFatFS_PTR_NAMEBUF(fileName2),
+          (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName2),
           McuFatFS_SIZE_NAMEBUF(fileName2), NULL, NULL, NULL)==ERR_OK)
      )
   {
@@ -633,11 +633,11 @@ static uint8_t PrintCmd(const unsigned char *cmd, const McuShell_ConstStdIOType 
   McuFatFS_DEF_NAMEBUF(fileName);
 
   McuFatFS_INIT_NAMEBUF(fileName);
-  if (McuUtility_ReadEscapedName(cmd+sizeof("print"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (McuUtility_ReadEscapedName(cmd+sizeof("print"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
         McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
      )
   {
-    res = McuFatFS_PrintFile(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_PrintFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"print fileName", io);
     res = ERR_FAILED;
@@ -652,11 +652,11 @@ static uint8_t PrintHexCmd(const unsigned char *cmd, const McuShell_ConstStdIOTy
   McuFatFS_DEF_NAMEBUF(fileName);
 
   McuFatFS_INIT_NAMEBUF(fileName);
-  if (McuUtility_ReadEscapedName(cmd+sizeof("printhex"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (McuUtility_ReadEscapedName(cmd+sizeof("printhex"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
         McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
      )
   {
-    res = McuFatFS_PrintHexFile(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_PrintHexFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"printhex fileName", io);
     res = ERR_FAILED;
@@ -664,7 +664,6 @@ static uint8_t PrintHexCmd(const unsigned char *cmd, const McuShell_ConstStdIOTy
   McuFatFS_FREE_NAMEBUF(fileName);
   return res;
 }
-
 
 static uint8_t CdCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *io) {
   /* precondition: cmd starts with "cd" */
@@ -674,11 +673,11 @@ static uint8_t CdCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *io
 
   McuFatFS_INIT_NAMEBUF(fileName);
   if (*(cmd+sizeof("cd")-1)== ' ') { /* space after "cd": read name */
-    if (McuUtility_ReadEscapedName(cmd+sizeof("cd"), McuFatFS_PTR_NAMEBUF(fileName),
+    if (McuUtility_ReadEscapedName(cmd+sizeof("cd"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
           McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
        )
     {
-      res = McuFatFS_ChangeDirectory(McuFatFS_PTR_NAMEBUF(fileName), io);
+      res = McuFatFS_ChangeDirectory((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
     } else {
       McuShell_SendStr((unsigned char*)"reading directory name failed!\r\n", io->stdErr);
       res = ERR_FAILED;
@@ -692,7 +691,7 @@ static uint8_t CdCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *io
       FatFsFResultMsg((unsigned char*)"getcwd failed", fres, io);
       res = ERR_FAILED;
     } else {
-      McuShell_SendStr(McuFatFS_PTR_NAMEBUF(fileName), io->stdOut);
+      McuShell_SendStr((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io->stdOut);
       McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     }
 #else
@@ -716,11 +715,11 @@ static uint8_t CreateCmd(const unsigned char *cmd, const McuShell_ConstStdIOType
   McuFatFS_DEF_NAMEBUF(fileName);
 
   McuFatFS_INIT_NAMEBUF(fileName);
-  if (McuUtility_ReadEscapedName(cmd+sizeof("create"), McuFatFS_PTR_NAMEBUF(fileName),
+  if (McuUtility_ReadEscapedName(cmd+sizeof("create"), (uint8_t*)McuFatFS_PTR_NAMEBUF(fileName),
         McuFatFS_SIZE_NAMEBUF(fileName), NULL, NULL, NULL)==ERR_OK
      )
   {
-    res = McuFatFS_CreateFile(McuFatFS_PTR_NAMEBUF(fileName), io);
+    res = McuFatFS_CreateFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"create fileName", io);
     res = ERR_FAILED;
@@ -1454,7 +1453,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   switch(drv) {
     case 0:
-      return McuSDCard_isWriteProtected();
+      return SDCard_isWriteProtected();
     default:
       break;
   } /* switch */
@@ -1485,7 +1484,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   switch(drv) {
     case 0:
-      return McuSDCard_CardPresent();
+      return SDCard_CardPresent();
     default:
       break;
   } /* switch */
@@ -1680,7 +1679,7 @@ uint8_t McuFatFS_Init(void)
 {
   uint8_t res = ERR_OK;
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  if (McuSDCard_Init(NULL)!=ERR_OK) {
+  if (SDCard_Init(NULL)!=ERR_OK) {
     res = ERR_FAILED;
   }
 #endif
@@ -1702,7 +1701,7 @@ uint8_t McuFatFS_Deinit(void)
 {
   uint8_t res = ERR_OK;
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  if (McuSDCard_Deinit(NULL)!=ERR_OK) {
+  if (SDCard_Deinit(NULL)!=ERR_OK) {
     res = ERR_FAILED;
   }
 #endif
@@ -2389,13 +2388,13 @@ uint8_t McuFatFS_RenameFile(const uint8_t *srcFileName, const uint8_t *dstFileNa
 */
 #if McuFatFS_USE_RTOS_DYNAMIC_MEMORY
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  #define SECTOR_BUF_SIZE0   McuSDCard_BLOCK_SIZE
+  #define SECTOR_BUF_SIZE0   SDCard_BLOCK_SIZE
 #else
   #define SECTOR_BUF_SIZE0   512
 #endif
 #else
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  static uint8_t print_buf0[McuSDCard_BLOCK_SIZE];
+  static uint8_t print_buf0[SDCard_BLOCK_SIZE];
   #define SECTOR_BUF_SIZE0   sizeof(print_buf0)
 #else
   static uint8_t print_buf0[512];

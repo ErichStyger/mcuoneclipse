@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 09:54, # CodeGen: 624
+**     Date/Time   : 2020-05-19, 14:46, # CodeGen: 642
 **     Abstract    :
 **
 **     Settings    :
@@ -15,7 +15,7 @@
 **          Tiny                                           : no
 **          Volumes                                        : 1
 **          Drives                                         : 1
-**            Drive0                                       : McuSDCard
+**            Drive0                                       : SDCard
 **          FS_MINIMIZE                                    : 0
 **          Maximum Sector Size                            : 512
 **          Relative Path                                  : Enabled with f_getcwd()
