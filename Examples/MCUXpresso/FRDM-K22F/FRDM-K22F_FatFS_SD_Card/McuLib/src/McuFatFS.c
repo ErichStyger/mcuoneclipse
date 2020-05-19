@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 15:07, # CodeGen: 643
+**     Date/Time   : 2020-05-19, 16:46, # CodeGen: 647
 **     Abstract    :
 **
 **     Settings    :
@@ -770,7 +770,7 @@ void ff_memfree (void* ptr) {  /* Free memory block */
 #endif
 #endif
 
-#if _FS_REENTRANT
+#if McuFatFS_FS_REENTRANT
 /*!
 * \brief Create a Synchronization Object
 * This function is called in f_mount function to create a new
@@ -784,7 +784,7 @@ void ff_memfree (void* ptr) {  /* Free memory block */
   static StaticSemaphore_t xMutexBuffer[_VOLUMES];
 #endif
 
-int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
+int ff_cre_syncobj(uint8_t vol, McuFatFS_SYNC_t *sobj) {
   (void)vol; /* argument not used */
 #if configSUPPORT_STATIC_ALLOCATION
   *sobj = xSemaphoreCreateMutexStatic(&xMutexBuffer[vol]);
@@ -792,7 +792,7 @@ int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
   *sobj = xSemaphoreCreateMutex(); /* create semaphore */
 #endif
   if (*sobj!=NULL) {
-    vQueueAddToRegistry(*sobj, "McuFatFS_Sem");
+    vQueueAddToRegistry(*sobj, "McuFatFS_Mutex");
   }
   return (*sobj != NULL) ? TRUE : FALSE;
 }
@@ -805,7 +805,7 @@ int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
 * \param[out] sobj Sync object tied to the logical drive to be deleted
 * \return TRUE: Function succeeded, FALSE: Could not create due to any error
 */
-int ff_del_syncobj(_SYNC_t sobj) {
+int ff_del_syncobj(McuFatFS_SYNC_t sobj) {
   vQueueUnregisterQueue(sobj);
   McuRTOS_vSemaphoreDelete(sobj); /* FreeRTOS: free up memory for semaphore */
   return TRUE; /* everything ok */
@@ -818,8 +818,8 @@ int ff_del_syncobj(_SYNC_t sobj) {
 * \param[in] sobj Sync object to wait
 * \return TRUE: Function succeeded, FALSE: Could not create due to any error
 */
-int ff_req_grant (_SYNC_t sobj) {
-  if (McuRTOS_xSemaphoreTake(sobj, _FS_TIMEOUT) == pdTRUE) {
+int ff_req_grant (McuFatFS_SYNC_t sobj) {
+  if (McuRTOS_xSemaphoreTake(sobj, McuFatFS_FS_TIMEOUT) == pdTRUE) {
     return TRUE; /* success */
   } else {  /* failed to get the sync object? */
     return FALSE; /* failure */
@@ -831,10 +831,10 @@ int ff_req_grant (_SYNC_t sobj) {
 * This function is called on leaving file functions to unlock the volume.
 * \param[in] sobj Sync object to be signaled
 */
-void ff_rel_grant (_SYNC_t sobj) {
+void ff_rel_grant (McuFatFS_SYNC_t sobj) {
   (void)McuRTOS_xSemaphoreGive(sobj); /* FreeRTOS */
 }
-#endif /* _FS_REENTRANT */
+#endif /* McuFatFS_FS_REENTRANT */
 
 /*
 ** ===================================================================

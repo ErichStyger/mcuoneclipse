@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 14:46, # CodeGen: 642
+**     Date/Time   : 2020-05-19, 16:46, # CodeGen: 647
 **     Abstract    :
 **
 **     Settings    :
@@ -164,17 +164,21 @@
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   #define McuFatFS_USE_LFN          _USE_LFN
   #define McuFatFS_MAX_LFN          _MAX_LFN
-  #define McuFatFS_FS_REENTRANT     _FS_REENTRANT
   #define McuFatFS_MAX_SS           _MAX_SS
   #define McuFatFS_FS_RPATH         _FS_RPATH
   #define McuFatFS_FS_READONLY      _FS_READONLY
+  #define McuFatFS_FS_REENTRANT     _FS_REENTRANT
+  #define McuFatFS_SYNC_t           _SYNC_t
+  #define McuFatFS_FS_TIMEOUT       _FS_TIMEOUT
 #else /* use newer defines in NXP SDK and FatFS */
   #define McuFatFS_USE_LFN          FF_USE_LFN
   #define McuFatFS_MAX_LFN          FF_MAX_LFN
-  #define McuFatFS_FS_REENTRANT     FF_FS_REENTRANT
   #define McuFatFS_MAX_SS           FF_MAX_SS
   #define McuFatFS_FS_RPATH         FF_FS_RPATH
   #define McuFatFS_FS_READONLY      FF_FS_READONLY
+  #define McuFatFS_FS_REENTRANT     FF_FS_REENTRANT
+  #define McuFatFS_SYNC_t           FF_SYNC_t
+  #define McuFatFS_FS_TIMEOUT       FF_FS_TIMEOUT
 #endif
 
 /* prototypes for application callbacks */
