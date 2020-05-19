@@ -28,4 +28,9 @@
 
 #define INI_USE_GLOBAL_BUFFER   0 /* 0: use stack for buffer; 1: use global memory for buffer */
 
+#if !defined(McuMinINI_CONFIG_PARSE_COMMAND_ENABLED)
+  #define McuMinINI_CONFIG_PARSE_COMMAND_ENABLED  (1)
+    /*!< 1: shell support enabled, 0: otherwise */
+#endif
+
 #endif /* __McuMinINI_CONFIG_H */

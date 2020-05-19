@@ -17,7 +17,7 @@
   #include "McuFatFS.h"
 #endif
 #if PL_CONFIG_USE_MININI
-  #include "ini.h"
+  #include "McuMinINI.h"
 #endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -28,7 +28,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuArmTools_ParseCommand,
 #endif
 #if PL_CONFIG_USE_MININI
-  INI_ParseCommand,
+  McuMinINI_ParseCommand,
 #endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
