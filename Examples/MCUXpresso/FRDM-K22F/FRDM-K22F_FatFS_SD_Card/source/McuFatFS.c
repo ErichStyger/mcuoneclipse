@@ -261,7 +261,7 @@ DRESULT disk_ioctl (
 }
 #endif
 /*-----------------------------------------------------------------------*/
-#define McuFatFS_8_3_SIZE       sizeof("12345678.txt") /* length of a 8.3 file name (13 including the zero byte) */
+#define McuFatFS_8_3_SIZE       sizeof("0:/12345678.txt") /* length of a 8.3 file name (13 including the zero byte) */
 
 #if McuFatFS_USE_LFN == 0               /* No LFN */
 #define McuFatFS_DEF_NAMEBUF(name)      uint8_t name[McuFatFS_8_3_SIZE]

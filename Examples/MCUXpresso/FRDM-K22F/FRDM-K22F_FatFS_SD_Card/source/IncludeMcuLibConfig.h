@@ -63,7 +63,7 @@ Instructions:
 #define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "4:/" /* 4 is for the SPI SD card type in the SDK */
 /* -------------------------------------------------*/
 /* MinINI */
-#define MinINI_CONFIG_FS                        MinINI_CONFIG_FS_TYPE_FAT_FS
+#define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
 /* -------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

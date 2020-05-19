@@ -4,14 +4,15 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.163, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.164, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-09, 12:32, # CodeGen: 607
+**     Date/Time   : 2020-05-19, 11:05, # CodeGen: 630
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
 **          Component name                                 : McuUtility
 **     Contents    :
+**         SkipSpaces              - void McuUtility_SkipSpaces(const unsigned char **str);
 **         strcpy                  - void McuUtility_strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src);
 **         strcat                  - void McuUtility_strcat(uint8_t *dst, size_t dstSize, const unsigned char *src);
 **         strcatPad               - void McuUtility_strcatPad(uint8_t *dst, size_t dstSize, const unsigned char...
@@ -2831,6 +2832,26 @@ uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb)
     return ERR_OK;
   }
   return ERR_FAILED;
+}
+
+/*
+** ===================================================================
+**     Method      :  SkipSpaces (component Utility)
+**
+**     Description :
+**         Skips spaces
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * str             - Pointer to string to scan. Returns until
+**                           where it has scanned.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuUtility_SkipSpaces(const unsigned char **str)
+{
+  while(**str == ' ') {
+    (*str)++; /* skip space */
+  }
 }
 
 /* END McuUtility. */

@@ -9,9 +9,9 @@
  */
 
 #include "McuLib.h" /* SDK and API used */
-#include "MinINIconfig.h" /* MinIni config file */
+#include "McuMinINIconfig.h" /* MinIni config file */
 
-#if MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_GENERIC
+#if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_GENERIC
   /* map required file I/O types and functions to the standard C library */
   #include <stdio.h>
 
@@ -34,7 +34,7 @@
 
   typedef char TCHAR;
 
-#elif MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_FAT_FS
+#elif McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS
   #include "minGlue-FatFs.h"
 #endif
 
