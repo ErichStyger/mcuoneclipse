@@ -9,11 +9,16 @@
 #include "McuRTOS.h"
 #include "leds.h"
 #include "McuTimeout.h"
+#include "McuTimeDate.h"
 
-static TimerHandle_t timerHndl;
+static TimerHandle_t timerTimeoutHndl, timerTimeHndl;
 
 static void vTimerTimoutAddTick(TimerHandle_t pxTimer) {
   McuTimeout_AddTick();
+}
+
+static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
+  McuTimeDate_AddTick();
 }
 
 static void AppTask(void *pv) {
@@ -27,7 +32,6 @@ static void AppTask(void *pv) {
   }
 }
 
-
 void APP_Run(void) {
   BaseType_t result;
 
@@ -36,16 +40,29 @@ void APP_Run(void) {
   if (result!=pdPASS) {
     /* error! */
   }
-  timerHndl = xTimerCreate(  /* timer to handle periodic things */
+  timerTimeoutHndl = xTimerCreate(  /* timer to handle periodic things */
         "timeout", /* name */
         pdMS_TO_TICKS(McuTimeout_TICK_PERIOD_MS), /* period/time */
         pdTRUE, /* auto reload */
         (void*)0, /* timer ID */
         vTimerTimoutAddTick); /* callback */
-  if (timerHndl==NULL) {
+  if (timerTimeoutHndl==NULL) {
     for(;;); /* failure! */
   }
-  if (xTimerStart(timerHndl, 0)!=pdPASS) { /* start the timer */
+  if (xTimerStart(timerTimeoutHndl, 0)!=pdPASS) { /* start the timer */
+    for(;;); /* failure!?! */
+  }
+
+  timerTimeHndl = xTimerCreate(  /* timer to handle periodic things */
+        "time", /* name */
+        pdMS_TO_TICKS(McuTimeDate_TICK_TIME_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerTimeAddTick); /* callback */
+  if (timerTimeHndl==NULL) {
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(timerTimeHndl, 0)!=pdPASS) { /* start the timer */
     for(;;); /* failure!?! */
   }
 

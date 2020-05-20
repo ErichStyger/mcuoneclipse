@@ -36,6 +36,7 @@
   #include "McuFatFS.h"
   #include "fatfs_sdcard.h"
 #endif
+#include "McuTimeDate.h"
 
 void PL_Init(void) {
   /* clocking */
@@ -52,6 +53,7 @@ void PL_Init(void) {
   McuLED_Init();
   McuGPIO_Init();
   McuTimeout_Init();
+  McuTimeDate_Init();
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif

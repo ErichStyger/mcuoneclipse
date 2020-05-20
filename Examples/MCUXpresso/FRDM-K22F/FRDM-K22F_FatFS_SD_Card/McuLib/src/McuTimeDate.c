@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.063, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-21, 18:32, # CodeGen: 568
+**     Date/Time   : 2020-05-20, 07:04, # CodeGen: 649
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -66,7 +66,7 @@
 **         DeInit                      - void McuTimeDate_DeInit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2019, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

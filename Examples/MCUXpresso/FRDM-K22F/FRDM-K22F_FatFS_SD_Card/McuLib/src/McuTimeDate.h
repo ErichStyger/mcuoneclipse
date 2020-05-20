@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.063, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 11:40, # CodeGen: 565
+**     Date/Time   : 2020-05-20, 07:04, # CodeGen: 649
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -66,7 +66,7 @@
 **         DeInit                      - void McuTimeDate_DeInit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2019, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -163,21 +163,20 @@
 
 /* default time/date values */
 static const TIMEREC McuTimeDate_DefaultTime = {
-  17, /* hour */
-  51,  /* minute */
-  31,  /* second */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR, /* hour */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN,  /* minute */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC,  /* second */
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
   0 /* h-second */
 #endif
 };
 static const DATEREC McuTimeDate_DefaultDate = {
-  2019, /* year */
-  8,  /* month */
-  1 /* day */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR, /* year */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH,  /* month */
+  McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY /* day */
 };
 
-#define McuTimeDate_TICK_TIME_MS \
-  (1000/1000)                           /* Period in milliseconds as defined in RTOS component properties, at which McuTimeDate_AddTick() is called */
+#define McuTimeDate_TICK_TIME_MS  McuTimeDate_CONFIG_TICK_TIME_MS /* period of AddTick() */
 
 
 

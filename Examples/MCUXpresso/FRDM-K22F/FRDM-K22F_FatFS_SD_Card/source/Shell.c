@@ -19,11 +19,13 @@
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
 #endif
+#include "McuTimeDate.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand,
   McuRTOS_ParseCommand,
+  McuTimeDate_ParseCommand,
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
@@ -105,6 +107,8 @@ static void ShellTask(void *pv) {
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
   const TCHAR driverNumberBuffer[] = {SDSPIDISK + '0', ':', '/', '\0'};
+  bool first = true;
+  uint8_t res;
 #endif
 
   McuShell_SendStr((uint8_t*)"\nShell task started.\r\n", McuShell_GetStdio()->stdOut);
@@ -113,7 +117,20 @@ static void ShellTask(void *pv) {
   }
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
-    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)driverNumberBuffer/*volume*/, &fileSystemObject, McuShell_GetStdio());
+    res = McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)driverNumberBuffer/*volume*/, &fileSystemObject, McuShell_GetStdio());
+    if (res==ERR_OK && first && cardMounted) {
+#if (FF_FS_RPATH >= 2U)
+    FRESULT error;
+
+    first = false;
+    error = f_chdrive((char const *)&driverNumberBuffer[0U]);
+    if (error)
+    {
+//        PRINTF("Change drive failed.\r\n");
+    }
+#endif
+
+    }
 #endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
