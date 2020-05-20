@@ -1,17 +1,16 @@
 readme.txt
 ----------
+Project for the FRDM-K22F with FatFS and FreeRTOS, see
+https://mcuoneclipse.com/2020/05/20/fatfs-minini-shell-and-freertos-for-the-nxp-k22fn512/
 
 Open Points:
-- ioctl does not work properly?
+- ioctl does not work properly yet?
 - better multi-drive handling in shell
 - reduced number of drives (sd, usb)
 - test all commands in shell
-- USB MSD integration
 - configuration items (file print buffer size, ...)
-- test with FF_USE_LFN == 1
-- add default change drive (in detect drive?)
-- add chdrive to shell
 - add mkfs to shell
+- USB MSD integration
 
 #if (FF_FS_RPATH >= 2U)
     error = f_chdrive((char const *)&driverNumberBuffer[0U]);

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
-**     Version     : Component 01.053, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 14:41, # CodeGen: 640
+**     Date/Time   : 2020-05-20, 09:26, # CodeGen: 652
 **     Abstract    :
 **         minIni is a programmer’s library to read and write ini files in embedded systems.
 **     Settings    :
@@ -360,9 +360,9 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "McuMinINI status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (McuUtility_strncmp((char*)cmd, "ini read ", sizeof("ini read ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuMinINI read ", sizeof("McuMinINI read ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("ini read ")-1;
+    p = cmd + sizeof("McuMinINI read ")-1;
     if (McuUtility_ReadEscapedName(p, fileName, sizeof(fileName), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }
@@ -388,9 +388,9 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
     McuShell_SendStr(value, io->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "ini write ", sizeof("ini write ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuMinINI write ", sizeof("McuMinINI write ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("ini write ")-1;
+    p = cmd + sizeof("McuMinINI write ")-1;
     if (McuUtility_ReadEscapedName(p, fileName, sizeof(fileName), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }
@@ -417,9 +417,9 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       return ERR_FAILED;
     }
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "ini delkey ", sizeof("ini delkey ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuMinINI delkey ", sizeof("McuMinINI delkey ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("ini delkey ")-1;
+    p = cmd + sizeof("McuMinINI delkey ")-1;
     if (McuUtility_ReadEscapedName(p, fileName, sizeof(fileName), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }
@@ -441,9 +441,9 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
       return ERR_FAILED;
     }
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "ini delsec ", sizeof("ini delsec ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuMinINI delsec ", sizeof("McuMinINI delsec ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("ini delsec ")-1;
+    p = cmd + sizeof("McuMinINI delsec ")-1;
     if (McuUtility_ReadEscapedName(p, fileName, sizeof(fileName), &lenRead, NULL, NULL)!=ERR_OK || lenRead==0) {
       return ERR_FAILED;
     }

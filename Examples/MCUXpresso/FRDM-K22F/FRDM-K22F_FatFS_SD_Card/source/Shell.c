@@ -106,8 +106,6 @@ static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
-  bool first = true;
-  uint8_t res;
 #endif
 
   McuShell_SendStr((uint8_t*)"\nShell task started.\r\n", McuShell_GetStdio()->stdOut);
@@ -116,20 +114,7 @@ static void ShellTask(void *pv) {
   }
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
-    res = McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
-    if (res==ERR_OK && first && cardMounted) {
-#if (FF_FS_RPATH >= 2U)
-    FRESULT error;
-
-    first = false;
-    error = f_chdrive((char const *)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING);
-    if (error)
-    {
-//        PRINTF("Change drive failed.\r\n");
-    }
-#endif
-
-    }
+    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
 #endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {

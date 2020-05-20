@@ -29,7 +29,6 @@ void FatFS_SdCardInit(void) {
 
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = true;
-
   config.hw.gpio = CARD_DETECT_GPIO;
   config.hw.port = CARD_DETECT_PORT;
   config.hw.pin = CARD_DETECT_PIN;

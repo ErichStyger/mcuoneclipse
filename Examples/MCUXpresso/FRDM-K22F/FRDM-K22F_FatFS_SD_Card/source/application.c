@@ -8,8 +8,10 @@
 #include "McuWait.h"
 #include "McuRTOS.h"
 #include "leds.h"
+#include "McuUtility.h"
 #include "McuTimeout.h"
 #include "McuTimeDate.h"
+#include "McuMinINI.h"
 
 static TimerHandle_t timerTimeoutHndl, timerTimeHndl;
 
@@ -22,12 +24,30 @@ static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
 }
 
 static void AppTask(void *pv) {
+  McuLED_Handle_t led;
+  uint8_t colorBuf[8];
+
+  vTaskDelay(pdMS_TO_TICKS(1000));
+  led = LEDS_LedGreen; /* default */
+  if (ini_gets(
+      (const TCHAR *)"LED", /* section */
+      (const TCHAR *)"color", /* key */
+      (const TCHAR *)"green",  /* default value */
+      (TCHAR *)colorBuf, sizeof(colorBuf), /* key value from ini */
+      (const TCHAR *)"config.ini" /* ini file */
+      )
+      > 0) /* success */
+  {
+    if (McuUtility_strcmp((char*)colorBuf, (char*)"red")==0) {
+      led = LEDS_LedRed;
+    } else if (McuUtility_strcmp((char*)colorBuf, (char*)"green")==0) {
+      led = LEDS_LedGreen;
+    } else if (McuUtility_strcmp((char*)colorBuf, (char*)"blue")==0) {
+      led = LEDS_LedBlue;
+    }
+  }
   for(;;) {
-    McuLED_Toggle(LEDS_LedRed);
-    vTaskDelay(pdMS_TO_TICKS(100));
-    McuLED_Toggle(LEDS_LedGreen);
-    vTaskDelay(pdMS_TO_TICKS(100));
-    McuLED_Toggle(LEDS_LedBlue);
+    McuLED_Toggle(led);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
@@ -36,7 +56,7 @@ void APP_Run(void) {
   BaseType_t result;
 
   PL_Init();
-  result =xTaskCreate(AppTask, "AppTask", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+2, NULL);
+  result =xTaskCreate(AppTask, "AppTask", 2500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+2, NULL);
   if (result!=pdPASS) {
     /* error! */
   }

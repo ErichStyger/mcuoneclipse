@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
-**     Version     : Component 01.053, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 14:27, # CodeGen: 637
+**     Date/Time   : 2020-05-19, 15:07, # CodeGen: 643
 **     Abstract    :
 **         minIni is a programmer’s library to read and write ini files in embedded systems.
 **     Settings    :

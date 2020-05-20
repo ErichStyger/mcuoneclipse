@@ -1854,6 +1854,9 @@ uint8_t McuFatFS_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS *fil
       if (io!=NULL) {
         McuShell_SendStr((unsigned char*)"File System mounted\r\n", io->stdOut);
       }
+#if (FF_FS_RPATH >= 1U)
+      (void)f_chdrive((char const *)drive);
+#endif
     } else {
       return ERR_FAILED;
     }
