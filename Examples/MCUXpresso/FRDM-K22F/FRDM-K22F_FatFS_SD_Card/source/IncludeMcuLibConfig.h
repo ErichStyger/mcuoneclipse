@@ -60,7 +60,7 @@ Instructions:
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (128)
 /* -------------------------------------------------*/
 /* FatFS */
-#define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "4:/" /* 4 is for the SPI SD card type in the SDK */
+#define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "0:/" /* 0: is for the SPI SD card type, and 1: for USB, see diskio.h */
 /* -------------------------------------------------*/
 /* MinINI */
 #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS

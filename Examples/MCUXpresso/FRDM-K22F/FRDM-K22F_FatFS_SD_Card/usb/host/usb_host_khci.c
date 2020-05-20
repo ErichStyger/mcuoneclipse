@@ -1547,6 +1547,11 @@ usb_status_t USB_HostKhciCreate(uint8_t controllerId,
     /* init khci mutext */
     usbHostPointer->khciMutex = (osa_mutex_handle_t)(&usbHostPointer->mutexBuffer[0]);
     osaStatus                 = OSA_MutexCreate(usbHostPointer->khciMutex);
+#if 1
+    if (usbHostPointer->khciMutex) {
+      vQueueAddToRegistry((QueueHandle_t)usbHostPointer->khciMutex, "HKCI_Mutex");
+    }
+#endif
     if (osaStatus != KOSA_StatusSuccess)
     {
 #ifdef HOST_ECHO

@@ -10,8 +10,13 @@
 /*---------------------------------------------------------------------------/
 / MSDK adaptation configuration
 /---------------------------------------------------------------------------*/
-//#define SDSPI_DISK_ENABLE
-#define USB_DISK_ENABLE
+#include "platform.h"
+#if PL_CONFIG_USE_SD_CARD
+  #define SDSPI_DISK_ENABLE
+#endif
+#if PL_CONFIG_USE_USB_MSD
+  #define USB_DISK_ENABLE
+#endif
 /* Available options are:
 /      RAM_DISK_ENABLE
 /      USB_DISK_ENABLE
@@ -179,7 +184,7 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
-#define FF_VOLUMES		5
+#define FF_VOLUMES		2
 /* Number of volumes (logical drives) to be used. (1-10) */
 
 

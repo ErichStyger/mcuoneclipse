@@ -9,6 +9,7 @@
 #include "platform.h"
 #include "McuRTOS.h"
 
+#include "msd_app.h"
 #include "usb_host_config.h"
 #include "usb_host.h"
 #include "fsl_device_registers.h"
@@ -19,7 +20,7 @@
 #if (defined(FSL_FEATURE_SOC_SYSMPU_COUNT) && (FSL_FEATURE_SOC_SYSMPU_COUNT > 0U))
 #include "fsl_sysmpu.h"
 #endif /* FSL_FEATURE_SOC_SYSMPU_COUNT */
-#include "app.h"
+#include <msd_app.h>
 #include "board.h"
 
 #if ((!USB_HOST_CONFIG_KHCI) && (!USB_HOST_CONFIG_EHCI) && (!USB_HOST_CONFIG_OHCI) && (!USB_HOST_CONFIG_IP3516HS))
@@ -181,36 +182,21 @@ static void USB_HostTask(void *param)
     }
 }
 
-static void USB_HostApplicationTask(void *param)
-{
-    while (1)
-    {
-        USB_HostMsdTask(param);
-    }
+static void USB_HostApplicationTask(void *param) {
+  for(;;) {
+    USB_HostMsdTask(param);
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
 }
 
-int main2(void)
-{
-    BOARD_InitPins();
-    BOARD_BootClockHSRUN();
-    BOARD_InitDebugConsole();
-
-    USB_HostApplicationInit();
-
-    if (xTaskCreate(USB_HostTask, "usb host task", 2*2000L / sizeof(portSTACK_TYPE), g_HostHandle, 4, NULL) != pdPASS)
-    {
-        usb_echo("create host task error\r\n");
-    }
-    if (xTaskCreate(USB_HostApplicationTask, "app task", 2*2300L / sizeof(portSTACK_TYPE), &g_MsdFatfsInstance, 3,
-                    NULL) != pdPASS)
-    {
-        usb_echo("create app task error\r\n");
-    }
-
-    vTaskStartScheduler();
-
-    while (1)
-    {
-        ;
-    }
+void MSD_APP_Init(void) {
+  USB_HostApplicationInit();
+  if (xTaskCreate(USB_HostTask, "UsbHost", 2*2000L / sizeof(portSTACK_TYPE), g_HostHandle, 4, NULL) != pdPASS)
+  {
+      usb_echo("create host task error\r\n");
+  }
+  if (xTaskCreate(USB_HostApplicationTask, "UsbApp", 2*2300L / sizeof(portSTACK_TYPE), &g_MsdFatfsInstance, 3, NULL) != pdPASS)
+  {
+      usb_echo("create app task error\r\n");
+  }
 }

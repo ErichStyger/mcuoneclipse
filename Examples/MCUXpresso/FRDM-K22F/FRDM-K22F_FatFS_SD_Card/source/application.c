@@ -12,6 +12,9 @@
 #include "McuTimeout.h"
 #include "McuTimeDate.h"
 #include "McuMinINI.h"
+#if PL_CONFIG_USE_USB_MSD
+  #include "msd_app.h"
+#endif
 
 static TimerHandle_t timerTimeoutHndl, timerTimeHndl;
 
@@ -56,6 +59,9 @@ void APP_Run(void) {
   BaseType_t result;
 
   PL_Init();
+#if PL_CONFIG_USE_USB_MSD
+  MSD_APP_Init();
+#endif
   result =xTaskCreate(AppTask, "AppTask", 2500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+2, NULL);
   if (result!=pdPASS) {
     /* error! */
