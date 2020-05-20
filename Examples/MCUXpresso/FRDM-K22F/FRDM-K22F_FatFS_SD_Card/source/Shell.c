@@ -106,7 +106,6 @@ static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
-  const TCHAR driverNumberBuffer[] = {SDSPIDISK + '0', ':', '/', '\0'};
   bool first = true;
   uint8_t res;
 #endif
@@ -117,13 +116,13 @@ static void ShellTask(void *pv) {
   }
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
-    res = McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)driverNumberBuffer/*volume*/, &fileSystemObject, McuShell_GetStdio());
+    res = McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
     if (res==ERR_OK && first && cardMounted) {
 #if (FF_FS_RPATH >= 2U)
     FRESULT error;
 
     first = false;
-    error = f_chdrive((char const *)&driverNumberBuffer[0U]);
+    error = f_chdrive((char const *)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING);
     if (error)
     {
 //        PRINTF("Change drive failed.\r\n");

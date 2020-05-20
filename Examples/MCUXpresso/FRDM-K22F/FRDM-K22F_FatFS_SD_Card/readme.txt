@@ -5,13 +5,14 @@ Open Points:
 - ioctl does not work properly?
 - better multi-drive handling in shell
 - reduced number of drives (sd, usb)
-- benchmark (SPI speed)
 - test all commands in shell
 - USB MSD integration
 - configuration items (file print buffer size, ...)
 - fatfs RTC integration
 - test with FF_USE_LFN == 1
-
+- add default change drive (in detect drive?)
+- add chdrive to shell
+- add mkfs to shell
 
 #if (FF_FS_RPATH >= 2U)
     error = f_chdrive((char const *)&driverNumberBuffer[0U]);
