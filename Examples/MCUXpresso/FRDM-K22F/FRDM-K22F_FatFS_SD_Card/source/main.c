@@ -45,13 +45,15 @@
  * @brief   Application entry point.
  */
 int main(void) {
-  	/* Init board hardware. */
+  void main2(void);
+  main2();
+  for(;;) {}
+
+  /* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    void main2(void);
-    //main2();
 
     APP_Run();
     return 0 ;
