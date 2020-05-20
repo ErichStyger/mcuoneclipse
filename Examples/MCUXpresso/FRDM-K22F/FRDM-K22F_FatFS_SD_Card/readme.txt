@@ -8,7 +8,6 @@ Open Points:
 - test all commands in shell
 - USB MSD integration
 - configuration items (file print buffer size, ...)
-- fatfs RTC integration
 - test with FF_USE_LFN == 1
 - add default change drive (in detect drive?)
 - add chdrive to shell
