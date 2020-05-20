@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
 #include "usb_host_config.h"
 #include "usb_host.h"
 #include "usb_host_msd.h"
@@ -339,6 +340,7 @@ static uint32_t USB_HostMsdFatfsForward(const uint8_t *data, uint32_t dataLength
 }
 #endif
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 static void USB_HostMsdFatfsTest(usb_host_msd_fatfs_instance_t *msdFatfsInstance)
 {
     FRESULT fatfsCode;
@@ -829,6 +831,7 @@ static void USB_HostMsdFatfsTest(usb_host_msd_fatfs_instance_t *msdFatfsInstance
 
     USB_HostMsdFatfsTestDone();
 }
+#endif /* PL_CONFIG_USE_USB_MSD_TEST */
 
 #endif /* MSD_FATFS_THROUGHPUT_TEST_ENABLE */
 
@@ -893,7 +896,9 @@ void USB_HostMsdTask(void *arg)
 #if ((defined MSD_FATFS_THROUGHPUT_TEST_ENABLE) && (MSD_FATFS_THROUGHPUT_TEST_ENABLE))
             USB_HostMsdFatfsThroughputTest(msdFatfsInstance); /* test throughput */
 #else
+#if PL_CONFIG_USE_USB_MSD_TEST
             USB_HostMsdFatfsTest(msdFatfsInstance); /* test msd device */
+#endif
 #endif /* MSD_FATFS_THROUGHPUT_TEST_ENABLE */
             msdFatfsInstance->runState = kUSB_HostMsdRunIdle;
             break;

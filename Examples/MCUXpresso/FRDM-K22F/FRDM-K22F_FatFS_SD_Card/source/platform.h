@@ -11,6 +11,7 @@
 #define PL_CONFIG_USE_SD_CARD       (1) /* if using FatFS with SD card */
 #define PL_CONFIG_USE_MININI        (1 && PL_CONFIG_USE_SD_CARD) /* if using minIni */
 #define PL_CONFIG_USE_USB_MSD       (1) /* if using FatFS with USB MSD */
+#define PL_CONFIG_USE_USB_MSD_TEST  (0) /* if after connecting a device it shall run a test suite */
 
 /* Shell */
 #define PL_CONFIG_USE_SHELL         (1) /* if using shell */

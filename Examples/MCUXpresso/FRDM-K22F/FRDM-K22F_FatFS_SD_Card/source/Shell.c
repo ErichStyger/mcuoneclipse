@@ -108,6 +108,7 @@ static void ShellTask(void *pv) {
   static McuFatFS_FATFS fileSystemObject;
 #endif
 
+  vTaskDelay(pdMS_TO_TICKS(1000));
   McuShell_SendStr((uint8_t*)"\nShell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';

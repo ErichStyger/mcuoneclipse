@@ -42,7 +42,12 @@ extern int DbgConsole_Printf(const char *fmt_s, ...);
 
 #ifndef __DSC__
 #if defined(SDK_DEBUGCONSOLE) && (SDK_DEBUGCONSOLE < 1)
+#if 1 /* << EST */
+#include "McuShell.h"
+#define usb_echo McuShell_printf
+#else
 #define usb_echo printf
+#endif
 #else
 #define usb_echo DbgConsole_Printf
 #endif
