@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 16:46, # CodeGen: 647
+**     Date/Time   : 2020-05-20, 07:40, # CodeGen: 650
 **     Abstract    :
 **
 **     Settings    :
@@ -756,8 +756,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 
 
 /* Unicode support functions */
-#if _USE_LFN  /* Unicode - OEM code conversion */
-#if _USE_LFN == 3   /* Memory functions */
+#if McuFatFS_USE_LFN  /* Unicode - OEM code conversion */
+#if McuFatFS_USE_LFN == 3   /* Memory functions */
 void *ff_memalloc(UINT size) { /* Allocate memory block */
   /* FreeRTOS */
   return McuRTOS_pvPortMalloc(size);
@@ -1709,7 +1709,7 @@ uint8_t McuFatFS_Deinit(void)
 }
 
 
-#if !_FS_READONLY
+#if !McuFatFS_FS_READONLY
 /*
 ** ===================================================================
 **     Method      :  get_fattime (component FAT_FileSystem)
@@ -1749,7 +1749,7 @@ uint32_t McuFatFS_get_fattime(void)
 uint32_t get_fattime(void) {
   return McuFatFS_get_fattime();
 }
-#endif /*!_FS_READONLY*/
+#endif /* !McuFatFS_FS_READONLY */
 
 
 /*
