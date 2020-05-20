@@ -11,7 +11,7 @@
 /* This fatfs subcomponent is disabled by default
  * To enable it, define following macro in ffconf.h */
 #ifdef USB_DISK_ENABLE
-
+#include "McuRTOS.h" /* << EST */
 #include "fsl_usb_disk.h" /* FatFs lower layer API */
 
 /*******************************************************************************
