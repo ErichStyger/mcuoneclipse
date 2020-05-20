@@ -282,7 +282,7 @@ enum _sd_scr_flag
 /*! @brief SD timing function number */
 enum _sd_timing_function
 {
-    kSD_FunctionSDR12Deafult   = 0U, /*!< SDR12 mode & default*/
+    kSD_FunctionSDR12Default   = 0U, /*!< SDR12 mode & default*/
     kSD_FunctionSDR25HighSpeed = 1U, /*!< SDR25 & high speed*/
     kSD_FunctionSDR50          = 2U, /*!< SDR50 mode*/
     kSD_FunctionSDR104         = 3U, /*!< SDR104 mode*/

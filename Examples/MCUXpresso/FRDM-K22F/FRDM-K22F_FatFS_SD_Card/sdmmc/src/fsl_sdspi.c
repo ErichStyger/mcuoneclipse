@@ -1079,13 +1079,18 @@ status_t SDSPI_Init(sdspi_card_t *card)
     {
         return kStatus_SDSPI_SendCsdFailed;
     }
-
+#if 0
     /* Set to max frequency according to the max frequency information in CSD register. */
     if (kStatus_Success !=
         card->host->setFrequency(SD_CLOCK_25MHZ > card->host->busBaudRate ? card->host->busBaudRate : SD_CLOCK_25MHZ))
     {
         return kStatus_SDSPI_SetFrequencyFailed;
     }
+#else
+/* << EST */
+    SDSPI_SwitchToHighSpeed(card);
+/* << EST */
+#endif
 
     if (kStatus_Success != SDSPI_SendScr(card))
     {
@@ -1275,13 +1280,25 @@ status_t SDSPI_EraseBlocks(sdspi_card_t *card, uint32_t startBlock, uint32_t blo
 status_t SDSPI_SwitchToHighSpeed(sdspi_card_t *card)
 {
     assert(card);
-
+#if 0 /* << EST */
     if (SDSPI_SelectFunction(card, kSD_GroupTimingMode, kSD_FunctionSDR25HighSpeed) == kStatus_Success)
     {
         card->host->setFrequency(SD_CLOCK_50MHZ > card->host->busBaudRate ? card->host->busBaudRate : SD_CLOCK_50MHZ);
 
         return kStatus_Success;
     }
-
     return kStatus_Fail;
+#else /* << EST */
+    uint32_t frequency = card->host->busBaudRate; /* default */
+
+    if (SDSPI_SelectFunction(card, kSD_GroupTimingMode, kSD_FunctionSDR12Default) == kStatus_Success) {
+      frequency = 12000000U;
+    }
+    if (SDSPI_SelectFunction(card, kSD_GroupTimingMode, kSD_FunctionSDR25HighSpeed) == kStatus_Success) {
+      frequency = SD_CLOCK_25MHZ;
+    }
+    /* switch frequency */
+    card->host->setFrequency(frequency > card->host->busBaudRate ? frequency : card->host->busBaudRate);
+    return kStatus_Success;
+#endif
 }
