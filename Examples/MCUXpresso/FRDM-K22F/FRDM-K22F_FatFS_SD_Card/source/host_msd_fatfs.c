@@ -43,10 +43,12 @@
  */
 void USB_HostMsdControlCallback(void *param, uint8_t *data, uint32_t dataLength, usb_status_t status);
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 /*!
  * @brief msd fatfs test code execute done.
  */
 static void USB_HostMsdFatfsTestDone(void);
+#endif
 
 #if ((defined MSD_FATFS_THROUGHPUT_TEST_ENABLE) && (MSD_FATFS_THROUGHPUT_TEST_ENABLE))
 /*!
@@ -58,15 +60,19 @@ static void USB_HostMsdFatfsThroughputTest(usb_host_msd_fatfs_instance_t *msdFat
 
 #else
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 /*!
  * @brief display file information.
  */
 static void USB_HostMsdFatfsDisplayFileInfo(FILINFO *fileInfo);
+#endif
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 /*!
  * @brief list files and sub-directory in one directory, the function don't check all sub-directories recursively.
  */
 static FRESULT USB_HostMsdFatfsListDirectory(const TCHAR *path);
+#endif
 
 /*!
  * @brief forward function pointer for fatfs f_forward function.
@@ -78,6 +84,7 @@ static FRESULT USB_HostMsdFatfsListDirectory(const TCHAR *path);
 static uint32_t USB_HostMsdFatfsForward(const uint8_t *data_ptr, uint32_t dataLength);
 #endif
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 /*!
  * @brief host msd fatfs test.
  *
@@ -86,6 +93,7 @@ static uint32_t USB_HostMsdFatfsForward(const uint8_t *data_ptr, uint32_t dataLe
  * @param msdFatfsInstance   the host fatfs instance pointer.
  */
 static void USB_HostMsdFatfsTest(usb_host_msd_fatfs_instance_t *msdFatfsInstance);
+#endif
 
 #endif /* MSD_FATFS_THROUGHPUT_TEST_ENABLE */
 
@@ -97,7 +105,9 @@ static void USB_HostMsdFatfsTest(usb_host_msd_fatfs_instance_t *msdFatfsInstance
 extern usb_host_class_handle g_UsbFatfsClassHandle;
 
 usb_host_msd_fatfs_instance_t g_MsdFatfsInstance; /* global msd fatfs instance */
+#if PL_CONFIG_USE_USB_MSD_TEST
 static FATFS fatfs;
+#endif
 /* control transfer on-going state. It should set to 1 when start control transfer, it is set to 0 in the callback */
 volatile uint8_t controlIng;
 /* control transfer callback status */
@@ -107,7 +117,9 @@ volatile usb_status_t controlStatus;
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint32_t testThroughputBuffer[THROUGHPUT_BUFFER_SIZE / 4]; /* the buffer for throughput test */
 uint32_t testSizeArray[] = {20 * 1024, 20 * 1024}; /* test time and test size (uint: K)*/
 #else
+#if PL_CONFIG_USE_USB_MSD_TEST
 USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t testBuffer[(FF_MAX_SS > 256) ? FF_MAX_SS : 256]; /* normal test buffer */
+#endif
 #endif /* MSD_FATFS_THROUGHPUT_TEST_ENABLE */
 
 /*******************************************************************************
@@ -127,10 +139,12 @@ void USB_HostMsdControlCallback(void *param, uint8_t *data, uint32_t dataLength,
     controlStatus = status;
 }
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 static void USB_HostMsdFatfsTestDone(void)
 {
     usb_echo("............................test done......................\r\n");
 }
+#endif
 
 #if ((defined MSD_FATFS_THROUGHPUT_TEST_ENABLE) && (MSD_FATFS_THROUGHPUT_TEST_ENABLE))
 
@@ -258,6 +272,7 @@ static void USB_HostMsdFatfsThroughputTest(usb_host_msd_fatfs_instance_t *msdFat
 
 #else
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 static void USB_HostMsdFatfsDisplayFileInfo(FILINFO *fileInfo)
 {
     char *fileName;
@@ -281,7 +296,9 @@ static void USB_HostMsdFatfsDisplayFileInfo(FILINFO *fileInfo)
              (uint32_t)(fileInfo->ftime & 0x0000001Fu) /* second */
              );
 }
+#endif
 
+#if PL_CONFIG_USE_USB_MSD_TEST
 static FRESULT USB_HostMsdFatfsListDirectory(const TCHAR *path)
 {
     FRESULT fatfsCode = FR_OK;
@@ -317,6 +334,7 @@ static FRESULT USB_HostMsdFatfsListDirectory(const TCHAR *path)
 
     return fatfsCode;
 }
+#endif
 
 #if _USE_FORWARD && _FS_TINY
 static uint32_t USB_HostMsdFatfsForward(const uint8_t *data, uint32_t dataLength)
