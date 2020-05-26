@@ -20,6 +20,7 @@
 #include "McuSystemView.h"
 #include "McuArmTools.h"
 #include "McuTimeout.h"
+#include "McuLog.h"
 
 /* application modules */
 #include "leds.h"
@@ -72,5 +73,8 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
   FatFS_SdCardInit();
+#endif
+#if PL_CONFIG_USE_LOGGING
+  McuLog_Init();
 #endif
 }

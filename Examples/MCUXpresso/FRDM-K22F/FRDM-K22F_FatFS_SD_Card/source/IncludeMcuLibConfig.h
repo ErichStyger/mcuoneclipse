@@ -53,11 +53,11 @@ Instructions:
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (128) /* max size of each command */
 /* -------------------------------------------------*/
 /* RTT */
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)
 #define McuRTT_CONFIG_BLOCKING_SEND                   (1)
 #define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (100)
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (128)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* -------------------------------------------------*/
 /* FatFS */
 #define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "0:/" /* 0: is for the SPI SD card type, and 1: for USB, see diskio.h */
