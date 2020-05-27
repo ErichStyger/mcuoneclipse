@@ -8,6 +8,7 @@
 
 #include "platform.h"
 #include "McuRTOS.h"
+#include "McuLog.h"
 
 #include "msd_app.h"
 #include "usb_host_config.h"
@@ -171,7 +172,7 @@ static void USB_HostApplicationInit(void)
     }
     USB_HostIsrEnable();
 
-    usb_echo("host init done\r\n");
+    McuLog_trace("Host init done");
 }
 
 static void USB_HostTask(void *param)

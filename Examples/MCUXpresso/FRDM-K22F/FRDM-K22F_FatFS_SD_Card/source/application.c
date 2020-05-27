@@ -12,6 +12,7 @@
 #include "McuTimeout.h"
 #include "McuTimeDate.h"
 #include "McuMinINI.h"
+#include "McuLog.h"
 #if PL_CONFIG_USE_USB_MSD
   #include "msd_app.h"
 #endif
@@ -30,6 +31,12 @@ static void AppTask(void *pv) {
   McuLED_Handle_t led;
   uint8_t colorBuf[8];
 
+  McuLog_trace("Started Shell Task");
+  McuLog_debug("Started Shell Task");
+  McuLog_info("Started App Task");
+  McuLog_warn("Started Shell Task");
+  McuLog_error("Started Shell Task");
+  McuLog_fatal("Started Shell Task");
   vTaskDelay(pdMS_TO_TICKS(1000));
   led = LEDS_LedGreen; /* default */
   if (ini_gets(
