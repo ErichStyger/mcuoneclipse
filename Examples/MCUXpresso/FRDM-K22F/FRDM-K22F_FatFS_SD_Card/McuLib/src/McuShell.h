@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-04, 08:06, # CodeGen: 604
+**     Date/Time   : 2020-05-30, 16:02, # CodeGen: 654
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -160,6 +160,46 @@
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */
+
+
+/* VTxxx control and color codes which can be used in terminals supporting color. See https://en.wikipedia.org/wiki/ANSI_escape_code */
+/* general control */
+#define McuShell_ANSI_CONTROL_RESET                "\033[0m"        /* reset to defaults */
+#define McuShell_ANSI_CONTROL_CLEAR                "\033[2J"        /* clear terminal */
+/* text colors: */
+#define McuShell_ANSI_COLOR_TEXT_BLACK           "\033[2;30m"
+#define McuShell_ANSI_COLOR_TEXT_RED             "\033[2;31m"
+#define McuShell_ANSI_COLOR_TEXT_GREEN           "\033[2;32m"
+#define McuShell_ANSI_COLOR_TEXT_YELLOW          "\033[2;33m"
+#define McuShell_ANSI_COLOR_TEXT_BLUE            "\033[2;34m"
+#define McuShell_ANSI_COLOR_TEXT_MAGENTA         "\033[2;35m"
+#define McuShell_ANSI_COLOR_TEXT_CYAN            "\033[2;36m"
+#define McuShell_ANSI_COLOR_TEXT_WHITE           "\033[2;37m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_BLACK    "\033[1;30m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_RED      "\033[1;31m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_GREEN    "\033[1;32m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_YELLOW   "\033[1;33m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_BLUE     "\033[1;34m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_MAGENTA  "\033[1;35m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_CYAN     "\033[1;36m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_WHITE    "\033[1;37m"
+/* text background colors */
+#define McuShell_ANSI_COLOR_BG_BLACK             "\033[24;40m"
+#define McuShell_ANSI_COLOR_BG_RED               "\033[24;41m"
+#define McuShell_ANSI_COLOR_BG_GREEN             "\033[24;42m"
+#define McuShell_ANSI_COLOR_BG_YELLOW            "\033[24;43m"
+#define McuShell_ANSI_COLOR_BG_BLUE              "\033[24;44m"
+#define McuShell_ANSI_COLOR_BG_MAGENTA           "\033[24;45m"
+#define McuShell_ANSI_COLOR_BG_CYAN              "\033[24;46m"
+#define McuShell_ANSI_COLOR_BG_WHITE             "\033[24;47m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_BLACK      "\033[4;40m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_RED        "\033[4;41m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_GREEN      "\033[4;42m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_YELLOW     "\033[4;43m"
+#define McuShell_ANSI_COLOR_BRIGHT_BLUE          "\033[4;44m"
+#define McuShell_ANSI_COLOR_BRIGHT_MAGENTA       "\033[4;45m"
+#define McuShell_ANSI_COLOR_BRIGHT_CYAN          "\033[4;46m"
+#define McuShell_ANSI_COLOR_BRIGHT_WHITE         "\033[4;47m"
 
 /* settings for command line history */
 #define McuShell_HISTORY_ENABLED  0    /* 1: enabled, 0: disabled */

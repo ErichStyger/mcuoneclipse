@@ -31,12 +31,7 @@ static void AppTask(void *pv) {
   McuLED_Handle_t led;
   uint8_t colorBuf[8];
 
-  McuLog_trace("Started Shell Task");
-  McuLog_debug("Started Shell Task");
-  McuLog_info("Started App Task");
-  McuLog_warn("Started Shell Task");
-  McuLog_error("Started Shell Task");
-  McuLog_fatal("Started Shell Task");
+  McuLog_trace("Starting Task");
   vTaskDelay(pdMS_TO_TICKS(1000));
   led = LEDS_LedGreen; /* default */
   if (ini_gets(

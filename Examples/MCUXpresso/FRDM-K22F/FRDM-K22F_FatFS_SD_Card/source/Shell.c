@@ -107,6 +107,9 @@ static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
+  McuFatFS_FIL logFile;
+  bool logFileOpen = false;
+  const unsigned char *logFileName = (unsigned char*)"0:/log.txt";
 #endif
 
   McuLog_info("Started Shell Task");
@@ -117,6 +120,17 @@ static void ShellTask(void *pv) {
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
     (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
+    if (cardMounted && !logFileOpen) {
+      McuFatFS_FRESULT fres;
+      fres = f_open(&logFile, (const TCHAR*)logFileName, FA_WRITE|FA_OPEN_APPEND);
+      if (fres == FR_OK) {
+        McuLog_set_fp(&logFile);
+        McuLog_info("Logging to file '%s'.", logFileName);
+        logFileOpen = true;
+      } else {
+        McuLog_error("Failed opening log file '%s'.", logFileName);
+      }
+    }
 #endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
@@ -138,9 +152,15 @@ void SHELL_Init(void) {
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
+    McuLog_fatal("Failed creating Shell task.");
     for(;;){} /* error! probably out of memory */
   }
   McuShell_SetStdio(ios[0].stdio); /* default */
+#if PL_CONFIG_USE_RTT
+  McuLog_set_console(&McuRTT_stdio);
+#else
+  McuLog_set_console(ios[0].stdio);
+#endif
 }
 
 void SHELL_Deinit(void) {}

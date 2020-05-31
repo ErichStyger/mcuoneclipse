@@ -61,6 +61,9 @@ void PL_Init(void) {
   if (configUSE_SEGGER_SYSTEM_VIEWER_HOOKS) {
     McuSystemView_Init();
   }
+#if PL_CONFIG_USE_LOGGING
+  McuLog_Init();
+#endif
 
   /* application modules */
 #if PL_CONFIG_USE_SHELL_UART
@@ -73,8 +76,5 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
   FatFS_SdCardInit();
-#endif
-#if PL_CONFIG_USE_LOGGING
-  McuLog_Init();
 #endif
 }
