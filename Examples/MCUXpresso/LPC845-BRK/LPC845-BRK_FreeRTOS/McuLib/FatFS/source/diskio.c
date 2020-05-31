@@ -14,6 +14,9 @@
 /* This is an example of glue functions to attach various exsisting      */
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
+#include "McuLib.h"
+#if McuLib_CONFIG_USE_FAT_FS
+
 #include "ffconf.h"     /* FatFs configuration options */
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
@@ -297,3 +300,4 @@ DRESULT disk_ioctl (
     return RES_PARERR;
 }
 
+#endif /* McuLib_CONFIG_USE_FAT_FS */

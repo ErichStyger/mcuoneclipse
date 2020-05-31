@@ -26,6 +26,9 @@
 extern "C" {
 #endif
 
+#include "McuLib.h"
+#if McuLib_CONFIG_USE_FAT_FS
+
 #include "ffconf.h"		/* FatFs configuration options */
 
 #if FF_DEFINED != FFCONF_DEF
@@ -403,3 +406,5 @@ int ff_del_syncobj (FF_SYNC_t sobj);	/* Delete a sync object */
 #endif
 
 #endif /* FF_DEFINED */
+
+#endif /* McuLib_CONFIG_USE_FAT_FS */

@@ -16,7 +16,13 @@
     /*!< 1: ARM Cortex-M family, 0 otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_KINETIS
-  #define McuLib_CONFIG_CPU_IS_KINETIS                  (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
+  #define McuLib_CONFIG_CPU_IS_KINETIS                  (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_LPC) \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_LPC55xx) \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_IMXRT) \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_STM32) \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_NORDIC_NRF) \
+                                                            && !defined(McuLib_CONFIG_CPU_IS_S32K))
     /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_S32K

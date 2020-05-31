@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "platform.h"
-#if PL_CONFIG_USE_SHELL_UART
 #include "McuShellUartconfig.h"
 #include "McuShellUart.h"
 #include "McuShell.h"
@@ -91,5 +89,3 @@ void McuShellUart_Init(void) {
   }
   vQueueAddToRegistry(uartRxQueue, "UartRxQueue");
 }
-
-#endif /* PL_CONFIG_USE_SHELL_UART */

@@ -7,6 +7,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLib.h"
+#if McuLib_CONFIG_USE_FAT_FS
+
 #include "ffconf.h"
 /* This fatfs subcomponent is disabled by default
  * To enable it, define following macro in ffconf.h */
@@ -379,3 +382,5 @@ DRESULT USB_HostMsdIoctlDisk(BYTE pdrv, BYTE cmd, void *buff)
     return fatfs_code;
 }
 #endif /* USB_DISK_ENABLE */
+
+#endif /* McuLib_CONFIG_USE_FAT_FS */

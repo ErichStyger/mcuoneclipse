@@ -147,6 +147,8 @@
 */         
 
 /* MODULE McuFatFS. */
+#include "McuLib.h"
+#if McuLib_CONFIG_USE_FAT_FS
 
 #include "ff.h"
 #include "McuFatFS.h"
@@ -2998,3 +3000,4 @@ FRESULT McuFatFS_f_readdir(DIR *dj, FILINFO *fno)
 /*!
 ** @}
 */
+#endif /* McuLib_CONFIG_USE_FAT_FS */

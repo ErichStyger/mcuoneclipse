@@ -39,15 +39,16 @@
 #include "clock_config.h"
 #include "LPC845.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
-/* TODO: insert other definitions and declarations here. */
+#include "McuRTOS.h" /* access to all FreeRTOS API functions */
 
-/*
- * @brief   Application entry point.
- */
+static void MyTask(void *pv) { /* simple task */
+  for(;;) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+
 int main(void) {
-
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -55,16 +56,17 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    PRINTF("Hello World\n");
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
-        __asm volatile ("nop");
+    McuRTOS_Init(); /* initialize FreeRTOS middleware */
+    if (xTaskCreate(  /* create task */
+        MyTask,  /* pointer to the task */
+        "App", /* task name for kernel awareness debugging */
+        200/sizeof(StackType_t), /* task stack size */
+        (void*)NULL, /* optional task startup argument */
+        tskIDLE_PRIORITY+2,  /* initial priority */
+        (TaskHandle_t*)NULL /* optional task handle to create */
+      ) != pdPASS) {
+       for(;;){} /* error! probably out of memory */
     }
+    vTaskStartScheduler(); /* start RTOS scheduler */
     return 0 ;
 }
