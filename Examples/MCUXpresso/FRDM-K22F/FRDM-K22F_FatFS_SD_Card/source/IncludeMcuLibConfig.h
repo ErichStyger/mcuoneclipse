@@ -54,7 +54,7 @@ Instructions:
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)
-#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND                   (0)
 #define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (100)
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
@@ -77,11 +77,13 @@ Instructions:
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
 
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2020
-#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 5
-#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   20
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 6
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   1
 
 #define McuTimeDate_CONFIG_TICK_TIME_MS               50
-
 /* -------------------------------------------------*/
+/* McuLog */
+#define MCULOG_CONFIG_USE_FILE                  (1)
+
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

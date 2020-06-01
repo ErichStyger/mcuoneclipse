@@ -36,6 +36,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
 #endif
+#if MCULOG_CONFIG_PARSE_COMMAND_ENABLED
+  McuLog_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -107,8 +110,8 @@ static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
-  McuFatFS_FIL logFile;
   bool logFileOpen = false;
+  bool doCloseLogFile = false; /* request closing the file e.g. with a push button */
   const unsigned char *logFileName = (unsigned char*)"0:/log.txt";
 #endif
 
@@ -121,15 +124,20 @@ static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
     (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
     if (cardMounted && !logFileOpen) {
-      McuFatFS_FRESULT fres;
-      fres = f_open(&logFile, (const TCHAR*)logFileName, FA_WRITE|FA_OPEN_APPEND);
-      if (fres == FR_OK) {
-        McuLog_set_fp(&logFile);
+      if (McuLog_open_logfile(logFileName)!=0) {
+        McuLog_error("Failed opening log file '%s'.", logFileName);
+      } else {
         McuLog_info("Logging to file '%s'.", logFileName);
         logFileOpen = true;
-      } else {
-        McuLog_error("Failed opening log file '%s'.", logFileName);
       }
+    }
+    if (logFileOpen && doCloseLogFile) {
+      if (McuLog_close_logfile()!=0) {
+        McuLog_error("Failed closing log file '%s'.", logFileName);
+      } else {
+        McuLog_info("Closed log file '%s'.", logFileName);
+      }
+      doCloseLogFile = false;
     }
 #endif
     /* process all I/Os */

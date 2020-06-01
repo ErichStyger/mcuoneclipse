@@ -32,6 +32,14 @@ static void AppTask(void *pv) {
   uint8_t colorBuf[8];
 
   McuLog_trace("Starting Task");
+#if 1
+  McuLog_trace("Trace message");
+  McuLog_debug("Debug message");
+  McuLog_info("Information message");
+  McuLog_warn("Warning message");
+  McuLog_error("Error message");
+  McuLog_fatal("Fatal message");
+#endif
   vTaskDelay(pdMS_TO_TICKS(1000));
   led = LEDS_LedGreen; /* default */
   if (ini_gets(

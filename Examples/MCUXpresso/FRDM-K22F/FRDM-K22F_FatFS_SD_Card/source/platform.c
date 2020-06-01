@@ -22,7 +22,7 @@
 #include "McuTimeout.h"
 #include "McuLog.h"
 
-/* application modules */
+/* application modulMcues */
 #include "leds.h"
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
