@@ -22,6 +22,8 @@ Instructions:
 ../McuLib/TraceRecorder/include
 ../McuLib/TraceRecorder/streamports/Jlink_RTT/include
 ../McuLib/HD44780
+../McuLib/FatFS
+../McuLib/FatFS/source
  */
 
 #ifndef INCLUDEMCULIBCONFIG_H_
