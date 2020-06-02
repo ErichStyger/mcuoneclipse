@@ -32,7 +32,7 @@ static void AppTask(void *pv) {
   uint8_t colorBuf[8];
 
   McuLog_trace("Starting Task");
-#if 1
+#if 0 /* test logging messages */
   McuLog_trace("Trace message");
   McuLog_debug("Debug message");
   McuLog_info("Information message");
