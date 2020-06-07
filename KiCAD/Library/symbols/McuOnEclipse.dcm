@@ -47,13 +47,27 @@ K Adafruit, I2C, TSL2516
 F https://www.adafruit.com/product/439
 $ENDCMP
 #
+$CMP CD74HCT14
+D 6 channel high speed CMOS Hex inverting Schmitt Trigger
+K TI, 74HCT14
+$ENDCMP
+#
 $CMP Conn_RS485
 D Connector for a 'green' PCB connector
+$ENDCMP
+#
+$CMP DIO7003
+D 5.5V Low Loss Power Distribution Switch, DIO7003HAST5 is High active, DIO7003LAST5 is low active
 $ENDCMP
 #
 $CMP FT2232_Breakout
 D Header rows of the FT2232 breakout board
 K FT2232, breakout
+$ENDCMP
+#
+$CMP K02FN64M100
+D NXP Kinetis K02FN64
+K NXP, K02, Kinetis, Cortex, ARM
 $ENDCMP
 #
 $CMP LPC845-BRK
@@ -111,6 +125,11 @@ $ENDCMP
 $CMP VID28-XX
 D Dual axis miniature stepper motor driver
 K VID28, stepper motor, miniature
+$ENDCMP
+#
+$CMP VID66-08
+D Dual-Driver for instrumentation stepper motors
+K VID6608, VID66-08, STI6608, stepper motor, driver
 $ENDCMP
 #
 $CMP WS2812B-SIDE-A
