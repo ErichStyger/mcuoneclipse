@@ -1028,7 +1028,69 @@ usb_status_t USB_HostMsdEvent(usb_device_handle deviceHandle,
     return status;
 }
 
-uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+uint8_t USB_HostMsdCheckDiskPresence(bool *isMounted, uint8_t *drive, FATFS *fileSystemObject, const McuShell_StdIOType *io) {
+  if (drive==NULL) { /* backward compatibility with drive numbers before (which could be zero or NULL) */
+    drive = (unsigned char*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING;
+  }
+  if (!(*isMounted) && g_MsdFatfsInstance.deviceState==kStatus_DEV_Attached) {
+    /* card inserted */
+    if (McuFatFS_MountFileSystem(fileSystemObject, drive, io)==ERR_OK) {
+      *isMounted = true;
+      if (io!=NULL) {
+        McuShell_SendStr((unsigned char*)"MSD File System mounted\r\n", io->stdOut);
+      }
+    } else {
+      return ERR_FAILED;
+    }
+  } else if (*isMounted && g_MsdFatfsInstance.deviceState!=kStatus_DEV_Attached) {
+    /* card removed */
+    if (McuFatFS_UnMountFileSystem(drive, io)==ERR_OK) {
+      *isMounted = false;
+      if (io!=NULL) {
+        McuShell_SendStr((unsigned char*)"MSD File System unmounted\r\n", io->stdOut);
+      }
+    } else {
+      return ERR_FAILED;
+    }
+  }
   return ERR_OK;
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[24];
+
+  McuShell_SendStatusStr((unsigned char*)"UsbHostMsd", (unsigned char*)"UsbHostMsd status\r\n", io->stdOut);
+  switch(g_MsdFatfsInstance.deviceState) {
+    case kStatus_DEV_Attached: McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"attached\r\n"); break;
+    case kStatus_DEV_Detached: McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"detached\r\n"); break;
+    case kStatus_DEV_Idle: McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"idle\r\n"); break;
+    default: McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"unknown\r\n"); break;
+  }
+  McuShell_SendStatusStr((unsigned char*)"  state", buf, io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"UsbHostMsd", (unsigned char*)"Group of UsbHostMsd commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
+    || McuUtility_strcmp((char*)cmd, "UsbHostMsd help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0)
+             || (McuUtility_strcmp((char*)cmd, "UsbHostMsd status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  }
+  return res;
 }
 

@@ -15,6 +15,8 @@
 #include "McuShell.h"
 uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
+#include "McuFatFS.h"
+uint8_t USB_HostMsdCheckDiskPresence(bool *isMounted, uint8_t *drive, FATFS *fileSystemObject, const McuShell_StdIOType *io);
 
 /*******************************************************************************
  * Definitions

@@ -42,7 +42,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_USB_MSD
   USB_HostMsdParseCommand,
 #endif
-#if MCULOG_CONFIG_PARSE_COMMAND_ENABLED
+#if McuLog_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
 #endif
   NULL /* Sentinel */
@@ -122,7 +122,7 @@ static void ShellTask(void *pv) {
 #endif
 #if PL_CONFIG_USE_USB_MSD
   static McuFatFS_FATFS fsUsbMSD;
-  static bool mountMSD = false;
+  static bool msdMounted = false;
 #endif
 
   McuLog_info("Started Shell Task");
@@ -131,13 +131,10 @@ static void ShellTask(void *pv) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-#if PL_CONFIG_USE_SD_CARD
-    if (mountMSD) {
-      mountMSD = false;
-      if (McuFatFS_MountFileSystem(&fsUsbMSD, (unsigned char*)"1:/", McuShell_GetStdio())==ERR_OK) {
-          McuShell_SendStr((unsigned char*)"MSD File System mounted\r\n", McuShell_GetStdio()->stdOut);
-      }
-    }
+  #if PL_CONFIG_USE_USB_MSD
+    (void)USB_HostMsdCheckDiskPresence(&msdMounted, (unsigned char*)"1:/", &fsUsbMSD, McuShell_GetStdio());
+  #endif
+  #if PL_CONFIG_USE_SD_CARD
     (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fsSdCard, McuShell_GetStdio());
     if (cardMounted && !logFileOpen) {
       if (McuLog_open_logfile(logFileName)!=0) {
@@ -155,7 +152,7 @@ static void ShellTask(void *pv) {
       }
       doCloseLogFile = false;
     }
-#endif
+  #endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
