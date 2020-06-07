@@ -13,6 +13,7 @@
 #include "usb_misc.h"
 #include "usb_spec.h"
 #include "usb_host_framework.h"
+#include "usb_host_config.h"
 
 /*******************************************************************************
  * Definitions

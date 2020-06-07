@@ -19,6 +19,9 @@
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
 #endif
+#if PL_CONFIG_USE_USB_MSD
+  #include "host_msd_fatfs.h"
+#endif
 #include "McuTimeDate.h"
 #include "McuLog.h"
 
@@ -35,6 +38,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
+#endif
+#if PL_CONFIG_USE_USB_MSD
+  USB_HostMsdParseCommand,
 #endif
 #if MCULOG_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
@@ -109,10 +115,14 @@ uint8_t SHELL_ParseCommand(const unsigned char *command, McuShell_ConstStdIOType
 static void ShellTask(void *pv) {
 #if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
-  static McuFatFS_FATFS fileSystemObject;
+  static McuFatFS_FATFS fsSdCard;
   bool logFileOpen = false;
   bool doCloseLogFile = false; /* request closing the file e.g. with a push button */
   const unsigned char *logFileName = (unsigned char*)"0:/log.txt";
+#endif
+#if PL_CONFIG_USE_USB_MSD
+  static McuFatFS_FATFS fsUsbMSD;
+  static bool mountMSD = false;
 #endif
 
   McuLog_info("Started Shell Task");
@@ -122,7 +132,13 @@ static void ShellTask(void *pv) {
   }
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
-    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fileSystemObject, McuShell_GetStdio());
+    if (mountMSD) {
+      mountMSD = false;
+      if (McuFatFS_MountFileSystem(&fsUsbMSD, (unsigned char*)"1:/", McuShell_GetStdio())==ERR_OK) {
+          McuShell_SendStr((unsigned char*)"MSD File System mounted\r\n", McuShell_GetStdio()->stdOut);
+      }
+    }
+    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fsSdCard, McuShell_GetStdio());
     if (cardMounted && !logFileOpen) {
       if (McuLog_open_logfile(logFileName)!=0) {
         McuLog_error("Failed opening log file '%s'.", logFileName);

@@ -12,6 +12,10 @@
 #include "usb_host.h"
 #include "usb_host_msd.h"
 
+#include "McuShell.h"
+uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/

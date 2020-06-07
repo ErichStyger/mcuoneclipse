@@ -16,6 +16,8 @@
 #include "stdio.h"
 #include "fsl_device_registers.h"
 #include "msd_app.h"
+#include "McuLog.h"
+#include "McuShell.h"
 
 /*******************************************************************************
  * Definitions
@@ -885,7 +887,7 @@ void USB_HostMsdTask(void *arg)
                                   msdFatfsInstance->classHandle); /* msd class de-initialization */
                 msdFatfsInstance->classHandle = NULL;
 
-                usb_echo("mass storage device detached\r\n");
+                McuLog_info("mass storage device detached");
                 break;
 
             default:
@@ -934,7 +936,6 @@ usb_status_t USB_HostMsdEvent(usb_device_handle deviceHandle,
     usb_host_configuration_t *configuration;
     uint8_t interfaceIndex;
     usb_host_interface_t *interface;
-    uint32_t infoValue;
     uint8_t id;
 
     switch (eventCode)
@@ -990,18 +991,18 @@ usb_status_t USB_HostMsdEvent(usb_device_handle deviceHandle,
                     /* the device enumeration is done */
                     if (g_MsdFatfsInstance.deviceState == kStatus_DEV_Idle)
                     {
+                        uint32_t pid, vid, addr;
+
                         g_MsdFatfsInstance.deviceState = kStatus_DEV_Attached;
 
-                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDevicePID, &infoValue);
-                        usb_echo("mass storage device attached:pid=0x%x", infoValue);
-                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDeviceVID, &infoValue);
-                        usb_echo("vid=0x%x ", infoValue);
-                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDeviceAddress, &infoValue);
-                        usb_echo("address=%d\r\n", infoValue);
+                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDevicePID, &pid);
+                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDeviceVID, &vid);
+                        USB_HostHelperGetPeripheralInformation(deviceHandle, kUSB_HostGetDeviceAddress, &addr);
+                        McuLog_info("mass storage device attached: pid=0x%x vid=0x%x address=%d", pid, vid, addr);
                     }
                     else
                     {
-                        usb_echo("not idle msd instance\r\n");
+                        McuLog_error("not idle msd instance");
                         status = kStatus_USB_Error;
                     }
                 }
@@ -1026,3 +1027,8 @@ usb_status_t USB_HostMsdEvent(usb_device_handle deviceHandle,
     }
     return status;
 }
+
+uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  return ERR_OK;
+}
+
