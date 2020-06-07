@@ -20,6 +20,12 @@ extern "C" {
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
+#ifndef McuX12_017_CONFIG_QUAD_DRIVER
+  #define McuX12_017_CONFIG_QUAD_DRIVER   (1)
+    /*!< 1: Quad driver version; 0: Dual driver version */
+#endif
+
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif

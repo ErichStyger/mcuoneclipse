@@ -2,7 +2,7 @@
 #define __McuXFormat_CONFIG_H
 
 #ifndef McuXFormat_CONFIG_XCFG_FORMAT_FLOAT
-  #define XCFG_FORMAT_FLOAT             1 /* 1: enable, 0: disable floating format (component property) */
+  #define XCFG_FORMAT_FLOAT             0 /* 1: enable, 0: disable floating format (component property) */
 #endif
 
 
@@ -26,7 +26,7 @@
 #ifdef __SDCC
 #define DOUBLE  float
 #ifndef XCFG_FORMAT_LONGLONG
-#define XCFG_FORMAT_LONGLONG    0
+  #define XCFG_FORMAT_LONGLONG    0
 #endif
 #endif
 
@@ -43,7 +43,7 @@
  * Define XCFG_FORMAT_FLOAT=0 to remove floating point support
  */
 #ifndef XCFG_FORMAT_FLOAT
-#define XCFG_FORMAT_FLOAT    1
+  #define XCFG_FORMAT_FLOAT    0
 #endif
 
 /**
@@ -53,12 +53,12 @@
  */
 #ifndef XCFG_FORMAT_VA_COPY
 #if defined(__GNUC__) && defined(__x86_64__)
-#define XCFG_FORMAT_VA_COPY     1
+  #define XCFG_FORMAT_VA_COPY     1
 #endif
 
 
 #ifndef XCFG_FORMAT_VA_COPY
-#define XCFG_FORMAT_VA_COPY 0
+  #define XCFG_FORMAT_VA_COPY 0
 #endif
 
 #endif
@@ -68,7 +68,7 @@
  * Define to 0 to support long long type (prefix ll)
  */
 #ifndef XCFG_FORMAT_LONGLONG
-#define XCFG_FORMAT_LONGLONG    1
+  #define XCFG_FORMAT_LONGLONG    0
 #endif
 
 

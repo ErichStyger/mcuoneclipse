@@ -78,6 +78,7 @@ static const McuX12_017_Config_t defaultConfig =
       .hw_step.pin = 0,
     },
 
+#if McuX12_017_CONFIG_QUAD_DRIVER
     .motor[X12_017_M2] = {
       .isInverted =  false,
       .hw_dir.gpio = NULL,
@@ -113,6 +114,7 @@ static const McuX12_017_Config_t defaultConfig =
   #endif
       .hw_step.pin = 0,
     },
+#endif
 };
 
 void McuX12_017_GetDefaultConfig(McuX12_017_Config_t *config) {
@@ -200,6 +202,15 @@ void McuX12_017_ResetDriver(McuX12_017_Handle_t device) {
     McuWait_Waitms(1);
     McuGPIO_SetHigh(dev->reset); /* reset is low active */
     McuWait_Waitus(10);
+  }
+}
+
+void McuX12_017_SetResetLine(McuX12_017_Handle_t device, bool setHigh) {
+  /* RESET is low-active */
+  McuX12_Device_t *dev = (McuX12_Device_t*)device;
+
+  if (dev!=NULL && dev->hasReset) {
+    McuGPIO_SetValue(dev->reset, setHigh);
   }
 }
 

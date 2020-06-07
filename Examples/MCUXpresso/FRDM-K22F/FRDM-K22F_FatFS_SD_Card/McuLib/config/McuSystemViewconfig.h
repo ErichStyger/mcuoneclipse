@@ -27,4 +27,25 @@
     /*!< 1: events for tickets steps are generated. 0: no ticket step events are generated */
 #endif
 
+#ifndef McuSystemView_CONFIG_USE_STATIC_BUFFER
+  #define McuSystemView_CONFIG_USE_STATIC_BUFFER  (1)
+    /*!< 1: Use a static buffer to generate events instead of a buffer on the stack. 0: Use a buffer on the stack */
+#endif
+
+#ifndef McuSystemView_CONFIG_POST_MORTEM_MODE
+  #define McuSystemView_CONFIG_POST_MORTEM_MODE   (0)
+    /*!< 1: Enable post mortem analysis. 0: do not use it in post-morem mode */
+#endif
+
+#ifndef McuSystemView_CONFIG_RTT_BUFFER_SIZE
+  #define McuSystemView_CONFIG_RTT_BUFFER_SIZE    (1024)
+    /*!< Buffer size of RTT buffer, default 1024 */
+#endif
+
+#ifndef McuSystemView_CONFIG_RTT_CHANNEL
+  #define McuSystemView_CONFIG_RTT_CHANNEL        (1)
+    /*!< RTT channel to be used (default 1) */
+#endif
+
+
 #endif /* __McuSystemView_CONFIG_H */

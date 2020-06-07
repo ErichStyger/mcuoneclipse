@@ -7,6 +7,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLib.h"
+#if McuLib_CONFIG_USE_FAT_FS
+
 #include "ffconf.h"
 /* This fatfs subcomponent is disabled by default
  * To enable it, define following macro in ffconf.h */
@@ -474,3 +477,6 @@ void sdspi_host_init(void)
     g_card.host = &g_host;
 }
 #endif /* SDSPI_DISK_ENABLE */
+
+#endif /* McuLib_CONFIG_USE_FAT_FS */
+

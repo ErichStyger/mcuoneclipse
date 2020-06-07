@@ -7,8 +7,22 @@
 #ifndef MCUSHELLUARTCONFIG_H_
 #define MCUSHELLUARTCONFIG_H_
 
+/* supported UART implementation: */
+#define McuShellUart_CONFIG_UART_NONE               (0)
+#define McuShellUart_CONFIG_UART_LPC845_USART0      (1)
+#define McuShellUart_CONFIG_UART_K22FX512_UART0     (2)
+#define McuShellUart_CONFIG_UART_K22FN512_UART1     (3)
+#define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (4)
+
+/* default UART used */
+#ifndef McuShellUart_CONFIG_UART
+  #define McuShellUart_CONFIG_UART      McuShellUart_CONFIG_UART_NONE
+#endif
+
 /* UART configuration items */
-#if McuLib_CONFIG_CPU_IS_LPC  /* LPC845-BRK */
+#if McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_NONE
+  /* no UART used */
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC845_USART0
   #include "fsl_usart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   USART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_Select(kUART0_Clk_From_MainClk) /* Select the main clock as source clock of USART0. */
@@ -25,8 +39,7 @@
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
-#elif McuLib_CONFIG_CPU_IS_KINETIS
-#if 0
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
   /* UART0 on K22FX512 */
   #include "fsl_uart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART0
@@ -44,7 +57,7 @@
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
-#elif 1
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
   /* UART1 on K22FN512 */
   #include "fsl_uart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART1
@@ -62,7 +75,7 @@
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#else
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
   /* LPUART on K22FN512 */
   #include "fsl_lpuart.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   LPUART0
@@ -86,7 +99,6 @@
   #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Osc0ErClkUndiv /*kCLOCK_PllFllSelClk*/ /* has to match Clocks setting! */
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
-#endif
 #else
   /* you have to put your config here */
 #endif

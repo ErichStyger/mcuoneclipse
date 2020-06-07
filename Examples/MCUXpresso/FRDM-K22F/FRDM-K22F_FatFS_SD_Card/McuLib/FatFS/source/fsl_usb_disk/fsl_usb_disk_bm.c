@@ -6,6 +6,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "McuLib.h"
 #if McuLib_CONFIG_USE_FAT_FS
 
@@ -15,6 +16,7 @@
 #ifdef USB_DISK_ENABLE
 
 #include "fsl_usb_disk.h" /* FatFs lower layer API */
+
 
 /*******************************************************************************
  * Definitons
@@ -44,7 +46,8 @@ extern usb_host_handle g_HostHandle;
 
 usb_host_class_handle g_UsbFatfsClassHandle;
 static uint32_t s_FatfsSectorSize;
-static SemaphoreHandle_t s_CommandSemaphore;
+/* command on-going state. It should set to 1 when start command, it is set to 0 in the callback */
+static volatile uint8_t ufiIng;
 /* command callback status */
 static volatile usb_status_t ufiStatus;
 
@@ -61,29 +64,32 @@ USB_DMA_NONINIT_DATA_ALIGN(USB_DATA_ALIGN_SIZE) static uint8_t s_UsbTransferBuff
 
 static void USB_HostMsdUfiCallback(void *param, uint8_t *data, uint32_t dataLength, usb_status_t status)
 {
-    xSemaphoreGive(s_CommandSemaphore);
+    ufiIng = 0;
     ufiStatus = status;
+}
+
+static inline void USB_HostControllerTaskFunction(usb_host_handle hostHandle)
+{
+#if ((defined USB_HOST_CONFIG_KHCI) && (USB_HOST_CONFIG_KHCI))
+    USB_HostKhciTaskFunction(hostHandle);
+#endif /* USB_HOST_CONFIG_KHCI */
+#if ((defined USB_HOST_CONFIG_EHCI) && (USB_HOST_CONFIG_EHCI))
+    USB_HostEhciTaskFunction(hostHandle);
+#endif /* USB_HOST_CONFIG_EHCI */
+#if ((defined USB_HOST_CONFIG_IP3516HS) && (USB_HOST_CONFIG_IP3516HS > 0U))
+        USB_HostIp3516HsTaskFunction(g_HostHandle);
+#endif /* USB_HOST_CONFIG_IP3516HS */
+#if ((defined USB_HOST_CONFIG_OHCI) && (USB_HOST_CONFIG_OHCI > 0U))
+        USB_HostOhciTaskFunction(g_HostHandle);
+#endif /* USB_HOST_CONFIG_OHCI */
 }
 
 DSTATUS USB_HostMsdInitializeDisk(BYTE pdrv)
 {
     uint32_t address;
 
-    if (s_CommandSemaphore == NULL)
-    {
-        s_CommandSemaphore = xSemaphoreCreateCounting(0x01U, 0x00U);
-    }
-    else
-    {
-        vSemaphoreDelete(s_CommandSemaphore);
-        s_CommandSemaphore = xSemaphoreCreateCounting(0x01U, 0x00U);
-    }
-    if (NULL == s_CommandSemaphore)
-    {
-        return RES_ERROR;
-    }
-
     /* test unit ready */
+    ufiIng = 1;
     if (g_UsbFatfsClassHandle == NULL)
     {
         return RES_ERROR;
@@ -92,12 +98,13 @@ DSTATUS USB_HostMsdInitializeDisk(BYTE pdrv)
     {
         return STA_NOINIT;
     }
-    if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+    while (ufiIng) /* wait the command */
     {
-        return RES_ERROR;
+        USB_HostControllerTaskFunction(g_HostHandle);
     }
 
     /*request sense */
+    ufiIng = 1;
     if (g_UsbFatfsClassHandle == NULL)
     {
         return RES_ERROR;
@@ -107,12 +114,13 @@ DSTATUS USB_HostMsdInitializeDisk(BYTE pdrv)
     {
         return STA_NOINIT;
     }
-    if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+    while (ufiIng) /* wait the command */
     {
-        return RES_ERROR;
+        USB_HostControllerTaskFunction(g_HostHandle);
     }
 
     /* get the sector size */
+    ufiIng = 1;
     if (g_UsbFatfsClassHandle == NULL)
     {
         return RES_ERROR;
@@ -124,9 +132,9 @@ DSTATUS USB_HostMsdInitializeDisk(BYTE pdrv)
     }
     else
     {
-        if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+        while (ufiIng)
         {
-            return RES_ERROR;
+            USB_HostControllerTaskFunction(g_HostHandle);
         }
         if (ufiStatus == kStatus_USB_Success)
         {
@@ -181,6 +189,7 @@ DRESULT USB_HostMsdReadDisk(BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
         retry = USB_HOST_FATFS_RW_RETRY_TIMES;
         while (retry--)
         {
+            ufiIng = 1;
             if (g_UsbFatfsClassHandle == NULL)
             {
                 return RES_ERROR;
@@ -193,9 +202,9 @@ DRESULT USB_HostMsdReadDisk(BYTE pdrv, BYTE *buff, DWORD sector, UINT count)
             }
             else
             {
-                if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+                while (ufiIng)
                 {
-                    return RES_ERROR;
+                    USB_HostControllerTaskFunction(g_HostHandle);
                 }
                 if (ufiStatus == kStatus_USB_Success)
                 {
@@ -250,6 +259,7 @@ DRESULT USB_HostMsdWriteDisk(BYTE pdrv, const BYTE *buff, DWORD sector, UINT cou
         retry = USB_HOST_FATFS_RW_RETRY_TIMES;
         while (retry--)
         {
+            ufiIng = 1;
             if (g_UsbFatfsClassHandle == NULL)
             {
                 return RES_ERROR;
@@ -262,9 +272,9 @@ DRESULT USB_HostMsdWriteDisk(BYTE pdrv, const BYTE *buff, DWORD sector, UINT cou
             }
             else
             {
-                if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+                while (ufiIng)
                 {
-                    return RES_ERROR;
+                    USB_HostControllerTaskFunction(g_HostHandle);
                 }
                 if (ufiStatus == kStatus_USB_Success)
                 {
@@ -300,6 +310,7 @@ DRESULT USB_HostMsdIoctlDisk(BYTE pdrv, BYTE cmd, void *buff)
                 return RES_ERROR;
             }
 
+            ufiIng = 1;
             if (g_UsbFatfsClassHandle == NULL)
             {
                 return RES_ERROR;
@@ -312,9 +323,9 @@ DRESULT USB_HostMsdIoctlDisk(BYTE pdrv, BYTE cmd, void *buff)
             }
             else
             {
-                if (pdTRUE != xSemaphoreTake(s_CommandSemaphore, portMAX_DELAY)) /* wait the command */
+                while (ufiIng)
                 {
-                    return RES_ERROR;
+                    USB_HostControllerTaskFunction(g_HostHandle);
                 }
                 if (ufiStatus == kStatus_USB_Success)
                 {
@@ -373,4 +384,3 @@ DRESULT USB_HostMsdIoctlDisk(BYTE pdrv, BYTE cmd, void *buff)
 #endif /* USB_DISK_ENABLE */
 
 #endif /* McuLib_CONFIG_USE_FAT_FS */
-

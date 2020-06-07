@@ -10,21 +10,12 @@ extern "C" {
 #endif
 
 /* Definitions of physical drive number for each drive */
-#if 1 /* << EST */
-#define SDSPIDISK       0       /* sdspi disk to physical drive 4 */
-#define USBDISK         1       /* usb disk to physical drive 1 */
-#define RAMDISK         2       /* Example: ram disk to physical drive 0 */
-#define SDDISK          3       /* sd disk to physical drive 2 */
-#define MMCDISK         4       /* mmc disk to physical drive 3 */
-#define NANDDISK        5       /* nand disk to physical drive 5 */
-#else
 #define RAMDISK         0       /* Example: ram disk to physical drive 0 */
 #define USBDISK         1       /* usb disk to physical drive 1 */
 #define SDDISK          2       /* sd disk to physical drive 2 */
 #define MMCDISK         3       /* mmc disk to physical drive 3 */
 #define SDSPIDISK       4       /* sdspi disk to physical drive 4 */
 #define NANDDISK        5       /* nand disk to physical drive 5 */
-#endif
 
 /* Status of Disk Functions */
 typedef BYTE	DSTATUS;
