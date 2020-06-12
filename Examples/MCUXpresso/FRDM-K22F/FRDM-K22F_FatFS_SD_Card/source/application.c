@@ -65,6 +65,10 @@ static void AppTask(void *pv) {
   }
 }
 
+void NMI_Handler(void) {
+  /* do nothing, just in case we get here */
+}
+
 void APP_Run(void) {
   BaseType_t result;
 

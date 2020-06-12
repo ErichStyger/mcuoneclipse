@@ -45,12 +45,28 @@ extern "C" {
 // allows the MCU to restrict access to the Flash Memory module.
 // Placed at address 0x400 by the linker script.
 //*****************************************************************************
+#include "MK22F51212.h"
+#define FOPT_Config \
+            (  (0xFF & ~(NV_FOPT_NMI_DIS_MASK|NV_FOPT_EZPORT_DIS_MASK|NV_FOPT_LPBOOT_MASK)) /* keep other bits untouched */ \
+             | NV_FOPT_NMI_DIS(0)    /* 0: NMI disabled; 1: NMI enabled */ \
+             | NV_FOPT_EZPORT_DIS(0) /* 0: EzPort disabled; 1: EzPort enabled */ \
+             | NV_FOPT_LPBOOT(1)  /* 0: low power boot; 1: fast boot */ \
+            )
 __attribute__ ((used,section(".FlashConfig"))) const struct {
     unsigned int word1;
     unsigned int word2;
     unsigned int word3;
     unsigned int word4;
-} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFE};
+} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+#if 0
+    0xFFFFFFFE
+#else
+       (0xFF<<24) /* 0x040F: FDPROT */
+     | (0xFF<<16) /* 0x040E: FEPROT */
+     | (FOPT_Config<<8) /* 0x040D: FOPT */
+     | (0xFE) /* 0x040C: FSEC */
+#endif
+};
 //*****************************************************************************
 // Declaration of external SystemInit function
 //*****************************************************************************
