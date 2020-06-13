@@ -24,6 +24,7 @@
 #endif
 #include "McuTimeDate.h"
 #include "McuLog.h"
+#include "disk.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -45,6 +46,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuLog_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
 #endif
+  DISK_ParseCommand,
   NULL /* Sentinel */
 };
 
@@ -122,7 +124,7 @@ static void ShellTask(void *pv) {
 #endif
 #if PL_CONFIG_USE_USB_MSD
   static McuFatFS_FATFS fsUsbMSD;
-  static bool msdMounted = false;
+  bool msdMounted = false;
 #endif
 
   McuLog_info("Started Shell Task");
@@ -131,10 +133,10 @@ static void ShellTask(void *pv) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-  #if PL_CONFIG_USE_USB_MSD
-    (void)USB_HostMsdCheckDiskPresence(&msdMounted, (unsigned char*)"1:/", &fsUsbMSD, McuShell_GetStdio());
+  #if 0 && PL_CONFIG_USE_USB_MSD
+    //(void)USB_HostMsdCheckDiskPresence(&msdMounted, (unsigned char*)"1:/", &fsUsbMSD, McuShell_GetStdio());
   #endif
-  #if PL_CONFIG_USE_SD_CARD
+  #if 0 && PL_CONFIG_USE_SD_CARD
     (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fsSdCard, McuShell_GetStdio());
     if (cardMounted && !logFileOpen) {
       if (McuLog_open_logfile(logFileName)!=0) {

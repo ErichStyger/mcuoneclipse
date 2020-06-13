@@ -21,6 +21,7 @@
 #include "McuArmTools.h"
 #include "McuTimeout.h"
 #include "McuLog.h"
+#include "disk.h"
 
 /* application modulMcues */
 #include "leds.h"
@@ -77,4 +78,5 @@ void PL_Init(void) {
   McuFatFS_Init();
   FatFS_SdCardInit();
 #endif
+  DISK_Init();
 }

@@ -18,6 +18,7 @@
 #include "msd_app.h"
 #include "McuLog.h"
 #include "McuShell.h"
+#include "disk.h"
 
 /*******************************************************************************
  * Definitions
@@ -878,6 +879,8 @@ void USB_HostMsdTask(void *arg)
                     return;
                 }
                 msdFatfsInstance->runState = kUSB_HostMsdRunSetInterface;
+                DISK_SendEvent(DISK_EVENT_USB_MSD_INSERTED);
+                McuLog_info("mass storage device attached");
                 break;
 
             case kStatus_DEV_Detached: /* device is detached */
@@ -887,6 +890,7 @@ void USB_HostMsdTask(void *arg)
                                   msdFatfsInstance->classHandle); /* msd class de-initialization */
                 msdFatfsInstance->classHandle = NULL;
 
+                DISK_SendEvent(DISK_EVENT_USB_MSD_REMOVED);
                 McuLog_info("mass storage device detached");
                 break;
 

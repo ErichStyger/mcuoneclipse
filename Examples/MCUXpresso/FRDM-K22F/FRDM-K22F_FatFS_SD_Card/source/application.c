@@ -13,6 +13,7 @@
 #include "McuTimeDate.h"
 #include "McuMinINI.h"
 #include "McuLog.h"
+#include "disk.h"
 #if PL_CONFIG_USE_USB_MSD
   #include "msd_app.h"
 #endif
@@ -30,6 +31,8 @@ static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
 static void AppTask(void *pv) {
   McuLED_Handle_t led;
   uint8_t colorBuf[8];
+  bool sdDiskPresent = false;
+  bool present;
 
   McuLog_trace("Starting Task");
 #if 0 /* test logging messages */
@@ -60,6 +63,14 @@ static void AppTask(void *pv) {
     }
   }
   for(;;) {
+    present = DISK_IsDiskPresent((unsigned char*)DISK_DRIVE_SD_CARD);
+    if (!sdDiskPresent && present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_INSERTED);
+      sdDiskPresent = true;
+    } else if (sdDiskPresent && !present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_REMOVED);
+      sdDiskPresent = false;
+    }
     McuLED_Toggle(led);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
@@ -78,7 +89,8 @@ void APP_Run(void) {
 #endif
   result =xTaskCreate(AppTask, "AppTask", 2500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+2, NULL);
   if (result!=pdPASS) {
-    /* error! */
+    McuLog_fatal("Failed creating AppTask");
+    for(;;) {}
   }
   timerTimeoutHndl = xTimerCreate(  /* timer to handle periodic things */
         "timeout", /* name */
@@ -87,9 +99,11 @@ void APP_Run(void) {
         (void*)0, /* timer ID */
         vTimerTimoutAddTick); /* callback */
   if (timerTimeoutHndl==NULL) {
+    McuLog_fatal("Failed creating timeout timer");
     for(;;); /* failure! */
   }
   if (xTimerStart(timerTimeoutHndl, 0)!=pdPASS) { /* start the timer */
+    McuLog_fatal("Failed starting timer");
     for(;;); /* failure!?! */
   }
 
@@ -100,9 +114,11 @@ void APP_Run(void) {
         (void*)0, /* timer ID */
         vTimerTimeAddTick); /* callback */
   if (timerTimeHndl==NULL) {
+    McuLog_fatal("Failed creating time timer");
     for(;;); /* failure! */
   }
   if (xTimerStart(timerTimeHndl, 0)!=pdPASS) { /* start the timer */
+    McuLog_fatal("Failed starting timer");
     for(;;); /* failure!?! */
   }
 
