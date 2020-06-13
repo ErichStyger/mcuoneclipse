@@ -55,9 +55,9 @@ Instructions:
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)
-#define McuRTT_CONFIG_BLOCKING_SEND                   (0)
-#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (100)
-#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (20)
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (5)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (5)
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* -------------------------------------------------*/
 /* FatFS */

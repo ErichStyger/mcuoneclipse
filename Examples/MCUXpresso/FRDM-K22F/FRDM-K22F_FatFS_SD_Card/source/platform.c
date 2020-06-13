@@ -78,5 +78,7 @@ void PL_Init(void) {
   McuFatFS_Init();
   FatFS_SdCardInit();
 #endif
+#if PL_CONFIG_USE_SD_CARD || PL_CONFIG_USE_USB_MSD
   DISK_Init();
+#endif
 }

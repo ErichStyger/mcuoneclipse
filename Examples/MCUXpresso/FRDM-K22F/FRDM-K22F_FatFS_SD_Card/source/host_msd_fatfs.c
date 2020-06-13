@@ -7,6 +7,7 @@
  */
 
 #include "platform.h"
+#if PL_CONFIG_USE_USB_MSD
 #include "usb_host_config.h"
 #include "usb_host.h"
 #include "usb_host_msd.h"
@@ -1098,3 +1099,4 @@ uint8_t USB_HostMsdParseCommand(const unsigned char *cmd, bool *handled, const M
   return res;
 }
 
+#endif /* PL_CONFIG_USE_USB_MSD */

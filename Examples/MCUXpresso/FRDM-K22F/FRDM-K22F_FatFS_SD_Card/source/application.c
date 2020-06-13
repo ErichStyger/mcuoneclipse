@@ -31,18 +31,12 @@ static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
 static void AppTask(void *pv) {
   McuLED_Handle_t led;
   uint8_t colorBuf[8];
+#if PL_CONFIG_USE_SD_CARD
   bool sdDiskPresent = false;
   bool present;
+#endif
 
   McuLog_trace("Starting Task");
-#if 0 /* test logging messages */
-  McuLog_trace("Trace message");
-  McuLog_debug("Debug message");
-  McuLog_info("Information message");
-  McuLog_warn("Warning message");
-  McuLog_error("Error message");
-  McuLog_fatal("Fatal message");
-#endif
   vTaskDelay(pdMS_TO_TICKS(1000));
   led = LEDS_LedGreen; /* default */
   if (ini_gets(
@@ -63,6 +57,7 @@ static void AppTask(void *pv) {
     }
   }
   for(;;) {
+#if PL_CONFIG_USE_SD_CARD
     present = DISK_IsDiskPresent((unsigned char*)DISK_DRIVE_SD_CARD);
     if (!sdDiskPresent && present) {
       DISK_SendEvent(DISK_EVENT_SD_CARD_INSERTED);
@@ -71,6 +66,7 @@ static void AppTask(void *pv) {
       DISK_SendEvent(DISK_EVENT_SD_CARD_REMOVED);
       sdDiskPresent = false;
     }
+#endif
     McuLED_Toggle(led);
     vTaskDelay(pdMS_TO_TICKS(100));
   }

@@ -80,7 +80,7 @@ bool SHELL_HasStdIoInput(void) {
 
 void SHELL_SendChar(unsigned char ch) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
-  McuShell_SendCh(ch, ios[i].stdio->stdOut);
+    McuShell_SendCh(ch, ios[i].stdio->stdOut);
   }
 }
 
@@ -115,17 +115,6 @@ uint8_t SHELL_ParseCommand(const unsigned char *command, McuShell_ConstStdIOType
 }
 
 static void ShellTask(void *pv) {
-#if PL_CONFIG_USE_SD_CARD
-  bool cardMounted = false;
-  static McuFatFS_FATFS fsSdCard;
-  bool logFileOpen = false;
-  bool doCloseLogFile = false; /* request closing the file e.g. with a push button */
-  const unsigned char *logFileName = (unsigned char*)"0:/log.txt";
-#endif
-#if PL_CONFIG_USE_USB_MSD
-  static McuFatFS_FATFS fsUsbMSD;
-  bool msdMounted = false;
-#endif
 
   McuLog_info("Started Shell Task");
   vTaskDelay(pdMS_TO_TICKS(1000));
@@ -133,28 +122,6 @@ static void ShellTask(void *pv) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-  #if 0 && PL_CONFIG_USE_USB_MSD
-    //(void)USB_HostMsdCheckDiskPresence(&msdMounted, (unsigned char*)"1:/", &fsUsbMSD, McuShell_GetStdio());
-  #endif
-  #if 0 && PL_CONFIG_USE_SD_CARD
-    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)McuFatFS_CONFIG_DEFAULT_DRIVE_STRING, &fsSdCard, McuShell_GetStdio());
-    if (cardMounted && !logFileOpen) {
-      if (McuLog_open_logfile(logFileName)!=0) {
-        McuLog_error("Failed opening log file '%s'.", logFileName);
-      } else {
-        McuLog_info("Logging to file '%s'.", logFileName);
-        logFileOpen = true;
-      }
-    }
-    if (logFileOpen && doCloseLogFile) {
-      if (McuLog_close_logfile()!=0) {
-        McuLog_error("Failed closing log file '%s'.", logFileName);
-      } else {
-        McuLog_info("Closed log file '%s'.", logFileName);
-      }
-      doCloseLogFile = false;
-    }
-  #endif
     /* process all I/Os */
     for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
