@@ -30,10 +30,11 @@ static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
 
 static void AppTask(void *pv) {
   McuLED_Handle_t led;
-  uint8_t colorBuf[8];
+  uint8_t keyValueBuf[24];
 #if PL_CONFIG_USE_SD_CARD
   bool sdDiskPresent = false;
   bool present;
+  #define SD_CARD_INI_FILENAME "0:/config.ini"
 #endif
 
   McuLog_trace("Starting Task");
@@ -43,28 +44,92 @@ static void AppTask(void *pv) {
       (const TCHAR *)"LED", /* section */
       (const TCHAR *)"color", /* key */
       (const TCHAR *)"green",  /* default value */
-      (TCHAR *)colorBuf, sizeof(colorBuf), /* key value from ini */
-      (const TCHAR *)"config.ini" /* ini file */
+      (TCHAR *)keyValueBuf, sizeof(keyValueBuf), /* key value from ini */
+      (const TCHAR *)SD_CARD_INI_FILENAME /* ini file */
       )
       > 0) /* success */
   {
-    if (McuUtility_strcmp((char*)colorBuf, (char*)"red")==0) {
+    if (McuUtility_strcmp((char*)keyValueBuf, (char*)"red")==0) {
       led = LEDS_LedRed;
-    } else if (McuUtility_strcmp((char*)colorBuf, (char*)"green")==0) {
+    } else if (McuUtility_strcmp((char*)keyValueBuf, (char*)"green")==0) {
       led = LEDS_LedGreen;
-    } else if (McuUtility_strcmp((char*)colorBuf, (char*)"blue")==0) {
+    } else if (McuUtility_strcmp((char*)keyValueBuf, (char*)"blue")==0) {
       led = LEDS_LedBlue;
     }
   }
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
-    present = DISK_IsDiskPresent((unsigned char*)DISK_DRIVE_SD_CARD);
+    present = DISK_IsInserted((unsigned char*)DISK_DRIVE_SD_CARD);
     if (!sdDiskPresent && present) {
       DISK_SendEvent(DISK_EVENT_SD_CARD_INSERTED);
       sdDiskPresent = true;
     } else if (sdDiskPresent && !present) {
       DISK_SendEvent(DISK_EVENT_SD_CARD_REMOVED);
       sdDiskPresent = false;
+    }
+#endif
+#if PL_CONFIG_USE_USB_MSD
+  #define USB_MSD_INI_FILENAME "1:/log.ini"
+  #define DEFAULT_SRC_FILENAME "0:/log.txt"
+  #define DEFAULT_DST_FILENAME "1:/log.txt"
+   /* log.ini example content:
+        [Mount]
+        copyLog=yes
+        srcLogFile=0:\log.txt
+        dstLogFile=1:\log.txt
+        unmount=yes
+      */
+    unsigned char srcLogFileName[32], dstLogFileName[32];
+
+    if (DISK_IsMounted((unsigned char*)DISK_DRIVE_USB_MSD)) {
+      if (ini_gets(
+          (const TCHAR *)"Mount", /* section */
+          (const TCHAR *)"copyLog", /* key */
+          (const TCHAR *)"no",  /* default value */
+          (TCHAR *)keyValueBuf, sizeof(keyValueBuf), /* key value from ini */
+          (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
+          )
+          > 0) /* success */
+      {
+        if (McuUtility_strcmp((char*)keyValueBuf, (char*)"yes")==0) { /* copyLog=yes ? */
+          if (
+              ini_gets(
+              (const TCHAR *)"Mount", /* section */
+              (const TCHAR *)"srcLogFile", /* key */
+              (const TCHAR *)DEFAULT_SRC_FILENAME,  /* default value */
+              (TCHAR *)srcLogFileName, sizeof(srcLogFileName), /* key value from ini */
+              (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
+              ) > 0 /* success */
+              &&
+              ini_gets(
+              (const TCHAR *)"Mount", /* section */
+              (const TCHAR *)"dstLogFile", /* key */
+              (const TCHAR *)DEFAULT_DST_FILENAME,  /* default value */
+              (TCHAR *)dstLogFileName, sizeof(dstLogFileName), /* key value from ini */
+              (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
+              ) > 0) /* success */
+          {
+            /* copy log file */
+           McuLog_info("Copy log file '%s' => '%s'", srcLogFileName, dstLogFileName);
+           if (McuFatFS_CopyFile(srcLogFileName, dstLogFileName, NULL)!=ERR_OK) {
+             McuLog_error("Copy of log file failed");
+           }
+          }
+        }
+      }
+      if (ini_gets(
+          (const TCHAR *)"Mount", /* section */
+          (const TCHAR *)"unmount", /* key */
+          (const TCHAR *)"no",  /* default value */
+          (TCHAR *)keyValueBuf, sizeof(keyValueBuf), /* key value from ini */
+          (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
+          )
+          > 0) /* success */
+      {
+        if (McuUtility_strcmp((char*)keyValueBuf, (char*)"yes")==0) { /* unmount=yes ? */
+          DISK_SendEvent(DISK_EVENT_USB_MSD_REQ_UNMOUNT);
+        }
+      }
     }
 #endif
     McuLED_Toggle(led);

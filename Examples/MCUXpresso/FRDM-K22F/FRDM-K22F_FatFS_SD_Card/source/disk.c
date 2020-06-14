@@ -20,12 +20,28 @@ static TaskHandle_t diskTaskHandle;
   static bool DISK_msdMounted = false;
 #endif
 
-bool DISK_IsDiskPresent(unsigned char *drive) {
-  /* hard coded for '0' (SD card) and '1' (MSD) for now */
-  if (*drive=='0') {
-    return McuFatFS_isDiskPresent(drive);
-  } else if (*drive=='1') {
-    /* NYI, \todo */
+bool DISK_IsInserted(unsigned char *drive) {
+  switch(*drive) {
+  #if PL_CONFIG_USE_SD_CARD
+    case '0': return McuFatFS_isDiskPresent(drive);
+  #endif
+  #if PL_CONFIG_USE_USB_MSD
+    case '1': return DISK_msdMounted; /* no special hardware pin */
+  #endif
+    default: break;
+  }
+  return false;
+}
+
+bool DISK_IsMounted(unsigned char *drive) {
+  switch(*drive) {
+  #if PL_CONFIG_USE_SD_CARD
+    case '0': return DISK_sdMounted;
+  #endif
+  #if PL_CONFIG_USE_USB_MSD
+    case '1': return DISK_msdMounted;
+  #endif
+    default: break;
   }
   return false;
 }

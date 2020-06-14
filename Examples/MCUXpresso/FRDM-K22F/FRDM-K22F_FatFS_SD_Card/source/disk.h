@@ -9,6 +9,7 @@
 #define DISK_H_
 
 #include "platform.h"
+#if PL_CONFIG_USE_SD_CARD || PL_CONFIG_USE_USB_MSD
 #include <stdbool.h>
 
 typedef enum {
@@ -32,10 +33,16 @@ uint8_t DISK_ParseCommand(const unsigned char *cmd, bool *handled, const McuShel
 #define DISK_DRIVE_SD_CARD  "0:/"
 #define DISK_DRIVE_USB_MSD  "1:/"
 
-bool DISK_IsDiskPresent(unsigned char *drive);
+/* checks if the device is inserted */
+bool DISK_IsInserted(unsigned char *drive);
+
+/* checks if the device is mounted and ready to use */
+bool DISK_IsMounted(unsigned char *drive);
 
 void DISK_SendEvent(DISK_Events event);
 
 void DISK_Init(void);
+
+#endif /* PL_CONFIG_USE_SD_CARD || PL_CONFIG_USE_USB_MSD */
 
 #endif /* DISK_H_ */
