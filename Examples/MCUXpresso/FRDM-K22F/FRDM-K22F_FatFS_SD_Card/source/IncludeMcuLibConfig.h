@@ -79,7 +79,10 @@ Instructions:
 
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2020
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 6
-#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   1
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   14
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR 10
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN 12
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC 30
 
 #define McuTimeDate_CONFIG_TICK_TIME_MS               50
 /* -------------------------------------------------*/

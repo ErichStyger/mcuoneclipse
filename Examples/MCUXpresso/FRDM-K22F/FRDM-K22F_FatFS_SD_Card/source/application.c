@@ -29,12 +29,17 @@ static void vTimerTimeAddTick(TimerHandle_t pxTimer) {
 }
 
 static void AppTask(void *pv) {
+  #define SD_CARD_INI_FILENAME "0:/config.ini"
+  #define USB_MSD_INI_FILENAME "1:/log.ini"
+  #define DEFAULT_LOG_SRC_FILENAME "0:/log.txt"
+  #define DEFAULT_LOG_DST_FILENAME "1:/log.txt"
   McuLED_Handle_t led;
   uint8_t keyValueBuf[24];
 #if PL_CONFIG_USE_SD_CARD
   bool sdDiskPresent = false;
   bool present;
-  #define SD_CARD_INI_FILENAME "0:/config.ini"
+  bool logFileOpen = false;
+  bool doCloseLogFile = false; /* set by push button or similar */
 #endif
 
   McuLog_trace("Starting Task");
@@ -68,10 +73,25 @@ static void AppTask(void *pv) {
       sdDiskPresent = false;
     }
 #endif
+#if PL_CONFIG_USE_SD_CARD
+  if (!logFileOpen && DISK_IsMounted((unsigned char*)DISK_DRIVE_SD_CARD)) {
+    if (McuLog_open_logfile((const unsigned char*)DEFAULT_LOG_SRC_FILENAME)!=0) {
+      McuLog_error("Failed opening log file '%s'.", DEFAULT_LOG_SRC_FILENAME);
+    } else {
+      McuLog_info("Logging to file '%s'.", DEFAULT_LOG_SRC_FILENAME);
+      logFileOpen = true;
+    }
+  }
+  if (logFileOpen && doCloseLogFile) {
+    if (McuLog_close_logfile()!=0) {
+      McuLog_error("Failed closing log file '%s'.", DEFAULT_LOG_SRC_FILENAME);
+    } else {
+      McuLog_info("Closed log file '%s'.", DEFAULT_LOG_SRC_FILENAME);
+    }
+    doCloseLogFile = false;
+  }
+#endif
 #if PL_CONFIG_USE_USB_MSD
-  #define USB_MSD_INI_FILENAME "1:/log.ini"
-  #define DEFAULT_SRC_FILENAME "0:/log.txt"
-  #define DEFAULT_DST_FILENAME "1:/log.txt"
    /* log.ini example content:
         [Mount]
         copyLog=yes
@@ -96,7 +116,7 @@ static void AppTask(void *pv) {
               ini_gets(
               (const TCHAR *)"Mount", /* section */
               (const TCHAR *)"srcLogFile", /* key */
-              (const TCHAR *)DEFAULT_SRC_FILENAME,  /* default value */
+              (const TCHAR *)DEFAULT_LOG_SRC_FILENAME,  /* default value */
               (TCHAR *)srcLogFileName, sizeof(srcLogFileName), /* key value from ini */
               (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
               ) > 0 /* success */
@@ -104,7 +124,7 @@ static void AppTask(void *pv) {
               ini_gets(
               (const TCHAR *)"Mount", /* section */
               (const TCHAR *)"dstLogFile", /* key */
-              (const TCHAR *)DEFAULT_DST_FILENAME,  /* default value */
+              (const TCHAR *)DEFAULT_LOG_DST_FILENAME,  /* default value */
               (TCHAR *)dstLogFileName, sizeof(dstLogFileName), /* key value from ini */
               (const TCHAR *)USB_MSD_INI_FILENAME /* ini file */
               ) > 0) /* success */
@@ -112,6 +132,11 @@ static void AppTask(void *pv) {
             /* copy log file */
            McuLog_info("Copy log file '%s' => '%s'", srcLogFileName, dstLogFileName);
            if (McuFatFS_CopyFile(srcLogFileName, dstLogFileName, NULL)!=ERR_OK) {
+             McuLED_Off(led);
+             for(int i=0;i<10;i++) { /* indicate error with 10 red blinks */
+               McuLED_Toggle(LEDS_LedRed);
+               vTaskDelay(pdMS_TO_TICKS(500));
+             }
              McuLog_error("Copy of log file failed");
            }
           }
@@ -128,6 +153,11 @@ static void AppTask(void *pv) {
       {
         if (McuUtility_strcmp((char*)keyValueBuf, (char*)"yes")==0) { /* unmount=yes ? */
           DISK_SendEvent(DISK_EVENT_USB_MSD_REQ_UNMOUNT);
+          McuLED_Off(led);
+          for(int i=0;i<10;i++) { /* indicate unmount with 5 blue blinks */
+            McuLED_Toggle(LEDS_LedBlue);
+            vTaskDelay(pdMS_TO_TICKS(500));
+          }
         }
       }
     }
