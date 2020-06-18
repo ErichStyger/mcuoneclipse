@@ -48,7 +48,6 @@
  * @brief   Application entry point.
  */
 int main(void) {
-
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -58,12 +57,5 @@ int main(void) {
 
     PRINTF("Hello World\n");
     APP_Run();
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
     return 0;
 }
