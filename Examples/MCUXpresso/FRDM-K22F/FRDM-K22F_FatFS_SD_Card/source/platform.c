@@ -22,6 +22,10 @@
 #include "McuTimeout.h"
 #include "McuLog.h"
 #include "disk.h"
+#if PL_CONFIG_USE_EXT_I2C_RTC
+  #include "McuExtRTC.h"
+  #include "i2clib.h"
+#endif
 
 /* application modulMcues */
 #include "leds.h"
@@ -40,10 +44,14 @@
 #endif
 #include "McuTimeDate.h"
 
+void PL_InitFromTask(void) {
+  McuTimeDate_Init();
+}
+
 void PL_Init(void) {
   /* clocking */
   CLOCK_EnableClock(kCLOCK_PortA); /* used by leds */
-  CLOCK_EnableClock(kCLOCK_PortB); /* used by sd card detect */
+  CLOCK_EnableClock(kCLOCK_PortB); /* used by sd card detect and I2C */
   CLOCK_EnableClock(kCLOCK_PortD); /* used by leds */
 
   /* library modules */
@@ -55,7 +63,17 @@ void PL_Init(void) {
   McuLED_Init();
   McuGPIO_Init();
   McuTimeout_Init();
-  McuTimeDate_Init();
+#if PL_CONFIG_USE_I2C
+  McuGenericI2C_Init();
+#endif
+#if PL_CONFIG_USE_I2C && PL_CONFIG_USE_HW_I2C
+  I2CLIB_Init();
+#elif PL_CONFIG_USE_I2C
+  McuGenericSWI2C_Init();
+#endif
+#if PL_CONFIG_USE_EXT_I2C_RTC
+  McuExtRTC_Init();
+#endif
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif

@@ -111,6 +111,8 @@ BOARD_InitPins:
   - {pin_num: '60', peripheral: SPI0, signal: SIN, pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/LPUART0_TX/I2C0_SDA, identifier: ''}
   - {pin_num: '59', peripheral: SPI0, signal: SOUT, pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/LPUART0_RX/I2C0_SCL, identifier: ''}
   - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
+  - {pin_num: '35', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/FTM1_QD_PHA}
+  - {pin_num: '36', peripheral: I2C0, signal: SDA, pin_signal: ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/FTM1_QD_PHB}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -125,6 +127,8 @@ void BOARD_InitPins(void)
 {
     /* Port A Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
     /* Port D Clock Gate Control: Clock enabled */
@@ -143,6 +147,12 @@ void BOARD_InitPins(void)
 
                      /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
                      | PORT_PCR_PE(kPORT_PullDisable));
+
+    /* PORTB0 (pin 35) is configured as I2C0_SCL */
+    PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt2);
+
+    /* PORTB1 (pin 36) is configured as I2C0_SDA */
+    PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt2);
 
     /* PORTC4 (pin 49) is configured as SPI0_PCS0 */
     PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt2);

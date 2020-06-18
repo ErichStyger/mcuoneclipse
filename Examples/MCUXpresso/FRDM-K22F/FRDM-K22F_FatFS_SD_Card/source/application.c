@@ -42,7 +42,8 @@ static void AppTask(void *pv) {
   bool doCloseLogFile = false; /* set by push button or similar */
 #endif
 
-  McuLog_trace("Starting Task");
+  McuLog_trace("Starting App Task");
+  PL_InitFromTask();
   vTaskDelay(pdMS_TO_TICKS(1000));
   led = LEDS_LedGreen; /* default */
   if (ini_gets(

@@ -14,11 +14,17 @@
 #define PL_CONFIG_USE_LOGGING       (1) /* if using logging */
 #define PL_CONFIG_USE_MININI        (1 && PL_CONFIG_USE_SD_CARD) /* if using minIni */
 
+#define PL_CONFIG_USE_I2C           (1) /* use I2C bus */
+#define PL_CONFIG_USE_HW_I2C        (1) /* using hardware I2C and not software I2C */
+#define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_I2C) /* configure the RTC handling in the IncludeMcuLibConfig.h too! */
+
 /* Shell */
 #define PL_CONFIG_USE_SHELL         (1) /* if using shell */
 #define PL_CONFIG_USE_SHELL_UART    (1) /* if using (OpenSDA) UART */
 #define PL_CONFIG_USE_RTT           (1) /* if using RTT */
 #define PL_CONFIG_USE_USB_CDC       (0) /* if using USB CDC */
+
+void PL_InitFromTask(void);
 
 /* platform initialization */
 void PL_Init(void);

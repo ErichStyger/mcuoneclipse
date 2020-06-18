@@ -22,6 +22,9 @@
 #if PL_CONFIG_USE_USB_MSD
   #include "host_msd_fatfs.h"
 #endif
+#if PL_CONFIG_USE_EXT_I2C_RTC
+  #include "McuExtRTC.h"
+#endif
 #include "McuTimeDate.h"
 #include "McuLog.h"
 #include "disk.h"
@@ -30,6 +33,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand,
   McuRTOS_ParseCommand,
+#if PL_CONFIG_USE_EXT_I2C_RTC
+  McuExtRTC_ParseCommand,
+#endif
   McuTimeDate_ParseCommand,
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,

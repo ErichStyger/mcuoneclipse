@@ -110,6 +110,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="I2C0" description="Peripheral I2C0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -145,6 +150,8 @@
                         <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="I2C0" signal="SCL" pin_num="35" pin_signal="ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/FTM1_QD_PHA"/>
+                  <pin peripheral="I2C0" signal="SDA" pin_num="36" pin_signal="ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/FTM1_QD_PHB"/>
                </pins>
             </function>
             <function name="BOARD_InitLEDsPins">
