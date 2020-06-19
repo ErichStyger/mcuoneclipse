@@ -113,6 +113,8 @@ BOARD_InitPins:
   - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
   - {pin_num: '35', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/FTM1_QD_PHA}
   - {pin_num: '36', peripheral: I2C0, signal: SDA, pin_signal: ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/FTM1_QD_PHB}
+  - {pin_num: '39', peripheral: UART0, signal: RX, pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN, identifier: ''}
+  - {pin_num: '40', peripheral: UART0, signal: TX, pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, identifier: ''}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -154,6 +156,12 @@ void BOARD_InitPins(void)
     /* PORTB1 (pin 36) is configured as I2C0_SDA */
     PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt2);
 
+    /* PORTB16 (pin 39) is configured as UART0_RX */
+    PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt3);
+
+    /* PORTB17 (pin 40) is configured as UART0_TX */
+    PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt3);
+
     /* PORTC4 (pin 49) is configured as SPI0_PCS0 */
     PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt2);
 
@@ -165,6 +173,13 @@ void BOARD_InitPins(void)
 
     /* PORTD3 (pin 60) is configured as SPI0_SIN */
     PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt2);
+
+    SIM->SOPT5 = ((SIM->SOPT5 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                  /* UART 0 transmit data source select: UART0_TX pin. */
+                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
 }
 
 /* clang-format off */

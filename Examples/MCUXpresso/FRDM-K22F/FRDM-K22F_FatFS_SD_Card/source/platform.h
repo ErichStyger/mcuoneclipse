@@ -16,11 +16,12 @@
 
 #define PL_CONFIG_USE_I2C           (1) /* use I2C bus */
 #define PL_CONFIG_USE_HW_I2C        (1) /* using hardware I2C and not software I2C */
-#define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_I2C) /* configure the RTC handling in the IncludeMcuLibConfig.h too! */
+#define PL_CONFIG_USE_EXT_I2C_RTC   (1 && PL_CONFIG_USE_I2C) /* configure the RTC handling in the IncludeMcuLibConfig.h, set McuExtRTC_CONFIG_DEVICE */
 
 /* Shell */
 #define PL_CONFIG_USE_SHELL         (1) /* if using shell */
 #define PL_CONFIG_USE_SHELL_UART    (1) /* if using (OpenSDA) UART */
+#define PL_CONFIG_USE_SHELL_UART0   (1) /* if using UART0 (PTB16 (Rx), PTB17 (Tx)). Set McuShellUart_CONFIG_UART in IncludeMcuLibConfig.h  */
 #define PL_CONFIG_USE_RTT           (1) /* if using RTT */
 #define PL_CONFIG_USE_USB_CDC       (0) /* if using USB CDC */
 
