@@ -25,8 +25,6 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
-
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

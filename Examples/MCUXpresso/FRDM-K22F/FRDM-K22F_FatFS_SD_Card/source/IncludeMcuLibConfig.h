@@ -101,15 +101,25 @@ Instructions:
 #endif
 /* -------------------------------------------------*/
 /* Time/Date */
+#define CONFIG_USE_EXTERNAL_HW_RTC  (0) /* if using external HW RTC on I2C bus */
+
 #define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (1) /* enable software RTC */
-#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (1) /* enable external I2C RTC */
+#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (CONFIG_USE_EXTERNAL_HW_RTC) /* enable external I2C RTC */
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
-#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
-#define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
-#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
-#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
-#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
+#if CONFIG_USE_EXTERNAL_HW_RTC
+  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
+  #define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
+#else
+  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
+  #define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (0) /* if using external I2C RTC */
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
+#endif
 
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2020
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 6
@@ -118,10 +128,10 @@ Instructions:
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN 12
 #define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC 30
 
-#define McuTimeDate_CONFIG_TICK_TIME_MS               50
+#define McuTimeDate_CONFIG_TICK_TIME_MS         (50)
 /* -------------------------------------------------*/
 /* RTC */
-#define McuExtRTC_CONFIG_DEVICE                 3231  /* RTC device used */
+#define McuExtRTC_CONFIG_DEVICE                 (3231)  /* RTC device used */
 /* -------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_USE_FILE                  (1)
