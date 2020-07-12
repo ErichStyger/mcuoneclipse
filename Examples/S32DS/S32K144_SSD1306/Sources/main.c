@@ -102,6 +102,8 @@ static void TestLCD(void) {
   }
 }
 
+
+static const char projectName[] = PROJECT_NAME;
 /*!
   \brief The main function for the project.
   \details The startup initialization sequence is the following:

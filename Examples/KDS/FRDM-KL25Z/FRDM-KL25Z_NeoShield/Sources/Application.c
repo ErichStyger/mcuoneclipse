@@ -61,6 +61,7 @@ static void DimmColor(NEO_PixelIdxT start, NEO_PixelIdxT end, bool isRed, bool i
 }
 #endif
 
+#if PL_HAS_LED_FRAME_CLOCK
 static void ClockUpdate(void) {
   static int prevHour=-1, prevMinute=-1, prevSecond=1;
   TIMEREC time;
@@ -81,6 +82,7 @@ static void ClockUpdate(void) {
     }
   }
 }
+#endif
 
 #if 0 && PL_HAS_RTC
 static void UpdateFromRTC(void) {
@@ -119,7 +121,7 @@ static void NeoTask(void* pvParameters) {
 
   //Test();
   //MATRIX_Test();
-  vTaskDelay(500/portTICK_RATE_MS); /* give RTC time to power up */
+  vTaskDelay(pdMS_TO_TICKS(500)); /* give RTC time to power up */
   //UpdateFromRTC(); /* get and sync the RTC */
   TmDt1_SyncWithExternalRTC();
   for(;;) {
@@ -184,7 +186,7 @@ static void NeoTask(void* pvParameters) {
 //    DimmColor(NEO_PIXEL_FIRST, NEO_PIXEL_LAST, FALSE, TRUE, TRUE);
 #endif
     //LED1_Neg();
-    vTaskDelay(1000/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(1000));
     //NEO_TransferPixels();
   }
 }
@@ -222,7 +224,7 @@ void APP_Run(void) {
         500/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

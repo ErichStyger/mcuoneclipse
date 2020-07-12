@@ -121,12 +121,12 @@ static void ShellTask(void *pvParameters) {
     (void)FAT1_CheckCardPresence(&cardMounted, "0" /* drive */, &fileSystemObject, CLS1_GetStdio());
 #endif
     (void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
 
 void SHELL_Init(void) {
-  if (FRTOS1_xTaskCreate(ShellTask, "Shell", (800/sizeof(StackType_t)), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", (800/sizeof(StackType_t)), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 }
