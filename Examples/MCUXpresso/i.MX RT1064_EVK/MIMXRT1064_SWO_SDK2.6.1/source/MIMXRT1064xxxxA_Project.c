@@ -74,7 +74,6 @@ static void blinkFLASH(void) {
   }
 }
 
-
 /*!
  * \brief Initialize the SWO trace port for debug message printing
  * \param portBits Port bit mask to be configured
