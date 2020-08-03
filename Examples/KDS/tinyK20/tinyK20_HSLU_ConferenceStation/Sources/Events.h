@@ -41,6 +41,27 @@
 #include "KIN1.h"
 #include "UTIL1.h"
 #include "FRTOS1.h"
+#include "USB1.h"
+#include "HIDK1.h"
+#include "Tx2.h"
+#include "USB0.h"
+#include "CLS1.h"
+#include "TMOUT1.h"
+#include "CS1.h"
+#include "XF1.h"
+#include "KEY1.h"
+#include "Inhr1.h"
+#include "BitIoLdd2.h"
+#include "Inhr2.h"
+#include "BitIoLdd3.h"
+#include "TRG1.h"
+#include "EVNT1.h"
+#include "LED_Mic.h"
+#include "LEDpin2.h"
+#include "BitIoLdd4.h"
+#include "LED_Cam.h"
+#include "LEDpin3.h"
+#include "BitIoLdd5.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -140,6 +161,72 @@ void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
 **         NAME            - DESCRIPTION
 **         expectedIdleTicks - expected idle
 **                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressed(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleased(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyPressedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void KEY1_OnKeyReleasedLong(uint8_t keys);
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void EVNT1_AppHandleEvent(uint8_t event);
+/*
+** ===================================================================
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
 **     Returns     : Nothing
 ** ===================================================================
 */

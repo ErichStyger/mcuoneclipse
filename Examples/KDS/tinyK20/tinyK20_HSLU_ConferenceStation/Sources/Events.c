@@ -35,6 +35,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "TRG1.h"
 
 /*
 ** ===================================================================
@@ -96,7 +97,7 @@ void FRTOS1_vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
 void FRTOS1_vApplicationTickHook(void)
 {
   /* Called for every RTOS tick. */
-  /* Write your code here ... */
+  TRG1_AddTick();
 }
 
 /*
@@ -190,6 +191,88 @@ void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a key has been pressed.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressed(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key pressed ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleased(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key released ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated at the time a long key press has been
+**         detected.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyPressedLong(uint8_t keys)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event generated after a key has been released (long key
+**         press).
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         keys            - the key(s) pressed, as bitset (e.g. 1 is
+**                           key 1, 2 is key 2, 4 is key 3, ....)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void KEY1_OnKeyReleasedLong(uint8_t keys)
+{
+  /* Write your code here. A bit in 'keys' indicates key released after a long time ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         event           - Event (event number) to be processed.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void EVNT1_AppHandleEvent(uint8_t event)
+{
+  (void)event; /* only to avoid compiler warning about unused variable */
   /* Write your code here ... */
 }
 
