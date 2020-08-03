@@ -333,6 +333,149 @@ void SM1_OnFreeTxBuf(void)
 }
 
 
+/*
+** ===================================================================
+**     Event       :  AS1_OnError (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using <GetError> method.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnError(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnRxChar (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled and either the <Receiver>
+**         property is enabled or the <SCI output mode> property (if
+**         supported) is set to Single-wire mode.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnRxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnTxChar (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnTxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnFullRxBuf (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called when the input buffer is full;
+**         i.e. after reception of the last character 
+**         that was successfully placed into input buffer.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnFullRxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  AS1_OnFreeTxBuf (module Events)
+**
+**     Component   :  AS1 [AsynchroSerial]
+**     Description :
+**         This event is called after the last character in output
+**         buffer is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void AS1_OnFreeTxBuf(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used */
+#if 1
+  /* example for Kinetis (enable SetOperationMode() in CPU component): */
+  // Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
+  /* or to wait for interrupt: */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#elif 0
+  /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
+  Cpu_SetWaitMode();
+#elif 0
+  /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#else
+  #error "you *must* enter low power mode (wait for interrupt) here!"
+#endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

@@ -41,7 +41,7 @@ static void smile(uint8_t r, uint8_t g, uint8_t b) {
   NEO_ClearAllPixel();
   NEO_TransferPixels();
 
-  for(int i=0; i<=6; i++) {
+  for(int i=0; i<=7; i++) {
     NEO_SetPixelRGB(0, 6+i, r, g, b);
     NEO_SetPixelRGB(0, 6-i, r, g, b);
     NEO_TransferPixels();
@@ -57,7 +57,7 @@ static void NeoTask(void* pvParameters) {
   for(;;) {
     smile(0, 0, 0x50);
     NEOL_PixelTrail(0xff, 0x00, 0x00, NEO_PIXEL_FIRST, 12, 12, 30, 100);
-    DimmColor(NEO_PIXEL_FIRST, 12, FALSE, TRUE, FALSE);
+    DimmColor(1, 12, FALSE, TRUE, FALSE);
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }

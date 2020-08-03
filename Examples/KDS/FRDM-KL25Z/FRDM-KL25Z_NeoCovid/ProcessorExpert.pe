@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-KL25Z_NeoCovid</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>244</ModificationStamp>
+    <ModificationStamp>245</ModificationStamp>
     <Date>2015-04-22</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -8912,42 +8912,6 @@
     </Properties>
     <Methods>
       <ItemState>
-        <ItemSymbol>strcatPad</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>strcatPad</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>chcat</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>chcat</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num8sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num8sToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>Num8uToStr</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -9786,6 +9750,42 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strcat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>strcatPad</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>strcatPad</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>chcat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>chcat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num8sToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num8sToStr</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -11326,7 +11326,9 @@
         <PrecInProc>true</PrecInProc>
         <LowLimit />
         <HighLimit />
-        <List lines_count="0" />
+        <List lines_count="1">
+          <Line>115200 baud</Line>
+        </List>
         <UnitText>baud</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
         <ControlledTimingCfgFromPropertySymbol>BdRate</ControlledTimingCfgFromPropertySymbol>
@@ -11956,7 +11958,9 @@
               <PrecInProc>true</PrecInProc>
               <LowLimit />
               <HighLimit />
-              <List lines_count="0" />
+              <List lines_count="1">
+                <Line>115200 baud</Line>
+              </List>
               <UnitText>baud</UnitText>
               <MinCounterTicks>0</MinCounterTicks>
             </ItemState>
