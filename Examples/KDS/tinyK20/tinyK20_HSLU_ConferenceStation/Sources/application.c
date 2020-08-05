@@ -10,13 +10,19 @@
 #include "LED1.h"
 #include "USB1.h"
 #include "HIDK1.h"
+#include "LED_Mic.h"
+#include "LED_Cam.h"
 #include "KEY1.h"
+#include "EVNT1.h"
 #include "PORT_PDD.h"
 
 static bool sendMicMute = FALSE;
 static bool sendCamMute = FALSE;
 
 static void UsbTask(void *pv) {
+  bool camIsMuted = FALSE;
+  bool micIsMuted = FALSE;
+
   USB1_Init();
   for(;;) {
     if (HIDK1_App_Task()==ERR_OK) { /* run the USB application task: this will send the buffer */
@@ -26,17 +32,50 @@ static void UsbTask(void *pv) {
     }
     if (sendMicMute) {
       sendMicMute = FALSE;
-      /* send print screen */
-      HIDK1_Send(MODIFERKEYS_NONE, KEY_PRINTSCREEN);
+      micIsMuted = !micIsMuted;
+      LED_Mic_Off();
+     /* Send <Alt>+<A> to start/stop mic in Zoom */
+      HIDK1_Send(MODIFERKEYS_LEFT_ALT, KEY_A); /* press key */
+      HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
+      /* or: send <space> to temporarily unmute */
+    }
+    if (sendCamMute) {
+      sendCamMute = FALSE;
+      camIsMuted = !camIsMuted;
+      LED_Cam_Off();
+      /* send <Alt>+<V> to start/stop video in Zoom */
+      HIDK1_Send(MODIFERKEYS_LEFT_ALT, KEY_V);
       HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
     }
+    if (micIsMuted) {
+      LED_Mic_Neg();
+    } else {
+      LED_Mic_On();
+    }
+    if (camIsMuted) {
+      LED_Cam_Neg();
+    } else {
+      LED_Cam_On();
+    }
     vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+
+void APP_HandleEvent(uint8_t event) {
+  switch(event) {
+    case EVNT1_SW_MUTE_CAM_PRESSED:
+      sendCamMute = TRUE;
+      break;
+    case EVNT1_SW_MUTE_MIC_PRESSED:
+      sendMicMute = TRUE;
+      break;
   }
 }
 
 static void BtnTask(void *pv) {
   for(;;) {
     KEY1_ScanKeys();
+    EVNT1_HandleEvent();
     vTaskDelay(pdMS_TO_TICKS(50));
   }
 }

@@ -36,6 +36,7 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "TRG1.h"
+#include "application.h"
 
 /*
 ** ===================================================================
@@ -207,7 +208,11 @@ void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
 */
 void KEY1_OnKeyPressed(uint8_t keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key pressed ... */
+  if (keys&(1<<0)) { /* SW_MuteMic */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_MIC_PRESSED);
+  } else if (keys&(1<<1)) { /* SW_MuteCam */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_CAM_PRESSED);
+  }
 }
 
 /*
@@ -272,8 +277,7 @@ void KEY1_OnKeyReleasedLong(uint8_t keys)
 */
 void EVNT1_AppHandleEvent(uint8_t event)
 {
-  (void)event; /* only to avoid compiler warning about unused variable */
-  /* Write your code here ... */
+  APP_HandleEvent(event);
 }
 
 /* END Events */

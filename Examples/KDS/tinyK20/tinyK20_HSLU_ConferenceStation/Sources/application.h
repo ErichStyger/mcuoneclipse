@@ -8,6 +8,9 @@
 #ifndef SOURCES_APPLICATION_H_
 #define SOURCES_APPLICATION_H_
 
+#include <stdint.h>
+
+void APP_HandleEvent(uint8_t event);
 
 void APP_Run(void);
 
