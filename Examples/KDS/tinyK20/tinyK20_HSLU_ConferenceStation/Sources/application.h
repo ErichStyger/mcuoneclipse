@@ -1,8 +1,7 @@
 /*
- * application.h
+ * Copyright (c) 2020, Erich Styger
  *
- *  Created on: 03.08.2020
- *      Author: Erich Styger Local
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef SOURCES_APPLICATION_H_
@@ -13,6 +12,5 @@
 void APP_HandleEvent(uint8_t event);
 
 void APP_Run(void);
-
 
 #endif /* SOURCES_APPLICATION_H_ */

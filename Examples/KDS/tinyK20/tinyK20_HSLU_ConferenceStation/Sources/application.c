@@ -1,8 +1,7 @@
 /*
- * application.c
+ * Copyright (c) 2020, Erich Styger
  *
- *  Created on: 03.08.2020
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "application.h"
