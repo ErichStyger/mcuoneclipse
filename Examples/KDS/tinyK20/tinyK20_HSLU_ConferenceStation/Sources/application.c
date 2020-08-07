@@ -16,8 +16,10 @@
 #include "EVNT1.h"
 #include "PORT_PDD.h"
 
-static bool sendMicMute = FALSE;
-static bool sendCamMute = FALSE;
+static volatile bool sendMicMute = FALSE;
+static volatile bool sendCamMute = FALSE;
+static volatile bool sendPushToTalkOn = FALSE;
+static volatile bool sendPushToTalkOff = FALSE;
 
 static void UsbTask(void *pv) {
   bool camIsMuted = FALSE;
@@ -47,6 +49,14 @@ static void UsbTask(void *pv) {
       HIDK1_Send(MODIFERKEYS_LEFT_ALT, KEY_V);
       HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release key */
     }
+    if (sendPushToTalkOn) {
+      /* send <SPACE> as push-to-talk in Zoom */
+      sendPushToTalkOn = FALSE;
+      HIDK1_Send(MODIFERKEYS_NONE, KEY_SPACEBAR); /* send <space> */
+    } else if (sendPushToTalkOff) {
+      sendPushToTalkOff = FALSE;
+      HIDK1_Send(MODIFERKEYS_NONE, KEY_NONE); /* release <space> */
+    }
     if (micIsMuted) {
       LED_Mic_Neg();
     } else {
@@ -68,6 +78,16 @@ void APP_HandleEvent(uint8_t event) {
       break;
     case EVNT1_SW_MUTE_MIC_PRESSED:
       sendMicMute = TRUE;
+      break;
+    case EVNT1_SW_MUTE_MIC_PRESSED_LONG:
+      sendPushToTalkOn = TRUE;
+      break;
+    case EVNT1_SW_MUTE_CAM_PRESSED_LONG:
+      break;
+    case EVNT1_SW_MUTE_MIC_RELEASED_LONG:
+      sendPushToTalkOff = TRUE;
+      break;
+    case EVNT1_SW_MUTE_CAM_RELEASED_LONG:
       break;
   }
 }

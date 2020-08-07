@@ -245,7 +245,11 @@ void KEY1_OnKeyReleased(uint8_t keys)
 */
 void KEY1_OnKeyPressedLong(uint8_t keys)
 {
-  /* Write your code here ... */
+  if (keys&(1<<0)) { /* SW_MuteMic */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_MIC_PRESSED_LONG);
+  } else if (keys&(1<<1)) { /* SW_MuteCam */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_CAM_PRESSED_LONG);
+  }
 }
 
 /*
@@ -262,7 +266,11 @@ void KEY1_OnKeyPressedLong(uint8_t keys)
 */
 void KEY1_OnKeyReleasedLong(uint8_t keys)
 {
-  /* Write your code here. A bit in 'keys' indicates key released after a long time ... */
+  if (keys&(1<<0)) { /* SW_MuteMic */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_MIC_RELEASED_LONG);
+  } else if (keys&(1<<1)) { /* SW_MuteCam */
+    EVNT1_SetEvent(EVNT1_SW_MUTE_CAM_RELEASED_LONG);
+  }
 }
 
 /*

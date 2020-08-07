@@ -3,7 +3,7 @@
   <Header>
     <Name>tinyK20_HSLU_ConferenceStation</Name>
     <SavedBy>Erich Styger Local</SavedBy>
-    <ModificationStamp>20</ModificationStamp>
+    <ModificationStamp>25</ModificationStamp>
     <Date>2020-08-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -15572,7 +15572,7 @@
               <ItemSymbol>_Pin</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>TSI0_CH2/PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</Value>
+              <Value>TSI0_CH3/PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -15618,7 +15618,7 @@
                     <ItemSymbol>_Pin</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>TSI0_CH2/PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</Value>
+                    <Value>TSI0_CH3/PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</Value>
                     <SharedPrphMode>false</SharedPrphMode>
                   </ItemState>
                   <ItemState>
@@ -16168,7 +16168,7 @@
               <ItemSymbol>_Pin</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>TSI0_CH3/PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</Value>
+              <Value>TSI0_CH2/PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -16214,7 +16214,7 @@
                     <ItemSymbol>_Pin</ItemSymbol>
                     <ReadOnly>false</ReadOnly>
                     <UserReadOnly>false</UserReadOnly>
-                    <Value>TSI0_CH3/PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO</Value>
+                    <Value>TSI0_CH2/PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI</Value>
                     <SharedPrphMode>false</SharedPrphMode>
                   </ItemState>
                   <ItemState>
@@ -17075,10 +17075,14 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>(string list)</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <StrgList lines_count="3">
+        <StrgList lines_count="7">
           <Line>INIT /* Example event */</Line>
           <Line>SW_MUTE_MIC_PRESSED</Line>
           <Line>SW_MUTE_CAM_PRESSED</Line>
+          <Line>SW_MUTE_MIC_PRESSED_LONG</Line>
+          <Line>SW_MUTE_CAM_PRESSED_LONG</Line>
+          <Line>SW_MUTE_MIC_RELEASED_LONG</Line>
+          <Line>SW_MUTE_CAM_RELEASED_LONG</Line>
         </StrgList>
       </ItemState>
       <ItemState>
