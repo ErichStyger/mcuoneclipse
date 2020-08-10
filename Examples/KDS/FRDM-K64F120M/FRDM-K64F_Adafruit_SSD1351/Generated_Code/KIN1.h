@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -32,7 +32,7 @@
 **         Deinit                 - void KIN1_Deinit(void);
 **         Init                   - void KIN1_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -89,7 +89,7 @@
 #endif
 
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
   /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
   #define KIN1_DWT_CONTROL             (*((volatile uint32_t*)0xE0001000))
     /*!< DWT Control register */
@@ -251,7 +251,7 @@ void KIN1_SetLR(uint32_t setval);
 ** ===================================================================
 */
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
 #define KIN1_InitCycleCounter() \
   KIN1_DEMCR |= KIN1_TRCENA_BIT
   /*!< TRCENA: Enable trace and debug block DEMCR (Debug Exception and Monitor Control Register */
@@ -269,7 +269,7 @@ void KIN1_SetLR(uint32_t setval);
 */
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
 #define KIN1_ResetCycleCounter() \
   KIN1_DWT_CYCCNT = 0
   /*!< Reset cycle counter */
@@ -285,7 +285,7 @@ void KIN1_SetLR(uint32_t setval);
 */
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
 #define KIN1_EnableCycleCounter() \
   KIN1_DWT_CONTROL |= KIN1_DWT_CYCCNTENA_BIT
   /*!< Enable cycle counter */
@@ -301,7 +301,7 @@ void KIN1_SetLR(uint32_t setval);
 */
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
 #define KIN1_DisableCycleCounter() \
   KIN1_DWT_CONTROL &= ~KIN1_DWT_CYCCNTENA_BIT
   /*!< Disable cycle counter */
@@ -317,7 +317,7 @@ void KIN1_SetLR(uint32_t setval);
 */
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M >= 3 /* only for Cortex-M3 or higher */
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M && MCUC1_CONFIG_CORTEX_M>=3 /* only for Cortex-M3 or higher */
 #define KIN1_GetCycleCounter() \
   KIN1_DWT_CYCCNT
   /*!< Read cycle counter register */

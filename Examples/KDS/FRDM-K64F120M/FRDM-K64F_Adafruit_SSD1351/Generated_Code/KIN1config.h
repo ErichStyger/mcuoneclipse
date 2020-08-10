@@ -21,6 +21,8 @@
   /* include here the low level CMSIS header files, e.g. with */
   #if MCUC1_CONFIG_CPU_IS_STM32
     #include "stm32f3xx_hal.h" /* header file for STM32F303K8 */
+  #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_NORDIC_NRF5
+    #include "nrf.h"
   #endif
 #endif
 

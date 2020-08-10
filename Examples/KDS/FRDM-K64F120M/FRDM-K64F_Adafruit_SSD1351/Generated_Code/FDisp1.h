@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FontDisplay
-**     Version     : Component 01.199, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.200, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-08-10, 20:01, # CodeGen: 4
 **     Abstract    :
 **          Driver to write fonts using GFont component
 **     Settings    :
@@ -14,16 +14,17 @@
 **          System                                         : 
 **            InhGDisplay                                  : GDisp1
 **     Contents    :
-**         GetFontHeight   - void FDisp1_GetFontHeight(FDisp1_Font *font, FDisp1_PixelDim *charHeight,...
-**         GetStringHeight - FDisp1_PixelDim FDisp1_GetStringHeight(uint8_t *str, FDisp1_Font *font,...
-**         GetCharWidth    - void FDisp1_GetCharWidth(uint8_t ch, FDisp1_PixelDim *charWidth,...
-**         GetStringWidth  - FDisp1_PixelDim FDisp1_GetStringWidth(uint8_t *str, FDisp1_Font *font,...
-**         WriteString     - void FDisp1_WriteString(uint8_t *str, FDisp1_PixelColor color,...
-**         WriteChar       - void FDisp1_WriteChar(uint8_t ch, FDisp1_PixelColor color, FDisp1_PixelDim...
-**         Deinit          - void FDisp1_Deinit(void);
-**         Init            - void FDisp1_Init(void);
+**         GetFontHeight    - void FDisp1_GetFontHeight(FDisp1_Font *font, FDisp1_PixelDim *charHeight,...
+**         GetStringHeight  - FDisp1_PixelDim FDisp1_GetStringHeight(uint8_t *str, FDisp1_Font *font,...
+**         GetCharWidth     - void FDisp1_GetCharWidth(uint8_t ch, FDisp1_PixelDim *charWidth,...
+**         GetStringWidth   - FDisp1_PixelDim FDisp1_GetStringWidth(uint8_t *str, FDisp1_Font *font,...
+**         WriteString      - void FDisp1_WriteString(uint8_t *str, FDisp1_PixelColor color,...
+**         WriteStringWidth - void FDisp1_WriteStringWidth(uint8_t *str, FDisp1_PixelColor color,...
+**         WriteChar        - void FDisp1_WriteChar(uint8_t ch, FDisp1_PixelColor color, FDisp1_PixelDim...
+**         Deinit           - void FDisp1_Deinit(void);
+**         Init             - void FDisp1_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -234,6 +235,35 @@ void FDisp1_Init(void);
 **     Description :
 **         Driver initialization
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FDisp1_WriteStringWidth(uint8_t *str, FDisp1_PixelColor color, FDisp1_PixelDim *xCursor, FDisp1_PixelDim *yCursor, FDisp1_Font *font, FDisp1_PixelDim width);
+/*
+** ===================================================================
+**     Method      :  WriteStringWidth (component FontDisplay)
+**
+**     Description :
+**         Function to write a string or character at the startpoint.
+**         Set the startpoint with the function setCursor. If the
+**         string reaches the given width, the text gets wrapped to a
+**         new line.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * str             - Pointer to the character string
+**         color           - Foreground color to be used (for the
+**                           character pixels)
+**       * xCursor         - Pointer to x position of first
+**                           character (upper left corner). On return
+**                           this will contain the next y position.
+**       * yCursor         - Pointer to y position of character
+**                           (upper left corner). On return this will
+**                           contain the next y position.
+**       * font            - Pointer to font information
+**         width           - Maximum of width of the text box. If
+**                           text reaches the end of the box, the text
+**                           gets wrapped to a new line.
 **     Returns     : Nothing
 ** ===================================================================
 */

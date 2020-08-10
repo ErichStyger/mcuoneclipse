@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -82,7 +82,11 @@
 #define LED2_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define LED2_On() LEDpin2_ClrVal()
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_On() LEDpin2_ClrVal()
+#else
+  #define LED2_On() LEDpin2_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -94,7 +98,11 @@
 ** ===================================================================
 */
 
-#define LED2_Off() LEDpin2_SetVal()
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_Off() LEDpin2_SetVal()
+#else
+  #define LED2_Off() LEDpin2_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -118,7 +126,11 @@
 ** ===================================================================
 */
 
-#define LED2_Get() (!(LEDpin2_GetVal()))
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_Get() (!(LEDpin2_GetVal()))
+#else
+  #define LED2_Get() LEDpin2_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

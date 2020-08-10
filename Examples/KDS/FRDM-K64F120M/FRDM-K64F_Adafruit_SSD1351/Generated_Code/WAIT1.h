@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Adafruit_SSD1351
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.086, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-08-10, 19:57, # CodeGen: 1
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -25,9 +25,8 @@
 **         Waitns         - void WAIT1_Waitns(uint16_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
-**         DeInit         - void WAIT1_DeInit(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -241,18 +240,6 @@ void WAIT1_Init(void);
 **
 **     Description :
 **         Driver initialization routine.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-void WAIT1_DeInit(void);
-/*
-** ===================================================================
-**     Method      :  DeInit (component Wait)
-**
-**     Description :
-**         Driver de-initialization routine
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================
