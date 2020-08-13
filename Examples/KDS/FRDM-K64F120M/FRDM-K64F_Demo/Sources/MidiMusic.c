@@ -9,6 +9,7 @@
 #if PL_HAS_MUSIC
 #include "Floppy.h"
 #include "FRTOS1.h"
+#include "UTIL1.h"
 #include "Midi.h"
 #include "MidiMusic.h"
 #include "MidiMusicReady.h"

@@ -36,6 +36,9 @@ typedef void (*log_LockFn)(void *udata, int lock);
 typedef enum { McuLog_TRACE, McuLog_DEBUG, McuLog_INFO, McuLog_WARN, McuLog_ERROR, McuLog_FATAL } McuLog_Levels_e;
 
 /* note: gcc supports __BASE_FILE__ instead of __FILE__ */
+#ifndef __BASE_FILE__
+  #define __BASE_FILE__  __FILE__
+#endif
 #define McuLog_trace(...) McuLog_log(McuLog_TRACE, __BASE_FILE__, __LINE__, __VA_ARGS__)
 #define McuLog_debug(...) McuLog_log(McuLog_DEBUG, __BASE_FILE__, __LINE__, __VA_ARGS__)
 #define McuLog_info(...)  McuLog_log(McuLog_INFO,  __BASE_FILE__, __LINE__, __VA_ARGS__)
