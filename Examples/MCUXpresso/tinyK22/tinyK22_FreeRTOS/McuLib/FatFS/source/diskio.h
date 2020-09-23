@@ -9,20 +9,23 @@
 extern "C" {
 #endif
 
-#include "integer.h"
+/* Definitions of physical drive number for each drive */
+#if 1 /* << EST */
+#define SDSPIDISK       0       /* sdspi disk to physical drive 4 */
+#define USBDISK         1       /* usb disk to physical drive 1 */
+#define RAMDISK         2       /* Example: ram disk to physical drive 0 */
+#define SDDISK          3       /* sd disk to physical drive 2 */
+#define MMCDISK         4       /* mmc disk to physical drive 3 */
+#define NANDDISK        5       /* nand disk to physical drive 5 */
+#else
+#define RAMDISK         0       /* Example: ram disk to physical drive 0 */
+#define USBDISK         1       /* usb disk to physical drive 1 */
+#define SDDISK          2       /* sd disk to physical drive 2 */
+#define MMCDISK         3       /* mmc disk to physical drive 3 */
+#define SDSPIDISK       4       /* sdspi disk to physical drive 4 */
+#define NANDDISK        5       /* nand disk to physical drive 5 */
+#endif
 
-/* << EST added */
-#include "ffconf.h"
-#ifndef NULL
-  #define NULL ((void*)0)
-#endif /* NULL */
-#define CT_SD1   (1<<0) /* LDD_SDHC_SD, Secure Digital memory card */
-#define CT_SD2   (1<<1) /* LDD_SDHC_SDIO, Secure Digital IO card */
-#define CT_BLOCK (1<<2)
-#define CT_MMC   (1<<3) /* LDD_SDHC_MMC, MultiMediaCard memory card */
-#define CT_SDC   (1<<4) /* LDD_SDHC_SDCOMBO, Combined Secure Digital memory and IO card */
-#define CT_ATA   (1<<5) /* LDD_SDHC_CE_ATA, Consumer Electronics ATA card */
-/* << EST end */
 
 /* Status of Disk Functions */
 typedef BYTE	DSTATUS;
@@ -33,8 +36,7 @@ typedef enum {
 	RES_ERROR,		/* 1: R/W Error */
 	RES_WRPRT,		/* 2: Write Protected */
 	RES_NOTRDY,		/* 3: Not Ready */
-	RES_PARERR,		/* 4: Invalid Parameter */
-	RES_NOT_ENOUGH_CORE /* 5: not enough memory */ /* << EST: needed for FatFsMem_USB_MSD */
+	RES_PARERR		/* 4: Invalid Parameter */
 } DRESULT;
 
 
@@ -56,14 +58,14 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 #define STA_PROTECT		0x04	/* Write protected */
 
 
-/* Command code for disk_ioctrl fucntion */
+/* Command code for disk_ioctrl function */
 
 /* Generic command (Used by FatFs) */
-#define CTRL_SYNC			0	/* Complete pending write process (needed at _FS_READONLY == 0) */
-#define GET_SECTOR_COUNT	1	/* Get media size (needed at _USE_MKFS == 1) */
-#define GET_SECTOR_SIZE		2	/* Get sector size (needed at _MAX_SS != _MIN_SS) */
-#define GET_BLOCK_SIZE		3	/* Get erase block size (needed at _USE_MKFS == 1) */
-#define CTRL_TRIM			4	/* Inform device that the data on the block of sectors is no longer used (needed at _USE_TRIM == 1) */
+#define CTRL_SYNC			0	/* Complete pending write process (needed at FF_FS_READONLY == 0) */
+#define GET_SECTOR_COUNT	1	/* Get media size (needed at FF_USE_MKFS == 1) */
+#define GET_SECTOR_SIZE		2	/* Get sector size (needed at FF_MAX_SS != FF_MIN_SS) */
+#define GET_BLOCK_SIZE		3	/* Get erase block size (needed at FF_USE_MKFS == 1) */
+#define CTRL_TRIM			4	/* Inform device that the data on the block of sectors is no longer used (needed at FF_USE_TRIM == 1) */
 
 /* Generic command (Not used by FatFs) */
 #define CTRL_POWER			5	/* Get/Set power status */
@@ -73,12 +75,21 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
 /* MMC/SDC specific ioctl command */
 #define MMC_GET_TYPE		10	/* Get card type */
+/* << EST */
+#define CT_SD1   (1<<0) /* LDD_SDHC_SD, Secure Digital memory card */
+#define CT_SD2   (1<<1) /* LDD_SDHC_SDIO, Secure Digital IO card */
+#define CT_BLOCK (1<<2)
+#define CT_MMC   (1<<3) /* LDD_SDHC_MMC, MultiMediaCard memory card */
+#define CT_SDC   (1<<4) /* LDD_SDHC_SDCOMBO, Combined Secure Digital memory and IO card */
+#define CT_ATA   (1<<5) /* LDD_SDHC_CE_ATA, Consumer Electronics ATA card */
+/* << EST */
+
 #define MMC_GET_CSD			11	/* Get CSD */
 #define MMC_GET_CID			12	/* Get CID */
 #define MMC_GET_OCR			13	/* Get OCR */
 #define MMC_GET_SDSTAT		14	/* Get SD status */
 
-/*<< EST added: */
+/* << EST */
 #define MMC_GET_SDC_VERSION     15  /* 1 byte */
 #define MMC_GET_READ_BL_LEN     16  /* 2 bytes */
 #define MMC_GET_DRIVER_VERSION  17  /* 1 byte: return: 0 SPI driver, 1 LLD SDHC driver */
@@ -88,7 +99,8 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
   #define MMC_GET_LLD_CMD_LOW_VOLTAGE    2 /* return 1 byte, 0 for no, 1 for yes */
   #define MMC_GET_LLD_CMD_DATA_WIDTHS    3 /* return 1 byte (bitset), 0x1: 1, 0x2: 4, 0x4: 8 */
   #define MMC_GET_LLD_CMD_OPERATIONS     4 /* return 1 byte (bitset), 0x1: block read, 0x2: block write, 0x4: block erase, 0x8: write protection, 0x10: I/O */
-/* << EST end */
+/*<< EST */
+
 
 #define ISDIO_READ			55	/* Read data form SD iSDIO register */
 #define ISDIO_WRITE			56	/* Write data to SD iSDIO register */
@@ -104,5 +116,3 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 #endif
 
 #endif
-
-

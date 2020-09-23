@@ -14,6 +14,8 @@
 #include "leds.h"
 #include "fsl_pit.h"
 
+uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
+
 #if 0 /* using Cortex cycle counter */
 static uint32_t prevCycleCounter, cycleCntCounter = 0;
 
@@ -33,7 +35,6 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
   return cycleCntCounter;
 }
 #else /* using PIT timer */
-static uint32_t perfCounter = 0;
 
 #define PIT_BASEADDR       PIT
 #define PIT_SOURCE_CLOCK   CLOCK_GetFreq(kCLOCK_BusClk)
@@ -43,7 +44,7 @@ static uint32_t perfCounter = 0;
 
 void PIT_HANDLER(void) {
   PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
-  perfCounter++;
+  McuRTOS_RunTimeCounter++;
   __DSB();
 }
 
@@ -61,7 +62,7 @@ void AppConfigureTimerForRuntimeStats(void) {
 }
 
 uint32_t AppGetRuntimeCounterValueFromISR(void) {
-  return perfCounter;
+  return McuRTOS_AppGetRuntimeCounterValueFromISR();
 }
 #endif
 

@@ -1,3 +1,4 @@
+/** Copyright (C) SEGGER Microcontroller GmbH                        */
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
@@ -637,14 +638,14 @@ static void _SendPacket(U8* pStartPacket, U8* pEndPacket, unsigned int EventId) 
 
 #if (SEGGER_SYSVIEW_POST_MORTEM_MODE == 1)
   if (_SYSVIEW_Globals.EnableState == 0) {
-    goto SendDone;
+    goto SendDone; /* @suppress("Goto statement used") */
   }
 #else
   if (_SYSVIEW_Globals.EnableState == 1) {  // Enabled, no dropped packets remaining
-    goto Send;
+    goto Send; /* @suppress("Goto statement used") */
   }
   if (_SYSVIEW_Globals.EnableState == 0) {
-    goto SendDone;
+    goto SendDone; /* @suppress("Goto statement used") */
   }
   //
   // Handle buffer full situations:
@@ -654,7 +655,7 @@ static void _SendPacket(U8* pStartPacket, U8* pEndPacket, unsigned int EventId) 
   if (_SYSVIEW_Globals.EnableState == 2) {
     _TrySendOverflowPacket();
     if (_SYSVIEW_Globals.EnableState != 1) {
-      goto SendDone;
+      goto SendDone; /* @suppress("Goto statement used") */
     }
   }
 Send:
@@ -664,7 +665,7 @@ Send:
   //
   if (EventId < 32) {
     if (_SYSVIEW_Globals.DisabledEvents & ((U32)1u << EventId)) {
-      goto SendDone;
+      goto SendDone; /* @suppress("Goto statement used") */
     }
   }
   //

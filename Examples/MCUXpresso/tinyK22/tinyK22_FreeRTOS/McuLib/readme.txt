@@ -8,7 +8,7 @@ This folder contains all the library sources:
 - src: source files
 
 Middleware and dedicated driver folders:
-- FatFS (experimental): port of the ElmChan FatFS system
+- FatFS: port of the ElmChan FatFS system
 - fonts: graphical LCD fonts, used by McuFontDisplay
 - FreeRTOS: FreeRTOS realtime operating system, optimized and tuned for Segger SystemView and Percepio Trace
 - HDD44780: Driver for HD44780 LCDs with up to 4 lines (https://mcuoneclipse.com/2012/12/22/hd44780-2x16-character-display-for-kinetis-and-freedom-board/)

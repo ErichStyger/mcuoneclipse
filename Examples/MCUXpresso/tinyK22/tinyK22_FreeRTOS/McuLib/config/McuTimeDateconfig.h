@@ -1,3 +1,12 @@
+/**
+ * \file
+ * \brief Configuration header file for GenericTimeDate
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the generic timc/date module.
+ */
+
 #ifndef __McuTimeDate_CONFIG_H
 #define __McuTimeDate_CONFIG_H
 
@@ -74,6 +83,33 @@
 #endif
 #ifndef McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR
   #define McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR  "dd.mm.yyyy"
+#endif
+
+#ifndef McuTimeDate_CONFIG_TICK_TIME_MS
+  #define McuTimeDate_CONFIG_TICK_TIME_MS \
+    (1000/1000)                         /* Period in milliseconds as defined in RTOS component properties, at which McuTimeDate_AddTick() is called */
+#endif
+
+/* date/time defaults: */
+
+/* default time/date values */
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR 17
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN 51
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC 31
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR 2019
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 8
+#endif
+#ifndef McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY
+  #define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY 1
 #endif
 
 #endif /* __McuTimeDate_CONFIG_H */

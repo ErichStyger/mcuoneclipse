@@ -744,7 +744,7 @@ static void prvInitialiseNewQueue( const UBaseType_t uxQueueLength, const UBaseT
 #endif /* ( ( configUSE_COUNTING_SEMAPHORES == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) */
 /*-----------------------------------------------------------*/
 
-BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition )
+BaseType_t xQueueGenericSend( QueueHandle_t xQueue, const void * const pvItemToQueue, TickType_t xTicksToWait, const BaseType_t xCopyPosition ) // @suppress("No return")
 {
 BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
 TimeOut_t xTimeOut;
@@ -1270,7 +1270,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
+BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait ) // @suppress("No return")
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
@@ -1411,7 +1411,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait )
+BaseType_t xQueueSemaphoreTake( QueueHandle_t xQueue, TickType_t xTicksToWait ) // @suppress("No return")
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;
@@ -1629,7 +1629,7 @@ Queue_t * const pxQueue = xQueue;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait )
+BaseType_t xQueuePeek( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait ) // @suppress("No return")
 {
 BaseType_t xEntryTimeSet = pdFALSE;
 TimeOut_t xTimeOut;

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RTC_Maxim
-**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-21, 18:32, # CodeGen: 568
+**     Date/Time   : 2020-07-20, 11:46, # CodeGen: 659
 **     Abstract    :
 **          Driver for external I2C based realtime clocks (RTC)
 **     Settings    :
@@ -28,6 +28,7 @@
 **         SetTime        - uint8_t McuExtRTC_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t...
 **         GetDate        - uint8_t McuExtRTC_GetDate(DATEREC *date);
 **         SetDate        - uint8_t McuExtRTC_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
+**         GetTemperature - uint8_t McuExtRTC_GetTemperature(float *temperature);
 **         Read           - uint8_t McuExtRTC_Read(uint8_t addr, uint8_t *buf, uint8_t bufSize);
 **         Write          - uint8_t McuExtRTC_Write(uint8_t addr, uint8_t *buf, uint8_t bufSize);
 **         ReadByte       - uint8_t McuExtRTC_ReadByte(uint8_t addr, uint8_t *buf);
@@ -38,7 +39,7 @@
 **         Init           - void McuExtRTC_Init(void);
 **         Deinit         - void McuExtRTC_Deinit(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -239,7 +240,18 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  RAM", buf, io->stdOut);
 #endif
+#if McuExtRTC_CONFIG_DEVICE==3231 || McuExtRTC_CONFIG_DEVICE==3232
+   float temperature;
 
+  if (McuExtRTC_GetTemperature(&temperature)==ERR_OK) {
+    buf[0] = '\0';
+    McuUtility_strcatNumFloat(buf, sizeof(buf), temperature, 2);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" degree C\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  Temperature", buf, io->stdOut);
+#endif
   return ERR_OK;
 }
 
@@ -796,6 +808,45 @@ uint8_t McuExtRTC_SetDate(uint16_t Year, uint8_t Month, uint8_t Day)
   tdate.day = Day;
   tdate.dayOfWeek = McuUtility_WeekDay(Year, Month, Day);
   return McuExtRTC_SetRTCDate(&tdate);
+}
+
+/*
+** ===================================================================
+**     Method      :  GetTemperature (component RTC_Maxim)
+**
+**     Description :
+**         Returns the temperature from the device internal temperature
+**         sensor. Only available on DS3231 and DS3232.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * temperature     - Pointer to store the
+**                           temperature
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuExtRTC_GetTemperature(float *temperature)
+{
+#if McuExtRTC_CONFIG_DEVICE==3231 || McuExtRTC_CONFIG_DEVICE==3232
+  int8_t high;
+  uint8_t low, res;
+
+  res = McuExtRTC_Read(McuExtRTC_MEM_MSB_TEMP_ADDR, (uint8_t*)&high, 1);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  res = McuExtRTC_Read(McuExtRTC_MEM_LSB_TEMP_ADDR, &low, 1);
+  if (res!=ERR_OK) {
+    return res;
+  }
+  /* high values is two's complement of integer part of temperature, the upper two bits of LSB are the number of 0.25 degrees.
+     For example 0b00011000 0b01xxxxxx gives 24.25 degree. */
+  *temperature = (float)high + (((low&0xC0)>>6)*0.25f);
+  return ERR_OK;
+#else /* not supported */
+  *temperature = 0.0f;
+  return ERR_FAILED;
+#endif
 }
 
 /* END McuExtRTC. */

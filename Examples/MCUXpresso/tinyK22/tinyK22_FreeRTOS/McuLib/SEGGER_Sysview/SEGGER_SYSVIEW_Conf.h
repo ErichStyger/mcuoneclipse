@@ -1,3 +1,4 @@
+/** Copyright (C) SEGGER Microcontroller GmbH                        */
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
@@ -66,6 +67,8 @@ Revision: $Rev: 12298 $
 #define SEGGER_SYSVIEW_CONF_H
 
 #include "SEGGER_RTT_Conf.h" /* << EST */
+#include "McuSystemViewconfig.h" /* configuration */
+
 /*********************************************************************
 *
 *       Defines, fixed
@@ -129,15 +132,15 @@ Revision: $Rev: 12298 $
 #define SEGGER_SYSVIEW_RTT_CHANNEL          1                                   // The RTT channel that SystemView will use. 0: Auto selection
 #else /* << EST */
 // Number of bytes that SystemView uses for a buffer.
-#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE    1024
-#define SEGGER_SYSVIEW_RTT_CHANNEL        1
+#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE    McuSystemView_CONFIG_RTT_BUFFER_SIZE  // Number of bytes that SystemView uses for the buffer.
+#define SEGGER_SYSVIEW_RTT_CHANNEL        McuSystemView_CONFIG_RTT_CHANNEL      // The RTT channel that SystemView will use. 0: Auto selection
 #if SEGGER_SYSVIEW_RTT_CHANNEL>=SEGGER_RTT_MAX_NUM_UP_BUFFERS
   #error "Not enough RTT buffers allocated in SEGGER_RTT_Conf.h!"
 #endif
 #endif
 
-#define SEGGER_SYSVIEW_USE_STATIC_BUFFER    1                                   // Use a static buffer to generate events instead of a buffer on the stack
-#define SEGGER_SYSVIEW_POST_MORTEM_MODE     0                                   // 1: Enable post mortem analysis mode
+#define SEGGER_SYSVIEW_USE_STATIC_BUFFER    McuSystemView_CONFIG_USE_STATIC_BUFFER  // 1: Use a static buffer to generate events instead of a buffer on the stack
+#define SEGGER_SYSVIEW_POST_MORTEM_MODE     McuSystemView_CONFIG_POST_MORTEM_MODE   // 1: Enable post mortem analysis mode
 
 /*********************************************************************
 *

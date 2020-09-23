@@ -1,8 +1,10 @@
-/*
- * McuRBconfig.h
+/**
+ * \file
+ * \brief Configuration header file for a RingBuffer
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
- *  Created on: 21.04.2019
- *      Author: Erich Styger
+ * This header file is used to configure settings of the ring buffer module.
  */
 
 #ifndef MCURBCONFIG_H_

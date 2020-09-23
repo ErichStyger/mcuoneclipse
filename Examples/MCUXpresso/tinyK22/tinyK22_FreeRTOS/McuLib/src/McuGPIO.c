@@ -345,7 +345,7 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   }
   /* \todo */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  /* \todo */
+  /* \todo, NYI */
   if (pull == McuGPIO_PULL_DISABLE) {
   } else if (pull == McuGPIO_PULL_UP) {
   } else if (pull == McuGPIO_PULL_DOWN) {

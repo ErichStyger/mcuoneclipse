@@ -30,6 +30,8 @@ typedef struct {
   uint8_t iocon; /* I/O Connection index used for muxing, e.g. IOCON_INDEX_PIO0_0 */
 #elif McuLib_CONFIG_CPU_IS_LPC
   uint32_t port; /* port number */
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  /* no port for i.MX */
 #endif
   uint32_t pin; /* pin number */
 } McuGPIO_HwPin_t;

@@ -6,7 +6,7 @@
 **     Component   : LED
 **     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-03, 18:58, # CodeGen: 486
+**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :

@@ -1,3 +1,4 @@
+/* Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved. */
 /* << EST */
 #include "FreeRTOSConfig.h"
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==3 && configSUPPORT_DYNAMIC_ALLOCATION==1)

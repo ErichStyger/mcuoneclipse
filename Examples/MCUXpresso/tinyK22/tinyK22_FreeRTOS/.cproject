@@ -306,12 +306,22 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1652255002.1734047823" name="/" resourcePath="McuLib/SEGGER_Sysview">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1727867397" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1941901401" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2132798231"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.239464361" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104"/>
+							<tool id="com.crt.advproject.gas.exe.debug.61282886" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.625261844"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.20728679" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1649601390"/>
+							<tool id="com.crt.advproject.link.exe.debug.478765588" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1999308306"/>
+							<tool id="com.crt.advproject.tool.debug.debug.404349325" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1585692387"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="minIni|TraceRecorder|LittlevGL|fonts|HD44780|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 					</sourceEntries>
@@ -650,8 +660,8 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
-		<sdkName>SDK_2.x_FRDM-K22F</sdkName>
-		<sdkVersion>2.7.0</sdkVersion>
+		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
+		<sdkVersion>2.8.2</sdkVersion>
 		<sdkComponents>middleware.baremetal.MK22F51212;device.MK22F51212_startup.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.pit.MK22F51212;platform.drivers.smc.MK22F51212;</sdkComponents>
 		<package>MK22FN512VLH12</package>
 		<core>cm4</core>

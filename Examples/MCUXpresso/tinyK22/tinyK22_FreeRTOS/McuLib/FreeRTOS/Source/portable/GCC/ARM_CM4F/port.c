@@ -120,7 +120,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICK_NOF_BITS               16
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
-    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val);
+    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
     #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
@@ -1376,14 +1376,14 @@ __asm void vPortPendSVHandler(void) {
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 #if configGDB_HELPER
 /* prototypes to avoid compiler warnings */
-__attribute__ ((naked)) void vPortPendSVHandler_native(void);
-__attribute__ ((naked)) void PendSV_Handler_jumper(void);
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
-__attribute__ ((naked)) void vPortPendSVHandler_native(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
 #elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
-__attribute__ ((naked)) void PendSV_Handler(void) {
+__attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
-__attribute__ ((naked)) void vPortPendSVHandler(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
@@ -1498,14 +1498,26 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
  * 1 - hook installation performed,
  * 2 - following hooked switches
  */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 int volatile dbgPendSVHookState = 0;
 /* Requested target task handle variable */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 void *volatile dbgPendingTaskHandle;
 
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_suspend_value = INCLUDE_vTaskSuspend;
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_delete_value = INCLUDE_vTaskDelete;
 
-__attribute__ ((naked)) void PendSV_Handler_jumper(void) {
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void) {
   __asm volatile("b vPortPendSVHandler_native \n");
 }
 
