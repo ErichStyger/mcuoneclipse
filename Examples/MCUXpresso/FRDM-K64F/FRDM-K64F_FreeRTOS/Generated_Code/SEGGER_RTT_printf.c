@@ -1,3 +1,4 @@
+/** Copyright (C) SEGGER Microcontroller GmbH                        */
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *

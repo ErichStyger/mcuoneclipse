@@ -97,7 +97,7 @@
     <Enabled v="Y" />
     <Properties>
       <Component_name v="FRTOS1" />
-      <RTOS_Version v="V10.1.1" />
+      <RTOS_Version v="V10.4.1" />
       <SDK v="MCUC1" />
       <boolgroup name="Kinetis SDK" v="Disabled" />
       <group name="Custom Port">
@@ -253,8 +253,8 @@
         <Use_Recursive_Mutexes v="yes" />
       </group>
       <boolgroup name="Timers" v="Enabled">
-        <Priority v="4" />
         <Queue_Length v="10" />
+        <Priority v="4" />
         <Stack_Depth v="200" />
         <Use_Daemon_Task_Startup_Hook v="no" />
       </boolgroup>
@@ -430,8 +430,12 @@
       <event name="vApplicationMallocFailedHook" v="generate code">
         <Event_procedure_name v="FRTOS1_vApplicationMallocFailedHook" />
       </event>
-      <event name="vOnPreSleepProcessing" v="don&amp;apos;t generate code" />
-      <event name="vOnPostSleepProcessing" v="don&amp;apos;t generate code" />
+      <event name="vOnPreSleepProcessing" v="generate code">
+        <Event_procedure_name v="FRTOS1_vOnPreSleepProcessing" />
+      </event>
+      <event name="vOnPostSleepProcessing" v="generate code">
+        <Event_procedure_name v="FRTOS1_vOnPostSleepProcessing" />
+      </event>
     </Events>
   </Bean>
   <Bean name="MCUC1" type="McuLibConfig">
@@ -439,6 +443,9 @@
     <Properties>
       <Component_name v="MCUC1" />
       <SDK v="Processor Expert" />
+      <SDK_Major_Version v="2" />
+      <SDK_Minor_Version v="5" />
+      <SDK_Build_Version v="0" />
       <Config_Files_Folder v="" />
     </Properties>
     <Methods>
@@ -456,6 +463,7 @@
       <SDK v="MCUC1" />
     </Properties>
     <Methods>
+      <SkipSpaces v="generate code" />
       <strcpy v="generate code" />
       <strcat v="generate code" />
       <strcatPad v="generate code" />
@@ -507,6 +515,8 @@
       <ScanHex32uNumber v="generate code" />
       <ScanSeparatedNumbers v="generate code" />
       <ScanDoubleQuotedString v="generate code" />
+      <ScanRGB v="generate code" />
+      <ScanRGB32 v="generate code" />
       <strcmp v="generate code" />
       <strncmp v="generate code" />
       <strFind v="generate code" />
@@ -886,7 +896,7 @@
       <Waitns v="generate code" />
       <WaitOSms v="generate code" />
       <Init v="generate code" />
-      <DeInit v="generate code" />
+      <Deinit v="generate code" />
     </Methods>
     <Events>
       <EmptySection_DummyValue />
@@ -944,7 +954,10 @@
       <GetStdio v="generate code" />
       <RequestSerial v="generate code" />
       <ReleaseSerial v="generate code" />
+      <ReadAndParseWithCommandTableExt v="generate code" />
+      <ReadCommandLine v="generate code" />
       <ReadAndParseWithCommandTable v="generate code" />
+      <ParseWithCommandTableExt v="generate code" />
       <ParseWithCommandTable v="generate code" />
       <GetSemaphore v="generate code" />
       <SendStatusStr v="generate code" />

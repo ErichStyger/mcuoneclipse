@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.083, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -25,9 +25,9 @@
 **         Waitns         - void WAIT1_Waitns(uint16_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
-**         DeInit         - void WAIT1_DeInit(void);
+**         Deinit         - void WAIT1_Deinit(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -246,10 +246,10 @@ void WAIT1_Init(void);
 ** ===================================================================
 */
 
-void WAIT1_DeInit(void);
+void WAIT1_Deinit(void);
 /*
 ** ===================================================================
-**     Method      :  DeInit (component Wait)
+**     Method      :  Deinit (component Wait)
 **
 **     Description :
 **         Driver de-initialization routine

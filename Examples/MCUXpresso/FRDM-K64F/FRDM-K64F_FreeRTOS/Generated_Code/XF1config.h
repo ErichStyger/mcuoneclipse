@@ -1,10 +1,17 @@
+/**
+ * \file
+ * \brief Configuration header file for XFormat
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the XFormat module.
+ */
 #ifndef __XF1_CONFIG_H
 #define __XF1_CONFIG_H
 
 #ifndef XF1_CONFIG_XCFG_FORMAT_FLOAT
   #define XCFG_FORMAT_FLOAT             0 /* 1: enable, 0: disable floating format (component property) */
 #endif
-
 
 #ifndef XF1_CONFIG_XCFG_FORMAT_FLOAT
   #define XCFG_FORMAT_STATIC            /* static */ /* used for the buffer. WARNING: using 'static' makes it non-reentrant! */
@@ -19,17 +26,15 @@
 #define XCFG_FORMAT_LONG_ARE_LONGLONG
 #endif
 
-
 /**
  * SDCC support only float and for now do not support long long
  */
 #ifdef __SDCC
 #define DOUBLE  float
 #ifndef XCFG_FORMAT_LONGLONG
-#define XCFG_FORMAT_LONGLONG    0
+  #define XCFG_FORMAT_LONGLONG    0
 #endif
 #endif
-
 
 /**
  * Define internal parameters as volatile for 8 bit cpu define
@@ -43,7 +48,7 @@
  * Define XCFG_FORMAT_FLOAT=0 to remove floating point support
  */
 #ifndef XCFG_FORMAT_FLOAT
-#define XCFG_FORMAT_FLOAT    1
+  #define XCFG_FORMAT_FLOAT    0
 #endif
 
 /**
@@ -53,22 +58,20 @@
  */
 #ifndef XCFG_FORMAT_VA_COPY
 #if defined(__GNUC__) && defined(__x86_64__)
-#define XCFG_FORMAT_VA_COPY     1
+  #define XCFG_FORMAT_VA_COPY     1
 #endif
-
 
 #ifndef XCFG_FORMAT_VA_COPY
-#define XCFG_FORMAT_VA_COPY 0
+  #define XCFG_FORMAT_VA_COPY 0
 #endif
 
 #endif
-
 
 /**
  * Define to 0 to support long long type (prefix ll)
  */
 #ifndef XCFG_FORMAT_LONGLONG
-#define XCFG_FORMAT_LONGLONG    1
+  #define XCFG_FORMAT_LONGLONG    0
 #endif
 
 

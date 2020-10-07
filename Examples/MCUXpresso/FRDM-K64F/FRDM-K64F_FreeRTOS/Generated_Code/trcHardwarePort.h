@@ -73,8 +73,10 @@
   {
     __asm volatile ("MSR primask, %0" : : "r" (priMask) : "memory");
   }
-#elif McuLib_CONFIG_CPU_IS_STM32
+#elif MCUC1_CONFIG_CPU_IS_STM32
   #include "stm32f3xx_hal.h" /* header file for STM32F303K8 */
+#elif MCUC1_CONFIG_CPU_IS_NORDIC_NRF
+  #include "nrf.h" /* header file Nordic devices */
 #else
   #include "fsl_device_registers.h"
 #endif /* #if MCUC1_CONFIG_PEX_SDK_USED */

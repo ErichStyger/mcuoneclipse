@@ -4,7 +4,7 @@
     <Name>ProcessorExpert</Name>
     <SavedBy>Erich Styger Local</SavedBy>
     <ModificationStamp>79</ModificationStamp>
-    <Date>2019-07-22</Date>
+    <Date>2020-09-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -9812,7 +9812,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.066</BeanVersion>
+    <BeanVersion>01.067</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -12015,7 +12015,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.084</BeanVersion>
+    <BeanVersion>01.087</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -12236,6 +12236,17 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>DeInit</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>Deinit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -12249,7 +12260,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13037,7 +13048,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -13825,7 +13836,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14613,7 +14624,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.106</BeanVersion>
+    <BeanVersion>01.110</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15189,6 +15200,39 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>PrintMemory</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadAndParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadAndParseWithCommandTableExt</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ReadCommandLine</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ReadCommandLine</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ParseWithCommandTableExt</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ParseWithCommandTableExt</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -18074,7 +18118,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.160</BeanVersion>
+    <BeanVersion>01.164</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -18931,6 +18975,42 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>map64</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>SkipSpaces</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>SkipSpaces</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanRGB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanRGB</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanRGB32</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanRGB32</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -18944,7 +19024,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.057</BeanVersion>
+    <BeanVersion>01.059</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24288,7 +24368,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.579</BeanVersion>
+    <BeanVersion>01.581</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -24301,7 +24381,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V10.2.1</Value>
+        <Value>V10.4.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CustomPortGroup</ItemSymbol>
@@ -35896,7 +35976,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.030</BeanVersion>
+    <BeanVersion>01.031</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -37900,7 +37980,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.207</BeanVersion>
+    <BeanVersion>01.208</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -38407,7 +38487,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.130</BeanVersion>
+    <BeanVersion>01.131</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -38607,7 +38687,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.199</BeanVersion>
+    <BeanVersion>01.201</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -38759,6 +38839,18 @@
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>WriteStringWidth</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>WriteStringWidth</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
@@ -38772,7 +38864,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.015</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -38871,7 +38963,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template>XFormat</Template>
-    <BeanVersion>01.025</BeanVersion>
+    <BeanVersion>01.026</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>

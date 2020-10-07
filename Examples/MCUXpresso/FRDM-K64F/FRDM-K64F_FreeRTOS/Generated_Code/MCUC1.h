@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : McuLibConfig
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **          Configures the drivers for various SDKs and APIs used.
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Init   - void MCUC1_Init(void);
 **         Deinit - void MCUC1_Deinit(void);
 **
-** * Copyright (c) 2016-2018, Erich Styger
+** * Copyright (c) 2016-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

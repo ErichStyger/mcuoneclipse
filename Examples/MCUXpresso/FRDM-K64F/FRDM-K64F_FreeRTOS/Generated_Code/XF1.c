@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : XFormat
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **         Deinit    - void XF1_Deinit(void);
 **         Init      - void XF1_Init(void);
 **
-** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+** *  Copyright : (c) Copyright Mario Viara, 2014-2020, https://github.com/MarioViara/xprintfc
 **  * Adopted for Processor Expert: Erich Styger
 **  * xsnprintf() contributed by Engin Lee
 **  * Web:         https://mcuoneclipse.com
@@ -512,9 +512,7 @@ unsigned XF1_xformat(void (*outchar)(void *,char), void *arg, const char * fmt, 
 
   va_start(list,fmt);
   count = XF1_xvformat(outchar,arg,fmt,list);
-
   va_end(list);
-
   return count;
 }
 
@@ -549,7 +547,6 @@ static unsigned xstrlen(const char *s)
   for (i = s ; *i ; i++)
   {
   }
-
   return (unsigned)(i - s);
 }
 
@@ -574,7 +571,6 @@ static unsigned outBuffer(void (*myoutchar)(void *arg,char),void *arg,const char
 
   return count;
 }
-
 
 static unsigned outChars(void (*myoutchar)(void *arg,char),void *arg,char ch,int len)
 {
@@ -684,7 +680,6 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
 
     param.state = formatStates[(i << 3) + param.state] >> 4;
 
-
     switch (param.state)
     {
       default:
@@ -784,12 +779,13 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'P':
             param.flags |=  FLAG_UPPER;
-            /* no break */
+            // fall through
             /*lint -fallthrough */
 
             /*
              * Pointer
              */
+            /* no break */
           case  'p':
             param.flags &= ~FLAG_TYPE_MASK;
             param.flags |= FLAG_INTEGER | FLAG_TYPE_SIZEOF;
@@ -831,16 +827,14 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              * Hex number upper case letter.
              */
           case  'X':
-            /* no break */
             param.flags |= FLAG_UPPER;
-
-            /* no break */
-
+            // fall through
             /* lint -fallthrough */
 
             /*
              * Hex number lower case
              */
+            /* no break */
           case  'x':
             param.flags |= FLAG_INTEGER;
             param.radix = 16;
@@ -874,12 +868,13 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'S':
             param.flags |= FLAG_UPPER;
-            /* no break */
+            // fall through
             /*lint -fallthrough */
 
             /*
              * Normal string
              */
+            /* no break */
           case  's':
             param.out = va_arg(args,char *);
             if (param.out == 0)
@@ -892,12 +887,13 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
              */
           case  'C':
             param.flags |= FLAG_UPPER;
-            /* no break */
+            // fall through
             /* lint -fallthrough */
 
             /*
              * Char
              */
+            /* no break */
           case  'c':
             param.out = param.buffer;
             param.buffer[0] = (char)va_arg(args,int);
@@ -1004,6 +1000,8 @@ unsigned XF1_xvformat(void (*outchar)(void *,char), void *arg, const char * fmt,
                 param.values.llvalue = (LONGLONG)va_arg(args,long long);
                 break;
 #endif
+              default:
+                break;
             }
 
           }

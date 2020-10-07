@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
@@ -54,11 +54,11 @@
 **         Deinit           - void RTT1_Deinit(void);
 **         Init             - void RTT1_Init(void);
 **
-** * (c) Copyright Segger, 2018
+** * (c) Copyright Segger, 2019
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2018, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

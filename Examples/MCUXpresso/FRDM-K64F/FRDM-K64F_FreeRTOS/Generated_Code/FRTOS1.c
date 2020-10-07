@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.570, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-03, 06:23, # CodeGen: 1
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V10.1.1
+**          RTOS Version                                   : V10.4.1
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -210,10 +210,10 @@
 **         Deinit                               - void FRTOS1_Deinit(void);
 **         Init                                 - void FRTOS1_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2020 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -253,10 +253,14 @@
 
 /* MODULE FRTOS1. */
 #include "FRTOS1.h"
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
+
 #include "portTicks.h"                 /* interface to tick counter */
 #include "RTOSCNTRLDD1.h" /* Interface to LDD Counter Interrupt */
-
-
+#if configSYSTICK_USE_LOW_POWER_TIMER && MCUC1_CONFIG_NXP_SDK_USED
+  #include "fsl_clock.h"
+#endif
+#include "UTIL1.h"
 #if configHEAP_SCHEME_IDENTIFICATION
   /* special variable identifying the used heap scheme */
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
@@ -541,7 +545,7 @@ portBASE_TYPE FRTOS1_xTaskResumeFromISR(xTaskHandle pxTaskToResume)
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.
@@ -1933,7 +1937,11 @@ void FRTOS1_Init(void)
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
+  #if MCUC1_CONFIG_NXP_SDK_USED
+  CLOCK_EnableClock(kCLOCK_Lptmr0);
+  #else /* Processor Expert */
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
+  #endif
 #endif
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
 #if configUSE_PERCEPIO_TRACE_HOOKS
@@ -4710,6 +4718,7 @@ void FRTOS1_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t FRTOS1_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   FRTOS1_RunTimeCounter = 0;
   FRTOS1_RunTimeCounterHandle = RTOSCNTRLDD1_Init(NULL);
   (void)RTOSCNTRLDD1_Enable(FRTOS1_RunTimeCounterHandle);
@@ -4735,6 +4744,7 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t FRTOS1_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   return FRTOS1_RunTimeCounter;
   #endif
 #else
@@ -4742,6 +4752,7 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void)
 #endif
 }
 
+#endif /* MCUC1_CONFIG_SDK_USE_FREERTOS */
 /* END FRTOS1. */
 
 /*!

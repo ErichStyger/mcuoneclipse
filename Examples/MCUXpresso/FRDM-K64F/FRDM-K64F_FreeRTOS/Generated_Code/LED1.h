@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : LED
-**     Version     : Component 01.076, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.078, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LED1_Deinit(void);
 **         Init       - void LED1_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -82,7 +82,11 @@
 #define LED1_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define LED1_On() LEDpin1_ClrVal()
+#if LED1_CONFIG_IS_LOW_ACTIVE
+  #define LED1_On() LEDpin1_ClrVal()
+#else
+  #define LED1_On() LEDpin1_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -94,7 +98,11 @@
 ** ===================================================================
 */
 
-#define LED1_Off() LEDpin1_SetVal()
+#if LED1_CONFIG_IS_LOW_ACTIVE
+  #define LED1_Off() LEDpin1_SetVal()
+#else
+  #define LED1_Off() LEDpin1_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -118,7 +126,11 @@
 ** ===================================================================
 */
 
-#define LED1_Get() (!(LEDpin1_GetVal()))
+#if LED1_CONFIG_IS_LOW_ACTIVE
+  #define LED1_Get() (!(LEDpin1_GetVal()))
+#else
+  #define LED1_Get() LEDpin1_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

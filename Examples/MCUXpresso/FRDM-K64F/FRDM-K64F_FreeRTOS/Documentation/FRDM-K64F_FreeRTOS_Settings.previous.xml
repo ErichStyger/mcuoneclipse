@@ -111,9 +111,10 @@
       <Application_Task_Tags v="no" />
       <Thread_Local_Storage_Pointers v="0" />
       <Use_Trace_Facility v="yes" />
-      <LinkTimeOptimizer_Helper v="yes" />
       <group name="Debug Helpers">
         <Enable_GDB_Debug_Helper v="no" />
+        <Backward_Compatibility v="no" />
+        <LinkTimeOptimizer_Helper v="yes" />
         <uxTopUsedPriority v="no" />
         <Heap_Indication_Constant v="no" />
         <Task_C_Additions v="yes" />
@@ -1019,6 +1020,7 @@
         <Queues v="yes" />
         <ISR v="yes" />
         <StreamBuffer v="yes" />
+        <vTaskStepTick v="yes" />
       </boolgroup>
       <group name="RTT Channel">
         <Segger_RTT v="RTT1" />

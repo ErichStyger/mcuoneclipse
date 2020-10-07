@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_FreeRTOS
 **     Processor   : MK64FN1M0VLL12
 **     Component   : XFormat
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-02-23, 11:24, # CodeGen: 0
+**     Date/Time   : 2020-09-29, 12:32, # CodeGen: 3
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **         Deinit    - void XF1_Deinit(void);
 **         Init      - void XF1_Init(void);
 **
-** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+** *  Copyright : (c) Copyright Mario Viara, 2014-2020, https://github.com/MarioViara/xprintfc
 **  * Adopted for Processor Expert: Erich Styger
 **  * xsnprintf() contributed by Engin Lee
 **  * Web:         https://mcuoneclipse.com
