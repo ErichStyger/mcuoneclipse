@@ -66,17 +66,19 @@ Params: gpio_pin                GPIO pin to trigger on (default 3)
                                 external pullup.
 
 #################################################
-# State: Pin from Raspy which goes HIGH after a power down. Disable this for power-up functionality.
+# State: Pin from Raspy which goes HIGH after a power down.
+# NOTE: Disable this for power-up functionality. This overlay
+# *cannot* be active if you want to boot the RPi on BCM3 (I2C SCL)!
 # Board V3 & V4: Using physical 40, BCM21 (Red LED)
 #dtoverlay=gpio-poweroff,gpiopin=21
-# Board V5: Using tinyGP_1 (physical 12, BCM18)
+# Board V5 or later: Using tinyGP_1 (physical 12, BCM18)
 #dtoverlay=gpio-poweroff,gpiopin=18
 
 ##################################################
 # Shutdown: Pin to request shutdown (pulling pin LOW)
 # Board V3 & V4: BCM4 (SHT30 Alert)
 #dtoverlay=gpio-shutdown,gpio_pin=4,gpio_pull=up
-# Board V5: using tinyGP_0, (physical 11, BCM17)
+# Board V5 or later: using tinyGP_0, (physical 11, BCM17)
 #dtoverlay=gpio-shutdown,gpio_pin=17,gpio_pull=up
 
 Below the mapping for V3 & V4:

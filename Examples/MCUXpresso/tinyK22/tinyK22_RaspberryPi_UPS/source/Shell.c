@@ -106,7 +106,7 @@ void SHELL_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
-  McuShell_SetStdio(McuRTT_GetStdio());
+  McuShell_SetStdio(McuRTT_GetStdio()); /* use RTT as the default */
 }
 
 void SHELL_Deinit(void) {}

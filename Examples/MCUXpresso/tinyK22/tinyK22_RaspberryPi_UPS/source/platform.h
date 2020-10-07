@@ -24,7 +24,7 @@
 #define PL_CONFIG_USE_SHELL               (1) /* if shell is enabled, uses RTT */
 #define PL_CONFIG_USE_USB_CDC             (1)
 #define PL_CONFIG_USE_SHUTDOWN            (1 && PL_CONFIG_USE_RASPBERRY) /* if implementing shutdown for Raspberry Pi */
-#define PL_CONFIG_USE_POWER_ON            (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION==5) /* ability to power up Raspy, only possible with Rev5 of the board. See shutdown.c for Raspy settings! */
+#define PL_CONFIG_USE_POWER_ON            (1 && PL_CONFIG_USE_RASPBERRY && TINYK22_HAT_VERSION>=5) /* ability to power up Raspy, only possible with Rev5 or later of the board. See shutdown.c for Raspy settings! */
 
 #define PL_CONFIG_USE_GUI                 (1 && PL_CONFIG_USE_OLED && PL_CONFIG_USE_BUTTONS) /* use LittlevGL */
 #define PL_CONFIG_USE_GUI_SCREENSAVER     (1 && PL_CONFIG_USE_GUI)
