@@ -7,7 +7,8 @@
 <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
 <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
 <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerARMDAPLink CMSIS-DAP0226000040214e4500171019c89200399e11000097969900"/>
+<booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsMCU-LINK CMSIS-DAP V1.09544BSTLVAIDQZ0"/>
 <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
 <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
 <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x60000000"/>
@@ -17,8 +18,8 @@
 <stringAttribute key="com.nxp.mcuxpresso.flash.executable" value="axf"/>
 <stringAttribute key="com.nxp.mcuxpresso.flash.program.action" value="Program"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.reset.target" value="true"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="ARM"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="DAPLink CMSIS-DAP"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="NXP Semiconductors"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="MCU-LINK CMSIS-DAP V1.095"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="LinkServer"/>
 <stringAttribute key="debug.level" value="2"/>
 <stringAttribute key="emu.speed" value=""/>
@@ -62,7 +63,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
-<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
@@ -85,7 +86,7 @@
 <mapEntry key="[debug]" value="com.crt.dsfdebug.dsf.MCULaunch"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
-<stringAttribute key="process_factory_id" value="com.crt.dsfdebug.dsf.override.CRTProcessFactory"/>
+<stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
 <booleanAttribute key="redlink.enable.rangestepping" value="true"/>
 <stringAttribute key="run" value="cont"/>
 <booleanAttribute key="vector.catch" value="false"/>
