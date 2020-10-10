@@ -78,6 +78,7 @@ static const McuX12_017_Config_t defaultConfig =
       .hw_step.pin = 0,
     },
 
+#if McuX12_017_CONFIG_QUAD_DRIVER
     .motor[X12_017_M2] = {
       .isInverted =  false,
       .hw_dir.gpio = NULL,
@@ -113,6 +114,7 @@ static const McuX12_017_Config_t defaultConfig =
   #endif
       .hw_step.pin = 0,
     },
+#endif
 };
 
 void McuX12_017_GetDefaultConfig(McuX12_017_Config_t *config) {
@@ -174,7 +176,7 @@ McuX12_017_Handle_t McuX12_017_InitDevice(McuX12_017_Config_t *config) {
 
       /* direction pin */
       handle->m[i].isInverted = config->motor[i].isInverted;
-      handle->m[i].isForward = false;
+      handle->m[i].isForward = true;
       handle->m[i].pos = 0;
       /* direction pin */
       gpio_config.isInput = false; /* direction pin is output only */
@@ -200,6 +202,15 @@ void McuX12_017_ResetDriver(McuX12_017_Handle_t device) {
     McuWait_Waitms(1);
     McuGPIO_SetHigh(dev->reset); /* reset is low active */
     McuWait_Waitus(10);
+  }
+}
+
+void McuX12_017_SetResetLine(McuX12_017_Handle_t device, bool setHigh) {
+  /* RESET is low-active */
+  McuX12_Device_t *dev = (McuX12_Device_t*)device;
+
+  if (dev!=NULL && dev->hasReset) {
+    McuGPIO_SetValue(dev->reset, setHigh);
   }
 }
 
@@ -305,6 +316,30 @@ void McuX12_017_GetDeviceStatusString(McuX12_017_Handle_t device, unsigned char 
     } else {
       McuUtility_strcat(buf, bufSize, (unsigned char*)"n ");
     }
+  }
+}
+
+void McuX12_017_DisableDevice(McuX12_017_Handle_t device) {
+  McuX12_Device_t *x12 = (McuX12_Device_t*)device;
+
+  McuGPIO_SetAsInput(x12->reset);
+  for(int i=0; i<X12_017_NOF_M; i++) {
+    McuGPIO_SetAsInput(x12->m[i].dir);
+    McuGPIO_SetAsInput(x12->m[i].step);
+  }
+}
+
+void McuX12_017_EnableDevice(McuX12_017_Handle_t device) {
+  McuX12_Device_t *x12 = (McuX12_Device_t*)device;
+
+  McuGPIO_SetAsOutput(x12->reset, true);
+  for(int i=0; i<X12_017_NOF_M; i++) {
+    if (x12->m[i].isForward) { /* set pin according to current direction state */
+      McuGPIO_SetAsOutput(x12->m[i].dir, !x12->m[i].isInverted);
+    } else {
+      McuGPIO_SetAsOutput(x12->m[i].dir, x12->m[i].isInverted);
+    }
+    McuGPIO_SetAsOutput(x12->m[i].step, false);
   }
 }
 

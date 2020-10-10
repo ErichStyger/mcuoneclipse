@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.0
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -52,40 +51,59 @@
 #endif
 #if configGENERATE_RUN_TIME_STATS
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
-    #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   /* nothing */ /* default: use Tick counter as runtime counter */
-    #define portGET_RUN_TIME_COUNTER_VALUE()           xTaskGetTickCountFromISR() /* default: use Tick counter as runtime counter */
+    #ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+      #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() /* nothing */ /* default: use Tick counter as runtime counter */
+   #endif
+   #ifndef portGET_RUN_TIME_COUNTER_VALUE
+     #define portGET_RUN_TIME_COUNTER_VALUE()          xTaskGetTickCountFromISR() /* default: use Tick counter as runtime counter */
+    #endif
   #else /* use dedicated timer */
-
-#ifndef configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR
-  #define configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR
-#endif
-
-#ifndef configCONFIGURE_TIMER_FOR_RUNTIME_STATS
-  #define configCONFIGURE_TIMER_FOR_RUNTIME_STATS
-#endif
-
-    extern uint32_t configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR(void);
-    extern void configCONFIGURE_TIMER_FOR_RUNTIME_STATS(void);
-    #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   configCONFIGURE_TIMER_FOR_RUNTIME_STATS()
-    #define portGET_RUN_TIME_COUNTER_VALUE()           configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR()
+    #ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+      extern void McuRTOS_AppConfigureTimerForRuntimeStats(void);
+      #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() McuRTOS_AppConfigureTimerForRuntimeStats()
+    #endif
+    #ifndef portGET_RUN_TIME_COUNTER_VALUE
+      extern uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
+      #define portGET_RUN_TIME_COUNTER_VALUE()         McuRTOS_AppGetRuntimeCounterValueFromISR()
+    #endif
   #endif
 #else /* no runtime stats, use empty macros */
   #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()     /* nothing */
   #define portGET_RUN_TIME_COUNTER_VALUE()             /* nothing */
 #endif
-#define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
-#define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
-#define configUSE_IDLE_HOOK                       1 /* 1: use Idle hook; 0: no Idle hook */
-#define configUSE_IDLE_HOOK_NAME                  McuRTOS_vApplicationIdleHook
-#define configUSE_TICK_HOOK                       1 /* 1: use Tick hook; 0: no Tick hook */
-#define configUSE_TICK_HOOK_NAME                  McuRTOS_vApplicationTickHook
-#define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
-#define configUSE_MALLOC_FAILED_HOOK_NAME         McuRTOS_vApplicationMallocFailedHook
+#ifndef configUSE_PREEMPTION
+  #define configUSE_PREEMPTION                    1 /* 1: pre-emptive mode; 0: cooperative mode */
+#endif
+#ifndef configUSE_TIME_SLICING
+  #define configUSE_TIME_SLICING                  1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
+#endif
+#ifndef configUSE_IDLE_HOOK
+  #define configUSE_IDLE_HOOK                     1 /* 1: use Idle hook; 0: no Idle hook */
+#endif
+#ifndef configUSE_IDLE_HOOK_NAME
+  #define configUSE_IDLE_HOOK_NAME                McuRTOS_vApplicationIdleHook
+#endif
+#ifndef configUSE_TICK_HOOK
+  #define configUSE_TICK_HOOK                     1 /* 1: use Tick hook; 0: no Tick hook */
+#endif
+#ifndef configUSE_TICK_HOOK_NAME
+  #define configUSE_TICK_HOOK_NAME                McuRTOS_vApplicationTickHook
+#endif
+#ifndef configUSE_MALLOC_FAILED_HOOK
+  #define configUSE_MALLOC_FAILED_HOOK            1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#endif
+#ifndef configUSE_MALLOC_FAILED_HOOK_NAME
+  #define configUSE_MALLOC_FAILED_HOOK_NAME       McuRTOS_vApplicationMallocFailedHook
+#endif
 #ifndef configTICK_RATE_HZ
   #define configTICK_RATE_HZ                      (1000) /* frequency of tick interrupt */
 #endif
-#define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
-#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
+#ifndef configSYSTICK_USE_LOW_POWER_TIMER
+  #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#endif
+#ifndef configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ
+  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  1 /* Frequency of low power timer. Set to 1 if not used */
+#endif
 #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
@@ -167,6 +185,9 @@
 #endif
 #ifndef configUSE_APPLICATION_TASK_TAG
   #define configUSE_APPLICATION_TASK_TAG          0
+#endif
+#ifndef configUSE_TASK_NOTIFICATIONS
+  #define configUSE_TASK_NOTIFICATIONS            1
 #endif
 /* Tickless Idle Mode ----------------------------------------------------------*/
 #ifndef configUSE_TICKLESS_IDLE
@@ -278,9 +299,11 @@ point support. */
 #endif
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
-#define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
-#if 0 /* version for RISC-V with a debug break: */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#ifndef configASSERT
+  #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+  #if 0 /* version for RISC-V with a debug break: */
+    #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+  #endif
 #endif
 
 /* RISC-V only: If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT base address.

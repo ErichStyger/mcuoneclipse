@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.049, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-06-11, 17:17, # CodeGen: 537
+**     Date/Time   : 2020-05-18, 08:17, # CodeGen: 608
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -44,7 +44,7 @@
 **         Deinit            - void McuGenericI2C_Deinit(void);
 **         Init              - void McuGenericI2C_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -88,10 +88,14 @@
 #include "McuWait.h"
 #include "McuRTOS.h"
 #include "McuGenericSWI2C.h"
+#if McuGenericI2C_CONFIG_USE_TIMEOUT
+  #include "McuTimeout.h"
+#endif
 
 #ifndef NULL
   #define NULL 0L
 #endif /* NULL */
+
 
 #if McuGenericI2C_CONFIG_USE_MUTEX
 static SemaphoreHandle_t McuGenericI2C_busSem = NULL; /* Semaphore to protect I2C bus access */
@@ -294,6 +298,10 @@ uint8_t McuGenericI2C_ReadBlock(void* data, uint16_t dataSize, McuGenericI2C_Enu
 uint8_t McuGenericI2C_WriteBlock(void* data, uint16_t dataSize, McuGenericI2C_EnumSendFlags flags)
 {
   uint16_t nof;
+#if McuGenericI2C_CONFIG_USE_TIMEOUT
+  TIMEOUT_COUNTER_HANDLE timeout;
+  bool isTimeout=FALSE;
+#endif
   uint8_t res = ERR_OK;
 
   for(;;) { /* breaks */
@@ -451,6 +459,10 @@ uint8_t McuGenericI2C_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t me
   uint8_t *p;
   uint16_t i;
   uint16_t nof;
+#if McuGenericI2C_CONFIG_USE_TIMEOUT
+  TIMEOUT_COUNTER_HANDLE timeout;
+  bool isTimeout=FALSE;
+#endif
   uint8_t res = ERR_OK;
 
   if (McuGenericI2C_SelectSlave(i2cAddr)!=ERR_OK) {

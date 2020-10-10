@@ -7,7 +7,7 @@
 **     Component   : DS18B20
 **     Version     : Component 01.019, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-10-14, 06:52, # CodeGen: 585
+**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.047, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-24, 10:23, # CodeGen: 503
+**     Date/Time   : 2020-05-04, 08:06, # CodeGen: 604
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -49,6 +49,7 @@
 **         UpdateRegion          - void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y,...
 **         InitCommChannel       - void McuSSD1306_InitCommChannel(void);
 **         SetContrast           - uint8_t McuSSD1306_SetContrast(uint8_t contrast);
+**         SetDisplayClockDiv    - uint8_t McuSSD1306_SetDisplayClockDiv(uint8_t clockDiv);
 **         DisplayOn             - uint8_t McuSSD1306_DisplayOn(bool on);
 **         DisplayInvert         - uint8_t McuSSD1306_DisplayInvert(bool invert);
 **         GetLCD                - void McuSSD1306_GetLCD(void);
@@ -59,7 +60,7 @@
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
-** * Copyright (c) 2017-2019, Erich Styger
+** * Copyright (c) 2017-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -526,6 +527,23 @@ void McuSSD1306_ClearLine(uint8_t line);
 **         NAME            - DESCRIPTION
 **         line            - Line number, starting with zero
 **     Returns     : Nothing
+** ===================================================================
+*/
+
+uint8_t McuSSD1306_SetDisplayClockDiv(uint8_t clockDiv);
+/*
+** ===================================================================
+**     Method      :  SetDisplayClockDiv (component SSD1306)
+**
+**     Description :
+**         Sets the display clock divider (default 0x80). This can be
+**         used to affect display refresh rate or to reduce audible
+**         noise.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         clockDiv        - Clock Divider (default 0x80).
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

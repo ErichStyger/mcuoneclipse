@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Application configuration file for SSD1306 display driver
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is a configuration header file to configure the module McuSSD1306 (SSD1306).
  * You can configure the defines directly in this file or with the compiler -D option.

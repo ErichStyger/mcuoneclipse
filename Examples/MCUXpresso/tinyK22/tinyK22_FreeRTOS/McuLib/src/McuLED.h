@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef LED_H_
-#define LED_H_
+#ifndef McuLED_H_
+#define McuLED_H_
 
 #include <stdbool.h>
 #include "McuLibconfig.h"
@@ -49,4 +49,4 @@ void McuLED_Deinit(void);
 }  /* extern "C" */
 #endif
 
-#endif /* MCULED_H_ */
+#endif /* McuLED_H_ */

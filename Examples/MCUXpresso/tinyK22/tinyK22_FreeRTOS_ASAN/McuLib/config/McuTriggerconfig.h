@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Application configuration file for Trigger module
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is a configuration header file to configure the module McuTrigger.
  * You can configure the defines directly in this file or with the compiler -D option.

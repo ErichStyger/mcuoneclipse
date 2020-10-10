@@ -3017,3 +3017,4 @@ void vQueueEndScheduler(void) { /* << EST */
   memset(xQueueRegistry, 0, sizeof(xQueueRegistry));
 #endif /* configQUEUE_REGISTRY_SIZE */
 }
+

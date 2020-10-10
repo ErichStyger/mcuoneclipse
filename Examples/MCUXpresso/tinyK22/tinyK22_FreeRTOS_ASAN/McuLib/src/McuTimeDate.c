@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.063, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-21, 18:32, # CodeGen: 568
+**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -66,7 +66,7 @@
 **         DeInit                      - void McuTimeDate_DeInit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2019, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -135,7 +135,7 @@ static uint8_t AddDateToBuf(uint8_t *buf, uint16_t bufSize, DATEREC *tdate) {
   McuUtility_chcat(buf, bufSize, '.');
   McuUtility_strcatNum16uFormatted(buf, bufSize, tdate->Month, '0', 2);
   McuUtility_chcat(buf, bufSize, '.');
-  McuUtility_strcatNum16u(buf, bufSize, (uint16_t)tdate->Year);
+  McuUtility_strcatNum16uFormatted(buf, bufSize, (uint16_t)tdate->Year, '0', 2);
   return ERR_OK;
 }
 
@@ -694,6 +694,20 @@ uint8_t McuTimeDate_Init(void)
 {
   /* initialize software RTC time and date */
 #if McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS
+/* default time/date values */
+  TIMEREC McuTimeDate_DefaultTime = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR, /* hour */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN,  /* minute */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC,  /* second */
+  #if McuTimeDate_HAS_SEC100_IN_TIMEREC
+    0 /* h-second */
+  #endif
+  };
+  DATEREC McuTimeDate_DefaultDate = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR, /* year */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH,  /* month */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY /* day */
+  };
   return McuTimeDate_SetSWTimeDate((TIMEREC*)&McuTimeDate_DefaultTime, (DATEREC*)&McuTimeDate_DefaultDate);
 #elif McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC
   return McuTimeDate_SyncWithInternalRTC();

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : HardFault
-**     Version     : Component 01.022, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.023, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-11, 16:44, # CodeGen: 460
+**     Date/Time   : 2020-05-18, 08:17, # CodeGen: 608
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void McuHardFault_Deinit(void);
 **         Init             - void McuHardFault_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -181,8 +181,8 @@ void McuHardFault_HardFaultHandler(void)
     " b McuHardFault_HandlerC   \n"  /* if no, dump the register values and halt the system */
   "_SemihostReturn:               \n"  /* returning from semihosting fault */
     " adds r1,#2                  \n"  /* r1 points to the semihosting BKPT instruction. Adjust the PC to skip it (2 bytes) */
-    " str r1,[r0,#24]             \n"  /* store back the ajusted PC value to the interrupt stack frame */
-    " movs r1,#32                 \n"  /* need to pass back a return value to emulate a sucessful semihosting operation. 32 is an arbitrary value */
+    " str r1,[r0,#24]             \n"  /* store back the adjusted PC value to the interrupt stack frame */
+    " movs r1,#32                 \n"  /* need to pass back a return value to emulate a successful semihosting operation. 32 is an arbitrary value */
     " str r1,[r0,#0]              \n"  /* store the return value on the stack frame */
     " bx lr                       \n"  /* return from the exception handler back to the application */
 #else
