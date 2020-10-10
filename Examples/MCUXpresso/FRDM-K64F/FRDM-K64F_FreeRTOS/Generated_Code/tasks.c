@@ -362,12 +362,26 @@ PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
  * xDelayedTaskList1 and xDelayedTaskList2 could be move to function scople but
  * doing so breaks some kernel aware debuggers and debuggers that rely on removing
  * the static qualifier. */
-PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ]; /*< Prioritised ready tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList1;                         /*< Delayed tasks. */
-PRIVILEGED_DATA static List_t xDelayedTaskList2;                         /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;              /*< Points to the delayed task list currently being used. */
-PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;      /*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
-PRIVILEGED_DATA static List_t xPendingReadyList;                         /*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#if configLTO_HELPER /* << EST */
+  /* If using -lto (Link Time Optimization), the linker might replace/remove the names of the following variables.
+   * If using a FreeRTOS Kernel aware debugger (e.g. Segger FreeRTOS task aware plugin), then the debugger won't be able to see the symbols and will fail.
+   * Therefore (more as of a hack) the symbols are defined with external linkage, even if not used from other modules.
+   * See https://mcuoneclipse.com/2017/07/27/troubleshooting-tips-for-freertos-thread-aware-debugging-in-eclipse/
+   */
+  PRIVILEGED_DATA /*static*/ List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+  PRIVILEGED_DATA /*static*/ List_t xDelayedTaskList1;            /*< Delayed tasks. */
+  PRIVILEGED_DATA /*static*/ List_t xDelayedTaskList2;            /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+  PRIVILEGED_DATA /*static*/ List_t * volatile pxDelayedTaskList;       /*< Points to the delayed task list currently being used. */
+  PRIVILEGED_DATA /*static*/ List_t * volatile pxOverflowDelayedTaskList;   /*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+  PRIVILEGED_DATA /*static*/ List_t xPendingReadyList;            /*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#else
+ PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
+  PRIVILEGED_DATA static List_t xDelayedTaskList1;            /*< Delayed tasks. */
+  PRIVILEGED_DATA static List_t xDelayedTaskList2;            /*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
+  PRIVILEGED_DATA static List_t * volatile pxDelayedTaskList;       /*< Points to the delayed task list currently being used. */
+  PRIVILEGED_DATA static List_t * volatile pxOverflowDelayedTaskList;   /*< Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */
+  PRIVILEGED_DATA static List_t xPendingReadyList;            /*< Tasks that have been readied while the scheduler was suspended.  They will be moved to the ready list when the scheduler is resumed. */
+#endif
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
@@ -3102,7 +3116,7 @@ BaseType_t xTaskIncrementTick( void )
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
 
-#ifdef __GNUC__ /* << EST */
+#if defined(__GNUC__) && McuLib_CONFIG_SDK_USE_FREERTOS && configLTO_HELPER /* << EST: 'used' attribute need for LTO (Link Time Optimization) */
 __attribute__((used)) /* using C++ compiler, vTaskSwitchContext() might be removed even with -O0? */
 #endif
 void vTaskSwitchContext( void )

@@ -2938,7 +2938,11 @@ void vTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem,
  * Sets the pointer to the current TCB to the TCB of the highest priority task
  * that is ready to run.
  */
-portDONT_DISCARD void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION;
+#if defined(__GNUC__) && McuLib_CONFIG_SDK_USE_FREERTOS && configLTO_HELPER /* << EST: 'used' attribute need for LTO (Link Time Optimization) */
+  void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION __attribute__((used));
+#else
+  portDONT_DISCARD void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION;
+#endif
 
 /*
  * THESE FUNCTIONS MUST NOT BE USED FROM APPLICATION CODE.  THEY ARE USED BY
