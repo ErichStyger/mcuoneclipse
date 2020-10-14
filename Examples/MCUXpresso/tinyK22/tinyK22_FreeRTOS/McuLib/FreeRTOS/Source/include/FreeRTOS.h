@@ -737,7 +737,15 @@
     #define traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength )
 #endif
 
+/* ---------------------------------------------------------------------------------- */
 #if 1 /* << EST additional trace entries used by Segger SystemView */
+#ifndef INCLUDE_pxTaskGetStackStart
+  #define INCLUDE_pxTaskGetStackStart 0
+#endif
+
+#ifndef traceREADDED_TASK_TO_READY_STATE
+ #define traceREADDED_TASK_TO_READY_STATE( pxTCB ) traceMOVED_TASK_TO_READY_STATE( pxTCB )
+#endif
 
 #ifndef traceISR_ENTER
   #define traceISR_ENTER()
@@ -764,6 +772,7 @@
 #endif
 
 #endif /* << EST */
+/* ---------------------------------------------------------------------------------- */
 
 #ifndef configGENERATE_RUN_TIME_STATS
     #define configGENERATE_RUN_TIME_STATS    0

@@ -34,15 +34,15 @@ static void led_task(void *param) {
   for(;;) {
     WAIT1_Waitus(100); /* burn some time */
     LED1_Neg();
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(100));
   } /* for */
 }
 
-static void T50_task(void *param) {
+static void T5_task(void *param) {
   (void)param;
   for(;;) {
-    WAIT1_Waitms(50); /* burn 5 ms */
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    WAIT1_Waitms(5); /* burn 5 ms */
+    vTaskDelay(pdMS_TO_TICKS(200));
   } /* for */
 }
 
@@ -51,7 +51,7 @@ void APP_Run(void) {
   if (xTaskCreate(led_task, "Led", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
-  if (xTaskCreate(T50_task, "T50", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
+  if (xTaskCreate(T5_task, "T5", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL) != pdPASS) {
     for(;;){} /* error! probably out of memory */
   }
   vTaskStartScheduler();

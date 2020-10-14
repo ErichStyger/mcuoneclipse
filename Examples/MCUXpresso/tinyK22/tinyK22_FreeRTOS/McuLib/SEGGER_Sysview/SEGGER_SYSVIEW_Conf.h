@@ -1,10 +1,10 @@
-/** Copyright (C) SEGGER Microcontroller GmbH                        */
+/** Copyright (C) SEGGER Microcontroller GmbH                        */ /* << EST */
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2018 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -18,24 +18,14 @@
 *                                                                    *
 * SEGGER strongly recommends to not make any changes                 *
 * to or modify the source code of this software in order to stay     *
-* compatible with the RTT protocol and J-Link.                       *
+* compatible with the SystemView and RTT protocol, and J-Link.       *
 *                                                                    *
 * Redistribution and use in source and binary forms, with or         *
 * without modification, are permitted provided that the following    *
-* conditions are met:                                                *
+* condition is met:                                                  *
 *                                                                    *
 * o Redistributions of source code must retain the above copyright   *
-*   notice, this list of conditions and the following disclaimer.    *
-*                                                                    *
-* o Redistributions in binary form must reproduce the above          *
-*   copyright notice, this list of conditions and the following      *
-*   disclaimer in the documentation and/or other materials provided  *
-*   with the distribution.                                           *
-*                                                                    *
-* o Neither the name of SEGGER Microcontroller GmbH         *
-*   nor the names of its contributors may be used to endorse or      *
-*   promote products derived from this software without specific     *
-*   prior written permission.                                        *
+*   notice, this condition and the following disclaimer.             *
 *                                                                    *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND             *
 * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,        *
@@ -53,22 +43,21 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: V2.52b                                    *
+*       SystemView version: V3.12                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 
 File    : SEGGER_SYSVIEW_Conf.h
 Purpose : SEGGER SystemView configuration.
-Revision: $Rev: 12298 $
+Revision: $Rev: 17066 $
 */
 
 #ifndef SEGGER_SYSVIEW_CONF_H
 #define SEGGER_SYSVIEW_CONF_H
 
 #include "SEGGER_RTT_Conf.h" /* << EST */
-#include "McuSystemViewconfig.h" /* configuration */
-
+#include "McuSystemViewconfig.h" /* << EST configuration */
 /*********************************************************************
 *
 *       Defines, fixed
@@ -86,13 +75,17 @@ Revision: $Rev: 12298 $
 #if (defined __SES_ARM) || (defined __CROSSWORKS_ARM) || (defined __GNUC__) || (defined __clang__)
   #if (defined __ARM_ARCH_6M__) || (defined __ARM_ARCH_8M_BASE__)
     #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM0
-  #elif (defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
+  #elif (defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__))
     #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM3
   #endif
 #elif defined(__ICCARM__)
-  #if (defined (__ARM6M__) && (__CORE__ == __ARM6M__))
+  #if (defined (__ARM6M__)          && (__CORE__ == __ARM6M__))          \
+   || (defined (__ARM8M_BASELINE__) && (__CORE__ == __ARM8M_BASELINE__))
     #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM0
-  #elif ((defined (__ARM7M__) && (__CORE__ == __ARM7M__)) || (defined (__ARM7EM__) && (__CORE__ == __ARM7EM__)))
+  #elif (defined (__ARM7EM__)         && (__CORE__ == __ARM7EM__))         \
+     || (defined (__ARM7M__)          && (__CORE__ == __ARM7M__))          \
+     || (defined (__ARM8M_MAINLINE__) && (__CORE__ == __ARM8M_MAINLINE__)) \
+     || (defined (__ARM8M_MAINLINE__) && (__CORE__ == __ARM8M_MAINLINE__))
     #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_CM3
   #endif
 #elif defined(__CC_ARM)
@@ -117,6 +110,10 @@ Revision: $Rev: 12298 $
   #define SEGGER_SYSVIEW_CORE SEGGER_SYSVIEW_CORE_OTHER
 #endif
 
+#ifndef   SEGGER_SYSVIEW_ON_EVENT_RECORDED
+  #define SEGGER_SYSVIEW_ON_EVENT_RECORDED(NumBytes)                            // Needed for SystemView via non-J-Link Recorder. Macro to enable the UART or notify IP task.
+#endif
+
 /*********************************************************************
 *
 *       Defines, configurable
@@ -127,81 +124,90 @@ Revision: $Rev: 12298 $
 *
 *       SystemView buffer configuration
 */
-#if 0
-#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE      1024                                // Number of bytes that SystemView uses for the buffer.
-#define SEGGER_SYSVIEW_RTT_CHANNEL          1                                   // The RTT channel that SystemView will use. 0: Auto selection
-#else /* << EST */
-// Number of bytes that SystemView uses for a buffer.
-#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE    McuSystemView_CONFIG_RTT_BUFFER_SIZE  // Number of bytes that SystemView uses for the buffer.
-#define SEGGER_SYSVIEW_RTT_CHANNEL        McuSystemView_CONFIG_RTT_CHANNEL      // The RTT channel that SystemView will use. 0: Auto selection
-#if SEGGER_SYSVIEW_RTT_CHANNEL>=SEGGER_RTT_MAX_NUM_UP_BUFFERS
-  #error "Not enough RTT buffers allocated in SEGGER_RTT_Conf.h!"
-#endif
+#ifndef   SEGGER_SYSVIEW_RTT_BUFFER_SIZE
+  //#define SEGGER_SYSVIEW_RTT_BUFFER_SIZE        1024                            // Number of bytes that SystemView uses for the buffer.
+  #define SEGGER_SYSVIEW_RTT_BUFFER_SIZE        McuSystemView_CONFIG_RTT_BUFFER_SIZE  // << EST: Number of bytes that SystemView uses for the buffer.
 #endif
 
-#define SEGGER_SYSVIEW_USE_STATIC_BUFFER    McuSystemView_CONFIG_USE_STATIC_BUFFER  // 1: Use a static buffer to generate events instead of a buffer on the stack
-#define SEGGER_SYSVIEW_POST_MORTEM_MODE     McuSystemView_CONFIG_POST_MORTEM_MODE   // 1: Enable post mortem analysis mode
+#ifndef   SEGGER_SYSVIEW_RTT_CHANNEL
+  //#define SEGGER_SYSVIEW_RTT_CHANNEL            1                               // The RTT channel that SystemView will use. 0: Auto selection
+  #define SEGGER_SYSVIEW_RTT_CHANNEL              McuSystemView_CONFIG_RTT_CHANNEL      // << EST: The RTT channel that SystemView will use. 0: Auto selection
+  #if SEGGER_SYSVIEW_RTT_CHANNEL>=SEGGER_RTT_MAX_NUM_UP_BUFFERS /* << EST */
+    #error "Not enough RTT buffers allocated in SEGGER_RTT_Conf.h!"
+  #endif
+#endif
+
+#ifndef   SEGGER_SYSVIEW_USE_STATIC_BUFFER
+  // #define SEGGER_SYSVIEW_USE_STATIC_BUFFER      1                               // Use a static buffer to generate events instead of a buffer on the stack
+  #define SEGGER_SYSVIEW_USE_STATIC_BUFFER    McuSystemView_CONFIG_USE_STATIC_BUFFER  // << EST: 1: Use a static buffer to generate events instead of a buffer on the stack
+#endif
+
+#ifndef   SEGGER_SYSVIEW_POST_MORTEM_MODE
+  //#define SEGGER_SYSVIEW_POST_MORTEM_MODE       0                               // 1: Enable post mortem analysis mode
+  #define SEGGER_SYSVIEW_POST_MORTEM_MODE     McuSystemView_CONFIG_POST_MORTEM_MODE   // << EST: 1: Enable post mortem analysis mode
+#endif
+
+#ifndef   SEGGER_SYSVIEW_CAN_RESTART
+  #define SEGGER_SYSVIEW_CAN_RESTART            1                               // 1: Send the SystemView start sequence on every start command, not just on the first. Enables restart when SystemView Application disconnected unexpectedly.
+#endif
 
 /*********************************************************************
 *
 *       SystemView timestamp configuration
 */
-#if SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM3
-#if 0
-  #define SEGGER_SYSVIEW_GET_TIMESTAMP()      (*(U32 *)(0xE0001004))            // Retrieve a system timestamp. Cortex-M cycle counter.
-  #define SEGGER_SYSVIEW_TIMESTAMP_BITS       32                                // Define number of valid bits low-order delivered by clock source
-#else /* << EST */
-  #define SEGGER_SYSVIEW_TIMESTAMP_SHIFT      4 /* << EST */
-  #define SEGGER_SYSVIEW_GET_TIMESTAMP()      ((*(U32 *)(0xE0001004))>>SEGGER_SYSVIEW_TIMESTAMP_SHIFT)     // Retrieve a system timestamp. Cortex-M cycle counter. Shifted by 4 to save bandwith.
-  #define SEGGER_SYSVIEW_TIMESTAMP_BITS       (32-SEGGER_SYSVIEW_TIMESTAMP_SHIFT)                          // Define number of valid bits low-order delivered by clock source
-#endif
-#else
-#if 0
-  #define SEGGER_SYSVIEW_GET_TIMESTAMP()      SEGGER_SYSVIEW_X_GetTimestamp()   // Retrieve a system timestamp via user-defined function
-  #define SEGGER_SYSVIEW_TIMESTAMP_BITS       32                                // Define number of valid bits low-order delivered by SEGGER_SYSVIEW_X_GetTimestamp()
-#else /* << EST */
-  #define SEGGER_SYSVIEW_TIMESTAMP_SHIFT      0 /* << EST */
-  #define SEGGER_SYSVIEW_GET_TIMESTAMP()      (SEGGER_SYSVIEW_X_GetTimestamp())   // Retrieve a system timestamp via user-defined function
-  #define SEGGER_SYSVIEW_TIMESTAMP_BITS       32                                // Define number of valid bits low-order delivered by SEGGER_SYSVIEW_X_GetTimestamp()
-#endif
+#if !defined(SEGGER_SYSVIEW_GET_TIMESTAMP) && !defined(SEGGER_SYSVIEW_TIMESTAMP_BITS)
+  #if SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM3
+    #define SEGGER_SYSVIEW_TIMESTAMP_SHIFT      4 /* << EST */
+    //#define SEGGER_SYSVIEW_GET_TIMESTAMP()      (*(U32 *)(0xE0001004))          // Retrieve a system timestamp. Cortex-M cycle counter.
+    #define SEGGER_SYSVIEW_GET_TIMESTAMP()      ((*(U32 *)(0xE0001004))>>SEGGER_SYSVIEW_TIMESTAMP_SHIFT)     // << EST: Retrieve a system timestamp. Cortex-M cycle counter. Shifted by 4 to save bandwith.
+    #define SEGGER_SYSVIEW_TIMESTAMP_BITS       32                              // Define number of valid bits low-order delivered by clock source
+  #else
+    #define SEGGER_SYSVIEW_TIMESTAMP_SHIFT      0 /* << EST */
+    #define SEGGER_SYSVIEW_GET_TIMESTAMP()      SEGGER_SYSVIEW_X_GetTimestamp() // Retrieve a system timestamp via user-defined function
+    #define SEGGER_SYSVIEW_TIMESTAMP_BITS       32                              // Define number of valid bits low-order delivered by SEGGER_SYSVIEW_X_GetTimestamp()
+  #endif
 #endif
 
 /*********************************************************************
 *
 *       SystemView Id configuration
 */
-#if 0
-#define SEGGER_SYSVIEW_ID_BASE         0x10000000                               // Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
-#define SEGGER_SYSVIEW_ID_SHIFT        2                                        // Number of bits to shift the Id to save bandwidth. (i.e. 2 when Ids are 4 byte aligned)
-#else /* << EST */
-#define SEGGER_SYSVIEW_ID_BASE         (0x10000000)                          // Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
-#define SEGGER_SYSVIEW_ID_SHIFT        (2)                                   // Number of bits to shift the Id to save bandwidth. (i.e. 2 when Ids are 4 byte aligned)
+#ifndef   SEGGER_SYSVIEW_ID_BASE
+  //#define SEGGER_SYSVIEW_ID_BASE                0x10000000                      // Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
+  #define SEGGER_SYSVIEW_ID_BASE                 (0x10000000)            // << EST: Default value for the lowest Id reported by the application. Can be overridden by the application via SEGGER_SYSVIEW_SetRAMBase(). (i.e. 0x20000000 when all Ids are an address in this RAM)
+#endif
+
+#ifndef   SEGGER_SYSVIEW_ID_SHIFT
+  //#define SEGGER_SYSVIEW_ID_SHIFT               2                               // Number of bits to shift the Id to save bandwidth. (i.e. 2 when Ids are 4 byte aligned)
+  #define SEGGER_SYSVIEW_ID_SHIFT                 (2)               // << EST: Number of bits to shift the Id to save bandwidth. (i.e. 2 when Ids are 4 byte aligned)
 #endif
 /*********************************************************************
 *
 *       SystemView interrupt configuration
 */
-#if SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM3
-  #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   ((*(U32 *)(0xE000ED04)) & 0x1FF)  // Get the currently active interrupt Id. (i.e. read Cortex-M ICSR[8:0] = active vector)
-#elif SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM0
-  #if defined(__ICCARM__)
-    #if (__VER__ > 6100000)
-      #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   (__get_IPSR())                  // Workaround for IAR, which might do a byte-access to 0xE000ED04. Read IPSR instead.
+#ifndef SEGGER_SYSVIEW_GET_INTERRUPT_ID
+  #if SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM3
+    #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()      ((*(U32*)(0xE000ED04)) & 0x1FF)    // Get the currently active interrupt Id. (i.e. read Cortex-M ICSR[8:0] = active vector)
+  #elif SEGGER_SYSVIEW_CORE == SEGGER_SYSVIEW_CORE_CM0
+    #if defined(__ICCARM__)
+      #if (__VER__ > 6010000)
+        #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()  (__get_IPSR())                     // Workaround for IAR, which might do a byte-access to 0xE000ED04. Read IPSR instead.
+      #else
+        #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()  ((*(U32*)(0xE000ED04)) & 0x3F)     // Older versions of IAR do not include __get_IPSR, but might also not optimize to byte-access.
+      #endif
     #else
-      #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   ((*(U32 *)(0xE000ED04)) & 0x3F) // Older versions of IAR do not include __get_IPSR, but might also not optimize to byte-access.
+      #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()    ((*(U32*)(0xE000ED04)) & 0x3F)     // Get the currently active interrupt Id. (i.e. read Cortex-M ICSR[5:0] = active vector)
     #endif
   #else
-    #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   ((*(U32 *)(0xE000ED04)) & 0x3F) // Get the currently active interrupt Id. (i.e. read Cortex-M ICSR[5:0] = active vector)
+    #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()      SEGGER_SYSVIEW_X_GetInterruptId()  // Get the currently active interrupt Id from the user-provided function.
   #endif
-#else
-  #define SEGGER_SYSVIEW_GET_INTERRUPT_ID()   SEGGER_SYSVIEW_X_GetInterruptId() // Get the currently active interrupt Id from the user-provided function.
 #endif
 
 #if 1 /* << EST */
   uint32_t SEGGER_uxGetTickCounterValue(void);
 
 #define SEGGER_SYSVIEW_PRINTF_IMPLICIT_FORMAT 0
-#endif
+#endif /* << EST */
 
 #endif  // SEGGER_SYSVIEW_CONF_H
 
