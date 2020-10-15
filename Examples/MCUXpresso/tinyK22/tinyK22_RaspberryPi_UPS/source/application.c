@@ -42,7 +42,7 @@
 #endif
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
-#include "Buttons.h"
+#include "buttons.h"
 #include "RaspyUART.h"
 #include "McuRTT.h"
 #include "virtual_com.h"
