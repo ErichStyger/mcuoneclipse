@@ -93,9 +93,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #endif
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   if (McuGPIO_IsHigh(RGPIO_wake_gpio)) {
-    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Wake_Raspy HIGH: SCL connected, falling edge can wakeup Raspy\r\n");
+    McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Wake_Raspy HIGH: SCL connected, falling edge can wake-up Raspy\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Wake_Raspy LOW: SCL not connected to Raspy\r\n");
   }
@@ -111,7 +111,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rgpio", (unsigned char*)"Group of Raspberry GPIO commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  shutdown", (unsigned char*)"Signal Raspy to shutdown\r\n", io->stdOut);
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   McuShell_SendHelpStr((unsigned char*)"  wake connect|disconnect", (unsigned char*)"Connect SCL to Raspy\r\n", io->stdOut);
 #endif
 #if PL_CONFIG_USE_POWER_ON

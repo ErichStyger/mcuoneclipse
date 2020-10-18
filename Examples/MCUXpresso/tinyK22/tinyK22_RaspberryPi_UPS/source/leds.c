@@ -33,7 +33,7 @@ void LEDS_Init(void) {
   config.hw.gpio = PINS_LEDBLUE_GPIO;
   tinyLED = McuLED_InitLed(&config);
 
-  /* hat LEDs are high active */
+  /* HAT LEDs are high active */
   config.isLowActive = false;
 
   config.hw.pin = PINS_HATLEDBLUE_PIN;
