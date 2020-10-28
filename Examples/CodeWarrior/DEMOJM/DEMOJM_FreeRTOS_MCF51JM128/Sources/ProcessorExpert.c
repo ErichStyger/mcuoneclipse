@@ -54,7 +54,7 @@ static portTASK_FUNCTION(Task1, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
@@ -62,7 +62,7 @@ static portTASK_FUNCTION(Task2, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LED2_Neg();
-    FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(500));
   }
 }
 
@@ -81,7 +81,7 @@ void main(void)
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */
@@ -93,7 +93,7 @@ void main(void)
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

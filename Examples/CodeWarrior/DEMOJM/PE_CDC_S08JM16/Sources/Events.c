@@ -37,6 +37,7 @@
 */
 void HIDK1_OnEvent(byte error)
 {
+  (void)error;
   /* Write your code here ... */
 }
 

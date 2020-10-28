@@ -68,12 +68,12 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
       /* Call the USB application task, wait until enumeration has finished */
       while(CDC1_App_Task(buf, sizeof(buf))!=ERR_OK) {
         LED1_Neg(); /* flash LED fast to indicate that we are not communicating */
-        FRTOS1_vTaskDelay(20/portTICK_RATE_MS);
+        FRTOS1_vTaskDelay(pdMS_TO_TICKS(20));
       }
     }
     LED1_Neg();
     (void)CLS1_ReadAndParseWithCommandTable(cmd_buf, sizeof(cmd_buf), CLS1_GetStdio(), CmdParserTable);
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
