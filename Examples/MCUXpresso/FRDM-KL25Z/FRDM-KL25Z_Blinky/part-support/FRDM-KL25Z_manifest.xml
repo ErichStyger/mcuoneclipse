@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.0" api_version="2.0.0" configuration="9ce6c63b44d1c436d182cd0386dad04e" id="SDK_2.x_FRDM-KL25Z" name="SDK version 2.2.0 package for FRDM-KL25Z board" brief="This is SDK version 2.2.0 manifest file. It describes the content of the SDK version 2.2.0 package for FRDM-KL25Z board and additional settings for tools that support SDK version 2.2.0">
+    <defines>
+        <define name="CPU_$|package|_$|core|" value=""/>
+        <define name="CPU_$|package|" value=""/>
+    </defines>
+    <externalDefinitions>
+        <definition extID="twrkl25z48m"/>
+    </externalDefinitions>
+    <ksdk id="KSDK220" name="KSDK220" version="2.2.0"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="1.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.compiler.option.misc.other" type="string" user_name="">
+                <value>-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections</value>
+            </option>
+            <option id="com.crt.advproject.gpp.hdrlib" type="enum" user_name="">
+                <value>Newlib</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.misc.other" type="string" user_name="">
+                <value>-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections</value>
+            </option>
+            <option id="com.crt.advproject.gcc.hdrlib" type="enum" user_name="">
+                <value>Redlib</value>
+            </option>
+            <option id="com.crt.advproject.gas.hdrlib" type="enum" user_name="">
+                <value>Redlib</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.cpp.link.option.other" type="stringList" user_name="">
+                <value>-Map="${BuildArtifactFileBaseName}.map"</value>
+                <value>--gc-sections</value>
+                <value>-print-memory-usage</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.manage" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.hdrlib" type="enum" user_name="">
+                <value>com.crt.advproject.cpp.link.hdrlib.newlib.semihost</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.other" type="stringList" user_name="">
+                <value>-Map="${BuildArtifactFileBaseName}.map"</value>
+                <value>--gc-sections</value>
+                <value>-print-memory-usage</value>
+            </option>
+            <option id="com.crt.advproject.link.manage" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.gcc.hdrlib" type="enum" user_name="">
+                <value>com.crt.advproject.gcc.link.hdrlib.codered.semihost</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="10.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}
+        </script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+${run}
+        </script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MKL25Z128VLK4" id="frdmkl25z" name="FRDM-KL25Z" href="http://www.nxp.com/frdm-kl25z" version="1.0.0">
+            <description>
+FRDM-KL25Z: Freedom Development Platform for Kinetis® KL14, KL15, KL24, KL25 MCUs
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-KL25Z.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The Freedom KL25Z is an ultra-low-cost development platform for Kinetis® L Series KL1x (KL14/15) and KL2x (KL24/25) MCUs built on ARM® Cortex®-M0+ processor.
+&lt;ul&gt;
+&lt;li&gt;Features include easy access to MCU I/O, battery-ready, low-power operation, a standard-based form factor with expansion board options and a built-in debug interface for flash programming and run-control.&lt;/li&gt;
+&lt;li&gt;The FRDM-KL25Z is supported by a range of NXP® and third-party development software.&lt;/li&gt;
+&lt;li&gt;You can now use mbed.org at no charge, with full access to the online SDK, tools, reusable code—which means no downloads, installations or licenses—and an active community of developers&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MKL25Z128VLK4" type="kit" id="frdmkl25z_a8471" name="FRDMKL25-A8471" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/freedom-development-boards/sensor-toolbox-development-platform-for-fxls8471q-3-axis-linear-accelerometer:FRDMSTBC-A8471" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for FXLS8471Q 3-Axis linear Accelerometer
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDMKL25-A8471.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+This is your ecosystem for the NXP FXLS8471Q 3-axis linear accelerometer. This includes a Demo Kit, Sensor Shield Development Board and Breakout Board. Each of these boards is supported by the NXP Software: Sensor Toolbox – CE and Intelligent Sensing Framework (ISF)
+&lt;ul&gt;
+&lt;li&gt;The Demo Kit (FRDMKL25-A8471) enables an ‘Out of the Box’ demonstration using ISF and the Sensor Toolbox – CE.&lt;/li&gt;
+&lt;li&gt;The Sensor Shield Development Board (FRDMSTBC-A8471) enables sensor evaluation and development. The Sensor Shield Development board is compatible with most NXP Freedom development boards.&lt;/li&gt;
+&lt;li&gt;The Breakout Board (BRKTSTBC-A8471) enables prototyping of your sensor designs.&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MKL25Z128VLK4" type="kit" id="frdmkl25z_a8491" name="FRDMKL25-A8491" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/freedom-development-boards/sensor-toolbox-development-platform-for-mma8491-3-axis-digital-accelerometer:FRDMSTBC-A8491" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for MMA8491 3-Axis Digital Accelerometer
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDMKL25-A8491.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+This is your ecosystem for the NXP MMA8491Q 3-axis digital accelerometer. This includes a Demo Kit, Sensor Shield Development Board and Breakout Board. Each of these boards is supported by the NXP® Software: Sensor Toolbox – CE and Intelligent Sensing Framework (ISF)
+&lt;ul&gt;
+&lt;li&gt;The Demo Kit (FRDMKL25-A8491) enables an ‘Out of the Box’ demonstration using ISF and the Sensor Toolbox – CE.&lt;/li&gt;
+&lt;li&gt;The Sensor Shield Development Board (FRDMSTBC-A8491) enables sensor evaluation and development. The Sensor Shield Development board is compatible with most NXP Freedom development boards.&lt;/li&gt;
+&lt;li&gt;The Breakout Board (BRKTSTBC-A8491) enables prototyping of your sensor designs.&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MKL25Z128VLK4" type="kit" id="frdmkl25z_p3115" name="FRDMKL25-P3115" href="http://www.nxp.com/products/software-and-tools/hardware-development-tools/freedom-development-boards/sensor-toolbox-development-platform-for-mpl3115a2-pressure-altimeter-sensor:FRDMSTBC-P3115" version="1.0.0">
+            <description>
+Sensor Toolbox Development Platform for MPL3115A2 Pressure/Altimeter Sensor
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="FRDMKL25-P3115.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+This is your ecosystem for the NXP MMP3115Q 3-axis digital accelerometer. This includes a Demo Kit, Sensor Shield Development Board and Breakout Board. Each of these boards is supported by the NXP® Software: Sensor Toolbox – CE and Intelligent Sensing Framework (ISF)
+&lt;ul&gt;
+&lt;li&gt;The Demo Kit (FRDMKL25-P3115) enables an ‘Out of the Box’ demonstration using ISF and the Sensor Toolbox – CE.&lt;/li&gt;
+&lt;li&gt;The Sensor Shield Development Board (FRDMSTBC-P3115) enables sensor evaluation and development. The Sensor Shield Development board is compatible with most NXP Freedom development boards.&lt;/li&gt;
+&lt;li&gt;The Breakout Board (BRKTSTBC-P3115) enables prototyping of your sensor designs.&lt;/li&gt;
+&lt;/ul&gt;
+        </content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="KL2x" platform="Kinetis" id="MKL25Z128xxx4" name="MKL25Z4" full_name="MKL25Z128xxx4" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>
+KL2x: Kinetis® KL2x-48 MHz, USB Ultra-Low-Power Microcontrollers (MCUs) based on ARM® Cortex®-M0+ Core
+        </description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="USB_KHCI_COUNT" value="1"/>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="vendor.device.type" value="Kinetis"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+The Kinetis® KL2x is an ultra-low-power MCU family that adds a full-speed USB 2.0 On-the-Go (OTG) controller or a full-speed crystal-less USB 2.0 device controller in addition to the Kinetis KL1x series.
+
+The Kinetis KL2x MCU family is compatible with Kinetis K20 MCUs (based on ARM® Cortex®-M4), and with all other Kinetis KL1x, KL2x, KL3x, and KL4x series MCUs, providing a migration path to lower and higher performance and feature integration.
+        </content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor.device.family" value="KL2x"/>
+            </metadataSet>
+            <core fpu="false" type="cm0plus" id="core0_MKL25Z128xxx4" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00020000" type="Flash" access="RO" id="PROGRAM_FLASH_MKL25Z128xxx4" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="1FFFF000" size="00004000" type="RAM" access="RW" id="SRAM_MKL25Z128xxx4" name="SRAM"/>
+            </memory>
+            <total_memory flash_size_kb="128" ram_size_kb="16"/>
+            <package id="MKL25Z128VFM4" name="MKL25Z128VFM4"/>
+            <package id="MKL25Z128VFT4" name="MKL25Z128VFT4"/>
+            <package id="MKL25Z128VLH4" name="MKL25Z128VLH4"/>
+            <package id="MKL25Z128VLK4" name="MKL25Z128VLK4"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmkl25z"/>
+                <evaluation_board name="frdmkl25z_a8471"/>
+                <evaluation_board name="frdmkl25z_a8491"/>
+                <evaluation_board name="frdmkl25z_p3115"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.MKL25Z128xxx4" name="internal.wiretype"/>
+                        <params value="false" id="internal.has_swo.release.MKL25Z128xxx4" name="internal.has_swo"/>
+                        <params value="kinetisconnect.scp" id="internal.connect.script.debug.mcuxpresso.MKL25Z128xxx4" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MKL25Z128xxx4">
+                            <driverBinary path="devices/MKL25Z4/mcuxpresso" type="binary">
+<files mask="FTFA_1K.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="true"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="true"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component type="debugger" devices="MKL25Z128xxx4" id="platform.devices.MKL25Z4_debugger.MKL25Z4" name="MKL25Z4_debugger" version="1.0.0">
+            <source path="devices/MKL25Z4" target_path="TARGET_PATH" type="xml">
+                <files mask="MKL25Z4.xml"/>
+            </source>
+        </component>
+        <component type="debugger" devices="MKL25Z128xxx4" id="platform.devices.MKL25Z4_flash.MKL25Z4" name="MKL25Z4_flash" version="1.0.0">
+            <source path="devices/MKL25Z4/mcuxpresso" target_path="TARGET_PATH" type="binary" toolchain="mcuxpresso">
+                <files mask="FTFA_1K.cfx"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
