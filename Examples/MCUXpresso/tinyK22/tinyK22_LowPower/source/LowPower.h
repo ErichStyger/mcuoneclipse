@@ -15,8 +15,8 @@
 
 /* selected low power mode: */
 //#define LP_MODE LP_MODE_RUN /* the low power mode to be used */
-#define LP_MODE LP_MODE_WAIT /* the low power mode to be used */
-//#define LP_MODE LP_MODE_STOP /* the low power mode to be used */
+//#define LP_MODE LP_MODE_WAIT /* the low power mode to be used */
+#define LP_MODE LP_MODE_STOP /* the low power mode to be used */
 
 void LP_EnterLowPower(void);
 

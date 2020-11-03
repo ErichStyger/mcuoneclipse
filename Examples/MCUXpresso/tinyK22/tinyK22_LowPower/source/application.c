@@ -15,7 +15,7 @@ void APP_Run(void) {
   PL_Init();
   for(;;) {
     McuLED_On(tinyLED);
-    McuWait_Waitms(1000);
+    McuWait_Waitms(100);
     McuLED_Off(tinyLED);
     LP_EnterLowPower();
 #if LP_MODE==LP_MODE_RUN
