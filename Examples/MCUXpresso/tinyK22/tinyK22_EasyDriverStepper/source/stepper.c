@@ -9,6 +9,7 @@
 #include "Stepper.h"
 #include "McuA3967.h"
 #include "McuWait.h"
+#include "McuUtility.h"
 #include "McuRTOS.h"
 
 #define STEPPER_CONFIG_DO_UINT_TEST             (0)

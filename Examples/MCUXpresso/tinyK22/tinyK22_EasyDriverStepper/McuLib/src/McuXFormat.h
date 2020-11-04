@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : XFormat
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **         Deinit    - void McuXFormat_Deinit(void);
 **         Init      - void McuXFormat_Init(void);
 **
-** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+** *  Copyright : (c) Copyright Mario Viara, 2014-2020, https://github.com/MarioViara/xprintfc
 **  * Adopted for Processor Expert: Erich Styger
 **  * xsnprintf() contributed by Engin Lee
 **  * Web:         https://mcuoneclipse.com

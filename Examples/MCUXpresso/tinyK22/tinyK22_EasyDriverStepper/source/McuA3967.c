@@ -9,6 +9,7 @@
 #include "McuA3967.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
+#include "McuUtility.h"
 #include <assert.h>
 #include <string.h> /* for memset */
 #include <stdlib.h> /* for malloc() and free() */
@@ -206,7 +207,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* reset pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* reset it output only */
-  gpio_config.isLowOnInit = true; /* pin is LOW active, have it disabled (LOW) initially */
+  gpio_config.isHighOnInit = false; /* pin is LOW active, have it disabled (LOW) initially */
   gpio_config.hw.gpio = config->rst.gpio;
   gpio_config.hw.port = config->rst.port;
   gpio_config.hw.pin  = config->rst.pin;
@@ -216,7 +217,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* enable pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* enable it output only */
-  gpio_config.isLowOnInit = false; /* pin is LOW active, have it disabled initially => HIGH */
+  gpio_config.isHighOnInit = true; /* pin is LOW active, have it disabled initially => HIGH */
   gpio_config.hw.gpio = config->enable.gpio;
   gpio_config.hw.port = config->enable.port;
   gpio_config.hw.pin  = config->enable.pin;
@@ -226,7 +227,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* sleep pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* sleep it output only */
-  gpio_config.isLowOnInit = true; /* pin is LOW active, have it disabled initially */
+  gpio_config.isHighOnInit = false; /* pin is LOW active, have it disabled initially */
   gpio_config.hw.gpio = config->slp.gpio;
   gpio_config.hw.port = config->slp.port;
   gpio_config.hw.pin  = config->slp.pin;
@@ -236,7 +237,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* ms1 pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* ms1 it output only */
-  gpio_config.isLowOnInit = true; /* initial setting for full stepping */
+  gpio_config.isHighOnInit = false; /* initial setting for full stepping */
   gpio_config.hw.gpio = config->ms1.gpio;
   gpio_config.hw.port = config->ms1.port;
   gpio_config.hw.pin  = config->ms1.pin;
@@ -246,7 +247,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* ms2 pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* ms1 it output only */
-  gpio_config.isLowOnInit = true; /* initial setting for full stepping */
+  gpio_config.isHighOnInit = false; /* initial setting for full stepping */
   gpio_config.hw.gpio = config->ms2.gpio;
   gpio_config.hw.port = config->ms2.port;
   gpio_config.hw.pin  = config->ms2.pin;
@@ -256,7 +257,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* step pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* step it output only */
-  gpio_config.isLowOnInit = true; /* initially low */
+  gpio_config.isHighOnInit = false; /* initially low */
   gpio_config.hw.gpio = config->step.gpio;
   gpio_config.hw.port = config->step.port;
   gpio_config.hw.pin  = config->step.pin;
@@ -266,7 +267,7 @@ McuA3967_Handle_t McuA3967_InitHandle(McuA3967_Config_t *config) {
   /* direction pin */
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* direction it output only */
-  gpio_config.isLowOnInit = true; /* initially low */
+  gpio_config.isHighOnInit = false; /* initially low */
   gpio_config.hw.gpio = config->dir.gpio;
   gpio_config.hw.port = config->dir.port;
   gpio_config.hw.pin  = config->dir.pin;

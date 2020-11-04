@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.577, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-23, 09:05, # CodeGen: 497
+**     Date/Time   : 2020-09-23, 21:12, # CodeGen: 685
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.2.0
+**          RTOS Version                                   : V10.4.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -34,7 +34,7 @@
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
 **          Debug Helpers                                  : 
-**            Enable GDB Debug Helper                      : yes
+**            Enable GDB Debug Helper                      : no
 **            uxTopUsedPriority                            : yes
 **            Heap Indication Constant                     : yes
 **          Segger System Viewer Trace                     : Disabled
@@ -231,10 +231,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2020 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -572,7 +572,7 @@ extern "C" {
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.

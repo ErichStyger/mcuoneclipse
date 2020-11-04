@@ -1,8 +1,8 @@
 /*
  * McuButton.h
  *
- *  Created on: 27.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCUBUTTON_H_
@@ -30,6 +30,9 @@ void McuBtn_GetDefaultConfig(McuBtn_Config_t *config);
 McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config);
 
 McuBtn_Handle_t McuBtn_DeinitButton(McuBtn_Handle_t button);
+
+void McuBtn_DisablePullResistor(McuBtn_Handle_t btn);
+void McuBtn_EnablePullResistor(McuBtn_Handle_t btn);
 
 bool McuBtn_IsOn(McuBtn_Handle_t btn);
 

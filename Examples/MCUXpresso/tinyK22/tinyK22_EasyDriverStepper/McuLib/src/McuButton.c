@@ -1,8 +1,8 @@
 /*
  * McuButton.c
  *
- *  Created on: 27.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "McuButton.h"
@@ -38,6 +38,24 @@ void McuBtn_GetDefaultConfig(McuBtn_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
+void McuBtn_DisablePullResistor(McuBtn_Handle_t btn) {
+  McuBtn_t *button;
+
+  button = (McuBtn_t*)btn;
+  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_DISABLE);
+}
+
+void McuBtn_EnablePullResistor(McuBtn_Handle_t btn) {
+  McuBtn_t *button;
+
+  button = (McuBtn_t*)btn;
+  if (button->isLowActive) {
+    McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+  } else {
+	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+  }
+}
+
 bool McuBtn_IsOn(McuBtn_Handle_t btn) {
   McuBtn_t *button;
 
@@ -67,7 +85,6 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
     /* create GPIO pin */
     McuGPIO_GetDefaultConfig(&gpioConfig);
     gpioConfig.isInput = true;
-    gpioConfig.isLowOnInit = false;
     memcpy(&gpioConfig.hw, &config->hw, sizeof(gpioConfig.hw));
     handle->gpio = McuGPIO_InitGPIO(&gpioConfig);
   }

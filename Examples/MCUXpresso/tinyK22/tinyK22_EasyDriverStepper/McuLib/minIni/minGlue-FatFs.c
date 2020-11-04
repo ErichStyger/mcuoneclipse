@@ -9,9 +9,9 @@
  *  its own terms.)
  */
 
-#include "MinINIconfig.h" /* MinIni config file */
+#include "McuMinINIconfig.h" /* MinIni config file */
 
-#if MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_FAT_FS
+#if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS
 #include "ff.h"                   /* include tff.h for Tiny-FatFs */
 #include "minGlue-FatFs.h"
 #include <stddef.h>
@@ -24,5 +24,5 @@ int ini_rename(TCHAR *source, const TCHAR *dest)
   drive = (drive == NULL) ? (char*)dest : drive + 1;
   return (f_rename(source, drive) == FR_OK);
 }
-#endif /* MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_FAT_FS */
+#endif /* McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS */
 

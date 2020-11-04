@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : OneWire
-**     Version     : Component 01.151, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-01-29, 06:51, # CodeGen: 595
 **     Abstract    :
 **          This is a component implementing the 1-Wire protocol.
 **     Settings    :
@@ -57,7 +57,7 @@
 **         Init          - void McuOneWire%.Init(void) McuOneWire_Init(void);
 **
 ** * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
-**  * Updated and maintained by Erich Styger, 2014-2017
+**  * Updated and maintained by Erich Styger, 2014-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

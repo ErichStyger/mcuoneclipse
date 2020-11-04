@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.0
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 #ifndef FREERTOS_CONFIG_H
@@ -52,30 +51,59 @@
 #endif
 #if configGENERATE_RUN_TIME_STATS
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
-    #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   /* nothing */ /* default: use Tick counter as runtime counter */
-    #define portGET_RUN_TIME_COUNTER_VALUE()           xTaskGetTickCountFromISR() /* default: use Tick counter as runtime counter */
+    #ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+      #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() /* nothing */ /* default: use Tick counter as runtime counter */
+   #endif
+   #ifndef portGET_RUN_TIME_COUNTER_VALUE
+     #define portGET_RUN_TIME_COUNTER_VALUE()          xTaskGetTickCountFromISR() /* default: use Tick counter as runtime counter */
+    #endif
   #else /* use dedicated timer */
-    extern uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
-    #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   McuRTOS_AppConfigureTimerForRuntimeStats()
-    #define portGET_RUN_TIME_COUNTER_VALUE()           McuRTOS_AppGetRuntimeCounterValueFromISR()
+    #ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS
+      extern void McuRTOS_AppConfigureTimerForRuntimeStats(void);
+      #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS() McuRTOS_AppConfigureTimerForRuntimeStats()
+    #endif
+    #ifndef portGET_RUN_TIME_COUNTER_VALUE
+      extern uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
+      #define portGET_RUN_TIME_COUNTER_VALUE()         McuRTOS_AppGetRuntimeCounterValueFromISR()
+    #endif
   #endif
 #else /* no runtime stats, use empty macros */
   #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()     /* nothing */
   #define portGET_RUN_TIME_COUNTER_VALUE()             /* nothing */
 #endif
-#define configUSE_PREEMPTION                      1 /* 1: pre-emptive mode; 0: cooperative mode */
-#define configUSE_TIME_SLICING                    1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
-#define configUSE_IDLE_HOOK                       1 /* 1: use Idle hook; 0: no Idle hook */
-#define configUSE_IDLE_HOOK_NAME                  McuRTOS_vApplicationIdleHook
-#define configUSE_TICK_HOOK                       1 /* 1: use Tick hook; 0: no Tick hook */
-#define configUSE_TICK_HOOK_NAME                  McuRTOS_vApplicationTickHook
-#define configUSE_MALLOC_FAILED_HOOK              1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
-#define configUSE_MALLOC_FAILED_HOOK_NAME         McuRTOS_vApplicationMallocFailedHook
+#ifndef configUSE_PREEMPTION
+  #define configUSE_PREEMPTION                    1 /* 1: pre-emptive mode; 0: cooperative mode */
+#endif
+#ifndef configUSE_TIME_SLICING
+  #define configUSE_TIME_SLICING                  1 /* 1: use time slicing; 0: don't time slice at tick interrupt time */
+#endif
+#ifndef configUSE_IDLE_HOOK
+  #define configUSE_IDLE_HOOK                     1 /* 1: use Idle hook; 0: no Idle hook */
+#endif
+#ifndef configUSE_IDLE_HOOK_NAME
+  #define configUSE_IDLE_HOOK_NAME                McuRTOS_vApplicationIdleHook
+#endif
+#ifndef configUSE_TICK_HOOK
+  #define configUSE_TICK_HOOK                     1 /* 1: use Tick hook; 0: no Tick hook */
+#endif
+#ifndef configUSE_TICK_HOOK_NAME
+  #define configUSE_TICK_HOOK_NAME                McuRTOS_vApplicationTickHook
+#endif
+#ifndef configUSE_MALLOC_FAILED_HOOK
+  #define configUSE_MALLOC_FAILED_HOOK            1 /* 1: use MallocFailed hook; 0: no MallocFailed hook */
+#endif
+#ifndef configUSE_MALLOC_FAILED_HOOK_NAME
+  #define configUSE_MALLOC_FAILED_HOOK_NAME       McuRTOS_vApplicationMallocFailedHook
+#endif
 #ifndef configTICK_RATE_HZ
   #define configTICK_RATE_HZ                      (1000) /* frequency of tick interrupt */
 #endif
-#define configSYSTICK_USE_LOW_POWER_TIMER         0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
-#define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ    1 /* 1 kHz LPO timer. Set to 1 if not used */
+#ifndef configSYSTICK_USE_LOW_POWER_TIMER
+  #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+#endif
+#ifndef configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ
+  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  1 /* Frequency of low power timer. Set to 1 if not used */
+#endif
 #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
   extern uint32_t SystemCoreClock;
@@ -100,32 +128,67 @@
 #ifndef configTOTAL_HEAP_SIZE
   #define configTOTAL_HEAP_SIZE                   (8192) /* size of heap in bytes */
 #endif /* configTOTAL_HEAP_SIZE */
-#define configUSE_HEAP_SECTION_NAME               0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
-#if configUSE_HEAP_SECTION_NAME
-#define configHEAP_SECTION_NAME_STRING            ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for gcc and "m_data_20000000" for IAR). Check your linker file for the name used. */
+#ifndef configUSE_HEAP_SECTION_NAME
+  #define configUSE_HEAP_SECTION_NAME             0 /* set to 1 if a custom section name (configHEAP_SECTION_NAME_STRING) shall be used, 0 otherwise */
+#endif
+#ifndef configHEAP_SECTION_NAME_STRING
+  #define configHEAP_SECTION_NAME_STRING          ".m_data_20000000" /* heap section name (use e.g. ".m_data_20000000" for KDS/gcc, ".bss.$SRAM_LOWER.FreeRTOS" for MCUXpresso or "m_data_20000000" for IAR). Check your linker file for the name used. */
 #endif
 #define configAPPLICATION_ALLOCATED_HEAP          0 /* set to one if application is defining heap ucHeap[] variable, 0 otherwise */
-#define configSUPPORT_DYNAMIC_ALLOCATION          1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
-#define configSUPPORT_STATIC_ALLOCATION           0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#ifndef configSUPPORT_DYNAMIC_ALLOCATION
+  #define configSUPPORT_DYNAMIC_ALLOCATION        1 /* 1: make dynamic allocation functions for RTOS available. 0: only static functions are allowed */
+#endif
+#ifndef configSUPPORT_STATIC_ALLOCATION
+  #define configSUPPORT_STATIC_ALLOCATION         0 /* 1: make static allocation functions for RTOS available. 0: only dynamic functions are allowed */
+#endif
 #define configUSE_NEWLIB_REENTRANT                (configUSE_HEAP_SCHEME==6) /* 1: a newlib reent structure will be allocated for each task; 0: no such reentr structure used */
 /*----------------------------------------------------------*/
-#define configMAX_TASK_NAME_LEN                   12 /* task name length in bytes */
+#ifndef configMAX_TASK_NAME_LEN
+  #define configMAX_TASK_NAME_LEN                 12 /* task name length in bytes */
+#endif
 #ifndef configUSE_TRACE_FACILITY
   #define configUSE_TRACE_FACILITY                1 /* 1: include additional structure members and functions to assist with execution visualization and tracing, 0: no runtime stats/trace */
 #endif
-#define configUSE_STATS_FORMATTING_FUNCTIONS      (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
+#ifndef configUSE_STATS_FORMATTING_FUNCTIONS
+  #define configUSE_STATS_FORMATTING_FUNCTIONS    (configUSE_TRACE_FACILITY || configGENERATE_RUN_TIME_STATS)
+#endif
 #define configUSE_16_BIT_TICKS                    0 /* 1: use 16bit tick counter type, 0: use 32bit tick counter type */
-#define configIDLE_SHOULD_YIELD                   1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION   (0 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
-#define configUSE_CO_ROUTINES                     0
-#define configUSE_MUTEXES                         1
-#define configCHECK_FOR_STACK_OVERFLOW            1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
-#define configCHECK_FOR_STACK_OVERFLOW_NAME       McuRTOS_vApplicationStackOverflowHook
-#define configUSE_RECURSIVE_MUTEXES               1
-#define configQUEUE_REGISTRY_SIZE                 5
-#define configUSE_QUEUE_SETS                      1
-#define configUSE_COUNTING_SEMAPHORES             1
-#define configUSE_APPLICATION_TASK_TAG            0
+#ifndef configIDLE_SHOULD_YIELD
+  #define configIDLE_SHOULD_YIELD                 1 /* 1: the IDEL task will yield as soon as possible. 0: The IDLE task waits until preemption. */
+#endif
+#ifndef configUSE_PORT_OPTIMISED_TASK_SELECTION
+  #define configUSE_PORT_OPTIMISED_TASK_SELECTION (0 && configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) /* 1: the scheduler uses an optimized task selection as defined by the port (if available). 0: normal task selection is used */
+#endif
+#ifndef configUSE_CO_ROUTINES
+  #define configUSE_CO_ROUTINES                   0
+#endif
+#ifndef configUSE_MUTEXES
+  #define configUSE_MUTEXES                       1
+#endif
+#ifndef configCHECK_FOR_STACK_OVERFLOW
+  #define configCHECK_FOR_STACK_OVERFLOW          1 /* 0 is disabling stack overflow. Set it to 1 for Method1 or 2 for Method2 */
+#endif
+#ifndef configCHECK_FOR_STACK_OVERFLOW_NAME
+  #define configCHECK_FOR_STACK_OVERFLOW_NAME     McuRTOS_vApplicationStackOverflowHook
+#endif
+#ifndef configUSE_RECURSIVE_MUTEXES
+  #define configUSE_RECURSIVE_MUTEXES             1
+#endif
+#ifndef configQUEUE_REGISTRY_SIZE
+  #define configQUEUE_REGISTRY_SIZE               5
+#endif
+#ifndef configUSE_QUEUE_SETS
+  #define configUSE_QUEUE_SETS                    1
+#endif
+#ifndef configUSE_COUNTING_SEMAPHORES
+  #define configUSE_COUNTING_SEMAPHORES           1
+#endif
+#ifndef configUSE_APPLICATION_TASK_TAG
+  #define configUSE_APPLICATION_TASK_TAG          0
+#endif
+#ifndef configUSE_TASK_NOTIFICATIONS
+  #define configUSE_TASK_NOTIFICATIONS            1
+#endif
 /* Tickless Idle Mode ----------------------------------------------------------*/
 #ifndef configUSE_TICKLESS_IDLE
   #define configUSE_TICKLESS_IDLE                 0 /* set to 1 for tickless idle mode, 0 otherwise */
@@ -148,18 +211,35 @@
 #endif
 #define configMAX_CO_ROUTINE_PRIORITIES           2 /* co-routine priorities can be from 0 up to this value-1 */
 
+/* the following needs to be defined (present) or not (not present)! */
 #define configTASK_RETURN_ADDRESS                 0 /* return address of task is zero */
 
-#define configRECORD_STACK_HIGH_ADDRESS           1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
+#ifndef configRECORD_STACK_HIGH_ADDRESS
+  #define configRECORD_STACK_HIGH_ADDRESS         1  /* 1: record stack high address for the debugger, 0: do not record stack high address */
+#endif
 
 /* Software timer definitions. */
-#define configUSE_TIMERS                          1 /* 1: enable software timers; 0: software timers disabled */
-#define configTIMER_TASK_PRIORITY                 (configMAX_PRIORITIES-1U) /* e.g. (configMAX_PRIORITIES-1U) */
-#define configTIMER_QUEUE_LENGTH                  10 /* size of queue for the timer task */
-#define configTIMER_TASK_STACK_DEPTH              (configMINIMAL_STACK_SIZE) /* e.g. (configMINIMAL_STACK_SIZE) */
-#define INCLUDE_xEventGroupSetBitFromISR          1 /* 1: function is included; 0: do not include function */
-#define INCLUDE_xTimerPendFunctionCall            1 /* 1: function is included; 0: do not include function */
-#define configUSE_DAEMON_TASK_STARTUP_HOOK        0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
+#ifndef configUSE_TIMERS
+  #define configUSE_TIMERS                        1 /* 1: enable software timers; 0: software timers disabled */
+#endif
+#ifndef configTIMER_TASK_PRIORITY
+  #define configTIMER_TASK_PRIORITY               (configMAX_PRIORITIES-1U) /* e.g. (configMAX_PRIORITIES-1U) */
+#endif
+#ifndef configTIMER_QUEUE_LENGTH
+  #define configTIMER_QUEUE_LENGTH                10 /* size of queue for the timer task */
+#endif
+#ifndef configTIMER_TASK_STACK_DEPTH
+  #define configTIMER_TASK_STACK_DEPTH            (configMINIMAL_STACK_SIZE) /* e.g. (configMINIMAL_STACK_SIZE) */
+#endif
+#ifndef INCLUDE_xEventGroupSetBitFromISR
+  #define INCLUDE_xEventGroupSetBitFromISR        1 /* 1: function is included; 0: do not include function */
+#endif
+#ifndef INCLUDE_xTimerPendFunctionCall
+  #define INCLUDE_xTimerPendFunctionCall          1 /* 1: function is included; 0: do not include function */
+#endif
+#ifndef configUSE_DAEMON_TASK_STARTUP_HOOK
+  #define configUSE_DAEMON_TASK_STARTUP_HOOK      0 /* 1: use application specific vApplicationDaemonTaskStartupHook(), 0: do not use hook */
+#endif
 
 /* Set configUSE_TASK_FPU_SUPPORT to 0 to omit floating point support even
 if floating point hardware is otherwise supported by the FreeRTOS port in use.
@@ -219,9 +299,11 @@ point support. */
 #endif
 
 /* Normal assert() semantics without relying on the provision of an assert.h header file. */
-#define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
-#if 0 /* version for RISC-V with a debug break: */
-#define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+#ifndef configASSERT
+  #define configASSERT(x) if((x)==0) { taskDISABLE_INTERRUPTS(); for( ;; ); }
+  #if 0 /* version for RISC-V with a debug break: */
+    #define configASSERT( x ) if( ( x ) == 0 ) { taskDISABLE_INTERRUPTS(); __asm volatile( "ebreak" ); for( ;; ); }
+  #endif
 #endif
 
 /* RISC-V only: If the target chip includes a Core Local Interrupter (CLINT) then set configCLINT_BASE_ADDRESS to the CLINT base address.

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.207, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-04-24, 10:26, # CodeGen: 505
+**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -52,7 +52,7 @@
 **         Deinit                - void McuGDisplaySSD1306_Deinit(void);
 **         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -98,7 +98,7 @@
   #include "FreeRTOS.h"
   #include "semphr.h"
 
-  static xSemaphoreHandle McuGDisplaySSD1306_displayMutex;
+  static SemaphoreHandle_t McuGDisplaySSD1306_displayMutex;
 #endif
 static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-6-5 RGB value */
  0x0000, 0x000A, 0x0014, 0xF81E, 0x0120, 0x012A, 0x0134, 0xF93E,

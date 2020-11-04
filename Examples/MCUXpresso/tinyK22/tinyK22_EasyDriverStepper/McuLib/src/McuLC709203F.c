@@ -214,6 +214,7 @@ uint8_t McuLC_GetICversion(uint16_t *pVersion) {
   return ReadCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_IC_VER, pVersion);
 }
 
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
 static const unsigned char *McuLC_CurrentDirectionToString(McuLC_CurrentDirection dir) {
   switch(dir) {
     case McuLC_CURRENT_DIR_AUTO:       return (const unsigned char*)"auto";
@@ -223,6 +224,7 @@ static const unsigned char *McuLC_CurrentDirectionToString(McuLC_CurrentDirectio
     default:                           return (const unsigned char*)"ERROR";
   }
 }
+#endif
 
 uint8_t McuLC_GetCurrentDirection(McuLC_CurrentDirection *pDir) {
   uint16_t val;
@@ -255,6 +257,7 @@ uint8_t McuLC_SetCurrentDirection(McuLC_CurrentDirection direction) {
   return WriteCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_CURRENT_DIRECTION, low, high);
 }
 
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[32], res;
 
@@ -350,7 +353,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   }
   return ERR_OK;
 }
+#endif /* MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED */
 
+#if MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED
 uint8_t McuLC_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   uint8_t res = ERR_OK;
   const uint8_t *p;
@@ -376,6 +381,7 @@ uint8_t McuLC_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
   }
   return res;
 }
+#endif /* MCULC709203F_CONFIG_PARSE_COMMAND_ENABLED */
 
 uint8_t McuLC_GetTemperatureMeasurementMode(bool *isI2Cmode) {
   uint16_t val=0;
@@ -393,6 +399,9 @@ uint8_t McuLC_SetTemperatureMeasurementMode(bool i2cMode) {
   return WriteCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, LC709203F_REG_EN_NTC, i2cMode?0x00:0x01, 0x0);
 }
 
+uint8_t McuLC_SetPowerMode(bool sleepMode) {
+  return WriteCmdWordChecked(LC709203F_I2C_SLAVE_ADDR, lC709203F_REG_PW_MODE, sleepMode?0x02:0x01, 0x00);
+}
 
 uint8_t McuLC_Init(void) {
   /* initializes LC709203F for Renata ICP543759PMT battery */

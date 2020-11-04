@@ -1,3 +1,12 @@
+/**
+ * \file
+ * \brief Configuration header file for SimpleEvents
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the SimpleEvents module.
+ */
+
 #ifndef __McuEvents_CONFIG_H
 #define __McuEvents_CONFIG_H
 
@@ -14,6 +23,9 @@
 /*! List of events */
 #define McuEvents_INIT /* Example event */ 0
 
-#define McuEvents_CONFIG_NOF_EVENTS    1 /*!< Number of events supported */
+#ifndef McuEvents_CONFIG_NOF_EVENTS
+  #define McuEvents_CONFIG_NOF_EVENTS    1
+    /*!< Number of events supported */
+#endif
 
 #endif /* __McuEvents_CONFIG_H */

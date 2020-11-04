@@ -1,8 +1,8 @@
 /*
  * McuDebounce.h
  *
- *  Created on: 29.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCUDEBOUNCE_H_
@@ -38,7 +38,7 @@ typedef enum {
 
 typedef struct {
   McuDbnc_State_e state;        /* data */
-  //uint32_t flags;
+  /* uint32_t flags; */
   uint32_t timerPeriodMs;       /* config: period of timer in ms */
   TimerHandle_t timer;          /* config: RTOS timer handle */
   uint32_t scanValue;           /* data: value of buttons at debounce start */
