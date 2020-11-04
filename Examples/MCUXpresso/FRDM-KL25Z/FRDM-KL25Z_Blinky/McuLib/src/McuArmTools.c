@@ -215,7 +215,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
-  int i, j;
+  unsigned int i, j;
 
   SIM_GetUniqueId(&tmp);
   /* init */
