@@ -147,7 +147,7 @@ int main(void) {
   /* Init FSL debug console. */
   BOARD_InitDebugConsole();
 
-  SWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
+ // SWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
 
   PRINTF("Hello World\n");
   SWO_PrintString("hello world using ITM console.\n", 0);

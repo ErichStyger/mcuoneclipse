@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.6" api_version="2.0.0" configuration="cdeaf0c0acd8b43e04d51d3c61864137" id="SDK_2.x_EVK-MIMXRT1064" name="EVK-MIMXRT1064" brief="This is SDK version 2.8.3 manifest file. It describes the content of the EVK-MIMXRT1064 and additional settings for tools that support SDK version 2.8.3">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <ksdk id="MCUXpresso283" name="MCUXpresso283" version="2.8.3" revision="Stage 927 2020-09-23"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.2.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.2.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MIMXRT1064DVL6A" id="evkmimxrt1064" name="EVK-MIMXRT1064" href="https://www.nxp.com/pip/MIMXRT1064-EVK" version="1.0.0">
+            <description>i.MX RT1064 Evaluation Kit</description>
+            <image path="MIR/marketing_data/1.0/boards/images" type="image">
+                <files mask="5-EVK-MIMXRT1064.gif"/>
+            </image>
+            <memory>
+                <memoryBlock addr="70000000" size="00400000" type="Flash" access="RO" id="PROGRAM_FLASH_evkmimxrt1064" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="80000000" size="01E00000" type="RAM" access="RW" id="BOARD_SDRAM_evkmimxrt1064" name="BOARD_SDRAM"/>
+                <memoryBlock addr="81E00000" size="00200000" type="RAM" access="RW" id="NCACHE_REGION_evkmimxrt1064" name="NCACHE_REGION"/>
+            </memory>
+            <total_memory flash_size_kb="4096" ram_size_kb="2048"/>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_evkmimxrt1064">
+                            <driverBinary path="devices/MIMXRT1064/mcuxpresso" type="binary">
+<files mask="MIMXRT1064.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+        </board>
+    </boards>
+    <devices>
+        <device family="MIMXRT1064" platform="i.MX" id="MIMXRT1064xxxxA" name="MIMXRT1064" full_name="MIMXRT1064xxxxA" version="1.0.0">
+            <description>i.MX MIMXRT1064 600MHz, 512KB SRAM Microcontrollers (MCUs) based on ARM Cortex-M7 Core</description>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+                <metadata key="compatible_device.segger" value="MIMXRT1064xxx6A"/>
+                <metadata key="compatible_device.pemicro" value="IMXRT1064"/>
+            </metadataSet>
+            <core fpu="true" type="cm7" id="core0_MIMXRT1064xxxxA" name="core0"/>
+            <memory>
+                <memoryBlock addr="70000000" size="00400000" type="Flash" access="RO" id="PROGRAM_FLASH_MIMXRT1064xxxxA" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00020000" type="RAM" access="RW" id="SRAM_DTC_MIMXRT1064xxxxA" name="SRAM_DTC"/>
+                <memoryBlock addr="00000000" size="00020000" type="RAM" access="RW" id="SRAM_ITC_MIMXRT1064xxxxA" name="SRAM_ITC"/>
+                <memoryBlock addr="20200000" size="000C0000" type="RAM" access="RW" id="SRAM_OC_MIMXRT1064xxxxA" name="SRAM_OC"/>
+            </memory>
+            <total_memory flash_size_kb="4096" ram_size_kb="768"/>
+            <package id="MIMXRT1064CVL5A" name="MIMXRT1064CVL5A"/>
+            <package id="MIMXRT1064CVJ5A" name="MIMXRT1064CVJ5A"/>
+            <package id="MIMXRT1064DVL6A" name="MIMXRT1064DVL6A"/>
+            <package id="MIMXRT1064DVJ6A" name="MIMXRT1064DVJ6A"/>
+            <evaluation_boards>
+                <evaluation_board name="evkmimxrt1064"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="--no-packed" id="misc.options.MIMXRT1064xxxxA" name="misc.options"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.MIMXRT1064xxxxA" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.MIMXRT1064xxxxA" name="internal.has_swo"/>
+                        <params value="RT1064_connect.scp" id="internal.connect.script.debug.mcuxpresso.MIMXRT1064xxxxA" name="internal.connect.script"/>
+                    </params>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MIMXRT1064xxxxA" id="device.MIMXRT1064_debugger.MIMXRT1064" name="MIMXRT1064_debugger" full_name="Device MIMXRT1064_debugger" brief="Device MIMXRT1064_debugger" version="1.0.0">
+            <source path="devices/MIMXRT1064" target_path="MIMXRT1064" type="xml">
+                <files mask="MIMXRT1064.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
