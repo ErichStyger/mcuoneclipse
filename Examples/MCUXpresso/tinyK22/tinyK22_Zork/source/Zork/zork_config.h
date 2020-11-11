@@ -17,13 +17,13 @@
   #include "McuShell.h"
   #define   printf   McuShell_printf
   #undef putchar
-  extern void CLS1_putchar(char ch);
+  extern void McuShell_putchar(char ch);
   #define   putchar  McuShell_putchar
 
-  extern unsigned CLS1_fprintf(void *stream, const char *fmt, ...);
+  extern unsigned McuShell_fprintf(void *stream, const char *fmt, ...);
   #define fprintf    McuShell_fprintf
 
-  extern char *CLS1_fgets(char *buf, int bufSize, void *channel);
+  extern char *McuShell_fgets(char *buf, int bufSize, void *channel);
   #define fgets      McuShell_fgets
 #endif
 

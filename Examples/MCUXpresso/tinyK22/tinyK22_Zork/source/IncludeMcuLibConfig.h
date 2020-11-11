@@ -53,6 +53,25 @@ Instructions:
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- FatFS ---------------------------*/
-#define McuLib_CONFIG_USE_FAT_FS             (0)
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "Zork on tinyK22"
+#define McuShell_CONFIG_MULTI_CMD_ENABLED             (1)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (128)
+#define McuShell_CONFIG_MULTI_CMD_SIZE                (250) /* max size of each command */
+#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0
+/* -------------------------------------------------*/
+/* RTT */
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (10)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (5)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (512)
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #define McuRTT_CONFIG_RTT_MAX_NUM_UP_BUFFERS          (2)
+  #define McuRTT_CONFIG_RTT_MAX_NUM_DOWN_BUFFERS        (2)
+#else
+  #define McuRTT_CONFIG_RTT_MAX_NUM_UP_BUFFERS          (1)
+  #define McuRTT_CONFIG_RTT_MAX_NUM_DOWN_BUFFERS        (1)
+#endif
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -16,8 +16,8 @@
 #define USE_CONSOLE       (1) /* required, using Console input/output */
 #define USE_MCURSES       (0) /* use mcurses */
 
-#define PL_CONFIG_USE_UART_SHELL     (0)
-#define PL_CONFIG_USE_RTT            (1)
+#define PL_CONFIG_USE_UART_SHELL     (1)
+#define PL_CONFIG_USE_RTT            (0)
 #define PL_CONFIG_USE_USB_CDC_SHELL  (0)
 
 void PL_Init(void);

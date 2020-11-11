@@ -47,7 +47,7 @@ integer *secptr;
 {
 	TIMEREC time;
 
-	TmDt1_GetTime(&time);
+	McuTimeDate_GetTime(&time);
 	*hrptr = time.Hour;
 	*minptr = time.Min;
 	*secptr = time.Sec;

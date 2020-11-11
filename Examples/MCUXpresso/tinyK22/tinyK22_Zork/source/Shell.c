@@ -13,6 +13,7 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuShellUart.h"
+#include "McuTimeDate.h"
 #if USE_FATFS
   #include "McuFatFS.h"
 #endif
@@ -41,6 +42,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand, /* Processor Expert Shell component, is first in list */
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
+  McuTimeDate_ParseCommand,
 #if USE_FATFS
   McuFatFS_ParseCommand,
 #endif
@@ -81,6 +83,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(ShellTask, "Shell", 900/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &ShellTaskHandle) != pdPASS) {
     for(;;){} /* error */
   }
+  McuShell_SetStdio(ios[0].stdio);
 }
 
 void SHELL_Deinit(void) {
