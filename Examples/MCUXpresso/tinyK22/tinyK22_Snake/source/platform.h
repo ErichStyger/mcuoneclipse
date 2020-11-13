@@ -9,9 +9,15 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-/* configuration makros: */
-#define USE_FATFS         (0) /* using FatFS with SD card */
-#define USE_SEMIHOSTING   (0) /* using semihosting with the debug probe for file I/O */
+
+#define PL_CONFIG_HAS_SNAKE_GAME    (1)
+
+#define PL_CONFIG_USE_I2C           (1) /* if I2C is enabled */
+#define PL_CONFIG_USE_OLED          (1 && PL_CONFIG_USE_I2C) /* if using OLED */
+#define PL_CONFIG_USE_SHELL         (1) /* if shell is enabled, uses RTT */
+
+#define PL_CONFIG_USE_HW_I2C        USE_HW_I2C /* defined in IncludeMcuLibConfig.h */
+
 
 #define PL_CONFIG_USE_UART_SHELL     (1)
 #define PL_CONFIG_USE_RTT            (0)
