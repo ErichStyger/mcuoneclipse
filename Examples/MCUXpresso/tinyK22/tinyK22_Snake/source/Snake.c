@@ -62,7 +62,6 @@ static McuGDisplaySSD1306_PixelDim snakeCols[SNAKE_MAX_LEN];
 /* of the snake {cols [snake_lenght], row [snake_lenght]} correspond to the tail */
 static McuGDisplaySSD1306_PixelDim snakeRow[SNAKE_MAX_LEN];
 
-#if 1
 static TaskHandle_t gameTaskHandle;
 static QueueHandle_t SNAKE_Queue;
 #define SNAKE_QUEUE_LENGTH     5
@@ -78,8 +77,16 @@ bool SNAKE_GameIsRunning(void) {
   return (taskState!=eSuspended); /* only if task is not suspended */
 }
 
+BaseType_t SNAKE_SendButtonEventFromISR(SNAKE_Event event, BaseType_t *pxHigherPriorityTaskWoken) {
+  if (event==SNAKE_ENTER_EVENT) { /* center button is used to pause/continue game */
+    event = SNAKE_START_STOP_EVENT;
+  }
+  return xQueueSendFromISR(SNAKE_Queue, &event, pxHigherPriorityTaskWoken);
+}
+
+/* below can be used from non-interrupts */
 void SNAKE_SendEvent(SNAKE_Event event) {
-  if (event==SNAKE_SIDE_BOTTOM_EVENT || event==SNAKE_SIDE_TOP_EVENT || event==SNAKE_ENTER_EVENT) {
+  if (event==SNAKE_ENTER_EVENT) { /* center button is used to pause/continue game */
     event = SNAKE_START_STOP_EVENT;
   } else if (event==SNAKE_RESUME_GAME) {
     vTaskResume(gameTaskHandle);
@@ -92,10 +99,10 @@ void SNAKE_SendEvent(SNAKE_Event event) {
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
     uint8_t buf[32];
 
-    McuUtility_strcpy(buf, sizeof(buf), "SNAKE_SendEvent: ");
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"SNAKE_SendEvent: ");
     McuUtility_strcatNum32u(buf, sizeof(buf), event);
-    McuUtility_strcat(buf, sizeof(buf), "\r\n");
-    McuSystemView_Print(buf);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    McuSystemView_Print((char*)buf);
 #endif
     if (xQueueSendToBack(SNAKE_Queue, &event, portMAX_DELAY)!=pdPASS) {
       for(;;){} /* ups? */
@@ -119,37 +126,17 @@ SNAKE_Event SNAKE_ReceiveEvent(bool blocking) {
   {
     uint8_t buf[32];
 
-    McuUtility_strcpy(buf, sizeof(buf), "SNAKE_ReceiveEvent: ");
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"SNAKE_ReceiveEvent: ");
     McuUtility_strcatNum32u(buf, sizeof(buf), event);
-    McuUtility_strcat(buf, sizeof(buf), "\r\n");
-    McuSystemView_Print(buf);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    McuSystemView_Print((char*)buf);
   }
 #endif
   return event;
 }
-#endif
 
 static void waitAnyButton(void) {
   (void)SNAKE_ReceiveEvent(TRUE); /* blocking wait */
-}
-
-static int random(int min, int max) {
-  TickType_t cnt;
-  
-  cnt = xTaskGetTickCount();
-  cnt &= 0xff; /* reduce to 8 bits */
-  if (max>64) {
-    cnt >>= 1;
-  } else {
-    cnt >>= 2;
-  }
-  if (cnt<min) {
-    cnt = min;
-  }
-  if (cnt>max) {
-    cnt = max/2;
-  }
-  return cnt;
 }
 
 static void showPause(void) {
@@ -277,8 +264,8 @@ static void eatFood(void) {
     snakeLen = SNAKE_MAX_LEN-1;
   }
   /* new random coordinates for food */
-  xFood = random(1, MAX_WIDTH-3);
-  yFood = random(1, MAX_HEIGHT-3);
+  xFood = McuUtility_random(1, MAX_WIDTH-3);
+  yFood = McuUtility_random(1, MAX_HEIGHT-3);
   drawSnake();  
 }
 
@@ -368,11 +355,7 @@ static void gameover(void) {
   McuGDisplaySSD1306_UpdateFull();
   McuWait_WaitOSms(4000);
   waitAnyButton();
- 
-#if 1 /*! \todo check implementation */
-  //LCD_SetEvent(LCD_REFRESH); /* \TODO */
-  vTaskSuspend(NULL); /* pause task until resumed again */
-#endif
+//  vTaskSuspend(NULL); /* pause task until resumed again */
   resetGame();  
 }
 
@@ -456,7 +439,7 @@ static void intro(void) {
   McuFontDisplay_WriteString((unsigned char*)"Snake Game", McuGDisplaySSD1306_COLOR_WHITE, &x, &y, font);
   y += totalHeight;
   x = (McuGDisplaySSD1306_GetWidth()-McuFontDisplay_GetStringWidth((unsigned char*)"by Erich Styger", font, NULL))/2; /* center text */
-  McuFontDisplay_WriteString((unsigned char*)"McuOnEclipse", McuGDisplaySSD1306_COLOR_WHITE, &x, &y, font);
+  McuFontDisplay_WriteString((unsigned char*)"by Erich Styger", McuGDisplaySSD1306_COLOR_WHITE, &x, &y, font);
   McuGDisplaySSD1306_UpdateFull();
   McuWait_WaitOSms(2000);
 }
@@ -466,6 +449,7 @@ static void SnakeTask(void *pvParameters) {
   McuSSD1306_Clear(); /* clear the display */
   McuSSD1306_PrintString(0, 0, (unsigned char*)"Welcome to SNAKE!");
   intro();
+  McuUtility_randomSetSeed(xTaskGetTickCount());
   resetGame();
   drawSnake();
   for(;;) {

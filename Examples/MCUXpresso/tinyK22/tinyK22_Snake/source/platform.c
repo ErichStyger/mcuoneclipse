@@ -32,6 +32,7 @@
 #include "McuShellUart.h"
 #include "McuGFont.h"
 #include "McuFontDisplay.h"
+#include "buttons.h"
 
 static void InitPins(void) {
   /* turn on clocking for all the GPIO ports we are going to use for buttons, LEDs and GPIO to Rasbperry */
@@ -76,6 +77,7 @@ void PL_Init(void) {
 
   /* initialize my own modules */
   McuShellUart_Init();
+  BTN_Init();
   SHELL_Init();
   SNAKE_Init();
 }
