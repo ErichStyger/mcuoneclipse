@@ -330,7 +330,7 @@ void BTN_Init(void) {
   /* all buttons are on Port B */
   NVIC_SetPriority(PORTB_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTB_IRQn);
-  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+  #elif TINYK22_HAT_VERSION>=4
   /* left and right are on Port A. up, down and push are on Port B */
   NVIC_SetPriority(PORTA_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
   EnableIRQ(PORTA_IRQn);
@@ -367,7 +367,7 @@ void BTN_Deinit(void) {
 #if PL_CONFIG_USE_KBI
   #if TINYK22_HAT_VERSION==3
     DisableIRQ(PORTB_IRQn); /* all buttons are on Port B */
-  #elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+  #elif TINYK22_HAT_VERSION>=4
     DisableIRQ(PORTA_IRQn); /* left and right are on Port A */
     DisableIRQ(PORTB_IRQn); /* up, down, push are on Port B */
   #endif
