@@ -100,7 +100,7 @@ static void UartTask(void *pvParams) {
   static UART_MyDeviceDesc myDevice; /* user data structure, used for status */
   static lpuart_handle_t sdkUartHandle; /* SDK UART device handle struct */
   status_t status;
-  uint32_t receivedBytes;
+  size_t receivedBytes;
 
   (void)pvParams; /* not used parameter */
 
