@@ -14,5 +14,4 @@
 void PL_InitFromTask(void);
 void PL_Init(void);
 
-
 #endif /* PLATFORM_H_ */
