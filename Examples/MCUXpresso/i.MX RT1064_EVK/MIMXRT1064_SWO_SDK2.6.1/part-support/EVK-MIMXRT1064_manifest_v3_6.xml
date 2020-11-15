@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.6" api_version="2.0.0" configuration="cdeaf0c0acd8b43e04d51d3c61864137" id="SDK_2.x_EVK-MIMXRT1064" name="EVK-MIMXRT1064" brief="This is SDK version 2.8.3 manifest file. It describes the content of the EVK-MIMXRT1064 and additional settings for tools that support SDK version 2.8.3">
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.6" api_version="2.0.0" configuration="c66ec4c932580eef65195de02ccc32fa" id="SDK_2.x_EVK-MIMXRT1064" name="EVK-MIMXRT1064" brief="This is SDK version 2.8.5 manifest file. It describes the content of the EVK-MIMXRT1064 and additional settings for tools that support SDK version 2.8.5">
     <defines>
         <define name="CPU_$|package|" value=""/>
         <define name="CPU_$|package|_$|core|" value=""/>
     </defines>
-    <ksdk id="MCUXpresso283" name="MCUXpresso283" version="2.8.3" revision="Stage 927 2020-09-23"/>
+    <ksdk id="MCUXpresso285" name="MCUXpresso285" version="2.8.5" revision="Epluginsite 386 2020-11-02"/>
     <compilers>
         <compiler type="gcc" id="compiler_gcc" name="gcc"/>
     </compilers>
@@ -94,6 +94,29 @@ ${load}</script>
                 <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
                     <drivers>
                         <driver id_refs="PROGRAM_FLASH_evkmimxrt1064">
+                            <driverBinary path="devices/MIMXRT1064/mcuxpresso" type="binary">
+<files mask="MIMXRT1064.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+        </board>
+        <board package="MIMXRT1064DVL6A" type="kit" id="evkmimxrt1064_agm01" name="EVK-MIMXRT1064-AGM01" href="" version="1.0.0">
+            <description>i.MX RT1064 Evaluation Kit with Sensor Toolbox Development Boards for a 9-Axis Solution using FXAS21002C and FXOS8700CQ</description>
+            <image path="MIR/marketing_data/1.0/kits/images" type="image">
+                <files mask="169-EVK-MIMXRT1064-AGM01.gif"/>
+            </image>
+            <memory>
+                <memoryBlock addr="70000000" size="00400000" type="Flash" access="RO" id="PROGRAM_FLASH_evkmimxrt1064_agm01" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="80000000" size="01E00000" type="RAM" access="RW" id="BOARD_SDRAM_evkmimxrt1064_agm01" name="BOARD_SDRAM"/>
+                <memoryBlock addr="81E00000" size="00200000" type="RAM" access="RW" id="NCACHE_REGION_evkmimxrt1064_agm01" name="NCACHE_REGION"/>
+            </memory>
+            <total_memory flash_size_kb="4096" ram_size_kb="2048"/>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_evkmimxrt1064_agm01">
                             <driverBinary path="devices/MIMXRT1064/mcuxpresso" type="binary">
 <files mask="MIMXRT1064.cfx"/>
                             </driverBinary>
