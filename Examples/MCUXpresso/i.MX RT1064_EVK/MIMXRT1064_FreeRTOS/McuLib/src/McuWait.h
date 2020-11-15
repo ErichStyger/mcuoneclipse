@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.085, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-10-14, 06:52, # CodeGen: 585
+**     Date/Time   : 2020-10-06, 07:32, # CodeGen: 692
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -26,8 +26,9 @@
 **         Waitns         - void McuWait_Waitns(uint16_t ns);
 **         WaitOSms       - void McuWait_WaitOSms(void);
 **         Init           - void McuWait_Init(void);
+**         Deinit         - void McuWait_Deinit(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -241,6 +242,18 @@ void McuWait_Init(void);
 **
 **     Description :
 **         Driver initialization routine.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void McuWait_Deinit(void);
+/*
+** ===================================================================
+**     Method      :  Deinit (component Wait)
+**
+**     Description :
+**         Driver de-initialization routine
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

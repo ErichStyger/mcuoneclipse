@@ -6,7 +6,7 @@
 **     Component   : SeggerRTT
 **     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-27, 17:20, # CodeGen: 576
+**     Date/Time   : 2020-04-20, 07:03, # CodeGen: 599
 **     Abstract    :
 **
 **     Settings    :
@@ -96,7 +96,9 @@
 /* MODULE McuRTT. */
 
 #include "McuRTT.h"
-#include "McuWait.h"
+#if McuRTT_CONFIG_BLOCKING_SEND
+  #include "McuWait.h"
+#endif
 
 /* default standard I/O struct */
 McuShell_ConstStdIOType McuRTT_stdio = {

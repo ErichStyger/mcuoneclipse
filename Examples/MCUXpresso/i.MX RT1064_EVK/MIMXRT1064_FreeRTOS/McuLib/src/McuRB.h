@@ -32,8 +32,20 @@ size_t McuRB_NofFreeElements(McuRB_Handle_t rb);
 /* put an element into the ring buffer. Returns ERR_OK if OK. */
 uint8_t McuRB_Put(McuRB_Handle_t rb, void *data);
 
+/* put a number of elements into the buffer */
+uint8_t McuRB_Putn(McuRB_Handle_t rb, void *data, size_t nof);
+
+/* clear the ring buffer */
+void McuRB_Clear(McuRB_Handle_t rb);
+
 /* get an element from the ring buffer. Returns ERR_OK if OKy. */
 uint8_t McuRB_Get(McuRB_Handle_t rb, void *data);
+
+/* peek an element of the ring buffer without removing it */
+uint8_t McuRB_Peek(McuRB_Handle_t rb, size_t index, void *data);
+
+/* compare elements in the ring buffer with data. Returns 0 if the data is the same, -1 otherwise */
+uint8_t McuRB_Compare(McuRB_Handle_t rb, size_t index, void *data, size_t nof);
 
 /* return a default ring buffer configuration */
 void McuRB_GetDefaultconfig(McuRB_Config_t *config);

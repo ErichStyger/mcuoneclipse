@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for DS18B20
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the DS128B20 1-Wire temperature sensor.
  */

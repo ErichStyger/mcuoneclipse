@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerSystemView
-**     Version     : Component 01.070, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.071, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-05-30, 10:44, # CodeGen: 534
+**     Date/Time   : 2020-10-11, 10:32, # CodeGen: 699
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
 **          Component name                                 : McuSystemView
-**          Version                                        : V2.52b
+**          Version                                        : V3.12
 **          Application Name                               : "Demo Application"
 **          Device Name                                    : "Cortex"
 **          RAM Base                                       : 0x20000000
@@ -49,7 +49,7 @@
 **         Deinit         - void McuSystemView_Deinit(void);
 **         Init           - void McuSystemView_Init(void);
 **
-** * (c) Copyright Segger, 2019
+** * (c) Copyright Segger, 2020
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
@@ -91,23 +91,10 @@
 **  @{
 */         
 
-#ifndef __McuSystemView_H
-#define __McuSystemView_H
-
 /* MODULE McuSystemView. */
-#include "McuLib.h" /* SDK and API used */
-#include "McuSystemViewconfig.h" /* configuration */
 
-/* Include inherited components */
-#include "McuRTT.h"
-#include "McuLib.h"
+#include "McuSystemView.h"
 
-#include "SEGGER_SYSVIEW.h"
-
-
-
-
-void McuSystemView_Init(void);
 /*
 ** ===================================================================
 **     Method      :  Init (component SeggerSystemView)
@@ -118,9 +105,10 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-#define McuSystemView_OnUserStart(UserId) \
-  SEGGER_SYSVIEW_OnUserStart(UserId)
+void McuSystemView_Init(void)
+{
+  SEGGER_SYSVIEW_Conf(); /* initialize Segger System Viewer */
+}
 
 /*
 ** ===================================================================
@@ -135,9 +123,12 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-#define McuSystemView_OnUserStop(UserId) \
-  SEGGER_SYSVIEW_OnUserStop(UserId)
+/**
+void McuSystemView_OnUserStart(unsigned UserId)
+{
+  Implemented as macro on the header file.
+}
+*/
 
 /*
 ** ===================================================================
@@ -152,9 +143,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/**
+void McuSystemView_OnUserStop(unsigned UserId)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_RecordEnterISR() \
-  SEGGER_SYSVIEW_RecordEnterISR()
 /*
 ** ===================================================================
 **     Method      :  RecordEnterISR (component SeggerSystemView)
@@ -166,9 +161,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_RecordEnterISR(void)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_RecordExitISR() \
-  SEGGER_SYSVIEW_RecordExitISR()
 /*
 ** ===================================================================
 **     Method      :  RecordExitISR (component SeggerSystemView)
@@ -180,9 +179,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_RecordExitISR(void)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_Print(s) \
-  SEGGER_SYSVIEW_Print(s)
 /*
 ** ===================================================================
 **     Method      :  Print (component SeggerSystemView)
@@ -195,9 +198,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_Print(const char *s)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_Warn(s) \
-  SEGGER_SYSVIEW_Warn(s)
 /*
 ** ===================================================================
 **     Method      :  Warn (component SeggerSystemView)
@@ -210,9 +217,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_Warn(const char *s)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_Error(s) \
-  SEGGER_SYSVIEW_Error(s)
 /*
 ** ===================================================================
 **     Method      :  Error (component SeggerSystemView)
@@ -225,8 +236,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_Error(const char *s)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_PrintfHost    SEGGER_SYSVIEW_PrintfHost
 /*
 ** ===================================================================
 **     Method      :  PrintfHost (component SeggerSystemView)
@@ -240,8 +256,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_PrintfHost(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_PrintfTarget   SEGGER_SYSVIEW_PrintfTarget
 /*
 ** ===================================================================
 **     Method      :  PrintfTarget (component SeggerSystemView)
@@ -255,8 +276,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_PrintfTarget(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_WarnfHost  SEGGER_SYSVIEW_WarnfHost
 /*
 ** ===================================================================
 **     Method      :  WarnfHost (component SeggerSystemView)
@@ -270,8 +296,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_WarnfHost(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_WarnfTarget   SEGGER_SYSVIEW_WarnfTarget
 /*
 ** ===================================================================
 **     Method      :  WarnfTarget (component SeggerSystemView)
@@ -285,8 +316,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_WarnfTarget(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_ErrorfHost   SEGGER_SYSVIEW_ErrorfHost
 /*
 ** ===================================================================
 **     Method      :  ErrorfHost (component SeggerSystemView)
@@ -300,8 +336,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_ErrorfHost(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-#define McuSystemView_ErrorfTarget   SEGGER_SYSVIEW_ErrorfTarget
 /*
 ** ===================================================================
 **     Method      :  ErrorfTarget (component SeggerSystemView)
@@ -315,9 +356,12 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-#define McuSystemView_DisableEvents(DisableMask) \
-  SEGGER_SYSVIEW_DisableEvents(DisableMask)
+/*
+void McuSystemView_ErrorfTarget(const char *s, ...)
+{
+  Implemented as macro on the header file.
+}
+*/
 
 /*
 ** ===================================================================
@@ -331,9 +375,12 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
-
-#define McuSystemView_EnableEvents(EnableMask) \
-  SEGGER_SYSVIEW_EnableEvents(EnableMask)
+/*
+void McuSystemView_DisableEvents(uint32_t DisableMask)
+{
+  Implemented as macro on the header file.
+}
+*/
 
 /*
 ** ===================================================================
@@ -347,8 +394,13 @@ void McuSystemView_Init(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+/*
+void McuSystemView_EnableEvents(uint32_t EnableMask)
+{
+  Implemented as macro on the header file.
+}
+*/
 
-void McuSystemView_Deinit(void);
 /*
 ** ===================================================================
 **     Method      :  Deinit (component SeggerSystemView)
@@ -359,11 +411,13 @@ void McuSystemView_Deinit(void);
 **     Returns     : Nothing
 ** ===================================================================
 */
+void McuSystemView_Deinit(void)
+{
+  /* nothing needed */
+}
 
 /* END McuSystemView. */
 
-#endif
-/* ifndef __McuSystemView_H */
 /*!
 ** @}
 */

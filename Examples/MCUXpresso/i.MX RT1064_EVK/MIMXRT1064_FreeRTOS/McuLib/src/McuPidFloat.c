@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PID_Float
-**     Version     : Component 01.006, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.007, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-08-14, 06:24, # CodeGen: 679
 **     Abstract    :
 **
 **     Settings    :
@@ -18,7 +18,7 @@
 **         Set_Ti  - void McuPidFloat_Set_Ti(float t);
 **         Set_Td  - void McuPidFloat_Set_Td(float t);
 **
-** * (c) Copyright Carlos Alvarez, 2013
+** * (c) Copyright Carlos Alvarez, 2013-2020
 **  * For non-commercial use only.
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse

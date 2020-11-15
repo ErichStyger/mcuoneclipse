@@ -2,7 +2,7 @@
  * Copyright (c) 2019, Erich Styger
  * All rights reserved.
  *
- * Configuration header file for McuDebounc
+ * Configuration header file for McuDebounce
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.107, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-01-29, 06:51, # CodeGen: 595
+**     Date/Time   : 2020-05-04, 08:06, # CodeGen: 604
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -55,6 +55,7 @@
 **         RequestSerial                   - void McuShell_RequestSerial(void);
 **         ReleaseSerial                   - void McuShell_ReleaseSerial(void);
 **         ReadAndParseWithCommandTableExt - uint8_t McuShell_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t...
+**         ReadCommandLine                 - uint8_t McuShell_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize,...
 **         ReadAndParseWithCommandTable    - uint8_t McuShell_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t...
 **         ParseWithCommandTableExt        - uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd,...
 **         ParseWithCommandTable           - uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd,...
@@ -68,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -741,6 +742,7 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
   for(;;) { /* breaks */
     if (i>sizeof(buf)-2) {
       res = ERR_FAILED;
+      McuShell_PrintCommandFailed(buf, io);
       break; /* buffer overflow */
     }
     buf[i] = *cmd;
@@ -915,6 +917,58 @@ uint8_t McuShell_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t cmdBufS
     }
   }
   return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  ReadCommandLine (component Shell)
+**
+**     Description :
+**         Similar to ReadAndParseWithCommandTableExt, but does not
+**         call the parser. Reads characters from the default input
+**         channel and appends it to the buffer. Once a new line has
+**         been detected, it  removes it and returns ERR_OK
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**     Returns     :
+**         ---             - Error code, ERR_OK if a complete line has
+**                           been detected
+** ===================================================================
+*/
+uint8_t McuShell_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize, McuShell_ConstStdIOType *io)
+{
+  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
+  size_t len;
+
+  if (io==NULL) { /* no I/O handler? */
+    return ERR_FAILED;
+  }
+  len = McuUtility_strlen((const char*)cmdBuf);
+  if (McuShell_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
+    len = McuUtility_strlen((const char*)cmdBuf); /* length of buffer string */
+    if (len==0) { /* error case */
+      return ERR_FAILED;
+    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
+      cmdBuf[0] = '\0';
+    }
+    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
+      cmdBuf[0] = '\0'; /* start again */
+      return ERR_OVERFLOW;
+    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
+      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
+      return ERR_OK;
+    } else {
+      /* continue to append to buffer */
+    }
+  }
+  return ERR_BUSY;
 }
 
 /*

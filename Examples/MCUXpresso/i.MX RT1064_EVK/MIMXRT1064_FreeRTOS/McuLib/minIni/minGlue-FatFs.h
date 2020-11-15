@@ -12,9 +12,9 @@
 #ifndef _MINGLUE_FATFS_H__
 #define _MINGLUE_FATFS_H__
 
-#include "MinINIconfig.h" /* MinIni config file */
+#include "McuMinINIconfig.h" /* MinIni config file TEST */
 
-#if MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_FAT_FS
+#if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS
 
 #ifdef __HIWARE__
   /* switching off some warnings */
@@ -53,7 +53,7 @@ int ini_rename(TCHAR *source, const TCHAR *dest);
   #define ini_atof(string)              (INI_REAL)strtod((string),NULL)
 #endif /* defined INI_REAL */
 
-#endif /* MinINI_CONFIG_FS==MinINI_CONFIG_FS_TYPE_FAT_FS */
+#endif /* McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS */
 
 #endif /* _MINGLUE-FATFS_H__ */
 

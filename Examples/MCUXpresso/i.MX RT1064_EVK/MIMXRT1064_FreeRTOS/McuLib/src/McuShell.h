@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.107, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-12-21, 16:19, # CodeGen: 594
+**     Date/Time   : 2020-05-30, 16:02, # CodeGen: 654
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -55,6 +55,7 @@
 **         RequestSerial                   - void McuShell_RequestSerial(void);
 **         ReleaseSerial                   - void McuShell_ReleaseSerial(void);
 **         ReadAndParseWithCommandTableExt - uint8_t McuShell_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t...
+**         ReadCommandLine                 - uint8_t McuShell_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize,...
 **         ReadAndParseWithCommandTable    - uint8_t McuShell_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t...
 **         ParseWithCommandTableExt        - uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd,...
 **         ParseWithCommandTable           - uint8_t McuShell_ParseWithCommandTable(const uint8_t *cmd,...
@@ -68,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -159,6 +160,46 @@
 
 /* other includes needed */
 #include <stddef.h> /* for size_t */
+
+
+/* VTxxx control and color codes which can be used in terminals supporting color. See https://en.wikipedia.org/wiki/ANSI_escape_code */
+/* general control */
+#define McuShell_ANSI_CONTROL_RESET                "\033[0m"        /* reset to defaults */
+#define McuShell_ANSI_CONTROL_CLEAR                "\033[2J"        /* clear terminal */
+/* text colors: */
+#define McuShell_ANSI_COLOR_TEXT_BLACK           "\033[2;30m"
+#define McuShell_ANSI_COLOR_TEXT_RED             "\033[2;31m"
+#define McuShell_ANSI_COLOR_TEXT_GREEN           "\033[2;32m"
+#define McuShell_ANSI_COLOR_TEXT_YELLOW          "\033[2;33m"
+#define McuShell_ANSI_COLOR_TEXT_BLUE            "\033[2;34m"
+#define McuShell_ANSI_COLOR_TEXT_MAGENTA         "\033[2;35m"
+#define McuShell_ANSI_COLOR_TEXT_CYAN            "\033[2;36m"
+#define McuShell_ANSI_COLOR_TEXT_WHITE           "\033[2;37m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_BLACK    "\033[1;30m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_RED      "\033[1;31m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_GREEN    "\033[1;32m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_YELLOW   "\033[1;33m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_BLUE     "\033[1;34m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_MAGENTA  "\033[1;35m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_CYAN     "\033[1;36m"
+#define McuShell_ANSI_COLOR_TEXT_BRIGHT_WHITE    "\033[1;37m"
+/* text background colors */
+#define McuShell_ANSI_COLOR_BG_BLACK             "\033[24;40m"
+#define McuShell_ANSI_COLOR_BG_RED               "\033[24;41m"
+#define McuShell_ANSI_COLOR_BG_GREEN             "\033[24;42m"
+#define McuShell_ANSI_COLOR_BG_YELLOW            "\033[24;43m"
+#define McuShell_ANSI_COLOR_BG_BLUE              "\033[24;44m"
+#define McuShell_ANSI_COLOR_BG_MAGENTA           "\033[24;45m"
+#define McuShell_ANSI_COLOR_BG_CYAN              "\033[24;46m"
+#define McuShell_ANSI_COLOR_BG_WHITE             "\033[24;47m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_BLACK      "\033[4;40m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_RED        "\033[4;41m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_GREEN      "\033[4;42m"
+#define McuShell_ANSI_COLOR_BG_BRIGHT_YELLOW     "\033[4;43m"
+#define McuShell_ANSI_COLOR_BRIGHT_BLUE          "\033[4;44m"
+#define McuShell_ANSI_COLOR_BRIGHT_MAGENTA       "\033[4;45m"
+#define McuShell_ANSI_COLOR_BRIGHT_CYAN          "\033[4;46m"
+#define McuShell_ANSI_COLOR_BRIGHT_WHITE         "\033[4;47m"
 
 /* settings for command line history */
 #define McuShell_HISTORY_ENABLED  0    /* 1: enabled, 0: disabled */
@@ -813,6 +854,31 @@ uint8_t McuShell_ParseWithCommandTableExt(const uint8_t *cmd, McuShell_ConstStdI
 **                           command prompt printed
 **     Returns     :
 **         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t McuShell_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize, McuShell_ConstStdIOType *io);
+/*
+** ===================================================================
+**     Method      :  ReadCommandLine (component Shell)
+**
+**     Description :
+**         Similar to ReadAndParseWithCommandTableExt, but does not
+**         call the parser. Reads characters from the default input
+**         channel and appends it to the buffer. Once a new line has
+**         been detected, it  removes it and returns ERR_OK
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**     Returns     :
+**         ---             - Error code, ERR_OK if a complete line has
+**                           been detected
 ** ===================================================================
 */
 

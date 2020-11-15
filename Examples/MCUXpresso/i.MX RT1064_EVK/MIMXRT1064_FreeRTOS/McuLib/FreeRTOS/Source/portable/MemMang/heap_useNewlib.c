@@ -1,3 +1,4 @@
+/* Copyright (C) Dave Nadler 2017, All Rights Reserved. */
 #include "FreeRTOSConfig.h"
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==6)
 /**
@@ -53,7 +54,7 @@
 #include <malloc.h> // mallinfo...
 #include <errno.h>  // ENOMEM
 
-#include "freeRTOS.h" // defines public interface we're implementing here
+#include "FreeRTOS.h" // defines public interface we're implementing here
 #if !defined(configUSE_NEWLIB_REENTRANT) ||  (configUSE_NEWLIB_REENTRANT!=1)
   #warning "#define configUSE_NEWLIB_REENTRANT 1 // Required for thread-safety of newlib sprintf, strtok, etc..."
   // If you're *really* sure you don't need FreeRTOS's newlib reentrancy support, remove this warning...
