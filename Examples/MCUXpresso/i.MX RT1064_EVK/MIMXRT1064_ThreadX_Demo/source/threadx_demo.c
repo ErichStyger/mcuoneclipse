@@ -60,6 +60,12 @@ void thread_6_and_7_entry(ULONG thread_input);
 /*******************************************************************************
  * Code
  ******************************************************************************/
+
+
+#ifdef TX_ENABLE_EVENT_TRACE /* << EST */
+UCHAR my_trace_buffer[64000];
+#endif
+
 /* Define main entry point.  */
 int main()
 {
@@ -73,10 +79,8 @@ int main()
 
     /* This sentence must be called before tx_kernel_enter(). */
     systick_cycles = (SystemCoreClock / TX_TIMER_TICKS_PER_SECOND) - 1;
-
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
-
     return 0;
 }
 
@@ -85,6 +89,18 @@ void tx_application_define(void *first_unused_memory)
 {
     CHAR *pointer = TX_NULL;
 
+#ifdef TX_ENABLE_EVENT_TRACE /* << EST */
+    /* Enable event tracing using the global "my_trace_buffer" memory and supporting a maximum of 30 ThreadX objects in the registry. */
+    UINT status;
+	status = tx_trace_enable (&my_trace_buffer, sizeof(my_trace_buffer), 30);
+    if (status!=TX_SUCCESS ) {
+      for(;;) {}
+    }
+	status = tx_trace_event_unfilter(TX_TRACE_ALL_EVENTS);
+    if (status!=TX_SUCCESS ) {
+      for(;;) {}
+    }
+#endif
     /* Check whether the size of first_unused_memory is enough. */
     if (GET_UNUSED_MEM_SIZE() < DEMO_BYTE_POOL_SIZE)
     {
@@ -268,6 +284,7 @@ void thread_3_and_4_entry(ULONG thread_input)
        below shows, these function compete for ownership of semaphore_0.  */
     while (1)
     {
+    	tx_trace_user_event_insert(4096, 1, 2, 3, 4); // << EST */
         /* Increment the thread counter.  */
         if (thread_input == 3)
             thread_3_counter++;
