@@ -64,6 +64,7 @@ void thread_6_and_7_entry(ULONG thread_input);
 
 #ifdef TX_ENABLE_EVENT_TRACE /* << EST */
 UCHAR my_trace_buffer[64000];
+uint8_t *RecorderDataPtr;
 #endif
 
 /* Define main entry point.  */
@@ -75,6 +76,7 @@ int main()
     BOARD_InitBootClocks();
     BOARD_InitDebugConsole();
 
+    RecorderDataPtr = my_trace_buffer;
     PRINTF("THREADX example ...\r\n");
 
     /* This sentence must be called before tx_kernel_enter(). */
