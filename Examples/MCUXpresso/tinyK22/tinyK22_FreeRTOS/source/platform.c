@@ -22,15 +22,15 @@ void PL_Init(void) {
   /* initialize McuLib modules */
   McuLib_Init();
   McuWait_Init();
+  McuRTT_Init();
   McuRTOS_Init();
   McuUtility_Init();
   McuArmTools_Init();
   McuCriticalSection_Init();
-  McuRTT_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #elif configUSE_PERCEPIO_TRACE_HOOKS
-  McuPercepio_Startup();
+  // McuPercepio_Startup(); /* done in McuRTOS_Init() */
   //vTraceEnable(TRC_START);
 #endif
   McuGPIO_Init();
