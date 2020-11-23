@@ -6,12 +6,12 @@
 **     Component   : FreeRTOS
 **     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
+**     Date/Time   : 2020-09-23, 21:12, # CodeGen: 685
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.2.1
+**          RTOS Version                                   : V10.4.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings

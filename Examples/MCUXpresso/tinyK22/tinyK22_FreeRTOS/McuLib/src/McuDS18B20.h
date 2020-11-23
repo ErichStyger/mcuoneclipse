@@ -5,9 +5,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : DS18B20
-**     Version     : Component 01.019, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
+**     Date/Time   : 2020-08-14, 06:24, # CodeGen: 679
 **     Abstract    :
 **
 This is a component for the Maxim DS18B20 1-Wire temperature sensor.
@@ -36,7 +36,7 @@ This is a component for the Maxim DS18B20 1-Wire temperature sensor.
 **         Deinit                  - void McuDS18B20_Deinit(void);
 **
 ** * Copyright (c) Original implementation: Omar Isaí Pinales Ayala, 2014, all rights reserved.
-**  * Updated and maintained by Erich Styger, 2014-2019
+**  * Updated and maintained by Erich Styger, 2014-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

@@ -6,7 +6,7 @@
 **     Component   : GDisplay
 **     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
+**     Date/Time   : 2020-10-13, 07:43, # CodeGen: 707
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -101,9 +101,6 @@
 extern "C" {
 #endif
 
-
-
-
 #ifndef _TIMAGE_IS_DEFINED
   #define _TIMAGE_IS_DEFINED
   /* this type is declared in PE_Types.h for non-LDD processors, need to declare it locally otherwise */
@@ -116,6 +113,8 @@ extern "C" {
   } TIMAGE;
   typedef TIMAGE* PIMAGE ;                 /* Pointer to image */
 #endif /* _TIMAGE_IS_DEFINED */
+
+#include "McuSSD1306.h"
 
 #define McuGDisplaySSD1306_RGB565(R,G,B)     ((McuGDisplaySSD1306_PixelColor)((((R)&0x1f)<<11)+(((G)&0x3f)<<5)+((B)&0x1f))) /* convert RGB into 565 color format */
 

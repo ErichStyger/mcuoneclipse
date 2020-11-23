@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : XFormat
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-07-28, 06:57, # CodeGen: 660
+**     Date/Time   : 2020-10-13, 06:28, # CodeGen: 701
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **         Deinit    - void McuXFormat_Deinit(void);
 **         Init      - void McuXFormat_Init(void);
 **
-** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+** *  Copyright : (c) Copyright Mario Viara, 2014-2020, https://github.com/MarioViara/xprintfc
 **  * Adopted for Processor Expert: Erich Styger
 **  * xsnprintf() contributed by Engin Lee
 **  * Web:         https://mcuoneclipse.com
@@ -779,7 +779,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'P':
             param.flags |=  FLAG_UPPER;
-            // fall through
+            /* fall through */
             /*lint -fallthrough */
 
             /*
@@ -828,7 +828,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'X':
             param.flags |= FLAG_UPPER;
-            // fall through
+            /* fall through */
             /* lint -fallthrough */
 
             /*
@@ -868,7 +868,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'S':
             param.flags |= FLAG_UPPER;
-            // fall through
+            /* fall through */
             /*lint -fallthrough */
 
             /*
@@ -887,7 +887,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
              */
           case  'C':
             param.flags |= FLAG_UPPER;
-            // fall through
+            /* fall through */
             /* lint -fallthrough */
 
             /*

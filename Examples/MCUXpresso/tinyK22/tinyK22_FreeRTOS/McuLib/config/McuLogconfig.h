@@ -31,7 +31,12 @@
 
 #ifndef McuLog_CONFIG_LOG_TIMESTAMP_DATE
   #define McuLog_CONFIG_LOG_TIMESTAMP_DATE    (1)
-    /*!< 1: add date to timestamp, 0: do not date for timestamp */
+    /*!< 1: add date to time stamp, 0: do not date for time stamp */
+#endif
+
+#ifndef McuLog_CONFIG_LOG_TIMESTAMP_TIME
+  #define McuLog_CONFIG_LOG_TIMESTAMP_TIME    (1)
+    /*!< 1: add time to time stamp, 0: do not time for time stamp */
 #endif
 
 #ifndef McuLog_CONFIG_LOG_STRIP_FILENAME_PATH

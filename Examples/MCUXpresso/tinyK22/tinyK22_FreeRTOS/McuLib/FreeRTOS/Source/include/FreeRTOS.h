@@ -1370,3 +1370,8 @@ typedef StaticStreamBuffer_t StaticMessageBuffer_t;
 
 #endif /* INC_FREERTOS_H */
 
+#if configUSE_PERCEPIO_TRACE_HOOKS /* << EST */
+  #include "trcRecorder.h"
+#endif
+
+

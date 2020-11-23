@@ -157,6 +157,12 @@ void McuLog_set_color(bool enable) {
 
 static void OutputCharFctConsole(void *p, char ch) {
   McuShell_StdIO_OutErr_FctType io = (McuShell_StdIO_OutErr_FctType)p;
+  if (io==McuRTT_StdIOSendChar) { /* using RTT: check first if we are able to send */
+    unsigned int rttUpSize = SEGGER_RTT_GetUpBufferFreeSize(0);
+    if (rttUpSize<1) { /* there is NOT enough space available in the RTT up buffer */
+      return; /* do not send :-( */
+    }
+  }
   io(ch);
 }
 
@@ -190,15 +196,19 @@ static void OutString(const unsigned char *str, void (*outchar)(void *,char), vo
 static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool supportColor, const char *file, int line, void (*outchar)(void *,char), void *param) {
   unsigned char buf[32];
 
+#if McuLog_CONFIG_LOG_TIMESTAMP_DATE || McuLog_CONFIG_LOG_TIMESTAMP_TIME
   /* date/time */
   buf[0] = '\0';
 #if McuLog_CONFIG_LOG_TIMESTAMP_DATE
   McuTimeDate_AddDateString((unsigned char*)buf, sizeof(buf), date, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR);
   McuUtility_chcat(buf, sizeof(buf), ' ');
 #endif
+#if McuLog_CONFIG_LOG_TIMESTAMP_TIME
   McuTimeDate_AddTimeString((unsigned char*)buf, sizeof(buf), time, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_TIME_FORMAT_STR);
   McuUtility_chcat(buf, sizeof(buf), ' ');
+#endif
   OutString(buf, outchar, param);
+#endif
 
   /* level */
   buf[0] = '\0';

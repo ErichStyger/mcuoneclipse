@@ -68,7 +68,7 @@ static void Task1(void *pvParameters) {
   for(;;) {
     LEDG_Neg();
     vTaskDelay(pdMS_TO_TICKS(100));
-    vTaskEndScheduler();
+  //  vTaskEndScheduler();
   }
 }
 #else

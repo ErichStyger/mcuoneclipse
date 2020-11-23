@@ -4219,10 +4219,10 @@ static void prvResetNextTaskUnblockTime( void )
 
                     /* Inherit the priority before being moved into the new list. */
                     pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
-#if 0 /* << EST: change for Segger SystemView */
-                    prvAddTaskToReadyList( pxMutexHolderTCB );
-#else
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST  */
                     prvReAddTaskToReadyList( pxMutexHolderTCB );
+#else
+                    prvAddTaskToReadyList( pxMutexHolderTCB );
 #endif
                 }
                 else

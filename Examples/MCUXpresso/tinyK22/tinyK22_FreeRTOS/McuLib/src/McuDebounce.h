@@ -38,7 +38,7 @@ typedef enum {
 
 typedef struct {
   McuDbnc_State_e state;        /* data */
-  //uint32_t flags;
+  /* uint32_t flags; */
   uint32_t timerPeriodMs;       /* config: period of timer in ms */
   TimerHandle_t timer;          /* config: RTOS timer handle */
   uint32_t scanValue;           /* data: value of buttons at debounce start */

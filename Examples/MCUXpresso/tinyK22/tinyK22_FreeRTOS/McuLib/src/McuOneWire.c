@@ -7,7 +7,7 @@
 **     Component   : OneWire
 **     Version     : Component 01.154, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-01-29, 06:51, # CodeGen: 595
+**     Date/Time   : 2020-10-13, 06:28, # CodeGen: 701
 **     Abstract    :
 **          This is a component implementing the 1-Wire protocol.
 **     Settings    :
@@ -685,12 +685,12 @@ void McuOneWire_TargetSearch(uint8_t familyCode)
 */
 bool McuOneWire_Search(uint8_t *newAddr, bool search_mode)
 {
-// Version from https://raw.githubusercontent.com/PaulStoffregen/OneWire/master/OneWire.cpp
-//--------------------------------------------------------------------------
-// Perform the 1-Wire Search Algorithm on the 1-Wire bus using the existing
-// search state.
-// Return TRUE  : device found, ROM number in ROM_NO buffer
-//        FALSE : device not found, end of search
+/* Version from https://raw.githubusercontent.com/PaulStoffregen/OneWire/master/OneWire.cpp */
+/*-------------------------------------------------------------------------- */
+/* Perform the 1-Wire Search Algorithm on the 1-Wire bus using the existing  */
+/* search state.                                                             */
+/* Return TRUE  : device found, ROM number in ROM_NO buffer                  */
+/*        FALSE : device not found, end of search                            */
   uint8_t id_bit_number;
   uint8_t last_zero, rom_byte_number, search_result;
   uint8_t id_bit, cmp_id_bit;
@@ -733,7 +733,7 @@ bool McuOneWire_Search(uint8_t *newAddr, bool search_mode)
       } else {
         /* all devices coupled have 0 or 1 */
         if (id_bit != cmp_id_bit) {
-          search_direction = id_bit;  // bit write value for search
+          search_direction = id_bit;  /* bit write value for search */
         } else {
           /* if this discrepancy if before the Last Discrepancy */
           /* on a previous next then pick the same as last time */
