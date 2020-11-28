@@ -63,8 +63,7 @@ void thread_6_and_7_entry(ULONG thread_input);
 
 
 #ifdef TX_ENABLE_EVENT_TRACE /* << EST */
-UCHAR my_trace_buffer[64000];
-uint8_t *RecorderDataPtr;
+UCHAR g_tx_trace_buffer[64000];
 #endif
 
 /* Define main entry point.  */
@@ -76,7 +75,6 @@ int main()
     BOARD_InitBootClocks();
     BOARD_InitDebugConsole();
 
-    RecorderDataPtr = my_trace_buffer;
     PRINTF("THREADX example ...\r\n");
 
     /* This sentence must be called before tx_kernel_enter(). */
@@ -94,7 +92,7 @@ void tx_application_define(void *first_unused_memory)
 #ifdef TX_ENABLE_EVENT_TRACE /* << EST */
     /* Enable event tracing using the global "my_trace_buffer" memory and supporting a maximum of 30 ThreadX objects in the registry. */
     UINT status;
-	status = tx_trace_enable (&my_trace_buffer, sizeof(my_trace_buffer), 30);
+	status = tx_trace_enable (&g_tx_trace_buffer, sizeof(g_tx_trace_buffer), 30);
     if (status!=TX_SUCCESS ) {
       for(;;) {}
     }
