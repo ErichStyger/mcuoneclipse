@@ -93,7 +93,7 @@ void APP_Run(void) {
       configMINIMAL_STACK_SIZE+200, /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+1,  /* initial priority */
-      (xTaskHandle*)NULL /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
     for(;;){} /* error! probably out of memory */

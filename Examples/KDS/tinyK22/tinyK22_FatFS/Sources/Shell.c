@@ -47,6 +47,9 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if TmDt1_PARSE_COMMAND_ENABLED
   TmDt1_ParseCommand,
 #endif
+#if KIN1_PARSE_COMMAND_ENABLED
+  KIN1_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -143,7 +146,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_USB_CDC
     (void)CLS1_ReadAndParseWithCommandTable(cdc_buf, sizeof(cdc_buf), &CDC_stdio, CmdParserTable);
 #endif
-    vTaskDelay(50/portTICK_RATE_MS);
+    vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
 }
 #endif /* PL_HAS_RTOS */
