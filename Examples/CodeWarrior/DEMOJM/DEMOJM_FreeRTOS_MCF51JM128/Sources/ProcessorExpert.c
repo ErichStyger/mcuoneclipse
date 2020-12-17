@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : ProcessorExpert.c
 **     Project     : ProcessorExpert
-**     Processor   : MCF51JM128VLK
+**     Processor   : MCF51JM128VQH
 **     Version     : Driver 01.00
 **     Compiler    : CodeWarrior ColdFireV1 C Compiler
 **     Date/Time   : 2013-08-30, 09:39, # CodeGen: 0

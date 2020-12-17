@@ -1,7 +1,7 @@
 /* ###################################################################
 **     Filename    : Events.h
 **     Project     : ProcessorExpert
-**     Processor   : MCF51JM128VLK
+**     Processor   : MCF51JM128VQH
 **     Component   : Events
 **     Version     : Driver 01.02
 **     Compiler    : CodeWarrior ColdFireV1 C Compiler
