@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericSWI2C
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-28, 07:32, # CodeGen: 351
+**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
 **     Abstract    :
 **
 **     Settings    :
@@ -16,7 +16,7 @@
 **          SDA                                            : SDK_BitIO
 **          SCL                                            : SDK_BitIO
 **          Wait                                           : McuWait
-**          Yield                                          : yes
+**          Yield                                          : no
 **     Contents    :
 **         ResetBus          - bool McuGenericSWI2C_ResetBus(void);
 **         SendChar          - uint8_t McuGenericSWI2C_SendChar(uint8_t Chr);
@@ -32,7 +32,7 @@
 **         Deinit            - void McuGenericSWI2C_Deinit(void);
 **         Init              - void McuGenericSWI2C_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -74,19 +74,17 @@
 
 #include "McuGenericSWI2C.h"
 #include "McuWait.h" /* waiting routines */
+#include "McuLib.h" /* SDK defines */
 #include "SDA1.h" /* SDA pin */
 #include "SCL1.h" /* SCL pin */
 
-#define McuGenericSWI2C_HAS_RTOS  1 /* FreeRTOS present */
-#define McuGenericSWI2C_YIELD     1 /* Yield is enabled in the component properties */
-
-#if McuGenericSWI2C_HAS_RTOS
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   /* include RTOS header files */
   #include "FreeRTOS.h" /* for yielding */
   #include "task.h"
 #endif
 
-#if McuGenericSWI2C_HAS_RTOS && McuGenericSWI2C_YIELD
+#if McuLib_CONFIG_SDK_USE_FREERTOS && McuGenericSWI2C_CONFIG_DO_YIELD
   #define McuGenericSWI2C_OSYIELD() taskYIELD()
 #else
   #define McuGenericSWI2C_OSYIELD() /* do nothing */
@@ -96,9 +94,6 @@
 #define INPUT       0U
 #define WRITE       0U
 #define READ        1U
-#define TRIALS      256 /* defined by component properties */
-
-#define McuGenericSWI2C_DELAY_NS    1250   /* delay time in ns, as specified in the component properties */
 
 static uint8_t SlaveAddr;             /* destination slave address      */
 
@@ -140,7 +135,7 @@ static void InternalStop(void);
 static void Delay(void)
 {
   McuGenericSWI2C_OSYIELD();
-  McuWait_Waitns(McuGenericSWI2C_DELAY_NS);
+  McuWait_Waitns(McuGenericSWI2C_CONFIG_DELAY_NS);
 }
 
 /*
@@ -384,7 +379,7 @@ uint8_t McuGenericSWI2C_SendChar(uint8_t Chr)
   bool Acknowledge;
   uint16_t timeout;
 
-  Trial = TRIALS;
+  Trial = McuGenericSWI2C_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP*/
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -468,7 +463,7 @@ uint8_t McuGenericSWI2C_RecvChar(uint8_t *Chr)
   bool Acknowledge;
   uint16_t timeout;
 
-  Trial = TRIALS;
+  Trial = McuGenericSWI2C_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP */
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -565,7 +560,7 @@ uint8_t McuGenericSWI2C_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt)
   uint16_t timeout;
 
   *Snt = 0U;
-  Trial = TRIALS;
+  Trial = McuGenericSWI2C_CONFIG_NOF_TRIALS;
   do {
     SDA_SetDir((bool)INPUT);     /* SDA HIGH  - START SETUP */
     SCL_SetDir((bool)INPUT);     /* CLOCK HIGH PULSE */
@@ -741,7 +736,7 @@ uint8_t McuGenericSWI2C_RecvBlockCustom(void *Ptr, uint16_t Siz, uint16_t *Rcv, 
   uint16_t timeout;
 
   *Rcv = 0U;
-  Trial = TRIALS;
+  Trial = McuGenericSWI2C_CONFIG_NOF_TRIALS;
   if (flagsStart == McuGenericSWI2C_SEND_START) {
     do {
       SDA_SetDir((bool)INPUT);     /* SDA HIGH - START SETUP */

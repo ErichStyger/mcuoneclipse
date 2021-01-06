@@ -1,8 +1,10 @@
 /*
  * FreeRTOShooks.c
  *
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
  *  This is a default FreeRTOS hooks file you can use in your application.
- *      Author: Erich Styger
  */
 
 #include "McuLibconfig.h"

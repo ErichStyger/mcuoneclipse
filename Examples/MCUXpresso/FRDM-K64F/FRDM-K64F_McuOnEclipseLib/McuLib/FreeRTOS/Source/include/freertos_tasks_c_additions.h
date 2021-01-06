@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 NXP
+ * Copyright 2017-2020 NXP
  * All rights reserved.
  *
  *
@@ -94,6 +94,8 @@ char *const portArch_Name = NULL;
   const uint8_t FreeRTOSDebugConfig[] __attribute__((used)) =
 #elif defined(__IAR_SYSTEMS_ICC__)
   #pragma required=FreeRTOSDebugConfig
+  const uint8_t FreeRTOSDebugConfig[] =
+#else /* << EST generic compiler */
   const uint8_t FreeRTOSDebugConfig[] =
 #endif
 {

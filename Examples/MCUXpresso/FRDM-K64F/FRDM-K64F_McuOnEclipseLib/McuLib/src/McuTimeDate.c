@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericTimeDate
-**     Version     : Component 01.062, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-16, 06:57, # CodeGen: 357
+**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -21,12 +21,12 @@
 **          Set Time and Date                              : 
 **            Software RTC                                 : yes
 **            Internal RTC                                 : no
-**            External RTC                                 : no
+**            External RTC                                 : yes
 **          Get Time and Date                              : Software RTC
 **          Init()                                         : 
 **            Defaults                                     : 
 **              Time                                       : 17:51:31
-**              Date                                       : 2018-08-01
+**              Date                                       : 2019-08-01
 **            Call Init() in startup                       : yes
 **            Software RTC Initialization                  : Init from Defaults
 **          System                                         : 
@@ -66,7 +66,7 @@
 **         DeInit                      - void McuTimeDate_DeInit(void);
 **         Init                        - uint8_t McuTimeDate_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -108,13 +108,17 @@
 
 #include "McuTimeDate.h"
 #include <stdlib.h> /* for NULL */
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  #include "McuExtRTC.h"
+#endif
+
 
 #if McuTimeDate_TICK_TIME_MS==0
   #error "Tick period cannot be zero!"
 #endif
 #define McuTimeDate_TICKS_PER_S  (1000/McuTimeDate_TICK_TIME_MS) /* number of timer ticks per second */
 
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   /* counters used by software RTC */
   static uint8_t CntDay;               /* Day counter */
   static uint8_t CntMonth;             /* Month counter */
@@ -131,7 +135,7 @@ static uint8_t AddDateToBuf(uint8_t *buf, uint16_t bufSize, DATEREC *tdate) {
   McuUtility_chcat(buf, bufSize, '.');
   McuUtility_strcatNum16uFormatted(buf, bufSize, tdate->Month, '0', 2);
   McuUtility_chcat(buf, bufSize, '.');
-  McuUtility_strcatNum16u(buf, bufSize, (uint16_t)tdate->Year);
+  McuUtility_strcatNum16uFormatted(buf, bufSize, (uint16_t)tdate->Year, '0', 2);
   return ERR_OK;
 }
 
@@ -149,7 +153,6 @@ static uint8_t AddTimeToBuf(uint8_t *buf, uint16_t bufSize, TIMEREC *ttime) {
 #endif
   return ERR_OK;
 }
-
 
 static uint8_t AddDate(uint8_t *buf, uint16_t bufSize, uint8_t (*GetTimeDateFn)(TIMEREC*, DATEREC*)) {
   DATEREC tdate;
@@ -182,7 +185,7 @@ static uint8_t DateCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
       /* update software real time clock */
       res = McuTimeDate_SetDate(year, month, day);
       if (res != ERR_OK) {
-        McuShell_SendStr((unsigned char*)"*** Failure setting time\r\n", io->stdErr);
+        McuShell_SendStr((unsigned char*)"*** Failure setting date\r\n", io->stdErr);
         res = ERR_FAILED;
       }
     } else {
@@ -249,7 +252,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
   McuShell_SendStatusStr((unsigned char*)"McuTimeDate", (const unsigned char*)"\r\n", io->stdOut);
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   McuShell_SendStatusStr((unsigned char*)"  SW RTC", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   if (AddDate(buf, sizeof(buf), McuTimeDate_GetSWTimeDate)!=ERR_OK) {
@@ -266,7 +269,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   }
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
-#if McuTimeDate_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_USE_INTERNAL_HW_RTC_BEAN
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
   McuShell_SendStatusStr((unsigned char*)"  HW RTC", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   if (AddDate(buf, sizeof(buf), McuTimeDate_GetInternalRTCTimeDate)!=ERR_OK) {
@@ -283,7 +286,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   }
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
-#if McuTimeDate_USE_EXTERNAL_HW_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   McuShell_SendStatusStr((unsigned char*)"  Ext. RTC", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
   if (AddDate(buf, sizeof(buf), McuTimeDate_GetExternalRTCTimeDate)!=ERR_OK) {
@@ -317,7 +320,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 */
 void McuTimeDate_AddTick(void)
 {
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   const uint8_t *ptr;                  /* Pointer to ULY/LY table */
   McuCriticalSection_CriticalVariable()
 
@@ -366,7 +369,7 @@ void McuTimeDate_AddTick(void)
 */
 void McuTimeDate_AddTicks(uint16_t nofTicks)
 {
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   while(nofTicks>0) {
     McuTimeDate_AddTick();
     nofTicks--;
@@ -397,7 +400,7 @@ void McuTimeDate_AddTicks(uint16_t nofTicks)
 */
 uint8_t McuTimeDate_SetSWTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   uint8_t res;
   uint32_t nofTicks;
   bool failed = FALSE;
@@ -449,7 +452,7 @@ uint8_t McuTimeDate_SetSWTimeDate(TIMEREC *time, DATEREC *date)
 */
 uint8_t McuTimeDate_GetSWTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   uint8_t res;
   uint32_t ticks;
   bool failed = FALSE;
@@ -514,19 +517,19 @@ uint8_t McuTimeDate_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec1
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
   time.Sec100 = Sec100;
 #endif
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
   res = McuTimeDate_SetSWTimeDate(&time, NULL);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
   res = McuTimeDate_SetInternalRTCTimeDate(&time, NULL);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
   res = McuTimeDate_SetExternalRTCTimeDate(&time, NULL);
   if (res!=ERR_OK) {
     failed = TRUE;
@@ -563,11 +566,11 @@ uint8_t McuTimeDate_GetTime(TIMEREC *time)
 {
   uint8_t res;
 
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
   res = McuTimeDate_GetSWTimeDate(time, NULL);
-#elif McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
   res = McuTimeDate_GetInternalRTCTimeDate(time, NULL);
-#elif McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
   res = McuTimeDate_GetExternalRTCTimeDate(time, NULL);
 #else
   #error "invalid configuration!"
@@ -616,19 +619,19 @@ uint8_t McuTimeDate_SetDate(uint16_t Year, uint8_t Month, uint8_t Day)
   date.Year = Year;
   date.Month = Month;
   date.Day = Day;
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
   res = McuTimeDate_SetSWTimeDate(NULL, &date);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
   res = McuTimeDate_SetInternalRTCTimeDate(NULL, &date);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
   res = McuTimeDate_SetExternalRTCTimeDate(NULL, &date);
   if (res!=ERR_OK) {
     failed = TRUE;
@@ -660,17 +663,17 @@ uint8_t McuTimeDate_GetDate(DATEREC *date)
 {
   uint8_t res;
 
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
   res = McuTimeDate_GetSWTimeDate(NULL, date);
-#elif McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
   res = McuTimeDate_GetInternalRTCTimeDate(NULL, date);
-#elif McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
   res = McuTimeDate_GetExternalRTCTimeDate(NULL, date);
 #else
   #error "invalid configuration!"
   res = ERR_FAILED;
 #endif
-#if McuTimeDate_ON_DATE_GET_EVENT && McuTimeDate_USE_SOFTWARE_RTC
+#if McuTimeDate_ON_DATE_GET_EVENT && McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   McuTimeDate_ON_DATE_GET_EVENT_NAME(&CntDay, &CntMonth, &CntYear); /* call user event */
 #endif
   return res;
@@ -690,11 +693,25 @@ uint8_t McuTimeDate_GetDate(DATEREC *date)
 uint8_t McuTimeDate_Init(void)
 {
   /* initialize software RTC time and date */
-#if McuTimeDate_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS
+#if McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS
+/* default time/date values */
+  TIMEREC McuTimeDate_DefaultTime = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR, /* hour */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN,  /* minute */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC,  /* second */
+  #if McuTimeDate_HAS_SEC100_IN_TIMEREC
+    0 /* h-second */
+  #endif
+  };
+  DATEREC McuTimeDate_DefaultDate = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR, /* year */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH,  /* month */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY /* day */
+  };
   return McuTimeDate_SetSWTimeDate((TIMEREC*)&McuTimeDate_DefaultTime, (DATEREC*)&McuTimeDate_DefaultDate);
-#elif McuTimeDate_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC
+#elif McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC
   return McuTimeDate_SyncWithInternalRTC();
-#elif McuTimeDate_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC
+#elif McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC
   return McuTimeDate_SyncWithExternalRTC();
 #else
   return ERR_FAILED; /* wrong or no init specified? */
@@ -886,7 +903,7 @@ uint8_t McuTimeDate_TimeToTicks(TIMEREC *time, uint32_t *ticks)
 */
 uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_INTERNAL_HW_RTC_LDD
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD
   LDD_RTC_TTime timeDate;
 
   /* get current time/date */
@@ -903,7 +920,7 @@ uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     timeDate.DayOfWeek = McuTimeDate_CalculateDayOfWeek(date->Year, date->Month, date->Day);
   }
   return RTC1_SetTime(RTC1_DeviceData, &timeDate); /* get information from HW RTC */
-#elif McuTimeDate_USE_INTERNAL_HW_RTC_BEAN
+#elif McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
   uint8_t res;
 
   if (time!=NULL) {
@@ -945,7 +962,7 @@ uint8_t McuTimeDate_SetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 */
 uint8_t McuTimeDate_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_INTERNAL_HW_RTC_LDD
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD
   LDD_RTC_TTime timeDate;
 
   RTC1_GetTime(RTC1_DeviceData, &timeDate); /* get information from HW RTC */
@@ -963,7 +980,7 @@ uint8_t McuTimeDate_GetInternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     date->Day = timeDate.Day;
   }
   return ERR_OK;
-#elif McuTimeDate_USE_INTERNAL_HW_RTC_BEAN
+#elif McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
   TIMEREC t;
   DATEREC d;
   uint8_t res;
@@ -1074,7 +1091,7 @@ uint8_t McuTimeDate_SyncSWtimeToInternalRTCsec(void)
 */
 uint8_t McuTimeDate_SyncWithInternalRTC(void)
 {
-#if McuTimeDate_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_USE_INTERNAL_HW_RTC_BEAN
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_LDD || McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC_BEAN
   TIMEREC time;
   DATEREC date;
   uint8_t res;
@@ -1123,7 +1140,7 @@ uint8_t McuTimeDate_SyncWithInternalRTC(void)
 */
 uint8_t McuTimeDate_SyncWithExternalRTC(void)
 {
-#if McuTimeDate_USE_EXTERNAL_HW_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   TIMEREC time;
   DATEREC date;
   uint8_t res;
@@ -1168,11 +1185,11 @@ uint8_t McuTimeDate_SyncWithExternalRTC(void)
 */
 uint8_t McuTimeDate_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_EXTERNAL_HW_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   uint8_t res;
 
   if (time!=NULL) {
-    res = RTC2_SetTime(time->Hour, time->Min, time->Sec,
+    res = McuExtRTC_SetTime(time->Hour, time->Min, time->Sec,
 #if McuTimeDate_HAS_SEC100_IN_TIMEREC
         time->Sec100
 #else
@@ -1184,7 +1201,7 @@ uint8_t McuTimeDate_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
     }
   }
   if (date!=NULL) {
-    res = RTC2_SetDate(date->Year, date->Month, date->Day);
+    res = McuExtRTC_SetDate(date->Year, date->Month, date->Day);
     if (res!=ERR_OK) {
       return res;
     }
@@ -1216,17 +1233,17 @@ uint8_t McuTimeDate_SetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 */
 uint8_t McuTimeDate_GetExternalRTCTimeDate(TIMEREC *time, DATEREC *date)
 {
-#if McuTimeDate_USE_EXTERNAL_HW_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   uint8_t res;
 
   if (time!=NULL) {
-    res = RTC2_GetTime(time);
+    res = McuExtRTC_GetTime(time);
     if (res!=ERR_OK) {
       return res;
     }
   }
   if (date!=NULL) {
-    res = RTC2_GetDate(date);
+    res = McuExtRTC_GetDate(date);
     if (res!=ERR_OK) {
       return res;
     }
@@ -1262,19 +1279,19 @@ uint8_t McuTimeDate_SetTimeDate(TIMEREC *time, DATEREC *date)
   uint8_t res = ERR_OK;
   bool failed = FALSE;
 
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC
   res = McuTimeDate_SetSWTimeDate(time, date);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC
   res = McuTimeDate_SetInternalRTCTimeDate(time, date);
   if (res!=ERR_OK) {
     failed = TRUE;
   }
 #endif
-#if McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC
   res = McuTimeDate_SetExternalRTCTimeDate(time, date);
   if (res!=ERR_OK) {
     failed = TRUE;
@@ -1306,11 +1323,11 @@ uint8_t McuTimeDate_GetTimeDate(TIMEREC *time, DATEREC *date)
 {
   uint8_t res;
 
-#if McuTimeDate_USE_SOFTWARE_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
+#if McuTimeDate_CONFIG_USE_SOFTWARE_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC
   res = McuTimeDate_GetSWTimeDate(time, date);
-#elif McuTimeDate_USE_INTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC
   res = McuTimeDate_GetInternalRTCTimeDate(time, date);
-#elif McuTimeDate_USE_EXTERNAL_HW_RTC && McuTimeDate_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
+#elif McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC && McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD==McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC
   res = McuTimeDate_GetExternalRTCTimeDate(time, date);
 #else
   #error "invalid configuration!"

@@ -10,6 +10,10 @@
 
 /* McuLibConfig.h */
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+#define McuLib_CONFIG_CPU_IS_LPC         (0)  /* e.g. LPC845 */
+#define McuLib_CONFIG_CORTEX_M           (4)  /* K64 is a Cortex-M4 */
+#define McuLib_CONFIG_CPU_IS_KINETIS     (1)  /* K64 is a Kinetis */
+
 #define McuLib_CONFIG_SDK_USE_FREERTOS  (1)
 
 /* LED1 -> LedPin1 */

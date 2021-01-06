@@ -1,15 +1,34 @@
 /**
  * \file
  * \brief Configuration header file for SDK_BitIO
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the SDK Bit I/O module.
  */
+
 #ifndef __Clock1_CONFIG_H
 #define __Clock1_CONFIG_H
+
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+  #include "pin_mux.h" /* include pin muxing header file */
+
+  #if defined(BOARD_INITPINS_Clock1_PIN)
+    #define Clock1_CONFIG_PIN_NUMBER    BOARD_INITPINS_Clock1_PIN
+  #endif
+  #if defined(BOARD_INITPINS_Clock1_GPIO)
+    #define Clock1_CONFIG_GPIO_NAME     BOARD_INITPINS_Clock1_GPIO
+  #endif
+  #if defined(BOARD_INITPINS_Clock1_PORT)
+    #define Clock1_CONFIG_PORT_NAME     BOARD_INITPINS_Clock1_PORT
+  #endif
+#endif
 
 #ifndef Clock1_CONFIG_PORT_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define Clock1_CONFIG_PORT_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define Clock1_CONFIG_PORT_NAME       0
   #else /* name from properties */
     #define Clock1_CONFIG_PORT_NAME       PORTA
   #endif
@@ -19,6 +38,8 @@
 #ifndef Clock1_CONFIG_GPIO_NAME
   #if McuLib_CONFIG_CPU_IS_IMXRT
     #define Clock1_CONFIG_GPIO_NAME       GPIO1
+  #elif McuLib_CONFIG_CPU_IS_LPC
+    #define Clock1_CONFIG_GPIO_NAME       GPIO
   #else /* name from properties */
     #define Clock1_CONFIG_GPIO_NAME       GPIOA
   #endif

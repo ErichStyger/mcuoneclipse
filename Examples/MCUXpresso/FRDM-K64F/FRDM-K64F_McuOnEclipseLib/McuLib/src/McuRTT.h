@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.088, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-05-08, 06:26, # CodeGen: 511
+**     Date/Time   : 2019-08-21, 18:45, # CodeGen: 570
 **     Abstract    :
 **
 **     Settings    :
@@ -22,10 +22,7 @@
 **            Down Buffer Size (Rx)                        : 64
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
-**            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 5
-**              Wait                                       : McuWait
-**              Wait Time (ms)                             : 1
+**            Blocking Send                                : Disabled
 **            Printf Buffer Size                           : 64
 **          SDK                                            : McuLib
 **          Shell                                          : McuShell
@@ -104,7 +101,6 @@
 #include "McuRTTconfig.h" /* configuration */
 
 /* Include inherited components */
-#include "McuWait.h"
 #include "McuLib.h"
 #include "McuShell.h"
 

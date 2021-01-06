@@ -1,9 +1,9 @@
-/*********************************************************************
+/********************************************************************* // <<EST @suppress("Lack of copyright information")
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2018 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -17,24 +17,14 @@
 *                                                                    *
 * SEGGER strongly recommends to not make any changes                 *
 * to or modify the source code of this software in order to stay     *
-* compatible with the RTT protocol and J-Link.                       *
+* compatible with the SystemView and RTT protocol, and J-Link.       *
 *                                                                    *
 * Redistribution and use in source and binary forms, with or         *
 * without modification, are permitted provided that the following    *
-* conditions are met:                                                *
+* condition is met:                                                  *
 *                                                                    *
 * o Redistributions of source code must retain the above copyright   *
-*   notice, this list of conditions and the following disclaimer.    *
-*                                                                    *
-* o Redistributions in binary form must reproduce the above          *
-*   copyright notice, this list of conditions and the following      *
-*   disclaimer in the documentation and/or other materials provided  *
-*   with the distribution.                                           *
-*                                                                    *
-* o Neither the name of SEGGER Microcontroller GmbH         *
-*   nor the names of its contributors may be used to endorse or      *
-*   promote products derived from this software without specific     *
-*   prior written permission.                                        *
+*   notice, this condition and the following disclaimer.             *
 *                                                                    *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND             *
 * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,        *
@@ -52,7 +42,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: V2.52b                                    *
+*       SystemView version: V3.12                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -83,7 +73,9 @@ Notes:
 #if 0 /* << EST */
 #define SYSVIEW_FREERTOS_MAX_NOF_TASKS  8
 #else /* << EST */
-#define SYSVIEW_FREERTOS_MAX_NOF_TASKS    8
+#ifndef SYSVIEW_FREERTOS_MAX_NOF_TASKS
+  #define SYSVIEW_FREERTOS_MAX_NOF_TASKS    10
+#endif
 #endif
 /*********************************************************************
 *
@@ -206,25 +198,25 @@ Notes:
 #define apiID_XSTREAMBUFFERRECEIVEFROMISR         (111u)
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
-#include "McuSystemViewconfig.h"
+#include "McuSystemViewconfig.h" /* << EST */
 
-#define traceTASK_NOTIFY_TAKE()                                                 SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_ULTASKNOTIFYTAKE, xClearCountOnExit, xTicksToWait)
+#define traceTASK_NOTIFY_TAKE(uxIndexToWait)                                    SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_ULTASKNOTIFYTAKE, xClearCountOnExit, xTicksToWait)
 #define traceTASK_DELAY()                                                       SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKDELAY, xTicksToDelay)
 #define traceTASK_DELAY_UNTIL(xTimeToWake)                                      SEGGER_SYSVIEW_RecordVoid (apiID_OFFSET + apiID_VTASKDELAYUNTIL)
-#define traceTASK_NOTIFY_GIVE_FROM_ISR()                                        SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_VTASKNOTIFYGIVEFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), (U32)pxHigherPriorityTaskWoken)
+#define traceTASK_NOTIFY_GIVE_FROM_ISR(uxIndexToNotify)                         SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_VTASKNOTIFYGIVEFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), (U32)pxHigherPriorityTaskWoken)
 #define traceTASK_PRIORITY_INHERIT( pxTCB, uxPriority )                         SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKPRIORITYINHERIT, (U32)pxMutexHolder)
 #define traceTASK_RESUME( pxTCB )                                               SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKRESUME, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB))
-#if McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS
+#if McuSystemView_CONFIG_GENERATE_STEPTICK_EVENTS /* << EST */
 #define traceINCREASE_TICK_COUNT( xTicksToJump )                                SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKSTEPTICK, xTicksToJump)
 #endif
 #define traceTASK_SUSPEND( pxTCB )                                              SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VTASKSUSPEND, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB))
 #define traceTASK_PRIORITY_DISINHERIT( pxTCB, uxBasePriority )                  SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_XTASKPRIORITYDISINHERIT, (U32)pxMutexHolder)
 #define traceTASK_RESUME_FROM_ISR( pxTCB )                                      SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_XTASKRESUMEFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB))
-#define traceTASK_NOTIFY()                                                      SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XTASKGENERICNOTIFY, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), ulValue, eAction, (U32)pulPreviousNotificationValue)
-#define traceTASK_NOTIFY_FROM_ISR()                                             SEGGER_SYSVIEW_RecordU32x5(apiID_OFFSET + apiID_XTASKGENERICNOTIFYFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), ulValue, eAction, (U32)pulPreviousNotificationValue, (U32)pxHigherPriorityTaskWoken)
-#define traceTASK_NOTIFY_WAIT()                                                 SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XTASKNOTIFYWAIT, ulBitsToClearOnEntry, ulBitsToClearOnExit, (U32)pulNotificationValue, xTicksToWait)
+#define traceTASK_NOTIFY(uxIndexToNotify)                                       SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XTASKGENERICNOTIFY, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), ulValue, eAction, (U32)pulPreviousNotificationValue)
+#define traceTASK_NOTIFY_FROM_ISR(uxIndexToNotify)                              SEGGER_SYSVIEW_RecordU32x5(apiID_OFFSET + apiID_XTASKGENERICNOTIFYFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxTCB), ulValue, eAction, (U32)pulPreviousNotificationValue, (U32)pxHigherPriorityTaskWoken)
+#define traceTASK_NOTIFY_WAIT(uxIndexToNotify)                                  SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XTASKNOTIFYWAIT, ulBitsToClearOnEntry, ulBitsToClearOnExit, (U32)pulNotificationValue, xTicksToWait)
 
-#if McuSystemView_CONFIG_GENERATE_QUEUE_EVENTS
+#if McuSystemView_CONFIG_GENERATE_QUEUE_EVENTS /* << EST */
 #define traceQUEUE_CREATE( pxNewQueue )                                         SEGGER_SYSVIEW_RecordU32x3(apiID_OFFSET + apiID_XQUEUEGENERICCREATE, uxQueueLength, uxItemSize, ucQueueType)
 #define traceQUEUE_DELETE( pxQueue )                                            SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VQUEUEDELETE, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue))
 #define traceQUEUE_PEEK( pxQueue )                                              SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XQUEUEGENERICRECEIVE, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), SEGGER_SYSVIEW_ShrinkId((U32)pvBuffer), xTicksToWait, 1)
@@ -241,12 +233,13 @@ Notes:
 #else
   #define traceQUEUE_SEND( pxQueue )                                            SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XQUEUEGENERICSEND, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), 0u, 0u, xCopyPosition)
 #endif
+#define traceQUEUE_SET_SEND( pxQueue )                                          SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XQUEUEGENERICSEND, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), 0u, 0u, 0)
 #define traceQUEUE_SEND_FAILED( pxQueue )                                       SEGGER_SYSVIEW_RecordU32x4(apiID_OFFSET + apiID_XQUEUEGENERICSEND, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), (U32)pvItemToQueue, xTicksToWait, xCopyPosition)
 #define traceQUEUE_SEND_FROM_ISR( pxQueue )                                     SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XQUEUEGENERICSENDFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), (U32)pxHigherPriorityTaskWoken)
 #define traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue )                              SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XQUEUEGENERICSENDFROMISR, SEGGER_SYSVIEW_ShrinkId((U32)pxQueue), (U32)pxHigherPriorityTaskWoken)
 #endif /* #if McuSystemView_CONFIG_GENERATE_QUEUE_EVENTS */
 
-#if McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS
+#if McuSystemView_CONFIG_GENERATE_STREAMBUFFER_EVENTS /* << EST */
 #define traceSTREAM_BUFFER_CREATE( pxStreamBuffer, xIsMessageBuffer )           SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERCREATE, (U32)xIsMessageBuffer, (U32)pxStreamBuffer)
 #define traceSTREAM_BUFFER_CREATE_FAILED( xIsMessageBuffer )                    SEGGER_SYSVIEW_RecordU32x2(apiID_OFFSET + apiID_XSTREAMBUFFERCREATE, (U32)xIsMessageBuffer, 0u)
 #define traceSTREAM_BUFFER_DELETE( xStreamBuffer )                              SEGGER_SYSVIEW_RecordU32  (apiID_OFFSET + apiID_VSTREAMBUFFERDELETE, (U32)xStreamBuffer)
@@ -346,7 +339,7 @@ Notes:
 #define traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST()  SEGGER_SYSVIEW_OnTaskStopReady((U32)pxCurrentTCB,  (1u << 2))
 #define traceMOVED_TASK_TO_SUSPENDED_LIST(pxTCB)    SEGGER_SYSVIEW_OnTaskStopReady((U32)pxTCB,         ((3u << 3) | 3))
 
-#if McuSystemView_CONFIG_GENERATE_ISR_EVENTS
+#if McuSystemView_CONFIG_GENERATE_ISR_EVENTS /* << EST */
 #define traceISR_EXIT_TO_SCHEDULER()                SEGGER_SYSVIEW_RecordExitISRToScheduler()
 #define traceISR_EXIT()                             SEGGER_SYSVIEW_RecordExitISR()
 #define traceISR_ENTER()                            SEGGER_SYSVIEW_RecordEnterISR()

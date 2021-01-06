@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GDisplay
-**     Version     : Component 01.206, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.208, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-12-29, 15:35, # CodeGen: 361
+**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
 **     Abstract    :
 **          Graphical display driver for LCD or other displays
 **     Settings    :
@@ -21,35 +21,38 @@
 **          Watchdog                                       : Disabled
 **          RTOS                                           : Disabled
 **     Contents    :
-**         PutPixel          - void McuGDisplaySSD1306_PutPixel(McuGDisplaySSD1306_PixelDim x,...
-**         SetPixel          - void McuGDisplaySSD1306_SetPixel(McuGDisplaySSD1306_PixelDim x,...
-**         ClrPixel          - void McuGDisplaySSD1306_ClrPixel(McuGDisplaySSD1306_PixelDim x,...
-**         Clear             - void McuGDisplaySSD1306_Clear(void);
-**         DrawBox           - void McuGDisplaySSD1306_DrawBox(McuGDisplaySSD1306_PixelDim x,...
-**         DrawFilledBox     - void McuGDisplaySSD1306_DrawFilledBox(McuGDisplaySSD1306_PixelDim x,...
-**         DrawHLine         - void McuGDisplaySSD1306_DrawHLine(McuGDisplaySSD1306_PixelDim x,...
-**         DrawVLine         - void McuGDisplaySSD1306_DrawVLine(McuGDisplaySSD1306_PixelDim x,...
-**         DrawLine          - void McuGDisplaySSD1306_DrawLine(McuGDisplaySSD1306_PixelDim xstart,...
-**         DrawCircle        - void McuGDisplaySSD1306_DrawCircle(McuGDisplaySSD1306_PixelDim x0,...
-**         DrawFilledCircle  - void McuGDisplaySSD1306_DrawFilledCircle(McuGDisplaySSD1306_PixelDim x0,...
-**         DrawBarChart      - void McuGDisplaySSD1306_DrawBarChart(McuGDisplaySSD1306_PixelDim x,...
-**         DrawMonoBitmap    - void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x,...
-**         DrawColorBitmap   - void McuGDisplaySSD1306_DrawColorBitmap(McuGDisplaySSD1306_PixelDim x,...
-**         Draw65kBitmap     - void McuGDisplaySSD1306_Draw65kBitmap(McuGDisplaySSD1306_PixelDim x1,...
-**         Draw256BitmapLow  - void McuGDisplaySSD1306_Draw256BitmapLow(McuGDisplaySSD1306_PixelDim x1,...
-**         Draw256BitmapHigh - void McuGDisplaySSD1306_Draw256BitmapHigh(McuGDisplaySSD1306_PixelDim x1,...
-**         UpdateFull        - void McuGDisplaySSD1306_UpdateFull(void);
-**         UpdateRegion      - void McuGDisplaySSD1306_UpdateRegion(McuGDisplaySSD1306_PixelDim x,...
-**         GetWidth          - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetWidth(void);
-**         GetHeight         - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetHeight(void);
-**         GetLongerSide     - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetLongerSide(void);
-**         GetShorterSide    - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetShorterSide(void);
-**         GetDisplay        - void McuGDisplaySSD1306_GetDisplay(void);
-**         GiveDisplay       - void McuGDisplaySSD1306_GiveDisplay(void);
-**         Deinit            - void McuGDisplaySSD1306_Deinit(void);
-**         Init              - void McuGDisplaySSD1306_Init(void);
+**         PutPixel              - void McuGDisplaySSD1306_PutPixel(McuGDisplaySSD1306_PixelDim x,...
+**         SetPixel              - void McuGDisplaySSD1306_SetPixel(McuGDisplaySSD1306_PixelDim x,...
+**         ClrPixel              - void McuGDisplaySSD1306_ClrPixel(McuGDisplaySSD1306_PixelDim x,...
+**         Clear                 - void McuGDisplaySSD1306_Clear(void);
+**         DrawBox               - void McuGDisplaySSD1306_DrawBox(McuGDisplaySSD1306_PixelDim x,...
+**         DrawFilledBox         - void McuGDisplaySSD1306_DrawFilledBox(McuGDisplaySSD1306_PixelDim x,...
+**         DrawHLine             - void McuGDisplaySSD1306_DrawHLine(McuGDisplaySSD1306_PixelDim x,...
+**         DrawVLine             - void McuGDisplaySSD1306_DrawVLine(McuGDisplaySSD1306_PixelDim x,...
+**         DrawLine              - void McuGDisplaySSD1306_DrawLine(McuGDisplaySSD1306_PixelDim xstart,...
+**         DrawCircle            - void McuGDisplaySSD1306_DrawCircle(McuGDisplaySSD1306_PixelDim x0,...
+**         DrawFilledCircle      - void McuGDisplaySSD1306_DrawFilledCircle(McuGDisplaySSD1306_PixelDim x0,...
+**         DrawBarChart          - void McuGDisplaySSD1306_DrawBarChart(McuGDisplaySSD1306_PixelDim x,...
+**         DrawMonoBitmap        - void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x,...
+**         DrawMonoBitmapMask    - void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x,...
+**         DrawColorBitmap       - void McuGDisplaySSD1306_DrawColorBitmap(McuGDisplaySSD1306_PixelDim x,...
+**         Draw65kBitmap         - void McuGDisplaySSD1306_Draw65kBitmap(McuGDisplaySSD1306_PixelDim x1,...
+**         Draw256BitmapLow      - void McuGDisplaySSD1306_Draw256BitmapLow(McuGDisplaySSD1306_PixelDim x1,...
+**         Draw256BitmapHigh     - void McuGDisplaySSD1306_Draw256BitmapHigh(McuGDisplaySSD1306_PixelDim x1,...
+**         UpdateFull            - void McuGDisplaySSD1306_UpdateFull(void);
+**         UpdateRegion          - void McuGDisplaySSD1306_UpdateRegion(McuGDisplaySSD1306_PixelDim x,...
+**         GetDisplayOrientation - McuGDisplaySSD1306_DisplayOrientation M...
+**         SetDisplayOrientation - void McuGDisplaySSD1306_SetDisplayOrien...
+**         GetWidth              - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetWidth(void);
+**         GetHeight             - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetHeight(void);
+**         GetLongerSide         - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetLongerSide(void);
+**         GetShorterSide        - McuGDisplaySSD1306_PixelDim McuGDisplaySSD1306_GetShorterSide(void);
+**         GetDisplay            - void McuGDisplaySSD1306_GetDisplay(void);
+**         GiveDisplay           - void McuGDisplaySSD1306_GiveDisplay(void);
+**         Deinit                - void McuGDisplaySSD1306_Deinit(void);
+**         Init                  - void McuGDisplaySSD1306_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -95,7 +98,7 @@
   #include "FreeRTOS.h"
   #include "semphr.h"
 
-  static xSemaphoreHandle McuGDisplaySSD1306_displayMutex;
+  static SemaphoreHandle_t McuGDisplaySSD1306_displayMutex;
 #endif
 static const uint16_t c332to565[256] = { /* converts a 3-3-2 RBG value into a 5-6-5 RGB value */
  0x0000, 0x000A, 0x0014, 0xF81E, 0x0120, 0x012A, 0x0134, 0xF93E,
@@ -423,6 +426,59 @@ void McuGDisplaySSD1306_DrawMonoBitmap(McuGDisplaySSD1306_PixelDim x, McuGDispla
     for(;;) {
       pixel = (McuGDisplaySSD1306_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
       McuGDisplaySSD1306_PutPixel(x0, y0, (McuGDisplaySSD1306_PixelColor)(pixel==1?pixelColor:backgroundColor));
+      if (i==0 && x0!=xe) { /* next byte inside the row */
+        data++;
+        i = 7;
+      } else {
+        i--;
+      }
+      if (x0==xe) { /* reached end of line, next row */
+        data++; /* next data byte */
+        break;
+      }
+      x0++;
+    } /* for */
+    if (y0==ye) break; /* reached end */
+    y0++;
+  } /* for */
+}
+
+/*
+** ===================================================================
+**     Method      :  DrawMonoBitmapMask (component GDisplay)
+**
+**     Description :
+**         Draws a B/W bitmap, but only the pixels which are set
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         x               - x position of left upper corner
+**         y               - y position of left upper corner
+**         image           - Pointer to image structure and
+**                           information.
+**         pixelColor      - Color to be used for pixels
+**                           (pixel set)
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuGDisplaySSD1306_DrawMonoBitmapMask(McuGDisplaySSD1306_PixelDim x, McuGDisplaySSD1306_PixelDim y, PIMAGE image, McuGDisplaySSD1306_PixelColor pixelColor)
+{
+  McuGDisplaySSD1306_PixelDim x0, y0, xe, ye;
+  McuGDisplaySSD1306_PixelColor pixel;
+  uint8_t i;
+  const uint8_t *data;
+
+  data = image->pixmap;
+  y0 = y;
+  ye = (McuGDisplaySSD1306_PixelDim)(y+image->height-1);
+  xe = (McuGDisplaySSD1306_PixelDim)(x+image->width-1);
+  for(;;) {
+    i=7;
+    x0 = x;
+    for(;;) {
+      pixel = (McuGDisplaySSD1306_PixelColor)(((*data)&(1<<i))>>i); /* extract pixel out of bitstream */
+      if (pixel) { /* only draw if pixel is set, everything else is transparent */
+        McuGDisplaySSD1306_PutPixel(x0, y0, pixelColor);
+      }
       if (i==0 && x0!=xe) { /* next byte inside the row */
         data++;
         i = 7;
@@ -990,6 +1046,42 @@ void McuGDisplaySSD1306_UpdateRegion(McuGDisplaySSD1306_PixelDim x, McuGDisplayS
   McuGDisplaySSD1306_GiveDisplay();
 #endif
 }
+
+/*
+** ===================================================================
+**     Method      :  GetDisplayOrientation (component GDisplay)
+**
+**     Description :
+**         Returns the current display orientation
+**     Parameters  : None
+**     Returns     :
+**         ---             - current display orientation
+** ===================================================================
+*/
+/*
+McuGDisplaySSD1306_DisplayOrientation McuGDisplaySSD1306_GetDisplayOrientation(void)
+  ** This method is implemented as macro
+*/
+
+/*
+** ===================================================================
+**     Method      :  SetDisplayOrientation (component GDisplay)
+**
+**     Description :
+**         Sets the display orientation. If you enable this method,
+**         then the orientation of the display can be changed at
+**         runtime. However, this requires additional resources.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         newOrientation  - new orientation to
+**                           be used
+**     Returns     : Nothing
+** ===================================================================
+*/
+/*
+void McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_DisplayOrientation newOrientation)
+  ** This method is implemented as macro
+*/
 
 /*
 ** ===================================================================

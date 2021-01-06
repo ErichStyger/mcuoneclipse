@@ -95,6 +95,7 @@
 									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
+									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
@@ -261,7 +262,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS.old|FreeRTOS/FreeRTOShooks.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="minIni|LittlevGL|HD44780|fonts|FatFS|FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS.old|FreeRTOS/FreeRTOShooks.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FontDisplay
-**     Version     : Component 01.199, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.201, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-11, 12:55, # CodeGen: 333
+**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
 **     Abstract    :
 **          Driver to write fonts using GFont component
 **     Settings    :
@@ -14,16 +14,17 @@
 **          System                                         : 
 **            InhGDisplay                                  : McuGDisplaySSD1306
 **     Contents    :
-**         GetFontHeight   - void McuFontDisplay_GetFontHeight(McuFontDisplay_Font *font,...
-**         GetStringHeight - McuFontDisplay_PixelDim McuFontDisplay_GetStringHeight(uint8_t *str,...
-**         GetCharWidth    - void McuFontDisplay_GetCharWidth(uint8_t ch, McuFontDisplay_PixelDim...
-**         GetStringWidth  - McuFontDisplay_PixelDim McuFontDisplay_GetStringWidth(uint8_t *str,...
-**         WriteString     - void McuFontDisplay_WriteString(uint8_t *str, McuFontDisplay_PixelColor...
-**         WriteChar       - void McuFontDisplay_WriteChar(uint8_t ch, McuFontDisplay_PixelColor color,...
-**         Deinit          - void McuFontDisplay_Deinit(void);
-**         Init            - void McuFontDisplay_Init(void);
+**         GetFontHeight    - void McuFontDisplay_GetFontHeight(McuFontDisplay_Font *font,...
+**         GetStringHeight  - McuFontDisplay_PixelDim McuFontDisplay_GetStringHeight(uint8_t *str,...
+**         GetCharWidth     - void McuFontDisplay_GetCharWidth(uint8_t ch, McuFontDisplay_PixelDim...
+**         GetStringWidth   - McuFontDisplay_PixelDim McuFontDisplay_GetStringWidth(uint8_t *str,...
+**         WriteString      - void McuFontDisplay_WriteString(uint8_t *str, McuFontDisplay_PixelColor...
+**         WriteStringWidth - void McuFontDisplay_WriteStringWidth(uint8_t *str, McuFontDisplay_PixelColor...
+**         WriteChar        - void McuFontDisplay_WriteChar(uint8_t ch, McuFontDisplay_PixelColor color,...
+**         Deinit           - void McuFontDisplay_Deinit(void);
+**         Init             - void McuFontDisplay_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -234,6 +235,35 @@ void McuFontDisplay_Init(void);
 **     Description :
 **         Driver initialization
 **     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void McuFontDisplay_WriteStringWidth(uint8_t *str, McuFontDisplay_PixelColor color, McuFontDisplay_PixelDim *xCursor, McuFontDisplay_PixelDim *yCursor, McuFontDisplay_Font *font, McuFontDisplay_PixelDim width);
+/*
+** ===================================================================
+**     Method      :  WriteStringWidth (component FontDisplay)
+**
+**     Description :
+**         Function to write a string or character at the startpoint.
+**         Set the startpoint with the function setCursor. If the
+**         string reaches the given width, the text gets wrapped to a
+**         new line.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * str             - Pointer to the character string
+**         color           - Foreground color to be used (for the
+**                           character pixels)
+**       * xCursor         - Pointer to x position of first
+**                           character (upper left corner). On return
+**                           this will contain the next y position.
+**       * yCursor         - Pointer to y position of character
+**                           (upper left corner). On return this will
+**                           contain the next y position.
+**       * font            - Pointer to font information
+**         width           - Maximum of width of the text box. If
+**                           text reaches the end of the box, the text
+**                           gets wrapped to a new line.
 **     Returns     : Nothing
 ** ===================================================================
 */

@@ -1,8 +1,14 @@
 /*
- * led.c
+ * Copyright (c) 2019, Erich Styger
+ * All rights reserved.
  *
+ * Driver for LEDs
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
  */
+
 #include "McuLibconfig.h"
+#include "McuLEDconfig.h"
 #include "McuLED.h"
 #include "McuGPIO.h"
 #include "fsl_gpio.h"
@@ -11,21 +17,26 @@
 #endif
 #include <stddef.h>
 #include <string.h> /* for memset */
+#include <stdlib.h> /* for malloc() and free() */
 #include <assert.h>
-#include <McuLEDconfig.h>
+#if MCULED_CONFIG_USE_FREERTOS_HEAP
+  #include "McuRTOS.h"
+#endif
 
 /* default configuration, used for initializing the config */
 static const McuLED_Config_t defaultConfig =
 {
     .isLowActive = false,
     .isOnInit = false,
-    .gpio = NULL,
-#if McuLib_CONFIG_CPU_IS_KINETIS
-    .port = NULL,
-#elif McuLib_CONFIG_CPU_IS_LPC
-    .port = 0,
-#endif
-    .pin = 0,
+    .hw = {
+      .gpio = NULL,
+  #if McuLib_CONFIG_CPU_IS_KINETIS
+      .port = NULL,
+  #elif McuLib_CONFIG_CPU_IS_LPC
+      .port = 0,
+  #endif
+      .pin = 0,
+    }
 };
 
 typedef struct {
@@ -46,16 +57,22 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   assert(config!=NULL);
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
-  gpio_config.gpio = config->gpio;
-  gpio_config.port = config->port;
-  gpio_config.pin = config->pin;
+  gpio_config.hw.gpio = config->hw.gpio;
+#if !McuLib_CONFIG_CPU_IS_IMXRT /* i.MX does not need a port */
+  gpio_config.hw.port = config->hw.port;
+#endif
+  gpio_config.hw.pin  = config->hw.pin;
   if (config->isLowActive) {
-    gpio_config.isLowOnInit = config->isOnInit;
+    gpio_config.isHighOnInit = !config->isOnInit;
   } else {
-    gpio_config.isLowOnInit = !config->isOnInit;
+    gpio_config.isHighOnInit = config->isOnInit;
   }
   gpio = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
+#if MCULED_CONFIG_USE_FREERTOS_HEAP
+  handle = (McuLED_t*)pvPortMalloc(sizeof(McuLED_t)); /* get a new device descriptor */
+#else
   handle = (McuLED_t*)malloc(sizeof(McuLED_t)); /* get a new device descriptor */
+#endif
   assert(handle!=NULL);
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(McuLED_t)); /* init all fields */
@@ -68,7 +85,11 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
 McuLED_Handle_t McuLED_DeinitLed(McuLED_Handle_t led) {
   assert(led!=NULL);
   McuGPIO_DeinitGPIO(((McuLED_t*)led)->gpio);
+#if MCULED_CONFIG_USE_FREERTOS_HEAP
+  vPortFree(led);
+#else
   free(led);
+#endif
   return NULL;
 }
 
@@ -77,9 +98,9 @@ void McuLED_On(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    McuGPIO_Low(desc->gpio);
+    McuGPIO_SetLow(desc->gpio);
   } else {
-    McuGPIO_High(desc->gpio);
+    McuGPIO_SetHigh(desc->gpio);
   }
 }
 
@@ -88,17 +109,17 @@ void McuLED_Off(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    McuGPIO_High(desc->gpio);
+    McuGPIO_SetHigh(desc->gpio);
   } else {
-    McuGPIO_Low(desc->gpio);
+    McuGPIO_SetLow(desc->gpio);
   }
 }
 
-void McuLED_Neg(McuLED_Handle_t led) {
+void McuLED_Toggle(McuLED_Handle_t led) {
   assert(led!=NULL);
   McuLED_t *desc = (McuLED_t*)led;
 
-  McuGPIO_Neg(desc->gpio);
+  McuGPIO_Toggle(desc->gpio);
 }
 
 bool McuLED_Get(McuLED_Handle_t led) {
@@ -106,9 +127,9 @@ bool McuLED_Get(McuLED_Handle_t led) {
   McuLED_t *desc = (McuLED_t*)led;
 
   if (desc->isLowActive) {
-    return McuGPIO_Get(desc->gpio)==false;
+    return !McuGPIO_IsHigh(desc->gpio);
   } else {
-    return McuGPIO_Get(desc->gpio)!=false;
+    return McuGPIO_IsHigh(desc->gpio);
  }
 }
 

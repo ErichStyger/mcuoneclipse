@@ -81,9 +81,7 @@ static void TestCoverage(int i) {
     printf("i is not zero!\n");
   }
 }
-/*
- * @brief   Application entry point.
- */
+
 int main(void) {
 #if GCOV_DO_COVERAGE
   #if defined(__REDLIB__)
@@ -102,8 +100,8 @@ int main(void) {
   	BOARD_InitDebugConsole();
 
     TestCoverage(3); /* quick coverage test */
-#if 0
-    if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
+#if 0 /* somehow does not work with latest FreeRTOS? */
+    if (xTaskCreate(AppTask, "App", 1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
     }
     vTaskStartScheduler();
@@ -114,6 +112,7 @@ int main(void) {
 #endif
     for(;;) { /* do not leave main */
       __asm("nop");
+      __asm volatile("bkpt #0");
     }
     return 0 ;
 }

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.087, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-10-16, 06:57, # CodeGen: 357
+**     Date/Time   : 2020-04-20, 07:03, # CodeGen: 599
 **     Abstract    :
 **
 **     Settings    :
@@ -22,10 +22,7 @@
 **            Down Buffer Size (Rx)                        : 64
 **            Up Buffer Mode                               : Skip (Default)
 **            Down Buffer Mode                             : Skip (Default)
-**            Blocking Send                                : Enabled
-**              Timeout (ms)                               : 5
-**              Wait                                       : McuWait
-**              Wait Time (ms)                             : 1
+**            Blocking Send                                : Disabled
 **            Printf Buffer Size                           : 64
 **          SDK                                            : McuLib
 **          Shell                                          : McuShell
@@ -54,11 +51,11 @@
 **         Deinit           - void McuRTT_Deinit(void);
 **         Init             - void McuRTT_Init(void);
 **
-** * (c) Copyright Segger, 2018
+** * (c) Copyright Segger, 2019
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2018, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -99,6 +96,9 @@
 /* MODULE McuRTT. */
 
 #include "McuRTT.h"
+#if McuRTT_CONFIG_BLOCKING_SEND
+  #include "McuWait.h"
+#endif
 
 /* default standard I/O struct */
 McuShell_ConstStdIOType McuRTT_stdio = {
@@ -292,18 +292,28 @@ void McuRTT_StdIOReadChar(uint8_t *c)
 */
 void McuRTT_StdIOSendChar(uint8_t ch)
 {
-  int timeoutMs = 5;
+#if McuRTT_CONFIG_BLOCKING_SEND
+  #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0 && McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+  int timeoutMs = McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS;
+  #endif
 
   for(;;) { /* will break */
     if (McuRTT_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
       break; /* was able to send character, get out of waiting loop */
     }
-    McuWait_WaitOSms(1);
+  #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    McuWait_WaitOSms(McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS);
+    #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if(timeoutMs<=0) {
       break; /* timeout */
     }
-    timeoutMs -= 1;
+    timeoutMs -= McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS;
+    #endif
+  #endif
   } /* for */
+#else
+  (void)McuRTT_Write(0, &ch, 1); /* non blocking send, might loose characters */
+#endif
 }
 
 /*

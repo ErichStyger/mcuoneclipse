@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.0
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*-----------------------------------------------------------
@@ -74,6 +73,7 @@
   #error TrustZone needs to be disabled in order to run FreeRTOS on the Secure Side.
 #endif
 
+#endif /*  McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* --------------------------------------------------- */
 /* Let the user override the pre-loading of the initial LR with the address of
    prvTaskExitError() in case is messes up unwinding of the stack in the
@@ -119,7 +119,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICK_NOF_BITS               16
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
-    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val);
+    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
     #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
@@ -158,7 +158,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICKLESS_ENABLE_INTERRUPTS()   portENABLE_INTERRUPTS()  /* re-enable interrupts */
 #endif
 
-  #if 1
+  #if 1 /* using ARM SysTick Timer */
     #if configSYSTICK_USE_LOW_POWER_TIMER
       /* using Low Power Timer */
       #if CONFIG_PEX_SDK_USEDMcuLib_CONFIG_PEX_SDK_USED
@@ -1375,14 +1375,14 @@ __asm void vPortPendSVHandler(void) {
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 #if configGDB_HELPER
 /* prototypes to avoid compiler warnings */
-__attribute__ ((naked)) void vPortPendSVHandler_native(void);
-__attribute__ ((naked)) void PendSV_Handler_jumper(void);
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
-__attribute__ ((naked)) void vPortPendSVHandler_native(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
 #elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
-__attribute__ ((naked)) void PendSV_Handler(void) {
+__attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
-__attribute__ ((naked)) void vPortPendSVHandler(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
@@ -1497,14 +1497,26 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
  * 1 - hook installation performed,
  * 2 - following hooked switches
  */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 int volatile dbgPendSVHookState = 0;
 /* Requested target task handle variable */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 void *volatile dbgPendingTaskHandle;
 
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_suspend_value = INCLUDE_vTaskSuspend;
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_delete_value = INCLUDE_vTaskDelete;
 
-__attribute__ ((naked)) void PendSV_Handler_jumper(void) {
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void) {
   __asm volatile("b vPortPendSVHandler_native \n");
 }
 
@@ -1697,10 +1709,7 @@ __asm uint32_t vPortGetIPSR(void) {
 
 #endif /* configASSERT_DEFINED */
 
-
 #endif /* ARM M4(F) core */ 
-
-#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 

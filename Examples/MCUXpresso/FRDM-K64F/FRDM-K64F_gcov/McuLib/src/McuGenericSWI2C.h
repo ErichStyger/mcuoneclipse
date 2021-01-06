@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericSWI2C
-**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-28, 07:32, # CodeGen: 351
+**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
 **     Abstract    :
 **
 **     Settings    :
@@ -16,7 +16,7 @@
 **          SDA                                            : SDK_BitIO
 **          SCL                                            : SDK_BitIO
 **          Wait                                           : McuWait
-**          Yield                                          : yes
+**          Yield                                          : no
 **     Contents    :
 **         ResetBus          - bool McuGenericSWI2C_ResetBus(void);
 **         SendChar          - uint8_t McuGenericSWI2C_SendChar(uint8_t Chr);
@@ -32,7 +32,7 @@
 **         Deinit            - void McuGenericSWI2C_Deinit(void);
 **         Init              - void McuGenericSWI2C_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

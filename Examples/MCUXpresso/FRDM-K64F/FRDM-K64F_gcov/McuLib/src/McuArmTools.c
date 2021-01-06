@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
+**     Date/Time   : 2020-07-28, 16:15, # CodeGen: 666
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -75,11 +75,16 @@
 /* MODULE McuArmTools. */
 
 #include "McuArmTools.h"
+
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
   #if McuLib_CONFIG_CPU_IS_KINETIS
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #elif McuLib_CONFIG_CPU_IS_LPC  /* LPC845 */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_KINETIS_1_3
   #include "Cpu.h" /* include CPU related interfaces and defines */
@@ -122,14 +127,14 @@ static const unsigned char *KinetisM0FamilyStrings[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io)
 {
-#if McuLib_CONFIG_CPU_IS_KINETIS
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   uint8_t buf[1+(16*5)+1+1]; /* "{0xAA,...0xBB}" */
   uint8_t res;
   McuArmTools_UID uid;
 #endif
 
   McuShell_SendStatusStr((unsigned char*)"McuArmTools", (unsigned char*)"\r\n", io->stdOut);
-#if McuLib_CONFIG_CPU_IS_KINETIS
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   res = McuArmTools_UIDGet(&uid);
   if (res==ERR_OK) {
     res = McuArmTools_UIDtoString(&uid, buf, sizeof(buf));
@@ -208,7 +213,7 @@ void McuArmTools_SoftwareReset(void)
 uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
   int i, j;
 
@@ -224,19 +229,19 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   for(i=0,j=sizeof(McuArmTools_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(McuArmTools_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
-#else
-#ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
-#ifdef SIM_UIDH
+  #else /* not McuLib_CONFIG_NXP_SDK_2_0_USED */
+    #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
+      #ifdef SIM_UIDH
   uid->id[0] = (SIM_UIDH>>24)&0xff;
   uid->id[1] = (SIM_UIDH>>16)&0xff;
   uid->id[2] = (SIM_UIDH>>8)&0xff;
   uid->id[3] = SIM_UIDH&0xff;
-#else
+      #else
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
   uid->id[3] = 0;
-#endif
+      #endif
   uid->id[4] = (SIM_UIDMH>>24)&0xff;
   uid->id[5] = (SIM_UIDMH>>16)&0xff;
   uid->id[6] = (SIM_UIDMH>>8)&0xff;
@@ -251,7 +256,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UIDL>>16)&0xff;
   uid->id[14] = (SIM_UIDL>>8)&0xff;
   uid->id[15] = SIM_UIDL&0xff;
-#elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
+    #elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -270,7 +275,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+    #else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -288,8 +293,16 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#endif
-#endif /* SDK V2.0 */
+    #endif
+  #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
+  return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+  uint8_t res;
+
+  res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
+  if (res != kStatus_IAP_Success) {
+    return ERR_FAILED;
+  }
   return ERR_OK;
 #else
   (void)uid; /* not used */
@@ -420,7 +433,7 @@ uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled, const 
 McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-#if McuLib_CONFIG_CORTEX_M==0
+  #if McuLib_CONFIG_CORTEX_M==0
   #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
@@ -432,7 +445,7 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     }
   #elif defined(SIM_SRSID_FAMID) /* MKE02Z4 defines this, hopefully all other KE too... */
     return (McuArmTools_ConstCharPtr)"KE0x Family"; /* 0000 only KE0x supported */
-  #elif defined(SIM_SDID_FAMID)
+  #elif defined(SIM_SDID_FAMID) || defined(SIM_SDID_FAMILYID)
     int32_t val;
 
     val = ((SIM->SDID)>>28)&0xF; /* bits 31..28 */
@@ -445,8 +458,8 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     #error "Unknown architecture!"
     return (McuArmTools_ConstCharPtr)"ERROR";
   #endif
-#elif McuLib_CONFIG_CORTEX_M==4
-  #ifdef SIM_SDID /* normal Kinetis define this */
+  #elif McuLib_CONFIG_CORTEX_M==4
+    #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
     val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
@@ -455,7 +468,7 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     } else {
       return (McuArmTools_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #elif defined(SIM_SDID_FAMID)
+    #elif defined(SIM_SDID_FAMID) || defined(SIM_SDID_FAMILYID)
     int32_t val;
 
     val = ((SIM->SDID)>>4)&0x3; /* bits 6..4 */
@@ -464,18 +477,30 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
     } else {
       return (McuArmTools_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #else
+    #else
     #error "Unknown architecture!"
     return (McuArmTools_ConstCharPtr)"ERROR";
-  #endif
-#elif McuLib_CONFIG_CORTEX_M==7
+    #endif
+  #elif McuLib_CONFIG_CORTEX_M==7
   return (McuArmTools_ConstCharPtr)"Cortex-M7";
-#else
+  #else
   #error "Unknown architecture!"
   return (McuArmTools_ConstCharPtr)"ERROR";
-#endif
+  #endif
+#elif McuLib_CONFIG_CPU_IS_NORDIC_NRF
+  return (McuArmTools_ConstCharPtr)"Nordic nRF";
+#elif McuLib_CONFIG_CPU_IS_STM
+  return (McuArmTools_ConstCharPtr)"STM32";
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  return (McuArmTools_ConstCharPtr)"NXP i.MX RT";
+#elif McuLib_CONFIG_CPU_IS_S32K
+  return (McuArmTools_ConstCharPtr)"NXP S32K";
+#elif McuLib_CONFIG_CPU_IS_LPC55xx
+  return (McuArmTools_ConstCharPtr)"NXP LPC55xx";
+#elif McuLib_CONFIG_CPU_IS_LPC
+  return (McuArmTools_ConstCharPtr)"NXP LPC";
 #else
-  return (McuArmTools_ConstCharPtr)"NOT KINETIS";
+  return (McuArmTools_ConstCharPtr)"UNKNOWN";
 #endif
 }
 
@@ -689,6 +714,8 @@ void McuArmTools_Init(void)
   /* Nothing needed */
 }
 
+
+#endif /* McuLib_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* END McuArmTools. */
 
 /*!

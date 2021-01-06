@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-17, 07:41, # CodeGen: 375
+**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -76,7 +76,11 @@
 #include "C21.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if C21_CONFIG_DO_PIN_MUXING
-  #include "fsl_port.h" /* include SDK header file for port muxing */
+    #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+      #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
+    #else /* normal Kinetis or LPC */
+      #include "fsl_port.h" /* include SDK header file for port muxing */
+    #endif
   #endif
   #include "fsl_gpio.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
@@ -84,12 +88,13 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   #include "pins_gpio_hw_access.h"
   #include "pins_driver.h" /* include SDK header file for GPIO */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  #include "nrf_gpio.h"
 #else
   #error "Unsupported SDK!"
 #endif
 
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
-
   static const gpio_pin_config_t C21_configOutput = {
     kGPIO_DigitalOutput,  /* use as output pin */
     C21_CONFIG_INIT_PIN_VALUE,  /* initial value */
@@ -166,11 +171,19 @@ static bool C21_isOutput = false;
 void C21_ClrVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortClear(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_ClearPinsOutput(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortClear(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_ClearPinOutput(C21_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_clear(C21_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -187,11 +200,19 @@ void C21_ClrVal(void)
 void C21_SetVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortSet(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_SetPinsOutput(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortSet(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinOutput(C21_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_GPIO_WritePin(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_set(C21_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -208,7 +229,13 @@ void C21_SetVal(void)
 void C21_NegVal(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PortToggle(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #elif McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_TogglePinsOutput(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #else
   GPIO_PortToggle(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_TogglePinOutput(C21_CONFIG_PIN_SYMBOL);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
@@ -220,6 +247,8 @@ void C21_NegVal(void)
   } else {
     PINS_GPIO_WritePin(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, 1);
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_pin_toggle(C21_CONFIG_PIN_NUMBER);
 #endif
 }
 
@@ -238,12 +267,20 @@ void C21_NegVal(void)
 */
 bool C21_GetVal(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  return GPIO_PinRead(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(C21_CONFIG_GPIO_NAME, C21_CONFIG_PIN_NUMBER)!=0;
+  #else
+  return GPIO_PinRead(C21_CONFIG_GPIO_NAME, C21_CONFIG_PIN_NUMBER)!=0;
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   return GPIO_DRV_ReadPinInput(C21_CONFIG_PIN_SYMBOL)!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   return (PINS_DRV_ReadPins(C21_CONFIG_PORT_NAME)&(1<<C21_CONFIG_PIN_NUMBER))!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  return nrf_gpio_pin_read(C21_CONFIG_PIN_NUMBER)!=0;
 #else
   return FALSE;
 #endif
@@ -299,7 +336,9 @@ void C21_SetDir(bool Dir)
 */
 void C21_SetInput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, &C21_configInput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(C21_CONFIG_GPIO_NAME, C21_CONFIG_PIN_NUMBER, &C21_configInput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(C21_CONFIG_PIN_SYMBOL, kGpioDigitalInput);
@@ -309,6 +348,8 @@ void C21_SetInput(void)
   val = PINS_GPIO_GetPinsDirection(C21_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val &= ~(1<<C21_CONFIG_PIN_NUMBER); /* clear bit ==> input */
   PINS_DRV_SetPinsDirection(C21_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_input(C21_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
 #endif
   C21_isOutput = false;
 }
@@ -325,7 +366,9 @@ void C21_SetInput(void)
 */
 void C21_SetOutput(void)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  GPIO_PinInit(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, &C21_configOutput);
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
   GPIO_PinInit(C21_CONFIG_GPIO_NAME, C21_CONFIG_PIN_NUMBER, &C21_configOutput);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_SetPinDir(C21_CONFIG_PIN_SYMBOL, kGpioDigitalOutput);
@@ -335,6 +378,8 @@ void C21_SetOutput(void)
   val = PINS_GPIO_GetPinsDirection(C21_CONFIG_PORT_NAME); /* bit 0: pin is input; 1: pin is output */
   val |= (1<<C21_CONFIG_PIN_NUMBER); /* set bit ==> output */
   PINS_DRV_SetPinsDirection(C21_CONFIG_PORT_NAME, val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  nrf_gpio_cfg_output(C21_CONFIG_PIN_NUMBER);
 #endif
   C21_isOutput = true;
 }
@@ -354,16 +399,32 @@ void C21_SetOutput(void)
 */
 void C21_PutVal(bool Val)
 {
-#if McuLib_CONFIG_NXP_SDK_2_0_USED
+#if McuLib_CONFIG_CPU_IS_LPC
+  if (Val) {
+    GPIO_PortSet(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(C21_CONFIG_GPIO_NAME, C21_CONFIG_PORT_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  }
+#elif McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_SDK_VERSION < 250
   if (Val) {
     GPIO_SetPinsOutput(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
   } else {
     GPIO_ClearPinsOutput(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
   }
+  #else
+  if (Val) {
+    GPIO_PortSet(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  } else {
+    GPIO_PortClear(C21_CONFIG_GPIO_NAME, 1<<C21_CONFIG_PIN_NUMBER);
+  }
+  #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   GPIO_DRV_WritePinOutput(C21_CONFIG_PIN_SYMBOL, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, Val);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /*! \todo */
 #endif
 }
 
@@ -381,7 +442,34 @@ void C21_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if C21_CONFIG_DO_PIN_MUXING
-  PORT_SetPinMux(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+        #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+        #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+        const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
+                                      IOCON_PIO_FUNC0 |
+                                      /* Selects pull-up function */
+                                      IOCON_PIO_MODE_PULLUP |
+                                      /* Standard mode, output slew rate control is enabled */
+                                      IOCON_PIO_SLEW_STANDARD |
+                                      /* Input function is not inverted */
+                                      IOCON_PIO_INV_DI |
+                                      /* Enables digital function */
+                                      IOCON_PIO_DIGITAL_EN |
+                                      /* Open drain is disabled */
+                                      IOCON_PIO_OPENDRAIN_DI);
+        #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
+          IOCON_PinMuxSet(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, port_pin_config);
+        #else
+          IOCON_PinMuxSet(IOCON, C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, port_pin_config);
+        #endif
+      #else
+        PORT_SetPinMux(C21_CONFIG_PORT_NAME, C21_CONFIG_PIN_NUMBER, kPORT_MuxAsGpio); /* mux as GPIO */
+      #endif
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
   /*! \todo Pin Muxing not implemented */
@@ -390,6 +478,8 @@ void C21_Init(void)
   /* the following needs to be called in the application first:
   PINS_DRV_Init(NUM_OF_CONFIGURED_PINS, g_pin_mux_InitConfigArr);
   */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
+  /* nothing needed */
 #endif
 #if C21_CONFIG_INIT_PIN_DIRECTION == C21_CONFIG_INIT_PIN_DIRECTION_INPUT
   C21_SetInput();
