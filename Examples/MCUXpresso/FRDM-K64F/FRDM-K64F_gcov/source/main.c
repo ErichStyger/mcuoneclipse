@@ -99,14 +99,15 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
   	/* Init FSL debug console. */
-	BOARD_InitDebugConsole();
+  	BOARD_InitDebugConsole();
 
     TestCoverage(3); /* quick coverage test */
+#if 0
     if (xTaskCreate(AppTask, "App", 300/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
     }
     vTaskStartScheduler();
-
+#endif
     /* here we have ended the scheduler so we can write the coverage data */
 #if GCOV_DO_COVERAGE
     gcov_write(); /* write coverage files, might take a while depending how many files are covered */

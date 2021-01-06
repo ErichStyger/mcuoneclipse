@@ -6,10 +6,13 @@ The project uses semihosting with File I/O, and this works in MCUXpresso IDE v10
 - LPC-Link2 debug probe
 
 It has confirmed working with the following libraries:
-- newlib (semihosting)
-- newlib-nano (semihosting)
+- newlib (semihost)
 
-It does *not* work currently with:
+I tried it with newlib-nano
+- newlib-nano (semihost)
+However, with latest gcc libraries this is a) very slow and b) leads to writing errors. I really recommend using newlib instead!
+
+It does *not* work  with:
 - redlib (semihosting) (fails in gcov_init(), as there is no list of constructor function pointers?). But file I/O works.
 - redlib (semihost-mb) (dito)
 additionally, redlib seems not to implement the needed coverage routines (would need standalone implementation)

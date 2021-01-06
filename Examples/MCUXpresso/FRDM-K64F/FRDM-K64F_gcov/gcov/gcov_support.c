@@ -86,6 +86,11 @@ void gcov_init(void) {
 #endif /* GCOV_DO_COVERAGE */
 }
 
+void exit(int i) {
+  /* custom exit function */
+  for(;;) {}
+}
+
 #if 0 && GCOV_USE_GCOV_EMBEDDED
 
 #include <stdio.h>
