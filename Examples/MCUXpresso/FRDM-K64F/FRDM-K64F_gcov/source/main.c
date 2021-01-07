@@ -106,7 +106,7 @@ int main(void) {
   	BOARD_InitDebugConsole();
 
     TestCoverage(3); /* quick coverage test */
-#if 1 /* somehow does not work with latest FreeRTOS? */
+#if 1
     if (xTaskCreate(AppTask, "App", 1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
     }
