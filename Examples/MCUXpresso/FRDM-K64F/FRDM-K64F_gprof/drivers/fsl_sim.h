@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -20,15 +20,15 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 0)) /*!< Driver version 2.0.0 */
+#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
 /*@}*/
 
 #if (defined(FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR) && FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR)
 /*!@brief USB voltage regulator enable setting. */
 enum _sim_usb_volt_reg_enable_mode
 {
-    kSIM_UsbVoltRegEnable = (int)SIM_SOPT1_USBREGEN_MASK,      /*!< Enable voltage regulator. */
-    kSIM_UsbVoltRegEnableInLowPower = SIM_SOPT1_USBVSTBY_MASK, /*!< Enable voltage regulator in VLPR/VLPW modes. */
+    kSIM_UsbVoltRegEnable           = (int)SIM_SOPT1_USBREGEN_MASK, /*!< Enable voltage regulator. */
+    kSIM_UsbVoltRegEnableInLowPower = SIM_SOPT1_USBVSTBY_MASK,      /*!< Enable voltage regulator in VLPR/VLPW modes. */
     kSIM_UsbVoltRegEnableInStop = SIM_SOPT1_USBSSTBY_MASK, /*!< Enable voltage regulator in STOP/VLPS/LLS/VLLS modes. */
     kSIM_UsbVoltRegEnableInAllModes =
         (int)(SIM_SOPT1_USBREGEN_MASK | SIM_SOPT1_USBSSTBY_MASK |
@@ -65,7 +65,7 @@ typedef struct _sim_rf_addr
 enum _sim_flash_mode
 {
     kSIM_FlashDisableInWait = SIM_FCFG1_FLASHDOZE_MASK, /*!< Disable flash in wait mode.   */
-    kSIM_FlashDisable = SIM_FCFG1_FLASHDIS_MASK         /*!< Disable flash in normal mode. */
+    kSIM_FlashDisable       = SIM_FCFG1_FLASHDIS_MASK   /*!< Disable flash in normal mode. */
 };
 
 /*******************************************************************************

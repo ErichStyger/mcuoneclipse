@@ -1,13 +1,14 @@
 /*
 ** ###################################################################
 **     Version:             rev. 2.15, 2016-03-21
-**     Build:               b180801
+**     Build:               b200409
 **
 **     Abstract:
 **         Chip specific module features.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2018 NXP
+**     Copyright 2016-2020 NXP
+**     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
 **
@@ -363,6 +364,12 @@
 #define FSL_FEATURE_EDMA_HAS_ERROR_IRQ (1)
 /* @brief Number of DMA channels with asynchronous request capability (register EARS). (Valid only for eDMA modules.) */
 #define FSL_FEATURE_EDMA_ASYNCHRO_REQUEST_CHANNEL_COUNT (0)
+/* @brief Channel IRQ entry shared offset. */
+#define FSL_FEATURE_EDMA_MODULE_CHANNEL_IRQ_ENTRY_SHARED_OFFSET (0)
+/* @brief If 8 bytes transfer supported. */
+#define FSL_FEATURE_EDMA_SUPPORT_8_BYTES_TRANSFER (0)
+/* @brief If 16 bytes transfer supported. */
+#define FSL_FEATURE_EDMA_SUPPORT_16_BYTES_TRANSFER (1)
 
 /* DMAMUX module features */
 
@@ -383,13 +390,15 @@
 #define FSL_FEATURE_ENET_INTERRUPT_COUNT (4)
 /* @brief Has threshold for the number of frames in the receive FIFO (register bit field RSEM[STAT_SECTION_EMPTY]). */
 #define FSL_FEATURE_ENET_HAS_RECEIVE_STATUS_THRESHOLD (1)
+/* @brief Has Extend MDIO Support. */
+#define FSL_FEATURE_ENET_HAS_EXTEND_MDIO (0)
 
 /* EWM module features */
 
 /* @brief Has clock select (register CLKCTRL). */
-#define FSL_FEATURE_EWM_HAS_CLOCK_SELECT  (0)
+#define FSL_FEATURE_EWM_HAS_CLOCK_SELECT (0)
 /* @brief Has clock prescaler (register CLKPRESCALER). */
-#define FSL_FEATURE_EWM_HAS_PRESCALER  (0)
+#define FSL_FEATURE_EWM_HAS_PRESCALER (0)
 
 /* FLEXBUS module features */
 
@@ -443,8 +452,12 @@
     #define FSL_FEATURE_FLASH_PFLASH_PROTECTION_REGION_COUNT (32)
     /* @brief Has FlexNVM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+    /* @brief Has FlexNVM alias. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_NVM_ALIAS (0)
     /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
     #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
+    /* @brief FlexNVM alias start address. (Valid only if FlexNVM alias is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_ALIAS_START_ADDRESS (0x00000000)
     /* @brief FlexNVM block count. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
     /* @brief FlexNVM block size. */
@@ -524,37 +537,37 @@
     /* @brief FlexNVM Program check command address alignment. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_CHECK_CMD_ADDRESS_ALIGMENT (0)
     /* @brief FlexNVM partition code 0000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0xFFFFFFFFU)
     /* @brief Emulated eeprom size code 0000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0000 (0xFFFF)
     /* @brief Emulated eeprom size code 0001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
@@ -632,8 +645,12 @@
     #define FSL_FEATURE_FLASH_PFLASH_PROTECTION_REGION_COUNT (32)
     /* @brief Has FlexNVM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (1)
+    /* @brief Has FlexNVM alias. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_NVM_ALIAS (0)
     /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
     #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x10000000)
+    /* @brief FlexNVM alias start address. (Valid only if FlexNVM alias is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_ALIAS_START_ADDRESS (0x00000000)
     /* @brief FlexNVM block count. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (1)
     /* @brief FlexNVM block size. */
@@ -713,37 +730,37 @@
     /* @brief FlexNVM Program check command address alignment. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_CHECK_CMD_ADDRESS_ALIGMENT (4)
     /* @brief FlexNVM partition code 0000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0x00020000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0x00020000U)
     /* @brief FlexNVM partition code 0001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0x0001C000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0x0001C000U)
     /* @brief FlexNVM partition code 0011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0x00018000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0x00018000U)
     /* @brief FlexNVM partition code 0100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0x00010000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0x00010000U)
     /* @brief FlexNVM partition code 0101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0x00000000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0x00000000U)
     /* @brief FlexNVM partition code 0110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 0111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0x00000000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0x00000000U)
     /* @brief FlexNVM partition code 1001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0x00004000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0x00004000U)
     /* @brief FlexNVM partition code 1011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0x00008000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0x00008000U)
     /* @brief FlexNVM partition code 1100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0x00010000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0x00010000U)
     /* @brief FlexNVM partition code 1101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0x00020000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0x00020000U)
     /* @brief FlexNVM partition code 1110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFF)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFFU)
     /* @brief FlexNVM partition code 1111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0x00020000)
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0x00020000U)
     /* @brief Emulated eeprom size code 0000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0000 (0xFFFF)
     /* @brief Emulated eeprom size code 0001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
@@ -783,10 +800,10 @@
 
 /* @brief Number of channels. */
 #define FSL_FEATURE_FTM_CHANNEL_COUNTn(x) \
-    ((x) == FTM0 ? (8) : \
-    ((x) == FTM1 ? (2) : \
-    ((x) == FTM2 ? (2) : \
-    ((x) == FTM3 ? (8) : (-1)))))
+    (((x) == FTM0) ? (8) : \
+    (((x) == FTM1) ? (2) : \
+    (((x) == FTM2) ? (2) : \
+    (((x) == FTM3) ? (8) : (-1)))))
 /* @brief Has counter reset by the selected input capture event (register bits C0SC[ICRST], C1SC[ICRST], ...). */
 #define FSL_FEATURE_FTM_HAS_COUNTER_RESET_BY_CAPTURE_EVENT (0)
 /* @brief Has extended deadtime value. */
@@ -807,15 +824,13 @@
 #define FSL_FEATURE_FTM_HAS_CHANNEL7_TRIGGER (0)
 /* @brief Has no QDCTRL. */
 #define FSL_FEATURE_FTM_HAS_NO_QDCTRL (0)
+/* @brief If instance has only TPM function. */
+#define FSL_FEATURE_FTM_IS_TPM_ONLY_INSTANCEn(x) (0)
 
 /* GPIO module features */
 
-/* @brief Has fast (single cycle) access capability via a dedicated memory region. */
-#define FSL_FEATURE_GPIO_HAS_FAST_GPIO (0)
-/* @brief Has port input disable register (PIDR). */
-#define FSL_FEATURE_GPIO_HAS_INPUT_DISABLE (0)
-/* @brief Has dedicated interrupt vector. */
-#define FSL_FEATURE_GPIO_HAS_PORT_INTERRUPT_VECTOR (1)
+/* @brief Has GPIO attribute checker register (GACR). */
+#define FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER (0)
 
 /* I2C module features */
 
@@ -847,7 +862,7 @@
 /* @brief Receive/transmit FIFO size in item count (register bit fields TCSR[FRDE], TCSR[FRIE], TCSR[FRF], TCR1[TFW], RCSR[FRDE], RCSR[FRIE], RCSR[FRF], RCR1[RFW], registers TFRn, RFRn). */
 #define FSL_FEATURE_SAI_FIFO_COUNT (8)
 /* @brief Receive/transmit channel number (register bit fields TCR3[TCE], RCR3[RCE], registers TDRn and RDRn). */
-#define FSL_FEATURE_SAI_CHANNEL_COUNT (2)
+#define FSL_FEATURE_SAI_CHANNEL_COUNTn(x) (2)
 /* @brief Maximum words per frame (register bit fields TCR3[WDFL], TCR4[FRSZ], TMR[TWM], RCR3[WDFL], RCR4[FRSZ], RMR[RWM]). */
 #define FSL_FEATURE_SAI_MAX_WORDS_PER_FRAME (32)
 /* @brief Has support of combining multiple data channel FIFOs into single channel FIFO (register bit fields TCR3[CFR], TCR4[FCOMB], TFR0[WCP], TFR1[WCP], RCR3[CFR], RCR4[FCOMB], RFR0[RCP], RFR1[RCP]). */
@@ -868,6 +883,10 @@
 #define FSL_FEATURE_SAI_HAS_MCR (1)
 /* @brief Has register of MDR */
 #define FSL_FEATURE_SAI_HAS_MDR (1)
+/* @brief Has DIV bit fields of MCR register (register bit fields MCR[DIV]. */
+#define FSL_FEATURE_SAI_HAS_MCR_MCLK_POST_DIV (0)
+/* @brief Support Channel Mode (register bit fields TCR4[CHMOD]). */
+#define FSL_FEATURE_SAI_HAS_CHANNEL_MODE (0)
 
 /* LLWU module features */
 
@@ -1206,12 +1225,18 @@
 
 /* PDB module features */
 
-/* @brief Define the count of supporting ADC pre-trigger for each channel. */
-#define FSL_FEATURE_PDB_ADC_PRE_CHANNEL_COUNT (2)
 /* @brief Has DAC support. */
 #define FSL_FEATURE_PDB_HAS_DAC (1)
 /* @brief Has shared interrupt handler (has not individual interrupt handler for each channel). */
 #define FSL_FEATURE_PDB_HAS_SHARED_IRQ_HANDLER (0)
+/* @brief PDB channel number). */
+#define FSL_FEATURE_PDB_CHANNEL_COUNT (2)
+/* @brief Channel pre-trigger nunmber (related to number of registers CHmDLYn). */
+#define FSL_FEATURE_PDB_CHANNEL_PRE_TRIGGER_COUNT (2)
+/* @brief DAC interval trigger number). */
+#define FSL_FEATURE_PDB_DAC_INTERVAL_TRIGGER_COUNT (2)
+/* @brief Pulse out number). */
+#define FSL_FEATURE_PDB_PULSE_OUT_COUNT (3)
 
 /* PIT module features */
 
@@ -1709,14 +1734,16 @@
 #define FSL_FEATURE_SMC_HAS_SRS_TAMPER (0)
 /* @brief Has security violation reset (register bit SRS[SECVIO]). */
 #define FSL_FEATURE_SMC_HAS_SRS_SECVIO (0)
+/* @brief Width of SMC registers. */
+#define FSL_FEATURE_SMC_REG_WIDTH (8)
 
 /* DSPI module features */
 
 /* @brief Receive/transmit FIFO size in number of items. */
 #define FSL_FEATURE_DSPI_FIFO_SIZEn(x) \
-    ((x) == SPI0 ? (4) : \
-    ((x) == SPI1 ? (1) : \
-    ((x) == SPI2 ? (1) : (-1))))
+    (((x) == SPI0) ? (4) : \
+    (((x) == SPI1) ? (1) : \
+    (((x) == SPI2) ? (1) : (-1))))
 /* @brief Maximum transfer data width in bits. */
 #define FSL_FEATURE_DSPI_MAX_DATA_WIDTH (16)
 /* @brief Maximum number of chip select pins. (Reflects the width of register bit field PUSHR[PCS].) */
@@ -1733,9 +1760,9 @@
 #define FSL_FEATURE_DSPI_16BIT_TRANSFERS (1)
 /* @brief Has separate DMA RX and TX requests. */
 #define FSL_FEATURE_DSPI_HAS_SEPARATE_DMA_RX_TX_REQn(x) \
-    ((x) == SPI0 ? (1) : \
-    ((x) == SPI1 ? (0) : \
-    ((x) == SPI2 ? (0) : (-1))))
+    (((x) == SPI0) ? (1) : \
+    (((x) == SPI1) ? (0) : \
+    (((x) == SPI2) ? (0) : (-1))))
 
 /* SYSMPU module features */
 
@@ -1787,12 +1814,12 @@
     #define FSL_FEATURE_UART_IS_SCI (0)
     /* @brief Capacity (number of entries) of the transmit/receive FIFO (or zero if no FIFO is available). */
     #define FSL_FEATURE_UART_FIFO_SIZEn(x) \
-        ((x) == UART0 ? (8) : \
-        ((x) == UART1 ? (8) : \
-        ((x) == UART2 ? (1) : \
-        ((x) == UART3 ? (1) : \
-        ((x) == UART4 ? (1) : \
-        ((x) == UART5 ? (1) : (-1)))))))
+        (((x) == UART0) ? (8) : \
+        (((x) == UART1) ? (8) : \
+        (((x) == UART2) ? (1) : \
+        (((x) == UART3) ? (1) : \
+        (((x) == UART4) ? (1) : \
+        (((x) == UART5) ? (1) : (-1)))))))
     /* @brief Maximal data width without parity bit. */
     #define FSL_FEATURE_UART_MAX_DATA_WIDTH_WITH_NO_PARITY (9)
     /* @brief Maximal data width with parity bit. */
@@ -1819,12 +1846,12 @@
     #define FSL_FEATURE_UART_HAS_WAIT_MODE_OPERATION (1)
     /* @brief Has separate DMA RX and TX requests. */
     #define FSL_FEATURE_UART_HAS_SEPARATE_DMA_RX_TX_REQn(x) \
-        ((x) == UART0 ? (1) : \
-        ((x) == UART1 ? (1) : \
-        ((x) == UART2 ? (1) : \
-        ((x) == UART3 ? (1) : \
-        ((x) == UART4 ? (0) : \
-        ((x) == UART5 ? (0) : (-1)))))))
+        (((x) == UART0) ? (1) : \
+        (((x) == UART1) ? (1) : \
+        (((x) == UART2) ? (1) : \
+        (((x) == UART3) ? (1) : \
+        (((x) == UART4) ? (0) : \
+        (((x) == UART5) ? (0) : (-1)))))))
 #elif defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FX512VLL12)
     /* @brief Has receive FIFO overflow detection (bit field CFIFO[RXOFE]). */
     #define FSL_FEATURE_UART_HAS_IRQ_EXTENDED_FUNCTIONS (1)
@@ -1854,11 +1881,11 @@
     #define FSL_FEATURE_UART_IS_SCI (0)
     /* @brief Capacity (number of entries) of the transmit/receive FIFO (or zero if no FIFO is available). */
     #define FSL_FEATURE_UART_FIFO_SIZEn(x) \
-        ((x) == UART0 ? (8) : \
-        ((x) == UART1 ? (8) : \
-        ((x) == UART2 ? (1) : \
-        ((x) == UART3 ? (1) : \
-        ((x) == UART4 ? (1) : (-1))))))
+        (((x) == UART0) ? (8) : \
+        (((x) == UART1) ? (8) : \
+        (((x) == UART2) ? (1) : \
+        (((x) == UART3) ? (1) : \
+        (((x) == UART4) ? (1) : (-1))))))
     /* @brief Maximal data width without parity bit. */
     #define FSL_FEATURE_UART_MAX_DATA_WIDTH_WITH_NO_PARITY (9)
     /* @brief Maximal data width with parity bit. */
@@ -1885,11 +1912,11 @@
     #define FSL_FEATURE_UART_HAS_WAIT_MODE_OPERATION (1)
     /* @brief Has separate DMA RX and TX requests. */
     #define FSL_FEATURE_UART_HAS_SEPARATE_DMA_RX_TX_REQn(x) \
-        ((x) == UART0 ? (1) : \
-        ((x) == UART1 ? (1) : \
-        ((x) == UART2 ? (1) : \
-        ((x) == UART3 ? (1) : \
-        ((x) == UART4 ? (0) : (-1))))))
+        (((x) == UART0) ? (1) : \
+        (((x) == UART1) ? (1) : \
+        (((x) == UART2) ? (1) : \
+        (((x) == UART3) ? (1) : \
+        (((x) == UART4) ? (0) : (-1))))))
 #endif /* defined(CPU_MK64FN1M0CAJ12) || defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FN1M0VMD12) || \
     defined(CPU_MK64FX512VDC12) || defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FX512VMD12) */
 

@@ -3,7 +3,8 @@
         ************************************************/
         . = ALIGN(4);
         *(.text*)
-        /* added in template for gcov: */
+        /* added in template for gprof: */
+        PROVIDE_HIDDEN (__etext = .); /* symobl for end of text area, needed by _mcount_internal() */
         PROVIDE_HIDDEN (__init_array_start = .);
         KEEP (*(SORT(.init_array.*)))
         KEEP (*(.init_array*))

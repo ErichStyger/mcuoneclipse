@@ -40,6 +40,10 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "McuWait.h"
+
+#include "profil.h"
+#include "gmon.h"
 
 #if 0
 static void AppTask(void *pv) {
@@ -56,6 +60,7 @@ static void AppTask(void *pv) {
 #endif
 
 static int Value(int i) {
+  McuWait_Waitms(20);
   if (i==3) {
     return 5;
   }
@@ -63,6 +68,7 @@ static int Value(int i) {
 }
 
 static void Test2(int *p) {
+  McuWait_Waitms(10);
   if (*p!=0) {
     if (Value(*p)==5) {
       printf("value is 5\n");
@@ -71,7 +77,8 @@ static void Test2(int *p) {
   }
 }
 
-static void TestCoverage(int i) {
+static void test(int i) {
+  McuWait_Waitms(50);
   Test2(&i);
   if (i==0) {
     printf("i is zero!\n");
@@ -81,36 +88,21 @@ static void TestCoverage(int i) {
 }
 
 int main(void) {
-#if GCOV_DO_COVERAGE
-  #if defined(__REDLIB__)
-    #error "gcov not supported with RedLib"
-  #else
-    gcov_init(); /* do *not* call this for redlib as it does not implement constructors! */
-  #endif
-    if (!gcov_check()) {
-      printf("WARNING: writing coverage does not work! Wrong library used?\n");
-    }
-#endif
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
   	/* Init FSL debug console. */
   	BOARD_InitDebugConsole();
 
-    TestCoverage(3); /* quick coverage test */
-#if 0
-    if (xTaskCreate(AppTask, "App", 1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
-      for(;;) {}
-    }
-    vTaskStartScheduler();
-#endif
-    /* here we have ended the scheduler so we can write the coverage data */
-#if GCOV_DO_COVERAGE
-    gcov_write(); /* write coverage files, might take a while depending how many files are covered */
-#endif
+  	_monInit();
+  	gprof_init_timer();
+    McuWait_Waitms(100);
+  	test(3);
+    //_exit(0); /* write coverage/profiling information */
+
     for(;;) { /* do not leave main */
-      __asm volatile("nop");
-      __asm volatile("bkpt #0");
+      //__asm volatile("nop");
+      //__asm volatile("bkpt #0");
     }
     return 0 ;
 }

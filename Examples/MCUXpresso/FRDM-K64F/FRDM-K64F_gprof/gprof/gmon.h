@@ -173,5 +173,6 @@ extern struct gmonparam _gmonparam;
 
 void _mcleanup(void); /* routine to be called to write gmon.out file */
 void _monInit(void); /* initialization routine */
+void _exit(int status);
 
 #endif /* !_SYS_GMONH_ */

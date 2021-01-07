@@ -18,19 +18,25 @@
 #include "profil.h"
 #include <string.h>
 #include <stdint.h>
+#include "fsl_pit.h"
+
 
 /* global profinfo for profil() call */
 static struct profinfo prof = {
   PROFILE_NOT_INIT, 0, 0, 0, 0
 };
 
-#if !McuLib_CONFIG_SDK_USE_FREERTOS
+#define PIT_BASEADDR 		PIT
+#define PIT_CHANNEL  		kPIT_Chnl_0
+#define PIT_HANDLER   		PIT0_IRQHandler
+#define PIT_IRQ_ID      	PIT0_IRQn
+#define PIT_SOURCE_CLOCK 	CLOCK_GetFreq(kCLOCK_BusClk)
+
 /* sample the current program counter */
-void SysTick_Handler(void) {
-  //void OSA_SysTick_Handler(void);
+void PIT0_IRQHandler(void) {
   static size_t pc, idx;
 
-  //OSA_SysTick_Handler(); /* call normal Kinetis SDK SysTick handler: rename OSA_SysTick_Handler to OSA_SysTick_Handler in osa1.c */
+  PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
   if (prof.state==PROFILE_ON) {
     pc = ((uint32_t*)(__builtin_frame_address(0)))[14]; /* get SP and use it to get the return address from stack */
     if (pc >= prof.lowpc && pc < prof.highpc) {
@@ -38,8 +44,29 @@ void SysTick_Handler(void) {
       prof.counter[idx]++;
     }
   }
+  __DSB();
 }
-#endif
+
+
+void gprof_init_timer(void) {
+    pit_config_t pitConfig;
+    /*
+     * pitConfig.enableRunInDebug = false;
+     */
+    PIT_GetDefaultConfig(&pitConfig);
+
+    /* Init pit module */
+    PIT_Init(PIT_BASEADDR, &pitConfig);
+
+    /* Set timer period for channel 0 */
+    PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, USEC_TO_COUNT(1000U, PIT_SOURCE_CLOCK)); /* must be PROF_HZ */
+
+    /* Enable timer interrupts for channel 0 */
+    PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
+
+    /* Enable at the NVIC */
+    EnableIRQ(PIT_IRQ_ID);
+}
 
 /* Stop profiling to the profiling buffer pointed to by p. */
 static int profile_off (struct profinfo *p) {

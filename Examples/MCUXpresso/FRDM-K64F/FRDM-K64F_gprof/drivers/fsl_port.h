@@ -35,8 +35,8 @@
 enum _port_pull
 {
     kPORT_PullDisable = 0U, /*!< Internal pull-up/down resistor is disabled. */
-    kPORT_PullDown = 2U,    /*!< Internal pull-down resistor is enabled. */
-    kPORT_PullUp = 3U,      /*!< Internal pull-up resistor is enabled. */
+    kPORT_PullDown    = 2U, /*!< Internal pull-down resistor is enabled. */
+    kPORT_PullUp      = 3U, /*!< Internal pull-up resistor is enabled. */
 };
 #endif /* FSL_FEATURE_PORT_HAS_PULL_ENABLE */
 
@@ -54,7 +54,7 @@ enum _port_slew_rate
 enum _port_open_drain_enable
 {
     kPORT_OpenDrainDisable = 0U, /*!< Open drain output is disabled. */
-    kPORT_OpenDrainEnable = 1U,  /*!< Open drain output is enabled. */
+    kPORT_OpenDrainEnable  = 1U, /*!< Open drain output is enabled. */
 };
 #endif /* FSL_FEATURE_PORT_HAS_OPEN_DRAIN */
 
@@ -63,7 +63,7 @@ enum _port_open_drain_enable
 enum _port_passive_filter_enable
 {
     kPORT_PassiveFilterDisable = 0U, /*!< Passive input filter is disabled. */
-    kPORT_PassiveFilterEnable = 1U,  /*!< Passive input filter is enabled. */
+    kPORT_PassiveFilterEnable  = 1U, /*!< Passive input filter is enabled. */
 };
 #endif
 
@@ -71,7 +71,7 @@ enum _port_passive_filter_enable
 /*! @brief Configures the drive strength. */
 enum _port_drive_strength
 {
-    kPORT_LowDriveStrength = 0U,  /*!< Low-drive strength is configured. */
+    kPORT_LowDriveStrength  = 0U, /*!< Low-drive strength is configured. */
     kPORT_HighDriveStrength = 1U, /*!< High-drive strength is configured. */
 };
 #endif /* FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH */
@@ -81,7 +81,7 @@ enum _port_drive_strength
 enum _port_lock_register
 {
     kPORT_UnlockRegister = 0U, /*!< Pin Control Register fields [15:0] are not locked. */
-    kPORT_LockRegister = 1U,   /*!< Pin Control Register fields [15:0] are locked. */
+    kPORT_LockRegister   = 1U, /*!< Pin Control Register fields [15:0] are locked. */
 };
 #endif /* FSL_FEATURE_PORT_HAS_PIN_CONTROL_LOCK */
 
@@ -89,22 +89,22 @@ enum _port_lock_register
 /*! @brief Pin mux selection */
 typedef enum _port_mux
 {
-    kPORT_PinDisabledOrAnalog = 0U, /*!< Corresponding pin is disabled, but is used as an analog pin. */
-    kPORT_MuxAsGpio = 1U,           /*!< Corresponding pin is configured as GPIO. */
-    kPORT_MuxAlt2 = 2U,             /*!< Chip-specific */
-    kPORT_MuxAlt3 = 3U,             /*!< Chip-specific */
-    kPORT_MuxAlt4 = 4U,             /*!< Chip-specific */
-    kPORT_MuxAlt5 = 5U,             /*!< Chip-specific */
-    kPORT_MuxAlt6 = 6U,             /*!< Chip-specific */
-    kPORT_MuxAlt7 = 7U,             /*!< Chip-specific */
-    kPORT_MuxAlt8 = 8U,             /*!< Chip-specific */
-    kPORT_MuxAlt9 = 9U,             /*!< Chip-specific */
-    kPORT_MuxAlt10 = 10U,           /*!< Chip-specific */
-    kPORT_MuxAlt11 = 11U,           /*!< Chip-specific */
-    kPORT_MuxAlt12 = 12U,           /*!< Chip-specific */
-    kPORT_MuxAlt13 = 13U,           /*!< Chip-specific */
-    kPORT_MuxAlt14 = 14U,           /*!< Chip-specific */
-    kPORT_MuxAlt15 = 15U,           /*!< Chip-specific */
+    kPORT_PinDisabledOrAnalog = 0U,  /*!< Corresponding pin is disabled, but is used as an analog pin. */
+    kPORT_MuxAsGpio           = 1U,  /*!< Corresponding pin is configured as GPIO. */
+    kPORT_MuxAlt2             = 2U,  /*!< Chip-specific */
+    kPORT_MuxAlt3             = 3U,  /*!< Chip-specific */
+    kPORT_MuxAlt4             = 4U,  /*!< Chip-specific */
+    kPORT_MuxAlt5             = 5U,  /*!< Chip-specific */
+    kPORT_MuxAlt6             = 6U,  /*!< Chip-specific */
+    kPORT_MuxAlt7             = 7U,  /*!< Chip-specific */
+    kPORT_MuxAlt8             = 8U,  /*!< Chip-specific */
+    kPORT_MuxAlt9             = 9U,  /*!< Chip-specific */
+    kPORT_MuxAlt10            = 10U, /*!< Chip-specific */
+    kPORT_MuxAlt11            = 11U, /*!< Chip-specific */
+    kPORT_MuxAlt12            = 12U, /*!< Chip-specific */
+    kPORT_MuxAlt13            = 13U, /*!< Chip-specific */
+    kPORT_MuxAlt14            = 14U, /*!< Chip-specific */
+    kPORT_MuxAlt15            = 15U, /*!< Chip-specific */
 } port_mux_t;
 #endif /* FSL_FEATURE_PORT_PCR_MUX_WIDTH */
 
@@ -113,24 +113,24 @@ typedef enum _port_mux
 typedef enum _port_interrupt
 {
     kPORT_InterruptOrDMADisabled = 0x0U, /*!< Interrupt/DMA request is disabled. */
-#if defined(FSL_FEATURE_PORT_HAS_DMA_REQUEST) && FSL_FEATURE_PORT_HAS_DMA_REQUEST
-    kPORT_DMARisingEdge = 0x1U,  /*!< DMA request on rising edge. */
+#if defined(FSL_FEATURE_PORT_HAS_DMA_REQUEST) && FSL_FEATURE_PORT_HAS_DMA_REQUEST || defined(DOXYGEN_OUTPUT)
+    kPORT_DMARisingEdge  = 0x1U, /*!< DMA request on rising edge. */
     kPORT_DMAFallingEdge = 0x2U, /*!< DMA request on falling edge. */
-    kPORT_DMAEitherEdge = 0x3U,  /*!< DMA request on either edge. */
+    kPORT_DMAEitherEdge  = 0x3U, /*!< DMA request on either edge. */
 #endif
-#if defined(FSL_FEATURE_PORT_HAS_IRQC_FLAG) && FSL_FEATURE_PORT_HAS_IRQC_FLAG
-    kPORT_FlagRisingEdge = 0x05U,  /*!< Flag sets on rising edge. */
+#if defined(FSL_FEATURE_PORT_HAS_IRQC_FLAG) && FSL_FEATURE_PORT_HAS_IRQC_FLAG || defined(DOXYGEN_OUTPUT)
+    kPORT_FlagRisingEdge  = 0x05U, /*!< Flag sets on rising edge. */
     kPORT_FlagFallingEdge = 0x06U, /*!< Flag sets on falling edge. */
-    kPORT_FlagEitherEdge = 0x07U,  /*!< Flag sets on either edge. */
+    kPORT_FlagEitherEdge  = 0x07U, /*!< Flag sets on either edge. */
 #endif
-    kPORT_InterruptLogicZero = 0x8U,   /*!< Interrupt when logic zero. */
-    kPORT_InterruptRisingEdge = 0x9U,  /*!< Interrupt on rising edge. */
+    kPORT_InterruptLogicZero   = 0x8U, /*!< Interrupt when logic zero. */
+    kPORT_InterruptRisingEdge  = 0x9U, /*!< Interrupt on rising edge. */
     kPORT_InterruptFallingEdge = 0xAU, /*!< Interrupt on falling edge. */
-    kPORT_InterruptEitherEdge = 0xBU,  /*!< Interrupt on either edge. */
-    kPORT_InterruptLogicOne = 0xCU,    /*!< Interrupt when logic one. */
-#if defined(FSL_FEATURE_PORT_HAS_IRQC_TRIGGER) && FSL_FEATURE_PORT_HAS_IRQC_TRIGGER
+    kPORT_InterruptEitherEdge  = 0xBU, /*!< Interrupt on either edge. */
+    kPORT_InterruptLogicOne    = 0xCU, /*!< Interrupt when logic one. */
+#if defined(FSL_FEATURE_PORT_HAS_IRQC_TRIGGER) && FSL_FEATURE_PORT_HAS_IRQC_TRIGGER || defined(DOXYGEN_OUTPUT)
     kPORT_ActiveHighTriggerOutputEnable = 0xDU, /*!< Enable active high-trigger output. */
-    kPORT_ActiveLowTriggerOutputEnable = 0xEU,  /*!< Enable active low-trigger output. */
+    kPORT_ActiveLowTriggerOutputEnable  = 0xEU, /*!< Enable active low-trigger output. */
 #endif
 } port_interrupt_t;
 #endif
@@ -208,8 +208,8 @@ typedef struct _port_pin_config
 #endif /* FSL_FEATURE_PORT_PCR_MUX_WIDTH */
 
 /*******************************************************************************
-* API
-******************************************************************************/
+ * API
+ ******************************************************************************/
 
 #if defined(__cplusplus)
 extern "C" {
@@ -243,7 +243,7 @@ extern "C" {
 static inline void PORT_SetPinConfig(PORT_Type *base, uint32_t pin, const port_pin_config_t *config)
 {
     assert(config);
-    uint32_t addr = (uint32_t)&base->PCR[pin];
+    uint32_t addr                = (uint32_t)&base->PCR[pin];
     *(volatile uint16_t *)(addr) = *((const uint16_t *)config);
 }
 
@@ -337,7 +337,7 @@ static inline void PORT_SetMultipleInterruptPinsConfig(PORT_Type *base, uint32_t
  *        - #kPORT_MuxAlt5            : chip-specific.
  *        - #kPORT_MuxAlt6            : chip-specific.
  *        - #kPORT_MuxAlt7            : chip-specific.
- * @Note : This function is NOT recommended to use together with the PORT_SetPinsConfig, because
+ * @note : This function is NOT recommended to use together with the PORT_SetPinsConfig, because
  *         the PORT_SetPinsConfig need to configure the pin mux anyway (Otherwise the pin mux is
  *         reset to zero : kPORT_PinDisabledOrAnalog).
  *        This function is recommended to use to reset the pin mux
@@ -354,8 +354,9 @@ static inline void PORT_SetPinMux(PORT_Type *base, uint32_t pin, port_mux_t mux)
 /*!
  * @brief Enables the digital filter in one port, each bit of the 32-bit register represents one pin.
  *
- * @param base  PORT peripheral base pointer.
- * @param mask  PORT pin number macro.
+ * @param base    PORT peripheral base pointer.
+ * @param mask    PORT pin number macro.
+ * @param enable  PORT digital filter configuration.
  */
 static inline void PORT_EnablePinsDigitalFilter(PORT_Type *base, uint32_t mask, bool enable)
 {
@@ -422,9 +423,9 @@ static inline void PORT_SetPinInterruptConfig(PORT_Type *base, uint32_t pin, por
 /*!
  * @brief Configures the port pin drive strength.
  *
- * @param base    PORT peripheral base pointer.
- * @param pin     PORT pin number.
- * @param config  PORT pin drive strength
+ * @param base      PORT peripheral base pointer.
+ * @param pin       PORT pin number.
+ * @param strength  PORT pin drive strength
  *        - #kPORT_LowDriveStrength = 0U - Low-drive strength is configured.
  *        - #kPORT_HighDriveStrength = 1U - High-drive strength is configured.
  */
