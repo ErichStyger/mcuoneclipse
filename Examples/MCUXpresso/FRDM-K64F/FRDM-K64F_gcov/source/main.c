@@ -46,6 +46,10 @@
 /* TODO: insert other definitions and declarations here. */
 
 static void AppTask(void *pv) {
+#if 1
+  vTaskEndScheduler();
+  for(;;) {}
+#else
   int cntr = 0;
   (void)pv;
   for(;;) {
@@ -55,6 +59,7 @@ static void AppTask(void *pv) {
       vTaskEndScheduler();
     }
   }
+#endif
 }
 
 static int Value(int i) {
@@ -100,7 +105,7 @@ int main(void) {
   	BOARD_InitDebugConsole();
 
     TestCoverage(3); /* quick coverage test */
-#if 0 /* somehow does not work with latest FreeRTOS? */
+#if 1 /* somehow does not work with latest FreeRTOS? */
     if (xTaskCreate(AppTask, "App", 1024/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!= pdPASS) {
       for(;;) {}
     }
