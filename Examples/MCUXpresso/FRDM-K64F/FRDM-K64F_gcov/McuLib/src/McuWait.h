@@ -6,7 +6,7 @@
 **     Component   : Wait
 **     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-06, 07:32, # CodeGen: 692
+**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -77,8 +77,13 @@
 #if McuWait_CONFIG_USE_RTOS_WAIT
   /* include RTOS header files */
   #include "McuRTOS.h"
-  #include "FreeRTOS.h" /* for vTaskDelay() */
-  #include "task.h"
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h" /* for vTaskDelay() */
+    #include "freertos/task.h"
+  #else
+    #include "FreeRTOS.h" /* for vTaskDelay() */
+    #include "task.h"
+  #endif
 #endif
 
 #ifdef __cplusplus

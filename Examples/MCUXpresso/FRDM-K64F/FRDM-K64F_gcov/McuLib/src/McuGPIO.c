@@ -186,7 +186,11 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_ClearPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #else
   GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
@@ -199,7 +203,11 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_SetPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #else
   GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
@@ -212,7 +220,11 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+  GPIO_TogglePinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #else
   GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PortToggle(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
@@ -226,7 +238,11 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 
   if (val) { /* set to HIGH */
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+    GPIO_SetPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #else
     GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
@@ -234,7 +250,11 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+    GPIO_ClearPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #else
     GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
     GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
@@ -252,7 +272,11 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_SDK_VERSION < 250
+  return GPIO_ReadPinInput(pin->hw.gpio, pin->hw.pin)!=0;
+  #else
   return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
   return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
 #elif McuLib_CONFIG_CPU_IS_IMXRT

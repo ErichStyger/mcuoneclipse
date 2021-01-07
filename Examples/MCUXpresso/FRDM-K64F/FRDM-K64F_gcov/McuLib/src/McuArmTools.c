@@ -6,7 +6,7 @@
 **     Component   : KinetisTools
 **     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-07-28, 16:15, # CodeGen: 666
+**     Date/Time   : 2020-11-23, 10:16, # CodeGen: 715
 **     Abstract    :
 **
 **     Settings    :
@@ -215,7 +215,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
-  int i, j;
+  unsigned int i, j;
 
   SIM_GetUniqueId(&tmp);
   /* init */

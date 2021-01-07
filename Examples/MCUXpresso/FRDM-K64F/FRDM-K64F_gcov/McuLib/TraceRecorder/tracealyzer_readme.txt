@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
-          Tracealyzer for FreeRTOS - Trace Recorder Library v3.3.0                      
+          Tracealyzer Recorder Library for FreeRTOS
 -------------------------------------------------------------------------------
 
-Tracealyzer for FreeRTOS is a sophisticated tool for tracing and visualization
+Tracealyzer is a sophisticated tool for tracing and visualization
 of FreeRTOS-based software systems.
 
 Tracealyzer gives an unprecedented insight into the runtime behavior, which 
@@ -16,13 +16,145 @@ To learn more, see these links.
 
  - Getting Started (videos etc): https://percepio.com/gettingstarted
 
- - User Manual (incl. Recorder API): https://percepio.com/docs/FreeRTOS/manual
-
  - FAQ: https://percepio.com/category/faq
 
 In case you have any questions, don't hesitate to contact support@percepio.com
 
 Tracealyzer supports FreeRTOS v7.3 and newer, including Amazon FreeRTOS.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.11 -> v4.4.1
+- Updates to the USB CDC streamport
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.10 -> v4.3.11
+- Adapted for new Task Notify changes
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.8 -> v4.3.10
+- Fixed accidental C99 reliance
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.7 -> v4.3.8
+- Modified how FreeRTOS versions are configured in the trace library.
+- traceQUEUE_SET_SEND() was added.
+- Now informs users of FreeRTOS v10.3.X that the trace point traceQUEUE_SEND in
+  prvNotifyQueueSetContainer() should be changed to traceQUEUE_SET_SEND.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.5 -> v4.3.7
+- Fixed issue where ISR naming would not always work.
+- Fixed "errno" issue with certain compilers when using lwip streaming port.
+- Recorder now makes sure all streaming trace header info is successfully sent 
+  before moving on.
+- Recorder warns if TRC_CFG_PAGED_EVENT_BUFFER_PAGE_COUNT > 128 since code
+  isn't designed for that.
+- Made sure uiTraceSystemState is always declared in snapshot recorder.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.1 -> v4.3.5
+- A previously removed define is no longer used when configSUPPORT_STATIC_ALLOCATION is 1
+
+-------------------------------------------------------------------------------
+
+Changes, v4.3.0 -> v4.3.1
+- Name string no longer has to have unique address when calling xTraceSetISRProperties()
+
+-------------------------------------------------------------------------------
+
+Changes, v4.2.12 -> v4.3.0
+- Improved Streaming stability in regards to starting/stopping.
+- Added support for STACK usage reports.
+- Added vTraceVPrintF() that accepts a va_list as argument.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.2.2 -> v4.2.12
+
+- Changed a call to vTracePrintF() into vTracePrint().
+
+-------------------------------------------------------------------------------
+
+Changes, v4.2.1 -> v4.2.2
+
+- TRC_STREAM_PORT_WRITE_DATA() no longer has to deal with null pointers. Better
+  for custom StreamPort implementations.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.7 -> v4.2.1
+
+- Added support for initial heap usage at trace start in Streaming mode.
+- Fixed bug regarding failed malloc calls in Streaming mode.
+- Added support for tracing failed malloc calls in Snapshot mode.
+- Better way of setting initial task "(startup)" in Streaming mode.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.5 -> v4.1.7
+
+- vQueueSendToFront() and vQueueSendToFrontFromISR() are now traced properly in
+  Snaphot mode.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.4 -> v4.1.5
+
+- Fixed a bug in the ITM stream port, that required Port 0 to be enabled.
+- Added missing include of stdio.h (needed by vTraceConsoleChannelPrintF).
+- Moved standard includes from trcRecorder.h into the .c files needing them.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.2 -> v4.1.4
+
+- Fixed a compile error when certain FreeRTOS settings were used
+- Disabled filter support for FreeRTOS v7.3 since it uses "char" for object id
+
+-------------------------------------------------------------------------------
+
+Changes, v4.1.0 -> v4.1.2
+
+- Added vTraceConsoleChannelPrintF(...)
+
+-------------------------------------------------------------------------------
+
+Changes, v4.0.3 -> v4.1.0
+
+- Improved performance of User Events
+- Fixed handling of format strings ending with '%'
+- Improved handling of creative user configuration macros
+
+-------------------------------------------------------------------------------
+
+Changes, v4.0.2 -> v4.0.3
+
+- Minor fix for TCP/IP stream port.
+- Corrected default RTT mode setting.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.0.1 -> v4.0.2
+
+- Memory allocation trace events now ignore filters.
+
+-------------------------------------------------------------------------------
+
+Changes, v4.0.0 -> v4.0.1
+
+- Minor fixes to default values.
+
+-------------------------------------------------------------------------------
+
+Changes, v3.3.0 -> v4.0.0
+
+- Fixed some issues with filters.
 
 -------------------------------------------------------------------------------
 
@@ -154,7 +286,6 @@ Changes, v3.1.2 -> v3.2.0
 -------------------------------------------------------------------------------
 
 Changes, v3.1.1 -> v3.1.2
-
 - Fixed two bugs related to User Events, one in vTracePrintF and other in vTracePrint.
 
 - Fixed a build problem related to a single reference of the old FreeRTOS type "xTaskHandle", in trcKernelPort.c.
@@ -284,5 +415,5 @@ Changes, v3.0.9 -> v3.1.0
   
  
 -------------------------------------------------------------------------------
-Copyright Percepio AB, 2017. 
+Copyright Percepio AB, 2018. 
 
