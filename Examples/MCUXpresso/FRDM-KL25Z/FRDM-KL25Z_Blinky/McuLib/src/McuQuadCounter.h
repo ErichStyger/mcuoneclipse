@@ -6,7 +6,7 @@
 **     Component   : QuadCounter
 **     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-14, 06:24, # CodeGen: 679
+**     Date/Time   : 2020-12-02, 10:47, # CodeGen: 721
 **     Abstract    :
 **
 This driver implements a quadrature encoder using two signals (C1 and C2) to generate position information.
@@ -28,6 +28,8 @@ This driver implements a quadrature encoder using two signals (C1 and C2) to gen
 **         SetPos       - void McuQuadCounter_SetPos(McuQuadCounter_QuadCntrType pos);
 **         GetVal       - uint8_t McuQuadCounter_GetVal(void);
 **         Sample       - void McuQuadCounter_Sample(void);
+**         NofErrors    - uint16_t McuQuadCounter_NofErrors(void);
+**         SwapPins     - uint8_t McuQuadCounter_SwapPins(bool swap);
 **         Deinit       - void McuQuadCounter_Deinit(void);
 **         Init         - void McuQuadCounter_Init(void);
 **         ParseCommand - uint8_t McuQuadCounter_ParseCommand(const unsigned char *cmd, bool *handled,...
@@ -87,7 +89,7 @@ This driver implements a quadrature encoder using two signals (C1 and C2) to gen
 
 
 #define McuQuadCounter_SWAP_PINS  0 /* 1: C1 and C2 are swapped */
-#define McuQuadCounter_SWAP_PINS_AT_RUNTIME  0 /* 1: C1 and C2 are swapped at runtime, if SwapPins() method is available */
+#define McuQuadCounter_SWAP_PINS_AT_RUNTIME  1 /* 1: C1 and C2 are swapped at runtime, if SwapPins() method is available */
 #define McuQuadCounter_GET_C1_PIN()      (C11_GetVal())
 #define McuQuadCounter_GET_C2_PIN()      (C21_GetVal())
 #if McuQuadCounter_SWAP_PINS
@@ -145,6 +147,19 @@ void McuQuadCounter_Sample(void);
 ** ===================================================================
 */
 
+uint16_t McuQuadCounter_NofErrors(void);
+/*
+** ===================================================================
+**     Method      :  NofErrors (component QuadCounter)
+**
+**     Description :
+**         Returns the number of decoding errors
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
 void McuQuadCounter_Deinit(void);
 /*
 ** ===================================================================
@@ -198,6 +213,21 @@ uint8_t McuQuadCounter_GetVal(void);
 **     Parameters  : None
 **     Returns     :
 **         ---             - Quadrature value (0-3)
+** ===================================================================
+*/
+
+uint8_t McuQuadCounter_SwapPins(bool swap);
+/*
+** ===================================================================
+**     Method      :  SwapPins (component QuadCounter)
+**
+**     Description :
+**         Swap the two pins
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         swap            - if C1 and C2 pins shall be swapped.
+**     Returns     :
+**         ---             - Error code
 ** ===================================================================
 */
 

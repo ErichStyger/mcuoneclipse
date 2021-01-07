@@ -32,6 +32,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 #include "McuTimeDate.h"
 #include "McuUtility.h"
@@ -55,7 +56,7 @@ static struct {
 #endif
   log_LockFn lock; /* user mutex for synchronization */
   void *udata;  /* optional data for lock */
-  McuShell_ConstStdIOType *consoleIo; /* I/O for console logging */
+  McuShell_ConstStdIOType *consoleIo[McuLog_CONFIG_NOF_CONSOLE_LOGGER]; /* I/O for console logging */
   bool quiet; /* if console logging is silent/quiet */
 #if McuLog_CONFIG_USE_COLOR
   bool color; /* if using color for terminal */
@@ -96,8 +97,9 @@ static void unlock(void) {
   }
 }
 
-void McuLog_set_console(McuShell_ConstStdIOType *io) {
-  L.consoleIo = io;
+void McuLog_set_console(McuShell_ConstStdIOType *io, uint8_t index) {
+  assert(index<McuLog_CONFIG_NOF_CONSOLE_LOGGER);
+  L.consoleIo[index] = io;
 }
 
 void McuLog_set_udata(void *udata) {
@@ -274,13 +276,17 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 #else
   (void)McuTimeDate_GetTime(&time); /* Get current time */
 #endif
-  if (!L.quiet && L.consoleIo!=NULL) { /* log to console */
-    LogHeader(DATE_PTR, &time, level, true, file, line, OutputCharFctConsole, L.consoleIo->stdErr);
-    /* open argument list */
-    va_start(list, fmt);
-    McuXFormat_xvformat(OutputCharFctConsole, L.consoleIo->stdErr, fmt, list);
-    va_end(list);
-    OutString((unsigned char *)"\n", OutputCharFctConsole, L.consoleIo->stdErr);
+  if (!L.quiet) {
+    for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
+      if(L.consoleIo[i]!=NULL) { /* log to console */
+        LogHeader(DATE_PTR, &time, level, true, file, line, OutputCharFctConsole, L.consoleIo[i]->stdErr);
+        /* open argument list */
+        va_start(list, fmt);
+        McuXFormat_xvformat(OutputCharFctConsole, L.consoleIo[i]->stdErr, fmt, list);
+        va_end(list);
+        OutString((unsigned char *)"\n", OutputCharFctConsole, L.consoleIo[i]->stdErr);
+      }
+    } /* for */
   }
 
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
@@ -313,6 +319,7 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 
 #if McuLog_CONFIG_USE_MUTEX
 static void LockUnlockCallback(void *data, int lock) {
+  (void)data; /* not used */
   if (lock) {
     (void)xSemaphoreTakeRecursive(L.McuLog_Mutex, portMAX_DELAY);
   } else {
@@ -323,7 +330,12 @@ static void LockUnlockCallback(void *data, int lock) {
 
 #if McuLog_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[8];
+
   McuShell_SendStatusStr((unsigned char*)"McuLog", (unsigned char*)"Log status\r\n", io->stdOut);
+  McuUtility_Num8uToStr(buf, sizeof(buf), McuLog_CONFIG_NOF_CONSOLE_LOGGER);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  console", buf, io->stdOut);
 #if McuLog_CONFIG_USE_FILE
   McuShell_SendStatusStr((unsigned char*)"  file", L.fp!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
 #endif
@@ -421,7 +433,7 @@ void McuLog_Init(void) {
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   McuLog_set_rtt_logger(true);
 #endif
-  L.consoleIo = McuShell_GetStdio();
+  L.consoleIo[0] = McuShell_GetStdio(); /* default */
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   #if McuLib_CONFIG_SDK_USE_FREERTOS && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && McuSystemView_CONFIG_RTT_CHANNEL==McuLog_RTT_DATA_LOGGER_CHANNEL
     #error "Both RTT Logger and SystemViewer are using the same channel! Change McuSystemView_CONFIG_RTT_CHANNEL to a different value."

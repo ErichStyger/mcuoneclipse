@@ -981,7 +981,7 @@ CopyStraight:
   } else {                                             // Potential case 4)
     Avail = RdOff - WrOff - 1u;
     if (Avail >= NumBytes) {                           // Case 4)? => If not, we have case 5) (does not fit)
-      goto CopyStraight;
+      goto CopyStraight; // << EST @suppress("Goto statement used")
     }
   }
   return 0;     // No space in buffer
@@ -1666,7 +1666,7 @@ int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBu
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
   if (BufferIndex < (unsigned)pRTTCB->MaxNumUpBuffers) {
     SEGGER_RTT_LOCK();
-    if (BufferIndex > 0u) {
+    if (BufferIndex > 0u && SEGGER_RTT_MAX_NUM_UP_BUFFERS>1) { /* << EST additional check to avoid gcc warning with -Os */
       pRTTCB->aUp[BufferIndex].sName        = sName;
       pRTTCB->aUp[BufferIndex].pBuffer      = (char*)pBuffer;
       pRTTCB->aUp[BufferIndex].SizeOfBuffer = BufferSize;
@@ -1715,7 +1715,7 @@ int SEGGER_RTT_ConfigDownBuffer(unsigned BufferIndex, const char* sName, void* p
   pRTTCB = (volatile SEGGER_RTT_CB*)((unsigned char*)&_SEGGER_RTT + SEGGER_RTT_UNCACHED_OFF);  // Access RTTCB uncached to make sure we see changes made by the J-Link side and all of our changes go into HW directly
   if (BufferIndex < (unsigned)pRTTCB->MaxNumDownBuffers) {
     SEGGER_RTT_LOCK();
-    if (BufferIndex > 0u) {
+    if (BufferIndex > 0u && SEGGER_RTT_MAX_NUM_DOWN_BUFFERS>1) { /* << EST additional check to avoid gcc warning with -Os */
       pRTTCB->aDown[BufferIndex].sName        = sName;
       pRTTCB->aDown[BufferIndex].pBuffer      = (char*)pBuffer;
       pRTTCB->aDown[BufferIndex].SizeOfBuffer = BufferSize;

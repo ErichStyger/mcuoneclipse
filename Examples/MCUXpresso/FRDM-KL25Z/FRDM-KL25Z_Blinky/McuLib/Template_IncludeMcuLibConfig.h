@@ -18,6 +18,7 @@ Instructions:
 ../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
 ../McuLib/SEGGER_RTT
 ../McuLib/SEGGER_Sysview
+../McuLib/TraceRecorder
 ../McuLib/TraceRecorder/config
 ../McuLib/TraceRecorder/include
 ../McuLib/TraceRecorder/streamports/Jlink_RTT/include

@@ -6,7 +6,7 @@
 **     Component   : XFormat
 **     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-13, 06:28, # CodeGen: 701
+**     Date/Time   : 2020-11-23, 10:16, # CodeGen: 715
 **     Abstract    :
 **
 **     Settings    :
@@ -366,33 +366,29 @@ static void ulong2a(struct param_s * param)
     switch (param->radix)
     {
       case 2:
-        digit = param->values.lvalue & 0x01;
+        digit = (unsigned char)(param->values.lvalue & 0x01);
         param->values.lvalue >>= 1;
         break;
 
       case 8:
-        digit = param->values.lvalue & 0x07;
+        digit = (unsigned char)(param->values.lvalue & 0x07);
         param->values.lvalue >>= 3;
         break;
 
       case 16:
-        digit = param->values.lvalue & 0x0F;
+        digit = (unsigned char)(param->values.lvalue & 0x0F);
         param->values.lvalue >>= 4;
         break;
 
       default:
       case 10:
-        digit = param->values.lvalue % 10;
+        digit = (unsigned char)(param->values.lvalue % 10);
         param->values.lvalue /= 10;
         break;
     }
-
-
     *param->out -- = ms_digits[digit];
     param->length ++;
-
   }
-
 }
 
 
@@ -678,7 +674,7 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
     else
       i = formatStates[c - ' '] & 0x0F;
 
-    param.state = formatStates[(i << 3) + param.state] >> 4;
+    param.state = (char)(formatStates[(i << 3) + param.state] >> 4);
 
     switch (param.state)
     {
@@ -689,15 +685,16 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
         break;
 
       case  ST_PERCENT:
-        param.flags = param.length = param.prefixlen = param.width = param.prec = 0;
+        param.flags = (unsigned)(param.length = param.prefixlen = param.width = param.prec = 0);
         param.pad = ' ';
         break;
 
       case  ST_WIDTH:
-        if (c == '*')
+        if (c == '*') {
           param.width = (int)va_arg(args,int);
-        else
+        } else {
           param.width = param.width * 10 + (c - '0');
+        }
         break;
 
       case  ST_DOT:
@@ -705,10 +702,11 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
 
       case  ST_PRECIS:
         param.flags |= FLAG_PREC;
-        if (c == '*')
+        if (c == '*') {
           param.prec = (int)va_arg(args,int);
-        else
+        } else {
           param.prec = param.prec * 10 + (c - '0');
+        }
         break;
 
       case  ST_SIZE:
@@ -983,17 +981,19 @@ unsigned McuXFormat_xvformat(void (*outchar)(void *,char), void *arg, const char
                 param.values.lvalue = (unsigned LONG)va_arg(args,void *);
                 break;
               case FLAG_TYPE_LONG:
-                if (param.flags & FLAG_DECIMAL)
-                  param.values.lvalue = (LONG)va_arg(args,long);
-                else
+                if (param.flags & FLAG_DECIMAL) {
+                  param.values.lvalue = (unsigned LONG)va_arg(args,long);
+                } else {
                   param.values.lvalue = (unsigned LONG)va_arg(args,unsigned long);
+                }
                 break;
 
               case FLAG_TYPE_INT:
-                if (param.flags & FLAG_DECIMAL)
-                  param.values.lvalue = (LONG)va_arg(args,int);
-                else
+                if (param.flags & FLAG_DECIMAL) {
+                  param.values.lvalue = (unsigned LONG)va_arg(args,int);
+                } else {
                   param.values.lvalue = (unsigned LONG)va_arg(args,unsigned int);
+                }
                 break;
 #if XCFG_FORMAT_LONGLONG
               case FLAG_TYPE_LONGLONG:

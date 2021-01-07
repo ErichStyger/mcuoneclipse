@@ -29,6 +29,12 @@
     /*!< 1: use use file for logging, 0: do not use file */
 #endif
 
+#ifndef McuLog_CONFIG_NOF_CONSOLE_LOGGER
+  #define McuLog_CONFIG_NOF_CONSOLE_LOGGER    (1)
+    /*!< Number of console loggers */
+#endif
+
+
 #ifndef McuLog_CONFIG_LOG_TIMESTAMP_DATE
   #define McuLog_CONFIG_LOG_TIMESTAMP_DATE    (1)
     /*!< 1: add date to time stamp, 0: do not date for time stamp */

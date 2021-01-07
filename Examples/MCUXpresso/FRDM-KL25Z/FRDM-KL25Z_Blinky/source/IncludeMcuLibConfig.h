@@ -31,6 +31,7 @@ Instructions:
 
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+
 /* set the CPU. See McuLibConfig.h for all supported CPUs */
 #if 0 /* example configuration for LPC845 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
@@ -43,6 +44,7 @@ Instructions:
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #elif 1 /* example configuration for Kinetis KL25Z */
+  #define McuLib_CONFIG_CPU_IS_LPC         (0)  /* LPC845 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (0)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
   #define McuLib_CONFIG_SDK_VERSION_MAJOR   (2)

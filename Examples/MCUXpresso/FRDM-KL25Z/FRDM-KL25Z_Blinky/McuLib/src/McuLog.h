@@ -46,7 +46,7 @@ typedef enum { McuLog_TRACE, McuLog_DEBUG, McuLog_INFO, McuLog_WARN, McuLog_ERRO
 #define McuLog_error(...) McuLog_log(McuLog_ERROR, __BASE_FILE__, __LINE__, __VA_ARGS__)
 #define McuLog_fatal(...) McuLog_log(McuLog_FATAL, __BASE_FILE__, __LINE__, __VA_ARGS__)
 
-void McuLog_set_console(McuShell_ConstStdIOType *io);
+void McuLog_set_console(McuShell_ConstStdIOType *io, uint8_t index);
 void McuLog_set_udata(void *udata);
 void McuLog_set_lock(log_LockFn fn);
 #if McuLog_CONFIG_USE_FILE
@@ -79,7 +79,7 @@ void McuLog_Deinit(void);
   #define McuLog_error(...) do{}while(0)
   #define McuLog_fatal(...) do{}while(0)
 
-  #define McuLog_set_console(io)                    do{}while(0)
+  #define McuLog_set_console(io,ch)                 do{}while(0)
   #define McuLog_set_udata(udata)                   do{}while(0)
   #define McuLog_set_lock(fn)                       do{}while(0)
   #define McuLog_set_fp(fp)                         do{}while(0)
@@ -92,9 +92,10 @@ void McuLog_Deinit(void);
   #define McuLog_Deinit() do{}while(0)
 #endif /* McuLog_CONFIG_IS_ENABLED */
 
-#endif /* McuLog_CONFIG_IS_ENABLED */
-
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+#endif /* McuLog_CONFIG_IS_ENABLED */
+
 
