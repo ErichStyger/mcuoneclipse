@@ -43,10 +43,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-/* TODO: insert other definitions and declarations here. */
+/* NOTE: might need to do a full clean/rebuild and remove existing coverage information first! */
 
 static void AppTask(void *pv) {
-#if 1
+#if 0
+  vTaskDelay(pdMS_TO_TICKS(100));
   vTaskEndScheduler();
   for(;;) {}
 #else
