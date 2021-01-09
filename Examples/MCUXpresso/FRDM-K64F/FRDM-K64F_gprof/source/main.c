@@ -88,21 +88,22 @@ static void test(int i) {
 }
 
 int main(void) {
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-  	/* Init FSL debug console. */
-  	BOARD_InitDebugConsole();
+    BOARD_InitPins();
+    BOARD_BootClockRUN();
 
-  	_monInit();
-  	gprof_init_timer();
+    if (profile_file_write_check()!=1) {
+    	/* failed writing file with semihosting? */
+    	for(;;) {}
+    }
+
+    gprof_init_timer();
     McuWait_Waitms(100);
   	test(3);
-    //_exit(0); /* write coverage/profiling information */
+    _exit(0); /* write coverage/profiling information */
 
     for(;;) { /* do not leave main */
       //__asm volatile("nop");
       //__asm volatile("bkpt #0");
     }
-    return 0 ;
+    return 0;
 }

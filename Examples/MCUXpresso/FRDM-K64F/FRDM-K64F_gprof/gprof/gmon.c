@@ -140,7 +140,7 @@ void monstartup (size_t lowpc, size_t highpc) {
 }
 
 void _mcleanup(void) {
-	static const char gmon_out[] = "gmon.out";
+	static const char gmon_out[] = "c:\\tmp\\" "gmon.out"; /* by default this is inside the <IDE>\ide folder */
 	int fd;
 	int hz;
 	int fromindex;
@@ -168,7 +168,7 @@ void _mcleanup(void) {
 		return;
 	}
 #ifdef DEBUG
-	log = open("gmon.log", O_CREAT|O_TRUNC|O_WRONLY, 0664);
+	log = open("c:\\tmp\\" "gmon.log", O_CREAT|O_TRUNC|O_WRONLY, 0664);
 	if (log < 0) {
 		perror("mcount: gmon.log");
 		return;

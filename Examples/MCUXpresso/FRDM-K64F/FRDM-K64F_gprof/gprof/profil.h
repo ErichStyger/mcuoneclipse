@@ -57,5 +57,6 @@ struct profinfo {
 int profile_ctl(struct profinfo *, char *, size_t, size_t, u_int);
 int profil(char *, size_t, size_t, u_int);
 void gprof_init_timer(void);
+int profile_file_write_check(void);
 
 #endif /* __PROFIL_H__ */

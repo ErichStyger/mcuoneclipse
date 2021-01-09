@@ -47,7 +47,6 @@ void PIT0_IRQHandler(void) {
   __DSB();
 }
 
-
 void gprof_init_timer(void) {
     pit_config_t pitConfig;
     /*
@@ -66,6 +65,7 @@ void gprof_init_timer(void) {
 
     /* Enable at the NVIC */
     EnableIRQ(PIT_IRQ_ID);
+    PIT_StartTimer(PIT_BASEADDR, PIT_CHANNEL);
 }
 
 /* Stop profiling to the profiling buffer pointed to by p. */
@@ -121,3 +121,15 @@ int profil (char *samples, size_t size, size_t offset, u_int scale) {
   return profile_ctl (&prof, samples, size, offset, scale);
 }
 
+int profile_file_write_check(void) {
+  FILE *file = NULL;
+
+  file = fopen ("c:\\tmp\\test.txt", "w");
+  if (file!=NULL) {
+    fputs("hello world with file I/O\r\n", file);
+    (void)fwrite("hello\r\n", sizeof("hello\r\n")-1, 1, file);
+    fclose(file);
+    return 1; /* ok */
+  }
+  return 0; /* failed */
+}
