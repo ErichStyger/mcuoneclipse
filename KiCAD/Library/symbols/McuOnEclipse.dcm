@@ -113,6 +113,12 @@ $CMP SN65HVD72
 D RS-485 driver
 $ENDCMP
 #
+$CMP STSPIN220
+D Low voltage stepper motor driver, 1.8V to 10V input, 1.3Arms output, 0.4Ω Rdson per phase (typical), QFN-16 package
+K motor driver stepper
+F www.st.com/resource/en/datasheet/stspin220.pdf
+$ENDCMP
+#
 $CMP SWD_JTAG_10pin
 D 10pin 1.27pitch SWD/JTAG Header
 $ENDCMP
