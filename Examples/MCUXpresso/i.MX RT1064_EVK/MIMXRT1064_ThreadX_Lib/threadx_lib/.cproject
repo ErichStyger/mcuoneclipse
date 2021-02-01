@@ -345,7 +345,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_EVK-MIMXRT1064</sdkName>
 		<sdkExample>evkmimxrt1064_threadx_lib</sdkExample>
-		<sdkVersion>2.8.6</sdkVersion>
+		<sdkVersion>2.8.5</sdkVersion>
 		<sdkComponents>middleware.azure_rtos.tx.lib.MIMXRT1064;platform.utilities.misc_utilities.MIMXRT1064;evkmimxrt1064_threadx_lib;</sdkComponents>
 		<boardId>evkmimxrt1064</boardId>
 		<package>MIMXRT1064DVL6A</package>
@@ -363,7 +363,7 @@
 &lt;family&gt;MIMXRT1064&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="4096" type="Flash"/&gt;&#13;
-&lt;memory id="RAM" size="1024" type="RAM"/&gt;&#13;
+&lt;memory id="RAM" size="768" type="RAM"/&gt;&#13;
 &lt;memoryInstance derived_from="Flash" driver="MIMXRT1064.cfx" edited="true" id="PROGRAM_FLASH" location="0x70000000" size="0x400000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_DTC" location="0x20000000" size="0x20000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM_ITC" location="0x0" size="0x20000"/&gt;&#13;
