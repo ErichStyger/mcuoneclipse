@@ -47,9 +47,7 @@
  */
 int main(void) {
   gcov_init();  /* initialize library */
-  if (!gcov_check()) { /* optional: check if semihosting file writing works */
-    printf("WARNING: writing coverage does not work! Wrong library used?\n");
-  }
+
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
