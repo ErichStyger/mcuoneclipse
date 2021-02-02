@@ -318,18 +318,22 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.157740412.453937089" name="board.c" rcbsApplicability="disable" resourcePath="board/board.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1874379271.1427049233">
-						<tool id="com.crt.advproject.gcc.exe.debug.1874379271.1427049233" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1874379271">
-							<option id="gnu.c.compiler.option.debugging.codecov.290999079" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-							<inputType id="com.crt.advproject.compiler.input.583789974" superClass="com.crt.advproject.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.157740412.1602902287" name="clock_config.c" rcbsApplicability="disable" resourcePath="board/clock_config.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1874379271.510345924">
-						<tool id="com.crt.advproject.gcc.exe.debug.1874379271.510345924" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1874379271">
-							<option id="gnu.c.compiler.option.debugging.codecov.487115381" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-							<inputType id="com.crt.advproject.compiler.input.1925958716" superClass="com.crt.advproject.compiler.input"/>
-						</tool>
-					</fileInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.157740412.107255191" name="/" resourcePath="board">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1846772905" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.515180296" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.925333664"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1618353006" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1874379271">
+								<option id="gnu.c.compiler.option.debugging.codecov.1775200768" superClass="gnu.c.compiler.option.debugging.codecov" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<inputType id="com.crt.advproject.compiler.input.83137046" superClass="com.crt.advproject.compiler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.gas.exe.debug.1531295876" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.974765989">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.402678048" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="com.crt.advproject.assembler.input.1620113119" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
+							</tool>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1618762142" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1694268461"/>
+							<tool id="com.crt.advproject.link.exe.debug.1121453144" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.2074061467"/>
+							<tool id="com.crt.advproject.tool.debug.debug.871492210" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.20370853"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
@@ -726,4 +730,12 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-K64F_gcov_bm"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-K64F_gcov_bm"/>
+		</configuration>
+	</storageModule>
 </cproject>
