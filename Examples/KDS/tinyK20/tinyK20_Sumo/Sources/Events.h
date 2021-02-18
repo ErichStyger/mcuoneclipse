@@ -65,17 +65,11 @@
 #include "PwmLdd4.h"
 #include "PWML.h"
 #include "PwmLdd3.h"
-#include "RNET1.h"
-#include "RF1.h"
-#include "CE1.h"
-#include "BitIoLdd10.h"
-#include "CSN1.h"
-#include "BitIoLdd11.h"
-#include "SM1.h"
-#include "SMasterLdd1.h"
 #include "RTT1.h"
 #include "SYS1.h"
 #include "HF1.h"
+#include "TGT_SWD_OE.h"
+#include "BitIoLdd8.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -172,22 +166,30 @@ void FRTOS1_vApplicationMallocFailedHook(void);
 */
 void QuadInt_OnInterrupt(void);
 
-void SM1_OnRxCharExt(SM1_TComData Chr);
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
-**     Event       :  SM1_OnRxCharExt (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
 **     Description :
-**         This event is called after a correct character is received.
-**         The parameter of the event contains the last received
-**         character. If an input buffer is used, the character is also
-**         inserted into the buffer.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         Chr             - The last received character
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */

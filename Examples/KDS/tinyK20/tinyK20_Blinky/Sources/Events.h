@@ -40,8 +40,6 @@
 #include "MCUC1.h"
 #include "KIN1.h"
 #include "UTIL1.h"
-#include "TGT_SWD_OE.h"
-#include "BitIoLdd2.h"
 
 #ifdef __cplusplus
 extern "C" {

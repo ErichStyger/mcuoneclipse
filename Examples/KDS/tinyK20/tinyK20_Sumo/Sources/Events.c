@@ -165,24 +165,53 @@ void QuadInt_OnInterrupt(void)
 
 /*
 ** ===================================================================
-**     Event       :  SM1_OnRxCharExt (module Events)
-**
-**     Component   :  SM1 [SynchroMaster]
 **     Description :
-**         This event is called after a correct character is received.
-**         The parameter of the event contains the last received
-**         character. If an input buffer is used, the character is also
-**         inserted into the buffer.
-**         The event is available only when the <Interrupt
-**         service/event> property is enabled.
+**         Used in tickless idle mode only, but required in this mode.
+**         Hook for the application to enter low power mode.
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         Chr             - The last received character
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
 **     Returns     : Nothing
 ** ===================================================================
 */
-void SM1_OnRxCharExt(SM1_TComData Chr)
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
+  (void)expectedIdleTicks; /* not used */
+#if 1
+  /* example for Kinetis (enable SetOperationMode() in CPU component): */
+  /* Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); */ /* Processor Expert way to get into WAIT mode */
+  /* or to wait for interrupt: */
+    __asm volatile("dsb");
+    __asm volatile("wfi");
+    __asm volatile("isb");
+#elif 0
+  /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
+  Cpu_SetWaitMode();
+#elif 0
+  /* example for ColdFire V2: */
+   __asm("stop #0x2000"); */
+#else
+  #error "you *must* enter low power mode (wait for interrupt) here!"
+#endif
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */
 }
 
