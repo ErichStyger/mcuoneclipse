@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2019 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -20,7 +20,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
+#define FSL_SIM_DRIVER_VERSION (MAKE_VERSION(2, 1, 2))
 /*@}*/
 
 #if (defined(FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR) && FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR)
@@ -39,7 +39,7 @@ enum _sim_usb_volt_reg_enable_mode
 /*!@brief Unique ID. */
 typedef struct _sim_uid
 {
-#if defined(SIM_UIDH)
+#if (defined(FSL_FEATURE_SIM_HAS_UIDH) && FSL_FEATURE_SIM_HAS_UIDH)
     uint32_t H; /*!< UIDH.  */
 #endif
 

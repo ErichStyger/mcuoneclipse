@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2017, 2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -20,8 +20,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief SMC driver version 2.0.6. */
-#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 6))
+/*! @brief SMC driver version */
+#define FSL_SMC_DRIVER_VERSION (MAKE_VERSION(2, 0, 7))
 /*@}*/
 
 /*!
@@ -127,9 +127,9 @@ typedef enum _smc_partial_stop_mode
 } smc_partial_stop_option_t;
 
 /*!
- * @brief SMC configuration status.
+ * @brief _smc_status, SMC configuration status.
  */
-enum _smc_status
+enum
 {
     kStatus_SMC_StopAbort = MAKE_STATUS(kStatusGroup_POWER, 0) /*!< Entering Stop mode is abort*/
 };

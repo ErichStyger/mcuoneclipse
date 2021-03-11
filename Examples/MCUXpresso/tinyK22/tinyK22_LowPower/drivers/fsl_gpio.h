@@ -22,9 +22,16 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief GPIO driver version 2.4.1. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 4, 1))
+/*! @brief GPIO driver version 2.5.1. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 5, 1))
 /*@}*/
+
+#if defined(FSL_FEATURE_GPIO_REGISTERS_WIDTH) && (FSL_FEATURE_GPIO_REGISTERS_WIDTH == 8U)
+#define GPIO_FIT_REG(value) \
+    ((uint8_t)(value)) /*!< For some platforms with 8-bit register width, cast the type to uint8_t */
+#else
+#define GPIO_FIT_REG(value) (value)
+#endif /*FSL_FEATURE_GPIO_REGISTERS_WIDTH*/
 
 /*! @brief GPIO direction definition */
 typedef enum _gpio_pin_direction
@@ -158,11 +165,11 @@ static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
 
     if (output == 0U)
     {
-        base->PCOR = u32flag << pin;
+        base->PCOR = GPIO_FIT_REG(u32flag << pin);
     }
     else
     {
-        base->PSOR = u32flag << pin;
+        base->PSOR = GPIO_FIT_REG(u32flag << pin);
     }
 }
 
@@ -174,7 +181,7 @@ static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
  */
 static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
 {
-    base->PSOR = mask;
+    base->PSOR = GPIO_FIT_REG(mask);
 }
 
 /*!
@@ -185,7 +192,7 @@ static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
 {
-    base->PCOR = mask;
+    base->PCOR = GPIO_FIT_REG(mask);
 }
 
 /*!
@@ -196,7 +203,7 @@ static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
 {
-    base->PTOR = mask;
+    base->PTOR = GPIO_FIT_REG(mask);
 }
 
 /*@}*/
@@ -215,7 +222,7 @@ static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
  */
 static inline uint32_t GPIO_PinRead(GPIO_Type *base, uint32_t pin)
 {
-    return (((base->PDIR) >> pin) & 0x01U);
+    return (((uint32_t)(base->PDIR) >> pin) & 0x01UL);
 }
 
 /*@}*/
@@ -271,15 +278,44 @@ static inline void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t pin, gpi
 {
     assert(base);
 
-    base->ICR[pin] = (base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config);
+    base->ICR[pin] = GPIO_FIT_REG((base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config));
 }
+
 /*!
- * brief Clears GPIO pin interrupt status flags.
+ * @brief Read the GPIO interrupt status flags.
  *
- * param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
- * param mask GPIO pin number macro
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on.)
+ * @return The current GPIO's interrupt status flag.
+ *         '1' means the related pin's flag is set, '0' means the related pin's flag not set.
+ *          For example, the return value 0x00010001 means the pin 0 and 17 have the interrupt pending.
+ */
+uint32_t GPIO_GpioGetInterruptFlags(GPIO_Type *base);
+
+/*!
+ * @brief Read individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on)
+ * @param pin GPIO specific pin number.
+ * @return The current selected pin's interrupt status flag.
+ */
+uint8_t GPIO_PinGetInterruptFlag(GPIO_Type *base, uint32_t pin);
+
+/*!
+ * @brief Clears GPIO pin interrupt status flags.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
  */
 void GPIO_GpioClearInterruptFlags(GPIO_Type *base, uint32_t mask);
+
+/*!
+ * @brief Clear GPIO individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on).
+ * @param pin GPIO specific pin number.
+ */
+void GPIO_PinClearInterruptFlag(GPIO_Type *base, uint32_t pin);
+
 /*!
  * @brief Reads the GPIO DMA request flags.
  *        The corresponding flag will be cleared automatically at the completion of the requested
@@ -318,12 +354,12 @@ static inline void GPIO_SetMultipleInterruptPinsConfig(GPIO_Type *base, uint32_t
 
     if (mask & 0xffffU)
     {
-        base->GICLR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICLR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
-    mask = mask >> 16;
+    mask = mask >> 16U;
     if (mask)
     {
-        base->GICHR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICHR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
 }
 #endif
@@ -336,8 +372,8 @@ static inline void GPIO_SetMultipleInterruptPinsConfig(GPIO_Type *base, uint32_t
  * organized as 32-bit words, the attribute controls for the 4 data bytes in the GACR follow a standard little
  * endian data convention.
  *
- * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
- * @param mask GPIO pin number macro
+ * @param base      GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param attribute GPIO checker attribute
  */
 void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribute);
 #endif
@@ -509,7 +545,7 @@ uint32_t FGPIO_PortGetInterruptFlags(FGPIO_Type *base);
  */
 void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
 #endif
-#if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
+#if defined(FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER
 /*!
  * @brief The FGPIO module supports a device-specific number of data ports, organized as 32-bit
  * words. Each 32-bit data port includes a GACR register, which defines the byte-level
@@ -517,11 +553,11 @@ void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
  * bytes in the GACR follow a standard little endian
  * data convention.
  *
- * @param base FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
- * @param mask FGPIO pin number macro
+ * @param base      FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
+ * @param attribute FGPIO checker attribute
  */
 void FGPIO_CheckAttributeBytes(FGPIO_Type *base, gpio_checker_attribute_t attribute);
-#endif
+#endif /* FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER */
 
 /*@}*/
 
