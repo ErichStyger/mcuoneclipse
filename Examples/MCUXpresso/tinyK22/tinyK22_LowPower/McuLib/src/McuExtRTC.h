@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : RTC_Maxim
-**     Version     : Component 01.020, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-03, 07:13, # CodeGen: 546
+**     Date/Time   : 2020-05-19, 14:21, # CodeGen: 634
 **     Abstract    :
 **          Driver for external I2C based realtime clocks (RTC)
 **     Settings    :
@@ -28,6 +28,7 @@
 **         SetTime        - uint8_t McuExtRTC_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t...
 **         GetDate        - uint8_t McuExtRTC_GetDate(DATEREC *date);
 **         SetDate        - uint8_t McuExtRTC_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
+**         GetTemperature - uint8_t McuExtRTC_GetTemperature(float *temperature);
 **         Read           - uint8_t McuExtRTC_Read(uint8_t addr, uint8_t *buf, uint8_t bufSize);
 **         Write          - uint8_t McuExtRTC_Write(uint8_t addr, uint8_t *buf, uint8_t bufSize);
 **         ReadByte       - uint8_t McuExtRTC_ReadByte(uint8_t addr, uint8_t *buf);
@@ -38,7 +39,7 @@
 **         Init           - void McuExtRTC_Init(void);
 **         Deinit         - void McuExtRTC_Deinit(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -88,6 +89,7 @@
 #include "McuUtility.h"
 #include "McuLib.h"
 #include "McuShell.h"
+
 
 #ifndef __BWUserType_McuExtRTC_TTIME
 #define __BWUserType_McuExtRTC_TTIME
@@ -496,6 +498,23 @@ uint8_t McuExtRTC_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
 **         Year            - Year in 2000 format
 **         Month           - Month number (1..12)
 **         Day             - Day number (1..31)
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t McuExtRTC_GetTemperature(float *temperature);
+/*
+** ===================================================================
+**     Method      :  GetTemperature (component RTC_Maxim)
+**
+**     Description :
+**         Returns the temperature from the device internal temperature
+**         sensor. Only available on DS3231 and DS3232.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * temperature     - Pointer to store the
+**                           temperature
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================

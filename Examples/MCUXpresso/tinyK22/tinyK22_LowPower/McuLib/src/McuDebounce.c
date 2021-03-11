@@ -1,8 +1,8 @@
 /*
  * McuDebounce.c
  *
- *  Created on: 29.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "McuDebounce.h"
@@ -96,7 +96,7 @@ void McuDbnc_Process(McuDbnc_Desc_t *data) {
           }
           changed = (data->scanValue)&(~buttons); /* newly released buttons */
           if (changed!=0) {
-            data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, changed); /* generate release event for the old keys released */
+            data->onDebounceEvent(MCUDBNC_EVENT_LONG_RELEASED, changed); /* generate release event for the old keys released */
             data->lastEventTimeMs = data->countTimeMs;
           }
           data->scanValue = buttons; /* store new set of buttons */
@@ -105,7 +105,11 @@ void McuDbnc_Process(McuDbnc_Desc_t *data) {
         break; /* go to next state */
 
       case MCUDBMC_STATE_RELEASED:
-        data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, data->scanValue); /* throw short event */
+        if (data->countTimeMs>=data->longKeyTimeMs) {
+          data->onDebounceEvent(MCUDBNC_EVENT_LONG_RELEASED, data->scanValue); /* throw long event */
+        } else {
+          data->onDebounceEvent(MCUDBNC_EVENT_RELEASED, data->scanValue); /* throw short event */
+        }
         data->lastEventTimeMs = data->countTimeMs;
         data->state = MCUDBMC_STATE_END;
         break;

@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for FXOS8700CQ accelerometer
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the FXOS8700CQ module.
  */
@@ -27,7 +29,6 @@ extern "C" {
   #define McuFXOS8700_CONFIG_TEMP_OFFSET  (24)
     /*!< die temperature offset for real temperature calculation */
 #endif
-
 
 #if !defined(McuFXOS8700_CONFIG_PARSE_COMMAND_ENABLED)
   #define McuFXOS8700_CONFIG_PARSE_COMMAND_ENABLED  1

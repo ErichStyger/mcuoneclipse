@@ -135,7 +135,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[32];
   float temperature, humidity;
 
-  McuShell_SendStatusStr((unsigned char*)"SHT31", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"SHT31", (unsigned char*)"Sensirion SHT31 sensor status\r\n", io->stdOut);
 
   if(McuSHT31_ReadTempHum(&temperature, &humidity)==ERR_OK) {
     McuUtility_NumFloatToStr(buf, sizeof(buf), temperature, 2);

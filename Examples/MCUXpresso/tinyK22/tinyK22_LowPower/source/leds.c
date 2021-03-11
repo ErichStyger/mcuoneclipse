@@ -7,7 +7,7 @@
 #include "leds.h"
 #include "McuLED.h"
 
-#if 0 /* tinyK22 */
+#if 1 /* tinyK22 */
   #define PINS_LEDBLUE_GPIO       GPIOC
   #define PINS_LEDBLUE_PORT       PORTC
   #define PINS_LEDBLUE_PIN        2U

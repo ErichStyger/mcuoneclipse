@@ -1,8 +1,8 @@
 /*
  * McuDebounce.h
  *
- *  Created on: 29.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef MCUDEBOUNCE_H_
@@ -33,12 +33,13 @@ typedef enum {
   MCUDBNC_EVENT_LONG_PRESSED,           /*!< Event for key(s) pressed for a long time */
   MCUDBNC_EVENT_LONG_PRESSED_REPEAT,    /*!< Event for key(s) pressed for a long time */
   MCUDBNC_EVENT_RELEASED,               /*!< Event for key(s) released */
+  MCUDBNC_EVENT_LONG_RELEASED,          /*!< Event for key(s) released after pressed a long time */
   MCUDBNC_EVENT_END                     /*!< Debouncing end event. This one is called when the FSM finishes. */
 } McuDbnc_EventKinds;
 
 typedef struct {
   McuDbnc_State_e state;        /* data */
-  //uint32_t flags;
+  /* uint32_t flags; */
   uint32_t timerPeriodMs;       /* config: period of timer in ms */
   TimerHandle_t timer;          /* config: RTOS timer handle */
   uint32_t scanValue;           /* data: value of buttons at debounce start */

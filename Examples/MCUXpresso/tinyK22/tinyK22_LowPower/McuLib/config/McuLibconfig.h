@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for McuLibConfig
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the McuLibConfig module.
  */
@@ -14,10 +16,6 @@
 #ifndef McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   #define McuLib_CONFIG_CPU_IS_ARM_CORTEX_M             (1 || defined(__CORTEX_M))
     /*!< 1: ARM Cortex-M family, 0 otherwise */
-#endif
-#ifndef McuLib_CONFIG_CPU_IS_KINETIS
-  #define McuLib_CONFIG_CPU_IS_KINETIS                  (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
-    /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_S32K
   #define McuLib_CONFIG_CPU_IS_S32K                     (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
@@ -63,6 +61,18 @@
     /*!< 1: ESP32 CPU family, 0: otherwise. The ESP32 compiler defines __XTENSA__ with a value of 1 */
 #endif
 
+#ifndef McuLib_CONFIG_CPU_IS_KINETIS
+  #define McuLib_CONFIG_CPU_IS_KINETIS                 (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M \
+                                                            && !(McuLib_CONFIG_CPU_IS_LPC) \
+                                                            && !(McuLib_CONFIG_CPU_IS_LPC55xx) \
+                                                            && !(McuLib_CONFIG_CPU_IS_IMXRT) \
+                                                            && !(McuLib_CONFIG_CPU_IS_STM32) \
+                                                            && !(McuLib_CONFIG_CPU_IS_NORDIC_NRF) \
+                                                            && !(McuLib_CONFIG_CPU_IS_S32K))
+    /*!< 1: NXP Kinetis CPU family, 0: otherwise */
+#endif
+
+
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #ifndef McuLib_CONFIG_CORTEX_M
@@ -86,19 +96,19 @@
 #define McuLib_CONFIG_CPU_IS_LITTLE_ENDIAN   (McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
 
 /* Identifiers used to identify the SDK */
-#define McuLib_CONFIG_SDK_GENERIC             0
+#define McuLib_CONFIG_SDK_GENERIC             (0)
   /*!< using a generic API/SDK */
-#define McuLib_CONFIG_SDK_PROCESSOR_EXPERT    1
+#define McuLib_CONFIG_SDK_PROCESSOR_EXPERT    (1)
   /*!< using Processor Expert SDK */
-#define McuLib_CONFIG_SDK_KINETIS_1_3         2
+#define McuLib_CONFIG_SDK_KINETIS_1_3         (2)
   /*!< using NXP Kinetis SDK V1.3 */
-#define McuLib_CONFIG_SDK_KINETIS_2_0         3
+#define McuLib_CONFIG_SDK_KINETIS_2_0         (3)
   /*!< using NXP Kinetis SDK V2.0 */
-#define McuLib_CONFIG_SDK_MCUXPRESSO_2_0      4
+#define McuLib_CONFIG_SDK_MCUXPRESSO_2_0      (4)
   /*!< using NXP MCUXpresso SDK V2.x, same as Kinetis SDK v2.0 */
-#define McuLib_CONFIG_SDK_S32K                5
+#define McuLib_CONFIG_SDK_S32K                (5)
   /*!< SDK for S32K */
-#define McuLib_CONFIG_SDK_NORDIC_NRF5         6
+#define McuLib_CONFIG_SDK_NORDIC_NRF5         (6)
   /*!< Nordic nRF5 SDK */
 
 #ifndef McuLib_CONFIG_SDK_VERSION_MAJOR
@@ -136,11 +146,25 @@
 #endif
 
 
+/* *****************   Middleware Configuration *******************/
 /* Configuration macro if FreeRTOS is used */
 #ifndef McuLib_CONFIG_SDK_USE_FREERTOS
   #define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
     /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
 #endif
+
+/* Configuration macro if FreeRTOS is used */
+#ifndef McuLib_CONFIG_SDK_USE_FREERTOS
+  #define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
+    /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
+#endif
+
+/* FatFS */
+#ifndef McuLib_CONFIG_SDK_USE_FAT_FS
+  #define McuLib_CONFIG_SDK_USE_FAT_FS            (0)
+    /*!< 1: Use FatFS; 0: no FatFS used */
+#endif
+/* ***************************************************************/
 
 /* special macro to identify a set of SDKs used */
 #define McuLib_CONFIG_NXP_SDK_USED               (   (McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_KINETIS_1_3) \
@@ -157,6 +181,29 @@
 
 #define McuLib_CONFIG_PEX_SDK_USED               (McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_PROCESSOR_EXPERT)
   /*!< Using Processor Expert API */
+
+/* Compiler identification: */
+#define McuLib_CONFIG_COMPILER_GNU            (0)
+#define McuLib_CONFIG_COMPILER_IAR            (1)
+#define McuLib_CONFIG_COMPILER_KEIL           (2)
+#define McuLib_CONFIG_COMPILER_HIWARE         (3)
+#define McuLib_CONFIG_COMPILER_METROWERKS     (4)
+
+#ifndef McuLib_CONFIG_COMPILER
+  #if defined(__GNUC__)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_GNU
+  #elif defined(__HIWARE__)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_HIWARE
+  #elif defined(__IAR_SYSTEMS_ICC__)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_IAR
+  #elif defined(__CC_ARM)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_KEIL
+  #elif defined(__MWERKS__)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_METROWERKS
+  #else
+    #warning "a compiler needs to be defined!"
+  #endif
+#endif
 
 #endif /* __McuLib_CONFIG_H */
 

@@ -1,4 +1,12 @@
-#ifndef __McuRTOS_CONFIG_H
+/**
+ * \file
+ * \brief Configuration header file for FreeRTOS component
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the FreeRTOS module.
+ */
+ #ifndef __McuRTOS_CONFIG_H
 #define __McuRTOS_CONFIG_H
 
 #include "McuLib.h" /* SDK and API used */
@@ -90,7 +98,7 @@
  * See http://interactive.freertos.org/entries/23468301-Tasks-backtrace-switcher-viewer-snippet-for-debugger-gcc-gdb-ARM-Cortex-M3-MPU-port-Eclipse-support-
  *----------------------------------------------------------*/
 #ifndef configGDB_HELPER
-  #define configGDB_HELPER                        (1 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
+  #define configGDB_HELPER                        (0 && configCPU_FAMILY_IS_ARM(configCPU_FAMILY) && (configCOMPILER==configCOMPILER_ARM_GCC))
    /*!< 1: enable special GDB stack backtrace debug helper; 0: disabled */
 #endif
 
@@ -110,17 +118,29 @@
 #endif
 
 #ifndef configLINKER_HEAP_BASE_SYMBOL
+#if McuLib_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_BASE_SYMBOL           _pvHeapStart
+#else
   #define configLINKER_HEAP_BASE_SYMBOL           __HeapBase
+#endif
     /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapBase, MCUXpresso: _pvHeapStart)  */
 #endif
 
 #ifndef configLINKER_HEAP_LIMIT_SYMBOL
+#if McuLib_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_LIMIT_SYMBOL          _pvHeapLimit
+#else
   #define configLINKER_HEAP_LIMIT_SYMBOL          __HeapLimit
+#endif
     /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapLimit, MCUXpresso: _pvHeapLimit)  */
 #endif
 
 #ifndef configLINKER_HEAP_SIZE_SYMBOL
+#if McuLib_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_SIZE_SYMBOL           _HeapSize
+#else
   #define configLINKER_HEAP_SIZE_SYMBOL           __heap_size
+#endif
     /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib). (KDS: __heap_size, MCUXpresso: _HeapSize) */
 #endif
 
@@ -133,7 +153,6 @@
   #define configRESET_MSP                         (1)
    /*!< 1: reset MSP at scheduler start (Cortex M3/M4/M7 only); 0: do not reset MSP */
 #endif
-
 
 /*-----------------------------------------------------------
  * FreeRTOS Trace hook support

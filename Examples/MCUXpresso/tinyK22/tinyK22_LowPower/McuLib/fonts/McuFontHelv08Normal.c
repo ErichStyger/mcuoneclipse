@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GFont
-**     Version     : Component 01.130, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.131, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-08-19, 17:46, # CodeGen: 341
+**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
 **     Abstract    :
 **          Driver for graphical fonts
 **     Settings    :
@@ -25,7 +25,7 @@
 **         Deinit                - void McuFontHelv08Normal_Deinit(void);
 **         Init                  - void McuFontHelv08Normal_Init(void);
 **
-** * Copyright (c) 2011-2018, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

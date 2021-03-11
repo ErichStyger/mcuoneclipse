@@ -58,7 +58,9 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
   gpio_config.hw.gpio = config->hw.gpio;
+#if !McuLib_CONFIG_CPU_IS_IMXRT /* i.MX does not need a port */
   gpio_config.hw.port = config->hw.port;
+#endif
   gpio_config.hw.pin  = config->hw.pin;
   if (config->isLowActive) {
     gpio_config.isHighOnInit = !config->isOnInit;

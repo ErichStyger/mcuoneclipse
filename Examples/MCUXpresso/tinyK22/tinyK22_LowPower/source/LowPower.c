@@ -27,7 +27,7 @@ static void ConfigurePIT(void) {
   PIT_GetDefaultConfig(&config);
   config.enableRunInDebug = false;
   PIT_Init(PIT_BASEADDR, &config);
-  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, MSEC_TO_COUNT(10*1000U, PIT_SOURCE_CLOCK));
+  PIT_SetTimerPeriod(PIT_BASEADDR, PIT_CHANNEL, MSEC_TO_COUNT(1*1000U, PIT_SOURCE_CLOCK));
   PIT_EnableInterrupts(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerInterruptEnable);
   NVIC_SetPriority(PIT_IRQ_ID, 0);
   EnableIRQ(PIT_IRQ_ID);

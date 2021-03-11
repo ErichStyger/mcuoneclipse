@@ -1,8 +1,10 @@
 /**
  * \file
  * \brief Configuration header file for Kinetis Tools (or ARM in general)
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
- * This header file is used to configure settings of the Kinetis Tools module.
+ * This header file is used to configure settings of the ARM Tools module.
  */
 
 #ifndef __McuArmTools_CONFIG_H
