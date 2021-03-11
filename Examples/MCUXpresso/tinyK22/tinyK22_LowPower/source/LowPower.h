@@ -12,7 +12,6 @@
 
 /* Power mode definition used in application. */
 typedef enum _app_power_mode {
-    kAPP_PowerModeMin = 'A' - 1,
     kAPP_PowerModeRun,   /* Normal RUN mode */
     kAPP_PowerModeWait,  /* WAIT mode. */
     kAPP_PowerModeStop,  /* STOP mode. */
@@ -25,7 +24,6 @@ typedef enum _app_power_mode {
     kAPP_PowerModeVlls2, /* VLLS2 mode. */
     kAPP_PowerModeVlls3, /* VLLS3 mode. */
     kAPP_PowerModeHsrun, /* HighSpeed RUN mode */
-    kAPP_PowerModeMax
 } app_power_mode_t;
 
 typedef enum _app_wakeup_source {
@@ -44,8 +42,8 @@ bool LP_CheckPowerMode(smc_power_state_t curPowerState, app_power_mode_t targetP
 
 /* selected low power mode: */
 //#define LP_MODE LP_MODE_RUN /* the low power mode to be used */
-#define LP_MODE LP_MODE_WAIT /* the low power mode to be used */
-//#define LP_MODE LP_MODE_STOP /* the low power mode to be used */
+//#define LP_MODE LP_MODE_WAIT /* the low power mode to be used */
+#define LP_MODE LP_MODE_STOP /* the low power mode to be used */
 //#define LP_MODE LP_MODE_VLPR
 
 smc_power_state_t LP_GetCurrPowerMode(void);

@@ -8,8 +8,24 @@
 #include "LowPower.h"
 #include "fsl_pit.h"
 #include "fsl_smc.h"
+#include "fsl_lptmr.h"
+#include "fsl_port.h"
+#include "fsl_llwu.h"
 
 static smc_power_state_t LP_curPowerState;
+static uint8_t s_wakeupTimeout;            /* Wakeup timeout. (Unit: Second) */
+static app_wakeup_source_t s_wakeupSource; /* Wakeup source.                 */
+
+#define APP_WAKEUP_BUTTON_GPIO        GPIOC
+#define APP_WAKEUP_BUTTON_PORT        PORTC
+#define APP_WAKEUP_BUTTON_GPIO_PIN    1
+#define APP_WAKEUP_BUTTON_IRQ         PORTC_IRQn
+#define APP_WAKEUP_BUTTON_IRQ_HANDLER PORTC_IRQHandler
+#define APP_WAKEUP_BUTTON_IRQ_TYPE    kPORT_InterruptFallingEdge
+
+#define LLWU_LPTMR_IDX       0U /* LLWU_M0IF */
+#define LLWU_WAKEUP_PIN_IDX  6U /* LLWU_P6 */
+#define LLWU_WAKEUP_PIN_TYPE kLLWU_ExternalPinFallingEdge
 
 static void LP_SetClockVlpr(void) {
   const sim_clock_config_t simConfig = {
@@ -321,45 +337,136 @@ void LP_PowerPostSwitchHook(smc_power_state_t originPowerState, app_power_mode_t
   //APP_InitDebugConsole();
 }
 
+/* Get wake-up source by user input. */
+static app_wakeup_source_t LP_GetWakeupSource(void) {
 #if 0
+  uint8_t ch;
+
+    while (1)
+    {
+        PRINTF("Select the wake up source:\r\n");
+        PRINTF("Press T for LPTMR - Low Power Timer\r\n");
+        PRINTF("Press S for switch/button %s. \r\n", APP_WAKEUP_BUTTON_NAME);
+
+        PRINTF("\r\nWaiting for key press..\r\n\r\n");
+
+        ch = GETCHAR();
+
+        if ((ch >= 'a') && (ch <= 'z'))
+        {
+            ch -= 'a' - 'A';
+        }
+
+        if (ch == 'T')
+        {
+            return kAPP_WakeupSourceLptmr;
+        }
+        else if (ch == 'S')
+        {
+            return kAPP_WakeupSourcePin;
+        }
+        else
+        {
+            PRINTF("Wrong value!\r\n");
+        }
+    }
+#else
+  return kAPP_WakeupSourceLptmr;
+#endif
+}
+
+void LP_SetWakeupConfig(app_power_mode_t targetMode) {
+  /* Set LPTMR timeout value. */
+  if (kAPP_WakeupSourceLptmr == s_wakeupSource)
+  {
+      LPTMR_SetTimerPeriod(LPTMR0, (LPO_CLK_FREQ * s_wakeupTimeout) - 1U);
+      LPTMR_StartTimer(LPTMR0);
+  }
+
+  /* Set the wakeup module. */
+  if (kAPP_WakeupSourceLptmr == s_wakeupSource)
+  {
+      LPTMR_EnableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
+  }
+  else
+  {
+      PORT_SetPinInterruptConfig(APP_WAKEUP_BUTTON_PORT, APP_WAKEUP_BUTTON_GPIO_PIN, APP_WAKEUP_BUTTON_IRQ_TYPE);
+  }
+
+  /* If targetMode is VLLS/LLS, setup LLWU. */
+  if ((kAPP_PowerModeWait != targetMode) && (kAPP_PowerModeVlpw != targetMode) &&
+      (kAPP_PowerModeVlps != targetMode) && (kAPP_PowerModeStop != targetMode))
+  {
+      if (kAPP_WakeupSourceLptmr == s_wakeupSource)
+      {
+          LLWU_EnableInternalModuleInterruptWakup(LLWU, LLWU_LPTMR_IDX, true);
+      }
+      else
+      {
+          LLWU_SetExternalWakeupPinMode(LLWU, LLWU_WAKEUP_PIN_IDX, LLWU_WAKEUP_PIN_TYPE);
+      }
+      NVIC_EnableIRQ(LLWU_IRQn);
+  }
+}
+
+static uint8_t LP_GetWakeupTimeout(void) {
+  return 1; /* seconds */
+}
+
+/* Get wake-up timeout and wake-up source. */
+void LP_GetWakeupConfig(app_power_mode_t targetMode) {
+    /* Get wakeup source by user input. */
+    if (targetMode == kAPP_PowerModeVlls0) {
+        /* In VLLS0 mode, the LPO is disabled, LPTMR could not work. */
+   //     PRINTF("Not support LPTMR wakeup because LPO is disabled in VLLS0 mode.\r\n");
+        s_wakeupSource = kAPP_WakeupSourcePin;
+    } else {
+        /* Get wakeup source by user input. */
+        s_wakeupSource = LP_GetWakeupSource();
+    }
+    if (kAPP_WakeupSourceLptmr == s_wakeupSource) {
+        /* Wakeup source is LPTMR, user should input wakeup timeout value. */
+        s_wakeupTimeout = LP_GetWakeupTimeout();
+     //   PRINTF("Will wakeup in %d seconds.\r\n", s_wakeupTimeout);
+    } else {
+       // PRINTF("Press %s to wake up.\r\n", APP_WAKEUP_BUTTON_NAME);
+    }
+}
+
 /*!
  * @brief LLWU interrupt handler.
  */
-void APP_LLWU_IRQHANDLER(void) {
+void LLWU_IRQHandler(void) {
     /* If wakeup by LPTMR. */
-    if (LLWU_GetInternalWakeupModuleFlag(APP_LLWU, LLWU_LPTMR_IDX))
+    if (LLWU_GetInternalWakeupModuleFlag(LLWU, LLWU_LPTMR_IDX))
     {
         /* Disable lptmr as a wakeup source, so that lptmr's IRQ Handler will be executed when reset from VLLSx mode. */
-        LLWU_EnableInternalModuleInterruptWakup(APP_LLWU, LLWU_LPTMR_IDX, false);
+        LLWU_EnableInternalModuleInterruptWakup(LLWU, LLWU_LPTMR_IDX, false);
     }
     /* If wakeup by external pin. */
-    if (LLWU_GetExternalWakeupPinFlag(APP_LLWU, LLWU_WAKEUP_PIN_IDX))
+    if (LLWU_GetExternalWakeupPinFlag(LLWU, LLWU_WAKEUP_PIN_IDX))
     {
         /* Disable WAKEUP pin as a wakeup source, so that WAKEUP pin's IRQ Handler will be executed when reset from
          * VLLSx mode. */
-        LLWU_ClearExternalWakeupPinFlag(APP_LLWU, LLWU_WAKEUP_PIN_IDX);
+        LLWU_ClearExternalWakeupPinFlag(LLWU, LLWU_WAKEUP_PIN_IDX);
     }
     /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
     exception return operation might vector to incorrect interrupt */
     __DSB();
 }
-#endif
 
-#if 0
-void APP_LPTMR_IRQHANDLER(void) {
-  if (kLPTMR_TimerInterruptEnable & LPTMR_GetEnabledInterrupts(APP_LPTMR)) {
-      LPTMR_DisableInterrupts(APP_LPTMR, kLPTMR_TimerInterruptEnable);
-      LPTMR_ClearStatusFlags(APP_LPTMR, kLPTMR_TimerCompareFlag);
-      LPTMR_StopTimer(APP_LPTMR);
+void LPTMR0_IRQHandler(void) {
+  if (kLPTMR_TimerInterruptEnable & LPTMR_GetEnabledInterrupts(LPTMR0)) {
+      LPTMR_DisableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
+      LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
+      LPTMR_StopTimer(LPTMR0);
   }
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
   exception return operation might vector to incorrect interrupt */
   __DSB();
 }
-#endif
 
-#if 0
-void APP_WAKEUP_BUTTON_IRQ_HANDLER(void) {
+void PORTC_IRQHandler(void) {
   if ((1U << APP_WAKEUP_BUTTON_GPIO_PIN) & PORT_GetPinsInterruptFlags(APP_WAKEUP_BUTTON_PORT)) {
       /* Disable interrupt. */
       PORT_SetPinInterruptConfig(APP_WAKEUP_BUTTON_PORT, APP_WAKEUP_BUTTON_GPIO_PIN, kPORT_InterruptOrDMADisabled);
@@ -369,7 +476,7 @@ void APP_WAKEUP_BUTTON_IRQ_HANDLER(void) {
   exception return operation might vector to incorrect interrupt */
   __DSB();
 }
-#endif
+
 
 
 #if LP_MODE==LP_MODE_WAIT || LP_MODE==LP_MODE_STOP
@@ -399,10 +506,30 @@ static void ConfigurePIT(void) {
 #endif
 
 void LP_EnterLowPower(app_power_mode_t targetPowerMode) {
+  bool needSetWakeup;
+
   if (!LP_CheckPowerMode(LP_curPowerState, targetPowerMode)) {
     return;
   }
+  /* If target mode is RUN/VLPR/HSRUN, don't need to set wakeup source. */
+  if ((kAPP_PowerModeRun == targetPowerMode) || (kAPP_PowerModeHsrun == targetPowerMode) ||
+      (kAPP_PowerModeVlpr == targetPowerMode))
+  {
+    needSetWakeup = false;
+  } else {
+    needSetWakeup = true;
+  }
+  if (needSetWakeup) {
+    LP_GetWakeupConfig(targetPowerMode);
+  }
+  LP_PowerPreSwitchHook(LP_curPowerState, targetPowerMode);
+  if (needSetWakeup) {
+    LP_SetWakeupConfig(targetPowerMode);
+  }
   LP_PowerModeSwitch(LP_curPowerState, targetPowerMode);
+  LP_PowerPostSwitchHook(LP_curPowerState, targetPowerMode);
+
+#if 0
 #if LP_MODE==LP_MODE_RUN
   /* not entering any low power mode */
 #elif LP_MODE==LP_MODE_WAIT
@@ -412,14 +539,39 @@ void LP_EnterLowPower(app_power_mode_t targetPowerMode) {
   SMC_SetPowerModeStop(SMC, kSMC_PartialStop2); /* Partial Stop with system clock disabled and bus clock enabled */
   /* next interrupt will wake me up */
 #endif
+#endif
 }
 
 smc_power_state_t LP_GetCurrPowerMode(void) {
   return LP_curPowerState;
 }
 
+static void LP_InitLPTMR(void) {
+  static  const lptmr_config_t LPTMR_config = {.timerMode            = kLPTMR_TimerModeTimeCounter,
+      .pinSelect            = kLPTMR_PinSelectInput_0,
+      .pinPolarity          = kLPTMR_PinPolarityActiveHigh,
+      .enableFreeRunning    = false,
+      .bypassPrescaler      = true,
+      .prescalerClockSource = kLPTMR_PrescalerClock_1,
+      .value                = kLPTMR_Prescale_Glitch_0};
+
+  /* Initialize the LPTMR */
+  LPTMR_Init(LPTMR0, &LPTMR_config);
+  /* Set LPTMR period to 1000000us */
+  LPTMR_SetTimerPeriod(LPTMR0, 1000);
+  /* Configure timer interrupt */
+  LPTMR_EnableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
+  /* Enable interrupt LPTMR0_IRQn request in the NVIC */
+  EnableIRQ(LPTMR0_IRQn);
+}
+
 void LP_Init(void) {
   LP_curPowerState = SMC_GetPowerModeState(SMC);
+  /* initialize LLWU */
+  EnableIRQ(LLWU_IRQn);
+
+  LP_InitLPTMR();
+
 #if LP_MODE==LP_MODE_RUN
   /* not entering any low power mode */
 #elif LP_MODE==LP_MODE_WAIT
