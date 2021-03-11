@@ -6,13 +6,41 @@
 #ifndef _PERIPHERALS_H_
 #define _PERIPHERALS_H_
 
+/***********************************************************************************************************************
+ * Included files
+ **********************************************************************************************************************/
+#include "fsl_common.h"
+#include "fsl_lptmr.h"
+
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
 
 /***********************************************************************************************************************
+ * Definitions
+ **********************************************************************************************************************/
+/* Definitions for BOARD_InitPeripherals functional group */
+/* BOARD_InitPeripherals defines for LPTMR0 */
+/* Definition of peripheral ID */
+#define LPTMR0_PERIPHERAL LPTMR0
+/* Definition of the clock source frequency */
+#define LPTMR0_CLK_FREQ 1000UL
+/* Definition of the prescaled clock source frequency */
+#define LPTMR0_INPUT_FREQ 1000UL
+/* Definition of the timer period in us */
+#define LPTMR0_USEC_COUNT 1000000UL
+/* Definition of the timer period in number of ticks */
+#define LPTMR0_TICKS 1000UL
+
+/***********************************************************************************************************************
+ * Global variables
+ **********************************************************************************************************************/
+extern const lptmr_config_t LPTMR0_config;
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
+
 void BOARD_InitPeripherals(void);
 
 /***********************************************************************************************************************

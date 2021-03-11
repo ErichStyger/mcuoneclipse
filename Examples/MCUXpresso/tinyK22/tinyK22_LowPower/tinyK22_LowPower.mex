@@ -105,17 +105,19 @@
                   <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
-                  <clock_output id="Bus_clock.outFreq" value="5.24288 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Core_clock.outFreq" value="10.48576 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="10.48576/3 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FlexBus_clock.outFreq" value="5.24288 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Bus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Core_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Flash_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FlexBus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
-                  <clock_output id="MCGFFCLK.outFreq" value="32.768 kHz" locked="false" accuracy=""/>
-                  <clock_output id="PLLFLLCLK.outFreq" value="20.97152 MHz" locked="false" accuracy=""/>
-                  <clock_output id="System_clock.outFreq" value="10.48576 MHz" locked="false" accuracy=""/>
+                  <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
+                  <setting id="MCGMode" value="PEE" locked="false"/>
                   <setting id="MCG.FRDIV.scale" value="32" locked="false"/>
+                  <setting id="MCG.IREFS.sel" value="MCG.SLOW_IRCLK" locked="false"/>
+                  <setting id="MCG.PLLS.sel" value="MCG.FLL" locked="false"/>
                   <setting id="MCG.PRDIV.scale" value="2" locked="false"/>
                   <setting id="MCG.VDIV.scale" value="30" locked="false"/>
                   <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscLowPower" locked="false"/>

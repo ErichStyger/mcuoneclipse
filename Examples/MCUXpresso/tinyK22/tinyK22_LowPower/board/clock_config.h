@@ -37,7 +37,7 @@ void BOARD_InitBootClocks(void);
 /*******************************************************************************
  * Definitions for BOARD_BootClockRUN configuration
  ******************************************************************************/
-#define BOARD_BOOTCLOCKRUN_CORE_CLOCK              10485760U  /*!< Core clock frequency: 10485760Hz */
+#define BOARD_BOOTCLOCKRUN_CORE_CLOCK              60000000U  /*!< Core clock frequency: 60000000Hz */
 
 /*! @brief MCG set for BOARD_BootClockRUN configuration.
  */
