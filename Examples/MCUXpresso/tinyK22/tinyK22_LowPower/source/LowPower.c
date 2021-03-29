@@ -486,6 +486,7 @@ void PORTC_IRQHandler(void) {
 #define PIT_HANDLER        PIT0_IRQHandler
 #define PIT_IRQ_ID         PIT0_IRQn
 
+
 void PIT_HANDLER(void) {
   PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
   __DSB();
