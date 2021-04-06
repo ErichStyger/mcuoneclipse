@@ -14,7 +14,7 @@
 
 void APP_Run(void) {
   PL_Init(); /* initialize platform */
-  //printf("SystemCoreClock: %lu\n", SystemCoreClock);
+  printf("SystemCoreClock: %lu\n", SystemCoreClock);
   for(;;) {
     McuLED_On(tinyLED);
     McuWait_Waitms(100);

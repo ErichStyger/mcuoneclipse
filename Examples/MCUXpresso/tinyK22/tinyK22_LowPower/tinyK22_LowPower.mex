@@ -105,13 +105,13 @@
                   <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
-                  <clock_output id="Bus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Core_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FlexBus_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Bus_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Core_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Flash_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FlexBus_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
-                  <clock_output id="System_clock.outFreq" value="60 MHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="MCGMode" value="PEE" locked="false"/>
@@ -123,10 +123,10 @@
                   <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscLowPower" locked="false"/>
                   <setting id="MCG_C2_RANGE0_CFG" value="High" locked="false"/>
                   <setting id="MCG_C2_RANGE0_FRDIV_CFG" value="High" locked="false"/>
-                  <setting id="SIM.OUTDIV1.scale" value="2" locked="false"/>
-                  <setting id="SIM.OUTDIV2.scale" value="4" locked="false"/>
-                  <setting id="SIM.OUTDIV3.scale" value="4" locked="false"/>
-                  <setting id="SIM.OUTDIV4.scale" value="6" locked="false"/>
+                  <setting id="SIM.OUTDIV1.scale" value="12" locked="false"/>
+                  <setting id="SIM.OUTDIV2.scale" value="12" locked="false"/>
+                  <setting id="SIM.OUTDIV3.scale" value="12" locked="false"/>
+                  <setting id="SIM.OUTDIV4.scale" value="12" locked="false"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
