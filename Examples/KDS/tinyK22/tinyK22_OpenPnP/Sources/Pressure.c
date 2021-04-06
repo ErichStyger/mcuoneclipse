@@ -8,8 +8,9 @@
 #include "CLS1.h"
 #include "UTIL1.h"
 #include "Pressure.h"
+#include "FRTOS1.h"
 
-static xQueueHandle SQUEUE_Queue;
+static QueueHandle_t SQUEUE_Queue;
 #define SQUEUE_LENGTH      48 /* items in queue, that's my buffer size */
 #define SQUEUE_ITEM_SIZE   1  /* each item is a single character */
 

@@ -160,7 +160,7 @@ void FRTOS1_vApplicationMallocFailedHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used */
 #if 1
@@ -385,6 +385,24 @@ void PTRC1_OnTraceWrap(void)
   /* GDB: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
   PTRC1_vGetGDBDumpCommand(buf, sizeof(buf), "c:\\tmp\\trc.dump");
 #endif
+}
+
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
+{
+  (void)expectedIdleTicks; /* not used (yet?) */
+  /* Write your code here ... */
 }
 
 /* END Events */

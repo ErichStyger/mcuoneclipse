@@ -9,6 +9,7 @@
 #include "UTIL1.h"
 #include "Feeder.h"
 #include "AS2.h" /* UART to feeder */
+#include "FRTOS1.h"
 
 static uint32_t FEED_nofErrors = 0; /* error counter */
 

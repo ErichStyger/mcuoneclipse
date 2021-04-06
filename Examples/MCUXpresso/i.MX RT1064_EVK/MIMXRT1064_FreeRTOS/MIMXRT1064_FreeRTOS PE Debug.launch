@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
-<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEM6B012B"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal FX Rev C (PEM6B012B)"/>
+<stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEMFA9867"/>
+<booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal FX Rev C (PEMFA9867)"/>
 <intAttribute key="com.nxp.mcuxpresso.core.datamodels.ui.launchers.PELaunchConfigHandler.version" value="1"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="P&amp;E Microcomputer Systems"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal FX Rev C (PEM6B012B)"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal FX Rev C (PEMFA9867)"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB1"/>
 <booleanAttribute key="com.nxp.mcuxpresso.pemicro.flash.cyclone.image" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.pemicro.flash.program.action" value="Erase, blank check, program and verify"/>
@@ -92,7 +93,7 @@
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.DO_RESET_DELAY" value="false"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.ml.INTERFACE_PORT" value="0"/>
-<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.INTERFACE_PORT_STRING" value=""/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.INTERFACE_PORT_STRING" value="USB1"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.NETWORK_CARD_IP" value=""/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.POWER_DOWN_DELAY" value="250"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.POWER_OFF" value="false"/>
@@ -104,6 +105,8 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_IP" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_NETWORK_CARD" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.STARTUP_USE_SWD" value="true"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_MULTILINK_VALUE" value="-1.000000"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_TARGET_VALUE" value="-1.000000"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.otherRunCommands" value=""/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.partitionParam" value="0"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.preserveMemory0" value="false"/>
