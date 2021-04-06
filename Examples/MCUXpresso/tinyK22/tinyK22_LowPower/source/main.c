@@ -9,9 +9,16 @@
 #include "fsl_pmc.h"
 #include "application.h"
 
+static void safetyBelt(void) {
+  /* delay application: do NOT enter low power to prevent lock-out during development */
+  for(int i=0; i<20000000; i++) {
+    __asm("nop");
+  }
+}
+
 int main(void) {
   /* Init board hardware. */
-
+  safetyBelt();
   /* Power related. */
   SMC_SetPowerModeProtection(SMC, kSMC_AllowPowerModeAll);
   if (kRCM_SourceWakeup & RCM_GetPreviousResetSources(RCM)) { /* Wakeup from VLLS. */
