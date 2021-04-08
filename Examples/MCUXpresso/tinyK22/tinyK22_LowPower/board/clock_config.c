@@ -93,8 +93,8 @@ called_from_default_init: true
 outputs:
 - {id: Bus_clock.outFreq, value: 20 MHz}
 - {id: Core_clock.outFreq, value: 20 MHz}
-- {id: Flash_clock.outFreq, value: 20 MHz}
-- {id: FlexBus_clock.outFreq, value: 20 MHz}
+- {id: Flash_clock.outFreq, value: 10 MHz}
+- {id: FlexBus_clock.outFreq, value: 10 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
 - {id: MCGFFCLK.outFreq, value: 250 kHz}
 - {id: System_clock.outFreq, value: 20 MHz}
@@ -110,8 +110,8 @@ settings:
 - {id: MCG_C2_RANGE0_FRDIV_CFG, value: High}
 - {id: SIM.OUTDIV1.scale, value: '5'}
 - {id: SIM.OUTDIV2.scale, value: '5'}
-- {id: SIM.OUTDIV3.scale, value: '5'}
-- {id: SIM.OUTDIV4.scale, value: '5'}
+- {id: SIM.OUTDIV3.scale, value: '10'}
+- {id: SIM.OUTDIV4.scale, value: '10'}
 sources:
 - {id: OSC.OSC.outFreq, value: 8 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -141,7 +141,7 @@ const sim_clock_config_t simConfig_BOARD_BootClockRUN =
     {
         .pllFllSel = SIM_PLLFLLSEL_MCGFLLCLK_CLK, /* PLLFLL select: MCGFLLCLK clock */
         .er32kSrc = SIM_OSC32KSEL_OSC32KCLK_CLK,  /* OSC32KSEL select: OSC32KCLK clock */
-        .clkdiv1 = 0x44440000U,                   /* SIM_CLKDIV1 - OUTDIV1: /5, OUTDIV2: /5, OUTDIV3: /5, OUTDIV4: /5 */
+        .clkdiv1 = 0x44990000U,                   /* SIM_CLKDIV1 - OUTDIV1: /5, OUTDIV2: /5, OUTDIV3: /10, OUTDIV4: /10 */
     };
 const osc_config_t oscConfig_BOARD_BootClockRUN =
     {

@@ -24,6 +24,7 @@
             <processor_version>9.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="45" pin_signal="ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b" label="LED_BLUE" identifier="LED_BLUE"/>
+               <pin_label pin_num="1" pin_signal="ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT" label="TEST" identifier="TEST"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -107,8 +108,8 @@
                <clock_outputs>
                   <clock_output id="Bus_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
                   <clock_output id="Core_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FlexBus_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
+                  <clock_output id="Flash_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FlexBus_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
@@ -125,8 +126,8 @@
                   <setting id="MCG_C2_RANGE0_FRDIV_CFG" value="High" locked="false"/>
                   <setting id="SIM.OUTDIV1.scale" value="5" locked="false"/>
                   <setting id="SIM.OUTDIV2.scale" value="5" locked="false"/>
-                  <setting id="SIM.OUTDIV3.scale" value="5" locked="false"/>
-                  <setting id="SIM.OUTDIV4.scale" value="5" locked="false"/>
+                  <setting id="SIM.OUTDIV3.scale" value="10" locked="false"/>
+                  <setting id="SIM.OUTDIV4.scale" value="10" locked="false"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
