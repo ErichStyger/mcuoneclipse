@@ -6,7 +6,7 @@
 **     Component   : Shell
 **     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-04, 08:06, # CodeGen: 604
+**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -114,7 +114,7 @@
 #include "McuXFormat.h"
 #include "McuUtility.h"
 #include "McuCriticalSection.h"
-  #include "McuWait.h"
+#include "McuWait.h"
 
 #if McuShell_DEFAULT_SERIAL
   #include McuShell_CONFIG_DEFAULT_SERIAL_INCLUDE
@@ -621,7 +621,7 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
 */
 uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io)
 {
-  McuShell_SendStatusStr((const unsigned char*)"McuShell", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"McuShell", (const unsigned char*)"Commandline shell status\r\n", io->stdOut);
   McuShell_SendStatusStr((const unsigned char*)"  Build", (const unsigned char*)__DATE__, io->stdOut);
   McuShell_SendStr((unsigned char*)" ", io->stdOut);
   McuShell_SendStr((unsigned char*)__TIME__, io->stdOut);

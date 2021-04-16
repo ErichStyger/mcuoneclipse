@@ -120,7 +120,7 @@ static void AppTask(void *pv) {
       } while(BTN_DownButtonIsPressed() && counter<30); /* 3 secs */
       if (counter>=30) { /* pressed for more than 3 secs */
         RASPYU_SetEventsEnabled(!RASPYU_GetEventsEnabled()); /* toggle */
-        McuRTT_WriteString(0, "Toggling Raspy UART Events, current status: %s");
+        McuRTT_WriteString(0, "Toggling Raspy UART Events, current status: ");
         if (RASPYU_GetEventsEnabled()) {
           McuRTT_WriteString(0, "on\r\n");
         } else {

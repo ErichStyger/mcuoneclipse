@@ -68,6 +68,7 @@ bool McuBtn_IsOn(McuBtn_Handle_t btn) {
   }
 }
 
+
 McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
   McuBtn_t *handle;
   McuGPIO_Config_t gpioConfig;

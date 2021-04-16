@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.crt.dsfdebug.crtmcu.launchType">
 <stringAttribute key=".gdbinit" value=""/>
-<stringAttribute key="InstructionTraceInfo" value="eJzFlMFO4zAQhu8r7TtYvrNNmjYEiYAgbaWVmm7VGPaITDotWRK7sh2Wffu1G6dqGoM4IOGTbf3zjf3P2JfXr1WJXkDIgrMY+z88jIDlfF2wbYzvyOwswtdX379dgqpAPU5A0aKUZoNQsQU1A6pqARKl9A8X9y1HU9KCdTeaAA1dZHfL5a8VmU6wAU1JeksloJv1WoNkjM98jJZ6CkyZwIERTX6TE9E4CKMwjPzwSKxEDY3+Zw9q9OfehT906qfktq8PPW98fszf0FLagLQX4L8h1K79VSfaYRiNAj8IPXcMETSHWc0YlN0TjS/CUeQ5b6CTJFxAVmyf9KTacaYFyOR1epbIOc+fY7yoy7KZY6QRK9hmSmO08V82sC34pu0tc4nO6a0g19ekgurzSrSoq0cQMR41bmT1bseFgjVKql1KVf5kvULJv7yEhNdMGfl+zwQYy2x3owlV1KzbmqB5wZ79wyqlrymV2rtAl7zNa/vUjWkyW0qzcEL89yAfP8vwczBBgxkcvLRtthR8U5T6g7AuSluOh4Ss5uieljUc/Bi8pR8cFbgV9vt3/5RV9aHGto/b0dinb6qHAwevfWoO3t7cjMxO7/p+ikbS+TX3W92f9T+2IbE6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
+<stringAttribute key="InstructionTraceInfo" value="eJzFVFFPwjAQfjfxPzR9RxgoYsIkMCAxYYTAxEdTxjEmXUvaTvDf224FXbIRHkzc03r33Xd3313b7R0Tij5ByJgzFzt3DYyAhXwds8jFr8G41sG959ubLqgE1GoIisRUGkNARARqDESlAiTyyQcXyxOPZvFjVjCYmFHgD4gENNMRwJSLN4RKwHXjG74Fma+/XmuvdHHtodXutNsdp41/ApRILf7FchXxj40np1mKHwWDytz+JZ/u+qAq3YEgIYxTxoCWt3VQfZEsHz0uYBFHW+XxZM+ZhiHDWdqtJyc83Ll4mlKa/2OkeeYQLZSm0Wr+24ftqDanuZsmCtVbQKjbJILoeiWapskKhIvvc0kW6X7PhYI18pK9T1S4tXNC3ldIweMpUwae2UyAkcxuHhoSRcz5JDKaxGznnE8+OfpEau1aDj7nbeR5y2nyzJYlP5SSOJdIrq+l+Tc0rZymftbS7tpM8E1M9eW1Kko7jncvmE/QktAUznrUq/D1XwM+ASuWOLuJKrlqu+3dLNnuvJzii5KZiq/ON8/nbNoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
 <booleanAttribute key="attach" value="false"/>
 <stringAttribute key="bootrom.stall" value=""/>
 <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="LinkServer"/>
@@ -9,9 +9,8 @@
 <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
 <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
 <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsMCU-LINK CMSIS-DAP V1.09835KW0CFW45YWG"/>
+<stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsLPC-LINK2 CMSIS-DAP V5.361ORAYAQDQ"/>
 <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
-<stringAttribute key="com.crt.ctrlcenter.targetbase" value="Debug Configuration (*)"/>
 <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
 <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x70000000"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
@@ -21,13 +20,14 @@
 <stringAttribute key="com.nxp.mcuxpresso.flash.program.action" value="Program"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.reset.target" value="true"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="NXP Semiconductors"/>
-<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="MCU-LINK CMSIS-DAP V1.098"/>
+<stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="LPC-LINK2 CMSIS-DAP V5.361"/>
 <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="LinkServer"/>
 <stringAttribute key="debug.level" value="2"/>
 <stringAttribute key="emu.speed" value=""/>
 <stringAttribute key="flash.driver.reset" value=""/>
+<booleanAttribute key="internal.attach.slave" value="false"/>
 <booleanAttribute key="internal.cache" value="false"/>
-<stringAttribute key="internal.connect.script" value=""/>
+<stringAttribute key="internal.connect.script" value="RT1064_connect.scp"/>
 <stringAttribute key="internal.core.index" value=""/>
 <booleanAttribute key="internal.has_swo" value="true"/>
 <booleanAttribute key="internal.multi.swd" value="true"/>
@@ -46,7 +46,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set non-stop on&#10;set pagination off&#10;set mi-async&#10;&#10;set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
@@ -65,7 +65,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
-<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
@@ -73,8 +73,6 @@
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
-<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
-<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\MIMXRT1064_SWO.axf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="MIMXRT1064_SWO"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
@@ -87,10 +85,12 @@
 <listEntry value="4"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.preferred_launchers">
-<mapEntry key="[debug]" value="com.crt.dsfdebug.dsf.MCULaunch"/>
+<mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.linkserver.launch.LinkServerGdbLaunch"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;&#13;&#10;"/>
 <stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
+<booleanAttribute key="redlink.disable.preconnect.script" value="false"/>
+<booleanAttribute key="redlink.enable.flashhashing" value="true"/>
 <booleanAttribute key="redlink.enable.rangestepping" value="true"/>
 <stringAttribute key="run" value="cont"/>
 <booleanAttribute key="vector.catch" value="false"/>

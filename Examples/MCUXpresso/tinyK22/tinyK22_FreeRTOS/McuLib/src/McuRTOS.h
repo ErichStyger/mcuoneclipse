@@ -6,7 +6,7 @@
 **     Component   : FreeRTOS
 **     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-09-23, 21:12, # CodeGen: 685
+**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -110,7 +110,6 @@
 **         xTaskCreateStatic                    - TaskHandle_t McuRTOS_xTaskCreateStatic(pdTASK_CODE pvTaskCode, const portCHAR...
 **         vTaskDelete                          - void McuRTOS_vTaskDelete(xTaskHandle pxTask);
 **         vTaskStartScheduler                  - void McuRTOS_vTaskStartScheduler(void);
-**         vTaskEndScheduler                    - void McuRTOS_vTaskEndScheduler(void);
 **         vTaskSuspend                         - void McuRTOS_vTaskSuspend(xTaskHandle pxTaskToSuspend);
 **         vTaskSuspendAll                      - void McuRTOS_vTaskSuspendAll(void);
 **         vTaskResume                          - void McuRTOS_vTaskResume(xTaskHandle pxTaskToResume);
@@ -278,7 +277,11 @@
 
 /* MODULE McuRTOS. */
 #include "McuLib.h" /* SDK and API used */
-#include "FreeRTOSConfig.h"
+#if McuLib_CONFIG_CPU_IS_ESP32
+  #include "freertos/FreeRTOSConfig.h"
+#else
+  #include "FreeRTOSConfig.h"
+#endif
 #include "McuRTOSconfig.h" /* configuration file for component */
 
 #if configUSE_SHELL
@@ -286,11 +289,19 @@
 #endif
 
 /* other includes needed */
-#include "FreeRTOS.h"
-#include "task.h"                      /* task API */
-#include "semphr.h"                    /* semaphore API */
-#include "event_groups.h"              /* event group API */
-#include "timers.h"                    /* timer module API */
+#if McuLib_CONFIG_CPU_IS_ESP32
+  #include "freertos/FreeRTOS.h"
+  #include "freertos/task.h"           /* task API */
+  #include "freertos/semphr.h"         /* semaphore API */
+  #include "freertos/event_groups.h"   /* event group API */
+  #include "freertos/timers.h"         /* timer module API */
+#else
+  #include "FreeRTOS.h"
+  #include "task.h"                    /* task API */
+  #include "semphr.h"                  /* semaphore API */
+  #include "event_groups.h"            /* event group API */
+  #include "timers.h"                  /* timer module API */
+#endif
 #include <stddef.h>                    /* for size_t type */
 
 #if configUSE_PERCEPIO_TRACE_HOOKS
@@ -493,32 +504,6 @@ extern "C" {
 **
 **     Description :
 **         Macro to enable microcontroller interrupts.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-
-#define McuRTOS_vTaskEndScheduler() \
-  vTaskEndScheduler()
-/*
-** ===================================================================
-**     Method      :  vTaskEndScheduler (component FreeRTOS)
-**
-**     Description :
-**         Stops the real time kernel tick. All created tasks will be
-**         automatically deleted and multitasking (either preemptive or
-**         cooperative) will stop. Execution then resumes from the
-**         point where vTaskStartScheduler() was called, as if
-**         vTaskStartScheduler() had just returned.
-**         See the demo application file main. c in the demo/PC
-**         directory for an example that uses vTaskEndScheduler ().
-**         vTaskEndScheduler () requires an exit function to be defined
-**         within the portable layer (see vPortEndScheduler () in port.
-**         c for the PC port). This performs hardware specific
-**         operations such as stopping the kernel tick.
-**         vTaskEndScheduler () will cause all of the resources
-**         allocated by the kernel to be freed - but will not free
-**         resources allocated by application tasks.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

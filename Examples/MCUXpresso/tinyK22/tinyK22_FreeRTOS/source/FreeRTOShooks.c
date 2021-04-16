@@ -104,11 +104,14 @@ void McuRTOS_vApplicationIdleHook(void)
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
   /* Write your code here ... */
+#if !configUSE_TICKLESS_IDLE
     __asm volatile("dsb");
+  //#if !configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
     __asm volatile("wfi");
+  //#endif
     __asm volatile("isb");
+#endif
 }
-
 
 /*
 ** ===================================================================
@@ -143,7 +146,6 @@ void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 #else
   #error "you *must* enter low power mode (wait for interrupt) here!"
 #endif
-  /* Write your code here ... */
 }
 
 /*

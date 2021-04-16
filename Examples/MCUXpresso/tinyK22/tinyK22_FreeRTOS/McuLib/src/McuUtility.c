@@ -6,7 +6,7 @@
 **     Component   : Utility
 **     Version     : Component 01.164, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-07-28, 17:35, # CodeGen: 670
+**     Date/Time   : 2020-11-23, 10:16, # CodeGen: 715
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
@@ -2787,9 +2787,9 @@ uint8_t McuUtility_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g, ui
       && val32 <= 0xffffff
      )
   {
-    *r = (val32>>16)&0xff;
-    *g = (val32>>8)&0xff;
-    *b = val32&0xff;
+    *r = (uint8_t)((val32>>16)&0xff);
+    *g = (uint8_t)((val32>>8)&0xff);
+    *b = (uint8_t)(val32&0xff);
     *str = p;
     return ERR_OK;
   } else { /* not starting with 0x (hex): read three values */
@@ -2798,9 +2798,9 @@ uint8_t McuUtility_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g, ui
         && McuUtility_xatoi(&p, &bv)==ERR_OK && bv>=0 && bv<=0xff
        )
     {
-      *r = rv;
-      *g = gv;
-      *b = bv;
+      *r = (uint8_t)rv;
+      *g = (uint8_t)gv;
+      *b = (uint8_t)bv;
       *str = p;
       return ERR_OK;
     }
@@ -2830,7 +2830,7 @@ uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb)
 
   res = McuUtility_ScanRGB(str, &r, &g, &b);
   if (res==ERR_OK) {
-    *rgb = (r<<16)|(g<<8)|b;
+    *rgb = ((uint32_t)r<<16)|((uint32_t)g<<8)|b;
     return ERR_OK;
   }
   return ERR_FAILED;

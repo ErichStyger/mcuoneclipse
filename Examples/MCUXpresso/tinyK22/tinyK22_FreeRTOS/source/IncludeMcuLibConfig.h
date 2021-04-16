@@ -36,6 +36,8 @@
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 
+#define configUSE_TICKLESS_IDLE                     (1)
+
 /* performance counter: */
 #include <stdint.h>
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (0)
@@ -45,12 +47,12 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define portGET_RUN_TIME_COUNTER_VALUE()           AppGetRuntimeCounterValueFromISR()
 
 /* Segger SystemViewer: */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        	(0)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        	(1)
 #define SYSVIEW_APP_NAME                            	"FreeRTOS on tinyK22"
 #define SYSVIEW_DEVICE_NAME                         	"NXP K22FN512"
 
 /* Percepio Tracealyzer */
-#define configUSE_PERCEPIO_TRACE_HOOKS                  (1)
+#define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

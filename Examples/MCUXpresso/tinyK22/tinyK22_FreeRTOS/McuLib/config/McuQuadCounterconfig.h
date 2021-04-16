@@ -10,6 +10,14 @@
 #ifndef __McuQuadCounter_CONFIG_H
 #define __McuQuadCounter_CONFIG_H
 
-/* no configuration supported yet */
+#ifndef McuQuadCounter_CONFIG_USE_ERROR_CORRECTION
+  #define McuQuadCounter_CONFIG_USE_ERROR_CORRECTION  (0)
+    /*!< 1: Use error correction, 0: not using error correction */
+#endif
+
+#ifndef McuQuadCounter_CONFIG_COUNT_ERRORS
+  #define McuQuadCounter_CONFIG_COUNT_ERRORS  (1)
+    /*!< 1: count errors, 0: do not count errors */
+#endif
 
 #endif /* __McuQuadCounter_CONFIG_H */
