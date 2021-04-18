@@ -322,7 +322,9 @@ void McuX12_017_GetDeviceStatusString(McuX12_017_Handle_t device, unsigned char 
 void McuX12_017_DisableDevice(McuX12_017_Handle_t device) {
   McuX12_Device_t *x12 = (McuX12_Device_t*)device;
 
-  McuGPIO_SetAsInput(x12->reset);
+  if (x12->hasReset) {
+    McuGPIO_SetAsInput(x12->reset);
+  }
   for(int i=0; i<X12_017_NOF_M; i++) {
     McuGPIO_SetAsInput(x12->m[i].dir);
     McuGPIO_SetAsInput(x12->m[i].step);
@@ -332,7 +334,9 @@ void McuX12_017_DisableDevice(McuX12_017_Handle_t device) {
 void McuX12_017_EnableDevice(McuX12_017_Handle_t device) {
   McuX12_Device_t *x12 = (McuX12_Device_t*)device;
 
-  McuGPIO_SetAsOutput(x12->reset, true);
+  if (x12->hasReset) {
+    McuGPIO_SetAsOutput(x12->reset, true);
+  }
   for(int i=0; i<X12_017_NOF_M; i++) {
     if (x12->m[i].isForward) { /* set pin according to current direction state */
       McuGPIO_SetAsOutput(x12->m[i].dir, !x12->m[i].isInverted);

@@ -73,8 +73,8 @@ static void InitUart(void) {
   /* Initialize the USART with configuration. */
   McuShellUart_CONFIG_UART_INIT(McuShellUart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
   McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS(McuShellUart_CONFIG_UART_DEVICE, McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
-  EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
   NVIC_SetPriority(McuShellUart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
 }
 
 void McuShellUart_Deinit(void) {
@@ -83,12 +83,12 @@ void McuShellUart_Deinit(void) {
 }
 
 void McuShellUart_Init(void) {
-  InitUart();
   uartRxQueue = xQueueCreate(McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
   if (uartRxQueue==NULL) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(uartRxQueue, "UartRxQueue");
+  InitUart();
 }
 
 #endif /* McuShellUart_CONFIG_UART!=McuShellUart_CONFIG_UART_NONE*/

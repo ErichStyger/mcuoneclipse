@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-06, 07:32, # CodeGen: 692
+**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -19,16 +19,16 @@
 **     Contents    :
 **         Wait10Cycles   - void McuWait_Wait10Cycles(void);
 **         Wait100Cycles  - void McuWait_Wait100Cycles(void);
-**         WaitCycles     - void McuWait_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void McuWait_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void McuWait_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void McuWait_Waitms(uint16_t ms);
-**         Waitus         - void McuWait_Waitus(uint16_t us);
-**         Waitns         - void McuWait_Waitns(uint16_t ns);
+**         Waitms         - void McuWait_Waitms(uint32_t ms);
+**         Waitus         - void McuWait_Waitus(uint32_t us);
+**         Waitns         - void McuWait_Waitns(uint32_t ns);
 **         WaitOSms       - void McuWait_WaitOSms(void);
 **         Init           - void McuWait_Init(void);
 **         Deinit         - void McuWait_Deinit(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -77,8 +77,13 @@
 #if McuWait_CONFIG_USE_RTOS_WAIT
   /* include RTOS header files */
   #include "McuRTOS.h"
-  #include "FreeRTOS.h" /* for vTaskDelay() */
-  #include "task.h"
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h" /* for vTaskDelay() */
+    #include "freertos/task.h"
+  #else
+    #include "FreeRTOS.h" /* for vTaskDelay() */
+    #include "task.h"
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -99,7 +104,7 @@ extern "C" {
 #define McuWait_WAIT_C(cycles) \
      ( (cycles)<=10 ? \
           McuWait_Wait10Cycles() \
-        : McuWait_WaitCycles((uint16_t)cycles) \
+        : McuWait_WaitCycles(cycles) \
       )                                      /*!< wait for some cycles */
 
 
@@ -127,13 +132,13 @@ void McuWait_Wait100Cycles(void);
 ** ===================================================================
 */
 
-void McuWait_WaitCycles(uint16_t cycles);
+void McuWait_WaitCycles(uint32_t cycles);
 /*
 ** ===================================================================
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
@@ -141,7 +146,7 @@ void McuWait_WaitCycles(uint16_t cycles);
 ** ===================================================================
 */
 
-void McuWait_Waitms(uint16_t ms);
+void McuWait_Waitms(uint32_t ms);
 /*
 ** ===================================================================
 **     Method      :  Waitms (component Wait)
@@ -161,7 +166,7 @@ void McuWait_Waitms(uint16_t ms);
         /*lint -save -e(505,506,522) Constant value Boolean, Redundant left argument to comma. */\
        (  ((McuWait_NofCyclesUs((us),McuWait_INSTR_CLOCK_HZ)==0)||(us)==0) ? \
           (void)0 : \
-          ( ((us)/1000)==0 ? (void)0 : McuWait_Waitms((uint16_t)((us)/1000))) \
+          ( ((us)/1000)==0 ? (void)0 : McuWait_Waitms(((us)/1000))) \
           , (McuWait_NofCyclesUs(((us)%1000), McuWait_INSTR_CLOCK_HZ)==0) ? (void)0 : \
             McuWait_WAIT_C(McuWait_NofCyclesUs(((us)%1000), McuWait_INSTR_CLOCK_HZ)) \
        /*lint -restore */\
