@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,38 +21,44 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief UART driver version 2.1.6. */
-#define FSL_UART_DRIVER_VERSION (MAKE_VERSION(2, 1, 6))
+/*! @brief UART driver version 2.4.0. */
+#define FSL_UART_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
 /*@}*/
 
+/*! @brief Retry times for waiting flag. */
+#ifndef UART_RETRY_TIMES
+#define UART_RETRY_TIMES 0U /* Defining to zero means to keep waiting for the flag until it is assert/deassert. */
+#endif
+
 /*! @brief Error codes for the UART driver. */
-enum _uart_status
+enum
 {
-    kStatus_UART_TxBusy = MAKE_STATUS(kStatusGroup_UART, 0),              /*!< Transmitter is busy. */
-    kStatus_UART_RxBusy = MAKE_STATUS(kStatusGroup_UART, 1),              /*!< Receiver is busy. */
-    kStatus_UART_TxIdle = MAKE_STATUS(kStatusGroup_UART, 2),              /*!< UART transmitter is idle. */
-    kStatus_UART_RxIdle = MAKE_STATUS(kStatusGroup_UART, 3),              /*!< UART receiver is idle. */
+    kStatus_UART_TxBusy              = MAKE_STATUS(kStatusGroup_UART, 0), /*!< Transmitter is busy. */
+    kStatus_UART_RxBusy              = MAKE_STATUS(kStatusGroup_UART, 1), /*!< Receiver is busy. */
+    kStatus_UART_TxIdle              = MAKE_STATUS(kStatusGroup_UART, 2), /*!< UART transmitter is idle. */
+    kStatus_UART_RxIdle              = MAKE_STATUS(kStatusGroup_UART, 3), /*!< UART receiver is idle. */
     kStatus_UART_TxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_UART, 4), /*!< TX FIFO watermark too large  */
     kStatus_UART_RxWatermarkTooLarge = MAKE_STATUS(kStatusGroup_UART, 5), /*!< RX FIFO watermark too large  */
     kStatus_UART_FlagCannotClearManually =
-        MAKE_STATUS(kStatusGroup_UART, 6),                                /*!< UART flag can't be manually cleared. */
-    kStatus_UART_Error = MAKE_STATUS(kStatusGroup_UART, 7),               /*!< Error happens on UART. */
-    kStatus_UART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_UART, 8), /*!< UART RX software ring buffer overrun. */
-    kStatus_UART_RxHardwareOverrun = MAKE_STATUS(kStatusGroup_UART, 9),   /*!< UART RX receiver overrun. */
-    kStatus_UART_NoiseError = MAKE_STATUS(kStatusGroup_UART, 10),         /*!< UART noise error. */
-    kStatus_UART_FramingError = MAKE_STATUS(kStatusGroup_UART, 11),       /*!< UART framing error. */
-    kStatus_UART_ParityError = MAKE_STATUS(kStatusGroup_UART, 12),        /*!< UART parity error. */
+        MAKE_STATUS(kStatusGroup_UART, 6),                                 /*!< UART flag can't be manually cleared. */
+    kStatus_UART_Error               = MAKE_STATUS(kStatusGroup_UART, 7),  /*!< Error happens on UART. */
+    kStatus_UART_RxRingBufferOverrun = MAKE_STATUS(kStatusGroup_UART, 8),  /*!< UART RX software ring buffer overrun. */
+    kStatus_UART_RxHardwareOverrun   = MAKE_STATUS(kStatusGroup_UART, 9),  /*!< UART RX receiver overrun. */
+    kStatus_UART_NoiseError          = MAKE_STATUS(kStatusGroup_UART, 10), /*!< UART noise error. */
+    kStatus_UART_FramingError        = MAKE_STATUS(kStatusGroup_UART, 11), /*!< UART framing error. */
+    kStatus_UART_ParityError         = MAKE_STATUS(kStatusGroup_UART, 12), /*!< UART parity error. */
     kStatus_UART_BaudrateNotSupport =
         MAKE_STATUS(kStatusGroup_UART, 13), /*!< Baudrate is not support in current clock source */
     kStatus_UART_IdleLineDetected = MAKE_STATUS(kStatusGroup_UART, 14), /*!< UART IDLE line detected. */
+    kStatus_UART_Timeout          = MAKE_STATUS(kStatusGroup_UART, 15), /*!< UART times out. */
 };
 
 /*! @brief UART parity mode. */
 typedef enum _uart_parity_mode
 {
     kUART_ParityDisabled = 0x0U, /*!< Parity disabled */
-    kUART_ParityEven = 0x2U,     /*!< Parity enabled, type even, bit setting: PE|PT = 10 */
-    kUART_ParityOdd = 0x3U,      /*!< Parity enabled, type odd,  bit setting: PE|PT = 11 */
+    kUART_ParityEven     = 0x2U, /*!< Parity enabled, type even, bit setting: PE|PT = 10 */
+    kUART_ParityOdd      = 0x3U, /*!< Parity enabled, type odd,  bit setting: PE|PT = 11 */
 } uart_parity_mode_t;
 
 /*! @brief UART stop bit count. */
@@ -66,7 +72,7 @@ typedef enum _uart_stop_bit_count
 typedef enum _uart_idle_type_select
 {
     kUART_IdleTypeStartBit = 0U, /*!< Start counting after a valid start bit. */
-    kUART_IdleTypeStopBit = 1U,  /*!< Start counting after a stop bit. */
+    kUART_IdleTypeStopBit  = 1U, /*!< Start counting after a stop bit. */
 } uart_idle_type_select_t;
 
 /*!
@@ -79,18 +85,18 @@ enum _uart_interrupt_enable
 #if defined(FSL_FEATURE_UART_HAS_LIN_BREAK_DETECT) && FSL_FEATURE_UART_HAS_LIN_BREAK_DETECT
     kUART_LinBreakInterruptEnable = (UART_BDH_LBKDIE_MASK), /*!< LIN break detect interrupt. */
 #endif
-    kUART_RxActiveEdgeInterruptEnable = (UART_BDH_RXEDGIE_MASK),   /*!< RX active edge interrupt. */
-    kUART_TxDataRegEmptyInterruptEnable = (UART_C2_TIE_MASK << 8), /*!< Transmit data register empty interrupt. */
+    kUART_RxActiveEdgeInterruptEnable         = (UART_BDH_RXEDGIE_MASK), /*!< RX active edge interrupt. */
+    kUART_TxDataRegEmptyInterruptEnable       = (UART_C2_TIE_MASK << 8), /*!< Transmit data register empty interrupt. */
     kUART_TransmissionCompleteInterruptEnable = (UART_C2_TCIE_MASK << 8), /*!< Transmission complete interrupt. */
-    kUART_RxDataRegFullInterruptEnable = (UART_C2_RIE_MASK << 8),         /*!< Receiver data register full interrupt. */
-    kUART_IdleLineInterruptEnable = (UART_C2_ILIE_MASK << 8),             /*!< Idle line interrupt. */
-    kUART_RxOverrunInterruptEnable = (UART_C3_ORIE_MASK << 16),           /*!< Receiver overrun interrupt. */
-    kUART_NoiseErrorInterruptEnable = (UART_C3_NEIE_MASK << 16),          /*!< Noise error flag interrupt. */
-    kUART_FramingErrorInterruptEnable = (UART_C3_FEIE_MASK << 16),        /*!< Framing error flag interrupt. */
-    kUART_ParityErrorInterruptEnable = (UART_C3_PEIE_MASK << 16),         /*!< Parity error flag interrupt. */
+    kUART_RxDataRegFullInterruptEnable        = (UART_C2_RIE_MASK << 8),  /*!< Receiver data register full interrupt. */
+    kUART_IdleLineInterruptEnable             = (UART_C2_ILIE_MASK << 8), /*!< Idle line interrupt. */
+    kUART_RxOverrunInterruptEnable            = (UART_C3_ORIE_MASK << 16), /*!< Receiver overrun interrupt. */
+    kUART_NoiseErrorInterruptEnable           = (UART_C3_NEIE_MASK << 16), /*!< Noise error flag interrupt. */
+    kUART_FramingErrorInterruptEnable         = (UART_C3_FEIE_MASK << 16), /*!< Framing error flag interrupt. */
+    kUART_ParityErrorInterruptEnable          = (UART_C3_PEIE_MASK << 16), /*!< Parity error flag interrupt. */
 #if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
-    kUART_RxFifoOverflowInterruptEnable = (UART_CFIFO_RXOFE_MASK << 24),  /*!< RX FIFO overflow interrupt. */
-    kUART_TxFifoOverflowInterruptEnable = (UART_CFIFO_TXOFE_MASK << 24),  /*!< TX FIFO overflow interrupt. */
+    kUART_RxFifoOverflowInterruptEnable  = (UART_CFIFO_RXOFE_MASK << 24), /*!< RX FIFO overflow interrupt. */
+    kUART_TxFifoOverflowInterruptEnable  = (UART_CFIFO_TXOFE_MASK << 24), /*!< TX FIFO overflow interrupt. */
     kUART_RxFifoUnderflowInterruptEnable = (UART_CFIFO_RXUFE_MASK << 24), /*!< RX FIFO underflow interrupt. */
 #endif
     kUART_AllInterruptsEnable =
@@ -102,8 +108,8 @@ enum _uart_interrupt_enable
         kUART_RxOverrunInterruptEnable | kUART_NoiseErrorInterruptEnable | kUART_FramingErrorInterruptEnable |
         kUART_ParityErrorInterruptEnable
 #if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
-        |
-        kUART_RxFifoOverflowInterruptEnable | kUART_TxFifoOverflowInterruptEnable | kUART_RxFifoUnderflowInterruptEnable
+        | kUART_RxFifoOverflowInterruptEnable | kUART_TxFifoOverflowInterruptEnable |
+        kUART_RxFifoUnderflowInterruptEnable
 #endif
     ,
 };
@@ -113,18 +119,18 @@ enum _uart_interrupt_enable
  *
  * This provides constants for the UART status flags for use in the UART functions.
  */
-enum _uart_flags
+enum
 {
-    kUART_TxDataRegEmptyFlag = (UART_S1_TDRE_MASK),     /*!< TX data register empty flag. */
-    kUART_TransmissionCompleteFlag = (UART_S1_TC_MASK), /*!< Transmission complete flag. */
-    kUART_RxDataRegFullFlag = (UART_S1_RDRF_MASK),      /*!< RX data register full flag. */
-    kUART_IdleLineFlag = (UART_S1_IDLE_MASK),           /*!< Idle line detect flag. */
-    kUART_RxOverrunFlag = (UART_S1_OR_MASK),            /*!< RX overrun flag. */
-    kUART_NoiseErrorFlag = (UART_S1_NF_MASK),           /*!< RX takes 3 samples of each received bit.
-                                                             If any of these samples differ, noise flag sets */
-    kUART_FramingErrorFlag = (UART_S1_FE_MASK),         /*!< Frame error flag, sets if logic 0 was detected
-                                                             where stop bit expected */
-    kUART_ParityErrorFlag = (UART_S1_PF_MASK),          /*!< If parity enabled, sets upon parity error detection */
+    kUART_TxDataRegEmptyFlag       = (UART_S1_TDRE_MASK), /*!< TX data register empty flag. */
+    kUART_TransmissionCompleteFlag = (UART_S1_TC_MASK),   /*!< Transmission complete flag. */
+    kUART_RxDataRegFullFlag        = (UART_S1_RDRF_MASK), /*!< RX data register full flag. */
+    kUART_IdleLineFlag             = (UART_S1_IDLE_MASK), /*!< Idle line detect flag. */
+    kUART_RxOverrunFlag            = (UART_S1_OR_MASK),   /*!< RX overrun flag. */
+    kUART_NoiseErrorFlag           = (UART_S1_NF_MASK),   /*!< RX takes 3 samples of each received bit.
+                                                               If any of these samples differ, noise flag sets */
+    kUART_FramingErrorFlag = (UART_S1_FE_MASK),           /*!< Frame error flag, sets if logic 0 was detected
+                                                               where stop bit expected */
+    kUART_ParityErrorFlag = (UART_S1_PF_MASK),            /*!< If parity enabled, sets upon parity error detection */
 #if defined(FSL_FEATURE_UART_HAS_LIN_BREAK_DETECT) && FSL_FEATURE_UART_HAS_LIN_BREAK_DETECT
     kUART_LinBreakFlag =
         (UART_S2_LBKDIF_MASK
@@ -135,15 +141,15 @@ enum _uart_flags
     kUART_RxActiveFlag =
         (UART_S2_RAF_MASK << 8), /*!< Receiver Active Flag (RAF), sets at beginning of valid start bit */
 #if defined(FSL_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS) && FSL_FEATURE_UART_HAS_EXTENDED_DATA_REGISTER_FLAGS
-    kUART_NoiseErrorInRxDataRegFlag = (UART_ED_NOISY_MASK << 16),    /*!< Noisy bit, sets if noise detected. */
+    kUART_NoiseErrorInRxDataRegFlag  = (UART_ED_NOISY_MASK << 16),   /*!< Noisy bit, sets if noise detected. */
     kUART_ParityErrorInRxDataRegFlag = (UART_ED_PARITYE_MASK << 16), /*!< Parity bit, sets if parity error detected. */
 #endif
 #if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
-    kUART_TxFifoEmptyFlag = (int)(UART_SFIFO_TXEMPT_MASK << 24), /*!< TXEMPT bit, sets if TX buffer is empty */
-    kUART_RxFifoEmptyFlag = (UART_SFIFO_RXEMPT_MASK << 24),      /*!< RXEMPT bit, sets if RX buffer is empty */
-    kUART_TxFifoOverflowFlag = (UART_SFIFO_TXOF_MASK << 24),     /*!< TXOF bit, sets if TX buffer overflow occurred */
-    kUART_RxFifoOverflowFlag = (UART_SFIFO_RXOF_MASK << 24),     /*!< RXOF bit, sets if receive buffer overflow */
-    kUART_RxFifoUnderflowFlag = (UART_SFIFO_RXUF_MASK << 24),    /*!< RXUF bit, sets if receive buffer underflow */
+    kUART_TxFifoEmptyFlag     = (int)(UART_SFIFO_TXEMPT_MASK << 24), /*!< TXEMPT bit, sets if TX buffer is empty */
+    kUART_RxFifoEmptyFlag     = (UART_SFIFO_RXEMPT_MASK << 24),      /*!< RXEMPT bit, sets if RX buffer is empty */
+    kUART_TxFifoOverflowFlag  = (UART_SFIFO_TXOF_MASK << 24), /*!< TXOF bit, sets if TX buffer overflow occurred */
+    kUART_RxFifoOverflowFlag  = (UART_SFIFO_RXOF_MASK << 24), /*!< RXOF bit, sets if receive buffer overflow */
+    kUART_RxFifoUnderflowFlag = (UART_SFIFO_RXUF_MASK << 24), /*!< RXUF bit, sets if receive buffer underflow */
 #endif
 };
 
@@ -287,11 +293,96 @@ void UART_GetDefaultConfig(uart_config_t *config);
  *
  * @param base UART peripheral base address.
  * @param baudRate_Bps UART baudrate to be set.
- * @param srcClock_Hz UART clock source freqency in Hz.
+ * @param srcClock_Hz UART clock source frequency in Hz.
  * @retval kStatus_UART_BaudrateNotSupport Baudrate is not support in the current clock source.
  * @retval kStatus_Success Set baudrate succeeded.
  */
 status_t UART_SetBaudRate(UART_Type *base, uint32_t baudRate_Bps, uint32_t srcClock_Hz);
+
+/*!
+ * @brief Enable 9-bit data mode for UART.
+ *
+ * This function set the 9-bit mode for UART module. The 9th bit is not used for parity thus can be modified by user.
+ *
+ * @param base UART peripheral base address.
+ * @param enable true to enable, flase to disable.
+ */
+void UART_Enable9bitMode(UART_Type *base, bool enable);
+
+#if defined(FSL_FEATURE_UART_HAS_ADDRESS_MATCHING) && FSL_FEATURE_UART_HAS_ADDRESS_MATCHING
+/*!
+ * @brief Set the UART slave address.
+ *
+ * This function configures the address for UART module that works as slave in 9-bit data mode. One or two address
+ * fields can be configured. When the address field's match enable bit is set, the frame it receices with MSB being
+ * 1 is considered as an address frame, otherwise it is considered as data frame. Once the address frame matches one
+ * of slave's own addresses, this slave is addressed. This address frame and its following data frames are stored in
+ * the receive buffer, otherwise the frames will be discarded. To un-address a slave, just send an address frame with
+ * unmatched address.
+ *
+ * @note Any UART instance joined in the multi-slave system can work as slave. The position of the address mark is the
+ * same as the parity bit when parity is enabled for 8 bit and 9 bit data formats.
+ *
+ * @param base UART peripheral base address.
+ * @param address1 UART slave address 1.
+ * @param address2 UART slave address 2.
+ */
+static inline void UART_SetMatchAddress(UART_Type *base, uint8_t address1, uint8_t address2)
+{
+    /* Configure match address. */
+    base->MA1 = address1;
+    base->MA2 = address2;
+}
+
+/*!
+ * @brief Enable the UART match address feature.
+ *
+ * @param base UART peripheral base address.
+ * @param match1 true to enable match address1, false to disable.
+ * @param match2 true to enable match address2, false to disable.
+ */
+static inline void UART_EnableMatchAddress(UART_Type *base, bool match1, bool match2)
+{
+    /* Configure match address1 enable bit. */
+    if (match1)
+    {
+        base->C4 |= (uint8_t)UART_C4_MAEN1_MASK;
+    }
+    else
+    {
+        base->C4 &= ~(uint8_t)UART_C4_MAEN1_MASK;
+    }
+    /* Configure match address2 enable bit. */
+    if (match2)
+    {
+        base->C4 |= (uint8_t)UART_C4_MAEN2_MASK;
+    }
+    else
+    {
+        base->C4 &= ~(uint8_t)UART_C4_MAEN2_MASK;
+    }
+}
+#endif
+
+/*!
+ * @brief Set UART 9th transmit bit.
+ *
+ * @param base UART peripheral base address.
+ */
+static inline void UART_Set9thTransmitBit(UART_Type *base)
+{
+    base->C3 |= (uint8_t)UART_C3_T8_MASK;
+}
+
+/*!
+ * @brief Clear UART 9th transmit bit.
+ *
+ * @param base UART peripheral base address.
+ */
+static inline void UART_Clear9thTransmitBit(UART_Type *base)
+{
+    base->C3 &= ~(uint8_t)UART_C3_T8_MASK;
+}
 
 /* @} */
 
@@ -304,8 +395,8 @@ status_t UART_SetBaudRate(UART_Type *base, uint32_t baudRate_Bps, uint32_t srcCl
  * @brief Gets UART status flags.
  *
  * This function gets all UART status flags. The flags are returned as the logical
- * OR value of the enumerators @ref _uart_flags. To check a specific status,
- * compare the return value with enumerators in @ref _uart_flags.
+ * OR value of the enumerators _uart_flags. To check a specific status,
+ * compare the return value with enumerators in _uart_flags.
  * For example, to check whether the TX is empty, do the following.
  * @code
  *     if (kUART_TxDataRegEmptyFlag & UART_GetStatusFlags(UART1))
@@ -328,10 +419,10 @@ uint32_t UART_GetStatusFlags(UART_Type *base);
  *    kUART_TxDataRegEmptyFlag, kUART_TransmissionCompleteFlag, kUART_RxDataRegFullFlag,
  *    kUART_RxActiveFlag, kUART_NoiseErrorInRxDataRegFlag, kUART_ParityErrorInRxDataRegFlag,
  *    kUART_TxFifoEmptyFlag,kUART_RxFifoEmptyFlag
- * Note that this API should be called when the Tx/Rx is idle. Otherwise it has no effect.
+ * @note that this API should be called when the Tx/Rx is idle. Otherwise it has no effect.
  *
  * @param base UART peripheral base address.
- * @param mask The status flags to be cleared; it is logical OR value of @ref _uart_flags.
+ * @param mask The status flags to be cleared; it is logical OR value of _uart_flags.
  * @retval kStatus_UART_FlagCannotClearManually The flag can't be cleared by this function but
  *         it is cleared automatically by hardware.
  * @retval kStatus_Success Status in the mask is cleared.
@@ -431,20 +522,20 @@ static inline void UART_EnableTxDMA(UART_Type *base, bool enable)
     if (enable)
     {
 #if (defined(FSL_FEATURE_UART_IS_SCI) && FSL_FEATURE_UART_IS_SCI)
-        base->C4 |= UART_C4_TDMAS_MASK;
+        base->C4 |= (uint8_t)UART_C4_TDMAS_MASK;
 #else
-        base->C5 |= UART_C5_TDMAS_MASK;
+        base->C5 |= (uint8_t)UART_C5_TDMAS_MASK;
 #endif
-        base->C2 |= UART_C2_TIE_MASK;
+        base->C2 |= (uint8_t)UART_C2_TIE_MASK;
     }
     else
     {
 #if (defined(FSL_FEATURE_UART_IS_SCI) && FSL_FEATURE_UART_IS_SCI)
-        base->C4 &= ~UART_C4_TDMAS_MASK;
+        base->C4 &= ~(uint8_t)UART_C4_TDMAS_MASK;
 #else
-        base->C5 &= ~UART_C5_TDMAS_MASK;
+        base->C5 &= ~(uint8_t)UART_C5_TDMAS_MASK;
 #endif
-        base->C2 &= ~UART_C2_TIE_MASK;
+        base->C2 &= ~(uint8_t)UART_C2_TIE_MASK;
     }
 }
 
@@ -461,20 +552,20 @@ static inline void UART_EnableRxDMA(UART_Type *base, bool enable)
     if (enable)
     {
 #if (defined(FSL_FEATURE_UART_IS_SCI) && FSL_FEATURE_UART_IS_SCI)
-        base->C4 |= UART_C4_RDMAS_MASK;
+        base->C4 |= (uint8_t)UART_C4_RDMAS_MASK;
 #else
-        base->C5 |= UART_C5_RDMAS_MASK;
+        base->C5 |= (uint8_t)UART_C5_RDMAS_MASK;
 #endif
-        base->C2 |= UART_C2_RIE_MASK;
+        base->C2 |= (uint8_t)UART_C2_RIE_MASK;
     }
     else
     {
 #if (defined(FSL_FEATURE_UART_IS_SCI) && FSL_FEATURE_UART_IS_SCI)
-        base->C4 &= ~UART_C4_RDMAS_MASK;
+        base->C4 &= ~(uint8_t)UART_C4_RDMAS_MASK;
 #else
-        base->C5 &= ~UART_C5_RDMAS_MASK;
+        base->C5 &= ~(uint8_t)UART_C5_RDMAS_MASK;
 #endif
-        base->C2 &= ~UART_C2_RIE_MASK;
+        base->C2 &= ~(uint8_t)UART_C2_RIE_MASK;
     }
 }
 
@@ -498,11 +589,11 @@ static inline void UART_EnableTx(UART_Type *base, bool enable)
 {
     if (enable)
     {
-        base->C2 |= UART_C2_TE_MASK;
+        base->C2 |= (uint8_t)UART_C2_TE_MASK;
     }
     else
     {
-        base->C2 &= ~UART_C2_TE_MASK;
+        base->C2 &= ~(uint8_t)UART_C2_TE_MASK;
     }
 }
 
@@ -518,11 +609,11 @@ static inline void UART_EnableRx(UART_Type *base, bool enable)
 {
     if (enable)
     {
-        base->C2 |= UART_C2_RE_MASK;
+        base->C2 |= (uint8_t)UART_C2_RE_MASK;
     }
     else
     {
-        base->C2 &= ~UART_C2_RE_MASK;
+        base->C2 &= ~(uint8_t)UART_C2_RE_MASK;
     }
 }
 
@@ -554,21 +645,29 @@ static inline uint8_t UART_ReadByte(UART_Type *base)
     return base->D;
 }
 
+#if defined(FSL_FEATURE_UART_HAS_ADDRESS_MATCHING) && FSL_FEATURE_UART_HAS_ADDRESS_MATCHING
+/*!
+ * @brief Transmit an address frame in 9-bit data mode.
+ *
+ * @param base UART peripheral base address.
+ * @param address UART slave address.
+ */
+void UART_SendAddress(UART_Type *base, uint8_t address);
+#endif
+
 /*!
  * @brief Writes to the TX register using a blocking method.
  *
  * This function polls the TX register, waits for the TX register to be empty or for the TX FIFO
  * to have room and writes data to the TX buffer.
  *
- * @note This function does not check whether all data is sent out to the bus.
- * Before disabling the TX, check kUART_TransmissionCompleteFlag to ensure that the TX is
- * finished.
- *
  * @param base UART peripheral base address.
  * @param data Start address of the data to write.
  * @param length Size of the data to write.
+ * @retval kStatus_UART_Timeout Transmission timed out and was aborted.
+ * @retval kStatus_Success Successfully wrote all data.
  */
-void UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length);
+status_t UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length);
 
 /*!
  * @brief Read RX data register using a blocking method.
@@ -583,6 +682,7 @@ void UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length);
  * @retval kStatus_UART_NoiseError A noise error occurred while receiving data.
  * @retval kStatus_UART_FramingError A framing error occurred while receiving data.
  * @retval kStatus_UART_ParityError A parity error occurred while receiving data.
+ * @retval kStatus_UART_Timeout Transmission timed out and was aborted.
  * @retval kStatus_Success Successfully received all data.
  */
 status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length);
@@ -681,10 +781,9 @@ status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, ua
 void UART_TransferAbortSend(UART_Type *base, uart_handle_t *handle);
 
 /*!
- * @brief Gets the number of bytes written to the UART TX register.
+ * @brief Gets the number of bytes sent out to bus.
  *
- * This function gets the number of bytes written to the UART TX
- * register by using the interrupt method.
+ * This function gets the number of bytes sent out to bus by using the interrupt method.
  *
  * @param base UART peripheral base address.
  * @param handle UART handle pointer.
@@ -750,6 +849,32 @@ void UART_TransferAbortReceive(UART_Type *base, uart_handle_t *handle);
  * @retval kStatus_Success Get successfully through the parameter \p count;
  */
 status_t UART_TransferGetReceiveCount(UART_Type *base, uart_handle_t *handle, uint32_t *count);
+
+#if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
+/*!
+ * @brief Enables or disables the UART Tx FIFO.
+ *
+ * This function enables or disables the UART Tx FIFO.
+ *
+ * param base UART peripheral base address.
+ * param enable true to enable, false to disable.
+ * retval kStatus_Success Successfully turn on or turn off Tx FIFO.
+ * retval kStatus_Fail Fail to turn on or turn off Tx FIFO.
+ */
+status_t UART_EnableTxFIFO(UART_Type *base, bool enable);
+
+/*!
+ * @brief Enables or disables the UART Rx FIFO.
+ *
+ * This function enables or disables the UART Rx FIFO.
+ *
+ * param base UART peripheral base address.
+ * param enable true to enable, false to disable.
+ * retval kStatus_Success Successfully turn on or turn off Rx FIFO.
+ * retval kStatus_Fail Fail to turn on or turn off Rx FIFO.
+ */
+status_t UART_EnableRxFIFO(UART_Type *base, bool enable);
+#endif /* FSL_FEATURE_UART_HAS_FIFO */
 
 /*!
  * @brief UART IRQ handle function.

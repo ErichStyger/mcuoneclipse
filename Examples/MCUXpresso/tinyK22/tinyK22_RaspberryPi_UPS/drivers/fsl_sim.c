@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -34,7 +34,7 @@ void SIM_SetUsbVoltRegulatorEnableMode(uint32_t mask)
 {
     SIM->SOPT1CFG |= (SIM_SOPT1CFG_URWE_MASK | SIM_SOPT1CFG_UVSWE_MASK | SIM_SOPT1CFG_USSWE_MASK);
 
-    SIM->SOPT1 = (SIM->SOPT1 & ~kSIM_UsbVoltRegEnableInAllModes) | mask;
+    SIM->SOPT1 = (SIM->SOPT1 & ~(uint32_t)kSIM_UsbVoltRegEnableInAllModes) | mask;
 }
 #endif /* FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR */
 
@@ -45,7 +45,7 @@ void SIM_SetUsbVoltRegulatorEnableMode(uint32_t mask)
  */
 void SIM_GetUniqueId(sim_uid_t *uid)
 {
-#if defined(SIM_UIDH)
+#if (defined(FSL_FEATURE_SIM_HAS_UIDH) && FSL_FEATURE_SIM_HAS_UIDH)
     uid->H = SIM->UIDH;
 #endif
 #if (defined(FSL_FEATURE_SIM_HAS_UIDM) && FSL_FEATURE_SIM_HAS_UIDM)
