@@ -296,7 +296,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     #endif
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+#elif McuLib_CONFIG_CPU_IS_LPC && !McuLib_CONFIG_CPU_IS_LPC55xx /* LPC845 */
   uint8_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
@@ -304,6 +304,20 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     return ERR_FAILED;
   }
   return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx/* LPC845 */
+  int i;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+
+  uint8_t *p;
+  p = (uint8_t*)FLASH_NMPA->UUID_ARRAY[0];
+  for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
+    uid->id[i] = *p;
+    p++;
+  }
 #else
   (void)uid; /* not used */
   return ERR_FAILED;

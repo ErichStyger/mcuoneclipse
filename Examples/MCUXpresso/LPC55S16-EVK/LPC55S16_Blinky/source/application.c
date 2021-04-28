@@ -23,14 +23,14 @@
 #define LED_GPIO    GPIO
 #define LED_PORT    1U
 
-/* Blue: P1_4 */
+/* Blue: P1_6 */
 #define LED_BLUE_GPIO    GPIO
 #define LED_BLUE_PORT    1U
-#define LED_BLUE_PIN     4U
-/* Red: P1_6 */
+#define LED_BLUE_PIN     6U
+/* Red: P1_4 */
 #define LED_RED_GPIO     GPIO
 #define LED_RED_PORT     1U
-#define LED_RED_PIN      6U
+#define LED_RED_PIN      4U
 /* Green: P1_7 */
 #define LED_GREEN_GPIO   GPIO
 #define LED_GREEN_PORT   1U
@@ -41,14 +41,14 @@ static SemaphoreHandle_t mutex;
 
 static void Init(void) {
   McuLib_Init();
-  McuRTOS_Init();
+//  McuRTOS_Init();
   McuWait_Init();
   McuLED_Init();
 }
 
 static void AppTask(void *pv) {
   for(;;) {
-    McuLED_Neg(ledRed);
+    McuLED_Toggle(ledRed);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
@@ -86,39 +86,43 @@ void APP_Run(void) {
   IOCON_PinMuxSet(IOCON, LED_BLUE_PORT, LED_BLUE_PIN, port1_pin4_config);
 
   McuLED_GetDefaultConfig(&config);
-  config.isLowActive = true;
+  config.isLowActive = false;
   config.isOnInit = false;
-  config.port = LED_RED_PORT;
-  config.gpio = LED_RED_GPIO;
-  config.pin = LED_RED_PIN;
+  config.hw.port = LED_RED_PORT;
+  config.hw.gpio = LED_RED_GPIO;
+  config.hw.pin = LED_RED_PIN;
   ledRed = McuLED_InitLed(&config);
 
-  config.port = LED_GREEN_PORT;
-  config.gpio = LED_GREEN_GPIO;
-  config.pin = LED_GREEN_PIN;
+  config.hw.port = LED_GREEN_PORT;
+  config.hw.gpio = LED_GREEN_GPIO;
+  config.hw.pin = LED_GREEN_PIN;
   ledGreen = McuLED_InitLed(&config);
 
-  config.port = LED_BLUE_PORT;
-  config.gpio = LED_BLUE_GPIO;
-  config.pin = LED_BLUE_PIN;
+  config.hw.port = LED_BLUE_PORT;
+  config.hw.gpio = LED_BLUE_GPIO;
+  config.hw.pin = LED_BLUE_PIN;
   ledBlue = McuLED_InitLed(&config);
- // for(;;) {
- //   McuLED_On(ledRed);
- //   McuLED_Off(ledRed);
+  for(;;) {
+    McuLED_On(ledRed);
+    McuLED_Off(ledRed);
+    McuLED_On(ledGreen);
+    McuLED_Off(ledGreen);
+    McuLED_On(ledBlue);
+    McuLED_Off(ledBlue);
 
-    McuLED_Neg(ledRed);
+    McuLED_Toggle(ledRed);
     McuWait_Waitms(100);
-    McuLED_Neg(ledRed);
+    McuLED_Toggle(ledRed);
     McuWait_Waitms(100);
-    McuLED_Neg(ledGreen);
+    McuLED_Toggle(ledGreen);
     McuWait_Waitms(100);
-    McuLED_Neg(ledGreen);
+    McuLED_Toggle(ledGreen);
     McuWait_Waitms(100);
-    McuLED_Neg(ledBlue);
+    McuLED_Toggle(ledBlue);
     McuWait_Waitms(100);
-    McuLED_Neg(ledBlue);
+    McuLED_Toggle(ledBlue);
     McuWait_Waitms(100);
- // } /* for */
+  } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
