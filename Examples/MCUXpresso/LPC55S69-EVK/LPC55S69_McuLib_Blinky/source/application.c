@@ -10,6 +10,7 @@
 #include "McuWait.h"
 #include "McuLED.h"
 #include "McuRTOS.h"
+#include "leds.h"
 
 #include "fsl_iocon.h"
 #include "pin_mux.h"
@@ -20,21 +21,6 @@
 #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
 #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
-#define LED_GPIO    GPIO
-#define LED_PORT    1U
-
-/* Blue: P1_4 */
-#define LED_BLUE_GPIO    GPIO
-#define LED_BLUE_PORT    1U
-#define LED_BLUE_PIN     4U
-/* Red: P1_6 */
-#define LED_RED_GPIO     GPIO
-#define LED_RED_PORT     1U
-#define LED_RED_PIN      6U
-/* Green: P1_7 */
-#define LED_GREEN_GPIO   GPIO
-#define LED_GREEN_PORT   1U
-#define LED_GREEN_PIN    7U
 
 static McuLED_Handle_t ledRed, ledGreen, ledBlue;
 static SemaphoreHandle_t mutex;
