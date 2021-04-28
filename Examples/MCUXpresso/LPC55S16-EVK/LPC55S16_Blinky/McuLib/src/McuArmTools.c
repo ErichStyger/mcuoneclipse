@@ -304,20 +304,20 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     return ERR_FAILED;
   }
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx/* LPC845 */
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55xx */
   int i;
+  uint8_t *p;
 
   /* init */
   for(i=0;i<sizeof(McuArmTools_UID);i++) {
     uid->id[i] = 0;
   }
-
-  uint8_t *p;
   p = (uint8_t*)FLASH_NMPA->UUID_ARRAY[0];
   for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
     uid->id[i] = *p;
     p++;
   }
+  return ERR_OK;
 #else
   (void)uid; /* not used */
   return ERR_FAILED;

@@ -11,6 +11,7 @@
 #include "McuLED.h"
 #include "McuRTOS.h"
 #include "leds.h"
+#include "buttons.h"
 
 static SemaphoreHandle_t mutex;
 
@@ -20,6 +21,7 @@ static void Init(void) {
   McuWait_Init();
   McuLED_Init();
   LEDS_Init();
+  BTN_Init();
 }
 
 static void AppTask(void *pv) {
@@ -38,7 +40,8 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 
 void APP_Run(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
-  GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs */
+  GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
+
   Init(); /* init modules */
 
   for(;;) {
@@ -54,6 +57,11 @@ void APP_Run(void) {
     McuWait_Waitms(100);
     LEDS_Off(LEDS_BLUE);
     McuWait_Waitms(100);
+    if (BTN_IsPressed(BTN_USER)) {
+      LEDS_On(LEDS_RED);
+      McuWait_Waitms(100);
+      LEDS_Off(LEDS_RED);
+    }
   } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
