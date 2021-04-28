@@ -44,7 +44,7 @@ void APP_Run(void) {
 
   Init(); /* init modules */
 
-  for(;;) {
+ // for(;;) {
     LEDS_On(LEDS_RED);
     McuWait_Waitms(100);
     LEDS_Off(LEDS_RED);
@@ -62,7 +62,7 @@ void APP_Run(void) {
       McuWait_Waitms(100);
       LEDS_Off(LEDS_RED);
     }
-  } /* for */
+ // } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
