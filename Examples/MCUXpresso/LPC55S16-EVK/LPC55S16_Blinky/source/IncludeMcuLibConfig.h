@@ -42,9 +42,11 @@ Instructions:
   #define McuLib_CONFIG_CORTEX_M          (33)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 
   #define configRUN_FREERTOS_SECURE_ONLY (0)
-  #define configENABLE_TRUSTZONE         (0)
+  #define configENABLE_TRUSTZONE         (1)
   #define configENABLE_MPU (0)
   #define configENABLE_FPU (1) /* ???? */
+//#define configENABLE_TRUSTZONE (1)
+#define configMINIMAL_SECURE_STACK_SIZE  (500)
 
 #elif 0 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
