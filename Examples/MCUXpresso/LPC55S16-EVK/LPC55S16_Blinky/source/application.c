@@ -38,13 +38,15 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
 }
 
+bool doIt = false;
+
 void APP_Run(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
   GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
 
   Init(); /* init modules */
 
- // for(;;) {
+  for(int i=0;i<5;i++) {
     LEDS_On(LEDS_RED);
     McuWait_Waitms(100);
     LEDS_Off(LEDS_RED);
@@ -62,7 +64,7 @@ void APP_Run(void) {
       McuWait_Waitms(100);
       LEDS_Off(LEDS_RED);
     }
- // } /* for */
+  } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
@@ -84,6 +86,8 @@ void APP_Run(void) {
   if (mutex!=NULL) {
     vQueueAddToRegistry(mutex, "Mutex");
   }
-  vTaskStartScheduler();
+  if (doIt) {
+    vTaskStartScheduler();
+  }
   for(;;) { /* should not get here */ }
 }
