@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -230,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2020 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -295,12 +295,14 @@
   #include "freertos/semphr.h"         /* semaphore API */
   #include "freertos/event_groups.h"   /* event group API */
   #include "freertos/timers.h"         /* timer module API */
+  #include "freertos/stream_buffer.h"  /* stream buffer module API */
 #else
   #include "FreeRTOS.h"
   #include "task.h"                    /* task API */
   #include "semphr.h"                  /* semaphore API */
   #include "event_groups.h"            /* event group API */
   #include "timers.h"                  /* timer module API */
+  #include "stream_buffer.h"           /* stream buffer module API */
 #endif
 #include <stddef.h>                    /* for size_t type */
 

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -69,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -122,8 +122,8 @@
 
 
 uint8_t McuShell_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
-#if McuShell_HISTORY_ENABLED
-  static uint8_t McuShell_history[McuShell_NOF_HISTORY][McuShell_HIST_LEN]; /* History buffers */
+#if McuShell_CONFIG_HISTORY_ENABLED
+  static uint8_t McuShell_history[McuShell_CONFIG_HISTORY_NOF_ITEMS][McuShell_CONFIG_HISTORY_ITEM_LENGTH]; /* History buffers */
   static uint8_t McuShell_history_index = 0; /* Selected command */
 #endif
 #if McuShell_ECHO_ENABLED
@@ -428,15 +428,15 @@ void McuShell_PrintPrompt(McuShell_ConstStdIOType *io)
 bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, bool *isPrev)
 {
   *isPrev = FALSE;
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
   if (   cmdBufIdx==0 /* first character on command line */
       || (McuUtility_strcmp((const char*)cmdBuf, (const char*)McuShell_history[McuShell_history_index])==0) /* pressing prev/next character on previous history element */
       )
   {
-    if (ch==McuShell_HISTORY_PREV_CHAR) {
+    if (ch==McuShell_CONFIG_HISTORY_CHAR_PREV) {
       *isPrev = TRUE;
       return TRUE;
-    } else if (ch==McuShell_HISTORY_NEXT_CHAR) {
+    } else if (ch==McuShell_CONFIG_HISTORY_CHAR_NEXT) {
       *isPrev = FALSE;
       return TRUE;
     }
@@ -513,13 +513,13 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
            bufSize++;
         }
       } else if (McuShell_IsHistoryCharacter(c, bufStart, (size_t)(buf-bufStart), &isBackwardHistory)) {
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
         uint8_t cBuf[3]={'\0','\0','\0'}, cBufIdx = 0;
         bool prevInHistory;
 #endif
 
         while (c!='\0') {              /* empty the rx buffer (escape sequence) */
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
            cBuf[cBufIdx] = c;
            cBufIdx++;
            if (cBufIdx==sizeof(cBuf)) {
@@ -529,7 +529,7 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
            c = '\0';                   /* initialize character */
            io->stdIn(&c);              /* read character */
         }
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
         /* if not an alphanumeric switch to history  */
         prevInHistory = cBufIdx==0 && cBuf[0]==0x1b && cBuf[1]==0x5b && (cBuf[2]==0x41 /*up*/ || cBuf[2]==0x44 /*left*/);
         /* up:    0x27 0x5b 0x41
@@ -538,18 +538,18 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
          * left:  0x27 0x5b 0x44
          */
         if (prevInHistory) {
-          McuUtility_strcpy(bufStart, McuShell_HIST_LEN, McuShell_history[McuShell_history_index]);
+          McuUtility_strcpy(bufStart, McuShell_CONFIG_HISTORY_ITEM_LENGTH, McuShell_history[McuShell_history_index]);
           McuShell_history_index++;    /* update the index */
-          if (McuShell_history_index==McuShell_NOF_HISTORY) {
+          if (McuShell_history_index==McuShell_CONFIG_HISTORY_NOF_ITEMS) {
             McuShell_history_index = 0;
           }
         } else {
           if (McuShell_history_index==0) {
-            McuShell_history_index = (McuShell_NOF_HISTORY-1);
+            McuShell_history_index = (McuShell_CONFIG_HISTORY_NOF_ITEMS-1);
           } else {
             McuShell_history_index--;
           }
-          McuUtility_strcpy(bufStart, McuShell_HIST_LEN, McuShell_history[McuShell_history_index]);
+          McuUtility_strcpy(bufStart, McuShell_CONFIG_HISTORY_ITEM_LENGTH, McuShell_history[McuShell_history_index]);
         }
         bufSize = bufSize + buf - bufStart - McuUtility_strlen((const char*)bufStart); /* update the buffer */
         buf = bufStart + McuUtility_strlen((const char*)bufStart);
@@ -576,19 +576,19 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
             McuShell_SendStr((unsigned char*)"\n", io->stdOut);
           }
 #endif
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
           if ((bufStart[0] != '\0') && (bufStart[0] != '\r') && (bufStart[0] != '\n')) {
             int i;
 
-            for(i=McuShell_NOF_HISTORY-1; i>0;i--) {
-              McuUtility_strcpy(McuShell_history[i], McuShell_HIST_LEN, McuShell_history[i-1]); /* move previous commands */
+            for(i=McuShell_CONFIG_HISTORY_NOF_ITEMS-1; i>0;i--) {
+              McuUtility_strcpy(McuShell_history[i], McuShell_CONFIG_HISTORY_ITEM_LENGTH, McuShell_history[i-1]); /* move previous commands */
             }
             McuShell_history_index = 0; /* update the history with the current command */
-            McuUtility_strcpy(McuShell_history[0], McuShell_HIST_LEN, bufStart); /* add the current command to the history */
-            if (buf-bufStart <= McuShell_HIST_LEN) { /* size check */
+            McuUtility_strcpy(McuShell_history[0], McuShell_CONFIG_HISTORY_ITEM_LENGTH, bufStart); /* add the current command to the history */
+            if (buf-bufStart <= McuShell_CONFIG_HISTORY_ITEM_LENGTH) { /* size check */
               McuShell_history[0][buf-bufStart-1] = '\0';
             } else {
-              McuShell_history[0][McuShell_HIST_LEN-1] = '\0';
+              McuShell_history[0][McuShell_CONFIG_HISTORY_ITEM_LENGTH-1] = '\0';
             }
           }
 #endif
@@ -1258,12 +1258,12 @@ void McuShell_Init(void)
   }
   vQueueAddToRegistry(ShellSem, "McuShell_Sem");
 #endif
-#if McuShell_HISTORY_ENABLED
+#if McuShell_CONFIG_HISTORY_ENABLED
   {
     int i;
 
     McuShell_history_index = 0;
-    for(i=0; i<McuShell_NOF_HISTORY;i++) {
+    for(i=0; i<McuShell_CONFIG_HISTORY_NOF_ITEMS;i++) {
       McuShell_history[i][0] = '\0';
     }
   }

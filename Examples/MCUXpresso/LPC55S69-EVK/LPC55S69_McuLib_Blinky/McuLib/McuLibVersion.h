@@ -10,15 +10,15 @@
 
 /* See
  * https://github.com/ErichStyger/McuOnEclipseLibrary
- * Date: 25-Oct-2020
- * Time: 12:08
+ * Date: 30-Apr-2021
+ * Time: 12:07
  */
 
 #define McuLib_VERSION_VERSION_MAJOR   (1)
   /*!< McuLib major version number */
 #define McuLib_VERSION_VERSION_MINOR   (0)
   /*!< McuLib minor version number */
-#define McuLib_VERSION_VERSION_BUILD   (4)
+#define McuLib_VERSION_VERSION_BUILD   (5)
   /*!< McuLib build version number */
 
 #endif /* SOURCES_MCULIBVERSION_H_ */

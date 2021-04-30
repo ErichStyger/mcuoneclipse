@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef SHELLUART_H_
-#define SHELLUART_H_
+#ifndef MCUSHELLUART_H_
+#define MCUSHELLUART_H_
 
 #include "McuShellUartconfig.h"
 #include "McuShell.h"
@@ -24,4 +24,4 @@ void McuShellUart_Init(void);
 }  /* extern "C" */
 #endif
 
-#endif /* SHELLUART_H_ */
+#endif /* MCUSHELLUART_H_ */

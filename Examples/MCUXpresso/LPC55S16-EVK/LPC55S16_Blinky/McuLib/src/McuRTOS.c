@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.581, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-12-16, 15:45, # CodeGen: 725
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
@@ -230,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2020 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -285,6 +285,24 @@
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
 #endif
 
+
+#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+  /* This is only really needed for debugging with openOCD:
+   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
+   * present in the kernel, so it has to be supplied by other means for
+   * OpenOCD's threads awareness.
+   *
+   * Add this file to your project, and, if you're using --gc-sections,
+   * ``--undefined=uxTopUsedPriority'' (or
+   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
+   * linking) to your LDFLAGS; same with all the other symbols you need.
+   */
+  const int
+  #ifdef __GNUC__
+  __attribute__((used))
+  #endif
+  uxTopUsedPriority = configMAX_PRIORITIES-1;
+#endif
 
 #if configUSE_SHELL
 static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
@@ -5441,25 +5459,6 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   return 0; /* dummy value */
 #endif
 }
-
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
-  /* This is only really needed for debugging with openOCD:
-   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
-   * present in the kernel, so it has to be supplied by other means for
-   * OpenOCD's threads awareness.
-   *
-   * Add this file to your project, and, if you're using --gc-sections,
-   * ``--undefined=uxTopUsedPriority'' (or
-   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
-   * linking) to your LDFLAGS; same with all the other symbols you need.
-   */
-  const int
-  #ifdef __GNUC__
-  __attribute__((used))
-  #endif
-  uxTopUsedPriority = configMAX_PRIORITIES-1;
-#endif
-
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 /* END McuRTOS. */

@@ -2947,7 +2947,8 @@ int SEGGER_SYSVIEW_IsStarted(void) {
   return _SYSVIEW_Globals.EnableState;
 }
 
-#endif
+#endif /* configUSE_SEGGER_SYSTEM_VIEWER_HOOKS */ /* << EST: added check, otherwise compiler might complain about calling RTT init with out-of-bound RTT channel index */
+
 
 /*************************** End of file ****************************/
 

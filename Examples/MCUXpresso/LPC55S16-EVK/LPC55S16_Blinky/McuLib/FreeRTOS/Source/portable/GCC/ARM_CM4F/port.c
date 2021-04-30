@@ -1467,7 +1467,6 @@ __attribute__ ((naked, used)) void vPortPendSVHandler(void) {
 #endif
 }
 
-
 #if configGDB_HELPER /* if GDB debug helper is enabled */
 /* Credits to:
  * - Artem Pisarneko for his initial contribution
