@@ -52,7 +52,6 @@ void LEDS_Init(void) {
   config.hw.gpio = LEDS_LED_RED_GPIO;
   config.hw.port = LEDS_LED_RED_PORT;
   config.hw.pin = LEDS_LED_RED_PIN;
-//  config.hw.iocon = LEDS_LED_RED_IOCON;
   ledRed = McuLED_InitLed(&config);
   if (ledRed==NULL) {
     for(;;) {}
@@ -63,7 +62,6 @@ void LEDS_Init(void) {
   config.hw.gpio = LEDS_LED_GREEN_GPIO;
   config.hw.port = LEDS_LED_GREEN_PORT;
   config.hw.pin = LEDS_LED_GREEN_PIN;
-//  config.hw.iocon = LEDS_LED_GREEN_IOCON;
   ledGreen = McuLED_InitLed(&config);
   if (ledGreen==NULL) {
     for(;;) {}
@@ -74,7 +72,6 @@ void LEDS_Init(void) {
   config.hw.gpio = LEDS_LED_BLUE_GPIO;
   config.hw.port = LEDS_LED_BLUE_PORT;
   config.hw.pin = LEDS_LED_BLUE_PIN;
-//  config.hw.iocon = LEDS_LED_BLUE_IOCON;
   ledBlue = McuLED_InitLed(&config);
   if (ledBlue==NULL) {
     for(;;) {}

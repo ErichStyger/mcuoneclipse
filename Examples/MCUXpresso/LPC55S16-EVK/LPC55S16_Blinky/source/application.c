@@ -13,6 +13,8 @@
 #include "McuShellUart.h"
 #include "McuShell.h"
 #include "McuRTT.h"
+#include "McuLog.h"
+#include "McuTimeDate.h"
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
@@ -30,10 +32,13 @@ static void Init(void) {
  // McuRTT_WriteString(0, "hello\n");
   //McuShellUart_Init();
   McuShell_Init();
+  McuTimeDate_Init();
+  McuLog_Init();
   SHELL_Init();
 }
 
 static void AppTask(void *pv) {
+  McuLog_info("App Task started.");
   for(;;) {
     LEDS_Neg(LEDS_RED);
     vTaskDelay(pdMS_TO_TICKS(100));
@@ -41,10 +46,11 @@ static void AppTask(void *pv) {
 }
 
 static TimerHandle_t timerHndl;
-#define TIMER_PERIOD_MS 100
+#define TIMER_PERIOD_MS    McuTimeDate_CONFIG_TICK_TIME_MS
 
 static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
+  McuTimeDate_AddTick();
 }
 
 void APP_Run(void) {

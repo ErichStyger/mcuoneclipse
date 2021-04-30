@@ -10,6 +10,8 @@
 #include "McuRTOS.h"
 #include "McuRTT.h"
 #include "McuArmTools.h"
+#include "McuLog.h"
+#include "McuTimeDate.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -18,6 +20,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
+#if McuLog_CONFIG_IS_ENABLED && McuLog_CONFIG_PARSE_COMMAND_ENABLED
+  McuLog_ParseCommand,
+#endif
+  McuTimeDate_ParseCommand,
   NULL /* Sentinel */
 };
 
