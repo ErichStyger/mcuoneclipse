@@ -81,6 +81,9 @@ void SHELL_Init(void) {
      for(;;){} /* error! probably out of memory */
   }
   McuShell_SetStdio(McuRTT_GetStdio());
+#if McuLog_CONFIG_IS_ENABLED
+  McuLog_set_console(&McuRTT_stdio, 0);
+#endif
 }
 
 void SHELL_Deinit(void) {}

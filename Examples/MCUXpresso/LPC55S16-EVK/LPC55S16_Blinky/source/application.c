@@ -13,6 +13,7 @@
 #include "McuShellUart.h"
 #include "McuShell.h"
 #include "McuRTT.h"
+#include "McuSystemView.h"
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "leds.h"
@@ -25,21 +26,34 @@ static void Init(void) {
   McuLib_Init();
   McuRTOS_Init();
   McuWait_Init();
+  McuGPIO_Init();
   McuLED_Init();
-  LEDS_Init();
-  BTN_Init();
   McuRTT_Init();
- // McuRTT_WriteString(0, "hello\n");
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  McuSystemView_Init();
+#endif
+  McuLog_Init();
   //McuShellUart_Init();
   McuShell_Init();
   McuTimeDate_Init();
-  McuLog_Init();
+
+  /* user modules */
+  LEDS_Init();
+  BTN_Init();
   SHELL_Init();
 }
 
 static void AppTask(void *pv) {
   McuLog_info("App Task started.");
   for(;;) {
+    if (BTN_IsPressed(BTN_USER)) {
+      McuLog_info("User Button pressed.");
+      LEDS_Neg(LEDS_BLUE);
+    }
+    if (BTN_IsPressed(BTN_WAKEUP)) {
+      McuLog_info("Wakeup Button pressed.");
+      LEDS_Neg(LEDS_GREEN);
+    }
     LEDS_Neg(LEDS_RED);
     vTaskDelay(pdMS_TO_TICKS(100));
   }
@@ -81,7 +95,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      300/sizeof(StackType_t), /* task stack size */
+      700/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
