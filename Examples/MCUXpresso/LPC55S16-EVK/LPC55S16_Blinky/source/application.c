@@ -24,6 +24,12 @@
 static SemaphoreHandle_t mutex;
 
 static void Init(void) {
+  CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
+  CLOCK_EnableClock(kCLOCK_Gpio0); /* for button on P0_7 */
+  GPIO_PortInit(GPIO, 0); /* Initialize GPIO button */
+  CLOCK_EnableClock(kCLOCK_Gpio1); /* LEDs and user buttons */
+  GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
+
   McuLib_Init();
   McuRTOS_Init();
   McuWait_Init();
@@ -78,6 +84,10 @@ static void AppTask(void *pv) {
   McuLog_info("App Task started.");
   BTN_RegisterAppCallback(AppOnDebounceEvent);
   for(;;) {
+    if (BTN_IsPressed(BTN_UP)) {
+      McuLog_info("User Up pressed.");
+      LEDS_Neg(LEDS_BLUE);
+    }
 #if 1
     BTN_PollDebounce(); /* check and debounce */
 #else /* simply button polling */
@@ -104,9 +114,6 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 }
 
 void APP_Run(void) {
-  CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
-  GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
-
   Init(); /* init modules */
 
   for(int i=0;i<5;i++) {

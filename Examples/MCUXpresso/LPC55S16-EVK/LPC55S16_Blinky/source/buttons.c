@@ -168,6 +168,12 @@ void BTN_Init(void) {
   btnConfig.hw.port = BUTTONS_WAKEUP_PORT;
   btnConfig.hw.pin = BUTTONS_WAKEUP_PIN;
   BTN_Infos[BTN_WAKEUP].handle = McuBtn_InitButton(&btnConfig);
+
+  btnConfig.hw.gpio = BUTTONS_UP_GPIO;
+  btnConfig.hw.port = BUTTONS_UP_PORT;
+  btnConfig.hw.pin = BUTTONS_UP_PIN;
+  BTN_Infos[BTN_UP].handle = McuBtn_InitButton(&btnConfig);
+
 #if 0
   SYSCON_AttachSignal(SYSCON, kPINT_PinInt0, kSYSCON_GpioPort0Pin4ToPintsel);
 

@@ -22,14 +22,21 @@
 #define BUTTONS_WAKEUP_PORT     1
 #define BUTTONS_WAKEUP_PIN      18
 
+/* user up button on LPC55S16-EVK board J22 HDR_1X1: PIO0_7 */
+#define BUTTONS_UP_GPIO         GPIO
+#define BUTTONS_UP_PORT         0
+#define BUTTONS_UP_PIN          7
+
 typedef enum {
   BTN_USER,
   BTN_WAKEUP,
+  BTN_UP,
   BTN_NOF_BUTTONS  /* sentinel, must be last in list! */
 } BTN_Buttons_e;
 
 /* bits of the buttons */
 #define BTN_BIT_USER        (1<<0)
 #define BTN_BIT_WAKEUP      (1<<1)
+#define BTN_BIT_UP          (1<<2)
 
 #endif /* BUTTONS_CONFIG_H_ */
