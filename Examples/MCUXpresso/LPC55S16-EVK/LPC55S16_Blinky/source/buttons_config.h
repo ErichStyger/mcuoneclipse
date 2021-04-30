@@ -28,4 +28,8 @@ typedef enum {
   BTN_NOF_BUTTONS  /* sentinel, must be last in list! */
 } BTN_Buttons_e;
 
+/* bits of the buttons */
+#define BTN_BIT_USER        (1<<0)
+#define BTN_BIT_WAKEUP      (1<<1)
+
 #endif /* BUTTONS_CONFIG_H_ */

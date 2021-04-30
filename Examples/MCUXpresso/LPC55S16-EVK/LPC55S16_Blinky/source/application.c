@@ -16,6 +16,7 @@
 #include "McuSystemView.h"
 #include "McuLog.h"
 #include "McuTimeDate.h"
+#include "McuDebounce.h"
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
@@ -36,6 +37,7 @@ static void Init(void) {
   //McuShellUart_Init();
   McuShell_Init();
   McuTimeDate_Init();
+  McuDbnc_Init();
 
   /* user modules */
   LEDS_Init();
@@ -43,9 +45,42 @@ static void Init(void) {
   SHELL_Init();
 }
 
+static void AppOnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
+  switch(event) {
+    case MCUDBNC_EVENT_PRESSED:
+      McuLog_info("Dbnc pressed: %d", buttons);
+      break;
+
+    case MCUDBNC_EVENT_PRESSED_REPEAT:
+      McuLog_info("Dbnc repeat: %d", buttons);
+      break;
+
+    case MCUDBNC_EVENT_LONG_PRESSED:
+      McuLog_info("Dbnc long pressed: %d", buttons);
+      break;
+
+    case MCUDBNC_EVENT_LONG_PRESSED_REPEAT:
+      McuLog_info("Dbnc pressed repeat: %d", buttons);
+      break;
+
+    case MCUDBNC_EVENT_RELEASED:
+      McuLog_info("Dbnc released: %d", buttons);
+      break;
+
+    default:
+    case MCUDBNC_EVENT_END:
+      McuLog_info("Dbnc end: %d", buttons);
+      break;
+  }
+}
+
 static void AppTask(void *pv) {
   McuLog_info("App Task started.");
+  BTN_RegisterAppCallback(AppOnDebounceEvent);
   for(;;) {
+#if 1
+    BTN_PollDebounce(); /* check and debounce */
+#else /* simply button polling */
     if (BTN_IsPressed(BTN_USER)) {
       McuLog_info("User Button pressed.");
       LEDS_Neg(LEDS_BLUE);
@@ -54,6 +89,7 @@ static void AppTask(void *pv) {
       McuLog_info("Wakeup Button pressed.");
       LEDS_Neg(LEDS_GREEN);
     }
+#endif
     LEDS_Neg(LEDS_RED);
     vTaskDelay(pdMS_TO_TICKS(100));
   }

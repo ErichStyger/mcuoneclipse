@@ -8,6 +8,7 @@
 #include "buttons_config.h"
 #include <assert.h>
 #include "McuButton.h"
+#include "McuDebounce.h"
 #include "fsl_pint.h"
 //#include "fsl_syscon.h"
 #include "McuLED.h"
@@ -25,6 +26,99 @@ static BTN_Desc_t BTN_Infos[BTN_NOF_BUTTONS];
 bool BTN_IsPressed(BTN_Buttons_e btn) {
   assert(btn<BTN_NOF_BUTTONS);
   return McuBtn_IsOn(BTN_Infos[btn].handle);
+}
+
+static uint32_t GetButtons(void) {
+  uint32_t val = 0;
+
+  if (BTN_IsPressed(BTN_USER)) {
+    val |= BTN_BIT_USER;
+  }
+  if (BTN_IsPressed(BTN_WAKEUP)) {
+    val |= BTN_BIT_WAKEUP;
+  }
+  return val;
+}
+
+static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons);
+
+#define TIMER_PERIOD_MS  20 /* frequency of debouncing timer */
+static McuDbnc_Desc_t data =
+{
+  .state = MCUDBMC_STATE_IDLE,  /* state of state machine */
+  .timerPeriodMs = TIMER_PERIOD_MS, /* timer period for debouncing */
+  .timer = NULL, /* FreeRTOS timer handle */
+  .debounceTimeMs = 100, /* debouncing time */
+  .repeatTimeMs   = 300, /* time for repeated button events */
+  .longKeyTimeMs  = 1000, /* time for a long key press */
+  .getButtons = GetButtons, /* callback to get bitset of buttons */
+  .onDebounceEvent = OnDebounceEvent, /* debounce event handler */
+};
+
+void BTN_RegisterAppCallback(void (*cb)(McuDbnc_EventKinds, uint32_t)) {
+  data.onDebounceEvent = cb;
+}
+
+static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
+  switch(event) {
+    case MCUDBNC_EVENT_PRESSED:
+      SEGGER_printf("pressed: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_PRESSED_REPEAT:
+      SEGGER_printf("repeat: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_LONG_PRESSED:
+      SEGGER_printf("long pressed: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_LONG_PRESSED_REPEAT:
+      SEGGER_printf("long repeat: %d\r\n", buttons);
+      break;
+
+    case MCUDBNC_EVENT_RELEASED:
+      SEGGER_printf("released: %d\r\n", buttons);
+      break;
+
+    default:
+    case MCUDBNC_EVENT_END:
+      (void)xTimerStop(data.timer, pdMS_TO_TICKS(100)); /* stop timer */
+      SEGGER_printf("end: %d\r\n", buttons);
+      break;
+  }
+}
+
+static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
+  /* called with TIMER_PERIOD_MS during debouncing */
+  McuDbnc_Process(&data);
+}
+
+static void StartDebounce(uint32_t buttons, bool fromISR) {
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+  if (data.state==MCUDBMC_STATE_IDLE) {
+    data.scanValue = buttons;
+    data.state = MCUDBMC_STATE_START;
+    McuDbnc_Process(&data);
+    if (fromISR) {
+      (void)xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
+    } else {
+      (void)xTimerStart(data.timer, pdMS_TO_TICKS(100));
+    }
+    if (fromISR) {
+      portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    }
+  }
+}
+
+void BTN_PollDebounce(void) {
+  if (BTN_IsPressed(BTN_USER)) {
+    StartDebounce(BTN_BIT_USER, false);
+  }
+  if (BTN_IsPressed(BTN_WAKEUP)) {
+    StartDebounce(BTN_BIT_WAKEUP, false);
+  }
 }
 
 #if 0
@@ -83,4 +177,15 @@ void BTN_Init(void) {
   /* Enable callbacks for PINT0 by Index */
   PINT_EnableCallbackByIndex(PINT, kPINT_PinInt0);
 #endif
+
+  data.timer = xTimerCreate(
+        "tmrDbnc", /* name */
+        pdMS_TO_TICKS(TIMER_PERIOD_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackDebounce); /* callback */
+  if (data.timer==NULL) {
+    for(;;); /* failure! */
+  }
+
 }
