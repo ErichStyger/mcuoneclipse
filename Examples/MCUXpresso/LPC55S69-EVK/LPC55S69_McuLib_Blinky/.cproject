@@ -102,7 +102,7 @@
 									<listOptionValue builtIn="false" value="../McuLib/fonts"/>
 									<listOptionValue builtIn="false" value="../McuLib/src"/>
 									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM33"/>
+									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
 									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
 									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
@@ -287,19 +287,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.651754409.69330114" name="/" resourcePath="McuLib/minIni">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.734324131" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.1364207570" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.814137859"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.454846603" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.523192842"/>
-							<tool id="com.crt.advproject.gas.exe.debug.898318568" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.993691357"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1792921191" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.967751306"/>
-							<tool id="com.crt.advproject.link.exe.debug.817396323" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.538759573"/>
-							<tool id="com.crt.advproject.tool.debug.debug.1084039428" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.218460647"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="minIni|LittlevGL|fonts|FatFS|HD44780|FreeRTOS/Source/portable/GCC/ARM_CM33/secure_heap.c|FreeRTOS/Source/portable/GCC/ARM_CM4F|FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33|minIni|LittlevGL|fonts|FatFS|HD44780|FreeRTOS/Source/portable/GCC/ARM_CM33/secure_heap.c|FreeRTOS/Source/portable/GCC/RISC-V" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>

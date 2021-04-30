@@ -41,10 +41,11 @@ Instructions:
   #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)  /* LPC55xx */
   #define McuLib_CONFIG_CORTEX_M          (33)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 
+/* note: M33 port not functional yet! */
   #define configRUN_FREERTOS_SECURE_ONLY (0)
   #define configENABLE_TRUSTZONE         (0)
   #define configENABLE_MPU               (0)
-  #define configENABLE_FPU               (1) /* ???? */
+  #define configENABLE_FPU               (1)
   #define configMINIMAL_SECURE_STACK_SIZE  (600)
 
 #elif 0 /* example configuration for Kinetis K22 */
@@ -62,5 +63,16 @@ Instructions:
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS             (0)
+/* -----------------------------------------------------*/
+/* Shell */
+#define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
+
+#define McuShellUart_CONFIG_UART   McuShellUart_CONFIG_UART_NONE /* NYI */
+
+/* RTT */
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP    (1*1024)
+#define McuRTT_CONFIG_BLOCKING_SEND           (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS  (20)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS   (5)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

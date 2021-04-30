@@ -10,18 +10,27 @@
 #include "McuWait.h"
 #include "McuLED.h"
 #include "McuRTOS.h"
+#include "McuShellUart.h"
+#include "McuShell.h"
+#include "McuRTT.h"
 #include "leds.h"
 #include "buttons.h"
+#include "Shell.h"
 
 static SemaphoreHandle_t mutex;
 
 static void Init(void) {
   McuLib_Init();
-//  McuRTOS_Init();
+  McuRTOS_Init();
   McuWait_Init();
   McuLED_Init();
   LEDS_Init();
   BTN_Init();
+  McuRTT_Init();
+ // McuRTT_WriteString(0, "hello\n");
+  //McuShellUart_Init();
+  McuShell_Init();
+  SHELL_Init();
 }
 
 static void AppTask(void *pv) {
@@ -37,8 +46,6 @@ static TimerHandle_t timerHndl;
 static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
 }
-
-bool doIt = false;
 
 void APP_Run(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -86,8 +93,6 @@ void APP_Run(void) {
   if (mutex!=NULL) {
     vQueueAddToRegistry(mutex, "Mutex");
   }
-  if (doIt) {
-    vTaskStartScheduler();
-  }
+  vTaskStartScheduler();
   for(;;) { /* should not get here */ }
 }

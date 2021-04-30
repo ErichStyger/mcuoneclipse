@@ -14,6 +14,7 @@
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5)
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6)
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
