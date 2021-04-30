@@ -46,11 +46,6 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_gpio" description="Pins initialization requires the LPC_GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
-                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_iocon" description="Pins initialization requires the LPC_IOCON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="cm33_core0">
                         <data>true</data>
@@ -72,12 +67,6 @@
                         <pin_feature name="slew_rate" value="standard"/>
                         <pin_feature name="invert" value="disabled"/>
                         <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO0, 7" pin_num="6" pin_signal="PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="pullUp"/>
                      </pin_features>
                   </pin>
                </pins>

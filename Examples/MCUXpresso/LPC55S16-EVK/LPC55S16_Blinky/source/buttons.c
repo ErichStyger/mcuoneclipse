@@ -157,22 +157,25 @@ void BTN_Init(void) {
   McuBtn_Config_t btnConfig;
 
   McuBtn_GetDefaultConfig(&btnConfig);
-  btnConfig.isLowActive = true;
 
+  btnConfig.isLowActive = true;
   btnConfig.hw.gpio = BUTTONS_USER_GPIO;
   btnConfig.hw.port = BUTTONS_USER_PORT;
   btnConfig.hw.pin = BUTTONS_USER_PIN;
   BTN_Infos[BTN_USER].handle = McuBtn_InitButton(&btnConfig);
 
+  btnConfig.isLowActive = true;
   btnConfig.hw.gpio = BUTTONS_WAKEUP_GPIO;
   btnConfig.hw.port = BUTTONS_WAKEUP_PORT;
   btnConfig.hw.pin = BUTTONS_WAKEUP_PIN;
   BTN_Infos[BTN_WAKEUP].handle = McuBtn_InitButton(&btnConfig);
 
+  btnConfig.isLowActive = true;
   btnConfig.hw.gpio = BUTTONS_UP_GPIO;
   btnConfig.hw.port = BUTTONS_UP_PORT;
   btnConfig.hw.pin = BUTTONS_UP_PIN;
   BTN_Infos[BTN_UP].handle = McuBtn_InitButton(&btnConfig);
+  McuBtn_EnablePullResistor(BTN_Infos[BTN_UP].handle);
 
 #if 0
   SYSCON_AttachSignal(SYSCON, kPINT_PinInt0, kSYSCON_GpioPort0Pin4ToPintsel);

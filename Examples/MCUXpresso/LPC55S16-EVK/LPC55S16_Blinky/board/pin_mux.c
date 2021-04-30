@@ -20,7 +20,6 @@ pin_labels:
 /* clang-format on */
 
 #include "fsl_common.h"
-#include "fsl_gpio.h"
 #include "fsl_iocon.h"
 #include "pin_mux.h"
 
@@ -45,7 +44,6 @@ BOARD_InitPins:
     mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, mode: inactive,
     slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '6', peripheral: GPIO, signal: 'PIO0, 7', pin_signal: PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7, direction: INPUT, mode: pullUp}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -61,16 +59,6 @@ void BOARD_InitPins(void)
 {
     /* Enables the clock for the I/O controller.: Enable Clock. */
     CLOCK_EnableClock(kCLOCK_Iocon);
-
-    /* Enables the clock for the GPIO0 module */
-    CLOCK_EnableClock(kCLOCK_Gpio0);
-
-    gpio_pin_config_t test_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_7 (pin 6)  */
-    GPIO_PinInit(BOARD_INITPINS_test_GPIO, BOARD_INITPINS_test_PORT, BOARD_INITPINS_test_PIN, &test_config);
 
     const uint32_t port0_pin29_config = (/* Pin is configured as FC0_RXD_SDA_MOSI_DATA */
                                          IOCON_PIO_FUNC1 |
@@ -101,24 +89,6 @@ void BOARD_InitPins(void)
                                          IOCON_PIO_OPENDRAIN_DI);
     /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
     IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
-
-    IOCON->PIO[0][7] = ((IOCON->PIO[0][7] &
-                         /* Mask bits to zero which are setting */
-                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                        /* Selects pin function.
-                         * : PORT07 (pin 6) is configured as PIO0_7. */
-                        | IOCON_PIO_FUNC(PIO0_7_FUNC_ALT0)
-
-                        /* Selects function mode (on-chip pull-up/pull-down resistor control).
-                         * : Pull-up.
-                         * Pull-up resistor enabled. */
-                        | IOCON_PIO_MODE(PIO0_7_MODE_PULL_UP)
-
-                        /* Select Digital mode.
-                         * : Enable Digital mode.
-                         * Digital input is enabled. */
-                        | IOCON_PIO_DIGIMODE(PIO0_7_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF

@@ -386,11 +386,25 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   }
   IOCON_PinMuxSet(IOCON, pin->hw.iocon, IOCON_config);
 #elif McuLib_CONFIG_CPU_IS_LPC
+  uint32_t config;
+
+  /*! IOCON_PIO_MODE:
+   *  MODE - Selects function mode (on-chip pull-up/pull-down resistor control).
+   *  0b00..Inactive. Inactive (no pull-down/pull-up resistor enabled).
+   *  0b01..Pull-down. Pull-down resistor enabled.
+   *  0b10..Pull-up. Pull-up resistor enabled.
+   *  0b11..Repeater. Repeater mode.
+   */
   if (pull == McuGPIO_PULL_DISABLE) {
+    config = IOCON_PIO_MODE(0b00); /* inactive */
   } else if (pull == McuGPIO_PULL_UP) {
+    config = IOCON_PIO_MODE(0b10); /* pull-up */
   } else if (pull == McuGPIO_PULL_DOWN) {
+    config = IOCON_PIO_MODE(0b01); /* pull-down */
   }
-  /* \todo */
+  IOCON->PIO[pin->hw.port][pin->hw.pin] = ((IOCON->PIO[pin->hw.port][pin->hw.pin] &
+                       (~(IOCON_PIO_MODE_MASK))) /* Mask bits to zero which are setting */
+                      | config); /* Select function mode (on-chip pull-up/pull-down resistor control) */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   /* \todo, NYI */
   if (pull == McuGPIO_PULL_DISABLE) {
