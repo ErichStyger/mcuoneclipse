@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "My Configuration",
+            "includePath": [
+                "${workspaceFolder}/",
+                "${workspaceFolder}/src"
+            ],
+            "defines": [
+                "MY_DEFINE",
+                "FOO=bar"
+            ],
+            "compilerPath": "C:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2020-q4-major\\bin\\arm-none-eabi-gcc.exe",
+            "compilerArgs": [
+                "-mcpu=cortex-m4",
+                "-mthumb",
+                "-mfloat-abi=hard"
+            ],
+            "cppStandard": "c++17",
+            "cStandard": "c11",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
