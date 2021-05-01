@@ -72,10 +72,10 @@ target_link_options(${EXECUTABLE} PRIVATE
 # Print executable size
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
-        COMMAND arm-none-eabi-size ${EXECUTABLE})
+        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE})
 
 # Create hex file
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
-        COMMAND arm-none-eabi-objcopy -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
-        COMMAND arm-none-eabi-objcopy -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
+        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
