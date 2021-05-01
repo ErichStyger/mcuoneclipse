@@ -36,7 +36,6 @@ target_compile_definitions(${EXECUTABLE} PRIVATE
         )
 
 target_include_directories(${EXECUTABLE} PRIVATE
-        inc
         device
         CMSIS
          )
