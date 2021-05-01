@@ -1,7 +1,7 @@
 set(CMAKE_MAKE_PROGRAM make.exe)
 
-#set(CMAKE_GENERATOR "Unix Makefile")
-set(CMAKE_GENERATOR "MinGW Makefile")
+set(CMAKE_GENERATOR "Unix Makefile")
+#set(CMAKE_GENERATOR "MinGW Makefile")
 #message("generator is set to ${CMAKE_GENERATOR})
 
 set(CMAKE_C_COMPILER gcc)
