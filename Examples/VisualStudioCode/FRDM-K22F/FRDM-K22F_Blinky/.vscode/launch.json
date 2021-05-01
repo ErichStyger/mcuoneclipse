@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "cwd": "${workspaceRoot}",
             "executable": "./build/FRDM-K22F_Blinky.elf",
@@ -18,7 +19,8 @@
             "serialNumber": "", //If you have more than one J-Link probe, add the serial number here.
             //"jlinkscript":"${workspaceRoot}Setup/Kinetis_K66_Target.js",
             "runToMain": true,
-            //"svdFile": "${workspaceRoot}/SVD/MK66F18.svd" 
+            "svdFile": "${workspaceRoot}/device/MK22F51212.svd",
+            "rtos": "GDBServer/RTOSPlugin_FreeRTOS"
         }
     ]
 }
