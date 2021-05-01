@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15.3)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
-project(tinyK22)
+project(FRDM-K22F_Blinky)
 
 enable_language(C ASM)
 set(CMAKE_C_STANDARD 99)
@@ -67,6 +67,7 @@ target_link_options(${EXECUTABLE} PRIVATE
         -lnosys
         -Wl,-Map=${PROJECT_NAME}.map,--cref
         -Wl,--gc-sections
+        -Xlinker -print-memory-usage -Xlinker
         )
 
 # Print executable size
@@ -77,5 +78,6 @@ add_custom_command(TARGET ${EXECUTABLE}
 # Create hex file
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE} ${PROJECT_NAME}.s19
         COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
         COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
