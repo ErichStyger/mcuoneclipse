@@ -5,7 +5,7 @@ File > Add Folder to Workspace
 
 
 create folder: .vscode
-add file:
+add file: tasks.json
 
 
 mkdir build
