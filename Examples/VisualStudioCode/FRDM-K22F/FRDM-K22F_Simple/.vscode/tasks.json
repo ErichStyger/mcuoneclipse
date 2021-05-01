@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-             "type": "shell",
+            "type": "shell",
             "label": "arm-none-eabi-gcc build active file",
             "command": "c:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2020-q4-major\\bin\\arm-none-eabi-gcc.exe",
             "args": [
@@ -38,7 +38,10 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         },
         {
             "type": "shell",
