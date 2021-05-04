@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.15.3)
-# print out extra messages to see what is going on
+
+# Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
 set(CMAKE_VERBOSE_MAKEFILE ON)
+
+#set(CMAKE_MAKE_PROGRAM make.exe)
+#set(CMAKE_GENERATOR "Unix Makefile")
 
 # Setup project, output and linker file
 project(FRDM-K22F_Blinky)
@@ -12,37 +16,33 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-# issue a message to be sure it uses the correct toolchain file
+# Optional: issue a message to be sure it uses the correct toolchain file.
 message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 
+# List of source files
 set(SRC_FILES
         src/main.c
         device/startup_MK22F51212.S
         device/system_MK22F51212.c
         )
 
+# Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
+# List of compiler defines, prefix with -D compiler option
 target_compile_definitions(${EXECUTABLE} PRIVATE
         -DCPU_MK22FN512VLH12
         -DCPU_MK22FN512VLH12_cm4
-        -DFSL_RTOS_BM
-        -DSDK_OS_BAREMETAL
-        -DSDK_DEBUGCONSOLE=0
-        -DCR_INTEGER_PRINTF
-        -DPRINTF_FLOAT_ENABLE=0
-        -D__MCUXPRESSO
-        -D__USE_CMSIS
-        -DDEBUG
-        -D__NEWLIB__
         )
 
+# List of includ directories
 target_include_directories(${EXECUTABLE} PRIVATE
         src 
         device
         CMSIS
-         )
+        )
 
+# Compiler options
 target_compile_options(${EXECUTABLE} PRIVATE
         -mcpu=cortex-m4
         -mthumb
@@ -53,11 +53,9 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -ffunction-sections
 
         -Wall
-        -fdiagnostics-color=always
-
-        $<$<CONFIG:Debug>:-Og>
         )
 
+# Linker options
 target_link_options(${EXECUTABLE} PRIVATE
         -T${LINKER_FILE}
         -mcpu=cortex-m4
@@ -73,12 +71,12 @@ target_link_options(${EXECUTABLE} PRIVATE
         -Xlinker -print-memory-usage -Xlinker
         )
 
-# Print executable size
+# Optional: Print executable size as part of the post build process
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
         COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE})
 
-# Create hex, bin and S-Record file
+# Optional: Create hex, bin and S-Record files after the build
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE} ${PROJECT_NAME}.s19

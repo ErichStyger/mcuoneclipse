@@ -1,10 +1,17 @@
-# call me from the 'build' subfolder with
-# cmake -DCMAKE_TOOLCHAIN_FILE="../arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=make.exe -G "Unix Makefiles" ..
+# Call Cmake from the 'build' subfolder with the command below.
+# For using Make:
+# cmake -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=make.exe -G "Unix Makefiles" ..
+# followed by
+# make
+#
+# For using Ninja:
+# cmake -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=ninja.exe -G "Ninja" ..
+# followed by
+# ninja
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
-set(CMAKE_MAKE_PROGRAM make.exe)
-set(CMAKE_GENERATOR "Unix Makefile")
 set(ARM_TOOLCHAIN_DIR "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin")
 set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR})
 
