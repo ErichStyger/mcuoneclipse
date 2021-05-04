@@ -87,5 +87,34 @@
   #define McuShell_CONFIG_MULTI_CMD_CHAR                   ';' /* separation character */
 #endif
 
+#ifndef McuShell_CONFIG_HISTORY_ENABLED
+  #define McuShell_CONFIG_HISTORY_ENABLED                  (0)
+    /*!< 1: history enabled with <cursor-up> and <cursor-down>; 0: no history functionality */
+#endif
+
+#ifndef McuShell_CONFIG_HISTORY_NOF_ITEMS
+  #define McuShell_CONFIG_HISTORY_NOF_ITEMS                (5)
+    /*!< number of items in the history */
+#endif
+
+#ifndef McuShell_CONFIG_HISTORY_ITEM_LENGTH
+  #define McuShell_CONFIG_HISTORY_ITEM_LENGTH              (32)
+    /*!< length of a history item */
+#endif
+
+#ifndef McuShell_CONFIG_HISTORY_CHAR_PREV
+  #define McuShell_CONFIG_HISTORY_CHAR_PREV                '\e'
+    /*!< character to go to previous item in history */
+#endif
+
+#ifndef McuShell_CONFIG_HISTORY_CHAR_NEXT
+  #define McuShell_CONFIG_HISTORY_CHAR_NEXT                '\t'
+    /*!< character to go to next item in history */
+#endif
+
+#ifndef McuShell_CONFIG_ECHO_ENABLED
+  #define McuShell_CONFIG_ECHO_ENABLED                     (0)
+    /*!< 1: shell implements local echo; 0: no echo functionality */
+#endif
 
 #endif /* __McuShell_CONFIG_H */

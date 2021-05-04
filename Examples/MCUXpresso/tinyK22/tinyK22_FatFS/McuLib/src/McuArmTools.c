@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-11-23, 10:16, # CodeGen: 715
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -296,12 +296,26 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     #endif
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+#elif McuLib_CONFIG_CPU_IS_LPC && !McuLib_CONFIG_CPU_IS_LPC55xx /* LPC845 */
   uint8_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
   if (res != kStatus_IAP_Success) {
     return ERR_FAILED;
+  }
+  return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55xx */
+  int i;
+  uint8_t *p;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+  p = (uint8_t*)&FLASH_NMPA->UUID_ARRAY[0];
+  for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
+    uid->id[i] = *p;
+    p++;
   }
   return ERR_OK;
 #else

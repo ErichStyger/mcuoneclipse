@@ -52,7 +52,7 @@ void McuBtn_EnablePullResistor(McuBtn_Handle_t btn) {
   if (button->isLowActive) {
     McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
   } else {
-	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+	McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_DOWN);
   }
 }
 
@@ -67,7 +67,6 @@ bool McuBtn_IsOn(McuBtn_Handle_t btn) {
     return McuGPIO_IsHigh(button->gpio);
   }
 }
-
 
 McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
   McuBtn_t *handle;

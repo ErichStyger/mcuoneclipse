@@ -56,5 +56,17 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
+/* -----------------------------------------------------*/
+/* Shell */
+#define McuShellUart_CONFIG_UART             McuShellUart_CONFIG_UART_K22FN512_LPUART0
+#define McuShell_CONFIG_PROJECT_NAME_STRING  "tinyK22 FatFS"
+#define McuShell_CONFIG_PROMPT_STRING        "tiny> "
+#define McuShell_CONFIG_ECHO_ENABLED         (1)
+#define McuShell_CONFIG_HISTORY_ENABLED      (1)
+#define McuShell_CONFIG_HISTORY_NOF_ITEMS    (3)
+#define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  /*kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk  /* has to match Clocks setting! */
+
+/* time/Date */
+#define McuTimeDate_CONFIG_USE_SOFTWARE_RTC  (1)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

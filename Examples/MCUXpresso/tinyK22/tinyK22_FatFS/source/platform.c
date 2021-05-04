@@ -13,10 +13,15 @@
 #include "McuUtility.h"
 #include "McuCriticalSection.h"
 #include "McuLED.h"
-#include "leds.h"
 #include "McuRTT.h"
+#include "McuShell.h"
+#include "McuShellUart.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
+#include "McuTimeDate.h"
+#include "leds.h"
+#include "Shell.h"
+#include "myTimer.h"
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -26,6 +31,7 @@ void PL_Init(void) {
   McuRTOS_Init();
   McuUtility_Init();
   McuArmTools_Init();
+  McuTimeDate_Init();
   McuCriticalSection_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
@@ -35,9 +41,12 @@ void PL_Init(void) {
 #endif
   McuGPIO_Init();
   McuLED_Init();
+  McuShellUart_Init();
 
   /* initialize my own modules */
   LEDS_Init();
+  SHELL_Init();
+  MyTimer_Init();
 }
 
 void PL_Deinit(void) {

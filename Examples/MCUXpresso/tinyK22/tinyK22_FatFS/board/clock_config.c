@@ -51,8 +51,9 @@ processor_version: 9.0.0
 #define MCG_PLL_DISABLE                                   0U  /*!< MCGPLLCLK disabled */
 #define OSC_CAP0P                                         0U  /*!< Oscillator 0pF capacitor load */
 #define OSC_ER_CLK_DISABLE                                0U  /*!< Disable external reference clock */
+#define SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK                  1U  /*!< LPUART clock select: PLLFLLSEL output clock */
 #define SIM_OSC32KSEL_OSC32KCLK_CLK                       0U  /*!< OSC32KSEL select: OSC32KCLK clock */
-#define SIM_PLLFLLSEL_MCGFLLCLK_CLK                       0U  /*!< PLLFLL select: MCGFLLCLK clock */
+#define SIM_PLLFLLSEL_MCGPLLCLK_CLK                       1U  /*!< PLLFLL select: MCGPLLCLK clock */
 
 /*******************************************************************************
  * Variables
@@ -92,27 +93,31 @@ void BOARD_InitBootClocks(void)
 name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
-- {id: Bus_clock.outFreq, value: 60 MHz}
-- {id: Core_clock.outFreq, value: 120 MHz}
-- {id: Flash_clock.outFreq, value: 24 MHz}
-- {id: FlexBus_clock.outFreq, value: 30 MHz}
+- {id: Bus_clock.outFreq, value: 48 MHz}
+- {id: Core_clock.outFreq, value: 96 MHz}
+- {id: Flash_clock.outFreq, value: 19.2 MHz}
+- {id: FlexBus_clock.outFreq, value: 24 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
+- {id: LPUARTCLK.outFreq, value: 96 MHz}
 - {id: MCGFFCLK.outFreq, value: 250 kHz}
-- {id: System_clock.outFreq, value: 120 MHz}
+- {id: PLLFLLCLK.outFreq, value: 96 MHz}
+- {id: System_clock.outFreq, value: 96 MHz}
 settings:
 - {id: MCGMode, value: PEE}
 - {id: powerMode, value: HSRUN}
+- {id: LPUARTClkConfig, value: 'yes'}
 - {id: MCG.FRDIV.scale, value: '32'}
 - {id: MCG.IREFS.sel, value: MCG.FRDIV}
 - {id: MCG.PLLS.sel, value: MCG.PLL}
 - {id: MCG.PRDIV.scale, value: '2'}
-- {id: MCG.VDIV.scale, value: '30'}
 - {id: MCG_C2_OSC_MODE_CFG, value: ModeOscLowPower}
 - {id: MCG_C2_RANGE0_CFG, value: High}
 - {id: MCG_C2_RANGE0_FRDIV_CFG, value: High}
+- {id: SIM.LPUARTSRCSEL.sel, value: SIM.PLLFLLSEL}
 - {id: SIM.OUTDIV2.scale, value: '2'}
 - {id: SIM.OUTDIV3.scale, value: '4'}
 - {id: SIM.OUTDIV4.scale, value: '5'}
+- {id: SIM.PLLFLLSEL.sel, value: MCG.MCGPLLCLK}
 sources:
 - {id: OSC.OSC.outFreq, value: 8 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -135,12 +140,12 @@ const mcg_config_t mcgConfig_BOARD_BootClockRUN =
             {
                 .enableMode = MCG_PLL_DISABLE,    /* MCGPLLCLK disabled */
                 .prdiv = 0x1U,                    /* PLL Reference divider: divided by 2 */
-                .vdiv = 0x6U,                     /* VCO divider: multiplied by 30 */
+                .vdiv = 0x0U,                     /* VCO divider: multiplied by 24 */
             },
     };
 const sim_clock_config_t simConfig_BOARD_BootClockRUN =
     {
-        .pllFllSel = SIM_PLLFLLSEL_MCGFLLCLK_CLK, /* PLLFLL select: MCGFLLCLK clock */
+        .pllFllSel = SIM_PLLFLLSEL_MCGPLLCLK_CLK, /* PLLFLL select: MCGPLLCLK clock */
         .er32kSrc = SIM_OSC32KSEL_OSC32KCLK_CLK,  /* OSC32KSEL select: OSC32KCLK clock */
         .clkdiv1 = 0x1340000U,                    /* SIM_CLKDIV1 - OUTDIV1: /1, OUTDIV2: /2, OUTDIV3: /4, OUTDIV4: /5 */
     };
@@ -182,5 +187,7 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetSimConfig(&simConfig_BOARD_BootClockRUN);
     /* Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
+    /* Set LPUART clock source. */
+    CLOCK_SetLpuartClock(SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK);
 }
 

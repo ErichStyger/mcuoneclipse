@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PercepioTrace
-**     Version     : Component 01.138, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.140, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-11-28, 10:44, # CodeGen: 717
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : McuPercepio
-**          RTOS+Trace Version                             : V3.3.0
+**          RTOS+Trace Version                             : V4.4.1
 **          Recorder Mode                                  : Streaming
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 16
@@ -91,12 +91,12 @@
 **         vTraceClearError          - byte McuPercepio_vTraceClearError(int resetErrorMessage);
 **         Startup                   - void McuPercepio_Startup(void);
 **
-** * (c) Copyright Percepio AB, 2013-2018
+** * (c) Copyright Percepio AB, 2013-2020
 **  * http      : www.percepio.se
 **  * mail      : info@percepio.com
 **  * See separate Percepio licensing terms.
 **  *
-**  * Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
