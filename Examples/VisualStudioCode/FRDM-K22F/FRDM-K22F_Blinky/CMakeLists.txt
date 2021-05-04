@@ -1,12 +1,18 @@
 cmake_minimum_required(VERSION 3.15.3)
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+# print out extra messages to see what is going on
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# Setup project, output and linker file
 project(FRDM-K22F_Blinky)
+set(EXECUTABLE ${PROJECT_NAME}.elf)
+set(LINKER_FILE ${CMAKE_SOURCE_DIR}/MK22FN512xxx12_flash.ld)
 
 enable_language(C ASM)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# issue a message to be sure it uses the correct toolchain file
 message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 
 set(SRC_FILES
@@ -15,9 +21,6 @@ set(SRC_FILES
         src/startup.c
         device/system_MK22F51212.c
         )
-
-set(EXECUTABLE ${PROJECT_NAME}.elf)
-set(LINKER_FILE ${CMAKE_SOURCE_DIR}/MK22FN512xxx12_flash.ld)
 
 add_executable(${EXECUTABLE} ${SRC_FILES})
 
@@ -50,6 +53,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -ffunction-sections
 
         -Wall
+        -fdiagnostics-color=always
 
         $<$<CONFIG:Debug>:-Og>
         )
@@ -74,7 +78,7 @@ add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
         COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE})
 
-# Create hex file
+# Create hex, bin and S-Record file
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE} ${PROJECT_NAME}.s19
