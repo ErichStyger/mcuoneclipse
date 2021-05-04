@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.5" api_version="2.0.0" configuration="b85110ae30163edec309141cd2ff4651" id="SDK_2.x_MK22FN512xxx12" name="MK22FN512xxx12" brief="This is SDK version 2.6.0 manifest file. It describes the content of the MK22FN512xxx12 and additional settings for tools that support SDK version 2.6.0">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+    </defines>
+    <ksdk id="MCUXpresso260" name="MCUXpresso260" version="2.6.0" revision="228 2019-06-14"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.0.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.0.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MK22FN512VDC12" id="twrk22f120m" name="TWR-K22F120M" href="http://www.nxp.com/twr-k22f120m" version="1.0.0">
+            <description>The TWR-K22F120M is a development board for the Kinetis K22 32-bit ARM® Cortex®-M4 MCUs</description>
+            <image path="docs/images" type="image">
+                <files mask="TWR-K22F120M.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">.It features the Kinetis K22FN512VDC12 low-power MCU with 512 KB Flash, 128 KB SRAM, and USB connectivity with crystal-less operation.The TWR-K22F120M operates as a standalone debug tool and can also be combined and used as part of the modular Tower System development platform.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+        <board package="MK22FN512VLH12" id="frdmk22f" name="FRDM-K22F" href="http://www.nxp.com/frdm-k22f" version="1.0.0">
+            <description>The NXP Freedom K22F is an ultra-low-cost development platform for Kinetis K22 MCUs</description>
+            <image path="docs/images" type="image">
+                <files mask="FRDM-K22F.gif"/>
+            </image>
+            <metadataSet>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">.Form-factor compatible with the Arduino R3 pin layout.Peripherals enable rapid prototyping, including a 6-axis digital accelerometer and magnetometer to create full eCompass capabilities, a tri-colored LED and 2 user push-buttons for direct interaction, and connectivity for use with Bluetooth® and 2.4 GHz radio add-on modules.OpenSDAv2 offers options for serial communication, flash programming, and run-control debugging.The FRDM-K22F is enabled with the ARM® mbed™ development platform, which means you can quickly get started designing with no downloads or installations.</content>
+                    </specific>
+                </metadata>
+            </metadataSet>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="K2x" platform="Kinetis" id="MK22FN512xxx12" name="MK22F51212" full_name="MK22FN512xxx12" href="http://www.nxp.com/kinetis" version="1.0.0">
+            <description>K22_120: Kinetis® K22-120 MHz, Cost Effective, Full-Speed USB Microcontrollers (MCUs) based on ARM® Cortex®-M4 Core</description>
+            <image path="docs/images" type="image">
+                <files mask="device.jpg"/>
+            </image>
+            <metadataSet>
+                <metadata key="USB_KHCI_COUNT" value="1"/>
+                <metadata key="USB_KHCI_Controller_number" value="1"/>
+                <metadata key="html">
+                    <specific>
+                        <content xmlns:ksdk="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Kinetis® K22 MCUs have been optimized for cost-sensitive applications requiring low power flexibility and processing efficiency.Delivers industry-leading low power while providing significant bill-of-materials savings through smart on-chip integration.Includes options that support crystal-less USB design for reduced system cost and board space.Provides scalability with various levels of integration, offering a rich suite of analog, communication, timing and control peripherals to accommodate a wide range of requirements.Shares the comprehensive enablement and scalability of the Kinetis portfolio.</content>
+                    </specific>
+                </metadata>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="true" type="cm4" id="core0_MK22FN512xxx12" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00080000" type="Flash" access="RO" id="PROGRAM_FLASH_MK22FN512xxx12" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="20000000" size="00010000" type="RAM" access="RW" id="SRAM_UPPER_MK22FN512xxx12" name="SRAM_UPPER"/>
+                <memoryBlock addr="1FFF0000" size="00010000" type="RAM" access="RW" id="SRAM_LOWER_MK22FN512xxx12" name="SRAM_LOWER"/>
+            </memory>
+            <total_memory flash_size_kb="512" ram_size_kb="64"/>
+            <package id="MK22FN512VDC12" name="MK22FN512VDC12"/>
+            <package id="MK22FN512VLL12" name="MK22FN512VLL12"/>
+            <package id="MK22FN512VLH12" name="MK22FN512VLH12"/>
+            <package id="MK22FN512VFX12" name="MK22FN512VFX12"/>
+            <package id="MK22FN512CAP12" name="MK22FN512CAP12"/>
+            <package id="MK22FN512VMP12" name="MK22FN512VMP12"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmk22f"/>
+                <evaluation_board name="twrk22f120m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD*,JTAG" id="internal.wiretype.release.MK22FN512xxx12" name="internal.wiretype"/>
+                        <params value="true" id="internal.has_swo.release.MK22FN512xxx12" name="internal.has_swo"/>
+                        <params value="kinetisconnect.scp" id="internal.connect.script.debug.mcuxpresso.MK22FN512xxx12" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MK22FN512xxx12">
+                            <driverBinary path="devices/MK22F51212/mcuxpresso" type="binary">
+<files mask="FTFA_2K.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MK22FN512xxx12" id="device.MK22F51212_debugger.MK22F51212" name="MK22F51212_debugger" version="1.0.0">
+            <source path="devices/MK22F51212" target_path="src" type="xml">
+                <files mask="MK22F51212.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
