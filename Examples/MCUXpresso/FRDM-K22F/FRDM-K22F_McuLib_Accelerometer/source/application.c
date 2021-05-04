@@ -17,10 +17,12 @@ void APP_Run(void) {
     McuLED_On(LED_red);
     McuWait_Waitms(100);
     McuLED_Off(LED_red);
+#if 0
     McuLED_On(LED_green);
     McuWait_Waitms(100);
     McuLED_Off(LED_green);
     McuLED_On(LED_blue);
+#endif
     McuWait_Waitms(100);
   }
 }
