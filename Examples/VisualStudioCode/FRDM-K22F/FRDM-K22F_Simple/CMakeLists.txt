@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.15.3)
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-#set(CMAKE_MAKE_PROGRAM make.exe)
-#set(CMAKE_GENERATOR "Unix Makefile")
-
 # Setup project, output and linker file
 project(FRDM-K22F_Blinky)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
