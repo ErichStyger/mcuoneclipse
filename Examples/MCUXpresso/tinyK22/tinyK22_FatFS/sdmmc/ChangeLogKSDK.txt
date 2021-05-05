@@ -1,0 +1,28 @@
+/*!
+@page middleware_log Middleware Change Log
+
+@section sdspi SD(SPI) Card driver for MCUXpresso SDK
+The current driver version is 2.2.1.
+
+  - 2.2.1
+    - Bug Fixes
+      - Fixed violations of MISRA C-2012 rule 11.9, 15.7, 4.7, 16.4, 10.1, 10.3, 10.4, 11.3, 14.4, 10.6, 17.7, 16.1, 16.3.
+
+  - 2.2.0
+  	- Improvements
+  	  - Added init/deinit/csActivePolarity function pointer in sdspi_host_t.
+  	  - Added retry function in SDSPI_SetBlockSize to fix the issue that set block size command failed found on low capability card.
+      - Added internalBuffer in sdspi_card_t instead if use rawcid/rawcsd/rawscr to reduce the memoery cost of card descriptor.
+
+  - 2.1.4
+    - Bug Fixes
+      - Fixed MDK 66-D warning.
+
+  - 2.1.3
+  	- Improvements
+      - Improved sdspi code size and performance.
+
+  - 2.0.0
+    - Initial version.
+
+*/

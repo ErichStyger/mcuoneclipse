@@ -66,6 +66,10 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define McuShell_CONFIG_HISTORY_NOF_ITEMS    (3)
 #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  /*kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk  /* has to match Clocks setting! */
 
+/* FatFS */
+/* ------------------- FatFS ---------------------------*/
+#define McuLib_CONFIG_USE_FAT_FS             (1)
+
 /* time/Date */
 #define McuTimeDate_CONFIG_USE_SOFTWARE_RTC  (1)
 

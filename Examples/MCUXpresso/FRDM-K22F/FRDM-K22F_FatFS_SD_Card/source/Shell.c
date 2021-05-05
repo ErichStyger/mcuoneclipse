@@ -121,7 +121,6 @@ uint8_t SHELL_ParseCommand(const unsigned char *command, McuShell_ConstStdIOType
 }
 
 static void ShellTask(void *pv) {
-
   McuLog_info("Started Shell Task");
   vTaskDelay(pdMS_TO_TICKS(1000));
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {

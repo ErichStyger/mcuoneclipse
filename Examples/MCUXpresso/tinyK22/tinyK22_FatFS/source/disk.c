@@ -10,7 +10,9 @@
 #include "McuLog.h"
 #include "McuRTOS.h"
 #include "McuFatFS.h"
-#include "host_msd_fatfs.h"
+#if PL_CONFIG_USE_USB_MSD
+  #include "host_msd_fatfs.h"
+#endif
 
 static TaskHandle_t diskTaskHandle;
 #if PL_CONFIG_USE_SD_CARD

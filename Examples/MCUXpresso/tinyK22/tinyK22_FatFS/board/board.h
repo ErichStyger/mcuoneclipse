@@ -47,6 +47,9 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/* @brief The SDSPI disk PHY configuration. */
+#define BOARD_SDSPI_SPI_BASE SPI0_BASE /*!< SPI base address for SDSPI */
+
 /**
  * @brief 	Initialize board specific settings.
  */

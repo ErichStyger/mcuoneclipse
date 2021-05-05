@@ -19,9 +19,13 @@
 #include "McuSystemView.h"
 #include "McuPercepio.h"
 #include "McuTimeDate.h"
+#include "McuLog.h"
 #include "leds.h"
 #include "Shell.h"
 #include "myTimer.h"
+#include "McuFatFS.h"
+#include "fatfs_sdcard.h"
+#include "disk.h"
 
 void PL_Init(void) {
   /* initialize McuLib modules */
@@ -30,6 +34,7 @@ void PL_Init(void) {
   McuRTT_Init();
   McuRTOS_Init();
   McuUtility_Init();
+  McuLog_Init();
   McuArmTools_Init();
   McuTimeDate_Init();
   McuCriticalSection_Init();
@@ -47,6 +52,11 @@ void PL_Init(void) {
   LEDS_Init();
   SHELL_Init();
   MyTimer_Init();
+#if PL_CONFIG_USE_SD_CARD
+  McuFatFS_Init();
+  FatFS_SdCardInit();
+  DISK_Init();
+#endif
 }
 
 void PL_Deinit(void) {
