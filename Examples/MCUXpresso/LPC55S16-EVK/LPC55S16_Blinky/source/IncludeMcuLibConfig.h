@@ -77,6 +77,7 @@ Instructions:
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED          (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE  (0)
+#define McuLog_CONFIG_USE_COLOR           (0)
 /* -----------------------------------------------------*/
 /* McuTimeDate */
 #define McuTimeDate_CONFIG_TICK_TIME_MS   (100)

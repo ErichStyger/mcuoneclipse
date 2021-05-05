@@ -36,9 +36,11 @@ typedef struct {
 
 static const SHELL_IODesc ios[] =
 {
-  {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
 #if PL_CONFIG_USE_SHELL_UART
   {&McuShellUart_stdio,  McuShellUart_DefaultShellBuffer,  sizeof(McuShellUart_DefaultShellBuffer)},
+#endif
+#if PL_CONFIG_USE_RTT
+  {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
 #endif
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
@@ -84,11 +86,10 @@ void SHELL_Init(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-  McuShell_SetStdio(McuRTT_GetStdio());
+  McuShell_SetStdio(ios[0].stdio);
 #if McuLog_CONFIG_IS_ENABLED
-  McuLog_set_console(&McuRTT_stdio, 0);
+  McuLog_set_console(ios[0].stdio, 0);
 #endif
-  SHELL_SendString("hello\r\n");
 }
 
 void SHELL_Deinit(void) {}
