@@ -6,7 +6,7 @@
 **     Component   : minIni
 **     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-20, 09:26, # CodeGen: 652
+**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
 **     Abstract    :
 **         minIni is a programmer’s library to read and write ini files in embedded systems.
 **     Settings    :
@@ -20,8 +20,8 @@
 **          Global Buffer                                  : no
 **          FatFS                                          : Disabled
 **          Source Folders                                 : 
-**            Source Folder                                : MinIni
-**            Config Folder                                : MinIni
+**            Source Folder                                : minIni
+**            Config Folder                                : minIni
 **     Contents    :
 **         ini_getbool    - int McuMinINI_ini_getbool(const mTCHAR *Section, const mTCHAR *Key, int...
 **         ini_gets       - int McuMinINI_ini_gets(const mTCHAR *Section, const mTCHAR *Key, const mTCHAR...
@@ -463,7 +463,6 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
   }
   return ERR_OK;
 }
-
 /* END McuMinINI. */
 
 /*!

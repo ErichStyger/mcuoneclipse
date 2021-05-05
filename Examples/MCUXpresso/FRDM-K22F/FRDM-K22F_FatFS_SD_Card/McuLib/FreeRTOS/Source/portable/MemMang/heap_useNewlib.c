@@ -1,3 +1,4 @@
+/* Copyright (C) Dave Nadler 2017, All Rights Reserved. */
 #include "FreeRTOSConfig.h"
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==6)
 /**

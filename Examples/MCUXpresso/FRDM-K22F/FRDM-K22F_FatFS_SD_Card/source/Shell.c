@@ -152,9 +152,9 @@ void SHELL_Init(void) {
   }
   McuShell_SetStdio(ios[0].stdio); /* default */
 #if PL_CONFIG_USE_RTT
-  McuLog_set_console(&McuRTT_stdio);
+  McuLog_set_console(&McuRTT_stdio, 0);
 #else
-  McuLog_set_console(ios[0].stdio);
+  McuLog_set_console(ios[0].stdio, 0);
 #endif
 }
 

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.086, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-20, 08:14, # CodeGen: 603
+**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -19,15 +19,16 @@
 **     Contents    :
 **         Wait10Cycles   - void McuWait_Wait10Cycles(void);
 **         Wait100Cycles  - void McuWait_Wait100Cycles(void);
-**         WaitCycles     - void McuWait_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void McuWait_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void McuWait_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void McuWait_Waitms(uint16_t ms);
-**         Waitus         - void McuWait_Waitus(uint16_t us);
-**         Waitns         - void McuWait_Waitns(uint16_t ns);
+**         Waitms         - void McuWait_Waitms(uint32_t ms);
+**         Waitus         - void McuWait_Waitus(uint32_t us);
+**         Waitns         - void McuWait_Waitns(uint32_t ns);
 **         WaitOSms       - void McuWait_WaitOSms(void);
 **         Init           - void McuWait_Init(void);
+**         Deinit         - void McuWait_Deinit(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -179,14 +180,14 @@ void McuWait_Wait100Cycles(void)
    /* bl to here:               [4] */
    "push {r0}   \n\t"        /* [2] */
    "movs r0, #0 \n\t"        /* [1] */
-   "loop:       \n\t"
+   "loopWait100Cycles:       \n\t"
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "add r0,#1   \n\t"        /* [1] */
    "cmp r0,#9   \n\t"        /* [1] */
-   "bls loop    \n\t"        /* [3] taken, [1] not taken */
+   "bls loopWait100Cycles    \n\t"        /* [3] taken, [1] not taken */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
@@ -234,9 +235,9 @@ loop
   /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
-    "Loop:             \n\t"
+    "LoopWait100Cycles:             \n\t"
     "  addi a5,a5,-1   \n\t"
-    "  bgtz a5, Loop   \n\t"
+    "  bgtz a5, LoopWait100Cycles   \n\t"
   );
 #endif
   /*lint -restore */
@@ -248,14 +249,14 @@ loop
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuWait_WaitCycles(uint16_t cycles)
+void McuWait_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
 #if McuWait_CONFIG_USE_CYCLE_COUNTER
@@ -266,15 +267,13 @@ void McuWait_WaitCycles(uint16_t cycles)
     /* wait */
   }
 #else
-  int32_t counter = cycles;
-
-  while(counter > 100) {
+  while(cycles >= 100u) {
     McuWait_Wait100Cycles();
-    counter -= 100;
+    cycles -= 100u;
   }
-  while(counter > 10) {
+  while(cycles >= 10u) {
     McuWait_Wait10Cycles();
-    counter -= 10;
+    cycles -= 10u;
   }
 #endif
   /*lint -restore */
@@ -307,7 +306,7 @@ void McuWait_WaitLongCycles(uint32_t cycles)
     McuWait_WaitCycles(60000);
     cycles -= 60000;
   }
-  McuWait_WaitCycles((uint16_t)cycles);
+  McuWait_WaitCycles(cycles);
   /*lint -restore */
 #endif
 }
@@ -325,7 +324,7 @@ void McuWait_WaitLongCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuWait_Waitms(uint16_t ms)
+void McuWait_Waitms(uint32_t ms)
 {
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
@@ -400,6 +399,24 @@ void McuWait_Init(void)
   McuArmTools_InitCycleCounter();
   McuArmTools_ResetCycleCounter();
   McuArmTools_EnableCycleCounter();
+#endif
+}
+
+/*
+** ===================================================================
+**     Method      :  Deinit (component Wait)
+**
+**     Description :
+**         Driver de-initialization routine
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuWait_Deinit(void)
+{
+#if McuWait_CONFIG_USE_CYCLE_COUNTER
+  /* disable hardware cycle counter */
+  McuArmTools_DisableCycleCounter();
 #endif
 }
 

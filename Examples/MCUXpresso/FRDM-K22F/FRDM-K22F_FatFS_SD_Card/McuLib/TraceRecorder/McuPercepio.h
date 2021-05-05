@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : PercepioTrace
-**     Version     : Component 01.138, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.140, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-11-28, 10:44, # CodeGen: 717
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : McuPercepio
-**          RTOS+Trace Version                             : V3.3.0
+**          RTOS+Trace Version                             : V4.4.1
 **          Recorder Mode                                  : Streaming
 **          Recorder Buffer Allocation                     : static
 **          Max ISR Nesting                                : 16
@@ -91,12 +91,12 @@
 **         vTraceClearError          - byte McuPercepio_vTraceClearError(int resetErrorMessage);
 **         Startup                   - void McuPercepio_Startup(void);
 **
-** * (c) Copyright Percepio AB, 2013-2018
+** * (c) Copyright Percepio AB, 2013-2020
 **  * http      : www.percepio.se
 **  * mail      : info@percepio.com
 **  * See separate Percepio licensing terms.
 **  *
-**  * Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * Processor Expert Component: (c) Copyright Erich Styger, 2013-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -134,11 +134,28 @@
 **  @{
 */         
 
+#ifndef __McuPercepio_HvTraceInitTraceData
+#define __McuPercepio_H
+
 /* MODULE McuPercepio. */
-#include "McuPercepio.h"
-#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  #include "Events.h"
+#include "McuLib.h" /* SDK and API used */
+#include "McuPercepioconfig.h" /* configuration */
+
+/* Include inherited components */
+#include "McuRTT.h"
+#include "McuLib.h"
+#include "McuUtility.h"
+
+#if McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  /* prototypes for user events */
+  void McuPercepio_OnTraceWrap(void);
 #endif
+
+#include "trcRecorder.h" /* streaming interface */
+
+
+#define McuPercepio_uiTraceGetTraceBufferSize() \
+  uiTraceGetTraceBufferSize()
 
 /*
 ** ===================================================================
@@ -154,12 +171,9 @@
 **         ---             - Size of the trace buffer
 ** ===================================================================
 */
-/*
-dword McuPercepio_uiTraceGetTraceBufferSize(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_xTraceGetTraceBuffer() \
+  xTraceGetTraceBuffer()
 
 /*
 ** ===================================================================
@@ -175,13 +189,9 @@ dword McuPercepio_uiTraceGetTraceBufferSize(void)
 **         ---             - Pointer to the trace buffer
 ** ===================================================================
 */
-/*
-void* McuPercepio_xTraceGetTraceBuffer(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_uiTraceStart() \
+  uiTraceStart()
 /*
 ** ===================================================================
 **     Method      :  uiTraceStart (component PercepioTrace)
@@ -194,12 +204,9 @@ void* McuPercepio_xTraceGetTraceBuffer(void)
 **                           otherwise.
 ** ===================================================================
 */
-/*
-dword McuPercepio_uiTraceStart(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTraceStop() \
+  vTraceStop()
 
 /*
 ** ===================================================================
@@ -211,12 +218,9 @@ dword McuPercepio_uiTraceStart(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceStop(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTraceClear() \
+  vTraceClear()
 
 /*
 ** ===================================================================
@@ -228,12 +232,9 @@ void McuPercepio_vTraceStop(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceClear(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_xTraceRegisterString (label) \
+  xTraceRegisterString(label)
 
 /*
 ** ===================================================================
@@ -249,12 +250,9 @@ void McuPercepio_vTraceClear(void)
 **         ---             - trace label to be used with vTracePrintF
 ** ===================================================================
 */
-/*
-traceString McuPercepio_xTraceRegisterString(const char* name)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTracePrint(chn, str) \
+  vTracePrint(chn, str)
 
 /*
 ** ===================================================================
@@ -271,12 +269,9 @@ traceString McuPercepio_xTraceRegisterString(const char* name)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTracePrint(traceString chn, const char* str)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+/* void McuPercepio_vTracePrintF(traceLabel eventLabel, char *formatStr, ...); */
+#define McuPercepio_vTracePrintF vTracePrintF
 
 /*
 ** ===================================================================
@@ -293,12 +288,9 @@ void McuPercepio_vTracePrint(traceString chn, const char* str)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTracePrintF(traceLabel eventLabel, char *formatStr, ...)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTraceSetQueueName(queue, name) \
+  vTraceSetQueueName(queue, name)
 
 /*
 ** ===================================================================
@@ -317,12 +309,9 @@ void McuPercepio_vTracePrintF(traceLabel eventLabel, char *formatStr, ...)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceSetQueueName(void *queue, char *name)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_xTraceSetISRProperties(name, prioritiy) \
+  xTraceSetISRProperties(name, prioritiy)
 
 /*
 ** ===================================================================
@@ -344,12 +333,9 @@ void McuPercepio_vTraceSetQueueName(void *queue, char *name)
 **                           vTaceStoreISRBegin()
 ** ===================================================================
 */
-/*
-traceHandle McuPercepio_xTraceSetISRProperties(char *name, char prioritiy)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTraceStoreISRBegin(handle) \
+  vTraceStoreISRBegin(handle)
 
 /*
 ** ===================================================================
@@ -368,12 +354,9 @@ traceHandle McuPercepio_xTraceSetISRProperties(char *name, char prioritiy)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceStoreISRBegin(traceHandle handle)
-{
-  *** Implemented as macro in the header file
-}
-*/
+
+#define McuPercepio_vTraceStoreISREnd(isTaskSwitchRequired) \
+  vTraceStoreISREnd(isTaskSwitchRequired)
 
 /*
 ** ===================================================================
@@ -395,13 +378,8 @@ void McuPercepio_vTraceStoreISRBegin(traceHandle handle)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceStoreISREnd(int isTaskSwitchRequired)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+void McuPercepio_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName);
 /*
 ** ===================================================================
 **     Method      :  vGetGDBDumpCommand (component PercepioTrace)
@@ -419,29 +397,9 @@ void McuPercepio_vTraceStoreISREnd(int isTaskSwitchRequired)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuPercepio_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fileName)
-{
-#if !TRC_USE_TRACEALYZER_RECORDER || (TRC_CFG_RECORDER_MODE==TRC_RECORDER_MODE_STREAMING) /* trace disabled or streaming mode */
-  (void)bufSize; /* not used */
-  (void)fileName; /* not used */
-  /* with RTT streaming, there is no trace buffer */
-  *buf = '\0';
-#else
-  /* construct gdb command string: dump binary memory <file> <hexStartAddr> <hexEndAddr> */
-  uint8_t *ptr; /* pointer to data */
-  size_t len; /* size/length of data */
 
-  ptr = (uint8_t*)McuPercepio_xTraceGetTraceBuffer();
-  len = McuPercepio_uiTraceGetTraceBufferSize();
-  McuUtility_strcpy(buf, bufSize, (unsigned char*)"dump binary memory ");
-  McuUtility_strcat(buf, bufSize, fileName);
-  McuUtility_strcat(buf, bufSize, (unsigned char*)" 0x");
-  McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)ptr);
-  McuUtility_strcat(buf, bufSize, (unsigned char*)" 0x");
-  McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)(ptr+len));
-#endif
-}
-
+#define McuPercepio_vTraceSetStopHook(stopHookFunction) \
+  vTraceSetStopHook(stopHookFunction)
 /*
 ** ===================================================================
 **     Method      :  vTraceSetStopHook (component PercepioTrace)
@@ -454,13 +412,9 @@ void McuPercepio_vGetGDBDumpCommand(uint8_t *buf, uint16_t bufSize, uint8_t *fil
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceSetStopHook(TRACE_STOP_HOOK stopHookFunction)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_xTraceGetLastError() \
+  xTraceGetLastError()
 /*
 ** ===================================================================
 **     Method      :  xTraceGetLastError (component PercepioTrace)
@@ -474,13 +428,9 @@ void McuPercepio_vTraceSetStopHook(TRACE_STOP_HOOK stopHookFunction)
 **         ---             - Error message
 ** ===================================================================
 */
-/*
-char* McuPercepio_xTraceGetLastError(void)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_vTraceClearError(resetErrorMessage) \
+  vTraceClearError(resetErrorMessage)
 /*
 ** ===================================================================
 **     Method      :  vTraceClearError (component PercepioTrace)
@@ -500,13 +450,9 @@ char* McuPercepio_xTraceGetLastError(void)
 **         ---             - Error code
 ** ===================================================================
 */
-/*
-byte McuPercepio_vTraceClearError(int resetErrorMessage)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_vTraceEnable(startOption) \
+  vTraceEnable(startOption)
 /*
 ** ===================================================================
 **     Method      :  vTraceEnable (component PercepioTrace)
@@ -544,13 +490,9 @@ byte McuPercepio_vTraceClearError(int resetErrorMessage)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceEnable(int startOption)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_vTraceSetSemaphoreName(semaphore, name) \
+  vTraceSetSemaphoreName(semaphore, name)
 /*
 ** ===================================================================
 **     Method      :  vTraceSetSemaphoreName (component PercepioTrace)
@@ -568,13 +510,9 @@ void McuPercepio_vTraceEnable(int startOption)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceSetSemaphoreName(void *semaphore, char *name)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+#define McuPercepio_vTraceSetMutexName(mutex, name) \
+  vTraceSetMutexName(mutex, name)
 /*
 ** ===================================================================
 **     Method      :  vTraceSetMutexName (component PercepioTrace)
@@ -592,13 +530,8 @@ void McuPercepio_vTraceSetSemaphoreName(void *semaphore, char *name)
 **     Returns     : Nothing
 ** ===================================================================
 */
-/*
-void McuPercepio_vTraceSetMutexName(void *mutex, char *name)
-{
-  *** Implemented as macro in the header file
-}
-*/
 
+void McuPercepio_Startup(void);
 /*
 ** ===================================================================
 **     Method      :  Startup (component PercepioTrace)
@@ -610,16 +543,11 @@ void McuPercepio_vTraceSetMutexName(void *mutex, char *name)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuPercepio_Startup(void)
-{
-#if configUSE_PERCEPIO_TRACE_HOOKS /* FreeRTOS using Percepio Trace */
-  vTraceSetFrequency(configSYSTICK_CLOCK_HZ);
-  vTraceEnable(McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE); /* snapshot trace, from startup */
-#endif /* configUSE_PERCEPIO_TRACE_HOOKS */
-}
 
 /* END McuPercepio. */
 
+#endif
+/* ifndef __McuPercepio_H */
 /*!
 ** @}
 */

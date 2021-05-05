@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for LCDHTA
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the character LCD module.
  */
@@ -65,10 +67,8 @@
   #include "RW1.h"
 #endif
 
-
 #define McuHD44780_CONFIG_WAIT_DISPLAY_US                      0 /* wait time as specified in properties */
 #define McuHD44780_CONFIG_WAIT_LCD_CMD_AFTER_4BIT_DATA1_US     15 /* wait time after first 4bit data */
 #define McuHD44780_CONFIG_WAIT_LCD_CMD_AFTER_4BIT_DATA2_US     60 /* wait time after second 4bit data */
-
 
 #endif /* __McuHD44780_CONFIG_H */

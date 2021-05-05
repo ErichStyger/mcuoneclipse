@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Trigger
-**     Version     : Component 01.066, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.067, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-06-06, 18:27, # CodeGen: 535
+**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
 **     Abstract    :
 **
 This component implements triggers.
@@ -24,7 +24,7 @@ Triggers are callbacks with a time when they should be executed.
 **         AnyTriggerPending - bool McuTrigger_AnyTriggerPending(void);
 **         TriggerPending    - bool McuTrigger_TriggerPending(uint8_t trigger);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

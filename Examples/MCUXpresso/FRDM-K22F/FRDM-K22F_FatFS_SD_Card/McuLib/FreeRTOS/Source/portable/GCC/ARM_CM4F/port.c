@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.1
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,10 +19,9 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 /*-----------------------------------------------------------
@@ -120,7 +119,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define TICK_NOF_BITS               16
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
-    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val);
+    #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
     #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
@@ -1131,7 +1130,7 @@ void vPortStartFirstTask(void) {
 #if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
   /* only needed for openOCD or Segger FreeRTOS thread awareness. It needs the symbol uxTopUsedPriority present after linking */
   {
-    extern volatile const int uxTopUsedPriority;
+    extern const int uxTopUsedPriority;
     __attribute__((__unused__)) volatile uint8_t dummy_value_for_openocd;
     dummy_value_for_openocd = uxTopUsedPriority;
   }
@@ -1376,14 +1375,14 @@ __asm void vPortPendSVHandler(void) {
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
 #if configGDB_HELPER
 /* prototypes to avoid compiler warnings */
-__attribute__ ((naked)) void vPortPendSVHandler_native(void);
-__attribute__ ((naked)) void PendSV_Handler_jumper(void);
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
-__attribute__ ((naked)) void vPortPendSVHandler_native(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
 #elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
-__attribute__ ((naked)) void PendSV_Handler(void) {
+__attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
-__attribute__ ((naked)) void vPortPendSVHandler(void) {
+__attribute__ ((naked, used)) void vPortPendSVHandler(void) {
 #endif
 #if configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) /* ARM M4(F)/M7/M33 core */
   __asm volatile (
@@ -1468,24 +1467,6 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
 #endif
 }
 
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
-  /* This is only really needed for debugging with openOCD:
-   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
-   * present in the kernel, so it has to be supplied by other means for
-   * OpenOCD's threads awareness.
-   *
-   * Add this file to your project, and, if you're using --gc-sections,
-   * ``--undefined=uxTopUsedPriority'' (or
-   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
-   * linking) to your LDFLAGS; same with all the other symbols you need.
-   */
-  volatile const int
-  #ifdef __GNUC__
-  __attribute__((used))
-  #endif
-  uxTopUsedPriority = configMAX_PRIORITIES-1;
-#endif
-
 #if configGDB_HELPER /* if GDB debug helper is enabled */
 /* Credits to:
  * - Artem Pisarneko for his initial contribution
@@ -1498,14 +1479,26 @@ __attribute__ ((naked)) void vPortPendSVHandler(void) {
  * 1 - hook installation performed,
  * 2 - following hooked switches
  */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 int volatile dbgPendSVHookState = 0;
 /* Requested target task handle variable */
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 void *volatile dbgPendingTaskHandle;
 
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_suspend_value = INCLUDE_vTaskSuspend;
+#ifdef __GNUC__
+__attribute__((used))  /* needed for -flto and highest optimizations */
+#endif
 const int volatile dbgFreeRTOSConfig_delete_value = INCLUDE_vTaskDelete;
 
-__attribute__ ((naked)) void PendSV_Handler_jumper(void) {
+__attribute__ ((naked, used)) void PendSV_Handler_jumper(void) {
   __asm volatile("b vPortPendSVHandler_native \n");
 }
 

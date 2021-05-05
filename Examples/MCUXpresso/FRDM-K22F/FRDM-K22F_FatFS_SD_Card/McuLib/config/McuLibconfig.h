@@ -1,6 +1,8 @@
 /**
  * \file
  * \brief Configuration header file for McuLibConfig
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the McuLibConfig module.
  */
@@ -14,16 +16,6 @@
 #ifndef McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   #define McuLib_CONFIG_CPU_IS_ARM_CORTEX_M             (1 || defined(__CORTEX_M))
     /*!< 1: ARM Cortex-M family, 0 otherwise */
-#endif
-#ifndef McuLib_CONFIG_CPU_IS_KINETIS
-  #define McuLib_CONFIG_CPU_IS_KINETIS                  (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_LPC) \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_LPC55xx) \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_IMXRT) \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_STM32) \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_NORDIC_NRF) \
-                                                            && !defined(McuLib_CONFIG_CPU_IS_S32K))
-    /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_S32K
   #define McuLib_CONFIG_CPU_IS_S32K                     (0 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M)
@@ -68,6 +60,18 @@
   #define McuLib_CONFIG_CPU_IS_ESP32                    (__XTENSA__)
     /*!< 1: ESP32 CPU family, 0: otherwise. The ESP32 compiler defines __XTENSA__ with a value of 1 */
 #endif
+
+#ifndef McuLib_CONFIG_CPU_IS_KINETIS
+  #define McuLib_CONFIG_CPU_IS_KINETIS                 (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M \
+                                                            && !(McuLib_CONFIG_CPU_IS_LPC) \
+                                                            && !(McuLib_CONFIG_CPU_IS_LPC55xx) \
+                                                            && !(McuLib_CONFIG_CPU_IS_IMXRT) \
+                                                            && !(McuLib_CONFIG_CPU_IS_STM32) \
+                                                            && !(McuLib_CONFIG_CPU_IS_NORDIC_NRF) \
+                                                            && !(McuLib_CONFIG_CPU_IS_S32K))
+    /*!< 1: NXP Kinetis CPU family, 0: otherwise */
+#endif
+
 
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
@@ -149,6 +153,12 @@
     /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
 #endif
 
+/* Configuration macro if FreeRTOS is used */
+#ifndef McuLib_CONFIG_SDK_USE_FREERTOS
+  #define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
+    /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
+#endif
+
 /* FatFS */
 #ifndef McuLib_CONFIG_SDK_USE_FAT_FS
   #define McuLib_CONFIG_SDK_USE_FAT_FS            (0)
@@ -177,6 +187,7 @@
 #define McuLib_CONFIG_COMPILER_IAR            (1)
 #define McuLib_CONFIG_COMPILER_KEIL           (2)
 #define McuLib_CONFIG_COMPILER_HIWARE         (3)
+#define McuLib_CONFIG_COMPILER_METROWERKS     (4)
 
 #ifndef McuLib_CONFIG_COMPILER
   #if defined(__GNUC__)
@@ -187,11 +198,12 @@
     #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_IAR
   #elif defined(__CC_ARM)
     #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_KEIL
+  #elif defined(__MWERKS__)
+    #define McuLib_CONFIG_COMPILER                    McuLib_CONFIG_COMPILER_METROWERKS
   #else
     #warning "a compiler needs to be defined!"
   #endif
 #endif
-
 
 #endif /* __McuLib_CONFIG_H */
 

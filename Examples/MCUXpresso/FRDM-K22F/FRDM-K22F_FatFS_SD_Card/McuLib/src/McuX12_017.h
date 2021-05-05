@@ -63,6 +63,9 @@ void X12_017_SetPos(McuX12_017_Handle_t device, McuX12_017_Motor_e motor, int32_
 
 void McuX12_017_GetDeviceStatusString(McuX12_017_Handle_t device, unsigned char *buf, size_t bufSize);
 
+void McuX12_017_DisableDevice(McuX12_017_Handle_t device);
+void McuX12_017_EnableDevice(McuX12_017_Handle_t device);
+
 void McuX12_017_Deinit(void);
 void McuX12_017_Init(void);
 

@@ -37,7 +37,9 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUSART_RxReadyInterruptEnable | kUSART_HardwareOverRunInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               USART0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     USART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
+  #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
@@ -55,9 +57,11 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+  #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
-  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0
   /* UART0 on K22FN512. Mux the pins using the pins muxing tool */
   #include "fsl_uart.h"
@@ -73,7 +77,9 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+  #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
@@ -91,7 +97,9 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART1_RX_TX_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+  #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
@@ -115,7 +123,9 @@
   #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kLPUART_RxDataRegFullInterruptEnable)
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               LPUART0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     LPUART_Init
-  #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Osc0ErClkUndiv /*kCLOCK_PllFllSelClk*/ /* has to match Clocks setting! */
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    /* kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk /* has to match Clocks setting! */
+  #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
 #else

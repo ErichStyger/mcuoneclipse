@@ -2,8 +2,9 @@
  * Copyright (c) 2019, Erich Styger
  *
  * Configuration header file for X12.017 quad-stepper motor driver
- *
+ * Copyright (c) 2020, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
+ *
  */
 
 #ifndef MCU_X12_017_CONFIG_H_

@@ -6,7 +6,7 @@
 **     Component   : FAT_FileSystem
 **     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 15:07, # CodeGen: 643
+**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
 **     Abstract    :
 **
 **     Settings    :
@@ -147,8 +147,6 @@
 */         
 
 /* MODULE McuFatFS. */
-#include "McuLib.h"
-#if McuLib_CONFIG_USE_FAT_FS
 
 #include "ff.h"
 #include "McuFatFS.h"
@@ -535,7 +533,7 @@ static uint8_t CopyCmd(const unsigned char *cmd, const McuShell_ConstStdIOType *
           McuFatFS_SIZE_NAMEBUF(fileName2), NULL, NULL, NULL)==ERR_OK)
      )
   {
-    res = McuFatFS_CopyFile(McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_PTR_NAMEBUF(fileName2), io);
+    res = McuFatFS_CopyFile((uint8_t*)McuFatFS_PTR_NAMEBUF(fileName), McuFatFS_PTR_NAMEBUF(fileName2), io);
   } else {
     CmdUsageError(cmd, (unsigned char*)"copy srcFileName dstFileName", io);
     res = ERR_FAILED;
@@ -758,8 +756,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 
 
 /* Unicode support functions */
-#if _USE_LFN  /* Unicode - OEM code conversion */
-#if _USE_LFN == 3   /* Memory functions */
+#if McuFatFS_USE_LFN  /* Unicode - OEM code conversion */
+#if McuFatFS_USE_LFN == 3   /* Memory functions */
 void *ff_memalloc(UINT size) { /* Allocate memory block */
   /* FreeRTOS */
   return McuRTOS_pvPortMalloc(size);
@@ -772,7 +770,7 @@ void ff_memfree (void* ptr) {  /* Free memory block */
 #endif
 #endif
 
-#if _FS_REENTRANT
+#if McuFatFS_FS_REENTRANT
 /*!
 * \brief Create a Synchronization Object
 * This function is called in f_mount function to create a new
@@ -786,7 +784,7 @@ void ff_memfree (void* ptr) {  /* Free memory block */
   static StaticSemaphore_t xMutexBuffer[_VOLUMES];
 #endif
 
-int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
+int ff_cre_syncobj(uint8_t vol, McuFatFS_SYNC_t *sobj) {
   (void)vol; /* argument not used */
 #if configSUPPORT_STATIC_ALLOCATION
   *sobj = xSemaphoreCreateMutexStatic(&xMutexBuffer[vol]);
@@ -794,7 +792,7 @@ int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
   *sobj = xSemaphoreCreateMutex(); /* create semaphore */
 #endif
   if (*sobj!=NULL) {
-    vQueueAddToRegistry(*sobj, "McuFatFS_Sem");
+    vQueueAddToRegistry(*sobj, "McuFatFS_Mutex");
   }
   return (*sobj != NULL) ? TRUE : FALSE;
 }
@@ -807,7 +805,7 @@ int ff_cre_syncobj(uint8_t vol, _SYNC_t *sobj) {
 * \param[out] sobj Sync object tied to the logical drive to be deleted
 * \return TRUE: Function succeeded, FALSE: Could not create due to any error
 */
-int ff_del_syncobj(_SYNC_t sobj) {
+int ff_del_syncobj(McuFatFS_SYNC_t sobj) {
   vQueueUnregisterQueue(sobj);
   McuRTOS_vSemaphoreDelete(sobj); /* FreeRTOS: free up memory for semaphore */
   return TRUE; /* everything ok */
@@ -820,8 +818,8 @@ int ff_del_syncobj(_SYNC_t sobj) {
 * \param[in] sobj Sync object to wait
 * \return TRUE: Function succeeded, FALSE: Could not create due to any error
 */
-int ff_req_grant (_SYNC_t sobj) {
-  if (McuRTOS_xSemaphoreTake(sobj, _FS_TIMEOUT) == pdTRUE) {
+int ff_req_grant (McuFatFS_SYNC_t sobj) {
+  if (McuRTOS_xSemaphoreTake(sobj, McuFatFS_FS_TIMEOUT) == pdTRUE) {
     return TRUE; /* success */
   } else {  /* failed to get the sync object? */
     return FALSE; /* failure */
@@ -833,10 +831,10 @@ int ff_req_grant (_SYNC_t sobj) {
 * This function is called on leaving file functions to unlock the volume.
 * \param[in] sobj Sync object to be signaled
 */
-void ff_rel_grant (_SYNC_t sobj) {
+void ff_rel_grant (McuFatFS_SYNC_t sobj) {
   (void)McuRTOS_xSemaphoreGive(sobj); /* FreeRTOS */
 }
-#endif /* _FS_REENTRANT */
+#endif /* McuFatFS_FS_REENTRANT */
 
 /*
 ** ===================================================================
@@ -1711,7 +1709,7 @@ uint8_t McuFatFS_Deinit(void)
 }
 
 
-#if !_FS_READONLY
+#if !McuFatFS_FS_READONLY
 /*
 ** ===================================================================
 **     Method      :  get_fattime (component FAT_FileSystem)
@@ -1751,7 +1749,7 @@ uint32_t McuFatFS_get_fattime(void)
 uint32_t get_fattime(void) {
   return McuFatFS_get_fattime();
 }
-#endif /*!_FS_READONLY*/
+#endif /* !McuFatFS_FS_READONLY */
 
 
 /*
@@ -1856,6 +1854,11 @@ uint8_t McuFatFS_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS *fil
       if (io!=NULL) {
         McuShell_SendStr((unsigned char*)"File System mounted\r\n", io->stdOut);
       }
+  #if (McuFatFS_FS_RPATH >= 1U && McuFatFS_VOLUMES >= 2)
+      if (f_chdrive((char const *)drive)!=FR_OK) { /* change default drive */
+        return ERR_FAILED;
+      }
+  #endif
     } else {
       return ERR_FAILED;
     }
@@ -3000,4 +3003,3 @@ FRESULT McuFatFS_f_readdir(DIR *dj, FILINFO *fno)
 /*!
 ** @}
 */
-#endif /* McuLib_CONFIG_USE_FAT_FS */

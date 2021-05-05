@@ -1,8 +1,10 @@
 /**
  * \file
  * \brief Configuration header file for FAT_FileSystem
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
- * This header file is used to configure settings of the Generic I2C module.
+ * This header file is used to configure settings of the FAT File System module.
  */
 
 #ifndef __McuFatFS_CONFIG_H

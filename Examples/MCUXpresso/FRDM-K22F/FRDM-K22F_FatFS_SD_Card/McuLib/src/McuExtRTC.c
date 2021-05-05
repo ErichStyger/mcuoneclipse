@@ -6,7 +6,7 @@
 **     Component   : RTC_Maxim
 **     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-19, 14:21, # CodeGen: 634
+**     Date/Time   : 2020-07-20, 11:46, # CodeGen: 659
 **     Abstract    :
 **          Driver for external I2C based realtime clocks (RTC)
 **     Settings    :
@@ -845,7 +845,7 @@ uint8_t McuExtRTC_GetTemperature(float *temperature)
   return ERR_OK;
 #else /* not supported */
   *temperature = 0.0f;
-  return ERR_OK;
+  return ERR_FAILED;
 #endif
 }
 

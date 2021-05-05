@@ -1,8 +1,8 @@
 /*
  * McuButton.c
  *
- *  Created on: 27.05.2019
- *      Author: Erich Styger
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "McuButton.h"
@@ -52,7 +52,7 @@ void McuBtn_EnablePullResistor(McuBtn_Handle_t btn) {
   if (button->isLowActive) {
     McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
   } else {
-	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+	McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_DOWN);
   }
 }
 

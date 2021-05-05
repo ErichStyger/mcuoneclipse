@@ -6,7 +6,7 @@
 **     Component   : GenericTimeDate
 **     Version     : Component 01.064, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-20, 07:04, # CodeGen: 649
+**     Date/Time   : 2020-08-10, 19:29, # CodeGen: 671
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -135,7 +135,7 @@ static uint8_t AddDateToBuf(uint8_t *buf, uint16_t bufSize, DATEREC *tdate) {
   McuUtility_chcat(buf, bufSize, '.');
   McuUtility_strcatNum16uFormatted(buf, bufSize, tdate->Month, '0', 2);
   McuUtility_chcat(buf, bufSize, '.');
-  McuUtility_strcatNum16u(buf, bufSize, (uint16_t)tdate->Year);
+  McuUtility_strcatNum16uFormatted(buf, bufSize, (uint16_t)tdate->Year, '0', 2);
   return ERR_OK;
 }
 
@@ -694,6 +694,20 @@ uint8_t McuTimeDate_Init(void)
 {
   /* initialize software RTC time and date */
 #if McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS
+/* default time/date values */
+  TIMEREC McuTimeDate_DefaultTime = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR, /* hour */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN,  /* minute */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC,  /* second */
+  #if McuTimeDate_HAS_SEC100_IN_TIMEREC
+    0 /* h-second */
+  #endif
+  };
+  DATEREC McuTimeDate_DefaultDate = {
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR, /* year */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH,  /* month */
+    McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY /* day */
+  };
   return McuTimeDate_SetSWTimeDate((TIMEREC*)&McuTimeDate_DefaultTime, (DATEREC*)&McuTimeDate_DefaultDate);
 #elif McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD==McuTimeDate_INIT_SOFTWARE_RTC_FROM_INTERNAL_RTC
   return McuTimeDate_SyncWithInternalRTC();
