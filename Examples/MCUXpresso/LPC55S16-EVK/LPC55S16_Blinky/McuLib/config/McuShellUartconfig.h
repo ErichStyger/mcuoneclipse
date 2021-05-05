@@ -14,6 +14,7 @@
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5)
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6)
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
@@ -41,6 +42,25 @@
     #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
+  #include "fsl_usart.h"
+  #define McuShellUart_CONFIG_UART_DEVICE                   USART0
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0)
+  #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking
+  #define McuShellUart_CONFIG_UART_GET_FLAGS                USART_GetStatusFlags
+  #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kUSART_RxFifoNotEmptyFlag | kUSART_RxError)
+  #define McuShellUart_CONFIG_UART_READ_BYTE                USART_ReadByte
+  #define McuShellUart_CONFIG_UART_CONFIG_STRUCT            usart_config_t
+  #define McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG       USART_GetDefaultConfig
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS        USART_EnableInterrupts
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUSART_RxLevelInterruptEnable | kUSART_RxErrorInterruptEnable)
+  #define McuShellUart_CONFIG_UART_IRQ_NUMBER               FLEXCOMM0_IRQn
+  #define McuShellUart_CONFIG_UART_INIT                     USART_Init
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Fro12M
+  #endif
+  #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
   /* UART0 on K22FX512 */

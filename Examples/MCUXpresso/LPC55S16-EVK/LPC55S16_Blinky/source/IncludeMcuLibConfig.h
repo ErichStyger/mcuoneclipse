@@ -66,19 +66,18 @@ Instructions:
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
-
-#define McuShellUart_CONFIG_UART   McuShellUart_CONFIG_UART_NONE /* NYI */
-
+#define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
+/* -----------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP    (1*1024)
 #define McuRTT_CONFIG_BLOCKING_SEND           (1)
 #define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS  (20)
 #define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS   (5)
-
+/* -----------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED          (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE  (0)
-
+/* -----------------------------------------------------*/
 /* McuTimeDate */
 #define McuTimeDate_CONFIG_TICK_TIME_MS   (100)
 

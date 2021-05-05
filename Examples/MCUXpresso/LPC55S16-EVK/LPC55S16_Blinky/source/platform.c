@@ -38,7 +38,9 @@ void PL_Init(void) {
   McuSystemView_Init();
 #endif
   McuLog_Init();
-  //McuShellUart_Init();
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
+#endif
   McuShell_Init();
   McuTimeDate_Init();
   McuDbnc_Init();
