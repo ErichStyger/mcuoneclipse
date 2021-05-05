@@ -83,6 +83,9 @@
   #include "fsl_common.h"
   #if McuLib_CONFIG_CPU_IS_KINETIS
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55x */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
+    #include "fsl_iap_ffr.h"
   #elif McuLib_CONFIG_CPU_IS_LPC  /* LPC845 */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
   #endif
@@ -306,17 +309,25 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   return ERR_OK;
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55xx */
   int i;
-  uint8_t *p;
+  status_t status;
+  flash_config_t flashConfig;
 
   /* init */
   for(i=0;i<sizeof(McuArmTools_UID);i++) {
     uid->id[i] = 0;
   }
-  p = (uint8_t*)&FLASH_NMPA->UUID_ARRAY[0];
-  for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
-    uid->id[i] = *p;
-    p++;
+
+  status = FLASH_Init(&flashConfig);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
   }
+
+  assert(sizeof(uid->id)*8>=128); /* must be at least 128 bits */
+  status = FFR_GetUUID(&flashConfig, &uid->id[0]);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+
   return ERR_OK;
 #else
   (void)uid; /* not used */
