@@ -465,6 +465,16 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
 }
 
+#if 1 /* << EST */
+static void sdspi_init(void) {
+}
+
+static void sdspi_deinit(void) {
+}
+
+static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) {
+}
+#endif
 
 void sdspi_host_init(void)
 {
@@ -472,7 +482,11 @@ void sdspi_host_init(void)
     g_host.busBaudRate = DSPI_BUS_BAUDRATE;
     g_host.setFrequency = spi_set_frequency;
     g_host.exchange = spi_exchange;
-
+#if 1 /* << EST */
+    g_host.init = sdspi_init;
+    g_host.deinit = sdspi_deinit;
+    g_host.csActivePolarity = sdspi_activePolarity;
+#endif
     /* Saves card state. */
     g_card.host = &g_host;
 }

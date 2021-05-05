@@ -40,6 +40,7 @@
 
 #define configTICK_RATE_HZ                          (1000)
 
+/* -----------------------------------------------------*/
 /* performance counter: */
 #include <stdint.h>
 #define configGENERATE_RUN_TIME_STATS_USE_TICKS     (0)
@@ -47,12 +48,12 @@ extern void AppConfigureTimerForRuntimeStats(void);
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   AppConfigureTimerForRuntimeStats()
 extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define portGET_RUN_TIME_COUNTER_VALUE()           AppGetRuntimeCounterValueFromISR()
-
+/* -----------------------------------------------------*/
 /* Segger SystemViewer: */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        	(1)
 #define SYSVIEW_APP_NAME                            	"FreeRTOS on tinyK22"
 #define SYSVIEW_DEVICE_NAME                         	"NXP K22FN512"
-
+/* -----------------------------------------------------*/
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
@@ -65,12 +66,31 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define McuShell_CONFIG_HISTORY_ENABLED      (1)
 #define McuShell_CONFIG_HISTORY_NOF_ITEMS    (3)
 #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  /*kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk  /* has to match Clocks setting! */
-
-/* FatFS */
+/* -------------------------------------------------*/
+/* RTT */
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (5)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (5)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS             (1)
-
+#define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "0:/" /* 0: is for the SPI SD card type, and 1: for USB, see diskio.h */
+/* -------------------------------------------------*/
+/* MinINI */
+#define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
+/* -----------------------------------------------------*/
 /* time/Date */
 #define McuTimeDate_CONFIG_USE_SOFTWARE_RTC  (1)
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2020
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 6
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   14
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR 10
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN 12
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC 30
+//#define McuTimeDate_CONFIG_TICK_TIME_MS         (50)
+/* -------------------------------------------------*/
+/* McuLog */
+#define McuLog_CONFIG_USE_FILE                  (0)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
