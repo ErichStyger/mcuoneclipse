@@ -13,7 +13,7 @@ set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
 set(ARM_TOOLCHAIN_DIR "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin")
-set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR})
+set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR}) 
 
 set(TOOLCHAIN_PREFIX ${ARM_TOOLCHAIN_DIR}/arm-none-eabi-)
 
