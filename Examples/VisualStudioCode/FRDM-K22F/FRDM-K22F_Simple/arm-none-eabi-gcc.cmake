@@ -1,13 +1,13 @@
 # Call Cmake from the 'build' subfolder with the command below.
 # For using Make:
-# cmake -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=make.exe -G "Unix Makefiles" ..
+# cmake -DCMAKE_MAKE_PROGRAM=make.exe -G "Unix Makefiles" ..
 # followed by
-# make
+# 'make' or 'cmake --build .' to build it
 #
 # For using Ninja:
-# cmake -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=ninja.exe -G "Ninja" ..
+# cmake -DCMAKE_MAKE_PROGRAM=ninja.exe -G "Ninja" ..
 # followed by
-# ninja
+# 'ninja' or 'cmake --build .' to build it
 
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
