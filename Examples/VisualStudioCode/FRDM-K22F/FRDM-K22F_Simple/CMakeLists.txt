@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.15.3)
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+# Path to toolchain file. This one has to be before 'project()' below
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
+
 # Setup project, output and linker file
 project(FRDM-K22F_Simple)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
@@ -50,6 +53,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -ffunction-sections
 
         -Wall
+        $<$<CONFIG:Debug>:-Og>
         )
 
 # Linker options
