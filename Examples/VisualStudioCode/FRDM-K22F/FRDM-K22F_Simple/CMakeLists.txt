@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.15.3)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Setup project, output and linker file
-project(FRDM-K22F_Blinky)
+project(FRDM-K22F_Simple)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 set(LINKER_FILE ${CMAKE_SOURCE_DIR}/device/MK22FN512xxx12_flash.ld)
 
