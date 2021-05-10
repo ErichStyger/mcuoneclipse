@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stdint.h>
 
-static void bar(int *p) {
+static void bar(int32_t *p) {
     (*p)++;
 }
 
