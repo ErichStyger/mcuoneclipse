@@ -53,7 +53,8 @@ target_compile_options(${EXECUTABLE} PRIVATE
         -ffunction-sections
 
         -Wall
-        $<$<CONFIG:Debug>:-Og>
+        -O0
+        -g3
         )
 
 # Linker options
