@@ -20,6 +20,11 @@
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
+#if PL_CONFIG_USE_SD_CARD
+  #include "McuFatFS.h"
+  #include "fatfs_sdcard.h"
+  #include "disk.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -49,4 +54,9 @@ void PL_Init(void) {
   LEDS_Init();
   BTN_Init();
   SHELL_Init();
+#if PL_CONFIG_USE_SD_CARD
+  McuFatFS_Init();
+  FatFS_SdCardInit();
+  DISK_Init();
+#endif
 }

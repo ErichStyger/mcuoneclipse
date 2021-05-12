@@ -46,14 +46,18 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuLog_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
 #endif
+#if PL_CONFIG_USE_SD_CARD
   DISK_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
 static void ShellTask(void *pvParameters) {
   int i;
+#if PL_CONFIG_USE_SD_CARD
   bool cardMounted = false;
   static McuFatFS_FATFS fileSystemObject;
+#endif
 
   (void)pvParameters; /* not used */
   /* initialize buffers */
@@ -63,7 +67,9 @@ static void ShellTask(void *pvParameters) {
   McuShell_SendStr((uint8_t*)"Shell task started!\r\n", McuShell_GetStdio()->stdOut);
   (void)McuShell_ParseWithCommandTable((unsigned char*)McuShell_CMD_HELP, ios[0].stdio, CmdParserTable);
   for(;;) {
+#if PL_CONFIG_USE_SD_CARD
     (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)DISK_DRIVE_SD_CARD, &fileSystemObject, McuShell_GetStdio());
+#endif
     /* process all I/Os */
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);

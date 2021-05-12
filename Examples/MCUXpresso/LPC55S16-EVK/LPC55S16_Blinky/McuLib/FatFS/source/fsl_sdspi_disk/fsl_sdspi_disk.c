@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "fsl_dspi.h"
+//#include "fsl_dspi.h"
 #include "fsl_sdspi.h"
 #include "fsl_gpio.h"
 #include "fsl_sdspi_disk.h"
@@ -413,6 +413,7 @@ DSTATUS sdspi_disk_initialize(uint8_t physicalDrive)
 
 void spi_init(void)
 {
+#if 0
     uint32_t sourceClock;
 
     dspi_master_config_t masterConfig;
@@ -438,10 +439,14 @@ void spi_init(void)
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
     DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
+#else
+    for(;;) {}
+#endif
 }
 
 status_t spi_set_frequency(uint32_t frequency)
 {
+#if 0
     uint32_t sourceClock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
@@ -452,10 +457,14 @@ status_t spi_set_frequency(uint32_t frequency)
     }
 
     return kStatus_Fail;
+#else
+    for(;;) {}
+#endif
 }
 
 status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
 {
+#if 0
     dspi_transfer_t masterTransfer;
 
     masterTransfer.txData = in;
@@ -463,6 +472,9 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     masterTransfer.dataSize = size;
     masterTransfer.configFlags = (kDSPI_MasterCtar0 | DSPI_MASTER_PCS_TRANSFER | kDSPI_MasterPcsContinuous);
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
+#else
+    for(;;) {}
+#endif
 }
 
 
