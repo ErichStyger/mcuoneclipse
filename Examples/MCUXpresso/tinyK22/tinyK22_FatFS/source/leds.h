@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef LEDS_H_
-#define LEDS_H_
+#ifndef MY_LEDS_H_
+#define MY_LEDS_H_
 
 #include "McuLED.h"
 
@@ -15,4 +15,4 @@ extern McuLED_Handle_t tinyLED;
 void LEDS_Deinit(void);
 void LEDS_Init(void);
 
-#endif /* LEDS_H_ */
+#endif /* MY_LEDS_H_ */
