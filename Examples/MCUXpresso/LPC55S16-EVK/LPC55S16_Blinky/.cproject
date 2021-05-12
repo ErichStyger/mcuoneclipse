@@ -147,6 +147,8 @@
 									<listOptionValue builtIn="false" value="../McuLib/HD44780"/>
 									<listOptionValue builtIn="false" value="../McuLib/FatFS"/>
 									<listOptionValue builtIn="false" value="../McuLib/FatFS/source"/>
+									<listOptionValue builtIn="false" value="../McuLib/FatFS/source/fsl_sdspi_disk"/>
+									<listOptionValue builtIn="false" value="&quot;../sdmmc/inc&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.files.359890342" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/source/IncludeMcuLibConfig.h&quot;"/>
@@ -351,24 +353,15 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.964463517.1525730810" name="/" resourcePath="McuLib/FatFS">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.400060781" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.2114768838" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2041070601"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.407481547" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.341432283"/>
-							<tool id="com.crt.advproject.gas.exe.debug.442380243" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1352020453"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.265196305" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.462921836"/>
-							<tool id="com.crt.advproject.link.exe.debug.320984137" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1636572860"/>
-							<tool id="com.crt.advproject.tool.debug.debug.1726867024" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1104060562"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|TraceRecorder|minIni|LittlevGL|HD44780|fonts" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FatFS/source/fsl_sd_disk|FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|TraceRecorder|minIni|LittlevGL|HD44780|fonts" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sdmmc"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
@@ -400,7 +393,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso55S16</sdkName>
 		<sdkVersion>2.9.1</sdkVersion>
-		<sdkComponents>middleware.baremetal.LPC55S16;platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;platform.Include_common.LPC55S16;platform.Include_core_cm33.LPC55S16;platform.Include_dsp.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.iap1.LPC55S16;platform.drivers.pint.LPC55S16;</sdkComponents>
+		<sdkComponents>middleware.baremetal.LPC55S16;platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;platform.Include_common.LPC55S16;platform.Include_core_cm33.LPC55S16;platform.Include_dsp.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.iap1.LPC55S16;platform.drivers.pint.LPC55S16;platform.drivers.flexcomm_spi.LPC55S16;</sdkComponents>
 		<boardId>lpcxpresso55s16</boardId>
 		<package>LPC55S16JBD100</package>
 		<core>cm33</core>

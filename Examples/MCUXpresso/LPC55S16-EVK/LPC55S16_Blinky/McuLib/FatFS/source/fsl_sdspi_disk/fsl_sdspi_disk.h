@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-
+#if 0
 /* DSPI clock source */
 #if (BOARD_SDSPI_SPI_BASE == SPI0_BASE)
 #define DSPI_MASTER_CLK_SRC (DSPI0_CLK_SRC)
@@ -59,6 +59,8 @@
 #elif(BOARD_SDSPI_SPI_PCS_NUMBER == 5U)
 #define DSPI_MASTER_PCS_CONFIG kDSPI_Pcs5
 #define DSPI_MASTER_PCS_TRANSFER kDSPI_MasterPcs5
+#endif
+
 #endif
 
 #define DSPI_MASTER_CTAR (kDSPI_Ctar0) /* The CTAR to describle the transfer attribute */
