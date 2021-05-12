@@ -18,7 +18,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-//#include "fsl_dspi.h"
+#if 0 /* tinyK22 */
+  #include "fsl_dspi.h"
+#else
+  #include "fsl_spi.h"
+#endif
 #include "fsl_sdspi.h"
 #include "fsl_gpio.h"
 #include "fsl_sdspi_disk.h"
@@ -79,11 +83,6 @@
 static uint8_t CardType = CT_SD1;       /* Card type flags */
 
 /* << EST */
-
-/* New project wizard guide note. */
-#ifndef BOARD_SDSPI_SPI_BASE
-#warning Undefined macro. Define BOARD_SDSPI_SPI_BASE in board.h
-#endif
 
 /*******************************************************************************
  * Definitions
@@ -413,7 +412,7 @@ DSTATUS sdspi_disk_initialize(uint8_t physicalDrive)
 
 void spi_init(void)
 {
-#if 0
+#if 0 /* tinyK22 */
     uint32_t sourceClock;
 
     dspi_master_config_t masterConfig;
@@ -440,13 +439,20 @@ void spi_init(void)
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
     DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
 #else
-    for(;;) {}
+    spi_master_config_t userConfig = {0};
+    uint32_t srcFreq               = 0;
+
+    SPI_MasterGetDefaultConfig(&userConfig);
+    srcFreq            = SDSPI_SPI_MASTER_CLK_FREQ;
+    userConfig.sselNum = (spi_ssel_t)SDSPI_SPI_SSEL;
+    userConfig.sselPol = (spi_spol_t)SDSPI_SPI_SPOL;
+    SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
 #endif
 }
 
 status_t spi_set_frequency(uint32_t frequency)
 {
-#if 0
+#if 0 /* tinyK22 */
     uint32_t sourceClock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
@@ -458,13 +464,22 @@ status_t spi_set_frequency(uint32_t frequency)
 
     return kStatus_Fail;
 #else
-    for(;;) {}
+    uint32_t sourceClock;
+
+    sourceClock = SDSPI_SPI_MASTER_CLK_FREQ;
+    /* If returns 0, indicates failed. */
+    if (SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock))
+    {
+        return kStatus_Success;
+    }
+
+    return kStatus_Fail;
 #endif
 }
 
 status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
 {
-#if 0
+#if 0 /* tinyK22 */
     dspi_transfer_t masterTransfer;
 
     masterTransfer.txData = in;
@@ -473,9 +488,25 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     masterTransfer.configFlags = (kDSPI_MasterCtar0 | DSPI_MASTER_PCS_TRANSFER | kDSPI_MasterPcsContinuous);
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
 #else
-    for(;;) {}
+    spi_transfer_t xfer            = {0};
+    xfer.txData      = in;
+    xfer.rxData      = out;
+    xfer.dataSize    = size;
+    xfer.configFlags = kSPI_FrameAssert;
+    return SPI_MasterTransferBlocking(SDSPI_SPI_MASTER, &xfer);
 #endif
 }
+
+#if 1 /* << EST */
+static void sdspi_init(void) {
+}
+
+static void sdspi_deinit(void) {
+}
+
+static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) {
+}
+#endif
 
 
 void sdspi_host_init(void)
@@ -484,7 +515,11 @@ void sdspi_host_init(void)
     g_host.busBaudRate = DSPI_BUS_BAUDRATE;
     g_host.setFrequency = spi_set_frequency;
     g_host.exchange = spi_exchange;
-
+#if 1 /* << EST */
+    g_host.init = sdspi_init;
+    g_host.deinit = sdspi_deinit;
+    g_host.csActivePolarity = sdspi_activePolarity;
+#endif
     /* Saves card state. */
     g_card.host = &g_host;
 }

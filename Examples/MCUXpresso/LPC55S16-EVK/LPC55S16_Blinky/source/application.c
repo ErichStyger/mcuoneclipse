@@ -22,6 +22,12 @@
 #include "buttons.h"
 #include "Shell.h"
 
+void __assertion_failed(char *_Expr) {
+  for(;;) {
+    __asm("nop");
+  }
+}
+
 static SemaphoreHandle_t mutex;
 
 static void AppOnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
@@ -89,7 +95,7 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 
-  for(int i=0;i<5;i++) {
+  for(int i=0;i<2;i++) {
     LEDS_On(LEDS_RED);
     McuWait_Waitms(100);
     LEDS_Off(LEDS_RED);
