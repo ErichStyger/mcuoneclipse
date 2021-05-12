@@ -454,7 +454,7 @@ void spi_init(void)
     userConfig.polarity = kSPI_ClockPolarityActiveHigh;
     userConfig.phase = kSPI_ClockPhaseFirstEdge;
     userConfig.direction = kSPI_MsbFirst;
-    userConfig.sselPol = kSPI_SpolActiveAllHigh;
+    userConfig.sselPol = kSPI_SpolActiveAllLow; /* low active CS */
     res = SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
     if (res!=kStatus_Success) {
       for(;;) {}
@@ -477,10 +477,15 @@ status_t spi_set_frequency(uint32_t frequency)
     return kStatus_Fail;
 #else
     uint32_t sourceClock;
+    status_t res;
 
     sourceClock = SDSPI_SPI_MASTER_CLK_FREQ;
     /* If returns 0, indicates failed. */
-    return SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock);
+    res = SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock);
+    if (res!=kStatus_Success) {
+      for(;;) {}
+    }
+    return res;
 #endif
 }
 
@@ -495,7 +500,7 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     masterTransfer.configFlags = (kDSPI_MasterCtar0 | DSPI_MASTER_PCS_TRANSFER | kDSPI_MasterPcsContinuous);
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
 #else
-    spi_transfer_t xfer            = {0};
+    spi_transfer_t xfer = {0};
     xfer.txData      = in;
     xfer.rxData      = out;
     xfer.dataSize    = size;
@@ -511,7 +516,7 @@ static void sdspi_init(void) {
 static void sdspi_deinit(void) {
 }
 
-static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) {
+static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) { /* used to change clock polarity */
 }
 #endif
 
