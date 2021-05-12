@@ -62,7 +62,7 @@ Instructions:
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- FatFS ---------------------------*/
-#define McuLib_CONFIG_USE_FAT_FS             (0)
+#define McuLib_CONFIG_USE_FAT_FS             (1)
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"

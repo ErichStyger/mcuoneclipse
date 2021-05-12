@@ -13,6 +13,11 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "McuFatFS.h"
+#if PL_CONFIG_USE_MININI
+  #include "McuMinINI.h"
+#endif
+#include "disk.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -25,6 +30,8 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
+  McuFatFS_ParseCommand,
+  DISK_ParseCommand,
   NULL /* Sentinel */
 };
 
@@ -61,13 +68,16 @@ void SHELL_SendString(unsigned char *str) {
 
 static void ShellTask(void *pv) {
   int i;
+  bool cardMounted = false;
+  static McuFatFS_FATFS fileSystemObject;
 
   McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-    /* process all I/Os */
+    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)DISK_DRIVE_SD_CARD, &fileSystemObject, McuShell_GetStdio());
+   /* process all I/Os */
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
