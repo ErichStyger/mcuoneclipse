@@ -10,14 +10,20 @@
 
 #if PL_CONFIG_USE_SD_CARD
 
-#define CARD_DETECT_GPIO        GPIO
-#define CARD_DETECT_PORT        0
-#define CARD_DETECT_PIN         16U
+#if 0
+  #define CARD_DETECT_GPIO        GPIOC
+  #define CARD_DETECT_PORT        PORTC
+  #define CARD_DETECT_PIN         0U
+  #define FatFS_CardDetect_Pull         McuGPIO_PULL_DOWN /* tinyK22: */
+  #define FatFS_CardDetect_HighActive   (1)  /* tinyK22 */
+#else /* LPC55S16*/
+  #define CARD_DETECT_GPIO        GPIO
+  #define CARD_DETECT_PORT        0
+  #define CARD_DETECT_PIN         16U
 
-//#define FatFS_CardDetect_Pull         McuGPIO_PULL_DOWN /* tinyK22: */
-//#define FatFS_CardDetect_HighActive   (1)  /* tinyK22 */
-#define FatFS_CardDetect_Pull           McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
-#define FatFS_CardDetect_HighActive     (1)  /*  https://www.pololu.com/product/2587 */
+  #define FatFS_CardDetect_Pull           McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
+  #define FatFS_CardDetect_HighActive     (1)  /*  https://www.pololu.com/product/2587 */
+#endif
 
 static McuGPIO_Handle_t FatFS_CardDetectPin;
 
