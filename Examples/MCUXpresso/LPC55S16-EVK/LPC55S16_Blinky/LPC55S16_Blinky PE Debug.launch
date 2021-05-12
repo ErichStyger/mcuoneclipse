@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
 <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEMFA9867"/>
-<booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
 <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal FX Rev C (PEMFA9867)"/>
+<mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
 <intAttribute key="com.nxp.mcuxpresso.core.datamodels.ui.launchers.PELaunchConfigHandler.version" value="1"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
 <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
@@ -14,7 +14,7 @@
 <booleanAttribute key="com.nxp.mcuxpresso.pemicro.flash.reset.target" value="true"/>
 <listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.NUMBER_ELVES" value="0"/>
-<stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="NXP_LPC55Sxx_LPC55S69"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="NXP_LPC55Sxx_LPC55S16"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_OPTIONS" value=""/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.PE.HARDWARE_INTERFACE" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.LAST_ATTRIBUTE_HEADER" value="com.pemicro.debug.gdbjtag.pne.ml."/>
@@ -24,7 +24,7 @@
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.algorithmIndex" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.alternativeAlgorithmPath" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.attachToRunning" value="false"/>
-<intAttribute key="com.pemicro.debug.gdbjtag.pne.customTrimFrequency" value="0"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.customTrimFrequency" value="0"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_eth.ALWAYS_ERASE" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_eth.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.cyc_eth.DO_RESET_DELAY" value="false"/>
@@ -83,8 +83,8 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.eraseOptionsenabled" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#10;set tcp auto-retry on&#10;set tcp connect-timeout 240&#10;set remotetimeout 60"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherOptions" value=""/>
-<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerTelnetPortNumber" value="51794"/>
-<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbmiPortNumber" value="6224"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerTelnetPortNumber" value="51795"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbmiPortNumber" value="6225"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagPreIrBits" value="0"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.jtagTapNumber" value="0"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.macScript" value=""/>
@@ -105,6 +105,8 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_IP" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_NETWORK_CARD" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.STARTUP_USE_SWD" value="true"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_MULTILINK_VALUE" value="-1.000000"/>
+<stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_TARGET_VALUE" value="-1.000000"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.otherRunCommands" value=""/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.partitionParam" value="0"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.preserveMemory0" value="false"/>
@@ -135,7 +137,7 @@
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.SPECIFY_NETWORK_CARD" value="false"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.sda.STARTUP_USE_SWD" value="true"/>
 <intAttribute key="com.pemicro.debug.gdbjtag.pne.selectedCoreNumber" value="1"/>
-<intAttribute key="com.pemicro.debug.gdbjtag.pne.serverPortNumber" value="7224"/>
+<intAttribute key="com.pemicro.debug.gdbjtag.pne.serverPortNumber" value="7225"/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.trc_eth.ALWAYS_ERASE" value="false"/>
 <stringAttribute key="com.pemicro.debug.gdbjtag.pne.trc_eth.CYCLONE_IP" value=""/>
 <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.trc_eth.DO_RESET_DELAY" value="false"/>
@@ -194,12 +196,12 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\LPC55S69_McuLib_Blinky.axf"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="LPC55S69_McuLib_Blinky"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\LPC55S16_Blinky.axf"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="LPC55S16_Blinky"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.651754409"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.964463517"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/LPC55S69_McuLib_Blinky"/>
+<listEntry value="/LPC55S16_Blinky"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>

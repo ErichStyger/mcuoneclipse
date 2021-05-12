@@ -44,6 +44,10 @@ BOARD_InitPins:
     mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, mode: inactive,
     slew_rate: standard, invert: disabled, open_drain: disabled}
+  - {pin_num: '62', peripheral: FLEXCOMM8, signal: HS_SPI_MISO, pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6}
+  - {pin_num: '61', peripheral: FLEXCOMM8, signal: HS_SPI_SCK, pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5}
+  - {pin_num: '60', peripheral: FLEXCOMM8, signal: HS_SPI_MOSI, pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26}
+  - {pin_num: '59', peripheral: FLEXCOMM8, signal: HS_SPI_SSEL1, pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -59,6 +63,19 @@ void BOARD_InitPins(void)
 {
     /* Enables the clock for the I/O controller.: Enable Clock. */
     CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][26] = ((IOCON->PIO[0][26] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT026 (pin 60) is configured as HS_SPI_MOSI. */
+                         | IOCON_PIO_FUNC(0x09u)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_26_DIGIMODE_DIGITAL));
 
     const uint32_t port0_pin29_config = (/* Pin is configured as FC0_RXD_SDA_MOSI_DATA */
                                          IOCON_PIO_FUNC1 |
@@ -89,6 +106,45 @@ void BOARD_InitPins(void)
                                          IOCON_PIO_OPENDRAIN_DI);
     /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
     IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
+
+    IOCON->PIO[1][1] = ((IOCON->PIO[1][1] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT11 (pin 59) is configured as HS_SPI_SSEL1. */
+                        | IOCON_PIO_FUNC(PIO1_1_FUNC_ALT5)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_1_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][2] = ((IOCON->PIO[1][2] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT12 (pin 61) is configured as HS_SPI_SCK. */
+                        | IOCON_PIO_FUNC(PIO1_2_FUNC_ALT6)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][3] = ((IOCON->PIO[1][3] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT13 (pin 62) is configured as HS_SPI_MISO. */
+                        | IOCON_PIO_FUNC(PIO1_3_FUNC_ALT6)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_3_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF
