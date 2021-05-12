@@ -11,7 +11,7 @@
 
 static void safetyBelt(void) {
   /* delay application: do NOT enter low power to prevent lock-out during development */
-  for(int i=0; i<20000000; i++) {
+  for(int i=0; i<5000000; i++) {
     __asm("nop");
   }
 }

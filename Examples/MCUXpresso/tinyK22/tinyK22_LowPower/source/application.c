@@ -41,17 +41,17 @@ static void GearShiftSlow(bool slow) {
 void APP_Run(void) {
   PL_Init(); /* initialize platform */
   for(int i=0; i<3; i++) {
-    McuLED_On(tinyLED);
+    McuLED_On(blueLED);
     McuWait_Waitms(500);
-    McuLED_Off(tinyLED);
+    McuLED_Off(blueLED);
     McuWait_Waitms(500);
   }
 //  printf("SystemCoreClock: %lu\n", SystemCoreClock);
   GearShiftSlow(true);
   for(;;) {
-    McuLED_On(tinyLED);
+    McuLED_On(blueLED);
     McuWait_Waitms(100);
-    McuLED_Off(tinyLED);
+    McuLED_Off(blueLED);
 #if LP_MODE==LP_MODE_RUN
     LP_EnterLowPower(kAPP_PowerModeRun);
     McuWait_Waitms(1000); /* no wakeup, burn cycles here */

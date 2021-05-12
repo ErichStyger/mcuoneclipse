@@ -7,10 +7,15 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
+#include "platform.h"
 #include "McuLED.h"
 
 /* led handles */
-extern McuLED_Handle_t tinyLED;
+#if PL_BOARD_IS_TINYK22
+  extern McuLED_Handle_t blueLED;
+#else
+  extern McuLED_Handle_t redLED, blueLED, greenLED;
+#endif
 
 void LEDS_Deinit(void);
 void LEDS_Init(void);

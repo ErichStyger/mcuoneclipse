@@ -18,8 +18,6 @@
 #include "LowPower.h"
 
 void PL_Init(void) {
-  CLOCK_EnableClock(kCLOCK_PortD); /* FRDM-K22 has LED on port D */
-
   /* initialize McuLib modules */
   McuLib_Init();
   McuWait_Init();
