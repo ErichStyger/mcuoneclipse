@@ -414,7 +414,7 @@ void spi_init(void)
 {
 #if 0 /* tinyK22 */
     uint32_t sourceClock;
-
+    status_t res;
     dspi_master_config_t masterConfig;
 
     /*Master config*/
@@ -437,16 +437,28 @@ void spi_init(void)
     masterConfig.samplePoint = kDSPI_SckToSin0Clock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
-    DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
+    res = DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
+    if (res!=kStatus_Success) {
+      for(;;) {}
+    }
 #else
     spi_master_config_t userConfig = {0};
     uint32_t srcFreq               = 0;
+    status_t res;
 
     SPI_MasterGetDefaultConfig(&userConfig);
     srcFreq            = SDSPI_SPI_MASTER_CLK_FREQ;
     userConfig.sselNum = (spi_ssel_t)SDSPI_SPI_SSEL;
     userConfig.sselPol = (spi_spol_t)SDSPI_SPI_SPOL;
-    SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
+    userConfig.dataWidth = kSPI_Data8Bits;
+    userConfig.polarity = kSPI_ClockPolarityActiveHigh;
+    userConfig.phase = kSPI_ClockPhaseFirstEdge;
+    userConfig.direction = kSPI_MsbFirst;
+    userConfig.sselPol = kSPI_SpolActiveAllHigh;
+    res = SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
+    if (res!=kStatus_Success) {
+      for(;;) {}
+    }
 #endif
 }
 
@@ -468,12 +480,7 @@ status_t spi_set_frequency(uint32_t frequency)
 
     sourceClock = SDSPI_SPI_MASTER_CLK_FREQ;
     /* If returns 0, indicates failed. */
-    if (SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock))
-    {
-        return kStatus_Success;
-    }
-
-    return kStatus_Fail;
+    return SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock);
 #endif
 }
 
