@@ -15,11 +15,11 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v5.0
+product: Clocks v7.0
 processor: MIMXRT1064xxxxA
 package_id: MIMXRT1064DVL6A
 mcu_data: ksdk2_0
-processor_version: 5.0.1
+processor_version: 9.0.1
 board: MIMXRT1064-EVK
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -129,7 +129,6 @@ settings:
 - {id: CCM_ANALOG_PLL_ENET_POWERDOWN_CFG, value: 'Yes'}
 - {id: CCM_ANALOG_PLL_USB1_POWER_CFG, value: 'Yes'}
 sources:
-- {id: XTALOSC24M.OSC.outFreq, value: 24 MHz, enabled: true}
 - {id: XTALOSC24M.RTC_OSC.outFreq, value: 32.768 kHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
@@ -190,6 +189,7 @@ void BOARD_BootClockRUN(void)
     CLOCK_DisableClock(kCLOCK_Adc2);
     CLOCK_DisableClock(kCLOCK_Xbar1);
     CLOCK_DisableClock(kCLOCK_Xbar2);
+    CLOCK_DisableClock(kCLOCK_Xbar3);
     /* Set IPG_PODF. */
     CLOCK_SetDiv(kCLOCK_IpgDiv, 3);
     /* Set ARM_PODF. */
@@ -263,17 +263,11 @@ void BOARD_BootClockRUN(void)
     CLOCK_SetMux(kCLOCK_LpspiMux, 2);
     /* Disable TRACE clock gate. */
     CLOCK_DisableClock(kCLOCK_Trace);
-#if 0
     /* Set TRACE_PODF. */
     CLOCK_SetDiv(kCLOCK_TraceDiv, 2);
     /* Set Trace clock source. */
     CLOCK_SetMux(kCLOCK_TraceMux, 2);
-#else /* enable SWO */
-    /* Set TRACE_PODF. */
-    CLOCK_SetDiv(kCLOCK_TraceDiv, 0);
-    /* Set Trace clock source. */
-    CLOCK_SetMux(kCLOCK_TraceMux, 3);
-#endif
+    /* Disable SAI1 clock gate. */
     CLOCK_DisableClock(kCLOCK_Sai1);
     /* Set SAI1_CLK_PRED. */
     CLOCK_SetDiv(kCLOCK_Sai1PreDiv, 3);
@@ -369,6 +363,9 @@ void BOARD_BootClockRUN(void)
      * With this macro SKIP_SYSCLK_INIT, system pll (selected to be SEMC source clock in SDK projects) will be left unchanged.
      * Note: If another clock source is selected for SEMC, user may want to avoid changing that clock as well.*/
 #ifndef SKIP_SYSCLK_INIT
+#if defined(XIP_BOOT_HEADER_DCD_ENABLE) && (XIP_BOOT_HEADER_DCD_ENABLE == 1)
+    #warning "SKIP_SYSCLK_INIT should be defined to keep system pll (selected to be SEMC source clock in SDK projects) unchanged."
+#endif
     /* Init System PLL. */
     CLOCK_InitSysPll(&sysPllConfig_BOARD_BootClockRUN);
     /* Init System pfd0. */
@@ -473,16 +470,16 @@ void BOARD_BootClockRUN(void)
     /* Set ENET1 Tx clock source. */
     IOMUXC_EnableMode(IOMUXC_GPR, kIOMUXC_GPR_ENET1RefClkMode, false);
     /* Set ENET2 Tx clock source. */
+#if defined(FSL_IOMUXC_DRIVER_VERSION) && (FSL_IOMUXC_DRIVER_VERSION != (MAKE_VERSION(2, 0, 0)))
+    IOMUXC_EnableMode(IOMUXC_GPR, kIOMUXC_GPR_ENET2RefClkMode, false);
+#else
     IOMUXC_EnableMode(IOMUXC_GPR, IOMUXC_GPR_GPR1_ENET2_CLK_SEL_MASK, false);
+#endif
     /* Set GPT1 High frequency reference clock source. */
     IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT1_MASK;
     /* Set GPT2 High frequency reference clock source. */
     IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT2_MASK;
     /* Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
-#if 1 /* enable SWO */
-    //*((uint32_t *)(0x400E0600)) = (1 << 11);  /* enable TPIU clock */
-    CLOCK_EnableClock(kCLOCK_Trace);
-#endif
 }
 
