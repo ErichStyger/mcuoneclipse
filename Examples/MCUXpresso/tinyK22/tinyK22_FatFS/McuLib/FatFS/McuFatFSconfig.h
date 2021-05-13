@@ -21,12 +21,12 @@
 #endif
 
 #ifndef McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK
-  #define McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK    McuFatFS_IsDiskPresent
+  #define McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK    McuFatFS_CardPinDiskPresent
     /*!< 1: callback name to be used to decide if a device is present or not */
 #endif
 
 #ifndef McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK
-  #define McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK    McuFatFS_IsWriteProtected
+  #define McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK    McuFatFS_CardPinWriteProtected
     /*!< 1: callback name to be used to decide if a device is present or not */
 #endif
 

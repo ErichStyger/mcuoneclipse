@@ -21,6 +21,7 @@
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
+#include "disk.h"
 
 void __assertion_failed(char *_Expr) {
   for(;;) {
@@ -60,9 +61,24 @@ static void AppOnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
 }
 
 static void AppTask(void *pv) {
+#if PL_CONFIG_USE_SD_CARD
+  bool sdDiskPresent = false;
+  bool present;
+#endif
+
   McuLog_info("App Task started.");
   BTN_RegisterAppCallback(AppOnDebounceEvent);
   for(;;) {
+#if PL_CONFIG_USE_SD_CARD
+    present = DISK_IsInserted((unsigned char*)DISK_DRIVE_SD_CARD);
+    if (!sdDiskPresent && present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_INSERTED);
+      sdDiskPresent = true;
+    } else if (sdDiskPresent && !present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_REMOVED);
+      sdDiskPresent = false;
+    }
+#endif
     if (BTN_IsPressed(BTN_UP)) {
       McuLog_info("User Up pressed.");
       LEDS_Neg(LEDS_BLUE);

@@ -74,6 +74,21 @@
 
 
 
+/* define to identify the CPU variant better */
+#define McuLib_CONFIG_CPU_VARIANT_DEFAULT               (0)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_K22FN             (1)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (2)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (3)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (4)
+
+#ifndef McuLib_CONFIG_CPU_VARIANT
+  #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT
+#endif
+
+#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_DEFAULT
+  #error "Please specify the LPC CPU variant used"
+#endif
+
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #ifndef McuLib_CONFIG_CORTEX_M
   #define McuLib_CONFIG_CORTEX_M      (4)

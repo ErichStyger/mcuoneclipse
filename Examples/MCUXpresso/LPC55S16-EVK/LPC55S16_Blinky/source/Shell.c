@@ -70,19 +70,12 @@ void SHELL_SendString(unsigned char *str) {
 
 static void ShellTask(void *pv) {
   int i;
-#if PL_CONFIG_USE_SD_CARD
-  bool cardMounted = false;
-  static McuFatFS_FATFS fileSystemObject;
-#endif
 
   McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-#if PL_CONFIG_USE_SD_CARD
-    (void)McuFatFS_CheckCardPresence(&cardMounted, (uint8_t*)DISK_DRIVE_SD_CARD, &fileSystemObject, McuShell_GetStdio());
-#endif
    /* process all I/Os */
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
@@ -104,8 +97,10 @@ void SHELL_Init(void) {
   }
   McuShell_SetStdio(ios[0].stdio);
 #if McuLog_CONFIG_IS_ENABLED
-  McuLog_set_console(ios[0].stdio, 0);
-#endif
+  for(int i=0; i<sizeof(ios)/sizeof(ios[0]) && i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
+    McuLog_set_console(ios[i].stdio, i);
+  }
+#endif /* McuLog_CONFIG_IS_ENABLED */
 }
 
 void SHELL_Deinit(void) {}

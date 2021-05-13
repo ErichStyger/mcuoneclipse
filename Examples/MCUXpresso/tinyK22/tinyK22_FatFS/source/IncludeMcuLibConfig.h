@@ -24,6 +24,7 @@
 #elif 1 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
+  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 #elif 0 /* example configuration for i.MX RT */
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
@@ -76,6 +77,13 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS             (1)
 #define McuFatFS_CONFIG_DEFAULT_DRIVE_STRING   "0:/" /* 0: is for the SPI SD card type, and 1: for USB, see diskio.h */
+#define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (1)
+#define McuFatFS_CONFIG_CARD_DETECT_GPIO              GPIOC
+#define McuFatFS_CONFIG_CARD_DETECT_PORT              PORTC
+#define McuFatFS_CONFIG_CARD_DETECT_PIN               0U
+#define McuFatFS_CONFIG_CARD_DETECT_PULL              McuGPIO_PULL_DOWN
+#define McuFatFS_CONFIG_CARD_DETECT_IS_HIGH_ACTIVE    (1)
+#define McuFatFS_CONFIG_HAS_WRITE_PROTECT_PIN         (0)
 /* -------------------------------------------------*/
 /* MinINI */
 #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
@@ -91,6 +99,10 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 //#define McuTimeDate_CONFIG_TICK_TIME_MS         (50)
 /* -------------------------------------------------*/
 /* McuLog */
+#define McuLog_CONFIG_IS_ENABLED                (1)
 #define McuLog_CONFIG_USE_FILE                  (0)
+#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2)
+#define McuLog_CONFIG_USE_COLOR                 (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

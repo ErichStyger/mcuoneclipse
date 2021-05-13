@@ -24,7 +24,7 @@
 #include "Shell.h"
 #include "myTimer.h"
 #include "McuFatFS.h"
-#include "fatfs_sdcard.h"
+#include "McuFatFS_CardPins.h"
 #include "disk.h"
 
 void PL_Init(void) {
@@ -54,7 +54,7 @@ void PL_Init(void) {
   MyTimer_Init();
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
-  FatFS_SdCardInit();
+  McuFatFS_CardPinInit();
   DISK_Init();
 #endif
 }

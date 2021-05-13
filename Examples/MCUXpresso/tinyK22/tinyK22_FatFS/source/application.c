@@ -13,6 +13,7 @@
 #include "McuArmTools.h"
 #include "leds.h"
 #include "fsl_pit.h"
+#include "disk.h"
 
 uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
 
@@ -67,7 +68,21 @@ uint32_t AppGetRuntimeCounterValueFromISR(void) {
 #endif
 
 static void AppTask(void *pv) {
+#if PL_CONFIG_USE_SD_CARD
+  bool sdDiskPresent = false;
+  bool present;
+#endif
   for(;;) {
+#if PL_CONFIG_USE_SD_CARD
+    present = DISK_IsInserted((unsigned char*)DISK_DRIVE_SD_CARD);
+    if (!sdDiskPresent && present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_INSERTED);
+      sdDiskPresent = true;
+    } else if (sdDiskPresent && !present) {
+      DISK_SendEvent(DISK_EVENT_SD_CARD_REMOVED);
+      sdDiskPresent = false;
+    }
+#endif
     McuLED_Toggle(tinyLED);
     vTaskDelay(pdMS_TO_TICKS(500));
   } /* for */

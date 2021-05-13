@@ -18,11 +18,13 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#if 1 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
   #include "fsl_dspi.h"
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   #include "fsl_spi.h"
-#endif
+#else
+  #error "target not supported yet"
+#endif /* McuLib_CONFIG_CPU_VARIANT */
 #include "fsl_sdspi.h"
 #include "fsl_gpio.h"
 #include "fsl_sdspi_disk.h"
@@ -412,9 +414,8 @@ DSTATUS sdspi_disk_initialize(uint8_t physicalDrive)
 
 void spi_init(void)
 {
-#if 1 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     uint32_t sourceClock;
-
     dspi_master_config_t masterConfig;
 
     /*Master config*/
@@ -438,21 +439,32 @@ void spi_init(void)
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
     DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     spi_master_config_t userConfig = {0};
     uint32_t srcFreq               = 0;
+    status_t res;
 
     SPI_MasterGetDefaultConfig(&userConfig);
     srcFreq            = SDSPI_SPI_MASTER_CLK_FREQ;
     userConfig.sselNum = (spi_ssel_t)SDSPI_SPI_SSEL;
     userConfig.sselPol = (spi_spol_t)SDSPI_SPI_SPOL;
-    SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
+    userConfig.dataWidth = kSPI_Data8Bits;
+    userConfig.polarity = kSPI_ClockPolarityActiveHigh;
+    userConfig.phase = kSPI_ClockPhaseFirstEdge;
+    userConfig.direction = kSPI_MsbFirst;
+    userConfig.sselPol = kSPI_SpolActiveAllLow; /* low active CS */
+    res = SPI_MasterInit(SDSPI_SPI_MASTER, &userConfig, srcFreq);
+    if (res!=kStatus_Success) {
+      for(;;) {}
+    }
+#else
+  #error "unknown device"
 #endif
 }
 
 status_t spi_set_frequency(uint32_t frequency)
 {
-#if 1 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     uint32_t sourceClock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
@@ -463,23 +475,25 @@ status_t spi_set_frequency(uint32_t frequency)
     }
 
     return kStatus_Fail;
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     uint32_t sourceClock;
+    status_t res;
 
     sourceClock = SDSPI_SPI_MASTER_CLK_FREQ;
     /* If returns 0, indicates failed. */
-    if (SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock))
-    {
-        return kStatus_Success;
+    res = SPI_MasterSetBaud((SPI_Type *)SDSPI_SPI_MASTER, frequency, sourceClock);
+    if (res!=kStatus_Success) {
+      for(;;) {}
     }
-
-    return kStatus_Fail;
+    return res;
+#else
+  #error "unknown device"
 #endif
 }
 
 status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
 {
-#if 1 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     dspi_transfer_t masterTransfer;
 
     masterTransfer.txData = in;
@@ -487,13 +501,15 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     masterTransfer.dataSize = size;
     masterTransfer.configFlags = (kDSPI_MasterCtar0 | DSPI_MASTER_PCS_TRANSFER | kDSPI_MasterPcsContinuous);
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
-#else
-    spi_transfer_t xfer            = {0};
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+    spi_transfer_t xfer = {0};
     xfer.txData      = in;
     xfer.rxData      = out;
     xfer.dataSize    = size;
     xfer.configFlags = kSPI_FrameAssert;
     return SPI_MasterTransferBlocking(SDSPI_SPI_MASTER, &xfer);
+#else
+  #error "unknown device"
 #endif
 }
 
@@ -504,7 +520,7 @@ static void sdspi_init(void) {
 static void sdspi_deinit(void) {
 }
 
-static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) {
+static void sdspi_activePolarity(sdspi_cs_active_polarity_t polarity) { /* used to change clock polarity */
 }
 #endif
 
