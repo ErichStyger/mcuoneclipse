@@ -18,11 +18,13 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#if 0 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
   #include "fsl_dspi.h"
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   #include "fsl_spi.h"
-#endif
+#else
+  #error "target not supported yet"
+#endif /* McuLib_CONFIG_CPU_VARIANT */
 #include "fsl_sdspi.h"
 #include "fsl_gpio.h"
 #include "fsl_sdspi_disk.h"
@@ -412,7 +414,7 @@ DSTATUS sdspi_disk_initialize(uint8_t physicalDrive)
 
 void spi_init(void)
 {
-#if 0 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     uint32_t sourceClock;
     status_t res;
     dspi_master_config_t masterConfig;
@@ -441,7 +443,7 @@ void spi_init(void)
     if (res!=kStatus_Success) {
       for(;;) {}
     }
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     spi_master_config_t userConfig = {0};
     uint32_t srcFreq               = 0;
     status_t res;
@@ -459,12 +461,14 @@ void spi_init(void)
     if (res!=kStatus_Success) {
       for(;;) {}
     }
+#else
+  #error "unknown device"
 #endif
 }
 
 status_t spi_set_frequency(uint32_t frequency)
 {
-#if 0 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     uint32_t sourceClock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
@@ -475,7 +479,7 @@ status_t spi_set_frequency(uint32_t frequency)
     }
 
     return kStatus_Fail;
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     uint32_t sourceClock;
     status_t res;
 
@@ -486,12 +490,14 @@ status_t spi_set_frequency(uint32_t frequency)
       for(;;) {}
     }
     return res;
+#else
+  #error "unknown device"
 #endif
 }
 
 status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
 {
-#if 0 /* tinyK22 */
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     dspi_transfer_t masterTransfer;
 
     masterTransfer.txData = in;
@@ -499,13 +505,15 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
     masterTransfer.dataSize = size;
     masterTransfer.configFlags = (kDSPI_MasterCtar0 | DSPI_MASTER_PCS_TRANSFER | kDSPI_MasterPcsContinuous);
     return DSPI_MasterTransferBlocking((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterTransfer);
-#else
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     spi_transfer_t xfer = {0};
     xfer.txData      = in;
     xfer.rxData      = out;
     xfer.dataSize    = size;
     xfer.configFlags = kSPI_FrameAssert;
     return SPI_MasterTransferBlocking(SDSPI_SPI_MASTER, &xfer);
+#else
+  #error "unknown device"
 #endif
 }
 

@@ -20,10 +20,10 @@ int main(void) {
   BOARD_InitBootPeripherals();
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
   /* Init FSL debug console. */
-  BOARD_InitDebugConsole();
+//  BOARD_InitDebugConsole();
 #endif
 
-  PRINTF("Hello World\n");
+//  PRINTF("Hello World\n");
 
   APP_Run();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Erich Styger
+ * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,6 +9,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "McuFatFS_CardPins_config.h"
 
 #ifdef __cplusplus
 extern "C" {

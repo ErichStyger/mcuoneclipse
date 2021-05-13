@@ -40,7 +40,7 @@ Instructions:
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)  /* LPC55xx */
   #define McuLib_CONFIG_CORTEX_M          (33)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
-
+  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
 /* note: M33 port not functional yet! */
   #define configRUN_FREERTOS_SECURE_ONLY (0)
   #define configENABLE_TRUSTZONE         (0)
@@ -62,7 +62,19 @@ Instructions:
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- FatFS ---------------------------*/
-#define McuLib_CONFIG_USE_FAT_FS             (1)
+#define McuLib_CONFIG_USE_FAT_FS                      (1)
+#define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (1)
+#define McuFatFS_CONFIG_CARD_DETECT_GPIO              GPIO
+#define McuFatFS_CONFIG_CARD_DETECT_PORT              0
+#define McuFatFS_CONFIG_CARD_DETECT_PIN               16U
+#define McuFatFS_CONFIG_CARD_DETECT_PULL              McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
+#define McuFatFS_CONFIG_CARD_DETECT_IS_HIGH_ACTIVE    (1)  /*  https://www.pololu.com/product/2587 */
+#define McuFatFS_CONFIG_HAS_WRITE_PROTECT_PIN         (0)
+//#define McuFatFS_CONFIG_WRITE_PROTECT_GPIO            GPIO
+//#define McuFatFS_CONFIG_WRITE_PROTECT_PORT            0
+//#define McuFatFS_CONFIG_WRITE_PROTECT_PIN             17U
+//#define McuFatFS_CONFIG_WRITE_PROTECT_PULL            McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
+
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
