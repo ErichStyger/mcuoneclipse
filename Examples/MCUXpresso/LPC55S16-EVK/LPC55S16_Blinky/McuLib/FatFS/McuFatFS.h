@@ -184,8 +184,8 @@
 #endif
 
 /* prototypes for application callbacks */
-extern bool McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(uint8_t drive);
-extern bool McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(uint8_t drive);
+extern bool McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(uint8_t *drive);
+extern bool McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(uint8_t *drive);
 
 #if McuFatFS_CONFIG_SHELL_ENABLED
   #include "McuShell.h"

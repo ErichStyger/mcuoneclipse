@@ -10,14 +10,29 @@
 
 #if PL_CONFIG_USE_SD_CARD
 
-#define CARD_DETECT_GPIO        GPIOC
-#define CARD_DETECT_PORT        PORTC
-#define CARD_DETECT_PIN         0U
+#if 0 /* tinyK22 */
+  #define CARD_DETECT_GPIO        GPIOC
+  #define CARD_DETECT_PORT        PORTC
+  #define CARD_DETECT_PIN         0U
+  #define FatFS_CardDetect_Pull         McuGPIO_PULL_DOWN /* tinyK22: */
+  #define FatFS_CardDetect_HighActive   (1)  /* tinyK22 */
+#else /* LPC55S16*/
+  #define CARD_DETECT_GPIO        GPIO
+  #define CARD_DETECT_PORT        0
+  #define CARD_DETECT_PIN         16U
+
+  #define FatFS_CardDetect_Pull           McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
+  #define FatFS_CardDetect_HighActive     (1)  /*  https://www.pololu.com/product/2587 */
+#endif
 
 static McuGPIO_Handle_t FatFS_CardDetectPin;
 
 bool McuFatFS_IsDiskPresent(uint8_t drv) {
-  return McuGPIO_IsHigh(FatFS_CardDetectPin); /* pin has internal pull-down. Pin is high if card is inserted */
+#if FatFS_CardDetect_HighActive
+  return McuGPIO_IsHigh(FatFS_CardDetectPin); /* Pin is high if card is inserted */
+#else
+  return McuGPIO_IsLow(FatFS_CardDetectPin); /* Pin is low if card is inserted */
+#endif
 }
 
 bool McuFatFS_IsWriteProtected(uint8_t drv) {
@@ -33,7 +48,9 @@ void FatFS_SdCardInit(void) {
   config.hw.port = CARD_DETECT_PORT;
   config.hw.pin = CARD_DETECT_PIN;
   FatFS_CardDetectPin = McuGPIO_InitGPIO(&config);
-  McuGPIO_SetPullResistor(FatFS_CardDetectPin, McuGPIO_PULL_DOWN);
+  if (FatFS_CardDetect_Pull!=McuGPIO_PULL_DISABLE) {
+    McuGPIO_SetPullResistor(FatFS_CardDetectPin, FatFS_CardDetect_Pull);
+  }
 }
 
 #endif /* PL_CONFIG_USE_SD_CARD */

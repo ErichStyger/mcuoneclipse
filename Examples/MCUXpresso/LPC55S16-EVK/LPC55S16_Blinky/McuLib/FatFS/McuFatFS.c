@@ -1459,7 +1459,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
   } /* switch */
   return TRUE;
 #else
-  return McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(drv);
+  return McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(drvStr);
 #endif
 }
 
@@ -1490,7 +1490,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
   } /* switch */
   return FALSE;
 #else
-  return McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(drv);
+  return McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(drvStr);
 #endif
 }
 

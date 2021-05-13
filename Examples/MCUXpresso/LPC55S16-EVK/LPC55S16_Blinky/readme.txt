@@ -13,3 +13,4 @@ Open points:
 For UART over the Debug port:
 - JP9 (lower left corner, near PMod connector) has to be open
 - Mux pin 92 (FC0_RXDA_SDA) and pin 94 (FC0_TXD_SCL) as FLEXCOMM
+- Note Tx from host sometimes is garbled? Issue of J-Link firmware?
