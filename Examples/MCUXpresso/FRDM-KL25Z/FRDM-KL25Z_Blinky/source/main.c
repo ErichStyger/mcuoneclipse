@@ -73,16 +73,19 @@ int main(void) {
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
       McuLED_On(LEDS_red);
-      McuWait_Waitms(500);
+      McuWait_Waitms(100);
       McuLED_Off(LEDS_red);
+      McuWait_Waitms(500);
 
       McuLED_On(LEDS_green);
-      McuWait_Waitms(500);
+      McuWait_Waitms(100);
       McuLED_Off(LEDS_green);
+      McuWait_Waitms(500);
 
       McuLED_On(LEDS_blue);
-      McuWait_Waitms(500);
+      McuWait_Waitms(100);
       McuLED_Off(LEDS_blue);
+      McuWait_Waitms(500);
     }
     return 0 ;
 }
