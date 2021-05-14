@@ -30,6 +30,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
+#if PL_CONFIG_USE_MININI
+  McuMinINI_ParseCommand,
+#endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
   DISK_ParseCommand,

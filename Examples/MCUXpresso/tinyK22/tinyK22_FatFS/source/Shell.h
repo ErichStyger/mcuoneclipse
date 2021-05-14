@@ -15,5 +15,4 @@ void SHELL_Init(void);
 /*! \brief Shell driver de-initialization */
 void SHELL_Deinit(void);
 
-
 #endif /* SHELL_H_ */

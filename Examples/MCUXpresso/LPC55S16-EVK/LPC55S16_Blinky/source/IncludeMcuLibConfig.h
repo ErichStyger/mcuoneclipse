@@ -74,7 +74,9 @@ Instructions:
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PORT            0
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PIN             17U
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PULL            McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
-
+/* -------------------------------------------------*/
+/* MinINI */
+#define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"

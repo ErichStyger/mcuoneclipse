@@ -12,7 +12,7 @@
 #define PL_CONFIG_USE_USB_CDC     (0)
 #define PL_CONFIG_USE_SD_CARD     (1)
 #define PL_CONFIG_USE_USB_MSD     (0)
-#define PL_CONFIG_USE_MININI      (0)
+#define PL_CONFIG_USE_MININI      (1)
 
 void PL_Init(void);
 

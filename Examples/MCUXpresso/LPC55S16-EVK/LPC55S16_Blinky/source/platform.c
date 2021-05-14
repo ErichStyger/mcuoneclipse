@@ -25,6 +25,9 @@
   #include "McuFatFS_CardPins.h"
   #include "disk.h"
 #endif
+#if PL_CONFIG_USE_MININI
+  #include "McuMinINI.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
