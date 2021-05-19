@@ -17,6 +17,7 @@
 
 #define PL_CONFIG_USE_I2C           (1)
 #define PL_CONFIG_USE_HW_I2C        (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
+#define PL_CONFIG_USE_OLED          (1 && PL_CONFIG_USE_I2C)
 
 void PL_Init(void);
 

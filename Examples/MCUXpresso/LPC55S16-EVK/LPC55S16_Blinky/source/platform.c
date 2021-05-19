@@ -34,6 +34,9 @@
   #include "i2clib.h"
   #include "McuGenericI2C.h"
 #endif
+#if PL_CONFIG_USE_OLED
+  #include "McuSSD1306.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -77,7 +80,9 @@ void PL_Init(void) {
   //CLOCK_EnableClock(kCLOCK_PortA);  /* need PORTA for I2C Bitbanging */
   McuGenericSWI2C_Init();
   #endif
-  //McuSSD1306_Init();
-  //MyGui_Init();
 #endif /* PL_CONFIG_USE_I2C */
+#if PL_CONFIG_USE_OLED
+  McuSSD1306_Init();
+  MyGui_Init();
+#endif
 }

@@ -353,10 +353,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.964463517.123759223" name="/" resourcePath="McuLib/fonts">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1350494998" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1601002848" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2041070601"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.127042719" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.341432283"/>
+							<tool id="com.crt.advproject.gas.exe.debug.394659648" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1352020453"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.1460734458" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.462921836"/>
+							<tool id="com.crt.advproject.link.exe.debug.391409672" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1636572860"/>
+							<tool id="com.crt.advproject.tool.debug.debug.895007948" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1104060562"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
-						<entry excluding="FatFS/source/fsl_usb_disk|FatFS/source/fsl_ram_disk|FatFS/source/fsl_sd_disk|FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|TraceRecorder|LittlevGL|HD44780|fonts" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FatFS/source/fsl_usb_disk|FatFS/source/fsl_ram_disk|FatFS/source/fsl_sd_disk|FreeRTOS/Source/portable/GCC/ARM_CM33|FreeRTOS/Source/portable/GCC/RISC-V|TraceRecorder|LittlevGL|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
