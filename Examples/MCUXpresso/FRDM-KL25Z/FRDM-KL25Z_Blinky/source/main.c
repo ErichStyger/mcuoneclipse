@@ -39,13 +39,8 @@
 #include "clock_config.h"
 #include "MKL25Z4.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
-#include "leds.h"
-#include "McuLib.h"
-#include "McuWait.h"
-#include "McuGPIO.h"
-#include "McuLED.h"
+#include "application.h"
 
 /*
  * @brief   Application entry point.
@@ -60,32 +55,7 @@ int main(void) {
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
 #endif
+    APP_Run();
 
-    CLOCK_EnableClock(kCLOCK_PortB);
-    CLOCK_EnableClock(kCLOCK_PortD);
-
-    McuLib_Init();
-    McuWait_Init();
-    McuGPIO_Init();
-    McuLED_Init();
-    LEDS_Init();
-
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-      McuLED_On(LEDS_red);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_red);
-      McuWait_Waitms(500);
-
-      McuLED_On(LEDS_green);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_green);
-      McuWait_Waitms(500);
-
-      McuLED_On(LEDS_blue);
-      McuWait_Waitms(100);
-      McuLED_Off(LEDS_blue);
-      McuWait_Waitms(500);
-    }
     return 0 ;
 }

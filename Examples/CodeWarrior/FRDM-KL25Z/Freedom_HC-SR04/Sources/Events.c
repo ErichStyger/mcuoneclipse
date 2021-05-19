@@ -35,7 +35,7 @@
 **     Returns     : Nothing
 ** ===================================================================
 */
-void Cpu_OnNMIINT(void)
+void Cpu_OnNMIINT(void) 
 {
   /* Write your code here ... */
 }
