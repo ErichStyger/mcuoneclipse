@@ -11,8 +11,9 @@
 #define PL_CONFIG_USE_RTT         (1)
 #define PL_CONFIG_USE_USB_CDC     (0)
 #define PL_CONFIG_USE_SD_CARD     (1)
-#define PL_CONFIG_USE_USB_MSD     (0)
 #define PL_CONFIG_USE_MININI      (1)
+#define PL_CONFIG_USE_USB_MSD     (0)
+#define PL_CONFIG_USE_SWO         (0)  /* does not work yet! */
 
 void PL_Init(void);
 

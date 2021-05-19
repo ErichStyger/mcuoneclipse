@@ -223,6 +223,7 @@ called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
 - {id: System_clock.outFreq, value: 150 MHz}
+- {id: TRACE_clock.outFreq, value: 150 MHz}
 settings:
 - {id: PLL0_Mode, value: Normal}
 - {id: ENABLE_CLKIN_ENA, value: Enabled}
@@ -232,6 +233,8 @@ settings:
 - {id: SYSCON.PLL0M_MULT.scale, value: '150', locked: true}
 - {id: SYSCON.PLL0N_DIV.scale, value: '8', locked: true}
 - {id: SYSCON.PLL0_PDEC.scale, value: '2', locked: true}
+- {id: SYSCON.TRACECLKSEL.sel, value: SYSCON.TRACECLKDIV}
+- {id: TRACECLKDIV_HALT, value: Enable}
 sources:
 - {id: SYSCON.XTAL32M.outFreq, value: 16 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -278,9 +281,12 @@ void BOARD_BootClockPLL150M(void)
 
     /*!< Set up dividers */
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);               /*!< Reset TRACECLKDIV divider counter and halt it */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);         /*!< Set TRACECLKDIV divider to value 1 */
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kPLL0_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to PLL0 */
+    CLOCK_AttachClk(kTRACE_DIV_to_TRACE);                 /*!< Switch TRACE to TRACE_DIV */
 
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKPLL150M_CORE_CLOCK;

@@ -45,6 +45,12 @@ void BOARD_InitBootPins(void);
 #define IOCON_PIO_SLEW_STANDARD 0x00u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_10_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 6. */
+#define PIO0_10_FUNC_ALT6 0x06u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO0_26_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
@@ -70,6 +76,10 @@ void BOARD_InitBootPins(void);
 /* @} */
 
 /*! @name FC0_TXD_SCL_MISO_WS (number 94), U11[13]/U22[13]/FC0_USART_TXD
+  @{ */
+/* @} */
+
+/*! @name SWO (number 21), J9[1]/U18[12]/N4M_SWO
   @{ */
 /* @} */
 
