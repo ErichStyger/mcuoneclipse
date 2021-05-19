@@ -36,6 +36,7 @@
 #endif
 #if PL_CONFIG_USE_OLED
   #include "McuSSD1306.h"
+  #include "MyGui.h"
 #endif
 
 void PL_Init(void) {
