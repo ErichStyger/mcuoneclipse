@@ -156,7 +156,7 @@
                   <setting id="ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG" value="Enable" locked="false"/>
                   <setting id="SYSCON.MAINCLKSELA.sel" value="ANACTRL.fro_hf_clk" locked="false"/>
                </clock_settings>
-               <called_from_default_init>false</called_from_default_init>
+               <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
             <clock_configuration name="BOARD_BootClockPLL100M">
                <description></description>
@@ -276,7 +276,7 @@
                   <setting id="SYSCON.TRACECLKSEL.sel" value="SYSCON.TRACECLKDIV" locked="false"/>
                   <setting id="TRACECLKDIV_HALT" value="Enable" locked="false"/>
                </clock_settings>
-               <called_from_default_init>true</called_from_default_init>
+               <called_from_default_init>false</called_from_default_init>
             </clock_configuration>
             <clock_configuration name="BOARD_BootClockPLL1_150M">
                <description></description>

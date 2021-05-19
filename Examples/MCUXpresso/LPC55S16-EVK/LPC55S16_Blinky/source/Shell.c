@@ -17,6 +17,9 @@
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
 #endif
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
 #include "disk.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -32,6 +35,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuTimeDate_ParseCommand,
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
+#endif
+#if PL_CONFIG_USE_NVMC
+  NVMC_ParseCommand,
 #endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,

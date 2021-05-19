@@ -38,6 +38,9 @@
   #include "McuSSD1306.h"
   #include "MyGui.h"
 #endif
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -85,5 +88,8 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_OLED
   McuSSD1306_Init();
   MyGui_Init();
+#endif
+#if PL_CONFIG_USE_NVMC
+  NVMC_Init();
 #endif
 }
