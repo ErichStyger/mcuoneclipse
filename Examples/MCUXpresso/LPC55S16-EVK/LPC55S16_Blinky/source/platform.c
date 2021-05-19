@@ -30,12 +30,16 @@
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "McuSystemView.h"
 #endif
+#if PL_CONFIG_USE_I2C
+  #include "i2clib.h"
+  #include "McuGenericI2C.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
   CLOCK_EnableClock(kCLOCK_Gpio0); /* for button on P0_7 */
   GPIO_PortInit(GPIO, 0); /* Initialize GPIO button */
-  CLOCK_EnableClock(kCLOCK_Gpio1); /* LEDs and user buttons */
+  CLOCK_EnableClock(kCLOCK_Gpio1); /* LEDs and user buttons, plus I2C */
   GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
 
   McuLib_Init();
@@ -64,4 +68,16 @@ void PL_Init(void) {
   McuFatFS_CardPinInit();
   DISK_Init();
 #endif
+
+#if PL_CONFIG_USE_I2C
+  McuGenericI2C_Init();
+  #if PL_CONFIG_USE_HW_I2C
+  I2CLIB_Init();
+  #else
+  //CLOCK_EnableClock(kCLOCK_PortA);  /* need PORTA for I2C Bitbanging */
+  McuGenericSWI2C_Init();
+  #endif
+  //McuSSD1306_Init();
+  //MyGui_Init();
+#endif /* PL_CONFIG_USE_I2C */
 }
