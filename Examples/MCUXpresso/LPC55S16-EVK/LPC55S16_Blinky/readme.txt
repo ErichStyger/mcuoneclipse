@@ -5,9 +5,8 @@ Open points:
 - add extra defines
 - secure heap handling
 - RTT does not recognize the _SEGGER_RTT block
-  Range: 0x20000000 0x1000 (reported to Segger, not yet fixed in V7.20a)
+  	Range: 0x20000000 0x1000 (reported to Segger, not yet fixed in V7.20a)
 - Drivers: I2C, Flash Programming
-- SystemViewer
 - PL_CONFIG_USE_SWO does not work
 
 For UART over the Debug port:

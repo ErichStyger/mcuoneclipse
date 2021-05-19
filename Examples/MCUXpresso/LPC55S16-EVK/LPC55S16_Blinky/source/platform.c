@@ -13,7 +13,6 @@
 #include "McuShellUart.h"
 #include "McuShell.h"
 #include "McuRTT.h"
-#include "McuSystemView.h"
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuDebounce.h"
@@ -27,6 +26,9 @@
 #endif
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
+#endif
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  #include "McuSystemView.h"
 #endif
 
 void PL_Init(void) {
