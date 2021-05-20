@@ -74,7 +74,10 @@ __attribute__ ((used,section(".FlashConfig"))) const struct {
     unsigned int word2;
     unsigned int word3;
     unsigned int word4;
-} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFE};
+} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+//    0x0
+    0xFFFFFFFE
+};
 
 //*****************************************************************************
 // Declaration of external SystemInit function
@@ -295,9 +298,15 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
+#include "MKL25Z4.h"
+
 __attribute__ ((section(".after_vectors.reset")))
 void ResetISR(void) {
-
+//  SCB->AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
+//__asm("nop");
+//__asm("nop");
+//__asm("nop");
+//__asm("nop");
     // Disable interrupts
     __asm volatile ("cpsid i");
 
