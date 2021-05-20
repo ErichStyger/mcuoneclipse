@@ -12,7 +12,7 @@ int PICModule_Calculate(int val) {
 }
 
 void PICModule_DoThings(void) {
-
+  (void)PICModule_Calculate(3);
 }
 
 void PICModule_Init(void) {

@@ -339,16 +339,18 @@ void data_init(unsigned int romstart, unsigned int start, unsigned int len) {
     unsigned int *pulDest = (unsigned int*) start;
     unsigned int *pulSrc = (unsigned int*) romstart;
     unsigned int loop;
-    for (loop = 0; loop < len; loop = loop + 4)
+    for (loop = 0; loop < len; loop = loop + 4) {
         *pulDest++ = *pulSrc++;
+    }
 }
 
 __attribute__ ((section(".after_vectors.init_bss")))
 void bss_init(unsigned int start, unsigned int len) {
     unsigned int *pulDest = (unsigned int*) start;
     unsigned int loop;
-    for (loop = 0; loop < len; loop = loop + 4)
+    for (loop = 0; loop < len; loop = loop + 4) {
         *pulDest++ = 0;
+    }
 }
 
 //*****************************************************************************
@@ -370,16 +372,12 @@ extern unsigned int __bss_section_table_end;
 //*****************************************************************************
 __attribute__ ((section(".after_vectors.reset")))
 void ResetISR(void) {
-
     // Disable interrupts
     __asm volatile ("cpsid i");
-
-
 
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
     SystemInit();
-
 #endif // (__USE_CMSIS)
 
     //
@@ -435,6 +433,7 @@ void ResetISR(void) {
     // Call the Redlib library, which in turn calls main()
     __main();
 #else
+    __asm("LDR r9, =_sgot");
     main();
 #endif
 
