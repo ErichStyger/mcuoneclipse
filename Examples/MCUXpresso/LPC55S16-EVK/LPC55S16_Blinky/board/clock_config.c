@@ -101,9 +101,13 @@ called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
 - {id: System_clock.outFreq, value: 96 MHz}
+- {id: TRACE_clock.outFreq, value: 96 MHz}
 settings:
 - {id: ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG, value: Enable}
 - {id: SYSCON.MAINCLKSELA.sel, value: ANACTRL.fro_hf_clk}
+- {id: SYSCON.TRACECLKDIV.scale, value: '1', locked: true}
+- {id: SYSCON.TRACECLKSEL.sel, value: SYSCON.TRACECLKDIV}
+- {id: TRACECLKDIV_HALT, value: Enable}
 sources:
 - {id: ANACTRL.fro_hf.outFreq, value: 96 MHz}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -131,9 +135,12 @@ void BOARD_BootClockFROHF96M(void)
 
     /*!< Set up dividers */
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);               /*!< Reset TRACECLKDIV divider counter and halt it */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);         /*!< Set TRACECLKDIV divider to value 1 */
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO_HF */
+    CLOCK_AttachClk(kTRACE_DIV_to_TRACE);                 /*!< Switch TRACE to TRACE_DIV */
 
     /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK;

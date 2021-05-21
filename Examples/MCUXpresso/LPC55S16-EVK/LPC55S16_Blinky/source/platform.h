@@ -13,7 +13,7 @@
 #define PL_CONFIG_USE_SD_CARD     (1)
 #define PL_CONFIG_USE_MININI      (1)
 #define PL_CONFIG_USE_USB_MSD     (0)
-#define PL_CONFIG_USE_SWO         (0)  /* does not work yet! */
+#define PL_CONFIG_USE_SWO         (1)  /* does not work yet! */
 
 #define PL_CONFIG_USE_I2C         (1)
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */

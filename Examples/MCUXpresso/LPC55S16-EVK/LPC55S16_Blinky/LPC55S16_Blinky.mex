@@ -151,10 +151,14 @@
                <clock_outputs>
                   <clock_output id="FRO_12MHz_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
+                  <clock_output id="TRACE_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG" value="Enable" locked="false"/>
                   <setting id="SYSCON.MAINCLKSELA.sel" value="ANACTRL.fro_hf_clk" locked="false"/>
+                  <setting id="SYSCON.TRACECLKDIV.scale" value="1" locked="true"/>
+                  <setting id="SYSCON.TRACECLKSEL.sel" value="SYSCON.TRACECLKDIV" locked="false"/>
+                  <setting id="TRACECLKDIV_HALT" value="Enable" locked="false"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
