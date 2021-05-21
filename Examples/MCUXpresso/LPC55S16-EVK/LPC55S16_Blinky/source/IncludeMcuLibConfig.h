@@ -142,6 +142,6 @@ Instructions:
 #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
 
 
-#define McuWait_CONFIG_USE_CYCLE_COUNTER (0) /* does not work without debugger? */
+#define McuWait_CONFIG_USE_CYCLE_COUNTER (1) /* does not work without debugger? */
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -7,8 +7,9 @@ Open points:
 - RTT does not recognize the _SEGGER_RTT block
   	Range: 0x20000000 0x1000 (reported to Segger, not yet fixed in V7.20a)
 - Drivers: I2C (HW), Flash Programming
-- PL_CONFIG_USE_SWO does not work
-- McuWait_CONFIG_USE_CYCLE_COUNTER problem with HW init?
+- PL_CONFIG_USE_SWO
+  With J-Link it changes the SWO baud, need to set it again with SWO_SetSpeed()
+
 
 For UART over the Debug port:
 - JP9 (lower left corner, near PMod connector) has to be open

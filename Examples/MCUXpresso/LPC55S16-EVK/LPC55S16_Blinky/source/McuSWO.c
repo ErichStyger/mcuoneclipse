@@ -107,7 +107,11 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
         | (  1<<DWT_CTRL_CYCTAP_Pos)     /* 1 bits: This selects which bit in the cycle counter is used to trigger PC sampling events. A 1 selects bit 10 to tap, a 0 selects bit 6 to tap. */
         | (0xF<<DWT_CTRL_POSTINIT_Pos)   /* 4 bits */
         | (0xF<<DWT_CTRL_POSTPRESET_Pos) /* 4 bits: These bits control how many times the time bit must toggle before a PC sample event is generated. */
+#if McuWait_CONFIG_USE_CYCLE_COUNTER
+        | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
+#else
         | (  0<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
+#endif
     ;
   *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; /* Formatter and Flush Control Register */
 }
