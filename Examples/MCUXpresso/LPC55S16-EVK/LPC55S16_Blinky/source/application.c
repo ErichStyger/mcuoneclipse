@@ -113,6 +113,7 @@ void APP_Run(void) {
   PL_Init(); /* init modules */
 #if PL_CONFIG_USE_SWO
   SWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
+  SWO_SetSpeed(); /* execute again if J-Link has changed speed */
 #endif
 
   //for(int i=0;i<2;i++) {

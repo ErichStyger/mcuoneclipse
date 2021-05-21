@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.crt.dsfdebug.crtmcu.launchType">
 <stringAttribute key=".gdbinit" value=""/>
+<stringAttribute key="InstructionTraceInfo" value="eJytVF1PwjAUfTfxPzR9RzYUHAmTwJDEhBkCEx9N2S4w6VrSdn78e9utQ5cMNdE+bfece9p77m0Hw7eMohcQMuXMx+6FgxGwmCcp2/r4IZq2PDy8OT8bgMpArSegSEqlCUREbEFNgahcgEQheeZiVelolTBltYDJuY3CMZGA5joDmPLxhlAJuG2wyWNUYKMk0aj0cat72fN6Pc/t4c8EJXLLv7Nadf6103c7jfzbaHxy7/A7TFf9qk7CkSAxTHPGgDaX9apGIlt5ARewTLc7FfDswJmmIaPZWG0gZzze+/g+p7T8xkjrLGC7VFpGu9m4ul5zvFrJ97DT/QHfOH0P21Ztqr6bImqnt4RYl0kE0eeV6D7P1iB8fFVasswPBy4UJCjIDiFR8c72CQXvMYWA50wZehEzCcYyO3loQhQx/5XJaJayvXv8C8lbSOS+mMBqW6fc9o8q7r+odP5F5bJUaR+dtJM2F3yTUn11rYfSNuMpiBYztCI0h6Md7VP89pf2VsQTI1zcQ5X9arbtzWyY7fI49fekCNXfnA8AiW0vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
 <booleanAttribute key="attach" value="false"/>
 <stringAttribute key="bootrom.stall" value="0x50000040"/>
 <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="LinkServer"/>
 <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
 <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
 <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
+<booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
 <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerNXP SemiconductorsMCU-LINK r0CF CMSIS-DAP V0.0004FIQSNVD2MICA"/>
 <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
 <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
@@ -44,7 +46,7 @@
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set non-stop on&#10;set pagination off&#10;set mi-async&#10;set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
 <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
@@ -63,7 +65,7 @@
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
-<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
