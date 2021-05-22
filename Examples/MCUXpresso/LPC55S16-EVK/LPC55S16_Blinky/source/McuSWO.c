@@ -85,7 +85,7 @@ static void PrintRegHex(McuShell_ConstStdIOType *io, uint32_t regVal, const char
 }
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
-  uint8_t buf[64];
+  uint8_t buf[72];
 
   McuShell_SendStatusStr((const unsigned char*)"McuSWO", (const unsigned char*)"McuSWO module status\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"SystemCoreClock: ");
@@ -101,8 +101,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (DEMCR)\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  CoreDebug", buf, io->stdOut);
 
+  McuShell_SendStatusStr((const unsigned char*)"  DWT", (const unsigned char*)"Data Watchpoint and Trace\r\n", io->stdOut);
   /* DWT Trace Control register */
-  PrintRegHex(io, DWT->CTRL, "  DWT CTRL", " (Control)\r\n");
+  PrintRegHex(io, DWT->CTRL, "   CTRL", " (Control)\r\n");
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), (DWT->CTRL&DWT_CTRL_NUMCOMP_Msk)>>DWT_CTRL_NUMCOMP_Pos);
@@ -140,27 +141,44 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuShell_SendStatusStr((const unsigned char*)"", buf, io->stdOut);
 
   /* ITM registers */
-  PrintRegHex(io, ITM->TER, "  ITM TER", " (trace enable stimulus ports)\r\n");
-  PrintRegHex(io, ITM->TPR, "  ITM TPR", " (trace privilege)\r\n");
-  PrintRegHex(io, ITM->TCR, "  ITM TCR", " (trace control)\r\n");
-  /* write only: PrintRegHex(io, ITM->LAR, "  ITM LAR", " (lock access)\r\n"); */
-  PrintRegHex(io, ITM->LSR, "  ITM LSR", " (lock status)\r\n");
-  PrintRegHex(io, ITM->DEVARCH, "  ITM DEVARCH", " (device architecture, M33 only)\r\n");
-  PrintRegHex(io, ITM->PID0, "  ITM PID0", " (peripheral identification 0)\r\n");
-  PrintRegHex(io, ITM->PID1, "  ITM PID1", " (peripheral identification 1)\r\n");
-  PrintRegHex(io, ITM->PID2, "  ITM PID2", " (peripheral identification 2)\r\n");
-  PrintRegHex(io, ITM->PID3, "  ITM PID3", " (peripheral identification 3)\r\n");
-  PrintRegHex(io, ITM->PID4, "  ITM PID4", " (peripheral identification 4)\r\n");
-  PrintRegHex(io, ITM->PID5, "  ITM PID5", " (peripheral identification 5)\r\n");
-  PrintRegHex(io, ITM->PID6, "  ITM PID6", " (peripheral identification 6)\r\n");
-  PrintRegHex(io, ITM->PID7, "  ITM PID8", " (peripheral identification 7)\r\n");
-  PrintRegHex(io, ITM->CID0, "  ITM CID0", " (component identification 0)\r\n");
-  PrintRegHex(io, ITM->CID1, "  ITM CID1", " (component identification 1)\r\n");
-  PrintRegHex(io, ITM->CID2, "  ITM CID2", " (component identification 2)\r\n");
-  PrintRegHex(io, ITM->CID3, "  ITM CID3", " (component identification 3)\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  ITM", (const unsigned char*)"Instrumentation Trace Macrocell\r\n", io->stdOut);
+  PrintRegHex(io, ITM->TER, "   TER", " (trace enable stimulus ports)\r\n");
+  PrintRegHex(io, ITM->TPR, "   TPR", " (trace privilege)\r\n");
+  PrintRegHex(io, ITM->TCR, "   TCR", " (trace control)\r\n");
+  PrintRegHex(io, ITM->LSR, "   LSR", " (lock status)\r\n");
+  PrintRegHex(io, ITM->DEVARCH, "   DEVARCH", " (device architecture, M33 only)\r\n");
+  PrintRegHex(io, ITM->PID0, "   PID0", " (peripheral identification 0)\r\n");
+  PrintRegHex(io, ITM->PID1, "   PID1", " (peripheral identification 1)\r\n");
+  PrintRegHex(io, ITM->PID2, "   PID2", " (peripheral identification 2)\r\n");
+  PrintRegHex(io, ITM->PID3, "   PID3", " (peripheral identification 3)\r\n");
+  PrintRegHex(io, ITM->PID4, "   PID4", " (peripheral identification 4)\r\n");
+  PrintRegHex(io, ITM->PID5, "   PID5", " (peripheral identification 5)\r\n");
+  PrintRegHex(io, ITM->PID6, "   PID6", " (peripheral identification 6)\r\n");
+  PrintRegHex(io, ITM->PID7, "   PID8", " (peripheral identification 7)\r\n");
+  PrintRegHex(io, ITM->CID0, "   CID0", " (component identification 0)\r\n");
+  PrintRegHex(io, ITM->CID1, "   CID1", " (component identification 1)\r\n");
+  PrintRegHex(io, ITM->CID2, "   CID2", " (component identification 2)\r\n");
+  PrintRegHex(io, ITM->CID3, "   CID3", " (component identification 3)\r\n");
 
-  /* TPI Trace Port Interface */
-  PrintRegHex(io, TPI->ACPR, "  TPI ACPR", " (Asynchronous Clock Prescaler)\r\n");
+  /* TPI: Trace Port Interface */
+  McuShell_SendStatusStr((const unsigned char*)"  TPI", (const unsigned char*)"Trace Port Interface\r\n", io->stdOut);
+  PrintRegHex(io, TPI->SSPSR, "   SSPSR", " (Supported Parallel Port Size)\r\n");
+  PrintRegHex(io, TPI->CSPSR, "   CSPSR", " (Current Parallel Port Size)\r\n");
+  PrintRegHex(io, TPI->ACPR,  "   ACPR",  " (Asynchronous Clock Prescaler)\r\n");
+  PrintRegHex(io, TPI->SPPR,  "   SPPR",  " (Selected Pin Protocol)\r\n");
+  PrintRegHex(io, TPI->FFSR,  "   FFSR",  " (Formatter and Flush Status)\r\n");
+  PrintRegHex(io, TPI->FFCR,  "   FFSR",  " (Formatter and Flush Control)\r\n");
+  PrintRegHex(io, TPI->PSCR,  "   PSCR",  " (Periodic Synchronization Control)\r\n");
+  PrintRegHex(io, TPI->TRIGGER,  "   TRIGGER",  " (Trigger)\r\n");
+  PrintRegHex(io, TPI->ITFTTD0,  "   ITFTTD0",  " (Integration Test FIFO Test Data 0)\r\n");
+  PrintRegHex(io, TPI->ITATBCTR2,  "   ITATBCTR2",  " (Integration Test ATB Control 2)\r\n");
+  PrintRegHex(io, TPI->ITATBCTR0,  "   ITATBCTR0",  " (Integration Test ATB Control 0)\r\n");
+  PrintRegHex(io, TPI->ITFTTD1,  "   ITFTTD1",  " (Integration Test FIFO Test Data 1)\r\n");
+  PrintRegHex(io, TPI->ITCTRL,  "   ITCTRL",  " (Integration Mode Control)\r\n");
+  PrintRegHex(io, TPI->CLAIMSET,  "   CLAIMSET",  " (Claim tag set)\r\n");
+  PrintRegHex(io, TPI->CLAIMCLR,  "   CLAIMCLR",  " (Claim tag clear)\r\n");
+  PrintRegHex(io, TPI->DEVID,  "   DEVID",  " (Device Configuration)\r\n");
+  PrintRegHex(io, TPI->DEVTYPE,  "   DEVTYPE",  " (Device Type Identifier)\r\n");
   return ERR_OK;
 }
 
@@ -204,6 +222,7 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
     *handled = TRUE;
     p = cmd + sizeof("McuSWO send ")-1;
     PrintString(p, McuSWO_CONFIG_TERMINAL_CHANNEL);
+    PrintString((unsigned char*)"\r\n", McuSWO_CONFIG_TERMINAL_CHANNEL);
   }
   return ERR_OK; /* no error */
 }
@@ -246,7 +265,7 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
         | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
 #endif
     ;
-  *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; /* Formatter and Flush Control Register */
+  TPI->FFCR = 0x00000100; /* Formatter and Flush Control Register */
 }
 
 void McuSWO_SetSpeed(void) {
