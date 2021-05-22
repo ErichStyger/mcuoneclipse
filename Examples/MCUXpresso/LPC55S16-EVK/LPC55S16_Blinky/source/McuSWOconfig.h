@@ -12,8 +12,13 @@
   /*!< baud of SWO data */
 #endif
 
+#ifndef McuSWO_CONFIG_TERMINAL_CHANNEL
+  #define McuSWO_CONFIG_TERMINAL_CHANNEL   (0)
+  /*!< default SWO channel for terminal */
+#endif
+
 #ifndef McuSWO_CONFIG_PC_SAMPLING
-  #define McuSWO_CONFIG_PC_SAMPLING   (1)
+  #define McuSWO_CONFIG_PC_SAMPLING   (0)
   /*!< if SWO PC sampling is turned on */
 #endif
 

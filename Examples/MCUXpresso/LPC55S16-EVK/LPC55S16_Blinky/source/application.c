@@ -116,10 +116,10 @@ void APP_Run(void) {
   McuSWO_SetSpeed(); /* execute again if J-Link has changed speed */
 #endif
 
-  //for(int i=0;i<2;i++) {
-  for(;;) {
+  for(int i=0;i<2;i++) {
+  //for(;;) {
 #if PL_CONFIG_USE_SWO
-    McuSWO_SendStr("hello world using ITM console.\n");
+    McuSWO_SendStr((unsigned char*)"hello world using ITM console.\n");
 #endif
     LEDS_On(LEDS_RED);
     McuWait_Waitms(100);

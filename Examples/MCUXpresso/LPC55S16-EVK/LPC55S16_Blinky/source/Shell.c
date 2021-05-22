@@ -20,6 +20,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_USE_SWO
+  #include "McuSWO.h"
+#endif
 #include "disk.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -38,6 +41,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_NVMC
   NVMC_ParseCommand,
+#endif
+#if PL_CONFIG_USE_SWO
+  McuSWO_ParseCommand,
 #endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
