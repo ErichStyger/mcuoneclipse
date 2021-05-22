@@ -7,11 +7,22 @@
 #ifndef SWO_H_
 #define SWO_H_
 
-void SWO_SendStr(const char *str);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "McuSWOconfig.h"
+
+/* send a string through SWO ITM Port 0 (0x1) */
+void McuSWO_SendStr(const char *str);
 
 /* used to set speed back to desired value */
-void SWO_SetSpeed(void);
+void McuSWO_SetSpeed(void);
 
-void SWO_Init(void);
+void McuSWO_Init(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SWO_H_ */

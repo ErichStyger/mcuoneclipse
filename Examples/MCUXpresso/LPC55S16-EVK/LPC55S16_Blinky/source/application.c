@@ -112,14 +112,14 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 #if PL_CONFIG_USE_SWO
-  SWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
-  SWO_SetSpeed(); /* execute again if J-Link has changed speed */
+  McuSWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
+  McuSWO_SetSpeed(); /* execute again if J-Link has changed speed */
 #endif
 
   //for(int i=0;i<2;i++) {
   for(;;) {
 #if PL_CONFIG_USE_SWO
-    SWO_SendStr("hello world using ITM console.\n");
+    McuSWO_SendStr("hello world using ITM console.\n");
 #endif
     LEDS_On(LEDS_RED);
     McuWait_Waitms(100);

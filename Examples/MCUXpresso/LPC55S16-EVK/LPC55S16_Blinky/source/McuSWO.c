@@ -8,8 +8,6 @@
 #include "board.h"
 #include "pin_mux.h"
 
-#define SWO_CONFIG_SPEED   (64000)
-
 /*!
  * \brief Sends a character over the SWO channel
  * \param c Character to be sent
@@ -49,7 +47,7 @@ void PrintString(const char *s, uint8_t portNumber) {
   }
 }
 
-void SWO_SendStr(const char *str) {
+void McuSWO_SendStr(const char *str) {
   PrintString(str, 0);
 }
 
@@ -87,8 +85,8 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
 
   /*!< Set up dividers */
   CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
-  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);               /*!< Reset TRACECLKDIV divider counter and halt it */
-  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);         /*!< Set TRACECLKDIV divider to value 1 */
+  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);     /*!< Reset TRACECLKDIV divider counter and halt it */
+  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);    /*!< Set TRACECLKDIV divider to value 1 */
 
   /*!< Switch TRACE to TRACE_DIV */
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
@@ -102,24 +100,24 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
   ITM->TER = portBits; /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
   *((volatile unsigned *)(ITM_BASE + 0x01000)) =  /* DWT_CTRL */ /* see https://interrupt.memfault.com/blog/profiling-firmware-on-cortex-m#enabling-pc-sampling-with-itm-and-openocd */
           (  4<<DWT_CTRL_NUMCOMP_Pos)    /* 4 bits */
-        | (  0<<DWT_CTRL_PCSAMPLENA_Pos) /* 1 bit: enable PC sampling */
+#if McuSWO_CONFIG_PC_SAMPLING
+        | (  1<<DWT_CTRL_PCSAMPLENA_Pos) /* 1 bit: enable PC sampling */
+#endif
         | (  0<<DWT_CTRL_SYNCTAP_Pos)    /* 2 bits */
         | (  1<<DWT_CTRL_CYCTAP_Pos)     /* 1 bits: This selects which bit in the cycle counter is used to trigger PC sampling events. A 1 selects bit 10 to tap, a 0 selects bit 6 to tap. */
         | (0xF<<DWT_CTRL_POSTINIT_Pos)   /* 4 bits */
         | (0xF<<DWT_CTRL_POSTPRESET_Pos) /* 4 bits: These bits control how many times the time bit must toggle before a PC sample event is generated. */
-#if McuWait_CONFIG_USE_CYCLE_COUNTER
+#if McuWait_CONFIG_USE_CYCLE_COUNTER || McuSWO_CONFIG_PC_SAMPLING
         | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
-#else
-        | (  0<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
 #endif
     ;
   *((volatile unsigned *)(ITM_BASE + 0x40304)) = 0x00000100; /* Formatter and Flush Control Register */
 }
 
-void SWO_SetSpeed(void) {
-  SetSWOSpeed(SystemCoreClock, SWO_CONFIG_SPEED);
+void McuSWO_SetSpeed(void) {
+  SetSWOSpeed(SystemCoreClock, McuSWO_CONFIG_SPEED);
 }
 
-void SWO_Init(void) {
-  Init(1, SystemCoreClock, SWO_CONFIG_SPEED);
+void McuSWO_Init(void) {
+  Init(1, SystemCoreClock, McuSWO_CONFIG_SPEED);
 }
