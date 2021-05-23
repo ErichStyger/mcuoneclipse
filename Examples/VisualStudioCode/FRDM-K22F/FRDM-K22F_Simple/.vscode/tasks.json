@@ -14,9 +14,10 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": {
+                "base": "$gcc", 
+                "fileLocation": ["relative", "${workspaceRoot}/build"]
+            }
         },
         {
             "type": "shell",
@@ -26,9 +27,10 @@
                 "cwd": "${workspaceFolder}/build"
             },
             "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": {
+                "base": "$gcc", 
+                "fileLocation": ["relative", "${workspaceRoot}/build"]
+            }
         }
     ]
 }

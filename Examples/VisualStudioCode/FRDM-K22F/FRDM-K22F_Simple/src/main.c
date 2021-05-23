@@ -9,7 +9,6 @@ int32_t global = 0;
 
 int main(void) {
     int local = 0;
-
     for(;;) {
         global++;
         local += 2;
