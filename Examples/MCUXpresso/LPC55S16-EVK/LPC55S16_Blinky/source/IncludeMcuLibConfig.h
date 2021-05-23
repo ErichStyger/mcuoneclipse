@@ -80,6 +80,7 @@ Instructions:
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
+#define McuShell_CONFIG_ECHO_ENABLED                     (1)
 #define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
 /* -----------------------------------------------------*/
 /* RTT */

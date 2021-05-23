@@ -9,6 +9,13 @@ Open points:
 - Drivers: I2C (HW), Flash Programming
 - PL_CONFIG_USE_SWO
   With J-Link it changes the SWO baud, need to set it again with SWO_SetSpeed()
+  
+  Workaround:
+  - init, set to 64k
+  - Verify: McuSWO send hello
+  - suspend
+  - resume ITM console
+  
 
 
 For UART over the Debug port:
@@ -18,3 +25,9 @@ For UART over the Debug port:
 
 Article:
 https://mcuoneclipse.com/2021/05/15/using-fatfs-and-minini-with-the-nxp-lpc55s16-evk/
+
+
+Received monitor command: SWO DisableTarget 0xFFFFFFFF
+SWO disabled successfully.
+Received monitor command: SWO EnableTarget 0 64000 0x1 0
+SWO enabled successfully.

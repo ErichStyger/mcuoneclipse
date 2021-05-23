@@ -117,7 +117,7 @@ void APP_Run(void) {
 #endif
 
   for(int i=0;i<2;i++) {
-  //for(;;) {
+//  for(;;) {
 #if PL_CONFIG_USE_SWO
     McuSWO_SendStr((unsigned char*)"hello world using ITM console.\n");
 #endif

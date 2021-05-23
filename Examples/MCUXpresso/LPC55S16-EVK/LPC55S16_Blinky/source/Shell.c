@@ -69,6 +69,9 @@ static const SHELL_IODesc ios[] =
 #if PL_CONFIG_USE_USB_CDC
   {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
 #endif
+#if PL_CONFIG_USE_SWO
+  {&McuSWO_stdio,  McuSWO_DefaultShellBuffer,  sizeof(McuSWO_DefaultShellBuffer)},
+#endif
 };
 
 void SHELL_SendChar(unsigned char ch) {

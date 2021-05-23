@@ -53,6 +53,40 @@ void McuSWO_SendStr(const unsigned char *str) {
   PrintString(str, McuSWO_CONFIG_TERMINAL_CHANNEL);
 }
 
+volatile int32_t ITM_RxBuffer; /* implementation of buffer for Rx */
+
+bool McuSWO_StdIOKeyPressed(void) {
+  if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY) {
+    return true;
+  }
+  return false;
+}
+
+void McuSWO_StdIOReadChar(uint8_t *c) {
+  int res;
+
+  res = ITM_ReceiveChar();
+  if (res==-1) { /* no character present */
+    *c = '\0';
+  } else {
+    *c = (uint8_t)res; /* return character */
+  }
+}
+
+void McuSWO_StdIOSendChar(uint8_t ch) {
+  ITM_SendChar(ch);
+}
+
+/* default standard I/O struct */
+McuShell_ConstStdIOType McuSWO_stdio = {
+    (McuShell_StdIO_In_FctType)McuSWO_StdIOReadChar, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)McuSWO_StdIOSendChar, /* stdout */
+    (McuShell_StdIO_OutErr_FctType)McuSWO_StdIOSendChar, /* stderr */
+    McuSWO_StdIOKeyPressed /* if input is not empty */
+  };
+uint8_t McuSWO_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
+
 static void MuxSWOPin(void) {
   CLOCK_EnableClock(kCLOCK_Iocon);
   IOCON->PIO[0][10] = ((IOCON->PIO[0][10] &
@@ -233,7 +267,6 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
  * \param cpuCoreFreqHz CPU core clock frequency in Hz
  */
 static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
-
   /* Enables the clock for the I/O controller: Enable Clock. */
   MuxSWOPin();
 
@@ -265,7 +298,7 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
         | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
 #endif
     ;
-  TPI->FFCR = 0x00000100; /* Formatter and Flush Control Register */
+  TPI->FFCR = (1<<TPI_FFCR_TrigIn_Pos); /* Formatter and Flush Control Register */
 }
 
 void McuSWO_SetSpeed(void) {
