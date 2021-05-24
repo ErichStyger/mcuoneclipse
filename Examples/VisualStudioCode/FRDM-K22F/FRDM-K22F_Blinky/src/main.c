@@ -6,6 +6,6 @@ int main(void) {
         __asm("nop");
         i++;
         local++;  
-    }  
+    }
     return 0;
-}
+} 

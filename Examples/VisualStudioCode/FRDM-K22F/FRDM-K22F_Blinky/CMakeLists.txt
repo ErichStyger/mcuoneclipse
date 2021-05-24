@@ -25,6 +25,15 @@ set(SRC_FILES
         src/main.c
         device/startup_MK22F51212.S
         device/system_MK22F51212.c
+
+        drivers/fsl_clock.c
+        drivers/fsl_gpio.c
+
+        McuLib/src/McuLib.c
+        McuLib/src/McuGPIO.c
+        McuLib/src/McuLed.c
+        McuLib/src/McuWait.c
+        McuLib/src/McuRTOS.c
         )
 
 # Build the executable based on the source files
@@ -38,9 +47,21 @@ target_compile_definitions(${EXECUTABLE} PRIVATE
 
 # List of includ directories
 target_include_directories(${EXECUTABLE} PRIVATE
-        src 
-        device
         CMSIS
+        device
+        drivers
+        src 
+        McuLib/config
+        McuLib/config/fonts
+        McuLib/src
+        McuLib/fonts
+        McuLib/FreeRTOS/Source/include
+        McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
+        McuLib/SEGGER_RTT
+        McuLib/SEGGER_Sysview
+        McuLib/TraceRecorder/config
+        McuLib/TraceRecorder/include
+        McuLib/TraceRecorder/streamports/Jlink_RTT/include
         )
 
 # Compiler options
@@ -52,6 +73,8 @@ target_compile_options(${EXECUTABLE} PRIVATE
 
         -fdata-sections
         -ffunction-sections
+
+        -includeIncludeMcuLibConfig.h
 
         -Wall
         -O0
