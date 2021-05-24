@@ -5,7 +5,7 @@ int main(void) {
     for(;;) {
         __asm("nop");
         i++;
-        local++; 
+        local++;  
     }  
     return 0;
 }

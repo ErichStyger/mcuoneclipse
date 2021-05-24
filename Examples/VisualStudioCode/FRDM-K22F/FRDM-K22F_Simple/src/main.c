@@ -1,5 +1,6 @@
 #include "main.h"
 #include <stdint.h>
+#include <stdio.h>
 
 static void bar(int32_t *p) {
     (*p)++;

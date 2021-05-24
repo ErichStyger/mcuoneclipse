@@ -5,42 +5,32 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Make",
-            "command": "make",
+            "label": "Build Project",
+            "command": "cmake --build .",
             "options": {
                 "cwd": "${workspaceFolder}/build"
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
             },
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": {
+                "base": "$gcc", 
+                "fileLocation": ["relative", "${workspaceFolder}/build"]
+            }
         },
         {
             "type": "shell",
-            "label": "Make Clean",
-            "command": "make clean",
+            "label": "clean & build",
+            "command": "cmake --build . --clean-first",
             "options": {
                 "cwd": "${workspaceFolder}/build"
             },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
             "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "problemMatcher": {
+                "base": "$gcc", 
+                "fileLocation": ["relative", "${workspaceFolder}/build"]
+            }
         }
     ]
 }

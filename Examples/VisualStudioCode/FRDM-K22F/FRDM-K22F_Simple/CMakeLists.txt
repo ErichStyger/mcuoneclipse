@@ -1,3 +1,4 @@
+# CMake file for FRDM-K22F_Simple
 cmake_minimum_required(VERSION 3.15.3)
 
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages

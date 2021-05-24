@@ -1,30 +1,25 @@
+# Call Cmake from the 'build' subfolder with the command below.
+# For using Make:
+# cmake -DCMAKE_MAKE_PROGRAM=make.exe -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -G "Unix Makefiles" ..
+# followed by
+# 'make' or 'cmake --build .' to build it
+#
+# For using Ninja:
+# cmake -DCMAKE_MAKE_PROGRAM=ninja.exe -DCMAKE_TOOLCHAIN_FILE="arm-none-eabi-gcc.cmake" -G "Ninja" ..
+# followed by
+# 'ninja' or 'cmake --build .' to build it
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR ARM)
 
-set(CMAKE_MAKE_PROGRAM make.exe)
-set(CMAKE_GENERATOR "Unix Makefile")
 set(ARM_TOOLCHAIN_DIR "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin")
-set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR})
-
-#if(MINGW OR CYGWIN OR WIN32)
-#    set(UTIL_SEARCH_CMD where)
-#elseif(UNIX OR APPLE)
-#    set(UTIL_SEARCH_CMD which)
-#endif()
+set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR}) 
 
 set(TOOLCHAIN_PREFIX ${ARM_TOOLCHAIN_DIR}/arm-none-eabi-)
 
-#execute_process(
-#  COMMAND ${UTIL_SEARCH_CMD} ${TOOLCHAIN_PREFIX}gcc
-#  OUTPUT_VARIABLE BINUTILS_PATH
-#  OUTPUT_STRIP_TRAILING_WHITESPACE
-#)
-
-#get_filename_component(ARM_TOOLCHAIN_DIR ${BINUTILS_PATH} DIRECTORY)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 set(CMAKE_C_COMPILER "${TOOLCHAIN_PREFIX}gcc.exe")
-#set(CMAKE_C_COMPILER "C:\\Program Files (x86)\\GNU Arm Embedded Toolchain\\10 2020-q4-major\\bin\\gcc")
 set(CMAKE_ASM_COMPILER ${CMAKE_C_COMPILER})
 set(CMAKE_CXX_COMPILER "${TOOLCHAIN_PREFIX}g++.exe")
 
