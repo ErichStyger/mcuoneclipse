@@ -66,9 +66,9 @@ target_link_options(${EXECUTABLE} PRIVATE
         -mfpu=fpv4-sp-d16
         -mfloat-abi=hard
         -specs=nano.specs
+        -specs=nosys.specs
         -lc
         -lm
-        -lnosys
         -Wl,-Map=${PROJECT_NAME}.map,--cref
         -Wl,--gc-sections
         -Xlinker -print-memory-usage -Xlinker

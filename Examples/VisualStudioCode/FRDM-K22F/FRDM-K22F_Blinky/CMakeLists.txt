@@ -1,4 +1,4 @@
-# CMake file for FRDM-K22F_Simple
+# CMake file for FRDM-K22F_Blinky
 cmake_minimum_required(VERSION 3.15.3)
 
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
@@ -8,7 +8,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
 # Setup project, output and linker file
-project(FRDM-K22F_Simple)
+project(FRDM-K22F_Blinky)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 set(LINKER_FILE ${CMAKE_SOURCE_DIR}/device/MK22FN512xxx12_flash.ld)
 
@@ -23,6 +23,9 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 # List of source files
 set(SRC_FILES
         src/main.c
+        src/leds.c
+        src/platform.c
+
         device/startup_MK22F51212.S
         device/system_MK22F51212.c
 
@@ -34,6 +37,8 @@ set(SRC_FILES
         McuLib/src/McuLed.c
         McuLib/src/McuWait.c
         McuLib/src/McuRTOS.c
+        McuLib/src/McuUtility.c
+        McuLib/src/McuArmTools.c
         )
 
 # Build the executable based on the source files
@@ -43,6 +48,7 @@ add_executable(${EXECUTABLE} ${SRC_FILES})
 target_compile_definitions(${EXECUTABLE} PRIVATE
         -DCPU_MK22FN512VLH12
         -DCPU_MK22FN512VLH12_cm4
+        -DNDEBUG
         )
 
 # List of includ directories
@@ -50,7 +56,7 @@ target_include_directories(${EXECUTABLE} PRIVATE
         CMSIS
         device
         drivers
-        src 
+        src
         McuLib/config
         McuLib/config/fonts
         McuLib/src
@@ -89,9 +95,9 @@ target_link_options(${EXECUTABLE} PRIVATE
         -mfpu=fpv4-sp-d16
         -mfloat-abi=hard
         -specs=nano.specs
+        -specs=nosys.specs
         -lc
         -lm
-        -lnosys
         -Wl,-Map=${PROJECT_NAME}.map,--cref
         -Wl,--gc-sections
         -Xlinker -print-memory-usage -Xlinker
