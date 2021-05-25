@@ -1,21 +1,9 @@
-Cheat sheet:
+Project with GNU Tools for ARM Embedded and Visual Studio Code.
 
-Create folder on disk.
-File > Add Folder to Workspace
-
-
-create folder: .vscode
-add file: tasks.json
-
-
-mkdir build
-cd build
-cmake -DCMAKE_TOOLCHAIN_FILE="../arm-none-eabi-gcc.cmake" -DCMAKE_MAKE_PROGRAM=make.exe -G "Unix Makefiles" ..
-make
-
-* Debug *
-Menu Run > Start Debugging
-select GDB (creates launch.json)
-
-Cortex debug: set path to GDB:
-    "cortex-debug.JLinkGDBServerPath": "C:\\Program Files (x86)\\SEGGER\\JLink"
+See following links with articles:
+Installation		https://mcuoneclipse.com/2021/05/01/visual-studio-code-for-c-c-with-arm-cortex-m-part-1/
+Project	Creation	https://mcuoneclipse.com/2021/05/04/visual-studio-code-for-c-c-with-arm-cortex-m-part-2/
+Building			https://mcuoneclipse.com/2021/05/06/visual-studio-code-for-c-c-with-arm-cortex-m-part-3/
+Debugging			https://mcuoneclipse.com/2021/05/09/visual-studio-code-for-c-c-with-arm-cortex-m-part-4/
+CMake Kit			https://mcuoneclipse.com/2021/05/11/visual-studio-code-for-c-c-with-arm-cortex-m-part-5/
+IntelliSense:		https://mcuoneclipse.com/2021/05/24/visual-studio-code-for-c-c-with-arm-cortex-m-part-6/
