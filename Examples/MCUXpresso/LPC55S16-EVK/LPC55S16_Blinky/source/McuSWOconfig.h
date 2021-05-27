@@ -7,8 +7,8 @@
 #ifndef MCUSWOCONFIG_H_
 #define MCUSWOCONFIG_H_
 
-#ifndef McuSWO_CONFIG_SPEED
-  #define McuSWO_CONFIG_SPEED         (64000)
+#ifndef McuSWO_CONFIG_SPEED_BAUD
+  #define McuSWO_CONFIG_SPEED_BAUD         (64000)
   /*!< baud of SWO data */
 #endif
 

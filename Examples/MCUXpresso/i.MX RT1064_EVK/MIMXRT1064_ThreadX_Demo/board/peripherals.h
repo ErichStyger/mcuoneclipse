@@ -3,55 +3,31 @@
  * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
  **********************************************************************************************************************/
 
-#ifndef _PIN_MUX_H_
-#define _PIN_MUX_H_
+#ifndef _PERIPHERALS_H_
+#define _PERIPHERALS_H_
 
 /***********************************************************************************************************************
- * Definitions
+ * Included files
  **********************************************************************************************************************/
-
-/*! @brief Direction type  */
-typedef enum _pin_mux_direction
-{
-  kPIN_MUX_DirectionInput = 0U,         /* Input direction */
-  kPIN_MUX_DirectionOutput = 1U,        /* Output direction */
-  kPIN_MUX_DirectionInputOrOutput = 2U  /* Input or output direction */
-} pin_mux_direction_t;
-
-/*!
- * @addtogroup pin_mux
- * @{
- */
-
-/***********************************************************************************************************************
- * API
- **********************************************************************************************************************/
+#include "fsl_common.h"
 
 #if defined(__cplusplus)
 extern "C" {
-#endif
+#endif /* __cplusplus */
 
-/*!
- * @brief Calls initialization functions.
- *
- */
-void BOARD_InitBootPins(void);
+/***********************************************************************************************************************
+ * Initialization functions
+ **********************************************************************************************************************/
 
-/*!
- * @brief Configures pin routing and optionally pin electrical features.
- *
- */
-void BOARD_InitPins(void);
+void BOARD_InitPeripherals(void);
+
+/***********************************************************************************************************************
+ * BOARD_InitBootPeripherals function
+ **********************************************************************************************************************/
+void BOARD_InitBootPeripherals(void);
 
 #if defined(__cplusplus)
 }
 #endif
 
-/*!
- * @}
- */
-#endif /* _PIN_MUX_H_ */
-
-/***********************************************************************************************************************
- * EOF
- **********************************************************************************************************************/
+#endif /* _PERIPHERALS_H_ */

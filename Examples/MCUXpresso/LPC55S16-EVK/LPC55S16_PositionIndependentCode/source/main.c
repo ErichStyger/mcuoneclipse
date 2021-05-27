@@ -13,10 +13,10 @@
 #include "fsl_debug_console.h"
 #include "pic_module.h"
 #include "lib.h"
+#include "module.h"
 
 /* Force the counter to be placed into memory. */
 volatile int i, j = 0 ;
-
 
 int main(void) {
     /* Init board hardware. */
@@ -29,7 +29,7 @@ int main(void) {
 #endif
 //    PICModule_Init();
 //    LIB_Init();
-
+    MODULE_Init();
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
         i++;

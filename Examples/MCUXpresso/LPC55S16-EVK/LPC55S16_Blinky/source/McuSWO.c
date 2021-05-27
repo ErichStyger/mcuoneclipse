@@ -10,6 +10,8 @@
 #include "board.h"
 #include "pin_mux.h"
 
+static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
+
 /*!
  * \brief Sends a character over the SWO channel
  * \param c Character to be sent
@@ -122,10 +124,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[72];
 
   McuShell_SendStatusStr((const unsigned char*)"McuSWO", (const unsigned char*)"McuSWO module status\r\n", io->stdOut);
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"SystemCoreClock: ");
-  McuUtility_strcatNum32u(buf, sizeof(buf), SystemCoreClock);
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"traceClock: ");
+  McuUtility_strcatNum32u(buf, sizeof(buf), SWO_traceClock);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" Hz, Baud: ");
-  McuUtility_strcatNum32u(buf, sizeof(buf), SystemCoreClock/(TPI->ACPR+1));
+  McuUtility_strcatNum32u(buf, sizeof(buf), SWO_traceClock/(TPI->ACPR+1));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  Clocking", buf, io->stdOut);
 
@@ -248,8 +250,8 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
         return ERR_FAILED;
       }
       clock = val;
-    } else {
-      clock = SystemCoreClock;
+    } else { /* take default */
+      clock = SWO_traceClock;
     }
     SetSWOSpeed(clock, baud);
   } else if (McuUtility_strncmp((char*)cmd, "McuSWO send ", sizeof("McuSWO send ")-1)==0) {
@@ -301,10 +303,11 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
   TPI->FFCR = (1<<TPI_FFCR_TrigIn_Pos); /* Formatter and Flush Control Register */
 }
 
-void McuSWO_SetSpeed(void) {
-  SetSWOSpeed(SystemCoreClock, McuSWO_CONFIG_SPEED);
+void McuSWO_ChangeSpeed(uint32_t baud) {
+  SetSWOSpeed(SWO_traceClock, baud);
 }
 
-void McuSWO_Init(void) {
-  Init(1, SystemCoreClock, McuSWO_CONFIG_SPEED);
+void McuSWO_Init(uint32_t traceClock, uint32_t baud) {
+  SWO_traceClock = traceClock; /* just the default! */
+  Init(1, SWO_traceClock, baud);
 }

@@ -6,7 +6,7 @@
  * Generated linker script file for LPC55S16
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on May 19, 2021 7:17:36 PM
+ * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on May 26, 2021 8:48:48 AM
  */
 
 INCLUDE "LPC55S16_PositionIndependentCode_Debug_library.ld"
@@ -16,7 +16,24 @@ ENTRY(ResetISR)
 
 SECTIONS
 {
-     /* MAIN TEXT SECTION */
+     .text_Flash2 : ALIGN(4)
+    {
+       FILL(0xff)
+       */module.o (.text .text*)
+        *(.text_Flash2) /* for compatibility with previous releases */
+        *(.text_PROGRAM_FLASH_112) /* for compatibility with previous releases */
+        *(.text.$Flash2)
+        *(.text.$PROGRAM_FLASH_112)
+        *(.text_Flash2.*) /* for compatibility with previous releases */
+        *(.text_PROGRAM_FLASH_112.*) /* for compatibility with previous releases */
+        *(.text.$Flash2.*)
+        *(.text.$PROGRAM_FLASH_112.*)
+        *(.rodata.$Flash2)
+        *(.rodata.$PROGRAM_FLASH_112)
+        *(.rodata.$Flash2.*)
+        *(.rodata.$PROGRAM_FLASH_112.*)            } > PROGRAM_FLASH_112
+
+    /* MAIN TEXT SECTION */
     .text : ALIGN(4)
     {
         FILL(0xff)
@@ -29,11 +46,6 @@ SECTIONS
         LONG(LOADADDR(.data));
         LONG(    ADDR(.data));
         LONG(  SIZEOF(.data));
-/*------------------------------------------------------------- */
-        LONG(LOADADDR(.got));
-        LONG(    ADDR(.got));
-        LONG(  SIZEOF(.got));
-/*------------------------------------------------------------- */
         LONG(LOADADDR(.data_RAM2));
         LONG(    ADDR(.data_RAM2));
         LONG(  SIZEOF(.data_RAM2));
@@ -77,38 +89,7 @@ SECTIONS
         *(.ARM.exidx* .gnu.linkonce.armexidx.*)
         __exidx_end = .;
     } > PROGRAM_FLASH
-
-/*------------------------------------------------------------- */
-    /* PLT section contains code for accessing the dynamically linked functions
-     * ie functions from shared libraries in a position independent manner */
-    .plt :
-    {
-        . = ALIGN(4);
-        *(.plt)
-        . = ALIGN(4);
-    } >PROGRAM_FLASH
-    
- /* The global offset table is the table for indirectly accessing the global variables
-     * The table contains addresses of the global variables. The text section contains 
-     * a address of the GOT base and a offset in it to access the appropriate variables.
-     * This is done to access the variables in a position independent manner. */
-    .got :
-    {
-        . = ALIGN(4);
-        _sgot = .;
-        *(.got)
-    } >SRAM AT> PROGRAM_FLASH
-    
-    /* got.plt section contains entries which is used with the PLT to access the functions 
-     * in a position independent manner. */
-    .got.plt :
-    {
-        . = ALIGN(4);
-        *(.got.plt)
-        _edata = .;
-    } >SRAM AT> PROGRAM_FLASH
-/*------------------------------------------------------------- */
-    
+ 
     _etext = .;
         
  

@@ -73,6 +73,8 @@ int main()
     BOARD_ConfigMPU();
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
+    CLOCK_EnableClock(kCLOCK_Trace);
+
     BOARD_InitDebugConsole();
 
     PRINTF("THREADX example ...\r\n");

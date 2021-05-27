@@ -112,8 +112,8 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 #if PL_CONFIG_USE_SWO
-  McuSWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
-  McuSWO_SetSpeed(); /* execute again if J-Link has changed speed */
+  McuSWO_Init(SystemCoreClock, McuSWO_CONFIG_SPEED_BAUD); /* if initialization is not done by the debugger, need to do it manually here */
+  McuSWO_ChangeSpeed(McuSWO_CONFIG_SPEED_BAUD); /* execute again if J-Link has changed speed */
 #endif
 
   for(int i=0;i<2;i++) {
