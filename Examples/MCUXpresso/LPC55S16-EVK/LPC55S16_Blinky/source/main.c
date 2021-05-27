@@ -24,6 +24,8 @@ int main(void) {
 #endif
 
 //  PRINTF("Hello World\n");
+  /*!< Switch TRACE to TRACE_DIV */
+  CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /* needed for SWO */
 
   APP_Run();
 

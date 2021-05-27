@@ -14,8 +14,9 @@
 #define PL_CONFIG_USE_MININI      (1)
 #define PL_CONFIG_USE_USB_MSD     (0)
 #define PL_CONFIG_USE_SWO         (1)  /* for J-Link need to call SWO_SetSpeed()! */
+#define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO)
 
-#define PL_CONFIG_USE_I2C         (1)
+#define PL_CONFIG_USE_I2C         (0)
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_OLED        (1 && PL_CONFIG_USE_I2C)
 
