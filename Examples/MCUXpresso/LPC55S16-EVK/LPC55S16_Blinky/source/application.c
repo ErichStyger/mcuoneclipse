@@ -23,6 +23,7 @@
 #include "buttons.h"
 #include "Shell.h"
 #include "disk.h"
+#include "cr_section_macros.h"
 
 void __assertion_failed(char *_Expr) {
   for(;;) {
