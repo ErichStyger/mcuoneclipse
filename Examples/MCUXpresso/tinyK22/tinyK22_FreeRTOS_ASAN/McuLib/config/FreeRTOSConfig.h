@@ -245,30 +245,69 @@
 if floating point hardware is otherwise supported by the FreeRTOS port in use.
 This constant is not supported by all FreeRTOS ports that include floating
 point support. */
-#define configUSE_TASK_FPU_SUPPORT                1
-
+#ifndef configUSE_TASK_FPU_SUPPORT
+  #define configUSE_TASK_FPU_SUPPORT              1
+#endif
 /* Set the following definitions to 1 to include the API function, or zero
    to exclude the API function. */
-#define INCLUDE_vTaskEndScheduler                 1
-#define INCLUDE_vTaskPrioritySet                  1
-#define INCLUDE_uxTaskPriorityGet                 1
-#define INCLUDE_vTaskDelete                       1
-#define INCLUDE_vTaskCleanUpResources             1
-#define INCLUDE_vTaskSuspend                      1
-#define INCLUDE_vTaskDelayUntil                   1
-#define INCLUDE_vTaskDelay                        1
-#define INCLUDE_uxTaskGetStackHighWaterMark       1
-#define INCLUDE_xTaskGetSchedulerState            1
-#define INCLUDE_xQueueGetMutexHolder              1
-#define INCLUDE_xTaskGetHandle                    1
-#define INCLUDE_xTaskAbortDelay                   1
-#define INCLUDE_xTaskGetCurrentTaskHandle         1
-#define INCLUDE_xTaskGetIdleTaskHandle            1
-#define INCLUDE_xTaskResumeFromISR                1
-#define INCLUDE_eTaskGetState                     1
-#define INCLUDE_pcTaskGetTaskName                 1
+#ifndef INCLUDE_vTaskEndScheduler
+  #define INCLUDE_vTaskEndScheduler               0
+#endif
+#ifndef INCLUDE_vTaskPrioritySet
+  #define INCLUDE_vTaskPrioritySet                1
+#endif
+#ifndef INCLUDE_uxTaskPriorityGet
+  #define INCLUDE_uxTaskPriorityGet               1
+#endif
+#ifndef INCLUDE_vTaskDelete
+  #define INCLUDE_vTaskDelete                     1
+#endif
+#ifndef INCLUDE_vTaskCleanUpResources
+  #define INCLUDE_vTaskCleanUpResources           1
+#endif
+#ifndef INCLUDE_vTaskSuspend
+  #define INCLUDE_vTaskSuspend                    1
+#endif
+#ifndef INCLUDE_vTaskDelayUntil
+  #define INCLUDE_vTaskDelayUntil                 1
+#endif
+#ifndef INCLUDE_vTaskDelay
+  #define INCLUDE_vTaskDelay                      1
+#endif
+#ifndef INCLUDE_uxTaskGetStackHighWaterMark
+  #define INCLUDE_uxTaskGetStackHighWaterMark     1
+#endif
+#ifndef INCLUDE_xTaskGetSchedulerState
+  #define INCLUDE_xTaskGetSchedulerState          1
+#endif
+#ifndef INCLUDE_xQueueGetMutexHolder
+  #define INCLUDE_xQueueGetMutexHolder            1
+#endif
+#ifndef INCLUDE_xTaskGetHandle
+  #define INCLUDE_xTaskGetHandle                  1
+#endif
+#ifndef INCLUDE_xTaskAbortDelay
+  #define INCLUDE_xTaskAbortDelay                 1
+#endif
+#ifndef INCLUDE_xTaskGetCurrentTaskHandle
+  #define INCLUDE_xTaskGetCurrentTaskHandle       1
+#endif
+#ifndef INCLUDE_xTaskGetIdleTaskHandle
+  #define INCLUDE_xTaskGetIdleTaskHandle          1
+#endif
+#ifndef INCLUDE_xTaskResumeFromISR
+  #define INCLUDE_xTaskResumeFromISR              1
+#endif
+#ifndef INCLUDE_eTaskGetState
+  #define INCLUDE_eTaskGetState                   1
+#endif
+#ifndef INCLUDE_pcTaskGetTaskName
+  #define INCLUDE_pcTaskGetTaskName               1
+#endif
 /* -------------------------------------------------------------------- */
-#define INCLUDE_pxTaskGetStackStart               (1 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS)
+#ifndef INCLUDE_pxTaskGetStackStart
+  #define INCLUDE_pxTaskGetStackStart             (1 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS)
+#endif
 /* -------------------------------------------------------------------- */
 #if configCPU_FAMILY_IS_ARM(configCPU_FAMILY)
   /* Cortex-M specific definitions. */

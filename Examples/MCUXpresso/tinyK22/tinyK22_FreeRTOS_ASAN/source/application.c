@@ -13,19 +13,22 @@
 #include "McuArmTools.h"
 #include "leds.h"
 #include "fsl_pit.h"
-#include "asan.h"
+#include "McuASAN.h"
 
 static void AppTask(void *pv) {
-  uint8_t *pa[10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+  uint8_t *pa[10];
   size_t idx = 0;
 
+  for(int i=0; i<sizeof(pa)/sizeof(pa[0]); i++) {
+    pa[i] = NULL; /* initialize pointers */
+  }
   for(;;) {
     if (pa[idx]!=NULL) {
       vPortFree(pa[idx]);
     }
     pa[idx] = pvPortMalloc(20);
     idx++;
-    if (idx==10) {
+    if (idx==sizeof(pa)/sizeof(pa[0])) {
       idx = 0;
     }
     McuLED_Toggle(tinyLED);
@@ -35,7 +38,6 @@ static void AppTask(void *pv) {
 
 void APP_Run(void) {
   __asan_init(); /* initialize ASAN */
-
   PL_Init();
   if (xTaskCreate(
       AppTask,  /* pointer to the task */

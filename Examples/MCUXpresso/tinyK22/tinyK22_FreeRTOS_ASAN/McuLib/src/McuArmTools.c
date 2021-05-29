@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-07-28, 16:15, # CodeGen: 666
+**     Date/Time   : 2021-05-13, 14:15, # CodeGen: 744
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -83,6 +83,9 @@
   #include "fsl_common.h"
   #if McuLib_CONFIG_CPU_IS_KINETIS
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55x */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
+    #include "fsl_iap_ffr.h"
   #elif McuLib_CONFIG_CPU_IS_LPC  /* LPC845 */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
   #endif
@@ -96,7 +99,7 @@
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
 #if McuLib_CONFIG_CORTEX_M==4
-static const unsigned char *KinetisM4FamilyStrings[] =
+static const unsigned char *const KinetisM4FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"K10 or K12 Family",          /* 000 */
   (const unsigned char *)"K20 or K22 Family",          /* 001 */
@@ -110,7 +113,7 @@ static const unsigned char *KinetisM4FamilyStrings[] =
 #endif
 
 #if McuLib_CONFIG_CORTEX_M==0
-static const unsigned char *KinetisM0FamilyStrings[] =
+static const unsigned char *const KinetisM0FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"KL0x",          /* 0000 */
   (const unsigned char *)"KL1x",          /* 0001 */
@@ -215,7 +218,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_NXP_SDK_2_0_USED
   sim_uid_t tmp;
-  int i, j;
+  unsigned int i, j;
 
   SIM_GetUniqueId(&tmp);
   /* init */
@@ -296,7 +299,7 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     #endif
   #endif /* McuLib_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   uint8_t res;
 
   res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
@@ -304,6 +307,43 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
     return ERR_FAILED;
   }
   return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  int i;
+  uint8_t *p;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+  p = (uint8_t*)&FLASH_NMPA->UUID_ARRAY[0];
+  for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
+    uid->id[i] = *p;
+    p++;
+  }
+  return ERR_OK;
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  int i;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+#if 0 /* should work for LPC55x59, but fails? */
+  status_t status;
+  flash_config_t flashConfig;
+
+  status = FFR_Init(&flashConfig);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+
+  assert(sizeof(uid->id)*8>=128); /* must be at least 128 bits */
+  status = FFR_GetUUID(&flashConfig, &uid->id[0]);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+#endif
+  return ERR_FAILED; /* not implemented yet */
 #else
   (void)uid; /* not used */
   return ERR_FAILED;
@@ -495,10 +535,18 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
   return (McuArmTools_ConstCharPtr)"NXP i.MX RT";
 #elif McuLib_CONFIG_CPU_IS_S32K
   return (McuArmTools_ConstCharPtr)"NXP S32K";
-#elif McuLib_CONFIG_CPU_IS_LPC55xx
-  return (McuArmTools_ConstCharPtr)"NXP LPC55xx";
 #elif McuLib_CONFIG_CPU_IS_LPC
+  #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  return (McuArmTools_ConstCharPtr)"NXP LPC845";
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  return (McuArmTools_ConstCharPtr)"NXP LPC55S16";
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S59
+  return (McuArmTools_ConstCharPtr)"NXP LPC55S69";
+  #elif McuLib_CONFIG_CPU_IS_LPC55xx
+  return (McuArmTools_ConstCharPtr)"NXP LPC55xx";
+  #else
   return (McuArmTools_ConstCharPtr)"NXP LPC";
+  #endif
 #else
   return (McuArmTools_ConstCharPtr)"UNKNOWN";
 #endif

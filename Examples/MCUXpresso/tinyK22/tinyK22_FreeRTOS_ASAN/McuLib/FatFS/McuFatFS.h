@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.214, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
+**     Date/Time   : 2021-05-13, 11:07, # CodeGen: 738
 **     Abstract    :
 **
 **     Settings    :
@@ -92,6 +92,7 @@
 **         f_closedir        - FRESULT McuFatFS_f_closedir(DIR* dp);
 **         get_fattime       - uint32_t McuFatFS_get_fattime(void);
 **         ParseCommand      - uint8_t McuFatFS_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         StrToDriveNumber  - uint8_t McuFatFS_StrToDriveNumber(uint8_t *drvStr);
 **         CheckCardPresence - uint8_t McuFatFS_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS...
 **         MountFileSystem   - uint8_t McuFatFS_MountFileSystem(FATFS *fileSystemObject, uint8_t...
 **         UnMountFileSystem - uint8_t McuFatFS_UnMountFileSystem(uint8_t *logicalDrive, const...
@@ -110,7 +111,7 @@
 **         Deinit            - uint8_t McuFatFS_Deinit(void);
 **         Init              - uint8_t McuFatFS_Init(void);
 **
-** Copyright (c) 2014-2020,  Erich Styger
+** Copyright (c) 2014-2021,  Erich Styger
 ** Web: http://mcuoneclipse.com/
 ** SourceForge: https://sourceforge.net/projects/mcuoneclipse
 ** Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -184,8 +185,8 @@
 #endif
 
 /* prototypes for application callbacks */
-extern bool McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(uint8_t drive);
-extern bool McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(uint8_t drive);
+extern bool McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(uint8_t *drvStr);
+extern bool McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(uint8_t *drvStr);
 
 #if McuFatFS_CONFIG_SHELL_ENABLED
   #include "McuShell.h"
@@ -1336,6 +1337,21 @@ uint8_t McuFatFS_CreateFile(const uint8_t *fileName, const McuShell_StdIOType *i
 **         NAME            - DESCRIPTION
 **         dir             - Pointer to the open directory object
 **         fno             - Pointer to the file information structure
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
+uint8_t McuFatFS_StrToDriveNumber(uint8_t *drvStr);
+/*
+** ===================================================================
+**     Method      :  StrToDriveNumber (component FAT_FileSystem)
+**
+**     Description :
+**         Transforms a drive string ("0:/") into a drive number (0)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * drvStr          - Pointer to drive string, e.g. "0:/"
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================

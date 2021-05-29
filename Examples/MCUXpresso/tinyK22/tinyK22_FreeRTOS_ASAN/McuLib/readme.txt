@@ -25,7 +25,6 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - DQ1: subdriver of McuOneWire
 - Input1: subdriver of McuGenericSWSPI
 - InputRB1: subdriver of McuOneWire
-- LEDpin1, LEDpin2, LEDpin3, LEDpin4: subdrivers for McuLED1, McuLED2, McuLED3 and McuLED4
 - McuArmTools: various ARM Cortex utilities
 - McuButton: Push button driver
 - McuCriticalSection: critical section handling
@@ -41,10 +40,10 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuGenericSWI2C: Software (bit banging) I2C driver
 - McuGenericSWSPI: Software (bit banging) SPI driver
 - McuGFont: Graphical font library driver. Several fonts are available in the 'fonts' subfolder
+- McuGPIO: Generic GPIO pin driver
 - McuHardfault: ARM Cortex-M hardfault handler
 - McuI2CSpy: I2C sniffing utility
 - McuLED: generic LED driver for multiple LEDs
-- McuLED1, McuLED2, McuLED3, McuLED4: single LED driver
 - McuLib: Configuration of the McuOnEclipse Library
 - McuOneWire: 1-Wire communication driver
 - McuPercepio: Configuration and interface to the Percepio Trace library

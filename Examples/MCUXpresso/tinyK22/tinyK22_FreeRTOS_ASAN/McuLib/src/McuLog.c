@@ -32,6 +32,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 #include "McuTimeDate.h"
 #include "McuUtility.h"
@@ -55,7 +56,7 @@ static struct {
 #endif
   log_LockFn lock; /* user mutex for synchronization */
   void *udata;  /* optional data for lock */
-  McuShell_ConstStdIOType *consoleIo; /* I/O for console logging */
+  McuShell_ConstStdIOType *consoleIo[McuLog_CONFIG_NOF_CONSOLE_LOGGER]; /* I/O for console logging */
   bool quiet; /* if console logging is silent/quiet */
 #if McuLog_CONFIG_USE_COLOR
   bool color; /* if using color for terminal */
@@ -67,14 +68,14 @@ static struct {
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   bool rttDataLogger;
 #endif
-} L;
+} McuLog_ConfigData;
 
-static const char *level_names[] = {
+static const char *const level_names[] = {
   "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"
 };
 
 #if McuLog_CONFIG_USE_COLOR
-static const char *level_colors[] = { /* color codes for messages */
+static const char *const level_colors[] = { /* color codes for messages */
   McuShell_ANSI_COLOR_TEXT_BRIGHT_BLUE,     /* trace */
   McuShell_ANSI_COLOR_TEXT_BRIGHT_GREEN,    /* debug */
   McuShell_ANSI_COLOR_TEXT_BRIGHT_CYAN,     /* info */
@@ -85,32 +86,33 @@ static const char *level_colors[] = { /* color codes for messages */
 #endif
 
 static void lock(void)   {
-  if (L.lock) {
-    L.lock(L.udata, 1);
+  if (McuLog_ConfigData.lock!=NULL) {
+    McuLog_ConfigData.lock(McuLog_ConfigData.udata, true);
   }
 }
 
 static void unlock(void) {
-  if (L.lock) {
-    L.lock(L.udata, 0);
+  if (McuLog_ConfigData.lock!=NULL) {
+    McuLog_ConfigData.lock(McuLog_ConfigData.udata, false);
   }
 }
 
-void McuLog_set_console(McuShell_ConstStdIOType *io) {
-  L.consoleIo = io;
+void McuLog_set_console(McuShell_ConstStdIOType *io, uint8_t index) {
+  assert(index<McuLog_CONFIG_NOF_CONSOLE_LOGGER);
+  McuLog_ConfigData.consoleIo[index] = io;
 }
 
 void McuLog_set_udata(void *udata) {
-  L.udata = udata;
+  McuLog_ConfigData.udata = udata;
 }
 
 void McuLog_set_lock(log_LockFn fn) {
-  L.lock = fn;
+  McuLog_ConfigData.lock = fn;
 }
 
 #if McuLog_CONFIG_USE_FILE
 void McuLog_set_fp(McuFatFS_FIL *fp) {
-  L.fp = fp;
+  McuLog_ConfigData.fp = fp;
 }
 #endif
 
@@ -118,12 +120,12 @@ void McuLog_set_fp(McuFatFS_FIL *fp) {
 int McuLog_open_logfile(const unsigned char *logFileName) {
   McuFatFS_FRESULT fres;
 
-  fres = f_open(&L.logFile, (const TCHAR*)logFileName, FA_WRITE|FA_OPEN_APPEND);
+  fres = f_open(&McuLog_ConfigData.logFile, (const TCHAR*)logFileName, FA_WRITE|FA_OPEN_APPEND);
   if (fres != FR_OK) {
     McuLog_set_fp(NULL);
     return -1; /* failed */
   }
-  McuLog_set_fp(&L.logFile);
+  McuLog_set_fp(&McuLog_ConfigData.logFile);
   return 0; /* success */
 }
 #endif
@@ -132,7 +134,7 @@ int McuLog_open_logfile(const unsigned char *logFileName) {
 int McuLog_close_logfile(void) {
   McuFatFS_FRESULT fres;
 
-  fres = f_close(L.fp);
+  fres = f_close(McuLog_ConfigData.fp);
   McuLog_set_fp(NULL);
   if (fres != FR_OK) {
     return -1; /* failed */
@@ -142,21 +144,27 @@ int McuLog_close_logfile(void) {
 #endif
 
 void McuLog_set_level(McuLog_Levels_e level) {
-  L.level = level;
+  McuLog_ConfigData.level = level;
 }
 
 void McuLog_set_quiet(bool enable) {
-  L.quiet = enable;
+  McuLog_ConfigData.quiet = enable;
 }
 
 #if McuLog_CONFIG_USE_COLOR
 void McuLog_set_color(bool enable) {
-  L.color = enable;
+  McuLog_ConfigData.color = enable;
 }
 #endif
 
 static void OutputCharFctConsole(void *p, char ch) {
   McuShell_StdIO_OutErr_FctType io = (McuShell_StdIO_OutErr_FctType)p;
+  if (io==McuRTT_StdIOSendChar) { /* using RTT: check first if we are able to send */
+    unsigned int rttUpSize = SEGGER_RTT_GetUpBufferFreeSize(0);
+    if (rttUpSize<1) { /* there is NOT enough space available in the RTT up buffer */
+      return; /* do not send :-( */
+    }
+  }
   io(ch);
 }
 
@@ -170,7 +178,7 @@ static void OutputCharFctFile(void *p, char ch) {
 
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
 void McuLog_set_rtt_logger(bool enable) {
-  L.rttDataLogger = enable;
+  McuLog_ConfigData.rttDataLogger = enable;
 }
 #endif
 
@@ -190,26 +198,30 @@ static void OutString(const unsigned char *str, void (*outchar)(void *,char), vo
 static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool supportColor, const char *file, int line, void (*outchar)(void *,char), void *param) {
   unsigned char buf[32];
 
+#if McuLog_CONFIG_LOG_TIMESTAMP_DATE || McuLog_CONFIG_LOG_TIMESTAMP_TIME
   /* date/time */
   buf[0] = '\0';
 #if McuLog_CONFIG_LOG_TIMESTAMP_DATE
   McuTimeDate_AddDateString((unsigned char*)buf, sizeof(buf), date, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR);
   McuUtility_chcat(buf, sizeof(buf), ' ');
 #endif
+#if McuLog_CONFIG_LOG_TIMESTAMP_TIME
   McuTimeDate_AddTimeString((unsigned char*)buf, sizeof(buf), time, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_TIME_FORMAT_STR);
   McuUtility_chcat(buf, sizeof(buf), ' ');
+#endif
   OutString(buf, outchar, param);
+#endif
 
   /* level */
   buf[0] = '\0';
 #if McuLog_CONFIG_USE_COLOR
-  if (supportColor && L.color) {
+  if (supportColor && McuLog_ConfigData.color) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)level_colors[level]);
   }
 #endif
   McuUtility_strcatPad(buf, sizeof(buf), (unsigned char*)level_names[level], ' ', sizeof("DEBUG ")-1);
 #if McuLog_CONFIG_USE_COLOR
-  if (supportColor && L.color) {
+  if (supportColor && McuLog_ConfigData.color) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)McuShell_ANSI_CONTROL_RESET);
   }
 #endif
@@ -255,7 +267,7 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 #endif
   va_list list;
 
-  if (level < L.level) {
+  if (level < McuLog_ConfigData.level) {
     return;
   }
   lock(); /* Acquire lock */
@@ -264,18 +276,22 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 #else
   (void)McuTimeDate_GetTime(&time); /* Get current time */
 #endif
-  if (!L.quiet && L.consoleIo!=NULL) { /* log to console */
-    LogHeader(DATE_PTR, &time, level, true, file, line, OutputCharFctConsole, L.consoleIo->stdErr);
-    /* open argument list */
-    va_start(list, fmt);
-    McuXFormat_xvformat(OutputCharFctConsole, L.consoleIo->stdErr, fmt, list);
-    va_end(list);
-    OutString((unsigned char *)"\n", OutputCharFctConsole, L.consoleIo->stdErr);
+  if (!McuLog_ConfigData.quiet) {
+    for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
+      if(McuLog_ConfigData.consoleIo[i]!=NULL) { /* log to console */
+        LogHeader(DATE_PTR, &time, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        /* open argument list */
+        va_start(list, fmt);
+        McuXFormat_xvformat(OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr, fmt, list);
+        va_end(list);
+        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+      }
+    } /* for */
   }
 
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   /* log to RTT Data Logger */
-  if (L.rttDataLogger) {
+  if (McuLog_ConfigData.rttDataLogger) {
     LogHeader(DATE_PTR, &time, level, false, file, line, OutputCharRttLoggerFct, NULL);
     /* open argument list */
     va_start(list, fmt);
@@ -287,14 +303,14 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 
 #if McuLog_CONFIG_USE_FILE
   /* Log to file */
-  if (L.fp) {
-    LogHeader(DATE_PTR, &time, level, false, file, line, OutputCharFctFile, L.fp);
+  if (McuLog_ConfigData.fp) {
+    LogHeader(DATE_PTR, &time, level, false, file, line, OutputCharFctFile, McuLog_ConfigData.fp);
     /* open argument list */
     va_start(list, fmt);
-    McuXFormat_xvformat(OutputCharFctFile, L.fp, fmt, list);
+    McuXFormat_xvformat(OutputCharFctFile, McuLog_ConfigData.fp, fmt, list);
     va_end(list);
-    OutString((unsigned char *)"\n", OutputCharFctFile, L.fp);
-    f_sync(L.fp);
+    OutString((unsigned char *)"\n", OutputCharFctFile, McuLog_ConfigData.fp);
+    f_sync(McuLog_ConfigData.fp);
   }
 #endif
   /* Release lock */
@@ -302,31 +318,36 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 }
 
 #if McuLog_CONFIG_USE_MUTEX
-static void LockUnlockCallback(void *data, int lock) {
+static void LockUnlockCallback(void *data, bool lock) {
   if (lock) {
-    (void)xSemaphoreTakeRecursive(L.McuLog_Mutex, portMAX_DELAY);
+    (void)xSemaphoreTakeRecursive(McuLog_ConfigData.McuLog_Mutex, portMAX_DELAY);
   } else {
-    (void)xSemaphoreGiveRecursive(L.McuLog_Mutex);
+    (void)xSemaphoreGiveRecursive(McuLog_ConfigData.McuLog_Mutex);
   }
 }
 #endif
 
 #if McuLog_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[8];
+
   McuShell_SendStatusStr((unsigned char*)"McuLog", (unsigned char*)"Log status\r\n", io->stdOut);
+  McuUtility_Num8uToStr(buf, sizeof(buf), McuLog_CONFIG_NOF_CONSOLE_LOGGER);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  console", buf, io->stdOut);
 #if McuLog_CONFIG_USE_FILE
-  McuShell_SendStatusStr((unsigned char*)"  file", L.fp!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  file", McuLog_ConfigData.fp!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
 #endif
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
-  McuShell_SendStatusStr((unsigned char*)"  rttlogger", L.rttDataLogger?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  rttlogger", McuLog_ConfigData.rttDataLogger?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
-  McuShell_SendStatusStr((unsigned char*)"  lock", L.lock!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  level", (unsigned char*)level_names[L.level], io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  lock", McuLog_ConfigData.lock!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  level", (unsigned char*)level_names[McuLog_ConfigData.level], io->stdOut);
   McuShell_SendStr((unsigned char*)" (", io->stdOut);
-  McuShell_SendNum8u(L.level, io->stdOut);
+  McuShell_SendNum8u(McuLog_ConfigData.level, io->stdOut);
   McuShell_SendStr((unsigned char*)"), logging for this level and higher\r\n", io->stdOut);
 #if McuLog_CONFIG_USE_COLOR
-  McuShell_SendStatusStr((unsigned char*)"  color", L.color?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  color", McuLog_ConfigData.color?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
   return ERR_OK;
 }
@@ -398,11 +419,11 @@ static char McuLog_RttUpBuffer[McuLog_CONFIG_RTT_DATA_LOGGER_BUFFER_SIZE];
 
 void McuLog_Init(void) {
 #if McuLog_CONFIG_USE_MUTEX
-  L.McuLog_Mutex = xSemaphoreCreateRecursiveMutex();
-  if (L.McuLog_Mutex==NULL) { /* semaphore creation failed */
+  McuLog_ConfigData.McuLog_Mutex = xSemaphoreCreateRecursiveMutex();
+  if (McuLog_ConfigData.McuLog_Mutex==NULL) { /* semaphore creation failed */
     for(;;) {} /* error, not enough memory? */
   }
-  vQueueAddToRegistry(L.McuLog_Mutex, "McuLog_Mutex");
+  vQueueAddToRegistry(McuLog_ConfigData.McuLog_Mutex, "McuLog_Mutex");
   McuLog_set_lock(LockUnlockCallback);
 #endif
 #if McuLog_CONFIG_USE_COLOR
@@ -411,7 +432,7 @@ void McuLog_Init(void) {
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   McuLog_set_rtt_logger(true);
 #endif
-  L.consoleIo = McuShell_GetStdio();
+  McuLog_ConfigData.consoleIo[0] = McuShell_GetStdio(); /* default */
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   #if McuLib_CONFIG_SDK_USE_FREERTOS && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && McuSystemView_CONFIG_RTT_CHANNEL==McuLog_RTT_DATA_LOGGER_CHANNEL
     #error "Both RTT Logger and SystemViewer are using the same channel! Change McuSystemView_CONFIG_RTT_CHANNEL to a different value."
@@ -422,8 +443,8 @@ void McuLog_Init(void) {
 
 void McuLog_Deinit(void) {
 #if McuLog_CONFIG_USE_MUTEX
-  vSemaphoreDelete(L.McuLog_Mutex);
-  L.McuLog_Mutex = NULL;
+  vSemaphoreDelete(McuLog_ConfigData.McuLog_Mutex);
+  McuLog_ConfigData.McuLog_Mutex = NULL;
   McuLog_set_lock(NULL);
 #endif
 }

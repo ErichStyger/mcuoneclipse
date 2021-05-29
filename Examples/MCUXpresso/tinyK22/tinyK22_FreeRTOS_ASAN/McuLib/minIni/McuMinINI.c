@@ -6,7 +6,7 @@
 **     Component   : minIni
 **     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-31, 13:14, # CodeGen: 655
+**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
 **     Abstract    :
 **         minIni is a programmer’s library to read and write ini files in embedded systems.
 **     Settings    :
@@ -463,7 +463,6 @@ uint8_t McuMinINI_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
   }
   return ERR_OK;
 }
-
 /* END McuMinINI. */
 
 /*!

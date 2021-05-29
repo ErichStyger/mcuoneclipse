@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2020, Erich Styger
+ * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-
-#include "asan.h"
+#include "McuASAN.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -19,7 +18,8 @@ static void __asan_ReportGenericError(void) {
   for(;;){}
 }
 
-void __asan_report_store1(void) {__asan_ReportGenericError();}
+/* below are the required callbacks needed by ASAN */
+//void __asan_report_store1(void) {__asan_ReportGenericError();}
 void __asan_report_store2(void) {__asan_ReportGenericError();}
 void __asan_report_store4(void) {__asan_ReportGenericError();}
 void __asan_report_store_n(void) {__asan_ReportGenericError();}
@@ -51,17 +51,16 @@ typedef enum {
 
 static uint8_t *MemToShadow(void *address) {
   address -= APP_MEM_START;
-  return shadow+(((uint32_t)address)>>3);
+  return shadow+(((uint32_t)address)>>3); /* divided by 8: every byte has a shadow bit */
 }
 
 static void PoisonShadow(void *addr) {
-  *MemToShadow(addr) = -1; /* mark memory in shadow as poisoned */
+  *MemToShadow(addr) |= 1<<((uint32_t)addr&7); /* mark memory in shadow as poisoned with shadow bit */
 }
 
 static void ClearShadow(void *addr) {
-  *MemToShadow(addr) = 0; /* clear shadow: it is a valid memory */
+  *MemToShadow(addr) &= ~(1<<((uint32_t)addr&7)); /* clear shadow bit: it is a valid memory */
 }
-
 
 void __asan_init(void) {
   for(int i=0; i<sizeof(shadow); i++) {
@@ -73,8 +72,9 @@ void __asan_init(void) {
   }
 }
 
-static bool SlowPathCheck(uint8_t shadow_value, void *address, size_t kAccessSize) {
-  uint8_t last_accessed_byte = (((uint32_t)address) & 7) + kAccessSize - 1;
+static bool SlowPathCheck(int8_t shadow_value, void *address, size_t kAccessSize) {
+  /* return true if access to address is poisoned */
+  int8_t last_accessed_byte = (((uint32_t)address) & 7) + kAccessSize - 1;
   return (last_accessed_byte >= shadow_value);
 }
 
@@ -96,19 +96,35 @@ static void CheckShadow(void *address, size_t kAccessSize, rw_mode_e mode) {
 }
 
 void __asan_load4_noabort(void *address) {
-  CheckShadow(address, 4, kIsRead);
+  CheckShadow(address, 4, kIsRead); /* check if we are reading from poisened memory */
 }
 
 void __asan_store4_noabort(void *address) {
-  CheckShadow(address, 4, kIsWrite);
+  CheckShadow(address, 4, kIsWrite); /* check if we are writing to poisoned memory */
+}
+
+void __asan_load2_noabort(void *address) {
+  CheckShadow(address, 2, kIsRead); /* check if we are reading from poisened memory */
+}
+
+void __asan_store2_noabort(void *address) {
+  CheckShadow(address, 2, kIsWrite); /* check if we are writing to poisoned memory */
+}
+
+void __asan_load1_noabort(void *address) {
+  CheckShadow(address, 1, kIsRead); /* check if we are reading from poisened memory */
+}
+
+void __asan_store1_noabort(void *address) {
+  CheckShadow(address, 1, kIsWrite); /* check if we are writing to poisoned memory */
 }
 
 #define ASAN_MALLOC_RED_ZONE_BORDER  (8)
 /*
- * rrrrrrr  red zone border (inkl. size below)
+ * rrrrrrrr  red zone border (incl. size below)
  * size
  * memory returned
- * rrrrrrrrrrr  red zone boarder
+ * rrrrrrrr  red zone boarder
  */
 
 void *__asan_malloc(size_t size) {
@@ -116,7 +132,7 @@ void *__asan_malloc(size_t size) {
    * The shadow values corresponding to the redzones are poisoned and the shadow values
    * for the memory region are cleared.
    */
-  void *p = malloc(size+2*ASAN_MALLOC_RED_ZONE_BORDER);
+  void *p = malloc(size+2*ASAN_MALLOC_RED_ZONE_BORDER); /* add size_t for the size of the block */
   void *q;
 
   q = p;
@@ -125,7 +141,7 @@ void *__asan_malloc(size_t size) {
     PoisonShadow(q);
     q++;
   }
-  *((size_t*)q) = size; /* store memory size, needed for the free() part */
+  *((size_t*)(q-sizeof(size_t))) = size; /* store memory size, needed for the free() part */
   /* clear valid memory */
   for(int i=0; i<size; i++) {
     ClearShadow(q);
@@ -136,12 +152,20 @@ void *__asan_malloc(size_t size) {
     PoisonShadow(q);
     q++;
   }
-  return p+ASAN_MALLOC_RED_ZONE_BORDER;
+  return p+ASAN_MALLOC_RED_ZONE_BORDER; /* return pointer to valid memory */
 }
 
 void __asan_free(void *p) {
   /* free poisons shadow values for the entire region and puts the chunk of memory into a quarantine queue
    * (such that this chunk will not be returned again by malloc during some period of time).
    */
-  free(p-ASAN_MALLOC_RED_ZONE_BORDER);
+  size_t size = *((size_t*)(p-sizeof(size_t))); /* get size */
+  void *q = p;
+
+  for(int i=0; i<size; i++) {
+    PoisonShadow(q);
+    q++;
+  }
+  q= p-ASAN_MALLOC_RED_ZONE_BORDER; /* calculate beginning of malloc()ed block */
+  free(q); /* free block */
 }

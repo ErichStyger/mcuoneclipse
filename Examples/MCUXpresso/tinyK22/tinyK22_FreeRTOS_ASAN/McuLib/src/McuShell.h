@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.110, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-30, 16:02, # CodeGen: 654
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -69,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -201,18 +201,17 @@
 #define McuShell_ANSI_COLOR_BRIGHT_CYAN          "\033[4;46m"
 #define McuShell_ANSI_COLOR_BRIGHT_WHITE         "\033[4;47m"
 
-/* settings for command line history */
-#define McuShell_HISTORY_ENABLED  0    /* 1: enabled, 0: disabled */
-#define McuShell_NOF_HISTORY      0    /* number of items in history */
-#define McuShell_HIST_LEN         0    /* history buffer size */
-
 /* settings for silent prefix char */
 #define McuShell_SILENT_PREFIX_CHAR    '#' /* with this char as first character in the cmd, printing is silent. Use a space to disable it */
 #define McuShell_NO_SILENT_PREFIX_CHAR ' ' /* used for no silent prefix char */
 #define McuShell_SILENT_PREFIX_CHAR_ENABLED (McuShell_SILENT_PREFIX_CHAR != McuShell_NO_SILENT_PREFIX_CHAR)
 
 /* settings for local echo */
-#define McuShell_ECHO_ENABLED  0       /* 1: enabled, 0: disabled */
+#if McuShell_CONFIG_ECHO_ENABLED
+  #define McuShell_ECHO_ENABLED  1     /* 1: enabled, 0: disabled */
+#else
+  #define McuShell_ECHO_ENABLED  0     /* 1: enabled, 0: disabled */
+#endif
 
 #define McuShell_DEFAULT_SERIAL  McuShell_CONFIG_DEFAULT_SERIAL /* If set to 1, then the shell implements its own StdIO which is returned by McuShell_GetStdio(); */
 

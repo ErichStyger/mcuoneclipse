@@ -240,8 +240,8 @@
 #define prvReAddTaskToReadyList( pxTCB )																\
 	traceREADDED_TASK_TO_READY_STATE( pxTCB );														\
 	taskRECORD_READY_PRIORITY( ( pxTCB )->uxPriority );												\
-	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xStateListItem ) )
-
+	vListInsertEnd( &( pxReadyTasksLists[ ( pxTCB )->uxPriority ] ), &( ( pxTCB )->xStateListItem ) ); \
+  tracePOST_MOVED_TASK_TO_READY_STATE( pxTCB )
 #endif /* configUSE_SEGGER_SYSTEM_VIEWER_HOOKS */ /* << EST */
 
 /*
@@ -1200,8 +1200,11 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
         #endif /* configUSE_TRACE_FACILITY */
         traceTASK_CREATE( pxNewTCB );
 
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+        prvReAddTaskToReadyList( pxNewTCB );
+#else
         prvAddTaskToReadyList( pxNewTCB );
-
+#endif
         portSETUP_TCB( pxNewTCB );
     }
     taskEXIT_CRITICAL();
@@ -1815,7 +1818,9 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
                 mtCOVERAGE_TEST_MARKER();
             }
 
-						traceMOVED_TASK_TO_SUSPENDED_LIST(pxTCB); /* << EST */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+            traceMOVED_TASK_TO_SUSPENDED_LIST(pxTCB); /* << EST */
+#endif
             vListInsertEnd( &xSuspendedTaskList, &( pxTCB->xStateListItem ) );
 
             #if ( configUSE_TASK_NOTIFICATIONS == 1 )
@@ -4041,7 +4046,7 @@ static void prvCheckTasksWaitingTermination( void )
     }
 
 #endif /* INCLUDE_uxTaskGetStackHighWaterMark */
-/*-----------------------------------------------------------*/
+ /*-----------------------------------------------------------*/
 
 #if ( INCLUDE_vTaskDelete == 1 )
 
@@ -4214,7 +4219,11 @@ static void prvResetNextTaskUnblockTime( void )
 
                     /* Inherit the priority before being moved into the new list. */
                     pxMutexHolderTCB->uxPriority = pxCurrentTCB->uxPriority;
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST  */
+                    prvReAddTaskToReadyList( pxMutexHolderTCB );
+#else
                     prvAddTaskToReadyList( pxMutexHolderTCB );
+#endif
                 }
                 else
                 {
@@ -5457,7 +5466,9 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
                 /* Add the task to the suspended task list instead of a delayed task
                  * list to ensure it is not woken by a timing event.  It will block
                  * indefinitely. */
- 		  traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB); /* << EST */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+              traceMOVED_TASK_TO_SUSPENDED_LIST(pxCurrentTCB); /* << EST */
+#endif
                 vListInsertEnd( &xSuspendedTaskList, &( pxCurrentTCB->xStateListItem ) );
             }
             else
@@ -5474,13 +5485,18 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
                 {
                     /* Wake time has overflowed.  Place this item in the overflow
                      * list. */
-				traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST(); /* << EST */
-                    vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+                  traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST(); /* << EST */
+#endif
+				          vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
                 }
                 else
                 {
                     /* The wake time has not overflowed, so the current block list
                      * is used. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+                    traceMOVED_TASK_TO_DELAYED_LIST(); /* << EST */
+#endif
                     vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 
                     /* If the task entering the blocked state was placed at the
@@ -5510,11 +5526,17 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
             if( xTimeToWake < xConstTickCount )
             {
                 /* Wake time has overflowed.  Place this item in the overflow list. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+                traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST();
+#endif
                 vListInsert( pxOverflowDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
             }
             else
             {
                 /* The wake time has not overflowed, so the current block list is used. */
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
+                traceMOVED_TASK_TO_DELAYED_LIST();
+#endif
                 vListInsert( pxDelayedTaskList, &( pxCurrentTCB->xStateListItem ) );
 
                 /* If the task entering the blocked state was placed at the head of the
@@ -5557,6 +5579,21 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
     #endif
 
 #endif /* if ( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 ) */
+
+/*-----------------------------------------------------------*/
+
+#if (INCLUDE_pxTaskGetStackStart == 1)  /* << EST added for SystemView */
+ uint8_t* pxTaskGetStackStart( TaskHandle_t xTask)
+ {
+     TCB_t *pxTCB;
+     UBaseType_t uxReturn;
+        (void)uxReturn;
+
+   pxTCB = prvGetTCBFromHandle( xTask );
+   return ( uint8_t * ) pxTCB->pxStack;
+ }
+
+#endif /* INCLUDE_pxTaskGetStackStart */
 
 #if 1 /* << EST: additional functionality to iterathe through task handles. */
 static void prvCollectTaskHandlesWithinSingleList( List_t *pxList,  TaskHandle_t taskHandleArray[], UBaseType_t noTaskHandlesInArray, UBaseType_t *idxCounter)
