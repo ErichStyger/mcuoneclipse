@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Erich Styger
+ * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -8,9 +8,28 @@
 #define MCUASAN_H_
 
 #include <stddef.h>
+#include "McuASANconfig.h"
 
-void __asan_free(void *p);
+#if McuASAN_CONFIG_IS_ENABLED && McuASAN_CONFIG_CHECK_MALLOC_FREE
+  /* replace malloc and free calls */
+  #define malloc   __asan_malloc
+  #define free     __asan_free
+#endif
+
+/*! \brief
+ * Allocate a memory block
+ */
 void *__asan_malloc(size_t size);
+
+/*!
+ * \brief
+ * Free a memory block
+ */
+void __asan_free(void *p);
+
+/*! \brief
+ * Call the init function first to initialize the module.
+ */
 void __asan_init(void);
 
 #endif /* MCUASAN_H_ */

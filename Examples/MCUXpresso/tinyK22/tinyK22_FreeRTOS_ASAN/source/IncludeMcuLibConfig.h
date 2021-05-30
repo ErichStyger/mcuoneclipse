@@ -51,4 +51,13 @@
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 
+/* -------------------------- ASAN ---------------------*/
+#define McuASAN_CONFIG_IS_ENABLED           (1)
+#define McuASAN_CONFIG_CHECK_MALLOC_FREE    (1)
+#if McuASAN_CONFIG_CHECK_MALLOC_FREE
+  #include "McuASANconfig.h"  /* overwrite malloc() and free() */
+#endif
+#define McuASAN_CONFIG_APP_MEM_START 0x20000000
+#define McuASAN_CONFIG_APP_MEM_SIZE  (64*1024)
+
 #endif /* INCLUDEMCULIBCONFIG_H_ */

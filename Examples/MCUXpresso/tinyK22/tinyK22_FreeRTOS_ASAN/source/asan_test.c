@@ -8,43 +8,47 @@
 #include "McuASAN.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include "cr_section_macros.h"
 
 static int arr[] = {1,2,3};
 static int *p = &arr[0];
 
-void ASAN_TEST_1(void) {
-  int *p;
-  p = malloc(10);
-  free(p);
-  arr[0] = *p;
-  *p = 0;
-  //for(;;) {}
-  //p = malloc(10);
-  //p = malloc(100);
-  //p = malloc(1024);
+static int TestPointer(void) {
+  int *p = arr;
+  int sum = 0;
+
+  for(int i=0; i<5; i++) {
+     sum += *p;
+     p++;
+  }
+  return sum;
 }
 
-static void ASAN_TEST_2(void) {
+static void TestMalloc_1(void) {
+  p = malloc(16);
+  free(p);
+  arr[0] = *p;
+  *p = 0;  /* bug: access to released memory */
+}
+
+static int TestMalloc_2(void) {
   int i, *p;
   uint8_t c;
 
-#if 0
   p = malloc(10);
-  free(p);
-#else
-  p = __asan_malloc(10);
   c = *((uint8_t*)p);
   *p = 0xdeadbeef;
   for(int j=0; j<10; j++) {
-    p[j] = j; /* read */
+    p[j] = j; /* BUG: initialize memory */
   }
-  __asan_free(p);
-#endif
-  i = *p; /* access to released memory! */
+  free(p);
+  i = *p; /* BUG: access to released memory! */
+  return i+c;
 }
 
 void ASAN_TEST_Init(void)  {
-  ASAN_TEST_2();
-  ASAN_TEST_1();
+  TestPointer();
+  TestMalloc_1();
+  TestMalloc_2();
 }
 
