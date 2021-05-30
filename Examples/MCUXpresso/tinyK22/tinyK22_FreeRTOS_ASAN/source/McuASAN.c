@@ -99,14 +99,18 @@ static void ReportError(void *address, size_t kAccessSize, rw_mode_e mode) {
 }
 
 static void CheckShadow(void *address, size_t kAccessSize, rw_mode_e mode) {
-  uint8_t *shadow_address;
-  uint8_t shadow_value;
+  int8_t *shadow_address;
+  int8_t shadow_value;
 
-  shadow_address = MemToShadow(address);
-  shadow_value = *shadow_address;
-  if (shadow_value!=0) { /* fast check: poisoned! */
-    if (SlowPathCheck(shadow_value, address, kAccessSize)) {
+  if (address>=(void*)McuASAN_CONFIG_APP_MEM_START && address<(void*)(McuASAN_CONFIG_APP_MEM_START+McuASAN_CONFIG_APP_MEM_SIZE)) {
+    shadow_address = (int8_t*)MemToShadow(address);
+    shadow_value = *shadow_address;
+    if (shadow_value==-1) {
       ReportError(address, kAccessSize, mode);
+    } else if (shadow_value!=0) { /* fast check: poisoned! */
+      if (SlowPathCheck(shadow_value, address, kAccessSize)) {
+        ReportError(address, kAccessSize, mode);
+      }
     }
   }
 }

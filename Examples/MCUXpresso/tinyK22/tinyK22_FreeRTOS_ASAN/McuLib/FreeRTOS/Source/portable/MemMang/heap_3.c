@@ -51,6 +51,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "McuASAN.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 

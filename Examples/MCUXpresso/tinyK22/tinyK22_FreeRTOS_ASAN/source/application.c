@@ -28,6 +28,9 @@ static void AppTask(void *pv) {
     if (pa[idx]!=NULL) {
       vPortFree(pa[idx]);
     }
+    if (pa[idx]!=NULL) {
+      pa[idx][5]++;
+    }
     pa[idx] = pvPortMalloc(20);
     idx++;
     if (idx==sizeof(pa)/sizeof(pa[0])) {
@@ -45,7 +48,7 @@ void APP_Run(void) {
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      300/sizeof(StackType_t), /* task stack size */
+      600/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
