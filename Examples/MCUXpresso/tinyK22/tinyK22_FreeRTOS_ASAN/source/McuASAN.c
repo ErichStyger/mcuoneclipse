@@ -7,21 +7,31 @@
 #include "McuASANconfig.h"
 #if McuASAN_CONFIG_IS_ENABLED
 #include "McuASAN.h"
+#include "McuLog.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if 0
 /* hooks if using -fsanitize=address */
 /* -fasan-shadow-offset=number */
 /* -fsanitize=kernel-address */
 static void __asan_ReportGenericError(void) {
+#if 1
+  McuLog_fatal("ASAN generic failure");
+#else
   __asm volatile("bkpt #0"); /* stop application */
   for(;;){}
+#endif
 }
 
 /* below are the required callbacks needed by ASAN */
-//void __asan_report_store1(void) {__asan_ReportGenericError();}
+void __asan_report_store1(void) {__asan_ReportGenericError();}
 void __asan_report_store2(void) {__asan_ReportGenericError();}
 void __asan_report_store4(void) {__asan_ReportGenericError();}
 void __asan_report_store_n(void) {__asan_ReportGenericError();}
@@ -29,24 +39,30 @@ void __asan_report_load1(void) {__asan_ReportGenericError();}
 void __asan_report_load2(void) {__asan_ReportGenericError();}
 void __asan_report_load4(void) {__asan_ReportGenericError();}
 void __asan_report_load_n(void) {__asan_ReportGenericError();}
+#endif
 
-void __asan_stack_malloc_1(void) {}
-void __asan_stack_malloc_2(void) {}
-void __asan_handle_no_return(void) {}
-void __asan_option_detect_stack_use_after_return(void) {}
+#if 0
+static void NYI(void) {
+  __asm volatile("bkpt #0"); /* stop application */
+  for(;;){}
+}
+void __asan_stack_malloc_1(void) { NYI(); }
+void __asan_stack_malloc_2(void) { NYI(); }
+void __asan_handle_no_return(void) { NYI(); }
+void __asan_option_detect_stack_use_after_return(void) { NYI(); }
 
-void __asan_register_globals(void) {}
-void __asan_unregister_globals(void) {}
-void __asan_version_mismatch_check_v8(void) {}
-
+void __asan_register_globals(void) { NYI(); }
+void __asan_unregister_globals(void) { NYI(); }
+void __asan_version_mismatch_check_v8(void) { NYI(); }
+#endif
 
 /* see https://github.com/gcc-mirror/gcc/blob/master/libsanitizer/asan/asan_interface_internal.h */
-static uint8_t shadow[McuASAN_CONFIG_APP_MEM_SIZE/8]; /* one shadow byte for 8 application memory bytes */
+static uint8_t shadow[McuASAN_CONFIG_APP_MEM_SIZE/8]; /* one shadow byte for 8 application memory bytes. A 1 means that the memory address is poisoned */
 
 #if McuASAN_CONFIG_FREE_QUARANTINE_LIST_SIZE > 0
 static void *freeQuarantineList[McuASAN_CONFIG_FREE_QUARANTINE_LIST_SIZE];
 /*!< list of free'd blocks in quarantine */
-static int freeQuarantineListIdx; /* index in list (ringbuffer), points to free element in list */
+static int freeQuarantineListIdx; /* index in list (ring buffer), points to free element in list */
 #endif
 
 typedef enum {
@@ -59,12 +75,16 @@ static uint8_t *MemToShadow(void *address) {
   return shadow+(((uint32_t)address)>>3); /* divided by 8: every byte has a shadow bit */
 }
 
-static void PoisonShadow(void *addr) {
-  *MemToShadow(addr) |= 1<<((uint32_t)addr&7); /* mark memory in shadow as poisoned with shadow bit */
+static void PoisonShadowByte1Addr(void *addr) {
+  if (addr>=(void*)McuASAN_CONFIG_APP_MEM_START && addr<(void*)(McuASAN_CONFIG_APP_MEM_START+McuASAN_CONFIG_APP_MEM_SIZE)) {
+    *MemToShadow(addr) |= 1<<((uint32_t)addr&7); /* mark memory in shadow as poisoned with shadow bit */
+  }
 }
 
-static void ClearShadow(void *addr) {
-  *MemToShadow(addr) &= ~(1<<((uint32_t)addr&7)); /* clear shadow bit: it is a valid memory */
+static void ClearShadowByte1Addr(void *addr) {
+  if (addr>=(void*)McuASAN_CONFIG_APP_MEM_START && addr<(void*)(McuASAN_CONFIG_APP_MEM_START+McuASAN_CONFIG_APP_MEM_SIZE)) {
+    *MemToShadow(addr) &= ~(1<<((uint32_t)addr&7)); /* clear shadow bit: it is a valid memory */
+  }
 }
 
 static bool SlowPathCheck(int8_t shadow_value, void *address, size_t kAccessSize) {
@@ -74,7 +94,8 @@ static bool SlowPathCheck(int8_t shadow_value, void *address, size_t kAccessSize
 }
 
 static void ReportError(void *address, size_t kAccessSize, rw_mode_e mode) {
-  __asan_ReportGenericError();
+  McuLog_fatal("ASAN ptr failure: addr 0x%x, %s, size: %d", address, mode==kIsRead?"read":"write", kAccessSize);
+//  __asm volatile("bkpt #0"); /* stop application if debugger is attached */
 }
 
 static void CheckShadow(void *address, size_t kAccessSize, rw_mode_e mode) {
@@ -91,7 +112,7 @@ static void CheckShadow(void *address, size_t kAccessSize, rw_mode_e mode) {
 }
 
 void __asan_load4_noabort(void *address) {
-  CheckShadow(address, 4, kIsRead); /* check if we are reading from poisened memory */
+  CheckShadow(address, 4, kIsRead); /* check if we are reading from poisoned memory */
 }
 
 void __asan_store4_noabort(void *address) {
@@ -99,7 +120,7 @@ void __asan_store4_noabort(void *address) {
 }
 
 void __asan_load2_noabort(void *address) {
-  CheckShadow(address, 2, kIsRead); /* check if we are reading from poisened memory */
+  CheckShadow(address, 2, kIsRead); /* check if we are reading from poisoned memory */
 }
 
 void __asan_store2_noabort(void *address) {
@@ -107,7 +128,7 @@ void __asan_store2_noabort(void *address) {
 }
 
 void __asan_load1_noabort(void *address) {
-  CheckShadow(address, 1, kIsRead); /* check if we are reading from poisened memory */
+  CheckShadow(address, 1, kIsRead); /* check if we are reading from poisoned memory */
 }
 
 void __asan_store1_noabort(void *address) {
@@ -142,18 +163,18 @@ void *__asan_malloc(size_t size) {
   q = p;
   /* poison red zone at the beginning */
   for(int i=0; i<McuASAN_CONFIG_MALLOC_RED_ZONE_BORDER; i++) {
-    PoisonShadow(q);
+    PoisonShadowByte1Addr(q);
     q++;
   }
   *((size_t*)(q-sizeof(size_t))) = size; /* store memory size, needed for the free() part */
   /* clear valid memory */
   for(int i=0; i<size; i++) {
-    ClearShadow(q);
+    ClearShadowByte1Addr(q);
     q++;
   }
   /* poison red zone at the end */
   for(int i=0; i<McuASAN_CONFIG_MALLOC_RED_ZONE_BORDER; i++) {
-    PoisonShadow(q);
+    PoisonShadowByte1Addr(q);
     q++;
   }
   return p+McuASAN_CONFIG_MALLOC_RED_ZONE_BORDER; /* return pointer to valid memory */
@@ -162,14 +183,14 @@ void *__asan_malloc(size_t size) {
 
 #if McuASAN_CONFIG_CHECK_MALLOC_FREE
 void __asan_free(void *p) {
-  /* free poisons shadow values for the entire region and puts the chunk of memory into a quarantine queue
+  /* Poisons shadow values for the entire region and put the chunk of memory into a quarantine queue
    * (such that this chunk will not be returned again by malloc during some period of time).
    */
   size_t size = *((size_t*)(p-sizeof(size_t))); /* get size */
   void *q = p;
 
   for(int i=0; i<size; i++) {
-    PoisonShadow(q);
+    PoisonShadowByte1Addr(q);
     q++;
   }
   q = p-McuASAN_CONFIG_MALLOC_RED_ZONE_BORDER; /* calculate beginning of malloc()ed block */
@@ -190,13 +211,13 @@ void __asan_free(void *p) {
 }
 #endif /* McuASAN_CONFIG_CHECK_MALLOC_FREE */
 
-void __asan_init(void) {
-  for(int i=0; i<sizeof(shadow); i++) {
-    shadow[i] = 0; /* unpoisoned  */
+void McuASAN_Init(void) {
+  for(int i=0; i<sizeof(shadow); i++) { /* initialize full shadow map */
+    shadow[i] = -1; /* poison everything  */
   }
   /* because the shadow is part of the memory area: poison the shadow */
   for(int i=0; i<sizeof(shadow); i+=8) {
-    PoisonShadow(&shadow[i]);
+    PoisonShadowByte1Addr(&shadow[i]);
   }
 #if McuASAN_CONFIG_FREE_QUARANTINE_LIST_SIZE > 0
   for(int i=0; i<McuASAN_CONFIG_FREE_QUARANTINE_LIST_SIZE; i++) {
@@ -205,6 +226,5 @@ void __asan_init(void) {
   freeQuarantineListIdx = 0;
 #endif
 }
-
 
 #endif /* McuASAN_CONFIG_IS_ENABLED */

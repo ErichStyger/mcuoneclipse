@@ -17,7 +17,6 @@ int main(void) {
   BOARD_InitBootPeripherals();
 
   APP_Run(); /* run application */
-
   return 0 ;
 }
 

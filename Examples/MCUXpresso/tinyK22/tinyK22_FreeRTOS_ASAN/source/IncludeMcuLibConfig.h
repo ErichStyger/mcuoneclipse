@@ -37,13 +37,13 @@
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 
 /* performance counter: */
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)
+#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
 #define configGET_RUNTIMER_COUNTER_VALUE_FROM_ISR   AppGetRuntimeCounterValueFromISR
 #define configCONFIGURE_TIMER_FOR_RUNTIME_STATS     AppConfigureTimerForRuntimeStats
 
 
 /* Segger SystemViewer: */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
 #define SYSVIEW_APP_NAME                            "FreeRTOS on tinyK22"
 #define SYSVIEW_DEVICE_NAME                         "NXP K22FN512"
 
@@ -59,5 +59,12 @@
 #endif
 #define McuASAN_CONFIG_APP_MEM_START 0x20000000
 #define McuASAN_CONFIG_APP_MEM_SIZE  (64*1024)
+/* -------------------------------------------------*/
+/* McuLog */
+#define McuLog_CONFIG_IS_ENABLED                      (1)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE              (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_TIME              (0)
+#define McuLog_CONFIG_USE_RTT_DATA_LOGGER             (0)
+#define McuLog_CONFIG_RTT_DATA_LOGGER_BUFFER_SIZE     (128)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

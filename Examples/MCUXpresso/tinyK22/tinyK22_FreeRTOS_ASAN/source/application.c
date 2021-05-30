@@ -14,6 +14,8 @@
 #include "leds.h"
 #include "fsl_pit.h"
 #include "McuASAN.h"
+#include "McuLog.h"
+#include "asan_test.h"
 
 static void AppTask(void *pv) {
   uint8_t *pa[10];
@@ -37,8 +39,9 @@ static void AppTask(void *pv) {
 }
 
 void APP_Run(void) {
-  __asan_init(); /* initialize ASAN */
   PL_Init();
+  McuLog_info("Running application instrumented with ASAN");
+  ASAN_Test();
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */

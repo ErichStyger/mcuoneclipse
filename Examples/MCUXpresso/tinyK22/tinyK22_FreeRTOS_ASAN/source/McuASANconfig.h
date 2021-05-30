@@ -24,7 +24,7 @@
 
 #ifndef McuASAN_CONFIG_APP_MEM_SIZE
   #define McuASAN_CONFIG_APP_MEM_SIZE  (64*1024)
-  /*!< Memory size */
+  /*!< Memory size in bytes */
 #endif
 
 #if McuASAN_CONFIG_CHECK_MALLOC_FREE

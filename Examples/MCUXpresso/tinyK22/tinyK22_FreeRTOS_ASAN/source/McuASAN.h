@@ -30,6 +30,11 @@ void __asan_free(void *p);
 /*! \brief
  * Call the init function first to initialize the module.
  */
-void __asan_init(void);
+void McuASAN_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 
 #endif /* MCUASAN_H_ */

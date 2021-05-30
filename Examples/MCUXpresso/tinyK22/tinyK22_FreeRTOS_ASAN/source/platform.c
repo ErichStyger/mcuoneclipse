@@ -17,16 +17,22 @@
 #include "McuRTT.h"
 #include "McuSystemView.h"
 #include "McuPercepio.h"
-#include "asan_test.h"
+#include "McuTimeDate.h"
+#include "McuASAN.h"
+#include "McuLog.h"
 
 void PL_Init(void) {
   /* initialize McuLib modules */
   McuLib_Init();
+  McuASAN_Init(); /* initialize ASAN */
   McuWait_Init();
   McuRTOS_Init();
   McuUtility_Init();
   McuArmTools_Init();
+  McuTimeDate_Init();
   McuCriticalSection_Init();
+  McuLog_Init();
+  McuLog_set_console(&McuRTT_stdio, 0);
   McuRTT_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
@@ -39,7 +45,6 @@ void PL_Init(void) {
 
   /* initialize my own modules */
   LEDS_Init();
-  ASAN_TEST_Init();
 }
 
 void PL_Deinit(void) {
