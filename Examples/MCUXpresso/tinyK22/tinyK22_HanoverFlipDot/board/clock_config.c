@@ -48,10 +48,10 @@ processor_version: 9.0.0
  * Definitions
  ******************************************************************************/
 #define OSC_CAP0P                                         0U  /*!< Oscillator 0pF capacitor load */
-#define SIM_LPUART_CLK_SEL_OSCERCLK_CLK                   2U  /*!< LPUART clock select: OSCERCLK clock */
+#define SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK                  1U  /*!< LPUART clock select: PLLFLLSEL output clock */
 #define SIM_OSC32KSEL_OSC32KCLK_CLK                       0U  /*!< OSC32KSEL select: OSC32KCLK clock */
 #define SIM_PLLFLLSEL_MCGPLLCLK_CLK                       1U  /*!< PLLFLL select: MCGPLLCLK clock */
-#define SIM_USB_CLK_120000000HZ                   120000000U  /*!< Input SIM frequency for USB: 120000000Hz */
+#define SIM_USB_CLK_96000000HZ                     96000000U  /*!< Input SIM frequency for USB: 96000000Hz */
 
 /*******************************************************************************
  * Variables
@@ -91,18 +91,18 @@ void BOARD_InitBootClocks(void)
 name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
-- {id: Bus_clock.outFreq, value: 60 MHz}
-- {id: Core_clock.outFreq, value: 120 MHz}
-- {id: Flash_clock.outFreq, value: 24 MHz}
-- {id: FlexBus_clock.outFreq, value: 30 MHz}
+- {id: Bus_clock.outFreq, value: 48 MHz}
+- {id: Core_clock.outFreq, value: 96 MHz}
+- {id: Flash_clock.outFreq, value: 19.2 MHz}
+- {id: FlexBus_clock.outFreq, value: 24 MHz}
 - {id: LPO_clock.outFreq, value: 1 kHz}
-- {id: LPUARTCLK.outFreq, value: 8 MHz}
+- {id: LPUARTCLK.outFreq, value: 96 MHz}
 - {id: MCGFFCLK.outFreq, value: 250 kHz}
 - {id: MCGIRCLK.outFreq, value: 4 MHz}
 - {id: OSCERCLK.outFreq, value: 8 MHz}
 - {id: OSCERCLK_UNDIV.outFreq, value: 8 MHz}
-- {id: PLLFLLCLK.outFreq, value: 120 MHz}
-- {id: System_clock.outFreq, value: 120 MHz}
+- {id: PLLFLLCLK.outFreq, value: 96 MHz}
+- {id: System_clock.outFreq, value: 96 MHz}
 - {id: USB48MCLK.outFreq, value: 48 MHz}
 settings:
 - {id: MCGMode, value: PEE}
@@ -114,7 +114,6 @@ settings:
 - {id: MCG.IREFS.sel, value: MCG.FRDIV}
 - {id: MCG.PLLS.sel, value: MCG.PLL}
 - {id: MCG.PRDIV.scale, value: '2'}
-- {id: MCG.VDIV.scale, value: '30'}
 - {id: MCG_C1_IRCLKEN_CFG, value: Enabled}
 - {id: MCG_C1_IREFSTEN_CFG, value: Enabled}
 - {id: MCG_C2_OSC_MODE_CFG, value: ModeOscLowPower}
@@ -123,12 +122,12 @@ settings:
 - {id: MCG_C5_PLLCLKEN0_CFG, value: Enabled}
 - {id: OSC_CR_ERCLKEN_CFG, value: Enabled}
 - {id: OSC_CR_ERCLKEN_UNDIV_CFG, value: Enabled}
-- {id: SIM.LPUARTSRCSEL.sel, value: OSC.OSCERCLK}
+- {id: SIM.LPUARTSRCSEL.sel, value: SIM.PLLFLLSEL}
 - {id: SIM.OUTDIV2.scale, value: '2'}
 - {id: SIM.OUTDIV3.scale, value: '4'}
 - {id: SIM.OUTDIV4.scale, value: '5'}
 - {id: SIM.PLLFLLSEL.sel, value: MCG.MCGPLLCLK}
-- {id: SIM.USBDIV.scale, value: '5'}
+- {id: SIM.USBDIV.scale, value: '4'}
 - {id: SIM.USBFRAC.scale, value: '2'}
 - {id: SIM.USBSRCSEL.sel, value: SIM.USBDIV}
 - {id: USBClkConfig, value: 'yes'}
@@ -154,7 +153,7 @@ const mcg_config_t mcgConfig_BOARD_BootClockRUN =
             {
                 .enableMode = kMCG_PllEnableIndependent,/* MCGPLLCLK enabled independent of MCG clock mode, MCGPLLCLK disabled in STOP mode */
                 .prdiv = 0x1U,                    /* PLL Reference divider: divided by 2 */
-                .vdiv = 0x6U,                     /* VCO divider: multiplied by 30 */
+                .vdiv = 0x0U,                     /* VCO divider: multiplied by 24 */
             },
     };
 const sim_clock_config_t simConfig_BOARD_BootClockRUN =
@@ -206,8 +205,8 @@ void BOARD_BootClockRUN(void)
     /* Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
     /* Enable USB FS clock. */
-    CLOCK_EnableUsbfs0Clock(kCLOCK_UsbSrcPll0, SIM_USB_CLK_120000000HZ);
+    CLOCK_EnableUsbfs0Clock(kCLOCK_UsbSrcPll0, SIM_USB_CLK_96000000HZ);
     /* Set LPUART clock source. */
-    CLOCK_SetLpuartClock(SIM_LPUART_CLK_SEL_OSCERCLK_CLK);
+    CLOCK_SetLpuartClock(SIM_LPUART_CLK_SEL_PLLFLLSEL_CLK);
 }
 

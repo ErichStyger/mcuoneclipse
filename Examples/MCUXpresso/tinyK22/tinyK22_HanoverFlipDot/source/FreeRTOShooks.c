@@ -124,9 +124,9 @@ void McuRTOS_vApplicationIdleHook(void)
   /* somehow on LPC this does slow down RTT communication a lot! */
   /* a better solution here would be to check if there are RTT bytes in the buffer, but the buffer is not full yet */
 #else
-  __asm volatile("dsb");
-  __asm volatile("wfi");
-  __asm volatile("isb");
+//  __asm volatile("dsb");
+//  __asm volatile("wfi");
+//  __asm volatile("isb");
 #endif
 }
 
