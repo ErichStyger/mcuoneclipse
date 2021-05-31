@@ -36,9 +36,26 @@ set(SRC_FILES
         McuLib/src/McuGPIO.c
         McuLib/src/McuLed.c
         McuLib/src/McuWait.c
-        McuLib/src/McuRTOS.c
         McuLib/src/McuUtility.c
         McuLib/src/McuArmTools.c
+        McuLib/src/McuRTOS.c
+
+        McuLib/FreeRTOS/FreeRTOShooks.c
+        McuLib/FreeRTOS/Source/croutine.c
+        McuLib/FreeRTOS/Source/event_groups.c
+        McuLib/FreeRTOS/Source/list.c
+        McuLib/FreeRTOS/Source/queue.c
+        McuLib/FreeRTOS/Source/stream_buffer.c
+        McuLib/FreeRTOS/Source/tasks.c
+        McuLib/FreeRTOS/Source/timers.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_1.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_2.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_3.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_4.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_5.c
+        McuLib/FreeRTOS/Source/portable/MemMang/heap_useNewlib.c
+        McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
+        McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/portasm.s
         )
 
 # Build the executable based on the source files
@@ -61,10 +78,13 @@ target_include_directories(${EXECUTABLE} PRIVATE
         McuLib/config/fonts
         McuLib/src
         McuLib/fonts
+
         McuLib/FreeRTOS/Source/include
         McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
+        
         McuLib/SEGGER_RTT
         McuLib/SEGGER_Sysview
+
         McuLib/TraceRecorder/config
         McuLib/TraceRecorder/include
         McuLib/TraceRecorder/streamports/Jlink_RTT/include

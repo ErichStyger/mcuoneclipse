@@ -63,7 +63,7 @@ int main(void) {
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
 
-    printf("Hello World\n");
+    //printf("Hello World\n");
 
     while(1) {
       GPIO_PortSet(BOARD_LED_BLUE_GPIO, (1<<BOARD_LED_BLUE_PIN)); /* led off */

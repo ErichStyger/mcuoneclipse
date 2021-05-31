@@ -8,7 +8,7 @@
 #include "leds.h"
 #include "McuLED.h"
 
-/* LEDs on the board */
+/* LEDs on the FRDM-K22 board */
 #define LED_RED_GPIO        GPIOA
 #define LED_RED_PORT        PORTA
 #define LED_RED_PIN         1U
