@@ -25,7 +25,7 @@
 <intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
 <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
-<stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="false;GDBServer/RTOSPlugin_FreeRTOS"/>
+<stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
 <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
@@ -69,6 +69,7 @@
 <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
 <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\tinyK22_HanoverFlipDot.axf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="tinyK22_HanoverFlipDot"/>
