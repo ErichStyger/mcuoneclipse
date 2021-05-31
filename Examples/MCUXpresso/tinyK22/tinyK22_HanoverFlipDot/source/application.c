@@ -8,11 +8,41 @@
 #include "platform.h"
 #include "McuRTOS.h"
 #include "McuLED.h"
+#include "McuUtility.h"
 #include "leds.h"
 
 #if PL_CONFIG_USE_SHELL
-uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"App", (unsigned char*)"Application status\r\n", io->stdOut);
   return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"app", (unsigned char*)"Group of application commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"test flipdots\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0
+    || McuUtility_strcmp((char*)cmd, "app help") == 0)
+  {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (   (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0)
+             || (McuUtility_strcmp((char*)cmd, "app status")==0)
+            )
+  {
+    *handled = TRUE;
+    res = PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "app test")==0) {
+    *handled = TRUE;
+  }
+  return res;
 }
 #endif
 

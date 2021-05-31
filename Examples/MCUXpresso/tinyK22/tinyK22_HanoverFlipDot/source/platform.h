@@ -15,7 +15,7 @@
 #define PL_CONFIG_USE_RTC         (0)
 #define PL_CONFIG_USE_SHT31       (0)
 #define PL_CONFIG_USE_EXT_EEPROM  (0)
-#define PL_CONFIG_USE_RS485       (0)
+#define PL_CONFIG_USE_RS485       (1)
 #define PL_CONFIG_USE_NVMC        (0)
 #define PL_CONFIG_HAS_BUTTONS     (0)
 #define PL_CONFIG_USE_SHELL       (1)
