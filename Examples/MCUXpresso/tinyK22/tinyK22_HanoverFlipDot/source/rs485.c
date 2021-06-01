@@ -80,66 +80,143 @@ static void StoreASCIIHex8(uint8_t *buf, uint8_t val) {
   buf[0] = NumToHexChar[val/16];
   buf[1] = NumToHexChar[val%16];
 }
-// 0x30 => '0'
-// 0x31 => '1'
-// 0x32 => '2'
-// 0x33 => '3'
+
+static void StoreASCIIHex16(uint8_t *buf, uint16_t val) {
+  /* store checksum as ASCII, e.b. 0x4A  => '4' 'A' */
+  StoreASCIIHex8(buf, (val>>8)&0xff);
+  StoreASCIIHex8(buf+2, val&0xff);
+}
 
 #define FLIP_DOT_DEVICE_ADDRESS  (1) /* position of rotary switch */
 #define FLIP_DOT_NOF_COL         (20)
 #define FLIP_DOT_NOF_ROW         (14)
-#define FLIP_DOT_NOF_DATA        (FLIP_DOT_NOF_COL*((FLIP_DOT_NOF_ROW-1)/8)+1))
-#define FLIP_DOT_NOF_BUF_BYTES   (1/*SOT*/ +1/*cmd*/ +1/*addr*/ +2/*nof*/ +FLIP_DOT_NOF_DATA +1/*EOT*/ +2/*checksum*/)
+#define FLIP_DOT_NOF_DATA        (FLIP_DOT_NOF_COL*(((FLIP_DOT_NOF_ROW-1)/8)+1))
+#define FLIP_DOT_NOF_BUF_BYTES   (1/*SOT*/ +1/*cmd*/ +1/*addr*/ +2/*nof*/ +2*FLIP_DOT_NOF_DATA +1/*EOT*/ +2/*checksum*/)
 
 #define FLIP_DOT_BUF_POS_SOT     (0)
 #define FLIP_DOT_BUF_POS_CMD     (1)
 #define FLIP_DOT_BUF_POS_ADDR    (2)
 #define FLIP_DOT_BUF_POS_NOF     (3)
 #define FLIP_DOT_BUF_POS_DATA    (5)
-#define FLIP_DOT_BUF_POS_EOT     (FLIP_DOT_BUF_POS_DATA+FLIP_DOT_NOF_DATA)
+#define FLIP_DOT_BUF_POS_EOT     (FLIP_DOT_BUF_POS_DATA+2*FLIP_DOT_NOF_DATA)
 #define FLIP_DOT_BUF_POS_CHECK   (FLIP_DOT_BUF_POS_EOT+1)
 
-static void test(void) {
+static uint8_t dotMap[((FLIP_DOT_NOF_COL-1)/8)+1][FLIP_DOT_NOF_ROW];
+
+static void SetDot(unsigned int x, unsigned int y) {
+  if (x<FLIP_DOT_NOF_COL && y<FLIP_DOT_NOF_ROW) {
+    dotMap[x/8][y] |= 1<<(7-x%8);
+  }
+}
+
+static void ClrDot(unsigned int x, unsigned int y) {
+  if (x<FLIP_DOT_NOF_COL && y<FLIP_DOT_NOF_ROW) {
+    dotMap[x/8][y] &= ~(1<<(7-x%8));
+  }
+}
+
+static bool IsDotSet(unsigned int x, unsigned int y) {
+  return dotMap[x/8][y]&(1<<(7-x%8));
+}
+
+static void ClearAllDots(void) {
+  for (int x=0; x<FLIP_DOT_NOF_COL; x++) {
+    for (int y=0; y<FLIP_DOT_NOF_ROW; y++) {
+      ClrDot(x, y);
+    }
+  }
+}
+
+static void SetAllDots(void) {
+  for (int x=0; x<FLIP_DOT_NOF_COL; x++) {
+    for (int y=0; y<FLIP_DOT_NOF_ROW; y++) {
+      SetDot(x, y);
+    }
+  }
+}
+
+static void DataDots(uint8_t *buf) {
+  /* transform bitmap data into flip dot data */
+  static uint16_t rowConst[16] = { /* constant values for rows */
+      /* 0 */ 1<<9,
+      /* 1 */ 1<<10,
+      /* 2 */ 1<<11,
+      /* 3 */ 1<<12,
+      /* 4 */ 1<<13,
+      /* 5 */ 1<<14,
+      /* 6 */ 1<<15,
+      /* 7 */ 1<<0,
+      /* 8 */ 1<<1,
+      /* 9 */ 1<<2,
+      /* 10 */ 1<<3,
+      /* 11 */ 1<<4,
+      /* 12 */ 1<<5,
+      /* 13 */ 1<<6,
+      /* 14 */ 0, /* dummy */
+      /* 15 */ 0  /* dummy */
+  };
+  uint16_t val;
+
+  for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
+    val = 0;
+    for(int y=0;y<FLIP_DOT_NOF_ROW;y++) {
+      if (IsDotSet(x,y)) {
+        val |= rowConst[y];
+      }
+    } /* for y */
+    StoreASCIIHex16(&buf[x*4], val);
+  } /* for x */
+}
+
+static void SendDots(void) {
   /* see https://github.com/hawkz/Hanover_Flipdot */
   /* https://cute766.info/adventures-with-flippy-the-flip-dot-display-software-and-teardown/ */
-#if 0
-  uint8_t buf[] = {
-      0x02, /* SOT */
-      0x31, /* command: '0': text message, '1': graphics message, followed by the address of the device */
-      '0'+FLIP_DOT_DEVICE_ADDRESS+1, /* address: '1', 'val'+1 ('0' is broadcast) */
-      0x32, 0x41, /* how man bytes (width*height/8) 0x32 0x41 => '2' 'A' => 0x2A => 42 bytes => 84 characters */  /* Example: '5' '4' => 0x54 => 84 bytes */
-      0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x30, 0x36, 0x46, 0x43, 0x30,  /* Data */
-      0x37, 0x46, 0x43, 0x30, 0x37, 0x30, 0x30, 0x30, 0x36, 0x30, 0x30,
-      0x30, 0x30, 0x46, 0x38, 0x30, 0x33, 0x46, 0x43, 0x30, 0x37, 0x30,
-      0x43, 0x30, 0x36, 0x30, 0x43, 0x30, 0x36, 0x46, 0x43, 0x30, 0x37,
-      0x46, 0x38, 0x30, 0x33, 0x30, 0x30, 0x30, 0x30, 0x46, 0x38, 0x30,
-      0x33, 0x46, 0x43, 0x30, 0x37, 0x30, 0x43, 0x30, 0x36, 0x30, 0x43,
-      0x30, 0x36, 0x46, 0x43, 0x30, 0x37, 0x46, 0x38, 0x30, 0x33, 0x30,
-      0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,   /* End of data */
-      0x03, /* EOT, footer */
-      0x34, 0x41   /* checksum: 0x4A */
+  uint8_t buf[FLIP_DOT_NOF_BUF_BYTES] = {
+      0x00, /* SOT */
+      0x00, /* command: '0': text message, '1': graphics message, followed by the address of the device */
+      0x00, /* address: '1', 'val'+1 ('0' is broadcast) */
+      0x00, 0x00, /* how man bytes (20*14+2 /8) 0x32 0x41 => '2' 'A' => 0x2A => 42 bytes => 84 characters */  /* Example: '5' '4' => 0x54 => 84 bytes */
+      /* Data: treated column by column, from upper left to lower right */
+      0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x30, 0x36, 0x46, 0x43,
+      0x37, 0x46, 0x43, 0x30, 0x37, 0x30, 0x30, 0x30, 0x36, 0x30,
+      0x30, 0x30, 0x46, 0x38, 0x30, 0x33, 0x46, 0x43, 0x30, 0x37,
+      0x43, 0x30, 0x36, 0x30, 0x43, 0x30, 0x36, 0x46, 0x43, 0x30,
+      0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x30, 0x36, 0x46, 0x43,
+      0x37, 0x46, 0x43, 0x30, 0x37, 0x30, 0x30, 0x30, 0x36, 0x30,
+      0x30, 0x30, 0x46, 0x38, 0x30, 0x33, 0x46, 0x43, 0x30, 0x37,
+      0x43, 0x30, 0x36, 0x30, 0x43, 0x30, 0x36, 0x46, 0x43, 0x30,
+      /* End of data */
+      0x00, /* EOT, footer */
+      0x00, 0x00   /* checksum: 0x4A */
   };
-#else
-  uint8_t buf[] = {
-      0x02, /* SOT */
-      0x31, /* command: '0': text message, '1': graphics message, followed by the address of the device */
-      '0'+FLIP_DOT_DEVICE_ADDRESS+1, /* address: '1', 'val'+1 ('0' is broadcast) */
-      0x32, 0x41, /* how man bytes (20*14+2 /8) 0x32 0x41 => '2' 'A' => 0x2A => 42 bytes => 84 characters */  /* Example: '5' '4' => 0x54 => 84 bytes */
-      0x30, 0x30, 0x30, 0x30, 0x30, 0x38, 0x30, 0x36, 0x46, 0x43, 0x30,  /* Data: treated column by column, from upper left to lower right */
-      0x37, 0x46, 0x43, 0x30, 0x37, 0x30, 0x30, 0x30, 0x36, 0x30, 0x30,
-      0x30, 0x30, 0x46, 0x38, 0x30, 0x33, 0x46, 0x43, 0x30, 0x37, 0x30,
-      0x43, 0x30, 0x36, 0x30, 0x43, 0x30, 0x36, 0x46, 0x43, 0x30, 0x37,
-      0x46, 0x38, 0x30, 0x33, 0x30, 0x30, 0x30, 0x30, 0x46, 0x38, 0x30,
-      0x33, 0x46, 0x43, 0x30, 0x37, 0x30, 0x43, 0x30, 0x36, 0x30, 0x43,
-      0x30, 0x36, 0x46, 0x43, 0x30, 0x37, 0x46, 0x38, 0x30, 0x33, 0x30,
-      0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,   /* End of data */
-      0x03, /* EOT, footer */
-      0x34, 0x41   /* checksum: 0x4A */
-  };
-#endif
+  buf[FLIP_DOT_BUF_POS_SOT] = 0x02; /* SOT */
+  buf[FLIP_DOT_BUF_POS_CMD] = '1'; /* 1: graphics */
+  buf[FLIP_DOT_BUF_POS_ADDR] = '0'+FLIP_DOT_DEVICE_ADDRESS+1; /* addr */
+  StoreASCIIHex8(&buf[FLIP_DOT_BUF_POS_NOF], FLIP_DOT_NOF_DATA);
+  DataDots(&buf[FLIP_DOT_BUF_POS_DATA]); /* data */
+  buf[FLIP_DOT_BUF_POS_EOT] = 0x03; /* EOT */
   uint8_t checkSum = calcCheckSum(buf, sizeof(buf));
-  StoreASCIIHex8(&buf[sizeof(buf)-2], checkSum);
+  StoreASCIIHex8(&buf[FLIP_DOT_BUF_POS_CHECK], checkSum);
   RS485_SendData(buf, sizeof(buf));
+  RS485_SendData((unsigned char*)"\n", 1);
+}
+
+static void test(void) {
+  SetAllDots();
+  SendDots();
+  vTaskDelay(pdMS_TO_TICKS(500));
+  ClearAllDots();
+  SendDots();
+  vTaskDelay(pdMS_TO_TICKS(500));
+  for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
+    for(int y=0;y<FLIP_DOT_NOF_ROW;y++) {
+      SetDot(x, y);
+      SendDots();
+      //vTaskDelay(pdMS_TO_TICKS(10));
+//      ClrDot(x, y);
+    } /* for y */
+  } /* for x */
+  SendDots();
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
