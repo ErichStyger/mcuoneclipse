@@ -406,7 +406,7 @@ void FlipDot_SendDots(void) {
       0x43, 0x30, 0x36, 0x30, 0x43, 0x30, 0x36, 0x46, 0x43, 0x30,
       /* End of data */
       0x00, /* EOT, footer */
-      0x00, 0x00   /* checksum: 0x4A */
+      0x00, 0x00   /* checksum */
   };
   buf[FLIP_DOT_BUF_POS_SOT] = 0x02; /* SOT */
   buf[FLIP_DOT_BUF_POS_CMD] = '1'; /* 1: graphics */
