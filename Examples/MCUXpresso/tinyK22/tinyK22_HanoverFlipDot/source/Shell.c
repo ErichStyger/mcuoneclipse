@@ -75,6 +75,7 @@
 #endif
 #include "McuLog.h"
 #include "leds.h"
+#include "flipdot.h"
 
 #if PL_CONFIG_USE_AUTOMATIC_DEMO_MODE
 static struct {
@@ -152,6 +153,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_LED_PIXEL && PL_CONFIG_USE_NEO_PIXEL_HW
   PIXEL_ParseCommand,
 #endif
+  FlipDot_ParseCommand,
   APP_ParseCommand,
   NULL /* Sentinel */
 };

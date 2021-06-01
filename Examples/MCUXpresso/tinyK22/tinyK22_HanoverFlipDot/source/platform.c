@@ -45,6 +45,7 @@
 #endif
 #include "McuLog.h"
 #include "McuButton.h"
+#include "flipdot.h"
 
 /* SDK */
 #include "fsl_gpio.h"
@@ -200,4 +201,5 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_LOW_POWER
   LP_Init();
 #endif
+  FlipDot_Init();
 }

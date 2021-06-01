@@ -16,7 +16,7 @@
 
 uint8_t RS485_SendCommand(uint8_t dstAddr, const unsigned char *cmd, int32_t timeoutMs, bool intern, uint32_t nofRetry);
 
-uint8_t RS485_GetAddress(void);
+void RS485_SendData(uint8_t *data, size_t dataSize);
 
 uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
