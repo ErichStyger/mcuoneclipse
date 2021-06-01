@@ -103,6 +103,141 @@ static void StoreASCIIHex16(uint8_t *buf, uint16_t val) {
 
 static uint8_t dotMap[((FLIP_DOT_NOF_COL-1)/8)+1][FLIP_DOT_NOF_ROW];
 
+static const char char3x5_colon[5][3] = {
+    "   ",
+    " * ",
+    "   ",
+    " * ",
+    "   "
+};
+
+static const char char3x5_space[5][3] = {
+    "   ",
+    "   ",
+    "   ",
+    "   ",
+    "   "
+};
+
+static const char char3x5_dot[5][3] = {
+    "   ",
+    "   ",
+    "   ",
+    "   ",
+    " * "
+};
+
+static const char char3x5_0[5][3] = {
+    "***",
+    "* *",
+    "* *",
+    "* *",
+    "***"
+};
+
+static const char char3x5_1[5][3] = {
+    " * ",
+    " * ",
+    " * ",
+    " * ",
+    " * "
+};
+
+static const char char3x5_2[5][3] = {
+    "***",
+    "  *",
+    "***",
+    "*  ",
+    "***"
+};
+
+static const char char3x5_3[5][3] = {
+    "***",
+    "  *",
+    "***",
+    "  *",
+    "***"
+};
+
+static const char char3x5_4[5][3] = {
+    "* *",
+    "* *",
+    "***",
+    "  *",
+    "  *"
+};
+static const char char3x5_5[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "  *",
+    "***"
+};
+static const char char3x5_6[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "* *",
+    "***"
+};
+static const char char3x5_7[5][3] = {
+    "***",
+    "  *",
+    "  *",
+    "  *",
+    "  *"
+};
+static const char char3x5_8[5][3] = {
+    "***",
+    "* *",
+    "***",
+    "* *",
+    "***"
+};
+static const char char3x5_9[5][3] = {
+    "***",
+    "* *",
+    "***",
+    "  *",
+    "***"
+};
+
+static const char char3x5_H[5][3] = {
+    "* *",
+    "* *",
+    "***",
+    "* *",
+    "* *"
+};
+static const char char3x5_J[5][3] = {
+    "***",
+    "  *",
+    "  *",
+    "  *",
+    "** "
+};
+static const char char3x5_n[5][3] = {
+    "   ",
+    "   ",
+    "** ",
+    "* *",
+    "* *"
+};
+static const char char3x5_u[5][3] = {
+    "   ",
+    "   ",
+    "* *",
+    "* *",
+    "***"
+};
+static const char char3x5_U[5][3] = {
+    "* *",
+    "* *",
+    "* *",
+    "* *",
+    "***"
+};
+
 static const char SmileyCharMap[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL] = {
     "       *****        ",
     "      *     *       ",
@@ -158,17 +293,100 @@ static void PutDot(unsigned int x, unsigned int y, bool on) {
   }
 }
 
-
 static bool IsDotSet(unsigned int x, unsigned int y) {
   return dotMap[x/8][y]&(1<<(7-x%8));
 }
 
-static void DrawCharMap(const char map[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL]) {
+static void DrawBitMap(const char map[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL]) {
   for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
     for(int y=0;y<FLIP_DOT_NOF_COL;y++) {
       PutDot(x, y, map[y][x]!=' ');
     }
   }
+}
+
+static void DrawFontCharMap3x5(int x0, int y0, const char charMap[5][3]) {
+  for(int x=0; x<3; x++) {
+    for(int y=0; y<5; y++) {
+      PutDot(x0+x, y0+y, charMap[y][x]!=' ');
+    }
+  }
+}
+
+static void DrawFontChar3x5(int x0, int y0, char ch) {
+  switch(ch) {
+    case '0': DrawFontCharMap3x5(x0, y0, char3x5_0);  break;
+    case '1': DrawFontCharMap3x5(x0, y0, char3x5_1);  break;
+    case '2': DrawFontCharMap3x5(x0, y0, char3x5_2);  break;
+    case '3': DrawFontCharMap3x5(x0, y0, char3x5_3);  break;
+    case '4': DrawFontCharMap3x5(x0, y0, char3x5_4);  break;
+    case '5': DrawFontCharMap3x5(x0, y0, char3x5_5);  break;
+    case '6': DrawFontCharMap3x5(x0, y0, char3x5_6);  break;
+    case '7': DrawFontCharMap3x5(x0, y0, char3x5_7);  break;
+    case '8': DrawFontCharMap3x5(x0, y0, char3x5_8);  break;
+    case '9': DrawFontCharMap3x5(x0, y0, char3x5_9);  break;
+    case ':': DrawFontCharMap3x5(x0, y0, char3x5_colon);  break;
+    case ' ': DrawFontCharMap3x5(x0, y0, char3x5_space);  break;
+    case '.': DrawFontCharMap3x5(x0, y0, char3x5_dot);  break;
+    case 'J': DrawFontCharMap3x5(x0, y0, char3x5_J);  break;
+    case 'U': DrawFontCharMap3x5(x0, y0, char3x5_U);  break;
+    case 'u': DrawFontCharMap3x5(x0, y0, char3x5_u);  break;
+    case 'n': DrawFontCharMap3x5(x0, y0, char3x5_n);  break;
+    default:
+      break;
+  } /* switch */
+}
+
+static void DrawText3x5(int x0, int y0, const char *text) {
+  const char *p = text;
+  while(*p != '\0') {
+    DrawFontChar3x5(x0, y0, *p);
+    p++;
+    x0 += 4;
+  }
+}
+
+static void DrawTime3x5(int x0, int y0, uint8_t hour, uint8 minute) {
+  DrawFontChar3x5(x0, y0, '0'+hour/10);
+  x0 += 4;
+  DrawFontChar3x5(x0, y0, '0'+hour%10);
+  x0 += 3;
+  DrawFontChar3x5(x0, y0, ':');
+  x0 += 3;
+  DrawFontChar3x5(x0, y0, '0'+minute/10);
+  x0 += 4;
+  DrawFontChar3x5(x0, y0, '0'+minute%10);
+}
+
+static void DrawDate3x5(int x0, int y0, uint8_t day, uint8 month, uint16_t year) {
+  DrawFontChar3x5(x0, y0, '0'+day/10);
+  x0 += 4;
+  DrawFontChar3x5(x0, y0, '0'+day%10);
+#if 0
+  x0 += 3;
+  DrawFontChar3x5(x0, y0, '.');
+  x0 += 3;
+  DrawFontChar3x5(x0, y0, '0'+month/10);
+  x0 += 4;
+  DrawFontChar3x5(x0, y0, '0'+month%10);
+#else
+  x0 += 4;
+  switch(month) {
+    case 1: DrawText3x5(x0, y0, "Jan"); break;
+    case 2: DrawText3x5(x0, y0, "Feb"); break;
+    case 3: DrawText3x5(x0, y0, "Mar"); break;
+    case 4: DrawText3x5(x0, y0, "Apr"); break;
+    case 5: DrawText3x5(x0, y0, "May"); break;
+    case 6: DrawText3x5(x0, y0, "Jun"); break;
+    case 7: DrawText3x5(x0, y0, "Jul"); break;
+    case 8: DrawText3x5(x0, y0, "Aug"); break;
+    case 9: DrawText3x5(x0, y0, "Sep"); break;
+    case 10: DrawText3x5(x0, y0, "Okt"); break;
+    case 11: DrawText3x5(x0, y0, "Nov"); break;
+    case 12: DrawText3x5(x0, y0, "Dez"); break;
+    default: break;
+  }
+#endif
 }
 
 static void ClearAllDots(void) {
@@ -289,10 +507,10 @@ static void test(void) {
   } /* for x */
   SendDots();
 #endif
-  DrawCharMap(SmileyCharMap);
+  DrawBitMap(SmileyCharMap);
   SendDots();
   vTaskDelay(pdMS_TO_TICKS(1000));
-  DrawCharMap(Smiley2CharMap);
+  DrawBitMap(Smiley2CharMap);
   SendDots();
 }
 
@@ -308,12 +526,11 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  clear", (unsigned char*)"Clear display\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  fill", (unsigned char*)"Fill display\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  clock", (unsigned char*)"Show clock\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
-//  const unsigned char *p;
-
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "rs help")==0) {
     *handled = TRUE;
     return PrintHelp(io);
@@ -334,6 +551,20 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
   } else if (McuUtility_strcmp((char*)cmd, "rs fill")==0) {
     *handled = true;
     SetAllDots();
+    SendDots();
+  } else if (McuUtility_strcmp((char*)cmd, "rs clock")==0) {
+    *handled = true;
+    ClearAllDots();
+    DrawTime3x5(1, 1, 12, 34);
+    SendDots();
+
+    DrawTime3x5(1, 1, 6, 58);
+    SendDots();
+
+    DrawTime3x5(1, 1, 19, 59);
+    SendDots();
+
+    DrawDate3x5(0, 8, 1, 6, 2021);
     SendDots();
   }
   return ERR_OK;
