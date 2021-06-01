@@ -103,6 +103,41 @@ static void StoreASCIIHex16(uint8_t *buf, uint16_t val) {
 
 static uint8_t dotMap[((FLIP_DOT_NOF_COL-1)/8)+1][FLIP_DOT_NOF_ROW];
 
+static const char SmileyCharMap[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL] = {
+    "       *****        ",
+    "      *     *       ",
+    "     *       *      ",
+    "    *         *     ",
+    "   *           *    ",
+    "  *   **   **   *   ",
+    "  *   **   **   *   ",
+    "  *             *   ",
+    "  *   *     *   *   ",
+    "   *  *     *  *    ",
+    "    *  *   *  *     ",
+    "     *  ***  *      ",
+    "      *     *       ",
+    "       *****        "
+};
+
+static const char Smiley2CharMap[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL] = {
+    "       *****        ",
+    "      *******       ",
+    "     *********      ",
+    "    ***********     ",
+    "   *************    ",
+    "  ****  ***  ****   ",
+    "  ****  ***  ****   ",
+    "  ***************   ",
+    "  ***************   ",
+    "   *** ***** ***    ",
+    "    *** *** ***     ",
+    "     ***   ***      ",
+    "      *******       ",
+    "       *****        "
+};
+
+
 static void SetDot(unsigned int x, unsigned int y) {
   if (x<FLIP_DOT_NOF_COL && y<FLIP_DOT_NOF_ROW) {
     dotMap[x/8][y] |= 1<<(7-x%8);
@@ -115,8 +150,25 @@ static void ClrDot(unsigned int x, unsigned int y) {
   }
 }
 
+static void PutDot(unsigned int x, unsigned int y, bool on) {
+  if (on) {
+    SetDot(x, y);
+  } else {
+    ClrDot(x, y);
+  }
+}
+
+
 static bool IsDotSet(unsigned int x, unsigned int y) {
   return dotMap[x/8][y]&(1<<(7-x%8));
+}
+
+static void DrawCharMap(const char map[FLIP_DOT_NOF_ROW][FLIP_DOT_NOF_COL]) {
+  for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
+    for(int y=0;y<FLIP_DOT_NOF_COL;y++) {
+      PutDot(x, y, map[y][x]!=' ');
+    }
+  }
 }
 
 static void ClearAllDots(void) {
@@ -208,6 +260,25 @@ static void test(void) {
   ClearAllDots();
   SendDots();
   vTaskDelay(pdMS_TO_TICKS(500));
+
+  for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
+    for(int y=0;y<FLIP_DOT_NOF_ROW;y++) {
+      SetDot(x, y);
+    } /* for y */
+    SendDots();
+    vTaskDelay(pdMS_TO_TICKS(500));
+  } /* for x */
+
+  ClearAllDots();
+  for(int y=0;y<FLIP_DOT_NOF_ROW;y++) {
+    for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
+      SetDot(x, y);
+    } /* for y */
+    SendDots();
+    vTaskDelay(pdMS_TO_TICKS(500));
+  } /* for x */
+
+#if 0
   for(int x=0;x<FLIP_DOT_NOF_COL;x++) {
     for(int y=0;y<FLIP_DOT_NOF_ROW;y++) {
       SetDot(x, y);
@@ -216,6 +287,12 @@ static void test(void) {
 //      ClrDot(x, y);
     } /* for y */
   } /* for x */
+  SendDots();
+#endif
+  DrawCharMap(SmileyCharMap);
+  SendDots();
+  vTaskDelay(pdMS_TO_TICKS(1000));
+  DrawCharMap(Smiley2CharMap);
   SendDots();
 }
 
@@ -229,6 +306,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  send <text>", (unsigned char*)"Send a text to the RS-485 bus\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  test", (unsigned char*)"Test\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  clear", (unsigned char*)"Clear display\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  fill", (unsigned char*)"Fill display\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -248,6 +327,14 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
   } else if (McuUtility_strcmp((char*)cmd, "rs test")==0) {
     *handled = true;
     test();
+  } else if (McuUtility_strcmp((char*)cmd, "rs clear")==0) {
+    *handled = true;
+    ClearAllDots();
+    SendDots();
+  } else if (McuUtility_strcmp((char*)cmd, "rs fill")==0) {
+    *handled = true;
+    SetAllDots();
+    SendDots();
   }
   return ERR_OK;
 }
