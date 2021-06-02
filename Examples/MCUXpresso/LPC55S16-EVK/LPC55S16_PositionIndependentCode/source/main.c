@@ -33,6 +33,7 @@ int main(void) {
     void bar(void);
     foo();
     bar();
+    j = *foobar();
     MODULE_Init();
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {

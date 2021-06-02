@@ -7,6 +7,9 @@
 #ifndef MODULE_H_
 #define MODULE_H_
 
+void foo(void);
+void bar(void);
+const int *foobar(void) ;
 void MODULE_Init(void);
 
 #endif /* MODULE_H_ */

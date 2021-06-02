@@ -6,6 +6,7 @@
 
 #include "module.h"
 
+const int carr[] = {1,2,3,4};
 int var, var2;
 
 void foo(void) {
@@ -15,6 +16,10 @@ void foo(void) {
 
 void bar(void) {
   var = 2;
+}
+
+const int *foobar(void) {
+  return &carr[0];
 }
 
 void MODULE_Init(void) {

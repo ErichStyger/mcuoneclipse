@@ -6,7 +6,7 @@
  * Generated linker script file for LPC55S16
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Jun 2, 2021 2:29:13 PM
+ * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Jun 2, 2021 2:45:42 PM
  */
 
 INCLUDE "LPC55S16_PositionIndependentCode_Debug_library.ld"
@@ -29,6 +29,12 @@ SECTIONS
         LONG(LOADADDR(.data));
         LONG(    ADDR(.data));
         LONG(  SIZEOF(.data));
+/*------------------------------------------------------------- */
+/*--- Initialization of Global Offset Table ------------------- */
+/*        LONG(LOADADDR(.got));
+        LONG(    ADDR(.got));
+        LONG(  SIZEOF(.got));*/
+/*------------------------------------------------------------- */
         LONG(LOADADDR(.data_RAM2));
         LONG(    ADDR(.data_RAM2));
         LONG(  SIZEOF(.data_RAM2));
@@ -55,6 +61,7 @@ SECTIONS
     {
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
+       *(.got*)
        . = ALIGN(4);
     } > PROGRAM_FLASH
     /*
