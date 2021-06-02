@@ -17,6 +17,7 @@
 
 /* Force the counter to be placed into memory. */
 volatile int i, j = 0 ;
+void foobar(void) {}
 
 int main(void) {
     /* Init board hardware. */
@@ -33,7 +34,7 @@ int main(void) {
     void bar(void);
     foo();
     bar();
-    j = *foobar();
+    foobar();
     MODULE_Init();
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {
@@ -44,3 +45,4 @@ int main(void) {
     }
     return 0 ;
 }
+

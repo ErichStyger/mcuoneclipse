@@ -287,7 +287,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/LPC55S16/mcuxpresso}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LPC55S16_PicLibrary/Debug}&quot;"/>
 								</option>
-								<option id="gnu.c.link.option.ldflags.1978750420" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false"/>
+								<option id="gnu.c.link.option.ldflags.1978750420" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="-fPIC" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.other.1955486096" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value="-Map=&quot;${BuildArtifactFileBaseName}.map&quot;"/>
 									<listOptionValue builtIn="false" value="--gc-sections"/>
@@ -340,17 +340,11 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.1138309518.1660526853" name="main.c" rcbsApplicability="disable" resourcePath="source/main.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.434384190.1732457866">
-						<tool id="com.crt.advproject.gcc.exe.debug.434384190.1732457866" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.434384190">
-							<option id="gnu.c.compiler.option.misc.pic.129088527" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-							<inputType id="com.crt.advproject.compiler.input.1422173863" superClass="com.crt.advproject.compiler.input"/>
-						</tool>
-					</fileInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.1138309518.1403146754" name="module.c" rcbsApplicability="disable" resourcePath="source/module.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.434384190.1479623170">
 						<tool id="com.crt.advproject.gcc.exe.debug.434384190.1479623170" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.434384190">
 							<option id="gnu.c.compiler.option.misc.pic.1016841732" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.2023540419" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="true" value="gnu.c.optimization.level.optimize" valueType="enumerated"/>
-							<option id="gnu.c.compiler.option.misc.other.1303571476" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin" valueType="string"/>
+							<option id="gnu.c.compiler.option.misc.other.1303571476" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative" valueType="string"/>
 							<inputType id="com.crt.advproject.compiler.input.773945530" superClass="com.crt.advproject.compiler.input"/>
 						</tool>
 						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1240346545" name="Resource Custom Build Step">
@@ -358,14 +352,6 @@
 								<additionalInput kind="additionalinputdependency" paths=""/>
 							</inputType>
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.931622078" name="Resource Custom Build Step Output Type"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.crt.advproject.config.exe.debug.1138309518.1729971984" name="LPC55S16_PositionIndependentCode_Debug.ld" rcbsApplicability="disable" resourcePath="pic/LPC55S16_PositionIndependentCode_Debug.ld_" toolsToInvoke="">
-						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.868475794" name="Resource Custom Build Step">
-							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1747173273" name="Resource Custom Build Step Input Type">
-								<additionalInput kind="additionalinputdependency" paths=""/>
-							</inputType>
-							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.808135787" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
 					<sourceEntries>

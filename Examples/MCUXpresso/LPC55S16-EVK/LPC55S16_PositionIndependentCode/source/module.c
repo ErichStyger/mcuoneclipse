@@ -9,18 +9,31 @@
 const int carr[] = {1,2,3,4};
 int var, var2;
 
+int calc2(int i) {
+  var = i;
+  return i*2;
+}
+
+int calc(int i) {
+  var = i;
+  var2 = calc2(i+1);
+  return var+var2;
+}
+
+int doIt(int i) {
+  return calc2(i);
+}
+
 void foo(void) {
-  var = 1;
-  var2 = 2;
+  var++;
 }
 
+extern void foobar(void);
 void bar(void) {
-  var = 2;
+  foo();
+  foobar();
 }
 
-const int *foobar(void) {
-  return &carr[0];
-}
 
 void MODULE_Init(void) {
   var = 1;

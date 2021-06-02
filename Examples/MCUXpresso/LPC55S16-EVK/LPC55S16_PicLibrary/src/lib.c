@@ -5,10 +5,16 @@
  */
 #include "lib.h"
 
+static int cntr = 0;
+
+int LIB_Utility(void) {
+  return 1;
+}
+
 int LIB_Calculate(int i) {
-  return 0;
+  return cntr++;
 }
 
 void LIB_Init(void) {
-
+  cntr = LIB_Utility();
 }

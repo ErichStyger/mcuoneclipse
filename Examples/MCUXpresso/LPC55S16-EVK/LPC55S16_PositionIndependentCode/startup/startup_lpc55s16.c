@@ -433,7 +433,7 @@ void ResetISR(void) {
     // Call the Redlib library, which in turn calls main()
     __main();
 #else
-//    __asm("LDR r9, =_sgot");
+    __asm("LDR r9, =_sgot");
     main();
 #endif
 

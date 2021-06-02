@@ -42,5 +42,60 @@ See https://github.com/rgujju/STM32-projects/tree/master/got_plt
     
     _etext = .;
  
+ /////////////////////////////////////////////////////////////////////////////7
+ .got in FLASH:
+     .text : ALIGN(4)
+    {
+       *(.text*)
+       *(.rodata .rodata.* .constdata .constdata.*)
+       /*--------------------------------------------------- */
+       /*------ GOT Global Offset Table: place it into FLASH */
+       *(.got*)
+       /*--------------------------------------------------- */
+       . = ALIGN(4);
+    } > PROGRAM_FLASH
+ ///////////////////////////////////////////////////////////////////////////////
+ .got in RAM:
  
+      /* MAIN TEXT SECTION */
+    .text : ALIGN(4)
+    {
+        FILL(0xff)
+        __vectors_start__ = ABSOLUTE(.) ;
+        KEEP(*(.isr_vector))
+        /* Global Section Table */
+        . = ALIGN(4) ;
+        __section_table_start = .;
+        __data_section_table = .;
+        LONG(LOADADDR(.data));
+        LONG(    ADDR(.data));
+        LONG(  SIZEOF(.data));
+/*---------------------------------------------------------------------- */
+/*--- Initialization of Global Offset Table ---------------------------- */
+/* Adding the GOT here will place it in RAM, initialized during startup  */
+/*        LONG(LOADADDR(.got));
+        LONG(    ADDR(.got));
+        LONG(  SIZEOF(.got));*/
+/*---------------------------------------------------------------------- */
+        LONG(LOADADDR(.data_RAM2));
+        LONG(    ADDR(.data_RAM2));
+        LONG(  SIZEOF(.data_RAM2));
+        LONG(LOADADDR(.data_RAM3));
+        LONG(    ADDR(.data_RAM3));
+        LONG(  SIZEOF(.data_RAM3));
+        __data_section_table_end = .;
+        __bss_section_table = .;
+        LONG(    ADDR(.bss));
+        LONG(  SIZEOF(.bss));
+        LONG(    ADDR(.bss_RAM2));
+        LONG(  SIZEOF(.bss_RAM2));
+        LONG(    ADDR(.bss_RAM3));
+        LONG(  SIZEOF(.bss_RAM3));
+        __bss_section_table_end = .;
+        __section_table_end = . ;
+        /* End of Global Section Table */
+
+        *(.after_vectors*)
+
+    } > PROGRAM_FLASH
  

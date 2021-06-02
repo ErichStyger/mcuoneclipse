@@ -32,9 +32,9 @@ SECTIONS
 /*---------------------------------------------------------------------- */
 /*--- Initialization of Global Offset Table ---------------------------- */
 /* Adding the GOT here will place it in RAM, initialized during startup  */
-/*        LONG(LOADADDR(.got));
+        LONG(LOADADDR(.got));
         LONG(    ADDR(.got));
-        LONG(  SIZEOF(.got));*/
+        LONG(  SIZEOF(.got));
 /*---------------------------------------------------------------------- */
         LONG(LOADADDR(.data_RAM2));
         LONG(    ADDR(.data_RAM2));
@@ -64,10 +64,39 @@ SECTIONS
        *(.rodata .rodata.* .constdata .constdata.*)
        /*--------------------------------------------------- */
        /*------ GOT Global Offset Table: place it into FLASH */
-       *(.got*)
+    /*   *(.got*)*/
        /*--------------------------------------------------- */
        . = ALIGN(4);
     } > PROGRAM_FLASH
+ /*------------------------------------------------------------- */
+    /* PLT section contains code for accessing the dynamically linked functions
+     * ie functions from shared libraries in a position independent manner */
+    .plt :
+    {
+        . = ALIGN(4);
+        *(.plt)
+        . = ALIGN(4);
+    } >PROGRAM_FLASH
+ /* The global offset table is the table for indirectly accessing the global variables
+     * The table contains addresses of the global variables. The text section contains 
+     * a address of the GOT base and a offset in it to access the appropriate variables.
+     * This is done to access the variables in a position independent manner. */
+    .got :
+    {
+        . = ALIGN(4);
+        _sgot = .;
+        *(.got)
+    } >SRAM AT> PROGRAM_FLASH
+    
+    /* got.plt section contains entries which is used with the PLT to access the functions 
+     * in a position independent manner. */
+    .got.plt :
+    {
+        . = ALIGN(4);
+        *(.got.plt)
+        _edata = .;
+    } >SRAM AT> PROGRAM_FLASH
+ /*------------------------------------------------------------- */
     
     /*
      * for exception handling/unwind - some Newlib functions (in common
