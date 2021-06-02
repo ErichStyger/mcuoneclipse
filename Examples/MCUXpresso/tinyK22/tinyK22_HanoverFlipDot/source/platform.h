@@ -21,7 +21,7 @@
 #define PL_CONFIG_HAS_BUTTONS     (0)
 #define PL_CONFIG_USE_SHELL       (1)
 #define PL_CONFIG_USE_SHELL_UART  (1)
-#define PL_CONFIG_USE_USB_CDC     (0)
+#define PL_CONFIG_USE_USB_CDC     (1)
 #define PL_CONFIG_USE_ESP32       (0)
 #define PL_CONFIG_USE_ESP32_UART  (0)
 #define PL_CONFIG_USE_WDT         (0)
