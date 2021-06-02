@@ -14,7 +14,7 @@
 #define PL_CONFIG_USE_HW_I2C      (1)
 #define PL_CONFIG_USE_I2C_SPY     (0)
 #define PL_CONFIG_USE_RTC         (1)
-#define PL_CONFIG_USE_SHT31       (0)
+#define PL_CONFIG_USE_SHT31       (1)
 #define PL_CONFIG_USE_EXT_EEPROM  (0)
 #define PL_CONFIG_USE_RS485       (1)
 #define PL_CONFIG_USE_NVMC        (0)
@@ -26,8 +26,8 @@
 #define PL_CONFIG_USE_ESP32_UART  (0)
 #define PL_CONFIG_USE_WDT         (0)
 #define PL_CONFIG_USE_CLOCK       (1)
-#define PL_CONFIG_USE_BLE         (0)
-#define PL_CONFIG_USE_BLE_MSG     (0)
+#define PL_CONFIG_USE_BLE         (1)
+#define PL_CONFIG_USE_BLE_MSG     (1)
 #define PL_CONFIG_USE_LOW_POWER   (0)
 
 void PL_InitFromTask(void);
