@@ -29,12 +29,13 @@ SECTIONS
         LONG(LOADADDR(.data));
         LONG(    ADDR(.data));
         LONG(  SIZEOF(.data));
-/*------------------------------------------------------------- */
-/*--- Initialization of Global Offset Table ------------------- */
+/*---------------------------------------------------------------------- */
+/*--- Initialization of Global Offset Table ---------------------------- */
+/* Adding the GOT here will place it in RAM, initialized during startup  */
 /*        LONG(LOADADDR(.got));
         LONG(    ADDR(.got));
         LONG(  SIZEOF(.got));*/
-/*------------------------------------------------------------- */
+/*---------------------------------------------------------------------- */
         LONG(LOADADDR(.data_RAM2));
         LONG(    ADDR(.data_RAM2));
         LONG(  SIZEOF(.data_RAM2));
@@ -61,9 +62,13 @@ SECTIONS
     {
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
+       /*--------------------------------------------------- */
+       /*------ GOT Global Offset Table: place it into FLASH */
        *(.got*)
+       /*--------------------------------------------------- */
        . = ALIGN(4);
     } > PROGRAM_FLASH
+    
     /*
      * for exception handling/unwind - some Newlib functions (in common
      * with C++ and STDC++) use this.
