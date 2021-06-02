@@ -6,7 +6,7 @@
  * Generated linker script file for LPC55S16
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on May 26, 2021 8:48:48 AM
+ * MCUXpresso IDE v11.3.0 [Build 5222] [2021-01-11] on Jun 2, 2021 2:29:13 PM
  */
 
 INCLUDE "LPC55S16_PositionIndependentCode_Debug_library.ld"
@@ -16,24 +16,7 @@ ENTRY(ResetISR)
 
 SECTIONS
 {
-     .text_Flash2 : ALIGN(4)
-    {
-       FILL(0xff)
-       */module.o (.text .text*)
-        *(.text_Flash2) /* for compatibility with previous releases */
-        *(.text_PROGRAM_FLASH_112) /* for compatibility with previous releases */
-        *(.text.$Flash2)
-        *(.text.$PROGRAM_FLASH_112)
-        *(.text_Flash2.*) /* for compatibility with previous releases */
-        *(.text_PROGRAM_FLASH_112.*) /* for compatibility with previous releases */
-        *(.text.$Flash2.*)
-        *(.text.$PROGRAM_FLASH_112.*)
-        *(.rodata.$Flash2)
-        *(.rodata.$PROGRAM_FLASH_112)
-        *(.rodata.$Flash2.*)
-        *(.rodata.$PROGRAM_FLASH_112.*)            } > PROGRAM_FLASH_112
-
-    /* MAIN TEXT SECTION */
+     /* MAIN TEXT SECTION */
     .text : ALIGN(4)
     {
         FILL(0xff)

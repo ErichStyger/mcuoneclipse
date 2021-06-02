@@ -305,7 +305,7 @@
 								<option id="gnu.c.link.option.debugging.codecov.1743260990" name="Generate gcov information (-ftest-coverage -fprofile-arcs)" superClass="gnu.c.link.option.debugging.codecov" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.lto.2090662989" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1478847942" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
-								<option id="com.crt.advproject.link.manage.172710170" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="false" valueType="boolean"/>
+								<option id="com.crt.advproject.link.manage.172710170" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.script.784911684" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_PositionIndependentCode_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.387738400" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.1221852035" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
@@ -360,6 +360,14 @@
 							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.931622078" name="Resource Custom Build Step Output Type"/>
 						</tool>
 					</fileInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1138309518.1729971984" name="LPC55S16_PositionIndependentCode_Debug.ld" rcbsApplicability="disable" resourcePath="pic/LPC55S16_PositionIndependentCode_Debug.ld" toolsToInvoke="">
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.868475794" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.1747173273" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.808135787" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
@@ -367,7 +375,7 @@
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="pic"/>
+						<entry excluding="LPC55S16_PositionIndependentCode_Debug.ld" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="pic"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
@@ -764,10 +772,10 @@
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="224" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="96" type="RAM"/&gt;&#13;
-&lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" edited="true" id="PROGRAM_FLASH_224" location="0x0" size="0x38000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="SRAM" location="0x20000000" size="0x10000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="USB_RAM" location="0x20010000" size="0x4000"/&gt;&#13;
-&lt;memoryInstance derived_from="RAM" edited="true" id="SRAMX" location="0x4000000" size="0x4000"/&gt;&#13;
+&lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" id="PROGRAM_FLASH" location="0x0" size="0x38000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAM" location="0x20000000" size="0x10000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="USB_RAM" location="0x20010000" size="0x4000"/&gt;&#13;
+&lt;memoryInstance derived_from="RAM" id="SRAMX" location="0x4000000" size="0x4000"/&gt;&#13;
 &lt;/chip&gt;&#13;
 &lt;processor&gt;&#13;
 &lt;name gcc_name="cortex-m33"&gt;Cortex-M33&lt;/name&gt;&#13;
