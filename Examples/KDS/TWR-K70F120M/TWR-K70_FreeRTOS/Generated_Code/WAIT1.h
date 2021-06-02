@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : Wait
-**     Version     : Component 01.085, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-14, 08:06, # CodeGen: 2
+**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -18,15 +18,15 @@
 **     Contents    :
 **         Wait10Cycles   - void WAIT1_Wait10Cycles(void);
 **         Wait100Cycles  - void WAIT1_Wait100Cycles(void);
-**         WaitCycles     - void WAIT1_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void WAIT1_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void WAIT1_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void WAIT1_Waitms(uint16_t ms);
-**         Waitus         - void WAIT1_Waitus(uint16_t us);
-**         Waitns         - void WAIT1_Waitns(uint16_t ns);
+**         Waitms         - void WAIT1_Waitms(uint32_t ms);
+**         Waitus         - void WAIT1_Waitus(uint32_t us);
+**         Waitns         - void WAIT1_Waitns(uint32_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -75,8 +75,13 @@
 #if WAIT1_CONFIG_USE_RTOS_WAIT
   /* include RTOS header files */
   #include "McuRTOS.h"
-  #include "FreeRTOS.h" /* for vTaskDelay() */
-  #include "task.h"
+  #if MCUC1_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h" /* for vTaskDelay() */
+    #include "freertos/task.h"
+  #else
+    #include "FreeRTOS.h" /* for vTaskDelay() */
+    #include "task.h"
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -97,7 +102,7 @@ extern "C" {
 #define WAIT1_WAIT_C(cycles) \
      ( (cycles)<=10 ? \
           WAIT1_Wait10Cycles() \
-        : WAIT1_WaitCycles((uint16_t)cycles) \
+        : WAIT1_WaitCycles(cycles) \
       )                                      /*!< wait for some cycles */
 
 
@@ -125,13 +130,13 @@ void WAIT1_Wait100Cycles(void);
 ** ===================================================================
 */
 
-void WAIT1_WaitCycles(uint16_t cycles);
+void WAIT1_WaitCycles(uint32_t cycles);
 /*
 ** ===================================================================
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
@@ -139,7 +144,7 @@ void WAIT1_WaitCycles(uint16_t cycles);
 ** ===================================================================
 */
 
-void WAIT1_Waitms(uint16_t ms);
+void WAIT1_Waitms(uint32_t ms);
 /*
 ** ===================================================================
 **     Method      :  Waitms (component Wait)
@@ -159,7 +164,7 @@ void WAIT1_Waitms(uint16_t ms);
         /*lint -save -e(505,506,522) Constant value Boolean, Redundant left argument to comma. */\
        (  ((WAIT1_NofCyclesUs((us),WAIT1_INSTR_CLOCK_HZ)==0)||(us)==0) ? \
           (void)0 : \
-          ( ((us)/1000)==0 ? (void)0 : WAIT1_Waitms((uint16_t)((us)/1000))) \
+          ( ((us)/1000)==0 ? (void)0 : WAIT1_Waitms(((us)/1000))) \
           , (WAIT1_NofCyclesUs(((us)%1000), WAIT1_INSTR_CLOCK_HZ)==0) ? (void)0 : \
             WAIT1_WAIT_C(WAIT1_NofCyclesUs(((us)%1000), WAIT1_INSTR_CLOCK_HZ)) \
        /*lint -restore */\

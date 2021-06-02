@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : LED
-**     Version     : Component 01.077, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.078, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-14, 08:06, # CodeGen: 2
+**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LED2_Deinit(void);
 **         Init       - void LED2_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

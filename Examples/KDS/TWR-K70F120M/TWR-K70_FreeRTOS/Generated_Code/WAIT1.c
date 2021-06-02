@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : Wait
-**     Version     : Component 01.085, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-14, 08:06, # CodeGen: 2
+**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -18,15 +18,15 @@
 **     Contents    :
 **         Wait10Cycles   - void WAIT1_Wait10Cycles(void);
 **         Wait100Cycles  - void WAIT1_Wait100Cycles(void);
-**         WaitCycles     - void WAIT1_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void WAIT1_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void WAIT1_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void WAIT1_Waitms(uint16_t ms);
-**         Waitus         - void WAIT1_Waitus(uint16_t us);
-**         Waitns         - void WAIT1_Waitns(uint16_t ns);
+**         Waitms         - void WAIT1_Waitms(uint32_t ms);
+**         Waitus         - void WAIT1_Waitus(uint32_t us);
+**         Waitns         - void WAIT1_Waitns(uint32_t ns);
 **         WaitOSms       - void WAIT1_WaitOSms(void);
 **         Init           - void WAIT1_Init(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -100,7 +100,7 @@ void WAIT1_Wait10Cycles(void)
 
 #if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
   /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
-  /* Compiler is GNUC */
+#if MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_GNU
   __asm (
    /* bl Wait10Cycles() to here: [4] */
    "nop   \n\t" /* [1] */
@@ -108,6 +108,27 @@ void WAIT1_Wait10Cycles(void)
    "nop   \n\t" /* [1] */
    "bx lr \n\t" /* [3] */
   );
+#elif MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR
+  /* bl Wai10Cycles() to here: [4] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("bx lr"); /* [3] */
+#elif MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_KEIL
+  __asm {
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    /*bx lr*/                                /* [3] */
+  }
+#else
+  __asm {
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    bx lr                                    /* [3] */
+  }
+#endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
   /* \todo */
   __asm ( /* assuming [4] for overhead */
@@ -130,6 +151,9 @@ void WAIT1_Wait10Cycles(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR
+  /* Implemented in assembly file, as IAR does not support labels in HLI */
+#else
 #ifdef __GNUC__
   #if MCUC1_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
     #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
@@ -149,18 +173,19 @@ void WAIT1_Wait100Cycles(void)
   /* This function will spend 100 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
 #if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+#if MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_GNU
   __asm (
    /* bl to here:               [4] */
    "push {r0}   \n\t"        /* [2] */
    "movs r0, #0 \n\t"        /* [1] */
-   "loop:       \n\t"
+   "loopWait100Cycles:       \n\t"
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "add r0,#1   \n\t"        /* [1] */
    "cmp r0,#9   \n\t"        /* [1] */
-   "bls loop    \n\t"        /* [3] taken, [1] not taken */
+   "bls loopWait100Cycles    \n\t"        /* [3] taken, [1] not taken */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
@@ -171,50 +196,82 @@ void WAIT1_Wait100Cycles(void)
    "pop {r0}    \n\t"        /* [2] */
    "bx lr       \n\t"        /* [3] */
   );
+#elif MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR
+  /* need to implement in assembly, as IAR does not support labels in HLI */
+#elif MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_KEIL
+   /* bl to here:    [4] */
+    movs r0, #0   /* [1] */
+loop
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    adds r0,r0,#1 /* [1] */
+    cmp r0,#9     /* [1] */
+    bls loop      /* [3] taken, [1] not taken */
+    nop           /* [1] */
+    bx lr         /* [3] */
+#else
+  __asm {
+   /* bl Wai10Cycles() to here: [4] */
+    movs r0, #0 /* [1] */
+   loop:
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    add r0,#1   /* [1] */
+    cmp r0,#9   /* [1] */
+    bls loop    /* [3] taken, [1] not taken */
+    nop         /* [1] */
+    bx lr       /* [3] */
+  }
+#endif
 #elif MCUC1_CONFIG_CPU_IS_RISC_V
   /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
-    "Loop:             \n\t"
+    "LoopWait100Cycles:             \n\t"
     "  addi a5,a5,-1   \n\t"
-    "  bgtz a5, Loop   \n\t"
+    "  bgtz a5, LoopWait100Cycles   \n\t"
   );
 #endif
   /*lint -restore */
 }
+#endif  /* MCUC1_CONFIG_COMPILER==MCUC1_CONFIG_COMPILER_IAR */
 
 /*
 ** ===================================================================
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void WAIT1_WaitCycles(uint16_t cycles)
+void WAIT1_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
   uint32_t counter = cycles;
 
-  counter += KIN1_GetCycleCounter();
-  while(KIN1_GetCycleCounter()<counter) {
+  counter += McuArmTools_GetCycleCounter();
+  while(McuArmTools_GetCycleCounter()<counter) {
     /* wait */
   }
 #else
-  int32_t counter = cycles;
-
-  while(counter > 100) {
+  while(cycles >= 100u) {
     WAIT1_Wait100Cycles();
-    counter -= 100;
+    cycles -= 100u;
   }
-  while(counter > 10) {
+  while(cycles >= 10u) {
     WAIT1_Wait10Cycles();
-    counter -= 10;
+    cycles -= 10u;
   }
 #endif
   /*lint -restore */
@@ -237,8 +294,8 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
   uint32_t counter = cycles;
 
-  counter += KIN1_GetCycleCounter();
-  while(KIN1_GetCycleCounter()<counter) {
+  counter += McuArmTools_GetCycleCounter();
+  while(McuArmTools_GetCycleCounter()<counter) {
     /* wait */
   }
 #else
@@ -247,7 +304,7 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
     WAIT1_WaitCycles(60000);
     cycles -= 60000;
   }
-  WAIT1_WaitCycles((uint16_t)cycles);
+  WAIT1_WaitCycles(cycles);
   /*lint -restore */
 #endif
 }
@@ -265,7 +322,7 @@ void WAIT1_WaitLongCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void WAIT1_Waitms(uint16_t ms)
+void WAIT1_Waitms(uint32_t ms)
 {
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
@@ -337,9 +394,9 @@ void WAIT1_Init(void)
 {
 #if WAIT1_CONFIG_USE_CYCLE_COUNTER
   /* init cycle counter */
-  KIN1_InitCycleCounter();
-  KIN1_ResetCycleCounter();
-  KIN1_EnableCycleCounter();
+  McuArmTools_InitCycleCounter();
+  McuArmTools_ResetCycleCounter();
+  McuArmTools_EnableCycleCounter();
 #endif
 }
 

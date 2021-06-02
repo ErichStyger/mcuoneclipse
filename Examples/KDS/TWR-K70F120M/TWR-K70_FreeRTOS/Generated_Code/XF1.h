@@ -4,9 +4,9 @@
 **     Project     : TWR-K70_FreeRTOS
 **     Processor   : MK70FN1M0VMJ12
 **     Component   : XFormat
-**     Version     : Component 01.025, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-14, 08:06, # CodeGen: 2
+**     Date/Time   : 2021-06-02, 10:26, # CodeGen: 4
 **     Abstract    :
 **
 **     Settings    :
@@ -19,7 +19,7 @@
 **         Deinit    - void XF1_Deinit(void);
 **         Init      - void XF1_Init(void);
 **
-** *  Copyright : (c) Copyright Mario Viara, 2014-2018, https://github.com/MarioViara/xprintfc
+** *  Copyright : (c) Copyright Mario Viara, 2014-2020, https://github.com/MarioViara/xprintfc
 **  * Adopted for Processor Expert: Erich Styger
 **  * xsnprintf() contributed by Engin Lee
 **  * Web:         https://mcuoneclipse.com

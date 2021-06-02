@@ -1,3 +1,12 @@
+/**
+ * \file
+ * \brief Configuration header file for LED
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the LED module.
+ */
+
 #ifndef __LED2_CONFIG_H
 #define __LED2_CONFIG_H
 

@@ -1,4 +1,12 @@
-#ifndef __FRTOS1_CONFIG_H
+/**
+ * \file
+ * \brief Configuration header file for FreeRTOS component
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * This header file is used to configure settings of the FreeRTOS module.
+ */
+ #ifndef __FRTOS1_CONFIG_H
 #define __FRTOS1_CONFIG_H
 
 #include "MCUC1.h" /* SDK and API used */
@@ -110,17 +118,29 @@
 #endif
 
 #ifndef configLINKER_HEAP_BASE_SYMBOL
+#if MCUC1_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_BASE_SYMBOL           _pvHeapStart
+#else
   #define configLINKER_HEAP_BASE_SYMBOL           __HeapBase
+#endif
     /*!< Linker symbol used to denote the base address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapBase, MCUXpresso: _pvHeapStart)  */
 #endif
 
 #ifndef configLINKER_HEAP_LIMIT_SYMBOL
+#if MCUC1_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_LIMIT_SYMBOL          _pvHeapLimit
+#else
   #define configLINKER_HEAP_LIMIT_SYMBOL          __HeapLimit
+#endif
     /*!< Linker symbol used to denote the limit address of the heap, used for heap memory scheme 6 (newlib). (KDS: __HeapLimit, MCUXpresso: _pvHeapLimit)  */
 #endif
 
 #ifndef configLINKER_HEAP_SIZE_SYMBOL
+#if MCUC1_CONFIG_NXP_SDK_USED
+  #define configLINKER_HEAP_SIZE_SYMBOL           _HeapSize
+#else
   #define configLINKER_HEAP_SIZE_SYMBOL           __heap_size
+#endif
     /*!< Linker symbol used to denote the size of the heap, used for heap memory scheme 6 (newlib). (KDS: __heap_size, MCUXpresso: _HeapSize) */
 #endif
 
@@ -133,7 +153,6 @@
   #define configRESET_MSP                         (1)
    /*!< 1: reset MSP at scheduler start (Cortex M3/M4/M7 only); 0: do not reset MSP */
 #endif
-
 
 /*-----------------------------------------------------------
  * FreeRTOS Trace hook support
