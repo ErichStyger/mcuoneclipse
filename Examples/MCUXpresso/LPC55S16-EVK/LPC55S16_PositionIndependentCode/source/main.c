@@ -29,6 +29,10 @@ int main(void) {
 #endif
 //    PICModule_Init();
 //    LIB_Init();
+    void foo(void);
+    void bar(void);
+    foo();
+    bar();
     MODULE_Init();
     /* Enter an infinite loop, just incrementing a counter. */
     while(1) {

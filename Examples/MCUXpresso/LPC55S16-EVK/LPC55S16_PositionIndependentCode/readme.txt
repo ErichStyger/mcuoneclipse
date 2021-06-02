@@ -23,7 +23,7 @@ See https://github.com/rgujju/STM32-projects/tree/master/got_plt
  /* The global offset table is the table for indirectly accessing the global variables
      * The table contains addresses of the global variables. The text section contains 
      * a address of the GOT base and a offset in it to access the appropriate variables.
-     * This is done to access the variables in a postion independent manner. */
+     * This is done to access the variables in a position independent manner. */
     .got :
     {
         . = ALIGN(4);

@@ -346,6 +346,20 @@
 							<inputType id="com.crt.advproject.compiler.input.1422173863" superClass="com.crt.advproject.compiler.input"/>
 						</tool>
 					</fileInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1138309518.1403146754" name="module.c" rcbsApplicability="disable" resourcePath="source/module.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.434384190.1479623170">
+						<tool id="com.crt.advproject.gcc.exe.debug.434384190.1479623170" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.434384190">
+							<option id="gnu.c.compiler.option.misc.pic.1016841732" name="Position Independent Code (-fPIC)" superClass="gnu.c.compiler.option.misc.pic" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+							<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.2023540419" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" useByScannerDiscovery="true" value="gnu.c.optimization.level.optimize" valueType="enumerated"/>
+							<option id="gnu.c.compiler.option.misc.other.1303571476" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin" valueType="string"/>
+							<inputType id="com.crt.advproject.compiler.input.773945530" superClass="com.crt.advproject.compiler.input"/>
+						</tool>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1240346545" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.8409964" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.931622078" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
