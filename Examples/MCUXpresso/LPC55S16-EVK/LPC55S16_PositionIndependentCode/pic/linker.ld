@@ -16,12 +16,22 @@ _Min_Leftover_RAM = 0x400;
 
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x0, LENGTH = 0x38000 /* 224K bytes (alias Flash) */  
-  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 0x10000 /* 64K bytes (alias RAM) */  
+    FLASH   (rx)    : ORIGIN = 0x00000000, LENGTH = 32K
+    RAM     (rxw)   : ORIGIN = 0x20000000, LENGTH = 64K
+}
+
+PHDRS
+{
+  headers PT_PHDR PHDRS; /* program headers */
+  interp PT_INTERP ;
+  text PT_LOAD FILEHDR PHDRS ;
+  data PT_LOAD ;
+  dynamic PT_DYNAMIC ;
 }
 
 SECTIONS
 {
+     . = 0x1000; /* for size of headers */
     /* The vector table goes at the start of flash. */
     .vector_table :
     {
@@ -30,7 +40,7 @@ SECTIONS
         KEEP (*(.vector_table)) /* Use KEEP command to avoid removal of code if using link time garbage collection */
         . = ALIGN(4);
     } >FLASH
-
+    
     /* The 'text' section contains the main program code. */
     .text :
     {
@@ -48,11 +58,10 @@ SECTIONS
         . = ALIGN(4);
         *(.rodata*)
         . = ALIGN(4);
-
     } >FLASH
     
     /* PLT section contains code for accessing the dynamically linked functions
-     * ie funtions from shared libraries in a postion independent manner */
+     * ie funtions from shared libraries in a position independent manner */
     .plt :
     {
         . = ALIGN(4);
@@ -60,8 +69,16 @@ SECTIONS
         . = ALIGN(4);
     } >FLASH
     
+     .hdrs : { 
+        . = ALIGN(4);
+     	. = SIZEOF_HEADERS;
+        . = ALIGN(4);
+     } >FLASH :headers
+
     /* The 'data' section is space set aside in RAM for
      * things like non-zero global and static variables, which can change. */
+     
+     
    
     .data :
     {

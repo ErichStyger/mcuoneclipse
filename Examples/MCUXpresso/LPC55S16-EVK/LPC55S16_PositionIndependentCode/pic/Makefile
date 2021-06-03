@@ -6,7 +6,7 @@ TARGET = main
 
 # Define the linker script location and chip architecture.
 # Change this based on your linker script name and chip architecture
-LD_SCRIPT = stm32_linker.ld
+LD_SCRIPT = linker.ld
 MCU_SPEC  = cortex-m4
 
 # Add assembler and C files to this, later we can add a wildcard
