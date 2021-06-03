@@ -1,5 +1,15 @@
 readme.txt
 ----------
+Links:
+https://github.com/rgujju/STM32-projects/tree/master/got_plt
+https://community.arm.com/developer/ip-products/processors/f/cortex-m-forum/45919/gcc-does-not-generate-correct-code-while-building-pic
+https://answers.launchpad.net/gcc-arm-embedded/+question/669758
+https://answers.launchpad.net/gcc-arm-embedded/+question/675869
+https://eli.thegreenplace.net/2011/11/03/position-independent-code-pic-in-shared-libraries
+https://community.arm.com/developer/ip-products/processors/f/cortex-m-forum/45864/shared-libraries-and-plt-using-gcc-toolchain
+
+
+
 
 See https://github.com/rgujju/STM32-projects/tree/master/got_plt
 

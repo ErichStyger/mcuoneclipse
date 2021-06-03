@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-#include "lib.h"
+#include "myLib.h"
 
 static int cntr = 0;
 

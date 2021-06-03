@@ -11,7 +11,6 @@
 #include "clock_config.h"
 #include "LPC55S16.h"
 #include "fsl_debug_console.h"
-#include "pic_module.h"
 #include "lib.h"
 #include "module.h"
 
@@ -30,6 +29,7 @@ int main(void) {
 #endif
 //    PICModule_Init();
 //    LIB_Init();
+    i = LIB_Utility();
     void foo(void);
     void bar(void);
     foo();

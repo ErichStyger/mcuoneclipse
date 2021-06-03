@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef LIB_H_
-#define LIB_H_
+#ifndef MYLIB_H_
+#define MYLIB_H_
 
+int LIB_Utility(void);
 int LIB_Calculate(int i);
 
 void LIB_Init(void);
 
 
-#endif /* LIB_H_ */
+#endif /* MYLIB_H_ */

@@ -14,6 +14,14 @@ INCLUDE "LPC55S16_PositionIndependentCode_Debug_memory.ld"
 
 ENTRY(ResetISR)
 
+/*
+PHDRS
+{
+    headers PT_PHDR FILEHDR PHDRS;
+    code PT_LOAD FILEHDR;
+}
+*/
+
 SECTIONS
 {
      /* MAIN TEXT SECTION */
@@ -77,7 +85,8 @@ SECTIONS
         *(.plt)
         . = ALIGN(4);
     } >PROGRAM_FLASH
- /* The global offset table is the table for indirectly accessing the global variables
+    
+    /* The global offset table is the table for indirectly accessing the global variables
      * The table contains addresses of the global variables. The text section contains 
      * a address of the GOT base and a offset in it to access the appropriate variables.
      * This is done to access the variables in a position independent manner. */
