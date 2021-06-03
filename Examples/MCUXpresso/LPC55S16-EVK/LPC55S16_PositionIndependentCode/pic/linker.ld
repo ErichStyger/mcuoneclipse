@@ -31,7 +31,6 @@ PHDRS
 
 SECTIONS
 {
-     . = 0x1000; /* for size of headers */
     /* The vector table goes at the start of flash. */
     .vector_table :
     {
