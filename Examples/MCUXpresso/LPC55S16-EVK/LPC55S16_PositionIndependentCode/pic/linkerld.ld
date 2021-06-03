@@ -8,11 +8,11 @@ MEMORY
 
 PHDRS
 {
-  headers      PT_PHDR PHDRS;
-  header_load  PT_LOAD PHDRS;
-/*   interp       PT_INTERP; */
+ /*  headers      PT_PHDR PHDRS;*/
+ /* header_load  PT_LOAD PHDRS; */
   code         PT_LOAD;
   data         PT_LOAD;
+/*   interp       PT_INTERP; */
  /* dynamic      PT_DYNAMIC; */
 }
 
@@ -36,12 +36,13 @@ SECTIONS
   } >FLASH :code
   
 /*   .interp : { *(.interp) } :interp :headers :header_load*/
-  .hash : { *(.hash) } 
+  .hash : { *(.hash) } >FLASH
   .dynsym : { *(.dynsym) }
   .dynstr : { *(.dynstr) }
   .rela.dyn : { *(.rela.dyn) }
   .rela.plt : { *(.rela.plt) }
   .plt : { *(.plt) }
+  .header : { } >RAM  :header_load :headers
   
  /*  .dynamic : { *(.dynamic) } :data :dynamic */
 

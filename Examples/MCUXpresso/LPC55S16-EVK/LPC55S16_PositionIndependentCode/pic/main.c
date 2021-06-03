@@ -5,7 +5,7 @@ extern unsigned int library_function( unsigned int x );
 // These global variables will be in the bss section
 unsigned int x;
 unsigned int y;
-unsigned int z;
+unsigned int z = 0xdeadbeef;
 
 int main ( void )
 {

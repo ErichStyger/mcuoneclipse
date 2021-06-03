@@ -14,13 +14,13 @@ INCLUDE "LPC55S16_PositionIndependentCode_Debug_memory.ld"
 
 ENTRY(ResetISR)
 
-/*
+    /********************************************************** */
 PHDRS
 {
-    headers PT_PHDR FILEHDR PHDRS;
-    code PT_LOAD FILEHDR;
+  code         PT_LOAD;
+  data         PT_LOAD;
 }
-*/
+    /********************************************************** */
 
 SECTIONS
 {
@@ -64,7 +64,16 @@ SECTIONS
 
         *(.after_vectors*)
 
-    } > PROGRAM_FLASH
+    } > PROGRAM_FLASH :code
+    /********************************************************** */
+  .hash : { *(.hash) } >PROGRAM_FLASH
+  .dynsym : { *(.dynsym) }
+  .dynstr : { *(.dynstr) }
+  .rela.dyn : { *(.rela.dyn) }
+  .rela.plt : { *(.rela.plt) }
+  .plt : { *(.plt) }
+  .header : { } >SRAM  :header_load :headers
+    /********************************************************** */
 
     .text : ALIGN(4)
     {
@@ -75,7 +84,7 @@ SECTIONS
     /*   *(.got*)*/
        /*--------------------------------------------------- */
        . = ALIGN(4);
-    } > PROGRAM_FLASH
+    } > PROGRAM_FLASH :code
  /*------------------------------------------------------------- */
     /* PLT section contains code for accessing the dynamically linked functions
      * ie functions from shared libraries in a position independent manner */
@@ -84,7 +93,7 @@ SECTIONS
         . = ALIGN(4);
         *(.plt)
         . = ALIGN(4);
-    } >PROGRAM_FLASH
+    } >PROGRAM_FLASH :code
     
     /* The global offset table is the table for indirectly accessing the global variables
      * The table contains addresses of the global variables. The text section contains 
@@ -104,7 +113,7 @@ SECTIONS
         . = ALIGN(4);
         *(.got.plt)
         _edata = .;
-    } >SRAM AT> PROGRAM_FLASH
+    } >SRAM AT> PROGRAM_FLASH :code
  /*------------------------------------------------------------- */
     
     /*
@@ -193,7 +202,7 @@ SECTIONS
        _edata = . ;
        PROVIDE(__end_data_RAM = .) ;
        PROVIDE(__end_data_SRAM = .) ;
-    } > SRAM AT>PROGRAM_FLASH
+    } > SRAM AT>PROGRAM_FLASH :code
 
     /* BSS section for USB_RAM */
     .bss_RAM2 : ALIGN(4)

@@ -7,10 +7,6 @@
 #ifndef MYLIB_H_
 #define MYLIB_H_
 
-int LIB_Utility(void);
-int LIB_Calculate(int i);
-
-void LIB_Init(void);
-
+unsigned int library_function( unsigned int x );
 
 #endif /* MYLIB_H_ */
