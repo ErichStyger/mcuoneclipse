@@ -91,9 +91,8 @@ SECTIONS
  /*------------------------------------------------------------- */
     /* PLT section contains code for accessing the dynamically linked functions
      * ie functions from shared libraries in a position independent manner */
-    .plt :
+    .plt : ALIGN(4)
     {
-        . = ALIGN(4);
         *(.plt)
         . = ALIGN(4);
     } >PROGRAM_FLASH :code
@@ -102,18 +101,17 @@ SECTIONS
      * The table contains addresses of the global variables. The text section contains 
      * a address of the GOT base and a offset in it to access the appropriate variables.
      * This is done to access the variables in a position independent manner. */
-    .got :
+    .got : ALIGN(4)
     {
-        . = ALIGN(4);
         _sgot = .;
         *(.got)
     } >SRAM AT> PROGRAM_FLASH :data
     
     /* got.plt section contains entries which is used with the PLT to access the functions 
      * in a position independent manner. */
-    .got.plt :
+    .got.plt : ALIGN(4)
     {
-        . = ALIGN(4);
+         _sgot_plt = .;
         *(.got.plt)
         _edata = .;
     } >SRAM AT> PROGRAM_FLASH :data

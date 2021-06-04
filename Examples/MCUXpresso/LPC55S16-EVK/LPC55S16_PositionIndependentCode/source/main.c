@@ -19,6 +19,12 @@
 volatile int i, j = 0 ;
 void foobar(void) {}
 
+typedef void(*fp_t)(void);
+extern unsigned int _sgot, _sgot_plt; /* symbols provided by the linker */
+void BindLibrary(fp_t fp) {
+  ((uint32_t*)&_sgot_plt)[5] = (uint32_t)foobar; /* 0x2000'0014 */
+}
+
 int main(void) {
     /* Init board hardware. */
 //    BOARD_InitBootPins();
@@ -32,13 +38,14 @@ int main(void) {
 //    LIB_Init();
    // i = LIB_Utility();
 #if 1
-  i = library_function(3);
-    void foo(void);
-    void bar(void);
-    foo();
-    bar();
-    foobar();
-    MODULE_Init();
+    BindLibrary((fp_t)MyLib_Calc);
+    i = MyLib_Calc(3);
+    //void foo(void);
+    //void bar(void);
+    //foo();
+    //bar();
+    //foobar();
+    //MODULE_Init();
     /* Enter an infinite loop, just incrementing a counter. */
 #endif
     while(1) {
