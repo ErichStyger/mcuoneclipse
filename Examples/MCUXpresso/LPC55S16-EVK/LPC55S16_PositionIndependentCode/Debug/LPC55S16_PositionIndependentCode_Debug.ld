@@ -43,6 +43,9 @@ SECTIONS
         LONG(LOADADDR(.got));
         LONG(    ADDR(.got));
         LONG(  SIZEOF(.got));
+        LONG(LOADADDR(.got.plt));
+        LONG(    ADDR(.got.plt));
+        LONG(  SIZEOF(.got.plt));
 /*---------------------------------------------------------------------- */
         LONG(LOADADDR(.data_RAM2));
         LONG(    ADDR(.data_RAM2));
@@ -104,7 +107,7 @@ SECTIONS
         . = ALIGN(4);
         _sgot = .;
         *(.got)
-    } >SRAM AT> PROGRAM_FLASH
+    } >SRAM AT> PROGRAM_FLASH :data
     
     /* got.plt section contains entries which is used with the PLT to access the functions 
      * in a position independent manner. */
@@ -113,7 +116,7 @@ SECTIONS
         . = ALIGN(4);
         *(.got.plt)
         _edata = .;
-    } >SRAM AT> PROGRAM_FLASH :code
+    } >SRAM AT> PROGRAM_FLASH :data
  /*------------------------------------------------------------- */
     
     /*

@@ -7,6 +7,6 @@
 #ifndef MYLIB_H_
 #define MYLIB_H_
 
-unsigned int library_function( unsigned int x );
+int MyLib_Calc(int x);
 
 #endif /* MYLIB_H_ */

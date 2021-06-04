@@ -1,19 +1,18 @@
+/*
+ * Copyright (c) 2021, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+#include "myLib.h"
 
-// This function is defined in mylib.c
-extern unsigned int library_function( unsigned int x );
+int var1;
+int var2;
+int var3 = 0xdeadbeef;
 
-// These global variables will be in the bss section
-unsigned int x;
-unsigned int y;
-unsigned int z = 0xdeadbeef;
-
-int main ( void )
-{
-	x=7;
-	y=8;
-	z=library_function(77);
-
-	while(1){
-		
+int main ( void ) {
+	var1 = 1;
+	var2 = 2;
+	var3 = MyLib_Calc(5);
+	for(;;) {
 	}
 }

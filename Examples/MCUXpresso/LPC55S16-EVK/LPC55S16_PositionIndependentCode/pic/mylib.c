@@ -1,6 +1,16 @@
+/*
+ * Copyright (c) 2021, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/* library module which is built with -fPIC (position-independent code) mode, implemented as shared-object */
+
 #include "myLib.h"
 
-unsigned int library_function( unsigned int x )
-{
-    return(x+3);
+static int glob;
+
+int MyLib_Calc(int x) {
+  glob++;
+  return x*2;
 }
