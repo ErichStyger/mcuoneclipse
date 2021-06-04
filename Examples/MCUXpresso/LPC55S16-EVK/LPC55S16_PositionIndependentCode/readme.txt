@@ -1,6 +1,6 @@
 readme.txt
 ----------
-add-symbol-file ./Debug/myLib.o 0x100
+add-symbol-file ./so/libmystuff.so 0x718
 info address MyLib_Mul2
 
 discard all symbols: 

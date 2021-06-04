@@ -11,4 +11,6 @@ int MyLib_Calc(int x);
 
 int MyLib_Mul2(int x);
 
+void MyLib_Init(void);
+
 #endif /* MYLIB_H_ */
