@@ -101,7 +101,7 @@
 									<listOptionValue builtIn="false" value="SERIAL_PORT_TYPE_UART=1"/>
 									<listOptionValue builtIn="false" value="__MCUXPRESSO"/>
 									<listOptionValue builtIn="false" value="__USE_CMSIS"/>
-									<listOptionValue builtIn="false" value="DEBUG"/>
+									<listOptionValue builtIn="false" value="NDEBUG"/>
 									<listOptionValue builtIn="false" value="__NEWLIB__"/>
 								</option>
 								<option id="com.crt.advproject.gcc.fpu.327881841" name="Floating point" superClass="com.crt.advproject.gcc.fpu" useByScannerDiscovery="true" value="com.crt.advproject.gcc.fpu.fpv4.hard" valueType="enumerated"/>
@@ -334,16 +334,21 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1138309518.2038569698" name="/" resourcePath="board">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1303804933" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.419024032" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1288167573"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1046498995" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.434384190"/>
+							<tool id="com.crt.advproject.gas.exe.debug.139242517" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1944689903"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.692710102" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1853251337"/>
+							<tool id="com.crt.advproject.link.exe.debug.577090427" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1172680948"/>
+							<tool id="com.crt.advproject.tool.debug.debug.746965090" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.990358168"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

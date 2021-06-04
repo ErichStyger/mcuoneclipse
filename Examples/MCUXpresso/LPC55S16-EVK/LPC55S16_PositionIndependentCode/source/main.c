@@ -19,10 +19,12 @@
 volatile int i, j = 0 ;
 void foobar(void) {}
 
+#define GOT_PLT_ENTRY_MyLib_Calc  (3)
+
 typedef void(*fp_t)(void);
 extern unsigned int _sgot, _sgot_plt; /* symbols provided by the linker */
-void BindLibrary(fp_t fp) {
-  ((uint32_t*)&_sgot_plt)[5] = (uint32_t)foobar; /* 0x2000'0014 */
+void BindLibrary(unsigned int got_plt_idx, void (*fp)(void)) {
+  ((uint32_t*)&_sgot_plt)[got_plt_idx] = (uint32_t)fp;
 }
 
 int main(void) {
@@ -38,7 +40,7 @@ int main(void) {
 //    LIB_Init();
    // i = LIB_Utility();
 #if 1
-    BindLibrary((fp_t)MyLib_Calc);
+    BindLibrary(GOT_PLT_ENTRY_MyLib_Calc, foobar);
     i = MyLib_Calc(3);
     //void foo(void);
     //void bar(void);
