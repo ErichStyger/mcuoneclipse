@@ -6,6 +6,11 @@ To create a shared library, replace the
 in the compiler 'Miscellaneous' settings to
 -shared 
 
+Change the artifact extension from .a (static archive/library) to .so for a shared library or shared object)
+
+/////////////////////////////////////////////////
+// Issue
+/////////////////////////////////////////////////
 Using
 gcc version 9.3.1 20200408 (release) (GNU Arm Embedded Toolchain 9-2020-q2-update)
 

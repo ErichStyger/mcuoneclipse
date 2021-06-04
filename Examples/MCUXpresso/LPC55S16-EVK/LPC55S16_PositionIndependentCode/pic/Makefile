@@ -14,7 +14,7 @@ MCU_SPEC  = cortex-m4
 AS_SRC    = startup.S
 C_SRC     = main.c 
 LIBS_SRC  = 
-DLIB_SRC = mylib.c
+DLIB_SRC = myLib.c
 # Toolchain definitions (ARM bare metal defaults)
 # Set the TOOLCHAIN_PATH variable to the path where it is installed
 # If it is accessible globally. ie it is in your system path ($PATH)

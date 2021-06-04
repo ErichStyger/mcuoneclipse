@@ -274,12 +274,12 @@
 								<option id="gnu.c.link.option.strip.231329215" name="Omit all symbol information (-s)" superClass="gnu.c.link.option.strip" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.noshared.1123551814" name="No shared libraries (-static)" superClass="gnu.c.link.option.noshared" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.libs.970676165" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
-									<listOptionValue builtIn="false" value=":libmyLib.so"/>
+									<listOptionValue builtIn="false" value="LPC55S16_PicLibrary"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.paths.373819637" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/LPC55S16/mcuxpresso}&quot;"/>
-									<listOptionValue builtIn="false" value="../pic"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LPC55S16_PicLibrary/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="../pic"/>
 								</option>
 								<option id="gnu.c.link.option.ldflags.1978750420" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.other.1955486096" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" useByScannerDiscovery="false" valueType="stringList">
@@ -332,16 +332,6 @@
 								<option id="com.crt.advproject.debugger.security.nonsecureimageenable.450315661" name="Enable pre-programming of Non-Secure Image" superClass="com.crt.advproject.debugger.security.nonsecureimageenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimage.1777541334" name="Non-Secure Project" superClass="com.crt.advproject.debugger.security.nonsecureimage" useByScannerDiscovery="false"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.1138309518.2038569698" name="/" resourcePath="board">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1303804933" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.419024032" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1288167573"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.1046498995" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.434384190"/>
-							<tool id="com.crt.advproject.gas.exe.debug.139242517" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1944689903"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.692710102" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1853251337"/>
-							<tool id="com.crt.advproject.link.exe.debug.577090427" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1172680948"/>
-							<tool id="com.crt.advproject.tool.debug.debug.746965090" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.990358168"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -410,4 +400,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

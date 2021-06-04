@@ -15,6 +15,19 @@
 #include "module.h"
 #include "myLib.h"
 
+#if 0
+int MyLib_Mul2(int x) {
+  return x*2;
+}
+ 838: 0040        lsls  r0, r0, #1
+ 83a: 4770        bx  lr
+#else
+static const int16_t f_MyLib_Mul2[] = {
+     0x0040,
+     0x4770
+ };
+#endif
+
 /* Force the counter to be placed into memory. */
 volatile int i, j = 0 ;
 void foobar(void) {}
@@ -23,8 +36,8 @@ void foobar(void) {}
 
 typedef void(*fp_t)(void);
 extern unsigned int _sgot, _sgot_plt; /* symbols provided by the linker */
-void BindLibrary(unsigned int got_plt_idx, void (*fp)(void)) {
-  ((uint32_t*)&_sgot_plt)[got_plt_idx] = (uint32_t)fp;
+void BindLibrary(unsigned int got_plt_idx, uint32_t addr) {
+  ((uint32_t*)&_sgot_plt)[got_plt_idx] = addr;
 }
 
 int main(void) {
@@ -40,7 +53,7 @@ int main(void) {
 //    LIB_Init();
    // i = LIB_Utility();
 #if 1
-    BindLibrary(GOT_PLT_ENTRY_MyLib_Calc, foobar);
+    BindLibrary(GOT_PLT_ENTRY_MyLib_Calc, (uint32_t)f_MyLib_Mul2);
     i = MyLib_Calc(3);
     //void foo(void);
     //void bar(void);

@@ -1,5 +1,27 @@
 readme.txt
 ----------
+add-symbol-file ./Debug/myLib.o 0x100
+info address MyLib_Mul2
+
+discard all symbols: 
+symbol-file
+
+lib.so
+.text starting at 0x740
+MyLib_Mul2 is at  0x838  (+0xF8)
+
+MyLib_Mul2 is loaded at 0x6d0
+Set .text symbol base at 0x6d0-0xf8 => 0x5d8
+
+add-symbol-file ./Debug/myLib.o 0x5d8
+add symbol table from file "./Debug/myLib.o" at
+	.text_addr = 0x5d8
+(y or n) [answered Y; input not from terminal]
+Reading symbols from ./Debug/myLib.o...
+info address MyLib_Mul2
+Symbol "MyLib_Mul2" is a function at address 0x6d0.
+
+
 Links:
 https://github.com/rgujju/STM32-projects/tree/master/got_plt
 https://community.arm.com/developer/ip-products/processors/f/cortex-m-forum/45919/gcc-does-not-generate-correct-code-while-building-pic
