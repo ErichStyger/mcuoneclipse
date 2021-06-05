@@ -1,0 +1,75 @@
+
+C:\Users\erich\Data\GitRepos\McuOnEclipse\Examples\MCUXpresso\LPC55S16-EVK\LPC55S16_PositionIndependentCode\pic\myLib.o:     file format elf32-littlearm
+C:\Users\erich\Data\GitRepos\McuOnEclipse\Examples\MCUXpresso\LPC55S16-EVK\LPC55S16_PositionIndependentCode\pic\myLib.o
+architecture: armv7e-m, flags 0x00000011:
+HAS_RELOC, HAS_SYMS
+start address 0x00000000
+private flags = 5000000: [Version5 EABI]
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000002c  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .data         00000000  00000000  00000000  00000060  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000004  00000000  00000000  00000060  2**2
+                  ALLOC
+  3 .debug_info   00000063  00000000  00000000  00000060  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING, OCTETS
+  4 .debug_abbrev 0000005d  00000000  00000000  000000c3  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  5 .debug_aranges 00000020  00000000  00000000  00000120  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING, OCTETS
+  6 .debug_line   00000042  00000000  00000000  00000140  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING, OCTETS
+  7 .debug_str    000000fe  00000000  00000000  00000182  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+  8 .comment      0000004d  00000000  00000000  00000280  2**0
+                  CONTENTS, READONLY
+  9 .debug_frame  00000038  00000000  00000000  000002d0  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING, OCTETS
+ 10 .ARM.attributes 0000002e  00000000  00000000  00000308  2**0
+                  CONTENTS, READONLY
+SYMBOL TABLE:
+00000000 l    df *ABS*	00000000 myLib.c
+00000000 l    d  .text	00000000 .text
+00000000 l    d  .data	00000000 .data
+00000000 l    d  .bss	00000000 .bss
+00000000 l       .bss	00000004 glob
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .comment	00000000 .comment
+00000000 l    d  .ARM.attributes	00000000 .ARM.attributes
+00000000 g     F .text	0000002c MyLib_Calc
+
+
+
+Disassembly of section .text:
+
+00000000 <MyLib_Calc>:
+   0:	b480      	push	{r7}
+   2:	b083      	sub	sp, #12
+   4:	af00      	add	r7, sp, #0
+   6:	6078      	str	r0, [r7, #4]
+   8:	4b06      	ldr	r3, [pc, #24]	; (24 <MyLib_Calc+0x24>)
+   a:	447b      	add	r3, pc
+   c:	681b      	ldr	r3, [r3, #0]
+   e:	3301      	adds	r3, #1
+  10:	4a05      	ldr	r2, [pc, #20]	; (28 <MyLib_Calc+0x28>)
+  12:	447a      	add	r2, pc
+  14:	6013      	str	r3, [r2, #0]
+  16:	687b      	ldr	r3, [r7, #4]
+  18:	005b      	lsls	r3, r3, #1
+  1a:	4618      	mov	r0, r3
+  1c:	370c      	adds	r7, #12
+  1e:	46bd      	mov	sp, r7
+  20:	bc80      	pop	{r7}
+  22:	4770      	bx	lr
+  24:	00000016 	.word	0x00000016
+			24: R_ARM_REL32	.bss
+  28:	00000012 	.word	0x00000012
+			28: R_ARM_REL32	.bss

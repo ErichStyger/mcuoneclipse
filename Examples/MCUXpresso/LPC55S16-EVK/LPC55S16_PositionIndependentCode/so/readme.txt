@@ -1,4 +1,4 @@
 readme.txt
 ----------
 
-Run the .bat file to build the relocatable shared object/library.
+Run the the makefile to build the shared object/library.
