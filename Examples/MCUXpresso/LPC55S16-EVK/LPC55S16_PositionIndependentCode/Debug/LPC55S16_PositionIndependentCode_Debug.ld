@@ -66,8 +66,11 @@ SECTIONS
         /* End of Global Section Table */
 
         *(.after_vectors*)
+    ASSERT(1, "hello");
 
     } > PROGRAM_FLASH :code
+    . = ASSERT(1);
+    . = ASSERT((__data_load_start__ + SIZEOF(.data)) >= __FLASH_segment_start__ && (__data_load_start__ + SIZEOF(.data)) <= (__FLASH_segment_end__) , "error: .data is too large to fit in FLASH memory segment");
     /********************************************************** */
   .hash : { *(.hash) } >PROGRAM_FLASH
   .dynsym : { *(.dynsym) }
