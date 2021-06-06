@@ -11,7 +11,6 @@
 #include "clock_config.h"
 #include "LPC55S16.h"
 #include "fsl_debug_console.h"
-#include "lib.h"
 #include "module.h"
 #include "myLib.h"
 
@@ -69,18 +68,22 @@ static const int16_t code[] = {
 };
 #endif
 
+/*! \brief
+ * The information needed to perform the binding.
+ * The offsets are the code offsets inside (Virtual address) from the beginning.
+ * The got_plt index is used to identify the got PLT index.
+ */
 typedef struct {
-  const char *name; /* name of function */
-  size_t offset;    /* offset in loaded .code section */
-  int got_plt_idx;  /* index in .got_plt table */
-} got_t;
-#define GOT_PLT_ENTRY_MyLib_Calc  (3)
+  const char *name; /*!< name of function */
+  size_t offset;    /*!< offset in loaded .code section */
+  int got_plt_idx;  /*!< index in .got_plt table */
+} binding_t;
 
-static const got_t binding[] =
+static const binding_t bindings[] =
 {
-    {"MyLib_Calc", 0x0000, 4}, /* 0010 */
-    {"MyLib_Mul2", 0x0014, 5}, /* 0014 */
-    {"MyLib_Init", 0x0018, 3}, /* 000C */
+    {"MyLib_Calc", 0x0000, 4},
+    {"MyLib_Mul2", 0x0014, 5},
+    {"MyLib_Init", 0x0018, 3},
 };
 
 /* Force the counter to be placed into memory. */
@@ -88,29 +91,23 @@ volatile int i, j = 0 ;
 void foobar(void) {}
 
 extern unsigned int _sgot, _sgot_plt; /* symbols provided by the linker */
+
 void BindLibrary(void *relocStart) {
-  for(int i=0; i<sizeof(binding)/sizeof(binding[0]); i++) {
-    ((uint32_t*)&_sgot_plt)[binding[i].got_plt_idx] = (uint32_t)(relocStart+binding[i].offset);
+  for(int i=0; i<sizeof(bindings)/sizeof(bindings[0]); i++) {
+    ((uint32_t*)&_sgot_plt)[bindings[i].got_plt_idx] = (uint32_t)(relocStart+bindings[i].offset);
   }
 }
 
 int main(void) {
-    /* Init board hardware. */
-//    BOARD_InitBootPins();
-//    BOARD_InitBootClocks();
-//    BOARD_InitBootPeripherals();
-#if 1
     BindLibrary((void*)code); /* do the binding to the relocated code */
 
     MyLib_Init();
     i = MyLib_Calc(30);
     j = MyLib_Mul2(55);
     /* Enter an infinite loop, just incrementing a counter. */
-#endif
     while(1) {
         i++;
         j++;
-  //      PICModule_DoThings();
         __asm volatile ("nop");
     }
     return 0 ;

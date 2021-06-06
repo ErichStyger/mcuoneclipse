@@ -2,7 +2,7 @@ CC_SO_OPTIONS=-msingle-pic-base -mpic-register=r9 -mno-pic-data-is-text-relative
 
 all:
 	cd ../so
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -Wall -g -O1 -c ../so/myLib.c -o myLib.o
+	arm-none-eabi-gcc $(CC_SO_OPTIONS) -mcpu=cortex-m4 -mthumb -Wall -g -O1 -c ../so/myLib.c -o myLib.o
 	arm-none-eabi-gcc -shared -Wl,-soname,libmystuff.so -nostdlib -o libmystuff.so myLib.o
 	@echo "generating listing files"
 	arm-none-eabi-objdump -h -S "myLib.o" >"myLib.objdump.dis"
