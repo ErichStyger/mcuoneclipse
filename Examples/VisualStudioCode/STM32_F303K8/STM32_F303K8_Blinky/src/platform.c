@@ -19,12 +19,21 @@
 #endif
 #include "Board.h"
 #include "McuShell.h"
+#include "McuArmTools.h"
+#include "McuLog.h"
+#include "McuXFormat.h"
+#include "McuTimeDate.h"
 
 void PL_Init(void) {
-#if PL_CONFIG_USE_FREERTOS
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_Init(); /* must be first to disable the interrupts */
 #endif
   BOARD_Init();
+  McuLib_Init();
+  McuArmTools_Init();
+  McuLog_Init();
+  McuXFormat_Init();
+  McuTimeDate_Init();
   McuWait_Init();
   McuRTT_Init();
   McuUtility_Init();
@@ -33,7 +42,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SEGGER_SYSVIEW
   McuSystemView_Init();
 #endif
-#if PL_CONFIG_USE_FREERTOS
-  RTOS_Init();
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  McuRTOS_Init();
 #endif
 }

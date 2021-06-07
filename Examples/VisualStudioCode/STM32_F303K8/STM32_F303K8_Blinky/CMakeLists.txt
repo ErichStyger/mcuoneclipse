@@ -65,11 +65,15 @@ set(SRC_FILES
        McuLib/src/McuLib.c
  #      McuLib/src/McuGPIO.c
  #      McuLib/src/McuLed.c
+       McuLib/src/McuArmTools.c
        McuLib/src/McuWait.c
        McuLib/src/McuUtility.c
        McuLib/src/McuArmTools.c
        McuLib/src/McuRTOS.c
        McuLib/src/McuShell.c
+       McuLib/src/McuLog.c
+       McuLib/src/McuXFormat.c
+       McuLib/src/McuTimeDate.c
 
        McuLib/src/McuRTT.c
        McuLib/SEGGER_RTT/SEGGER_RTT.c

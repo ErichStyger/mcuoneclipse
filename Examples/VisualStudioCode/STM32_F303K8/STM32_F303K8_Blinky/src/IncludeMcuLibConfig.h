@@ -37,8 +37,8 @@ Instructions:
 //#define McuLib_CONFIG_CPU_IS_IMXRT      (0)  /* NXP i.MX RT */
 //#define McuLib_CONFIG_CPU_IS_LPC55xx    (0)  /* NXP LPC55xx */
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS              (0)
-#define configTOTAL_HEAP_SIZE                       (24*1024)
+#define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
+#define configTOTAL_HEAP_SIZE                       (8*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 #define configQUEUE_REGISTRY_SIZE                   (10)
@@ -136,7 +136,12 @@ Instructions:
 #define McuExtRTC_CONFIG_DEVICE                 (3231)  /* RTC device used */
 /* -------------------------------------------------*/
 /* McuLog */
-#define McuLog_CONFIG_USE_FILE                  (1)
+#define McuLog_CONFIG_IS_ENABLED                (1)
+#define McuLog_CONFIG_USE_FILE                  (0)
+#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (1)
+#define McuLog_CONFIG_USE_COLOR                 (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
+#define McuLog_CONFIG_USE_FILE                  (0)
 /* -------------------------------------------------*/
 /* FatFS */
 #define McuLib_CONFIG_USE_FAT_FS                (1)
