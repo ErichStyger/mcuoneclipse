@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019-2021, Erich Styger
  * All rights reserved.
  *
  * Driver for GPIO pins
@@ -10,7 +10,13 @@
 #ifndef McuGPIO_H_
 #define McuGPIO_H_
 
-#include "fsl_gpio.h"
+#include <stdint.h>
+#include <stddef.h>
+#if McuLib_CONFIG_NXP_SDK_USED
+  #include "fsl_gpio.h"
+#elif McuLib_CONFIG_CPU_IS_STM32
+  #include "stm32f3xx_hal.h"
+#endif
 #include "McuLibconfig.h"
 #include "McuGPIOconfig.h"
 #include <stdbool.h>
@@ -19,10 +25,20 @@
 extern "C" {
 #endif
 
+typedef enum {
+  McuGPIO_PULL_DISABLE,
+  McuGPIO_PULL_UP,
+  McuGPIO_PULL_DOWN,
+} McuGPIO_PullType;
+
 typedef void *McuGPIO_Handle_t;
 
 typedef struct {
+#if McuLib_CONFIG_NXP_SDK_USED
   GPIO_Type *gpio; /* pointer to GPIO */
+#elif McuLib_CONFIG_CPU_IS_STM32
+  GPIO_TypeDef *gpio;
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   PORT_Type *port; /* pointer to port */
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
@@ -34,6 +50,7 @@ typedef struct {
   /* no port for i.MX */
 #endif
   uint32_t pin; /* pin number */
+  McuGPIO_PullType pull; /* pull resistor configuration */
 } McuGPIO_HwPin_t;
 
 typedef struct {
@@ -61,12 +78,6 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val);
 bool McuGPIO_GetValue(McuGPIO_Handle_t gpio);
 
 void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_t bufSize);
-
-typedef enum {
-  McuGPIO_PULL_DISABLE,
-  McuGPIO_PULL_UP,
-  McuGPIO_PULL_DOWN,
-} McuGPIO_PullType;
 
 void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull);
 

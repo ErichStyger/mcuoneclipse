@@ -34,7 +34,7 @@ typedef enum {
 typedef void *McuGPIO_Handle_t;
 
 typedef struct {
-#if McuLib_CONFIG_NXP_SDK_USE
+#if McuLib_CONFIG_NXP_SDK_USED
   GPIO_Type *gpio; /* pointer to GPIO */
 #elif McuLib_CONFIG_CPU_IS_STM32
   GPIO_TypeDef *gpio;

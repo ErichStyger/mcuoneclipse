@@ -87,7 +87,6 @@ static void McuGPIO_ConfigurePin(bool isInput, bool isHighOnInit, McuGPIO_HwPin_
 #if McuLib_CONFIG_NXP_SDK_USED
   gpio_pin_config_t pin_config; /* config for the SDK */
 
-  (void)pull; /* not used, use dedicated interface instead */
   memset(&pin_config, 0, sizeof(pin_config)); /* init all fields */
   if (isInput) {
 #if McuLib_CONFIG_CPU_IS_IMXRT
