@@ -37,7 +37,7 @@ Instructions:
 //#define McuLib_CONFIG_CPU_IS_IMXRT      (0)  /* NXP i.MX RT */
 //#define McuLib_CONFIG_CPU_IS_LPC55xx    (0)  /* NXP LPC55xx */
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
+#define McuLib_CONFIG_SDK_USE_FREERTOS              (0)
 #define configTOTAL_HEAP_SIZE                       (24*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
@@ -45,8 +45,8 @@ Instructions:
 /* -------------------------------------------------*/
 /* Segger SystemViewer: */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
-#define SYSVIEW_APP_NAME                            "FRDM-K22F"
-#define SYSVIEW_DEVICE_NAME                         "NXP K22FN512"
+#define SYSVIEW_APP_NAME                            "STM32 F303K8"
+#define SYSVIEW_DEVICE_NAME                         "STM32F303K8"
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING           "FRDM-K22F"

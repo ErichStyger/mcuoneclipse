@@ -22,9 +22,19 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 
 # List of source files
 set(SRC_FILES
-       src/main.c
-       src/platform.c
+        src/main.c
+        src/platform.c
  #      src/leds.c
+
+        drivers/board.c
+        drivers/ADC.c
+        drivers/DAC.c
+        drivers/GPIO.c
+        drivers/led.c
+        drivers/pin.c 
+        drivers/RTOS.c
+        drivers/Speaker.c 
+        drivers/Timer.c 
 
        device/startup.c
        device/startup_stm32f303x8.S

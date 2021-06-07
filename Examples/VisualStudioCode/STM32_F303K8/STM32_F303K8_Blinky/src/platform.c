@@ -6,7 +6,7 @@
  * This module implements the hardware dependent initialization of board and drivers.
  */
 
-#include "Platform.h"
+#include "platform.h"
 #include "McuWait.h"
 #include "McuRTT.h"
 #include "McuUtility.h"
@@ -25,8 +25,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_FREERTOS
   McuRTOS_Init(); /* must be first to disable the interrupts */
 #endif
- // BOARD_Init();
-
+  BOARD_Init();
   McuWait_Init();
   McuRTT_Init();
   McuUtility_Init();

@@ -89,9 +89,7 @@ static void __initialize_hardware_early(void) {
 	SystemInit();
 }
 
-static void __initialize_hardware(void){
-	void PL_Init(void);
-	PL_Init();
+static void __initialize_hardware(void) {
 }
 
 void __attribute__ ((section(".after_vectors"),noreturn,weak)) _startup (void) {
