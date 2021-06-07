@@ -69,29 +69,30 @@ set(SRC_FILES
        McuLib/src/McuUtility.c
        McuLib/src/McuArmTools.c
        McuLib/src/McuRTOS.c
+       McuLib/src/McuShell.c
 
-        McuLib/src/McuRTT.c
-        McuLib/SEGGER_RTT/SEGGER_RTT.c
-        McuLib/SEGGER_RTT/RTT_Syscalls_GCC.c
-        McuLib/SEGGER_RTT/SEGGER_RTT_printf.c
+       McuLib/src/McuRTT.c
+       McuLib/SEGGER_RTT/SEGGER_RTT.c
+       McuLib/SEGGER_RTT/RTT_Syscalls_GCC.c
+       McuLib/SEGGER_RTT/SEGGER_RTT_printf.c
 
-        McuLib/FreeRTOS/FreeRTOShooks.c
-        McuLib/FreeRTOS/Source/croutine.c
-        McuLib/FreeRTOS/Source/event_groups.c
-        McuLib/FreeRTOS/Source/list.c
-        McuLib/FreeRTOS/Source/queue.c
-        McuLib/FreeRTOS/Source/stream_buffer.c
-        McuLib/FreeRTOS/Source/tasks.c
-        McuLib/FreeRTOS/Source/timers.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_1.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_2.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_3.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_4.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_5.c
-        McuLib/FreeRTOS/Source/portable/MemMang/heap_useNewlib.c
-        McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
-        McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/portasm.s
-        )
+       McuLib/FreeRTOS/FreeRTOShooks.c
+       McuLib/FreeRTOS/Source/croutine.c
+       McuLib/FreeRTOS/Source/event_groups.c
+       McuLib/FreeRTOS/Source/list.c
+       McuLib/FreeRTOS/Source/queue.c
+       McuLib/FreeRTOS/Source/stream_buffer.c
+       McuLib/FreeRTOS/Source/tasks.c
+       McuLib/FreeRTOS/Source/timers.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_1.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_2.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_3.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_4.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_5.c
+       McuLib/FreeRTOS/Source/portable/MemMang/heap_useNewlib.c
+       McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
+       McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F/portasm.s
+    )
 
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})

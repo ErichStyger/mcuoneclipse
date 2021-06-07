@@ -20,7 +20,6 @@
 #include "Board.h"
 #include "McuShell.h"
 
-
 void PL_Init(void) {
 #if PL_CONFIG_USE_FREERTOS
   McuRTOS_Init(); /* must be first to disable the interrupts */
@@ -29,7 +28,8 @@ void PL_Init(void) {
   McuWait_Init();
   McuRTT_Init();
   McuUtility_Init();
- // McuShell_SetStdio(&McuRTT_stdio); /* use RTT for standard I/O */
+  McuShell_Init();
+  McuShell_SetStdio(&McuRTT_stdio); /* use RTT for standard I/O */
 #if PL_CONFIG_USE_SEGGER_SYSVIEW
   McuSystemView_Init();
 #endif
