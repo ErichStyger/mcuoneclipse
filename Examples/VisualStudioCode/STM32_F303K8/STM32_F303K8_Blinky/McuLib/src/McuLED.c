@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019-2021, Erich Styger
  * All rights reserved.
  *
  * Driver for LEDs
@@ -11,7 +11,11 @@
 #include "McuLEDconfig.h"
 #include "McuLED.h"
 #include "McuGPIO.h"
-#include "fsl_gpio.h"
+#if McuLib_CONFIG_NXP_SDK_USED
+  #include "fsl_gpio.h"
+#elif McuLib_CONFIG_CPU_IS_STM32
+  #include "stm32f3xx_hal.h"
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
 #endif
@@ -58,9 +62,9 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
   gpio_config.hw.gpio = config->hw.gpio;
-#if !McuLib_CONFIG_CPU_IS_IMXRT /* i.MX does not need a port */
-  gpio_config.hw.port = config->hw.port;
-#endif
+  #if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
+    gpio_config.hw.port = config->hw.port;
+  #endif
   gpio_config.hw.pin  = config->hw.pin;
   if (config->isLowActive) {
     gpio_config.isHighOnInit = !config->isOnInit;

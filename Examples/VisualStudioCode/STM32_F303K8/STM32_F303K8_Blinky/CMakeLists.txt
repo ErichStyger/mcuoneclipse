@@ -24,7 +24,7 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 set(SRC_FILES
         src/main.c
         src/platform.c
- #      src/leds.c
+        src/Shell.c
 
         drivers/board.c
         drivers/ADC.c
@@ -63,8 +63,8 @@ set(SRC_FILES
        device/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.c
 
        McuLib/src/McuLib.c
- #      McuLib/src/McuGPIO.c
- #      McuLib/src/McuLed.c
+       McuLib/src/McuGPIO.c
+       McuLib/src/McuLed.c
        McuLib/src/McuArmTools.c
        McuLib/src/McuWait.c
        McuLib/src/McuUtility.c

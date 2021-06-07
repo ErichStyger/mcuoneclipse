@@ -53,7 +53,7 @@ Instructions:
 #define McuShell_CONFIG_MULTI_CMD_ENABLED             (0)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (64)
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (128) /* max size of each command */
-#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_UART0
+#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_NONE
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)

@@ -13,17 +13,6 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
-#include "McuFatFS.h"
-#if PL_CONFIG_USE_MININI
-  #include "McuMinINI.h"
-#endif
-#if PL_CONFIG_USE_NVMC
-  #include "nvmc.h"
-#endif
-#if PL_CONFIG_USE_SWO
-  #include "McuSWO.h"
-#endif
-#include "disk.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -36,19 +25,6 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
-#if PL_CONFIG_USE_MININI
-  McuMinINI_ParseCommand,
-#endif
-#if PL_CONFIG_USE_NVMC
-  NVMC_ParseCommand,
-#endif
-#if PL_CONFIG_USE_SWO
-  McuSWO_ParseCommand,
-#endif
-#if PL_CONFIG_USE_SD_CARD
-  McuFatFS_ParseCommand,
-  DISK_ParseCommand,
-#endif
   NULL /* Sentinel */
 };
 
@@ -65,12 +41,6 @@ static const SHELL_IODesc ios[] =
 #endif
 #if PL_CONFIG_USE_RTT
   {&McuRTT_stdio,  McuRTT_DefaultShellBuffer,  sizeof(McuRTT_DefaultShellBuffer)},
-#endif
-#if PL_CONFIG_USE_USB_CDC
-  {&USB_CdcStdio,  USB_CdcDefaultShellBuffer,  sizeof(USB_CdcDefaultShellBuffer)},
-#endif
-#if PL_CONFIG_USE_SWO
-  {&McuSWO_stdio,  McuSWO_DefaultShellBuffer,  sizeof(McuSWO_DefaultShellBuffer)},
 #endif
 };
 
@@ -121,6 +91,6 @@ void SHELL_Init(void) {
 #endif /* McuLog_CONFIG_IS_ENABLED */
 }
 
-void SHELL_Deinit(void) {}
+void SHELL_Deinit(void) {} 
 
 #endif /* PL_CONFIG_USE_SHELL */

@@ -14,6 +14,9 @@
 #include <stdint.h>
 
 #define PL_CONFIG_USE_SHELL              (1)
+#define PL_CONFIG_USE_SHELL_UART         (0)
+#define PL_CONFIG_USE_RTT                (1)
+
 
 #define PL_CONFIG_BOARD_ID_STM32_NUCLEO   1  /*!< Board is the STM32 Nucleo Board */
 #define PL_CONFIG_BOARD_ID_TINY_K22       2  /*!< Board is the NXP K22FN512 tinyK22 board */

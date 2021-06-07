@@ -18,6 +18,8 @@ static void BlinkyTask(void *p) {
   }
 }
 
+cc
+
 static int i;
 
 int main(void) {
