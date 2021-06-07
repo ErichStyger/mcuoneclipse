@@ -1,0 +1,19 @@
+{
+    "configurations": [
+         {
+            "name": "CrossARM",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "STM32F303x8"
+            ],
+            "forcedInclude": ["${workspaceFolder}/src/IncludeMcuLibConfig.h"],
+            "compilerPath": "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}
