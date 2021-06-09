@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9.xsd" uuid="86e8be97-3933-4a61-a8b5-00af3fbbb500" version="1.9" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_10 http://mcuxpresso.nxp.com/XSD/mex_configuration_10.xsd" uuid="86e8be97-3933-4a61-a8b5-00af3fbbb500" version="10" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC55S16</processor>
       <package>LPC55S16JBD100</package>
@@ -14,6 +14,7 @@
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <update_include_paths>true</update_include_paths>
    </preferences>
    <tools>
       <pins name="Pins" version="9.0" enabled="true" update_project_code="true">
@@ -22,7 +23,7 @@
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>9.0.2</processor_version>
+            <processor_version>0.10.4</processor_version>
             <pin_labels>
                <pin_label pin_num="6" pin_signal="PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7" label="J22/P0_7" identifier="test"/>
             </pin_labels>
@@ -88,13 +89,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="7.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="8.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>9.0.2</processor_version>
+            <processor_version>0.10.4</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockFRO12M">
@@ -350,13 +351,13 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="9.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="10.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>9.0.2</processor_version>
+            <processor_version>0.10.4</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="ac123cf9-61ab-4dfc-a705-940cdd4a1c85" called_from_default_init="true" id_prefix="" core="cm33_core0">
@@ -389,6 +390,9 @@
             <component name="generic_can" uuid="4f91ae43-3b62-41a7-832f-7ca1e321013d" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
             </component>
+            <component name="generic_enet" uuid="99868e73-3c96-4af7-ab6d-867299655bc1" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+               <config_set_global name="global_enet"/>
+            </component>
          </components>
       </periphs>
       <tee name="TEE" version="3.0" enabled="true" update_project_code="true">
@@ -397,316 +401,319 @@
             <file path="trustzone/resource_config.h" update_enabled="true"/>
          </generated_project_files>
          <tee_profile>
-            <processor_version>9.0.2</processor_version>
+            <processor_version>0.10.4</processor_version>
          </tee_profile>
-         <ahb>
-            <relative_region start="0" size="262144" security="ns_user" memory="PROGRAM_FLASH"/>
-            <relative_region start="0" size="131072" security="ns_user" memory="BootROM"/>
-            <relative_region start="0" size="16384" security="ns_user" memory="SRAMX"/>
-            <relative_region start="0" size="32768" security="ns_user" memory="SRAM0"/>
-            <relative_region start="0" size="16384" security="ns_user" memory="SRAM1"/>
-            <relative_region start="0" size="16384" security="ns_user" memory="SRAM2"/>
-            <relative_region start="0" size="16384" security="ns_user" memory="USB_RAM"/>
-            <masters>
-               <master id="CANFD" security="ns_user"/>
-               <master id="HASH" security="ns_user"/>
-               <master id="SDMA0" security="ns_user"/>
-               <master id="SDMA1" security="ns_user"/>
-               <master id="USBFSD" security="ns_user"/>
-               <master id="USBFSH" security="ns_user"/>
-            </masters>
-            <peripherals>
-               <peripheral id="ADC0" security="ns_user"/>
-               <peripheral id="AHB_SECURE_CTRL" security="ns_user"/>
-               <peripheral id="ANACTRL" security="ns_user"/>
-               <peripheral id="CAN0" security="ns_user"/>
-               <peripheral id="CASPER" security="ns_user"/>
-               <peripheral id="CRC_ENGINE" security="ns_user"/>
-               <peripheral id="CTIMER0" security="ns_user"/>
-               <peripheral id="CTIMER1" security="ns_user"/>
-               <peripheral id="CTIMER2" security="ns_user"/>
-               <peripheral id="CTIMER3" security="ns_user"/>
-               <peripheral id="CTIMER4" security="ns_user"/>
-               <peripheral id="DBGMAILBOX" security="ns_user"/>
-               <peripheral id="DMA0" security="ns_user"/>
-               <peripheral id="DMA1" security="ns_user"/>
-               <peripheral id="FLASH" security="ns_user"/>
-               <peripheral id="FLEXCOMM0" security="ns_user"/>
-               <peripheral id="FLEXCOMM1" security="ns_user"/>
-               <peripheral id="FLEXCOMM2" security="ns_user"/>
-               <peripheral id="FLEXCOMM3" security="ns_user"/>
-               <peripheral id="FLEXCOMM4" security="ns_user"/>
-               <peripheral id="FLEXCOMM5" security="ns_user"/>
-               <peripheral id="FLEXCOMM6" security="ns_user"/>
-               <peripheral id="FLEXCOMM7" security="ns_user"/>
-               <peripheral id="GINT0" security="ns_user"/>
-               <peripheral id="GINT1" security="ns_user"/>
-               <peripheral id="GPIO" security="ns_user"/>
-               <peripheral id="HASHCRYPT" security="ns_user"/>
-               <peripheral id="INPUTMUX" security="ns_user"/>
-               <peripheral id="IOCON" security="ns_user"/>
-               <peripheral id="MRT0" security="ns_user"/>
-               <peripheral id="OSTIMER" security="ns_user"/>
-               <peripheral id="PINT" security="ns_user"/>
-               <peripheral id="PLU" security="ns_user"/>
-               <peripheral id="PMC" security="ns_user"/>
-               <peripheral id="PRINCE" security="ns_user"/>
-               <peripheral id="PUF" security="ns_user"/>
-               <peripheral id="RNG" security="ns_user"/>
-               <peripheral id="RTC" security="ns_user"/>
-               <peripheral id="SCT0" security="ns_user"/>
-               <peripheral id="SECGPIO" security="ns_user"/>
-               <peripheral id="SECPINT" security="ns_user"/>
-               <peripheral id="SPI8" security="ns_user"/>
-               <peripheral id="SYSCON" security="ns_user"/>
-               <peripheral id="SYSCTL" security="ns_user"/>
-               <peripheral id="USB0" security="ns_user"/>
-               <peripheral id="USBFSH" security="ns_user"/>
-               <peripheral id="USBHSD" security="ns_user"/>
-               <peripheral id="USBHSH" security="ns_user"/>
-               <peripheral id="USBPHY" security="ns_user"/>
-               <peripheral id="UTICK0" security="ns_user"/>
-               <peripheral id="WWDT" security="ns_user"/>
-            </peripherals>
-            <interrupts>
-               <masking/>
-               <security>
-                  <interrupt id="ACMP_IRQn" secure="Secure"/>
-                  <interrupt id="ADC0_IRQn" secure="Secure"/>
-                  <interrupt id="CAN0_IRQ0_IRQn" secure="Secure"/>
-                  <interrupt id="CAN0_IRQ1_IRQn" secure="Secure"/>
-                  <interrupt id="CASER_IRQn" secure="Secure"/>
-                  <interrupt id="CTIMER0_IRQn" secure="Secure"/>
-                  <interrupt id="CTIMER1_IRQn" secure="Secure"/>
-                  <interrupt id="CTIMER2_IRQn" secure="Secure"/>
-                  <interrupt id="CTIMER3_IRQn" secure="Secure"/>
-                  <interrupt id="CTIMER4_IRQn" secure="Secure"/>
-                  <interrupt id="CodeWDG_IRQn" secure="Secure"/>
-                  <interrupt id="DMA0_IRQn" secure="Secure"/>
-                  <interrupt id="DMA1_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM0_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM1_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM2_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM3_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM4_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM5_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM6_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM7_IRQn" secure="Secure"/>
-                  <interrupt id="FLEXCOMM8_IRQn" secure="Secure"/>
-                  <interrupt id="GINT0_IRQn" secure="Secure"/>
-                  <interrupt id="GINT1_IRQn" secure="Secure"/>
-                  <interrupt id="HASCRYPT_IRQn" secure="Secure"/>
-                  <interrupt id="MRT0_IRQn" secure="Secure"/>
-                  <interrupt id="OS_EVENT_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT0_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT1_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT2_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT3_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT4_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT5_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT6_IRQn" secure="Secure"/>
-                  <interrupt id="PIN_INT7_IRQn" secure="Secure"/>
-                  <interrupt id="PLU_IRQn" secure="Secure"/>
-                  <interrupt id="PUF_IRQn" secure="Secure"/>
-                  <interrupt id="RTC_IRQn" secure="Secure"/>
-                  <interrupt id="SCT0_IRQn" secure="Secure"/>
-                  <interrupt id="SEC_GPIO_INT0_IRQ0_IRQn" secure="Secure"/>
-                  <interrupt id="SEC_GPIO_INT0_IRQ1_IRQn" secure="Secure"/>
-                  <interrupt id="SEC_HYPERVISOR_CALL_IRQn" secure="Secure"/>
-                  <interrupt id="SEC_VIO_IRQn" secure="Secure"/>
-                  <interrupt id="USB0_IRQn" secure="Secure"/>
-                  <interrupt id="USB0_NEEDCLK_IRQn" secure="Secure"/>
-                  <interrupt id="USB1_IRQn" secure="Secure"/>
-                  <interrupt id="USB1_NEEDCLK_IRQn" secure="Secure"/>
-                  <interrupt id="USB1_PHY_IRQn" secure="Secure"/>
-                  <interrupt id="UTICK0_IRQn" secure="Secure"/>
-                  <interrupt id="WDT_BOD_IRQn" secure="Secure"/>
-               </security>
-            </interrupts>
-            <pins_masks>
-               <port id="pio0">
-                  <pin_mask id="0" masked="Non-masked"/>
-                  <pin_mask id="1" masked="Non-masked"/>
-                  <pin_mask id="10" masked="Non-masked"/>
-                  <pin_mask id="11" masked="Non-masked"/>
-                  <pin_mask id="12" masked="Non-masked"/>
-                  <pin_mask id="13" masked="Non-masked"/>
-                  <pin_mask id="14" masked="Non-masked"/>
-                  <pin_mask id="15" masked="Non-masked"/>
-                  <pin_mask id="16" masked="Non-masked"/>
-                  <pin_mask id="17" masked="Non-masked"/>
-                  <pin_mask id="18" masked="Non-masked"/>
-                  <pin_mask id="19" masked="Non-masked"/>
-                  <pin_mask id="2" masked="Non-masked"/>
-                  <pin_mask id="20" masked="Non-masked"/>
-                  <pin_mask id="21" masked="Non-masked"/>
-                  <pin_mask id="22" masked="Non-masked"/>
-                  <pin_mask id="23" masked="Non-masked"/>
-                  <pin_mask id="24" masked="Non-masked"/>
-                  <pin_mask id="25" masked="Non-masked"/>
-                  <pin_mask id="26" masked="Non-masked"/>
-                  <pin_mask id="27" masked="Non-masked"/>
-                  <pin_mask id="28" masked="Non-masked"/>
-                  <pin_mask id="29" masked="Non-masked"/>
-                  <pin_mask id="3" masked="Non-masked"/>
-                  <pin_mask id="30" masked="Non-masked"/>
-                  <pin_mask id="31" masked="Non-masked"/>
-                  <pin_mask id="4" masked="Non-masked"/>
-                  <pin_mask id="5" masked="Non-masked"/>
-                  <pin_mask id="6" masked="Non-masked"/>
-                  <pin_mask id="7" masked="Non-masked"/>
-                  <pin_mask id="8" masked="Non-masked"/>
-                  <pin_mask id="9" masked="Non-masked"/>
-               </port>
-               <port id="pio1">
-                  <pin_mask id="0" masked="Non-masked"/>
-                  <pin_mask id="1" masked="Non-masked"/>
-                  <pin_mask id="10" masked="Non-masked"/>
-                  <pin_mask id="11" masked="Non-masked"/>
-                  <pin_mask id="12" masked="Non-masked"/>
-                  <pin_mask id="13" masked="Non-masked"/>
-                  <pin_mask id="14" masked="Non-masked"/>
-                  <pin_mask id="15" masked="Non-masked"/>
-                  <pin_mask id="16" masked="Non-masked"/>
-                  <pin_mask id="17" masked="Non-masked"/>
-                  <pin_mask id="18" masked="Non-masked"/>
-                  <pin_mask id="19" masked="Non-masked"/>
-                  <pin_mask id="2" masked="Non-masked"/>
-                  <pin_mask id="20" masked="Non-masked"/>
-                  <pin_mask id="21" masked="Non-masked"/>
-                  <pin_mask id="22" masked="Non-masked"/>
-                  <pin_mask id="23" masked="Non-masked"/>
-                  <pin_mask id="24" masked="Non-masked"/>
-                  <pin_mask id="25" masked="Non-masked"/>
-                  <pin_mask id="26" masked="Non-masked"/>
-                  <pin_mask id="27" masked="Non-masked"/>
-                  <pin_mask id="28" masked="Non-masked"/>
-                  <pin_mask id="29" masked="Non-masked"/>
-                  <pin_mask id="3" masked="Non-masked"/>
-                  <pin_mask id="30" masked="Non-masked"/>
-                  <pin_mask id="31" masked="Non-masked"/>
-                  <pin_mask id="4" masked="Non-masked"/>
-                  <pin_mask id="5" masked="Non-masked"/>
-                  <pin_mask id="6" masked="Non-masked"/>
-                  <pin_mask id="7" masked="Non-masked"/>
-                  <pin_mask id="8" masked="Non-masked"/>
-                  <pin_mask id="9" masked="Non-masked"/>
-               </port>
-            </pins_masks>
-         </ahb>
-         <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
-            <region start="0" size="32" security="ns" enabled="false" index="0"/>
-            <region start="0" size="32" security="ns" enabled="false" index="1"/>
-            <region start="0" size="32" security="ns" enabled="false" index="2"/>
-            <region start="0" size="32" security="ns" enabled="false" index="3"/>
-            <region start="0" size="32" security="ns" enabled="false" index="4"/>
-            <region start="0" size="32" security="ns" enabled="false" index="5"/>
-            <region start="0" size="32" security="ns" enabled="false" index="6"/>
-            <region start="0" size="32" security="ns" enabled="false" index="7"/>
-         </sau>
-         <global_options>
-            <option id="AIRCR_PRIS" value="no"/>
-            <option id="AIRCR_BFHFNMINS" value="no"/>
-            <option id="AIRCR_SYSRESETREQS" value="no"/>
-            <option id="SCR_SLEEPDEEPS" value="no"/>
-            <option id="SHCSR_SECUREFAULTENA" value="no"/>
-            <option id="NSACR_CP0" value="no"/>
-            <option id="NSACR_CP1" value="no"/>
-            <option id="NSACR_CP2" value="no"/>
-            <option id="NSACR_CP3" value="no"/>
-            <option id="NSACR_CP4" value="no"/>
-            <option id="NSACR_CP5" value="no"/>
-            <option id="NSACR_CP6" value="no"/>
-            <option id="NSACR_CP7" value="no"/>
-            <option id="NSACR_CP10" value="no"/>
-            <option id="NSACR_CP11" value="no"/>
-            <option id="CPPWR_SU0" value="no"/>
-            <option id="CPPWR_SUS0" value="no"/>
-            <option id="CPPWR_SU1" value="no"/>
-            <option id="CPPWR_SUS1" value="no"/>
-            <option id="CPPWR_SU2" value="no"/>
-            <option id="CPPWR_SUS2" value="no"/>
-            <option id="CPPWR_SU3" value="no"/>
-            <option id="CPPWR_SUS3" value="no"/>
-            <option id="CPPWR_SU4" value="no"/>
-            <option id="CPPWR_SUS4" value="no"/>
-            <option id="CPPWR_SU5" value="no"/>
-            <option id="CPPWR_SUS5" value="no"/>
-            <option id="CPPWR_SU6" value="no"/>
-            <option id="CPPWR_SUS6" value="no"/>
-            <option id="CPPWR_SU7" value="no"/>
-            <option id="CPPWR_SUS7" value="no"/>
-            <option id="CPPWR_SU10" value="no"/>
-            <option id="CPPWR_SUS10" value="no"/>
-            <option id="CPPWR_SU11" value="no"/>
-            <option id="CPPWR_SUS11" value="no"/>
-            <option id="SEC_GPIO_MASK0_LOCK" value="no"/>
-            <option id="SEC_GPIO_MASK1_LOCK" value="no"/>
-            <option id="MASTER_SEC_LEVEL_LOCK" value="no"/>
-            <option id="CPU0_LOCK_NS_VTOR" value="no"/>
-            <option id="CPU0_LOCK_NS_MPU" value="no"/>
-            <option id="CPU0_LOCK_S_VTAIRCR" value="no"/>
-            <option id="CPU0_LOCK_S_MPU" value="no"/>
-            <option id="CPU0_LOCK_SAU" value="no"/>
-            <option id="CPU0_LOCK_REG_LOCK" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_ENABLE_SECURE_CHECKING" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_DISABLE_VIOLATION_ABORT" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_DISABLE_SIMPLE_MASTER_STRICT_MODE" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_DISABLE_SMART_MASTER_STRICT_MODE" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_IDAU_ALL_NS" value="no"/>
-            <option id="AHB_MISC_CTRL_REG_WRITE_LOCK" value="no"/>
-            <option id="_output_type_" value="c_code"/>
-            <option id="_legacy_source_names_" value="no"/>
-         </global_options>
-         <user_memory_regions/>
-         <mpus>
-            <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="s" generate_code_for_disabled_regions="false">
-               <attributes>
-                  <group index="0" id="0" memory_type="device" device="nGnRE"/>
-                  <group index="1" id="1" memory_type="device" device="nGnRE"/>
-                  <group index="2" id="2" memory_type="device" device="nGnRE"/>
-                  <group index="3" id="3" memory_type="device" device="nGnRE"/>
-                  <group index="4" id="4" memory_type="device" device="nGnRE"/>
-                  <group index="5" id="5" memory_type="device" device="nGnRE"/>
-                  <group index="6" id="6" memory_type="device" device="nGnRE"/>
-                  <group index="7" id="7" memory_type="device" device="nGnRE"/>
-               </attributes>
-               <regions>
-                  <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
-               </regions>
-            </mpu>
-            <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="ns" generate_code_for_disabled_regions="false">
-               <attributes>
-                  <group index="0" id="0" memory_type="device" device="nGnRE"/>
-                  <group index="1" id="1" memory_type="device" device="nGnRE"/>
-                  <group index="2" id="2" memory_type="device" device="nGnRE"/>
-                  <group index="3" id="3" memory_type="device" device="nGnRE"/>
-                  <group index="4" id="4" memory_type="device" device="nGnRE"/>
-                  <group index="5" id="5" memory_type="device" device="nGnRE"/>
-                  <group index="6" id="6" memory_type="device" device="nGnRE"/>
-                  <group index="7" id="7" memory_type="device" device="nGnRE"/>
-               </attributes>
-               <regions>
-                  <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
-                  <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
-               </regions>
-            </mpu>
-         </mpus>
+         <functional_group name="BOARD_InitTEE" called_from_default_init="true" id_prefix="" prefix_user_defined="true">
+            <description></description>
+            <options/>
+            <ahb>
+               <relative_region start="0" size="262144" security="ns_user" memory="PROGRAM_FLASH"/>
+               <relative_region start="0" size="131072" security="ns_user" memory="BootROM"/>
+               <relative_region start="0" size="16384" security="ns_user" memory="SRAMX"/>
+               <relative_region start="0" size="32768" security="ns_user" memory="SRAM0"/>
+               <relative_region start="0" size="16384" security="ns_user" memory="SRAM1"/>
+               <relative_region start="0" size="16384" security="ns_user" memory="SRAM2"/>
+               <relative_region start="0" size="16384" security="ns_user" memory="USB_RAM"/>
+               <masters>
+                  <master id="CANFD" security="ns_user"/>
+                  <master id="HASH" security="ns_user"/>
+                  <master id="SDMA0" security="ns_user"/>
+                  <master id="SDMA1" security="ns_user"/>
+                  <master id="USBFSD" security="ns_user"/>
+                  <master id="USBFSH" security="ns_user"/>
+               </masters>
+               <peripherals>
+                  <peripheral id="ADC0" security="ns_user"/>
+                  <peripheral id="AHB_SECURE_CTRL" security="ns_user"/>
+                  <peripheral id="ANACTRL" security="ns_user"/>
+                  <peripheral id="CAN0" security="ns_user"/>
+                  <peripheral id="CASPER" security="ns_user"/>
+                  <peripheral id="CRC_ENGINE" security="ns_user"/>
+                  <peripheral id="CTIMER0" security="ns_user"/>
+                  <peripheral id="CTIMER1" security="ns_user"/>
+                  <peripheral id="CTIMER2" security="ns_user"/>
+                  <peripheral id="CTIMER3" security="ns_user"/>
+                  <peripheral id="CTIMER4" security="ns_user"/>
+                  <peripheral id="DBGMAILBOX" security="ns_user"/>
+                  <peripheral id="DMA0" security="ns_user"/>
+                  <peripheral id="DMA1" security="ns_user"/>
+                  <peripheral id="FLASH" security="ns_user"/>
+                  <peripheral id="FLEXCOMM0" security="ns_user"/>
+                  <peripheral id="FLEXCOMM1" security="ns_user"/>
+                  <peripheral id="FLEXCOMM2" security="ns_user"/>
+                  <peripheral id="FLEXCOMM3" security="ns_user"/>
+                  <peripheral id="FLEXCOMM4" security="ns_user"/>
+                  <peripheral id="FLEXCOMM5" security="ns_user"/>
+                  <peripheral id="FLEXCOMM6" security="ns_user"/>
+                  <peripheral id="FLEXCOMM7" security="ns_user"/>
+                  <peripheral id="GINT0" security="ns_user"/>
+                  <peripheral id="GINT1" security="ns_user"/>
+                  <peripheral id="GPIO" security="ns_user"/>
+                  <peripheral id="HASHCRYPT" security="ns_user"/>
+                  <peripheral id="INPUTMUX" security="ns_user"/>
+                  <peripheral id="IOCON" security="ns_user"/>
+                  <peripheral id="MRT0" security="ns_user"/>
+                  <peripheral id="OSTIMER" security="ns_user"/>
+                  <peripheral id="PINT" security="ns_user"/>
+                  <peripheral id="PLU" security="ns_user"/>
+                  <peripheral id="PMC" security="ns_user"/>
+                  <peripheral id="PRINCE" security="ns_user"/>
+                  <peripheral id="PUF" security="ns_user"/>
+                  <peripheral id="RNG" security="ns_user"/>
+                  <peripheral id="RTC" security="ns_user"/>
+                  <peripheral id="SCT0" security="ns_user"/>
+                  <peripheral id="SECGPIO" security="ns_user"/>
+                  <peripheral id="SECPINT" security="ns_user"/>
+                  <peripheral id="SPI8" security="ns_user"/>
+                  <peripheral id="SYSCON" security="ns_user"/>
+                  <peripheral id="SYSCTL" security="ns_user"/>
+                  <peripheral id="USB0" security="ns_user"/>
+                  <peripheral id="USBFSH" security="ns_user"/>
+                  <peripheral id="USBHSD" security="ns_user"/>
+                  <peripheral id="USBHSH" security="ns_user"/>
+                  <peripheral id="USBPHY" security="ns_user"/>
+                  <peripheral id="UTICK0" security="ns_user"/>
+                  <peripheral id="WWDT" security="ns_user"/>
+               </peripherals>
+               <interrupts>
+                  <masking/>
+                  <security>
+                     <interrupt id="ACMP_IRQn" secure="Secure"/>
+                     <interrupt id="ADC0_IRQn" secure="Secure"/>
+                     <interrupt id="CAN0_IRQ0_IRQn" secure="Secure"/>
+                     <interrupt id="CAN0_IRQ1_IRQn" secure="Secure"/>
+                     <interrupt id="CASER_IRQn" secure="Secure"/>
+                     <interrupt id="CTIMER0_IRQn" secure="Secure"/>
+                     <interrupt id="CTIMER1_IRQn" secure="Secure"/>
+                     <interrupt id="CTIMER2_IRQn" secure="Secure"/>
+                     <interrupt id="CTIMER3_IRQn" secure="Secure"/>
+                     <interrupt id="CTIMER4_IRQn" secure="Secure"/>
+                     <interrupt id="CodeWDG_IRQn" secure="Secure"/>
+                     <interrupt id="DMA0_IRQn" secure="Secure"/>
+                     <interrupt id="DMA1_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM0_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM1_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM2_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM3_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM4_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM5_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM6_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM7_IRQn" secure="Secure"/>
+                     <interrupt id="FLEXCOMM8_IRQn" secure="Secure"/>
+                     <interrupt id="GINT0_IRQn" secure="Secure"/>
+                     <interrupt id="GINT1_IRQn" secure="Secure"/>
+                     <interrupt id="HASCRYPT_IRQn" secure="Secure"/>
+                     <interrupt id="MRT0_IRQn" secure="Secure"/>
+                     <interrupt id="OS_EVENT_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT0_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT1_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT2_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT3_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT4_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT5_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT6_IRQn" secure="Secure"/>
+                     <interrupt id="PIN_INT7_IRQn" secure="Secure"/>
+                     <interrupt id="PLU_IRQn" secure="Secure"/>
+                     <interrupt id="PUF_IRQn" secure="Secure"/>
+                     <interrupt id="RTC_IRQn" secure="Secure"/>
+                     <interrupt id="SCT0_IRQn" secure="Secure"/>
+                     <interrupt id="SEC_GPIO_INT0_IRQ0_IRQn" secure="Secure"/>
+                     <interrupt id="SEC_GPIO_INT0_IRQ1_IRQn" secure="Secure"/>
+                     <interrupt id="SEC_HYPERVISOR_CALL_IRQn" secure="Secure"/>
+                     <interrupt id="SEC_VIO_IRQn" secure="Secure"/>
+                     <interrupt id="USB0_IRQn" secure="Secure"/>
+                     <interrupt id="USB0_NEEDCLK_IRQn" secure="Secure"/>
+                     <interrupt id="USB1_IRQn" secure="Secure"/>
+                     <interrupt id="USB1_NEEDCLK_IRQn" secure="Secure"/>
+                     <interrupt id="USB1_PHY_IRQn" secure="Secure"/>
+                     <interrupt id="UTICK0_IRQn" secure="Secure"/>
+                     <interrupt id="WDT_BOD_IRQn" secure="Secure"/>
+                  </security>
+               </interrupts>
+               <pins_masks>
+                  <port id="pio0">
+                     <pin_mask id="0" masked="Non-masked"/>
+                     <pin_mask id="1" masked="Non-masked"/>
+                     <pin_mask id="10" masked="Non-masked"/>
+                     <pin_mask id="11" masked="Non-masked"/>
+                     <pin_mask id="12" masked="Non-masked"/>
+                     <pin_mask id="13" masked="Non-masked"/>
+                     <pin_mask id="14" masked="Non-masked"/>
+                     <pin_mask id="15" masked="Non-masked"/>
+                     <pin_mask id="16" masked="Non-masked"/>
+                     <pin_mask id="17" masked="Non-masked"/>
+                     <pin_mask id="18" masked="Non-masked"/>
+                     <pin_mask id="19" masked="Non-masked"/>
+                     <pin_mask id="2" masked="Non-masked"/>
+                     <pin_mask id="20" masked="Non-masked"/>
+                     <pin_mask id="21" masked="Non-masked"/>
+                     <pin_mask id="22" masked="Non-masked"/>
+                     <pin_mask id="23" masked="Non-masked"/>
+                     <pin_mask id="24" masked="Non-masked"/>
+                     <pin_mask id="25" masked="Non-masked"/>
+                     <pin_mask id="26" masked="Non-masked"/>
+                     <pin_mask id="27" masked="Non-masked"/>
+                     <pin_mask id="28" masked="Non-masked"/>
+                     <pin_mask id="29" masked="Non-masked"/>
+                     <pin_mask id="3" masked="Non-masked"/>
+                     <pin_mask id="30" masked="Non-masked"/>
+                     <pin_mask id="31" masked="Non-masked"/>
+                     <pin_mask id="4" masked="Non-masked"/>
+                     <pin_mask id="5" masked="Non-masked"/>
+                     <pin_mask id="6" masked="Non-masked"/>
+                     <pin_mask id="7" masked="Non-masked"/>
+                     <pin_mask id="8" masked="Non-masked"/>
+                     <pin_mask id="9" masked="Non-masked"/>
+                  </port>
+                  <port id="pio1">
+                     <pin_mask id="0" masked="Non-masked"/>
+                     <pin_mask id="1" masked="Non-masked"/>
+                     <pin_mask id="10" masked="Non-masked"/>
+                     <pin_mask id="11" masked="Non-masked"/>
+                     <pin_mask id="12" masked="Non-masked"/>
+                     <pin_mask id="13" masked="Non-masked"/>
+                     <pin_mask id="14" masked="Non-masked"/>
+                     <pin_mask id="15" masked="Non-masked"/>
+                     <pin_mask id="16" masked="Non-masked"/>
+                     <pin_mask id="17" masked="Non-masked"/>
+                     <pin_mask id="18" masked="Non-masked"/>
+                     <pin_mask id="19" masked="Non-masked"/>
+                     <pin_mask id="2" masked="Non-masked"/>
+                     <pin_mask id="20" masked="Non-masked"/>
+                     <pin_mask id="21" masked="Non-masked"/>
+                     <pin_mask id="22" masked="Non-masked"/>
+                     <pin_mask id="23" masked="Non-masked"/>
+                     <pin_mask id="24" masked="Non-masked"/>
+                     <pin_mask id="25" masked="Non-masked"/>
+                     <pin_mask id="26" masked="Non-masked"/>
+                     <pin_mask id="27" masked="Non-masked"/>
+                     <pin_mask id="28" masked="Non-masked"/>
+                     <pin_mask id="29" masked="Non-masked"/>
+                     <pin_mask id="3" masked="Non-masked"/>
+                     <pin_mask id="30" masked="Non-masked"/>
+                     <pin_mask id="31" masked="Non-masked"/>
+                     <pin_mask id="4" masked="Non-masked"/>
+                     <pin_mask id="5" masked="Non-masked"/>
+                     <pin_mask id="6" masked="Non-masked"/>
+                     <pin_mask id="7" masked="Non-masked"/>
+                     <pin_mask id="8" masked="Non-masked"/>
+                     <pin_mask id="9" masked="Non-masked"/>
+                  </port>
+               </pins_masks>
+            </ahb>
+            <sau enabled="false" all_non_secure="false" generate_code_for_disabled_regions="false">
+               <region start="0" size="32" security="ns" enabled="false" index="0"/>
+               <region start="0" size="32" security="ns" enabled="false" index="1"/>
+               <region start="0" size="32" security="ns" enabled="false" index="2"/>
+               <region start="0" size="32" security="ns" enabled="false" index="3"/>
+               <region start="0" size="32" security="ns" enabled="false" index="4"/>
+               <region start="0" size="32" security="ns" enabled="false" index="5"/>
+               <region start="0" size="32" security="ns" enabled="false" index="6"/>
+               <region start="0" size="32" security="ns" enabled="false" index="7"/>
+            </sau>
+            <global_options>
+               <option id="AIRCR_PRIS" value="no"/>
+               <option id="AIRCR_BFHFNMINS" value="no"/>
+               <option id="AIRCR_SYSRESETREQS" value="no"/>
+               <option id="SCR_SLEEPDEEPS" value="no"/>
+               <option id="SHCSR_SECUREFAULTENA" value="no"/>
+               <option id="NSACR_CP0" value="no"/>
+               <option id="NSACR_CP1" value="no"/>
+               <option id="NSACR_CP2" value="no"/>
+               <option id="NSACR_CP3" value="no"/>
+               <option id="NSACR_CP4" value="no"/>
+               <option id="NSACR_CP5" value="no"/>
+               <option id="NSACR_CP6" value="no"/>
+               <option id="NSACR_CP7" value="no"/>
+               <option id="NSACR_CP10" value="no"/>
+               <option id="NSACR_CP11" value="no"/>
+               <option id="CPPWR_SU0" value="no"/>
+               <option id="CPPWR_SUS0" value="no"/>
+               <option id="CPPWR_SU1" value="no"/>
+               <option id="CPPWR_SUS1" value="no"/>
+               <option id="CPPWR_SU2" value="no"/>
+               <option id="CPPWR_SUS2" value="no"/>
+               <option id="CPPWR_SU3" value="no"/>
+               <option id="CPPWR_SUS3" value="no"/>
+               <option id="CPPWR_SU4" value="no"/>
+               <option id="CPPWR_SUS4" value="no"/>
+               <option id="CPPWR_SU5" value="no"/>
+               <option id="CPPWR_SUS5" value="no"/>
+               <option id="CPPWR_SU6" value="no"/>
+               <option id="CPPWR_SUS6" value="no"/>
+               <option id="CPPWR_SU7" value="no"/>
+               <option id="CPPWR_SUS7" value="no"/>
+               <option id="CPPWR_SU10" value="no"/>
+               <option id="CPPWR_SUS10" value="no"/>
+               <option id="CPPWR_SU11" value="no"/>
+               <option id="CPPWR_SUS11" value="no"/>
+               <option id="SEC_GPIO_MASK0_LOCK" value="no"/>
+               <option id="SEC_GPIO_MASK1_LOCK" value="no"/>
+               <option id="MASTER_SEC_LEVEL_LOCK" value="no"/>
+               <option id="CPU0_LOCK_NS_VTOR" value="no"/>
+               <option id="CPU0_LOCK_NS_MPU" value="no"/>
+               <option id="CPU0_LOCK_S_VTAIRCR" value="no"/>
+               <option id="CPU0_LOCK_S_MPU" value="no"/>
+               <option id="CPU0_LOCK_SAU" value="no"/>
+               <option id="CPU0_LOCK_REG_LOCK" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_ENABLE_SECURE_CHECKING" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_DISABLE_VIOLATION_ABORT" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_DISABLE_SIMPLE_MASTER_STRICT_MODE" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_DISABLE_SMART_MASTER_STRICT_MODE" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_IDAU_ALL_NS" value="no"/>
+               <option id="AHB_MISC_CTRL_REG_WRITE_LOCK" value="no"/>
+               <option id="_output_type_" value="c_code"/>
+               <option id="_legacy_source_names_" value="no"/>
+            </global_options>
+            <mpus>
+               <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="s" generate_code_for_disabled_regions="false">
+                  <attributes>
+                     <group index="0" id="0" memory_type="device" device="nGnRE"/>
+                     <group index="1" id="1" memory_type="device" device="nGnRE"/>
+                     <group index="2" id="2" memory_type="device" device="nGnRE"/>
+                     <group index="3" id="3" memory_type="device" device="nGnRE"/>
+                     <group index="4" id="4" memory_type="device" device="nGnRE"/>
+                     <group index="5" id="5" memory_type="device" device="nGnRE"/>
+                     <group index="6" id="6" memory_type="device" device="nGnRE"/>
+                     <group index="7" id="7" memory_type="device" device="nGnRE"/>
+                  </attributes>
+                  <regions>
+                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
+                  </regions>
+               </mpu>
+               <mpu enabled="false" priv_default_map="false" handler_enabled="false" id="ns" generate_code_for_disabled_regions="false">
+                  <attributes>
+                     <group index="0" id="0" memory_type="device" device="nGnRE"/>
+                     <group index="1" id="1" memory_type="device" device="nGnRE"/>
+                     <group index="2" id="2" memory_type="device" device="nGnRE"/>
+                     <group index="3" id="3" memory_type="device" device="nGnRE"/>
+                     <group index="4" id="4" memory_type="device" device="nGnRE"/>
+                     <group index="5" id="5" memory_type="device" device="nGnRE"/>
+                     <group index="6" id="6" memory_type="device" device="nGnRE"/>
+                     <group index="7" id="7" memory_type="device" device="nGnRE"/>
+                  </attributes>
+                  <regions>
+                     <region start="0" size="32" security="priv" enabled="false" index="0" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="1" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="2" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="3" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="4" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="5" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="6" executable="false" read_only="false" attributes_index="0"/>
+                     <region start="0" size="32" security="priv" enabled="false" index="7" executable="false" read_only="false" attributes_index="0"/>
+                  </regions>
+               </mpu>
+            </mpus>
+         </functional_group>
       </tee>
    </tools>
 </configuration>
