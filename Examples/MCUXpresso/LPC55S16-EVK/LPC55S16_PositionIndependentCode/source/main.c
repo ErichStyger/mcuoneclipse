@@ -99,6 +99,8 @@ void BindLibrary(void *relocStart) {
 }
 
 int main(void) {
+  /* load lib into memory */
+  /* bind methods of memory */
     BindLibrary((void*)code); /* do the binding to the relocated code */
 
     MyLib_Init();
