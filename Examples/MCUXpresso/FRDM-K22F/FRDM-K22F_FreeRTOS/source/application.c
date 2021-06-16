@@ -8,12 +8,16 @@
 #include "platform.h"
 #include "McuRTOS.h"
 #include "McuLED.h"
+#include "McuWait.h"
 #include "leds.h"
 
 static void AppTask(void *pv) {
+	TickType_t prevTick = xTaskGetTickCount();
 	for(;;) {
-		McuLED_Toggle(LEDS_LedBlue);
-		vTaskDelay(pdMS_TO_TICKS(500));
+		McuLED_On(LEDS_LedBlue);
+		McuWait_Waitms(50);
+		McuLED_Off(LEDS_LedBlue);
+		vTaskDelayUntil(&prevTick, pdMS_TO_TICKS(1000));
 	}
 }
 

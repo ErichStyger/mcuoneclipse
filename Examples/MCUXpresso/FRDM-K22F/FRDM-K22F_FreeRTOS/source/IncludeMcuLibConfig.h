@@ -49,6 +49,7 @@ Instructions:
 #endif
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
+#define configUSE_TICKLESS_IDLE				 (1)
 /* #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1) */
 /* #define configTOTAL_HEAP_SIZE                (24*1024) */
 /* #define configUSE_HEAP_SECTION_NAME          (1) */

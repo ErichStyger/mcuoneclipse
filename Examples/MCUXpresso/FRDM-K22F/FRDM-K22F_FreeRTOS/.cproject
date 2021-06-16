@@ -344,9 +344,12 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1519716413.62560986" name="FreeRTOShooks.c" rcbsApplicability="disable" resourcePath="McuLib/FreeRTOS/FreeRTOShooks.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1264614508.530588992">
+						<tool id="com.crt.advproject.gcc.exe.debug.1264614508.530588992" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1264614508"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|SEGGER_RTT|minIni|LittlevGL|HD44780|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/FreeRTOShooks.c|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|SEGGER_RTT|minIni|LittlevGL|HD44780|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
