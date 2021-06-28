@@ -308,7 +308,7 @@
 					</folderInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.1652255002.806521896" name="application.c" rcbsApplicability="disable" resourcePath="source/application.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1505299104.658656806">
 						<tool id="com.crt.advproject.gcc.exe.debug.1505299104.658656806" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104">
-							<option id="gnu.c.compiler.option.misc.other.896105834" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin  -fsanitize=kernel-address" valueType="string"/>
+							<option id="gnu.c.compiler.option.misc.other.896105834" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin  -fsanitize=kernel-address" valueType="string"/>
 							<inputType id="com.crt.advproject.compiler.input.1479468027" superClass="com.crt.advproject.compiler.input"/>
 						</tool>
 						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1280426219" name="Resource Custom Build Step">
@@ -320,7 +320,7 @@
 					</fileInfo>
 					<fileInfo id="com.crt.advproject.config.exe.debug.1652255002.1151758142" name="asan_test.c" rcbsApplicability="disable" resourcePath="source/asan_test.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1505299104.2075178225">
 						<tool id="com.crt.advproject.gcc.exe.debug.1505299104.2075178225" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104">
-							<option id="gnu.c.compiler.option.misc.other.576220189" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fsanitize=kernel-address" valueType="string"/>
+							<option id="gnu.c.compiler.option.misc.other.576220189" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fsanitize=address" valueType="string"/>
 							<option id="gnu.c.compiler.option.debugging.sanitaddress.2011297192" name="Sanitize address (-fsanitize=address)" superClass="gnu.c.compiler.option.debugging.sanitaddress" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 							<option id="gnu.c.compiler.option.debugging.sanitpointers.1414592196" name="Sanitize pointer operations (-fsanitize=pointer-compare -fsanitize=pointer-subtract)" superClass="gnu.c.compiler.option.debugging.sanitpointers" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 							<option id="gnu.c.compiler.option.debugging.sanitthread.2093067488" name="Sanitize data race in multi-thread (-fsanitize=thread)" superClass="gnu.c.compiler.option.debugging.sanitthread" useByScannerDiscovery="false" value="false" valueType="boolean"/>

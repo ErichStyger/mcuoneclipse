@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#if 0
+#if 1
 /* hooks if using -fsanitize=address */
 /* -fasan-shadow-offset=number */
 /* -fsanitize=kernel-address */
@@ -31,23 +31,25 @@ static void __asan_ReportGenericError(void) {
 }
 
 /* below are the required callbacks needed by ASAN */
-void __asan_report_store1(void) {__asan_ReportGenericError();}
-void __asan_report_store2(void) {__asan_ReportGenericError();}
-void __asan_report_store4(void) {__asan_ReportGenericError();}
-void __asan_report_store_n(void) {__asan_ReportGenericError();}
-void __asan_report_load1(void) {__asan_ReportGenericError();}
-void __asan_report_load2(void) {__asan_ReportGenericError();}
-void __asan_report_load4(void) {__asan_ReportGenericError();}
-void __asan_report_load_n(void) {__asan_ReportGenericError();}
+void __asan_report_store1(void *address) {__asan_ReportGenericError();}
+void __asan_report_store2(void *address) {__asan_ReportGenericError();}
+void __asan_report_store4(void *address) {__asan_ReportGenericError();}
+void __asan_report_store_n(void *address) {__asan_ReportGenericError();}
+void __asan_report_load1(void *address) {__asan_ReportGenericError();}
+void __asan_report_load2(void *address) {__asan_ReportGenericError();}
+void __asan_report_load4(void *address) {__asan_ReportGenericError();}
+void __asan_report_load_n(void *address) {__asan_ReportGenericError();}
 #endif
 
-#if 0
+#if 1
 static void NYI(void) {
   __asm volatile("bkpt #0"); /* stop application */
   for(;;){}
 }
-void __asan_stack_malloc_1(void) { NYI(); }
-void __asan_stack_malloc_2(void) { NYI(); }
+void __asan_stack_malloc_1(size_t size, void *addr) { NYI(); }
+void __asan_stack_malloc_2(size_t size, void *addr) { NYI(); }
+void __asan_stack_malloc_3(size_t size, void *addr) { NYI(); }
+void __asan_stack_malloc_4(size_t size, void *addr) { NYI(); }
 void __asan_handle_no_return(void) { NYI(); }
 void __asan_option_detect_stack_use_after_return(void) { NYI(); }
 

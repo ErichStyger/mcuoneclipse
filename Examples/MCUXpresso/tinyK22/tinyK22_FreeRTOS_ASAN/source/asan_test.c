@@ -11,12 +11,22 @@
 
 static int arr[] = {1,2,3};
 static int *p = &arr[0];
+int *pp;
+
+void foo(void) {
+  int i[5];
+
+  pp = &i[0];
+}
 
 static void Test1(void) {
   p = malloc(16);
   free(p);
   arr[0] = *p;
   *p = 0;  /* BOOM: access to released memory */
+
+  foo(); /* assigns pp to a stack variable of its own */
+  *pp = 0; /* BOOM: access to dangling stack area */
 }
 
 static int Test2(void) {
