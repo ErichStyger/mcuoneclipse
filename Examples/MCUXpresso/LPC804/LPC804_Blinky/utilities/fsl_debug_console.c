@@ -92,7 +92,7 @@ enum _debugconsole_scanf_flag
  * Variables
  ******************************************************************************/
 /*! @brief Debug UART state information. */
-static debug_console_state_t s_debugConsole;
+//static debug_console_state_t s_debugConsole;
 
 /*******************************************************************************
  * Prototypes
