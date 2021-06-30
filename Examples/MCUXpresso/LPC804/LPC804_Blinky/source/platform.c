@@ -9,6 +9,7 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuWait.h"
+#include "McuArmTools.h"
 #include "leds.h"
 
 void PL_Init(void) {
@@ -19,6 +20,7 @@ void PL_Init(void) {
   McuGPIO_Init();
   McuLED_Init();
   McuWait_Init();
+  McuArmTools_Init();
 
   /* application modules */
   LEDS_Init();
