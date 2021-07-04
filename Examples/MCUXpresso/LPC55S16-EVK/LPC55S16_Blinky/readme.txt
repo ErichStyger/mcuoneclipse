@@ -31,3 +31,8 @@ Received monitor command: SWO DisableTarget 0xFFFFFFFF
 SWO disabled successfully.
 Received monitor command: SWO EnableTarget 0 64000 0x1 0
 SWO enabled successfully.
+
+
+Note: with J-Link version V7.22 or later it is possible to attach with SWO:
+- [SWOViewer]: Added command line option "-swoattach <OnOff>" that disables all J-Link side initialization of SWO and relies on the target application to perform SWO init.
+JLinkSWOViewerCL -swoattach on -swofreq 64000 -device LPC55S16 -itmport 0x1
