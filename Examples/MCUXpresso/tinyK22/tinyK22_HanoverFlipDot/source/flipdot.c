@@ -50,7 +50,7 @@ static void StoreASCIIHex16(uint8_t *buf, uint16_t val) {
 #define FLIP_DOT_BUF_POS_CHECK   (FLIP_DOT_BUF_POS_EOT+1)
 
 static uint8_t dotMap[((FLIP_DOT_NOF_COL-1)/8)+1][FLIP_DOT_NOF_ROW];
-
+/* see https://freefontsdownload.net/free-small-5x3-regular-font-125210.htm, should add subline (g, y, ...) plus extra column for w and m */
 static const char char3x5_colon[5][3] = {
     "   ",
     " * ",
@@ -150,12 +150,68 @@ static const char char3x5_9[5][3] = {
     "***"
 };
 
+static const char char3x5_A[5][3] = {
+    " * ",
+    "* *",
+    "***",
+    "* *",
+    "* *"
+};
+static const char char3x5_B[5][3] = {
+    "** ",
+    "* *",
+    "***",
+    "* *",
+    "** "
+};
+static const char char3x5_C[5][3] = {
+    " **",
+    "*  ",
+    "*  ",
+    "*  ",
+    " **"
+};
+static const char char3x5_D[5][3] = {
+    "***",
+    "*  ",
+    "*  ",
+    "*  ",
+    "***"
+};
+static const char char3x5_E[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "*  ",
+    "***"
+};
+static const char char3x5_F[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "*  ",
+    "*  "
+};
+static const char char3x5_G[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "* *",
+    "***"
+};
 static const char char3x5_H[5][3] = {
     "* *",
     "* *",
     "***",
     "* *",
     "* *"
+};
+static const char char3x5_I[5][3] = {
+    "***",
+    " * ",
+    " * ",
+    " * ",
+    "***"
 };
 static const char char3x5_J[5][3] = {
     "***",
@@ -164,12 +220,251 @@ static const char char3x5_J[5][3] = {
     "  *",
     "** "
 };
-static const char char3x5_n[5][3] = {
+static const char char3x5_K[5][3] = {
+    "* *",
+    "** ",
+    "*  ",
+    "** ",
+    "* *"
+};
+static const char char3x5_L[5][3] = {
+    "*  ",
+    "*  ",
+    "*  ",
+    "*  ",
+    "***"
+};
+static const char char3x5_M[5][3] = {
+    "* *",
+    "***",
+    "* *",
+    "* *",
+    "* *"
+};
+static const char char3x5_N[5][3] = {
+    "* *",
+    "***",
+    "***",
+    "***",
+    "* *"
+};
+static const char char3x5_P[5][3] = {
+    "***",
+    "* *",
+    "***",
+    "*  ",
+    "*  "
+};
+static const char char3x5_Q[5][3] = {
+    "***",
+    "* *",
+    "* *",
+    "** ",
+    "* *"
+};
+static const char char3x5_R[5][3] = {
+    "***",
+    "* *",
+    "***",
+    "** ",
+    "* *"
+};
+static const char char3x5_S[5][3] = {
+    "***",
+    "*  ",
+    "***",
+    "  *",
+    "***"
+};
+static const char char3x5_T[5][3] = {
+    "***",
+    " * ",
+    " * ",
+    " * ",
+    " * "
+};
+static const char char3x5_U[5][3] = {
+    "* *",
+    "* *",
+    "* *",
+    "* *",
+    "***"
+};
+static const char char3x5_V[5][3] = {
+    "* *",
+    "* *",
+    "* *",
+    " * ",
+    " *"
+};
+static const char char3x5_W[5][3] = {
+    "* *",
+    "* *",
+    "* *",
+    "***",
+    "* *"
+};
+static const char char3x5_X[5][3] = {
+    "* *",
+    "* *",
+    "***",
+    "* *",
+    "* *"
+};
+static const char char3x5_Y[5][3] = {
+    "* *",
+    "***",
+    "***",
+    "* *",
+    "* *"
+};
+static const char char3x5_Z[5][3] = {
+    "***",
+    "  *",
+    " * ",
+    "*  ",
+    "***"
+};
+
+static const char char3x5_a[5][3] = {
     "   ",
+    " **",
+    "* *",
+    "* *",
+    " **"
+};
+static const char char3x5_b[5][3] = {
+    "*  ",
+    "** ",
+    "* *",
+    "* *",
+    "** "
+};
+static const char char3x5_c[5][3] = {
     "   ",
+    "***",
+    "*  ",
+    "*  ",
+    "***"
+};
+static const char char3x5_d[5][3] = {
+    "  *",
+    " **",
+    "* *",
+    "* *",
+    " **"
+};
+static const char char3x5_e[5][3] = {
+    "   ",
+    " * ",
+    "* *",
+    "** ",
+    " **"
+};
+static const char char3x5_f[5][3] = {
+    " **",
+    " * ",
+    "***",
+    " * ",
+    " * "
+};
+static const char char3x5_g[5][3] = {
+    "***",
+    "* *",
+    "***",
+    "  *",
+    "**"
+};
+static const char char3x5_h[5][3] = {
+    "*  ",
+    "** ",
+    "* *",
+    "* *",
+    "* *"
+};
+static const char char3x5_i[5][3] = {
+    " * ",
+    "   ",
+    " * ",
+    " * ",
+    " * "
+};
+static const char char3x5_j[5][3] = {
+    " * ",
+    "   ",
+    " * ",
+    " * ",
+    "*  "
+};
+static const char char3x5_k[5][3] = {
+    "*  ",
+    "* *",
     "** ",
     "* *",
     "* *"
+};
+static const char char3x5_l[5][3] = {
+    "*  ",
+    " * ",
+    " * ",
+    " * ",
+    " *"
+};
+static const char char3x5_m[5][3] = {
+    "   ",
+    "   ",
+    "***",
+    "***",
+    "* *"
+};
+static const char char3x5_n[5][3] = {
+    "   ",
+    "   ",
+    "***",
+    "* *",
+    "* *"
+};
+static const char char3x5_o[5][3] = {
+    "   ",
+    "   ",
+    "***",
+    "* *",
+    "***"
+};
+static const char char3x5_p[5][3] = {
+    "   ",
+    "***",
+    "* *",
+    "***",
+    "*  "
+};
+static const char char3x5_q[5][3] = {
+    "   ",
+    "***",
+    "* *",
+    "***",
+    "  *"
+};
+static const char char3x5_r[5][3] = {
+    "   ",
+    "***",
+    "* *",
+    "* ",
+    "*  "
+};
+static const char char3x5_s[5][3] = {
+    "   ",
+    " **",
+    "*  ",
+    "  *",
+    "** "
+};
+static const char char3x5_t[5][3] = {
+    " * ",
+    "***",
+    " * ",
+    " * ",
+    " **"
 };
 static const char char3x5_u[5][3] = {
     "   ",
@@ -178,11 +473,39 @@ static const char char3x5_u[5][3] = {
     "* *",
     "***"
 };
-static const char char3x5_U[5][3] = {
+static const char char3x5_v[5][3] = {
+    "   ",
     "* *",
     "* *",
     "* *",
+    " * "
+};
+static const char char3x5_w[5][3] = {
+    "   ",
     "* *",
+    "***",
+    "***",
+    "* *"
+};
+static const char char3x5_x[5][3] = {
+    "   ",
+    "* *",
+    " * ",
+    "* *",
+    "* *"
+};
+static const char char3x5_y[5][3] = {
+    "   ",
+    "* *",
+    "* *",
+    "***",
+    "  *"
+};
+static const char char3x5_z[5][3] = {
+    "   ",
+    "***",
+    "  *",
+    "*  ",
     "***"
 };
 
@@ -276,11 +599,59 @@ static void DrawFontChar3x5(int x0, int y0, char ch) {
     case ':': DrawFontCharMap3x5(x0, y0, char3x5_colon);  break;
     case ' ': DrawFontCharMap3x5(x0, y0, char3x5_space);  break;
     case '.': DrawFontCharMap3x5(x0, y0, char3x5_dot);  break;
+    case 'A': DrawFontCharMap3x5(x0, y0, char3x5_A);  break;
+    case 'B': DrawFontCharMap3x5(x0, y0, char3x5_B);  break;
+    case 'C': DrawFontCharMap3x5(x0, y0, char3x5_C);  break;
+    case 'D': DrawFontCharMap3x5(x0, y0, char3x5_D);  break;
+    case 'E': DrawFontCharMap3x5(x0, y0, char3x5_E);  break;
+    case 'F': DrawFontCharMap3x5(x0, y0, char3x5_F);  break;
+    case 'G': DrawFontCharMap3x5(x0, y0, char3x5_G);  break;
     case 'H': DrawFontCharMap3x5(x0, y0, char3x5_H);  break;
+    case 'I': DrawFontCharMap3x5(x0, y0, char3x5_I);  break;
     case 'J': DrawFontCharMap3x5(x0, y0, char3x5_J);  break;
+    case 'K': DrawFontCharMap3x5(x0, y0, char3x5_K);  break;
+    case 'L': DrawFontCharMap3x5(x0, y0, char3x5_L);  break;
+    case 'M': DrawFontCharMap3x5(x0, y0, char3x5_M);  break;
+    case 'N': DrawFontCharMap3x5(x0, y0, char3x5_N);  break;
+    case 'O': DrawFontCharMap3x5(x0, y0, char3x5_0);  break;
+    case 'P': DrawFontCharMap3x5(x0, y0, char3x5_P);  break;
+    case 'Q': DrawFontCharMap3x5(x0, y0, char3x5_Q);  break;
+    case 'R': DrawFontCharMap3x5(x0, y0, char3x5_R);  break;
+    case 'S': DrawFontCharMap3x5(x0, y0, char3x5_S);  break;
+    case 'T': DrawFontCharMap3x5(x0, y0, char3x5_T);  break;
     case 'U': DrawFontCharMap3x5(x0, y0, char3x5_U);  break;
-    case 'u': DrawFontCharMap3x5(x0, y0, char3x5_u);  break;
+    case 'V': DrawFontCharMap3x5(x0, y0, char3x5_V);  break;
+    case 'W': DrawFontCharMap3x5(x0, y0, char3x5_W);  break;
+    case 'X': DrawFontCharMap3x5(x0, y0, char3x5_X);  break;
+    case 'Y': DrawFontCharMap3x5(x0, y0, char3x5_Y);  break;
+    case 'Z': DrawFontCharMap3x5(x0, y0, char3x5_Z);  break;
+
+    case 'a': DrawFontCharMap3x5(x0, y0, char3x5_a);  break;
+    case 'b': DrawFontCharMap3x5(x0, y0, char3x5_b);  break;
+    case 'c': DrawFontCharMap3x5(x0, y0, char3x5_c);  break;
+    case 'd': DrawFontCharMap3x5(x0, y0, char3x5_d);  break;
+    case 'e': DrawFontCharMap3x5(x0, y0, char3x5_e);  break;
+    case 'f': DrawFontCharMap3x5(x0, y0, char3x5_f);  break;
+    case 'g': DrawFontCharMap3x5(x0, y0, char3x5_g);  break;
+    case 'h': DrawFontCharMap3x5(x0, y0, char3x5_h);  break;
+    case 'i': DrawFontCharMap3x5(x0, y0, char3x5_i);  break;
+    case 'j': DrawFontCharMap3x5(x0, y0, char3x5_j);  break;
+    case 'k': DrawFontCharMap3x5(x0, y0, char3x5_k);  break;
+    case 'l': DrawFontCharMap3x5(x0, y0, char3x5_l);  break;
+    case 'm': DrawFontCharMap3x5(x0, y0, char3x5_m);  break;
     case 'n': DrawFontCharMap3x5(x0, y0, char3x5_n);  break;
+    case 'o': DrawFontCharMap3x5(x0, y0, char3x5_o);  break;
+    case 'p': DrawFontCharMap3x5(x0, y0, char3x5_p);  break;
+    case 'q': DrawFontCharMap3x5(x0, y0, char3x5_q);  break;
+    case 'r': DrawFontCharMap3x5(x0, y0, char3x5_r);  break;
+    case 's': DrawFontCharMap3x5(x0, y0, char3x5_s);  break;
+    case 't': DrawFontCharMap3x5(x0, y0, char3x5_t);  break;
+    case 'u': DrawFontCharMap3x5(x0, y0, char3x5_u);  break;
+    case 'v': DrawFontCharMap3x5(x0, y0, char3x5_v);  break;
+    case 'w': DrawFontCharMap3x5(x0, y0, char3x5_w);  break;
+    case 'x': DrawFontCharMap3x5(x0, y0, char3x5_x);  break;
+    case 'y': DrawFontCharMap3x5(x0, y0, char3x5_y);  break;
+    case 'z': DrawFontCharMap3x5(x0, y0, char3x5_z);  break;
     default:
       break;
   } /* switch */
