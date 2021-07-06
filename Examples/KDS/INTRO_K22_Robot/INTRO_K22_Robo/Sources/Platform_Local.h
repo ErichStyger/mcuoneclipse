@@ -54,7 +54,7 @@
 //#define PL_LOCAL_CONFIG_HAS_TOF_DISABLED /* disable Time-of-Flight sensors */
 //#define PL_LOCAL_CONFIG_HAS_DISTANCE_DISABLED  /* no distance sensors */
 
-#define PL_HAS_MIDI  (1)
-#define PL_HAS_MUSIC (1)
+#define PL_HAS_MIDI  (0)
+#define PL_HAS_MUSIC (0)
 
 #endif /* PLATFORM_LOCAL_H_ */

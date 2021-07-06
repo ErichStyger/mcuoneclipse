@@ -12,6 +12,7 @@
 #include "ADC_Bat.h"
 #include "CLS1.h"
 #include "FRTOS1.h"
+#include "UTIL1.h"
 
 uint8_t BATT_MeasureBatteryVoltage(uint16_t *cvP) {
   #define SAMPLE_GROUP_SIZE 1U

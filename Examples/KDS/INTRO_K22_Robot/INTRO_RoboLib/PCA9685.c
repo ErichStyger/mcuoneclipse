@@ -10,6 +10,7 @@
 #include "PCA9685.h"
 #include "GI2C1.h"
 #include "PE_Error.h"
+#include "FRTOS1.h"
 #include <math.h> /* for floor() function */
 
 /*!

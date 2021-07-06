@@ -11,6 +11,7 @@
 #include "MCP4728.h"
 #include "GI2C1.h"
 #include "UTIL1.h"
+#include "WAIT1.h"
 #if PL_HAS_MCP4728_RDY
   #include "MCP4728_RDY.h"
 #endif

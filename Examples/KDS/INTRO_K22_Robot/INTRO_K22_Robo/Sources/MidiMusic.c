@@ -21,6 +21,7 @@
 #include "MidiBond.h"
 #include "Buzzer.h"
 #include "Identify.h"
+#include "UTIL1.h"
 
 typedef enum { /* bits are used for FreeRTOS direct task notifications */
   MIDI_SONG_BIT_GET_READY             = (1<<0),
@@ -37,7 +38,7 @@ typedef enum { /* bits are used for FreeRTOS direct task notifications */
   MIDI_SONG_BIT_STOP = (1<<31)
 } MIDI_SongBit;
 
-static xTaskHandle MidiPlayTaskHandle;
+static TaskHandle_t MidiPlayTaskHandle;
 static bool MM_isPlayingSong = FALSE;
 static MIDI_SongNr MM_SetSong = 1; /* skipping song 0 */
 
@@ -373,7 +374,7 @@ static void Play(MIDI_SongNr song, MIDI_MusicTrack *tracks, unsigned int nofTrac
       if (flags&(MIDI_SONG_BIT_START|MIDI_SONG_BIT_STOP|MIDI_SONG_BIT_NEXT)) {
         break; /* break current song */
       }
-      currTimeMs = (xTaskGetTickCount()-startTicks)/portTICK_RATE_MS;
+      currTimeMs = (xTaskGetTickCount()-startTicks)*(1000/configTICK_RATE_HZ);
       nofFinished = 0;
       for(channel=0;channel<nofTracks;channel++) {
         if (!PlayTrackItem(&tracks[channel], currTimeMs, channel, tempoUS)) {
@@ -383,7 +384,7 @@ static void Play(MIDI_SongNr song, MIDI_MusicTrack *tracks, unsigned int nofTrac
       if (nofFinished==nofTracks) { /* all finished */
         return;
       }
-      vTaskDelay(1/portTICK_RATE_MS);
+      vTaskDelay(pdMS_TO_TICKS(1));
       itemNo++;
     } /* for: playing song */
     if (flags&MIDI_SONG_BIT_STOP) {

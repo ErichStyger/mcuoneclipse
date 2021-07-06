@@ -56,7 +56,7 @@ static bool REF_IsEnabled = TRUE;
 
 #define REF_START_STOP_CALIB      1 /* start/stop calibration commands */
 #if REF_START_STOP_CALIB
-  static xSemaphoreHandle REF_StartStopSem = NULL;
+  static SemaphoreHandle_t REF_StartStopSem = NULL;
 #endif
 
 #define REF_TIMEOUT_TICKS       ((RefCnt_CNT_INP_FREQ_U_0/1000)*REF_SENSOR_TIMEOUT_US)/1000 /* REF_SENSOR_TIMEOUT_US translated into timeout ticks */

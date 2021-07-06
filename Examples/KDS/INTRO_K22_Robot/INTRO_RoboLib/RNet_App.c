@@ -117,7 +117,7 @@ static const RAPP_MsgHandler handlerTable[] =
 
 static void RadioPowerUp(void) {
   /* need to ensure that we wait 100 ms after power-on of the transceiver */
-  portTickType xTime;
+  TickType_t xTime;
   
   xTime = FRTOS1_xTaskGetTickCount();
   if (xTime<(100/portTICK_PERIOD_MS)) {
@@ -183,7 +183,7 @@ void RNETA_Init(void) {
         250, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+3,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
     /*lint -e527 */
     for(;;){}; /* error! probably out of memory */

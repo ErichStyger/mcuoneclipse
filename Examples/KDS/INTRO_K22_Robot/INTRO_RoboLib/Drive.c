@@ -67,7 +67,7 @@ typedef struct {
 
 #define QUEUE_LENGTH      4 /* number of items in queue, that's my buffer size */
 #define QUEUE_ITEM_SIZE   sizeof(DRV_Command) /* each item is a single drive command */
-static xQueueHandle DRV_Queue;
+static QueueHandle_t DRV_Queue;
 
 bool DRV_IsStopped(void) {
 #if PL_HAS_MOTOR_TACHO
@@ -437,7 +437,7 @@ static uint8_t GetCmd(void) {
 }
 
 static void DriveTask(void *pvParameters) {
-  portTickType xLastWakeTime;
+  TickType_t xLastWakeTime;
 #if !PL_HAS_MOTOR_TACHO
   DRV_Mode prevMode;
 #endif
