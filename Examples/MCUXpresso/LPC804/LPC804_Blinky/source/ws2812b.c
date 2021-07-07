@@ -10,12 +10,12 @@
     mosi: PIO0_21;
   
 */
-
+#include "platform.h"
 #include "ws2812b.h"
 #include "LPC8xx.h"
 #include "iocon.h"
 #include "syscon.h"
-//#include "gpio.h"
+#include "gpio.h"
 #include "swm.h"
 #include "spi.h"
 //#include "delay.h"
@@ -28,12 +28,24 @@
 void spi_init(void)
 {
   Enable_Periph_Clock(CLK_SPI0);
-  
+#if PL_NO_PLU_SPI_ONLY
+  map_function_to_port(SPI0_SCK, 9);
+  map_function_to_port(SPI0_MOSI, 8);
+#else
   map_function_to_port(SPI0_SCK, 9);
   map_function_to_port(SPI0_MOSI, 11);
+#endif
   
   LPC_SYSCON->SPI0CLKSEL = FCLKSEL_MAIN_CLK;	
+#if PL_NO_PLU_SPI_ONLY
+  LPC_SPI0->DIV = 6;  /* SPI Clock Div = 6 --> 2.5MHz SPI Clock --> 400ns */
+#else
+#if PL_PLU_FAST
   LPC_SPI0->DIV = 14;	/* 13 still seems to work */
+#else
+  LPC_SPI0->DIV = 24;	/* 22 still seems to work */
+#endif
+#endif
   LPC_SPI0->CFG = SPI_CFG_ENABLE | SPI_CFG_MASTER;
 }
 
@@ -62,7 +74,35 @@ void spi_out(uint8_t *data, int cnt)
   }
 
 }
-
+#if PL_NO_PLU_SPI_ONLY
+/*=======================================================================*/
+/*
+  convert 0 to 1000 and 1 to 1100
+  "out" array must be 4x bigger than "in" array.
+*/
+void convert_to_ws2812b(int cnt, uint8_t *in, uint8_t *out)
+{
+  int i, j;
+  uint8_t b;
+  for ( i = 0; i < cnt; i++ )
+  {
+    b = in[i];
+    j = 4;
+    do
+    {
+      *out = 0x44;
+      if ( b & 128 )
+	*out |= 0x20;
+      b <<= 1;
+      if ( b & 128 )
+	*out |= 0x02;
+      b <<= 1;
+      out++;
+      j--;
+    } while( j > 0 );
+  }
+}
+#endif
 /*=======================================================================*/
 
 /* https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both */
@@ -204,8 +244,12 @@ void SystemCoreClockUpdate_PLU(void);
 /*=======================================================================*/
 //int __attribute__ ((noinline)) main(void)
 void __attribute__ ((noinline)) WS2812B_Init(void)
-{
+{              /* g    r   b   g  r  b    */
   uint8_t a[] = { 0, 0x3c, 0,  0, 0, 0x3c};
+#if PL_NO_PLU_SPI_ONLY
+  uint8_t aa[6*4];
+  //uint8_t last_byte;
+#endif
   int h = 0;
   ccs_t ccs_v;
   int is_v_up = 1;
@@ -216,10 +260,16 @@ void __attribute__ ((noinline)) WS2812B_Init(void)
   /* if the clock or PLL has been changed, also update the global variable SystemCoreClock */
   SystemCoreClockUpdate_PLU();
 
-  /* set systick and start systick interrupt */
- // SysTick_Config(main_clk/1000UL*(unsigned long)SYS_TICK_PERIOD_IN_MS);
+#if PL_NO_PLU_SPI_ONLY
+  GPIOInit();
+  Enable_Periph_Clock(CLK_IOCON);
+  Enable_Periph_Clock(CLK_SWM);
+  GPIOSetDir(PORT0, 8, OUTPUT);	// output for MOSI
+#endif
 
+#if PL_CONFIG_USE_PLU
   plu_setup(); /*  will enable GPIO0 & SWM clock */
+#endif
   spi_init();	
 
   delay_micro_seconds(50);
@@ -227,6 +277,7 @@ void __attribute__ ((noinline)) WS2812B_Init(void)
   is_v_up = 1;
   for(;;)
   {
+#if 1
     h+=2;	/* will turn around at 255 */
     hsv_to_rgb(h, 255, ccs_v.current, a+0, a+1, a+2);
     hsv_to_rgb(h+20, 255, ccs_v.current, a+3, a+4, a+5);
@@ -243,9 +294,15 @@ void __attribute__ ((noinline)) WS2812B_Init(void)
 		is_v_up = 1;
       }
     }
-
+#endif
+#if PL_NO_PLU_SPI_ONLY
+    convert_to_ws2812b(6, a, aa);
+    spi_out(aa, 6*4);
+    //last_byte = 0;
+    //spi_out(&last_byte, 1);
+#else
     spi_out(a, sizeof(a));
-    
+#endif
     /* LPC804 has might have up to two bytes in the queue, wait for their transmission */    
     delay_micro_seconds(24+24);
     /* write the new values into the LEDs */
