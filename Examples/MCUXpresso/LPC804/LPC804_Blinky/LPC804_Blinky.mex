@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC804" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9.xsd" uuid="a3832750-5c1d-4fe6-b07a-630edd325fbf" version="1.9" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC804" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_10 http://mcuxpresso.nxp.com/XSD/mex_configuration_10.xsd" uuid="a3832750-5c1d-4fe6-b07a-630edd325fbf" version="10" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC804</processor>
       <package>LPC804M101JDH20</package>
@@ -13,11 +13,12 @@
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <update_include_paths>true</update_include_paths>
    </preferences>
    <tools>
-      <pins name="Pins" version="9.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="10.0" enabled="true" update_project_code="true">
          <pins_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>0.10.8</processor_version>
          </pins_profile>
          <functions_list>
             <function name="BOARD_InitPins">
@@ -38,9 +39,9 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="7.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="8.0" enabled="true" update_project_code="true">
          <clocks_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>0.10.8</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN">
@@ -82,9 +83,9 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="9.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="10.0" enabled="true" update_project_code="true">
          <peripherals_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>0.10.8</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="091fa9ef-c994-4dc4-acd7-9306af5027da" called_from_default_init="true" id_prefix="" core="core0">
@@ -110,14 +111,18 @@
             <component name="generic_can" uuid="7bb7df2b-6b48-455a-b66b-3b5aa528f434" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
             </component>
+            <component name="uart_cmsis_common" uuid="0a821739-cb0a-4219-8b50-8d9556179114" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
+               <config_set_global name="global_USART_CMSIS_common" quick_selection="default"/>
+            </component>
+            <component name="generic_enet" uuid="ffcab99f-e090-4b41-a1f4-358105be7733" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+               <config_set_global name="global_enet"/>
+            </component>
          </components>
       </periphs>
       <tee name="TEE" version="3.0" enabled="false" update_project_code="true">
          <tee_profile>
             <processor_version>N/A</processor_version>
          </tee_profile>
-         <global_options/>
-         <user_memory_regions/>
       </tee>
    </tools>
 </configuration>

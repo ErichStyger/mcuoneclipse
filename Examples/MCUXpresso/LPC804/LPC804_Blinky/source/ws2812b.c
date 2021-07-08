@@ -18,8 +18,6 @@
 #include "gpio.h"
 #include "swm.h"
 #include "spi.h"
-//#include "delay.h"
-//#include "util.h"
 #include "McuWait.h"
 #include "plu_setup.h"
 
@@ -239,26 +237,38 @@ static void delay_micro_seconds(uint32_t us) {
 	McuWait_Waitus(us);
 }
 
-void SystemInit_PLU(void);
-void SystemCoreClockUpdate_PLU(void);
-/*=======================================================================*/
-//int __attribute__ ((noinline)) main(void)
-void __attribute__ ((noinline)) WS2812B_Init(void)
-{              /* g    r   b   g  r  b    */
-  uint8_t a[] = { 0, 0x3c, 0,  0, 0, 0x3c};
+//void SystemInit_PLU(void);
+//void SystemCoreClockUpdate_PLU(void);
+
+#define WS2812_NOF_LEDS   (8)
+#define WS2812_NOF_COLORS (4)
+
+void __attribute__ ((noinline)) WS2812B_Init(void) {
+
+  uint8_t a[WS2812_NOF_LEDS*WS2812_NOF_COLORS] =
+  /* g     r     b */
+  { 0x00, 0x3c, 0x00,
+    0x00, 0x00, 0x3c,
+	0x3c, 0x00, 0x00,
+	0x11, 0x11, 0x11,
+	0x22, 0x00, 0x22,
+	0x00, 0x44, 0x22,
+	0x22, 0x44, 0x00,
+	0x11, 0x22, 0x44,
+  };
 #if PL_NO_PLU_SPI_ONLY
-  uint8_t aa[6*4];
+  uint8_t aa[WS2812_NOF_LEDS*WS2812_NOF_COLORS*4]; /* in SPI mode, needs 4x time the memory */
   //uint8_t last_byte;
 #endif
   int h = 0;
   ccs_t ccs_v;
   int is_v_up = 1;
 //  int i;
-  /* call to the lpc lib setup procedure. This will set the IRC as clk src and main clk to 24 MHz */
-  SystemInit_PLU();
+  /* call to the lpc lib setup procedure. This will set the IRC as clk src and main clk to 15 MHz */
+ // SystemInit_PLU();
 
   /* if the clock or PLL has been changed, also update the global variable SystemCoreClock */
-  SystemCoreClockUpdate_PLU();
+ // SystemCoreClockUpdate_PLU();
 
 #if PL_NO_PLU_SPI_ONLY
   GPIOInit();
@@ -275,31 +285,27 @@ void __attribute__ ((noinline)) WS2812B_Init(void)
   delay_micro_seconds(50);
   ccs_init(&ccs_v, 40, 100, 27);
   is_v_up = 1;
-  for(;;)
-  {
-#if 1
+  for(;;) {
+#if 1 /* color cycling */
     h+=2;	/* will turn around at 255 */
-    hsv_to_rgb(h, 255, ccs_v.current, a+0, a+1, a+2);
-    hsv_to_rgb(h+20, 255, ccs_v.current, a+3, a+4, a+5);
-    if ( ccs_step(&ccs_v) == 0 )
-    {
-      if ( is_v_up )
-      {
+    for(int led=0; led<WS2812_NOF_LEDS; led++) {
+      hsv_to_rgb(h+led*20, 255, ccs_v.current, a+(led*WS2812_NOF_COLORS)+0, a+(led*WS2812_NOF_COLORS)+1, a+(led*WS2812_NOF_COLORS)+2);
+    }
+    if ( ccs_step(&ccs_v) == 0 ) {
+      if ( is_v_up ) {
 		ccs_init(&ccs_v, 100, 40, 17);
 		is_v_up = 0;
-      }
-      else
-      {
+      } else {
 		ccs_init(&ccs_v, 40, 100, 17);
 		is_v_up = 1;
       }
     }
 #endif
 #if PL_NO_PLU_SPI_ONLY
-    convert_to_ws2812b(6, a, aa);
-    spi_out(aa, 6*4);
+    convert_to_ws2812b(sizeof(a), a, aa);
+    spi_out(aa, sizeof(aa));
     //last_byte = 0;
-    //spi_out(&last_byte, 1);
+    //spi_out(&last_byte, sizeof(last_byte));
 #else
     spi_out(a, sizeof(a));
 #endif
