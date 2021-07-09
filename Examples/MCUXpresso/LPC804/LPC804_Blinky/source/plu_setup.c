@@ -171,13 +171,13 @@ void plu_setup(void) {
 	*(uint32_t *)0x4004808CUL &= ~(1UL<<5);   /* Reset PLU */
 	*(uint32_t *)0x4004808CUL |= (1UL<<5);   /* Clear Reset PLU */
 #if 1
-	*(uint32_t *)0x40048080UL |= (1UL<<6);   /* Enable GPIO0 Clock */
+//	*(uint32_t *)0x40048080UL |= (1UL<<6);   /* Enable GPIO0 Clock */
 	//*(uint32_t *)0x40048088UL &= ~(1UL<<6);   /* Reset GPIO0 */
 	//*(uint32_t *)0x40048088UL |= (1UL<<6);   /* Clear Reset GPIO0 */
 	*(uint32_t *)0x40048080UL |= (1UL<<7);   /* Enable SWM Clock */
 	//*(uint32_t *)0x40048088UL &= ~(1UL<<7);   /* Reset SWM */
 	//*(uint32_t *)0x40048088UL |= (1UL<<7);   /* Clear Reset SWM */
-	*(uint32_t *)0x40048080UL |= (1UL<<18);   /* Enable IOCON Clock */
+//	*(uint32_t *)0x40048080UL |= (1UL<<18);   /* Enable IOCON Clock */
 	//*(uint32_t *)0x40048088UL &= ~(1UL<<18);   /* Reset IOCON */
 	//*(uint32_t *)0x40048088UL |= (1UL<<18);   /* Clear Reset IOCON */
 //	*(uint32_t *)0xA0002380UL |= (1UL<<8);    /* PIO0_8 GPIO DIRSETP: Setup as output */
