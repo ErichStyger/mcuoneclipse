@@ -20,11 +20,16 @@
 #include "spi.h"
 #include "McuWait.h"
 #include "plu_setup.h"
+#include "NeoPixel.h"
+#include <string.h>
 
 #define map_function_to_port   ConfigSWM
 
-void spi_init(void)
-{
+static void delay_micro_seconds(uint32_t us) {
+  McuWait_Waitus(us);
+}
+
+void spi_init(void) {
   Enable_Periph_Clock(CLK_SPI0);
 #if PL_NO_PLU_SPI_ONLY
   map_function_to_port(SPI0_SCK, 9);
@@ -47,31 +52,32 @@ void spi_init(void)
   LPC_SPI0->CFG = SPI_CFG_ENABLE | SPI_CFG_MASTER;
 }
 
-void spi_out(uint8_t *data, int cnt)
-{
-  int i;
+void WS2812B_spi_out(uint8_t *data, size_t cnt) {
   LPC_SPI0->TXCTL = 
       SPI_CTL_RXIGNORE | 		/* do not read data from MISO */
       SPI_CTL_LEN(8) | 			/* send 8 bits */
       SPI_TXDATCTL_SSELN(3); 	/* do not use any slave select */
-  for( i = 0; i < cnt; i ++ )
-  {
+  for(int i=0; i<cnt; i++) {
     /* wait until the tx register can accept further data */
-    while( (LPC_SPI0->STAT & SPI_STAT_TXRDY) == 0 )
-      ;
-
+    while( (LPC_SPI0->STAT & SPI_STAT_TXRDY) == 0 ) {}
     /* ensure, that the SCK goes to low after the byte transfer: */
     /* Set the EOT flag at the end of the transfer */
-    if ( i+1 == cnt )
-    {
+    if (i+1 == cnt) {
       LPC_SPI0->TXCTL |= SPI_CTL_EOT;
     }
-    
     /* transfer one byte via SPI */
     LPC_SPI0->TXDAT = data[i];
   }
-
 }
+
+void WS2812B_SendPixels(uint8_t *data, size_t cnt) {
+  WS2812B_spi_out(data, cnt);
+  /* LPC804 has might have up to two bytes in the queue, wait for their transmission */
+  delay_micro_seconds(24+24);
+  /* write the new values into the LEDs */
+  delay_micro_seconds(50);
+}
+
 #if PL_NO_PLU_SPI_ONLY
 /*=======================================================================*/
 /*
@@ -104,14 +110,10 @@ void convert_to_ws2812b(int cnt, uint8_t *in, uint8_t *out)
 /*=======================================================================*/
 
 /* https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both */
-
-
-void hsv_to_rgb(uint8_t h, uint8_t s, uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b)
-{
+void hsv_to_rgb(uint8_t h, uint8_t s, uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) {
     uint8_t region, remainder, p, q, t;
 
-    if (s == 0)
-    {
+    if (s == 0) {
         *r = v;
         *g = v;
         *b = v;
@@ -233,21 +235,20 @@ void ccs_seek(ccs_t *ccs, int16_t pos)
   ccs->current += ccs->start;
 }
 
-static void delay_micro_seconds(uint32_t us) {
-	McuWait_Waitus(us);
-}
 
 //void SystemInit_PLU(void);
 //void SystemCoreClockUpdate_PLU(void);
 
-#define WS2812_NOF_LEDS   (8)
+#define WS2812_NOF_LEDS   (16)
 #define WS2812_NOF_COLORS (4)
 
-void __attribute__ ((noinline)) WS2812B_Init(void) {
+void __attribute__ ((noinline)) WS2812B_main(void) {
 
   uint8_t a[WS2812_NOF_LEDS*WS2812_NOF_COLORS] =
   /* g     r     b */
-  { 0x00, 0x3c, 0x00,
+  {
+#if 0
+    0x00, 0x3c, 0x00,
     0x00, 0x00, 0x3c,
 	0x3c, 0x00, 0x00,
 	0x11, 0x11, 0x11,
@@ -255,6 +256,15 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
 	0x00, 0x44, 0x22,
 	0x22, 0x44, 0x00,
 	0x11, 0x22, 0x44,
+    0x00, 0x3c, 0x00,
+    0x00, 0x00, 0x3c,
+	0x3c, 0x00, 0x00,
+	0x11, 0x11, 0x11,
+	0x22, 0x00, 0x22,
+	0x00, 0x44, 0x22,
+	0x22, 0x44, 0x00,
+	0x11, 0x22, 0x44,
+#endif
   };
 #if PL_NO_PLU_SPI_ONLY
   uint8_t aa[WS2812_NOF_LEDS*WS2812_NOF_COLORS*4]; /* in SPI mode, needs 4x time the memory */
@@ -263,13 +273,8 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
   int h = 0;
   ccs_t ccs_v;
   int is_v_up = 1;
-//  int i;
-  /* call to the lpc lib setup procedure. This will set the IRC as clk src and main clk to 15 MHz */
- // SystemInit_PLU();
 
-  /* if the clock or PLL has been changed, also update the global variable SystemCoreClock */
- // SystemCoreClockUpdate_PLU();
-
+  memset(a, 0, sizeof(a)); /* initialize */
 #if PL_NO_PLU_SPI_ONLY
   GPIOInit();
   Enable_Periph_Clock(CLK_IOCON);
@@ -280,10 +285,12 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
 #if PL_CONFIG_USE_PLU
   plu_setup(); /*  will enable GPIO0 & SWM clock */
 #endif
-  spi_init();	
+  spi_init();
+#define B_START (10)
+#define B_END   (40)
 
   delay_micro_seconds(50);
-  ccs_init(&ccs_v, 40, 100, 27);
+  ccs_init(&ccs_v, B_START, B_END, 30);
   is_v_up = 1;
   for(;;) {
 #if 1 /* color cycling */
@@ -293,11 +300,11 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
     }
     if ( ccs_step(&ccs_v) == 0 ) {
       if ( is_v_up ) {
-		ccs_init(&ccs_v, 100, 40, 17);
-		is_v_up = 0;
+        ccs_init(&ccs_v, B_END, B_START, 30);
+        is_v_up = 0;
       } else {
-		ccs_init(&ccs_v, 40, 100, 17);
-		is_v_up = 1;
+        ccs_init(&ccs_v, B_START, B_END, 30);
+        is_v_up = 1;
       }
     }
 #endif
@@ -307,7 +314,7 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
     //last_byte = 0;
     //spi_out(&last_byte, sizeof(last_byte));
 #else
-    spi_out(a, sizeof(a));
+    WS2812B_spi_out(a, sizeof(a));
 #endif
     /* LPC804 has might have up to two bytes in the queue, wait for their transmission */    
     delay_micro_seconds(24+24);
@@ -317,4 +324,11 @@ void __attribute__ ((noinline)) WS2812B_Init(void) {
     /* end user delay */
     delay_micro_seconds(20000L);
   }
+}
+
+void WS2812B_Init(void) {
+#if PL_CONFIG_USE_PLU
+  plu_setup(); /*  will enable GPIO0 & SWM clock */
+#endif
+  spi_init();
 }

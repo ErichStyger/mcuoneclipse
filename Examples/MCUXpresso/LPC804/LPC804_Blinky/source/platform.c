@@ -11,6 +11,7 @@
 #include "McuWait.h"
 #include "McuArmTools.h"
 #include "leds.h"
+#include "NeoPixel.h"
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon);
@@ -24,4 +25,5 @@ void PL_Init(void) {
 
   /* application modules */
   LEDS_Init();
+  NEO_Init();
 }

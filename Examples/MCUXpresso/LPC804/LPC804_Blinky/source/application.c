@@ -13,10 +13,86 @@
 #include "leds.h"
 #if PL_CONFIG_USE_WS2812B
   #include "ws2812b.h"
+  #include "NeoPixel.h"
 #endif
 
 #if PL_CONFIG_USE_WS2812B
 static McuGPIO_Handle_t WS_lane;
+
+static void test(void) {
+  uint8_t r, g, b, w;
+#define MIN_VAL  1
+#define MAX_VAL  80
+
+  (void)NEO_ClearAllPixel();
+  for(;;) {
+    r = g = b = w = 0;
+    for(r=MIN_VAL; r<=MAX_VAL; r++) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+    for(r=MAX_VAL; r>=MIN_VAL; r--) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+
+    r = g = b = w = 0;
+    for(g=MIN_VAL; g<=MAX_VAL; g++) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+    for(g=MAX_VAL; g>=MIN_VAL; g--) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+
+    r = g = b = w = 0;
+    for(b=MIN_VAL; b<=MAX_VAL; b++) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+    for(b=MAX_VAL; b>=MIN_VAL; b--) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+
+    r = g = b = w = 0;
+    for(w=MIN_VAL; w<=MAX_VAL; w++) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+    for(w=MAX_VAL; w>=MIN_VAL; w--) {
+      for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
+        (void)NEO_SetPixelRGBW(pos, r, g, b, w);
+      }
+      (void)NEO_TransferPixels();
+      McuWait_Waitms(20);
+    }
+
+    McuWait_Waitms(100);
+  }
+}
 
 static void WS_Init(void) {
   McuGPIO_Config_t config;
@@ -35,6 +111,8 @@ static void WS_Init(void) {
     for(;;) {} /* error */
   }
   WS2812B_Init();
+
+  test();
 }
 
 #endif
