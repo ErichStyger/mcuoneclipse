@@ -17,7 +17,6 @@
 #endif
 
 #if PL_CONFIG_USE_WS2812B
-static McuGPIO_Handle_t WS_lane;
 
 static void test(void) {
   uint8_t r, g, b, w;
@@ -32,14 +31,14 @@ static void test(void) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
     for(r=MAX_VAL; r>=MIN_VAL; r--) {
       for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
 
     r = g = b = w = 0;
@@ -48,14 +47,14 @@ static void test(void) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
     for(g=MAX_VAL; g>=MIN_VAL; g--) {
       for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
 
     r = g = b = w = 0;
@@ -64,14 +63,14 @@ static void test(void) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
     for(b=MAX_VAL; b>=MIN_VAL; b--) {
       for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
 
     r = g = b = w = 0;
@@ -80,42 +79,31 @@ static void test(void) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
     for(w=MAX_VAL; w>=MIN_VAL; w--) {
       for(int pos=0; pos<NEO_NOF_PIXEL; pos++) {
         (void)NEO_SetPixelRGBW(pos, r, g, b, w);
       }
       (void)NEO_TransferPixels();
-      McuWait_Waitms(20);
+      vTaskDelay(pdMS_TO_TICKS(20));
     }
 
-    McuWait_Waitms(100);
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 
 static void WS_Init(void) {
-  McuGPIO_Config_t config;
-
-  McuGPIO_GetDefaultConfig(&config);
-  /* PIO0_9 */
-  config.hw.gpio = GPIO;
-  config.hw.iocon = IOCON_INDEX_PIO0_9;
-  config.hw.pin =  9;
-  config.hw.port = 0;
-  config.hw.pull = McuGPIO_PULL_DISABLE ;
-  config.isHighOnInit = false;
-  config.isInput = false;
-  WS_lane = McuGPIO_InitGPIO(&config);
-  if (WS_lane==NULL) {
-    for(;;) {} /* error */
-  }
   WS2812B_Init();
-
-  test();
 }
 
-#endif
+#endif /* PL_CONFIG_USE_WS2812B */
+
+static void neo(void *pv) {
+  for(;;) {
+    test();
+  }
+}
 
 static void blinky(void *pv) {
   for(;;) {
@@ -123,11 +111,6 @@ static void blinky(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(500));
     LEDS_Neg(LEDS_RED);
     vTaskDelay(pdMS_TO_TICKS(500));
-#if PL_CONFIG_USE_WS2812B
-    McuGPIO_SetHigh(WS_lane);
-    vTaskDelay(pdMS_TO_TICKS(1));
-    McuGPIO_SetLow(WS_lane);
-#endif
   }
 }
 
@@ -148,5 +131,10 @@ void APP_Run(void) {
   if (xTaskCreate(blinky, "blinky", 400/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!=pdPASS) {
     for(;;) {}
   }
+#if PL_CONFIG_USE_WS2812B
+  if (xTaskCreate(neo, "neo", 400/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL)!=pdPASS) {
+    for(;;) {}
+  }
+#endif
   vTaskStartScheduler();
 }
