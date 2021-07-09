@@ -1,11 +1,4 @@
 /*
- * Copyright 2018 NXP.
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
-/*
  * How to set up clock using clock driver functions:
  *
  * 1. Setup clock sources.
@@ -17,10 +10,11 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v5.0
+product: Clocks v8.0
 processor: LPC804
+package_id: LPC804M101JDH20
 mcu_data: ksdk2_0
-processor_version: 0.0.10
+processor_version: 0.10.8
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 #include "fsl_power.h"
@@ -54,7 +48,10 @@ name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
 - {id: FROHF_clock.outFreq, value: 30 MHz}
+- {id: LowPower_clock.outFreq, value: 1 MHz}
 - {id: System_clock.outFreq, value: 15 MHz}
+- {id: WWDT_clock.outFreq, value: 1 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /*******************************************************************************

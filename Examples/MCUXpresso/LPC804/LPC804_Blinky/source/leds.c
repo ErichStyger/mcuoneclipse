@@ -38,9 +38,9 @@ void LEDS_Neg(LEDS_Leds_e led) {
 }
 
 void LEDS_Init(void) {
-  LEDS_ENABLE_CLOCK();
   McuLED_Config_t config;
 
+  LEDS_ENABLE_CLOCK();
   McuLED_GetDefaultConfig(&config);
   config.isOnInit = false;
   config.isLowActive = false;

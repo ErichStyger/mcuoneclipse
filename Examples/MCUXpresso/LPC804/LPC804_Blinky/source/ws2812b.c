@@ -31,12 +31,14 @@ static void delay_micro_seconds(uint32_t us) {
 
 void spi_init(void) {
   Enable_Periph_Clock(CLK_SPI0);
+#if 0
 #if PL_NO_PLU_SPI_ONLY
   map_function_to_port(SPI0_SCK, 9);
   map_function_to_port(SPI0_MOSI, 8);
 #else
   map_function_to_port(SPI0_SCK, 9);
   map_function_to_port(SPI0_MOSI, 11);
+#endif
 #endif
   
   LPC_SYSCON->SPI0CLKSEL = FCLKSEL_MAIN_CLK;	

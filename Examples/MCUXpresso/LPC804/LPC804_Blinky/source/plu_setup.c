@@ -166,22 +166,23 @@ void plu_setup(void) {
 	*(uint32_t *)0x400480F4UL = 2;  /*SYSCON CLKOUTDIV*/
 }
 #else
-void plu_setup(void)
-{
+void plu_setup(void) {
 	*(uint32_t *)0x40048084UL |= (1UL<<5);   /* Enable PLU Clock */
 	*(uint32_t *)0x4004808CUL &= ~(1UL<<5);   /* Reset PLU */
 	*(uint32_t *)0x4004808CUL |= (1UL<<5);   /* Clear Reset PLU */
+#if 1
 	*(uint32_t *)0x40048080UL |= (1UL<<6);   /* Enable GPIO0 Clock */
-	*(uint32_t *)0x40048088UL &= ~(1UL<<6);   /* Reset GPIO0 */
-	*(uint32_t *)0x40048088UL |= (1UL<<6);   /* Clear Reset GPIO0 */
+	//*(uint32_t *)0x40048088UL &= ~(1UL<<6);   /* Reset GPIO0 */
+	//*(uint32_t *)0x40048088UL |= (1UL<<6);   /* Clear Reset GPIO0 */
 	*(uint32_t *)0x40048080UL |= (1UL<<7);   /* Enable SWM Clock */
-	*(uint32_t *)0x40048088UL &= ~(1UL<<7);   /* Reset SWM */
-	*(uint32_t *)0x40048088UL |= (1UL<<7);   /* Clear Reset SWM */
+	//*(uint32_t *)0x40048088UL &= ~(1UL<<7);   /* Reset SWM */
+	//*(uint32_t *)0x40048088UL |= (1UL<<7);   /* Clear Reset SWM */
 	*(uint32_t *)0x40048080UL |= (1UL<<18);   /* Enable IOCON Clock */
-	*(uint32_t *)0x40048088UL &= ~(1UL<<18);   /* Reset IOCON */
-	*(uint32_t *)0x40048088UL |= (1UL<<18);   /* Clear Reset IOCON */
-	*(uint32_t *)0xA0002380UL |= (1UL<<8);    /* PIO0_8 GPIO DIRSETP: Setup as output */
-	*(uint32_t *)0x40044038UL &= ~(3UL<<3);    /* PIO0_8 IOCON: Clear mode, deactivate any pull-up/pulldown */
+	//*(uint32_t *)0x40048088UL &= ~(1UL<<18);   /* Reset IOCON */
+	//*(uint32_t *)0x40048088UL |= (1UL<<18);   /* Clear Reset IOCON */
+//	*(uint32_t *)0xA0002380UL |= (1UL<<8);    /* PIO0_8 GPIO DIRSETP: Setup as output */
+//	*(uint32_t *)0x40044038UL &= ~(3UL<<3);    /* PIO0_8 IOCON: Clear mode, deactivate any pull-up/pulldown */
+#if 0
 	*(uint32_t *)0x40044034UL &= ~(3UL<<3);    /* PIO0_9 IOCON: Clear mode */
 	*(uint32_t *)0x40044034UL |= (2UL<<3);    /* PIO0_9 IOCON: Enable pull-up */
 	*(uint32_t *)0xA0002400UL |= (1UL<<9);    /* PIO0_9 GPIO DIRCLRP: Setup as input */
@@ -191,6 +192,8 @@ void plu_setup(void)
 	*(uint32_t *)0x4004405cUL &= ~(3UL<<3);    /* PIO0_30 IOCON: Clear mode */
 	*(uint32_t *)0x4004405cUL |= (2UL<<3);    /* PIO0_30 IOCON: Enable pull-up */
 	*(uint32_t *)0xA0002400UL |= (1UL<<30);    /* PIO0_30 GPIO DIRCLRP: Setup as input */
+#endif
+#endif
 	/* LUT 0 Config Value */
 	/* PIO0_9 PIO0_11 FF0 FF1 FF2|FF0 */
 	/* --0-1|1 */

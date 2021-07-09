@@ -55,7 +55,7 @@ Instructions:
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
 #define configUSE_HEAP_SCHEME                (4)
-#define configTOTAL_HEAP_SIZE                (2*1024)
+#define configTOTAL_HEAP_SIZE                (3*1024)
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 #define configSUPPORT_STATIC_ALLOCATION      (0)

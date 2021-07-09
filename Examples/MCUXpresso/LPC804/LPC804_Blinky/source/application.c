@@ -12,12 +12,10 @@
 #include "McuRTOS.h"
 #include "leds.h"
 #if PL_CONFIG_USE_WS2812B
-  #include "ws2812b.h"
   #include "NeoPixel.h"
 #endif
 
 #if PL_CONFIG_USE_WS2812B
-
 static void test(void) {
   uint8_t r, g, b, w;
 #define MIN_VAL  1
@@ -93,17 +91,12 @@ static void test(void) {
   }
 }
 
-static void WS_Init(void) {
-  WS2812B_Init();
-}
-
-#endif /* PL_CONFIG_USE_WS2812B */
-
 static void neo(void *pv) {
   for(;;) {
     test();
   }
 }
+#endif /* PL_CONFIG_USE_WS2812B */
 
 static void blinky(void *pv) {
   for(;;) {
@@ -116,9 +109,6 @@ static void blinky(void *pv) {
 
 void APP_Run(void) {
   PL_Init();
-#if PL_CONFIG_USE_WS2812B
-  WS_Init();
-#endif
   for(int i=0; i<3; i++) {
     LEDS_On(LEDS_GREEN);
     McuWait_Waitms(50);

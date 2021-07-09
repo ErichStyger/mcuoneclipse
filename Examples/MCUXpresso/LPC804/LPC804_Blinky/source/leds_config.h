@@ -9,7 +9,7 @@
 
    /* Green: PIO0_13
     * Red:   PIO0_12 */
-  #define LEDS_ENABLE_CLOCK() GPIO_PortInit(GPIO, 0) /* ungate the clocks for GPIO0: used for LEDs */
+  #define LEDS_ENABLE_CLOCK()     GPIO_PortInit(GPIO, 0) /* ungate the clocks for GPIO0: used for LEDs */
 
   #define LEDS_LED_RED_GPIO       GPIO
   #define LEDS_LED_RED_PORT       0
