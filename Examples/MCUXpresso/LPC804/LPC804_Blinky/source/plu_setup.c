@@ -2,9 +2,12 @@
 #include "platform.h"
 #include <stdint.h>
 #include "plu_setup.h"
+#include "LPC804.h"
+
 void plu_setup(void) {
-	*(uint32_t *)0x40048084UL |= (1UL<<5);   /* Enable PLU Clock */
-	*(uint32_t *)0x4004808CUL &= ~(1UL<<5);   /* Reset PLU */
+  SYSCON->SYSAHBCLKCTRL1 |= SYSCON_SYSAHBCLKCTRL1_PLU(1); //enable clock: PLU
+
+  *(uint32_t *)0x4004808CUL &= ~(1UL<<5);   /* Reset PLU */
 	*(uint32_t *)0x4004808CUL |= (1UL<<5);   /* Clear Reset PLU */
 	*(uint32_t *)0x40048080UL |= (1UL<<7);   /* Enable SWM Clock */
 
@@ -30,12 +33,16 @@ void plu_setup(void) {
 	/* 01-|1 */
 	/* 100|1 */
 	*(uint32_t *)0x40028810 = 0x00000056UL; /*PLU*/
+
 	/* PIO0_9 --> PLUINPUT1 */
-	*(uint32_t *)0x4000c180 &= ~0x0000000cUL; *(uint32_t *)0x4000c180 |= 0x00000004UL; /*SWM*/
+	SWM0->PINASSIGNFIXED0 = (SWM0->PINASSIGNFIXED0 & ~SWM_PINASSIGNFIXED0_PLU_INPUT1_MASK) | SWM_PINASSIGNFIXED0_PLU_INPUT1(1);
+
 	/* PIO0_11 --> PLUINPUT3 */
-	*(uint32_t *)0x4000c180 &= ~0x000000c0UL; *(uint32_t *)0x4000c180 |= 0x00000040UL; /*SWM*/
+  SWM0->PINASSIGNFIXED0 = (SWM0->PINASSIGNFIXED0 & ~SWM_PINASSIGNFIXED0_PLU_INPUT3_MASK) | SWM_PINASSIGNFIXED0_PLU_INPUT3(1);
+
 	/* PLUOUT1 --> PIO0_8 */
-	*(uint32_t *)0x4000c180 &= ~0x0000c000UL; *(uint32_t *)0x4000c180 |= 0x00000000UL; /*SWM*/
+  SWM0->PINASSIGNFIXED0 = (SWM0->PINASSIGNFIXED0 & ~SWM_PINASSIGNFIXED0_PLU_OUT1_MASK) | SWM_PINASSIGNFIXED0_PLU_OUT1(0);
+
 	/* PLUINPUT1 --> LUT0_INP0 */
 	*(uint32_t *)0x40028000 = 0x00000001UL; /*PLU*/
 	/* PLUINPUT3 --> LUT0_INP1 */
