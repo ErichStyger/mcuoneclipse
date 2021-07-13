@@ -69,6 +69,16 @@
                <description></description>
                <options/>
                <dependencies>
+                  <dependency resourceType="PinSignal" resourceId="PLU.CLKIN" description="&apos;PLUCLKIN&apos; (Pins tool id: PLU.CLKIN, Clocks tool id: SYSCON.PLUCLKIN) needs to be routed" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="routed" evaluation="">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PinSignal" resourceId="PLU.CLKIN" description="&apos;PLUCLKIN&apos; (Pins tool id: PLU.CLKIN, Clocks tool id: SYSCON.PLUCLKIN) needs to have &apos;INPUT&apos; direction" problem_level="1" source="Clocks:BOARD_BootClockRUN">
+                     <feature name="direction" evaluation="">
+                        <data>INPUT</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -85,10 +95,13 @@
                      </feature>
                   </dependency>
                </dependencies>
-               <clock_sources/>
+               <clock_sources>
+                  <clock_source id="SYSCON.plu_clkin.outFreq" value="10 MHz" locked="false" enabled="true"/>
+               </clock_sources>
                <clock_outputs>
                   <clock_output id="FROHF_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
                   <clock_output id="LowPower_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PLUCLKIN_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="15 MHz" locked="false" accuracy=""/>
                   <clock_output id="WWDT_clock.outFreq" value="1 MHz" locked="false" accuracy=""/>
                   <clock_output id="divto750k_clock.outFreq" value="750 kHz" locked="false" accuracy=""/>
@@ -106,6 +119,18 @@
          <dcdx_configurations/>
       </dcdx>
       <periphs name="Peripherals" version="10.0" enabled="true" update_project_code="true">
+         <dependencies>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.plu" description="PLU Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.plu" description="Unsupported version of the PLU Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.0.1</data>
+               </feature>
+            </dependency>
+         </dependencies>
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
@@ -118,7 +143,20 @@
                <description></description>
                <options/>
                <dependencies/>
-               <instances/>
+               <instances>
+                  <instance name="PLU" uuid="0a675cf6-e40d-424b-a6a1-4cc9c9564158" type="plu" type_id="plu_4164f6d7db750e9e9db7c5715074c76d" mode="general" peripheral="PLU" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_plu">
+                        <setting name="enableFile" value="false"/>
+                        <struct name="pluFile">
+                           <setting name="pathStr" value=""/>
+                        </struct>
+                        <struct name="clockSettings">
+                           <setting name="clockSource" value="FunctionClock"/>
+                           <setting name="clockSourceFreq" value="BOARD_BootClockRUN"/>
+                        </struct>
+                     </config_set>
+                  </instance>
+               </instances>
             </functional_group>
          </functional_groups>
          <components>

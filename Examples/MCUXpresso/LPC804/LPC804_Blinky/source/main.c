@@ -14,9 +14,9 @@
 
 int main(void) {
   /* Init board hardware. */
-  BOARD_InitBootPins();
+  BOARD_InitBootPins(); /* muxes SPI pins */
   BOARD_InitBootClocks();
-  BOARD_InitBootPeripherals();
+  BOARD_InitBootPeripherals(); /* initializes PLU */
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
   /* Init FSL debug console. */
   //BOARD_InitDebugConsole();

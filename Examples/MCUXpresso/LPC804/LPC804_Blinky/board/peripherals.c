@@ -42,10 +42,44 @@ component:
 #include "peripherals.h"
 
 /***********************************************************************************************************************
+ * BOARD_InitPeripherals functional group
+ **********************************************************************************************************************/
+/***********************************************************************************************************************
+ * PLU initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'PLU'
+- type: 'plu'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'plu_4164f6d7db750e9e9db7c5715074c76d'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'PLU'
+- config_sets:
+  - fsl_plu:
+    - enableFile: 'false'
+    - pluFile:
+      - pathStr: ''
+    - clockSettings:
+      - clockSource: 'FunctionClock'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+static void PLU_init(void) {
+  /* PLU peripheral initialization */
+  PLU_Init(PLU_PERIPHERAL);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
+  /* Initialize components */
+  PLU_init();
 }
 
 /***********************************************************************************************************************

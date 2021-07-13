@@ -49,9 +49,12 @@ called_from_default_init: true
 outputs:
 - {id: FROHF_clock.outFreq, value: 30 MHz}
 - {id: LowPower_clock.outFreq, value: 1 MHz}
+- {id: PLUCLKIN_clock.outFreq, value: 10 MHz}
 - {id: System_clock.outFreq, value: 15 MHz}
 - {id: WWDT_clock.outFreq, value: 1 MHz}
 - {id: divto750k_clock.outFreq, value: 750 kHz}
+sources:
+- {id: SYSCON.plu_clkin.outFreq, value: 10 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /*******************************************************************************
