@@ -1,12 +1,12 @@
 readme.txt
 ----------
-Project for the LPC804 using two LEDs.
-
-WS2812B PLU code from:
-https://github.com/olikraus/lpc804_plu/tree/master/lpc804/plu_ws2812b_fast
+Project for the LPC804 using driving two on-board LEDs (red and green) plus a WS2812B LEDs.
+For the WS2812B the PLU of the LPC804 is used. For this the PLU code from olikraus
+(https://github.com/olikraus/lpc804_plu/tree/master/lpc804) has been used for the PLU tables,
+and everything has been ported to the MCUXpresso SDK and the NXP PLU tool
 
 The LPC804.xml file is the data file for the NXP PLU Tool.
 
-Training/Tutorial:
+Training/Tutorial material:
 https://www.nxp.com/video/creative-ways-to-leverage-the-lpc804-mcus-part-2:LPC80X-LEVERAGE-PLU
 https://www.nxp.com/video/learn-more-about-lpc804-mcus-development-board-and-the-programmable-logic-unit-feature:LPC804-DEMO-VIDEO
