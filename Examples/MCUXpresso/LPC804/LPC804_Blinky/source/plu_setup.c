@@ -80,12 +80,18 @@ void plu_setup(void) {
 	/* LUT0 --> FF0 */
 	/* LUT1 --> FF1 */
 	/* LUT2 --> FF2 */
+
 	/* PIO0_30 --> PLU_CLKIN */
 	*(uint32_t *)0x4000c01c &= ~0xff000000UL; *(uint32_t *)0x4000c01c |= 0x1e000000UL; /*SWM*/
+
 	/* CLKOUT --> PIO0_30 */
 	*(uint32_t *)0x4000c014 &= ~0xff000000UL; *(uint32_t *)0x4000c014 |= 0x1e000000UL; /*SWM*/
+
 	/* CLKOUT clock source select register: Select main clock */
-	*(uint32_t *)0x400480F0UL = 1;  /*SYSCON CLKOUTSEL*/
+	//*(uint32_t *)0x400480F0UL = 1;  /*SYSCON CLKOUTSEL*/
+	SYSCON->CLKOUTSEL = SYSCON_CLKOUTSEL_SEL(1);
+
 	/* CLKOUT clock divider register: Divide by 6 */
-	*(uint32_t *)0x400480F4UL = 6;  /*SYSCON CLKOUTDIV*/
+	//*(uint32_t *)0x400480F4UL = 6;  /*SYSCON CLKOUTDIV*/
+	SYSCON->CLKOUTDIV = SYSCON_CLKOUTDIV_DIV(6);
 }
