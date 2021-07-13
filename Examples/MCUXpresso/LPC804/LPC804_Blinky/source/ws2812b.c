@@ -1,15 +1,14 @@
 /*
-
   ws2812b.c
 
   PLU will be configured as SPI client. 
   SPI clock should 800kHz: SPI clock div for the main clk can be 24 or 23
   
   PLU configuration:
-    sck: PIO0_9;
-    mosi: PIO0_11;
-  
+    SPI Clock: PIO0_9;
+    SPI MOSI: PIO0_11;
 */
+
 #include "platform.h"
 #include "ws2812b.h"
 #include "LPC8xx.h"
@@ -51,6 +50,6 @@ void WS2812B_SendPixels(uint8_t *data, size_t cnt) {
 }
 
 void WS2812B_Init(void) {
-  plu_setup(); /*  will enable SWM clock */
+  PLU_setup(); /*  will enable SWM clock */
   spi_init();
 }

@@ -1,13 +1,12 @@
 /*
- * plu_setup.h
+ * Copyright (c) 2021, Erich Styger
  *
- *  Created on: 07.07.2021
- *      Author: erich
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef PLU_SETUP_H_
 #define PLU_SETUP_H_
 
-void plu_setup(void);
+void PLU_setup(void);
 
 #endif /* PLU_SETUP_H_ */
