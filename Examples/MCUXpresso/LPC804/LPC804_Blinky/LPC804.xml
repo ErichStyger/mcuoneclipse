@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Schematic_data>
+    <Profile design="1" ff="4" in="6" lut="26" mcu="LPC804" out="8" package="LPC54113J128BD64" sdk="ksdk2_0">LPC80x</Profile>
+    <active_symbols>
+        <symbol connections="0" id="IN1" name="SCK" type="IN" x="-27.01" y="13.69"/>
+        <symbol connections="0" id="IN3" name="MOSI" type="IN" x="-26.9" y="24.56"/>
+        <symbol connections="5" id="LUT0" name="LUT0" type="LUT" x="-2.8" y="-6.71"/>
+        <symbol connections="3" id="LUT1" name="LUT1" type="LUT" x="6.03" y="41.21"/>
+        <symbol connections="5" id="LUT2" name="LUT2" type="LUT" x="56.77" y="6.04"/>
+        <symbol connections="3" id="LUT4" name="LUT4" type="LUT" x="99.73" y="6.99"/>
+        <symbol connections="1" id="FF0" name="FF0" type="FF" x="10.67" y="-11.45"/>
+        <symbol connections="1" id="FF1" name="FF1" type="FF" x="21.34" y="45.13"/>
+        <symbol connections="1" id="FF2" name="FF2" type="FF" x="71.07" y="10.09"/>
+        <symbol connections="1" id="OUT1" name="WS2812B" type="OUT" x="108.82" y="11.06"/>
+    </active_symbols>
+    <connections>
+        <connection end="LUT0" pin="0" start="IN1">
+            <path x="-11.4" y="14.69"/>
+            <path x="-11.4" y="-5.05"/>
+        </connection>
+        <connection end="LUT0" pin="1" start="IN3">
+            <path x="-11.35" y="25.56"/>
+            <path x="-11.35" y="-3.38"/>
+        </connection>
+        <connection end="FF0" pin="0" start="LUT0">
+            <path x="8.94" y="-1.71"/>
+            <path x="8.94" y="-10.45"/>
+        </connection>
+        <connection end="LUT0" pin="2" start="FF0">
+            <path x="24.67" y="-10.45"/>
+            <path x="24.67" y="12.29"/>
+            <path x="-4.55" y="12.29"/>
+            <path x="-4.55" y="-1.71"/>
+        </connection>
+        <connection end="LUT4" pin="0" start="FF0">
+            <path x="59.2" y="-10.45"/>
+            <path x="59.2" y="9.49"/>
+        </connection>
+        <connection end="LUT1" pin="0" start="FF0">
+            <path x="24.67" y="-10.45"/>
+            <path x="24.67" y="18.63"/>
+            <path x="4.28" y="18.63"/>
+            <path x="4.28" y="43.71"/>
+        </connection>
+        <connection end="OUT1" pin="0" start="LUT4">
+            <path x="109.28" y="11.99"/>
+            <path x="109.28" y="12.06"/>
+        </connection>
+        <connection end="FF2" pin="0" start="LUT2">
+            <path x="68.92" y="11.04"/>
+            <path x="68.92" y="11.09"/>
+        </connection>
+        <connection end="FF1" pin="0" start="LUT1">
+            <path x="18.69" y="46.21"/>
+            <path x="18.69" y="46.13"/>
+        </connection>
+        <connection end="LUT4" pin="1" start="FF1">
+            <path x="64.54" y="46.13"/>
+            <path x="64.54" y="11.99"/>
+        </connection>
+        <connection end="LUT4" pin="2" start="FF2">
+            <path x="89.4" y="11.09"/>
+            <path x="89.4" y="14.49"/>
+        </connection>
+        <connection end="LUT2" pin="2" start="FF0">
+            <path x="37.72" y="-10.45"/>
+            <path x="37.72" y="11.04"/>
+        </connection>
+        <connection end="LUT2" pin="1" start="IN3">
+            <path x="18.44" y="25.56"/>
+            <path x="18.44" y="9.37"/>
+        </connection>
+        <connection end="LUT2" pin="0" start="IN1">
+            <path x="18.38" y="14.69"/>
+            <path x="18.38" y="7.71"/>
+        </connection>
+        <connection end="LUT1" pin="2" start="FF2">
+            <path x="85.07" y="11.09"/>
+            <path x="85.07" y="29.4"/>
+            <path x="4.28" y="29.4"/>
+            <path x="4.28" y="48.71"/>
+        </connection>
+        <connection end="LUT1" pin="1" start="FF1">
+            <path x="35.34" y="46.13"/>
+            <path x="35.34" y="33.63"/>
+            <path x="4.28" y="33.63"/>
+            <path x="4.28" y="46.21"/>
+        </connection>
+        <connection end="LUT0" pin="3" start="FF1">
+            <path x="35.34" y="46.13"/>
+            <path x="35.34" y="22.96"/>
+            <path x="-4.55" y="22.96"/>
+            <path x="-4.55" y="-.05"/>
+        </connection>
+        <connection end="LUT0" pin="4" start="FF2">
+            <path x="85.07" y="11.09"/>
+            <path x="85.07" y="-1.41"/>
+            <path x="-4.55" y="-1.41"/>
+            <path x="-4.55" y="1.62"/>
+        </connection>
+        <connection end="LUT2" pin="3" start="FF1">
+            <path x="43.06" y="46.13"/>
+            <path x="43.06" y="12.71"/>
+        </connection>
+        <connection end="LUT2" pin="4" start="FF2">
+            <path x="85.07" y="11.09"/>
+            <path x="85.07" y="-1.41"/>
+            <path x="55.02" y="-1.41"/>
+            <path x="55.02" y="14.37"/>
+        </connection>
+    </connections>
+    <LUTdata>
+        <data hex="0x0f0f0f08" id="LUT0" inputs="5" name="LUT0" type="0"/>
+        <data hex="0x46464646" id="LUT1" inputs="3" name="LUT1" type="0"/>
+        <data hex="0x0f0f0002" id="LUT2" inputs="5" name="LUT2" type="0"/>
+        <data hex="0x56565656" id="LUT4" inputs="3" name="LUT4" type="0"/>
+    </LUTdata>
+</Schematic_data>
