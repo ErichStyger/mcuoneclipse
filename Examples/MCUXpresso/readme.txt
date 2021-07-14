@@ -1,2 +1,2 @@
-Projects with the MCUXPresso IDE V10.0.2 and later.
+Projects with the MCUXpresso IDE V10.0.2 and later.
 
