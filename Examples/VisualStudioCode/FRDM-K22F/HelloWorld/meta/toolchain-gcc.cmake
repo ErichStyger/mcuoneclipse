@@ -15,9 +15,12 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
-set(triple "")
-set(CMAKE_C_COMPILER   "${triple}gcc")
-set(CMAKE_CXX_COMPILER "${triple}g++")
+set(ARM_TOOLCHAIN_DIR "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin")
+set(triple "arm-none-eabi-")
+
+#set(triple "")
+set(CMAKE_C_COMPILER   "${ARM_TOOLCHAIN_DIR}/${triple}gcc")
+set(CMAKE_CXX_COMPILER "${ARM_TOOLCHAIN_DIR}/${triple}g++")
 
 # Must be explicit, not set by CMake.
 set(CMAKE_SIZE "${triple}size")
