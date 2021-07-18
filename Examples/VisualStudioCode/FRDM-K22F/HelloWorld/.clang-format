@@ -1,0 +1,18 @@
+---
+
+BasedOnStyle: GNU
+Language: Cpp
+# Force pointers to the type for C++.
+AlignEscapedNewlines: DontAlign
+AlignTrailingComments: false
+AllowShortFunctionsOnASingleLine: false
+AlwaysBreakAfterReturnType: All
+AlwaysBreakTemplateDeclarations: Yes
+DerivePointerAlignment: false
+FixNamespaceComments: true
+NamespaceIndentation: All
+PointerAlignment: Left
+SortIncludes: false
+Standard: c++17
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
