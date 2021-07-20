@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
+**     Date/Time   : 2021-07-20, 09:02, # CodeGen: 745
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -76,9 +76,9 @@
 #include "DB51.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB51_CONFIG_DO_PIN_MUXING
-    #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+    #if McuLib_CONFIG_CPU_IS_LPC
       #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
-    #else /* normal Kinetis or LPC */
+    #else /* Kinetis */
       #include "fsl_port.h" /* include SDK header file for port muxing */
     #endif
   #endif
@@ -442,7 +442,7 @@ void DB51_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DB51_CONFIG_DO_PIN_MUXING
-      #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+      #if McuLib_CONFIG_CPU_IS_LPC
         #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
         #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
         #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */

@@ -115,6 +115,13 @@
 								<option id="gnu.c.compiler.option.preprocessor.preprocess.1996621311" name="Preprocess only (-E)" superClass="gnu.c.compiler.option.preprocessor.preprocess" useByScannerDiscovery="false"/>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.556509390" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.884215959" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/uart}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/lists}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/board}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/}&quot;"/>
@@ -204,6 +211,13 @@
 								<option id="com.crt.advproject.gas.arch.402190549" name="Architecture" superClass="com.crt.advproject.gas.arch" value="com.crt.advproject.gas.target.cm4" valueType="enumerated"/>
 								<option id="gnu.both.asm.option.flags.crt.1870601829" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.both.asm.option.include.paths.1193796327" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/uart}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/lists}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/board}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/}&quot;"/>
@@ -356,6 +370,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|SEGGER_Sysview|SEGGER_RTT|minIni|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
@@ -392,7 +407,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso54608</sdkName>
 		<sdkVersion>2.7.0</sdkVersion>
-		<sdkComponents>middleware.baremetal.LPC54608;platform.drivers.lpc_gpio.LPC54608;platform.drivers.flexcomm_spi.LPC54608;platform.drivers.flexcomm_i2c.LPC54608;platform.drivers.clock.LPC54608;platform.drivers.emc.LPC54608;platform.drivers.common.LPC54608;platform.drivers.flexcomm.LPC54608;platform.drivers.reset.LPC54608;platform.drivers.lpc_iocon.LPC54608;platform.drivers.power.LPC54608;platform.drivers.flexcomm_usart.LPC54608;component.usart_adapter.LPC54608;component.serial_manager.LPC54608;utility.debug_console.LPC54608;component.serial_manager_uart.LPC54608;component.lists.LPC54608;device.LPC54608_startup.LPC54608;platform.Include_common.LPC54608;platform.Include_core_cm4.LPC54608;platform.Include_dsp.LPC54608;device.LPC54608_CMSIS.LPC54608;project_template.lpcxpresso54608.LPC54608;</sdkComponents>
+		<sdkComponents>middleware.baremetal.LPC54608;platform.drivers.lpc_gpio.LPC54608;platform.drivers.flexcomm_spi.LPC54608;platform.drivers.flexcomm_i2c.LPC54608;platform.drivers.clock.LPC54608;platform.drivers.emc.LPC54608;platform.drivers.common.LPC54608;platform.drivers.flexcomm.LPC54608;platform.drivers.reset.LPC54608;platform.drivers.lpc_iocon.LPC54608;platform.drivers.power.LPC54608;platform.drivers.flexcomm_usart.LPC54608;component.usart_adapter.LPC54608;component.serial_manager.LPC54608;utility.debug_console.LPC54608;component.serial_manager_uart.LPC54608;component.lists.LPC54608;device.LPC54608_startup.LPC54608;platform.Include_common.LPC54608;platform.Include_core_cm4.LPC54608;platform.Include_dsp.LPC54608;device.LPC54608_CMSIS.LPC54608;project_template.lpcxpresso54608.LPC54608;platform.drivers.iap.LPC54608;</sdkComponents>
 		<boardId>lpcxpresso54608</boardId>
 		<package>LPC54608J512ET180</package>
 		<core>cm4</core>
@@ -426,4 +441,9 @@
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/LPC54608_Blinky"/>
+		</configuration>
+	</storageModule>
 </cproject>
