@@ -9,6 +9,7 @@
 #if PL_CONFIG_USE_HALL_SENSOR
 #include "magnets.h"
 #include "McuGPIO.h"
+#include "McuUtility.h"
 
 /* sensor for hour */
 #define MAG_HH_GPIO       GPIO
