@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2021 NXP
+ * Copyright 2016-2018 NXP
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -27,9 +27,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
 /**
- * @file    LPC845-BRK_FlipFlap.c
+ * @file    LPC845-BRK_Blinky.c
  * @brief   Application entry point.
  */
 #include <stdio.h>
@@ -38,35 +38,21 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "LPC845.h"
-#include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
 
-/* TODO: insert other definitions and declarations here. */
+#include "application.h"
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
-
-    /* Init board hardware. */
+  	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-    /* Init FSL debug console. */
-    BOARD_InitDebugConsole();
-#endif
 
-    PRINTF("Hello World\n");
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-        /* 'Dummy' NOP to allow source level single stepping of
-            tight while() loop */
-        __asm volatile ("nop");
+    APP_Run();
+    for(;;) {
+      __asm("nop");
     }
     return 0 ;
 }
