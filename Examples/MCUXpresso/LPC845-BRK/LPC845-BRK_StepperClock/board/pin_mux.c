@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v6.0
+product: Pins v10.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 6.0.1
+processor_version: 10.0.0
 pin_labels:
 - {pin_num: '14', pin_signal: PIO1_1/CAPT_X2, label: LED_BLUE, identifier: LEDpin2}
 - {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: LED_GREEN, identifier: LEDpin1}
@@ -27,6 +27,7 @@ pin_labels:
 /* clang-format on */
 
 #include "fsl_common.h"
+#include "fsl_gpio.h"
 #include "fsl_swm.h"
 #include "pin_mux.h"
 
@@ -73,36 +74,59 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_Iocon);
     /* Enables clock for switch matrix.: enable */
     CLOCK_EnableClock(kCLOCK_Swm);
-    /* Enables the clock for the GPIO1 module */
-    CLOCK_EnableClock(kCLOCK_Gpio1);
-
-    GPIO->CLR[1] = ((GPIO->CLR[1] &
-                     /* Mask bits to zero which are setting */
-                     (~(GPIO_CLR_CLRP_MASK)))
-
-                    /* Clear output bits (bit 0 = PIOn_0, bit 1 = PIOn_1, etc.). Supported pins depends on the specific
-                     * device and package. 0 = No operation. 1 = Clear output bit.: 0x01u */
-                    | GPIO_CLR_CLRP(0x01u));
     /* Enables the clock for the GPIO0 module */
     CLOCK_EnableClock(kCLOCK_Gpio0);
-
-    GPIO->DIR[0] = ((GPIO->DIR[0] &
-                     /* Mask bits to zero which are setting */
-                     (~(GPIO_DIR_DIRP_MASK)))
-
-                    /* Selects pin direction for pin PIOm_n (bit 0 = PIOn_0, bit 1 = PIOn_1, etc.). Supported pins
-                     * depends on the specific device and package. 0 = input. 1 = output.: 0x00u */
-                    | GPIO_DIR_DIRP(0x00u));
     /* Enables the clock for the GPIO1 module */
     CLOCK_EnableClock(kCLOCK_Gpio1);
 
-    GPIO->DIR[1] = ((GPIO->DIR[1] &
-                     /* Mask bits to zero which are setting */
-                     (~(GPIO_DIR_DIRP_MASK)))
+    gpio_pin_config_t BTNpin3_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO0_4 (pin 6)  */
+    GPIO_PinInit(BOARD_INITPINS_BTNpin3_GPIO, BOARD_INITPINS_BTNpin3_PORT, BOARD_INITPINS_BTNpin3_PIN, &BTNpin3_config);
 
-                    /* Selects pin direction for pin PIOm_n (bit 0 = PIOn_0, bit 1 = PIOn_1, etc.). Supported pins
-                     * depends on the specific device and package. 0 = input. 1 = output.: 0x07u */
-                    | GPIO_DIR_DIRP(0x07u));
+    gpio_pin_config_t BTNpin1_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO0_12 (pin 4)  */
+    GPIO_PinInit(BOARD_INITPINS_BTNpin1_GPIO, BOARD_INITPINS_BTNpin1_PORT, BOARD_INITPINS_BTNpin1_PIN, &BTNpin1_config);
+
+    gpio_pin_config_t MAG_HH_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO0_16 (pin 15)  */
+    GPIO_PinInit(BOARD_INITPINS_MAG_HH_GPIO, BOARD_INITPINS_MAG_HH_PORT, BOARD_INITPINS_MAG_HH_PIN, &MAG_HH_config);
+
+    gpio_pin_config_t MAG_MM_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO0_17 (pin 48)  */
+    GPIO_PinInit(BOARD_INITPINS_MAG_MM_GPIO, BOARD_INITPINS_MAG_MM_PORT, BOARD_INITPINS_MAG_MM_PIN, &MAG_MM_config);
+
+    gpio_pin_config_t LEDpin1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO1_0 (pin 11)  */
+    GPIO_PinInit(BOARD_INITPINS_LEDpin1_GPIO, BOARD_INITPINS_LEDpin1_PORT, BOARD_INITPINS_LEDpin1_PIN, &LEDpin1_config);
+
+    gpio_pin_config_t LEDpin2_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO1_1 (pin 14)  */
+    GPIO_PinInit(BOARD_INITPINS_LEDpin2_GPIO, BOARD_INITPINS_LEDpin2_PORT, BOARD_INITPINS_LEDpin2_PIN, &LEDpin2_config);
+
+    gpio_pin_config_t LEDpin3_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U,
+    };
+    /* Initialize GPIO functionality on pin PIO1_2 (pin 16)  */
+    GPIO_PinInit(BOARD_INITPINS_LEDpin3_GPIO, BOARD_INITPINS_LEDpin3_PORT, BOARD_INITPINS_LEDpin3_PIN, &LEDpin3_config);
 
     IOCON->PIO[2] = ((IOCON->PIO[2] &
                       /* Mask bits to zero which are setting */

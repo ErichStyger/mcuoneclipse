@@ -6,18 +6,6 @@
 #ifndef _PIN_MUX_H_
 #define _PIN_MUX_H_
 
-/***********************************************************************************************************************
- * Definitions
- **********************************************************************************************************************/
-
-/*! @brief Direction type  */
-typedef enum _pin_mux_direction
-{
-    kPIN_MUX_DirectionInput = 0U,        /* Input direction */
-    kPIN_MUX_DirectionOutput = 1U,       /* Output direction */
-    kPIN_MUX_DirectionInputOrOutput = 2U /* Input or output direction */
-} pin_mux_direction_t;
-
 /*!
  * @addtogroup pin_mux
  * @{
@@ -75,108 +63,80 @@ void BOARD_InitBootPins(void);
 
 /*! @name PIO1_0 (number 11), LED_GREEN
   @{ */
-#define BOARD_INITPINS_LEDpin1_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LEDpin1_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LEDpin1_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LEDpin1_GPIO_PIN 0U                        /*!<@brief PIO1 pin index: 0 */
-#define BOARD_INITPINS_LEDpin1_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LEDpin1_PIN 0U                             /*!<@brief 1U pin index: 0 */
-#define BOARD_INITPINS_LEDpin1_CHANNEL 0                          /*!<@brief GPIO PIO1 channel: 0 */
-#define BOARD_INITPINS_LEDpin1_PIN_NAME PIO1_0                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LEDpin1_LABEL "LED_GREEN"                  /*!<@brief Label */
-#define BOARD_INITPINS_LEDpin1_NAME "LEDpin1"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_LEDpin1_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
-                                                                  /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LEDpin1_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LEDpin1_GPIO_PIN_MASK (1U << 0U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_LEDpin1_PORT 1U                  /*!<@brief PORT device index: 1 */
+#define BOARD_INITPINS_LEDpin1_PIN 0U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LEDpin1_PIN_MASK (1U << 0U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*! @name PIO1_1 (number 14), LED_BLUE
   @{ */
-#define BOARD_INITPINS_LEDpin2_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LEDpin2_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LEDpin2_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LEDpin2_GPIO_PIN 1U                        /*!<@brief PIO1 pin index: 1 */
-#define BOARD_INITPINS_LEDpin2_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LEDpin2_PIN 1U                             /*!<@brief 1U pin index: 1 */
-#define BOARD_INITPINS_LEDpin2_CHANNEL 1                          /*!<@brief GPIO PIO1 channel: 1 */
-#define BOARD_INITPINS_LEDpin2_PIN_NAME PIO1_1                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LEDpin2_LABEL "LED_BLUE"                   /*!<@brief Label */
-#define BOARD_INITPINS_LEDpin2_NAME "LEDpin2"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_LEDpin2_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
-                                                                  /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LEDpin2_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LEDpin2_GPIO_PIN_MASK (1U << 1U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_LEDpin2_PORT 1U                  /*!<@brief PORT device index: 1 */
+#define BOARD_INITPINS_LEDpin2_PIN 1U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LEDpin2_PIN_MASK (1U << 1U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*! @name PIO1_2 (number 16), LED_RED
   @{ */
-#define BOARD_INITPINS_LEDpin3_PERIPHERAL GPIO                    /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_LEDpin3_SIGNAL PIO1                        /*!<@brief GPIO signal: PIO1 */
-#define BOARD_INITPINS_LEDpin3_GPIO GPIO                          /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_LEDpin3_GPIO_PIN 2U                        /*!<@brief PIO1 pin index: 2 */
-#define BOARD_INITPINS_LEDpin3_PORT 1U                            /*!<@brief PORT device name: 1U */
-#define BOARD_INITPINS_LEDpin3_PIN 2U                             /*!<@brief 1U pin index: 2 */
-#define BOARD_INITPINS_LEDpin3_CHANNEL 2                          /*!<@brief GPIO PIO1 channel: 2 */
-#define BOARD_INITPINS_LEDpin3_PIN_NAME PIO1_2                    /*!<@brief Pin name */
-#define BOARD_INITPINS_LEDpin3_LABEL "LED_RED"                    /*!<@brief Label */
-#define BOARD_INITPINS_LEDpin3_NAME "LEDpin3"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_LEDpin3_DIRECTION kPIN_MUX_DirectionOutput /*!<@brief Direction */
-                                                                  /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_LEDpin3_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_LEDpin3_GPIO_PIN_MASK (1U << 2U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_LEDpin3_PORT 1U                  /*!<@brief PORT device index: 1 */
+#define BOARD_INITPINS_LEDpin3_PIN 2U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_LEDpin3_PIN_MASK (1U << 2U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*! @name PIO0_4 (number 6), BTN_K3
   @{ */
-#define BOARD_INITPINS_BTNpin3_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_BTNpin3_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
-#define BOARD_INITPINS_BTNpin3_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_BTNpin3_GPIO_PIN 4U                       /*!<@brief PIO0 pin index: 4 */
-#define BOARD_INITPINS_BTNpin3_PORT 0U                           /*!<@brief PORT device name: 0U */
-#define BOARD_INITPINS_BTNpin3_PIN 4U                            /*!<@brief 0U pin index: 4 */
-#define BOARD_INITPINS_BTNpin3_CHANNEL 4                         /*!<@brief GPIO PIO0 channel: 4 */
-#define BOARD_INITPINS_BTNpin3_PIN_NAME PIO0_4                   /*!<@brief Pin name */
-#define BOARD_INITPINS_BTNpin3_LABEL "BTN_K3"                    /*!<@brief Label */
-#define BOARD_INITPINS_BTNpin3_NAME "BTNpin3"                    /*!<@brief Identifier name */
-#define BOARD_INITPINS_BTNpin3_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
-                                                                 /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_BTNpin3_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_BTNpin3_GPIO_PIN_MASK (1U << 4U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_BTNpin3_PORT 0U                  /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_BTNpin3_PIN 4U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTNpin3_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*! @name PIO0_12 (number 4), BTN_K1
   @{ */
-#define BOARD_INITPINS_BTNpin1_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_BTNpin1_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
-#define BOARD_INITPINS_BTNpin1_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_BTNpin1_GPIO_PIN 12U                      /*!<@brief PIO0 pin index: 12 */
-#define BOARD_INITPINS_BTNpin1_PORT 0U                           /*!<@brief PORT device name: 0U */
-#define BOARD_INITPINS_BTNpin1_PIN 12U                           /*!<@brief 0U pin index: 12 */
-#define BOARD_INITPINS_BTNpin1_CHANNEL 12                        /*!<@brief GPIO PIO0 channel: 12 */
-#define BOARD_INITPINS_BTNpin1_PIN_NAME PIO0_12                  /*!<@brief Pin name */
-#define BOARD_INITPINS_BTNpin1_LABEL "BTN_K1"                    /*!<@brief Label */
-#define BOARD_INITPINS_BTNpin1_NAME "BTNpin1"                    /*!<@brief Identifier name */
-#define BOARD_INITPINS_BTNpin1_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
-                                                                 /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_BTNpin1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_BTNpin1_GPIO_PIN_MASK (1U << 12U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_BTNpin1_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_BTNpin1_PIN 12U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTNpin1_PIN_MASK (1U << 12U)      /*!<@brief PORT pin mask */
+                                                         /* @} */
 
 /*! @name PIO0_16 (number 15), MAG_HH
   @{ */
-#define BOARD_INITPINS_MAG_HH_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_MAG_HH_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
-#define BOARD_INITPINS_MAG_HH_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_MAG_HH_GPIO_PIN 16U                      /*!<@brief PIO0 pin index: 16 */
-#define BOARD_INITPINS_MAG_HH_PORT 0U                           /*!<@brief PORT device name: 0U */
-#define BOARD_INITPINS_MAG_HH_PIN 16U                           /*!<@brief 0U pin index: 16 */
-#define BOARD_INITPINS_MAG_HH_CHANNEL 16                        /*!<@brief GPIO PIO0 channel: 16 */
-#define BOARD_INITPINS_MAG_HH_PIN_NAME PIO0_16                  /*!<@brief Pin name */
-#define BOARD_INITPINS_MAG_HH_LABEL "MAG_HH"                    /*!<@brief Label */
-#define BOARD_INITPINS_MAG_HH_NAME "MAG_HH"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_MAG_HH_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
-                                                                /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_MAG_HH_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG_HH_GPIO_PIN_MASK (1U << 16U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG_HH_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG_HH_PIN 16U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG_HH_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*! @name PIO0_17 (number 48), MAG_MM
   @{ */
-#define BOARD_INITPINS_MAG_MM_PERIPHERAL GPIO                   /*!<@brief Device name: GPIO */
-#define BOARD_INITPINS_MAG_MM_SIGNAL PIO0                       /*!<@brief GPIO signal: PIO0 */
-#define BOARD_INITPINS_MAG_MM_GPIO GPIO                         /*!<@brief GPIO device name: GPIO */
-#define BOARD_INITPINS_MAG_MM_GPIO_PIN 17U                      /*!<@brief PIO0 pin index: 17 */
-#define BOARD_INITPINS_MAG_MM_PORT 0U                           /*!<@brief PORT device name: 0U */
-#define BOARD_INITPINS_MAG_MM_PIN 17U                           /*!<@brief 0U pin index: 17 */
-#define BOARD_INITPINS_MAG_MM_CHANNEL 17                        /*!<@brief GPIO PIO0 channel: 17 */
-#define BOARD_INITPINS_MAG_MM_PIN_NAME PIO0_17                  /*!<@brief Pin name */
-#define BOARD_INITPINS_MAG_MM_LABEL "MAG_MM"                    /*!<@brief Label */
-#define BOARD_INITPINS_MAG_MM_NAME "MAG_MM"                     /*!<@brief Identifier name */
-#define BOARD_INITPINS_MAG_MM_DIRECTION kPIN_MUX_DirectionInput /*!<@brief Direction */
-                                                                /* @} */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_MAG_MM_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG_MM_GPIO_PIN_MASK (1U << 17U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG_MM_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG_MM_PIN 17U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG_MM_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
+                                                        /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

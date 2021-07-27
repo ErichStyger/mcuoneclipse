@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC845" version="1.6" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6.xsd" uuid="c6968bd5-4da2-443a-beb4-314df11a8c82" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC845" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_10 http://mcuxpresso.nxp.com/XSD/mex_configuration_10.xsd" uuid="c6968bd5-4da2-443a-beb4-314df11a8c82" version="10" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_10" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC845</processor>
       <package>LPC845M301JBD48</package>
-      <board></board>
       <mcu_data>ksdk2_0</mcu_data>
       <cores selected="core0">
          <core name="Cortex-M0P" id="core0" description="M0P core"/>
@@ -14,15 +13,16 @@
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <update_include_paths>true</update_include_paths>
    </preferences>
    <tools>
-      <pins name="Pins" version="6.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="10.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>6.0.1</processor_version>
+            <processor_version>10.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="14" pin_signal="PIO1_1/CAPT_X2" label="LED_BLUE" identifier="LEDpin2"/>
                <pin_label pin_num="11" pin_signal="PIO1_0/CAPT_X1" label="LED_GREEN" identifier="LEDpin1"/>
@@ -44,12 +44,22 @@
                   <enableClock>true</enableClock>
                </options>
                <dependencies>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins.BOARD_InitPins">
+                  <dependency resourceType="Peripheral" resourceId="USART0" description="Peripheral USART0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.swm" description="Pins initialization requires the SWM Driver in the project." problem_level="2" source="Pins.BOARD_InitPins">
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_gpio" description="Pins initialization requires the LPC_GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.swm" description="Pins initialization requires the SWM Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -103,13 +113,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="6.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="8.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>6.0.1</processor_version>
+            <processor_version>10.0.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN">
@@ -135,8 +145,10 @@
                <clock_sources/>
                <clock_outputs>
                   <clock_output id="FROHF_clock.outFreq" value="30 MHz" locked="false" accuracy=""/>
+                  <clock_output id="LowPower_clock.outFreq" value="10 kHz" locked="false" accuracy=""/>
                   <clock_output id="SYSPLL_clock.outFreq" value="15 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="15 MHz" locked="false" accuracy=""/>
+                  <clock_output id="divto750k_clock.outFreq" value="750 kHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings/>
                <called_from_default_init>true</called_from_default_init>
@@ -158,13 +170,11 @@
          <functional_groups/>
          <components/>
       </periphs>
-      <tee name="TEE" version="1.0" enabled="false" update_project_code="true">
+      <tee name="TEE" version="4.0" enabled="false" update_project_code="true">
          <generated_project_files/>
          <tee_profile>
             <processor_version>N/A</processor_version>
          </tee_profile>
-         <global_options/>
-         <user_memory_regions/>
       </tee>
    </tools>
 </configuration>

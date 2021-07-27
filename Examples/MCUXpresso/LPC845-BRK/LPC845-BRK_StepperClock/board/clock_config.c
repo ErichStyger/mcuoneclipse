@@ -10,11 +10,11 @@
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v6.0
+product: Clocks v8.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 6.0.1
+processor_version: 10.0.0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 #include "fsl_power.h"
@@ -48,8 +48,10 @@ name: BOARD_BootClockRUN
 called_from_default_init: true
 outputs:
 - {id: FROHF_clock.outFreq, value: 30 MHz}
+- {id: LowPower_clock.outFreq, value: 10 kHz}
 - {id: SYSPLL_clock.outFreq, value: 15 MHz}
 - {id: System_clock.outFreq, value: 15 MHz}
+- {id: divto750k_clock.outFreq, value: 750 kHz}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /*******************************************************************************
