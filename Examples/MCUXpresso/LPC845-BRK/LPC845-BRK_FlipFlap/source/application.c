@@ -61,7 +61,7 @@ static void AppTask(void *pv) {
   TIMEREC time;
 
   PL_InitFromTask();
-  SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK StepperClock *\r\n***************************\r\n");
+  SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
 #if PL_CONFIG_USE_STEPPER
   (void)STEPPER_ZeroHourHand();
   (void)STEPPER_ZeroMinuteHand();
