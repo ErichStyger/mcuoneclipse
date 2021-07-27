@@ -9,6 +9,8 @@
 #if PL_CONFIG_USE_STEPPER
 #include "stepper.h"
 #include "McuULN2003.h"
+#include "McuRTOS.h"
+#include "McuUtility.h"
 #include "magnets.h"
 
 static McuULN2003_Handle_t motorMinute;
