@@ -19,7 +19,7 @@ static McuULN2003_Handle_t motorHour;
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS   1
 #define STEPPER_CLOCK_360_STEPS_HH   (385u) /* number of steps for a full turn on the clock for the hours */
-#define STEPPER_CLOCK_360_STEPS_MM   (385u) /* number of steps for a full turn on the clock for the minutes */
+#define STEPPER_CLOCK_360_STEPS_MM   (520u) /* number of steps for a full turn */
 
 #define STEPPER_CLOCK_HH_ZERO_OFFSET (13)   /* offset from the zero position */
 #define STEPPER_CLOCK_MM_ZERO_OFFSET (8)   /* offset from the zero position */

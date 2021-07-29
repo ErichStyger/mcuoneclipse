@@ -21,7 +21,7 @@
   #include "magnets.h"
 #endif
 
-static bool clockIsOn = true;
+static bool clockIsOn = false;
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"app", (unsigned char*)"\r\n", io->stdOut);
@@ -62,10 +62,8 @@ static void AppTask(void *pv) {
 
   PL_InitFromTask();
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
-#if PL_CONFIG_USE_STEPPER
-  (void)STEPPER_ZeroHourHand();
+  //(void)STEPPER_ZeroHourHand();
   (void)STEPPER_ZeroMinuteHand();
-#endif
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(200));
     if (clockIsOn) {
