@@ -53,17 +53,38 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
-static void AppTask(void *pv) {
 #if PL_CONFIG_USE_HALL_SENSOR
-  bool mmMag, hhMag;
+static void SensorTask(void *pv) {
+  bool mmMag;
+  int32_t pos, prevPos = -1;
+  uint8_t buf[32];
+
+  for(;;) {
+    mmMag = MAG_TriggeredMM();
+    if (mmMag) {
+      pos = STEPPER_GetPos();
+      if (pos!=prevPos) {
+        prevPos = pos;
+        McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos:");
+        McuUtility_strcatNum32s(buf, sizeof(buf), pos%512);
+        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
+        SHELL_SendString(buf);
+      }
+    }
+    vTaskDelay(pdMS_TO_TICKS(10));
+  } /* for */
+}
 #endif
+
+static void AppTask(void *pv) {
   uint8_t oldHH=-1, oldMM = -1;
   TIMEREC time;
 
-  PL_InitFromTask();
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
   //(void)STEPPER_ZeroHourHand();
   (void)STEPPER_ZeroMinuteHand();
+  vTaskDelay(pdMS_TO_TICKS(1000)); /* wait initializing external RTC below in PL_InitFromTask(), because it needs time to power up */
+  PL_InitFromTask();
   for(;;) {
     vTaskDelay(pdMS_TO_TICKS(200));
     if (clockIsOn) {
@@ -76,27 +97,6 @@ static void AppTask(void *pv) {
         oldMM = time.Min;
       }
     }
-  #if PL_CONFIG_USE_HALL_SENSOR
-    mmMag = MAG_TriggeredHH();
-    hhMag = MAG_TriggeredMM();
-    if (mmMag) {
-      McuLED_Toggle(LEDS_Red);
-    } else {
-      McuLED_Off(LEDS_Red);
-    }
-    if (hhMag) {
-      McuLED_Toggle(LEDS_Blue);
-    } else {
-      McuLED_Off(LEDS_Blue);
-    }
-    if (!mmMag && !hhMag) {
-      McuLED_Toggle(LEDS_Green);
-    } else {
-      McuLED_Off(LEDS_Green);
-    }
-  #else
-    McuLED_Toggle(LEDS_Green);
-  #endif
   }
 }
 
@@ -112,6 +112,18 @@ void APP_Run(void) {
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
+#if PL_CONFIG_USE_HALL_SENSOR
+  if (xTaskCreate(
+      SensorTask,  /* pointer to the task */
+      "Sensor", /* task name for kernel awareness debugging */
+      600/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS) {
+     for(;;){} /* error! probably out of memory */
+  }
+#endif
   vTaskStartScheduler();
   for(;;) { /* should not get here */ }
 }

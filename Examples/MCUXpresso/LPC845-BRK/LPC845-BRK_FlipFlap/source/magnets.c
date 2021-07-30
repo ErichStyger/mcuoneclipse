@@ -73,18 +73,20 @@ void MAG_Init(void) {
   McuGPIO_Config_t gpioConfig;
 
   McuGPIO_GetDefaultConfig(&gpioConfig);
-  /* internal pull-ups are enabled in Pins Tool */
+
   gpioConfig.hw.gpio = MAG_HH_GPIO;
   gpioConfig.hw.port = MAG_HH_PORT;
   gpioConfig.hw.pin = MAG_HH_PIN;
   gpioConfig.isInput = true;
   MAG_HHpin = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_HHpin, McuGPIO_PULL_UP);
 
   gpioConfig.hw.gpio = MAG_MM_GPIO;
   gpioConfig.hw.port = MAG_MM_PORT;
   gpioConfig.hw.pin = MAG_MM_PIN;
   gpioConfig.isInput = true;
   MAG_MMpin = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_MMpin, McuGPIO_PULL_UP);
 }
 
 #endif /* PL_CONFIG_USE_HALL_SENSOR */

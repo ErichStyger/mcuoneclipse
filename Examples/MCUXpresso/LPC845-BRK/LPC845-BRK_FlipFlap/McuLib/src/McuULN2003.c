@@ -25,7 +25,7 @@ typedef struct {
 } McuULN2003_Motor_t;
 
 #define McuULN2003_NOF_STEPS_HALF_STEP_MODE    (8)
-#define McuULN2003_DELAY_HALF_STEP_MODE()      McuWait_WaitOSms(1)
+#define McuULN2003_DELAY_HALF_STEP_MODE()      McuWait_WaitOSms(2)
 
 #define McuULN2003_NOF_STEPS_FULL_STEP_MODE    (4)
 #define McuULN2003_DELAY_FULL_STEP_MODE()      McuWait_WaitOSms(2)

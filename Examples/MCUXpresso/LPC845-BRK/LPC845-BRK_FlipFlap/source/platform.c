@@ -28,10 +28,6 @@
   #include "buttons.h"
 #endif
 #include "Shell.h"
-//#include "i2clib.h"
-//#include "McuULN2003.h"
-//#include "stepper.h"
-//#include "magnets.h"
 
 void PL_InitFromTask(void) {
   (void)McuTimeDate_Init(); /* uses I2C */
@@ -61,7 +57,7 @@ void PL_Init(void) {
 #elif PL_CONFIG_USE_I2C
   McuGenericSWI2C_Init();
 #endif
-#if PL_HAS_EXT_I2C_RTC
+#if PL_CONFIG_USE_EXT_I2C_RTC
   McuExtRTC_Init();
 #endif
 #if PL_CONFIG_USE_EXT_EEPROM
