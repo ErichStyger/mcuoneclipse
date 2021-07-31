@@ -62,7 +62,8 @@ static void SensorTask(void *pv) {
   for(;;) {
     mmMag = MAG_TriggeredMM();
     if (mmMag) {
-      pos = STEPPER_GetPos();
+#if PL_CONFIG_USE_STEPPER
+     pos = STEPPER_GetPos();
       if (pos!=prevPos) {
         prevPos = pos;
         McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos:");
@@ -70,6 +71,7 @@ static void SensorTask(void *pv) {
         McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
         SHELL_SendString(buf);
       }
+#endif
     }
     vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
@@ -81,8 +83,10 @@ static void AppTask(void *pv) {
   TIMEREC time;
 
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
+#if PL_CONFIG_USE_STEPPER
   //(void)STEPPER_ZeroHourHand();
   (void)STEPPER_ZeroMinuteHand();
+#endif
   vTaskDelay(pdMS_TO_TICKS(1000)); /* wait initializing external RTC below in PL_InitFromTask(), because it needs time to power up */
   PL_InitFromTask();
   for(;;) {
