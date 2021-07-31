@@ -15,7 +15,8 @@
 
 static const char STEPPER_flapChars[STEPPER_NOF_FLAPS] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?."; /* chars on the flaps */
 static McuULN2003_Handle_t motorHandles[STEPPER_CONFIG_NOF_STEPPER]; /* list of motor handles */
-static int32_t motorTargetPos[STEPPER_CONFIG_NOF_STEPPER]; /* target position for each motor, processed by timer */
+static int32_t motorMoveSteps[STEPPER_CONFIG_NOF_STEPPER]; /* number of steps to be performed, processed by timer */
+#if PL_CONFIG_USE_HALL_SENSOR
 static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset from the zero position */
   #if STEPPER_CONFIG_NOF_STEPPER>=1
     12,
@@ -24,11 +25,12 @@ static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset 
     12,
   #endif
 };
+#endif
 
 static TimerHandle_t timerHndl;
 #define TIMER_PERIOD_MS   1
 
-typedef struct {
+typedef struct StepperMover_t {
   int32_t targetPos;
   uint32_t delayMs;
   McuULN2003_Handle_t motor;
@@ -36,20 +38,42 @@ typedef struct {
 
 static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
-  uint32_t finished = 0;
-  uint32_t bit = 1;
-  uint32_t allBits = 0;
+  bool finished = true; /* gets reset if not finished */
+  bool finishedStep;
 
   for(int i=0; i<STEPPER_CONFIG_NOF_STEPPER; i++) {
-    if (McuULN2003_MoveCallback(motorHandles[i], motorTargetPos[i])) {
-      finished |= bit;
-      bit <<= 1;
+    if (motorMoveSteps[i]>0) {
+      finishedStep =  McuULN2003_StepCallback(motorHandles[i], true);
+      if (finishedStep) {
+        motorMoveSteps[i]--;
+      }
     }
-    allBits <<= 1;
-    allBits |= 1;
-  }
-  if ((finished & allBits) == allBits) { /* all bits set, all finished moving */
+    if (motorMoveSteps[i]>0) { /* not finished yet? */
+      finished = false;
+    }
+  } /* for */
+  if (finished) { /* all finished moving */
     (void)xTimerStop(timerHndl, 0);
+    /* normalize positions */
+    for(int i=0; i<STEPPER_CONFIG_NOF_STEPPER; i++) {
+      McuULN2003_Handle_t motor = motorHandles[i];
+      McuULN2003_SetPos(motor, McuULN2003_GetPos(motor)%STEPPER_360_STEPS);
+      McuULN2003_PowerOff(motor);
+    }
+  }
+}
+
+static void STEPPER_SetTargetPos(uint8_t motorIdx, int32_t targetPos) {
+  int32_t currPos;
+
+  targetPos %= STEPPER_360_STEPS;
+  currPos = STEPPER_GetPos(motorIdx);
+  currPos %= STEPPER_360_STEPS;
+  McuULN2003_SetPos(motorHandles[motorIdx], currPos);
+  if (targetPos>=currPos) {
+    motorMoveSteps[motorIdx] = targetPos-currPos;
+  } else {
+    motorMoveSteps[motorIdx] = STEPPER_360_STEPS-(currPos-targetPos);
   }
 }
 
@@ -64,16 +88,16 @@ void STEPPER_Deint(void) {
 }
 
 uint8_t STEPPER_ZeroPosition(uint8_t motorIndex) {
-  int i;
   uint8_t res = ERR_FAILED;
 
-  while(MAG_TriggeredMM()) {
+#if PL_CONFIG_USE_HALL_SENSOR
+  while(MAG_Triggered(motorIndex)) {
     McuULN2003_IncStep(motorHandles[motorIndex]);
   }
   McuULN2003_Step(motorHandles[motorIndex], STEPPER_360_STEPS/3);
-  for(i=0; i<STEPPER_360_STEPS+(STEPPER_360_STEPS/50); i++) {
+  for(int i=0; i<STEPPER_360_STEPS+(STEPPER_360_STEPS/50); i++) {
     McuULN2003_IncStep(motorHandles[motorIndex]);
-    if (MAG_TriggeredMM()) {
+    if (MAG_Triggered(motorIndex)) {
       McuULN2003_Step(motorHandles[motorIndex], motorZeroOffsets[motorIndex]);
       McuULN2003_SetPos(motorHandles[motorIndex], 0);
       res = ERR_OK;
@@ -81,6 +105,7 @@ uint8_t STEPPER_ZeroPosition(uint8_t motorIndex) {
     }
   }
   McuULN2003_PowerOff(motorHandles[motorIndex]);
+#endif
   return res;
 }
 
@@ -112,27 +137,25 @@ static uint8_t STEPPER_ShowChar(uint8_t motorIndex, unsigned char ch) {
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[64];
-  int32_t val, pos;
+  unsigned char statusBuf[16];
 
   McuShell_SendStatusStr((unsigned char*)"stepper", (unsigned char*)"\r\n", io->stdOut);
-
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"#: ");
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"");
   McuUtility_strcatNum32s(buf, sizeof(buf), STEPPER_360_STEPS);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" steps\r\n");
   McuShell_SendStatusStr((unsigned char*)"  360 degree", buf, io->stdOut);
 
   for(int motorIndex=0; motorIndex<STEPPER_CONFIG_NOF_STEPPER; motorIndex++) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"curr pos: ");
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"curr: ");
     McuUtility_strcatNum32s(buf, sizeof(buf), McuULN2003_GetPos(motorHandles[motorIndex]));
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", goto pos: ");
-    McuUtility_strcatNum32s(buf, sizeof(buf), motorTargetPos[motorIndex]);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    McuShell_SendStatusStr((unsigned char*)"  pos", buf, io->stdOut);
-
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"step mode: 1/");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", move: ");
+    McuUtility_strcatNum32s(buf, sizeof(buf), motorMoveSteps[motorIndex]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", step: 1/");
     McuUtility_strcatNum32s(buf, sizeof(buf), McuULN2003_GetStepMode(motorHandles[motorIndex]));
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-    McuShell_SendStatusStr((unsigned char*)"  motor", buf, io->stdOut);
+    McuUtility_strcpy(statusBuf, sizeof(statusBuf), (unsigned char*)"  motor ");
+    McuUtility_strcatNum8u(statusBuf, sizeof(statusBuf), motorIndex);
+    McuShell_SendStatusStr(statusBuf, buf, io->stdOut);
   }
   return ERR_OK;
 }
@@ -142,7 +165,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  reset <m>", (unsigned char*)"Set stepper position info to zero\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  step <m> <steps>", (unsigned char*)"perform a number of incremental steps for motor (0, ...)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  goto <m> <pos>", (unsigned char*)"background goto position for for motor (0, ...)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  goto <m> <pos>", (unsigned char*)"background goto position motor (0, ...)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  char <m> <ch>", (unsigned char*)"show character on motor (0, ...)\r\n", io->stdOut);
 #if PL_CONFIG_USE_HALL_SENSOR
   McuShell_SendHelpStr((unsigned char*)"  zero <m>", (unsigned char*)"Move hour or minute to zero position\r\n", io->stdOut);
@@ -153,7 +176,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
   uint8_t res = ERR_OK;
-  int32_t val;
+  int32_t motorIdx;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "stepper help")==0) {
     *handled = TRUE;
@@ -164,11 +187,11 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if (McuUtility_strncmp((char*)cmd, "stepper reset ", sizeof("stepper reset ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("stepper reset ")-1;
-    if (McuUtility_xatoi(&p, &val)==ERR_OK) {
-      if (val>=STEPPER_CONFIG_NOF_STEPPER) {
+    if (McuUtility_xatoi(&p, &motorIdx)==ERR_OK) {
+      if (motorIdx>=STEPPER_CONFIG_NOF_STEPPER) {
         return ERR_FAILED;
       }
-      McuULN2003_SetPos(motorHandles[val], 0);
+      McuULN2003_SetPos(motorHandles[motorIdx], 0);
     } else {
       return ERR_FAILED;
     }
@@ -177,7 +200,14 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if (McuUtility_strncmp((char*)cmd, "stepper zero ", sizeof("stepper zero ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("stepper zero ")-1;
-    res = STEPPER_ZeroHourHand();
+    if (McuUtility_xatoi(&p, &motorIdx)==ERR_OK) {
+      if (motorIdx>=STEPPER_CONFIG_NOF_STEPPER) {
+        return ERR_FAILED;
+      }
+    } else {
+      return ERR_FAILED;
+    }
+    res = STEPPER_ZeroPosition(motorIdx);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"failed to find zero position\r\n", io->stdErr);
     }
@@ -185,61 +215,54 @@ uint8_t STEPPER_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if (McuUtility_strncmp((char*)cmd, "stepper char ", sizeof("stepper char ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("stepper char ")-1;
-    if (McuUtility_xatoi(&p, &val)==ERR_OK) {
-      if (val>=STEPPER_CONFIG_NOF_STEPPER) {
+    if (McuUtility_xatoi(&p, &motorIdx)==ERR_OK) {
+      if (motorIdx>=STEPPER_CONFIG_NOF_STEPPER) {
         return ERR_FAILED;
       }
       if (*p==' ') {
         p++; /* skip space */
       }
-      return STEPPER_ShowChar(val, *p);
+      return STEPPER_ShowChar(motorIdx, *p);
     } else {
       return ERR_FAILED;
     }
   } else if (McuUtility_strncmp((char*)cmd, "stepper step ", sizeof("stepper step ")-1)==0) {
-    McuULN2003_Handle_t motor = NULL;
     int32_t steps;
 
     p = cmd + sizeof("stepper step ")-1;
-    if (McuUtility_xatoi(&p, &val)==ERR_OK) {
-      if (val>=STEPPER_CONFIG_NOF_STEPPER) {
+    if (McuUtility_xatoi(&p, &motorIdx)==ERR_OK) {
+      if (motorIdx>=STEPPER_CONFIG_NOF_STEPPER) {
         return ERR_FAILED;
       }
     } else {
       return ERR_FAILED;
     }
-    if (*p=='h') {
-      motor = motorHour;
-    } else if (*p=='m') {
-      motor = motorMinute;
-    } else {
-      return ERR_FAILED;
-    }
     p++;
     if (McuUtility_xatoi(&p, &steps)==ERR_OK) {
-      McuULN2003_Step(motor, steps);
-      McuULN2003_PowerOff(motor);
+      McuULN2003_Step(motorHandles[motorIdx], steps);
+      McuULN2003_PowerOff(motorHandles[motorIdx]);
     }
     *handled = TRUE;
     return ERR_OK;
   } else if (McuUtility_strncmp((char*)cmd, "stepper goto ", sizeof("stepper goto ")-1)==0) {
-    int32_t *posP = NULL;
     int32_t pos;
 
+    *handled = TRUE;
     p = cmd + sizeof("stepper goto ")-1;
-    if (*p=='h') {
-      posP = &targetPosHour;
-    } else if (*p=='s') {
-      posP = &targetPosMinute;
+    if (McuUtility_xatoi(&p, &motorIdx)==ERR_OK) {
+      if (motorIdx>=STEPPER_CONFIG_NOF_STEPPER) {
+        return ERR_FAILED;
+      }
     } else {
       return ERR_FAILED;
     }
     p++;
-    if (McuUtility_xatoi(&p, &pos)==ERR_OK) {
-      *posP = pos;
+    if (McuUtility_xatoi(&p, &pos)==ERR_OK && pos>=0) {
+      STEPPER_SetTargetPos(motorIdx, pos);
       (void)xTimerStart(timerHndl, 0);
+    } else {
+      return ERR_FAILED;
     }
-    *handled = TRUE;
     return ERR_OK;
   }
   return res;
@@ -253,18 +276,22 @@ void STEPPER_Init(void) {
   config.hw[0].gpio = GPIO;
   config.hw[0].port = 0U;
   config.hw[0].pin = 29U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_29;
 
   config.hw[1].gpio = GPIO;
   config.hw[1].port = 0U;
   config.hw[1].pin = 28U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_28;
 
   config.hw[2].gpio = GPIO;
   config.hw[2].port = 0U;
   config.hw[2].pin = 27U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_27;
 
   config.hw[3].gpio = GPIO;
   config.hw[3].port = 0U;
   config.hw[3].pin = 26U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_26;
 //  config.stepMode = McuULN2003_STEP_MODE_FULL;
   motorHandles[0] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[0]);
@@ -274,19 +301,22 @@ void STEPPER_Init(void) {
   config.hw[0].gpio = GPIO;
   config.hw[0].port = 0U;
   config.hw[0].pin = 23U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_23;
 
   config.hw[1].gpio = GPIO;
   config.hw[1].port = 0U;
   config.hw[1].pin = 22U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_22;
 
   config.hw[2].gpio = GPIO;
   config.hw[2].port = 0U;
   config.hw[2].pin = 21U;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_21;
 
   config.hw[3].gpio = GPIO;
   config.hw[3].port = 0U;
   config.hw[3].pin = 20U;
-  config.inverted = true;
+  config.hw[0].iocon = IOCON_INDEX_PIO0_20;
 //  config.stepMode = McuULN2003_STEP_MODE_FULL;
   motorHandles[1] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[1]);

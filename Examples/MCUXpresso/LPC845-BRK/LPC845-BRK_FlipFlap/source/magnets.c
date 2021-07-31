@@ -11,39 +11,41 @@
 #include "McuGPIO.h"
 #include "McuUtility.h"
 
-/* sensor for hour */
-#define MAG_HH_GPIO       GPIO
-#define MAG_HH_PORT       0U
-#define MAG_HH_PIN        16U
+#if MAG_CONFIG_NOF_MAGNETS>=1
+/* sensor for motor 0 */
+#define MAG_MOTOR0_GPIO       GPIO
+#define MAG_MOTOR0_PORT       0U
+#define MAG_MOTOR0_PIN        17U
+#define MAG_MOTOR0_IOCON      IOCON_INDEX_PIO0_17
+#endif
 
-/* sensor for minute */
-#define MAG_MM_GPIO       GPIO
-#define MAG_MM_PORT       0U
-#define MAG_MM_PIN        17U
+#if MAG_CONFIG_NOF_MAGNETS>=2
+/* sensor for motor 1 */
+#define MAG_MOTOR1_GPIO       GPIO
+#define MAG_MOTOR1_PORT       0U
+#define MAG_MOTOR1_PIN        16U
+#define MAG_MOTOR1_IOCON      IOCON_INDEX_PIO0_16
+#endif
 
-static McuGPIO_Handle_t MAG_HHpin, MAG_MMpin;
+static McuGPIO_Handle_t MAG_MagnetPins[MAG_CONFIG_NOF_MAGNETS];
 
-bool MAG_TriggeredHH(void) {
-  return McuGPIO_IsLow(MAG_HHpin);
-}
-
-bool MAG_TriggeredMM(void) {
-  return McuGPIO_IsLow(MAG_MMpin);
+bool MAG_Triggered(uint8_t magnetIdx) {
+  return McuGPIO_IsLow(MAG_MagnetPins[magnetIdx]);
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[64];
+  unsigned char statusBuf[16];
 
   McuShell_SendStatusStr((unsigned char*)"mag", (unsigned char*)"\r\n", io->stdOut);
 
-  McuGPIO_GetPinStatusString(MAG_HHpin, buf, sizeof(buf));
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  HH", buf, io->stdOut);
-
-  McuGPIO_GetPinStatusString(MAG_MMpin, buf, sizeof(buf));
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  MM", buf, io->stdOut);
-
+  for(int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
+    McuGPIO_GetPinStatusString(MAG_MagnetPins[i], buf, sizeof(buf));
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    McuUtility_strcpy(statusBuf, sizeof(statusBuf), (unsigned char*)"  mag ");
+    McuUtility_strcatNum8u(statusBuf, sizeof(statusBuf), i);
+    McuShell_SendStatusStr(statusBuf, buf, io->stdOut);
+  }
   return ERR_OK;
 }
 
@@ -65,28 +67,34 @@ uint8_t MAG_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 }
 
 void MAG_Deinit(void) {
-  MAG_HHpin = McuGPIO_DeinitGPIO(MAG_HHpin);
-  MAG_MMpin = McuGPIO_DeinitGPIO(MAG_MMpin);
+  for(int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
+    MAG_MagnetPins[i] = McuGPIO_DeinitGPIO(MAG_MagnetPins[i]);
+  }
 }
 
 void MAG_Init(void) {
   McuGPIO_Config_t gpioConfig;
 
   McuGPIO_GetDefaultConfig(&gpioConfig);
-
-  gpioConfig.hw.gpio = MAG_HH_GPIO;
-  gpioConfig.hw.port = MAG_HH_PORT;
-  gpioConfig.hw.pin = MAG_HH_PIN;
+#if MAG_CONFIG_NOF_MAGNETS>=1
+  gpioConfig.hw.gpio = MAG_MOTOR0_GPIO;
+  gpioConfig.hw.port = MAG_MOTOR0_PORT;
+  gpioConfig.hw.pin = MAG_MOTOR0_PIN;
+  gpioConfig.hw.iocon = MAG_MOTOR0_IOCON;
   gpioConfig.isInput = true;
-  MAG_HHpin = McuGPIO_InitGPIO(&gpioConfig);
-  McuGPIO_SetPullResistor(MAG_HHpin, McuGPIO_PULL_UP);
+  MAG_MagnetPins[0] = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_MagnetPins[0], McuGPIO_PULL_UP);
+#endif
 
-  gpioConfig.hw.gpio = MAG_MM_GPIO;
-  gpioConfig.hw.port = MAG_MM_PORT;
-  gpioConfig.hw.pin = MAG_MM_PIN;
+#if MAG_CONFIG_NOF_MAGNETS>=2
+  gpioConfig.hw.gpio = MAG_MOTOR1_GPIO;
+  gpioConfig.hw.port = MAG_MOTOR1_PORT;
+  gpioConfig.hw.pin = MAG_MOTOR1_PIN;
+  gpioConfig.hw.iocon = MAG_MOTOR1_IOCON;
   gpioConfig.isInput = true;
-  MAG_MMpin = McuGPIO_InitGPIO(&gpioConfig);
-  McuGPIO_SetPullResistor(MAG_MMpin, McuGPIO_PULL_UP);
+  MAG_MagnetPins[1] = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_MagnetPins[1], McuGPIO_PULL_UP);
+#endif
 }
 
 #endif /* PL_CONFIG_USE_HALL_SENSOR */

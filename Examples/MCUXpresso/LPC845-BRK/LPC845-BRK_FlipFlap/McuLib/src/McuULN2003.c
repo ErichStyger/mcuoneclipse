@@ -217,6 +217,16 @@ static void McuULN2003_TableMakeStep(McuULN2003_Handle_t motor, bool forward) {
   }
 }
 
+bool McuULN2003_StepCallback(McuULN2003_Handle_t motor, bool forward) {
+  McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+  if (forward) {
+    McuULN2003_TableMakeStep(motor, true); /* forward */
+  } else {
+    McuULN2003_TableMakeStep(motor, false); /* backward */
+  }
+  return m->tablePos==0; /* reached position */
+}
+
 bool McuULN2003_MoveCallback(McuULN2003_Handle_t motor, int32_t targetPos) {
   McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
 

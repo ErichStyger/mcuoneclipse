@@ -40,6 +40,7 @@ void McuULN2003_PowerOff(McuULN2003_Handle_t motor);
 void McuULN2003_SetStepMode(McuULN2003_Handle_t motor, McuULN2003_StepMode mode);
 McuULN2003_StepMode McuULN2003_GetStepMode(McuULN2003_Handle_t motor);
 
+bool McuULN2003_StepCallback(McuULN2003_Handle_t motor, bool forward);
 bool McuULN2003_MoveCallback(McuULN2003_Handle_t motor, int32_t targetPos);
 
 void McuULN2003_IncStep(McuULN2003_Handle_t motor);

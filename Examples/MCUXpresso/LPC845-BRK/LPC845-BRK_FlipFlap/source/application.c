@@ -55,24 +55,41 @@ uint8_t APP_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 
 #if PL_CONFIG_USE_HALL_SENSOR
 static void SensorTask(void *pv) {
-  bool mmMag;
-  int32_t pos, prevPos = -1;
-  uint8_t buf[32];
+  struct {
+    bool triggered;
+    int32_t motorPos;
+  } trigger[MAG_CONFIG_NOF_MAGNETS];
+  int32_t prevPos = -1;
+#if MAG_CONFIG_NOF_MAGNETS!=STEPPER_CONFIG_NOF_STEPPER
+  #error "number of magnets have to match number of motors"
+#endif
 
   for(;;) {
-    mmMag = MAG_TriggeredMM();
-    if (mmMag) {
-#if PL_CONFIG_USE_STEPPER
-     pos = STEPPER_GetPos();
-      if (pos!=prevPos) {
-        prevPos = pos;
-        McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos:");
-        McuUtility_strcatNum32s(buf, sizeof(buf), pos%512);
-        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
-        SHELL_SendString(buf);
+    for (int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
+      if (MAG_Triggered(i)) {
+        trigger[i].triggered = true;
+     #if PL_CONFIG_USE_STEPPER
+        trigger[i].motorPos = STEPPER_GetPos(i);
+     #endif
+      } else {
+        trigger[i].triggered = false;
       }
-#endif
-    }
+    } /* for */
+    for (int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
+      if (trigger[i].triggered) {
+  #if PL_CONFIG_USE_STEPPER
+        if (trigger[i].motorPos!=prevPos) {
+          uint8_t buf[32];
+
+          prevPos = trigger[i].motorPos;
+          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos:");
+          McuUtility_strcatNum32s(buf, sizeof(buf), trigger[i].motorPos);
+          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
+          SHELL_SendString(buf);
+        }
+  #endif
+      }
+    } /* for */
     vTaskDelay(pdMS_TO_TICKS(10));
   } /* for */
 }
@@ -84,8 +101,9 @@ static void AppTask(void *pv) {
 
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
 #if PL_CONFIG_USE_STEPPER
-  //(void)STEPPER_ZeroHourHand();
-  (void)STEPPER_ZeroMinuteHand();
+  for(int i=0; i<STEPPER_CONFIG_NOF_STEPPER; i++) {
+    (void)STEPPER_ZeroPosition(i);
+  }
 #endif
   vTaskDelay(pdMS_TO_TICKS(1000)); /* wait initializing external RTC below in PL_InitFromTask(), because it needs time to power up */
   PL_InitFromTask();
@@ -95,7 +113,7 @@ static void AppTask(void *pv) {
       McuTimeDate_GetTime(&time);
       if (time.Hour!=oldHH || time.Min != oldMM) {
 #if PL_CONFIG_USE_STEPPER
-        STEPPER_ShowTime(time.Hour, time.Min);
+        //STEPPER_ShowTime(time.Hour, time.Min);
 #endif
         oldHH = time.Hour;
         oldMM = time.Min;
