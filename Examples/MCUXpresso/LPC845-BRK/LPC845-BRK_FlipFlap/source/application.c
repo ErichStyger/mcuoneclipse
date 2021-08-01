@@ -100,7 +100,7 @@ static void AppTask(void *pv) {
   TIMEREC time;
 
   SHELL_SendString((unsigned char*)"\r\n***************************\r\n* LPC845-BRK FlipFlap     *\r\n***************************\r\n");
-#if PL_CONFIG_USE_STEPPER
+#if 0 && PL_CONFIG_USE_STEPPER
   for(int i=0; i<STEPPER_CONFIG_NOF_STEPPER; i++) {
     (void)STEPPER_ZeroPosition(i);
   }

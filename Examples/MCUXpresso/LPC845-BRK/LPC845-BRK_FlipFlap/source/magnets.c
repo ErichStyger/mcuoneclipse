@@ -15,16 +15,32 @@
 /* sensor for motor 0 */
 #define MAG_MOTOR0_GPIO       GPIO
 #define MAG_MOTOR0_PORT       0U
-#define MAG_MOTOR0_PIN        17U
-#define MAG_MOTOR0_IOCON      IOCON_INDEX_PIO0_17
+#define MAG_MOTOR0_PIN        19U
+#define MAG_MOTOR0_IOCON      IOCON_INDEX_PIO0_19
 #endif
 
 #if MAG_CONFIG_NOF_MAGNETS>=2
 /* sensor for motor 1 */
 #define MAG_MOTOR1_GPIO       GPIO
 #define MAG_MOTOR1_PORT       0U
-#define MAG_MOTOR1_PIN        16U
-#define MAG_MOTOR1_IOCON      IOCON_INDEX_PIO0_16
+#define MAG_MOTOR1_PIN        9U
+#define MAG_MOTOR1_IOCON      IOCON_INDEX_PIO0_9
+#endif
+
+#if MAG_CONFIG_NOF_MAGNETS>=3
+/* sensor for motor 2 */
+#define MAG_MOTOR2_GPIO       GPIO
+#define MAG_MOTOR2_PORT       0U
+#define MAG_MOTOR2_PIN        8U
+#define MAG_MOTOR2_IOCON      IOCON_INDEX_PIO0_8
+#endif
+
+#if MAG_CONFIG_NOF_MAGNETS>=4
+/* sensor for motor 3 */
+#define MAG_MOTOR3_GPIO       GPIO
+#define MAG_MOTOR3_PORT       0U
+#define MAG_MOTOR3_PIN        4U
+#define MAG_MOTOR3_IOCON      IOCON_INDEX_PIO0_4
 #endif
 
 static McuGPIO_Handle_t MAG_MagnetPins[MAG_CONFIG_NOF_MAGNETS];
@@ -94,6 +110,26 @@ void MAG_Init(void) {
   gpioConfig.isInput = true;
   MAG_MagnetPins[1] = McuGPIO_InitGPIO(&gpioConfig);
   McuGPIO_SetPullResistor(MAG_MagnetPins[1], McuGPIO_PULL_UP);
+#endif
+
+#if MAG_CONFIG_NOF_MAGNETS>=3
+  gpioConfig.hw.gpio = MAG_MOTOR2_GPIO;
+  gpioConfig.hw.port = MAG_MOTOR2_PORT;
+  gpioConfig.hw.pin = MAG_MOTOR2_PIN;
+  gpioConfig.hw.iocon = MAG_MOTOR2_IOCON;
+  gpioConfig.isInput = true;
+  MAG_MagnetPins[2] = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_MagnetPins[2], McuGPIO_PULL_UP);
+#endif
+
+#if MAG_CONFIG_NOF_MAGNETS>=4
+  gpioConfig.hw.gpio = MAG_MOTOR3_GPIO;
+  gpioConfig.hw.port = MAG_MOTOR3_PORT;
+  gpioConfig.hw.pin = MAG_MOTOR3_PIN;
+  gpioConfig.hw.iocon = MAG_MOTOR3_IOCON;
+  gpioConfig.isInput = true;
+  MAG_MagnetPins[3] = McuGPIO_InitGPIO(&gpioConfig);
+  McuGPIO_SetPullResistor(MAG_MagnetPins[3], McuGPIO_PULL_UP);
 #endif
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2021, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -27,10 +27,15 @@
 #if PL_CONFIG_USE_BUTTON
   #include "buttons.h"
 #endif
+#include "magnets.h"
+#include "stepper.h"
+#include "McuULN2003.h"
 #include "Shell.h"
 
 void PL_InitFromTask(void) {
+#if PL_CONFIG_USE_TIME_DATE
   (void)McuTimeDate_Init(); /* uses I2C */
+#endif
 }
 
 void PL_Init(void) {
@@ -51,7 +56,9 @@ void PL_Init(void) {
 #endif
   McuShellUart_Init();
 
+#if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
+#endif
 #if PL_CONFIG_USE_I2C && PL_CONFIG_USE_HW_I2C
   I2CLIB_Init();
 #elif PL_CONFIG_USE_I2C

@@ -31,9 +31,15 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_I2C_SPY
   McuI2CSpy_ParseCommand,
 #endif
+#if PL_CONFIG_USE_TIME_DATE
   McuTimeDate_ParseCommand,
+#endif
+#if PL_CONFIG_USE_EXT_I2C_RTC
   McuExtRTC_ParseCommand,
+#endif
+#if PL_CONFIG_USE_EXT_EEPROM
   McuEE24_ParseCommand,
+#endif
 #if PL_CONFIG_USE_STEPPER
   STEPPER_ParseCommand,
 #endif

@@ -38,7 +38,7 @@ Instructions:
 
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845-BRK FlipFlap"
+#define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845-BRK SplitFlap"
 #define McuShell_MULTI_CMD_ENABLED          (0)
 #define McuShellUart_CONFIG_UART            McuShellUart_CONFIG_UART_LPC845_USART0
 /* ------------------- I2C ---------------------------*/

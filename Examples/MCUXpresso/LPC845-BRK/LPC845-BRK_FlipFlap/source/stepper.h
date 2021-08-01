@@ -8,7 +8,9 @@
 #ifndef STEPPER_H_
 #define STEPPER_H_
 
-#define STEPPER_CONFIG_NOF_STEPPER   (1)
+#include "platform.h"
+
+#define STEPPER_CONFIG_NOF_STEPPER   (PL_CONFIG_NOF_UNITS)
 
 #define STEPPER_360_STEPS            (512u) /* number of steps for a full turn */
 

@@ -9,8 +9,9 @@
 #define MAGNETS_H_
 
 #include <stdbool.h>
+#include "platform.h"
 
-#define MAG_CONFIG_NOF_MAGNETS   (1) /* number of magnets */
+#define MAG_CONFIG_NOF_MAGNETS   (PL_CONFIG_NOF_UNITS) /* number of magnets */
 
 #include "McuShell.h"
 uint8_t MAG_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
