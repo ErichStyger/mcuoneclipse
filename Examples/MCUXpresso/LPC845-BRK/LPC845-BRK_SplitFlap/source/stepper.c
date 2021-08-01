@@ -114,7 +114,7 @@ static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset 
 #endif
 
 static TimerHandle_t timerHndl;
-#define TIMER_PERIOD_MS   1
+#define TIMER_PERIOD_MS   (PL_CONFIG_STEPPER_FULL_STEP?3:1)
 
 typedef struct StepperMover_t {
   int32_t targetPos;
@@ -379,6 +379,7 @@ void STEPPER_Init(void) {
   config.hw[3].pin = STEPPER_MOTOR0_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR0_IN4_IOCON;
   config.inverted = true;
+  config.stepMode = PL_CONFIG_STEPPER_FULL_STEP?McuULN2003_STEP_MODE_FULL:McuULN2003_STEP_MODE_HALF;
   motorHandles[0] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[0]);
 #endif
@@ -404,6 +405,7 @@ void STEPPER_Init(void) {
   config.hw[3].pin = STEPPER_MOTOR1_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR1_IN4_IOCON;
   config.inverted = true;
+  config.stepMode = PL_CONFIG_STEPPER_FULL_STEP?McuULN2003_STEP_MODE_FULL:McuULN2003_STEP_MODE_HALF;
   motorHandles[1] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[1]);
 #endif
@@ -429,6 +431,7 @@ void STEPPER_Init(void) {
   config.hw[3].pin = STEPPER_MOTOR2_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR2_IN4_IOCON;
   config.inverted = true;
+  config.stepMode = PL_CONFIG_STEPPER_FULL_STEP?McuULN2003_STEP_MODE_FULL:McuULN2003_STEP_MODE_HALF;
   motorHandles[2] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[2]);
 #endif
@@ -454,6 +457,7 @@ void STEPPER_Init(void) {
   config.hw[3].pin = STEPPER_MOTOR3_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR3_IN4_IOCON;
   config.inverted = true;
+  config.stepMode = PL_CONFIG_STEPPER_FULL_STEP?McuULN2003_STEP_MODE_FULL:McuULN2003_STEP_MODE_HALF;
   motorHandles[3] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[3]);
 #endif

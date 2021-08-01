@@ -28,7 +28,7 @@ typedef struct {
 #define McuULN2003_DELAY_HALF_STEP_MODE()      McuWait_WaitOSms(2)
 
 #define McuULN2003_NOF_STEPS_FULL_STEP_MODE    (4)
-#define McuULN2003_DELAY_FULL_STEP_MODE()      McuWait_WaitOSms(2)
+#define McuULN2003_DELAY_FULL_STEP_MODE()      McuWait_WaitOSms(3)
 
 typedef bool McuULN2003_PinStatus[McuULN2003_NOF_MOTOR_GPIO_PINS];
 

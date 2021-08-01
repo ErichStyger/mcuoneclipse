@@ -8,6 +8,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_NOF_UNITS             (4)
+#define PL_CONFIG_STEPPER_FULL_STEP     (1) /* if using stepper in full step mode */
 
 #define PL_CONFIG_USE_SHELL             (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT               (0) /* use SEGGER RTT (only possible with a J-Link) */
