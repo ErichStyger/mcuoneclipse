@@ -65,12 +65,12 @@
 #define STEPPER_MOTOR2_IN2_IOCON      IOCON_INDEX_PIO0_13
 #define STEPPER_MOTOR2_IN3_GPIO       GPIO
 #define STEPPER_MOTOR2_IN3_PORT       0U
-#define STEPPER_MOTOR2_IN3_PIN        11U
-#define STEPPER_MOTOR2_IN3_IOCON      IOCON_INDEX_PIO0_11
+#define STEPPER_MOTOR2_IN3_PIN        9U
+#define STEPPER_MOTOR2_IN3_IOCON      IOCON_INDEX_PIO0_9
 #define STEPPER_MOTOR2_IN4_GPIO       GPIO
 #define STEPPER_MOTOR2_IN4_PORT       0U
-#define STEPPER_MOTOR2_IN4_PIN        10U
-#define STEPPER_MOTOR2_IN4_IOCON      IOCON_INDEX_PIO0_10
+#define STEPPER_MOTOR2_IN4_PIN        8U
+#define STEPPER_MOTOR2_IN4_IOCON      IOCON_INDEX_PIO0_8
 #endif
 
 #if STEPPER_CONFIG_NOF_STEPPER>=4
@@ -102,6 +102,12 @@ static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset 
     12,
   #endif
   #if STEPPER_CONFIG_NOF_STEPPER>=2
+    12,
+  #endif
+  #if STEPPER_CONFIG_NOF_STEPPER>=3
+    12,
+  #endif
+  #if STEPPER_CONFIG_NOF_STEPPER>=4
     12,
   #endif
 };
@@ -397,6 +403,7 @@ void STEPPER_Init(void) {
   config.hw[3].port = STEPPER_MOTOR1_IN4_PORT;
   config.hw[3].pin = STEPPER_MOTOR1_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR1_IN4_IOCON;
+  config.inverted = true;
   motorHandles[1] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[1]);
 #endif
@@ -421,6 +428,7 @@ void STEPPER_Init(void) {
   config.hw[3].port = STEPPER_MOTOR2_IN4_PORT;
   config.hw[3].pin = STEPPER_MOTOR2_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR2_IN4_IOCON;
+  config.inverted = true;
   motorHandles[2] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[2]);
 #endif
@@ -445,6 +453,7 @@ void STEPPER_Init(void) {
   config.hw[3].port = STEPPER_MOTOR3_IN4_PORT;
   config.hw[3].pin = STEPPER_MOTOR3_IN4_PIN;
   config.hw[3].iocon = STEPPER_MOTOR3_IN4_IOCON;
+  config.inverted = true;
   motorHandles[3] = McuULN2003_InitMotor(&config);
   McuULN2003_PowerOff(motorHandles[3]);
 #endif

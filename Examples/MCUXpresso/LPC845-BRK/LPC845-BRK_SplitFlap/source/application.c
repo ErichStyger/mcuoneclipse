@@ -82,7 +82,9 @@ static void SensorTask(void *pv) {
           uint8_t buf[32];
 
           prevPos = trigger[i].motorPos;
-          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos:");
+          McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos #");
+          McuUtility_strcatNum32s(buf, sizeof(buf), i);
+          McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": ");
           McuUtility_strcatNum32s(buf, sizeof(buf), trigger[i].motorPos);
           McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
           SHELL_SendString(buf);

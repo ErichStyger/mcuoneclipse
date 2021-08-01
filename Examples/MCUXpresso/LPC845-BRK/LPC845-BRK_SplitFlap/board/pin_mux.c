@@ -18,16 +18,16 @@ pin_labels:
 - {pin_num: '6', pin_signal: PIO0_4/ADC_11, label: 'K3/CN1[35]/PIO0_4/ADC_11/TRSTN/WAKEUP', identifier: K3;MAG3}
 - {pin_num: '7', pin_signal: PIO0_28/WKTCLKIN, label: 'CN1[14]/PIO0_28/WKTCLKIN', identifier: M1_IN3}
 - {pin_num: '9', pin_signal: PIO0_31/CAPT_X0, label: S1/PIO0_31/CAPT_X0, identifier: CAPX}
-- {pin_num: '12', pin_signal: PIO0_11/I2C0_SDA, label: 'CN1[24]/PIO0_11/I2C0_SDA', identifier: M2_IN3}
-- {pin_num: '13', pin_signal: PIO0_10/I2C0_SCL, label: 'CN1[23]/PIO0_10/I2C0_SCL', identifier: M2_IN4}
+- {pin_num: '12', pin_signal: PIO0_11/I2C0_SDA, label: 'CN1[24]/PIO0_11/I2C0_SDA', identifier: MAG1}
+- {pin_num: '13', pin_signal: PIO0_10/I2C0_SCL, label: 'CN1[23]/PIO0_10/I2C0_SCL', identifier: MAG2}
 - {pin_num: '15', pin_signal: PIO0_16, label: 'CN1[1]/PIO0_16', identifier: RS485_TXRX_EN}
 - {pin_num: '17', pin_signal: PIO0_27, label: 'CN1[13]/PIO0_27', identifier: M1_IN2}
 - {pin_num: '18', pin_signal: PIO0_26, label: 'CN1[12]/PIO0_26', identifier: M1_IN1}
 - {pin_num: '22', pin_signal: PIO0_15, label: 'CN1[28]/PIO0_15', identifier: M3_IN4}
 - {pin_num: '23', pin_signal: PIO1_4/CAPT_X5, label: PIO1_4/CAPT_X5, identifier: RS458_TXRX_EN}
 - {pin_num: '24', pin_signal: PIO0_1/ACMP_I2/CLKIN, label: 'CN1[38]/PIO0_1/ACMP_I2/CLKIN/TDI', identifier: M3_IN2}
-- {pin_num: '25', pin_signal: PIO0_9/XTALOUT, label: 'CN1[18]/CN1[22]/PIO0_9/XTALOUT', identifier: MAG1}
-- {pin_num: '26', pin_signal: PIO0_8/XTALIN, label: 'CN1[19]/CN1[21]/PIO0_8/XTALIN', identifier: MAG2}
+- {pin_num: '25', pin_signal: PIO0_9/XTALOUT, label: 'CN1[18]/CN1[22]/PIO0_9/XTALOUT', identifier: M2_IN3}
+- {pin_num: '26', pin_signal: PIO0_8/XTALIN, label: 'CN1[19]/CN1[21]/PIO0_8/XTALIN', identifier: M2_IN4}
 - {pin_num: '34', pin_signal: PIO0_6/ADC_1/ACMPVREF, label: 'CN1[33]/PIO0_6/ADC_1/ACMPVREF', identifier: M3_IN3}
 - {pin_num: '36', pin_signal: PIO0_0/ACMP_I1, label: 'CN1[39]/PIO0_0/ACMP_I1/TDO', identifier: M3_IN1}
 - {pin_num: '37', pin_signal: PIO0_14/ACMP_I3/ADC_2, label: 'CN1[27]/PIO0_14/ACMP_I3/ADC_2', identifier: M2_IN1}
@@ -76,17 +76,17 @@ BOARD_InitPins:
   - {pin_num: '43', peripheral: GPIO, signal: 'PIO0, 22', pin_signal: PIO0_22/ADC_4, direction: OUTPUT}
   - {pin_num: '44', peripheral: GPIO, signal: 'PIO0, 21', pin_signal: PIO0_21/ADC_5, direction: OUTPUT}
   - {pin_num: '45', peripheral: GPIO, signal: 'PIO0, 20', pin_signal: PIO0_20/ADC_6, direction: OUTPUT}
-  - {pin_num: '46', peripheral: GPIO, signal: 'PIO0, 19', pin_signal: PIO0_19/ADC_7, direction: INPUT, invert: enabled}
-  - {pin_num: '12', peripheral: GPIO, signal: 'PIO0, 11', pin_signal: PIO0_11/I2C0_SDA, direction: OUTPUT}
+  - {pin_num: '46', peripheral: GPIO, signal: 'PIO0, 19', pin_signal: PIO0_19/ADC_7, direction: INPUT}
+  - {pin_num: '25', peripheral: GPIO, signal: 'PIO0, 9', pin_signal: PIO0_9/XTALOUT, direction: OUTPUT}
   - {pin_num: '15', peripheral: USART1, signal: RTS, pin_signal: PIO0_16}
   - {pin_num: '48', peripheral: USART1, signal: TXD, pin_signal: PIO0_17/ADC_9/DACOUT_0}
   - {pin_num: '47', peripheral: USART1, signal: RXD, pin_signal: PIO0_18/ADC_8}
-  - {pin_num: '25', peripheral: GPIO, signal: 'PIO0, 9', pin_signal: PIO0_9/XTALOUT, direction: INPUT, invert: enabled}
-  - {pin_num: '26', peripheral: GPIO, signal: 'PIO0, 8', pin_signal: PIO0_8/XTALIN, direction: INPUT, invert: enabled}
-  - {pin_num: '13', peripheral: GPIO, signal: 'PIO0, 10', pin_signal: PIO0_10/I2C0_SCL, direction: OUTPUT}
+  - {pin_num: '12', peripheral: GPIO, signal: 'PIO0, 11', pin_signal: PIO0_11/I2C0_SDA, direction: INPUT}
+  - {pin_num: '26', peripheral: GPIO, signal: 'PIO0, 8', pin_signal: PIO0_8/XTALIN, direction: OUTPUT}
+  - {pin_num: '13', peripheral: GPIO, signal: 'PIO0, 10', pin_signal: PIO0_10/I2C0_SCL, direction: INPUT}
   - {pin_num: '2', peripheral: GPIO, signal: 'PIO0, 13', pin_signal: PIO0_13/ADC_10, direction: OUTPUT}
   - {pin_num: '37', peripheral: GPIO, signal: 'PIO0, 14', pin_signal: PIO0_14/ACMP_I3/ADC_2, direction: OUTPUT}
-  - {pin_num: '6', peripheral: GPIO, signal: 'PIO0, 4', pin_signal: PIO0_4/ADC_11, identifier: MAG3, direction: INPUT, invert: enabled}
+  - {pin_num: '6', peripheral: GPIO, signal: 'PIO0, 4', pin_signal: PIO0_4/ADC_11, identifier: MAG3, direction: INPUT}
   - {pin_num: '36', peripheral: GPIO, signal: 'PIO0, 0', pin_signal: PIO0_0/ACMP_I1, direction: OUTPUT}
   - {pin_num: '24', peripheral: GPIO, signal: 'PIO0, 1', pin_signal: PIO0_1/ACMP_I2/CLKIN, direction: OUTPUT}
   - {pin_num: '34', peripheral: GPIO, signal: 'PIO0, 6', pin_signal: PIO0_6/ADC_1/ACMPVREF, direction: OUTPUT}
@@ -104,8 +104,6 @@ BOARD_InitPins:
 /* Function assigned for the Cortex-M0P */
 void BOARD_InitPins(void)
 {
-    /* Enables clock for IOCON.: enable */
-    CLOCK_EnableClock(kCLOCK_Iocon);
     /* Enables clock for switch matrix.: enable */
     CLOCK_EnableClock(kCLOCK_Swm);
     /* Enables the clock for the GPIO0 module */
@@ -125,12 +123,12 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PIO0_1 (pin )  */
     GPIO_PinInit(GPIO, 0U, 1U, &gpio0_pin0_1);
 
-    gpio_pin_config_t MAG3_config = {
+    gpio_pin_config_t gpio0_pin0_4 = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U,
     };
-    /* Initialize GPIO functionality on pin PIO0_4 (pin 6)  */
-    GPIO_PinInit(BOARD_INITPINS_MAG3_GPIO, BOARD_INITPINS_MAG3_PORT, BOARD_INITPINS_MAG3_PIN, &MAG3_config);
+    /* Initialize GPIO functionality on pin PIO0_4 (pin )  */
+    GPIO_PinInit(GPIO, 0U, 4U, &gpio0_pin0_4);
 
     gpio_pin_config_t gpio0_pin0_6 = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -139,29 +137,29 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PIO0_6 (pin )  */
     GPIO_PinInit(GPIO, 0U, 6U, &gpio0_pin0_6);
 
-    gpio_pin_config_t MAG2_config = {
-        .pinDirection = kGPIO_DigitalInput,
+    gpio_pin_config_t gpio0_pin0_8 = {
+        .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U,
     };
-    /* Initialize GPIO functionality on pin PIO0_8 (pin 26)  */
-    GPIO_PinInit(BOARD_INITPINS_MAG2_GPIO, BOARD_INITPINS_MAG2_PORT, BOARD_INITPINS_MAG2_PIN, &MAG2_config);
+    /* Initialize GPIO functionality on pin PIO0_8 (pin )  */
+    GPIO_PinInit(GPIO, 0U, 8U, &gpio0_pin0_8);
 
-    gpio_pin_config_t MAG1_config = {
-        .pinDirection = kGPIO_DigitalInput,
+    gpio_pin_config_t gpio0_pin0_9 = {
+        .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U,
     };
-    /* Initialize GPIO functionality on pin PIO0_9 (pin 25)  */
-    GPIO_PinInit(BOARD_INITPINS_MAG1_GPIO, BOARD_INITPINS_MAG1_PORT, BOARD_INITPINS_MAG1_PIN, &MAG1_config);
+    /* Initialize GPIO functionality on pin PIO0_9 (pin )  */
+    GPIO_PinInit(GPIO, 0U, 9U, &gpio0_pin0_9);
 
     gpio_pin_config_t gpio0_pin0_10 = {
-        .pinDirection = kGPIO_DigitalOutput,
+        .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U,
     };
     /* Initialize GPIO functionality on pin PIO0_10 (pin )  */
     GPIO_PinInit(GPIO, 0U, 10U, &gpio0_pin0_10);
 
     gpio_pin_config_t gpio0_pin0_11 = {
-        .pinDirection = kGPIO_DigitalOutput,
+        .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U,
     };
     /* Initialize GPIO functionality on pin PIO0_11 (pin )  */
@@ -188,12 +186,12 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PIO0_15 (pin )  */
     GPIO_PinInit(GPIO, 0U, 15U, &gpio0_pin0_15);
 
-    gpio_pin_config_t MAG0_config = {
+    gpio_pin_config_t gpio0_pin0_19 = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U,
     };
-    /* Initialize GPIO functionality on pin PIO0_19 (pin 46)  */
-    GPIO_PinInit(BOARD_INITPINS_MAG0_GPIO, BOARD_INITPINS_MAG0_PORT, BOARD_INITPINS_MAG0_PIN, &MAG0_config);
+    /* Initialize GPIO functionality on pin PIO0_19 (pin )  */
+    GPIO_PinInit(GPIO, 0U, 19U, &gpio0_pin0_19);
 
     gpio_pin_config_t M0_IN1_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -250,34 +248,6 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PIO0_29 (pin 38)  */
     GPIO_PinInit(BOARD_INITPINS_M1_IN4_GPIO, BOARD_INITPINS_M1_IN4_PORT, BOARD_INITPINS_M1_IN4_PIN, &M1_IN4_config);
-
-    IOCON->PIO[29] = ((IOCON->PIO[29] &
-                       /* Mask bits to zero which are setting */
-                       (~(IOCON_PIO_INV_MASK)))
-
-                      /* Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-                      | IOCON_PIO_INV(PIO0_19_INV_INVERTED));
-
-    IOCON->PIO[4] = ((IOCON->PIO[4] &
-                      /* Mask bits to zero which are setting */
-                      (~(IOCON_PIO_INV_MASK)))
-
-                     /* Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-                     | IOCON_PIO_INV(PIO0_4_INV_INVERTED));
-
-    IOCON->PIO[14] = ((IOCON->PIO[14] &
-                       /* Mask bits to zero which are setting */
-                       (~(IOCON_PIO_INV_MASK)))
-
-                      /* Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-                      | IOCON_PIO_INV(PIO0_8_INV_INVERTED));
-
-    IOCON->PIO[13] = ((IOCON->PIO[13] &
-                       /* Mask bits to zero which are setting */
-                       (~(IOCON_PIO_INV_MASK)))
-
-                      /* Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-                      | IOCON_PIO_INV(PIO0_9_INV_INVERTED));
 
     /* USART0_TXD connect to P0_25 */
     SWM_SetMovablePinSelect(SWM0, kSWM_USART0_TXD, kSWM_PortPin_P0_25);

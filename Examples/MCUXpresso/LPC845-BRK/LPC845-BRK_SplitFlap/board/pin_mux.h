@@ -25,19 +25,6 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-/*!
- * @brief Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-#define PIO0_19_INV_INVERTED 0x01u
-/*!
- * @brief Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-#define PIO0_4_INV_INVERTED 0x01u
-/*!
- * @brief Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-#define PIO0_8_INV_INVERTED 0x01u
-/*!
- * @brief Invert input: Input inverted (HIGH on pin reads as 0, LOW on pin reads as 1). */
-#define PIO0_9_INV_INVERTED 0x01u
-
 /*! @name PIO0_24 (number 20), CN1[10]/PIO0_24
   @{ */
 #define BOARD_INITPINS_DEBUG_UART_RX_PORT 0U                   /*!<@brief PORT device index: 0 */
@@ -151,16 +138,16 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_MAG0_PIN_MASK (1U << 19U)      /*!<@brief PORT pin mask */
                                                       /* @} */
 
-/*! @name PIO0_11 (number 12), CN1[24]/PIO0_11/I2C0_SDA
+/*! @name PIO0_9 (number 25), CN1[18]/CN1[22]/PIO0_9/XTALOUT
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_M2_IN3_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_M2_IN3_GPIO_PIN_MASK (1U << 11U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_M2_IN3_PORT 0U                   /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_M2_IN3_PIN 11U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_M2_IN3_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
-                                                        /* @} */
+#define BOARD_INITPINS_M2_IN3_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_M2_IN3_GPIO_PIN_MASK (1U << 9U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_M2_IN3_PORT 0U                  /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_M2_IN3_PIN 9U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_M2_IN3_PIN_MASK (1U << 9U)      /*!<@brief PORT pin mask */
+                                                       /* @} */
 
 /*! @name PIO0_16 (number 15), CN1[1]/PIO0_16
   @{ */
@@ -183,38 +170,38 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_RS458_RX_PIN_MASK (1U << 18U)      /*!<@brief PORT pin mask */
                                                           /* @} */
 
-/*! @name PIO0_9 (number 25), CN1[18]/CN1[22]/PIO0_9/XTALOUT
+/*! @name PIO0_11 (number 12), CN1[24]/PIO0_11/I2C0_SDA
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_MAG1_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_MAG1_GPIO_PIN_MASK (1U << 9U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_MAG1_PORT 0U                  /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_MAG1_PIN 9U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_MAG1_PIN_MASK (1U << 9U)      /*!<@brief PORT pin mask */
-                                                     /* @} */
+#define BOARD_INITPINS_MAG1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG1_GPIO_PIN_MASK (1U << 11U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG1_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG1_PIN 11U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG1_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
 
 /*! @name PIO0_8 (number 26), CN1[19]/CN1[21]/PIO0_8/XTALIN
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_MAG2_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_MAG2_GPIO_PIN_MASK (1U << 8U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_MAG2_PORT 0U                  /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_MAG2_PIN 8U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_MAG2_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
-                                                     /* @} */
+#define BOARD_INITPINS_M2_IN4_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_M2_IN4_GPIO_PIN_MASK (1U << 8U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_M2_IN4_PORT 0U                  /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_M2_IN4_PIN 8U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_M2_IN4_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
+                                                       /* @} */
 
 /*! @name PIO0_10 (number 13), CN1[23]/PIO0_10/I2C0_SCL
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_M2_IN4_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_M2_IN4_GPIO_PIN_MASK (1U << 10U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_M2_IN4_PORT 0U                   /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_M2_IN4_PIN 10U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_M2_IN4_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
-                                                        /* @} */
+#define BOARD_INITPINS_MAG2_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG2_GPIO_PIN_MASK (1U << 10U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG2_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG2_PIN 10U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG2_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+                                                      /* @} */
 
 /*! @name PIO0_13 (number 2), CN1[26]/PIO0_13/ADC_10
   @{ */

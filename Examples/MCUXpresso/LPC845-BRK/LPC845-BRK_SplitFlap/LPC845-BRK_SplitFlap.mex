@@ -29,16 +29,16 @@
                <pin_label pin_num="6" pin_signal="PIO0_4/ADC_11" label="K3/CN1[35]/PIO0_4/ADC_11/TRSTN/WAKEUP" identifier="K3;MAG3"/>
                <pin_label pin_num="7" pin_signal="PIO0_28/WKTCLKIN" label="CN1[14]/PIO0_28/WKTCLKIN" identifier="M1_IN3"/>
                <pin_label pin_num="9" pin_signal="PIO0_31/CAPT_X0" label="S1/PIO0_31/CAPT_X0" identifier="CAPX"/>
-               <pin_label pin_num="12" pin_signal="PIO0_11/I2C0_SDA" label="CN1[24]/PIO0_11/I2C0_SDA" identifier="M2_IN3"/>
-               <pin_label pin_num="13" pin_signal="PIO0_10/I2C0_SCL" label="CN1[23]/PIO0_10/I2C0_SCL" identifier="M2_IN4"/>
+               <pin_label pin_num="12" pin_signal="PIO0_11/I2C0_SDA" label="CN1[24]/PIO0_11/I2C0_SDA" identifier="MAG1"/>
+               <pin_label pin_num="13" pin_signal="PIO0_10/I2C0_SCL" label="CN1[23]/PIO0_10/I2C0_SCL" identifier="MAG2"/>
                <pin_label pin_num="15" pin_signal="PIO0_16" label="CN1[1]/PIO0_16" identifier="RS485_TXRX_EN"/>
                <pin_label pin_num="17" pin_signal="PIO0_27" label="CN1[13]/PIO0_27" identifier="M1_IN2"/>
                <pin_label pin_num="18" pin_signal="PIO0_26" label="CN1[12]/PIO0_26" identifier="M1_IN1"/>
                <pin_label pin_num="22" pin_signal="PIO0_15" label="CN1[28]/PIO0_15" identifier="M3_IN4"/>
                <pin_label pin_num="23" pin_signal="PIO1_4/CAPT_X5" label="PIO1_4/CAPT_X5" identifier="RS458_TXRX_EN"/>
                <pin_label pin_num="24" pin_signal="PIO0_1/ACMP_I2/CLKIN" label="CN1[38]/PIO0_1/ACMP_I2/CLKIN/TDI" identifier="M3_IN2"/>
-               <pin_label pin_num="25" pin_signal="PIO0_9/XTALOUT" label="CN1[18]/CN1[22]/PIO0_9/XTALOUT" identifier="MAG1"/>
-               <pin_label pin_num="26" pin_signal="PIO0_8/XTALIN" label="CN1[19]/CN1[21]/PIO0_8/XTALIN" identifier="MAG2"/>
+               <pin_label pin_num="25" pin_signal="PIO0_9/XTALOUT" label="CN1[18]/CN1[22]/PIO0_9/XTALOUT" identifier="M2_IN3"/>
+               <pin_label pin_num="26" pin_signal="PIO0_8/XTALIN" label="CN1[19]/CN1[21]/PIO0_8/XTALIN" identifier="M2_IN4"/>
                <pin_label pin_num="34" pin_signal="PIO0_6/ADC_1/ACMPVREF" label="CN1[33]/PIO0_6/ADC_1/ACMPVREF" identifier="M3_IN3"/>
                <pin_label pin_num="36" pin_signal="PIO0_0/ACMP_I1" label="CN1[39]/PIO0_0/ACMP_I1/TDO" identifier="M3_IN1"/>
                <pin_label pin_num="37" pin_signal="PIO0_14/ACMP_I3/ADC_2" label="CN1[27]/PIO0_14/ACMP_I3/ADC_2" identifier="M2_IN1"/>
@@ -134,10 +134,9 @@
                   <pin peripheral="GPIO" signal="PIO0, 19" pin_num="46" pin_signal="PIO0_19/ADC_7">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="invert" value="enabled"/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="GPIO" signal="PIO0, 11" pin_num="12" pin_signal="PIO0_11/I2C0_SDA">
+                  <pin peripheral="GPIO" signal="PIO0, 9" pin_num="25" pin_signal="PIO0_9/XTALOUT">
                      <pin_features>
                         <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
@@ -145,21 +144,19 @@
                   <pin peripheral="USART1" signal="RTS" pin_num="15" pin_signal="PIO0_16"/>
                   <pin peripheral="USART1" signal="TXD" pin_num="48" pin_signal="PIO0_17/ADC_9/DACOUT_0"/>
                   <pin peripheral="USART1" signal="RXD" pin_num="47" pin_signal="PIO0_18/ADC_8"/>
-                  <pin peripheral="GPIO" signal="PIO0, 9" pin_num="25" pin_signal="PIO0_9/XTALOUT">
+                  <pin peripheral="GPIO" signal="PIO0, 11" pin_num="12" pin_signal="PIO0_11/I2C0_SDA">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="invert" value="enabled"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 8" pin_num="26" pin_signal="PIO0_8/XTALIN">
                      <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="invert" value="enabled"/>
+                        <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 10" pin_num="13" pin_signal="PIO0_10/I2C0_SCL">
                      <pin_features>
-                        <pin_feature name="direction" value="OUTPUT"/>
+                        <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 13" pin_num="2" pin_signal="PIO0_13/ADC_10">
@@ -176,7 +173,6 @@
                      <pin_features>
                         <pin_feature name="identifier" value="MAG3"/>
                         <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="invert" value="enabled"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 0" pin_num="36" pin_signal="PIO0_0/ACMP_I1">
