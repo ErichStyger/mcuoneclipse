@@ -58,12 +58,16 @@ static void SensorTask(void *pv) {
   struct {
     bool triggered;
     int32_t motorPos;
+    int32_t prevPos;
   } trigger[MAG_CONFIG_NOF_MAGNETS];
-  int32_t prevPos = -1;
 #if MAG_CONFIG_NOF_MAGNETS!=STEPPER_CONFIG_NOF_STEPPER
   #error "number of magnets have to match number of motors"
 #endif
-
+  for (int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
+    trigger[i].triggered = false;
+    trigger[i].motorPos = 0;
+    trigger[i].prevPos = -1;
+  }
   for(;;) {
     for (int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
       if (MAG_Triggered(i)) {
@@ -78,10 +82,10 @@ static void SensorTask(void *pv) {
     for (int i=0; i<MAG_CONFIG_NOF_MAGNETS; i++) {
       if (trigger[i].triggered) {
   #if PL_CONFIG_USE_STEPPER
-        if (trigger[i].motorPos!=prevPos) {
+        if (trigger[i].motorPos!=trigger[i].prevPos) {
           uint8_t buf[32];
 
-          prevPos = trigger[i].motorPos;
+          trigger[i].prevPos = trigger[i].motorPos;
           McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"zero pos #");
           McuUtility_strcatNum32s(buf, sizeof(buf), i);
           McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": ");
@@ -110,6 +114,7 @@ static void AppTask(void *pv) {
   vTaskDelay(pdMS_TO_TICKS(1000)); /* wait initializing external RTC below in PL_InitFromTask(), because it needs time to power up */
   PL_InitFromTask();
   for(;;) {
+    McuLED_Toggle(LEDS_Blue);
     vTaskDelay(pdMS_TO_TICKS(200));
     if (clockIsOn) {
       McuTimeDate_GetTime(&time);

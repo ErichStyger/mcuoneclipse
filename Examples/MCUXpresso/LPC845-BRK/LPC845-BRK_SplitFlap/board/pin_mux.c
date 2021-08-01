@@ -18,8 +18,8 @@ pin_labels:
 - {pin_num: '6', pin_signal: PIO0_4/ADC_11, label: 'K3/CN1[35]/PIO0_4/ADC_11/TRSTN/WAKEUP', identifier: K3;MAG3}
 - {pin_num: '7', pin_signal: PIO0_28/WKTCLKIN, label: 'CN1[14]/PIO0_28/WKTCLKIN', identifier: M1_IN3}
 - {pin_num: '9', pin_signal: PIO0_31/CAPT_X0, label: S1/PIO0_31/CAPT_X0, identifier: CAPX}
-- {pin_num: '12', pin_signal: PIO0_11/I2C0_SDA, label: 'CN1[24]/PIO0_11/I2C0_SDA', identifier: MAG1}
-- {pin_num: '13', pin_signal: PIO0_10/I2C0_SCL, label: 'CN1[23]/PIO0_10/I2C0_SCL', identifier: MAG2}
+- {pin_num: '12', pin_signal: PIO0_11/I2C0_SDA, label: 'CN1[24]/PIO0_11/I2C0_SDA', identifier: MAG1;MAG2}
+- {pin_num: '13', pin_signal: PIO0_10/I2C0_SCL, label: 'CN1[23]/PIO0_10/I2C0_SCL', identifier: MAG2;MAG1}
 - {pin_num: '15', pin_signal: PIO0_16, label: 'CN1[1]/PIO0_16', identifier: RS485_TXRX_EN}
 - {pin_num: '17', pin_signal: PIO0_27, label: 'CN1[13]/PIO0_27', identifier: M1_IN2}
 - {pin_num: '18', pin_signal: PIO0_26, label: 'CN1[12]/PIO0_26', identifier: M1_IN1}
@@ -81,9 +81,9 @@ BOARD_InitPins:
   - {pin_num: '15', peripheral: USART1, signal: RTS, pin_signal: PIO0_16}
   - {pin_num: '48', peripheral: USART1, signal: TXD, pin_signal: PIO0_17/ADC_9/DACOUT_0}
   - {pin_num: '47', peripheral: USART1, signal: RXD, pin_signal: PIO0_18/ADC_8}
-  - {pin_num: '12', peripheral: GPIO, signal: 'PIO0, 11', pin_signal: PIO0_11/I2C0_SDA, direction: INPUT}
+  - {pin_num: '12', peripheral: GPIO, signal: 'PIO0, 11', pin_signal: PIO0_11/I2C0_SDA, identifier: MAG2, direction: INPUT}
   - {pin_num: '26', peripheral: GPIO, signal: 'PIO0, 8', pin_signal: PIO0_8/XTALIN, direction: OUTPUT}
-  - {pin_num: '13', peripheral: GPIO, signal: 'PIO0, 10', pin_signal: PIO0_10/I2C0_SCL, direction: INPUT}
+  - {pin_num: '13', peripheral: GPIO, signal: 'PIO0, 10', pin_signal: PIO0_10/I2C0_SCL, identifier: MAG1, direction: INPUT}
   - {pin_num: '2', peripheral: GPIO, signal: 'PIO0, 13', pin_signal: PIO0_13/ADC_10, direction: OUTPUT}
   - {pin_num: '37', peripheral: GPIO, signal: 'PIO0, 14', pin_signal: PIO0_14/ACMP_I3/ADC_2, direction: OUTPUT}
   - {pin_num: '6', peripheral: GPIO, signal: 'PIO0, 4', pin_signal: PIO0_4/ADC_11, identifier: MAG3, direction: INPUT}

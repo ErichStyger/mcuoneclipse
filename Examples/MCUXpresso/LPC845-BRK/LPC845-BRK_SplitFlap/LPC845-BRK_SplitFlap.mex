@@ -29,8 +29,8 @@
                <pin_label pin_num="6" pin_signal="PIO0_4/ADC_11" label="K3/CN1[35]/PIO0_4/ADC_11/TRSTN/WAKEUP" identifier="K3;MAG3"/>
                <pin_label pin_num="7" pin_signal="PIO0_28/WKTCLKIN" label="CN1[14]/PIO0_28/WKTCLKIN" identifier="M1_IN3"/>
                <pin_label pin_num="9" pin_signal="PIO0_31/CAPT_X0" label="S1/PIO0_31/CAPT_X0" identifier="CAPX"/>
-               <pin_label pin_num="12" pin_signal="PIO0_11/I2C0_SDA" label="CN1[24]/PIO0_11/I2C0_SDA" identifier="MAG1"/>
-               <pin_label pin_num="13" pin_signal="PIO0_10/I2C0_SCL" label="CN1[23]/PIO0_10/I2C0_SCL" identifier="MAG2"/>
+               <pin_label pin_num="12" pin_signal="PIO0_11/I2C0_SDA" label="CN1[24]/PIO0_11/I2C0_SDA" identifier="MAG1;MAG2"/>
+               <pin_label pin_num="13" pin_signal="PIO0_10/I2C0_SCL" label="CN1[23]/PIO0_10/I2C0_SCL" identifier="MAG2;MAG1"/>
                <pin_label pin_num="15" pin_signal="PIO0_16" label="CN1[1]/PIO0_16" identifier="RS485_TXRX_EN"/>
                <pin_label pin_num="17" pin_signal="PIO0_27" label="CN1[13]/PIO0_27" identifier="M1_IN2"/>
                <pin_label pin_num="18" pin_signal="PIO0_26" label="CN1[12]/PIO0_26" identifier="M1_IN1"/>
@@ -146,6 +146,7 @@
                   <pin peripheral="USART1" signal="RXD" pin_num="47" pin_signal="PIO0_18/ADC_8"/>
                   <pin peripheral="GPIO" signal="PIO0, 11" pin_num="12" pin_signal="PIO0_11/I2C0_SDA">
                      <pin_features>
+                        <pin_feature name="identifier" value="MAG2"/>
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
@@ -156,6 +157,7 @@
                   </pin>
                   <pin peripheral="GPIO" signal="PIO0, 10" pin_num="13" pin_signal="PIO0_10/I2C0_SCL">
                      <pin_features>
+                        <pin_feature name="identifier" value="MAG1"/>
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>

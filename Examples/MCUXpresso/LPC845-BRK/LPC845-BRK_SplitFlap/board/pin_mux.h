@@ -174,11 +174,11 @@ void BOARD_InitBootPins(void);
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_MAG1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_MAG1_GPIO_PIN_MASK (1U << 11U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_MAG1_PORT 0U                   /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_MAG1_PIN 11U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_MAG1_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_MAG2_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG2_GPIO_PIN_MASK (1U << 11U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG2_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG2_PIN 11U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG2_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
                                                       /* @} */
 
 /*! @name PIO0_8 (number 26), CN1[19]/CN1[21]/PIO0_8/XTALIN
@@ -196,11 +196,11 @@ void BOARD_InitBootPins(void);
   @{ */
 
 /* Symbols to be used with GPIO driver */
-#define BOARD_INITPINS_MAG2_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_MAG2_GPIO_PIN_MASK (1U << 10U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_MAG2_PORT 0U                   /*!<@brief PORT device index: 0 */
-#define BOARD_INITPINS_MAG2_PIN 10U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_MAG2_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_MAG1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_MAG1_GPIO_PIN_MASK (1U << 10U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_MAG1_PORT 0U                   /*!<@brief PORT device index: 0 */
+#define BOARD_INITPINS_MAG1_PIN 10U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_MAG1_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
                                                       /* @} */
 
 /*! @name PIO0_13 (number 2), CN1[26]/PIO0_13/ADC_10

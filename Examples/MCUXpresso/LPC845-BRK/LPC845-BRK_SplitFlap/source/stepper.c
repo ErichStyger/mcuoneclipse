@@ -102,7 +102,7 @@ static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset 
     12,
   #endif
   #if STEPPER_CONFIG_NOF_STEPPER>=2
-    12,
+    35,
   #endif
   #if STEPPER_CONFIG_NOF_STEPPER>=3
     12,
@@ -114,7 +114,7 @@ static const int32_t motorZeroOffsets[STEPPER_CONFIG_NOF_STEPPER] = { /* offset 
 #endif
 
 static TimerHandle_t timerHndl;
-#define TIMER_PERIOD_MS   (PL_CONFIG_STEPPER_FULL_STEP?3:1)
+#define TIMER_PERIOD_MS   (PL_CONFIG_STEPPER_FULL_STEP?4:1)
 
 typedef struct StepperMover_t {
   int32_t targetPos;

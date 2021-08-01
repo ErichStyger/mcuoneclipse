@@ -77,9 +77,11 @@
 /* define to identify the CPU variant better */
 #define McuLib_CONFIG_CPU_VARIANT_DEFAULT               (0)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_K22FN             (1)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (2)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (3)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (4)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC804            (2)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (3)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC54608          (4)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (5)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (6)
 
 #ifndef McuLib_CONFIG_CPU_VARIANT
   #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT

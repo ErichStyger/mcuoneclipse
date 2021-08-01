@@ -50,7 +50,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   NULL /* Sentinel */
 };
 
-typedef struct {
+typedef struct SHELL_IODesc {
   McuShell_ConstStdIOType *stdio;
   unsigned char *buf;
   size_t bufSize;

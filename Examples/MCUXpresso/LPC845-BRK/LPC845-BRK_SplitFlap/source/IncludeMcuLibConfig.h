@@ -39,7 +39,7 @@ Instructions:
 /* -------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845-BRK SplitFlap"
-#define McuShell_MULTI_CMD_ENABLED          (0)
+#define McuShell_CONFIG_MULTI_CMD_ENABLED   (1)
 #define McuShellUart_CONFIG_UART            McuShellUart_CONFIG_UART_LPC845_USART0
 /* ------------------- I2C ---------------------------*/
 #define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use software bit banging */

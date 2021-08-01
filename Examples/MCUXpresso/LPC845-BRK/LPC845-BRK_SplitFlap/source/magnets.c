@@ -23,16 +23,16 @@
 /* sensor for motor 1 */
 #define MAG_MOTOR1_GPIO       GPIO
 #define MAG_MOTOR1_PORT       0U
-#define MAG_MOTOR1_PIN        11U
-#define MAG_MOTOR1_IOCON      IOCON_INDEX_PIO0_11
+#define MAG_MOTOR1_PIN        10U
+#define MAG_MOTOR1_IOCON      IOCON_INDEX_PIO0_1
 #endif
 
 #if MAG_CONFIG_NOF_MAGNETS>=3
 /* sensor for motor 2 */
 #define MAG_MOTOR2_GPIO       GPIO
 #define MAG_MOTOR2_PORT       0U
-#define MAG_MOTOR2_PIN        10U
-#define MAG_MOTOR2_IOCON      IOCON_INDEX_PIO0_10
+#define MAG_MOTOR2_PIN        11U
+#define MAG_MOTOR2_IOCON      IOCON_INDEX_PIO0_11
 #endif
 
 #if MAG_CONFIG_NOF_MAGNETS>=4
