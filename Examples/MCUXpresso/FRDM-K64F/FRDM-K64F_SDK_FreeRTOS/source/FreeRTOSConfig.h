@@ -80,7 +80,7 @@
 #define configUSE_DAEMON_TASK_STARTUP_HOOK      0
 
 /* Run time and task stats gathering related definitions. */
-#define configGENERATE_RUN_TIME_STATS           0  /* \todo 08 enable runtime statistics( 0 ==> 1 )*/
+#define configGENERATE_RUN_TIME_STATS           1  /* \todo 08 enable runtime statistics( 0 ==> 1 )*/
 #define configUSE_TRACE_FACILITY                1
 #define configUSE_STATS_FORMATTING_FUNCTIONS    0
 

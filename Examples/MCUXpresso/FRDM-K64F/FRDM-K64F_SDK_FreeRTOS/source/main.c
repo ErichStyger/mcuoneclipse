@@ -111,7 +111,7 @@ uint32_t RTOS_AppGetRuntimeCounterValueFromISR(void) {
 
 
 void BOARD_InitBootPeripherals(void);
-
+extern const uint8_t FreeRTOSDebugConfig[];
 /*!
  * @brief Main function
  */
@@ -122,6 +122,9 @@ int main(void) {
 	BOARD_InitDebugConsole();
 	BOARD_InitBootPeripherals();
 
+	if (FreeRTOSDebugConfig[0]==0) { /* dummy usage */
+	  for(;;);
+	}
 	#if APP_CONFIG_USE_SEGGER_SYSTEMVIEW
 	SysView_Init();
 	#endif
