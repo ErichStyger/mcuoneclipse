@@ -18,7 +18,8 @@ static void blinky(void *pv) {
 	for(;;) {
 	  prevTime = xTaskGetTickCount();
 	  McuLED_On(LEDS_green);
-	  vTaskDelay(pdMS_TO_TICKS(10));
+	  //vTaskDelay(pdMS_TO_TICKS(10));
+	  McuWait_Waitms(100);
 	  McuLED_Off(LEDS_green);
 	  vTaskDelayUntil(&prevTime, pdMS_TO_TICKS(1000));
 	}

@@ -44,9 +44,9 @@ Instructions:
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #elif 1 /* example configuration for Kinetis KL25Z */
-  #define McuLib_CONFIG_CPU_IS_LPC         (0)  /* LPC845 */
-  #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
-  #define McuLib_CONFIG_CORTEX_M          (0)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
+  #define McuLib_CONFIG_CPU_IS_LPC          (0)  /* LPC845 */
+  #define McuLib_CONFIG_CPU_IS_KINETIS      (1)  /* NXP Kinetis family */
+  #define McuLib_CONFIG_CORTEX_M            (0)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
   #define McuLib_CONFIG_SDK_VERSION_MAJOR   (2)
   #define McuLib_CONFIG_SDK_VERSION_MINOR   (2)
   #define McuLib_CONFIG_SDK_VERSION_BUILD   (0)
@@ -57,8 +57,11 @@ Instructions:
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
+#define configUSE_TICKLESS_IDLE              (1)
+#define configUSE_TIMERS                     (0)
+#define INCLUDE_xTimerPendFunctionCall       (1 && configUSE_TIMERS)
 #define configTOTAL_HEAP_SIZE                (8*1024)
-#define configMINIMAL_STACK_SIZE     (150/sizeof(StackType_t))
+#define configMINIMAL_STACK_SIZE     (200/sizeof(StackType_t))
 //#define configUSE_HEAP_SECTION_NAME          (1)
 //#define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS"
 /* ------------------- FatFS ---------------------------*/
