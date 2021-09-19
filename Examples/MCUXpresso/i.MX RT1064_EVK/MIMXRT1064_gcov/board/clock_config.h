@@ -1,10 +1,3 @@
-/*
- * Copyright 2018-2020,2021 NXP
- * All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 #ifndef _CLOCK_CONFIG_H_
 #define _CLOCK_CONFIG_H_
 
@@ -51,11 +44,13 @@ void BOARD_InitBootClocks(void);
 #define BOARD_BOOTCLOCKRUN_CLK_1M                     1000000UL
 #define BOARD_BOOTCLOCKRUN_CLK_24M                    24000000UL
 #define BOARD_BOOTCLOCKRUN_CSI_CLK_ROOT               12000000UL
-#define BOARD_BOOTCLOCKRUN_ENET1_TX_CLK               2400000UL
 #define BOARD_BOOTCLOCKRUN_ENET2_125M_CLK             1200000UL
-#define BOARD_BOOTCLOCKRUN_ENET2_TX_CLK               1200000UL
+#define BOARD_BOOTCLOCKRUN_ENET2_REF_CLK              0UL
+#define BOARD_BOOTCLOCKRUN_ENET2_TX_CLK               0UL
 #define BOARD_BOOTCLOCKRUN_ENET_125M_CLK              2400000UL
 #define BOARD_BOOTCLOCKRUN_ENET_25M_REF_CLK           1200000UL
+#define BOARD_BOOTCLOCKRUN_ENET_REF_CLK               0UL
+#define BOARD_BOOTCLOCKRUN_ENET_TX_CLK                0UL
 #define BOARD_BOOTCLOCKRUN_FLEXIO1_CLK_ROOT           30000000UL
 #define BOARD_BOOTCLOCKRUN_FLEXIO2_CLK_ROOT           30000000UL
 #define BOARD_BOOTCLOCKRUN_FLEXSPI2_CLK_ROOT          264000000UL
@@ -123,3 +118,4 @@ void BOARD_BootClockRUN(void);
 #endif /* __cplusplus*/
 
 #endif /* _CLOCK_CONFIG_H_ */
+
