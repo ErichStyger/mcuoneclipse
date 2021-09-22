@@ -25,6 +25,7 @@ static void myTask(void *pvParameters) {
 }
 
 void APP_Run(void) {
+ PL_Init();
 	if (xTaskCreate(myTask, "myTask", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS)  {
 	    printf("ERROR: Creating task failed, not enough memory?\n");
 		for(;;){}
