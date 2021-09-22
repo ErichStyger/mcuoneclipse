@@ -16,6 +16,10 @@
 #include "McuCriticalSection.h"
 #include "McuSystemView.h"
 #include "McuI2CSpy.h"
+#include "McuShell.h"
+#if PL_CONFIG_USE_USB_CDC
+  #include "virtual_com.h"
+#endif
 
 void PL_Init(void) {
   /* McuLib modules: */
@@ -31,4 +35,9 @@ void PL_Init(void) {
   McuSystemView_Init();
 #endif
   McuCriticalSection_Init();
+  McuShell_Init();
+#if PL_CONFIG_USE_USB_CDC
+  USB_APPInit(); /* Initialize USB first before the UART, because this changes the clock settings! */
+#endif
+
 }

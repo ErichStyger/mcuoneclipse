@@ -7,7 +7,10 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-/* \brief
+
+#define PL_CONFIG_USE_USB_CDC   (1)
+
+/*! \brief
  * Platform initialization
  */
 void PL_Init(void);

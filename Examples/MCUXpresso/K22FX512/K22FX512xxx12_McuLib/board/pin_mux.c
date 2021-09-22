@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v6.0
+product: Pins v10.0
 processor: MK22FX512xxx12
 package_id: MK22FX512VLK12
 mcu_data: ksdk2_0
-processor_version: 6.0.0
+processor_version: 10.0.0
 pin_labels:
 - {pin_num: '5', pin_signal: PTE4/LLWU_P2/SPI1_PCS0/UART3_TX/SDHC0_D3/TRACE_D0, label: ACC_INT1}
 - {pin_num: '6', pin_signal: PTE5/SPI1_PCS2/UART3_RX/SDHC0_D2/FTM3_CH0, label: ACC_INT2}
