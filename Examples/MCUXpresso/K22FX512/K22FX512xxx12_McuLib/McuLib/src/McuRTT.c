@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.089, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-08-27, 17:20, # CodeGen: 576
+**     Date/Time   : 2020-10-23, 19:24, # CodeGen: 710
 **     Abstract    :
 **
 **     Settings    :
 **          Component name                                 : McuRTT
-**          Version                                        : V6.32b
+**          Version                                        : V6.86e
 **          Number of Up Channels                          : 3
 **          Number of Down Channels                        : 3
 **          Max Blocked Interrupt Level                    : 3
@@ -51,7 +51,7 @@
 **         Deinit           - void McuRTT_Deinit(void);
 **         Init             - void McuRTT_Init(void);
 **
-** * (c) Copyright Segger, 2019
+** * (c) Copyright Segger, 2020
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
@@ -96,6 +96,9 @@
 /* MODULE McuRTT. */
 
 #include "McuRTT.h"
+#if McuRTT_CONFIG_BLOCKING_SEND
+  #include "McuWait.h"
+#endif
 
 /* default standard I/O struct */
 McuShell_ConstStdIOType McuRTT_stdio = {
@@ -290,15 +293,29 @@ void McuRTT_StdIOReadChar(uint8_t *c)
 void McuRTT_StdIOSendChar(uint8_t ch)
 {
 #if McuRTT_CONFIG_BLOCKING_SEND
+  #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    #define RTT_STDIO_CNTR (100)
+	static uint8_t cntr = 0;
+  #endif
   #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0 && McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
   int timeoutMs = McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS;
   #endif
 
   for(;;) { /* will break */
     if (McuRTT_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
+  #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+      if (cntr>0) {
+        cntr--;
+      }
+  #endif
       break; /* was able to send character, get out of waiting loop */
     }
   #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    cntr++;
+    if (cntr>RTT_STDIO_CNTR) { /* waiting for too long, give up */
+      cntr = RTT_STDIO_CNTR;
+      return;
+    }
     McuWait_WaitOSms(McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS);
     #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if(timeoutMs<=0) {

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Wait
-**     Version     : Component 01.084, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.091, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-13, 10:22, # CodeGen: 471
+**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
 **     Abstract    :
 **          Implements busy waiting routines.
 **     Settings    :
@@ -19,16 +19,16 @@
 **     Contents    :
 **         Wait10Cycles   - void McuWait_Wait10Cycles(void);
 **         Wait100Cycles  - void McuWait_Wait100Cycles(void);
-**         WaitCycles     - void McuWait_WaitCycles(uint16_t cycles);
+**         WaitCycles     - void McuWait_WaitCycles(uint32_t cycles);
 **         WaitLongCycles - void McuWait_WaitLongCycles(uint32_t cycles);
-**         Waitms         - void McuWait_Waitms(uint16_t ms);
-**         Waitus         - void McuWait_Waitus(uint16_t us);
-**         Waitns         - void McuWait_Waitns(uint16_t ns);
+**         Waitms         - void McuWait_Waitms(uint32_t ms);
+**         Waitus         - void McuWait_Waitus(uint32_t us);
+**         Waitns         - void McuWait_Waitns(uint32_t ns);
 **         WaitOSms       - void McuWait_WaitOSms(void);
 **         Init           - void McuWait_Init(void);
-**         Deinit         - void McuWait_DeInit(void);
+**         Deinit         - void McuWait_Deinit(void);
 **
-** * Copyright (c) 2013-2019, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -82,7 +82,7 @@
 ** ===================================================================
 */
 #ifdef __GNUC__
-#if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+#if McuLib_CONFIG_CPU_IS_RISC_V  || McuLib_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
   #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
   #else
     __attribute__((no_instrument_function))
@@ -102,7 +102,7 @@ void McuWait_Wait10Cycles(void)
 
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   /* NOTE: Cortex-M0 and M4 have 1 cycle for a NOP */
-  /* Compiler is GNUC */
+#if McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_GNU
   __asm (
    /* bl Wait10Cycles() to here: [4] */
    "nop   \n\t" /* [1] */
@@ -110,8 +110,28 @@ void McuWait_Wait10Cycles(void)
    "nop   \n\t" /* [1] */
    "bx lr \n\t" /* [3] */
   );
+#elif McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR
+  /* bl Wai10Cycles() to here: [4] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("nop");   /* [1] */
+  __asm("bx lr"); /* [3] */
+#elif McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_KEIL
+  __asm {
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    /*bx lr*/                                /* [3] */
+  }
+#else
+  __asm {
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    nop                                      /* [1] */
+    bx lr                                    /* [3] */
+  }
+#endif
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [4] for overhead */
    "nop   \n\t" /* [1] */
    "nop   \n\t" /* [1] */
@@ -132,8 +152,11 @@ void McuWait_Wait10Cycles(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
+#if McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR
+  /* Implemented in assembly file, as IAR does not support labels in HLI */
+#else
 #ifdef __GNUC__
-  #if McuLib_CONFIG_CPU_IS_RISC_V /* naked is ignored for RISC-V gcc */
+  #if McuLib_CONFIG_CPU_IS_RISC_V || McuLib_CONFIG_CPU_IS_ESP32 /* naked is ignored for RISC-V or ESP32 gcc */
     #ifdef __cplusplus  /* gcc 4.7.3 in C++ mode does not like no_instrument_function: error: can't set 'no_instrument_function' attribute after definition */
     #else
       __attribute__((no_instrument_function))
@@ -151,18 +174,19 @@ void McuWait_Wait100Cycles(void)
   /* This function will spend 100 CPU cycles (including call overhead). */
   /*lint -save -e522 function lacks side effect. */
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
+#if McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_GNU
   __asm (
    /* bl to here:               [4] */
    "push {r0}   \n\t"        /* [2] */
    "movs r0, #0 \n\t"        /* [1] */
-   "loop:       \n\t"
+   "loopWait100Cycles:       \n\t"
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "add r0,#1   \n\t"        /* [1] */
    "cmp r0,#9   \n\t"        /* [1] */
-   "bls loop    \n\t"        /* [3] taken, [1] not taken */
+   "bls loopWait100Cycles    \n\t"        /* [3] taken, [1] not taken */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
    "nop         \n\t"        /* [1] */
@@ -173,31 +197,64 @@ void McuWait_Wait100Cycles(void)
    "pop {r0}    \n\t"        /* [2] */
    "bx lr       \n\t"        /* [3] */
   );
+#elif McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR
+  /* need to implement in assembly, as IAR does not support labels in HLI */
+#elif McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_KEIL
+   /* bl to here:    [4] */
+    movs r0, #0   /* [1] */
+loop
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    nop           /* [1] */
+    adds r0,r0,#1 /* [1] */
+    cmp r0,#9     /* [1] */
+    bls loop      /* [3] taken, [1] not taken */
+    nop           /* [1] */
+    bx lr         /* [3] */
+#else
+  __asm {
+   /* bl Wai10Cycles() to here: [4] */
+    movs r0, #0 /* [1] */
+   loop:
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    nop         /* [1] */
+    add r0,#1   /* [1] */
+    cmp r0,#9   /* [1] */
+    bls loop    /* [3] taken, [1] not taken */
+    nop         /* [1] */
+    bx lr       /* [3] */
+  }
+#endif
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  /* \todo */
   __asm ( /* assuming [10] for overhead */
     "  li a5,20        \n\t"
-    "Loop:             \n\t"
+    "LoopWait100Cycles:             \n\t"
     "  addi a5,a5,-1   \n\t"
-    "  bgtz a5, Loop   \n\t"
+    "  bgtz a5, LoopWait100Cycles   \n\t"
   );
 #endif
   /*lint -restore */
 }
+#endif  /* McuLib_CONFIG_COMPILER==McuLib_CONFIG_COMPILER_IAR */
 
 /*
 ** ===================================================================
 **     Method      :  WaitCycles (component Wait)
 **
 **     Description :
-**         Wait for a specified number of CPU cycles (16bit data type).
+**         Wait for a specified number of CPU cycles.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         cycles          - The number of cycles to wait.
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuWait_WaitCycles(uint16_t cycles)
+void McuWait_WaitCycles(uint32_t cycles)
 {
   /*lint -save -e522 function lacks side effect. */
 #if McuWait_CONFIG_USE_CYCLE_COUNTER
@@ -208,15 +265,13 @@ void McuWait_WaitCycles(uint16_t cycles)
     /* wait */
   }
 #else
-  int32_t counter = cycles;
-
-  while(counter > 100) {
+  while(cycles >= 100u) {
     McuWait_Wait100Cycles();
-    counter -= 100;
+    cycles -= 100u;
   }
-  while(counter > 10) {
+  while(cycles >= 10u) {
     McuWait_Wait10Cycles();
-    counter -= 10;
+    cycles -= 10u;
   }
 #endif
   /*lint -restore */
@@ -249,7 +304,7 @@ void McuWait_WaitLongCycles(uint32_t cycles)
     McuWait_WaitCycles(60000);
     cycles -= 60000;
   }
-  McuWait_WaitCycles((uint16_t)cycles);
+  McuWait_WaitCycles(cycles);
   /*lint -restore */
 #endif
 }
@@ -267,7 +322,7 @@ void McuWait_WaitLongCycles(uint32_t cycles)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuWait_Waitms(uint16_t ms)
+void McuWait_Waitms(uint32_t ms)
 {
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
@@ -347,7 +402,7 @@ void McuWait_Init(void)
 
 /*
 ** ===================================================================
-**     Method      :  DeInit (component Wait)
+**     Method      :  Deinit (component Wait)
 **
 **     Description :
 **         Driver de-initialization routine

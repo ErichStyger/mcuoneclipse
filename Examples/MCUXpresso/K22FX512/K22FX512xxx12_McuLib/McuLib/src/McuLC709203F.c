@@ -124,7 +124,7 @@ void McuLC_Wakeup(void) {
    * wait for 400 us
    *  */
 #if McuLib_CONFIG_CPU_IS_STM
-	/* set SDA pin of I2C to GPIO Ouput mode. */
+	/* set SDA pin of I2C to GPIO Output mode. */
 	HAL_I2C_MspDeInit(&hi2c3);
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   GPIO_InitStruct.Pin = I2C_SDA_Pin;
@@ -155,7 +155,7 @@ void McuLC_Wakeup(void) {
                ));
   PORT_PDD_SetPinOpenDrain(PORTB_BASE_PTR, 0x03u, PORT_PDD_OPEN_DRAIN_ENABLE); /* Set SDA pin as open drain */
 #else
-  /*! \todo NYI for NXP SDK yet */
+  /* NYI for NXP SDK yet */
 #endif
 }
 

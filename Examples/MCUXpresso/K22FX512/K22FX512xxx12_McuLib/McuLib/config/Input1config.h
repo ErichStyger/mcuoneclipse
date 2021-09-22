@@ -1,9 +1,12 @@
 /**
  * \file
  * \brief Configuration header file for SDK_BitIO
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the SDK Bit I/O module.
  */
+
 #ifndef __Input1_CONFIG_H
 #define __Input1_CONFIG_H
 
@@ -64,7 +67,7 @@
 #define Input1_CONFIG_INIT_PIN_DIRECTION_OUTPUT  (2)
 
 #ifndef Input1_CONFIG_INIT_PIN_DIRECTION
-  #define Input1_CONFIG_INIT_PIN_DIRECTION  Input1_CONFIG_INIT_PIN_DIRECTION_OUTPUT
+  #define Input1_CONFIG_INIT_PIN_DIRECTION  Input1_CONFIG_INIT_PIN_DIRECTION_INPUT
 #endif
 
 #ifndef Input1_CONFIG_DO_PIN_MUXING

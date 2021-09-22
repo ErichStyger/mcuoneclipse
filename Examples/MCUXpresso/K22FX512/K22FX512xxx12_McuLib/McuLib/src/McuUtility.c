@@ -4,14 +4,15 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Utility
-**     Version     : Component 01.160, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.164, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-12, 11:31, # CodeGen: 368
+**     Date/Time   : 2020-11-23, 10:16, # CodeGen: 715
 **     Abstract    :
 **          Contains various utility functions.
 **     Settings    :
 **          Component name                                 : McuUtility
 **     Contents    :
+**         SkipSpaces              - void McuUtility_SkipSpaces(const unsigned char **str);
 **         strcpy                  - void McuUtility_strcpy(uint8_t *dst, size_t dstSize, const unsigned char *src);
 **         strcat                  - void McuUtility_strcat(uint8_t *dst, size_t dstSize, const unsigned char *src);
 **         strcatPad               - void McuUtility_strcatPad(uint8_t *dst, size_t dstSize, const unsigned char...
@@ -63,6 +64,8 @@
 **         ScanHex32uNumber        - uint8_t McuUtility_ScanHex32uNumber(const unsigned char **str, uint32_t *val);
 **         ScanSeparatedNumbers    - uint8_t McuUtility_ScanSeparatedNumbers(const unsigned char **str, uint8_t...
 **         ScanDoubleQuotedString  - uint8_t McuUtility_ScanDoubleQuotedString(const uint8_t **cmd, uint8_t *buf,...
+**         ScanRGB                 - uint8_t McuUtility_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g,...
+**         ScanRGB32               - uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb);
 **         strcmp                  - int16_t McuUtility_strcmp(const char *, const char *);
 **         strncmp                 - int16_t McuUtility_strncmp(const char *, const char *, size_t size);
 **         strFind                 - int16_t McuUtility_strFind(uint8_t *str, uint8_t *subStr);
@@ -83,7 +86,7 @@
 **         Deinit                  - void McuUtility_Deinit(void);
 **         Init                    - void McuUtility_Init(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -2748,6 +2751,108 @@ void McuUtility_strcatNumHex(uint8_t *dst, size_t dstSize, uint32_t num, uint8_t
     McuUtility_strcatNum24Hex(dst, dstSize, num);
   } else { /* nofBytes==4 */
     McuUtility_strcatNum32Hex(dst, dstSize, num);
+  }
+}
+
+/*
+** ===================================================================
+**     Method      :  ScanRGB (component Utility)
+**
+**     Description :
+**         Scans a RGB value and stores it in r, g and b. String can be
+**         a single hex number (0x120506) or three decimal values (18 5
+**         6)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * r               - Pointer to red value
+**       * g               - Pointer to green value
+**       * b               - Pointer to blue value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuUtility_ScanRGB(const unsigned char **str, uint8_t *r, uint8_t *g, uint8_t *b)
+{
+  const unsigned char *p;
+  int32_t val32;
+  int32_t rv, gv, bv;
+
+  p = *str;
+  while(*p==' ') {
+    p++; /* skip leading spaces */
+  }
+  if (   *p=='0' && *(p+1)=='x' /* hexadecimal, read single number */
+      && McuUtility_xatoi(&p, &val32)==ERR_OK
+      && val32 <= 0xffffff
+     )
+  {
+    *r = (uint8_t)((val32>>16)&0xff);
+    *g = (uint8_t)((val32>>8)&0xff);
+    *b = (uint8_t)(val32&0xff);
+    *str = p;
+    return ERR_OK;
+  } else { /* not starting with 0x (hex): read three values */
+    if (   McuUtility_xatoi(&p, &rv)==ERR_OK && rv>=0 && rv<=0xff
+        && McuUtility_xatoi(&p, &gv)==ERR_OK && gv>=0 && gv<=0xff
+        && McuUtility_xatoi(&p, &bv)==ERR_OK && bv>=0 && bv<=0xff
+       )
+    {
+      *r = (uint8_t)rv;
+      *g = (uint8_t)gv;
+      *b = (uint8_t)bv;
+      *str = p;
+      return ERR_OK;
+    }
+  }
+  return ERR_FAILED;
+}
+
+/*
+** ===================================================================
+**     Method      :  ScanRGB32 (component Utility)
+**
+**     Description :
+**         Scans a RGB value and stores it in a single 32bit value.
+**         String can be a single hex number (0x120506) or three
+**         decimal values (18 5 6)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         str             - String to scan
+**       * rgb             - Pointer to red value
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuUtility_ScanRGB32(const unsigned char **str, uint32_t *rgb)
+{
+  uint8_t res, r, g, b;
+
+  res = McuUtility_ScanRGB(str, &r, &g, &b);
+  if (res==ERR_OK) {
+    *rgb = ((uint32_t)r<<16)|((uint32_t)g<<8)|b;
+    return ERR_OK;
+  }
+  return ERR_FAILED;
+}
+
+/*
+** ===================================================================
+**     Method      :  SkipSpaces (component Utility)
+**
+**     Description :
+**         Skips spaces
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * str             - Pointer to string to scan. Returns until
+**                           where it has scanned.
+**     Returns     : Nothing
+** ===================================================================
+*/
+void McuUtility_SkipSpaces(const unsigned char **str)
+{
+  while(**str == ' ') {
+    (*str)++; /* skip space */
   }
 }
 

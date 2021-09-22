@@ -56,7 +56,11 @@
 #include "usb_device_descriptor.h"
 #include "McuShell.h"
 extern McuShell_ConstStdIOType USB_CdcStdio;
+extern McuShell_ConstStdIOType USB_CdcStdioNonBlockingSend;
 extern uint8_t USB_CdcDefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
+/* return the number of free bytes in the send buffer */
+size_t USB_CdcGetFreeBytesInTxBuffer(void);
 
 void USB_APPInit(void);
 bool USB_CdcIsConnected(void);

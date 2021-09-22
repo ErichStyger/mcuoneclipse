@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Timeout
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2018-07-03, 08:21, # CodeGen: 331
+**     Date/Time   : 2020-08-14, 06:24, # CodeGen: 679
 **     Abstract    :
 **
 The module implements timeout functionality. With this implementation,
@@ -26,7 +26,7 @@ a periodic interrupt.
 **         AddTick        - void McuTimeout_AddTick(void);
 **         Init           - void McuTimeout_Init(void);
 **
-** * Copyright (c) 2011-2016, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

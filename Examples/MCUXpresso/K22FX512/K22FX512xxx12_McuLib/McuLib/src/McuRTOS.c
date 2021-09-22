@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.579, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-05-18, 07:41, # CodeGen: 529
+**     Date/Time   : 2021-04-30, 11:41, # CodeGen: 735
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.2.1
+**          RTOS Version                                   : V10.4.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -34,7 +34,7 @@
 **          Thread Local Storage Pointers                  : 0
 **          Use Trace Facility                             : yes
 **          Debug Helpers                                  : 
-**            Enable GDB Debug Helper                      : yes
+**            Enable GDB Debug Helper                      : no
 **            uxTopUsedPriority                            : yes
 **            Heap Indication Constant                     : yes
 **          Segger System Viewer Trace                     : Disabled
@@ -110,7 +110,6 @@
 **         xTaskCreateStatic                    - TaskHandle_t McuRTOS_xTaskCreateStatic(pdTASK_CODE pvTaskCode, const portCHAR...
 **         vTaskDelete                          - void McuRTOS_vTaskDelete(xTaskHandle pxTask);
 **         vTaskStartScheduler                  - void McuRTOS_vTaskStartScheduler(void);
-**         vTaskEndScheduler                    - void McuRTOS_vTaskEndScheduler(void);
 **         vTaskSuspend                         - void McuRTOS_vTaskSuspend(xTaskHandle pxTaskToSuspend);
 **         vTaskSuspendAll                      - void McuRTOS_vTaskSuspendAll(void);
 **         vTaskResume                          - void McuRTOS_vTaskResume(xTaskHandle pxTaskToResume);
@@ -231,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2019 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -276,27 +275,53 @@
 #include "McuRTOS.h"
 #if McuLib_CONFIG_SDK_USE_FREERTOS
 
-#include "portTicks.h"                 /* interface to tick counter */
-
-
+#if !McuLib_CONFIG_CPU_IS_ESP32
+  #include "portTicks.h"                 /* interface to tick counter */
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_NXP_SDK_USED
+  #include "fsl_clock.h"
+#endif
+#include "McuUtility.h"
 #if configHEAP_SCHEME_IDENTIFICATION
   /* special variable identifying the used heap scheme */
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
 #endif
 
 
+#if (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) && !McuLib_CONFIG_CPU_IS_ESP32
+  /* This is only really needed for debugging with openOCD:
+   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
+   * present in the kernel, so it has to be supplied by other means for
+   * OpenOCD's threads awareness.
+   *
+   * Add this file to your project, and, if you're using --gc-sections,
+   * ``--undefined=uxTopUsedPriority'' (or
+   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
+   * linking) to your LDFLAGS; same with all the other symbols you need.
+   */
+  const int
+  #ifdef __GNUC__
+  __attribute__((used))
+  #endif
+  uxTopUsedPriority = configMAX_PRIORITIES-1;
+#endif
+
 #if configUSE_SHELL
 static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
+#if tskKERNEL_VERSION_MAJOR>=10 && !McuLib_CONFIG_CPU_IS_ESP32
   #define SHELL_MAX_NOF_TASKS 16 /* maximum number of tasks, as specified in the properties */
   UBaseType_t nofTasks, i;
   TaskHandle_t taskHandles[SHELL_MAX_NOF_TASKS];
+  StackType_t *stackBeg, *stackEnd, *topOfStack;
+  uint8_t staticallyAllocated;
+  uint8_t tmpBuf[32];
+  uint16_t stackSize;
+#endif
 #if configUSE_TRACE_FACILITY
   TaskStatus_t taskStatus;
 #endif
-  StackType_t *stackBeg, *stackEnd, *topOfStack;
-  uint8_t staticallyAllocated;
-  uint8_t buf[32], tmpBuf[32], res;
-  uint16_t stackSize;
+  uint8_t buf[32];
+  uint8_t res;
 #if configGENERATE_RUN_TIME_STATS
   uint32_t ulTotalTime, ulStatsAsPercentage;
 #endif
@@ -391,6 +416,9 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
   ulTotalTime /= 100UL; /* For percentage calculations. */
 #endif
 
+#if tskKERNEL_VERSION_MAJOR<10 || McuLib_CONFIG_CPU_IS_ESP32 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
+  McuShell_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0 and not for ESP32\r\n", io->stdOut);
+#else
   nofTasks = uxTaskGetNumberOfTasks();
   if (nofTasks>SHELL_MAX_NOF_TASKS) {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"WARNING: more tasks than Shell maximum number of tasks.\r\n");
@@ -546,8 +574,9 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
       McuShell_SendStr(buf, io->stdOut);
 #endif
       McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
-    } /* for */
-  } /* if */
+    } /* if */
+  } /* for */
+#endif /* tskKERNEL_VERSION_MAJOR */
   return res;
 }
 #endif
@@ -556,7 +585,7 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[16];
 
-  McuShell_SendStatusStr((unsigned char*)"McuRTOS", (unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuRTOS", (unsigned char*)"FreeRTOS status information\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  Version", (const unsigned char*)tskKERNEL_VERSION_NUMBER, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  RTOS ticks", (const unsigned char*)"", io->stdOut);
@@ -775,36 +804,6 @@ void McuRTOS_taskDISABLE_INTERRUPTS(void)
 */
 /*
 void McuRTOS_taskENABLE_INTERRUPTS(void)
-{
-  *** Implemented as macro in the header file McuRTOS.h
-}
-*/
-
-/*
-** ===================================================================
-**     Method      :  vTaskEndScheduler (component FreeRTOS)
-**
-**     Description :
-**         Stops the real time kernel tick. All created tasks will be
-**         automatically deleted and multitasking (either preemptive or
-**         cooperative) will stop. Execution then resumes from the
-**         point where vTaskStartScheduler() was called, as if
-**         vTaskStartScheduler() had just returned.
-**         See the demo application file main. c in the demo/PC
-**         directory for an example that uses vTaskEndScheduler ().
-**         vTaskEndScheduler () requires an exit function to be defined
-**         within the portable layer (see vPortEndScheduler () in port.
-**         c for the PC port). This performs hardware specific
-**         operations such as stopping the kernel tick.
-**         vTaskEndScheduler () will cause all of the resources
-**         allocated by the kernel to be freed - but will not free
-**         resources allocated by application tasks.
-**     Parameters  : None
-**     Returns     : Nothing
-** ===================================================================
-*/
-/*
-void McuRTOS_vTaskEndScheduler(void)
 {
   *** Implemented as macro in the header file McuRTOS.h
 }
@@ -2296,13 +2295,21 @@ uint8_t McuRTOS_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
 */
 void McuRTOS_Init(void)
 {
+#if !McuLib_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
+  #if McuLib_CONFIG_NXP_SDK_USED
+  CLOCK_EnableClock(kCLOCK_Lptmr0);
+  #else /* Processor Expert */
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
+  #endif
 #endif
+#if !McuLib_CONFIG_CPU_IS_ESP32
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
+#endif
 #if configUSE_PERCEPIO_TRACE_HOOKS
   McuPercepio_Startup(); /* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
 #endif
@@ -5427,6 +5434,7 @@ void McuRTOS_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   McuRTOS_RunTimeCounter = 0;
 #endif
 }
@@ -5450,6 +5458,7 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t McuRTOS_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   return McuRTOS_RunTimeCounter;
   #endif
 #else

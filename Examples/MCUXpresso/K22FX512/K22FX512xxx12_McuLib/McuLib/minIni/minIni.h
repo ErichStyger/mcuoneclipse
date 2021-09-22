@@ -19,7 +19,7 @@
 #ifndef MININI_H
 #define MININI_H
 
-#include "MinINIconfig.h" /* MinIni config file */
+#include "McuMinINIconfig.h" /* MinIni config file */
 #include "minGlue.h"
 #include <stddef.h> /* for size_t */
 

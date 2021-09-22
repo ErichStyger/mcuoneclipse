@@ -1,6 +1,8 @@
 /**
  * \file
- * \brief Configuration header file for I2CSpy
+ * \brief Configuration header file for 24AA_EEPROM
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings the External I2C EEPROM module.
  */
@@ -57,6 +59,16 @@
 #ifndef McuEE24_CONFIG_TIMEOUT_BLOCK_MS
   #define McuEE24_CONFIG_TIMEOUT_BLOCK_MS          (60)
     /*!< number of milliseconds for timeout using for block write */
+#endif
+
+#ifndef McuEE24_CONFIG_USE_SHELL
+  #define McuEE24_CONFIG_USE_SHELL               (1)
+    /*!< 1: use shell, 0: do not use shell */
+#endif
+
+#ifndef McuEE24_CONFIG_USE_UTILITY
+  #define McuEE24_CONFIG_USE_UTILITY               (1)
+    /*!< 1: use utility module, 0: do not use utility module */
 #endif
 
 #endif /* __McuEE24_CONFIG_H */

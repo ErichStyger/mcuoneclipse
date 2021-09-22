@@ -6,7 +6,7 @@
 **     Component   : CriticalSection
 **     Version     : Component 01.014, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-03-11, 17:13, # CodeGen: 463
+**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
 **     Abstract    :
 **
 **     Settings    :
@@ -69,8 +69,13 @@
 
 /* other includes needed */
 #if McuCriticalSection_CONFIG_USE_RTOS_CRITICAL_SECTION
-  #include "FreeRTOS.h"
-  #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #if McuLib_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #else
+    #include "FreeRTOS.h"
+    #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -120,7 +125,7 @@ extern "C" {
   #if McuLib_CONFIG_CPU_IS_RISC_V
     #define McuCriticalSection_EnterCritical() \
       do {                                  \
-      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts \todo */ \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts */ \
       } while(0)
   #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
     #define McuCriticalSection_EnterCritical() \
@@ -156,7 +161,7 @@ extern "C" {
   #if McuLib_CONFIG_CPU_IS_RISC_V
     #define McuCriticalSection_ExitCritical() \
       do {                                  \
-        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts \todo */ \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts */ \
       } while(0)
   #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
     #define McuCriticalSection_ExitCritical() \

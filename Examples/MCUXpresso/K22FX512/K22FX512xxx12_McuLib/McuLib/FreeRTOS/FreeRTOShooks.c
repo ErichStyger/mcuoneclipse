@@ -1,8 +1,10 @@
 /*
  * FreeRTOShooks.c
  *
+ * Copyright (c) 2019, 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
  *  This is a default FreeRTOS hooks file you can use in your application.
- *      Author: Erich Styger
  */
 
 #include "McuLibconfig.h"
@@ -124,13 +126,13 @@ void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
   (void)expectedIdleTicks; /* not used */
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   /* example for ARM Cortex-M (enable SetOperationMode() in CPU component): */
-  // Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); /* Processor Expert way to get into WAIT mode */
+  /* Cpu_SetOperationMode(DOM_WAIT, NULL, NULL); */ /* Processor Expert way to get into WAIT mode */
   /* or to wait for interrupt: */
     __asm volatile("dsb");
     __asm volatile("wfi");
     __asm volatile("isb");
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  #warning "NYI" /* \todo */
+  #warning "NYI"
 #elif 0
   /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
   Cpu_SetWaitMode();

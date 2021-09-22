@@ -1,8 +1,10 @@
 /**
  * \file
- * \brief Configuration header file for GenericSWI2C
+ * \brief Configuration header file for GenericSWSPI
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
- * This header file is used to configure settings of the software (bit-banging) I2C module.
+ * This header file is used to configure settings of the software (bit-banging) SPI module.
  */
 
 #ifndef __McuGenericSWSPI_CONFIG_H

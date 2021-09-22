@@ -1,9 +1,12 @@
 /**
  * \file
  * \brief Configuration header file for SDK_BitIO
+ * Copyright (c) 2020, Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  *
  * This header file is used to configure settings of the SDK Bit I/O module.
  */
+
 #ifndef __C21_CONFIG_H
 #define __C21_CONFIG_H
 
