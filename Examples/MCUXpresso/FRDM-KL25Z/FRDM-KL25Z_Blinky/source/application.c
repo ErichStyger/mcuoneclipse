@@ -13,6 +13,8 @@
 #include "McuLED.h"
 #include "leds.h"
 
+uint32_t blinkyCounter = 0;
+
 static void blinky(void *pv) {
 	TickType_t prevTime;
 	for(;;) {
@@ -22,6 +24,7 @@ static void blinky(void *pv) {
 	  McuWait_Waitms(100);
 	  McuLED_Off(LEDS_green);
 	  vTaskDelayUntil(&prevTime, pdMS_TO_TICKS(1000));
+	  blinkyCounter++;
 	}
 }
 
