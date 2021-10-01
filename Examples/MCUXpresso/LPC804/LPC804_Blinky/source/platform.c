@@ -20,7 +20,7 @@ static void WSPinInit(void) {
   McuGPIO_Config_t config;
 
   McuGPIO_GetDefaultConfig(&config);
-  /* PIO0_9 */
+  /* PIO0_8 */
   config.hw.gpio = GPIO;
   config.hw.iocon = IOCON_INDEX_PIO0_8;
   config.hw.pin =  8;
