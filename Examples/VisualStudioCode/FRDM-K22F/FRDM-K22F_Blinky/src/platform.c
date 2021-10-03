@@ -18,9 +18,13 @@
 
 void PL_Init(void) {
   /* clocking */
+#if PL_CONFIG_IS_TINY_K22
+  CLOCK_EnableClock(kCLOCK_PortC); /* used by blue LED */
+#else
   CLOCK_EnableClock(kCLOCK_PortA); /* used by leds */
   CLOCK_EnableClock(kCLOCK_PortB); /* used by sd card detect and I2C */
   CLOCK_EnableClock(kCLOCK_PortD); /* used by leds */
+#endif
 
   /* library modules */
   McuLib_Init();
