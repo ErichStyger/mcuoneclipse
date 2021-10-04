@@ -23,7 +23,9 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 # List of source files
 set(SRC_FILES
         src/main.c
+        src/application.c
         src/leds.c
+        src/Shell.c
         src/platform.c
 
         device/startup_MK22F51212.S
@@ -31,6 +33,10 @@ set(SRC_FILES
 
         drivers/fsl_clock.c
         drivers/fsl_gpio.c
+        drivers/fsl_sim.c
+        drivers/fsl_uart.c
+        drivers/fsl_lpuart.c
+        drivers/fsl_i2c.c
 
         McuLib/src/McuLib.c
         McuLib/src/McuGPIO.c
@@ -39,6 +45,15 @@ set(SRC_FILES
         McuLib/src/McuUtility.c
         McuLib/src/McuArmTools.c
         McuLib/src/McuRTOS.c
+        McuLib/src/McuLog.c
+        McuLib/src/McuShell.c
+        McuLib/src/McuXFormat.c
+        McuLib/src/McuShellUart.c
+
+        McuLib/src/McuRTT.c
+        McuLib/SEGGER_RTT/SEGGER_RTT.c
+        McuLib/SEGGER_RTT/RTT_Syscalls_GCC.c
+        McuLib/SEGGER_RTT/SEGGER_RTT_printf.c
 
         McuLib/FreeRTOS/FreeRTOShooks.c
         McuLib/FreeRTOS/Source/croutine.c
@@ -88,6 +103,9 @@ target_include_directories(${EXECUTABLE} PRIVATE
         McuLib/TraceRecorder/config
         McuLib/TraceRecorder/include
         McuLib/TraceRecorder/streamports/Jlink_RTT/include
+
+        McuLib/FatFS
+        McuLib/FatFS/source
         )
 
 # Compiler options

@@ -87,7 +87,6 @@
 /* macros dealing with tick counter */
 #if configSYSTICK_USE_LOW_POWER_TIMER
   #if !McuLib_CONFIG_PEX_SDK_USED
-    /*! \todo */
     #define LPTMR0_BASE_PTR             LPTMR0  /* low power timer address base */
     #define configLOW_POWER_TIMER_VECTOR_NUMBER   LPTMR0_IRQn /* low power timer IRQ number */
     #define ENABLE_TICK_COUNTER()       LPTMR_StartTimer(LPTMR0_BASE_PTR); LPTMR_EnableInterrupts(LPTMR0_BASE_PTR, kLPTMR_TimerInterruptEnable)
@@ -120,7 +119,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
     #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
-    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! \todo SDK has no access method for this */
+    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*! SDK has no access method for this */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
     #define SET_TICK_DURATION(val)      LPTMR_PDD_WriteCompareReg(LPTMR0_BASE_PTR, val)
@@ -163,7 +162,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
       /* using Low Power Timer */
       #if CONFIG_PEX_SDK_USEDMcuLib_CONFIG_PEX_SDK_USED
         #define LPTMR_CSR_TCF_MASK           0x80u
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0/*! \todo */  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0 /* returns TRUE if tick interrupt had fired */
       #else
         #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR_PDD_GetInterruptFlag(LPTMR0_BASE_PTR)!=0)  /* returns TRUE if tick interrupt had fired */
       #endif
@@ -607,7 +606,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
         tickDuration -= tmp;
       }
       if (tickDuration > 1) {
-        /*! \todo Need to rethink this one! */
+        /*! Need to rethink this one! */
         //tickDuration -= 1; /* decrement by one, to compensate for one timer tick, as we are already part way through it */
       } else {
         /* Not enough time to setup for the next tick, so skip it and setup for the
@@ -746,7 +745,6 @@ static void vPortInitTickTimer(void) {
   LPTMR_PDD_SelectPrescalerSource(LPTMR0_BASE_PTR, LPTMR_PDD_SOURCE_LPO1KHZ);
   LPTMR_PDD_EnablePrescalerBypass(LPTMR0_BASE_PTR, LPTMR_PDD_BYPASS_ENABLED);
 #elif McuLib_CONFIG_NXP_SDK_2_0_USED
-  /*! \todo */
   {
     lptmr_config_t config;
 
@@ -1216,7 +1214,7 @@ __asm void vPortSVCHandler(void) {
   ldr r0, [r1]
   /* Pop the core registers. */
 #if configENABLE_FPU
-  ldmia r0!, {r4-r11, r14} /* \todo: r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
+  ldmia r0!, {r4-r11, r14} /* r14, check http://sourceforge.net/p/freertos/discussion/382005/thread/a9406af1/?limit=25#3bc7 */
 #else
   ldmia r0!, {r4-r11}
 #endif

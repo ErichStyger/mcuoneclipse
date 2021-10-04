@@ -12,6 +12,14 @@
 #include "McuGPIO.h"
 #include "McuLED.h"
 #include "McuUtility.h"
+#include "McuRTT.h"
+#include "McuLog.h"
+#include "McuShell.h"
+#include "McuShellUart.h"
+#include "McuArmTools.h"
+
+#include "leds.h"
+#include "Shell.h"
 
 /* application modulMcues */
 #include "leds.h"
@@ -36,7 +44,13 @@ void PL_Init(void) {
   McuUtility_Init();
   McuLED_Init();
   McuGPIO_Init();
+  McuRTT_Init();
+  McuLog_Init();
+  McuShellUart_Init();
+  McuShell_Init();
+  McuLog_set_console(McuRTT_GetStdio(), 0);
 
   /* application modules */
   LEDS_Init();
+  SHELL_Init();
 }

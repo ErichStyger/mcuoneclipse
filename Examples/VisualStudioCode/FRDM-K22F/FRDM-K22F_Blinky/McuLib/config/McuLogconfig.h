@@ -34,7 +34,6 @@
     /*!< Number of console loggers */
 #endif
 
-
 #ifndef McuLog_CONFIG_LOG_TIMESTAMP_DATE
   #define McuLog_CONFIG_LOG_TIMESTAMP_DATE    (1)
     /*!< 1: add date to time stamp, 0: do not date for time stamp */
@@ -48,6 +47,11 @@
 #ifndef McuLog_CONFIG_LOG_STRIP_FILENAME_PATH
   #define McuLog_CONFIG_LOG_STRIP_FILENAME_PATH    (1)
     /*!< 1: strip path from file name, 0: keep file name untouched */
+#endif
+
+#ifndef McuLog_CONFIG_USE_RTT_CONSOLE
+  #define McuLog_CONFIG_USE_RTT_CONSOLE        (0)
+    /*!< 1: use use SEGGER RTT console outpot, 0: do not use SEGGER RTT */
 #endif
 
 #ifndef McuLog_CONFIG_USE_RTT_DATA_LOGGER

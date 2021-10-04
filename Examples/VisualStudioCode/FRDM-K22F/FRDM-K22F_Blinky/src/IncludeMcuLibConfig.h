@@ -134,7 +134,9 @@ Instructions:
 #define McuExtRTC_CONFIG_DEVICE                 (3231)  /* RTC device used */
 /* -------------------------------------------------*/
 /* McuLog */
-#define McuLog_CONFIG_USE_FILE                  (1)
+#define McuLog_CONFIG_USE_FILE                  (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_TIME        (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 /* -------------------------------------------------*/
 /* FatFS */
 #define McuLib_CONFIG_USE_FAT_FS                (1)

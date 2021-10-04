@@ -457,7 +457,7 @@ bool McuShell_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, 
         return TRUE;
       }
     }
-    /* \todo: handle TAB and SHIFT-TAB */
+    /* NYI: handle TAB and SHIFT-TAB */
   }
 #endif
 #else

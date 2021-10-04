@@ -36,16 +36,13 @@ Instructions:
 #if 1 /* example configuration for LPC845 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CORTEX_M          (0)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
-  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
 #elif 0 /* example configuration for LPC55xx */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)  /* LPC55xx */
   #define McuLib_CONFIG_CORTEX_M          (33)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
-  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S59
 #elif 0 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
-  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 #elif 0 /* example configuration for i.MX RT */
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */

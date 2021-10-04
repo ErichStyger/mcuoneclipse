@@ -57,7 +57,12 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
     }
   }
   McuShellUART_CONFIG_CLEAR_STATUS_FLAGS(McuShellUart_CONFIG_UART_DEVICE, flags);
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M && ((McuLib_CONFIG_CORTEX_M==4) || (McuLib_CONFIG_CORTEX_M==7))
+  /* ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping exception return operation might vector to incorrect interrupt.
+  * For Cortex-M7, if core speed much faster than peripheral register write speed, the peripheral interrupt flags may be still set after exiting ISR, this results to
+  * the same error similar with errata 83869. */
   __DSB();
+#endif
 }
 
 static void InitUart(void) {

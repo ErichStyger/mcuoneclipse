@@ -416,7 +416,6 @@ void spi_init(void)
 {
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     uint32_t sourceClock;
-    status_t res;
     dspi_master_config_t masterConfig;
 
     /*Master config*/
@@ -439,10 +438,7 @@ void spi_init(void)
     masterConfig.samplePoint = kDSPI_SckToSin0Clock;
 
     sourceClock = CLOCK_GetFreq(DSPI_MASTER_CLK_SRC);
-    res = DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
-    if (res!=kStatus_Success) {
-      for(;;) {}
-    }
+    DSPI_MasterInit((SPI_Type *)BOARD_SDSPI_SPI_BASE, &masterConfig, sourceClock);
 #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     spi_master_config_t userConfig = {0};
     uint32_t srcFreq               = 0;

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.026, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.027, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-13, 18:42, # CodeGen: 675
+**     Date/Time   : 2021-09-18, 09:57, # CodeGen: 748
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -33,7 +33,7 @@
 **         Init      - void DbgRd1_Init(void);
 **         Deinit    - void DbgRd1_Deinit(void);
 **
-** * Copyright (c) 2015-2020, Erich Styger
+** * Copyright (c) 2015-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -76,9 +76,9 @@
 #include "DbgRd1.h"
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DbgRd1_CONFIG_DO_PIN_MUXING
-    #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+    #if McuLib_CONFIG_CPU_IS_LPC
       #include "fsl_iocon.h" /* include SDK header file for I/O connection muxing */
-    #else /* normal Kinetis or LPC */
+    #else /* Kinetis */
       #include "fsl_port.h" /* include SDK header file for port muxing */
     #endif
   #endif
@@ -424,7 +424,7 @@ void DbgRd1_PutVal(bool Val)
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   PINS_DRV_WritePin(DbgRd1_CONFIG_PORT_NAME, DbgRd1_CONFIG_PIN_NUMBER, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
-  /*! \todo */
+  /* NYI */
 #endif
 }
 
@@ -442,7 +442,7 @@ void DbgRd1_Init(void)
 {
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if DbgRd1_CONFIG_DO_PIN_MUXING
-      #if (McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CORTEX_M==33) ||  (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)/* e.g. LPC55xx or LPC845 */
+      #if McuLib_CONFIG_CPU_IS_LPC
         #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
         #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
         #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
@@ -472,7 +472,7 @@ void DbgRd1_Init(void)
       #endif
   #endif
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_KINETIS_1_3
-  /*! \todo Pin Muxing not implemented */
+  /*! Pin Muxing not implemented */
   GPIO_DRV_Init(DbgRd1_InputConfig, DbgRd1_OutputConfig);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_S32K
   /* the following needs to be called in the application first:

@@ -275,7 +275,9 @@
 #include "McuRTOS.h"
 #if McuLib_CONFIG_SDK_USE_FREERTOS
 
-#include "portTicks.h"                 /* interface to tick counter */
+#if !McuLib_CONFIG_CPU_IS_ESP32
+  #include "portTicks.h"                 /* interface to tick counter */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_clock.h"
 #endif
@@ -286,7 +288,7 @@
 #endif
 
 
-#if configUSE_TOP_USED_PRIORITY || configLTO_HELPER
+#if (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) && !McuLib_CONFIG_CPU_IS_ESP32
   /* This is only really needed for debugging with openOCD:
    * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
    * present in the kernel, so it has to be supplied by other means for
@@ -306,7 +308,7 @@
 
 #if configUSE_SHELL
 static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
-#if tskKERNEL_VERSION_MAJOR>=10
+#if tskKERNEL_VERSION_MAJOR>=10 && !McuLib_CONFIG_CPU_IS_ESP32
   #define SHELL_MAX_NOF_TASKS 16 /* maximum number of tasks, as specified in the properties */
   UBaseType_t nofTasks, i;
   TaskHandle_t taskHandles[SHELL_MAX_NOF_TASKS];
@@ -414,8 +416,8 @@ static uint8_t PrintTaskList(const McuShell_StdIOType *io) {
   ulTotalTime /= 100UL; /* For percentage calculations. */
 #endif
 
-#if tskKERNEL_VERSION_MAJOR<10 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
-  McuShell_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0\r\n", io->stdOut);
+#if tskKERNEL_VERSION_MAJOR<10 || McuLib_CONFIG_CPU_IS_ESP32 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
+  McuShell_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0 and not for ESP32\r\n", io->stdOut);
 #else
   nofTasks = uxTaskGetNumberOfTasks();
   if (nofTasks>SHELL_MAX_NOF_TASKS) {
@@ -2293,7 +2295,9 @@ uint8_t McuRTOS_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
 */
 void McuRTOS_Init(void)
 {
+#if !McuLib_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
@@ -2303,7 +2307,9 @@ void McuRTOS_Init(void)
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
   #endif
 #endif
+#if !McuLib_CONFIG_CPU_IS_ESP32
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
+#endif
 #if configUSE_PERCEPIO_TRACE_HOOKS
   McuPercepio_Startup(); /* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
 #endif

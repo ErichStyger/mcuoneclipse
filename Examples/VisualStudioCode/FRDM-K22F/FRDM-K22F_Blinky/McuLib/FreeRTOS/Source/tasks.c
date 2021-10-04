@@ -5595,7 +5595,7 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
 
 #endif /* INCLUDE_pxTaskGetStackStart */
 
-#if 1 /* << EST: additional functionality to iterathe through task handles. */
+#if 1 /* << EST: additional functionality to iterate through task handles. */
 static void prvCollectTaskHandlesWithinSingleList( List_t *pxList,  TaskHandle_t taskHandleArray[], UBaseType_t noTaskHandlesInArray, UBaseType_t *idxCounter)
 {
   TCB_t *pxNextTCB, *pxFirstTCB;
