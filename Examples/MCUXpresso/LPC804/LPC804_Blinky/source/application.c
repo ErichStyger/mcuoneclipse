@@ -18,8 +18,12 @@
 #if PL_CONFIG_USE_WS2812B
 static void test(void) {
   uint8_t r, g, b, w;
-#define MIN_VAL  1
-#define MAX_VAL  80
+#define MIN_VAL  1  /* miniumum brightness */
+#if NEOC_NOF_LEDS>8
+  #define MAX_VAL  80 /* maximum brightness */
+#else
+  #define MAX_VAL  150 /* maximum brightness */
+#endif
 
   (void)NEO_ClearAllPixel();
   for(;;) {
