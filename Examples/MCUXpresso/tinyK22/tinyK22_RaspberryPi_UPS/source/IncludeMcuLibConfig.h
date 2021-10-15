@@ -30,6 +30,8 @@
 #define SDA1_CONFIG_DO_PIN_MUXING (1)
 #define SCL1_CONFIG_DO_PIN_MUXING (1)
 
+#define I2C_RETRY_TIMES     (5000) /* NXP SDK driver: number of retries */
+
 #if USE_HW_I2C
   #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE "i2clib.h"
   #define McuGenericI2C_CONFIG_RECV_BLOCK                        I2CLIB_RecvBlock

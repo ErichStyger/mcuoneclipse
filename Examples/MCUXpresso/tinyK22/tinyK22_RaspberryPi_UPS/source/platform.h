@@ -32,7 +32,8 @@
 #define PL_CONFIG_USE_GUI_KEY_NAV         (1 && PL_CONFIG_USE_BUTTONS && PL_CONFIG_USE_GUI)
 
 #define PL_CONFIG_USE_POWER_DOWN_STATE_PIN  (1 && PL_CONFIG_USE_RASPBERRY && !PL_CONFIG_USE_POWER_ON && (TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6)) /* Raspy can indicate power down with a state pin. Not possible with wake-up functionality. On pre-V5 uses red LED instead. */
-#define PL_CONFIG_USE_POWER_DOWN_RED_LED    (1 && PL_CONFIG_USE_RASPBERRY && (TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4 || !PL_CONFIG_USE_POWER_ON)) /* uses the red HAT led as power down indicator */
+#define PL_CONFIG_USE_POWER_DOWN_RED_LED    (0 && PL_CONFIG_USE_RASPBERRY && (TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4 || !PL_CONFIG_USE_POWER_ON)) /* uses the red HAT led as power down indicator */
+#define PL_CONFIG_USE_POWER_DOWN_GREEN_LED  (1 && PL_CONFIG_USE_RASPBERRY && (TINYK22_HAT_VERSION==3 || TINYK22_HAT_VERSION==4 || !PL_CONFIG_USE_POWER_ON)) /* uses the green HAT led as power down indicator */
 
 #define PL_CONFIG_USE_HW_I2C                (USE_HW_I2C) /* defined in IncludeMcuLibConfig.h */
 

@@ -36,17 +36,28 @@ void RGPIO_EnableI2CtoRaspy(bool enable) {
 #endif
 }
 
+void RGPIO_SetSignalPowerDown(bool setToHigh) {
+  /* driving the pin low requests a poweroff */
+  if (setToHigh) {
+    McuGPIO_SetHigh(RGPIO_shutdown);
+  } else {
+    McuGPIO_SetLow(RGPIO_shutdown);
+  }
+}
+
 void RGPIO_SignalPowerdown(void) {
 #if PL_CONFIG_USE_POWER_DOWN_RED_LED
   McuLED_Off(hatRedLED); /* make sure we are not driving the poweroff LED */
+#elif PL_CONFIG_USE_POWER_DOWN_GREEN_LED
+  McuLED_Off(hatGreenLED); /* make sure we are not driving the poweroff LED */
 #endif
 #if (TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6) && PL_CONFIG_USE_POWER_ON /* disconnect I2C bus to Raspy, otherwise a falling SCL can wakeup the Raspy */
   RGPIO_EnableI2CtoRaspy(false);
 #endif
   /* driving the pin low requests a poweroff */
-  McuGPIO_SetLow(RGPIO_shutdown);   /* driving low */
-  McuWait_WaitOSms(50);             /* wait for some time */
-  McuGPIO_SetHigh(RGPIO_shutdown);  /* back to high again */
+  RGPIO_SetSignalPowerDown(false);  /* driving low */
+  McuWait_WaitOSms(10);
+  RGPIO_SetSignalPowerDown(true);   /* back to high again */
 }
 
 #if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
@@ -101,7 +112,10 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  Wake", buf, io->stdOut);
 #elif PL_CONFIG_USE_POWER_DOWN_RED_LED
-  McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Check the red LED: if on, the Raspy has shutdown\r\n");
+  McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Check the HAT red LED: if on, the Raspy has shutdown\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
+#elif PL_CONFIG_USE_POWER_DOWN_GREEN_LED
+  McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"Check the HAT green LED: if on, the Raspy has shutdown\r\n");
   McuShell_SendStatusStr((unsigned char*)"  State", buf, io->stdOut);
 #endif
   return ERR_OK;
@@ -110,7 +124,8 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rgpio", (unsigned char*)"Group of Raspberry GPIO commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  shutdown", (unsigned char*)"Signal Raspy to shutdown\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  shutdown", (unsigned char*)"Trigger Raspberry shutdown sequence\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  shutdown assert|deassert", (unsigned char*)"Assert (low) or deassert (high) the shutdown pin\r\n", io->stdOut);
 #if TINYK22_HAT_VERSION>=5
   McuShell_SendHelpStr((unsigned char*)"  wake connect|disconnect", (unsigned char*)"Connect SCL to Raspy\r\n", io->stdOut);
 #endif
@@ -147,15 +162,23 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
     *handled = TRUE;
     RGPIO_PowerOn();
 #endif
+  } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown assert")==0) {
+    *handled = TRUE;
+    RGPIO_SetSignalPowerDown(false); /* put it to LOW state */
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown deassert")==0) {
+    *handled = TRUE;
+    RGPIO_SetSignalPowerDown(true); /* put it to HIGH state */
+    return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "rgpio shutdown")==0) {
     *handled = TRUE;
     SHUTDOWN_RequestPowerOff();
 #if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
     int timeout = 15;
 
-    McuShell_SendStr((unsigned char*)"Waiting for Raspy to signal power down ", io->stdOut);
+    McuShell_SendStr((unsigned char*)"Waiting for Raspy to signal power down", io->stdOut);
     do {
-      McuShell_SendStr((unsigned char*)".", io->stdOut);
+      McuShell_SendStr((unsigned char*)".", io->stdOut); /* progress indicator */
       vTaskDelay(pdMS_TO_TICKS(1000));
       timeout--;
     } while(McuGPIO_IsLow(RGPIO_state) && timeout>0);
@@ -171,9 +194,11 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
       McuLED_On(hatRedLED); /* visual indication */
     }
 #elif PL_CONFIG_USE_POWER_ON
-    McuShell_SendStr((unsigned char*)"Wait until there is no Raspy activity anymore\r\n", io->stdOut);
+    McuShell_SendStr((unsigned char*)"Please wait until there is no Raspberry activity anymore\r\n", io->stdOut);
 #elif PL_CONFIG_USE_POWER_DOWN_RED_LED
-    McuShell_SendStr((unsigned char*)"Wait for the red LED\r\n", io->stdOut);
+    McuShell_SendStr((unsigned char*)"Please wait for the red LED\r\n", io->stdOut);
+#elif PL_CONFIG_USE_POWER_DOWN_GREEN_LED
+    McuShell_SendStr((unsigned char*)"Please wait for the green LED\r\n", io->stdOut);
 #endif
   }
   return res;
