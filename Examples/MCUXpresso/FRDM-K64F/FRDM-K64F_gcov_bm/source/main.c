@@ -47,6 +47,7 @@
  */
 int main(void) {
   gcov_init();  /* initialize library */
+  gcov_check();
 
   /* Init board hardware. */
   BOARD_InitBootPins();
