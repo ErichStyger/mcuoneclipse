@@ -97,15 +97,6 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_SW3_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
                                                     /* @} */
 
-/*! @name PORTE25 (number 32), J2[18]/U8[6]/I2C0_SDA
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_INITPINS_ACCEL_SDA_PORT PORTE                /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_ACCEL_SDA_PIN 25U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_ACCEL_SDA_PIN_MASK (1U << 25U)      /*!<@brief PORT pin mask */
-                                                           /* @} */
-
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *
