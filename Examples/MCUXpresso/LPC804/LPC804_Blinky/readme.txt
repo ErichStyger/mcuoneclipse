@@ -10,3 +10,6 @@ The LPC804.xml file is the data file for the NXP PLU Tool.
 Training/Tutorial material:
 https://www.nxp.com/video/creative-ways-to-leverage-the-lpc804-mcus-part-2:LPC80X-LEVERAGE-PLU
 https://www.nxp.com/video/learn-more-about-lpc804-mcus-development-board-and-the-programmable-logic-unit-feature:LPC804-DEMO-VIDEO
+
+See https://mcuoneclipse.com/2021/11/07/adding-rgbw-wings-and-enclosure-to-a-debug-probe/ for a usage of the LPC804 on the MCU-Link Pro debug probe.
+
