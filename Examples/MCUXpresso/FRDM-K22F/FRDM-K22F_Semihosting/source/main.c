@@ -46,7 +46,7 @@
 #define _FILENAME_RENAME  "c:\\tmp\\test_semihosting_renamed.txt"
 #define _FILENAME_REMOVE  "c:\\tmp\\test_semihosting_removed.txt"
 
-static int FileOpen(void) {
+static void FileOperations(void) {
   int hFile;
   int r;
   char buf[24];
@@ -63,7 +63,7 @@ static int FileOpen(void) {
   SEGGER_SEMIHOST_Close(hFile);
 
   /* writing to file */
-  const char *msg = "test file write";
+  const char *msg = "test file write 0123456789ABCDEF Hello Worlds";
 
   hFile = SEGGER_SEMIHOST_Open(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
   if (hFile == -1) {
@@ -120,14 +120,12 @@ static int FileOpen(void) {
    r = SEGGER_SEMIHOST_FLen(hFile);
     if (r >= 0) {
       snprintf(buf, sizeof(buf), "Filesize: %d\n", r);
-      SEGGER_SEMIHOST_Write0(buf);
+      //SEGGER_SEMIHOST_Write0(buf);
       SEGGER_SEMIHOST_Write0("OK");
     } else {
       SEGGER_SEMIHOST_Write0("Failed");
     }
     SEGGER_SEMIHOST_Close(hFile);
-
-
 
   /* removing a file */
   hFile = SEGGER_SEMIHOST_Open(_FILENAME_REMOVE, SYS_FILE_MODE_WRITEBINARY, strlen(_FILENAME_REMOVE));
@@ -137,15 +135,14 @@ static int FileOpen(void) {
     SEGGER_SEMIHOST_Close(hFile);
   }
 
-  r = SEGGER_SEMIHOST_Remove(_FILENAME_REMOVE, strlen(_FILENAME_REMOVE));
+  r = SEGGER_SEMIHOST_Remove(_FILENAME_REMOVE, strlen(_FILENAME_REMOVE)); /* fails? */
   if (r != 0) {
     SEGGER_SEMIHOST_Write0("Failed");
   } else {
     SEGGER_SEMIHOST_Write0("OK");
   }
-  SEGGER_SEMIHOST_Close(hFile);
 
-   /* renaming a file */
+   /* renaming a file ==> fails? */
   r = SEGGER_SEMIHOST_Rename(_FILENAME_OPEN, strlen(_FILENAME_OPEN), _FILENAME_RENAME, strlen(_FILENAME_RENAME));
   if (r != 0) {
     SEGGER_SEMIHOST_Write0("Failed");
@@ -153,8 +150,6 @@ static int FileOpen(void) {
     SEGGER_SEMIHOST_Write0("OK");
   }
 
-
-  return hFile;
 }
 
 static void WriteString(const char *str) {
@@ -183,7 +178,7 @@ static void various(void) {
   val = SEGGER_SEMIHOST_Errno();
   printf("errno on the host: %d\n", val);
 
-  val = SEGGER_SEMIHOST_System("cmd.exe", sizeof("cmd.exe")-1); /* fails? */
+  val = SEGGER_SEMIHOST_System("dir", sizeof("dir")-1); /* fails? */
   printf("system call return code: %d\n", val);
 
   (void)SEGGER_SEMIHOST_Exit(1); /* close debug session */
@@ -264,11 +259,16 @@ int main(void) {
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
 #endif
+    /* initialize standard I/O handler */
+    int hFile; /* https://developer.arm.com/documentation/100863/0300/Semihosting-operations/SYS-OPEN--0x01-?lang=en */
+    hFile = SEGGER_SEMIHOST_Open(":tt", SYS_FILE_MODE_READ, strlen(":tt")); /* stdin */
+    hFile = SEGGER_SEMIHOST_Open(":tt", SYS_FILE_MODE_WRITE, strlen(":tt")); /* stdout */
+    hFile = SEGGER_SEMIHOST_Open(":tt", SYS_FILE_MODE_APPEND, strlen(":tt")); /* stderr */
 
     ConsoleInputOutput();
     ReadUserInputString();
     SysWrite();
-    FileOpen();
+    FileOperations();
     WriteString("hello world!\n");
     _Test_SYS_WRITEF("Value is '%d'\n", 1234); /* fails */
     various();
