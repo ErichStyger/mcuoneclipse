@@ -259,6 +259,7 @@ int main(void) {
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
 #endif
+
     /* initialize standard I/O handler */
     int hFile; /* https://developer.arm.com/documentation/100863/0300/Semihosting-operations/SYS-OPEN--0x01-?lang=en */
     hFile = SEGGER_SEMIHOST_Open(":tt", SYS_FILE_MODE_READ, strlen(":tt")); /* stdin */
