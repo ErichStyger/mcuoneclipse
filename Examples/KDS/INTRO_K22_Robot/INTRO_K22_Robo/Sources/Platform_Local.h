@@ -44,14 +44,14 @@
 #define PL_LOCAL_CONFIG_HAS_BLUETOOTH_DISABLED            /* disable Bluetooth */
 
 #define PL_HAS_ULTRASONIC_OFF
-#define PL_HAS_ACCEL_SENSOR_OFF
+//#define PL_HAS_ACCEL_SENSOR_OFF
 #define PL_HAS_SHELL_TRACE_OFF
 //#define PL_HAS_BUZZER_OFF
 #define PL_USB_CDC_OFF
 //#define PL_SEGGER_RTT_OFF
 #define PL_MINT_LED_OFF
 #define PL_MINT_IR_OFF
-//#define PL_LOCAL_CONFIG_HAS_TOF_DISABLED /* disable Time-of-Flight sensors */
+#define PL_LOCAL_CONFIG_HAS_TOF_DISABLED /* disable Time-of-Flight sensors */
 //#define PL_LOCAL_CONFIG_HAS_DISTANCE_DISABLED  /* no distance sensors */
 
 #define PL_HAS_MIDI  (0)
