@@ -53,6 +53,7 @@ void PL_Init(void) {
   McuUtility_Init();
   McuLED_Init();
   McuGPIO_Init();
+  McuShell_Init();
 #if PL_CONFIG_USE_RTT
   McuRTT_Init();
 #endif
@@ -67,6 +68,7 @@ void PL_Init(void) {
   /* application modules: */
   LEDS_Init();
 #if PL_CONFIG_USE_SHELL_UART
+  //CLOCK_SetLpuartClock(1U);
   McuShellUart_Init();
 #endif
 #if PL_CONFIG_USE_SHELL
