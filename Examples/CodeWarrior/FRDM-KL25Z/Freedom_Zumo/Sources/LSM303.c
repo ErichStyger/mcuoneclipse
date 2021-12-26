@@ -6,6 +6,7 @@
  */
 #include "LSM303.h"
 #include "I2C2.h"
+#include "UTIL1.h"
 
 #define I2C_ACC_ADDR 0x19  /* I2C address of accelerometer */
 #define I2C_MAG_ADDR (0x3C>>1)  /* I2C address of magnetometer (0x1E), we have the LSM303DLHC! */

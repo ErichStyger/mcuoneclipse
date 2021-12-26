@@ -155,7 +155,7 @@ void EVNT1_AppHandleEvent(byte event);
 ** ===================================================================
 */
 
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
@@ -164,6 +164,20 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
 **     Description :
 **         Used in tickless idle mode only, but required in this mode.
 **         Hook for the application to enter low power mode.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         expectedIdleTicks - expected idle
+**                           time, in ticks
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
+/*
+** ===================================================================
+**     Description :
+**         Event called after the CPU woke up after low power mode.
+**         This event is optional.
 **     Parameters  :
 **         NAME            - DESCRIPTION
 **         expectedIdleTicks - expected idle

@@ -18,7 +18,7 @@ static portTASK_FUNCTION(MyTask, pvParameters) {
   (void)pvParameters; /* parameter not used */
   for(;;) {
     LED1_Neg();
-    FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(100));
     EVNT1_HandleEvent();
     LCD_ShowTime();
     //APP_ShowTemperature();
@@ -32,7 +32,7 @@ void RTOS_Start(void) {
         configMINIMAL_STACK_SIZE, /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY,  /* initial priority */
-        (xTaskHandle*)NULL /* optional task handle to create */
+        (TaskHandle_t*)NULL /* optional task handle to create */
       ) != pdPASS) {
      for(;;){}; /* error! probably out of memory */
   }

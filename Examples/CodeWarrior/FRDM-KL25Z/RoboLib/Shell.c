@@ -283,7 +283,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_WATCHDOG
     WDT_IncTaskCntr(WDT_TASK_ID_SHELL, 50);
 #endif
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
 }
 #endif /* PL_HAS_RTOS */

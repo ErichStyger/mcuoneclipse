@@ -40,6 +40,7 @@
 #if PL_HAS_DISTANCE_SENSOR
   #include "Distance.h"
 #endif
+#include "UTIL1.h"
 
 typedef enum {
   APP_STATE_INIT,
@@ -230,12 +231,12 @@ static void CheckButton(void) {
      * 2 s press   (3 beep): calibrate with auto-move
      * 3 s press   (4 beep or more): clear path
      * */
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS); /* simple debounce */
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50)); /* simple debounce */
     if (SW1_GetVal()==0) { /* still pressed */
       LEDG_On();
       timeTicks = 0;
       while(SW1_GetVal()==0 && timeTicks<=6000/BUTTON_CNT_MS) { 
-        FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
+        FRTOS1_vTaskDelay(pdMS_TO_TICKS(BUTTON_CNT_MS));
         if ((timeTicks%(1000/BUTTON_CNT_MS))==0) {
 #if PL_HAS_BUZZER
           (void)BUZ_Beep(300, 200);
@@ -265,7 +266,7 @@ static void CheckButton(void) {
 #endif
       }
       while (SW1_GetVal()==0) { /* wait until button is released */
-        FRTOS1_vTaskDelay(BUTTON_CNT_MS/portTICK_RATE_MS);
+        FRTOS1_vTaskDelay(pdMS_TO_TICKS(BUTTON_CNT_MS));
       }
 #if PL_APP_LINE_FOLLOWING || PL_APP_LINE_MAZE
       if (autoCalibrate) {
@@ -308,7 +309,7 @@ static portTASK_FUNCTION(MainTask, pvParameters) {
     EVNT_HandleEvent(RADIO_AppHandleEvent);
 #endif
     StateMachine(FALSE);
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 

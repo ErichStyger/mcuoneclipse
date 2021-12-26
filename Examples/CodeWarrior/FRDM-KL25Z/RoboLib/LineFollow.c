@@ -18,6 +18,7 @@
 #include "Pid.h"
 #include "Turn.h"
 #include "Maze.h"
+#include "UTIL1.h"
 #if PL_HAS_BUZZER
   #include "Buzzer.h"
 #endif
@@ -323,9 +324,9 @@ static portTASK_FUNCTION(LineTask, pvParameters) {
     }
     StateMachine();
     if (LF_IsFollowing()) {
-      FRTOS1_vTaskDelay(5/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(pdMS_TO_TICKS(5));
     } else {
-      FRTOS1_vTaskDelay(100/portTICK_RATE_MS);
+      FRTOS1_vTaskDelay(pdMS_TO_TICKS(100));
     }
   }
 }

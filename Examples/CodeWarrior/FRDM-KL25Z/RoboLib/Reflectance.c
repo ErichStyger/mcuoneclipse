@@ -31,7 +31,7 @@
 #include "Application.h"
 
 static LDD_TDeviceData *timerHandle;
-static xQueueHandle mutexHandle;
+static QueueHandle_t mutexHandle;
 static bool doMinMaxCalibration = FALSE;
 #if PL_IS_ZUMO_ROBOT
   #define REF_SENSOR1_IS_LEFT    0   /* if sensor 1 is on the left side */
@@ -681,7 +681,7 @@ static portTASK_FUNCTION(ReflTask, pvParameters) {
     } else {
       REF_Measure();
     }
-    FRTOS1_vTaskDelay(10/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
