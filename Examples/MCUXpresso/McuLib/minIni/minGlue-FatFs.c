@@ -25,9 +25,13 @@ int ini_rename(TCHAR *source, const TCHAR *dest)
   return (f_rename(source, drive) == FR_OK);
 }
 
-int ini_deinit(void) {}
+int ini_deinit(void) {
+  return 1; /* ok */
+}
 
-int ini_init(void) {}
+int ini_init(void) {
+  return 1; /* ok */
+}
 
 #endif /* McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS */
 
