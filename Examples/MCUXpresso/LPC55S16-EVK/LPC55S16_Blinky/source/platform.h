@@ -10,10 +10,10 @@
 #define PL_CONFIG_USE_SHELL_UART  (1)
 #define PL_CONFIG_USE_RTT         (1)
 #define PL_CONFIG_USE_USB_CDC     (0)
-#define PL_CONFIG_USE_SD_CARD     (1)
-#define PL_CONFIG_USE_MININI      (1)
+#define PL_CONFIG_USE_SD_CARD     (0)
+#define PL_CONFIG_USE_MININI      (1 && PL_CONFIG_USE_SD_CARD)
 #define PL_CONFIG_USE_USB_MSD     (0)
-#define PL_CONFIG_USE_SWO         (1)  /* for J-Link need to call SWO_SetSpeed()! */
+#define PL_CONFIG_USE_SWO         (0)  /* for J-Link need to call SWO_SetSpeed()! */
 #define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO)
 
 #define PL_CONFIG_USE_I2C         (0)

@@ -356,16 +356,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.964463517.217603174" name="/" resourcePath="McuLib/FatFS">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.1568386975" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.555267013" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2041070601"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.423466420" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.341432283"/>
-							<tool id="com.crt.advproject.gas.exe.debug.1691822387" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1352020453"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.908883477" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.462921836"/>
-							<tool id="com.crt.advproject.link.exe.debug.1417207323" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1636572860"/>
-							<tool id="com.crt.advproject.tool.debug.debug.109699290" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1104060562"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
@@ -425,7 +415,7 @@
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
 &lt;memory can_program="true" id="Flash" is_ro="true" size="224" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="96" type="RAM"/&gt;&#13;
-&lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" edited="true" id="PROGRAM_FLASH" location="0x0" size="0x38000"/&gt;&#13;
+&lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" edited="true" id="PROGRAM_FLASH" location="0x0" size="0x37d00"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM" location="0x20000000" size="0x10000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="USB_RAM" location="0x20010000" size="0x4000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAMX" location="0x4000000" size="0x4000"/&gt;&#13;
