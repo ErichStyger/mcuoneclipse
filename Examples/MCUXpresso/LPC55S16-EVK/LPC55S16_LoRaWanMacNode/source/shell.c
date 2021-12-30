@@ -89,14 +89,14 @@ static void ShellTask(void *pv) {
     vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
-#else
+#endif
+
 void SHELL_Process(void) {
   /* process all I/Os */
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
   }
 }
-#endif
 
 void SHELL_Init(void) {
 #if McuLib_CONFIG_SDK_USE_FREERTOS
