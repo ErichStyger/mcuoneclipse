@@ -42,15 +42,20 @@
 #endif
 
 #if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
-  /* flash settings */
-  #ifndef McuMinINI_CONFIG_FLASH_NVM_ADDR_START
-    #define McuMinINI_CONFIG_FLASH_NVM_ADDR_START      ((0+512*1024)-McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE)
-      /*!< last block in FLASH, start address of data in flash */
+  /* flash memory settings */
+  #ifndef McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS
+    #define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (1)
+      /*!< number of flash blocks */
   #endif
 
   #ifndef McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE
-    #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      0x800
+    #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      (0x800)
       /*!< must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
+  #endif
+
+  #ifndef McuMinINI_CONFIG_FLASH_NVM_ADDR_START
+    #define McuMinINI_CONFIG_FLASH_NVM_ADDR_START      ((0+512*1024)-(McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE))
+      /*!< last block in FLASH, start address of data in flash */
   #endif
 
   #ifndef McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE

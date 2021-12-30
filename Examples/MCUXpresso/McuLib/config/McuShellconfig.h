@@ -128,8 +128,9 @@
  /*!< position of the ';' after the command string for the 'help' command */
 #endif
 
-#define McuShell_CONFIG_SILENT_PREFIX_CHAR    '#'
-  /*!< With this char as first character in the cmd, printing is silent. Use a space to disable it */
-
+#ifndef McuShell_CONFIG_SILENT_PREFIX_CHAR
+  #define McuShell_CONFIG_SILENT_PREFIX_CHAR               '#'
+    /*!< With this char as first character in the cmd, printing is silent. Use a space to disable it */
+#endif
 
 #endif /* __McuShell_CONFIG_H */

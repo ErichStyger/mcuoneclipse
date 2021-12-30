@@ -17,7 +17,7 @@
 
 #define INI_BUFFERSIZE  256       /* maximum line length, maximum path length */
 
-#define MININI_FLASH_MAGIC_DATA_NUMBER_ID   0xFEEDBABE
+#define MININI_FLASH_MAGIC_DATA_NUMBER_ID   (0xFEEDBABE) /* magic ID to mark valid memory */
 typedef struct MinIniFlashFileHeader {
   unsigned int magicNumber; /* magic ID: MAGIC_DATA_NUMBER_ID */
   unsigned char dataName[16]; /* file/data name, limited to 16 bytes, zero terminated */
@@ -59,7 +59,16 @@ int ini_rename(const TCHAR *source, const TCHAR *dest);
 #include "McuShell.h"
 uint8_t ini_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
+/*!
+ * \brief Module de-initialization
+ * \return error code, 0 for no error
+ */
 int ini_deinit(void);
+
+/*!
+ * \brief Module initialization
+ * \return error code, 0 for no error
+ */
 int ini_init(void);
 
 #endif /* McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS */

@@ -6,11 +6,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v9.0
+product: Peripherals v10.0
 processor: LPC55S16
 package_id: LPC55S16JBD100
 mcu_data: ksdk2_0
-processor_version: 9.0.2
+processor_version: 10.0.1
 board: LPCXpresso55S16
 functionalGroups:
 - name: BOARD_InitPeripherals
@@ -26,6 +26,14 @@ component:
 - global_system_definitions:
   - user_definitions: ''
   - user_includes: ''
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'uart_cmsis_common'
+- type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
+- global_USART_CMSIS_common:
+  - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 

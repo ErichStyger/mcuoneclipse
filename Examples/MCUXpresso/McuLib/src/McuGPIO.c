@@ -504,6 +504,8 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
     config = IOCON_PIO_MODE(0b10); /* pull-up */
   } else if (pull == McuGPIO_PULL_DOWN) {
     config = IOCON_PIO_MODE(0b01); /* pull-down */
+  } else { /* default */
+    config = IOCON_PIO_MODE(0b00); /* inactive */
   }
   IOCON->PIO[pin->hw.port][pin->hw.pin] = ((IOCON->PIO[pin->hw.port][pin->hw.pin] &
                        (~(IOCON_PIO_MODE_MASK))) /* Mask bits to zero which are setting */

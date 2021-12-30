@@ -10,8 +10,11 @@ product: TEE v3.0
 processor: LPC55S16
 package_id: LPC55S16JBD100
 mcu_data: ksdk2_0
-processor_version: 9.0.2
+processor_version: 10.0.1
 board: LPCXpresso55S16
+toolOptions:
+  _output_type_: c_code
+  _legacy_source_names_: 'no'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -23,7 +26,12 @@ board: LPCXpresso55S16
 
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
-tee:
+functional_group:
+- called_from_default_init: 'true'
+- id_prefix: ''
+- prefix_user_defined: 'true'
+- name: 'BOARD_InitTEE'
+- description: ''
 - ahb:
   - regions: [{memory: PROGRAM_FLASH, security: ns_user, start: '0x00000000', size: '0x00040000'}, {memory: BootROM, security: ns_user, start: '0x00000000', size: '0x00020000'},
     {memory: SRAMX, security: ns_user, start: '0x00000000', size: '0x00004000'}, {memory: SRAM0, security: ns_user, start: '0x00000000', size: '0x00008000'}, {memory: SRAM1,
@@ -36,10 +44,10 @@ tee:
   - interrupts:
     - masking: {}
     - security: {Secure: {id: [ACMP_IRQn, ADC0_IRQn, CAN0_IRQ0_IRQn, CAN0_IRQ1_IRQn, CASER_IRQn, CTIMER0_IRQn, CTIMER1_IRQn, CTIMER2_IRQn, CTIMER3_IRQn, CTIMER4_IRQn,
-          CodeWDG_IRQn, DMA0_IRQn, DMA1_IRQn, FLEXCOMM0_IRQn, FLEXCOMM1_IRQn, FLEXCOMM2_IRQn, FLEXCOMM3_IRQn, FLEXCOMM4_IRQn, FLEXCOMM5_IRQn, FLEXCOMM6_IRQn, FLEXCOMM7_IRQn,
-          FLEXCOMM8_IRQn, GINT0_IRQn, GINT1_IRQn, HASCRYPT_IRQn, MRT0_IRQn, OS_EVENT_IRQn, PIN_INT0_IRQn, PIN_INT1_IRQn, PIN_INT2_IRQn, PIN_INT3_IRQn, PIN_INT4_IRQn,
-          PIN_INT5_IRQn, PIN_INT6_IRQn, PIN_INT7_IRQn, PLU_IRQn, PUF_IRQn, RTC_IRQn, SCT0_IRQn, SEC_GPIO_INT0_IRQ0_IRQn, SEC_GPIO_INT0_IRQ1_IRQn, SEC_HYPERVISOR_CALL_IRQn,
-          SEC_VIO_IRQn, USB0_IRQn, USB0_NEEDCLK_IRQn, USB1_IRQn, USB1_NEEDCLK_IRQn, USB1_PHY_IRQn, UTICK0_IRQn, WDT_BOD_IRQn]}}
+          DMA0_IRQn, DMA1_IRQn, FLEXCOMM0_IRQn, FLEXCOMM1_IRQn, FLEXCOMM2_IRQn, FLEXCOMM3_IRQn, FLEXCOMM4_IRQn, FLEXCOMM5_IRQn, FLEXCOMM6_IRQn, FLEXCOMM7_IRQn, FLEXCOMM8_IRQn,
+          GINT0_IRQn, GINT1_IRQn, HASCRYPT_IRQn, MRT0_IRQn, OS_EVENT_IRQn, PIN_INT0_IRQn, PIN_INT1_IRQn, PIN_INT2_IRQn, PIN_INT3_IRQn, PIN_INT4_IRQn, PIN_INT5_IRQn,
+          PIN_INT6_IRQn, PIN_INT7_IRQn, PLU_IRQn, PUF_IRQn, RTC_IRQn, SCT0_IRQn, SEC_GPIO_INT0_IRQ0_IRQn, SEC_GPIO_INT0_IRQ1_IRQn, SEC_HYPERVISOR_CALL_IRQn, SEC_VIO_IRQn,
+          USB0_IRQn, USB0_NEEDCLK_IRQn, USB1_IRQn, USB1_NEEDCLK_IRQn, USB1_PHY_IRQn, UTICK0_IRQn, WDT_BOD_IRQn]}}
   - pins_masks:
     - pio0: {Non-masked: {id: ['0', '1', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '2', '20', '21', '22', '23', '24', '25', '26', '27', '28',
           '29', '3', '30', '31', '4', '5', '6', '7', '8', '9']}}
@@ -61,9 +69,7 @@ tee:
       CPPWR_SU5, CPPWR_SUS5, CPPWR_SU6, CPPWR_SUS6, CPPWR_SU7, CPPWR_SUS7, CPPWR_SU10, CPPWR_SUS10, CPPWR_SU11, CPPWR_SUS11, SEC_GPIO_MASK0_LOCK, SEC_GPIO_MASK1_LOCK,
       MASTER_SEC_LEVEL_LOCK, CPU0_LOCK_NS_VTOR, CPU0_LOCK_NS_MPU, CPU0_LOCK_S_VTAIRCR, CPU0_LOCK_S_MPU, CPU0_LOCK_SAU, CPU0_LOCK_REG_LOCK, AHB_MISC_CTRL_REG_ENABLE_SECURE_CHECKING,
       AHB_MISC_CTRL_REG_ENABLE_S_PRIV_CHECK, AHB_MISC_CTRL_REG_ENABLE_NS_PRIV_CHECK, AHB_MISC_CTRL_REG_DISABLE_VIOLATION_ABORT, AHB_MISC_CTRL_REG_DISABLE_SIMPLE_MASTER_STRICT_MODE,
-      AHB_MISC_CTRL_REG_DISABLE_SMART_MASTER_STRICT_MODE, AHB_MISC_CTRL_REG_IDAU_ALL_NS, AHB_MISC_CTRL_REG_WRITE_LOCK, _legacy_source_names_]
-  - c_code:
-    - id: [_output_type_]
+      AHB_MISC_CTRL_REG_DISABLE_SMART_MASTER_STRICT_MODE, AHB_MISC_CTRL_REG_IDAU_ALL_NS, AHB_MISC_CTRL_REG_WRITE_LOCK]
 - user_memory_regions: []
 - mpus:
   - mpu:
@@ -102,6 +108,13 @@ tee:
         start: '0x00000000', size: '0x00000020'}]
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitTEE
+ * Description   : 
+ *
+ * END ****************************************************************************************************************/
 
 /***********************************************************************************************************************
  * BOARD_InitTrustZone function
@@ -142,7 +155,7 @@ void BOARD_InitAHBSE()
         3    Secure, Privileged access allowed.
     */
 
-    /* Security level configuration of all checkers */
+    /* Security level configuration of MPC checker */
     AHB_SECURE_CTRL->SEC_CTRL_FLASH_ROM[0].SEC_CTRL_FLASH_MEM_RULE[0] = 0;
     AHB_SECURE_CTRL->SEC_CTRL_FLASH_ROM[0].SEC_CTRL_ROM_MEM_RULE[0] = 0;
     AHB_SECURE_CTRL->SEC_CTRL_FLASH_ROM[0].SEC_CTRL_ROM_MEM_RULE[1] = 0;
@@ -153,21 +166,21 @@ void BOARD_InitAHBSE()
     AHB_SECURE_CTRL->SEC_CTRL_RAM1[0].MEM_RULE[0] = 0;
     AHB_SECURE_CTRL->SEC_CTRL_RAM2[0].MEM_RULE[0] = 0;
     AHB_SECURE_CTRL->SEC_CTRL_USB_HS[0].MEM_RULE[0] = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL0 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL1 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL2 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL0 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL1 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL2 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL3 = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT7_SLAVE0_RULE = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT7_SLAVE1_RULE = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT8_SLAVE0_RULE = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT8_SLAVE1_RULE = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT9[0].SLAVE0_RULE = 0;
-    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT9[0].SLAVE1_RULE = 0;
-    /* Bits [25:24] have to be set to '1' according to UM. */
-    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL3 |= 0x3000000;
+
+    /* Security level configuration of PPC checker */
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL0 = 0xFCCCCCCCU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL1 = 0xFCCCFFCCU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE0_MEM_CTRL2 = 0xFFFFCFFFU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL0 = 0xFFFFCFFCU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL1 = 0xFFCCFCCCU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL2 = 0xFFCCFFFFU;
+    AHB_SECURE_CTRL->SEC_CTRL_APB_BRIDGE[0].SEC_CTRL_APB_BRIDGE1_MEM_CTRL3 = 0xFFCFCCFCU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT7_SLAVE0_RULE = 0xCCCCFCFFU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT7_SLAVE1_RULE = 0xFFFCFCCCU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT8_SLAVE0_RULE = 0xCCCCFFFFU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT8_SLAVE1_RULE = 0xCFCCFFFCU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT9[0].SLAVE0_RULE = 0xCFCCCCFCU;
+    AHB_SECURE_CTRL->SEC_CTRL_AHB_PORT9[0].SLAVE1_RULE = 0xFFFFFFCCU;
 
     /* Security level configuration of masters */
     AHB_SECURE_CTRL->MASTER_SEC_LEVEL = 0x80000000U;
@@ -214,3 +227,10 @@ void BOARD_InitTEE()
     BOARD_InitAHBSE();
 }
 
+/***********************************************************************************************************************
+ * BOARD_InitBootTEE function
+ **********************************************************************************************************************/
+void BOARD_InitBootTEE()
+{
+    BOARD_InitTEE();
+}
