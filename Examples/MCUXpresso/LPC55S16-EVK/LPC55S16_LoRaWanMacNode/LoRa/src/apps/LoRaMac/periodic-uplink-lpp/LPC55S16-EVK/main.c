@@ -282,25 +282,22 @@ extern Uart_t Uart2;
 static void LoRaTask(void *pv) {
   for(;;) {
     // Processes the LoRaMac events
-     LmHandlerProcess( );
-#if 1
-     // Process application uplinks management
-     UplinkProcess( );
+    LmHandlerProcess();
 
-     CRITICAL_SECTION_BEGIN( );
-     if( IsMacProcessPending == 1 )
-     {
-         // Clear flag and prevent MCU to go into low power modes.
-         IsMacProcessPending = 0;
-     }
-     else
-     {
-         // The MCU wakes up through events
-         BoardLowPowerHandler( );
-     }
-     CRITICAL_SECTION_END( );
-#endif
-     vTaskDelay(pdMS_TO_TICKS(1));
+    // Process application uplinks management
+    UplinkProcess();
+
+    CRITICAL_SECTION_BEGIN();
+    if( IsMacProcessPending == 1 ) {
+      // Clear flag and prevent MCU to go into low power modes.
+      IsMacProcessPending = 0;
+    } else {
+      // The MCU wakes up through events
+      BoardLowPowerHandler();
+    }
+    CRITICAL_SECTION_END();
+
+    vTaskDelay(pdMS_TO_TICKS(1));
   }
 }
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */

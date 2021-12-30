@@ -5,6 +5,8 @@ This is a project implementing a LoRaWAN node using the NXP LPC55S16-EVK and the
 - https://www.semtech.com/products/wireless-rf/lora-core/sx1261mb2bas
 - https://os.mbed.com/components/SX126xMB2xAS/
 
+Alternatively, the SX1262MB2 can be used.
+
 Contributing:
 - McuLib:    https://github.com/ErichStyger/McuOnEclipseLibrary/tree/master/lib
 - LoRa/src:  https://github.com/Lora-net/LoRaMac-node
