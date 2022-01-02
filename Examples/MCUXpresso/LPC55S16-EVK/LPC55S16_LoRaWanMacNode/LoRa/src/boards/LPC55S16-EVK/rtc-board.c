@@ -20,6 +20,7 @@
 #include "fsl_ostimer.h"
 #include "fsl_power.h"
 #include "utilities.h"
+#include "McuRTOS.h"
 
 #define OSTIMER_REF					      OSTIMER
 #define OSTIMER_CLK_FREQ          32768
@@ -58,6 +59,9 @@ void RtcOSTimerCallback(void);
 void RtcInit(void) {
 	/* OS Timer initialization */
 	OSTIMER_Init(OSTIMER_REF);
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  NVIC_SetPriority(OS_EVENT_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+#endif
 
 	/* RTC initialization */
 	RTC_Init(RTC);
@@ -76,6 +80,9 @@ void RtcInit(void) {
 	/* Set RTC time to default */
 	RTC_SetDatetime(RTC, &initDate);
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  NVIC_SetPriority(RTC_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+#endif
 	/* When working under Normal Mode, the interrupt is controlled by NVIC. */
 	EnableIRQ(RTC_IRQn);
 
