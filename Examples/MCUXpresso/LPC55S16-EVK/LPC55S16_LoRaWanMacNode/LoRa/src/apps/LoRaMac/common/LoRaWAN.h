@@ -8,6 +8,11 @@
 #define FREERTOS_LORAWAN_H_
 
 /*!
+ * \brief Notify LoRaWAN task to process messages and events
+ */
+void LORAWAN_LmHandlerNotififyTaskRequest(void);
+
+/*!
  * \brief Module initialization
  */
 void LoRaWAN_Init(void);

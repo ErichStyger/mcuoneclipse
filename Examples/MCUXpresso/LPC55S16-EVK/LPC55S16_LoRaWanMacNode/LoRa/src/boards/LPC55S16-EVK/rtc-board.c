@@ -21,6 +21,9 @@
 #include "fsl_power.h"
 #include "utilities.h"
 #include "McuRTOS.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  #include "LoRaWAN.h"
+#endif
 
 #define OSTIMER_REF					      OSTIMER
 #define OSTIMER_CLK_FREQ          32768
@@ -215,7 +218,10 @@ TimerTime_t RtcTempCompensation(TimerTime_t period, float temperature) {
 	return period;
 }
 
-void RtcOSTimerCallback(void){
+void RtcOSTimerCallback(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  LORAWAN_LmHandlerNotififyTaskRequest();
+#endif
 	if (PendingAlarm) {
 		RtcStopAlarm();
 		TimerIrqHandler();

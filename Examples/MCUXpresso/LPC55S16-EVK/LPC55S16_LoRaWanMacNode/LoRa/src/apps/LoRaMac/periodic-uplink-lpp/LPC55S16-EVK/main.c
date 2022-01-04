@@ -42,6 +42,7 @@
 #include "LmHandlerMsgDisplay.h"
 
 #include "platform.h"
+#include "LoRaWAN.h"
 #include "McuRTOS.h"
 #if PL_CONFIG_USE_SHELL
   #include "shell.h"
@@ -277,7 +278,7 @@ extern Uart_t Uart2;
 #endif
 
 
-#if McuLib_CONFIG_SDK_USE_FREERTOS
+#if 0 && McuLib_CONFIG_SDK_USE_FREERTOS
 
 static void LoRaTask(void *pv) {
   for(;;) {
@@ -313,15 +314,15 @@ int main( void )
     PL_Init();
 
 #if PL_CONFIG_USE_LED1
-    TimerInit( &Led1Timer, OnLed1TimerEvent );
-    TimerSetValue( &Led1Timer, 25 );
+  //  TimerInit( &Led1Timer, OnLed1TimerEvent );
+  //  TimerSetValue( &Led1Timer, 25 );
 #endif
 #if PL_CONFIG_USE_LED2
     TimerInit( &Led2Timer, OnLed2TimerEvent );
     TimerSetValue( &Led2Timer, 25 );
 #endif
-    TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
-    TimerSetValue( &LedBeaconTimer, 5000 );
+  //  TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
+  //  TimerSetValue( &LedBeaconTimer, 5000 );
 
     // Initialize transmission periodicity variable
     TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
@@ -341,6 +342,11 @@ int main( void )
     /* GPS is not required for this application. In order to save power consumption, it is disabled here */
     GpsStop();
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+    LoRaWAN_Init();
+    vTaskStartScheduler();
+    for(;;) {} /* should not get here */
+#else
     if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {
         printf( "LoRaMac wasn't properly initialized\n" );
@@ -357,25 +363,9 @@ int main( void )
     // initialized and activated.
     LmHandlerPackageRegister( PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams );
 
-    LmHandlerJoin( );
+    LmHandlerJoin();
 
-    StartTxProcess( LORAMAC_HANDLER_TX_ON_TIMER );
-
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-    if (xTaskCreate(
-        LoRaTask,  /* pointer to the task */
-        "LoRaTask", /* task name for kernel awareness debugging */
-        5000/sizeof(StackType_t), /* task stack size */
-        (void*)NULL, /* optional task startup argument */
-        tskIDLE_PRIORITY+2,  /* initial priority */
-        (TaskHandle_t*)NULL /* optional task handle to create */
-      ) != pdPASS)
-    {
-       for(;;){} /* error! probably out of memory */
-    }
-    vTaskStartScheduler();
-    for(;;) {}
-#else
+    //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
     while( 1 )
     {
 #if PL_CONFIG_USE_SHELL
@@ -387,20 +377,23 @@ int main( void )
         CliProcess( &Uart2 );
 #endif
         // Processes the LoRaMac events
+        printf("*LmHandlerProcess\n");
         LmHandlerProcess( );
 
         // Process application uplinks management
-        UplinkProcess( );
+ //       UplinkProcess( );
 
         CRITICAL_SECTION_BEGIN( );
         if( IsMacProcessPending == 1 )
         {
             // Clear flag and prevent MCU to go into low power modes.
             IsMacProcessPending = 0;
+            printf("*clear\n");
         }
         else
         {
             // The MCU wakes up through events
+          printf("*low power\n");
             BoardLowPowerHandler( );
         }
         CRITICAL_SECTION_END( );
@@ -555,6 +548,7 @@ static void PrepareTxFrame( void )
     }
 }
 
+#if !McuLib_CONFIG_SDK_USE_FREERTOS
 static void StartTxProcess( LmHandlerTxEvents_t txEvent )
 {
     switch( txEvent )
@@ -575,7 +569,9 @@ static void StartTxProcess( LmHandlerTxEvents_t txEvent )
         break;
     }
 }
+#endif
 
+#if !McuLib_CONFIG_SDK_USE_FREERTOS
 static void UplinkProcess( void )
 {
     uint8_t isPending = 0;
@@ -588,6 +584,7 @@ static void UplinkProcess( void )
         PrepareTxFrame( );
     }
 }
+#endif
 
 static void OnTxPeriodicityChanged( uint32_t periodicity )
 {
