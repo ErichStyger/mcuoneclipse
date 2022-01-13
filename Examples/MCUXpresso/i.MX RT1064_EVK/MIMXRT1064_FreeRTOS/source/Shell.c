@@ -80,8 +80,6 @@ static const SHELL_IODesc ios[] =
 #endif
 };
 
-
-
 void SHELL_Process(void) {
   (void)McuShell_ReadAndParseWithCommandTable(localConsole_buf, sizeof(localConsole_buf), McuShell_GetStdio(), CmdParserTable);
 }

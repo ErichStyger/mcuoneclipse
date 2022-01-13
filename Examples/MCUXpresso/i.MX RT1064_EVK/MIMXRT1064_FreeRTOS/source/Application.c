@@ -80,7 +80,6 @@ static void AppTask(void *p) {
 
 void APP_Run(void) {
   PL_Init();
-
 #if 1 /* do NOT enter WAIT mode with WFI: */
   CLOCK_SetMode(kCLOCK_ModeRun); /* see https://community.nxp.com/thread/492841#comment-1099054 */
 #else /* default */

@@ -78,7 +78,7 @@ static void InitUART(lpuart_handle_t *sdkHandle, UART_MyDeviceDesc *device) {
    * config.enableRx = false;
    */
   /* overwrite config with our special values */
-  config.baudRate_Bps = 38400; /* default and initial baud rate */
+  config.baudRate_Bps = 115200; /* default and initial baud rate */
   config.enableTx = true;
   config.enableRx = true;
   LPUART_Init(device->uart, &config, BOARD_DebugConsoleSrcFreq()); /* really not clear to me why I have to divide the clock here??? */

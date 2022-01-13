@@ -29,7 +29,7 @@
  */
  
 /**
- * @file    MIMXRT1064_FreeRTOS.c
+ * @file    main.c
  * @brief   Application entry point.
  */
 #include <stdio.h>
@@ -41,9 +41,6 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 #include "Application.h"
-#include "McuWait.h"
-#include "Shell.h"
-/* TODO: insert other definitions and declarations here. */
 
 /*
  * @brief   Application entry point.

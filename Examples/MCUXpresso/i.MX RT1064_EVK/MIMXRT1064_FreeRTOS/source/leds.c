@@ -9,10 +9,6 @@
 #include "McuLED.h"
 #include "pin_mux.h"
 
-/* LED on the board */
-#define LED_GREEN_GPIO       BOARD_INITPINS_LED_GREEN_GPIO
-#define LED_GREEN_PIN        BOARD_INITPINS_LED_GREEN_GPIO_PIN
-
 McuLED_Handle_t LEDS_Led;
 
 void LEDS_Deinit(void) {
@@ -24,7 +20,8 @@ void LEDS_Init(void) {
 
   McuLED_GetDefaultConfig(&config);
   config.isLowActive = true;
-  config.hw.gpio = LED_GREEN_GPIO;
-  config.hw.pin = LED_GREEN_PIN;
+  config.hw.gpio = GPIO1;
+  config.hw.pin = 9;
+  McuGPIO_SetMux(&config.hw, IOMUXC_GPIO_AD_B0_09_GPIO1_IO09); /* set special i.MX RT muxing fields */
   LEDS_Led = McuLED_InitLed(&config);
 }

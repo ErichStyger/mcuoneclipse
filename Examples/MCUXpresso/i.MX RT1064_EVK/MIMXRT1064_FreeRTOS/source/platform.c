@@ -33,6 +33,7 @@ void PL_InitFromTask(void) {
 }
 
 void PL_Init(void) {
+  CLOCK_EnableClock(kCLOCK_Iomuxc); /* needed for muxing */
   /* McuLib modules */
   McuLib_Init();
   McuRTOS_Init();
