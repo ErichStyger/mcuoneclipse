@@ -9,7 +9,7 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (5)  /* 3, 4, 5 or 6 */
+#define TINYK22_HAT_VERSION  (3)  /* 3, 4, 5 or 6 */
 #define USE_HW_I2C           (1 && TINYK22_HAT_VERSION>=4)
 
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0

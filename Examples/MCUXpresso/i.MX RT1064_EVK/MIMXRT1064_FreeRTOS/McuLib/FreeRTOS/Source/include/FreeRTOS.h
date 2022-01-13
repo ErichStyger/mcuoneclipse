@@ -58,7 +58,7 @@
 
 /* << EST */
 #if configSYSTICK_USE_LOW_POWER_TIMER && McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  #include "SIM_PDD.h"  /*! \todo this is a PEx header */
+  #include "SIM_PDD.h"  /*! this is a PEx header */
 #endif
 /* >> EST */
 /* Basic FreeRTOS definitions. */
@@ -321,6 +321,8 @@
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST */
   #include "SEGGER_SYSVIEW_FreeRTOS.h" /* include Segger System Viewer macro definitions */
+#elif configUSE_PERCEPIO_TRACE_HOOKS /* << EST */
+   #include "trcRecorder.h"
 #endif
 
 /* Remove any unused trace macros. */

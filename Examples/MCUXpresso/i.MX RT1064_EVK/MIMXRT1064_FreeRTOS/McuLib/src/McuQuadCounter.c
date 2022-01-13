@@ -6,7 +6,7 @@
 **     Component   : QuadCounter
 **     Version     : Component 01.034, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-14, 06:24, # CodeGen: 679
+**     Date/Time   : 2020-12-02, 11:59, # CodeGen: 723
 **     Abstract    :
 **
 This driver implements a quadrature encoder using two signals (C1 and C2) to generate position information.
@@ -28,6 +28,8 @@ This driver implements a quadrature encoder using two signals (C1 and C2) to gen
 **         SetPos       - void McuQuadCounter_SetPos(McuQuadCounter_QuadCntrType pos);
 **         GetVal       - uint8_t McuQuadCounter_GetVal(void);
 **         Sample       - void McuQuadCounter_Sample(void);
+**         NofErrors    - uint16_t McuQuadCounter_NofErrors(void);
+**         SwapPins     - uint8_t McuQuadCounter_SwapPins(bool swap);
 **         Deinit       - void McuQuadCounter_Deinit(void);
 **         Init         - void McuQuadCounter_Init(void);
 **         ParseCommand - uint8_t McuQuadCounter_ParseCommand(const unsigned char *cmd, bool *handled,...
@@ -83,6 +85,117 @@ This driver implements a quadrature encoder using two signals (C1 and C2) to gen
    The value in the table (0,1,-1) indicates the steps taken since previous sample. */
 #define QUAD_ERROR  3 /*!< Value to indicate an error in impulse detection. Has to be different from 0,1,-1 */
 
+#if McuQuadCounter_CONFIG_USE_ERROR_CORRECTION
+static uint8_t McuQuadCounter_prevlast_quadrature_value; /*! Value of C1&C2 before last_quadrature_value. */
+
+static const signed char McuQuadCounter_Quad_Table[4][4][4] =
+  {               /* pprev prev   new    */
+    {             /* c12 c12 c12, c1 leading is backward, c2 leading is forward  */
+      {
+       0,           /* 00  00  00  no change or missed a step? */
+       1,           /* 00  00  01   */
+       -1,          /* 00  00  10   */
+       QUAD_ERROR,  /* 00  00  11  error, lost impulse */
+      },
+      {
+       -1,          /* 00  01  00   */
+       0,           /* 00  01  01   */
+       2,           /* 00  01  10  lost impulse, correct error */
+       1,           /* 00  01  11   */
+      },
+      {
+       1,           /* 00  10  00   */
+      -2,           /* 00  10  01  lost impulse, correct error */
+       0,           /* 00  10  10   */
+      -1,           /* 00  10  11   */
+      },
+      {
+       QUAD_ERROR,  /* 00  11  00  error */
+      -1,           /* 00  11  01  lost impulse, correct error */
+       1,           /* 00  11  10   */
+       0,           /* 00  11  11   */
+      }
+    },
+    {             /* c12 c12 c12  */
+      {
+       0,           /* 01  00  00   */
+       1,           /* 01  00  01   */
+       -1,          /* 01  00  10   */
+       -2,          /* 01  00  11  lost impulse, correct error */
+      },
+      {
+       -1,          /* 01  01  00   */
+       0,           /* 01  01  01   */
+       QUAD_ERROR,  /* 01  01  10   error */
+       1,           /* 01  01  11   */
+      },
+      {
+       1,           /* 01  10  00   */
+       QUAD_ERROR,  /* 01  10  01   error */
+       0,           /* 01  10  10   */
+      -1,           /* 01  10  11   */
+      },
+      {
+       2,           /* 01  11  00  lost impulse, correct error */
+       -1,          /* 01  11  01   */
+       1,           /* 01  11  10   */
+       0,           /* 01  11  11   */
+      }
+    },
+    {             /* c12 c12 c12  */
+      {
+       0,           /* 10  00  00   */
+       1,           /* 10  00  01   */
+       -1,          /* 10  00  10   */
+       2,           /* 10  00  11  lost impulse, correct error */
+      },
+      {
+       -1,          /* 10  01  00   */
+       0,           /* 10  01  01   */
+       QUAD_ERROR,  /* 10  01  10   error */
+       1,           /* 10  01  11   */
+      },
+      {
+       1,           /* 10  10  00   */
+       QUAD_ERROR,  /* 10  10  01   error */
+       0,           /* 10  10  10   */
+      -1,           /* 10  10  11   */
+      },
+      {
+       -2,          /* 10  11  00  lost impulse, correct error */
+       -1,          /* 10  11  01   */
+       1,           /* 10  11  10   */
+       0,           /* 10  11  11   */
+      }
+    },
+    {             /* c12 c12 c12  */
+      {
+       0,           /* 11  00  00   */
+       1,           /* 11  00  01   */
+       -1,          /* 11  00  10   */
+       QUAD_ERROR,  /* 11  00  11  error */
+      },
+      {
+       -1,          /* 11  01  00   */
+       0,           /* 11  01  01   */
+       -2,          /* 11  01  10  lost impulse, correct error */
+       1,           /* 11  01  11   */
+      },
+      {
+       1,           /* 11  10  00   */
+       2,           /* 11  10  01   lost impulse, correct error */
+       0,           /* 11  10  10   */
+      -1,           /* 11  10  11   */
+      },
+      {
+       QUAD_ERROR,  /* 11  11  00  error */
+       -1,          /* 11  11  01   */
+       1,           /* 11  11  10   */
+       0,           /* 11  11  11   */
+      }
+    }
+  };
+#else
 static const signed char McuQuadCounter_Quad_Table[4][4] =
   {               /* prev   new    */
     {             /* c1 c2  c1 c2  */
@@ -110,9 +223,14 @@ static const signed char McuQuadCounter_Quad_Table[4][4] =
      0            /* 1  1   1  1   no change or missed a step? */
      }
   };
+#endif /* McuQuadCounter_CONFIG_USE_ERROR_CORRECTION */
+
 static uint8_t McuQuadCounter_last_quadrature_value; /*! Value of C1&C2 during last round. */
 
 static McuQuadCounter_QuadCntrType McuQuadCounter_currPos = 0; /*!< Current position */
+#if McuQuadCounter_CONFIG_COUNT_ERRORS
+  static uint16_t McuQuadCounter_nofErrors = 0;
+#endif
 
 /*
 ** ===================================================================
@@ -188,12 +306,40 @@ void McuQuadCounter_Sample(void)
   uint8_t c12; /* value of the two sensor input */
 
   c12 = McuQuadCounter_GetVal();
+#if McuQuadCounter_CONFIG_USE_ERROR_CORRECTION
+  new_step = McuQuadCounter_Quad_Table[McuQuadCounter_prevlast_quadrature_value][McuQuadCounter_last_quadrature_value][c12];
+  McuQuadCounter_prevlast_quadrature_value = McuQuadCounter_last_quadrature_value;
+#else
   new_step = McuQuadCounter_Quad_Table[McuQuadCounter_last_quadrature_value][c12];
+#endif
   McuQuadCounter_last_quadrature_value = c12;
   if (new_step == QUAD_ERROR) {
+#if McuQuadCounter_CONFIG_COUNT_ERRORS
+    McuQuadCounter_nofErrors++;
+#endif
   } else if (new_step != 0) {
     McuQuadCounter_currPos += new_step;
   }
+}
+
+/*
+** ===================================================================
+**     Method      :  NofErrors (component QuadCounter)
+**
+**     Description :
+**         Returns the number of decoding errors
+**     Parameters  : None
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint16_t McuQuadCounter_NofErrors(void)
+{
+#if McuQuadCounter_CONFIG_COUNT_ERRORS
+  return McuQuadCounter_nofErrors;
+#else
+  return 0;
+#endif
 }
 
 /*
@@ -225,6 +371,12 @@ void McuQuadCounter_Init(void)
 {
   McuQuadCounter_currPos = 0;
   McuQuadCounter_last_quadrature_value = McuQuadCounter_GET_C1_C2_PINS();
+#if McuQuadCounter_CONFIG_USE_ERROR_CORRECTION
+  McuQuadCounter_prevlast_quadrature_value = McuQuadCounter_last_quadrature_value;
+#endif
+#if McuQuadCounter_CONFIG_COUNT_ERRORS
+  McuQuadCounter_nofErrors = 0;
+#endif
 #if McuQuadCounter_SWAP_PINS_AT_RUNTIME
   McuQuadCounter_swappedPins = FALSE;
 #endif
@@ -293,12 +445,39 @@ uint8_t McuQuadCounter_ParseCommand(const unsigned char *cmd, bool *handled, con
     } else {
       McuShell_SendStr((const unsigned char*)"0\r\n", io->stdOut);
     }
+  #if McuQuadCounter_CONFIG_COUNT_ERRORS
+    McuShell_SendStatusStr((const unsigned char*)"  errors", (const unsigned char*)"", io->stdOut);
+    McuShell_SendNum16u(McuQuadCounter_nofErrors, io->stdOut);
+    McuShell_SendStr((const unsigned char*)"\r\n", io->stdOut);
+  #endif
     *handled = TRUE;
   } else if (McuUtility_strcmp((const char*)cmd, "McuQuadCounter reset")==0) {
     McuQuadCounter_SetPos(0);
+  #if McuQuadCounter_CONFIG_COUNT_ERRORS
+    McuQuadCounter_nofErrors = 0;
+  #endif
     *handled = TRUE;
   }
   return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  SwapPins (component QuadCounter)
+**
+**     Description :
+**         Swap the two pins
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         swap            - if C1 and C2 pins shall be swapped.
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuQuadCounter_SwapPins(bool swap)
+{
+  McuQuadCounter_swappedPins = swap;
+  return ERR_OK;
 }
 
 /* END McuQuadCounter. */

@@ -12,6 +12,7 @@
 extern "C" {
 #endif
 
+#include "McuULN2003config.h"
 #include "McuGPIO.h"
 
 #define McuLUN2003_28BYJ_48_    4076  /* 64:1 gear (actually more 63.68395:1 (4076 steps/ref), Adafruit has a 1/16 reduction (513 steps/rev) */
@@ -40,6 +41,7 @@ void McuULN2003_PowerOff(McuULN2003_Handle_t motor);
 void McuULN2003_SetStepMode(McuULN2003_Handle_t motor, McuULN2003_StepMode mode);
 McuULN2003_StepMode McuULN2003_GetStepMode(McuULN2003_Handle_t motor);
 
+bool McuULN2003_StepCallback(McuULN2003_Handle_t motor, bool forward);
 bool McuULN2003_MoveCallback(McuULN2003_Handle_t motor, int32_t targetPos);
 
 void McuULN2003_IncStep(McuULN2003_Handle_t motor);
@@ -48,6 +50,19 @@ void McuULN2003_Step(McuULN2003_Handle_t motor, int32_t steps);
 
 int32_t McuULN2003_GetPos(McuULN2003_Handle_t motor);
 void McuULN2003_SetPos(McuULN2003_Handle_t motor, int32_t pos);
+
+#if McuULN2003_CONFIG_USE_ACCELERATION
+
+/* stepper motor acceleration table */
+typedef struct McuULN2003_Accel_t {
+  uint8_t nofEntries; /* number of entries in delay table */
+  const uint8_t *delays; /* table of delays, with nofEntires entries */
+} McuULN2003_Accel_t;
+
+void McuULN2003_AccelerationStart(McuULN2003_Handle_t motor);
+void McuULN2003_AccelerationEnd(McuULN2003_Handle_t motor);
+void McuULN2003_SetAccelerationTable(McuULN2003_Handle_t motor, const McuULN2003_Accel_t *table);
+#endif
 
 void McuULN2003_Deinit(void);
 void McuULN2003_Init(void);

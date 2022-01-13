@@ -14,6 +14,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
   #include "McuShell.h"
   uint8_t McuSHT31_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
@@ -26,5 +30,10 @@ uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity);
 
 void McuSHT31_Deinit(void);
 void McuSHT31_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 
 #endif /* SOURCES_MCUSHT31_H_ */

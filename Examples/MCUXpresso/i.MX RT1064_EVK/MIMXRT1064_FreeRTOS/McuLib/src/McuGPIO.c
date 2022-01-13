@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019-2021, Erich Styger
  *
  * Driver for GPIO pins
  *
@@ -15,11 +15,18 @@
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   #include "McuRTOS.h"
 #endif
-#include "fsl_gpio.h"
+#if McuLib_CONFIG_NXP_SDK_USED
+  #include "fsl_gpio.h"
+#elif McuLib_CONFIG_CPU_IS_STM32
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* LPC845 */
+#elif McuLib_CONFIG_CPU_IS_LPC
   #include "fsl_iocon.h"
+#elif McuLib_CONFIG_CPU_IS_STM32
+  #include "stm32f3xx_hal.h"
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  #include "driver/gpio.h"
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* LPC845 specific defines, not available in SDK */
@@ -54,7 +61,11 @@ static const McuGPIO_Config_t defaultConfig =
     .isInput = true,
     .isHighOnInit = false,
     .hw = {
-      .gpio = NULL,
+      #if McuLib_CONFIG_NXP_SDK_USED
+        .gpio = NULL,
+      #elif McuLib_CONFIG_CPU_IS_STM32
+        .gpio = NULL,
+      #endif
     #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
     #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
@@ -63,11 +74,19 @@ static const McuGPIO_Config_t defaultConfig =
     #elif McuLib_CONFIG_CPU_IS_LPC
       .port = 0,
     #endif
+    #if McuLib_CONFIG_CPU_IS_ESP32
+      .pin = GPIO_NUM_NC,
+    #else
       .pin = 0,
+    #endif
+      .pull = McuGPIO_PULL_DISABLE,
     }
 };
 
 typedef struct {
+#if McuLib_CONFIG_CPU_IS_ESP32
+  bool isHigh; /* status of output pin, because we cannot toggle pin */
+#endif
   bool isInput;
   McuGPIO_HwPin_t hw;
 } McuGPIO_t;
@@ -77,7 +96,8 @@ void McuGPIO_GetDefaultConfig(McuGPIO_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
-static void McuGPIO_ConfigureDirection(bool isInput, bool isHighOnInit, McuGPIO_HwPin_t *hw) {
+static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit) {
+#if McuLib_CONFIG_NXP_SDK_USED
   gpio_pin_config_t pin_config; /* config for the SDK */
 
   memset(&pin_config, 0, sizeof(pin_config)); /* init all fields */
@@ -99,11 +119,51 @@ static void McuGPIO_ConfigureDirection(bool isInput, bool isHighOnInit, McuGPIO_
 #endif
   pin_config.outputLogic = isHighOnInit;
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  GPIO_PinInit(hw->gpio, hw->pin, &pin_config);
+  GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
 #elif McuLib_CONFIG_CPU_IS_LPC
-  GPIO_PinInit(hw->gpio, hw->port, hw->pin, &pin_config);
+  GPIO_PinInit(pin->hw.gpio, pin->hw.port, pin->hw.pin, &pin_config);
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  GPIO_PinInit(hw->gpio, hw->pin, &pin_config);
+  GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
+#endif
+#elif McuLib_CONFIG_CPU_IS_STM32
+  GPIO_InitTypeDef config;
+
+  /* setup initialization structure */
+  config.Alternate = 0; /* init */
+  if (isInput) {
+    config.Mode = GPIO_MODE_INPUT; /* configure as input pin */
+  } else {
+    config.Mode = GPIO_MODE_OUTPUT_PP; /* configure as push/pull output pin */
+  }
+  switch(hw->pull) {
+    case McuGPIO_PULL_DISABLE: config.Pull = GPIO_NOPULL; break;
+    case McuGPIO_PULL_UP: config.Pull = GPIO_PULLUP; break;
+    case McuGPIO_PULL_DOWN: config.Pull = GPIO_PULLDOWN; break;
+  }
+  config.Speed = GPIO_SPEED_FREQ_LOW;
+  config.Pin = pin->hw.pin;
+  HAL_GPIO_Init(pin->hw.gpio, &config);
+  /* write default output level */
+  if (!isInput) {
+    HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, isHighOnInit?GPIO_PIN_SET:GPIO_PIN_RESET);
+  }
+#elif McuLib_CONFIG_CPU_IS_ESP32
+ /*! \todo */
+  gpio_pad_select_gpio(pin->hw.pin);
+  if (isInput) {
+    gpio_set_direction(pin->hw.pin, GPIO_MODE_INPUT);
+  } else {
+    gpio_set_direction(pin->hw.pin, GPIO_MODE_OUTPUT);
+  }
+  switch(pin->hw.pull) {
+    case McuGPIO_PULL_DISABLE: gpio_set_pull_mode(pin->hw.pin, GPIO_FLOATING); break;
+    case McuGPIO_PULL_UP:      gpio_set_pull_mode(pin->hw.pin, GPIO_PULLUP_ONLY); break;
+    case McuGPIO_PULL_DOWN:    gpio_set_pull_mode(pin->hw.pin, GPIO_PULLDOWN_ONLY); break;
+  }
+  if (!isInput) {
+    gpio_set_level(pin->hw.pin, isHighOnInit?1:0);
+    pin->isHigh = isHighOnInit;
+  }
 #endif
 }
 
@@ -111,7 +171,7 @@ void McuGPIO_SetAsInput(McuGPIO_Handle_t gpio) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
   assert(gpio!=NULL);
-  McuGPIO_ConfigureDirection(true, false /* don't care */, &pin->hw);
+  McuGPIO_ConfigurePin(pin, true, false /* don't care */);
   pin->isInput = true;
 }
 
@@ -119,7 +179,7 @@ void McuGPIO_SetAsOutput(McuGPIO_Handle_t gpio, bool setHigh) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
   assert(gpio!=NULL);
-  McuGPIO_ConfigureDirection(false, setHigh, &pin->hw);
+  McuGPIO_ConfigurePin(pin, false, setHigh);
   pin->isInput = false;
 }
 
@@ -137,19 +197,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   McuGPIO_t *handle;
 
   assert(config!=NULL);
-  McuGPIO_ConfigureDirection(config->isInput, config->isHighOnInit, &config->hw);
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
-  const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
-
-  assert(config->hw.iocon!=-1); /* must be set! */
-  IOCON_PinMuxSet(IOCON, config->hw.iocon, IOCON_config);
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==33 /* LPC55S69 */
-  /* \todo */
-#elif McuLib_CONFIG_CPU_IS_IMXRT
-  /* \todo */
-#endif
+  /* allocate memory for handle */
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   handle = (McuGPIO_t*)pvPortMalloc(sizeof(McuGPIO_t)); /* get a new device descriptor */
 #else
@@ -159,8 +207,11 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   if (handle!=NULL) { /* if malloc failed, will return NULL pointer */
     memset(handle, 0, sizeof(McuGPIO_t)); /* init all fields */
     handle->isInput = config->isInput;
+#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32
     handle->hw.gpio = config->hw.gpio;
+#endif
     handle->hw.pin = config->hw.pin;
+    handle->hw.pull = config->hw.pull;
   #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
     handle->hw.port = config->hw.port;
   #endif
@@ -168,6 +219,46 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
     handle->hw.iocon = config->hw.iocon;
   #endif
   }
+
+  McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
+
+  /* do pin muxing */
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
+  const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
+
+  assert(config->hw.iocon!=-1); /* must be set! */
+  IOCON_PinMuxSet(IOCON, config->hw.iocon, IOCON_config);
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==33 /* LPC55S69 */
+  #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+  #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+  #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+  #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+  #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+  #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+
+  static const uint32_t port_pin_config = (
+                                      IOCON_PIO_FUNC0 |
+                                      /* Selects pull-up function */
+                                      IOCON_PIO_MODE_PULLUP |
+                                      /* Standard mode, output slew rate control is enabled */
+                                      IOCON_PIO_SLEW_STANDARD |
+                                      /* Input function is not inverted */
+                                      IOCON_PIO_INV_DI |
+                                      /* Enables digital function */
+                                      IOCON_PIO_DIGITAL_EN |
+                                      /* Open drain is disabled */
+                                      IOCON_PIO_OPENDRAIN_DI);
+  IOCON_PinMuxSet(IOCON, config->hw.port, config->hw.pin, port_pin_config);
+#elif McuLib_CONFIG_CPU_IS_IMXRT
+  /* muxing not implemented */
+#elif McuLib_CONFIG_CPU_IS_STM32
+  /* no muxing */
+#elif McuLib_CONFIG_CPU_IS_ESP32
+ /* no muxing needed */
+#endif
+
   return handle;
 }
 
@@ -195,6 +286,11 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
   GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 0U);
+#elif McuLib_CONFIG_CPU_IS_STM32
+  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_RESET);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  gpio_set_level(pin->hw.pin, 0); /* low */
+  pin->isHigh = false;
 #endif
 }
 
@@ -212,6 +308,11 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
   GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
+#elif McuLib_CONFIG_CPU_IS_STM32
+  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_SET);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  gpio_set_level(pin->hw.pin, 1); /* high */
+  pin->isHigh = true;
 #endif
 }
 
@@ -229,6 +330,16 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
   GPIO_PortToggle(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
+#elif McuLib_CONFIG_CPU_IS_STM32
+  HAL_GPIO_TogglePin(pin->hw.gpio, pin->hw.pin);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  if (pin->isHigh) {
+    gpio_set_level(pin->hw.pin, 0);
+    pin->isHigh = false;
+  } else {
+    gpio_set_level(pin->hw.pin, 1);
+    pin->isHigh = true;
+  }
 #endif
 }
 
@@ -247,6 +358,11 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
     GPIO_PortSet(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
     GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
+#elif McuLib_CONFIG_CPU_IS_STM32
+  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_RESET);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  gpio_set_level(pin->hw.pin, 1); /* high */
+  pin->isHigh = true;
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -259,6 +375,11 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
     GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
     GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
+#elif McuLib_CONFIG_CPU_IS_STM32
+  HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_SET);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  gpio_set_level(pin->hw.pin, 0); /* low */
+  pin->isHigh = false;
 #endif
   }
 }
@@ -281,6 +402,10 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   return GPIO_PinRead(pin->hw.gpio, pin->hw.port, pin->hw.pin)!=0;
 #elif McuLib_CONFIG_CPU_IS_IMXRT
   return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
+#elif McuLib_CONFIG_CPU_IS_STM32
+  return HAL_GPIO_ReadPin(pin->hw.gpio, pin->hw.pin);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  return gpio_get_level(pin->hw.pin);
 #endif
   return false;
 }
@@ -303,8 +428,10 @@ void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_
   } else {
     McuUtility_strcat(buf, bufSize, (unsigned char*)", LOW");
   }
+#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32
   McuUtility_strcat(buf, bufSize, (unsigned char*)", gpio:0x");
   McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.gpio); /* write address */
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   McuUtility_strcat(buf, bufSize, (unsigned char*)", port:0x");
   McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.port); /* write address */
@@ -323,6 +450,7 @@ void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_
 void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
+  pin->hw.pull = pull;
 #if McuLib_CONFIG_CPU_IS_KINETIS
   if (pull == McuGPIO_PULL_DISABLE) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
@@ -336,7 +464,6 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-
                      /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                       * corresponding Port Pull Enable field is set. */
                      | (uint32_t)(kPORT_PullUp));
@@ -344,7 +471,6 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-
                      /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                       * corresponding Port Pull Enable field is set. */
                      | (uint32_t)(kPORT_PullDown));
@@ -363,17 +489,35 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   }
   IOCON_PinMuxSet(IOCON, pin->hw.iocon, IOCON_config);
 #elif McuLib_CONFIG_CPU_IS_LPC
+  uint32_t config;
+
+  /*! IOCON_PIO_MODE:
+   *  MODE - Selects function mode (on-chip pull-up/pull-down resistor control).
+   *  0b00..Inactive. Inactive (no pull-down/pull-up resistor enabled).
+   *  0b01..Pull-down. Pull-down resistor enabled.
+   *  0b10..Pull-up. Pull-up resistor enabled.
+   *  0b11..Repeater. Repeater mode.
+   */
   if (pull == McuGPIO_PULL_DISABLE) {
+    config = IOCON_PIO_MODE(0b00); /* inactive */
   } else if (pull == McuGPIO_PULL_UP) {
+    config = IOCON_PIO_MODE(0b10); /* pull-up */
   } else if (pull == McuGPIO_PULL_DOWN) {
+    config = IOCON_PIO_MODE(0b01); /* pull-down */
+  } else { /* default */
+    config = IOCON_PIO_MODE(0b00); /* inactive */
   }
-  /* \todo */
+  IOCON->PIO[pin->hw.port][pin->hw.pin] = ((IOCON->PIO[pin->hw.port][pin->hw.pin] &
+                       (~(IOCON_PIO_MODE_MASK))) /* Mask bits to zero which are setting */
+                      | config); /* Select function mode (on-chip pull-up/pull-down resistor control) */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  /* \todo, NYI */
+  /* NYI */
   if (pull == McuGPIO_PULL_DISABLE) {
   } else if (pull == McuGPIO_PULL_UP) {
   } else if (pull == McuGPIO_PULL_DOWN) {
   }
+#elif McuLib_CONFIG_CPU_IS_STM32 
+  McuGPIO_ConfigurePin(pin->isInput, false /* don't care as only for output */, &pin->hw);
 #endif
 }
 

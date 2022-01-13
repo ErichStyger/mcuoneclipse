@@ -145,6 +145,8 @@ Additional information:
 #include <stdlib.h>
 #include <stdarg.h>
 
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST: added check, otherwise compiler might complain about calling RTT init with out-of-bound RTT channel index */
+
 /*********************************************************************
 *
 *       Defines, fixed
@@ -2944,6 +2946,8 @@ int SEGGER_SYSVIEW_IsStarted(void) {
 #endif
   return _SYSVIEW_Globals.EnableState;
 }
+
+#endif /* configUSE_SEGGER_SYSTEM_VIEWER_HOOKS */ /* << EST: added check, otherwise compiler might complain about calling RTT init with out-of-bound RTT channel index */
 
 
 /*************************** End of file ****************************/
