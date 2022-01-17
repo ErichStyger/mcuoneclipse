@@ -20,6 +20,9 @@
 #elif McuLib_CONFIG_CPU_IS_ESP32
   #include "driver/gpio.h"
 #endif
+#if McuLib_CONFIG_CPU_IS_IMXRT
+  #include "fsl_iomuxc.h"
+#endif
 #include "McuLibconfig.h"
 #include "McuGPIOconfig.h"
 #include <stdbool.h>
@@ -50,7 +53,14 @@ typedef struct {
 #elif McuLib_CONFIG_CPU_IS_LPC
   uint32_t port; /* port number */
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-  /* no port for i.MX */
+  /* information needed for IOMUXC_SetPinMux(), provided e.g. with IOMUXC_GPIO_AD_B0_09_GPIO1_IO09 */
+  struct {
+    uint32_t muxRegister;     /* pin mux register */
+    uint32_t muxMode;         /* pin mux mode */
+    uint32_t inputRegister;   /* select input register */
+    uint32_t inputDaisy;      /* the input daisy */
+    uint32_t configRegister;  /* the configuration register */
+  } mux;
 #endif
 #if McuLib_CONFIG_CPU_IS_ESP32
   gpio_num_t pin; /* pin number, e.g. GPIO_NUM_10 */
@@ -65,6 +75,20 @@ typedef struct {
   bool isHighOnInit;
   McuGPIO_HwPin_t hw;
 } McuGPIO_Config_t;
+
+#if McuLib_CONFIG_CPU_IS_IMXRT
+  /*!
+   * \brief Used to set the Muxing configuration.
+   * Usage: McuGPIO_SetMux(&config.hw, IOMUXC_GPIO_AD_B0_09_GPIO1_IO09);
+   * @param hw Pointer to hardware struct
+   * @param muxRegister The muxing register
+   * @param muxMode The muxing mode
+   * @param inputRegister The input register, 0 for not used
+   * @param inputDaisy The input daisy value
+   * @param configRegister The configuration register
+   */
+  void McuGPIO_SetMux(McuGPIO_HwPin_t *hw, uint32_t muxRegister, uint32_t muxMode, uint32_t inputRegister, uint32_t inputDaisy, uint32_t configRegister);
+#endif
 
 void McuGPIO_GetDefaultConfig(McuGPIO_Config_t *config);
 

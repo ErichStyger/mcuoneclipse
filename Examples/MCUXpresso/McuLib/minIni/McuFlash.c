@@ -175,7 +175,7 @@ static uint8_t McuFlash_ProgramPage(void *addr, const void *data, size_t dataSiz
     return ERR_FAILED;
   }
   return ERR_OK;
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+#elif McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
   uint32_t startSector = (uint32_t)addr/McuFlash_CONFIG_FLASH_BLOCK_SIZE; /* sector is 1k in size */
   uint32_t endSector = ((uint32_t)addr+(McuFlash_CONFIG_FLASH_BLOCK_SIZE-1))/McuFlash_CONFIG_FLASH_BLOCK_SIZE;
   uint8_t result = ERR_FAILED; /* default */
@@ -276,7 +276,7 @@ uint8_t McuFlash_InitErase(void *addr, size_t nofBytes) {
 #endif
 
 uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
-#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+#if McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
   /* determine sector numbers based on block/sector size */
   uint32_t startSector = (uint32_t)addr/McuFlash_CONFIG_FLASH_BLOCK_SIZE;
   uint32_t endSector = (((uint32_t)addr+(McuFlash_CONFIG_FLASH_BLOCK_SIZE-1))/McuFlash_CONFIG_FLASH_BLOCK_SIZE);
@@ -376,6 +376,8 @@ uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
     }
   }
   return res;
+#error
+  #error "target not supported yet!"
 #endif
 }
 

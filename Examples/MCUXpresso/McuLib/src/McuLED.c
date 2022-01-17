@@ -69,13 +69,7 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
   assert(config!=NULL);
   McuGPIO_GetDefaultConfig(&gpio_config);
   gpio_config.isInput = false; /* LED is output only */
-  #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32
-    gpio_config.hw.gpio = config->hw.gpio;
-  #endif
-  #if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
-    gpio_config.hw.port = config->hw.port;
-  #endif
-  gpio_config.hw.pin  = config->hw.pin;
+  memcpy(&gpio_config.hw, &config->hw, sizeof(gpio_config.hw)); /* copy hardware information */
   if (config->isLowActive) {
     gpio_config.isHighOnInit = !config->isOnInit;
   } else {

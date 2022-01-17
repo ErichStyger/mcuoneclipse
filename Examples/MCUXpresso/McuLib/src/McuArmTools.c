@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.043, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-12-13, 20:30, # CodeGen: 757
+**     Date/Time   : 2022-01-04, 17:37, # CodeGen: 773
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void McuArmTools_Deinit(void);
 **         Init                   - void McuArmTools_Init(void);
 **
-** * Copyright (c) 2014-2021, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -148,6 +148,31 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io)
   McuShell_SendStatusStr((unsigned char*)"  UID", buf, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
+
+#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  uint32_t val;
+
+  res = IAP_ReadPartID(&val);
+  if (res == kStatus_IAP_Success) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum32Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  PartID", buf, io->stdOut);
+
+  res = IAP_ReadBootCodeVersion(&val);
+  if (res == kStatus_IAP_Success) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"Version 0x");
+    McuUtility_strcatNum32Hex(buf, sizeof(buf), val);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  BootCode", buf, io->stdOut);
+#endif
+
   McuShell_SendStatusStr((unsigned char*)"  Family", (uint8_t*)McuArmTools_GetKinetisFamilyString(), io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
