@@ -14,6 +14,9 @@
 #if PL_CONFIG_USE_WS2812B
   #include "NeoPixel.h"
 #endif
+#if PL_CONFIG_USE_MININI
+  #include "McuMinINI.h"
+#endif
 
 #if PL_CONFIG_USE_WS2812B
 static void test(void) {
@@ -111,8 +114,16 @@ static void blinky(void *pv) {
   }
 }
 
+int counter;
 void APP_Run(void) {
   PL_Init();
+  {
+    /* some test code */
+    counter = McuMinINI_ini_getl("app", "cnt", 5, "settings.ini");
+    if (counter==0) {
+      McuMinINI_ini_putl("app", "cnt", 3, "settings.ini");
+    }
+  }
   for(int i=0; i<3; i++) {
     LEDS_On(LEDS_GREEN);
     McuWait_Waitms(50);

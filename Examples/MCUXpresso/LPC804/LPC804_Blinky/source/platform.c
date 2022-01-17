@@ -13,6 +13,13 @@
 #include "leds.h"
 #include "NeoPixel.h"
 #include "ws2812b.h"
+#if PL_CONFIG_USE_MININI
+  #include "McuMinINI.h"
+  #include "McuFlash.h"
+#endif
+#if PL_CONFIG_USE_RTT
+  #include "McuRTT.h"
+#endif
 
 static McuGPIO_Handle_t WS_lane;
 
@@ -43,6 +50,14 @@ void PL_Init(void) {
   McuLED_Init();
   McuWait_Init();
   McuArmTools_Init();
+#if PL_CONFIG_USE_RTT
+  McuRTT_Init();
+#endif
+#if PL_CONFIG_USE_MININI
+  McuMinINI_Init();
+  McuFlash_Init();
+  McuFlash_RegisterMemory((const void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, 1*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
 
   /* application modules */
   LEDS_Init();
