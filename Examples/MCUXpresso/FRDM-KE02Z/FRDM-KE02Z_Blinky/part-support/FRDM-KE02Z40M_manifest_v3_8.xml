@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:manifest xmlns:ns2="http://nxp.com/ksdk/2.0/ksdk_manifest_v3.0.xsd" format_version="3.8" api_version="2.0.0" configuration="37bbf4eb706f3814bfad8f3a27525c83" id="SDK_2.x_FRDM-KE02Z40M" name="FRDM-KE02Z40M" brief="This is SDK version 2.10.0 manifest file. It describes the content of the FRDM-KE02Z40M and additional settings for tools that support SDK version 2.10.0">
+    <defines>
+        <define name="CPU_$|package|" value=""/>
+        <define name="CPU_$|package|_$|core|" value=""/>
+        <define name="CPU_$|package|_$|core_name|" value=""/>
+    </defines>
+    <ksdk id="MCUXpressoSDK2100" name="MCUXpressoSDK2100" version="2.10.0"/>
+    <compilers>
+        <compiler type="gcc" id="compiler_gcc" name="gcc"/>
+    </compilers>
+    <toolchainSettings>
+        <toolchainSetting id="com.nxp.mcuxpresso" name="mcuxpresso" full_name="MCUXpresso IDE" version="11.4.0" toolchain="mcuxpresso" compiler="compiler_gcc">
+            <option id="gnu.cpp.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.c.compiler.option.optimization.flags" type="string" user_name="">
+                <value>-fno-common</value>
+            </option>
+            <option id="gnu.cpp.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.cpp.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="com.crt.advproject.link.flashconfigenable" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+            <option id="gnu.c.link.option.nostdlibs" type="boolean" user_name="">
+                <value>true</value>
+            </option>
+        </toolchainSetting>
+    </toolchainSettings>
+    <toolchains>
+        <toolchain type="mcuxpresso" vendor="NXP Semiconductors" vendor_url="http://www.nxp.com" id="mcuxpresso" name="MCUXpresso_IDE" full_name="MCUXpresso IDE" version="11.4.0" compiler="compiler_gcc">
+            <debug>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.release" name="Release Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.release.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.release.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="LinkServer" id="com.crt.advproject.config.exe.debug" name="Debug Configuration">
+                    <scripts>
+                        <script type="init" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>
+set remotetimeout 60000
+##target_extended_remote##
+set mem inaccessible-by-default ${mem.access}
+mon ondisconnect ${ondisconnect}
+set arm force-mode thumb
+${load}</script>
+                        </script>
+                        <script type="run" silent="false" emulators="${gdb.stub} -mi -info-emu">
+                            <script>${run}</script>
+                        </script>
+                    </scripts>
+                    <params>
+                        <params value="false" id="vector.catch.debug.mcuxpresso" name="vector.catch"/>
+                        <params value="Disable" id="internal.cache.debug.mcuxpresso" name="internal.cache"/>
+                    </params>
+                </debug_configuration>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.debug" name="Debug Configuration"/>
+                <debug_configuration probe="Segger" id="com.nxp.mcuxpresso.core.debug.support.segger.release" name="Release Configuration"/>
+            </debug>
+        </toolchain>
+    </toolchains>
+    <boards>
+        <board package="MKE02Z64VQH4" id="frdmke02z40m" name="FRDM-KE02Z40M" href="https://www.nxp.com/pip/FRDM-KE02Z40M" version="1.0.0">
+            <description>Freedom Development Board for Kinetis KE02 (40 MHz) MCUs</description>
+            <image path="core/boards/frdmke02z40m" type="image">
+                <files mask="frdmke02z40m.png"/>
+            </image>
+            <total_memory flash_size_kb="0" ram_size_kb="0"/>
+        </board>
+    </boards>
+    <devices>
+        <device family="KE0x" platform="Kinetis" id="MKE02Z16xxx4" name="MKE02Z4" full_name="MKE02Z16xxx4" version="1.0.0">
+            <description>Kinetis KE02-40 MHz, robust Microcontrollers (MCUs) based on ARM Cortex-M0+ Core</description>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="false" type="cm0plus" id="core0_MKE02Z16xxx4" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00004000" type="Flash" access="RO" id="PROGRAM_FLASH_MKE02Z16xxx4" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="1FFFFE00" size="00000800" type="RAM" access="RW" id="SRAM_MKE02Z16xxx4" name="SRAM"/>
+            </memory>
+            <total_memory flash_size_kb="16" ram_size_kb="2"/>
+            <package id="MKE02Z16VFM4" name="MKE02Z16VFM4"/>
+            <package id="MKE02Z16VLC4" name="MKE02Z16VLC4"/>
+            <package id="MKE02Z16VLD4" name="MKE02Z16VLD4"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmke02z40m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.MKE02Z16xxx4" name="internal.wiretype"/>
+                        <params value="false" id="internal.has_swo.release.MKE02Z16xxx4" name="internal.has_swo"/>
+                        <params value="ke0xconnect.scp" id="internal.connect.script.debug.mcuxpresso.MKE02Z16xxx4" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MKE02Z16xxx4">
+                            <driverBinary path="core/devices/MKE02Z4/mcuxpresso" type="binary">
+<files mask="FTMRH_KE02.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+        <device family="KE0x" platform="Kinetis" id="MKE02Z32xxx4" name="MKE02Z4" full_name="MKE02Z32xxx4" version="1.0.0">
+            <description>Kinetis KE02-40 MHz, robust Microcontrollers (MCUs) based on ARM Cortex-M0+ Core</description>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="false" type="cm0plus" id="core0_MKE02Z32xxx4" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00008000" type="Flash" access="RO" id="PROGRAM_FLASH_MKE02Z32xxx4" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="1FFFFC00" size="00001000" type="RAM" access="RW" id="SRAM_MKE02Z32xxx4" name="SRAM"/>
+            </memory>
+            <total_memory flash_size_kb="32" ram_size_kb="4"/>
+            <package id="MKE02Z32VFM4" name="MKE02Z32VFM4"/>
+            <package id="MKE02Z32VLC4" name="MKE02Z32VLC4"/>
+            <package id="MKE02Z32VLD4" name="MKE02Z32VLD4"/>
+            <package id="MKE02Z32VLH4" name="MKE02Z32VLH4"/>
+            <package id="MKE02Z32VQH4" name="MKE02Z32VQH4"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmke02z40m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.MKE02Z32xxx4" name="internal.wiretype"/>
+                        <params value="false" id="internal.has_swo.release.MKE02Z32xxx4" name="internal.has_swo"/>
+                        <params value="ke0xconnect.scp" id="internal.connect.script.debug.mcuxpresso.MKE02Z32xxx4" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MKE02Z32xxx4">
+                            <driverBinary path="core/devices/MKE02Z4/mcuxpresso" type="binary">
+<files mask="FTMRH_KE02.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+        <device family="KE0x" platform="Kinetis" id="MKE02Z64xxx4" name="MKE02Z4" full_name="MKE02Z64xxx4" version="1.0.0">
+            <description>Kinetis KE02-40 MHz, robust Microcontrollers (MCUs) based on ARM Cortex-M0+ Core</description>
+            <metadataSet>
+                <metadata key="vendor" value="NXP"/>
+            </metadataSet>
+            <core fpu="false" type="cm0plus" id="core0_MKE02Z64xxx4" name="core0"/>
+            <memory>
+                <memoryBlock addr="00000000" size="00010000" type="Flash" access="RO" id="PROGRAM_FLASH_MKE02Z64xxx4" name="PROGRAM_FLASH"/>
+                <memoryBlock addr="1FFFFC00" size="00001000" type="RAM" access="RW" id="SRAM_MKE02Z64xxx4" name="SRAM"/>
+            </memory>
+            <total_memory flash_size_kb="64" ram_size_kb="4"/>
+            <package id="MKE02Z64VFM4" name="MKE02Z64VFM4"/>
+            <package id="MKE02Z64VLC4" name="MKE02Z64VLC4"/>
+            <package id="MKE02Z64VLD4" name="MKE02Z64VLD4"/>
+            <package id="MKE02Z64VLH4" name="MKE02Z64VLH4"/>
+            <package id="MKE02Z64VQH4" name="MKE02Z64VQH4"/>
+            <evaluation_boards>
+                <evaluation_board name="frdmke02z40m"/>
+            </evaluation_boards>
+            <debug_configurations>
+                <debug_configuration id_refs="com.crt.advproject.config.exe.debug com.crt.advproject.config.exe.release">
+                    <params>
+                        <params value="SWD" id="internal.wiretype.release.MKE02Z64xxx4" name="internal.wiretype"/>
+                        <params value="false" id="internal.has_swo.release.MKE02Z64xxx4" name="internal.has_swo"/>
+                        <params value="ke0xconnect.scp" id="internal.connect.script.debug.mcuxpresso.MKE02Z64xxx4" name="internal.connect.script"/>
+                    </params>
+                    <drivers>
+                        <driver id_refs="PROGRAM_FLASH_MKE02Z64xxx4">
+                            <driverBinary path="core/devices/MKE02Z4/mcuxpresso" type="binary">
+<files mask="FTMRH_KE02.cfx"/>
+                            </driverBinary>
+                        </driver>
+                    </drivers>
+                </debug_configuration>
+            </debug_configurations>
+            <linkerSettings nature="c_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+            <linkerSettings nature="cpp_nature">
+                <linker property="start_symbol" value="ResetISR"/>
+                <linker property="text_align" value="4"/>
+                <linker property="data_align" value="4"/>
+                <linker property="bss_align" value="4"/>
+                <linker property="flash_security_address" value="0x400"/>
+                <linker property="mtb_supported" value="false"/>
+            </linkerSettings>
+        </device>
+    </devices>
+    <components>
+        <component user_visible="true" type="debugger" devices="MKE02Z16xxx4 MKE02Z32xxx4 MKE02Z64xxx4" device_cores="" package_base_path="svd/MKE02Z4" project_base_path="MKE02Z4" id="device.MKE02Z4_debugger.MKE02Z4" name="MKE02Z4_debugger" full_name="Device MKE02Z4_debugger" brief="Device MKE02Z4_debugger" version="1.0.0">
+            <source relative_path="./" type="xml">
+                <files mask="MKE02Z4.xml"/>
+            </source>
+        </component>
+    </components>
+</ns2:manifest>
