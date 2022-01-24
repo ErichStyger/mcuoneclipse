@@ -57,7 +57,8 @@ int main(void) {
     BOARD_InitDebugConsole();
 #endif
 
-    PRINTF("Hello World\n");
+    printf("Hello World\n");
+    puts("Hello World with puts\n");
 
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
