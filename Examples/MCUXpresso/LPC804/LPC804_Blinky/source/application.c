@@ -117,6 +117,7 @@ static void blinky(void *pv) {
 int counter;
 void APP_Run(void) {
   PL_Init();
+#if PL_CONFIG_USE_MININI
   {
     /* some test code */
     counter = McuMinINI_ini_getl("app", "cnt", 5, "settings.ini");
@@ -124,6 +125,7 @@ void APP_Run(void) {
       McuMinINI_ini_putl("app", "cnt", 3, "settings.ini");
     }
   }
+#endif
   for(int i=0; i<3; i++) {
     LEDS_On(LEDS_GREEN);
     McuWait_Waitms(50);
