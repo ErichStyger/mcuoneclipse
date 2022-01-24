@@ -8,6 +8,7 @@
 #include "application.h"
 #include "McuWait.h"
 #include "McuLED.h"
+#include "McuGPIO.h"
 #include "leds.h"
 #include "LowPower.h"
 #include <stdio.h>
@@ -38,8 +39,32 @@ static void GearShiftSlow(bool slow) {
   SystemCoreClock = CLOCK_GetCoreSysClkFreq();
 }
 
+static McuGPIO_Handle_t measurementTriggerPin;
+
+static void ConfigureMeasurementPin(void) {
+  McuGPIO_Config_t config;
+
+  McuGPIO_GetDefaultConfig(&config);
+  /* PTD2, pin 3 on J3 of FRDM-K22F */
+  config.hw.port = PORTD;
+  config.hw.gpio = GPIOD;
+  config.hw.pin = 2;
+  config.isInput = false;
+  config.isHighOnInit = false;
+  measurementTriggerPin = McuGPIO_InitGPIO(&config);
+}
+
+static void MeasurementStart(void) {
+  McuGPIO_SetHigh(measurementTriggerPin);
+}
+
+static void MeasurementStop(void) {
+  McuGPIO_SetLow(measurementTriggerPin);
+}
+
 void APP_Run(void) {
   PL_Init(); /* initialize platform */
+  ConfigureMeasurementPin();
   for(int i=0; i<3; i++) {
     McuLED_On(blueLED);
     McuWait_Waitms(500);
@@ -49,9 +74,11 @@ void APP_Run(void) {
 //  printf("SystemCoreClock: %lu\n", SystemCoreClock);
   GearShiftSlow(true);
   for(;;) {
+    MeasurementStart();
     McuLED_On(blueLED);
     McuWait_Waitms(100);
     McuLED_Off(blueLED);
+    MeasurementStop();
 #if LP_MODE==LP_MODE_RUN
     LP_EnterLowPower(kAPP_PowerModeRun);
     McuWait_Waitms(1000); /* no wakeup, burn cycles here */
