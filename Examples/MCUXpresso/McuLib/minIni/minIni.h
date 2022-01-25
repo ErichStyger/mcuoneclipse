@@ -32,7 +32,7 @@
 #endif
 
 #if !defined INI_BUFFERSIZE
-  #define INI_BUFFERSIZE  512
+  #define INI_BUFFERSIZE  McuMinINI_CONFIG_BUFFER_SIZE
 #endif
 
 #if defined __cplusplus

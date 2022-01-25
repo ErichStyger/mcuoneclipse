@@ -15,7 +15,7 @@
 
 #if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
 
-#define INI_BUFFERSIZE  256       /* maximum line length, maximum path length */
+#define INI_BUFFERSIZE   (McuMinINI_CONFIG_BUFFER_SIZE)       /* maximum line length, maximum path length */
 
 #define MININI_FLASH_MAGIC_DATA_NUMBER_ID   (0xFEEDBABE) /* magic ID to mark valid memory */
 typedef struct MinIniFlashFileHeader {

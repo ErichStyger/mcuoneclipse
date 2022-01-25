@@ -37,6 +37,11 @@
 #endif
     /*!< if ini file handling is read-only */
 
+#ifndef McuMinINI_CONFIG_BUFFER_SIZE
+  #define McuMinINI_CONFIG_BUFFER_SIZE  (64)
+#endif
+    /*!< maximum line length, maximum path length, buffer is allocated on the stack! */
+
 #ifndef NDEBUG
   #define NDEBUG
 #endif
@@ -50,7 +55,8 @@
 
   #ifndef McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE
     #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      (0x800)
-      /*!< must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
+      /*!< must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize).
+      For LPC55Sxx it is 0x200, for LPC845 it is 0x400, for K22FN/K02FN it is 0x800 */
   #endif
 
   #ifndef McuMinINI_CONFIG_FLASH_NVM_ADDR_START
@@ -60,10 +66,9 @@
 
   #ifndef McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE
     #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE      (128)
-      /*!< size for the data, less than McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE to save memory */
+      /*!< size for the data, less than McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE to save memory. For LPC55Sxx it must be multiple of 0x200! */
   #endif
 #endif /* McuMinINI_CONFIG_FS_TYPE_FLASH_FS */
-
 
 #if !defined(McuMinINI_CONFIG_PARSE_COMMAND_ENABLED)
   #define McuMinINI_CONFIG_PARSE_COMMAND_ENABLED  (1)

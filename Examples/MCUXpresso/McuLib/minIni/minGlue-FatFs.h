@@ -12,7 +12,7 @@
 #ifndef _MINGLUE_FATFS_H__
 #define _MINGLUE_FATFS_H__
 
-#include "McuMinINIconfig.h" /* MinIni config file TEST */
+#include "McuMinINIconfig.h" /* MinIni configuration file */
 
 #if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FAT_FS
 
@@ -21,9 +21,6 @@
   #pragma MESSAGE DISABLE C1420 /* Result of function call is ignored */
   #pragma MESSAGE DISABLE C5909 /* Assignment in condition */
 #endif
-
-
-#define INI_BUFFERSIZE  256       /* maximum line length, maximum path length */
 
 /* You must set FF_USE_STRFUNC to 1 or 2 in the include file ff.h (or tff.h)
  * to enable the "string functions" fgets() and fputs().

@@ -4,11 +4,11 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : minIni
-**     Version     : Component 01.058, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.060, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-12-20, 07:00, # CodeGen: 763
+**     Date/Time   : 2022-01-22, 12:01, # CodeGen: 775
 **     Abstract    :
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 **     Settings    :
 **          Component name                                 : McuMinINI
 **          minIni Version                                 : 1.4
@@ -36,9 +36,9 @@
 **         Deinit         - void McuMinINI_Deinit(void);
 **         Init           - void McuMinINI_Init(void);
 **
-** (c) Copyright 2008-2012, CompuPhase;
+** (c) Copyright 2008-2021, CompuPhase;
 ** http      : www.compuphase.com
-** Processor Expert port: Erich Styger, 2014-2021, http://www.mcuoneclipse.com
+** Processor Expert port: Erich Styger, 2014-2022, http://www.mcuoneclipse.com
 ** License: See miniIni_LICENSE.txt and minIni_NOTICE.txt
 ** Adaptions for Processor Expert: (c) Copyright 2012-2020, Erich Styger
 ** ###################################################################*/
@@ -46,7 +46,7 @@
 ** @file McuMinINI.h
 ** @version 01.00
 ** @brief
-**         minIni is a programmer’s library to read and write ini files in embedded systems.
+**         minIni is a programmerï¿½s library to read and write ini files in embedded systems.
 */         
 /*!
 **  @addtogroup McuMinINI_module McuMinINI module documentation

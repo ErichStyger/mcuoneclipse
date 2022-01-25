@@ -25,11 +25,13 @@ static const McuULN2003_Accel_t McuULN2003_DefaultAccelTable =
 };
 #endif
 
-typedef struct {
+typedef struct McuULN2003_Motor_t {
   int32_t pos; /* actual stepper motor position counter */
   McuULN2003_StepMode stepMode; /* full or half stepping mode */
   bool inverted; /* if motor direction is inverted */
   uint8_t tablePos; /* current pos in the stepper logic table */
+  uint32_t id; /* optional ID */
+  bool noGPIO; /* if no GPIO handles shall be allocated */
 #if McuULN2003_CONFIG_USE_ACCELERATION
   struct {
     const McuULN2003_Accel_t *table;
@@ -37,23 +39,21 @@ typedef struct {
     uint8_t subAccelCnt; /* sub-position acceleration counter, used to count down the delay */
   } accel;
 #endif
+  void (*stepCallback)(McuULN2003_Handle_t motor, const bool w[McuULN2003_NOF_MOTOR_GPIO_PINS]);
   McuGPIO_Handle_t pin[McuULN2003_NOF_MOTOR_GPIO_PINS]; /* the 4 winding of the motor */
 } McuULN2003_Motor_t;
 
-#define McuULN2003_NOF_STEPS_HALF_STEP_MODE    (8)
 #define McuULN2003_DELAY_HALF_STEP_MODE()      McuWait_WaitOSms(2)
-
-#define McuULN2003_NOF_STEPS_FULL_STEP_MODE    (4)
 #define McuULN2003_DELAY_FULL_STEP_MODE()      McuWait_WaitOSms(4)
 
 typedef bool McuULN2003_PinStatus[McuULN2003_NOF_MOTOR_GPIO_PINS];
 
-static const bool disableTable[McuULN2003_NOF_MOTOR_GPIO_PINS] = { false, false, false, false};
+static const bool disableTable[McuULN2003_NOF_MOTOR_GPIO_PINS] = {false, false, false, false};
 
 /* half stepping mode with 8 steps
  * For the wire colors and stepper table, see https://leap.tardate.com/kinetics/steppermotors/28byj48/
- * */
-static const bool stepTableHalfStepsFw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
+ */
+const bool McuULN2003_stepTableHalfStepsFw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
   /* blue   pink   yellow orange */
     {true,  false, false, false},
     {true,  true,  false, false},
@@ -65,7 +65,7 @@ static const bool stepTableHalfStepsFw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuU
     {true,  false, false, true },
 };
 
-static const bool stepTableHalfStepsBw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
+const bool McuULN2003_stepTableHalfStepsBw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
    /* blue   pink   yellow orange */
     {true,  false, false, true },
     {false, false, false, true },
@@ -78,7 +78,7 @@ static const bool stepTableHalfStepsBw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuU
 };
 
 /* full stepping mode with 4 steps */
-static const bool stepTableFullStepsFw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
+const bool McuULN2003_stepTableFullStepsFw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
    /* blue   pink   yellow orange */
    /* https://leap.tardate.com/kinetics/steppermotors/28byj48/ */
     {true,  true,  false, false},
@@ -87,7 +87,7 @@ static const bool stepTableFullStepsFw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuU
     {true,  false, false, true },
 };
 
-static const bool stepTableFullStepsBw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
+const bool McuULN2003_stepTableFullStepsBw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
     /* blue   pink   yellow orange */
     {true,  false, false, true },
     {false, false, true,  true },
@@ -100,6 +100,9 @@ static const McuULN2003_Config_t defaultConfig =
 {
     .stepMode = McuULN2003_STEP_MODE_HALF,
     .inverted = false,
+    .id = 0,
+    .stepCallback = NULL,
+    .noGPIO = false,
     .hw[0] = {
   #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
@@ -159,6 +162,10 @@ void McuULN2003_GetDefaultConfig(McuULN2003_Config_t *config) {
   memcpy(config, &defaultConfig, sizeof(*config));
 }
 
+uint32_t McuULN2003_GetID(McuULN2003_Handle_t motor) {
+  return ((McuULN2003_Motor_t *)motor)->id;
+}
+
 #if McuULN2003_CONFIG_USE_ACCELERATION
 void McuULN2003_SetAccelerationTable(McuULN2003_Handle_t motor, const McuULN2003_Accel_t *table) {
   McuULN2003_Motor_t *handle;
@@ -169,6 +176,12 @@ void McuULN2003_SetAccelerationTable(McuULN2003_Handle_t motor, const McuULN2003
   handle->accel.subAccelCnt = 0;
 }
 #endif
+
+static void SetStep(McuULN2003_Handle_t motor, const bool w[McuULN2003_NOF_MOTOR_GPIO_PINS]) {
+  for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) { /* for all pins */
+    McuGPIO_SetValue(((McuULN2003_Motor_t *)motor)->pin[i], w[i]); /* change GPIO pins */
+  }
+}
 
 McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
   McuGPIO_Config_t gpio_config; /* config for the SDK */
@@ -186,16 +199,24 @@ McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
 #if McuULN2003_CONFIG_USE_ACCELERATION
     McuULN2003_SetAccelerationTable((McuULN2003_Handle_t*)handle, &McuULN2003_DefaultAccelTable);
 #endif
+    handle->id = config->id;
     handle->pos = 0;
     handle->stepMode = config->stepMode;
     handle->inverted = config->inverted;
     handle->tablePos = 0;
-    McuGPIO_GetDefaultConfig(&gpio_config);
-    for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) {
-      gpio_config.isInput = false; /* motor pin is output only */
-      memcpy(&gpio_config.hw, &config->hw[i], sizeof(gpio_config.hw)); /* copy hardware info */
-      gpio_config.isHighOnInit = false;
-      handle->pin[i] = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
+    handle->noGPIO = config->noGPIO;
+    handle->stepCallback = config->stepCallback;
+    if (handle->stepCallback==NULL) {
+      handle->stepCallback = SetStep; /* assign default GPIO callback */
+    }
+    if (!config->noGPIO) {
+      McuGPIO_GetDefaultConfig(&gpio_config);
+      for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) {
+        gpio_config.isInput = false; /* motor pin is output only */
+        memcpy(&gpio_config.hw, &config->hw[i], sizeof(gpio_config.hw)); /* copy hardware info */
+        gpio_config.isHighOnInit = false;
+        handle->pin[i] = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
+      }
     }
   }
   return handle;
@@ -224,15 +245,11 @@ McuULN2003_StepMode McuULN2003_GetStepMode(McuULN2003_Handle_t motor) {
   return ((McuULN2003_Motor_t*)motor)->stepMode;
 }
 
-static void SetStep(McuULN2003_Motor_t *motor, const bool w[McuULN2003_NOF_MOTOR_GPIO_PINS]) {
-  for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) { /* for all pins */
-    McuGPIO_SetValue(motor->pin[i], w[i]);
-  }
-}
-
 void McuULN2003_PowerOff(McuULN2003_Handle_t motor) {
-  SetStep((McuULN2003_Motor_t *)motor, disableTable);
-  ((McuULN2003_Motor_t *)motor)->tablePos = 0;
+  McuULN2003_Motor_t *m = (McuULN2003_Motor_t*)motor;
+
+  m->stepCallback(motor, disableTable);
+  m->tablePos = 0;
 }
 
 static void McuULN2003_TableMakeStep(McuULN2003_Handle_t motor, bool forward) {
@@ -242,20 +259,20 @@ static void McuULN2003_TableMakeStep(McuULN2003_Handle_t motor, bool forward) {
 
   if (m->stepMode==McuULN2003_STEP_MODE_HALF) {
     if ((forward && !m->inverted) || (!forward && m->inverted)) {
-      table = stepTableHalfStepsFw;
+      table = McuULN2003_stepTableHalfStepsFw;
     } else {
-      table = stepTableHalfStepsBw;
+      table = McuULN2003_stepTableHalfStepsBw;
     }
     maxTableIndex = McuULN2003_NOF_STEPS_HALF_STEP_MODE;
   } else { /* McuULN2003_STEP_MODE_FULL */
     if ((forward && !m->inverted) || (!forward && m->inverted)) {
-      table = stepTableFullStepsFw;
+      table = McuULN2003_stepTableFullStepsFw;
     } else {
-      table = stepTableFullStepsBw;
+      table = McuULN2003_stepTableFullStepsBw;
     }
     maxTableIndex = McuULN2003_NOF_STEPS_FULL_STEP_MODE;
   }
-  SetStep(m, table[m->tablePos]);
+  m->stepCallback(m, table[m->tablePos]);
   m->tablePos++;
   if (m->tablePos>=maxTableIndex) { /* full sequence reached */
     m->tablePos = 0;
