@@ -12,6 +12,7 @@ processor: MKE02Z64xxx4
 package_id: MKE02Z64VQH4
 mcu_data: ksdk2_0
 processor_version: 11.0.1
+board: FRDM-KE02Z40M
 pin_labels:
 - {pin_num: '5', pin_signal: PTE7/FTM2_CLK/FTM1_CH1, label: 'D4[3]/LEDRGB_BLUE', identifier: PTE7_BLUE}
 - {pin_num: '6', pin_signal: PTH2/BUSOUT/FTM1_CH0, label: 'D4[4]/LEDRGB_GREEN', identifier: PTH2_GREEN}
