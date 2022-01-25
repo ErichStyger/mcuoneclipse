@@ -63,14 +63,18 @@ static const McuGPIO_Config_t defaultConfig =
     .isInput = true,
     .isHighOnInit = false,
     .hw = {
-      #if McuLib_CONFIG_NXP_SDK_USED
+      #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
         .gpio = NULL,
       #elif McuLib_CONFIG_CPU_IS_STM32
         .gpio = NULL,
       #endif
     #if McuLib_CONFIG_CPU_IS_KINETIS
-      .port = NULL,
-    #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
+      .port = 0,
+      #if McuLib_CONFIG_IS_KINETIS_KE
+      .portType = 0,
+      .portNum = 0,
+      #endif
+   #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
       .port = 0,
       .iocon = -1,
     #elif McuLib_CONFIG_CPU_IS_LPC
@@ -120,7 +124,9 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
   pin_config.interruptMode = kGPIO_NoIntmode; /* no interrupts */
 #endif
   pin_config.outputLogic = isHighOnInit;
-#if McuLib_CONFIG_CPU_IS_KINETIS
+#if McuLib_CONFIG_IS_KINETIS_KE
+  GPIO_PinInit(pin->hw.portNum, pin->hw.pin, &pin_config);
+#elif McuLib_CONFIG_CPU_IS_KINETIS
   GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
 #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PinInit(pin->hw.gpio, pin->hw.port, pin->hw.pin, &pin_config);
@@ -222,8 +228,10 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   }
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
   /* do the pin muxing */
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
+#if McuLib_CONFIG_IS_KINETIS_KE
+  /* no pin muxing needed */
+#elif McuLib_CONFIG_CPU_IS_KINETIS
+  PORT_SetPinMux(config->hw.gpio, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
   const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
   assert(config->hw.iocon!=-1); /* must be set! */
@@ -307,6 +315,8 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
   GPIO_ClearPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  GPIO_PortClear(pin->hw.portNum, (1<<pin->hw.pin));
   #else
   GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
@@ -329,6 +339,8 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
   GPIO_SetPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  GPIO_PortSet(pin->hw.portNum, (1<<pin->hw.pin));
   #else
   GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
@@ -351,6 +363,8 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
   GPIO_TogglePinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  GPIO_PortToggle(pin->hw.portNum, (1<<pin->hw.pin));
   #else
   GPIO_PortToggle(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
@@ -379,6 +393,8 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
     GPIO_SetPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+    GPIO_PortSet(pin->hw.portNum, (1<<pin->hw.pin));
   #else
     GPIO_PortSet(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
@@ -396,6 +412,8 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
     GPIO_ClearPinsOutput(pin->hw.gpio, (1<<pin->hw.pin));
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+    GPIO_PortClear(pin->hw.portNum, (1<<pin->hw.pin));
   #else
     GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
@@ -423,6 +441,8 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #if McuLib_CONFIG_SDK_VERSION < 250
   return GPIO_ReadPinInput(pin->hw.gpio, pin->hw.pin)!=0;
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  return GPIO_PinRead(pin->hw.portNum, pin->hw.pin)!=0;
   #else
   return GPIO_PinRead(pin->hw.gpio, pin->hw.pin)!=0;
   #endif
@@ -456,7 +476,7 @@ void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_
   } else {
     McuUtility_strcat(buf, bufSize, (unsigned char*)", LOW");
   }
-#if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32
+#if (McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32) && !McuLib_CONFIG_IS_KINETIS_KE
   McuUtility_strcat(buf, bufSize, (unsigned char*)", gpio:0x");
   McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.gpio); /* write address */
 #endif
@@ -479,7 +499,14 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   McuGPIO_t *pin = (McuGPIO_t*)gpio;
 
   pin->hw.pull = pull;
-#if McuLib_CONFIG_CPU_IS_KINETIS
+#if McuLib_CONFIG_IS_KINETIS_KE
+  /* only pull-up */
+  if (pull == McuGPIO_PULL_DISABLE) {
+    PORT_SetPinPullUpEnable(pin->hw.port, pin->hw.portType, pin->hw.pin, false);
+  } else if (pull == McuGPIO_PULL_UP) {
+    PORT_SetPinPullUpEnable(pin->hw.port, pin->hw.portType, pin->hw.pin, true);
+  }
+#elif McuLib_CONFIG_CPU_IS_KINETIS
   if (pull == McuGPIO_PULL_DISABLE) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */

@@ -101,7 +101,11 @@ static const McuULN2003_Config_t defaultConfig =
     .stepMode = McuULN2003_STEP_MODE_HALF,
     .inverted = false,
     .hw[0] = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
@@ -110,7 +114,11 @@ static const McuULN2003_Config_t defaultConfig =
       .pin = 0,
     },
     .hw[1] = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
@@ -119,7 +127,11 @@ static const McuULN2003_Config_t defaultConfig =
       .pin = 0,
     },
     .hw[2] = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
@@ -128,7 +140,11 @@ static const McuULN2003_Config_t defaultConfig =
       .pin = 0,
     },
     .hw[3] = {
+  #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+  #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+  #endif
   #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
   #elif McuLib_CONFIG_CPU_IS_LPC
@@ -177,11 +193,7 @@ McuULN2003_Handle_t McuULN2003_InitMotor(McuULN2003_Config_t *config) {
     McuGPIO_GetDefaultConfig(&gpio_config);
     for(int i=0; i<McuULN2003_NOF_MOTOR_GPIO_PINS; i++) {
       gpio_config.isInput = false; /* motor pin is output only */
-      gpio_config.hw.gpio = config->hw[i].gpio;
-    #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
-      gpio_config.hw.port = config->hw[i].port;
-    #endif
-      gpio_config.hw.pin  = config->hw[i].pin;
+      memcpy(&gpio_config.hw, &config->hw[i], sizeof(gpio_config.hw)); /* copy hardware info */
       gpio_config.isHighOnInit = false;
       handle->pin[i] = McuGPIO_InitGPIO(&gpio_config); /* create gpio handle */
     }

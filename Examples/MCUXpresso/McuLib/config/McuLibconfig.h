@@ -78,22 +78,25 @@
     /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
 
-
-
 /* define to identify the CPU variant better */
 #define McuLib_CONFIG_CPU_VARIANT_DEFAULT               (0)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_K02FN             (1)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_K22FN             (2)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_K22FX             (3)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC804            (4)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (5)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC54608          (6)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (7)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (8)
-#define McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064         (9)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_KE02              (4)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC804            (5)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (6)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC54608          (7)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (8)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (9)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064         (10)
 
 #ifndef McuLib_CONFIG_CPU_VARIANT
   #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT
+#endif
+
+#ifndef McuLib_CONFIG_IS_KINETIS_KE
+  #define McuLib_CONFIG_IS_KINETIS_KE                   (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_KE02)
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_DEFAULT

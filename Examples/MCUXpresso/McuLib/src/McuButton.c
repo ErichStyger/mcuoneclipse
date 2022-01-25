@@ -19,7 +19,9 @@ static const McuBtn_Config_t defaultConfig =
 {
     .isLowActive = true,
     .hw = {
-    #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32
+    #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
+      .gpio = NULL,
+    #elif McuLib_CONFIG_CPU_IS_STM32
       .gpio = NULL,
     #endif
     #if McuLib_CONFIG_CPU_IS_KINETIS

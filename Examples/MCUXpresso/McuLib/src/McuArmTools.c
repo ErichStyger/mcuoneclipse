@@ -81,7 +81,7 @@
 #include "McuUtility.h" /* various utility functions */
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #include "fsl_common.h"
-  #if McuLib_CONFIG_CPU_IS_KINETIS
+  #if McuLib_CONFIG_CPU_IS_KINETIS && !McuLib_CONFIG_IS_KINETIS_KE
     #include "fsl_sim.h" /* system integration module, used for CPU ID */
   #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx /* LPC55x */
     #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
@@ -112,7 +112,7 @@ static const unsigned char *const KinetisM4FamilyStrings[] =
 };
 #endif
 
-#if McuLib_CONFIG_CORTEX_M==0
+#if McuLib_CONFIG_CORTEX_M==0 && !McuLib_CONFIG_IS_KINETIS_KE
 static const unsigned char *const KinetisM0FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"KL0x",          /* 0000 */
@@ -241,7 +241,7 @@ void McuArmTools_SoftwareReset(void)
 uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
 {
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  #if McuLib_CONFIG_NXP_SDK_2_0_USED
+  #if McuLib_CONFIG_NXP_SDK_2_0_USED && !McuLib_CONFIG_IS_KINETIS_KE
   sim_uid_t tmp;
   unsigned int i, j;
 
@@ -257,6 +257,26 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   for(i=0,j=sizeof(McuArmTools_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(McuArmTools_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
+  #elif McuLib_CONFIG_IS_KINETIS_KE
+  /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+
+  uid->id[0] = 0;
+  uid->id[1] = 0;
+  uid->id[2] = 0;
+  uid->id[3] = 0;
+  uid->id[4] = 0;
+  uid->id[5] = 0;
+  uid->id[6] = 0;
+  uid->id[7] = 0;
+  uid->id[8] = (SIM->UUIDH>>24)&0xff;
+  uid->id[9] = (SIM->UUIDH>>16)&0xff;
+  uid->id[10] = (SIM->UUIDH>>8)&0xff;
+  uid->id[11] = SIM->UUIDH&0xff;
+
+  uid->id[12] = (SIM->UUIDL>>24)&0xff;
+  uid->id[13] = (SIM->UUIDL>>16)&0xff;
+  uid->id[14] = (SIM->UUIDL>>8)&0xff;
+  uid->id[15] = SIM->UUIDL&0xff;
   #else /* not McuLib_CONFIG_NXP_SDK_2_0_USED */
     #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
       #ifdef SIM_UIDH

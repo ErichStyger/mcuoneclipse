@@ -15,6 +15,9 @@
 #include "McuLib.h"
 #if McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_gpio.h"
+  #if McuLib_CONFIG_IS_KINETIS_KE
+  #include "fsl_port.h"
+  #endif
 #elif McuLib_CONFIG_CPU_IS_STM32
   #include "stm32f3xx_hal.h"
 #elif McuLib_CONFIG_CPU_IS_ESP32
@@ -40,13 +43,17 @@ typedef enum {
 typedef void *McuGPIO_Handle_t;
 
 typedef struct {
-#if McuLib_CONFIG_NXP_SDK_USED
+#if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
   GPIO_Type *gpio; /* pointer to GPIO */
 #elif McuLib_CONFIG_CPU_IS_STM32
   GPIO_TypeDef *gpio;
 #endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_Type *port; /* pointer to port, e.g. PORTA */
+  PORT_Type *port; /* pointer to port, e.g. PORTA, for KE this is PORT */
+  #if McuLib_CONFIG_IS_KINETIS_KE
+  port_type_t portType; /* e.g. kPORT_PTH */
+  gpio_port_num_t portNum; /* e.g. kGPIO_PORTH */
+  #endif
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
   uint32_t port; /* port number */
   uint8_t iocon; /* I/O Connection index used for muxing, e.g. IOCON_INDEX_PIO0_0 */
