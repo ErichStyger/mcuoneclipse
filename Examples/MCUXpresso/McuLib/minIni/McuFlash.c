@@ -378,7 +378,7 @@ uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
     }
   }
   return res;
-#error
+#else
   #error "target not supported yet!"
 #endif
 }
