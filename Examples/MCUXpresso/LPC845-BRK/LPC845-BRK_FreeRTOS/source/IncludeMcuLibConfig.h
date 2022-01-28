@@ -34,6 +34,7 @@ Instructions:
 /* set the CPU. See McuLibConfig.h for all supported CPUs */
 #if 1 /* example configuration for LPC845 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
+  #define McuLib_CONFIG_CPU_VARIANT     McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #define McuLib_CONFIG_CORTEX_M          (0)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #elif 0 /* example configuration for LPC55xx */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */

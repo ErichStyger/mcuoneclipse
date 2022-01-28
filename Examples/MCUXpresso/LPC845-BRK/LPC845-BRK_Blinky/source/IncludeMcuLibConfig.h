@@ -4,6 +4,7 @@
 
 #define McuLib_CONFIG_CPU_IS_KINETIS  (0)
 #define McuLib_CONFIG_CPU_IS_LPC      (1)
+#define McuLib_CONFIG_CPU_VARIANT     McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
 #define McuLib_CONFIG_CORTEX_M        (0)
 
 

@@ -9,6 +9,12 @@
 
 #include "McuLib.h"
 
+#ifndef McuUart485_CONFIG_USE_RS_485
+  #define McuUart485_CONFIG_USE_RS_485  (0)
+    /*!< by default, this module is disabled */
+#endif
+
+#if McuUart485_CONFIG_USE_RS_485
 /* UART configuration items */
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #include "fsl_usart.h"
@@ -142,5 +148,6 @@
     #endif
   #endif
 #endif
+#endif /* McuUart485_CONFIG_USE_RS_485 */
 
 #endif /* MCUUART485CONFIG_H_ */

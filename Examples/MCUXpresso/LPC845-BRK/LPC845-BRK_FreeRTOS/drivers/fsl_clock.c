@@ -13,12 +13,12 @@
 #ifndef FSL_COMPONENT_ID
 #define FSL_COMPONENT_ID "platform.drivers.clock"
 #endif
-#define SYSPLL_MIN_INPUT_FREQ_HZ (10000000U)   /*!<  Minimum PLL input rate */
-#define SYSPLL_MAX_INPUT_FREQ_HZ (25000000U)   /*!<  Maximum PLL input rate */
+#define SYSPLL_MIN_INPUT_FREQ_HZ  (10000000U)  /*!<  Minimum PLL input rate */
+#define SYSPLL_MAX_INPUT_FREQ_HZ  (25000000U)  /*!<  Maximum PLL input rate */
 #define SYSPLL_MAX_OUTPUT_FREQ_HZ (100000000U) /*!< Maximum PLL output rate */
-#define SYSPLL_MIN_FCCO_FREQ_HZ (156000000U)   /*!< Maximum FCCO output rate */
-#define SYSPLL_MAX_FCCO_FREQ_HZ (320000000U)   /*!< Maximum FCCO output rate */
-#define SYSOSC_BOUNDARY_FREQ_HZ (15000000U)    /*!< boundary frequency value */
+#define SYSPLL_MIN_FCCO_FREQ_HZ   (156000000U) /*!< Maximum FCCO output rate */
+#define SYSPLL_MAX_FCCO_FREQ_HZ   (320000000U) /*!< Maximum FCCO output rate */
+#define SYSOSC_BOUNDARY_FREQ_HZ   (15000000U)  /*!< boundary frequency value */
 
 /* External clock rate.
  * Either external clk in rate or system oscillator frequency.
@@ -114,7 +114,7 @@ static void CLOCK_UpdateClkSrc(volatile uint32_t *base, uint32_t mask)
  */
 bool CLOCK_SetFRG0ClkFreq(uint32_t freq)
 {
-    return CLOCK_SetFRGClkFreq(((uint32_t *)(&SYSCON->FRG[0U])), freq);
+    return CLOCK_SetFRGClkFreq(((uint32_t *)(uint32_t)(&SYSCON->FRG[0U])), freq);
 }
 
 /*! brief Set FRG1 output frequency.
@@ -124,7 +124,7 @@ bool CLOCK_SetFRG0ClkFreq(uint32_t freq)
  */
 bool CLOCK_SetFRG1ClkFreq(uint32_t freq)
 {
-    return CLOCK_SetFRGClkFreq(((uint32_t *)(&SYSCON->FRG[1U])), freq);
+    return CLOCK_SetFRGClkFreq(((uint32_t *)(uint32_t)(&SYSCON->FRG[1U])), freq);
 }
 
 /*! brief  Return Frequency of FRG0 Clock.
@@ -134,7 +134,7 @@ uint32_t CLOCK_GetFRG0ClkFreq(void)
 {
     uint32_t temp;
 
-    temp = CLOCK_GetFRGInputClkFreq((uint32_t *)(&SYSCON->FRG[0U])) << 8U;
+    temp = CLOCK_GetFRGInputClkFreq((uint32_t *)(uint32_t)(&SYSCON->FRG[0U])) << 8U;
     return (uint32_t)((uint64_t)(temp) / (((uint64_t)SYSCON->FRG[0U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256ULL));
 }
 
@@ -145,7 +145,7 @@ uint32_t CLOCK_GetFRG1ClkFreq(void)
 {
     uint32_t temp;
 
-    temp = (CLOCK_GetFRGInputClkFreq((uint32_t *)(&SYSCON->FRG[1U])) << 8U);
+    temp = (CLOCK_GetFRGInputClkFreq((uint32_t *)(uint32_t)(&SYSCON->FRG[1U])) << 8U);
     return (uint32_t)(((uint64_t)temp) / (((uint64_t)SYSCON->FRG[1U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256ULL));
 }
 

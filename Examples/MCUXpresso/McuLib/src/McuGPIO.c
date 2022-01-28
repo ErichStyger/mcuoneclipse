@@ -231,7 +231,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
 #if McuLib_CONFIG_IS_KINETIS_KE
   /* no pin muxing needed */
 #elif McuLib_CONFIG_CPU_IS_KINETIS
-  PORT_SetPinMux(config->hw.gpio, config->hw.pin, kPORT_MuxAsGpio);
+  PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
   const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
   assert(config->hw.iocon!=-1); /* must be set! */

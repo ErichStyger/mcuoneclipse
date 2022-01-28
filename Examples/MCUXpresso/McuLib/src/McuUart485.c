@@ -5,7 +5,7 @@
  */
 
 #include "McuUart485.h"
-#ifdef McuUart485_CONFIG_UART_DEVICE  /* UART device needs to be definded for this module to be enabled */
+#if McuUart485_CONFIG_USE_RS_485
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, NXP
+ * Copyright 2017, NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -15,7 +15,7 @@
 #include "fsl_device_registers.h"
 
 /*!
- * @addtogroup ksdk_common
+ * @addtogroup reset
  * @{
  */
 

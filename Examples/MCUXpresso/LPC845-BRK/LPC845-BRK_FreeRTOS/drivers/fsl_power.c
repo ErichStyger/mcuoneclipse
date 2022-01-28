@@ -44,7 +44,7 @@ void POWER_EnterSleep(void)
 /*!
  * brief API to enter deep sleep power mode.
  *
- * param activePart , should be a single or combine value of _power_deep_sleep_active .
+ * param activePart: should be a single or combine value of _power_deep_sleep_active .
  * return none
  */
 void POWER_EnterDeepSleep(uint32_t activePart)
@@ -75,7 +75,7 @@ void POWER_EnterDeepSleep(uint32_t activePart)
 /*!
  * brief API to enter power down mode.
  *
- * param activePart , should be a single or combine value of _power_deep_sleep_active .
+ * param activePart: should be a single or combine value of _power_deep_sleep_active .
  * return none
  */
 void POWER_EnterPowerDown(uint32_t activePart)
