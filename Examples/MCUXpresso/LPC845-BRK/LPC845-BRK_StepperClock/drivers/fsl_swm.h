@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, NXP Semiconductors, Inc.
+ * Copyright  2017-2020 NXP
  * All rights reserved.
  *
  *
@@ -23,7 +23,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SWM_DRIVER_VERSION (MAKE_VERSION(2, 0, 0)) /*!< Version 2.0.0 */
+#define FSL_SWM_DRIVER_VERSION (MAKE_VERSION(2, 0, 2)) /*!< Version 2.0.2 */
 /*@}*/
 
 /*******************************************************************************
@@ -57,7 +57,9 @@ void SWM_SetMovablePinSelect(SWM_Type *base, swm_select_movable_t func, swm_port
  * @param func any function name that is movable.
  * @param swm_port_pin any pin which has a GPIO port number and bit number.
  */
-void SWM_SetFixedMovablePinSelect(SWM_Type *base, swm_select_fixed_movable_t func, swm_fixed_port_pin_type_t swm_port_pin);
+void SWM_SetFixedMovablePinSelect(SWM_Type *base,
+                                  swm_select_fixed_movable_t func,
+                                  swm_fixed_port_pin_type_t swm_port_pin);
 #endif /* FSL_FEATURE_SWM_HAS_PINASSIGNFIXED0_REGISTER */
 
 /*!

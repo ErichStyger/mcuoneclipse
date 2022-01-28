@@ -5,14 +5,14 @@
 **                          LPC845M301JHI33
 **                          LPC845M301JHI48
 **
-**     Compilers:           Keil ARM C/C++ Compiler
-**                          GNU C Compiler
+**     Compilers:           GNU C Compiler
 **                          IAR ANSI C/C++ Compiler for ARM
+**                          Keil ARM C/C++ Compiler
 **                          MCUXpresso Compiler
 **
 **     Reference manual:    LPC84x User manual Rev.1.6  8 Dec 2017
 **     Version:             rev. 1.2, 2017-06-08
-**     Build:               b180802
+**     Build:               b191014
 **
 **     Abstract:
 **         Provides a system configuration function and a global variable that
@@ -20,7 +20,8 @@
 **         the oscillator (PLL) that is part of the microcontroller device.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2018 NXP
+**     Copyright 2016-2019 NXP
+**     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
 **
@@ -91,17 +92,17 @@ void SystemCoreClockUpdate (void) {
   uint32_t fro_osc = 0;
 
   /* Determine clock frequency according to clock register values */
-  switch ((SYSCON->FROOSCCTRL     ) & 0x03) {
+  switch ((SYSCON->FROOSCCTRL     ) & 0x03UL) {
     case 0:  fro_osc = 18000000; break;
     case 1:  fro_osc = 24000000; break;
     case 2:  fro_osc = 30000000; break;
     case 3:  fro_osc = 30000000; break;
   }
-  if (((SYSCON->FROOSCCTRL >> 17) & 0x01) == 0) {
+  if (((SYSCON->FROOSCCTRL >> SYSCON_FROOSCCTRL_FRO_DIRECT_SHIFT) & 0x01UL) == 0UL) {
     fro_osc = fro_osc >> 1;
   }
 
-  switch ((SYSCON->WDTOSCCTRL >> 5) & 0x0F) {
+  switch ((SYSCON->WDTOSCCTRL >> SYSCON_WDTOSCCTRL_FREQSEL_SHIFT) & 0x0FUL) {
     case 0:  wdt_osc =       0; break;
     case 1:  wdt_osc =  600000; break;
     case 2:  wdt_osc = 1050000; break;
@@ -119,11 +120,11 @@ void SystemCoreClockUpdate (void) {
     case 14: wdt_osc = 4400000; break;
     case 15: wdt_osc = 4600000; break;
   }
-  wdt_osc /= (((SYSCON->WDTOSCCTRL & 0x1F) + 1) << 1);
+  wdt_osc /= (((SYSCON->WDTOSCCTRL & SYSCON_WDTOSCCTRL_DIVSEL_MASK) + 1UL) << 1UL);
 
-  switch (SYSCON->MAINCLKPLLSEL & 0x03) {
+  switch (SYSCON->MAINCLKPLLSEL & 0x01UL) {
     case 0:                                           /* main_clk_pre_pll     */
-      switch (SYSCON->MAINCLKSEL & 0x03) {
+      switch (SYSCON->MAINCLKSEL & SYSCON_MAINCLKSEL_SEL_MASK) {
         case 0:                                       /* Free running oscillator (FRO) */
           SystemCoreClock = fro_osc;
           break;
@@ -139,18 +140,18 @@ void SystemCoreClockUpdate (void) {
       }
       break;
     case 1:                                           /* System PLL Clock Out  */
-      switch (SYSCON->SYSPLLCLKSEL & 0x03) {
+      switch (SYSCON->SYSPLLCLKSEL & SYSCON_SYSPLLCLKSEL_SEL_MASK) {
         case 0:                                       /* Free running oscillator (FRO) */
-          SystemCoreClock = fro_osc        * ((SYSCON->SYSPLLCTRL & 0x01F) + 1);
+          SystemCoreClock = fro_osc        * ((SYSCON->SYSPLLCTRL & SYSCON_SYSPLLCTRL_MSEL_MASK) + 1UL);
           break;
         case 1:                                       /* System oscillator */
-          SystemCoreClock = CLK_OSC_IN * ((SYSCON->SYSPLLCTRL & 0x01F) + 1);
+          SystemCoreClock = CLK_OSC_IN * ((SYSCON->SYSPLLCTRL & SYSCON_SYSPLLCTRL_MSEL_MASK) + 1UL);
           break;
         case 2:                                       /* watchdog oscillator */
-          SystemCoreClock = wdt_osc        * ((SYSCON->SYSPLLCTRL & 0x01F) + 1);
+          SystemCoreClock = wdt_osc        * ((SYSCON->SYSPLLCTRL & SYSCON_SYSPLLCTRL_MSEL_MASK) + 1UL);
           break;
         case 3:                                       /* Free running oscillator (FRO) / 2 */
-          SystemCoreClock = (fro_osc >> 1) * ((SYSCON->SYSPLLCTRL & 0x01F) + 1);
+          SystemCoreClock = (fro_osc >> 1) * ((SYSCON->SYSPLLCTRL & SYSCON_SYSPLLCTRL_MSEL_MASK) + 1UL);
           break;
       }
       break;

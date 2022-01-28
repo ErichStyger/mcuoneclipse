@@ -1,11 +1,10 @@
 /*
- * Copyright 2017-2018 NXP
+ * Copyright 2017-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "fsl_common.h"
 #include "fsl_clock.h"
 /*******************************************************************************
  * Definitions
@@ -14,12 +13,12 @@
 #ifndef FSL_COMPONENT_ID
 #define FSL_COMPONENT_ID "platform.drivers.clock"
 #endif
-#define SYSPLL_MIN_INPUT_FREQ_HZ (10000000U)   /*!<  Minimum PLL input rate */
-#define SYSPLL_MAX_INPUT_FREQ_HZ (25000000U)   /*!<  Maximum PLL input rate */
+#define SYSPLL_MIN_INPUT_FREQ_HZ  (10000000U)  /*!<  Minimum PLL input rate */
+#define SYSPLL_MAX_INPUT_FREQ_HZ  (25000000U)  /*!<  Maximum PLL input rate */
 #define SYSPLL_MAX_OUTPUT_FREQ_HZ (100000000U) /*!< Maximum PLL output rate */
-#define SYSPLL_MIN_FCCO_FREQ_HZ (156000000U)   /*!< Maximum FCCO output rate */
-#define SYSPLL_MAX_FCCO_FREQ_HZ (320000000U)   /*!< Maximum FCCO output rate */
-#define SYSOSC_BOUNDARY_FREQ_HZ (15000000U)    /*!< boundary frequency value */
+#define SYSPLL_MIN_FCCO_FREQ_HZ   (156000000U) /*!< Maximum FCCO output rate */
+#define SYSPLL_MAX_FCCO_FREQ_HZ   (320000000U) /*!< Maximum FCCO output rate */
+#define SYSOSC_BOUNDARY_FREQ_HZ   (15000000U)  /*!< boundary frequency value */
 
 /* External clock rate.
  * Either external clk in rate or system oscillator frequency.
@@ -89,7 +88,7 @@ static bool CLOCK_SetFRGClkFreq(uint32_t *base, uint32_t freq)
         return false;
     }
 
-    mul = ((uint64_t)(input - freq) << 8U) / ((uint64_t)freq);
+    mul = (uint32_t)(((uint64_t)((uint64_t)input - freq) << 8U) / ((uint64_t)freq));
 
     CLK_FRG_DIV_REG_MAP(base) = SYSCON_FRG_FRGDIV_DIV_MASK;
     CLK_FRG_MUL_REG_MAP(base) = SYSCON_FRG_FRGMULT_MULT(mul);
@@ -109,23 +108,23 @@ static void CLOCK_UpdateClkSrc(volatile uint32_t *base, uint32_t mask)
 }
 
 /*! brief Set FRG0 output frequency.
-* param freq, target output frequency,freq < input and (input / freq) < 2 should be satisfy.
-* retval true - successfully, false - input argument is invalid.
-*
-*/
+ * param freq, target output frequency,freq < input and (input / freq) < 2 should be satisfy.
+ * retval true - successfully, false - input argument is invalid.
+ *
+ */
 bool CLOCK_SetFRG0ClkFreq(uint32_t freq)
 {
-    return CLOCK_SetFRGClkFreq(((uint32_t *)(&SYSCON->FRG[0U])), freq);
+    return CLOCK_SetFRGClkFreq(((uint32_t *)(uint32_t)(&SYSCON->FRG[0U])), freq);
 }
 
 /*! brief Set FRG1 output frequency.
-* param freq, target output frequency,freq < input and (input / freq) < 2 should be satisfy.
-* retval true - successfully, false - input argument is invalid.
-*
-*/
+ * param freq, target output frequency,freq < input and (input / freq) < 2 should be satisfy.
+ * retval true - successfully, false - input argument is invalid.
+ *
+ */
 bool CLOCK_SetFRG1ClkFreq(uint32_t freq)
 {
-    return CLOCK_SetFRGClkFreq(((uint32_t *)(&SYSCON->FRG[1U])), freq);
+    return CLOCK_SetFRGClkFreq(((uint32_t *)(uint32_t)(&SYSCON->FRG[1U])), freq);
 }
 
 /*! brief  Return Frequency of FRG0 Clock.
@@ -133,8 +132,10 @@ bool CLOCK_SetFRG1ClkFreq(uint32_t freq)
  */
 uint32_t CLOCK_GetFRG0ClkFreq(void)
 {
-    return ((uint64_t)(CLOCK_GetFRGInputClkFreq((uint32_t *)(&SYSCON->FRG[0U])) << 8U)) /
-           ((SYSCON->FRG[0U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256U);
+    uint32_t temp;
+
+    temp = CLOCK_GetFRGInputClkFreq((uint32_t *)(uint32_t)(&SYSCON->FRG[0U])) << 8U;
+    return (uint32_t)((uint64_t)(temp) / (((uint64_t)SYSCON->FRG[0U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256ULL));
 }
 
 /*! brief  Return Frequency of FRG1 Clock.
@@ -142,8 +143,10 @@ uint32_t CLOCK_GetFRG0ClkFreq(void)
  */
 uint32_t CLOCK_GetFRG1ClkFreq(void)
 {
-    return ((uint64_t)(CLOCK_GetFRGInputClkFreq((uint32_t *)(&SYSCON->FRG[1U])) << 8U)) /
-           ((SYSCON->FRG[1U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256U);
+    uint32_t temp;
+
+    temp = (CLOCK_GetFRGInputClkFreq((uint32_t *)(uint32_t)(&SYSCON->FRG[1U])) << 8U);
+    return (uint32_t)(((uint64_t)temp) / (((uint64_t)SYSCON->FRG[1U].FRGMULT & SYSCON_FRG_FRGMULT_MULT_MASK) + 256ULL));
 }
 
 /*! brief  Return Frequency of Main Clock.
@@ -176,6 +179,7 @@ uint32_t CLOCK_GetMainClkFreq(void)
             freq = CLOCK_GetFroFreq() >> 1U;
             break;
         default:
+            freq = 0U;
             break;
     }
 
@@ -187,7 +191,7 @@ uint32_t CLOCK_GetMainClkFreq(void)
  */
 uint32_t CLOCK_GetFroFreq(void)
 {
-    uint32_t froOscSel = SYSCON->FROOSCCTRL & 3U;
+    uint32_t froOscSel  = SYSCON->FROOSCCTRL & 3U;
     uint32_t froOscFreq = 0U;
 
     if (froOscSel == 0U)
@@ -206,7 +210,7 @@ uint32_t CLOCK_GetFroFreq(void)
     if (((SYSCON->FROOSCCTRL & SYSCON_FROOSCCTRL_FRO_DIRECT_MASK) >> SYSCON_FROOSCCTRL_FRO_DIRECT_SHIFT) == 0U)
     {
         /* need to check the FAIM low power boot value */
-        froOscFreq /= (*((volatile uint32_t *)(CLOCK_FAIM_BASE)) & 0x2U) ? 16U : 2U;
+        froOscFreq /= ((*((volatile uint32_t *)(CLOCK_FAIM_BASE)) & 0x2U) != 0UL) ? 16U : 2U;
     }
 
     return froOscFreq;
@@ -242,6 +246,7 @@ uint32_t CLOCK_GetClockOutClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -274,6 +279,7 @@ uint32_t CLOCK_GetUart0ClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -306,6 +312,7 @@ uint32_t CLOCK_GetUart1ClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -338,6 +345,7 @@ uint32_t CLOCK_GetUart2ClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -370,6 +378,7 @@ uint32_t CLOCK_GetUart3ClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -402,6 +411,7 @@ uint32_t CLOCK_GetUart4ClkFreq(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -480,6 +490,7 @@ uint32_t CLOCK_GetSystemPLLInClockRate(void)
             break;
 
         default:
+            freq = 0U;
             break;
     }
 
@@ -518,12 +529,13 @@ void CLOCK_InitSystemPll(const clock_sys_pll_t *config)
     assert(config->targetFreq <= SYSPLL_MAX_OUTPUT_FREQ_HZ);
 
     uint32_t mSel = 0U, pSel = 0U, inputFreq = 0U;
-
+    uint32_t syspllclkseltmp;
     /* Power off PLL during setup changes */
     SYSCON->PDRUNCFG |= SYSCON_PDRUNCFG_SYSPLL_PD_MASK;
 
     /*set system pll clock source select register */
-    SYSCON->SYSPLLCLKSEL |= (SYSCON->SYSPLLCLKSEL & (~SYSCON_SYSPLLCLKSEL_SEL_MASK)) | config->src;
+    syspllclkseltmp = (SYSCON->SYSPLLCLKSEL & (~SYSCON_SYSPLLCLKSEL_SEL_MASK)) | (uint32_t)(config->src);
+    SYSCON->SYSPLLCLKSEL |= syspllclkseltmp;
     /* system pll clock source update */
     CLOCK_UpdateClkSrc((volatile uint32_t *)(&(SYSCON->SYSPLLCLKUEN)), SYSCON_SYSPLLCLKSEL_SEL_MASK);
 
@@ -548,8 +560,8 @@ void CLOCK_InitSystemPll(const clock_sys_pll_t *config)
 }
 
 /*! brief  Init external CLK IN, select the CLKIN as the external clock source.
-* param clkInFreq external clock in frequency.
-*/
+ * param clkInFreq external clock in frequency.
+ */
 void CLOCK_InitExtClkin(uint32_t clkInFreq)
 {
     /* remove the pull up and pull down resistors in the IOCON */
@@ -569,8 +581,6 @@ void CLOCK_InitExtClkin(uint32_t clkInFreq)
  */
 void CLOCK_InitXtalin(uint32_t xtalInFreq)
 {
-    volatile uint32_t i = 0U;
-
     /* remove the pull up and pull down resistors in the IOCON */
     IOCON->PIO[IOCON_INDEX_PIO0_8] &= ~IOCON_PIO_MODE_MASK;
     /* enable the 1 bit functions for XTALIN and XTALOUT */
@@ -584,22 +594,18 @@ void CLOCK_InitXtalin(uint32_t xtalInFreq)
     SYSCON->PDRUNCFG &= ~SYSCON_PDRUNCFG_SYSOSC_PD_MASK;
 
     /* software delay 500USs */
-    for (i = 0U; i < 1500U; i++)
-    {
-        __ASM("nop");
-    }
+    SDK_DelayAtLeastUs(500U, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
 
     /* record the external clock rate */
     g_Ext_Clk_Freq = xtalInFreq;
 }
 
 /*! brief	Init SYS OSC
-* param oscFreq oscillator frequency value.
-*/
+ * param oscFreq oscillator frequency value.
+ */
 void CLOCK_InitSysOsc(uint32_t oscFreq)
 {
-    volatile uint32_t i = 0U;
-
+    uint32_t sysoscctrltmp;
     /* remove the pull up and pull down resistors in the IOCON */
     IOCON->PIO[IOCON_INDEX_PIO0_9] &= ~IOCON_PIO_MODE_MASK;
     IOCON->PIO[IOCON_INDEX_PIO0_8] &= ~IOCON_PIO_MODE_MASK;
@@ -607,8 +613,9 @@ void CLOCK_InitSysOsc(uint32_t oscFreq)
     SWM0->PINENABLE0 &= ~(SWM_PINENABLE0_XTALIN_MASK | SWM_PINENABLE0_XTALOUT_MASK);
 
     /* system osc configure */
-    SYSCON->SYSOSCCTRL |= (SYSCON->SYSOSCCTRL & (~(SYSCON_SYSOSCCTRL_BYPASS_MASK | SYSCON_SYSOSCCTRL_FREQRANGE_MASK))) |
-                          (oscFreq > SYSOSC_BOUNDARY_FREQ_HZ ? SYSCON_SYSOSCCTRL_FREQRANGE_MASK : 0U);
+    sysoscctrltmp = (SYSCON->SYSOSCCTRL & (~(SYSCON_SYSOSCCTRL_BYPASS_MASK | SYSCON_SYSOSCCTRL_FREQRANGE_MASK))) |
+                    (oscFreq > SYSOSC_BOUNDARY_FREQ_HZ ? SYSCON_SYSOSCCTRL_FREQRANGE_MASK : 0U);
+    SYSCON->SYSOSCCTRL |= sysoscctrltmp;
     /* external clock select */
     SYSCON->EXTCLKSEL &= ~SYSCON_EXTCLKSEL_SEL_MASK;
 
@@ -616,26 +623,23 @@ void CLOCK_InitSysOsc(uint32_t oscFreq)
     SYSCON->PDRUNCFG &= ~SYSCON_PDRUNCFG_SYSOSC_PD_MASK;
 
     /* software delay 500USs */
-    for (i = 0U; i < 1500U; i++)
-    {
-        __ASM("nop");
-    }
+    SDK_DelayAtLeastUs(500U, SDK_DEVICE_MAXIMUM_CPU_CLOCK_FREQUENCY);
 
     /* record the external clock rate */
     g_Ext_Clk_Freq = oscFreq;
 }
 
 /*! brief  Init watch dog OSC
-* Any setting of the FREQSEL bits will yield a Fclkana value within 40% of the
-* listed frequency value. The watchdog oscillator is the clock source with the lowest power
-* consumption. If accurate timing is required, use the FRO or system oscillator.
-* The frequency of the watchdog oscillator is undefined after reset. The watchdog
-* oscillator frequency must be programmed by writing to the WDTOSCCTRL register before
-* using the watchdog oscillator.
-* Watchdog osc output frequency = wdtOscFreq / wdtOscDiv, should in range 9.3KHZ to 2.3MHZ.
-* param wdtOscFreq watch dog analog part output frequency, reference _wdt_analog_output_freq.
-* param wdtOscDiv watch dog analog part output frequency divider, shoule be a value >= 2U and multiple of 2
-*/
+ * Any setting of the FREQSEL bits will yield a Fclkana value within 40% of the
+ * listed frequency value. The watchdog oscillator is the clock source with the lowest power
+ * consumption. If accurate timing is required, use the FRO or system oscillator.
+ * The frequency of the watchdog oscillator is undefined after reset. The watchdog
+ * oscillator frequency must be programmed by writing to the WDTOSCCTRL register before
+ * using the watchdog oscillator.
+ * Watchdog osc output frequency = wdtOscFreq / wdtOscDiv, should in range 9.3KHZ to 2.3MHZ.
+ * param wdtOscFreq watch dog analog part output frequency, reference _wdt_analog_output_freq.
+ * param wdtOscDiv watch dog analog part output frequency divider, shoule be a value >= 2U and multiple of 2
+ */
 void CLOCK_InitWdtOsc(clock_wdt_analog_freq_t wdtOscFreq, uint32_t wdtOscDiv)
 {
     assert(wdtOscDiv >= 2U);
@@ -644,8 +648,8 @@ void CLOCK_InitWdtOsc(clock_wdt_analog_freq_t wdtOscFreq, uint32_t wdtOscDiv)
 
     wdtOscCtrl &= ~(SYSCON_WDTOSCCTRL_DIVSEL_MASK | SYSCON_WDTOSCCTRL_FREQSEL_MASK);
 
-    wdtOscCtrl |=
-        SYSCON_WDTOSCCTRL_DIVSEL((wdtOscDiv >> 1U) - 1U) | SYSCON_WDTOSCCTRL_FREQSEL(CLK_WDT_OSC_GET_REG(wdtOscFreq));
+    wdtOscCtrl |= SYSCON_WDTOSCCTRL_DIVSEL((wdtOscDiv >> 1U) - 1U) |
+                  SYSCON_WDTOSCCTRL_FREQSEL(CLK_WDT_OSC_GET_REG((uint32_t)wdtOscFreq));
 
     SYSCON->WDTOSCCTRL = wdtOscCtrl;
 
@@ -656,8 +660,8 @@ void CLOCK_InitWdtOsc(clock_wdt_analog_freq_t wdtOscFreq, uint32_t wdtOscDiv)
 }
 
 /*! brief  Set main clock reference source.
-* param src, reference clock_main_clk_src_t to set the main clock source.
-*/
+ * param src, reference clock_main_clk_src_t to set the main clock source.
+ */
 void CLOCK_SetMainClkSrc(clock_main_clk_src_t src)
 {
     uint32_t mainMux = CLK_MAIN_CLK_MUX_GET_MUX(src), mainPreMux = CLK_MAIN_CLK_MUX_GET_PRE_MUX(src);
@@ -677,12 +681,12 @@ void CLOCK_SetMainClkSrc(clock_main_clk_src_t src)
 }
 
 /*! brief Set FRO clock source
-* param src, please reference _clock_fro_src definition.
-*
-*/
+ * param src, please reference _clock_fro_src definition.
+ *
+ */
 void CLOCK_SetFroOutClkSrc(clock_fro_src_t src)
 {
-    if (src != (SYSCON->FROOSCCTRL & SYSCON_FROOSCCTRL_FRO_DIRECT_MASK))
+    if ((uint32_t)src != (SYSCON->FROOSCCTRL & SYSCON_FROOSCCTRL_FRO_DIRECT_MASK))
     {
         SYSCON->FROOSCCTRL = (SYSCON->FROOSCCTRL & (~SYSCON_FROOSCCTRL_FRO_DIRECT_MASK)) | (uint32_t)src;
         /* Update clock source */
