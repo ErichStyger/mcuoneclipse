@@ -6,8 +6,6 @@
 
 /* header file is included with -include compiler option */
 
-#define SIM_UIDH       /* FIX: SDK does not define this one, but should be! See https://mcuoneclipse.com/2020/11/30/getting-a-96bit-unique-id-for-each-kinetis-device-using-mcuxpresso-sdk/ */
-
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
 #define McuLib_CONFIG_CPU_IS_KINETIS                (0)
@@ -35,9 +33,10 @@
 #define McuShell_CONFIG_ECHO_ENABLED                (1)
 /* ---------------------------------------------------------------------------------------*/
 /* MinINI */
+/* see as well platform.h about the memory layout and EEPROM reservation */
 #define McuMinINI_CONFIG_FS                         McuMinINI_CONFIG_FS_TYPE_FLASH_FS
 #define McuMinINI_CONFIG_FLASH_NVM_ADDR_START      (((0+244*1024)-(McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE))) /* last block in FLASH, start address of configuration data in flash */
 #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      (0x200)   /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
-#define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (2)       /* number of flash blocks */
+#define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (4)       /* number of flash blocks */
 #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE   (McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS * McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE) /* MUST be multiple of 512 for LPC55! */
 /* ---------------------------------------------------------------------------------------*/
