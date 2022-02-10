@@ -17,11 +17,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v8.0
+product: Clocks v9.0
 processor: LPC55S16
 package_id: LPC55S16JBD100
 mcu_data: ksdk2_0
-processor_version: 10.0.1
+processor_version: 11.0.1
 board: LPCXpresso55S16
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
@@ -71,7 +71,6 @@ settings:
 - {id: SYSCON_CLOCK_CTRL_FRO1MHZ_CLK_ENA_CFG, value: Enabled}
 sources:
 - {id: RTC.XTAL32K.outFreq, value: 32.768 kHz, enabled: true}
-- {id: RTC.fro_32k.outFreq, value: 32.768 kHz}
 - {id: SYSCON.fro_1m.outFreq, value: 1 MHz}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
