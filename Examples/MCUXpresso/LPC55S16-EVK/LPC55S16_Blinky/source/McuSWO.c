@@ -284,7 +284,8 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
   TPI->SPPR = 0x2; /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ (UART), 1: SWO Manchester encoding) */
   SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate */
   ITM->LAR = 0xC5ACCE55; /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
-  ITM->TCR = ITM_TCR_TRACEBUSID_Msk | ITM_TCR_SWOENA_Msk | ITM_TCR_SYNCENA_Msk | ITM_TCR_ITMENA_Msk; /* ITM Trace Control Register */
+  /* enable trace with the TCR: this includes DWT and ITM packets to be sent */
+  ITM->TCR = ITM_TCR_DWTENA_Msk | ITM_TCR_ITMENA_Msk | ITM_TCR_TRACEBUSID_Msk | ITM_TCR_SWOENA_Msk | ITM_TCR_SYNCENA_Msk; /* ITM Trace Control Register */
   ITM->TPR = ITM_TPR_PRIVMASK_Msk; /* ITM Trace Privilege Register */
   ITM->TER = portBits; /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
   DWT->CTRL = /* see https://interrupt.memfault.com/blog/profiling-firmware-on-cortex-m#enabling-pc-sampling-with-itm-and-openocd */

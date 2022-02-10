@@ -13,6 +13,7 @@
 #include "McuShellUart.h"
 #include "McuShell.h"
 #include "McuRTT.h"
+#include "McuSWO.h"
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuDebounce.h"
@@ -91,5 +92,11 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();
+#endif
+#if PL_CONFIG_INIT_SWO
+  /*!< Switch TRACE to TRACE_DIV */
+  CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /* needed for SWO */
+  McuSWO_Init(SystemCoreClock, McuSWO_CONFIG_SPEED_BAUD); /* if initialization is not done by the debugger, need to do it manually here */
+  McuSWO_ChangeSpeed(McuSWO_CONFIG_SPEED_BAUD); /* execute again if J-Link has changed speed */
 #endif
 }
