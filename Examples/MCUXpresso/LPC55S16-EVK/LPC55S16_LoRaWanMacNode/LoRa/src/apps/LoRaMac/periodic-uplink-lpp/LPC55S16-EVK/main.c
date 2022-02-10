@@ -369,7 +369,7 @@ int main( void )
     while( 1 )
     {
 #if PL_CONFIG_USE_SHELL
-        SHELL_Process();
+        SHELL_Process(); /* execute shell periodic task */
 #endif
 
 #if PL_CONFIG_USE_UART2
@@ -393,7 +393,7 @@ int main( void )
         else
         {
             // The MCU wakes up through events
-          printf("*low power\n");
+            printf("*low power\n");
             BoardLowPowerHandler( );
         }
         CRITICAL_SECTION_END( );

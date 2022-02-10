@@ -18,6 +18,7 @@
   #include "minGlue-Flash.h"
   #include "McuFlash.h"
 #endif
+#include "application.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -36,6 +37,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   ini_ParseCommand,
   McuFlash_ParseCommand,
 #endif
+  APP_ParseCommand,
   NULL /* Sentinel */
 };
 

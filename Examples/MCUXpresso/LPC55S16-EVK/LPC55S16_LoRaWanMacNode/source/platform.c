@@ -22,6 +22,7 @@
 #endif
 #include "McuFlash.h"
 #include "McuWait.h"
+#include "application.h"
 
 void PL_Init(void) {
   /* McuLib */
@@ -57,4 +58,5 @@ void PL_Init(void) {
       for(;;) {}
     }
   }
+  APP_Init();
 }
