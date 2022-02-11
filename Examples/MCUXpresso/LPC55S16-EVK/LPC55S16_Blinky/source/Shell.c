@@ -89,7 +89,7 @@ void SHELL_SendString(unsigned char *str) {
 static void ShellTask(void *pv) {
   int i;
 
-  McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
+  McuLog_info("Shell task started.");
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
