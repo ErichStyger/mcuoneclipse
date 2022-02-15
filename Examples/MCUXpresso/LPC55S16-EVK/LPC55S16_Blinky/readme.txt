@@ -27,8 +27,9 @@ SWO enabled successfully.
 Notes:
 with J-Link version V7.22 or later it is possible to attach with SWO so it does not change the SWO:
 - [SWOViewer]: Added command line option "-swoattach <OnOff>" that disables all J-Link side initialization of SWO and relies on the target application to perform SWO init.
-JLinkSWOViewerCL -swoattach on -swofreq 64000 -device LPC55S16 -itmport 0x0
+JLinkSWOViewerCL -swoattach on -swofreq 5625000 -device LPC55S16 -itmport 0x0
   See: https://mcuoneclipse.com/2021/07/12/standalone-swo/
+  Note: J-Link is able to deal with a SWO frequency up to 5625 kHz.
 
 The IDE 11.5.0 has standalone SWO functionality too, see https://mcuoneclipse.com/2022/01/24/mcuxpresso-ide-11-5-0/
 

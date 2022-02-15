@@ -142,7 +142,11 @@ Instructions:
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
 #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
 
-
+/* -----------------------------------------------------*/
 #define McuWait_CONFIG_USE_CYCLE_COUNTER (1)
+
+/* -----------------------------------------------------*/
+/* McuSWO */
+#define McuSWO_CONFIG_SPEED_BAUD      (5625000) /* J-Link supports up to 5625 kHz */
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
