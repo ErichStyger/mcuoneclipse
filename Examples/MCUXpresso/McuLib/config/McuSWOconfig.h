@@ -7,6 +7,11 @@
 #ifndef MCUSWOCONFIG_H_
 #define MCUSWOCONFIG_H_
 
+#ifndef McuSWO_CONFIG_HAS_SWO
+  #define McuSWO_CONFIG_HAS_SWO          (0)
+  /*!< 1: MCU has SWO; 0: MCUS does not have SWO */
+#endif
+
 #ifndef McuSWO_CONFIG_SPEED_BAUD
   #define McuSWO_CONFIG_SPEED_BAUD       (96000000)
   /*!< baud of SWO data */

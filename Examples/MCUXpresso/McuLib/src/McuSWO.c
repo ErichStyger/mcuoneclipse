@@ -5,6 +5,7 @@
  */
 
 #include "McuSWO.h"
+#if McuSWO_CONFIG_HAS_SWO
 #include "McuUtility.h"
 #include "McuShell.h"
 #include "board.h"
@@ -312,3 +313,4 @@ void McuSWO_Init(uint32_t traceClock, uint32_t baud) {
   SWO_traceClock = traceClock; /* just the default! */
   Init(1, SWO_traceClock, baud);
 }
+#endif /* McuSWO_CONFIG_HAS_SWO */
