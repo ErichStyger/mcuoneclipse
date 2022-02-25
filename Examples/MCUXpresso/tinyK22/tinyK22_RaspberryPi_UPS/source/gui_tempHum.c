@@ -5,7 +5,7 @@
  */
 
 #include "platform.h"
-#if PL_CONFIG_USE_SHT31 && PL_CONFIG_USE_GUI
+#if (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40) && PL_CONFIG_USE_GUI
 #include "gui_tempHum.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "Sensor.h"

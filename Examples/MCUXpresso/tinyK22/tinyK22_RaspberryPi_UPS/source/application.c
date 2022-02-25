@@ -37,9 +37,6 @@
 #if PL_CONFIG_USE_UPS
   #include "ups.h"
 #endif
-#if PL_CONFIG_USE_SHT31
-  #include <McuSHT31.h>
-#endif
 #include "McuRTOS.h"
 #include "FreeRTOS.h"
 #include "buttons.h"
@@ -65,19 +62,12 @@ static void AppTask(void *pv) {
     McuLED_On(hatGreenLED);
     vTaskDelay(pdMS_TO_TICKS(100));
     McuLED_Off(hatGreenLED);
+#if TINYK22_HAT_VERSION < 7
     McuLED_On(hatBlueLED);
     vTaskDelay(pdMS_TO_TICKS(100));
     McuLED_Off(hatBlueLED);
-  }
-#if PL_CONFIG_USE_SHT31
-  uint16_t status;
-  if (SHT31_ReadStatus(&status)!=ERR_OK) { /* just check if we can reach the sensor */
-    for(;;) {
-      vTaskDelay(pdMS_TO_TICKS(100));
-      McuLED_Off(hatRedLED);
-    }
-  }
 #endif
+  }
 #if PL_CONFIG_USE_UPS
   UPS_SetIsCharging(false);
 #endif

@@ -99,7 +99,13 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_TOASTER
   TOASTER_Init();
 #endif
-  SENSOR_Init();
+#if PL_CONFIG_USE_SHT31
+  McuSHT31_Init();
+#endif
+#if PL_CONFIG_USE_SHT40
+  McuSHT40_Init();
+#endif
+  SENSOR_Init(); /* does the SHT31 and SHT40 initialization inside a task */
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_Init();
 #endif

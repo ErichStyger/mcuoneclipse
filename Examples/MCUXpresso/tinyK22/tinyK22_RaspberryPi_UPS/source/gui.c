@@ -21,7 +21,7 @@
 #if PL_CONFIG_USE_SHUTDOWN
   #include "shutdown.h"
 #endif
-#if PL_CONFIG_USE_SHT31
+#if (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40)
   #include "gui_tempHum.h"
 #endif
 #if PL_CONFIG_USE_UPS
@@ -144,8 +144,8 @@ static void btn_click_uart_action(struct _lv_obj_t *obj, lv_event_t event) {
 }
 #endif
 
-#if PL_CONFIG_USE_SHT31
-static void btn_click_sht31_action(struct _lv_obj_t *obj, lv_event_t event) {
+#if (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40)
+static void btn_click_sht_action(struct _lv_obj_t *obj, lv_event_t event) {
   if(event == LV_EVENT_CLICKED) {
     GUI_TEMPHUM_CreateView();
   }
@@ -348,7 +348,7 @@ void GUI_MainMenuCreate(void) {
 #endif
 #endif /* PL_CONFIG_USE_SHUTDOWN */
 
-#if PL_CONFIG_USE_SHT31
+#if (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40)
   btn = lv_btn_create(gui_win, NULL);
 #if !AUTO_POS
   lv_obj_set_size(btn, 40, 20);
@@ -357,12 +357,12 @@ void GUI_MainMenuCreate(void) {
   label = lv_label_create(btn, NULL);
   lv_label_set_text(label, "SHT31");
   //lv_obj_set_free_num(btn, 1);   /*Set a unique number for the button*/
-  lv_obj_set_event_cb(btn, btn_click_sht31_action);
+  lv_obj_set_event_cb(btn, btn_click_sht_action);
   lv_btn_set_fit(btn, LV_FIT_TIGHT);
 #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_AddObjToGroup(btn);
 #endif
-#endif /* PL_CONFIG_USE_SHT31 */
+#endif /* PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40) */
 
 #if PL_CONFIG_USE_UPS
   btn = lv_btn_create(gui_win, NULL);

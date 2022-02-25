@@ -8,7 +8,9 @@
 #include "Sensor.h"
 #include "McuRTOS.h"
 #if PL_CONFIG_USE_SHT31
-  #include <McuSHT31.h>
+  #include "McuSHT31.h"
+#elif PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
 #endif
 #if PL_CONFIG_HAS_TSL2561
   #include "TSL1.h"
@@ -49,55 +51,58 @@ uint8_t SENSOR_GetAccel(int16_t *xmg, int16_t *ymg, int16_t *zmg) {
 }
 #endif
 
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
 static float temperature, humidity;
-static SemaphoreHandle_t sht31sem;
+static SemaphoreHandle_t shtSem;
 
 float SENSOR_GetTemperature(void) {
   float val;
 
-  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  (void)xSemaphoreTakeRecursive(shtSem, portMAX_DELAY);
   val = temperature;
-  (void)xSemaphoreGiveRecursive(sht31sem);
+  (void)xSemaphoreGiveRecursive(shtSem);
   return val;
 }
 
 float SENSOR_GetHumidity(void) {
   float val;
 
-  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  (void)xSemaphoreTakeRecursive(shtSem, portMAX_DELAY);
   val = humidity;
-  (void)xSemaphoreGiveRecursive(sht31sem);
+  (void)xSemaphoreGiveRecursive(shtSem);
   return val;
 }
 
 static void SENSOR_SetHumidity(float h) {
-  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  (void)xSemaphoreTakeRecursive(shtSem, portMAX_DELAY);
   humidity = h;
-  (void)xSemaphoreGiveRecursive(sht31sem);
+  (void)xSemaphoreGiveRecursive(shtSem);
 }
 
 static void SENSOR_SetTemperature(float t) {
-  (void)xSemaphoreTakeRecursive(sht31sem, portMAX_DELAY);
+  (void)xSemaphoreTakeRecursive(shtSem, portMAX_DELAY);
   temperature = t;
-  (void)xSemaphoreGiveRecursive(sht31sem);
+  (void)xSemaphoreGiveRecursive(shtSem);
 }
 
-static void SHT31Task(void *pv) {
+static void shtTask(void *pv) {
   float temp, hum;
 
   vTaskDelay(pdMS_TO_TICKS(200)); /* give sensors time to power up */
-  McuShell_SendStr((uint8_t*)"Initializing SHT31.\r\n", McuShell_GetStdio()->stdOut);
-  McuSHT31_Init();
+  McuShell_SendStr((uint8_t*)"Initializing sht task.\r\n", McuShell_GetStdio()->stdOut);
   for(;;) {
+#if PL_CONFIG_USE_SHT31
     if (McuSHT31_ReadTempHum(&temp, &hum)==ERR_OK) {
+#elif PL_CONFIG_USE_SHT40
+    if (McuSHT40_ReadTempHum(&temp, &hum)==ERR_OK) {
+#endif
       SENSOR_SetTemperature(temp);
       SENSOR_SetHumidity(hum);
     }
     vTaskDelay(pdMS_TO_TICKS(10000));
   }
 }
-#endif /* PL_CONFIG_USE_SHT31 */
+#endif /* PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40 */
 
 #if PL_CONFIG_HAS_AMG8833
 static float AMGBuf[AMG88xx_PIXEL_ARRAY_SIZE];
@@ -312,10 +317,10 @@ void SENSOR_Init(void) {
     /*lint +e527 */
   }
 #endif
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   if (xTaskCreate(
-        SHT31Task,  /* pointer to the task */
-        "SHT31", /* task name for kernel awareness debugging */
+        shtTask,  /* pointer to the task */
+        "sht", /* task name for kernel awareness debugging */
         700/sizeof(StackType_t), /* task stack size */
         (void*)NULL, /* optional task startup argument */
         tskIDLE_PRIORITY+2,  /* initial priority */
@@ -325,11 +330,11 @@ void SENSOR_Init(void) {
     for(;;){}; /* error! probably out of memory */
     /*lint +e527 */
   }
-  sht31sem = xSemaphoreCreateRecursiveMutex();
-  if (sht31sem==NULL) { /* creation failed? */
+  shtSem = xSemaphoreCreateRecursiveMutex();
+  if (shtSem==NULL) { /* creation failed? */
     for(;;);
   }
-  vQueueAddToRegistry(sht31sem, "sht31Sem");
+  vQueueAddToRegistry(shtSem, "shtSem");
 #endif
 }
 

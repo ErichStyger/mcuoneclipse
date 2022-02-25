@@ -55,7 +55,6 @@ static const bool disableTable[McuULN2003_NOF_MOTOR_GPIO_PINS] = {false, false, 
  */
 const bool McuULN2003_stepTableHalfStepsFw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
   /* blue   pink   yellow orange */
-    {true,  false, false, false},
     {true,  true,  false, false},
     {false, true,  false, false},
     {false, true,  true,  false},
@@ -63,10 +62,12 @@ const bool McuULN2003_stepTableHalfStepsFw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][
     {false, false, true,  true },
     {false, false, false, true },
     {true,  false, false, true },
+    {true,  false, false, false},
 };
 
 const bool McuULN2003_stepTableHalfStepsBw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][McuULN2003_NOF_MOTOR_GPIO_PINS] = {
    /* blue   pink   yellow orange */
+    {true,  false, false, false},
     {true,  false, false, true },
     {false, false, false, true },
     {false, false, true,  true },
@@ -74,7 +75,6 @@ const bool McuULN2003_stepTableHalfStepsBw[McuULN2003_NOF_STEPS_HALF_STEP_MODE][
     {false, true,  true,  false},
     {false, true,  false, false},
     {true,  true,  false, false},
-    {true,  false, false, false},
 };
 
 /* full stepping mode with 4 steps */
@@ -91,7 +91,7 @@ const bool McuULN2003_stepTableFullStepsBw[McuULN2003_NOF_STEPS_FULL_STEP_MODE][
     /* blue   pink   yellow orange */
     {true,  false, false, true },
     {false, false, true,  true },
-    {false, true,  true, false},
+    {false, true,  true,  false},
     {true,  true,  false, false},
 };
 

@@ -5,6 +5,7 @@
  */
 
 #include "McuFlash.h"
+#if McuFlash_CONFIG_IS_ENABLED
 #include "McuLib.h"
 #if McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_KINETIS /* currently limited support, only for these CPUs */
 #include "McuLog.h"
@@ -510,3 +511,5 @@ void McuFlash_Init(void) {
 }
 
 #endif
+
+#endif /* McuFlash_CONFIG_IS_ENABLED */

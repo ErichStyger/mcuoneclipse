@@ -16,7 +16,12 @@
 #if PL_CONFIG_USE_USB_CDC
   #include "virtual_com.h"
 #endif
-#include "McuSHT31.h"
+#if PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#endif
+#if PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
+#endif
 #include "RaspyUART.h"
 #include "RaspyGPIO.h"
 #include "gateway.h"
@@ -33,6 +38,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_SHT31 && MCUSHT31_CONFIG_PARSE_COMMAND_ENABLED
   McuSHT31_ParseCommand,
+#endif
+#if PL_CONFIG_USE_SHT40 && MCUSHT40_CONFIG_PARSE_COMMAND_ENABLED
+  McuSHT40_ParseCommand,
 #endif
 #if PL_CONFIG_USE_RASPY_UART
   RASPYU_ParseCommand,

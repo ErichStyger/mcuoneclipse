@@ -25,6 +25,24 @@ Instructions:
 ../McuLib/HD44780
 ../McuLib/FatFS
 ../McuLib/FatFS/source
+
+if using a CDT Build variable pointing to the library, the following can be used instead:
+${MCULIB}
+${MCULIB}/config
+${MCULIB}/config/fonts
+${MCULIB}/fonts
+${MCULIB}/src
+${MCULIB}/FreeRTOS/Source/include
+${MCULIB}/FreeRTOS/Source/portable/GCC/ARM_CM4F
+${MCULIB}/SEGGER_RTT
+${MCULIB}/SEGGER_Sysview
+${MCULIB}/TraceRecorder
+${MCULIB}/TraceRecorder/config
+${MCULIB}/TraceRecorder/include
+${MCULIB}/TraceRecorder/streamports/Jlink_RTT/include
+${MCULIB}/HD44780
+${MCULIB}/FatFS
+${MCULIB}/FatFS/source
  */
 
 /* For ESP32 targets:

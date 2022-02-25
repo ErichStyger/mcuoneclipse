@@ -14,8 +14,9 @@ void LEDS_Deinit(void) {
   hatBlueLED = McuLED_DeinitLed(hatBlueLED);
   hatRedLED = McuLED_DeinitLed(hatRedLED);
   hatGreenLED = McuLED_DeinitLed(hatGreenLED);
+#if TINYK22_HAT_VERSION < 7
   hatYellowLED = McuLED_DeinitLed(hatYellowLED);
-
+#endif
   McuLED_Deinit(); /* de-initialize LED module */
 }
 
@@ -36,10 +37,12 @@ void LEDS_Init(void) {
   /* HAT LEDs are high active */
   config.isLowActive = false;
 
+#if TINYK22_HAT_VERSION < 7
   config.hw.pin = PINS_HATLEDBLUE_PIN;
   config.hw.port = PINS_HATLEDBLUE_PORT;
   config.hw.gpio = PINS_HATLEDBLUE_GPIO;
   hatBlueLED = McuLED_InitLed(&config);
+#endif
 
   config.hw.pin = PINS_HATLEDGREEN_PIN;
   config.hw.port = PINS_HATLEDGREEN_PORT;

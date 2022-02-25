@@ -17,14 +17,14 @@
 
 static bool joystickEventsToLinuxEnabled = false;
 static bool joystickEventsToHostEnabled = false;
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   static bool shtEventsToHostEnabled = false;
   static bool shtEventsToLinuxEnabled = false;
 #endif
 
 bool RASPYU_GetEventsEnabled(void) {
   return
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
       shtEventsToHostEnabled ||
       shtEventsToLinuxEnabled ||
 #endif
@@ -35,13 +35,13 @@ bool RASPYU_GetEventsEnabled(void) {
 void RASPYU_SetEventsEnabled(bool on) {
   joystickEventsToLinuxEnabled = on;
   joystickEventsToHostEnabled = on;
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   shtEventsToHostEnabled = on;
   shtEventsToLinuxEnabled = on;
 #endif
 }
 
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
 static void UartTask(void *pv) {
   int16_t t,h, oldT=0, oldH=0; /* in deci-format, 375 is 37.5 */
   uint8_t buf[32];
@@ -73,7 +73,7 @@ static void UartTask(void *pv) {
     }
   }
 }
-#endif /* PL_CONFIG_USE_SHT31 */
+#endif /* PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40 */
 
 void RASPYU_OnJoystickEvent(uint32_t buttons) {
   uint8_t buf[24];
@@ -118,7 +118,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), joystickEventsToHostEnabled?(const unsigned char*)", to host (on)":(const unsigned char*)", to host (off)");
   McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  nav", buf, io->stdOut);
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   buf[0] = '\0';
   McuUtility_strcat(buf, sizeof(buf), shtEventsToLinuxEnabled?(const unsigned char*)"to linux (on)":(const unsigned char*)"to linux (off)");
   McuUtility_strcat(buf, sizeof(buf), shtEventsToHostEnabled?(const unsigned char*)", to host (on)":(const unsigned char*)", to host (off)");
@@ -133,7 +133,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  nav to linux (on|off)", (unsigned char*)"send nav events to linux\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  nav to host (on|off)", (unsigned char*)"send nav events to host\r\n", io->stdOut);
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   McuShell_SendHelpStr((unsigned char*)"  sht to linux (on|off)", (unsigned char*)"send SHT31 events to linux\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  sht to host (on|off)", (unsigned char*)"send SHT31 events to host\r\n", io->stdOut);
 #endif
@@ -170,7 +170,7 @@ uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "uart nav to host off")==0) {
     joystickEventsToLinuxEnabled = false;
     *handled = TRUE;
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   } else if (McuUtility_strcmp((char*)cmd, "uart sht to linux on")==0) {
     shtEventsToLinuxEnabled = true;
     *handled = TRUE;
@@ -216,7 +216,7 @@ void RASPYU_Deinit(void) {
 }
 
 void RASPYU_Init(void) {
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   if (xTaskCreate(
         UartTask,  /* pointer to the task */
         "uart", /* task name for kernel awareness debugging */

@@ -24,15 +24,15 @@
 #include "McuFontHelv12Bold.h"
 
 /* enum for line numbers */
-typedef enum {
+typedef enum OLED_Line_e {
 #if PL_CONFIG_USE_GATEWAY
   OLED_LINE_RX_TX,
 #endif
 #if PL_CONFIG_USE_UPS
   OLED_LINE_UPS,
 #endif
-#if PL_CONFIG_USE_SHT31
-  OLED_LINE_SHT31,
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+  OLED_LINE_SHT,
 #endif
 #if PL_CONFIG_USE_SHUTDOWN
   OLED_LINE_SHUTDOWN_0,
@@ -107,7 +107,7 @@ void OLED_ShowRxTx(uint32_t nofRx, uint32_t nofTx) {
 }
 #endif
 
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
 void OLED_ShowTemperatureHumidity(float temperature, float humidity) {
   uint8_t linebuf[OLED_NOF_CHARS_ON_LINE];
   uint8_t buf[24], fbuf[6];
@@ -121,7 +121,7 @@ void OLED_ShowTemperatureHumidity(float temperature, float humidity) {
   McuUtility_strcat(buf, sizeof(buf), fbuf);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"%");
   /* write string */
-  WritePadStringLine(linebuf, sizeof(linebuf), buf, OLED_LINE_SHT31);
+  WritePadStringLine(linebuf, sizeof(linebuf), buf, OLED_LINE_SHT);
 }
 #endif
 
@@ -197,7 +197,7 @@ void doOLED(void) {
 }
 
 void OLED_Init(void) {
-#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6 || TINYK22_HAT_VERSION==7
+#if TINYK22_HAT_VERSION>=4
   McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE);
 #else
   McuGDisplaySSD1306_SetDisplayOrientation(McuGDisplaySSD1306_ORIENTATION_LANDSCAPE180);
