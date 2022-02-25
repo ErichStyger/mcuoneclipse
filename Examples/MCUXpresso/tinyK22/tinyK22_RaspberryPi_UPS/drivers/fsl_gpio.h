@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2019 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -22,8 +22,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief GPIO driver version 2.5.1. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 5, 1))
+/*! @brief GPIO driver version 2.5.3. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 5, 3))
 /*@}*/
 
 #if defined(FSL_FEATURE_GPIO_REGISTERS_WIDTH) && (FSL_FEATURE_GPIO_REGISTERS_WIDTH == 8U)
@@ -161,16 +161,25 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config
  */
 static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
 {
-    uint32_t u32flag = 1;
-
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     if (output == 0U)
     {
-        base->PCOR = GPIO_FIT_REG(u32flag << pin);
+        base->PCOR = GPIO_FIT_REG(1UL << pin);
     }
     else
     {
-        base->PSOR = GPIO_FIT_REG(u32flag << pin);
+        base->PSOR = GPIO_FIT_REG(1UL << pin);
     }
+#else
+    if (output == 0U)
+    {
+        base->PDOR |= GPIO_FIT_REG(1UL << pin);
+    }
+    else
+    {
+        base->PDOR &= ~GPIO_FIT_REG(1UL << pin);
+    }
+#endif
 }
 
 /*!
@@ -181,7 +190,11 @@ static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
  */
 static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
 {
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     base->PSOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR |= GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -192,7 +205,11 @@ static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
 {
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     base->PCOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR &= ~GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -203,7 +220,11 @@ static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
 {
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     base->PTOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR ^= GPIO_FIT_REG(mask);
+#endif
 }
 
 /*@}*/
@@ -454,15 +475,13 @@ void FGPIO_PinInit(FGPIO_Type *base, uint32_t pin, const gpio_pin_config_t *conf
  */
 static inline void FGPIO_PinWrite(FGPIO_Type *base, uint32_t pin, uint8_t output)
 {
-    uint32_t u32flag = 1;
-
     if (output == 0U)
     {
-        base->PCOR = u32flag << pin;
+        base->PCOR = 1UL << pin;
     }
     else
     {
-        base->PSOR = u32flag << pin;
+        base->PSOR = 1UL << pin;
     }
 }
 

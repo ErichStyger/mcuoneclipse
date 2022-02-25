@@ -270,7 +270,7 @@ void PORTB_IRQHandler(void) {
   __DSB();
 }
 
-#if TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=4
 void PORTA_IRQHandler(void) { /* left and right are on Port A */
   uint32_t flags;
 
@@ -299,26 +299,41 @@ void BTN_Init(void) {
   btnConfig.hw.port = PINS_HATNAVUP_PORT;
   btnConfig.hw.pin = PINS_HATNAVUP_PIN;
   btnUp = McuBtn_InitButton(&btnConfig);
+#if TINYK22_HAT_VERSION>=7
+  McuBtn_EnablePullResistor(btnUp); /* HW v7 does not have on-board pull-up resistors */
+#endif
 
   btnConfig.hw.gpio = PINS_HATNAVDOWN_GPIO;
   btnConfig.hw.port = PINS_HATNAVDOWN_PORT;
   btnConfig.hw.pin = PINS_HATNAVDOWN_PIN;
   btnDown = McuBtn_InitButton(&btnConfig);
+#if TINYK22_HAT_VERSION>=7
+  McuBtn_EnablePullResistor(btnDown); /* HW v7 does not have on-board pull-up resistors */
+#endif
 
   btnConfig.hw.gpio = PINS_HATNAVLEFT_GPIO;
   btnConfig.hw.port = PINS_HATNAVLEFT_PORT;
   btnConfig.hw.pin = PINS_HATNAVLEFT_PIN;
   btnLeft = McuBtn_InitButton(&btnConfig);
+#if TINYK22_HAT_VERSION>=7
+  McuBtn_EnablePullResistor(btnLeft); /* HW v7 does not have on-board pull-up resistors */
+#endif
 
   btnConfig.hw.gpio = PINS_HATNAVRIGHT_GPIO;
   btnConfig.hw.port = PINS_HATNAVRIGHT_PORT;
   btnConfig.hw.pin = PINS_HATNAVRIGHT_PIN;
   btnRight = McuBtn_InitButton(&btnConfig);
+#if TINYK22_HAT_VERSION>=7
+  McuBtn_EnablePullResistor(btnRight); /* HW v7 does not have on-board pull-up resistors */
+#endif
 
   btnConfig.hw.gpio = PINS_HATNAVPUSH_GPIO;
   btnConfig.hw.port = PINS_HATNAVPUSH_PORT;
   btnConfig.hw.pin = PINS_HATNAVPUSH_PIN;
   btnCenter = McuBtn_InitButton(&btnConfig);
+#if TINYK22_HAT_VERSION>=7
+  McuBtn_EnablePullResistor(btnCenter); /* HW v7 does not have on-board pull-up resistors */
+#endif
 
 #if PL_CONFIG_USE_KBI
   PORT_SetPinInterruptConfig(PINS_HATNAVUP_PORT, PINS_HATNAVUP_PIN, kPORT_InterruptFallingEdge);

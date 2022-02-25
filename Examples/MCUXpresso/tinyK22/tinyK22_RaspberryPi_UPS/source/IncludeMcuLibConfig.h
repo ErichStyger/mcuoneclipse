@@ -9,11 +9,15 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (6)  /* 3, 4, 5 or 6 */
+#define TINYK22_HAT_VERSION  (7)  /* 3, 4, 5, 6 or 7 */
 #define USE_HW_I2C           (1 && TINYK22_HAT_VERSION>=4)
 
-#define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
-
+/* ------------------- SDK/Library ---------------------------*/
+#define McuLib_CONFIG_SDK_VERSION_USED   McuLib_CONFIG_SDK_MCUXPRESSO_2_0
+#define McuLib_CONFIG_CPU_IS_LPC         (0)  /* LPC845 */
+#define McuLib_CONFIG_CORTEX_M           (4)  /* K22 is a Cortex-M4 */
+#define McuLib_CONFIG_CPU_IS_KINETIS     (1)  /* K22 is a Kinetis */
+#define McuLib_CONFIG_CPU_VARIANT        McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       				(1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS 				(1)
@@ -86,7 +90,7 @@
   #define PINS_HATNAVPUSH_GPIO    GPIOB
   #define PINS_HATNAVPUSH_PORT    PORTB
   #define PINS_HATNAVPUSH_PIN     16u
-#elif TINYK22_HAT_VERSION==4 || TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#elif TINYK22_HAT_VERSION>=4
   /*
    * HAT V4 & V5:
    *
@@ -142,8 +146,8 @@
   #error "unknown configuration"
 #endif
 
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
-  /* HAT V5 has additional GPIO pins available:
+#if TINYK22_HAT_VERSION>=5
+  /* HAT V5 or later has additional GPIO pins available:
    * - can use the I2C bus without having the Raspberry powered
    * - pin to disconnect/connect the I2C bus in order to power up the Raspberry Pi
    * - dedicated power-down pin and power-down-status pins

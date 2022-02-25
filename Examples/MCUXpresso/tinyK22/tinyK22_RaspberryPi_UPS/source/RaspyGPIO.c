@@ -18,7 +18,7 @@
 #include "McuUtility.h"
 
 static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initiate a shutdown */
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   static McuGPIO_Handle_t RGPIO_wake_gpio;  /* used by the tinyK22 to connect or disconnect the SCL line to the Raspberry Pi which can wake it up */
 #endif
 #if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
@@ -27,7 +27,7 @@ static McuGPIO_Handle_t RGPIO_shutdown;   /* pin to signal Raspberry Pi to initi
 #endif
 
 void RGPIO_EnableI2CtoRaspy(bool enable) {
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   if (enable) {
     McuGPIO_SetHigh(RGPIO_wake_gpio); /* SCL connected to Raspberry Pi, can wake it up */
   } else {
@@ -51,7 +51,7 @@ void RGPIO_SignalPowerdown(void) {
 #elif PL_CONFIG_USE_POWER_DOWN_GREEN_LED
   McuLED_Off(hatGreenLED); /* make sure we are not driving the poweroff LED */
 #endif
-#if (TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6) && PL_CONFIG_USE_POWER_ON /* disconnect I2C bus to Raspy, otherwise a falling SCL can wakeup the Raspy */
+#if TINYK22_HAT_VERSION>=5 && PL_CONFIG_USE_POWER_ON /* disconnect I2C bus to Raspy, otherwise a falling SCL can wakeup the Raspy */
   RGPIO_EnableI2CtoRaspy(false);
 #endif
   /* driving the pin low requests a poweroff */
@@ -60,7 +60,7 @@ void RGPIO_SignalPowerdown(void) {
   RGPIO_SetSignalPowerDown(true);   /* back to high again */
 }
 
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
 void RGPIO_ConnectSCL(bool yes) {
   if (yes) {
     McuGPIO_SetHigh(RGPIO_wake_gpio);
@@ -89,7 +89,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   } else {
     McuUtility_strcpy(buf, sizeof(buf), (const unsigned char*)"LOW");
   }
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (GP_0, BCM17)");
 #else
   McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)" (SHT31 Alert, BCM4)");
@@ -149,7 +149,7 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
   {
     *handled = TRUE;
     res = PrintStatus(io);
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   } else if (McuUtility_strcmp((char*)cmd, "rgpio wake connect")==0) {
     *handled = TRUE;
     RGPIO_ConnectSCL(true);
@@ -206,7 +206,7 @@ uint8_t RGPIO_ParseCommand(const unsigned char* cmd, bool *handled, const McuShe
 
 void RGPIO_Deinit(void) {
   RGPIO_shutdown = McuGPIO_DeinitGPIO(RGPIO_shutdown);
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   RGPIO_wake_gpio = McuGPIO_DeinitGPIO(RGPIO_wake_gpio);
 #endif
 #if PL_CONFIG_USE_POWER_DOWN_STATE_PIN
@@ -227,7 +227,7 @@ void RGPIO_Init(void) {
    dtoverlay=gpio-poweroff,gpiopin=21
    */
   /* nothing needed as using the (already) configured red LED for this */
-#elif TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#elif TINYK22_HAT_VERSION>=5
   /* enabling the gpio-poweroff overlays will prevent the ability to boot by driving GPIO3 (SCL)low!
   # State: Pin from Raspy which goes HIGH after a power down. Disable this for power-up functionality.
   # Board V5: Using tinyGP_1 (physical 12, BCM18)
@@ -244,7 +244,7 @@ void RGPIO_Init(void) {
   RGPIO_state = McuGPIO_InitGPIO(&config);
 #endif /* PL_CONFIG_USE_POWER_DOWN_STATE_PIN */
 
-#if TINYK22_HAT_VERSION==5 || TINYK22_HAT_VERSION==6
+#if TINYK22_HAT_VERSION>=5
   /* wake-up pin which controls the connection of the I2C SCL signal: output pin */
   config.hw.gpio = PINS_WAKE_RASPY_GPIO;
   config.hw.port = PINS_WAKE_RASPY_PORT;

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -27,9 +27,6 @@ enum
     kUART_RxFramingError, /* Rx framing error */
     kUART_RxParityError   /* Rx parity error */
 };
-
-/* Typedef for interrupt handler. */
-typedef void (*uart_isr_t)(UART_Type *base, uart_handle_t *handle);
 
 /*******************************************************************************
  * Prototypes
@@ -100,12 +97,12 @@ static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t l
 #endif /* UART 3 */
 #endif /* UART 4 */
 #endif /* UART 5 */
-static uart_handle_t *s_uartHandle[UART_HANDLE_ARRAY_SIZE];
+void *s_uartHandle[UART_HANDLE_ARRAY_SIZE];
 /* Array of UART peripheral base address. */
 static UART_Type *const s_uartBases[] = UART_BASE_PTRS;
 
 /* Array of UART IRQ number. */
-static const IRQn_Type s_uartIRQ[] = UART_RX_TX_IRQS;
+const IRQn_Type s_uartIRQ[] = UART_RX_TX_IRQS;
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 /* Array of UART clock name. */
 static const clock_ip_name_t s_uartClock[] = UART_CLOCKS;
@@ -113,9 +110,9 @@ static const clock_ip_name_t s_uartClock[] = UART_CLOCKS;
 
 /* UART ISR for transactional APIs. */
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-static uart_isr_t s_uartIsr = (uart_isr_t)DefaultISR;
+uart_isr_t s_uartIsr = (uart_isr_t)DefaultISR;
 #else
-static uart_isr_t s_uartIsr;
+uart_isr_t s_uartIsr;
 #endif
 
 /*******************************************************************************
@@ -155,7 +152,7 @@ uint32_t UART_GetInstance(UART_Type *base)
  */
 size_t UART_TransferGetRxRingBufferLength(uart_handle_t *handle)
 {
-    assert(handle);
+    assert(handle != NULL);
 
     size_t size;
     uint16_t rxRingBufferHead = handle->rxRingBufferHead;
@@ -175,7 +172,7 @@ size_t UART_TransferGetRxRingBufferLength(uart_handle_t *handle)
 
 static bool UART_TransferIsRxRingBufferFull(uart_handle_t *handle)
 {
-    assert(handle);
+    assert(handle != NULL);
 
     bool full;
 
@@ -215,8 +212,8 @@ static bool UART_TransferIsRxRingBufferFull(uart_handle_t *handle)
  */
 status_t UART_Init(UART_Type *base, const uart_config_t *config, uint32_t srcClock_Hz)
 {
-    assert(config);
-    assert(config->baudRate_Bps);
+    assert(config != NULL);
+    assert(config->baudRate_Bps != 0U);
 #if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
     assert((uint8_t)FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->txFifoWatermark);
     assert((uint8_t)FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->rxFifoWatermark);
@@ -399,7 +396,7 @@ void UART_Deinit(UART_Type *base)
  */
 void UART_GetDefaultConfig(uart_config_t *config)
 {
-    assert(config);
+    assert(config != NULL);
 
     /* Initializes the configure structure to zero. */
     (void)memset(config, 0, sizeof(*config));
@@ -439,7 +436,7 @@ void UART_GetDefaultConfig(uart_config_t *config)
  */
 status_t UART_SetBaudRate(UART_Type *base, uint32_t baudRate_Bps, uint32_t srcClock_Hz)
 {
-    assert(baudRate_Bps);
+    assert(baudRate_Bps != 0U);
 
     uint32_t sbr      = 0;
     uint32_t baudDiff = 0;
@@ -800,7 +797,7 @@ status_t UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length)
 
 static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length)
 {
-    assert(data);
+    assert(data != NULL);
 
     size_t i;
 
@@ -908,7 +905,7 @@ status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length)
 
 static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length)
 {
-    assert(data);
+    assert(data != NULL);
 
     size_t i;
 
@@ -937,7 +934,7 @@ void UART_TransferCreateHandle(UART_Type *base,
                                uart_transfer_callback_t callback,
                                void *userData)
 {
-    assert(handle);
+    assert(handle != NULL);
 
     uint32_t instance;
 
@@ -982,8 +979,8 @@ void UART_TransferCreateHandle(UART_Type *base,
  */
 void UART_TransferStartRingBuffer(UART_Type *base, uart_handle_t *handle, uint8_t *ringBuffer, size_t ringBufferSize)
 {
-    assert(handle);
-    assert(ringBuffer);
+    assert(handle != NULL);
+    assert(ringBuffer != NULL);
 
     /* Setup the ringbuffer address */
     handle->rxRingBuffer     = ringBuffer;
@@ -991,15 +988,17 @@ void UART_TransferStartRingBuffer(UART_Type *base, uart_handle_t *handle, uint8_
     handle->rxRingBufferHead = 0U;
     handle->rxRingBufferTail = 0U;
 
+    /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte. */
+    uint32_t irqMask = DisableGlobalIRQ();
     /* Enable the interrupt to accept the data when user need the ring buffer. */
-    UART_EnableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable |
-                                    (uint32_t)kUART_RxOverrunInterruptEnable |
-                                    (uint32_t)kUART_FramingErrorInterruptEnable);
+    base->C2 |= (uint8_t)UART_C2_RIE_MASK;
+    base->C3 |= ((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
     /* Enable parity error interrupt when parity mode is enable*/
-    if ((UART_C1_PE_MASK & base->C1) != 0U)
+    if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
     {
-        UART_EnableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+        base->C3 |= (uint8_t)UART_C3_PEIE_MASK;
     }
+    EnableGlobalIRQ(irqMask);
 }
 
 /*!
@@ -1012,18 +1011,21 @@ void UART_TransferStartRingBuffer(UART_Type *base, uart_handle_t *handle, uint8_
  */
 void UART_TransferStopRingBuffer(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    assert(handle != NULL);
 
     if (handle->rxState == (uint8_t)kUART_RxIdle)
     {
-        UART_DisableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable |
-                                         (uint32_t)kUART_RxOverrunInterruptEnable |
-                                         (uint32_t)kUART_FramingErrorInterruptEnable);
+        /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte.
+         */
+        uint32_t irqMask = DisableGlobalIRQ();
+        base->C2 &= ~(uint8_t)UART_C2_RIE_MASK;
+        base->C3 &= ~((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
         /* Disable parity error interrupt when parity mode is enable*/
-        if ((UART_C1_PE_MASK & base->C1) != 0U)
+        if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
         {
-            UART_DisableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+            base->C3 &= ~(uint8_t)UART_C3_PEIE_MASK;
         }
+        EnableGlobalIRQ(irqMask);
     }
 
     handle->rxRingBuffer     = NULL;
@@ -1053,10 +1055,10 @@ void UART_TransferStopRingBuffer(UART_Type *base, uart_handle_t *handle)
  */
 status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, uart_transfer_t *xfer)
 {
-    assert(handle);
-    assert(xfer);
-    assert(xfer->dataSize);
-    assert(xfer->data);
+    assert(handle != NULL);
+    assert(xfer != NULL);
+    assert(xfer->dataSize != 0U);
+    assert(xfer->txData != NULL);
 
     status_t status;
 
@@ -1067,13 +1069,17 @@ status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, ua
     }
     else
     {
-        handle->txData        = xfer->data;
+        handle->txData        = xfer->txData;
         handle->txDataSize    = xfer->dataSize;
         handle->txDataSizeAll = xfer->dataSize;
         handle->txState       = (uint8_t)kUART_TxBusy;
 
+        /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte.
+         */
+        uint32_t irqMask = DisableGlobalIRQ();
         /* Enable transmitter interrupt. */
-        UART_EnableInterrupts(base, (uint32_t)kUART_TxDataRegEmptyInterruptEnable);
+        base->C2 |= (uint8_t)UART_C2_TIE_MASK;
+        EnableGlobalIRQ(irqMask);
 
         status = kStatus_Success;
     }
@@ -1092,10 +1098,12 @@ status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, ua
  */
 void UART_TransferAbortSend(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    assert(handle != NULL);
 
-    UART_DisableInterrupts(
-        base, (uint32_t)kUART_TxDataRegEmptyInterruptEnable | (uint32_t)kUART_TransmissionCompleteInterruptEnable);
+    /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte. */
+    uint32_t irqMask = DisableGlobalIRQ();
+    base->C2 &= ~((uint8_t)UART_C2_TIE_MASK | (uint8_t)UART_C2_TCIE_MASK);
+    EnableGlobalIRQ(irqMask);
 
     handle->txDataSize = 0;
     handle->txState    = (uint8_t)kUART_TxIdle;
@@ -1115,8 +1123,8 @@ void UART_TransferAbortSend(UART_Type *base, uart_handle_t *handle)
  */
 status_t UART_TransferGetSendCount(UART_Type *base, uart_handle_t *handle, uint32_t *count)
 {
-    assert(handle);
-    assert(count);
+    assert(handle != NULL);
+    assert(count != NULL);
 
     if ((uint8_t)kUART_TxIdle == handle->txState)
     {
@@ -1169,10 +1177,10 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
                                          uart_transfer_t *xfer,
                                          size_t *receivedBytes)
 {
-    assert(handle);
-    assert(xfer);
-    assert(xfer->data);
-    assert(xfer->dataSize);
+    assert(handle != NULL);
+    assert(xfer != NULL);
+    assert(xfer->rxData != NULL);
+    assert(xfer->dataSize != 0U);
 
     uint32_t i;
     status_t status;
@@ -1182,6 +1190,7 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
     size_t bytesToReceive;
     /* How many bytes currently have received. */
     size_t bytesCurrentReceived;
+    uint32_t irqMask;
 
     /* How to get data:
        1. If RX ring buffer is not enabled, then save xfer->data and xfer->dataSize
@@ -1205,8 +1214,12 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
         /* If RX ring buffer is used. */
         if (handle->rxRingBuffer != NULL)
         {
+            /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+             * read-modify-wrte. */
+            irqMask = DisableGlobalIRQ();
             /* Disable UART RX IRQ, protect ring buffer. */
-            UART_DisableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable);
+            base->C2 &= ~(uint8_t)UART_C2_RIE_MASK;
+            EnableGlobalIRQ(irqMask);
 
             /* How many bytes in RX ring buffer currently. */
             bytesToCopy = UART_TransferGetRxRingBufferLength(handle);
@@ -1220,7 +1233,7 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
                 /* Copy data from ring buffer to user memory. */
                 for (i = 0U; i < bytesToCopy; i++)
                 {
-                    xfer->data[bytesCurrentReceived++] = handle->rxRingBuffer[handle->rxRingBufferTail];
+                    xfer->rxData[bytesCurrentReceived++] = handle->rxRingBuffer[handle->rxRingBufferTail];
 
                     /* Wrap to 0. Not use modulo (%) because it might be large and slow. */
                     if ((size_t)handle->rxRingBufferTail + 1U == handle->rxRingBufferSize)
@@ -1238,14 +1251,18 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
             if (bytesToReceive != 0U)
             {
                 /* No data in ring buffer, save the request to UART handle. */
-                handle->rxData        = xfer->data + bytesCurrentReceived;
+                handle->rxData        = xfer->rxData + bytesCurrentReceived;
                 handle->rxDataSize    = bytesToReceive;
-                handle->rxDataSizeAll = bytesToReceive;
+                handle->rxDataSizeAll = xfer->dataSize;
                 handle->rxState       = (uint8_t)kUART_RxBusy;
             }
 
-            /* Enable UART RX IRQ if previously enabled. */
-            UART_EnableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable);
+            /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+             * read-modify-wrte. */
+            irqMask = DisableGlobalIRQ();
+            /* Re-enable UART RX IRQ. */
+            base->C2 |= (uint8_t)UART_C2_RIE_MASK;
+            EnableGlobalIRQ(irqMask);
 
             /* Call user callback since all data are received. */
             if (0U == bytesToReceive)
@@ -1259,20 +1276,24 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
         /* Ring buffer not used. */
         else
         {
-            handle->rxData        = xfer->data + bytesCurrentReceived;
+            handle->rxData        = xfer->rxData + bytesCurrentReceived;
             handle->rxDataSize    = bytesToReceive;
             handle->rxDataSizeAll = bytesToReceive;
             handle->rxState       = (uint8_t)kUART_RxBusy;
 
+            /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+             * read-modify-wrte. */
+            irqMask = DisableGlobalIRQ();
             /* Enable RX/Rx overrun/framing error/idle line interrupt. */
-            UART_EnableInterrupts(
-                base, (uint32_t)kUART_RxDataRegFullInterruptEnable | (uint32_t)kUART_RxOverrunInterruptEnable |
-                          (uint32_t)kUART_FramingErrorInterruptEnable | (uint32_t)kUART_IdleLineInterruptEnable);
+            base->C2 |= ((uint8_t)UART_C2_RIE_MASK | (uint8_t)UART_C2_ILIE_MASK);
+            base->C3 |= ((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
+
             /* Enable parity error interrupt when parity mode is enable*/
-            if ((UART_C1_PE_MASK & base->C1) != 0U)
+            if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
             {
-                UART_EnableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+                base->C3 |= (uint8_t)UART_C3_PEIE_MASK;
             }
+            EnableGlobalIRQ(irqMask);
         }
 
         /* Return the how many bytes have read. */
@@ -1298,20 +1319,23 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
  */
 void UART_TransferAbortReceive(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    assert(handle != NULL);
 
     /* Only abort the receive to handle->rxData, the RX ring buffer is still working. */
     if (NULL == handle->rxRingBuffer)
     {
+        /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte.
+         */
+        uint32_t irqMask = DisableGlobalIRQ();
         /* Disable RX interrupt. */
-        UART_DisableInterrupts(
-            base, (uint32_t)kUART_RxDataRegFullInterruptEnable | (uint32_t)kUART_RxOverrunInterruptEnable |
-                      (uint32_t)kUART_FramingErrorInterruptEnable | (uint32_t)kUART_IdleLineInterruptEnable);
+        base->C2 &= ~((uint8_t)UART_C2_RIE_MASK | (uint8_t)UART_C2_ILIE_MASK);
+        base->C3 &= ~((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
         /* Disable parity error interrupt when parity mode is enable*/
-        if ((UART_C1_PE_MASK & base->C1) != 0U)
+        if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
         {
-            UART_DisableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+            base->C3 &= ~(uint8_t)UART_C3_PEIE_MASK;
         }
+        EnableGlobalIRQ(irqMask);
     }
 
     handle->rxDataSize = 0U;
@@ -1332,8 +1356,8 @@ void UART_TransferAbortReceive(UART_Type *base, uart_handle_t *handle)
  */
 status_t UART_TransferGetReceiveCount(UART_Type *base, uart_handle_t *handle, uint32_t *count)
 {
-    assert(handle);
-    assert(count);
+    assert(handle != NULL);
+    assert(count != NULL);
 
     if ((uint8_t)kUART_RxIdle == handle->rxState)
     {
@@ -1447,16 +1471,18 @@ status_t UART_EnableRxFIFO(UART_Type *base, bool enable)
  * This function handles the UART transmit and receive IRQ request.
  *
  * param base UART peripheral base address.
- * param handle UART handle pointer.
+ * param irqHandle UART handle pointer.
  */
-void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
+void UART_TransferHandleIRQ(UART_Type *base, void *irqHandle)
 {
-    assert(handle);
+    assert(irqHandle != NULL);
 
     uint8_t count;
     uint8_t tempCount;
     uint32_t status = UART_GetStatusFlags(base);
     uint8_t tmpdata;
+    uint32_t irqMask;
+    uart_handle_t *handle = (uart_handle_t *)irqHandle;
 
     /* If RX framing error */
     if (((uint32_t)kUART_FramingErrorFlag & status) != 0U)
@@ -1543,16 +1569,18 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
             {
                 handle->rxState = (uint8_t)kUART_RxIdle;
 
+                /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+                 * read-modify-wrte. */
+                irqMask = DisableGlobalIRQ();
                 /* Disable RX interrupt/overrun interrupt/fram error/idle line detected interrupt */
-                UART_DisableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable |
-                                                 (uint32_t)kUART_RxOverrunInterruptEnable |
-                                                 (uint32_t)kUART_FramingErrorInterruptEnable);
-
-                /* Disable parity error interrupt when parity mode is enable*/
-                if ((UART_C1_PE_MASK & base->C1) != 0U)
+                base->C2 &= ~(uint8_t)UART_C2_RIE_MASK;
+                base->C3 &= ~((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
+                /* Disable parity error interrupt when parity mode is enabled */
+                if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
                 {
-                    UART_DisableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+                    base->C3 &= ~(uint8_t)UART_C3_PEIE_MASK;
                 }
+                EnableGlobalIRQ(irqMask);
 
                 if (handle->callback != NULL)
                 {
@@ -1573,7 +1601,11 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
         /* If rxDataSize is 0, disable idle line interrupt.*/
         if (0U == (handle->rxDataSize))
         {
-            UART_DisableInterrupts(base, (uint32_t)kUART_IdleLineInterruptEnable);
+            /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+             * read-modify-wrte. */
+            irqMask = DisableGlobalIRQ();
+            base->C2 &= ~(uint8_t)UART_C2_ILIE_MASK;
+            EnableGlobalIRQ(irqMask);
         }
         /* If callback is not NULL and rxDataSize is not 0. */
         if ((handle->callback != NULL) && (handle->rxDataSize != 0U))
@@ -1664,16 +1696,18 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
 
         else if (0U == handle->rxDataSize)
         {
+            /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+             * read-modify-wrte. */
+            irqMask = DisableGlobalIRQ();
             /* Disable RX interrupt/overrun interrupt/fram error/idle line detected interrupt */
-            UART_DisableInterrupts(base, (uint32_t)kUART_RxDataRegFullInterruptEnable |
-                                             (uint32_t)kUART_RxOverrunInterruptEnable |
-                                             (uint32_t)kUART_FramingErrorInterruptEnable);
-
-            /* Disable parity error interrupt when parity mode is enable*/
-            if ((UART_C1_PE_MASK & base->C1) != 0U)
+            base->C2 &= ~(uint8_t)UART_C2_RIE_MASK;
+            base->C3 &= ~((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
+            /* Disable parity error interrupt when parity mode is enabled */
+            if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
             {
-                UART_DisableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+                base->C3 &= ~(uint8_t)UART_C3_PEIE_MASK;
             }
+            EnableGlobalIRQ(irqMask);
         }
         else
         {
@@ -1684,15 +1718,19 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
     if (((handle->rxState == (uint8_t)kUART_RxFramingError) || (handle->rxState == (uint8_t)kUART_RxParityError)) &&
         (NULL == handle->rxRingBuffer))
     {
-        UART_DisableInterrupts(
-            base, (uint32_t)kUART_RxDataRegFullInterruptEnable | (uint32_t)kUART_RxOverrunInterruptEnable |
-                      (uint32_t)kUART_FramingErrorInterruptEnable | (uint32_t)kUART_IdleLineInterruptEnable);
+        /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte.
+         */
+        irqMask = DisableGlobalIRQ();
+        /* Enable RX/Rx overrun/framing error/idle line interrupt. */
+        base->C2 |= ((uint8_t)UART_C2_RIE_MASK | (uint8_t)UART_C2_ILIE_MASK);
+        base->C3 |= ((uint8_t)UART_C3_ORIE_MASK | (uint8_t)UART_C3_FEIE_MASK);
 
-        /* Disable parity error interrupt when parity mode is enable*/
-        if ((UART_C1_PE_MASK & base->C1) != 0U)
+        /* Enable parity error interrupt when parity mode is enable*/
+        if (((uint8_t)UART_C1_PE_MASK & base->C1) != 0U)
         {
-            UART_DisableInterrupts(base, (uint32_t)kUART_ParityErrorInterruptEnable);
+            base->C3 |= (uint8_t)UART_C3_PEIE_MASK;
         }
+        EnableGlobalIRQ(irqMask);
     }
 
     /* Send data register empty and the interrupt is enabled. */
@@ -1722,10 +1760,12 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
             /* If all the data are written to data register, TX finished. */
             if (0U == handle->txDataSize)
             {
-                /* Disable TX register empty interrupt. */
-                base->C2 = (base->C2 & ~(uint8_t)UART_C2_TIE_MASK);
-                /* Enable transmission complete interrupt. */
-                base->C2 = (base->C2 | (uint8_t)UART_C2_TCIE_MASK);
+                /* Disable and re-enable the global interrupt to protect the interrupt enable register during
+                 * read-modify-wrte. */
+                irqMask = DisableGlobalIRQ();
+                /* Disable TX register empty interrupt and enable transmission complete interrupt. */
+                base->C2 = (base->C2 & ~(uint8_t)UART_C2_TIE_MASK) | (uint8_t)UART_C2_TCIE_MASK;
+                EnableGlobalIRQ(irqMask);
             }
         }
     }
@@ -1735,8 +1775,14 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
     {
         /* Set txState to idle only when all data has been sent out to bus. */
         handle->txState = (uint8_t)kUART_TxIdle;
+
+        /* Disable and re-enable the global interrupt to protect the interrupt enable register during read-modify-wrte.
+         */
+        irqMask = DisableGlobalIRQ();
         /* Disable transmission complete interrupt. */
-        base->C2 = (base->C2 & ~(uint8_t)UART_C2_TCIE_MASK);
+        base->C2 &= ~(uint8_t)UART_C2_TCIE_MASK;
+        EnableGlobalIRQ(irqMask);
+
         /* Trigger callback. */
         if (handle->callback != NULL)
         {
@@ -1751,9 +1797,9 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
  * This function handles the UART error IRQ request.
  *
  * param base UART peripheral base address.
- * param handle UART handle pointer.
+ * param irqHandle UART handle pointer.
  */
-void UART_TransferHandleErrorIRQ(UART_Type *base, uart_handle_t *handle)
+void UART_TransferHandleErrorIRQ(UART_Type *base, void *irqHandle)
 {
     /* To be implemented by User. */
 }
@@ -1771,6 +1817,19 @@ void UART0_UART1_UART2_UART3_DriverIRQHandler(void)
     }
 }
 #else
+#if defined(FSL_FEATURE_UART_HAS_SHARED_IRQ0_IRQ1) && FSL_FEATURE_UART_HAS_SHARED_IRQ0_IRQ1
+void UART0_UART1_DriverIRQHandler(void);
+void UART0_UART1_DriverIRQHandler(void)
+{
+    for (uint32_t instance = 0U; instance < 2U; instance++)
+    {
+        if (s_uartHandle[instance] != NULL)
+        {
+            s_uartIsr(s_uartBases[instance], s_uartHandle[instance]);
+        }
+    }
+}
+#else /* FSL_FEATURE_UART_HAS_SHARED_IRQ0_IRQ1 */
 #if defined(UART0)
 #if ((!(defined(FSL_FEATURE_SOC_LPSCI_COUNT))) || \
      ((defined(FSL_FEATURE_SOC_LPSCI_COUNT)) && (FSL_FEATURE_SOC_LPSCI_COUNT == 0)))
@@ -1787,8 +1846,8 @@ void UART0_RX_TX_DriverIRQHandler(void)
     UART0_DriverIRQHandler();
     SDK_ISR_EXIT_BARRIER;
 }
-#endif
-#endif
+#endif /* FSL_FEATURE_SOC_LPSCI_COUNT */
+#endif /* UART0 */
 
 #if defined(UART1)
 void UART1_DriverIRQHandler(void);
@@ -1804,8 +1863,22 @@ void UART1_RX_TX_DriverIRQHandler(void)
     UART1_DriverIRQHandler();
     SDK_ISR_EXIT_BARRIER;
 }
-#endif
+#endif /* UART1 */
+#endif /* FSL_FEATURE_UART_HAS_SHARED_IRQ0_IRQ1 */
 
+#if defined(FSL_FEATURE_UART_HAS_SHARED_IRQ2_IRQ3) && FSL_FEATURE_UART_HAS_SHARED_IRQ2_IRQ3
+void UART2_UART3_DriverIRQHandler(void);
+void UART2_UART3_DriverIRQHandler(void)
+{
+    for (uint32_t instance = 2U; instance < 4U; instance++)
+    {
+        if (s_uartHandle[instance] != NULL)
+        {
+            s_uartIsr(s_uartBases[instance], s_uartHandle[instance]);
+        }
+    }
+}
+#else /* FSL_FEATURE_UART_HAS_SHARED_IRQ2_IRQ3 */
 #if defined(UART2)
 void UART2_DriverIRQHandler(void);
 void UART2_DriverIRQHandler(void)
@@ -1820,7 +1893,7 @@ void UART2_RX_TX_DriverIRQHandler(void)
     UART2_DriverIRQHandler();
     SDK_ISR_EXIT_BARRIER;
 }
-#endif
+#endif /* UART2 */
 
 #if defined(UART3)
 void UART3_DriverIRQHandler(void);
@@ -1836,8 +1909,9 @@ void UART3_RX_TX_DriverIRQHandler(void)
     UART3_DriverIRQHandler();
     SDK_ISR_EXIT_BARRIER;
 }
-#endif
-#endif
+#endif /* UART3 */
+#endif /* FSL_FEATURE_UART_HAS_SHARED_IRQ2_IRQ3 */
+#endif /* FSL_FEATURE_UART_HAS_SHARED_IRQ0_IRQ1_IRQ2_IRQ3 */
 
 #if defined(UART4)
 void UART4_DriverIRQHandler(void);

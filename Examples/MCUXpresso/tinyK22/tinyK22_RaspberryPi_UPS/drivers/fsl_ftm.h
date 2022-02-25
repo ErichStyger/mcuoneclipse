@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,8 +21,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief FTM driver version 2.3.0. */
-#define FSL_FTM_DRIVER_VERSION (MAKE_VERSION(2, 3, 0))
+/*! @brief FTM driver version 2.5.0. */
+#define FSL_FTM_DRIVER_VERSION (MAKE_VERSION(2, 5, 0))
 /*@}*/
 
 /*!
@@ -422,6 +422,35 @@ void FTM_Deinit(FTM_Type *base);
  */
 void FTM_GetDefaultConfig(ftm_config_t *config);
 
+/*!
+ * brief Calculates the counter clock prescaler.
+ *
+ * This function calculates the values for SC[PS] bit.
+ *
+ * param base                FTM peripheral base address
+ * param counterPeriod_Hz    The desired frequency in Hz which corresponding to the time when the counter reaches the
+ *                           mod value
+ * param srcClock_Hz         FTM counter clock in Hz
+ *
+ * return Calculated clock prescaler value, see @ref ftm_clock_prescale_t.
+ */
+static inline ftm_clock_prescale_t FTM_CalculateCounterClkDiv(FTM_Type *base,
+                                                              uint32_t counterPeriod_Hz,
+                                                              uint32_t srcClock_Hz)
+{
+    uint8_t i;
+    assert((srcClock_Hz / 2U) > counterPeriod_Hz);
+    assert((srcClock_Hz / 128U / 0xFFFFU) <= counterPeriod_Hz);
+    for (i = 0U; i < (uint32_t)kFTM_Prescale_Divide_128; i++)
+    {
+        if ((srcClock_Hz / (1UL << i) / 0xFFFFU) < counterPeriod_Hz)
+        {
+            break;
+        }
+    }
+    return (ftm_clock_prescale_t)i;
+}
+
 /*! @}*/
 
 /*!
@@ -462,11 +491,13 @@ status_t FTM_SetupPwm(FTM_Type *base,
  * @param dutyCyclePercent  New PWM pulse width; The value should be between 0 to 100
  *                          0=inactive signal(0% duty cycle)...
  *                          100=active signal (100% duty cycle)
+ * @return kStatus_Success if the PWM update was successful
+ *         kStatus_Error on failure
  */
-void FTM_UpdatePwmDutycycle(FTM_Type *base,
-                            ftm_chnl_t chnlNumber,
-                            ftm_pwm_mode_t currentPwmMode,
-                            uint8_t dutyCyclePercent);
+status_t FTM_UpdatePwmDutycycle(FTM_Type *base,
+                                ftm_chnl_t chnlNumber,
+                                ftm_pwm_mode_t currentPwmMode,
+                                uint8_t dutyCyclePercent);
 
 /*!
  * @brief Updates the edge level selection for a channel.
@@ -647,7 +678,8 @@ void FTM_ClearStatusFlags(FTM_Type *base, uint32_t mask);
  */
 static inline void FTM_SetTimerPeriod(FTM_Type *base, uint32_t ticks)
 {
-    base->MOD = ticks;
+    base->CNTIN = 0x0U;
+    base->MOD   = ticks;
 }
 
 /*!
@@ -665,6 +697,23 @@ static inline void FTM_SetTimerPeriod(FTM_Type *base, uint32_t ticks)
 static inline uint32_t FTM_GetCurrentTimerCount(FTM_Type *base)
 {
     return (uint32_t)((base->CNT & FTM_CNT_COUNT_MASK) >> FTM_CNT_COUNT_SHIFT);
+}
+
+/*!
+ * @brief Reads the captured value.
+ *
+ * This function returns the captured value of a FTM channel configured in input capture or dual edge capture mode.
+ *
+ * @note Call the utility macros provided in the fsl_common.h to convert ticks to usec or msec.
+ *
+ * @param base FTM peripheral base address
+ * @param chnlNumber Channel to be read
+ *
+ * @return The captured FTM counter value of the input modes.
+ */
+static inline uint32_t FTM_GetInputCaptureValue(FTM_Type *base, ftm_chnl_t chnlNumber)
+{
+    return (base->CONTROLS[chnlNumber].CnV & FTM_CnV_VAL_MASK);
 }
 
 /*! @}*/
@@ -822,6 +871,10 @@ static inline void FTM_SetPwmOutputEnable(FTM_Type *base, ftm_chnl_t chnlNumber,
  */
 static inline void FTM_SetFaultControlEnable(FTM_Type *base, ftm_chnl_t chnlPairNumber, bool value)
 {
+    /* Fault input is not supported if the instance has only basic feature.*/
+#if (defined(FSL_FEATURE_FTM_HAS_BASIC_FEATURE_ONLY_INSTANCE) && FSL_FEATURE_FTM_HAS_BASIC_FEATURE_ONLY_INSTANCE)
+    assert(0 == FSL_FEATURE_FTM_IS_BASIC_FEATURE_ONLY_INSTANCEn(base));
+#endif
     if (value)
     {
         base->COMBINE |=

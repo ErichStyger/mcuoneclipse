@@ -99,16 +99,14 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config
 {
     assert(NULL != config);
 
-    uint32_t u32flag = 1;
-
     if (config->pinDirection == kGPIO_DigitalInput)
     {
-        base->PDDR &= GPIO_FIT_REG(~(u32flag << pin));
+        base->PDDR &= GPIO_FIT_REG(~(1UL << pin));
     }
     else
     {
         GPIO_PinWrite(base, pin, config->outputLogic);
-        base->PDDR |= GPIO_FIT_REG((u32flag << pin));
+        base->PDDR |= GPIO_FIT_REG((1UL << pin));
     }
 }
 
@@ -311,16 +309,14 @@ void FGPIO_PinInit(FGPIO_Type *base, uint32_t pin, const gpio_pin_config_t *conf
 {
     assert(NULL != config);
 
-    uint32_t u32flag = 1;
-
     if (config->pinDirection == kGPIO_DigitalInput)
     {
-        base->PDDR &= ~(u32flag << pin);
+        base->PDDR &= ~(1UL << pin);
     }
     else
     {
         FGPIO_PinWrite(base, pin, config->outputLogic);
-        base->PDDR |= (u32flag << pin);
+        base->PDDR |= (1UL << pin);
     }
 }
 #if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT)

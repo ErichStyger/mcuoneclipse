@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,8 +21,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief UART driver version 2.4.0. */
-#define FSL_UART_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
+/*! @brief UART driver version. */
+#define FSL_UART_DRIVER_VERSION (MAKE_VERSION(2, 5, 1))
 /*@}*/
 
 /*! @brief Retry times for waiting flag. */
@@ -177,7 +177,16 @@ typedef struct _uart_config
 /*! @brief UART transfer structure. */
 typedef struct _uart_transfer
 {
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
+    /*
+     * Use separate TX and RX data pointer, because TX data is const data.
+     * The member data is kept for backward compatibility.
+     */
+    union
+    {
+        uint8_t *data;         /*!< The buffer of data to be transfer.*/
+        uint8_t *rxData;       /*!< The buffer to receive data. */
+        const uint8_t *txData; /*!< The buffer of data to be sent. */
+    };
     size_t dataSize; /*!< The byte count to be transfer. */
 } uart_transfer_t;
 
@@ -190,12 +199,12 @@ typedef void (*uart_transfer_callback_t)(UART_Type *base, uart_handle_t *handle,
 /*! @brief UART handle structure. */
 struct _uart_handle
 {
-    uint8_t *volatile txData;   /*!< Address of remaining data to send. */
-    volatile size_t txDataSize; /*!< Size of the remaining data to send. */
-    size_t txDataSizeAll;       /*!< Size of the data to send out. */
-    uint8_t *volatile rxData;   /*!< Address of remaining data to receive. */
-    volatile size_t rxDataSize; /*!< Size of the remaining data to receive. */
-    size_t rxDataSizeAll;       /*!< Size of the data to receive. */
+    const uint8_t *volatile txData; /*!< Address of remaining data to send. */
+    volatile size_t txDataSize;     /*!< Size of the remaining data to send. */
+    size_t txDataSizeAll;           /*!< Size of the data to send out. */
+    uint8_t *volatile rxData;       /*!< Address of remaining data to receive. */
+    volatile size_t rxDataSize;     /*!< Size of the remaining data to receive. */
+    size_t rxDataSizeAll;           /*!< Size of the data to receive. */
 
     uint8_t *rxRingBuffer;              /*!< Start address of the receiver ring buffer. */
     size_t rxRingBufferSize;            /*!< Size of the ring buffer. */
@@ -208,6 +217,21 @@ struct _uart_handle
     volatile uint8_t txState; /*!< TX transfer state. */
     volatile uint8_t rxState; /*!< RX transfer state */
 };
+
+/* Typedef for interrupt handler. */
+typedef void (*uart_isr_t)(UART_Type *base, void *handle);
+
+/*******************************************************************************
+ * Variables
+ ******************************************************************************/
+/*! Pointers to uart handles for each instance. */
+extern void *s_uartHandle[];
+
+/* Array of UART IRQs. */
+extern const IRQn_Type s_uartIRQ[];
+
+/*! Pointer to uart IRQ handler for each instance. */
+extern uart_isr_t s_uartIsr;
 
 /*******************************************************************************
  * API
@@ -645,6 +669,30 @@ static inline uint8_t UART_ReadByte(UART_Type *base)
     return base->D;
 }
 
+#if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
+/*!
+ * @brief Gets the rx FIFO data count.
+ *
+ * @param base UART peripheral base address.
+ * @return rx FIFO data count.
+ */
+static inline uint8_t UART_GetRxFifoCount(UART_Type *base)
+{
+    return (uint8_t)base->RCFIFO;
+}
+
+/*!
+ * @brief Gets the tx FIFO data count.
+ *
+ * @param base UART peripheral base address.
+ * @return tx FIFO data count.
+ */
+static inline uint8_t UART_GetTxFifoCount(UART_Type *base)
+{
+    return (uint8_t)base->TCFIFO;
+}
+#endif /* FSL_FEATURE_UART_HAS_FIFO */
+
 #if defined(FSL_FEATURE_UART_HAS_ADDRESS_MATCHING) && FSL_FEATURE_UART_HAS_ADDRESS_MATCHING
 /*!
  * @brief Transmit an address frame in 9-bit data mode.
@@ -874,6 +922,30 @@ status_t UART_EnableTxFIFO(UART_Type *base, bool enable);
  * retval kStatus_Fail Fail to turn on or turn off Rx FIFO.
  */
 status_t UART_EnableRxFIFO(UART_Type *base, bool enable);
+
+/*!
+ * @brief Sets the rx FIFO watermark.
+ *
+ * @param base UART peripheral base address.
+ * @param water Rx FIFO watermark.
+ */
+static inline void UART_SetRxFifoWatermark(UART_Type *base, uint8_t water)
+{
+    assert((uint8_t)FSL_FEATURE_UART_FIFO_SIZEn(base) >= water);
+    base->RWFIFO = water;
+}
+
+/*!
+ * @brief Sets the tx FIFO watermark.
+ *
+ * @param base UART peripheral base address.
+ * @param water Tx FIFO watermark.
+ */
+static inline void UART_SetTxFifoWatermark(UART_Type *base, uint8_t water)
+{
+    assert((uint8_t)FSL_FEATURE_UART_FIFO_SIZEn(base) >= water);
+    base->TWFIFO = water;
+}
 #endif /* FSL_FEATURE_UART_HAS_FIFO */
 
 /*!
@@ -882,9 +954,9 @@ status_t UART_EnableRxFIFO(UART_Type *base, bool enable);
  * This function handles the UART transmit and receive IRQ request.
  *
  * @param base UART peripheral base address.
- * @param handle UART handle pointer.
+ * @param irqHandle UART handle pointer.
  */
-void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle);
+void UART_TransferHandleIRQ(UART_Type *base, void *irqHandle);
 
 /*!
  * @brief UART Error IRQ handle function.
@@ -892,9 +964,9 @@ void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle);
  * This function handles the UART error IRQ request.
  *
  * @param base UART peripheral base address.
- * @param handle UART handle pointer.
+ * @param irqHandle UART handle pointer.
  */
-void UART_TransferHandleErrorIRQ(UART_Type *base, uart_handle_t *handle);
+void UART_TransferHandleErrorIRQ(UART_Type *base, void *irqHandle);
 
 /* @} */
 
