@@ -39,6 +39,11 @@
 #if PL_CONFIG_USE_USB_CDC
   #include "virtual_com.h"
 #endif
+#if PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#elif PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
+#endif
 
 void PL_Init(void) {
   InitPins(); /* do all the pin muxing */

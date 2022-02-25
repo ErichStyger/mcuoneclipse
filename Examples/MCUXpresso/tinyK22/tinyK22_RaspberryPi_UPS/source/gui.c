@@ -355,7 +355,13 @@ void GUI_MainMenuCreate(void) {
   lv_obj_set_pos(btn, 60, 0);
 #endif
   label = lv_label_create(btn, NULL);
+#if PL_CONFIG_USE_SHT31
   lv_label_set_text(label, "SHT31");
+#elif PL_CONFIG_USE_SHT40
+  lv_label_set_text(label, "SHT40");
+#else
+  #error "need a sensor?"
+#endif
   //lv_obj_set_free_num(btn, 1);   /*Set a unique number for the button*/
   lv_obj_set_event_cb(btn, btn_click_sht_action);
   lv_btn_set_fit(btn, LV_FIT_TIGHT);

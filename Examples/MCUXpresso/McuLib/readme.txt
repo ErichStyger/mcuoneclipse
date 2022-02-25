@@ -61,6 +61,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuShell: Driver for a command line shell
 - McuShellUart: UART driver for the McuShell
 - McuSHT31: Driver for the Sensirion SHT31 temperature/humidity sensor
+- McuSHT40: Driver for the Sensirion SHT40 temperature/humidity sensor
 - McuSSD1306: display driver for SSD1306 and SH1106
 - McuSTM32HALI2C: low level I2C driver using STM32 CubeMX HAL
 - McuSWO: SWO (ARM Single Wire Output) library and command line support

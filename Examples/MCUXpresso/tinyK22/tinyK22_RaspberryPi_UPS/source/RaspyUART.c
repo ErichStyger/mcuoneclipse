@@ -139,7 +139,9 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #endif
   McuShell_SendHelpStr((unsigned char*)"  red (on|off)", (unsigned char*)"turn red LED on or off\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  green (on|off)", (unsigned char*)"turn green LED on or off\r\n", io->stdOut);
+#if TINYK22_HAT_VERSION<7
   McuShell_SendHelpStr((unsigned char*)"  blue (on|off)", (unsigned char*)"turn blue LED on or off\r\n", io->stdOut);
+#endif
   McuShell_SendHelpStr((unsigned char*)"  yellow (on|off)", (unsigned char*)"turn yellow LED on or off\r\n", io->stdOut);
   return ERR_OK;
 }
@@ -196,12 +198,14 @@ uint8_t RASPYU_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   } else if (McuUtility_strcmp((char*)cmd, "uart green off")==0 || McuUtility_strcmp((char*)cmd, "green off")==0) {
     McuLED_Off(hatGreenLED);
     *handled = TRUE;
+#if TINYK22_HAT_VERSION<7
   } else if (McuUtility_strcmp((char*)cmd, "uart blue on")==0 || McuUtility_strcmp((char*)cmd, "blue on")==0) {
     McuLED_On(hatBlueLED);
     *handled = TRUE;
   } else if (McuUtility_strcmp((char*)cmd, "uart blue off")==0 || McuUtility_strcmp((char*)cmd, "blue off")==0) {
     McuLED_Off(hatBlueLED);
     *handled = TRUE;
+#endif
   } else if (McuUtility_strcmp((char*)cmd, "uart yellow on")==0 || McuUtility_strcmp((char*)cmd, "yellow on")==0) {
     McuLED_On(hatYellowLED);
     *handled = TRUE;
