@@ -91,7 +91,13 @@ void GUI_TEMPHUM_CreateView(void) {
   refr_task = lv_task_create(refresh_task, REFR_TIME_MS, LV_TASK_PRIO_LOW, NULL);
 
   win = lv_win_create(lv_scr_act(), NULL);
+#if PL_CONFIG_USE_SHT31
   lv_win_set_title(win, "SHT31");
+#elif PL_CONFIG_USE_SHT40
+  lv_win_set_title(win, "SHT40");
+#else
+  #error "device?"
+#endif
   lv_win_set_btn_size(win, 15);
   closeBtn = lv_win_add_btn(win, LV_SYMBOL_CLOSE);
   lv_obj_set_event_cb(closeBtn, win_close_action);

@@ -10,7 +10,7 @@
 /* configure the HW/Board version with TINYK22_HAT_VERSION in IncludeMcuLibConfig.h */
 #define PL_CONFIG_PCB_TEST_MODE           (0) /* 1: used for testing a new PCB */
 
-#define PL_CONFIG_USE_RASPBERRY           (0 && !PL_CONFIG_PCB_TEST_MODE) /* board used with Raspberry Pi */
+#define PL_CONFIG_USE_RASPBERRY           (1 && !PL_CONFIG_PCB_TEST_MODE) /* board used with Raspberry Pi */
 #define PL_CONFIG_USE_BUTTONS             (1) /* using buttons (navigation switch) */
 #define PL_CONFIG_USE_KBI                 (1 && PL_CONFIG_USE_BUTTONS) /* using interrupts for buttons */
 #define PL_CONFIG_USE_I2C                 (1) /* if I2C is enabled */

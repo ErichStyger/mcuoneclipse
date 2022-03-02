@@ -9,7 +9,7 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
-#define TINYK22_HAT_VERSION  (6)  /* 3, 4, 5, 6 or 7 */
+#define TINYK22_HAT_VERSION  (7)  /* 3, 4, 5, 6 or 7 */
 #define USE_HW_I2C           (1 && TINYK22_HAT_VERSION>=4)
 
 /* ------------------- SDK/Library ---------------------------*/

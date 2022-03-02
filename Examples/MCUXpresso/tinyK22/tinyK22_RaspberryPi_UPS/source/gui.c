@@ -42,7 +42,7 @@ static TaskHandle_t GUI_TaskHndl;
 
 #if PL_CONFIG_USE_GUI_KEY_NAV
 #define GUI_GROUP_NOF_IN_STACK   4
-typedef struct {
+typedef struct GUI_Group_t {
   lv_group_t *stack[GUI_GROUP_NOF_IN_STACK]; /* stack of GUI groups */
   uint8_t sp; /* stack pointer, points to next free element */
 } GUI_Group_t;

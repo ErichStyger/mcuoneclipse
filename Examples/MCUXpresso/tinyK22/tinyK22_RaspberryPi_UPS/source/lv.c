@@ -431,7 +431,7 @@ void LV_Init(void) {
 #if PL_CONFIG_USE_GUI_SCREENSAVER
   timerHndlLcdTimeout = xTimerCreate(
     "timerLCD", /* name */
-    pdMS_TO_TICKS(15*1000), /* period/time */
+    pdMS_TO_TICKS(30*1000), /* period/time */
     pdFALSE, /* auto reload */
     (void*)1, /* timer ID */
     vTimerCallbackLCDExpired); /* callback */
