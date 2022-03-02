@@ -40,3 +40,6 @@
 #define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (4)       /* number of flash blocks */
 #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE   (McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS * McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE) /* MUST be multiple of 512 for LPC55! */
 /* ---------------------------------------------------------------------------------------*/
+/* McuFlash */
+#define McuFlash_CONFIG_IS_ENABLED  (1)
+/* ---------------------------------------------------------------------------------------*/
