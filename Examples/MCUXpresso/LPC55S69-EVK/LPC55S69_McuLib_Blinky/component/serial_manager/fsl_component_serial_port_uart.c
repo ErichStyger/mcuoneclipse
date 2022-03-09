@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 NXP
+ * Copyright 2018 -2021 NXP
  * All rights reserved.
  *
  *
@@ -9,7 +9,8 @@
 #include "fsl_component_serial_manager.h"
 #include "fsl_component_serial_port_internal.h"
 
-#if (defined(SERIAL_PORT_TYPE_UART) && (SERIAL_PORT_TYPE_UART > 0U))
+#if (defined(SERIAL_PORT_TYPE_UART) && (SERIAL_PORT_TYPE_UART > 0U)) || \
+    (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
 #include "fsl_adapter_uart.h"
 
 #include "fsl_component_serial_port_uart.h"
@@ -52,6 +53,16 @@ typedef struct _serial_uart_recv_state
     volatile uint8_t rxEnable;
     uint8_t readBuffer[SERIAL_PORT_UART_RECEIVE_DATA_LENGTH];
 } serial_uart_recv_state_t;
+
+typedef struct _serial_uart_dma_recv_state
+{
+    serial_manager_callback_t callback;
+    void *callbackParam;
+    volatile uint8_t busy;
+    volatile uint8_t rxEnable;
+    uint8_t readBuffer[SERIAL_PORT_UART_DMA_RECEIVE_DATA_LENGTH];
+} serial_uart_dma_recv_state_t;
+
 typedef struct _serial_uart_block_state
 {
     UART_HANDLE_DEFINE(usartHandleBuffer);
@@ -66,6 +77,20 @@ typedef struct _serial_uart_state
     serial_uart_recv_state_t rx;
 #endif
 } serial_uart_state_t;
+#endif
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+#if (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
+typedef struct _serial_uart_dma_state
+{
+    UART_HANDLE_DEFINE(usartHandleBuffer);
+    UART_DMA_HANDLE_DEFINE(uartDmaHandle);
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+    serial_uart_send_state_t tx;
+    serial_uart_dma_recv_state_t rx;
+#endif
+} serial_uart_dma_state_t;
+#endif
+#endif
 
 /*******************************************************************************
  * Prototypes
@@ -116,12 +141,14 @@ static void Serial_UartCallback(hal_uart_handle_t handle, hal_uart_status_t stat
 
     if ((hal_uart_status_t)kStatus_HAL_UartRxIdle == status)
     {
+        (void)HAL_UartAbortReceive(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
         if ((NULL != serialUartHandle->rx.callback))
         {
             msg.buffer = &serialUartHandle->rx.readBuffer[0];
             msg.length = sizeof(serialUartHandle->rx.readBuffer);
             serialUartHandle->rx.callback(serialUartHandle->rx.callbackParam, &msg, kStatus_SerialManager_Success);
         }
+#if 0
 #if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
         transfer.data             = &serialUartHandle->rx.readBuffer[0];
         transfer.dataSize         = sizeof(serialUartHandle->rx.readBuffer);
@@ -136,6 +163,7 @@ static void Serial_UartCallback(hal_uart_handle_t handle, hal_uart_status_t stat
         {
             serialUartHandle->rx.busy = 1U;
         }
+#endif
     }
     else if ((hal_uart_status_t)kStatus_HAL_UartTxIdle == status)
     {
@@ -277,34 +305,15 @@ serial_manager_status_t Serial_UartWrite(serial_handle_t serialHandle, uint8_t *
 
     return kStatus_SerialManager_Success;
 }
-serial_manager_status_t Serial_UartWriteBlocking(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length)
-{
-    serial_uart_state_t *serialUartHandle;
 
-    assert(serialHandle);
-    assert(buffer);
-    assert(length);
-
-    serialUartHandle = (serial_uart_state_t *)serialHandle;
-
-    return (serial_manager_status_t)HAL_UartSendBlocking(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]),
-                                                         buffer, length);
-}
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE) && (SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE > 0U))
 serial_manager_status_t Serial_UartRead(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length)
 {
-    serial_uart_state_t *serialUartHandle;
-
     assert(serialHandle);
-    assert(buffer);
-    assert(length);
-
-    serialUartHandle = (serial_uart_state_t *)serialHandle;
-
-    return (serial_manager_status_t)HAL_UartReceiveBlocking(
-        ((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]), buffer, length);
+    (void)buffer;
+    (void)length;
+    return (serial_manager_status_t)Serial_UartEnableReceiving(serialHandle);
 }
-#endif /* SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE */
+
 #else
 
 serial_manager_status_t Serial_UartWrite(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length)
@@ -457,4 +466,306 @@ serial_manager_status_t Serial_UartExitLowpower(serial_handle_t serialHandle)
     return status;
 }
 
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+#if (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+static serial_manager_status_t Serial_UartDmaEnableReceiving(serial_uart_dma_state_t *serialUartHandle)
+{
+    if (1U == serialUartHandle->rx.rxEnable)
+    {
+        serialUartHandle->rx.busy = 1U;
+        if (kStatus_HAL_UartDmaSuccess !=
+            HAL_UartDMATransferReceive(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]),
+                                       &serialUartHandle->rx.readBuffer[0], sizeof(serialUartHandle->rx.readBuffer),
+                                       false))
+
+        {
+            serialUartHandle->rx.busy = 0U;
+            return kStatus_SerialManager_Error;
+        }
+    }
+    return kStatus_SerialManager_Success;
+}
+
+/* UART user callback */
+static void Serial_UartDmaCallback(hal_uart_dma_handle_t handle, hal_dma_callback_msg_t *msg, void *callbackParam)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+    serial_manager_callback_message_t cb_msg;
+#if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
+    hal_uart_transfer_t transfer;
+#endif
+
+    assert(callbackParam);
+    serialUartHandle = (serial_uart_dma_state_t *)callbackParam;
+
+    if (((hal_uart_dma_status_t)kStatus_HAL_UartDmaRxIdle == msg->status) ||
+        (kStatus_HAL_UartDmaIdleline == msg->status))
+    {
+        if ((NULL != serialUartHandle->rx.callback))
+        {
+            cb_msg.buffer = msg->data;
+            cb_msg.length = msg->dataSize;
+            serialUartHandle->rx.callback(serialUartHandle->rx.callbackParam, &cb_msg, kStatus_SerialManager_Success);
+        }
+
+        if (kStatus_HAL_UartDmaSuccess ==
+            HAL_UartDMATransferReceive(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]),
+                                       &serialUartHandle->rx.readBuffer[0], sizeof(serialUartHandle->rx.readBuffer),
+                                       false))
+        {
+            serialUartHandle->rx.busy = 1U;
+        }
+    }
+    else if (kStatus_HAL_UartDmaTxIdle == msg->status)
+    {
+        if (0U != serialUartHandle->tx.busy)
+        {
+            serialUartHandle->tx.busy = 0U;
+            if ((NULL != serialUartHandle->tx.callback))
+            {
+                cb_msg.buffer = msg->data;
+                cb_msg.length = msg->dataSize;
+                serialUartHandle->tx.callback(serialUartHandle->tx.callbackParam, &cb_msg,
+                                              kStatus_SerialManager_Success);
+            }
+        }
+    }
+    else
+    {
+    }
+}
+
+#endif
+
+serial_manager_status_t Serial_UartDmaInit(serial_handle_t serialHandle, void *serialConfig)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+    serial_port_uart_dma_config_t *uartConfig = (serial_port_uart_dma_config_t *)serialConfig;
+#endif
+    serial_manager_status_t serialManagerStatus = kStatus_SerialManager_Success;
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+#if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
+#if 0 /* Not used below! */
+        hal_uart_transfer_t transfer;
+#endif
+#endif
+#endif
+
+    assert(serialConfig);
+    assert(serialHandle);
+
+    assert(SERIAL_PORT_UART_DMA_HANDLE_SIZE >= sizeof(serial_uart_dma_state_t));
+
+    serialUartHandle    = (serial_uart_dma_state_t *)serialHandle;
+    serialManagerStatus = (serial_manager_status_t)HAL_UartInit(
+        ((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]), (const hal_uart_config_t *)serialConfig);
+    assert(kStatus_SerialManager_Success == serialManagerStatus);
+    (void)serialManagerStatus;
+
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+
+    hal_uart_dma_config_t dmaConfig;
+
+    dmaConfig.uart_instance             = uartConfig->instance;
+    dmaConfig.dma_instance              = uartConfig->dma_instance;
+    dmaConfig.rx_channel                = uartConfig->rx_channel;
+    dmaConfig.tx_channel                = uartConfig->tx_channel;
+    dmaConfig.dma_mux_configure         = uartConfig->dma_mux_configure;
+    dmaConfig.dma_channel_mux_configure = uartConfig->dma_channel_mux_configure;
+
+    // Init uart dma
+    (void)HAL_UartDMAInit(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]),
+                          (hal_uart_dma_handle_t *)serialUartHandle->uartDmaHandle, &dmaConfig);
+
+#endif
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+
+    serialUartHandle->rx.rxEnable = uartConfig->enableRx;
+    (void)HAL_UartDMATransferInstallCallback(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]),
+                                             Serial_UartDmaCallback, serialUartHandle);
+
+#endif
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+    serialManagerStatus = Serial_UartDmaEnableReceiving(serialUartHandle);
+#endif
+
+    return serialManagerStatus;
+}
+
+serial_manager_status_t Serial_UartDmaDeinit(serial_handle_t serialHandle)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    (void)HAL_UartDMAAbortReceive(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+
+    (void)HAL_UartDeinit(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+    (void)HAL_UartDMADeinit(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+    serialUartHandle->tx.busy = 0U;
+    serialUartHandle->rx.busy = 0U;
+#endif
+
+    return kStatus_SerialManager_Success;
+}
+
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+
+serial_manager_status_t Serial_UartDmaWrite(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+    hal_uart_status_t uartstatus;
+#if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
+    hal_uart_transfer_t transfer;
+#endif
+
+    assert(serialHandle);
+    assert(buffer);
+    assert(length);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    if (0U != serialUartHandle->tx.busy)
+    {
+        return kStatus_SerialManager_Busy;
+    }
+    serialUartHandle->tx.busy = 1U;
+
+    serialUartHandle->tx.buffer = buffer;
+    serialUartHandle->tx.length = length;
+
+    uartstatus = (hal_uart_status_t)HAL_UartDMATransferSend(
+        ((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]), buffer, length);
+
+    assert(kStatus_HAL_UartSuccess == uartstatus);
+    (void)uartstatus;
+
+    return kStatus_SerialManager_Success;
+}
+
+#endif
+
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+serial_manager_status_t Serial_UartDmaCancelWrite(serial_handle_t serialHandle)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+    serial_manager_callback_message_t msg;
+    uint32_t primask;
+    uint8_t isBusy = 0U;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    primask                   = DisableGlobalIRQ();
+    isBusy                    = serialUartHandle->tx.busy;
+    serialUartHandle->tx.busy = 0U;
+    EnableGlobalIRQ(primask);
+
+    (void)HAL_UartDMAAbortSend(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+
+    if (0U != isBusy)
+    {
+        if ((NULL != serialUartHandle->tx.callback))
+        {
+            msg.buffer = serialUartHandle->tx.buffer;
+            msg.length = serialUartHandle->tx.length;
+            serialUartHandle->tx.callback(serialUartHandle->tx.callbackParam, &msg, kStatus_SerialManager_Canceled);
+        }
+    }
+    return kStatus_SerialManager_Success;
+}
+
+serial_manager_status_t Serial_UartDmaInstallTxCallback(serial_handle_t serialHandle,
+                                                        serial_manager_callback_t callback,
+                                                        void *callbackParam)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    serialUartHandle->tx.callback      = callback;
+    serialUartHandle->tx.callbackParam = callbackParam;
+
+    return kStatus_SerialManager_Success;
+}
+
+serial_manager_status_t Serial_UartDmaInstallRxCallback(serial_handle_t serialHandle,
+                                                        serial_manager_callback_t callback,
+                                                        void *callbackParam)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    serialUartHandle->rx.callback      = callback;
+    serialUartHandle->rx.callbackParam = callbackParam;
+
+    return kStatus_SerialManager_Success;
+}
+
+void Serial_UartDmaIsrFunction(serial_handle_t serialHandle)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    HAL_UartIsrFunction(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+}
+#endif
+
+serial_manager_status_t Serial_UartDmaEnterLowpower(serial_handle_t serialHandle)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+    hal_uart_status_t uartstatus;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    uartstatus = HAL_UartEnterLowpower(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+    assert(kStatus_HAL_UartSuccess == uartstatus);
+    (void)uartstatus;
+
+    return kStatus_SerialManager_Success;
+}
+
+serial_manager_status_t Serial_UartDmaExitLowpower(serial_handle_t serialHandle)
+{
+    serial_uart_dma_state_t *serialUartHandle;
+    serial_manager_status_t status = kStatus_SerialManager_Success;
+    hal_uart_status_t uartstatus;
+
+    assert(serialHandle);
+
+    serialUartHandle = (serial_uart_dma_state_t *)serialHandle;
+
+    uartstatus = HAL_UartExitLowpower(((hal_uart_handle_t)&serialUartHandle->usartHandleBuffer[0]));
+    assert(kStatus_HAL_UartSuccess == uartstatus);
+    (void)uartstatus;
+
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+    serial_manager_type_t type =
+        *(serial_manager_type_t *)(void *)((uint8_t *)serialHandle - SERIAL_MANAGER_BLOCK_OFFSET);
+    if (type != kSerialManager_Blocking)
+    {
+        status = Serial_UartDmaEnableReceiving(serialUartHandle);
+    }
+#endif
+
+    return status;
+}
+#endif
 #endif

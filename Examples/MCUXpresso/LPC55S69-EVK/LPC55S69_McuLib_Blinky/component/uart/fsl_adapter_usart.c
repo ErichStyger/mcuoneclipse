@@ -12,6 +12,11 @@
 
 #include "fsl_adapter_uart.h"
 
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+#include "fsl_component_timer_manager.h"
+#include "fsl_usart_dma.h"
+#endif /* HAL_UART_DMA_ENABLE */
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -21,6 +26,49 @@
 #define assert(n)
 #endif
 #endif
+
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+/*! @brief uart RX state structure. */
+typedef struct _hal_uart_dma_receive_state
+{
+    uint8_t *volatile buffer;
+    volatile uint32_t bufferLength;
+    volatile uint32_t bufferSofar;
+    volatile uint32_t timeout;
+    volatile bool receiveAll;
+} hal_uart_dma_receive_state_t;
+
+/*! @brief uart TX state structure. */
+typedef struct _hal_uart_dma_send_state
+{
+    uint8_t *volatile buffer;
+    volatile uint32_t bufferLength;
+    volatile uint32_t bufferSofar;
+    volatile uint32_t timeout;
+} hal_uart_dma_send_state_t;
+
+typedef struct _hal_uart_dma_state
+{
+    struct _hal_uart_dma_state *next;
+    uint8_t instance; /* USART instance */
+    hal_uart_dma_transfer_callback_t dma_callback;
+    void *dma_callback_param;
+    usart_dma_handle_t dmaHandle;
+    dma_handle_t txDmaHandle;
+    dma_handle_t rxDmaHandle;
+    hal_uart_dma_receive_state_t dma_rx;
+    hal_uart_dma_send_state_t dma_tx;
+} hal_uart_dma_state_t;
+
+typedef struct _uart_dma_list
+{
+    TIMER_MANAGER_HANDLE_DEFINE(timerManagerHandle);
+    hal_uart_dma_state_t *dma_list;
+    volatile int8_t activeCount;
+} hal_uart_dma_list_t;
+
+static hal_uart_dma_list_t s_dmaHandleList;
+#endif /* HAL_UART_DMA_ENABLE */
 
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
 /*! @brief uart RX state structure. */
@@ -52,6 +100,9 @@ typedef struct _hal_uart_state
     hal_uart_send_state_t tx;
 #endif
     uint8_t instance;
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+    hal_uart_dma_state_t *dmaHandle;
+#endif /* HAL_UART_DMA_ENABLE */
 } hal_uart_state_t;
 
 /*******************************************************************************
@@ -76,7 +127,8 @@ static const IRQn_Type s_UsartIRQ[] = USART_IRQS;
  * Code
  ******************************************************************************/
 
-#if (defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U))
+#if ((defined(HAL_UART_TRANSFER_MODE) && (HAL_UART_TRANSFER_MODE > 0U)) || \
+     (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U)))
 static hal_uart_status_t HAL_UartGetStatus(status_t status)
 {
     hal_uart_status_t uartStatus = kStatus_HAL_UartError;
@@ -217,11 +269,11 @@ static void HAL_UartInterruptHandle_Wapper(void *base, void *handle)
 
 #endif
 
-hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t *config)
+static hal_uart_status_t HAL_UartInitCommon(hal_uart_handle_t handle, const hal_uart_config_t *config)
 {
-    hal_uart_state_t *uartHandle;
     usart_config_t usartConfig;
     status_t status;
+
     assert(handle);
     assert(config);
     assert(config->instance < (sizeof(s_UsartAdapterBase) / sizeof(USART_Type *)));
@@ -230,6 +282,11 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t
 
     USART_GetDefaultConfig(&usartConfig);
     usartConfig.baudRate_Bps = config->baudRate_Bps;
+
+    if ((0U != config->enableRxRTS) || (0U != config->enableTxCTS))
+    {
+        usartConfig.enableHardwareFlowControl = true;
+    }
 
     if (kHAL_UartParityEven == config->parityMode)
     {
@@ -264,8 +321,26 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t
         return HAL_UartGetStatus(status);
     }
 
+    return kStatus_HAL_UartSuccess;
+}
+
+hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t *config)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_status_t status;
+
+    /* Init serial port */
+    status = HAL_UartInitCommon(handle, config);
+    if (kStatus_HAL_UartSuccess != status)
+    {
+        return status;
+    }
+
     uartHandle           = (hal_uart_state_t *)handle;
     uartHandle->instance = config->instance;
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+    uartHandle->dmaHandle = NULL;
+#endif /* HAL_UART_DMA_ENABLE */
 
 #if (defined(UART_ADAPTER_NON_BLOCKING_MODE) && (UART_ADAPTER_NON_BLOCKING_MODE > 0U))
 
@@ -641,3 +716,371 @@ void HAL_UartIsrFunction(hal_uart_handle_t handle)
 #endif
 
 #endif
+
+#if (defined(HAL_UART_DMA_ENABLE) && (HAL_UART_DMA_ENABLE > 0U))
+static void USART_DMACallbacks(USART_Type *base, usart_dma_handle_t *handle, status_t status, void *userData)
+{
+    hal_uart_dma_state_t *uartDmaHandle;
+    hal_uart_status_t uartStatus = HAL_UartGetStatus(status);
+    hal_dma_callback_msg_t msg;
+    assert(handle);
+
+    uartDmaHandle = (hal_uart_dma_state_t *)userData;
+
+    if (NULL != uartDmaHandle->dma_callback)
+    {
+        if (kStatus_HAL_UartTxIdle == uartStatus)
+        {
+            msg.status                   = kStatus_HAL_UartDmaTxIdle;
+            msg.data                     = uartDmaHandle->dma_tx.buffer;
+            msg.dataSize                 = uartDmaHandle->dma_tx.bufferLength;
+            uartDmaHandle->dma_tx.buffer = NULL;
+        }
+        else if (kStatus_HAL_UartRxIdle == uartStatus)
+        {
+            msg.status                   = kStatus_HAL_UartDmaRxIdle;
+            msg.data                     = uartDmaHandle->dma_rx.buffer;
+            msg.dataSize                 = uartDmaHandle->dma_rx.bufferLength;
+            uartDmaHandle->dma_rx.buffer = NULL;
+        }
+
+        uartDmaHandle->dma_callback(uartDmaHandle, &msg, uartDmaHandle->dma_callback_param);
+    }
+}
+
+static void TimeoutTimer_Callbcak(void *param)
+{
+    hal_uart_dma_list_t *uartDmaHandleList;
+    hal_uart_dma_state_t *uartDmaHandle;
+    hal_dma_callback_msg_t msg;
+    uint32_t newReceived = 0U;
+
+    uartDmaHandleList = &s_dmaHandleList;
+    uartDmaHandle     = uartDmaHandleList->dma_list;
+
+    while (NULL != uartDmaHandle)
+    {
+        if ((NULL != uartDmaHandle->dma_rx.buffer) && (false == uartDmaHandle->dma_rx.receiveAll))
+        {
+            /* HAL_UartDMAGetReceiveCount(uartDmaHandle, &msg.dataSize); */
+            USART_TransferGetReceiveCountDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle,
+                                             &msg.dataSize);
+            newReceived                       = msg.dataSize - uartDmaHandle->dma_rx.bufferSofar;
+            uartDmaHandle->dma_rx.bufferSofar = msg.dataSize;
+
+            /* 1, If it is in idle state. */
+            if ((0U == newReceived) && (0U < uartDmaHandle->dma_rx.bufferSofar))
+            {
+                uartDmaHandle->dma_rx.timeout++;
+                if (uartDmaHandle->dma_rx.timeout >= HAL_UART_DMA_IDLELINE_TIMEOUT)
+                {
+                    /* HAL_UartDMAAbortReceive(uartDmaHandle); */
+                    USART_TransferAbortReceiveDMA(s_UsartAdapterBase[uartDmaHandle->instance],
+                                                  &uartDmaHandle->dmaHandle);
+                    msg.data                     = uartDmaHandle->dma_rx.buffer;
+                    msg.status                   = kStatus_HAL_UartDmaIdleline;
+                    uartDmaHandle->dma_rx.buffer = NULL;
+                    uartDmaHandle->dma_callback(uartDmaHandle, &msg, uartDmaHandle->dma_callback_param);
+                }
+            }
+            /* 2, If got new data again. */
+            if ((0U < newReceived) && (0U < uartDmaHandle->dma_rx.bufferSofar))
+            {
+                uartDmaHandle->dma_rx.timeout = 0U;
+            }
+        }
+
+        uartDmaHandle = uartDmaHandle->next;
+    }
+}
+
+hal_uart_dma_status_t HAL_UartDMAInit(hal_uart_handle_t handle,
+                                      hal_uart_dma_handle_t dmaHandle,
+                                      hal_uart_dma_config_t *dmaConfig)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+
+    assert(handle);
+    assert(dmaHandle);
+
+    /* DMA init process. */
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = (hal_uart_dma_state_t *)dmaHandle;
+
+    uartHandle->dmaHandle = uartDmaHandle;
+
+    uartDmaHandle->instance = dmaConfig->uart_instance;
+
+    DMA_Type *dmaBases[] = DMA_BASE_PTRS;
+    DMA_EnableChannel(dmaBases[dmaConfig->dma_instance], dmaConfig->tx_channel);
+    DMA_EnableChannel(dmaBases[dmaConfig->dma_instance], dmaConfig->rx_channel);
+
+    DMA_CreateHandle(&uartDmaHandle->txDmaHandle, dmaBases[dmaConfig->dma_instance], dmaConfig->tx_channel);
+    DMA_CreateHandle(&uartDmaHandle->rxDmaHandle, dmaBases[dmaConfig->dma_instance], dmaConfig->rx_channel);
+
+    /* Timeout timer init. */
+    if (0U == s_dmaHandleList.activeCount)
+    {
+        s_dmaHandleList.dma_list = uartDmaHandle;
+        uartDmaHandle->next      = NULL;
+        s_dmaHandleList.activeCount++;
+
+        timer_status_t timerStatus;
+        timerStatus = TM_Open((timer_handle_t)s_dmaHandleList.timerManagerHandle);
+        assert(kStatus_TimerSuccess == timerStatus);
+
+        timerStatus =
+            TM_InstallCallback((timer_handle_t)s_dmaHandleList.timerManagerHandle, TimeoutTimer_Callbcak, NULL);
+        assert(kStatus_TimerSuccess == timerStatus);
+
+        (void)TM_Start((timer_handle_t)s_dmaHandleList.timerManagerHandle, (uint8_t)kTimerModeIntervalTimer, 1);
+
+        (void)timerStatus;
+    }
+    else
+    {
+        uartDmaHandle->next      = s_dmaHandleList.dma_list;
+        s_dmaHandleList.dma_list = uartDmaHandle;
+    }
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMADeinit(hal_uart_handle_t handle)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+    hal_uart_dma_state_t *prev;
+    hal_uart_dma_state_t *curr;
+
+    assert(handle);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    uartHandle->dmaHandle = NULL;
+
+    assert(uartDmaHandle);
+
+    /* Abort rx/tx */
+    /* Here we should not abort before create transfer handle. */
+    if (NULL != uartDmaHandle->dmaHandle.txDmaHandle)
+    {
+        USART_TransferAbortSendDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle);
+    }
+    if (NULL != uartDmaHandle->dmaHandle.rxDmaHandle)
+    {
+        USART_TransferAbortReceiveDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle);
+    }
+
+    /* Disable rx/tx channels */
+    /* Here we should not disable before create transfer handle. */
+    if (NULL != uartDmaHandle->dmaHandle.txDmaHandle)
+    {
+        DMA_DisableChannel(uartDmaHandle->txDmaHandle.base, uartDmaHandle->txDmaHandle.channel);
+    }
+    if (NULL != uartDmaHandle->dmaHandle.rxDmaHandle)
+    {
+        DMA_DisableChannel(uartDmaHandle->rxDmaHandle.base, uartDmaHandle->rxDmaHandle.channel);
+    }
+
+    /* Remove handle from list */
+    prev = NULL;
+    curr = s_dmaHandleList.dma_list;
+    while (curr != NULL)
+    {
+        if (curr == uartDmaHandle)
+        {
+            /* 1, if it is the first one */
+            if (prev == NULL)
+            {
+                s_dmaHandleList.dma_list = curr->next;
+            }
+            /* 2, if it is the last one */
+            else if (curr->next == NULL)
+            {
+                prev->next = NULL;
+            }
+            /* 3, if it is in the middle */
+            else
+            {
+                prev->next = curr->next;
+            }
+            break;
+        }
+
+        prev = curr;
+        curr = curr->next;
+    }
+
+    /* Reset all handle data. */
+    (void)memset(uartDmaHandle, 0, sizeof(hal_uart_dma_state_t));
+
+    s_dmaHandleList.activeCount = (s_dmaHandleList.activeCount > 0) ? (s_dmaHandleList.activeCount - 1) : 0;
+    if (0 == s_dmaHandleList.activeCount)
+    {
+        (void)TM_Close((timer_handle_t)s_dmaHandleList.timerManagerHandle);
+    }
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMATransferInstallCallback(hal_uart_handle_t handle,
+                                                         hal_uart_dma_transfer_callback_t callback,
+                                                         void *callbackParam)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+
+    assert(handle);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    uartDmaHandle->dma_callback       = callback;
+    uartDmaHandle->dma_callback_param = callbackParam;
+
+    USART_TransferCreateHandleDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle,
+                                  USART_DMACallbacks, uartDmaHandle, &uartDmaHandle->txDmaHandle,
+                                  &uartDmaHandle->rxDmaHandle);
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMATransferReceive(hal_uart_handle_t handle,
+                                                 uint8_t *data,
+                                                 size_t length,
+                                                 bool receiveAll)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+    usart_transfer_t xfer;
+
+    assert(handle);
+    assert(data);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    if (NULL == uartDmaHandle->dma_rx.buffer)
+    {
+        uartDmaHandle->dma_rx.buffer       = data;
+        uartDmaHandle->dma_rx.bufferLength = length;
+        uartDmaHandle->dma_rx.timeout      = 0U;
+        uartDmaHandle->dma_rx.receiveAll   = receiveAll;
+    }
+    else
+    {
+        /* Already in reading process. */
+        return kStatus_HAL_UartDmaRxBusy;
+    }
+
+    xfer.data     = data;
+    xfer.dataSize = length;
+
+    USART_TransferReceiveDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle, &xfer);
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMATransferSend(hal_uart_handle_t handle, uint8_t *data, size_t length)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+    usart_transfer_t xfer;
+
+    assert(handle);
+    assert(data);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    if (NULL == uartDmaHandle->dma_tx.buffer)
+    {
+        uartDmaHandle->dma_tx.buffer       = data;
+        uartDmaHandle->dma_tx.bufferLength = length;
+        uartDmaHandle->dma_tx.bufferSofar  = 0U;
+        uartDmaHandle->dma_tx.timeout      = 0U;
+    }
+    else
+    {
+        /* Already in writing process. */
+        return kStatus_HAL_UartDmaTxBusy;
+    }
+
+    xfer.data     = data;
+    xfer.dataSize = length;
+
+    USART_TransferSendDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle, &xfer);
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMAGetReceiveCount(hal_uart_handle_t handle, uint32_t *reCount)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+
+    assert(handle);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    if (kStatus_Success != USART_TransferGetReceiveCountDMA(s_UsartAdapterBase[uartDmaHandle->instance],
+                                                            &uartDmaHandle->dmaHandle, reCount))
+    {
+        return kStatus_HAL_UartDmaError;
+    }
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMAGetSendCount(hal_uart_handle_t handle, uint32_t *seCount)
+{
+    /* No get send count API */
+    return kStatus_HAL_UartDmaError;
+}
+
+hal_uart_dma_status_t HAL_UartDMAAbortReceive(hal_uart_handle_t handle)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+
+    assert(handle);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    USART_TransferAbortReceiveDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle);
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+
+hal_uart_dma_status_t HAL_UartDMAAbortSend(hal_uart_handle_t handle)
+{
+    hal_uart_state_t *uartHandle;
+    hal_uart_dma_state_t *uartDmaHandle;
+
+    assert(handle);
+
+    uartHandle    = (hal_uart_state_t *)handle;
+    uartDmaHandle = uartHandle->dmaHandle;
+
+    assert(uartDmaHandle);
+
+    USART_TransferAbortSendDMA(s_UsartAdapterBase[uartDmaHandle->instance], &uartDmaHandle->dmaHandle);
+
+    return kStatus_HAL_UartDmaSuccess;
+}
+#endif /* HAL_UART_DMA_ENABLE */
