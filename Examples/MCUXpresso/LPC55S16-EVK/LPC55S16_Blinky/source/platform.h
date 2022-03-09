@@ -22,6 +22,9 @@
 
 #define PL_CONFIG_USE_NVMC        (0) /* if flash non-volatile memory is used to store data */
 
+/*!
+ * \brief Module initialization
+ */
 void PL_Init(void);
 
 
