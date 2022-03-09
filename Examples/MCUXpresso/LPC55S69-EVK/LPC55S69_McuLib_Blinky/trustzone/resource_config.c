@@ -26,7 +26,7 @@ toolOptions:
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 functional_group:
-- called_from_default_init: 'true'
+- called_from_default_init: 'false'
 - id_prefix: ''
 - prefix_user_defined: 'true'
 - name: 'BOARD_InitTEE'
@@ -254,5 +254,4 @@ void BOARD_InitTEE()
  **********************************************************************************************************************/
 void BOARD_InitBootTEE()
 {
-    BOARD_InitTEE();
 }

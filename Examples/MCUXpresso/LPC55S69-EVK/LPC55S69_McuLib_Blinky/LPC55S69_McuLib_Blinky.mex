@@ -40,6 +40,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="SWD" description="Peripheral SWD is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="cm33_core0">
                         <data>true</data>
@@ -68,6 +73,7 @@
                         <pin_feature name="open_drain" value="disabled"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="SWD" signal="SWO" pin_num="21" pin_signal="PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1"/>
                </pins>
             </function>
          </functions_list>
@@ -287,7 +293,7 @@
                <option id="_legacy_source_names_" value="no"/>
             </tool_options>
          </tee_profile>
-         <functional_group name="BOARD_InitTEE" called_from_default_init="true" id_prefix="" prefix_user_defined="true">
+         <functional_group name="BOARD_InitTEE" called_from_default_init="false" id_prefix="" prefix_user_defined="true">
             <description></description>
             <options/>
             <ahb>
