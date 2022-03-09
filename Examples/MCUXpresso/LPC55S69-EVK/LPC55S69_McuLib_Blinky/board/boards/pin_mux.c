@@ -29,6 +29,7 @@ processor_version: 11.0.1
 void BOARD_InitBootPins(void)
 {
     BOARD_InitPins();
+    BOARD_InitI2cPins();
 }
 
 /* clang-format off */
@@ -100,6 +101,57 @@ void BOARD_InitPins(void)
                                          IOCON_PIO_OPENDRAIN_DI);
     /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
     IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitI2cPins:
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '88', peripheral: FLEXCOMM4, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_5/FC4_RXD_SDA_MOSI_DATA/CTIMER3_MAT0/SCT_GPI5/FC3_RTS_SCL_SSEL1/MCLK/SECURE_GPIO0_5}
+  - {pin_num: '90', peripheral: FLEXCOMM4, signal: RTS_SCL_SSEL1, pin_signal: PIO0_19/FC4_RTS_SCL_SSEL1/UTICK_CAP0/CTIMER0_MAT2/SCT0_OUT2/FC7_TXD_SCL_MISO_WS/PLU_IN4/SECURE_GPIO0_19}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitI2cPins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 (Core #0) */
+void BOARD_InitI2cPins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][19] = ((IOCON->PIO[0][19] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT019 (pin 90) is configured as FC4_RTS_SCL_SSEL1. */
+                         | IOCON_PIO_FUNC(PIO0_19_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_19_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][5] = ((IOCON->PIO[0][5] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT05 (pin 88) is configured as FC4_RXD_SDA_MOSI_DATA. */
+                        | IOCON_PIO_FUNC(PIO0_5_FUNC_ALT2)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_5_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF

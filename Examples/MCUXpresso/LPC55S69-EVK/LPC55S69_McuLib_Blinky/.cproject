@@ -312,10 +312,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.651754409.1107279924" name="/" resourcePath="McuLib/fonts">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1695047267" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.2073742477" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.814137859"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1550520227" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.523192842"/>
+							<tool id="com.crt.advproject.gas.exe.debug.144793226" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.993691357"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.884387801" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.967751306"/>
+							<tool id="com.crt.advproject.link.exe.debug.2139363606" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.538759573"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1910439688" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.218460647"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S69"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|minIni|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|minIni|LittlevGL|HD44780|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry excluding="boards" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board/boards"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
@@ -324,7 +334,6 @@
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="libs"/>
 						<entry excluding="semihost_hardfault.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="trustzone"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
 				</configuration>
