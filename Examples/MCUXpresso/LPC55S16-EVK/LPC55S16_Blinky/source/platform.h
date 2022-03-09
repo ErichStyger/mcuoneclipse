@@ -16,7 +16,7 @@
 #define PL_CONFIG_USE_SWO         (1) /* for J-Link: need to call SWO_SetSpeed()! */
 #define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger */
 
-#define PL_CONFIG_USE_I2C         (0) /* if I2C peripherals are used */
+#define PL_CONFIG_USE_I2C         (1) /* if I2C peripherals are used */
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_OLED        (1 && PL_CONFIG_USE_I2C)
 
