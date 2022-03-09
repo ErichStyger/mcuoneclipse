@@ -1,0 +1,88 @@
+<!-- This is a directory of XML files for a specific processor or a
+     a set. It contains "links" to other XML files based on lookup
+     criteria. The file is organized into Boards (target boards),
+     Chips (processor+ASIC chip definitions), and RTOSes.
+     The containers for each are per processor family. The processor
+     families are such as "ARM7", "Cortex-M", etc. Within are the
+     links per specific item.					-->
+<!ELEMENT directory (boards*,chips*,rtoses*)>
+  <!-- 1st is Boards. These are target boards. The name match is 
+       normally from the user specifying the board by name (at
+       install time or dynamically or via configuration). Board
+       lookup by mapped register value is only available for a class
+       of boards, since there is no standards.			-->
+  <!ELEMENT boards (board*)> <!ATTLIST boards
+		chipVendor	CDATA	#REQUIRED>
+    <!-- Board defines a board by name, the chip on it, and optional
+ 	 description. It also has the link to the XML file with
+	 the details. Note that the board XML file may be a shared
+	 file with more than one board in it, so the consumer must
+	 look for the matching board by name. 
+	 If the name has a "*" or "?" in it, those are wildcards
+	 to allow multiple matches.
+	 The chip attribute is used to search for the chip file
+	 (see "chips" below).					-->
+    <!ELEMENT board (EMPTY)> <!ATTLIST board
+		name		CDATA	#REQUIRED
+		xml_file	CDATA	#REQUIRED
+		chip		CDATA	#REQUIRED
+		description	CDATA	#IMPLIED>
+
+  <!-- Chips define processor chips (processor+ASIC). These include
+       peripherals, Flash programming information, memory layout,
+       and vendor information.
+       If the name has a "*" or "?" in it, those are wildcards
+       to allow multiple matches.				-->
+  <!ELEMENT chips (chip*)> <!ATTLIST chips
+		chipVendor	CDATA	#REQUIRED
+	        family		CDATA	#IMPLIED>
+    <!-- Chip defines a chip by name, optionally the exact processor 
+	 in it, and an optional description. It also has the link to 
+	 the XML file with the details. Note that the chip XML file 
+	 may be a shared file with more than one chip in it, so the 
+	 consumer must look for the matching chip by name. Note that
+	 default is only filled in for one chip, and that is what will
+	 be selected if nothing requested.
+	 If the name has a "*" or "?" in it, those are wildcards
+	 to allow multiple matches.
+	 The proc attribute may be used to ensure support for the
+	 specific processor in the family. 			-->
+    <!ELEMENT chip (EMPTY)> <!ATTLIST chip
+		name		CDATA	#REQUIRED
+		xml_file	CDATA	#REQUIRED
+		proc		CDATA	#IMPLIED
+		description	CDATA	#IMPLIED
+		default		(true|false) #IMPLIED>
+
+  <!-- Rtoses defines embedded operating systems (and kernels and
+       the like). RTOS is used loosely, so that even an application
+       may be represented this way. The rtos data model allows for
+       both intelligent structure viewing (converting fields into
+       meaningful data, linked list and array following) and optionally
+       agent interactions (live debug of a running system).
+       The RTOS list allows for finding a matching rtos by name
+       or symbol match.
+       If the name has a "*" or "?" in it, those are wildcards
+       to allow multiple matches.				-->
+  <!ELEMENT rtoses (rtos*)> <!ATTLIST rtoses
+		chipVendor	CDATA	#REQUIRED>
+    <!-- Rtos defines an rtos by name, optionally the chip it is
+	 for (e.g. BSP/HAL), optionally the board it is for (e.g.
+	 BSP/HAL), optionally a symbol match (to verify in the current
+	 application), and an optional description. It also has the 
+	 link to the XML file with the details. Note that the rtos
+	 XML file may be a shared file with more than one rtos in it, 
+	 so the consumer must look for the matching rtos by name. 
+	 If the name has a "*" or "?" in it, those are wildcards
+	 to allow multiple matches.
+	 The chip and board may have "*" or "?" for matching as well.
+	 The sym_match attribute allows matching automatically based
+	 on a symbol name in the current application (to load). -->
+    <!ELEMENT rtos (EMPTY)> <!ATTLIST rtos
+		name		CDATA	#REQUIRED
+		xml_file	CDATA	#REQUIRED
+		chip		CDATA	#REQUIRED
+		board		CDATA	#REQUIRED
+		sym_match	CDATA	#REQUIRED
+		description	CDATA	#IMPLIED>
+

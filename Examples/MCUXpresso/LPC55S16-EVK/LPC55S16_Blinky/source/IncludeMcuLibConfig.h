@@ -57,13 +57,13 @@ Instructions:
 #endif
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
 #define configTOTAL_HEAP_SIZE                (24*1024)
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- FatFS ---------------------------*/
-#define McuLib_CONFIG_USE_FAT_FS                      (1)
-#define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (1)
+#define McuLib_CONFIG_USE_FAT_FS                      (0)
+#define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (0)
 #define McuFatFS_CONFIG_CARD_DETECT_GPIO              GPIO
 #define McuFatFS_CONFIG_CARD_DETECT_PORT              0
 #define McuFatFS_CONFIG_CARD_DETECT_PIN               16U
@@ -126,14 +126,14 @@ Instructions:
   #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 I2CLIB_RecvBlockCustom
 #else
   #define SCL1_CONFIG_GPIO_NAME     GPIO
-  #define SCL1_CONFIG_PORT_NAME     1
-  #define SCL1_CONFIG_PIN_NUMBER    20u
+  #define SCL1_CONFIG_PORT_NAME     0
+  #define SCL1_CONFIG_PIN_NUMBER    14u
 
   #define SDA1_CONFIG_GPIO_NAME     GPIO
-  #define SDA1_CONFIG_PORT_NAME     1
-  #define SDA1_CONFIG_PIN_NUMBER    21u
+  #define SDA1_CONFIG_PORT_NAME     0
+  #define SDA1_CONFIG_PIN_NUMBER    13u
 #endif
-#if 0 /* type of OLED */
+#if 1 /* type of OLED */
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
 #else
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1306)

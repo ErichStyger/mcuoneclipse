@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE infoList
+  SYSTEM "crt_infolist.dtd">
+<infoList vendor="NXP">
+   <info name="LPC55S69" chip="LPC55S69">
+      <chip>
+         <name>LPC55S69</name>
+         <family>LPC55S6x</family>
+         <vendor>NXP</vendor>
+         <memory id="Flash"
+                 type="Flash"
+                 size="608"
+                 is_ro="true"
+                 can_program="true"/>
+         <memory id="RAM" type="RAM" size="304"/>
+         <memoryInstance id="PROGRAM_FLASH"
+                         derived_from="Flash"
+                         location="0x00000000"
+                         size="0x00098000"
+                         driver="LPC55xx.cfx"/>
+         <memoryInstance id="SRAM"
+                         derived_from="RAM"
+                         location="0x20000000"
+                         size="0x00040000"/>
+         <memoryInstance id="SRAMX"
+                         derived_from="RAM"
+                         location="0x04000000"
+                         size="0x00008000"/>
+         <memoryInstance id="USB_RAM"
+                         derived_from="RAM"
+                         location="0x40100000"
+                         size="0x00004000"/>
+         <memoryInstance id="SRAM4"
+                         derived_from="RAM"
+                         location="0x20040000"
+                         size="0x00004000"/>
+      </chip>
+      <processor>
+         <name gcc_name="cortex-m33">Cortex-M33</name>
+         <family>Cortex-M</family>
+      </processor>
+      <processor>
+         <name gcc_name="cortex-m33-nodsp">Cortex-M33 (No DSP)</name>
+         <family>Cortex-M</family>
+      </processor>
+   </info>
+</infoList>

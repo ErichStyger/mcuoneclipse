@@ -13,7 +13,6 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
-#include "McuFatFS.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
 #endif
@@ -23,7 +22,10 @@
 #if PL_CONFIG_USE_SWO
   #include "McuSWO.h"
 #endif
-#include "disk.h"
+#if PL_CONFIG_USE_SD_CARD || PL_CONFIG_USE_USB_MSD
+  #include "McuFatFS.h"
+  #include "disk.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {

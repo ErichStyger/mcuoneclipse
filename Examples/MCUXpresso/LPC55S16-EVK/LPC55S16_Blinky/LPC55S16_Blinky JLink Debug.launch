@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
-    <stringAttribute key="InstructionTraceInfo" value="eJytVF1PwjAUfTfxPzR9RzYUHAmTwJDEhBkCEx9N2S4w6VrSdn78e9utQ5cMNdE+bfece9p77m0Hw7eMohcQMuXMx+6FgxGwmCcp2/r4IZq2PDy8OT8bgMpArSegSEqlCUREbEFNgahcgEQheeZiVelolTBltYDJuY3CMZGA5joDmPLxhlAJuG2wyWNUYKMk0aj0cat72fN6Pc/t4c8EJXLLv7Nadf6103c7jfzbaHxy7/A7TFf9qk7CkSAxTHPGgDaX9apGIlt5ARewTLc7FfDswJmmIaPZWG0gZzze+/g+p7T8xkjrLGC7VFpGu9m4ul5zvFrJ97DT/QHfOH0P21Ztqr6bImqnt4RYl0kE0eeV6D7P1iB8fFVasswPBy4UJCjIDiFR8c72CQXvMYWA50wZehEzCcYyO3loQhQx/5XJaJayvXv8C8lbSOS+mMBqW6fc9o8q7r+odP5F5bJUaR+dtJM2F3yTUn11rYfSNuMpiBYztCI0h6Md7VP89pf2VsQTI1zcQ5X9arbtzWyY7fI49fekCNXfnA8AiW0vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
-    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink724324004"/>
+    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink260114996"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 724324004"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 260114996"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
     <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="2"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="SEGGER"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link LPCXpresso V2"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link EDU"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.nickname" value=""/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB"/>
     <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.base.address" value="0x0"/>
@@ -29,7 +27,7 @@
     <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
-    <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=724324004"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=260114996"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
@@ -38,7 +36,7 @@
     <stringAttribute key="com.nxp.mcuxpresso.segger.verify" value="-vd"/>
     <stringAttribute key="disconnect" value="Run"/>
     <stringAttribute key="launch.config.handler" value="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler"/>
-    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="3"/>
+    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="0"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
@@ -89,6 +87,6 @@
     </mapAttribute>
     <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;"/>
     <stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
-    <booleanAttribute key="semihost" value="false"/>
-    <booleanAttribute key="start.server" value="true"/>
+    <booleanAttribute key="semihost" value="true"/>
+    <stringAttribute key="start.server" value="true"/>
 </launchConfiguration>
