@@ -22,6 +22,14 @@ int main(void) {
   /* Init FSL debug console. */
 //  BOARD_InitDebugConsole();
 #endif
+  int cntr;
+  for(;;) {
+    cntr++;
+    __asm("nop");
+    if (cntr==0xfffff000) {
+      break;
+    }
+  }
   APP_Run();
   return 0 ;
 }

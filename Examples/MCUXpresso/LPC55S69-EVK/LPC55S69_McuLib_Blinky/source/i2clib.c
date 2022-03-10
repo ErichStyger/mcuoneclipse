@@ -82,20 +82,6 @@ static void I2CLIB_ReleaseBus(void) {
   McuGPIO_Config_t config;
   uint8_t i = 0;
 
-  /* muxing */
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  /* Muxing is done inside McuGPIO for Kinetis */
-#elif McuLib_CONFIG_CPU_IS_LPC  /*! \todo make it generic for LPC too */
-  /*
-   * Bit 3:0 FUNC
-   *   5 (0101): I2C
-   * Bit 5:4 MODE (resistor): 00 (inactive), 01 (pull-down), 10 (pull-up), 11 (repeater)
-   */
-  //IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] &= 0xFFF1; /* scl */
-  //IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] &= 0xFFF1; /* sda */
-//  BOARD_InitI2cPinsAsGPIO(); /* mux pins using Pins tool */
-#endif
-
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = false;
   config.isHighOnInit = true;

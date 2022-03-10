@@ -63,5 +63,4 @@ void PL_Init(void) {
   McuSSD1306_Init();
   MyGui_Init();
 #endif
-
 }

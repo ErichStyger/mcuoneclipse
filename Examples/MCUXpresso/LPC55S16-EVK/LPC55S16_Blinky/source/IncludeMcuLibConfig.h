@@ -102,7 +102,7 @@ Instructions:
 
 /* -----------------------------------------------------*/
 /* I2C and OLED */
-#define USE_HW_I2C           (1)  /* otherwise uses GPIO bit-banging */
+#define USE_HW_I2C           (0)  /* otherwise uses GPIO bit-banging */
 
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
