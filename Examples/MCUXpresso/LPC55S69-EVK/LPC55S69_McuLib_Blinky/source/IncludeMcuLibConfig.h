@@ -48,14 +48,17 @@
   #define SDA1_CONFIG_DO_PIN_MUXING (1)
   #define SCL1_CONFIG_DO_PIN_MUXING (1)
 
-  /* using SCL/SDA on the Mikro Bus connector */
+  /* using SCL/SDA on the Mikro Bus connector
+   * FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
+   * FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
+   *  */
   #define SCL1_CONFIG_GPIO_NAME     GPIO
-  #define SCL1_CONFIG_PORT_NAME     0
-  #define SCL1_CONFIG_PIN_NUMBER    19u
+  #define SCL1_CONFIG_PORT_NAME     1
+  #define SCL1_CONFIG_PIN_NUMBER    20u
 
   #define SDA1_CONFIG_GPIO_NAME     GPIO
-  #define SDA1_CONFIG_PORT_NAME     0
-  #define SDA1_CONFIG_PIN_NUMBER    5u
+  #define SDA1_CONFIG_PORT_NAME     1
+  #define SDA1_CONFIG_PIN_NUMBER    21u
 #endif
 /* -------------------------------------------------*/
 #if 1 /* type of OLED */
