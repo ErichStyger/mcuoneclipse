@@ -181,7 +181,7 @@ static void I2CLIB_ConfigurePins(void) {
                         * Digital input is enabled. */
                        | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  BOARD_InitI2cPins(); /* Mux GPIO pins using the Pins tool */ /* \TODO */
+  BOARD_InitI2cPins(); /* Mux pins for I2C functionality */ /* \TODO */
 #if 0
   #define IOCON_PIO_FUNC5 0x05u         /*!<@brief Selects pin function 5 */
 

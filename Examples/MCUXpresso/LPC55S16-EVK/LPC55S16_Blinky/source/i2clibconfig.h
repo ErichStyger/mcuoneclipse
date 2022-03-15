@@ -42,25 +42,25 @@
     #define I2C_MASTER_BASEADDR     I2C1  /* matching the used FLEXCOM1 */
     #define I2C_MASTER_CLK_FREQ     12000000
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
-  /* using SCL/SDA on the Mikro Bus connector
-   * FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
-   * FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
-   *  */
-  #define I2CLIB_SCL_GPIO         GPIO
-  #define I2CLIB_SCL_GPIO_PORT    1
-  #define I2CLIB_SCL_GPIO_PIN     20u
+    /* using SCL/SDA on the Mikro Bus connector
+     * FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
+     * FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
+     *  */
+    #define I2CLIB_SCL_GPIO         GPIO
+    #define I2CLIB_SCL_GPIO_PORT    1
+    #define I2CLIB_SCL_GPIO_PIN     20u
 
-  #define I2CLIB_SDA_GPIO         GPIO
-  #define I2CLIB_SDA_GPIO_PORT    1
-  #define I2CLIB_SDA_GPIO_PIN     21u
+    #define I2CLIB_SDA_GPIO         GPIO
+    #define I2CLIB_SDA_GPIO_PORT    1
+    #define I2CLIB_SDA_GPIO_PIN     21u
 
-  #define I2CLIB_CONFIG_SCL_GPIO_MUXING    kPORT_MuxAlt2
-  #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
+    #define I2CLIB_CONFIG_SCL_GPIO_MUXING    kPORT_MuxAlt2
+    #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
 
-  #define I2C_MASTER_BASEADDR     I2C4  /* matching the used FLEXCOM4 */
-  #define I2C_MASTER_CLK_FREQ     12000000
+    #define I2C_MASTER_BASEADDR     I2C4  /* matching the used FLEXCOM4 */
+    #define I2C_MASTER_CLK_FREQ     12000000
+  #endif /* LPC variants */
 
-  #endif
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #if PL_CONFIG_BOARD_ID==PL_CONFIG_BOARD_ID_TINYK22_SHIFTER_V1_0
     #define CONFIG_I2C_USE_PORT_B     (0) /* SCL PTB0, SDA PTB1 */

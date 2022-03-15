@@ -46,19 +46,20 @@
      * FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
      * FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
      *  */
-    #define I2CLIB_SCL_GPIO         GPIO
-    #define I2CLIB_SCL_GPIO_PORT    1
-    #define I2CLIB_SCL_GPIO_PIN     20u
+    #define I2CLIB_SCL_GPIO                 GPIO
+    #define I2CLIB_SCL_GPIO_PORT            1
+    #define I2CLIB_SCL_GPIO_PIN             20u
+    #define I2CLIB_SCL_IOCON_PIO_FUNC       PIO1_20_FUNC_ALT5
+    #define I2CLIB_SCL_IOCON_PIO_DIGIMODE   PIO1_20_DIGIMODE_DIGITAL
 
-    #define I2CLIB_SDA_GPIO         GPIO
-    #define I2CLIB_SDA_GPIO_PORT    1
-    #define I2CLIB_SDA_GPIO_PIN     21u
+    #define I2CLIB_SDA_GPIO                 GPIO
+    #define I2CLIB_SDA_GPIO_PORT            1
+    #define I2CLIB_SDA_GPIO_PIN             21u
+    #define I2CLIB_SDA_IOCON_PIO_FUNC       PIO1_21_FUNC_ALT5
+    #define I2CLIB_SDA_IOCON_PIO_DIGIMODE   PIO1_21_DIGIMODE_DIGITAL
 
-    #define I2CLIB_CONFIG_SCL_GPIO_MUXING    kPORT_MuxAlt2
-    #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
-
-    #define I2C_MASTER_BASEADDR     I2C4  /* matching the used FLEXCOM4 */
-    #define I2C_MASTER_CLK_FREQ     12000000
+    #define I2C_MASTER_BASEADDR             I2C4  /* matching the used FLEXCOM4 */
+    #define I2C_MASTER_CLK_FREQ             12000000
   #endif /* LPC variants */
 
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */

@@ -180,6 +180,35 @@ static void I2CLIB_ConfigurePins(void) {
                         * : Enable Digital mode.
                         * Digital input is enabled. */
                        | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+   /* Mux the pins for I2C */
+   CLOCK_EnableClock(kCLOCK_Iocon);
+
+   IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] = ((IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT120 (pin 4) is configured as FC4_TXD_SCL_MISO_WS. */
+                        | IOCON_PIO_FUNC(I2CLIB_SCL_IOCON_PIO_FUNC)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(I2CLIB_SCL_IOCON_PIO_DIGIMODE));
+
+   IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] = ((IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT121 (pin 30) is configured as FC4_RXD_SDA_MOSI_DATA. */
+                        | IOCON_PIO_FUNC(I2CLIB_SDA_IOCON_PIO_FUNC)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(I2CLIB_SDA_IOCON_PIO_DIGIMODE));
 #elif McuLib_CONFIG_CPU_IS_LPC
   BOARD_InitI2cPins(); /* Mux pins for I2C functionality */ /* \TODO */
 #if 0

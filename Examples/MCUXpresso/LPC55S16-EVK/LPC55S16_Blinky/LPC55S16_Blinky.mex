@@ -27,8 +27,8 @@
             <processor_version>11.0.1</processor_version>
             <pin_labels>
                <pin_label pin_num="6" pin_signal="PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7" label="J22/P0_7" identifier="test"/>
-               <pin_label pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13" label="I2C_SDA"/>
-               <pin_label pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14" label="I2C_SCL"/>
+               <pin_label pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13" label="I2C_SDA" identifier="b"/>
+               <pin_label pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14" label="I2C_SCL" identifier="a"/>
                <pin_label pin_num="22" pin_signal="PIO0_15/FC6_CTS_SDA_SSEL0/UTICK_CAP2/CT_INP16/SCT0_OUT2/SECURE_GPIO0_15/ADC0_2" label="I2C_SDA"/>
             </pin_labels>
          </pins_profile>
@@ -111,8 +111,16 @@
                   </dependency>
                </dependencies>
                <pins>
-                  <pin peripheral="FLEXCOMM1" signal="RTS_SCL_SSEL1" pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14"/>
-                  <pin peripheral="FLEXCOMM1" signal="CTS_SDA_SSEL0" pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13"/>
+                  <pin peripheral="FLEXCOMM1" signal="RTS_SCL_SSEL1" pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="FLEXCOMM1" signal="CTS_SDA_SSEL0" pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -358,18 +366,6 @@
          <dcdx_configurations/>
       </dcdx>
       <periphs name="Peripherals" version="11.0" enabled="true" update_project_code="true">
-         <dependencies>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcomm_i2c" description="FLEXCOMM I2C Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
-               <feature name="enabled" evaluation="equal">
-                  <data type="Boolean">true</data>
-               </feature>
-            </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexcomm_i2c" description="Unsupported version of the FLEXCOMM I2C Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. Project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="equivalent">
-                  <data type="Version">2.3.0</data>
-               </feature>
-            </dependency>
-         </dependencies>
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
             <file path="board/peripherals.h" update_enabled="true"/>
@@ -381,23 +377,7 @@
             <functional_group name="BOARD_InitPeripherals" uuid="ac123cf9-61ab-4dfc-a705-940cdd4a1c85" called_from_default_init="true" id_prefix="" core="cm33_core0">
                <description></description>
                <options/>
-               <dependencies>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="FLEXCOMM1.i2c_scl" description="Signal I2C serial clock of the peripheral FLEXCOMM1 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="FLEXCOMM1.i2c_sda" description="Signal I2C serial data of the peripheral FLEXCOMM1 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="routed" evaluation="">
-                        <data type="Boolean">true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="ClockOutput" resourceId="FXCOM1_clock" description="FXCOM1 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
-                     <feature name="frequency" evaluation="greaterThan">
-                        <data type="Frequency" unit="Hz">0</data>
-                     </feature>
-                  </dependency>
-               </dependencies>
+               <dependencies/>
                <instances>
                   <instance name="NVIC" uuid="cd55b09f-e03d-4994-af67-cab1323f1ee2" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
@@ -405,7 +385,7 @@
                         <array name="interrupts"/>
                      </config_set>
                   </instance>
-                  <instance name="FLEXCOMM1" uuid="d283a74e-69e8-40e0-882e-c150a2a43cd5" type="flexcomm_i2c" type_id="flexcomm_i2c_c8597948f61bd571ab263ea4330b9dd6" mode="I2C_Polling" peripheral="FLEXCOMM1" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="FLEXCOMM1" uuid="d283a74e-69e8-40e0-882e-c150a2a43cd5" type="flexcomm_i2c" type_id="flexcomm_i2c_c8597948f61bd571ab263ea4330b9dd6" mode="I2C_Polling" peripheral="FLEXCOMM1" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="fsl_i2c">
                         <setting name="i2c_mode" value="kI2C_Master"/>
                         <setting name="clockSource" value="FXCOMFunctionClock"/>
