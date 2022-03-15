@@ -12,11 +12,12 @@
 #include "fsl_i2c.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  #include "fsl_port.h"
-#elif McuLib_CONFIG_CPU_IS_LPC
+#if McuLib_CONFIG_CPU_IS_LPC
   #include "pin_mux.h"
   #include "fsl_iocon.h"
+#endif
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  #include "fsl_swm.h"
 #endif
 
 static uint8_t i2cSlaveDeviceAddr;
@@ -127,140 +128,29 @@ static void I2CLIB_ReleaseBus(void) {
 }
 
 /* mux as I2C pins */
-static void I2CLIB_ConfigurePins(void) {
-#if McuLib_CONFIG_CPU_IS_KINETIS
-  /* clock enable has to be done outside (e.g. in Pins tool or in platform.c) */
-  /* I2C SCL Pin */
-  PORT_SetPinMux(I2CLIB_SCL_GPIO_PORT, I2CLIB_SCL_GPIO_PIN, I2CLIB_CONFIG_SCL_GPIO_MUXING);
-  I2CLIB_SCL_GPIO_PORT->PCR[I2CLIB_SCL_GPIO_PIN] = ((I2CLIB_SCL_GPIO_PORT->PCR[I2CLIB_SCL_GPIO_PIN] &
-                    /* Mask bits to zero which are setting */
-                    (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
-                   /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
-                   | (uint32_t)(PORT_PCR_PE_MASK)
-                   /* Open Drain Enable: Open drain output is enabled on the corresponding pin, if the pin is
-                    * configured as a digital output. */
-                   | PORT_PCR_ODE(kPORT_OpenDrainEnable));
-
-  /* I2C SDA Pin */
-  PORT_SetPinMux(I2CLIB_SDA_GPIO_PORT, I2CLIB_SDA_GPIO_PIN, I2CLIB_CONFIG_SDA_GPIO_MUXING);
-  I2CLIB_SDA_GPIO_PORT->PCR[I2CLIB_SDA_GPIO_PIN] = ((I2CLIB_SDA_GPIO_PORT->PCR[I2CLIB_SDA_GPIO_PIN] &
-                    /* Mask bits to zero which are setting */
-                    (~(PORT_PCR_PE_MASK | PORT_PCR_ODE_MASK | PORT_PCR_ISF_MASK)))
-                   /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
-                   | (uint32_t)(PORT_PCR_PE_MASK)
-                   /* Open Drain Enable: Open drain output is enabled on the corresponding pin, if the pin is
-                    * configured as a digital output. */
-                   | PORT_PCR_ODE(kPORT_OpenDrainEnable));
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
-  /* Enables the clock for the I/O controller.: Enable Clock. */
-  CLOCK_EnableClock(kCLOCK_Iocon);
-
-  IOCON->PIO[0][13] = ((IOCON->PIO[0][13] &
-                        /* Mask bits to zero which are setting */
-                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                       /* Selects pin function.
-                        * : PORT013 (pin 71) is configured as FC1_CTS_SDA_SSEL0. */
-                       | IOCON_PIO_FUNC(PIO0_13_FUNC_ALT1)
-
-                       /* Select Digital mode.
-                        * : Enable Digital mode.
-                        * Digital input is enabled. */
-                       | IOCON_PIO_DIGIMODE(PIO0_13_DIGIMODE_DIGITAL));
-
-  IOCON->PIO[0][14] = ((IOCON->PIO[0][14] &
-                        /* Mask bits to zero which are setting */
-                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                       /* Selects pin function.
-                        * : PORT014 (pin 72) is configured as FC1_RTS_SCL_SSEL1. */
-                       | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT1)
-
-                       /* Select Digital mode.
-                        * : Enable Digital mode.
-                        * Digital input is enabled. */
-                       | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
-   /* Mux the pins for I2C */
-   CLOCK_EnableClock(kCLOCK_Iocon);
-
-   IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] = ((IOCON->PIO[I2CLIB_SCL_GPIO_PORT][I2CLIB_SCL_GPIO_PIN] &
-                         /* Mask bits to zero which are setting */
-                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                        /* Selects pin function.
-                         * : PORT120 (pin 4) is configured as FC4_TXD_SCL_MISO_WS. */
-                        | IOCON_PIO_FUNC(I2CLIB_SCL_IOCON_PIO_FUNC)
-
-                        /* Select Digital mode.
-                         * : Enable Digital mode.
-                         * Digital input is enabled. */
-                        | IOCON_PIO_DIGIMODE(I2CLIB_SCL_IOCON_PIO_DIGIMODE));
-
-   IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] = ((IOCON->PIO[I2CLIB_SDA_GPIO_PORT][I2CLIB_SDA_GPIO_PIN] &
-                         /* Mask bits to zero which are setting */
-                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                        /* Selects pin function.
-                         * : PORT121 (pin 30) is configured as FC4_RXD_SDA_MOSI_DATA. */
-                        | IOCON_PIO_FUNC(I2CLIB_SDA_IOCON_PIO_FUNC)
-
-                        /* Select Digital mode.
-                         * : Enable Digital mode.
-                         * Digital input is enabled. */
-                        | IOCON_PIO_DIGIMODE(I2CLIB_SDA_IOCON_PIO_DIGIMODE));
-#elif McuLib_CONFIG_CPU_IS_LPC
-  BOARD_InitI2cPins(); /* Mux pins for I2C functionality */ /* \TODO */
-#if 0
-  #define IOCON_PIO_FUNC5 0x05u         /*!<@brief Selects pin function 5 */
-
-  const uint32_t port1_pin20_config = (/* Pin is configured as FC4_TXD_SCL_MISO_WS */
-                                       IOCON_PIO_FUNC5 |
-                                       /* No addition pin function */
-                                       IOCON_PIO_MODE_INACT |
-                                       /* Standard mode, output slew rate control is enabled */
-                                       IOCON_PIO_SLEW_STANDARD |
-                                       /* Input function is not inverted */
-                                       IOCON_PIO_INV_DI |
-                                       /* Enables digital function */
-                                       IOCON_PIO_DIGITAL_EN |
-                                       /* Open drain is disabled */
-                                       IOCON_PIO_OPENDRAIN_DI);
-  /* PORT1 PIN20 (coords: 4) is configured as FC4_TXD_SCL_MISO_WS */
-  IOCON_PinMuxSet(IOCON, 1U, 20U, port1_pin20_config);
-
-  const uint32_t port1_pin21_config = (/* Pin is configured as FC4_RXD_SDA_MOSI_DATA */
-                                       IOCON_PIO_FUNC5 |
-                                       /* No addition pin function */
-                                       IOCON_PIO_MODE_INACT |
-                                       /* Standard mode, output slew rate control is enabled */
-                                       IOCON_PIO_SLEW_STANDARD |
-                                       /* Input function is not inverted */
-                                       IOCON_PIO_INV_DI |
-                                       /* Enables digital function */
-                                       IOCON_PIO_DIGITAL_EN |
-                                       /* Open drain is disabled */
-                                       IOCON_PIO_OPENDRAIN_DI);
-  /* PORT1 PIN21 (coords: 30) is configured as FC4_RXD_SDA_MOSI_DATA */
-  IOCON_PinMuxSet(IOCON, 1U, 21U, port1_pin21_config);
-#endif
+static void I2CLIB_ConfigureI2cPins(void) {
+#if    McuLib_CONFIG_CPU_IS_KINETIS \
+    || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16 \
+    || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69 \
+    || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  I2CLIB_CONFIG_MUX_I2C_PINS();
+#else
+  #error "unknown configuration and MCU"
 #endif
 }
 
 void I2CLIB_Init(void) {
   I2CLIB_ReleaseBus();
-#if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
-  /* attach 12 MHz clock to FLEXCOMM4 (I2C master) */
-  CLOCK_AttachClk(kFRO12M_to_FLEXCOMM4);
-#elif McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
-  /* attach 12 MHz clock to FLEXCOMM1 (I2C master) */
-  CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1);
-#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
-  /* Select the main clock as source clock of I2C0. */
-  CLOCK_Select(kI2C0_Clk_From_MainClk);
+#if McuLib_CONFIG_CPU_IS_KINETIS \
+     || McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16 \
+     || McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69 \
+     || McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+  I2CLIB_CONFIG_CLOCK_SELECT();
+#else
+  #error "unknown configuration and MCU"
 #endif
 
-  I2CLIB_ConfigurePins();
+  I2CLIB_ConfigureI2cPins();
 
   i2c_master_config_t masterConfig;
   uint32_t sourceClock;
