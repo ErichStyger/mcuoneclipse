@@ -25,7 +25,8 @@
     #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
 
     #define I2C_MASTER_BASEADDR     I2C0
-    #define I2C_MASTER_CLK_FREQ     12000000
+    #define I2C_MASTER_CLK_FREQ     12000000 /* using kI2C0_Clk_From_MainClk */
+
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
     #define I2CLIB_SCL_GPIO         GPIO
     #define I2CLIB_SCL_GPIO_PORT    0
@@ -38,9 +39,27 @@
     #define I2CLIB_CONFIG_SCL_GPIO_MUXING    kPORT_MuxAlt2
     #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
 
-    #define I2C_MASTER_BASEADDR     I2C0
+    #define I2C_MASTER_BASEADDR     I2C1  /* matching the used FLEXCOM1 */
     #define I2C_MASTER_CLK_FREQ     12000000
-  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S59
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  /* using SCL/SDA on the Mikro Bus connector
+   * FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
+   * FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
+   *  */
+  #define I2CLIB_SCL_GPIO         GPIO
+  #define I2CLIB_SCL_GPIO_PORT    1
+  #define I2CLIB_SCL_GPIO_PIN     20u
+
+  #define I2CLIB_SDA_GPIO         GPIO
+  #define I2CLIB_SDA_GPIO_PORT    1
+  #define I2CLIB_SDA_GPIO_PIN     21u
+
+  #define I2CLIB_CONFIG_SCL_GPIO_MUXING    kPORT_MuxAlt2
+  #define I2CLIB_CONFIG_SDA_GPIO_MUXING    kPORT_MuxAlt2
+
+  #define I2C_MASTER_BASEADDR     I2C4  /* matching the used FLEXCOM4 */
+  #define I2C_MASTER_CLK_FREQ     12000000
+
   #endif
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   #if PL_CONFIG_BOARD_ID==PL_CONFIG_BOARD_ID_TINYK22_SHIFTER_V1_0
@@ -101,9 +120,9 @@
   #define I2C_MASTER_CLK_FREQ     CLOCK_GetFreq(I2C_MASTER_CLK_SRC)
 #endif
 
-#define I2C_BAUDRATE            400000U
+#define I2C_BAUDRATE            400000U /* the desired I2C SCL clock frequency */
 
-#define I2C_ADD_DELAY     (1)  /* needed for FXOS sensor? As well for RTC: otherwise the address is not on the bus? */
-#define I2C_ADD_DELAY_US  (10)
+#define I2CLIB_ADD_DELAY     (1)    /* needed for FXOS sensor? As well for RTC: otherwise the address is not on the bus? */
+#define I2CLIB_ADD_DELAY_US  (10)   /* added delay in microseconds */
 
 #endif /* I2CLIBCONFIG_H_ */

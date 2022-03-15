@@ -100,11 +100,14 @@ name: BOARD_BootClockFROHF96M
 called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
-- {id: System_clock.outFreq, value: 96 MHz}
-- {id: TRACE_clock.outFreq, value: 96 MHz}
+- {id: FXCOM0_clock.outFreq, value: 12 MHz}
+- {id: FXCOM1_clock.outFreq, value: 12 MHz}
+- {id: System_clock.outFreq, value: 12 MHz}
+- {id: TRACE_clock.outFreq, value: 12 MHz}
 settings:
 - {id: ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG, value: Enable}
-- {id: SYSCON.MAINCLKSELA.sel, value: ANACTRL.fro_hf_clk}
+- {id: SYSCON.FCCLKSEL0.sel, value: ANACTRL.fro_12m_clk}
+- {id: SYSCON.FCCLKSEL1.sel, value: SYSCON.MAINCLKSELB}
 - {id: SYSCON.TRACECLKDIV.scale, value: '1', locked: true}
 - {id: SYSCON.TRACECLKSEL.sel, value: SYSCON.TRACECLKDIV}
 - {id: TRACECLKDIV_HALT, value: Enable}
@@ -130,16 +133,28 @@ void BOARD_BootClockFROHF96M(void)
 
     CLOCK_SetupFROClocking(96000000U);                   /* Enable FRO HF(96MHz) output */
 
-    POWER_SetVoltageForFreq(96000000U);                  /*!< Set voltage for the one of the fastest clock outputs: System clock output */
-    CLOCK_SetFLASHAccessCyclesForFreq(96000000U);          /*!< Set FLASH wait states for core */
+    POWER_SetVoltageForFreq(12000000U);                  /*!< Set voltage for the one of the fastest clock outputs: System clock output */
+    CLOCK_SetFLASHAccessCyclesForFreq(12000000U);          /*!< Set FLASH wait states for core */
 
     /*!< Set up dividers */
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
     CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);               /*!< Reset TRACECLKDIV divider counter and halt it */
     CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);         /*!< Set TRACECLKDIV divider to value 1 */
+    #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg0, 0U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #else
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg0, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #endif
+    #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg1, 0U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #else
+      CLOCK_SetClkDiv(kCLOCK_DivFlexFrg1, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
+    #endif
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
-    CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO_HF */
+    CLOCK_AttachClk(kFRO12M_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO12M */
+    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0);                 /*!< Switch FLEXCOMM0 to FRO12M */
+    CLOCK_AttachClk(kMAIN_CLK_to_FLEXCOMM1);                 /*!< Switch FLEXCOMM1 to MAIN_CLK */
     CLOCK_AttachClk(kTRACE_DIV_to_TRACE);                 /*!< Switch TRACE to TRACE_DIV */
 
     /*!< Set SystemCoreClock variable. */

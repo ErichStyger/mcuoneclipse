@@ -70,11 +70,49 @@ static void NVIC_init(void) {
 } */
 
 /***********************************************************************************************************************
+ * FLEXCOMM1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FLEXCOMM1'
+- type: 'flexcomm_i2c'
+- mode: 'I2C_Polling'
+- custom_name_enabled: 'false'
+- type_id: 'flexcomm_i2c_c8597948f61bd571ab263ea4330b9dd6'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'FLEXCOMM1'
+- config_sets:
+  - fsl_i2c:
+    - i2c_mode: 'kI2C_Master'
+    - clockSource: 'FXCOMFunctionClock'
+    - clockSourceFreq: 'BOARD_BootClockFROHF96M'
+    - i2c_master_config:
+      - enableMaster: 'true'
+      - baudRate_Bps: '100000'
+      - enableTimeout: 'false'
+      - timeout_Ms: '35'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const i2c_master_config_t FLEXCOMM1_config = {
+  .enableMaster = true,
+  .baudRate_Bps = 100000UL,
+  .enableTimeout = false,
+  .timeout_Ms = 35U
+};
+
+static void FLEXCOMM1_init(void) {
+  /* Initialization function */
+  I2C_MasterInit(FLEXCOMM1_PERIPHERAL, &FLEXCOMM1_config, FLEXCOMM1_CLOCK_SOURCE);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
+  FLEXCOMM1_init();
 }
 
 /***********************************************************************************************************************

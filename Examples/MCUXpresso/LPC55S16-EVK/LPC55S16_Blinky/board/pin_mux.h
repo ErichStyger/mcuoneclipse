@@ -91,16 +91,16 @@ void BOARD_InitPins(void); /* Function assigned for the Cortex-M33 */
 
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_13_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_13_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO0_14_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 1. */
 #define PIO0_14_FUNC_ALT1 0x01u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_15_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 1. */
-#define PIO0_15_FUNC_ALT1 0x01u
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
