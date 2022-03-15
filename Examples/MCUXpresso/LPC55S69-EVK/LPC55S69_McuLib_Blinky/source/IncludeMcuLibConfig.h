@@ -26,7 +26,7 @@
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
 /* ------------------- I2C ---------------------------*/
-#define USE_HW_I2C           (0)  /* otherwise uses GPIO bit-banging */
+#define USE_HW_I2C           (1)  /* otherwise uses GPIO bit-banging */
 
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
@@ -34,7 +34,7 @@
 #define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 #if USE_HW_I2C
-  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE    "i2clib.h"
+  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "i2clib.h"
   #define McuGenericI2C_CONFIG_RECV_BLOCK                        I2CLIB_RecvBlock
   #define McuGenericI2C_CONFIG_SEND_BLOCK                        I2CLIB_SendBlock
   #if McuGenericI2C_CONFIG_SUPPORT_STOP_NO_START

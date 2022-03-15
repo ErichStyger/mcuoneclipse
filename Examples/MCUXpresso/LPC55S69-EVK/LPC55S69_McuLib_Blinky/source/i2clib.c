@@ -33,8 +33,8 @@ uint8_t I2CLIB_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
-#if I2C_ADD_DELAY
-  McuWait_Waitus(I2C_ADD_DELAY_US);
+#if I2CLIB_ADD_DELAY
+  McuWait_Waitus(I2CLIB_ADD_DELAY_US);
 #endif
   status = I2C_MasterWriteBlocking(I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferNoStopFlag);
   if (status!=kStatus_Success) {
@@ -51,8 +51,8 @@ uint8_t I2CLIB_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
-#if I2C_ADD_DELAY
-  McuWait_Waitus(I2C_ADD_DELAY_US);
+#if I2CLIB_ADD_DELAY
+  McuWait_Waitus(I2CLIB_ADD_DELAY_US);
 #endif
   status = I2C_MasterReadBlocking(I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferDefaultFlag);
   if (status!=kStatus_Success) {
@@ -151,8 +151,37 @@ static void I2CLIB_ConfigurePins(void) {
                    /* Open Drain Enable: Open drain output is enabled on the corresponding pin, if the pin is
                     * configured as a digital output. */
                    | PORT_PCR_ODE(kPORT_OpenDrainEnable));
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  /* Enables the clock for the I/O controller.: Enable Clock. */
+  CLOCK_EnableClock(kCLOCK_Iocon);
+
+  IOCON->PIO[0][13] = ((IOCON->PIO[0][13] &
+                        /* Mask bits to zero which are setting */
+                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                       /* Selects pin function.
+                        * : PORT013 (pin 71) is configured as FC1_CTS_SDA_SSEL0. */
+                       | IOCON_PIO_FUNC(PIO0_13_FUNC_ALT1)
+
+                       /* Select Digital mode.
+                        * : Enable Digital mode.
+                        * Digital input is enabled. */
+                       | IOCON_PIO_DIGIMODE(PIO0_13_DIGIMODE_DIGITAL));
+
+  IOCON->PIO[0][14] = ((IOCON->PIO[0][14] &
+                        /* Mask bits to zero which are setting */
+                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                       /* Selects pin function.
+                        * : PORT014 (pin 72) is configured as FC1_RTS_SCL_SSEL1. */
+                       | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT1)
+
+                       /* Select Digital mode.
+                        * : Enable Digital mode.
+                        * Digital input is enabled. */
+                       | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
 #elif McuLib_CONFIG_CPU_IS_LPC
-  BOARD_InitI2cPins(); /* Mux GPIO pins using the Pins tool */ /* \TODO */
+  BOARD_InitI2cPins(); /* Mux pins for I2C functionality */ /* \TODO */
 #if 0
   #define IOCON_PIO_FUNC5 0x05u         /*!<@brief Selects pin function 5 */
 
@@ -194,6 +223,9 @@ void I2CLIB_Init(void) {
 #if McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
   /* attach 12 MHz clock to FLEXCOMM4 (I2C master) */
   CLOCK_AttachClk(kFRO12M_to_FLEXCOMM4);
+#elif McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  /* attach 12 MHz clock to FLEXCOMM1 (I2C master) */
+  CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1);
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   /* Select the main clock as source clock of I2C0. */
   CLOCK_Select(kI2C0_Clk_From_MainClk);
