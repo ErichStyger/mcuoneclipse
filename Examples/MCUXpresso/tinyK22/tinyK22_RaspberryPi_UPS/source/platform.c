@@ -35,7 +35,7 @@
 #include "McuButton.h"
 #include "McuDebounce.h"
 #include "McuI2CSpy.h"
-#include "i2clib.h"
+#include "McuI2cLib.h"
 #if PL_CONFIG_USE_USB_CDC
   #include "virtual_com.h"
 #endif
@@ -60,7 +60,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   #if PL_CONFIG_USE_HW_I2C
-  I2CLIB_Init();
+  McuI2cLib_Init();
   #else
   McuGenericSWI2C_Init();
   #endif
