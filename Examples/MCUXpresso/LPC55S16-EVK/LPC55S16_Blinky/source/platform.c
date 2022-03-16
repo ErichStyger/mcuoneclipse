@@ -32,7 +32,7 @@
   #include "McuSystemView.h"
 #endif
 #if PL_CONFIG_USE_I2C
-  #include "i2clib.h"
+  #include "McuI2cLib.h"
   #include "McuGenericI2C.h"
 #endif
 #if PL_CONFIG_USE_OLED
@@ -80,7 +80,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   #if PL_CONFIG_USE_HW_I2C
-  I2CLIB_Init();
+  McuI2cLib_Init();
   #else
   //CLOCK_EnableClock(kCLOCK_PortA);  /* need PORTA for I2C Bitbanging */
   McuGenericSWI2C_Init();
