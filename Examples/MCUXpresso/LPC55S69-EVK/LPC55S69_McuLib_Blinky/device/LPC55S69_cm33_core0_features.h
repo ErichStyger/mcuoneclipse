@@ -1,13 +1,13 @@
 /*
 ** ###################################################################
 **     Version:             rev. 1.1, 2019-05-16
-**     Build:               b200707
+**     Build:               b211015
 **
 **     Abstract:
 **         Chip specific module features.
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2020 NXP
+**     Copyright 2016-2021 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -138,6 +138,8 @@
 #define FSL_FEATURE_LPADC_HAS_CFG_CALOFS (0)
 /* @brief Has offset trim (register OFSTRIM). */
 #define FSL_FEATURE_LPADC_HAS_OFSTRIM (1)
+/* @brief Has Trigger status register. */
+#define FSL_FEATURE_LPADC_HAS_TSTAT (1)
 /* @brief Has internal temperature sensor. */
 #define FSL_FEATURE_LPADC_HAS_INTERNAL_TEMP_SENSOR (1)
 /* @brief Temperature sensor parameter A (slope). */
@@ -149,14 +151,27 @@
 /* @brief the buffer size of temperature sensor. */
 #define FSL_FEATURE_LPADC_TEMP_SENS_BUFFER_SIZE (4U)
 
+/* ANALOGCTRL module features */
+
+/* @brief Has PLL_USB_OUT_BIT_FIELD bitfile in XO32M_CTRL reigster. */
+#define FSL_FEATURE_ANACTRL_HAS_NO_ENABLE_PLL_USB_OUT_BIT_FIELD (1)
+/* @brief Has XO32M_ADC_CLK_MODE bitfile in DUMMY_CTRL reigster. */
+#define FSL_FEATURE_ANACTRL_HAS_XO32M_ADC_CLK_MODE_BIF_FIELD (0)
+/* @brief Has auxiliary bias(register AUX_BIAS). */
+#define FSL_FEATURE_ANACTRL_HAS_AUX_BIAS_REG (1)
+
 /* CASPER module features */
 
 /* @brief Base address of the CASPER dedicated RAM */
 #define FSL_FEATURE_CASPER_RAM_BASE_ADDRESS (0x04000000)
-/* @brief Interleaving of the CASPER dedicated RAM */
+/* @brief SW interleaving of the CASPER dedicated RAM */
 #define FSL_FEATURE_CASPER_RAM_IS_INTERLEAVED (1)
 /* @brief CASPER dedicated RAM offset */
 #define FSL_FEATURE_CASPER_RAM_OFFSET (0xE)
+
+/* CTIMER module features */
+
+/* No feature definitions */
 
 /* DMA module features */
 
@@ -170,71 +185,71 @@
 /* FLEXCOMM module features */
 
 /* @brief FLEXCOMM0 USART INDEX 0 */
-#define FSL_FEATURE_FLEXCOMM0_USART_INDEX (0)
+#define FSL_FEATURE_FLEXCOMM0_USART_INDEX  (0)
 /* @brief FLEXCOMM0 SPI INDEX 0 */
-#define FSL_FEATURE_FLEXCOMM0_SPI_INDEX (0)
+#define FSL_FEATURE_FLEXCOMM0_SPI_INDEX  (0)
 /* @brief FLEXCOMM0 I2C INDEX 0 */
-#define FSL_FEATURE_FLEXCOMM0_I2C_INDEX (0)
+#define FSL_FEATURE_FLEXCOMM0_I2C_INDEX  (0)
 /* @brief FLEXCOMM0 I2S INDEX 0 */
-#define FSL_FEATURE_FLEXCOMM0_I2S_INDEX (0)
+#define FSL_FEATURE_FLEXCOMM0_I2S_INDEX  (0)
 /* @brief FLEXCOMM1 USART INDEX 1 */
-#define FSL_FEATURE_FLEXCOMM1_USART_INDEX (1)
+#define FSL_FEATURE_FLEXCOMM1_USART_INDEX  (1)
 /* @brief FLEXCOMM1 SPI INDEX 1 */
-#define FSL_FEATURE_FLEXCOMM1_SPI_INDEX (1)
+#define FSL_FEATURE_FLEXCOMM1_SPI_INDEX  (1)
 /* @brief FLEXCOMM1 I2C INDEX 1 */
-#define FSL_FEATURE_FLEXCOMM1_I2C_INDEX (1)
+#define FSL_FEATURE_FLEXCOMM1_I2C_INDEX  (1)
 /* @brief FLEXCOMM1 I2S INDEX 1 */
-#define FSL_FEATURE_FLEXCOMM1_I2S_INDEX (1)
+#define FSL_FEATURE_FLEXCOMM1_I2S_INDEX  (1)
 /* @brief FLEXCOMM2 USART INDEX 2 */
-#define FSL_FEATURE_FLEXCOMM2_USART_INDEX (2)
+#define FSL_FEATURE_FLEXCOMM2_USART_INDEX  (2)
 /* @brief FLEXCOMM2 SPI INDEX 2 */
-#define FSL_FEATURE_FLEXCOMM2_SPI_INDEX (2)
+#define FSL_FEATURE_FLEXCOMM2_SPI_INDEX  (2)
 /* @brief FLEXCOMM2 I2C INDEX 2 */
-#define FSL_FEATURE_FLEXCOMM2_I2C_INDEX (2)
+#define FSL_FEATURE_FLEXCOMM2_I2C_INDEX  (2)
 /* @brief FLEXCOMM2 I2S INDEX 2 */
-#define FSL_FEATURE_FLEXCOMM2_I2S_INDEX (2)
+#define FSL_FEATURE_FLEXCOMM2_I2S_INDEX  (2)
 /* @brief FLEXCOMM3 USART INDEX 3 */
-#define FSL_FEATURE_FLEXCOMM3_USART_INDEX (3)
+#define FSL_FEATURE_FLEXCOMM3_USART_INDEX  (3)
 /* @brief FLEXCOMM3 SPI INDEX 3 */
-#define FSL_FEATURE_FLEXCOMM3_SPI_INDEX (3)
+#define FSL_FEATURE_FLEXCOMM3_SPI_INDEX  (3)
 /* @brief FLEXCOMM3 I2C INDEX 3 */
-#define FSL_FEATURE_FLEXCOMM3_I2C_INDEX (3)
+#define FSL_FEATURE_FLEXCOMM3_I2C_INDEX  (3)
 /* @brief FLEXCOMM3 I2S INDEX 3 */
-#define FSL_FEATURE_FLEXCOMM3_I2S_INDEX (3)
+#define FSL_FEATURE_FLEXCOMM3_I2S_INDEX  (3)
 /* @brief FLEXCOMM4 USART INDEX 4 */
-#define FSL_FEATURE_FLEXCOMM4_USART_INDEX (4)
+#define FSL_FEATURE_FLEXCOMM4_USART_INDEX  (4)
 /* @brief FLEXCOMM4 SPI INDEX 4 */
-#define FSL_FEATURE_FLEXCOMM4_SPI_INDEX (4)
+#define FSL_FEATURE_FLEXCOMM4_SPI_INDEX  (4)
 /* @brief FLEXCOMM4 I2C INDEX 4 */
-#define FSL_FEATURE_FLEXCOMM4_I2C_INDEX (4)
+#define FSL_FEATURE_FLEXCOMM4_I2C_INDEX  (4)
 /* @brief FLEXCOMM4 I2S INDEX 4 */
-#define FSL_FEATURE_FLEXCOMM4_I2S_INDEX (4)
+#define FSL_FEATURE_FLEXCOMM4_I2S_INDEX  (4)
 /* @brief FLEXCOMM5 USART INDEX 5 */
-#define FSL_FEATURE_FLEXCOMM5_USART_INDEX (5)
+#define FSL_FEATURE_FLEXCOMM5_USART_INDEX  (5)
 /* @brief FLEXCOMM5 SPI INDEX 5 */
-#define FSL_FEATURE_FLEXCOMM5_SPI_INDEX (5)
+#define FSL_FEATURE_FLEXCOMM5_SPI_INDEX  (5)
 /* @brief FLEXCOMM5 I2C INDEX 5 */
-#define FSL_FEATURE_FLEXCOMM5_I2C_INDEX (5)
+#define FSL_FEATURE_FLEXCOMM5_I2C_INDEX  (5)
 /* @brief FLEXCOMM5 I2S INDEX 5 */
-#define FSL_FEATURE_FLEXCOMM5_I2S_INDEX (5)
+#define FSL_FEATURE_FLEXCOMM5_I2S_INDEX  (5)
 /* @brief FLEXCOMM6 USART INDEX 6 */
-#define FSL_FEATURE_FLEXCOMM6_USART_INDEX (6)
+#define FSL_FEATURE_FLEXCOMM6_USART_INDEX  (6)
 /* @brief FLEXCOMM6 SPI INDEX 6 */
-#define FSL_FEATURE_FLEXCOMM6_SPI_INDEX (6)
+#define FSL_FEATURE_FLEXCOMM6_SPI_INDEX  (6)
 /* @brief FLEXCOMM6 I2C INDEX 6 */
-#define FSL_FEATURE_FLEXCOMM6_I2C_INDEX (6)
+#define FSL_FEATURE_FLEXCOMM6_I2C_INDEX  (6)
 /* @brief FLEXCOMM6 I2S INDEX 6 */
-#define FSL_FEATURE_FLEXCOMM6_I2S_INDEX (6)
+#define FSL_FEATURE_FLEXCOMM6_I2S_INDEX  (6)
 /* @brief FLEXCOMM7 USART INDEX 7 */
-#define FSL_FEATURE_FLEXCOMM7_USART_INDEX (7)
+#define FSL_FEATURE_FLEXCOMM7_USART_INDEX  (7)
 /* @brief FLEXCOMM7 SPI INDEX 7 */
-#define FSL_FEATURE_FLEXCOMM7_SPI_INDEX (7)
+#define FSL_FEATURE_FLEXCOMM7_SPI_INDEX  (7)
 /* @brief FLEXCOMM7 I2C INDEX 7 */
-#define FSL_FEATURE_FLEXCOMM7_I2C_INDEX (7)
+#define FSL_FEATURE_FLEXCOMM7_I2C_INDEX  (7)
 /* @brief FLEXCOMM7 I2S INDEX 7 */
-#define FSL_FEATURE_FLEXCOMM7_I2S_INDEX (7)
+#define FSL_FEATURE_FLEXCOMM7_I2S_INDEX  (7)
 /* @brief FLEXCOMM8 SPI(HS_SPI) INDEX 8 */
-#define FSL_FEATURE_FLEXCOMM8_SPI_INDEX (8)
+#define FSL_FEATURE_FLEXCOMM8_SPI_INDEX  (8)
 /* @brief I2S has DMIC interconnection */
 #define FSL_FEATURE_FLEXCOMM_INSTANCE_I2S_HAS_DMIC_INTERCONNECTIONn(x) (0)
 
@@ -263,7 +278,7 @@
 /* MRT module features */
 
 /* @brief number of channels. */
-#define FSL_FEATURE_MRT_NUMBER_OF_CHANNELS (4)
+#define FSL_FEATURE_MRT_NUMBER_OF_CHANNELS  (4)
 
 /* PINT module features */
 
@@ -290,7 +305,7 @@
 /* POWERQUAD module features */
 
 /* @brief Sine and Cossine fix errata */
-#define FSL_FEATURE_POWERQUAD_SIN_COS_FIX_ERRATA (1)
+#define FSL_FEATURE_POWERQUAD_SIN_COS_FIX_ERRATA  (1)
 
 /* PUF module features */
 
@@ -337,7 +352,7 @@
 /* @brief Flash sector size in bytes */
 #define FSL_FEATURE_SYSCON_FLASH_SECTOR_SIZE_BYTES (32768)
 /* @brief Flash size in bytes */
-#define FSL_FEATURE_SYSCON_FLASH_SIZE_BYTES (622592)
+#define FSL_FEATURE_SYSCON_FLASH_SIZE_BYTES (645120)
 /* @brief Has Power Down mode */
 #define FSL_FEATURE_SYSCON_HAS_POWERDOWN_MODE (1)
 /* @brief CCM_ANALOG availability on the SoC.  */
@@ -408,3 +423,4 @@
 #define FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK (1)
 
 #endif /* _LPC55S69_cm33_core0_FEATURES_H_ */
+

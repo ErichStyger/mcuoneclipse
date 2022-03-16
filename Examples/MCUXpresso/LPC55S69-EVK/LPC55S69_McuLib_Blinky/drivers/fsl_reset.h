@@ -233,6 +233,10 @@ typedef enum _SYSCON_RSTn
     {                            \
         kOSTIMER0_RST_SHIFT_RSTn \
     } /* Reset bits for OSTIMER peripheral */
+#define POWERQUAD_RSTS            \
+    {                             \
+        kPOWERQUAD_RST_SHIFT_RSTn \
+    } /* Reset bits for Powerquad peripheral */
 typedef SYSCON_RSTn_t reset_ip_name_t;
 
 /*******************************************************************************

@@ -44,6 +44,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuGFont: Graphical font library driver. Several fonts are available in the 'fonts' subfolder
 - McuGPIO: Generic GPIO pin driver
 - McuHardfault: ARM Cortex-M hardfault handler
+- McuI2cLib: Generic and portable I2C library using hardware I2C
 - McuI2CSpy: I2C sniffing utility
 - McuLC709203F: Driver for the LC709203F battery/charing monitor device
 - McuLED: generic LED driver for multiple LEDs

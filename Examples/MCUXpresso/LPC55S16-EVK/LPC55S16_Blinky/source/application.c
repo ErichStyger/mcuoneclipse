@@ -98,7 +98,7 @@ static void AppTask(void *pv) {
     }
 #endif
     LEDS_Neg(LEDS_RED);
-   // vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 }
 

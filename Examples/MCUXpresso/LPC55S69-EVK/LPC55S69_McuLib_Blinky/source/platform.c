@@ -20,6 +20,10 @@
 #include "leds.h"
 //#include "buttons.h"
 //#include "Shell.h"
+#include "McuI2clib.h"
+#include "McuGenericI2C.h"
+#include "McuSSD1306.h"
+#include "MyGui.h"
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -47,4 +51,16 @@ void PL_Init(void) {
   LEDS_Init();
   //BTN_Init();
   //SHELL_Init();
+#if PL_CONFIG_USE_I2C
+  McuGenericI2C_Init();
+  #if PL_CONFIG_USE_HW_I2C
+    McuI2cLib_Init();
+  #else
+    McuGenericSWI2C_Init();
+  #endif
+#endif /* PL_CONFIG_USE_I2C */
+#if PL_CONFIG_USE_OLED
+  McuSSD1306_Init();
+  MyGui_Init();
+#endif
 }

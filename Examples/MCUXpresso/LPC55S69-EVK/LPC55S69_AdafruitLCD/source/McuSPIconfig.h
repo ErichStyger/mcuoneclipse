@@ -16,7 +16,7 @@
 #define DEVICE_SPI_MASTER             SPI8
 #define DEVICE_SPI_MASTER_IRQ         FLEXCOMM8_IRQn
 #define DEVICE_SPI_MASTER_CLK_SRC     kCLOCK_Flexcomm8
-#define DEVICE_SPI_MASTER_CLK_FREQ    CLOCK_GetFreq(kCLOCK_HsLspi)
+#define DEVICE_SPI_MASTER_CLK_FREQ    CLOCK_GetFreq(kCLOCK_Hs_Lspi)
 #define DEVICE_SPI_MASTER_IRQHandler  FLEXCOMM8_IRQHandler
 
 #endif /* MCUSPICONFIG_H_ */

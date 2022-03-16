@@ -91,19 +91,48 @@ uint8_t McuSWO_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* defaul
 
 
 static void MuxSWOPin(void) {
+#if McuLib_CONFIG_CPU_IS_LPC
   CLOCK_EnableClock(kCLOCK_Iocon);
+  #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  /* local settings copied from pin_mux.h: have them local here in case muxing is not done in Pins Tool */
+  #define PIO0_10_FUNC_ALT6_SWO           0x06u
+  #define PIO0_10_DIGIMODE_DIGITAL_SWO    0x01u
+
   IOCON->PIO[0][10] = ((IOCON->PIO[0][10] &
                         /* Mask bits to zero which are setting */
                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
                        /* Selects pin function.
                         * : PORT010 (pin 21) is configured as SWO. */
-                       | IOCON_PIO_FUNC(PIO0_10_FUNC_ALT6)
+                       | IOCON_PIO_FUNC(PIO0_10_FUNC_ALT6_SWO)
 
                        /* Select Digital mode.
                         * : Enable Digital mode.
                         * Digital input is enabled. */
                        | IOCON_PIO_DIGIMODE(PIO0_10_DIGIMODE_DIGITAL));
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  /* local settings copied from pin_mux.h: have them local here in case muxing is not done in Pins Tool */
+  #define PIO0_10_FUNC_ALT6_SWO           0x06u
+  #define PIO0_10_DIGIMODE_DIGITAL_SWO    0x01u
+
+  IOCON->PIO[0][10] = ((IOCON->PIO[0][10] &
+                        /* Mask bits to zero which are setting */
+                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                       /* Selects pin function.
+                        * : PORT010 (pin 21) is configured as SWO. */
+                       | IOCON_PIO_FUNC(PIO0_10_FUNC_ALT6_SWO)
+
+                       /* Select Digital mode.
+                        * : Enable Digital mode.
+                        * Digital input is enabled. */
+                       | IOCON_PIO_DIGIMODE(PIO0_10_DIGIMODE_DIGITAL_SWO));
+  #else
+    #error "NYI"
+  #endif
+#else
+  #error "NYI"
+#endif
 }
 
 static void SetSWOSpeed(uint32_t traceClockHz, uint32_t SWOSpeed) {

@@ -36,6 +36,7 @@ Instructions:
 #if 0 /* example configuration for LPC845 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CORTEX_M          (0)    /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
+  #define McuLib_CONFIG_CPU_VARIANT       (McuLib_CONFIG_CPU_VARIANT_NXP_LPC845) /* for LPC need to specify the actual device */
 #elif 1 /* example configuration for LPC55S16 */
   #define McuLib_CONFIG_CPU_IS_LPC        (1)  /* LPC family */
   #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)  /* LPC55xx */
@@ -101,7 +102,7 @@ Instructions:
 
 /* -----------------------------------------------------*/
 /* I2C and OLED */
-#define USE_HW_I2C           (0)
+#define USE_HW_I2C                              (1)  /* otherwise uses GPIO bit-banging */
 
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
@@ -110,21 +111,23 @@ Instructions:
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 
 /* I2C Pin Muxing */
-#define SDA1_CONFIG_DO_PIN_MUXING (1)
-#define SCL1_CONFIG_DO_PIN_MUXING (1)
 
 #if USE_HW_I2C
-  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE "i2clib.h"
-  #define McuGenericI2C_CONFIG_RECV_BLOCK                        I2CLIB_RecvBlock
-  #define McuGenericI2C_CONFIG_SEND_BLOCK                        I2CLIB_SendBlock
+  #define McuLib_CONFIG_MCUI2CLIB_ENABLED                        (1)
+  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "McuI2cLib.h"
+  #define McuGenericI2C_CONFIG_RECV_BLOCK                        McuI2cLib_RecvBlock
+  #define McuGenericI2C_CONFIG_SEND_BLOCK                        McuI2cLib_SendBlock
   #if McuGenericI2C_CONFIG_SUPPORT_STOP_NO_START
-  #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               I2CLIB_SendBlockContinue
+  #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               McuI2cLib_SendBlockContinue
   #endif
-  #define McuGenericI2C_CONFIG_SEND_STOP                         I2CLIB_SendStop
-  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      I2CLIB_SelectSlave
+  #define McuGenericI2C_CONFIG_SEND_STOP                         McuI2cLib_SendStop
+  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      McuI2cLib_SelectSlave
   #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (0)
-  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 I2CLIB_RecvBlockCustom
+  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 McuI2cLib_RecvBlockCustom
 #else
+  #define SDA1_CONFIG_DO_PIN_MUXING (1)
+  #define SCL1_CONFIG_DO_PIN_MUXING (1)
+  
   #define SCL1_CONFIG_GPIO_NAME     GPIO
   #define SCL1_CONFIG_PORT_NAME     0
   #define SCL1_CONFIG_PIN_NUMBER    14u
@@ -133,16 +136,19 @@ Instructions:
   #define SDA1_CONFIG_PORT_NAME     0
   #define SDA1_CONFIG_PIN_NUMBER    13u
 #endif
+
 #if 1 /* type of OLED */
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
 #else
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1306)
 #endif
+
 #define McuSSD1306_CONFIG_INIT_DELAY_MS (500)  /* extra delay to give hardware time for power-up */
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
 #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
 
 /* -----------------------------------------------------*/
+/* McuWait */
 #define McuWait_CONFIG_USE_CYCLE_COUNTER (1)
 
 /* -----------------------------------------------------*/

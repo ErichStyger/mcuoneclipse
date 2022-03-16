@@ -27,6 +27,9 @@
             <processor_version>11.0.1</processor_version>
             <pin_labels>
                <pin_label pin_num="6" pin_signal="PIO0_7/FC3_RTS_SCL_SSEL1/FC5_SCK/FC1_SCK/SECURE_GPIO0_7" label="J22/P0_7" identifier="test"/>
+               <pin_label pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13" label="I2C_SDA" identifier="b"/>
+               <pin_label pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14" label="I2C_SCL" identifier="a"/>
+               <pin_label pin_num="22" pin_signal="PIO0_15/FC6_CTS_SDA_SSEL0/UTICK_CAP2/CT_INP16/SCT0_OUT2/SECURE_GPIO0_15/ADC0_2" label="I2C_SDA"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -88,6 +91,38 @@
                   <pin peripheral="SWD" signal="SWO" pin_num="21" pin_signal="PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1"/>
                </pins>
             </function>
+            <function name="BOARD_InitI2cPins">
+               <description>Configures pin routing and optionally pin electrical features.</description>
+               <options>
+                  <callFromInitBoot>false</callFromInitBoot>
+                  <coreID>cm33_core0</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies>
+                  <dependency resourceType="Peripheral" resourceId="FLEXCOMM1" description="Peripheral FLEXCOMM1 is not initialized" problem_level="1" source="Pins:BOARD_InitI2cPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitI2cPins">
+                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <pins>
+                  <pin peripheral="FLEXCOMM1" signal="RTS_SCL_SSEL1" pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="FLEXCOMM1" signal="CTS_SDA_SSEL0" pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+               </pins>
+            </function>
          </functions_list>
       </pins>
       <clocks name="Clocks" version="9.0" enabled="true" update_project_code="true">
@@ -142,12 +177,15 @@
                </clock_sources>
                <clock_outputs>
                   <clock_output id="FRO_12MHz_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
-                  <clock_output id="System_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
-                  <clock_output id="TRACE_clock.outFreq" value="96 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FXCOM0_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FXCOM1_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
+                  <clock_output id="System_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
+                  <clock_output id="TRACE_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG" value="Enable" locked="false"/>
-                  <setting id="SYSCON.MAINCLKSELA.sel" value="ANACTRL.fro_hf_clk" locked="false"/>
+                  <setting id="SYSCON.FCCLKSEL0.sel" value="ANACTRL.fro_12m_clk" locked="false"/>
+                  <setting id="SYSCON.FCCLKSEL1.sel" value="SYSCON.MAINCLKSELB" locked="false"/>
                   <setting id="SYSCON.TRACECLKDIV.scale" value="1" locked="true"/>
                   <setting id="SYSCON.TRACECLKSEL.sel" value="SYSCON.TRACECLKDIV" locked="false"/>
                   <setting id="TRACECLKDIV_HALT" value="Enable" locked="false"/>
@@ -345,6 +383,19 @@
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>
+                     </config_set>
+                  </instance>
+                  <instance name="FLEXCOMM1" uuid="d283a74e-69e8-40e0-882e-c150a2a43cd5" type="flexcomm_i2c" type_id="flexcomm_i2c_c8597948f61bd571ab263ea4330b9dd6" mode="I2C_Polling" peripheral="FLEXCOMM1" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_i2c">
+                        <setting name="i2c_mode" value="kI2C_Master"/>
+                        <setting name="clockSource" value="FXCOMFunctionClock"/>
+                        <setting name="clockSourceFreq" value="BOARD_BootClockFROHF96M"/>
+                        <struct name="i2c_master_config">
+                           <setting name="enableMaster" value="true"/>
+                           <setting name="baudRate_Bps" value="100000"/>
+                           <setting name="enableTimeout" value="false"/>
+                           <setting name="timeout_Ms" value="35"/>
+                        </struct>
                      </config_set>
                   </instance>
                </instances>
