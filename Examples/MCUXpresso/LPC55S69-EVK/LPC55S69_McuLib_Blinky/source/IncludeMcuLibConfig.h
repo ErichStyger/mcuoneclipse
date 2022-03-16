@@ -34,16 +34,17 @@
 #define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 #if USE_HW_I2C
-  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "i2clib.h"
-  #define McuGenericI2C_CONFIG_RECV_BLOCK                        I2CLIB_RecvBlock
-  #define McuGenericI2C_CONFIG_SEND_BLOCK                        I2CLIB_SendBlock
+  #define McuLib_CONFIG_MCUI2CLIB_ENABLED                        (1)
+  #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "McuI2cLib.h"
+  #define McuGenericI2C_CONFIG_RECV_BLOCK                        McuI2cLib_RecvBlock
+  #define McuGenericI2C_CONFIG_SEND_BLOCK                        McuI2cLib_SendBlock
   #if McuGenericI2C_CONFIG_SUPPORT_STOP_NO_START
-  #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               I2CLIB_SendBlockContinue
+  #define McuGenericI2C_CONFIG_SEND_BLOCK_CONTINUE               McuI2cLib_SendBlockContinue
   #endif
-  #define McuGenericI2C_CONFIG_SEND_STOP                         I2CLIB_SendStop
-  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      I2CLIB_SelectSlave
+  #define McuGenericI2C_CONFIG_SEND_STOP                         McuI2cLib_SendStop
+  #define McuGenericI2C_CONFIG_SELECT_SLAVE                      McuI2cLib_SelectSlave
   #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM_AVAILABLE       (0)
-  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 I2CLIB_RecvBlockCustom
+  #define McuGenericI2C_CONFIG_RECV_BLOCK_CUSTOM                 McuI2cLib_RecvBlockCustom
 #else
   #define SDA1_CONFIG_DO_PIN_MUXING (1)
   #define SCL1_CONFIG_DO_PIN_MUXING (1)

@@ -20,7 +20,7 @@
 #include "leds.h"
 //#include "buttons.h"
 //#include "Shell.h"
-#include "i2clib.h"
+#include "McuI2clib.h"
 #include "McuGenericI2C.h"
 #include "McuSSD1306.h"
 #include "MyGui.h"
@@ -54,7 +54,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   #if PL_CONFIG_USE_HW_I2C
-    I2CLIB_Init();
+    McuI2cLib_Init();
   #else
     McuGenericSWI2C_Init();
   #endif
