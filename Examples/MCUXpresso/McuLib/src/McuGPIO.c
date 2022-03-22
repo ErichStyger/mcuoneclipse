@@ -227,6 +227,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
     memcpy(&handle->hw, &config->hw, sizeof(handle->hw)); /* copy hardware information */
   }
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
+  McuGPIO_SetPullResistor(handle, config->hw.pull);
   /* do the pin muxing */
 #if McuLib_CONFIG_IS_KINETIS_KE
   /* no pin muxing needed */
