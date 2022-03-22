@@ -3,6 +3,7 @@
  *
  */
 #include "S32K144.h"
+#include "../gcov/gcov_support.h"
 
 #if defined (__ghs__)
     #define __INTERRUPT_SVC  __interrupt
@@ -21,8 +22,15 @@
 int counter, accumulator = 0, limit_value = 1000000;
 
 int main(void) {
-    counter = 0;
+	  gcov_init();  /* initialize library */
+	  gcov_check();
 
+	  counter = 0;
+
+	  gcov_write(); /* write coverage files, might take a while depending how many files are covered */
+for(;;) {
+
+}
     for (;;) {
         counter++;
 
