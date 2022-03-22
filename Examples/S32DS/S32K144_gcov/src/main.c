@@ -4,6 +4,7 @@
  */
 #include "S32K144.h"
 #include "../gcov/gcov_support.h"
+#include "test.h"
 
 #if defined (__ghs__)
     #define __INTERRUPT_SVC  __interrupt
