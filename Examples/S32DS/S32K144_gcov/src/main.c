@@ -23,15 +23,16 @@
 int counter, accumulator = 0, limit_value = 1000000;
 
 int main(void) {
-	  gcov_init();  /* initialize library */
-	  gcov_check();
+   gcov_init();  /* initialize library */
+   gcov_check();
 
 	  counter = 0;
+	  test();
 
 	  gcov_write(); /* write coverage files, might take a while depending how many files are covered */
-for(;;) {
+	for(;;) {
 
-}
+	}
     for (;;) {
         counter++;
 
