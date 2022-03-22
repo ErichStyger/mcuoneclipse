@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>47</ProjectCompNumb>
+    <ProjectCompNumb>50</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -43,6 +43,7 @@
     <SdkVersionValue>SDK_S32K14x_09</SdkVersionValue>
     <SdkRepositoryName>SDK_S32K14x_09</SdkRepositoryName>
     <SdkRepositoryId>SDK_S32K14x_09</SdkRepositoryId>
+    <SdkLibraryModes lines_count="0" />
   </Options>
   <UserFolder>
     <UserFolderName />
@@ -52,7 +53,7 @@
     <ExpandedAll>true</ExpandedAll>
   </UserFolder>
   <CPU>
-    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/S32SDK_S32K14x_EAR_0.8.6/tools/pex/Repositories/SDK_S32K14x_09_Repository</Repository>
+    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/software/S32SDK_S32K1xx_RTM_3.0.0/tools/pex/Repositories/SDK_S32K1xx_15_Repository</Repository>
     <BeanType>S32K144_100</BeanType>
     <Name>Cpu</Name>
     <CompNumb>1</CompNumb>
@@ -578,7 +579,7 @@
     </Cpu_State>
   </CPU>
   <Bean>
-    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/S32SDK_S32K14x_EAR_0.8.6/tools/pex/Repositories/SDK_S32K14x_09_Repository</Repository>
+    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/software/S32SDK_S32K1xx_RTM_3.0.0/tools/pex/Repositories/SDK_S32K1xx_15_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.ksdk.pinsettings</ComponentUUID>
     <BeanType>PinSettings</BeanType>
     <Name>pin_mux</Name>
@@ -1054,6 +1055,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>CMP0_acmp_out</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <SharedPrphMode>false</SharedPrphMode>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CMP0_acmp_rrt</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -6601,6 +6609,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTC1_ADC_Interleave</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTC0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -6663,6 +6678,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTC0_DigitalFilter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTC0_ADC_Interleave</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -7553,6 +7575,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTB1_ADC_Interleave</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTB0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -7615,6 +7644,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTB0_DigitalFilter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTB0_ADC_Interleave</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -8189,6 +8225,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTB16_ADC_Interleave</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTB15</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -8251,6 +8294,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTB15_DigitalFilter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTB15_ADC_Interleave</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -8325,6 +8375,13 @@
         <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
       </ItemState>
       <ItemState>
+        <ItemSymbol>PTB14_ADC_Interleave</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>PTB13</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -8387,6 +8444,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>PTB13_DigitalFilter</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>&lt;Automatic&gt;</Value>
+        <PinFuncPropStateId>&lt;Automatic&gt;</PinFuncPropStateId>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>PTB13_ADC_Interleave</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>&lt;Automatic&gt;</Value>
@@ -10576,6 +10640,25 @@
         <ItemsTypeState>Beans\PinSettings\Items\S32K144_SDK01\PinSettings.item</ItemsTypeState>
       </ItemState>
       <ItemState>
+        <ItemSymbol>HALGrp</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UtilizeResetValuesCondGroup</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>UtilizeResetValues</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <EnumSymbVal>yes</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>LinkGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -10828,7 +10911,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/S32SDK_S32K14x_EAR_0.8.6/tools/pex/Repositories/SDK_S32K14x_09_Repository</Repository>
+    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/software/S32SDK_S32K1xx_RTM_3.0.0/tools/pex/Repositories/SDK_S32K1xx_15_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.ksdk.clock_manager</ComponentUUID>
     <BeanType>clock_manager</BeanType>
     <Name>clockMan1</Name>
@@ -10839,7 +10922,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>SDK_S32K14x_09</BeanVersion>
+    <BeanVersion>SDK_S32K1xx_15</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -10850,7 +10933,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>CompVersion</ItemSymbol>
-        <Value>S32K144_SDK01</Value>
+        <Value>S32_SDK_S32K</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Settings</ItemSymbol>
@@ -10907,6 +10990,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral17_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral17_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -10919,6 +11011,10 @@
         <Value>ADC0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral17_MODULE_NAME0</ItemSymbol>
+        <Value>ADC</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral17_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -10929,7 +11025,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral17_MUL_SEL0</ItemSymbol>
@@ -10950,6 +11046,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral5_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral5_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -10962,6 +11067,10 @@
         <Value>ADC1_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral5_MODULE_NAME0</ItemSymbol>
+        <Value>ADC</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral5_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -10972,7 +11081,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral5_MUL_SEL0</ItemSymbol>
@@ -10993,6 +11102,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral31_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral31_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11003,6 +11121,10 @@
       <ItemState>
         <ItemSymbol>Peripheral31_CLOCK_NAME0</ItemSymbol>
         <Value>CMP0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral31_MODULE_NAME0</ItemSymbol>
+        <Value>CMP</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral31_INTF_CLK0</ItemSymbol>
@@ -11031,6 +11153,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral11_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral11_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11041,6 +11172,10 @@
       <ItemState>
         <ItemSymbol>Peripheral11_CLOCK_NAME0</ItemSymbol>
         <Value>CRC0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral11_MODULE_NAME0</ItemSymbol>
+        <Value>CRC</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral11_INTF_CLK0</ItemSymbol>
@@ -11069,6 +11204,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral1_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral1_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11079,6 +11223,10 @@
       <ItemState>
         <ItemSymbol>Peripheral1_CLOCK_NAME0</ItemSymbol>
         <Value>DMAMUX0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral1_MODULE_NAME0</ItemSymbol>
+        <Value>DMA</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral1_INTF_CLK0</ItemSymbol>
@@ -11107,6 +11255,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral26_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral26_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11117,6 +11274,10 @@
       <ItemState>
         <ItemSymbol>Peripheral26_CLOCK_NAME0</ItemSymbol>
         <Value>EWM0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral26_MODULE_NAME0</ItemSymbol>
+        <Value>EWM</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral26_INTF_CLK0</ItemSymbol>
@@ -11145,6 +11306,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral2_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral2_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11155,6 +11325,10 @@
       <ItemState>
         <ItemSymbol>Peripheral2_CLOCK_NAME0</ItemSymbol>
         <Value>FlexCAN0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral2_MODULE_NAME0</ItemSymbol>
+        <Value>CAN</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral2_INTF_CLK0</ItemSymbol>
@@ -11183,6 +11357,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral3_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral3_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11193,6 +11376,10 @@
       <ItemState>
         <ItemSymbol>Peripheral3_CLOCK_NAME0</ItemSymbol>
         <Value>FlexCAN1_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral3_MODULE_NAME0</ItemSymbol>
+        <Value>CAN</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral3_INTF_CLK0</ItemSymbol>
@@ -11221,6 +11408,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral6_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral6_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11231,6 +11427,10 @@
       <ItemState>
         <ItemSymbol>Peripheral6_CLOCK_NAME0</ItemSymbol>
         <Value>FlexCAN2_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral6_MODULE_NAME0</ItemSymbol>
+        <Value>CAN</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral6_INTF_CLK0</ItemSymbol>
@@ -11259,6 +11459,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral25_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral25_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11271,6 +11480,10 @@
         <Value>FLEXIO0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral25_MODULE_NAME0</ItemSymbol>
+        <Value>FLEXIO</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral25_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11281,7 +11494,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral25_MUL_SEL0</ItemSymbol>
@@ -11302,6 +11515,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral0_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral0_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11312,6 +11534,10 @@
       <ItemState>
         <ItemSymbol>Peripheral0_CLOCK_NAME0</ItemSymbol>
         <Value>FTFC0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral0_MODULE_NAME0</ItemSymbol>
+        <Value>FTFC</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral0_INTF_CLK0</ItemSymbol>
@@ -11340,6 +11566,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral14_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral14_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11350,6 +11585,10 @@
       <ItemState>
         <ItemSymbol>Peripheral14_CLOCK_NAME0</ItemSymbol>
         <Value>FTM0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral14_MODULE_NAME0</ItemSymbol>
+        <Value>FTM</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral14_INTF_CLK0</ItemSymbol>
@@ -11383,6 +11622,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral15_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral15_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11393,6 +11641,10 @@
       <ItemState>
         <ItemSymbol>Peripheral15_CLOCK_NAME0</ItemSymbol>
         <Value>FTM1_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral15_MODULE_NAME0</ItemSymbol>
+        <Value>FTM</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral15_INTF_CLK0</ItemSymbol>
@@ -11426,6 +11678,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral16_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral16_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11436,6 +11697,10 @@
       <ItemState>
         <ItemSymbol>Peripheral16_CLOCK_NAME0</ItemSymbol>
         <Value>FTM2_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral16_MODULE_NAME0</ItemSymbol>
+        <Value>FTM</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral16_INTF_CLK0</ItemSymbol>
@@ -11469,6 +11734,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral4_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral4_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11479,6 +11753,10 @@
       <ItemState>
         <ItemSymbol>Peripheral4_CLOCK_NAME0</ItemSymbol>
         <Value>FTM3_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral4_MODULE_NAME0</ItemSymbol>
+        <Value>FTM</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral4_INTF_CLK0</ItemSymbol>
@@ -11512,6 +11790,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral27_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral27_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11524,6 +11811,10 @@
         <Value>LPI2C0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral27_MODULE_NAME0</ItemSymbol>
+        <Value>I2C</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral27_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11534,7 +11825,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral27_MUL_SEL0</ItemSymbol>
@@ -11555,6 +11846,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral13_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral13_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11567,6 +11867,10 @@
         <Value>LPIT0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral13_MODULE_NAME0</ItemSymbol>
+        <Value>LPIT</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral13_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11577,7 +11881,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral13_MUL_SEL0</ItemSymbol>
@@ -11598,6 +11902,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral7_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral7_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11610,6 +11923,10 @@
         <Value>LPSPI0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral7_MODULE_NAME0</ItemSymbol>
+        <Value>SPI</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral7_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11620,7 +11937,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral7_MUL_SEL0</ItemSymbol>
@@ -11641,6 +11958,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral8_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral8_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11653,6 +11979,10 @@
         <Value>LPSPI1_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral8_MODULE_NAME0</ItemSymbol>
+        <Value>SPI</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral8_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11663,7 +11993,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral8_MUL_SEL0</ItemSymbol>
@@ -11684,6 +12014,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral9_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral9_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11696,6 +12035,10 @@
         <Value>LPSPI2_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral9_MODULE_NAME0</ItemSymbol>
+        <Value>SPI</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral9_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11706,7 +12049,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral9_MUL_SEL0</ItemSymbol>
@@ -11727,6 +12070,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral19_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral19_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11739,6 +12091,10 @@
         <Value>LPTMR0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral19_MODULE_NAME0</ItemSymbol>
+        <Value>LPTMR</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral19_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11749,7 +12105,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral19_MUL_SEL0</ItemSymbol>
@@ -11780,6 +12136,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral28_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral28_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11792,6 +12157,10 @@
         <Value>LPUART0_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral28_MODULE_NAME0</ItemSymbol>
+        <Value>LPUART</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral28_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11802,7 +12171,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral28_MUL_SEL0</ItemSymbol>
@@ -11823,6 +12192,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral29_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral29_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11835,6 +12213,10 @@
         <Value>LPUART1_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral29_MODULE_NAME0</ItemSymbol>
+        <Value>LPUART</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral29_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11845,7 +12227,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral29_MUL_SEL0</ItemSymbol>
@@ -11866,6 +12248,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral30_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral30_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11878,6 +12269,10 @@
         <Value>LPUART2_CLK</Value>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral30_MODULE_NAME0</ItemSymbol>
+        <Value>LPUART</Value>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral30_INTF_CLK0</ItemSymbol>
         <Value>BUS_CLK</Value>
       </ItemState>
@@ -11888,7 +12283,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
         <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV1</EnumSymbVal>
+        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral30_MUL_SEL0</ItemSymbol>
@@ -11909,6 +12304,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral12_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral12_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11919,6 +12323,10 @@
       <ItemState>
         <ItemSymbol>Peripheral12_CLOCK_NAME0</ItemSymbol>
         <Value>PDB0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral12_MODULE_NAME0</ItemSymbol>
+        <Value>PDB</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral12_INTF_CLK0</ItemSymbol>
@@ -11947,6 +12355,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral10_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral10_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11957,6 +12374,10 @@
       <ItemState>
         <ItemSymbol>Peripheral10_CLOCK_NAME0</ItemSymbol>
         <Value>PDB1_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral10_MODULE_NAME0</ItemSymbol>
+        <Value>PDB</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral10_INTF_CLK0</ItemSymbol>
@@ -11985,6 +12406,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral20_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>Disabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral20_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -11995,6 +12425,10 @@
       <ItemState>
         <ItemSymbol>Peripheral20_CLOCK_NAME0</ItemSymbol>
         <Value>PORTA_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral20_MODULE_NAME0</ItemSymbol>
+        <Value>PinSettings</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral20_INTF_CLK0</ItemSymbol>
@@ -12023,6 +12457,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral21_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>Disabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral21_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12033,6 +12476,10 @@
       <ItemState>
         <ItemSymbol>Peripheral21_CLOCK_NAME0</ItemSymbol>
         <Value>PORTB_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral21_MODULE_NAME0</ItemSymbol>
+        <Value>PinSettings</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral21_INTF_CLK0</ItemSymbol>
@@ -12061,6 +12508,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral22_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>Disabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral22_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12071,6 +12527,10 @@
       <ItemState>
         <ItemSymbol>Peripheral22_CLOCK_NAME0</ItemSymbol>
         <Value>PORTC_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral22_MODULE_NAME0</ItemSymbol>
+        <Value>PinSettings</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral22_INTF_CLK0</ItemSymbol>
@@ -12099,6 +12559,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral23_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>Disabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral23_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12109,6 +12578,10 @@
       <ItemState>
         <ItemSymbol>Peripheral23_CLOCK_NAME0</ItemSymbol>
         <Value>PORTD_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral23_MODULE_NAME0</ItemSymbol>
+        <Value>PinSettings</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral23_INTF_CLK0</ItemSymbol>
@@ -12137,6 +12610,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral24_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>1</Index>
+        <EnumSymbVal>Disabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral24_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12147,6 +12629,10 @@
       <ItemState>
         <ItemSymbol>Peripheral24_CLOCK_NAME0</ItemSymbol>
         <Value>PORTE_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral24_MODULE_NAME0</ItemSymbol>
+        <Value>PinSettings</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral24_INTF_CLK0</ItemSymbol>
@@ -12175,6 +12661,15 @@
         <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
+        <ItemSymbol>Peripheral18_SetModuleClockGateAutomatically0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeClockEnaDis</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>Enabled</EnumSymbVal>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>Peripheral18_CLkEnable0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12185,6 +12680,10 @@
       <ItemState>
         <ItemSymbol>Peripheral18_CLOCK_NAME0</ItemSymbol>
         <Value>RTC0_CLK</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Peripheral18_MODULE_NAME0</ItemSymbol>
+        <Value>RTC</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral18_INTF_CLK0</ItemSymbol>
@@ -12568,7 +13067,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeSIRC_RANGE</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>SCG_SIRC_RANGE_HIGH</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -12848,7 +13347,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeSIRCCFG_RANGE</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>SCG_SIRC_RANGE_HIGH</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -12923,53 +13422,6 @@
         <EnumSymbVal>SCG_FIRC_RANGE_48M</EnumSymbVal>
       </ItemState>
       <ItemState>
-        <ItemSymbol>FIRCCSR_FIRCTRENGrp0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FIRCCSR_FIRCTRUP0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <TypeSpecNameState>typeFIRCCSR_FIRCTRUP</TypeSpecNameState>
-        <Index>0</Index>
-        <EnumSymbVal>false</EnumSymbVal>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FIRCSTATEnableGrp0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FIRCSTATGrp0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FIRCSTAT_TRIMCOAR0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>FIRCSTAT_TRIMFINE0</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>0</Value>
-        <Base>DEC</Base>
-      </ItemState>
-      <ItemState>
         <ItemSymbol>FIRCCSR_FIRCERR0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12997,6 +13449,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>LPOCLKS_RTCCLKSEL0</ItemSymbol>
@@ -13117,6 +13571,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>8000000</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>SOSCCFG_EREFS0</ItemSymbol>
@@ -13142,7 +13598,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeSOSCCFG_RANGE</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>SCG_SOSC_RANGE_MID</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -13759,18 +14215,24 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>TClock1UserValue0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>TClock2UserValue0</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>FCFG1Grp0</ItemSymbol>
@@ -14029,6 +14491,8 @@
       <ItemState>
         <ItemSymbol>RTC_CLKIN_CLOCK0</ItemSymbol>
         <Value>0</Value>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Base>DEC</Base>
       </ItemState>
       <ItemState>
         <ItemSymbol>SOSCClockValuesGrp0</ItemSymbol>
@@ -14491,6 +14955,341 @@
         <UserReadOnly>false</UserReadOnly>
         <Value>89</Value>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>ProjectComponentsCountChanged</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>2</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_ADC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_CAN</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_CMP</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_CRC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_CTU</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_DECFILT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_DMA</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_DSPI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_DTS</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_eMIOS</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_ENET</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_ETIMER</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_ETPU</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_EWM</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_FLEXIO</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_FLEXRAY</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_FTFC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_FTM</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_I2C</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_IIC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_LFAST</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_LIN</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_LPIT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_LPTMR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_LPUART</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_MEMU</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_MCB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_MLB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_PDB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_PinSettings</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>1</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_PIT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_PWM</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_QSPI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_RTC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SAI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SDHC</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SENT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SGEN</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SIPI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SPI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_USBOTG</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_USBSPH</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_WKPU</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_MIPI</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_RADAR</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_SPT</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ModuleName_WGM</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Value>0</Value>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCCSR_FIRCTRENGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCCSR_FIRCTRUP0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <TypeSpecNameState>typeFIRCCSR_FIRCTRUP</TypeSpecNameState>
+        <Index>0</Index>
+        <EnumSymbVal>false</EnumSymbVal>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCSTATEnableGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>false</Value>
+        <Expanded>false</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCSTATGrp0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <Expanded>true</Expanded>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCSTAT_TRIMCOAR0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>DEC</Base>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>FIRCSTAT_TRIMFINE0</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Value>0</Value>
+        <Base>DEC</Base>
+      </ItemState>
     </Properties>
     <Methods>
       <ItemState>
@@ -14548,22 +15347,31 @@
         <UsrMethodName>CLOCK_SYS_GetFreq</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>CLOCK_DRV_Init</ItemSymbol>
+        <ItemSymbol>CLOCK_DRV_SetSystemClock</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
-        <UsrMethodName>CLOCK_DRV_Init</UsrMethodName>
+        <UsrMethodName>CLOCK_DRV_SetSystemClock</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>CLOCK_DRV_GetFreq</ItemSymbol>
+        <ItemSymbol>CLOCK_DRV_GetSystemClockSource</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
-        <UsrMethodName>CLOCK_DRV_GetFreq</UsrMethodName>
+        <UsrMethodName>CLOCK_DRV_GetSystemClockSource</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CLOCK_DRV_SetClockSource</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>CLOCK_DRV_SetClockSource</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>CLOCK_DRV_EnablePeripheralClock</ItemSymbol>
@@ -14582,24 +15390,6 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>CLOCK_DRV_DisablePeripheralClock</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CLOCK_DRV_SetSystemClock</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>CLOCK_DRV_SetSystemClock</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>CLOCK_DRV_GetSystemClockSource</ItemSymbol>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>CLOCK_DRV_GetSystemClockSource</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>CLOCK_DRV_SetIrc</ItemSymbol>
@@ -14637,11 +15427,52 @@
         <LastUserSel>always</LastUserSel>
         <UsrMethodName>CLOCK_DRV_SetLpo</UsrMethodName>
       </ItemState>
+      <ItemState>
+        <ItemSymbol>SdkSpecificMethods</ItemSymbol>
+        <ListItemCount>1</ListItemCount>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>clock_methods_group</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DriverMethodsConditional</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CLOCK_DRV_Init</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>CLOCK_DRV_Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CLOCK_DRV_GetFreq</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>CLOCK_DRV_GetFreq</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>CLOCK_DRV_SetModuleClock</ItemSymbol>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>CLOCK_DRV_SetModuleClock</UsrMethodName>
+      </ItemState>
     </Methods>
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/S32SDK_S32K14x_EAR_0.8.6/tools/pex/Repositories/SDK_S32K14x_09_Repository</Repository>
+    <Repository>file:/${ProcessorExpert_loc}/../../S32DS/software/S32SDK_S32K1xx_RTM_3.0.0/tools/pex/Repositories/SDK_S32K1xx_15_Repository</Repository>
     <ComponentUUID>com.freescale.processorexpert.ksdk.interrupt_manager</ComponentUUID>
     <BeanType>interrupt_manager</BeanType>
     <Name>intMan1</Name>
@@ -14652,7 +15483,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>SDK_S32K14x_09</BeanVersion>
+    <BeanVersion>SDK_S32K1xx_15</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14777,6 +15608,11 @@
         <UsrMethodName>INT_SYS_GetPending</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>DriverMethodsConditional_INT_SYS_GetActive</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>INT_SYS_GetActive</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
@@ -14817,7 +15653,7 @@
     </Events>
   </Bean>
   <Bean>
-    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+    <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
     <BeanType>LED</BeanType>
     <Name>LEDR</Name>
     <CompNumb>11</CompNumb>
@@ -14827,7 +15663,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -14878,9 +15714,9 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
+        <RegCompRepository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+          <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>LEDpin2</Name>
           <CompNumb>13</CompNumb>
@@ -14890,7 +15726,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.025</BeanVersion>
+          <BeanVersion>01.029</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -15254,7 +16090,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+    <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
     <BeanType>LED</BeanType>
     <Name>LEDG</Name>
     <CompNumb>14</CompNumb>
@@ -15264,7 +16100,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15315,9 +16151,9 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
+        <RegCompRepository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+          <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>LEDpin3</Name>
           <CompNumb>16</CompNumb>
@@ -15327,7 +16163,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.025</BeanVersion>
+          <BeanVersion>01.029</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -15691,7 +16527,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+    <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
     <BeanType>LED</BeanType>
     <Name>LEDB</Name>
     <CompNumb>5</CompNumb>
@@ -15701,7 +16537,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.077</BeanVersion>
+    <BeanVersion>01.078</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -15752,9 +16588,9 @@
         <UserReadOnly>false</UserReadOnly>
         <Index>1</Index>
         <RegCompType>SDK_BitIO</RegCompType>
-        <RegCompRepository>file:/${home_ProcessorExpert_loc}/MyComponents</RegCompRepository>
+        <RegCompRepository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</RegCompRepository>
         <InheritedComponentState>
-          <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+          <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
           <BeanType>SDK_BitIO</BeanType>
           <Name>LEDpin1</Name>
           <CompNumb>9</CompNumb>
@@ -15764,7 +16600,7 @@
           <UserFolderName />
           <Comment lines_count="0" />
           <Template />
-          <BeanVersion>01.025</BeanVersion>
+          <BeanVersion>01.029</BeanVersion>
           <LightErrorsIgnored>false</LightErrorsIgnored>
           <Properties>
             <ItemState>
@@ -16128,7 +16964,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+    <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
     <BeanType>McuLibConfig</BeanType>
     <Name>MCUC1</Name>
     <CompNumb>7</CompNumb>
@@ -16138,7 +16974,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.016</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16228,7 +17064,7 @@
     <Events />
   </Bean>
   <Bean>
-    <Repository>file:/${home_ProcessorExpert_loc}/MyComponents</Repository>
+    <Repository>file:/C:\ProgramData\Processor Expert\PEXDRV_PE5_3</Repository>
     <BeanType>Wait</BeanType>
     <Name>WAIT1</Name>
     <CompNumb>10</CompNumb>
@@ -16238,7 +17074,7 @@
     <UserFolderName>McuOnEclipse</UserFolderName>
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.085</BeanVersion>
+    <BeanVersion>01.091</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
@@ -16455,7 +17291,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
-        <LastSelection>true</LastSelection>
+        <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
