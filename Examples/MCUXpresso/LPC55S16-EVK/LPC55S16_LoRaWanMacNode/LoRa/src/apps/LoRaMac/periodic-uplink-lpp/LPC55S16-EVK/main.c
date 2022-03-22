@@ -303,6 +303,8 @@ static void LoRaTask(void *pv) {
 }
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
+
+
 /*!
  * Main application entry point.
  */
@@ -314,15 +316,15 @@ int main( void )
     PL_Init();
 
 #if PL_CONFIG_USE_LED1
-  //  TimerInit( &Led1Timer, OnLed1TimerEvent );
-  //  TimerSetValue( &Led1Timer, 25 );
+    TimerInit( &Led1Timer, OnLed1TimerEvent );
+    TimerSetValue( &Led1Timer, 25 );
 #endif
 #if PL_CONFIG_USE_LED2
     TimerInit( &Led2Timer, OnLed2TimerEvent );
     TimerSetValue( &Led2Timer, 25 );
 #endif
-  //  TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
-  //  TimerSetValue( &LedBeaconTimer, 5000 );
+    TimerInit( &LedBeaconTimer, OnLedBeaconTimerEvent );
+    TimerSetValue( &LedBeaconTimer, 5000 );
 
     // Initialize transmission periodicity variable
     TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
@@ -365,7 +367,7 @@ int main( void )
 
     LmHandlerJoin();
 
-    //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
+    StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
     while( 1 )
     {
 #if PL_CONFIG_USE_SHELL
@@ -381,7 +383,7 @@ int main( void )
         LmHandlerProcess( );
 
         // Process application uplinks management
- //       UplinkProcess( );
+        //UplinkProcess( );
 
         CRITICAL_SECTION_BEGIN( );
         if( IsMacProcessPending == 1 )

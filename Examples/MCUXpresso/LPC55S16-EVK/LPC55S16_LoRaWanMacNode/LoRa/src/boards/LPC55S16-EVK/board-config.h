@@ -128,6 +128,13 @@ extern "C"
 #define RADIO_DIO_1_PIN							PIO1_4  /* MCU pin 1, ARD_LEDR_PWM, red RGB LED! */
 #define RADIO_DEVICE_SEL_PIN        PIO0_0  /* MCU pin 54, ARD_CMP0_IN_A */
 
+#define RFM95_DIO_0_PIN							PIO1_31  /* MCU pin  */
+#define RFM95_DIO_1_PIN							PIO0_13  /* MCU  */
+#define RFM95_DIO_2_PIN        					PIO0_14  /* MCU pin */
+#define RFM95_DIO_3_PIN							PIO1_22  /* MCU pin  */
+#define RFM95_DIO_4_PIN							PIO1_16  /* MCU  */
+#define RFM95_DIO_5_PIN        					PIO1_17  /* MCU pin */
+
 /**
  * LED pins
  */

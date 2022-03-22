@@ -28,7 +28,7 @@
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>11.0.2</processor_version>
             <pin_labels>
                <pin_label pin_num="54" pin_signal="PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A" label="NOT_CONNECTED" identifier="RADIO_DEVICE"/>
                <pin_label pin_num="7" pin_signal="PIO0_1/FC3_CTS_SDA_SSEL0/CT_INP0/SCT_GPI1/CMP0_OUT/SECURE_GPIO0_1" label="RADIO_NSS" identifier="RADIO_NSS"/>
@@ -43,8 +43,8 @@
                <pin_label pin_num="21" pin_signal="PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1" label="SWDO"/>
                <pin_label pin_num="13" pin_signal="PIO0_11/FC6_RXD_SDA_MOSI_DATA/CTIMER2_MAT2/FREQME_GPIO_CLK_A/SWCLK/SECURE_GPIO0_11/ADC0_9" label="SWDCLK"/>
                <pin_label pin_num="12" pin_signal="PIO0_12/FC3_TXD_SCL_MISO_WS/FREQME_GPIO_CLK_B/SCT_GPI7/SWDIO/FC6_TXD_SCL_MISO_WS/SECURE_GPIO0_12/ADC0_10" label="SWDIO"/>
-               <pin_label pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13" label="RADIO_SPI_MOSI"/>
-               <pin_label pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14" label="RADIO_SPI_MISO"/>
+               <pin_label pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13" label="DIO_1" identifier="DIO_1;RFM96_DIO_1"/>
+               <pin_label pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14" label="DIO_2" identifier="DIO_2;RFM96_DIO_2"/>
                <pin_label pin_num="22" pin_signal="PIO0_15/FC6_CTS_SDA_SSEL0/UTICK_CAP2/CT_INP16/SCT0_OUT2/SECURE_GPIO0_15/ADC0_2" label="NOT_CONNECTED"/>
                <pin_label pin_num="14" pin_signal="PIO0_16/FC4_TXD_SCL_MISO_WS/CLKOUT/CT_INP4/SECURE_GPIO0_16/ADC0_8" label="NOT_CONNECTED" identifier="RADIO_RESET"/>
                <pin_label pin_num="8" pin_signal="PIO0_17/FC4_SSEL2/SCT_GPI7/SCT0_OUT0/PLU_IN2/SECURE_GPIO0_17" label="RADIO_RESET" identifier="RADIO_RESET"/>
@@ -70,6 +70,7 @@
                <pin_label pin_num="5" pin_signal="PIO1_6/FC0_TXD_SCL_MISO_WS/CTIMER2_MAT1/SCT_GPI3" label="Q4[G1]/J12[10]/ARD_LEDB_PWM" identifier="LED_BLUE;RADIO_BUSY"/>
                <pin_label pin_num="24" pin_signal="PIO1_8/FC0_CTS_SDA_SSEL0/SCT0_OUT1/FC4_SSEL2/ADC0_4" label="J9[20]/ARD_P1_8" identifier="RADIO_ANT_SW"/>
                <pin_label pin_num="10" pin_signal="PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12" label="SW3/J12[2]/ARD_BTN_USR_P1_9" identifier="SW3;USR;RADIO_NSS"/>
+               <pin_label pin_num="91" pin_signal="PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0" label="DIO_0" identifier="I2S_MCLK;DIO_0;RFM96_DIO_0"/>
             </pin_labels>
          </pins_profile>
          <functions_list>
@@ -150,6 +151,28 @@
                         <pin_feature name="direction" value="INPUT"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="GPIO" signal="PIO1, 31" pin_num="91" pin_signal="PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0">
+                     <pin_features>
+                        <pin_feature name="identifier" value="RFM96_DIO_0"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 13" pin_num="71" pin_signal="PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13">
+                     <pin_features>
+                        <pin_feature name="identifier" value="RFM96_DIO_1"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="ssel" value="no_init"/>
+                        <pin_feature name="filter_off" value="no_init"/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="GPIO" signal="PIO0, 14" pin_num="72" pin_signal="PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14">
+                     <pin_features>
+                        <pin_feature name="identifier" value="RFM96_DIO_2"/>
+                        <pin_feature name="direction" value="INPUT"/>
+                        <pin_feature name="ssel" value="no_init"/>
+                        <pin_feature name="filter_off" value="no_init"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -160,7 +183,7 @@
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>11.0.2</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
@@ -447,7 +470,7 @@
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>11.0.2</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="e48301ba-6eae-42f0-b2e4-0109e547ef26" called_from_default_init="true" id_prefix="" core="cm33_core0">
@@ -485,6 +508,9 @@
             </component>
             <component name="generic_can" uuid="0c126b83-ace1-4ff0-bfdf-676a323e6010" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
+            </component>
+            <component name="gpio_adapter_common" uuid="6eec4be8-48a8-439b-aab5-620b56b377e4" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+               <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
             </component>
          </components>
       </periphs>

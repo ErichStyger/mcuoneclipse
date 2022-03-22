@@ -103,7 +103,17 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  *
  * \remark Please note that ETSI mandates duty cycled transmissions. Use only for test purposes
  */
-#define LORAWAN_DUTYCYCLE_ON                        true
+#define LORAWAN_DUTYCYCLE_ON                        false
+
+
+
+/*!
+ * LoRaWAN application port
+ * @remark The allowed port range is from 1 up to 223. Other values are reserved.
+ */
+#define LORAWAN_APP_PORT                            2
+
+
 
 static void OnMacProcessNotify( void );
 static void OnNvmDataChange( LmHandlerNvmContextStates_t state, uint16_t size );
@@ -120,6 +130,8 @@ static void OnSysTimeUpdate( bool isSynchronized, int32_t timeCorrection );
 #else
 static void OnSysTimeUpdate( void );
 #endif
+
+//static void UplinkProcess( void );
 
 static LmHandlerCallbacks_t LmHandlerCallbacks =
 {
@@ -151,6 +163,27 @@ static LmHandlerParams_t LmHandlerParams =
   .DataBuffer = AppDataBuffer,
   .PingSlotPeriodicity = REGION_COMMON_DEFAULT_PING_SLOT_PERIODICITY,
 };
+
+
+/*!
+ * User application data structure
+ */
+static LmHandlerAppData_t AppData =
+{
+    .Buffer = AppDataBuffer,
+    .BufferSize = 0,
+    .Port = 0,
+};
+
+
+/*!
+ * Specifies the state of the application LED
+ */
+static bool AppLedStateOn = false;
+
+
+
+
 
 static void OnTxPeriodicityChanged( uint32_t periodicity );
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed );
@@ -326,11 +359,15 @@ static void OnTxPeriodicityChanged(uint32_t periodicity) {
 
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed ) {
   LmHandlerParams.IsTxConfirmed = isTxConfirmed;
+  LORAWAN_LmHandlerNotififyTaskRequest();
 }
 
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity ) {
   LmHandlerParams.PingSlotPeriodicity = pingSlotPeriodicity;
+  LORAWAN_LmHandlerNotififyTaskRequest();
 }
+
+
 
 static void LoRaTask(void *pv) {
   uint32_t notification;
@@ -349,6 +386,10 @@ static void LoRaTask(void *pv) {
 
   LmHandlerJoin();
   //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
+  if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
+  {
+
+  }
   for(;;) {
     taskENTER_CRITICAL();
     if (IsMacProcessPending == 1) {
@@ -357,16 +398,38 @@ static void LoRaTask(void *pv) {
       printf("process pending\n");
       taskEXIT_CRITICAL();
       LmHandlerProcess();
+
     } else {
       taskEXIT_CRITICAL();
       /* wait for notification */
       res = xTaskNotifyWait(0, -1, &notification, portMAX_DELAY);
       if (res==pdPASS) { /* notification received */
         if (notification&LORAWAN_NOTIFICATION_EVENT_LMHANDLER) {
+
+         // taskENTER_CRITICAL();
           printf("event received\n");
           LmHandlerProcess();
+          //taskEXIT_CRITICAL();
+          // Process application uplinks management
+                  //UplinkProcess( );
+
+                  CRITICAL_SECTION_BEGIN( );
+                  if( IsMacProcessPending == 1 )
+                  {
+                      // Clear flag and prevent MCU to go into low power modes.
+                      IsMacProcessPending = 0;
+                      printf("*clear\n");
+                  }
+                  else
+                  {
+                      // The MCU wakes up through events
+                      printf("*low power\n");
+                      BoardLowPowerHandler( );
+                  }
+                  CRITICAL_SECTION_END( );
         }
         if (notification&LORAWAN_NOTIFICATION_EVENT_TX_REQUEST) {
+        	printf("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received\n");
         }
       }
     }
@@ -379,7 +442,7 @@ void LoRaWAN_Init(void) {
       "LoRaTask", /* task name for kernel awareness debugging */
       5000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
+      tskIDLE_PRIORITY+5,  /* initial priority */
       &LoRaTaskHandle /* optional task handle to create */
     ) != pdPASS)
   {

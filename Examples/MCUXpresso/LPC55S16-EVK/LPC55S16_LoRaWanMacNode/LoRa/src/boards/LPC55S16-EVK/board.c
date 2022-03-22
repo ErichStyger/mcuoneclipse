@@ -30,6 +30,14 @@
 #include "fsl_power.h"
 #include "McuArmTools.h"
 #include "McuUtility.h"
+#include "sx1276-board.h"
+
+
+#if PL_CONFIG_RADIO_TRANSEIVER_SX126x
+    #include "sx126x-board.h"
+#elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
+    #include "sx1276-board.h"
+#endif
 
 /*!
  * Uart objects
@@ -142,12 +150,24 @@ void BoardInitMcu( void )
 
 	BoardUnusedIoInit( );
 
+
+	  //SPI for LoRa transceiver
+#if PL_CONFIG_RADIO_TRANSEIVER_SX126x
+//#define PL_CONFIG_RADIO_TRANSEIVER_RFM96        (1)  /* if shell support is enabled */
+//#define PL_CONFIG_RADIO_TRANSEIVER_SX126x        (0)  /* if shell support is enabled */
   //SPI for LoRa transceiver
-  SpiInit( &SX126x.Spi, SPI_1, NC, NC, NC, NC );
+	SpiInit( &SX126x.Spi, SPI_1, NC, NC, NC, NC );
 	SX126xIoInit( );
 	SX126xIoDbgInit();
 	SX126xReset();
 	SX126xIoTcxoInit();
+#elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
+	SpiInit( &SX1276.Spi, SPI_1, NC, NC, NC, NC );
+	SX1276IoInit( );
+	SX1276IoDbgInit();
+	SX1276Reset();
+	SX1276IoTcxoInit();
+#endif
 
 #if BOARD_CONFIG_HAS_SECURE_ELEMENT
 	//I2C for Secure Element
@@ -181,7 +201,7 @@ void BoardDeInitMcu( void )
 #endif
 
 	BoardPutRadioInSleepMode(true);
-	SpiDeInit(&SX126x.Spi);
+	SpiDeInit(&SX1276.Spi);
 #if	BOARD_CONFIG_HAS_SECURE_ELEMENT
 	BoardPutSecureElementInSleepMode();
 	I2cDeInit(&I2c0);
@@ -330,7 +350,7 @@ static void BoardPutRadioInSleepMode(bool coldstart){
     SleepParams_t params = { 0 };
     params.Fields.WarmStart = coldstart;
 
-    SX126xSetSleep( params );
+    SX1276SetSleep();
 }
 
 void BoardPrintUUID(void) {
