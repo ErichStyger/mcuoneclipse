@@ -201,7 +201,16 @@ void BoardDeInitMcu( void )
 #endif
 
 	BoardPutRadioInSleepMode(true);
+
+#if PL_CONFIG_RADIO_TRANSEIVER_SX126x
+	SpiDeInit(&SX126x.Spi);
+
+#elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
 	SpiDeInit(&SX1276.Spi);
+#endif
+
+
+
 #if	BOARD_CONFIG_HAS_SECURE_ELEMENT
 	BoardPutSecureElementInSleepMode();
 	I2cDeInit(&I2c0);
@@ -350,7 +359,13 @@ static void BoardPutRadioInSleepMode(bool coldstart){
     SleepParams_t params = { 0 };
     params.Fields.WarmStart = coldstart;
 
+#if PL_CONFIG_RADIO_TRANSEIVER_SX126x
+    SX126xSetSleep(params);
+
+#elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
     SX1276SetSleep();
+#endif
+
 }
 
 void BoardPrintUUID(void) {

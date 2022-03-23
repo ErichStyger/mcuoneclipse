@@ -383,7 +383,7 @@ int main( void )
         LmHandlerProcess( );
 
         // Process application uplinks management
-        //UplinkProcess( );
+        UplinkProcess( );
 
         CRITICAL_SECTION_BEGIN( );
         if( IsMacProcessPending == 1 )
@@ -522,6 +522,7 @@ static void OnSysTimeUpdate( void )
 /*!
  * Prepares the payload of the frame and transmits it.
  */
+#if !McuLib_CONFIG_SDK_USE_FREERTOS
 static void PrepareTxFrame( void )
 {
     if( LmHandlerIsBusy( ) == true )
@@ -549,6 +550,8 @@ static void PrepareTxFrame( void )
 #endif
     }
 }
+#endif
+
 
 #if !McuLib_CONFIG_SDK_USE_FREERTOS
 static void StartTxProcess( LmHandlerTxEvents_t txEvent )
@@ -587,6 +590,10 @@ static void UplinkProcess( void )
     }
 }
 #endif
+
+
+
+
 
 static void OnTxPeriodicityChanged( uint32_t periodicity )
 {

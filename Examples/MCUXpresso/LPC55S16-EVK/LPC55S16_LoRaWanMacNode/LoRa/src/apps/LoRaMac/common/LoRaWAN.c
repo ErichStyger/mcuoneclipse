@@ -19,21 +19,22 @@
 
 #define FIRMWARE_VERSION  0x01020000 // 1.2.0.0
 
-/* Task notification values */
-#define LORAWAN_NOTIFICATION_EVENT_LMHANDLER     (1<<0) /* LmHandlerProcess */
-#define LORAWAN_NOTIFICATION_EVENT_TX_REQUEST    (1<<1) /* request to send data */
 
 static TaskHandle_t LoRaTaskHandle;
 static uint8_t IsMacProcessPending = 0;
 
-void LORAWAN_LmHandlerNotififyTaskRequest(void) {
+TaskHandle_t  lorawan_task_handle;
+QueueHandle_t lorawan_task_queue;
+
+
+void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
   if (xPortIsInsideInterrupt()) {
-    xTaskNotifyFromISR(LoRaTaskHandle, LORAWAN_NOTIFICATION_EVENT_LMHANDLER, eSetBits, &xHigherPriorityTaskWoken );
+	  xTaskNotifyAndQueryFromISR(LoRaTaskHandle, event, eSetBits, NULL, &xHigherPriorityTaskWoken );
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
   } else {
-    xTaskNotify(LoRaTaskHandle, LORAWAN_NOTIFICATION_EVENT_LMHANDLER, eSetBits);
+	  xTaskNotifyAndQuery(LoRaTaskHandle, event, eSetBits, NULL);
   }
 }
 
@@ -198,28 +199,32 @@ static LmhpComplianceParams_t LmhpComplianceParams =
 };
 
 static void OnMacProcessNotify(void) {
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_MAC_PENDING);
   IsMacProcessPending = 1;
+  printf( "\n###### =========== MacProcessNotify ============ ######\n" );
+  printf( "######            xxxxxxxxxxxxxxxxxxx             ######\n");
+  printf( "###### ========================================== ######\n");
+
 }
 
 static void OnNvmDataChange(LmHandlerNvmContextStates_t state, uint16_t size) {
   DisplayNvmDataChange(state, size);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnNetworkParametersChange(CommissioningParams_t* params) {
   DisplayNetworkParametersUpdate(params);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+ // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnMacMcpsRequest(LoRaMacStatus_t status, McpsReq_t *mcpsReq, TimerTime_t nextTxIn) {
   DisplayMacMcpsRequestUpdate(status, mcpsReq, nextTxIn);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnMacMlmeRequest(LoRaMacStatus_t status, MlmeReq_t *mlmeReq, TimerTime_t nextTxIn) {
   DisplayMacMlmeRequestUpdate(status, mlmeReq, nextTxIn);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnJoinRequest(LmHandlerJoinParams_t* params) {
@@ -229,12 +234,12 @@ static void OnJoinRequest(LmHandlerJoinParams_t* params) {
   } else {
     LmHandlerRequestClass( LORAWAN_DEFAULT_CLASS );
   }
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnTxData(LmHandlerTxParams_t* params) {
   DisplayTxUpdate(params);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+ // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnRxData(LmHandlerAppData_t* appData, LmHandlerRxParams_t* params) {
@@ -247,7 +252,7 @@ static void OnRxData(LmHandlerAppData_t* appData, LmHandlerRxParams_t* params) {
     default:
       break;
   }
-  LORAWAN_LmHandlerNotififyTaskRequest();
+ // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnClassChange(DeviceClass_t deviceClass) {
@@ -261,7 +266,7 @@ static void OnClassChange(DeviceClass_t deviceClass) {
       .Port = 0,
   };
   LmHandlerSend(&appData, LORAMAC_HANDLER_UNCONFIRMED_MSG);
-  LORAWAN_LmHandlerNotififyTaskRequest();
+ // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnBeaconStatusChange(LoRaMacHandlerBeaconParams_t* params) {
@@ -284,7 +289,7 @@ static void OnBeaconStatusChange(LoRaMacHandlerBeaconParams_t* params) {
         }
     }
     DisplayBeaconUpdate( params );
-    LORAWAN_LmHandlerNotififyTaskRequest();
+    //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 #if( LMH_SYS_TIME_UPDATE_NEW_API == 1 )
@@ -359,12 +364,12 @@ static void OnTxPeriodicityChanged(uint32_t periodicity) {
 
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed ) {
   LmHandlerParams.IsTxConfirmed = isTxConfirmed;
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity ) {
   LmHandlerParams.PingSlotPeriodicity = pingSlotPeriodicity;
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 
@@ -402,12 +407,12 @@ static void LoRaTask(void *pv) {
     } else {
       taskEXIT_CRITICAL();
       /* wait for notification */
-      res = xTaskNotifyWait(0, -1, &notification, portMAX_DELAY);
+      res = xTaskNotifyWait(0, -1, &notification, pdMS_TO_TICKS(5) /*portMAX_DELAY*/);
       if (res==pdPASS) { /* notification received */
-        if (notification&LORAWAN_NOTIFICATION_EVENT_LMHANDLER) {
+        if (notification&(LORAWAN_NOTIFICATION_EVENT_LMHANDLER|LORAWAN_NOTIFICATION_EVENT_MAC_PENDING)) {
 
          // taskENTER_CRITICAL();
-          printf("event received\n");
+         // printf("event received\n");
           LmHandlerProcess();
           //taskEXIT_CRITICAL();
           // Process application uplinks management
@@ -423,7 +428,7 @@ static void LoRaTask(void *pv) {
                   else
                   {
                       // The MCU wakes up through events
-                      printf("*low power\n");
+                     // printf("*low power\n");
                       BoardLowPowerHandler( );
                   }
                   CRITICAL_SECTION_END( );
@@ -442,7 +447,7 @@ void LoRaWAN_Init(void) {
       "LoRaTask", /* task name for kernel awareness debugging */
       5000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+5,  /* initial priority */
+	  configMAX_PRIORITIES-1,  /* initial priority */
       &LoRaTaskHandle /* optional task handle to create */
     ) != pdPASS)
   {
