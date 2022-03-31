@@ -57,34 +57,19 @@ void SpiInit(Spi_t *obj, SpiId_t spiId, PinNames mosi, PinNames miso,
 	PinNames sclk, PinNames nss) {
 
 	lpcSpiHandle_t *handle;
-	MapSpiIdToHandle(spiId, &handle);
+	MapSpiIdToHandle(obj->SpiId, &handle);
 
-#if(LPC_NUMBER_OF_SPI > 0)
-	if(handle == &spiHandle0){
-		handle->srcClk = LPC_SPI1_CLK_FRQ;
-		SPI_MasterGetDefaultConfig(&(handle->masterConfig));
-		handle->masterConfig.polarity = LPC_SPI1_CONFIG_POLARITY;
-		handle->masterConfig.phase = LPC_SPI1_CONFIG_PHASE;
-		handle->masterConfig.direction = LPC_SPI1_CONFIG_DIRECTION;
-		handle->masterConfig.baudRate_Bps = LPC_SPI1_CONFIG_BAUDRATE;
-		handle->masterConfig.dataWidth = LPC_SPI1_CONFIG_DATAWIDTH;
-		handle->masterConfig.sselNum = LPC_SPI1_CONFIG_SS;
-		handle->masterConfig.sselPol = LPC_SPI1_CONFIG_SPOL;
-	}
-#endif
-#if(LPC_NUMBER_OF_SPI > 1)
-	if(handle == &spiHandle1){
-		handle->srcClk = LPC_SPI2_CLK_FRQ;
-		SPI_MasterGetDefaultConfig(&(handle->masterConfig));
-		handle->masterConfig.polarity = LPC_SPI2_CONFIG_POLARITY;
-		handle->masterConfig.phase = LPC_SPI2_CONFIG_PHASE;
-		handle->masterConfig.direction = LPC_SPI2_CONFIG_DIRECTION;
-		handle->masterConfig.baudRate_Bps = LPC_SPI2_CONFIG_BAUDRATE;
-		handle->masterConfig.dataWidth = LPC_SPI2_CONFIG_DATAWIDTH;
-		handle->masterConfig.sselNum = LPC_SPI2_CONFIG_SS;
-		handle->masterConfig.sselPol = LPC_SPI2_CONFIG_SPOL;
-	}
-#endif
+
+	handle->srcClk = LPC_SPI2_CLK_FRQ;
+	SPI_MasterGetDefaultConfig(&(handle->masterConfig));
+	handle->masterConfig.polarity = LPC_SPI2_CONFIG_POLARITY;
+	handle->masterConfig.phase = LPC_SPI2_CONFIG_PHASE;
+	handle->masterConfig.direction = LPC_SPI2_CONFIG_DIRECTION;
+	handle->masterConfig.baudRate_Bps = LPC_SPI2_CONFIG_BAUDRATE;
+	handle->masterConfig.dataWidth = LPC_SPI2_CONFIG_DATAWIDTH;
+	handle->masterConfig.sselNum = LPC_SPI2_CONFIG_SS;
+	handle->masterConfig.sselPol = LPC_SPI2_CONFIG_SPOL;
+
 
 	SPI_MasterInit(handle->type, &(handle->masterConfig), handle->srcClk);
 }

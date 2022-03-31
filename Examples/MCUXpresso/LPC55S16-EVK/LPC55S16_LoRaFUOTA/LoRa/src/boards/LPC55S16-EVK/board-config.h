@@ -61,7 +61,7 @@ extern "C"
 /**
  * SPI definitions
  */
-#define LPC_NUMBER_OF_SPI                       1
+#define LPC_NUMBER_OF_SPI                       2
 
 #if(LPC_NUMBER_OF_SPI > 0)
   /* LoRa Transceiver is on FlexComm 8 */
@@ -76,15 +76,16 @@ extern "C"
   #define LPC_SPI1_CONFIG_SPOL                    kSPI_SpolActiveAllLow
 #endif
 #if(LPC_NUMBER_OF_SPI > 1)
-  #define LPC_SPI2_TYPE                           SPI7 /* Free */
-  #define LPC_SPI2_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(7U)
-  #define LPC_SPI2_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
-  #define LPC_SPI2_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
-  #define LPC_SPI2_CONFIG_DIRECTION               kSPI_MsbFirst
-  #define LPC_SPI2_CONFIG_BAUDRATE                500000U
-  #define LPC_SPI2_CONFIG_DATAWIDTH               kSPI_Data8Bits
-  #define LPC_SPI2_CONFIG_SS                      kSPI_Ssel0
-  #define LPC_SPI2_CONFIG_SPOL                    kSPI_SpolActiveAllLow
+	#define LPC_SPI2_TYPE                           SPI3 /* LoRa Transceiver */
+	#define LPC_SPI2_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(3U)
+	#define LPC_SPI2_SPI_MASTER_IRQ      			  FLEXCOMM3_IRQn
+	#define LPC_SPI2_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
+	#define LPC_SPI2_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
+	#define LPC_SPI2_CONFIG_DIRECTION               kSPI_MsbFirst
+	#define LPC_SPI2_CONFIG_BAUDRATE                500000U
+	#define LPC_SPI2_CONFIG_DATAWIDTH               kSPI_Data8Bits
+	#define LPC_SPI2_CONFIG_SS                      kSPI_Ssel0
+	#define LPC_SPI2_CONFIG_SPOL                    kSPI_SpolActiveAllLow
 #endif
 
 /**

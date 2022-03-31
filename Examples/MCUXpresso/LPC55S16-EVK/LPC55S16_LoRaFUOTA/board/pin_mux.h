@@ -25,54 +25,18 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-/*!
- * @brief Analog switch is open (disabled) */
-#define IOCON_PIO_ASW_DI 0x00u
-/*!
- * @brief Enables digital function */
-#define IOCON_PIO_DIGITAL_EN 0x0100u
-/*!
- * @brief IO is an open drain cell */
-#define IOCON_PIO_ECS_DI 0x00u
-/*!
- * @brief GPIO mode */
-#define IOCON_PIO_EGP_GPIO 0x4000u
-/*!
- * @brief Selects pin function 0 */
-#define IOCON_PIO_FUNC0 0x00u
-/*!
- * @brief Selects pin function 1 */
-#define IOCON_PIO_FUNC1 0x01u
-/*!
- * @brief Selects pin function 5 */
-#define IOCON_PIO_FUNC5 0x05u
-/*!
- * @brief Selects pin function 6 */
-#define IOCON_PIO_FUNC6 0x06u
-/*!
- * @brief Selects pin function 9 */
-#define IOCON_PIO_FUNC9 0x09u
-/*!
- * @brief I2C 50 ns glitch filter enabled. Typically used for Standard mode, Fast-mode and Fast-mode Plus I2C. */
-#define IOCON_PIO_I2CFILTER_NONHIGHSPEED 0x00u
-/*!
- * @brief Input filter disabled */
-#define IOCON_PIO_INPFILT_OFF 0x1000u
-/*!
- * @brief Input function is not inverted */
-#define IOCON_PIO_INV_DI 0x00u
-/*!
- * @brief No addition pin function */
-#define IOCON_PIO_MODE_INACT 0x00u
-/*!
- * @brief Open drain is disabled */
-#define IOCON_PIO_OPENDRAIN_DI 0x00u
-/*!
- * @brief Standard mode, output slew rate control is enabled */
-#define IOCON_PIO_SLEW_STANDARD 0x00u
-/*!
- * @brief 3V3 signaling in I2C mode */
-#define IOCON_PIO_SSEL_3V3 0x00u
+#define IOCON_PIO_ASW_DI 0x00u        /*!<@brief Analog switch is open (disabled) */
+#define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+#define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+#define IOCON_PIO_FUNC1 0x01u         /*!<@brief Selects pin function 1 */
+#define IOCON_PIO_FUNC6 0x06u         /*!<@brief Selects pin function 6 */
+#define IOCON_PIO_FUNC8 0x08u         /*!<@brief Selects pin function 8 */
+#define IOCON_PIO_FUNC9 0x09u         /*!<@brief Selects pin function 9 */
+#define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+#define IOCON_PIO_MODE_INACT 0x00u    /*!<@brief No addition pin function */
+#define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
+#define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+#define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
 /*! @name FC0_RXD_SDA_MOSI_DATA (number 92), MCU_RX
   @{ */
@@ -160,11 +124,23 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_RADIO_DEVICE_PIN_MASK (1U << 0U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
-/*! @name FC1_RXD_SDA_MOSI_DATA (number 71), RADIO_SPI_MOSI
+/*! @name SWO (number 21), J9[1]/U18[12]/N4M_SWO
   @{ */
 /* @} */
 
-/*! @name FC1_TXD_SCL_MISO_WS (number 72), RADIO_SPI_MISO
+/*! @name FC3_TXD_SCL_MISO_WS (number 81), J10[20]/U24[12]/FC3_SPI_MISO
+  @{ */
+/* @} */
+
+/*! @name FC3_RXD_SDA_MOSI_DATA (number 83), J10[18]/U24[11]/FC3_SPI_MOSI
+  @{ */
+/* @} */
+
+/*! @name FC3_SCK (number 89), J10[14]/U24[13]/FC3_SPI_SCK
+  @{ */
+/* @} */
+
+/*! @name FC3_CTS_SDA_SSEL0 (number 86), J10[16]/U24[14]/FC3_SPI_SSEL0
   @{ */
 /* @} */
 
@@ -173,6 +149,25 @@ void BOARD_InitBootPins(void);
  *
  */
 void BOARD_InitPins(void); /* Function assigned for the Cortex-M33 */
+
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_13_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_13_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_14_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_14_FUNC_ALT1 0x01u
+
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_InitI2cPins(void); /* Function assigned for the Cortex-M33 */
 
 #if defined(__cplusplus)
 }

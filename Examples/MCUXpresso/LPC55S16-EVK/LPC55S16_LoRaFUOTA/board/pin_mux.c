@@ -11,12 +11,16 @@ product: Pins v11.0
 processor: LPC55S16
 package_id: LPC55S16JBD100
 mcu_data: ksdk2_0
-processor_version: 11.0.1
+processor_version: 11.0.2
 board: LPCXpresso55S16
 pin_labels:
 - {pin_num: '54', pin_signal: PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A, label: NOT_CONNECTED, identifier: RADIO_DEVICE}
-- {pin_num: '71', pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13, label: RADIO_SPI_MOSI, identifier: FC1_SDA}
-- {pin_num: '72', pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14, label: RADIO_SPI_MISO, identifier: FC1_SCL}
+- {pin_num: '81', pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, label: 'J10[20]/U24[12]/FC3_SPI_MISO', identifier: EXT_FLASH_MISO}
+- {pin_num: '83', pin_signal: PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3, label: 'J10[18]/U24[11]/FC3_SPI_MOSI', identifier: EXT_FLASH_MISO;EXT_FLASH_MOSI}
+- {pin_num: '86', pin_signal: PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4, label: 'J10[16]/U24[14]/FC3_SPI_SSEL0', identifier: EXT_FLASH_SSEL}
+- {pin_num: '89', pin_signal: PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6, label: 'J10[14]/U24[13]/FC3_SPI_SCK', identifier: EXT_FLASH_SCK}
+- {pin_num: '71', pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13, label: I2C_SDA, identifier: FC1_SDA;a;b}
+- {pin_num: '72', pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14, label: I2C_SCL, identifier: FC1_SCL;b;a}
 - {pin_num: '14', pin_signal: PIO0_16/FC4_TXD_SCL_MISO_WS/CLKOUT/CT_INP4/SECURE_GPIO0_16/ADC0_8, label: 'J7[1]/J13[1]/JP4[1]/ARD_MIK_ADC0_8_N', identifier: RADIO_RESET}
 - {pin_num: '60', pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26, label: NOT_CONNECTED, identifier: SPI_MOSI}
 - {pin_num: '92', pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29, label: MCU_RX, identifier: DEBUG_UART_RX}
@@ -76,10 +80,16 @@ BOARD_InitPins:
     mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '54', peripheral: GPIO, signal: 'PIO0, 0', pin_signal: PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A, direction: INPUT, mode: inactive,
     slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '71', peripheral: FLEXCOMM1, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, ssel: signal3v3, filter_off: disabled, ecs: disabled, egp: gpio, i2cfilter: nonhighspeedmode}
-  - {pin_num: '72', peripheral: FLEXCOMM1, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, ssel: signal3v3, filter_off: disabled, ecs: disabled, egp: gpio, i2cfilter: nonhighspeedmode}
+  - {pin_num: '21', peripheral: SWD, signal: SWO, pin_signal: PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1, mode: inactive,
+    slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
+  - {pin_num: '81', peripheral: FLEXCOMM3, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, mode: pullUp,
+    slew_rate: standard, invert: disabled, open_drain: disabled}
+  - {pin_num: '83', peripheral: FLEXCOMM3, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3, identifier: EXT_FLASH_MOSI,
+    mode: pullUp, slew_rate: standard, invert: disabled, open_drain: disabled}
+  - {pin_num: '89', peripheral: FLEXCOMM3, signal: SCK, pin_signal: PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6, mode: pullUp, slew_rate: standard,
+    invert: disabled, open_drain: disabled}
+  - {pin_num: '86', peripheral: FLEXCOMM3, signal: CTS_SDA_SSEL0, pin_signal: PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4, mode: pullUp,
+    slew_rate: standard, invert: disabled, open_drain: disabled}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -161,32 +171,7 @@ void BOARD_InitPins(void)
     /* PORT0 PIN0 (coords: 54) is configured as PIO0_0 */
     IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DEVICE_PORT, BOARD_INITPINS_RADIO_DEVICE_PIN, RADIO_DEVICE);
 
-    const uint32_t port0_pin13_config = (/* Pin is configured as FC1_RXD_SDA_MOSI_DATA */
-                                         IOCON_PIO_FUNC5 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI |
-                                         /* 3V3 signaling in I2C mode */
-                                         IOCON_PIO_SSEL_3V3 |
-                                         /* Input filter disabled */
-                                         IOCON_PIO_INPFILT_OFF |
-                                         /* IO is an open drain cell */
-                                         IOCON_PIO_ECS_DI |
-                                         /* GPIO mode */
-                                         IOCON_PIO_EGP_GPIO |
-                                         /* I2C 50 ns glitch filter enabled. Typically used for Standard mode, Fast-mode and Fast-mode Plus I2C. */
-                                         IOCON_PIO_I2CFILTER_NONHIGHSPEED);
-    /* PORT0 PIN13 (coords: 71) is configured as FC1_RXD_SDA_MOSI_DATA */
-    IOCON_PinMuxSet(IOCON, 0U, 13U, port0_pin13_config);
-
-    const uint32_t port0_pin14_config = (/* Pin is configured as FC1_TXD_SCL_MISO_WS */
+    const uint32_t port0_pin10_config = (/* Pin is configured as SWO */
                                          IOCON_PIO_FUNC6 |
                                          /* No addition pin function */
                                          IOCON_PIO_MODE_INACT |
@@ -198,18 +183,10 @@ void BOARD_InitPins(void)
                                          IOCON_PIO_DIGITAL_EN |
                                          /* Open drain is disabled */
                                          IOCON_PIO_OPENDRAIN_DI |
-                                         /* 3V3 signaling in I2C mode */
-                                         IOCON_PIO_SSEL_3V3 |
-                                         /* Input filter disabled */
-                                         IOCON_PIO_INPFILT_OFF |
-                                         /* IO is an open drain cell */
-                                         IOCON_PIO_ECS_DI |
-                                         /* GPIO mode */
-                                         IOCON_PIO_EGP_GPIO |
-                                         /* I2C 50 ns glitch filter enabled. Typically used for Standard mode, Fast-mode and Fast-mode Plus I2C. */
-                                         IOCON_PIO_I2CFILTER_NONHIGHSPEED);
-    /* PORT0 PIN14 (coords: 72) is configured as FC1_TXD_SCL_MISO_WS */
-    IOCON_PinMuxSet(IOCON, 0U, 14U, port0_pin14_config);
+                                         /* Analog switch is open (disabled) */
+                                         IOCON_PIO_ASW_DI);
+    /* PORT0 PIN10 (coords: 21) is configured as SWO */
+    IOCON_PinMuxSet(IOCON, 0U, 10U, port0_pin10_config);
 
     const uint32_t RADIO_RESET = (/* Pin is configured as PIO0_16 */
                                   IOCON_PIO_FUNC0 |
@@ -227,6 +204,21 @@ void BOARD_InitPins(void)
                                   IOCON_PIO_ASW_DI);
     /* PORT0 PIN16 (coords: 14) is configured as PIO0_16 */
     IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_RESET_PORT, BOARD_INITPINS_RADIO_RESET_PIN, RADIO_RESET);
+
+    const uint32_t port0_pin2_config = (/* Pin is configured as FC3_TXD_SCL_MISO_WS */
+                                        IOCON_PIO_FUNC1 |
+                                        /* Selects pull-up function */
+                                        IOCON_PIO_MODE_PULLUP |
+                                        /* Standard mode, output slew rate control is enabled */
+                                        IOCON_PIO_SLEW_STANDARD |
+                                        /* Input function is not inverted */
+                                        IOCON_PIO_INV_DI |
+                                        /* Enables digital function */
+                                        IOCON_PIO_DIGITAL_EN |
+                                        /* Open drain is disabled */
+                                        IOCON_PIO_OPENDRAIN_DI);
+    /* PORT0 PIN2 (coords: 81) is configured as FC3_TXD_SCL_MISO_WS */
+    IOCON_PinMuxSet(IOCON, 0U, 2U, port0_pin2_config);
 
     const uint32_t port0_pin26_config = (/* Pin is configured as HS_SPI_MOSI */
                                          IOCON_PIO_FUNC9 |
@@ -258,6 +250,21 @@ void BOARD_InitPins(void)
     /* PORT0 PIN29 (coords: 92) is configured as FC0_RXD_SDA_MOSI_DATA */
     IOCON_PinMuxSet(IOCON, 0U, 29U, port0_pin29_config);
 
+    const uint32_t port0_pin3_config = (/* Pin is configured as FC3_RXD_SDA_MOSI_DATA */
+                                        IOCON_PIO_FUNC1 |
+                                        /* Selects pull-up function */
+                                        IOCON_PIO_MODE_PULLUP |
+                                        /* Standard mode, output slew rate control is enabled */
+                                        IOCON_PIO_SLEW_STANDARD |
+                                        /* Input function is not inverted */
+                                        IOCON_PIO_INV_DI |
+                                        /* Enables digital function */
+                                        IOCON_PIO_DIGITAL_EN |
+                                        /* Open drain is disabled */
+                                        IOCON_PIO_OPENDRAIN_DI);
+    /* PORT0 PIN3 (coords: 83) is configured as FC3_RXD_SDA_MOSI_DATA */
+    IOCON_PinMuxSet(IOCON, 0U, 3U, port0_pin3_config);
+
     const uint32_t port0_pin30_config = (/* Pin is configured as FC0_TXD_SCL_MISO_WS */
                                          IOCON_PIO_FUNC1 |
                                          /* No addition pin function */
@@ -272,6 +279,36 @@ void BOARD_InitPins(void)
                                          IOCON_PIO_OPENDRAIN_DI);
     /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
     IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
+
+    const uint32_t port0_pin4_config = (/* Pin is configured as FC3_CTS_SDA_SSEL0 */
+                                        IOCON_PIO_FUNC8 |
+                                        /* Selects pull-up function */
+                                        IOCON_PIO_MODE_PULLUP |
+                                        /* Standard mode, output slew rate control is enabled */
+                                        IOCON_PIO_SLEW_STANDARD |
+                                        /* Input function is not inverted */
+                                        IOCON_PIO_INV_DI |
+                                        /* Enables digital function */
+                                        IOCON_PIO_DIGITAL_EN |
+                                        /* Open drain is disabled */
+                                        IOCON_PIO_OPENDRAIN_DI);
+    /* PORT0 PIN4 (coords: 86) is configured as FC3_CTS_SDA_SSEL0 */
+    IOCON_PinMuxSet(IOCON, 0U, 4U, port0_pin4_config);
+
+    const uint32_t port0_pin6_config = (/* Pin is configured as FC3_SCK */
+                                        IOCON_PIO_FUNC1 |
+                                        /* Selects pull-up function */
+                                        IOCON_PIO_MODE_PULLUP |
+                                        /* Standard mode, output slew rate control is enabled */
+                                        IOCON_PIO_SLEW_STANDARD |
+                                        /* Input function is not inverted */
+                                        IOCON_PIO_INV_DI |
+                                        /* Enables digital function */
+                                        IOCON_PIO_DIGITAL_EN |
+                                        /* Open drain is disabled */
+                                        IOCON_PIO_OPENDRAIN_DI);
+    /* PORT0 PIN6 (coords: 89) is configured as FC3_SCK */
+    IOCON_PinMuxSet(IOCON, 0U, 6U, port0_pin6_config);
 
     const uint32_t port1_pin2_config = (/* Pin is configured as HS_SPI_SCK */
                                         IOCON_PIO_FUNC6 |
@@ -366,6 +403,57 @@ void BOARD_InitPins(void)
                                 IOCON_PIO_ASW_DI);
     /* PORT1 PIN9 (coords: 10) is configured as PIO1_9 */
     IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_NSS_PORT, BOARD_INITPINS_RADIO_NSS_PIN, RADIO_NSS);
+}
+
+/* clang-format off */
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitI2cPins:
+- options: {callFromInitBoot: 'false', coreID: cm33_core0, enableClock: 'true'}
+- pin_list:
+  - {pin_num: '72', peripheral: FLEXCOMM1, signal: RTS_SCL_SSEL1, pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14}
+  - {pin_num: '71', peripheral: FLEXCOMM1, signal: CTS_SDA_SSEL0, pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+/* clang-format on */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitI2cPins
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+/* Function assigned for the Cortex-M33 */
+void BOARD_InitI2cPins(void)
+{
+    /* Enables the clock for the I/O controller.: Enable Clock. */
+    CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][13] = ((IOCON->PIO[0][13] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT013 (pin 71) is configured as FC1_CTS_SDA_SSEL0. */
+                         | IOCON_PIO_FUNC(PIO0_13_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_13_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][14] = ((IOCON->PIO[0][14] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT014 (pin 72) is configured as FC1_RTS_SCL_SSEL1. */
+                         | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF

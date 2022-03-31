@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "W25Q128.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
   #include "minGlue-Flash.h"
@@ -32,12 +33,24 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuLog_CONFIG_IS_ENABLED && McuLog_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
 #endif
+  McuTimeDate_ParseCommand,
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
-  ini_ParseCommand,
-  McuFlash_ParseCommand,
 #endif
-  APP_ParseCommand,
+#if PL_CONFIG_USE_NVMC
+  //NVMC_ParseCommand,
+#endif
+#if PL_CONFIG_USE_W25Q
+  W25_ParseCommand,
+#endif
+
+#if PL_CONFIG_USE_SWO
+  McuSWO_ParseCommand,
+#endif
+#if PL_CONFIG_USE_SD_CARD
+  McuFatFS_ParseCommand,
+  DISK_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 

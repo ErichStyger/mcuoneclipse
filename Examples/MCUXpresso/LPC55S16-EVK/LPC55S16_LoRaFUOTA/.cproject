@@ -388,14 +388,14 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/apps/LoRaMac/FW_Update_VM2|src/apps/LoRaMac/FW_Update_VM2/LPC55S16-EVK/janpatch.c|src/apps/LoRaMac/FUOTA|src/radio/sx1276|src/radio/sx1272|src/apps/ping-pong|src/boards/LPC55S16-EVK/sx1262mbxdas-board.c|src/mac/region/RegionUS915.c|src/mac/region/RegionRU864.c|src/mac/region/RegionKR920.c|src/mac/region/RegionIN865.c|src/mac/region/RegionEU433.c|src/mac/region/RegionCN779.c|src/mac/region/RegionCN470B26.c|src/mac/region/RegionCN470B20.c|src/mac/region/RegionCN470A26.c|src/mac/region/RegionCN470A20.c|src/mac/region/RegionCN470.c|src/mac/region/RegionBaseUS.c|src/mac/region/RegionAU915.c|src/mac/region/RegionAS923.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LoRa"/>
+						<entry excluding="src/apps/LoRaMac/periodic-uplink-lpp/LPC55S16-EVK/main.c|src/apps/LoRaMac/FW_Update_VM2|src/apps/LoRaMac/FW_Update_VM2/LPC55S16-EVK/janpatch.c|src/apps/LoRaMac/FUOTA|src/radio/sx1276|src/radio/sx1272|src/apps/ping-pong|src/boards/LPC55S16-EVK/sx1262mbxdas-board.c|src/mac/region/RegionUS915.c|src/mac/region/RegionRU864.c|src/mac/region/RegionKR920.c|src/mac/region/RegionIN865.c|src/mac/region/RegionEU433.c|src/mac/region/RegionCN779.c|src/mac/region/RegionCN470B26.c|src/mac/region/RegionCN470B20.c|src/mac/region/RegionCN470A26.c|src/mac/region/RegionCN470A20.c|src/mac/region/RegionCN470.c|src/mac/region/RegionBaseUS.c|src/mac/region/RegionAU915.c|src/mac/region/RegionAS923.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LoRa"/>
 						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="freertos_kernel/portable/MemMang/heap_1.c|freertos_kernel/portable/MemMang/heap_2.c|freertos_kernel/portable/MemMang/heap_3.c|freertos_kernel/portable/MemMang/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="freertos"/>
-						<entry excluding="main.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="littleFS|fs.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
@@ -782,7 +782,7 @@
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="freertos_kernel/portable/MemMang/heap_1.c|freertos_kernel/portable/MemMang/heap_2.c|freertos_kernel/portable/MemMang/heap_3.c|freertos_kernel/portable/MemMang/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="freertos"/>
-						<entry excluding="main.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="littleFS|fs.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
