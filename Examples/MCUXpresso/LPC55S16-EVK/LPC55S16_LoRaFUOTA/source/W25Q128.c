@@ -23,6 +23,7 @@
 #define W25_CMD_READ_STATUS1  0x05
 
 #define W25_CMD_WRITE_ENABLE  0x06
+#define W25_CMD_WRITE_DISABLE  0x04
 
 #define W25_CMD_GET_ID        0x9F
 #define W25_ID0_WINBOND       0xEF
@@ -57,7 +58,8 @@ static void W25Q_MasterDMASetup(void);
 static void W25Q_MasterStartDMATransfer(void);
 static void W25Q_TransferDataCheck(void);
 static void SPI_WRITE_READ_CMD(uint8_t cmd, uint8_t *buf, size_t bufSize);
-
+static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t bufSize);
+static void SPI_WRITE_W25(uint8_t command ,uint32_t address, const uint8_t *buf, size_t bufSize);
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -159,95 +161,47 @@ bool W25_isBusy(void) {
 
 void W25_WaitIfBusy(void) {
   while(W25_isBusy()) {
-	  McuWait_WaitCycles(1);
+	  McuWait_Waitus(10);
   }
 }
 
 uint8_t W25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
   size_t i;
-
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_DATA_READ);
-  SPI_WRITE(address>>16);
-  SPI_WRITE(address>>8);
-  SPI_WRITE(address);
-  for(i=0;i<bufSize;i++) {
-    SPI_WRITE_READ(0, &buf[i]);
-  }
-  W25_CS_DISABLE();
+  SPI_READ_W25(W25_CMD_DATA_READ, address, buf, bufSize);
   return ERR_OK;
 }
 
 uint8_t W25_EraseAll(void) {
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_WRITE_ENABLE);
-  W25_CS_DISABLE();
-  McuWait_WaitCycles(1);
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_CHIP_ERASE);
-  W25_CS_DISABLE();
-
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_READ_CMD(W25_CMD_CHIP_ERASE, NULL, 0);
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
   return ERR_OK;
 }
 
 
 uint8_t W25_EraseSector4K(uint32_t address) {
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_WRITE_ENABLE);
-  W25_CS_DISABLE();
-  McuWait_WaitCycles(1);
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_SECTOR_ERASE_4K);
-  SPI_WRITE(address>>16);
-  SPI_WRITE(address>>8);
-  SPI_WRITE(address);
-  W25_CS_DISABLE();
-
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_W25(W25_CMD_SECTOR_ERASE_4K, address, NULL, 0);
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
   return ERR_OK;
 }
 
 uint8_t W25_EraseBlock32K(uint32_t address) {
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_WRITE_ENABLE);
-  W25_CS_DISABLE();
-  McuWait_WaitCycles(1);
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_BLOCK_ERASE_32K);
-  SPI_WRITE(address>>16);
-  SPI_WRITE(address>>8);
-  SPI_WRITE(address);
-  W25_CS_DISABLE();
-
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_W25(W25_CMD_BLOCK_ERASE_32K, address, NULL, 0);
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
   return ERR_OK;
 }
 
 uint8_t W25_EraseBlock64K(uint32_t address) {
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_WRITE_ENABLE);
-  W25_CS_DISABLE();
-  McuWait_WaitCycles(1);
-
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_BLOCK_ERASE_64K);
-  SPI_WRITE(address>>16);
-  SPI_WRITE(address>>8);
-  SPI_WRITE(address);
-  W25_CS_DISABLE();
-
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_W25(W25_CMD_BLOCK_ERASE_64K, address, NULL, 0);
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
   return ERR_OK;
 }
 
@@ -260,23 +214,9 @@ uint8_t W25_EraseBlock64K(uint32_t address) {
  */
 uint8_t W25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize) {
   W25_WaitIfBusy();
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_WRITE_ENABLE);
-  W25_CS_DISABLE();
-  McuWait_WaitCycles(1);
-
-  W25_CS_ENABLE();
-  SPI_WRITE(W25_CMD_PAGE_PROGRAM);
-  SPI_WRITE(address>>16);
-  SPI_WRITE(address>>8);
-  SPI_WRITE(address);
-  while(dataSize>0) {
-    SPI_WRITE(*data);
-    dataSize--;
-    data++;
-  }
-  W25_CS_DISABLE();
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_W25(W25_CMD_PAGE_PROGRAM, address, data, dataSize);
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
 
   return ERR_OK;
 }
@@ -405,7 +345,8 @@ static uint8_t W25_PrintStatus(McuShell_ConstStdIOType *io) {
 
 static uint8_t ReadBytes(void *hndl, uint32_t address, uint8_t *buf, size_t bufSize) {
   (void)hndl; /* not used */
-  return W25_Read(address, buf, bufSize);
+  SPI_READ_W25(W25_CMD_DATA_READ, address, buf, bufSize);
+  return ERR_OK;
 }
 
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_ConstStdIOType *io) {
@@ -626,10 +567,79 @@ static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	McuWait_Waitms(1);
+	McuWait_Waitus(1);
 	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
 	free(masterRxData_temp);free(masterTxData_temp);
 }
+
+
+static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t buffSize){
+
+
+	spi_transfer_t masterXfer;
+	uint32_t i = 0U;
+	uint8_t *masterRxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
+	uint8_t *masterTxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
+	masterTxData_temp[0]= command;
+	masterTxData_temp[1]= address>>16;
+	masterTxData_temp[2]= address>>8;
+	masterTxData_temp[3]= address;
+	/* Set up handle for spi master */
+    SPI_MasterTransferCreateHandleDMA(W25Q_SPI_MASTER, &masterHandle, SPI_MasterUserCallback, NULL, &masterTxHandle,
+                                      &masterRxHandle);
+
+	/* Start master transfer */
+	//0x9F
+	masterXfer.txData      = (uint8_t *)masterTxData_temp;
+	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
+	masterXfer.dataSize    = (buffSize+1) * sizeof(masterTxData_temp[0]);
+	masterXfer.configFlags = kSPI_FrameAssert;
+
+	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
+	{
+		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
+	}
+	McuWait_Waitus(1);
+	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
+	free(masterRxData_temp);free(masterTxData_temp);
+}
+
+static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf, size_t buffSize){
+
+	spi_transfer_t masterXfer;
+	uint32_t i = 0U;
+	uint8_t *masterRxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
+	uint8_t *masterTxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
+	masterTxData_temp[0]= command;
+	masterTxData_temp[1]= address>>16;
+	masterTxData_temp[2]= address>>8;
+	masterTxData_temp[3]= address;
+
+	for (int i = 0; i < buffSize; ++i)
+	{
+		masterTxData_temp[4+i]= buf[i];
+	}
+
+	/* Set up handle for spi master */
+    SPI_MasterTransferCreateHandleDMA(W25Q_SPI_MASTER, &masterHandle, SPI_MasterUserCallback, NULL, &masterTxHandle,
+                                      &masterRxHandle);
+
+	/* Start master transfer */
+	//0x9F
+	masterXfer.txData      = (uint8_t *)masterTxData_temp;
+	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
+	masterXfer.dataSize    = (buffSize+1) * sizeof(masterTxData_temp[0]);
+	masterXfer.configFlags = kSPI_FrameAssert;
+
+	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
+	{
+		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
+	}
+	McuWait_Waitus(1);
+	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
+	free(masterRxData_temp);free(masterTxData_temp);
+}
+
 
 
 //static void W25Q_MasterStartDMATransfer(void)
