@@ -12,15 +12,20 @@
 #include "LPC55S16.h"
 #include "fsl_debug_console.h"
 #include "application.h"
+#include "W25Q128.h"
+#include "fsl_power.h"
 
 int main(void) {
-  /* Init board hardware. */
-	//CLOCK_AttachClk(kFRO12M_to_FLEXCOMM3);
-	//RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
+
+    /* attach 12 MHz clock to SPI3 */
+    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM3);
+    /* reset FLEXCOMM for SPI */
+    RESET_PeripheralReset(kFC3_RST_SHIFT_RSTn);
+  //POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
+  //SystemCoreClockUpdate();
   BOARD_InitBootPeripherals();
-
 
 #ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
   /* Init FSL debug console. */

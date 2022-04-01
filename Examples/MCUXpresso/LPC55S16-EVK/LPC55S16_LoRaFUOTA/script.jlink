@@ -1,7 +1,7 @@
 ExitOnError 1
 r
-exec EnableEraseAllFlashBanks
-erase
+h
+loadfile "C:\Users\cc-isn\Documents\Repo\Styger\Examples\MCUXpresso\LPC55S16-EVK\LPC55S16_LoRaFUOTA\Debug\LPC55S16_LoRaFUOTA.hex" 0x0 
 qc
 
 qc

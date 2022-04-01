@@ -45,7 +45,6 @@ extern uint32_t SystemCoreClock;
  ******************************************************************************/
 void BOARD_InitBootClocks(void)
 {
-    BOARD_BootClockFROHF96M();
 }
 
 /*******************************************************************************
@@ -97,15 +96,17 @@ void BOARD_BootClockFRO12M(void)
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!Configuration
 name: BOARD_BootClockFROHF96M
-called_from_default_init: true
 outputs:
 - {id: FRO_12MHz_clock.outFreq, value: 12 MHz}
 - {id: System_clock.outFreq, value: 96 MHz}
 settings:
+- {id: PLL0_Mode, value: Normal}
 - {id: ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG, value: Enable}
+- {id: ENABLE_CLKIN_ENA, value: Enabled}
 - {id: SYSCON.MAINCLKSELA.sel, value: ANACTRL.fro_hf_clk}
 sources:
 - {id: ANACTRL.fro_hf.outFreq, value: 96 MHz}
+- {id: SYSCON.XTAL32M.outFreq, value: 16 MHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 

@@ -56,7 +56,7 @@ static void SPI_MasterUserCallback(SPI_Type *base, spi_dma_handle_t *handle, sta
 static void W25Q_MasterInit(void);
 static void W25Q_MasterDMASetup(void);
 static void W25Q_MasterStartDMATransfer(void);
-static void W25Q_TransferDataCheck(void);
+static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize);
 static void SPI_WRITE_READ_CMD(uint8_t cmd, uint8_t *buf, size_t bufSize);
 static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t bufSize);
 static void SPI_WRITE_W25(uint8_t command ,uint32_t address, const uint8_t *buf, size_t bufSize);
@@ -473,24 +473,21 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell
 }
 
 uint8_t W25_Init(void) {
-    /* attach 12 MHz clock to SPI3 */
-    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM3);
-    /* reset FLEXCOMM for SPI */
-    RESET_PeripheralReset(kFC3_RST_SHIFT_RSTn);
 
-    /* Print project information. */
-    McuLog_info("Initialisation of the W25Q SPI interface.\r\n");
+
     /* Initialize SPI master with configuration. */
     W25Q_MasterInit();
 
     /* Set up DMA for SPI master TX and RX channel. */
     W25Q_MasterDMASetup();
 
+    /* Print project information. */
+    McuLog_info("Initialisation of the W25Q SPI interface.\r\n");
     uint8_t serial_buf[W25_SERIAL_BUF_SIZE] = {0,0,0,0,0,0,0,0};
     uint8_t id_buf[W25_ID_BUF_SIZE] = {0,0,0};
     uint8_t res;
-    res = W25_ReadID(id_buf, sizeof(id_buf)); /* check ID */
-    res = W25_ReadSerialNumber(serial_buf, sizeof(serial_buf));
+    //res = W25_ReadID(id_buf, sizeof(id_buf)); /* check ID */
+    //res = W25_ReadSerialNumber(serial_buf, sizeof(serial_buf));
   return res; /* check ID */
 }
 
@@ -539,8 +536,8 @@ static void W25Q_MasterDMASetup(void)
     /* Configure the DMA channel,priority and handle. */
     DMA_EnableChannel(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL);
     DMA_EnableChannel(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL);
-    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL, kDMA_ChannelPriority3);
-    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL, kDMA_ChannelPriority2);
+    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL, kDMA_ChannelPriority1);
+    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL, kDMA_ChannelPriority0);
     DMA_CreateHandle(&masterTxHandle, W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL);
     DMA_CreateHandle(&masterRxHandle, W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL);
 }
@@ -549,8 +546,8 @@ static void W25Q_MasterDMASetup(void)
 static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 	spi_transfer_t masterXfer;
 	uint32_t i = 0U;
-	uint8_t *masterRxData_temp = malloc(buffSize+1 * sizeof(uint8_t));
-	uint8_t *masterTxData_temp = malloc(buffSize+1 * sizeof(uint8_t));
+	uint8_t *masterRxData_temp = malloc(buffSize+2 * sizeof(uint8_t));
+	uint8_t *masterTxData_temp = malloc(buffSize+2 * sizeof(uint8_t));
 	masterTxData_temp[0]= command;
 	/* Set up handle for spi master */
     SPI_MasterTransferCreateHandleDMA(W25Q_SPI_MASTER, &masterHandle, SPI_MasterUserCallback, NULL, &masterTxHandle,
@@ -560,22 +557,22 @@ static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 	//0x9F
 	masterXfer.txData      = (uint8_t *)masterTxData_temp;
 	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
-	masterXfer.dataSize    = (buffSize+1) * sizeof(masterTxData_temp[0]);
+	masterXfer.dataSize    = (buffSize+2) * sizeof(masterTxData_temp[0]);
 	masterXfer.configFlags = kSPI_FrameAssert;
 
 	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	McuWait_Waitus(1);
-	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
-	free(masterRxData_temp);free(masterTxData_temp);
+
+	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize);
+//	McuWait_Waitus(1);
+//	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
+//	free(masterRxData_temp);free(masterTxData_temp);
 }
 
 
 static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t buffSize){
-
-
 	spi_transfer_t masterXfer;
 	uint32_t i = 0U;
 	uint8_t *masterRxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
@@ -592,16 +589,14 @@ static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t
 	//0x9F
 	masterXfer.txData      = (uint8_t *)masterTxData_temp;
 	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
-	masterXfer.dataSize    = (buffSize+1) * sizeof(masterTxData_temp[0]);
+	masterXfer.dataSize    = (buffSize+4) * sizeof(masterTxData_temp[0]);
 	masterXfer.configFlags = kSPI_FrameAssert;
 
 	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	McuWait_Waitus(1);
-	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
-	free(masterRxData_temp);free(masterTxData_temp);
+	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize);
 }
 
 static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf, size_t buffSize){
@@ -628,18 +623,28 @@ static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf,
 	//0x9F
 	masterXfer.txData      = (uint8_t *)masterTxData_temp;
 	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
-	masterXfer.dataSize    = (buffSize+1) * sizeof(masterTxData_temp[0]);
+	masterXfer.dataSize    = (buffSize+4) * sizeof(masterTxData_temp[0]);
 	masterXfer.configFlags = kSPI_FrameAssert;
 
 	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	McuWait_Waitus(1);
-	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
-	free(masterRxData_temp);free(masterTxData_temp);
+	W25Q_TransferDataCheck(NULL,NULL,NULL);
 }
 
+
+static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize)
+{
+
+    /* Wait until transfer completed */
+    while (!isTransferCompleted)
+    {
+    }
+	McuWait_Waitms(1);
+	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
+
+}
 
 
 //static void W25Q_MasterStartDMATransfer(void)

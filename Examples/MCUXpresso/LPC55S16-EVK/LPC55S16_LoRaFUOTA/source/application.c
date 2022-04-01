@@ -199,7 +199,7 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 void APP_Run(void) {
   PL_Init(); /* init modules */
 
-  W25_Init();
+
   for(int i=0;i<2;i++) {
 //  for(;;) {
 #if PL_CONFIG_USE_SWO
@@ -228,7 +228,7 @@ void APP_Run(void) {
       "App", /* task name for kernel awareness debugging */
       700/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
+      tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS) {
      for(;;){} /* error! probably out of memory */

@@ -120,7 +120,7 @@ void SHELL_Init(void) {
       "Shell", /* task name for kernel awareness debugging */
       3000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+2,  /* initial priority */
+      tskIDLE_PRIORITY+1,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
