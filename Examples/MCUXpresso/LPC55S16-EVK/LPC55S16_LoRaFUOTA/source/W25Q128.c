@@ -56,7 +56,7 @@ static void SPI_MasterUserCallback(SPI_Type *base, spi_dma_handle_t *handle, sta
 static void W25Q_MasterInit(void);
 static void W25Q_MasterDMASetup(void);
 static void W25Q_MasterStartDMATransfer(void);
-static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize);
+static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize, uint8_t offset);
 static void SPI_WRITE_READ_CMD(uint8_t cmd, uint8_t *buf, size_t bufSize);
 static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t bufSize);
 static void SPI_WRITE_W25(uint8_t command ,uint32_t address, const uint8_t *buf, size_t bufSize);
@@ -161,7 +161,7 @@ bool W25_isBusy(void) {
 
 void W25_WaitIfBusy(void) {
   while(W25_isBusy()) {
-	  McuWait_Waitus(10);
+	  McuWait_Waitms(1);
   }
 }
 
@@ -213,9 +213,15 @@ uint8_t W25_EraseBlock64K(uint32_t address) {
  * \return error code, ERR_OK for no error
  */
 uint8_t W25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize) {
+
   W25_WaitIfBusy();
   SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  SPI_WRITE_W25(W25_CMD_SECTOR_ERASE_4K, address, NULL, 0);
+  W25_WaitIfBusy();
+  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  W25_WaitIfBusy();
   SPI_WRITE_W25(W25_CMD_PAGE_PROGRAM, address, data, dataSize);
+  W25_WaitIfBusy();
   SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
 
   return ERR_OK;
@@ -239,7 +245,7 @@ uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
 
 uint8_t W25_ReadStatus1(uint8_t *status) {
 	/* W25Q128 should report Serialnumber */
-	SPI_WRITE_READ_CMD(W25_CMD_READ_STATUS1, status, sizeof(status));
+	SPI_WRITE_READ_CMD(W25_CMD_READ_STATUS1, status, sizeof(* status));
 
   return ERR_OK;
 }
@@ -326,6 +332,7 @@ static uint8_t W25_PrintStatus(McuShell_ConstStdIOType *io) {
 
   res = W25_ReadStatus1(&status);
   if(res==ERR_OK) {
+	buf[0] = '\0';
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum8Hex(buf, sizeof(buf), status);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" SEC:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<6)?(unsigned char*)"1": (unsigned char*)"0");
@@ -345,6 +352,16 @@ static uint8_t W25_PrintStatus(McuShell_ConstStdIOType *io) {
 
 static uint8_t ReadBytes(void *hndl, uint32_t address, uint8_t *buf, size_t bufSize) {
   (void)hndl; /* not used */
+//  size_t i;
+//  W25_WaitIfBusy();
+//  SPI_WRITE_READ_CMD(W25_CMD_DATA_READ, NULL, 0);
+//  SPI_WRITE_READ_CMD(address>>16, NULL, 0);
+//  SPI_WRITE_READ_CMD(address>>8, NULL, 0);
+//  SPI_WRITE_READ_CMD(address, NULL, 0);
+//  for(i=0;i<bufSize;i++) {
+//	  SPI_WRITE_READ_CMD(0, &buf[i],1);
+//  }
+
   SPI_READ_W25(W25_CMD_DATA_READ, address, buf, bufSize);
   return ERR_OK;
 }
@@ -355,7 +372,7 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell
   uint32_t res;
   uint8_t data[32];
   int i;
-  uint8_t buf[8];
+  uint8_t buf[60];
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "W25 help")==0) {
     McuShell_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
@@ -364,13 +381,54 @@ uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell
     McuShell_SendHelpStr((unsigned char*)"  erase 4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  erase 32k <addr>", (const unsigned char*)"Erase a 32K block\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  erase 64k <addr>", (const unsigned char*)"Erase a 64K block\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  enable", (const unsigned char*)"Enable/disable write action (1/0)\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  write <addr> <data>", (const unsigned char*)"Write to page (max 32 bytes data, separated by spaces)\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0 || McuUtility_strcmp((char*)cmd, "W25 status")==0) {
     *handled = TRUE;
     return W25_PrintStatus(io);
-  } else if (McuUtility_strncmp((char*)cmd, "W25 read ", sizeof("W25 read ")-1)==0) {
+
+  } else if (McuUtility_strncmp((char*)cmd, "W25 enable ", sizeof("W25 enable ")-1)==0) {
+	    *handled = TRUE;
+  	  uint8_t status;
+	    p = cmd+sizeof("W25 read ");
+	    res = McuUtility_xatoi(&p, (int32_t*)&val);
+	    if (res!=ERR_OK) {
+	      McuShell_SendStr((unsigned char*)"wrong start address\r\n", io->stdErr);
+	      return ERR_FAILED;
+	    } else {
+
+	      if (val!=true) {
+	    	  SPI_WRITE_READ_CMD(W25_CMD_WRITE_DISABLE, NULL, 0);
+	    	  res = W25_ReadStatus1(&status);
+
+
+	      }
+	      else{
+	    	  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+	    	  res = W25_ReadStatus1(&status);
+	      }
+	      res = W25_ReadStatus1(&status);
+	      if(res==ERR_OK) {
+	    	buf[0] = '\0';
+	        McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+	        McuUtility_strcatNum8Hex(buf, sizeof(buf), status);
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" SEC:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<6)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" TB:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<5)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" BP2:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<4)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" BP1:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<3)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" BP0:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<2)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" WEL:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<1)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" BUSY:"); McuUtility_strcat(buf, sizeof(buf), status&(1<<0)?(unsigned char*)"1": (unsigned char*)"0");
+	        McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+	      } else {
+	        McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+	      }
+	      McuShell_SendStatusStr((const unsigned char*)"  Status", buf, io->stdOut);
+	    }
+
+  }else if (McuUtility_strncmp((char*)cmd, "W25 read ", sizeof("W25 read ")-1)==0) {
     *handled = TRUE;
     p = cmd+sizeof("W25 read ")-1;
     res = McuUtility_xatoi(&p, (int32_t*)&val);
@@ -536,8 +594,8 @@ static void W25Q_MasterDMASetup(void)
     /* Configure the DMA channel,priority and handle. */
     DMA_EnableChannel(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL);
     DMA_EnableChannel(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL);
-    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL, kDMA_ChannelPriority1);
-    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL, kDMA_ChannelPriority0);
+    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL, kDMA_ChannelPriority3);
+    DMA_SetChannelPriority(W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL, kDMA_ChannelPriority2);
     DMA_CreateHandle(&masterTxHandle, W25Q_DMA, W25Q_SPI_MASTER_TX_CHANNEL);
     DMA_CreateHandle(&masterRxHandle, W25Q_DMA, W25Q_SPI_MASTER_RX_CHANNEL);
 }
@@ -546,18 +604,22 @@ static void W25Q_MasterDMASetup(void)
 static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 	spi_transfer_t masterXfer;
 	uint32_t i = 0U;
-	uint8_t *masterRxData_temp = malloc(buffSize+2 * sizeof(uint8_t));
-	uint8_t *masterTxData_temp = malloc(buffSize+2 * sizeof(uint8_t));
+	uint8_t buffOffset = 1;
+	uint8_t *masterRxData_temp = malloc(buffSize+buffOffset * sizeof(uint8_t));
+	uint8_t *masterTxData_temp = malloc(buffSize+buffOffset * sizeof(uint8_t));
 	masterTxData_temp[0]= command;
 	/* Set up handle for spi master */
     SPI_MasterTransferCreateHandleDMA(W25Q_SPI_MASTER, &masterHandle, SPI_MasterUserCallback, NULL, &masterTxHandle,
                                       &masterRxHandle);
-
+	for (int i = 0; i < buffSize; ++i)
+	{
+		masterTxData_temp[buffOffset+i]= 0;
+	}
 	/* Start master transfer */
 	//0x9F
 	masterXfer.txData      = (uint8_t *)masterTxData_temp;
 	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
-	masterXfer.dataSize    = (buffSize+2) * sizeof(masterTxData_temp[0]);
+	masterXfer.dataSize    = (buffSize+buffOffset) * sizeof(masterTxData_temp[0]);
 	masterXfer.configFlags = kSPI_FrameAssert;
 
 	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
@@ -565,7 +627,7 @@ static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
 
-	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize);
+	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize, buffOffset);
 //	McuWait_Waitus(1);
 //	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
 //	free(masterRxData_temp);free(masterTxData_temp);
@@ -575,8 +637,9 @@ static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t buffSize){
 	spi_transfer_t masterXfer;
 	uint32_t i = 0U;
-	uint8_t *masterRxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
-	uint8_t *masterTxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
+	uint8_t buffOffset = 4;
+	uint8_t *masterRxData_temp = malloc(buffSize+buffOffset * sizeof(uint8_t));
+	uint8_t *masterTxData_temp = malloc(buffSize+buffOffset * sizeof(uint8_t));
 	masterTxData_temp[0]= command;
 	masterTxData_temp[1]= address>>16;
 	masterTxData_temp[2]= address>>8;
@@ -585,18 +648,22 @@ static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t
     SPI_MasterTransferCreateHandleDMA(W25Q_SPI_MASTER, &masterHandle, SPI_MasterUserCallback, NULL, &masterTxHandle,
                                       &masterRxHandle);
 
+	for (int i = 0; i < buffSize; ++i)
+	{
+		masterTxData_temp[buffOffset+i]= 0;
+	}
 	/* Start master transfer */
 	//0x9F
 	masterXfer.txData      = (uint8_t *)masterTxData_temp;
 	masterXfer.rxData      = (uint8_t *)masterRxData_temp;
-	masterXfer.dataSize    = (buffSize+4) * sizeof(masterTxData_temp[0]);
+	masterXfer.dataSize    = (buffSize+buffOffset) * sizeof(masterTxData_temp[0]);
 	masterXfer.configFlags = kSPI_FrameAssert;
 
 	if (kStatus_Success != SPI_MasterTransferDMA(W25Q_SPI_MASTER, &masterHandle, &masterXfer))
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize);
+	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize,buffOffset);
 }
 
 static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf, size_t buffSize){
@@ -630,19 +697,20 @@ static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf,
 	{
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
-	W25Q_TransferDataCheck(NULL,NULL,NULL);
+	W25Q_TransferDataCheck(NULL,NULL,NULL,0);
 }
 
 
-static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize)
+static void W25Q_TransferDataCheck(uint8_t *buf, uint8_t *masterRxData_temp, size_t buffSize ,uint8_t offset)
 {
 
     /* Wait until transfer completed */
     while (!isTransferCompleted)
     {
     }
-	McuWait_Waitms(1);
-	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
+	//McuWait_Waitms(1);
+	memcpy(buf, masterRxData_temp+offset, buffSize * sizeof(masterRxData_temp[0]));
+	isTransferCompleted = false;
 
 }
 
