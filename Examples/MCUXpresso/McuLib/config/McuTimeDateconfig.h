@@ -45,7 +45,7 @@
 
 /* ****************** settings for external hardware RTC *************************** */
 #ifndef McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
-  #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC            (0)
+  #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC            (1)
     /*!< set to 1 if using external HW RTC driver, 0 otherwise */
 #endif
 
@@ -68,9 +68,9 @@
 
 /* ********************************************************************************* */
 /* GetTime() and GetDate() configuration options: */
-#define McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC       1 /* use software RTC */
-#define McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC       2 /* use internal RTC */
-#define McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC       3 /* use external RTC */
+#define McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC       0 /* use software RTC */
+#define McuTimeDate_GET_TIME_DATE_METHOD_INTERNAL_RTC       1 /* use internal RTC */
+#define McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC       2 /* use external RTC */
 
 #ifndef McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD
   #define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD       McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC /* specifies method to get time and date */
