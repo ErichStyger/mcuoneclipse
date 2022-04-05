@@ -630,7 +630,7 @@ static void SPI_WRITE_READ_CMD(uint8_t command, uint8_t *buf, size_t buffSize){
 	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize, buffOffset);
 //	McuWait_Waitus(1);
 //	memcpy(buf, masterRxData_temp+1, buffSize * sizeof(masterRxData_temp[0]));
-//	free(masterRxData_temp);free(masterTxData_temp);
+	free(masterRxData_temp);free(masterTxData_temp);
 }
 
 
@@ -664,6 +664,7 @@ static void SPI_READ_W25(uint8_t command ,uint32_t address, uint8_t *buf, size_t
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
 	W25Q_TransferDataCheck(buf, masterRxData_temp, buffSize,buffOffset);
+	free(masterRxData_temp);free(masterTxData_temp);
 }
 
 static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf, size_t buffSize){
@@ -698,6 +699,7 @@ static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf,
 		//PRINTF("There is an error when start SPI_MasterTransferDMA \r\n ");
 	}
 	W25Q_TransferDataCheck(NULL,NULL,NULL,0);
+	free(masterRxData_temp);free(masterTxData_temp);
 }
 
 

@@ -7,8 +7,8 @@
 #include "lfs.h"
 #include "lfs_util.h"
 
+#include <stdint.h>
 #include <inttypes.h>
-
 
 /// Caching block device operations ///
 static int lfs_cache_read(lfs_t *lfs, lfs_cache_t *rcache,

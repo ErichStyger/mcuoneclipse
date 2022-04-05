@@ -14,6 +14,7 @@
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
 #include "W25Q128.h"
+#include "fs.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
   #include "minGlue-Flash.h"
@@ -43,6 +44,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_W25Q
   W25_ParseCommand,
 #endif
+#if PL_CONFIG_USE_littleFS
+  FS_ParseCommand,
+#endif
+
 
 #if PL_CONFIG_USE_SWO
   McuSWO_ParseCommand,

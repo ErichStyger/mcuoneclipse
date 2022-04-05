@@ -29,6 +29,7 @@
 
 #define PL_CONFIG_USE_W25Q        (1) /* if flash non-volatile memory is used to store data */
 
+#define PL_CONFIG_USE_littleFS        (1) /* if flash non-volatile memory is used to store data */
 
 /* FLASH storage parameters, used for EEPROM Emulation */
 /* 4 pages (2.0 KByte) is reserved for EEPROM emulation buffer
