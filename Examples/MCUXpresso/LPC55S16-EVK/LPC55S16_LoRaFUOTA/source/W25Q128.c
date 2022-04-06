@@ -216,9 +216,9 @@ uint8_t W25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize) 
 
   W25_WaitIfBusy();
   SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
-  SPI_WRITE_W25(W25_CMD_SECTOR_ERASE_4K, address, NULL, 0);
-  W25_WaitIfBusy();
-  SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
+  //SPI_WRITE_W25(W25_CMD_SECTOR_ERASE_4K, address, NULL, 0);
+  //W25_WaitIfBusy();
+  //SPI_WRITE_READ_CMD(W25_CMD_WRITE_ENABLE, NULL, 0);
   W25_WaitIfBusy();
   SPI_WRITE_W25(W25_CMD_PAGE_PROGRAM, address, data, dataSize);
   W25_WaitIfBusy();
@@ -671,6 +671,8 @@ static void SPI_WRITE_W25(uint8_t command, uint32_t address, const uint8_t *buf,
 
 	spi_transfer_t masterXfer;
 	uint32_t i = 0U;
+	//ueberpruefen auf NULL
+	//pvmalloc
 	uint8_t *masterRxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
 	uint8_t *masterTxData_temp = malloc(buffSize+4 * sizeof(uint8_t));
 	masterTxData_temp[0]= command;

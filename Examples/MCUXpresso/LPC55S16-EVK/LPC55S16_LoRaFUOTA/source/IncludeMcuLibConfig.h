@@ -91,6 +91,7 @@ Instructions:
 #define McuShellUart_CONFIG_UART 					          McuShellUart_CONFIG_UART_LPC55S16_USART0
 #endif
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (96)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96) /* maximum size of a single command in a multi-command string */
 #define McuShell_CONFIG_PROMPT_STRING               "LoRa> "
 #define McuShell_CONFIG_ECHO_ENABLED                (1)
