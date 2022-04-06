@@ -9,10 +9,11 @@
 #ifndef __McuMinINI_CONFIG_H
 #define __McuMinINI_CONFIG_H
 
-#define McuMinINI_CONFIG_FS_TYPE_GENERIC  (0) /* Generic File System */
-#define McuMinINI_CONFIG_FS_TYPE_FAT_FS   (1) /* FatFS File System */
-#define McuMinINI_CONFIG_FS_TYPE_TINY_FS  (2) /* TinyFS File System */
-#define McuMinINI_CONFIG_FS_TYPE_FLASH_FS (3) /* Flash Page System */
+#define McuMinINI_CONFIG_FS_TYPE_GENERIC    (0) /* Generic File System */
+#define McuMinINI_CONFIG_FS_TYPE_FAT_FS     (1) /* FatFS File System */
+#define McuMinINI_CONFIG_FS_TYPE_TINY_FS    (2) /* TinyFS File System */
+#define McuMinINI_CONFIG_FS_TYPE_FLASH_FS   (3) /* Flash Page System */
+#define McuMinINI_CONFIG_FS_TYPE_LITTLE_FS  (4) /* LittleFS File System */
 
 #ifndef McuMinINI_CONFIG_FS
   #define McuMinINI_CONFIG_FS      (McuMinINI_CONFIG_FS_TYPE_GENERIC)
