@@ -5,7 +5,7 @@
  */
 
 #include "McuLittleFS.h"
-#include "McuLittleFSMemory.h"
+#include "McuLittleFSBlockDevice.h"
 #include "McuShell.h"
 #include "McuTimeDate.h"
 #include "littleFS/lfs.h"
@@ -27,46 +27,13 @@ bool McuLFS_IsMounted(void) {
   return McuLFS_isMounted;
 }
 
-static int block_device_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, void *buffer, lfs_size_t size) {
-  uint8_t res;
-  res = McuLFSMem_Read(block * c->block_size + off, buffer, size);
-  if (res != ERR_OK) {
-    return LFS_ERR_IO;
-  }
-  return LFS_ERR_OK;
-}
-
-int block_device_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, const void *buffer, lfs_size_t size) {
-  uint8_t res;
-
-  res = McuLFSMem_Program(block * c->block_size + off, buffer, size);
-  if (res != ERR_OK) {
-    return LFS_ERR_IO;
-  }
-  return LFS_ERR_OK;
-}
-
-int block_device_erase(const struct lfs_config *c, lfs_block_t block) {
-  uint8_t res;
-
-  res = McuLFSMem_EraseBlock(block * c->block_size);
-  if (res != ERR_OK) {
-    return LFS_ERR_IO;
-  }
-  return LFS_ERR_OK;
-}
-
-int block_device_sync(const struct lfs_config *c) {
-  return LFS_ERR_OK;
-}
-
 // configuration of the file system is provided by this struct
 static const struct lfs_config McuLFS_cfg = {
     // block device operations
-    .read = block_device_read,
-    .prog = block_device_prog,
-    .erase =block_device_erase,
-    .sync = block_device_sync,
+    .read = McuLittleFS_block_device_read,
+    .prog = McuLittleFS_block_device_prog,
+    .erase = McuLittleFS_block_device_erase,
+    .sync = McuLittleFS_block_device_sync,
     // block device configuration
     .read_size = FILESYSTEM_READ_BUFFER_SIZE,
     .prog_size = FILESYSTEM_PROG_BUFFER_SIZE,
@@ -1109,7 +1076,7 @@ uint8_t McuLFS_Init(void) {
       for(;;) {} /* Error */
   }
   xSemaphoreGiveRecursive(fileSystemAccessMutex);
-  if (McuLFSMem_Init() != ERR_OK) {
+  if (McuLittleFS_block_device_init() != ERR_OK) {
     return ERR_FAILED;
   }
   return McuLFS_Mount(NULL);
@@ -1121,7 +1088,7 @@ uint8_t McuLFS_FormatInit(void) {
       for(;;) {} /* Error */
   }
   xSemaphoreGiveRecursive(fileSystemAccessMutex);
-  if (McuLFSMem_Init() != ERR_OK) {
+  if (McuLittleFS_block_device_init() != ERR_OK) {
     return ERR_FAILED;
   }
   McuLFS_Format(NULL);
