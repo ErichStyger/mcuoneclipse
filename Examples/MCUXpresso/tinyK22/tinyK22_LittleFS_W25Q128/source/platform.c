@@ -35,6 +35,8 @@
   #include "McuShellUart.h"
 #endif
 
+#include "McuSPI.h"
+
 void PL_InitFromTask(void) {
   /* call here things which need interrupts enabled */
   /* the clock time/date gets initialized in the clock task */
@@ -74,4 +76,5 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
+  McuSPI_Init();
 }

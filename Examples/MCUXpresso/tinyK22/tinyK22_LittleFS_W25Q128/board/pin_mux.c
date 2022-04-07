@@ -109,6 +109,9 @@ BOARD_InitPins:
   - {pin_num: '24', peripheral: TPIU, signal: SWO, pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, identifier: '', pull_select: down, pull_enable: disable}
   - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX, identifier: ''}
   - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
+  - {pin_num: '39', peripheral: SPI1, signal: SOUT, pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN, identifier: ''}
+  - {pin_num: '40', peripheral: SPI1, signal: SIN, pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, identifier: ''}
+  - {pin_num: '62', peripheral: SPI1, signal: SCK, pin_signal: ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK, identifier: ''}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -123,8 +126,12 @@ void BOARD_InitPins(void)
 {
     /* Port A Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
     /* Port C Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortC);
+    /* Port D Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortD);
 
     /* PORTA2 (pin 24) is configured as TRACE_SWO */
     PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt7);
@@ -140,11 +147,20 @@ void BOARD_InitPins(void)
                      /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
                      | PORT_PCR_PE(kPORT_PullDisable));
 
+    /* PORTB16 (pin 39) is configured as SPI1_SOUT */
+    PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt2);
+
+    /* PORTB17 (pin 40) is configured as SPI1_SIN */
+    PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt2);
+
     /* PORTC3 (pin 46) is configured as LPUART0_RX */
     PORT_SetPinMux(PORTC, 3U, kPORT_MuxAlt7);
 
     /* PORTC4 (pin 49) is configured as LPUART0_TX */
     PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);
+
+    /* PORTD5 (pin 62) is configured as SPI1_SCK */
+    PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt7);
 }
 
 /* clang-format off */

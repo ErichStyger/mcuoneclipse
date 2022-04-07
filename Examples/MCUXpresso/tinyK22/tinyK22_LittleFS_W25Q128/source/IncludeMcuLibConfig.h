@@ -114,5 +114,9 @@ Instructions:
 #define McuEE24_CONFIG_HAS_WP_PIN               (0)   /* no WP Pin */
 #define McuEE24_CONFIG_DO_ACKNOWLEDGE_POLLING   (0)   /* no acknowledge polling */
 #define McuEE24_CONFIG_USE_TIMEOUT              (0)   /* no timeout */
+/* -------------------------------------------------*/
+/* LittleFS */
+#define LITTLEFS_CONFIG_ENABLED                 (1)
+/* -------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

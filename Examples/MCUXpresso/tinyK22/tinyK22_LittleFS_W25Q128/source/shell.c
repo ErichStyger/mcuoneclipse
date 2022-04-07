@@ -14,6 +14,7 @@
 #include "McuTimeDate.h"
 #include "application.h"
 #include "McuLog.h"
+#include "McuLittleFS.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -25,6 +26,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuTimeDate_ParseCommand,
   McuLog_ParseCommand,
   APP_ParseCommand,
+  McuLFS_ParseCommand,
   NULL /* Sentinel */
 };
 
