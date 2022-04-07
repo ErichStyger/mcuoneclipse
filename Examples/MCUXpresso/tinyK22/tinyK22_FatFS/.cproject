@@ -3,6 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="com.crt.advproject.config.exe.debug.1652255002">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.1652255002" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<macros>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -98,24 +101,24 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/board}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/}&quot;"/>
-									<listOptionValue builtIn="false" value="../McuLib"/>
-									<listOptionValue builtIn="false" value="../McuLib/config"/>
-									<listOptionValue builtIn="false" value="../McuLib/config/fonts"/>
-									<listOptionValue builtIn="false" value="../McuLib/fonts"/>
-									<listOptionValue builtIn="false" value="../McuLib/src"/>
-									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
-									<listOptionValue builtIn="false" value="../McuLib/SEGGER_RTT"/>
-									<listOptionValue builtIn="false" value="../McuLib/SEGGER_Sysview"/>
-									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder"/>
-									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/config"/>
-									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/include"/>
-									<listOptionValue builtIn="false" value="../McuLib/TraceRecorder/streamports/Jlink_RTT/include"/>
-									<listOptionValue builtIn="false" value="../McuLib/HD44780"/>
-									<listOptionValue builtIn="false" value="../McuLib/MinIni"/>
-									<listOptionValue builtIn="false" value="../McuLib/FatFS"/>
-									<listOptionValue builtIn="false" value="../McuLib/FatFS/source"/>
-									<listOptionValue builtIn="false" value="../McuLib/FatFS/source/fsl_sdspi_disk"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/config&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/config/fonts&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/fonts&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/FreeRTOS/Source/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/FreeRTOS/Source/portable/GCC/ARM_CM4F&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/SEGGER_RTT&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/SEGGER_Sysview&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/TraceRecorder&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/TraceRecorder/config&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/TraceRecorder/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/TraceRecorder/streamports/Jlink_RTT/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/HD44780&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/minIni&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/FatFS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/FatFS/source&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${MCULIB}/FatFS/source/fsl_sdspi_disk&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.files.909453796" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" useByScannerDiscovery="false" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/source/IncludeMcuLibConfig.h&quot;"/>
@@ -309,15 +312,18 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.1652255002.972465775" name="FreeRTOShooks.c" rcbsApplicability="disable" resourcePath="McuLib/FreeRTOS/FreeRTOShooks.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.1505299104.301256814">
+						<tool id="com.crt.advproject.gcc.exe.debug.1505299104.301256814" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/FreeRTOShooks.c|SEGGER_Sysview/SEGGER_SYSVIEW_Config.c|LittlevGL|fonts|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/FreeRTOShooks.c|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|LittlevGL|littleFS|HD44780|fonts" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
+						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sdmmc"/>
 						<entry excluding="Src|Segger_SystemView" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
-						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="sdmmc"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
