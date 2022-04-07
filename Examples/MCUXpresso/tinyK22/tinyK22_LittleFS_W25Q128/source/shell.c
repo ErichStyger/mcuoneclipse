@@ -55,7 +55,7 @@ bool SHELL_HasStdIoInput(void) {
 
 void SHELL_SendChar(unsigned char ch) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
-  McuShell_SendCh(ch, ios[i].stdio->stdOut);
+    McuShell_SendCh(ch, ios[i].stdio->stdOut);
   }
 }
 

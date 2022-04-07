@@ -40,15 +40,6 @@ void BOARD_InitBootPins(void);
 #define BOARD_LEDBLUE_PIN_MASK (1U << 2U)      /*!<@brief PORT pin mask */
                                                /* @} */
 
-/*! @name PORTC3 (number 46), J1[14]
-  @{ */
-
-/* Symbols to be used with PORT driver */
-#define BOARD_CLKOUT_PORT PORTC               /*!<@brief PORT peripheral base pointer */
-#define BOARD_CLKOUT_PIN 3U                   /*!<@brief PORT pin number */
-#define BOARD_CLKOUT_PIN_MASK (1U << 3U)      /*!<@brief PORT pin mask */
-                                              /* @} */
-
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

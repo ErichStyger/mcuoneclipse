@@ -43,7 +43,11 @@ void *SDK_Malloc(size_t size, size_t alignbytes)
     union
     {
         void *pointer_value;
+#if (defined(__DSC__) && defined(__CW__))
         uint32_t unsigned_value;
+#else
+        uintptr_t unsigned_value;
+#endif
     } p_align_addr, p_addr;
 
     p_addr.pointer_value = malloc(alignedsize);
@@ -67,7 +71,11 @@ void SDK_Free(void *ptr)
     union
     {
         void *pointer_value;
+#if (defined(__DSC__) && defined(__CW__))
         uint32_t unsigned_value;
+#else
+        uintptr_t unsigned_value;
+#endif
     } p_free;
     p_free.pointer_value = ptr;
     mem_align_cb_t *p_cb = (mem_align_cb_t *)(p_free.unsigned_value - 4U);

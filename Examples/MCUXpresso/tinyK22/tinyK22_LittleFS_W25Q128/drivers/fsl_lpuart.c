@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -242,8 +242,8 @@ status_t LPUART_Init(LPUART_Type *base, const lpuart_config_t *config, uint32_t 
     assert(NULL != config);
     assert(0U < config->baudRate_Bps);
 #if defined(FSL_FEATURE_LPUART_HAS_FIFO) && FSL_FEATURE_LPUART_HAS_FIFO
-    assert((uint8_t)FSL_FEATURE_LPUART_FIFO_SIZEn(base) >= config->txFifoWatermark);
-    assert((uint8_t)FSL_FEATURE_LPUART_FIFO_SIZEn(base) >= config->rxFifoWatermark);
+    assert((uint8_t)FSL_FEATURE_LPUART_FIFO_SIZEn(base) > config->txFifoWatermark);
+    assert((uint8_t)FSL_FEATURE_LPUART_FIFO_SIZEn(base) > config->rxFifoWatermark);
 #endif
 
     status_t status = kStatus_Success;
@@ -2145,6 +2145,30 @@ void LPUART11_DriverIRQHandler(void);
 void LPUART11_DriverIRQHandler(void)
 {
     s_lpuartIsr(LPUART11, s_lpuartHandle[11]);
+    SDK_ISR_EXIT_BARRIER;
+}
+#endif
+#endif
+
+#if defined(LPUART12)
+#if defined(FSL_FEATURE_LPUART_HAS_SEPARATE_RX_TX_IRQ) && FSL_FEATURE_LPUART_HAS_SEPARATE_RX_TX_IRQ
+void LPUART12_TX_DriverIRQHandler(void);
+void LPUART12_TX_DriverIRQHandler(void)
+{
+    s_lpuartIsr(LPUART12, s_lpuartHandle[12]);
+    SDK_ISR_EXIT_BARRIER;
+}
+void LPUART12_RX_DriverIRQHandler(void);
+void LPUART12_RX_DriverIRQHandler(void)
+{
+    s_lpuartIsr(LPUART12, s_lpuartHandle[12]);
+    SDK_ISR_EXIT_BARRIER;
+}
+#else
+void LPUART12_DriverIRQHandler(void);
+void LPUART12_DriverIRQHandler(void)
+{
+    s_lpuartIsr(LPUART12, s_lpuartHandle[12]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif

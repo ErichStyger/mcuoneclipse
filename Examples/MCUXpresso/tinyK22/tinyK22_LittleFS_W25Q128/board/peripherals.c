@@ -6,14 +6,15 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Peripherals v10.0
+product: Peripherals v11.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 10.0.1
+processor_version: 11.0.1
+board: FRDM-K22F
 functionalGroups:
 - name: BOARD_InitPeripherals
-  UUID: 67f10b3a-0b36-42c3-bc51-860bfdf369be
+  UUID: ebfc8d2b-b9e6-4f4d-9b67-3fe7b316db9a
   called_from_default_init: true
   selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
@@ -21,7 +22,7 @@ functionalGroups:
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 component:
 - type: 'system'
-- type_id: 'system_54b53072540eeeb8f8e9343e71f28176'
+- type_id: 'system'
 - global_system_definitions:
   - user_definitions: ''
   - user_includes: ''
@@ -32,6 +33,14 @@ component:
 - type: 'uart_cmsis_common'
 - type_id: 'uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8'
 - global_USART_CMSIS_common:
+  - quick_selection: 'default'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+component:
+- type: 'gpio_adapter_common'
+- type_id: 'gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6'
+- global_gpio_adapter_common:
   - quick_selection: 'default'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */

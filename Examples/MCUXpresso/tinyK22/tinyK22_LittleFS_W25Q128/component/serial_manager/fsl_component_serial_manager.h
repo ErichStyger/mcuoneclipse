@@ -32,26 +32,19 @@
 #endif
 #endif
 
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-/*! @brief Enable or disable serial manager dual(block and non-block) mode (1 - enable, 0 - disable) */
-#ifdef DEBUG_CONSOLE_TRANSFER_NON_BLOCKING
-#else
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-#ifndef SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE
-#define SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE (1U)
+/*! @brief Enable or ring buffer flow control (1 - enable, 0 - disable) */
+#ifndef SERIAL_MANAGER_RING_BUFFER_FLOWCONTROL
+#define SERIAL_MANAGER_RING_BUFFER_FLOWCONTROL (0U)
 #endif
-#endif
-#endif
-#ifndef SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE
-#define SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE (0U)
-#endif
-#endif
-
 /*! @brief Enable or disable uart port (1 - enable, 0 - disable) */
 #ifndef SERIAL_PORT_TYPE_UART
 #define SERIAL_PORT_TYPE_UART (0U)
 #endif
 
+/*! @brief Enable or disable uart dma port (1 - enable, 0 - disable) */
+#ifndef SERIAL_PORT_TYPE_UART_DMA
+#define SERIAL_PORT_TYPE_UART_DMA (0U)
+#endif
 /*! @brief Enable or disable USB CDC port (1 - enable, 0 - disable) */
 #ifndef SERIAL_PORT_TYPE_USBCDC
 #define SERIAL_PORT_TYPE_USBCDC (0U)
@@ -70,6 +63,24 @@
 /*! @brief Enable or disable rPMSG port (1 - enable, 0 - disable) */
 #ifndef SERIAL_PORT_TYPE_RPMSG
 #define SERIAL_PORT_TYPE_RPMSG (0U)
+#endif
+
+/*! @brief Enable or disable SPI Master port (1 - enable, 0 - disable) */
+#ifndef SERIAL_PORT_TYPE_SPI_MASTER
+#define SERIAL_PORT_TYPE_SPI_MASTER (0U)
+#endif
+
+/*! @brief Enable or disable SPI Slave port (1 - enable, 0 - disable) */
+#ifndef SERIAL_PORT_TYPE_SPI_SLAVE
+#define SERIAL_PORT_TYPE_SPI_SLAVE (0U)
+#endif
+
+#if (defined(SERIAL_PORT_TYPE_SPI_SLAVE) && (SERIAL_PORT_TYPE_SPI_SLAVE == 1U))
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE == 0U))
+#warning When SERIAL_PORT_TYPE_SPI_SLAVE=1, SERIAL_MANAGER_NON_BLOCKING_MODE should be set.
+#undef SERIAL_MANAGER_NON_BLOCKING_MODE
+#define SERIAL_MANAGER_NON_BLOCKING_MODE (1U)
+#endif
 #endif
 
 /*! @brief Enable or disable SerialManager_Task() handle TX to prevent recursive calling */
@@ -119,6 +130,9 @@
 #include "fsl_component_serial_port_uart.h"
 #endif
 
+#if (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
+#include "fsl_component_serial_port_uart.h"
+#endif
 #if (defined(SERIAL_PORT_TYPE_RPMSG) && (SERIAL_PORT_TYPE_RPMSG > 0U))
 #include "fsl_component_serial_port_rpmsg.h"
 #endif
@@ -136,6 +150,12 @@
 #include "fsl_component_serial_port_swo.h"
 #endif
 
+#if (defined(SERIAL_PORT_TYPE_SPI_MASTER) && (SERIAL_PORT_TYPE_SPI_MASTER > 0U))
+#include "fsl_component_serial_port_spi.h"
+#endif
+#if (defined(SERIAL_PORT_TYPE_SPI_SLAVE) && (SERIAL_PORT_TYPE_SPI_SLAVE > 0U))
+#include "fsl_component_serial_port_spi.h"
+#endif
 #if (defined(SERIAL_PORT_TYPE_VIRTUAL) && (SERIAL_PORT_TYPE_VIRTUAL > 0U))
 
 #if !(defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
@@ -152,7 +172,13 @@
 #undef SERIAL_MANAGER_HANDLE_SIZE_TEMP
 #define SERIAL_MANAGER_HANDLE_SIZE_TEMP SERIAL_PORT_UART_HANDLE_SIZE
 #endif
+#endif
 
+#if (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
+#if (SERIAL_PORT_UART_DMA_HANDLE_SIZE > SERIAL_MANAGER_HANDLE_SIZE_TEMP)
+#undef SERIAL_MANAGER_HANDLE_SIZE_TEMP
+#define SERIAL_MANAGER_HANDLE_SIZE_TEMP SERIAL_PORT_UART_DMA_HANDLE_SIZE
+#endif
 #endif
 
 #if (defined(SERIAL_PORT_TYPE_USBCDC) && (SERIAL_PORT_TYPE_USBCDC > 0U))
@@ -171,6 +197,20 @@
 #define SERIAL_MANAGER_HANDLE_SIZE_TEMP SERIAL_PORT_SWO_HANDLE_SIZE
 #endif
 
+#endif
+
+#if (defined(SERIAL_PORT_TYPE_SPI_MASTER) && (SERIAL_PORT_TYPE_SPI_MASTER > 0U))
+#if (SERIAL_PORT_SPI_MASTER_HANDLE_SIZE > SERIAL_MANAGER_HANDLE_SIZE_TEMP)
+#undef SERIAL_MANAGER_HANDLE_SIZE_TEMP
+#define SERIAL_MANAGER_HANDLE_SIZE_TEMP SERIAL_PORT_SPI_MASTER_HANDLE_SIZE
+#endif
+#endif
+
+#if (defined(SERIAL_PORT_TYPE_SPI_SLAVE) && (SERIAL_PORT_TYPE_SPI_SLAVE > 0U))
+#if (SERIAL_PORT_SPI_SLAVE_HANDLE_SIZE > SERIAL_MANAGER_HANDLE_SIZE_TEMP)
+#undef SERIAL_MANAGER_HANDLE_SIZE_TEMP
+#define SERIAL_MANAGER_HANDLE_SIZE_TEMP SERIAL_PORT_SPI_SLAVE_HANDLE_SIZE
+#endif
 #endif
 
 #if (defined(SERIAL_PORT_TYPE_VIRTUAL) && (SERIAL_PORT_TYPE_VIRTUAL > 0U))
@@ -333,6 +373,10 @@ typedef enum _serial_port_type
     kSerialPort_Swo,       /*!< Serial port SWO */
     kSerialPort_Virtual,   /*!< Serial port Virtual */
     kSerialPort_Rpmsg,     /*!< Serial port RPMSG */
+    kSerialPort_UartDma,   /*!< Serial port UART DMA*/
+    kSerialPort_SpiMaster, /*!< Serial port SPIMASTER*/
+    kSerialPort_SpiSlave,  /*!< Serial port SPISLAVE*/
+    kSerialPort_None,      /*!< Serial port is none */
 } serial_port_type_t;
 
 /*! @brief serial manager type*/
@@ -764,6 +808,24 @@ serial_manager_status_t SerialManager_EnterLowpower(serial_handle_t serialHandle
  * @retval kStatus_SerialManager_Success Successful operation.
  */
 serial_manager_status_t SerialManager_ExitLowpower(serial_handle_t serialHandle);
+
+/*!
+ * @brief Check if need polling ISR.
+ *
+ * This function is used to check if need polling ISR.
+ *
+ * @retval TRUE if need polling.
+ */
+static inline bool SerialManager_needPollingIsr(void)
+{
+#if (defined(__DSC__) && defined(__CW__))
+    return !(isIRQAllowed());
+#elif defined(__GIC_PRIO_BITS)
+    return (0x13 == (__get_CPSR() & CPSR_M_Msk));
+#else
+    return (0U != __get_IPSR());
+#endif
+}
 
 #if defined(__cplusplus)
 }

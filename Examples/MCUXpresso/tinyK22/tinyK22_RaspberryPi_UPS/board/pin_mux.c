@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v8.0
+product: Pins v11.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 8.0.1
+processor_version: 11.0.1
 pin_labels:
 - {pin_num: '22', pin_signal: PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK, label: 'J11[4]/SWD_CLK_TGTMCU'}
 - {pin_num: '23', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, label: 'J2[4]/RED_LED', identifier: LEDRGB_RED}
@@ -103,7 +103,7 @@ BOARD_InitPins:
 - pin_list:
   - {pin_num: '45', peripheral: GPIOC, signal: 'GPIO, 2', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b, direction: OUTPUT,
     gpio_init_state: 'true'}
-  - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX}
+  - {pin_num: '46', peripheral: LPUART0, signal: RX, pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK/LPUART0_RX, identifier: ''}
   - {pin_num: '49', peripheral: LPUART0, signal: TX, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, identifier: ''}
   - {pin_num: '63', peripheral: UART0, signal: RX, pin_signal: ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT, pull_select: up, pull_enable: enable}
   - {pin_num: '64', peripheral: UART0, signal: TX, pin_signal: PTD7/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN, pull_select: up, pull_enable: enable}
@@ -135,7 +135,7 @@ void BOARD_InitPins(void)
     PORT_SetPinMux(BOARD_LEDBLUE_PORT, BOARD_LEDBLUE_PIN, kPORT_MuxAsGpio);
 
     /* PORTC3 (pin 46) is configured as LPUART0_RX */
-    PORT_SetPinMux(BOARD_CLKOUT_PORT, BOARD_CLKOUT_PIN, kPORT_MuxAlt7);
+    PORT_SetPinMux(PORTC, 3U, kPORT_MuxAlt7);
 
     /* PORTC4 (pin 49) is configured as LPUART0_TX */
     PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);

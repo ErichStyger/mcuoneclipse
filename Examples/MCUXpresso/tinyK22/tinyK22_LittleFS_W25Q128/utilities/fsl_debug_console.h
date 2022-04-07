@@ -50,6 +50,8 @@ extern serial_handle_t g_serialHandle; /*!< serial manager handle */
 
 #if defined(SDK_DEBUGCONSOLE) && !(SDK_DEBUGCONSOLE)
 #include <stdio.h>
+#else
+#include <stdarg.h>
 #endif
 
 /*! @brief Definition to select redirect toolchain printf, scanf to uart or not.
@@ -201,6 +203,17 @@ static inline status_t DbgConsole_ExitLowpower(void)
 int DbgConsole_Printf(const char *fmt_s, ...);
 
 /*!
+ * @brief Writes formatted output to the standard output stream.
+ *
+ * Call this function to write a formatted output to the standard output stream.
+ *
+ * @param   fmt_s Format control string.
+ * @param   formatStringArg Format arguments.
+ * @return  Returns the number of characters printed or a negative value if an error occurs.
+ */
+int DbgConsole_Vprintf(const char *fmt_s, va_list formatStringArg);
+
+/*!
  * @brief Writes a character to stdout.
  *
  * Call this function to write a character to stdout.
@@ -221,10 +234,10 @@ int DbgConsole_Putchar(int ch);
  * And an error is returned when the function called in this case. The suggestion
  * is that polling the non-blocking function DbgConsole_TryGetchar to get the input char.
  *
- * @param   formatString Format control string.
+ * @param   fmt_s Format control string.
  * @return  Returns the number of fields successfully converted and assigned.
  */
-int DbgConsole_Scanf(char *formatString, ...);
+int DbgConsole_Scanf(char *fmt_s, ...);
 
 /*!
  * @brief Reads a character from standard input.
@@ -249,10 +262,24 @@ int DbgConsole_Getchar(void);
  * or not.
  * The function could be used in system ISR mode with DEBUG_CONSOLE_TRANSFER_NON_BLOCKING set.
  *
- * @param   formatString Format control string.
+ * @param   fmt_s Format control string.
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
-int DbgConsole_BlockingPrintf(const char *formatString, ...);
+int DbgConsole_BlockingPrintf(const char *fmt_s, ...);
+
+/*!
+ * @brief Writes formatted output to the standard output stream with the blocking mode.
+ *
+ * Call this function to write a formatted output to the standard output stream with the blocking mode.
+ * The function will send data with blocking mode no matter the DEBUG_CONSOLE_TRANSFER_NON_BLOCKING set
+ * or not.
+ * The function could be used in system ISR mode with DEBUG_CONSOLE_TRANSFER_NON_BLOCKING set.
+ *
+ * @param   fmt_s Format control string.
+ * @param   formatStringArg Format arguments.
+ * @return  Returns the number of characters printed or a negative value if an error occurs.
+ */
+int DbgConsole_BlockingVprintf(const char *fmt_s, va_list formatStringArg);
 
 /*!
  * @brief Debug console flush.
