@@ -15,6 +15,7 @@
 #include "application.h"
 #include "McuLog.h"
 #include "McuLittleFS.h"
+#include "McuW25Q128.h"
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -27,6 +28,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
   APP_ParseCommand,
   McuLFS_ParseCommand,
+  W25_ParseCommand,
   NULL /* Sentinel */
 };
 

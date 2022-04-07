@@ -11,6 +11,13 @@
 
 #include "fsl_dspi.h"
 
+#include "McuSPI.h"
+
+/* W25Q128 chip select is LOW active */
+#define W25_CS_ENABLE()   McuSPI_SetCS_Low()
+#define W25_CS_DISABLE()  McuSPI_SetCS_High()
+
+#if 0
 //#define W25Q_NSS_GPIO       GPIO
 //#define W25Q_NSS_PORT       0
 //#define W25Q_NSS_PIN        4
@@ -27,6 +34,6 @@
 #define W25Q_SPI_MASTER_RX_CHANNEL 8
 #define W25Q_SPI_MASTER_TX_CHANNEL 9
 #define W25Q_MASTER_SPI_SPOL       kSPI_SpolActiveAllLow
-
+#endif
 
 #endif /* MCUW28Q128CONFIG_H_ */

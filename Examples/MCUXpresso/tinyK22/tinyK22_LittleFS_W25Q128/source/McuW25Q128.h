@@ -12,7 +12,6 @@
 #include <stddef.h>
 #include "McuShell.h"
 
-
 uint8_t W25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 
 #define W25_SERIAL_BUF_SIZE  (8)
@@ -50,6 +49,6 @@ uint8_t W25_GetCapacity(const uint8_t *id, uint32_t *capacity);
 
 uint8_t W25_Init(void);
 
-uint16_t W25_SpiInOut( Spi_t *obj, uint16_t outData );
+//uint16_t W25_SpiInOut( Spi_t *obj, uint16_t outData );
 
 #endif /* MCU_W25Q128_H_ */

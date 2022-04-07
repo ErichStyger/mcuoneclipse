@@ -19,7 +19,7 @@
 
 static McuGPIO_Handle_t McuSPI_CSpin;
 
-int McuSPI_SendReceiveData(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t dataSize) {
+int McuSPI_SendReceiveBlock(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t dataSize) {
   dspi_transfer_t masterXfer;
   status_t status;
 
@@ -35,6 +35,20 @@ int McuSPI_SendReceiveData(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t 
   return -1; /* error */
 }
 
+int McuSPI_SendByte(unsigned char ch) {
+  return McuSPI_SendReceiveBlock(&ch, NULL, 1);
+}
+
+int McuSPI_SendReceiveByte(unsigned char ch, unsigned char *chp) {
+  return McuSPI_SendReceiveBlock(&ch, chp, 1);
+}
+
+int McuSPI_ReceiveByte(unsigned char *chp) {
+  return McuSPI_SendReceiveBlock(NULL, chp, 1);
+}
+
+
+#if 0
 static void Test(void) {
   uint8_t tx = 'A';
   uint8_t rx;
@@ -42,6 +56,15 @@ static void Test(void) {
   McuGPIO_SetLow(McuSPI_CSpin);
   McuGPIO_SetHigh(McuSPI_CSpin);
   McuSPI_SendReceiveData(&tx, &rx, sizeof(tx));
+}
+#endif
+
+void McuSPI_SetCS_Low(void) {
+  McuGPIO_SetLow(McuSPI_CSpin);
+}
+
+void McuSPI_SetCS_High(void) {
+  McuGPIO_SetHigh(McuSPI_CSpin);
 }
 
 void McuSPI_Init(void) {
@@ -83,5 +106,5 @@ void McuSPI_Init(void) {
   srcClock_Hz = DSPI_MASTER_CLK_FREQ;
   DSPI_MasterInit(EXAMPLE_DSPI_MASTER_BASEADDR, &masterConfig, srcClock_Hz);
 
-  Test();
+  //Test();
 }
