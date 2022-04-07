@@ -387,10 +387,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1312586129.2102440957" name="/" resourcePath="McuLib/littleFS">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1404790018" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1963474985" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1778091250"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.836681110" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1585646965"/>
+							<tool id="com.crt.advproject.gas.exe.debug.767298383" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.782987362"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.705204411" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1339104557"/>
+							<tool id="com.crt.advproject.link.exe.debug.1934910399" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1961572165"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1368091671" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.298336659"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry excluding="src/apps/LoRaMac/periodic-uplink-lpp/LPC55S16-EVK/main.c|src/apps/LoRaMac/FW_Update_VM2|src/apps/LoRaMac/FW_Update_VM2/LPC55S16-EVK/janpatch.c|src/apps/LoRaMac/FUOTA|src/radio/sx1276|src/radio/sx1272|src/apps/ping-pong|src/boards/LPC55S16-EVK/sx1262mbxdas-board.c|src/mac/region/RegionUS915.c|src/mac/region/RegionRU864.c|src/mac/region/RegionKR920.c|src/mac/region/RegionIN865.c|src/mac/region/RegionEU433.c|src/mac/region/RegionCN779.c|src/mac/region/RegionCN470B26.c|src/mac/region/RegionCN470B20.c|src/mac/region/RegionCN470A26.c|src/mac/region/RegionCN470A20.c|src/mac/region/RegionCN470.c|src/mac/region/RegionBaseUS.c|src/mac/region/RegionAU915.c|src/mac/region/RegionAS923.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LoRa"/>
-						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="littleFS|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
