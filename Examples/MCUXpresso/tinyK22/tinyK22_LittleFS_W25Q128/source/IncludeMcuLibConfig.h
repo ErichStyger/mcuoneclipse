@@ -117,6 +117,7 @@ Instructions:
 /* -------------------------------------------------*/
 /* LittleFS */
 #define LITTLEFS_CONFIG_ENABLED                 (1)
+#define MCUW28Q128_CONFIG_ENABLED               (1)
 /* -------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

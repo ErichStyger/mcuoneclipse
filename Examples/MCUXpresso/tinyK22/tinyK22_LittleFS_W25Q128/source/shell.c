@@ -28,7 +28,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
   APP_ParseCommand,
   McuLFS_ParseCommand,
-  W25_ParseCommand,
+  McuW25_ParseCommand,
   NULL /* Sentinel */
 };
 
