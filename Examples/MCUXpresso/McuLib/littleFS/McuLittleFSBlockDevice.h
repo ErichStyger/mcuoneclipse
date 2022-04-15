@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "littleFS/lfs.h"
+#include "littleFS/McuLittleFSBlockDeviceconfig.h"
 
 int McuLittleFS_block_device_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, void *buffer, lfs_size_t size);
 

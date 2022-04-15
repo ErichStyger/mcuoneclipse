@@ -84,7 +84,7 @@ char* McuLFS_gets (
  * (ported from FatFS)
  *-----------------------------------------------------------------------*/
 
-typedef struct {
+typedef struct putbuff {
   lfs_file_t* fp ;
   int idx, nchr;
   unsigned char buf[64];

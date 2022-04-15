@@ -38,6 +38,7 @@
 #include "McuSPI.h"
 #include "McuW25Q128.h"
 #include "McuLittleFS.h"
+#include "myTimer.h"
 
 void PL_InitFromTask(void) {
   /* call here things which need interrupts enabled */
@@ -62,6 +63,7 @@ void PL_Init(void) {
   McuRTT_Init();
 #endif
   McuTimeout_Init();
+  McuTimeDate_Init();
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #elif configUSE_PERCEPIO_TRACE_HOOKS
@@ -81,4 +83,5 @@ void PL_Init(void) {
   McuSPI_Init();
   McuW25_Init();
   McuLFS_Init();
+  MyTimer_Init();
 }

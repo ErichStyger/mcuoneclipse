@@ -7,39 +7,50 @@
 #include "McuLittleFSBlockDevice.h"
 #include "littleFS/lfs.h"
 
+/* pre-configured memory devices */
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  #include "McuW25Q128.h"
+#endif
+
 int McuLittleFS_block_device_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, void *buffer, lfs_size_t size) {
-#if 0
   uint8_t res;
 
-  res = McuLFSMem_Read(block * c->block_size + off, buffer, size);
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
+  /* NYI */
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  res = McuW25_Read(block * c->block_size + off, buffer, size);
+#endif
   if (res != ERR_OK) {
     return LFS_ERR_IO;
   }
-#endif
   return LFS_ERR_OK;
 }
 
 int McuLittleFS_block_device_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t off, const void *buffer, lfs_size_t size) {
-#if 0
   uint8_t res;
 
-  res = McuLFSMem_Program(block * c->block_size + off, buffer, size);
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
+  /* NYI */
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  res = McuW25_ProgramPage(block * c->block_size + off, buffer, size);
+#endif
   if (res != ERR_OK) {
     return LFS_ERR_IO;
   }
-#endif
   return LFS_ERR_OK;
 }
 
 int McuLittleFS_block_device_erase(const struct lfs_config *c, lfs_block_t block) {
-#if 0
   uint8_t res;
 
-  res = McuLFSMem_EraseBlock(block * c->block_size);
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
+  /* NYI */
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  res = McuW25_EraseSector4K(block * c->block_size);
+#endif
   if (res != ERR_OK) {
     return LFS_ERR_IO;
   }
-#endif
   return LFS_ERR_OK;
 }
 
