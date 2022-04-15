@@ -12,6 +12,15 @@
 #include <stddef.h>
 #include "McuShell.h"
 
+/* supported devices */
+typedef enum {
+  McuW28_DEVICE_UNKNOWN,
+  McuW28_DEVICE_W28Q128JV_IQ_JQ,
+  McuW28_DEVICE_W28Q128JV_IM_JM,
+} McuW28_Device_e;
+
+McuW28_Device_e McuW28_GetDeviceType(void);
+
 uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 
 #define McuW25_SERIAL_BUF_SIZE  (8)
@@ -45,8 +54,12 @@ uint8_t McuW25_EraseBlock64K(uint32_t address);
  */
 uint8_t McuW25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize);
 
-uint8_t McuW25_GetCapacity(const uint8_t *id, uint32_t *capacity);
+uint8_t McuW25_GetCapacity(uint32_t *capacity);
 
-uint8_t McuW25_Init(void);
+/*!* \brief Module de-initialization */
+void McuW25_Deinit(void);
+
+/*!* \brief Module initialization */
+void McuW25_Init(void);
 
 #endif /* MCU_W25Q128_H_ */

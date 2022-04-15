@@ -27,21 +27,21 @@ bool McuLFS_IsMounted(void) {
   return McuLFS_isMounted;
 }
 
-// configuration of the file system is provided by this struct
+/* configuration of the file system is provided by this struct */
 static const struct lfs_config McuLFS_cfg = {
-    // block device operations
-    .read = McuLittleFS_block_device_read,
-    .prog = McuLittleFS_block_device_prog,
-    .erase = McuLittleFS_block_device_erase,
-    .sync = McuLittleFS_block_device_sync,
-    // block device configuration
-    .read_size = FILESYSTEM_READ_BUFFER_SIZE,
-    .prog_size = FILESYSTEM_PROG_BUFFER_SIZE,
-    .block_size = 4096,
-    .block_count = 16384, /* 16384 * 4K = 64 MByte */
-    .cache_size = FILESYSTEM_CACHE_SIZE,
-    .lookahead_size = FILESYSTEM_LOOKAHEAD_SIZE,
-    .block_cycles = 500
+  /* block device operations */
+  .read = McuLittleFS_block_device_read,
+  .prog = McuLittleFS_block_device_prog,
+  .erase = McuLittleFS_block_device_erase,
+  .sync = McuLittleFS_block_device_sync,
+  /* block device configuration */
+  .read_size = FILESYSTEM_READ_BUFFER_SIZE,
+  .prog_size = FILESYSTEM_PROG_BUFFER_SIZE,
+  .block_size = 4096,
+  .block_count = 16384, /* 16384 * 4K = 64 MByte */
+  .cache_size = FILESYSTEM_CACHE_SIZE,
+  .lookahead_size = FILESYSTEM_LOOKAHEAD_SIZE,
+  .block_cycles = 500
 };
 
 /*-----------------------------------------------------------------------
@@ -952,7 +952,7 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io)
 {
   uint8_t buf[24];
 
-  McuShell_SendStatusStr((const unsigned char*) "FS", (const unsigned char*) "\r\n", io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*) "littleFS", (const unsigned char*) "littleFS status\r\n", io->stdOut);
   McuShell_SendStatusStr((const unsigned char*) "  mounted",  McuLFS_isMounted ? (const uint8_t *)"yes\r\n" : (const uint8_t *)"no\r\n", io->stdOut);
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
@@ -986,8 +986,8 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
   unsigned char fileNameSrc[McuLFS_FILE_NAME_SIZE],fileNameDst[McuLFS_FILE_NAME_SIZE];
   size_t lenRead;
 
-  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0|| McuUtility_strcmp((char*)cmd, "FS help") == 0) {
-    McuShell_SendHelpStr((unsigned char*) "FS", (const unsigned char*) "Group of FileSystem (LittleFS) commands\r\n", io->stdOut);
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0|| McuUtility_strcmp((char*)cmd, "littleFS help") == 0) {
+    McuShell_SendHelpStr((unsigned char*) "littleFS", (const unsigned char*) "Group of FileSystem (LittleFS) commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  help|status",  (const unsigned char*) "Print help or status information\r\n",  io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  format",(const unsigned char*) "Format the file system\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  mount",(const unsigned char*) "Mount the file system\r\n", io->stdOut);
@@ -1002,62 +1002,62 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
     McuShell_SendHelpStr((unsigned char*) "  benchmark",(const unsigned char*) "Run a benchmark to measure performance\r\n",io->stdOut);
     *handled = TRUE;
     return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS) == 0|| McuUtility_strcmp((char*)cmd, "FS status") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS) == 0|| McuUtility_strcmp((char*)cmd, "littleFS status") == 0) {
     *handled = TRUE;
     return McuLFS_PrintStatus(io);
-  } else if (McuUtility_strcmp((char*)cmd, "FS format") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, "littleFS format") == 0) {
     *handled = TRUE;
     return McuLFS_Format(io);
-  } else if (McuUtility_strcmp((char*)cmd, "FS mount") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, "littleFS mount") == 0) {
     *handled = TRUE;
     return McuLFS_Mount(io);
-  } else if (McuUtility_strcmp((char*)cmd, "FS unmount") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, "littleFS unmount") == 0) {
     *handled = TRUE;
     return McuLFS_Unmount(io);
-  } else if (McuUtility_strcmp((char*)cmd, "FS ls") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, "littleFS ls") == 0) {
     *handled = TRUE;
     return McuLFS_Dir(NULL, io);
-  } else if (McuUtility_strncmp((char* )cmd, "FS ls ", sizeof("FS ls ") - 1) == 0) {
+  } else if (McuUtility_strncmp((char* )cmd, "littleFS ls ", sizeof("littleFS ls ") - 1) == 0) {
     *handled = TRUE;
-    if ((McuUtility_ReadEscapedName(cmd + sizeof("FS ls ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK))  {
+    if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS ls ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK))  {
       return McuLFS_Dir((const char*)fileNameSrc, io);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strcmp((char*)cmd, "FS benchmark") == 0) {
+  } else if (McuUtility_strcmp((char*)cmd, "littleFS benchmark") == 0) {
     *handled = TRUE;
     return McuLFS_RunBenchmark(io);
-  } else if (McuUtility_strncmp((char* )cmd, "FS printhex ", sizeof("FS printhex ") - 1) == 0) {
+  } else if (McuUtility_strncmp((char* )cmd, "littleFS printhex ", sizeof("littleFS printhex ") - 1) == 0) {
     *handled = TRUE;
-    if ((McuUtility_ReadEscapedName(cmd + sizeof("FS printhex ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
+    if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS printhex ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
       return McuLFS_PrintFile((const char*)fileNameSrc, io, TRUE);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strncmp((char* )cmd, "FS printtxt ", sizeof("FS printtxt ") - 1) == 0) {
+  } else if (McuUtility_strncmp((char* )cmd, "littleFS printtxt ", sizeof("littleFS printtxt ") - 1) == 0) {
       *handled = TRUE;
-      if ((McuUtility_ReadEscapedName(cmd + sizeof("FS printtxt ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
+      if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS printtxt ") - 1,fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
         return McuLFS_PrintFile((const char*)fileNameSrc, io, FALSE);
       }
       return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "FS rm ", sizeof("FS rm ")-1) == 0) {
+  } else if (McuUtility_strncmp((char*)cmd, "littleFS rm ", sizeof("littleFS rm ")-1) == 0) {
     *handled = TRUE;
-    if ((McuUtility_ReadEscapedName(cmd + sizeof("FS rm ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
+    if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS rm ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
       return McuLFS_RemoveFile((const char*)fileNameSrc, io);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "FS mv ", sizeof("FS mv ")-1) == 0) {
+  } else if (McuUtility_strncmp((char*)cmd, "littleFS mv ", sizeof("littleFS mv ")-1) == 0) {
     *handled = TRUE;
-    if ((McuUtility_ReadEscapedName(cmd + sizeof("FS mv ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)
-        && *(cmd + sizeof("FS cp ") - 1 + lenRead) == ' '
-        && (McuUtility_ReadEscapedName(cmd + sizeof("FS mv ") - 1 + lenRead + 1, fileNameDst,sizeof(fileNameDst), NULL, NULL, NULL) == ERR_OK))
+    if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS mv ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)
+        && *(cmd + sizeof("littleFS mv ") - 1 + lenRead) == ' '
+        && (McuUtility_ReadEscapedName(cmd + sizeof("littleFS mv ") - 1 + lenRead + 1, fileNameDst,sizeof(fileNameDst), NULL, NULL, NULL) == ERR_OK))
     {
       return McuLFS_MoveFile((const char*)fileNameSrc, (const char*)fileNameDst, io);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "FS cp ", sizeof("FS cp ")-1) == 0) {
+  } else if (McuUtility_strncmp((char*)cmd, "littleFS cp ", sizeof("littleFS cp ")-1) == 0) {
     *handled = TRUE;
-    if ((McuUtility_ReadEscapedName(cmd + sizeof("FS cp ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)
-        && *(cmd + sizeof("FS cp ") - 1 + lenRead) == ' '
-        && (McuUtility_ReadEscapedName(cmd + sizeof("FS cp ") - 1 + lenRead + 1, fileNameDst,sizeof(fileNameDst), NULL, NULL, NULL) == ERR_OK))
+    if ((McuUtility_ReadEscapedName(cmd + sizeof("littleFS cp ") - 1, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)
+        && *(cmd + sizeof("littleFS cp ") - 1 + lenRead) == ' '
+        && (McuUtility_ReadEscapedName(cmd + sizeof("littleFS cp ") - 1 + lenRead + 1, fileNameDst,sizeof(fileNameDst), NULL, NULL, NULL) == ERR_OK))
     {
       return McuLFS_CopyFile((const char*)fileNameSrc, (const char*)fileNameDst, io);
     }

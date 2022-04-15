@@ -78,5 +78,5 @@ void PL_Init(void) {
   SHELL_Init();
 #endif
   McuSPI_Init();
-  W25_Init();
+  McuW25_Init();
 }

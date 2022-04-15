@@ -22,7 +22,11 @@
 #define McuW25_CMD_WRITE_DISABLE  0x04
 
 #define McuW25_CMD_GET_ID        0x9F
-#define McuW25_ID0_WINBOND       0xEF
+#define McuW25_ID0_WINBOND       0xEF /* first byte of ID for Winbond */
+#define McuW25_ID1_WINBOND_xQ    0x40 /* second byte for W25Q128JV-IQ-JQ */
+#define McuW25_ID2_WINBOND_xQ    0x18 /* third byte for W25Q128JV-IQ-JQ */
+#define McuW25_ID1_WINBOND_xM    0x70 /* second byte for W25Q128JV-IM-JM */
+#define McuW25_ID2_WINBOND_xM    0x18 /* third byte for W25Q128JV-IM-JM */
 
 #define McuW25_CMD_GET_SERIAL    0x4B
 
@@ -44,7 +48,7 @@ uint8_t McuW25_ReadStatus1(uint8_t *status) {
   McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_READ_STATUS1);
   SPI_WRITE_READ(0, status);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   return ERR_OK;
 }
 
@@ -74,7 +78,7 @@ uint8_t McuW25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
   for(i=0;i<bufSize;i++) {
     SPI_WRITE_READ(0, &buf[i]);
   }
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   return ERR_OK;
 }
 
@@ -83,12 +87,12 @@ uint8_t McuW25_EraseAll(void) {
 
   McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_WRITE_ENABLE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   McuWait_Waitus(1);
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_CHIP_ERASE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;
 }
@@ -99,15 +103,15 @@ uint8_t McuW25_EraseSector4K(uint32_t address) {
 
   McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_WRITE_ENABLE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   McuWait_Waitus(1);
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_SECTOR_ERASE_4K);
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
   SPI_WRITE(address);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;
 }
@@ -117,15 +121,15 @@ uint8_t McuW25_EraseBlock32K(uint32_t address) {
 
   McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_WRITE_ENABLE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   McuWait_Waitus(1);
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_BLOCK_ERASE_32K);
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
   SPI_WRITE(address);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;
 }
@@ -133,17 +137,17 @@ uint8_t McuW25_EraseBlock32K(uint32_t address) {
 uint8_t McuW25_EraseBlock64K(uint32_t address) {
   McuW25_WaitIfBusy();
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_WRITE_ENABLE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   McuWait_Waitus(1);
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_BLOCK_ERASE_64K);
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
   SPI_WRITE(address);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;
 }
@@ -158,12 +162,12 @@ uint8_t McuW25_EraseBlock64K(uint32_t address) {
 uint8_t McuW25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSize) {
   McuW25_WaitIfBusy();
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_WRITE_ENABLE);
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   McuWait_Waitus(1);
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_PAGE_PROGRAM);
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
@@ -173,14 +177,20 @@ uint8_t McuW25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSiz
     dataSize--;
     data++;
   }
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;
 }
 
-uint8_t McuW25_GetCapacity(const uint8_t *id, uint32_t *capacity) {
-  uint32_t n = 0x100000; // unknown chips, default to 1 MByte
+uint8_t McuW25_GetCapacity(uint32_t *capacity) {
+  uint32_t n = 0x100000; /* unknown chips, default to 1 MByte */
+  uint8_t id[McuW25_ID_BUF_SIZE] = {0,0,0};
+  uint8_t res;
 
+  res = McuW25_ReadID(id, sizeof(id));
+  if (res!=ERR_OK) {
+    return ERR_FAILED;
+  }
   if (id[2] >= 16 && id[2] <= 31) {
     n = 1ul << id[2];
   } else if (id[2] >= 32 && id[2] <= 37) {
@@ -200,7 +210,7 @@ uint8_t McuW25_ReadSerialNumber(uint8_t *buf, size_t bufSize) {
     return ERR_OVERFLOW; /* buffer not large enough */
   }
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_GET_SERIAL);
   for(i=0;i<4;i++) {
     SPI_WRITE(0); /* 4 dummy bytes */
@@ -208,7 +218,7 @@ uint8_t McuW25_ReadSerialNumber(uint8_t *buf, size_t bufSize) {
   for(i=0; i<McuW25_SERIAL_BUF_SIZE; i++) {
     SPI_WRITE_READ(0, &buf[i]);
   }
-  McuW25_CS_DISABLE();
+  McuW25_CONFIG_CS_DISABLE();
   return ERR_OK;
 }
 
@@ -217,48 +227,70 @@ uint8_t McuW25_ReadID(uint8_t *buf, size_t bufSize) {
     return ERR_OVERFLOW; /* buffer not large enough */
   }
 
-  McuW25_CS_ENABLE();
+  McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_GET_ID);
   /* W25Q128 should report EF 40 18 */
   SPI_WRITE_READ(0, &buf[0]);
   SPI_WRITE_READ(0, &buf[1]);
   SPI_WRITE_READ(0, &buf[2]);
-  McuW25_CS_DISABLE();
-  if (buf[0]==McuW25_ID0_WINBOND && (buf[1]==0x40 || buf[1]==0x70) && buf[2]==0x18) {
-    return ERR_OK;
+  McuW25_CONFIG_CS_DISABLE();
+  return ERR_OK; /* not expected part */
+}
+
+McuW28_Device_e McuW28_GetDeviceType(void) {
+  uint8_t id[McuW25_ID_BUF_SIZE] = {0,0,0};
+  uint8_t res;
+
+  res = McuW25_ReadID(id, sizeof(id)); /* check ID */
+  if (res!=ERR_OK) {
+    return McuW28_DEVICE_UNKNOWN; /* error case */
   }
-  return ERR_FAILED; /* not expected part */
+  if (id[0]==McuW25_ID0_WINBOND && id[1]==McuW25_ID1_WINBOND_xQ && id[2]==McuW25_ID2_WINBOND_xQ) {
+    return McuW28_DEVICE_W28Q128JV_IQ_JQ;
+  } else if (id[0]==McuW25_ID0_WINBOND && id[1]==McuW25_ID1_WINBOND_xM && id[2]==McuW25_ID2_WINBOND_xM) {
+    return McuW28_DEVICE_W28Q128JV_IM_JM;
+  }
+  return McuW28_DEVICE_UNKNOWN; /* error case */
 }
 
 static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[60];
   uint8_t id[McuW25_ID_BUF_SIZE] = {0,0,0};
+  McuW28_Device_e devID;
   uint8_t serial[McuW25_SERIAL_BUF_SIZE] = {0,0,0,0,0,0,0,0};
   uint8_t res, status;
   uint32_t capacity;
   int i;
 
-  McuShell_SendStatusStr((const unsigned char*)"W25", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"McuWW25", (const unsigned char*)"\r\n", io->stdOut);
 
-  res = McuW25_ReadID(id, sizeof(id)); /* check ID */
-  if(res==ERR_OK) {
-    buf[0] = '\0';
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), id[0]);
-    McuUtility_chcat(buf, sizeof(buf), ' ');
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), id[1]);
-    McuUtility_chcat(buf, sizeof(buf), ' ');
-    McuUtility_strcatNum8Hex(buf, sizeof(buf), id[2]);
-    if (id[0]==McuW25_ID0_WINBOND && id[1]==0x40 && id[2]==0x18) {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Winbond W25Q128)\r\n");
-    } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (UNKNOWN)\r\n");
+  res = McuW25_ReadID(id, sizeof(id));
+  buf[0] = '\0';
+  if (res==ERR_OK) {
+    for(int i=0; i<sizeof(id); i++) {
+      McuUtility_strcatNum8Hex(buf, sizeof(buf), id[i]);
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"ERROR reading ID, ");
+ }
+  devID = McuW28_GetDeviceType();
+  switch(devID) {
+    case McuW28_DEVICE_W28Q128JV_IQ_JQ:
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Winbond W25Q128JV-IQ/JQ)\r\n");
+      break;
+    case McuW28_DEVICE_W28Q128JV_IM_JM:
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Winbond W25Q128JV-IM/JM)\r\n");
+      break;
+    case McuW28_DEVICE_UNKNOWN:
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Unknown)\r\n");
+      break;
+    default:
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (ERROR)\r\n");
+      break;
   }
   McuShell_SendStatusStr((const unsigned char*)"  ID", buf, io->stdOut);
 
-  res = McuW25_GetCapacity(id, &capacity);
+  res = McuW25_GetCapacity(&capacity);
   if (res==ERR_OK) {
     buf[0] = '\0';
     McuUtility_strcatNum32u(buf, sizeof(buf), capacity);
@@ -312,23 +344,23 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   uint8_t data[32];
   int i;
 
-  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "W25 help")==0) {
-    McuShell_SendHelpStr((unsigned char*)"W25", (const unsigned char*)"Group of W25 commands\r\n", io->stdOut);
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "McuW25 help")==0) {
+    McuShell_SendHelpStr((unsigned char*)"McuW25", (const unsigned char*)"Group of Winbond W25Q128 Flash commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  read <start> <end>", (const unsigned char*)"Read memory from <start> to <end> address\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*)"  erase all", (const unsigned char*)"Erase all\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  erase all", (const unsigned char*)"Erase all data on device\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  erase 4k <addr>", (const unsigned char*)"Erase a 4K sector\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  erase 32k <addr>", (const unsigned char*)"Erase a 32K block\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  erase 64k <addr>", (const unsigned char*)"Erase a 64K block\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  write <addr> <data>", (const unsigned char*)"Write to page (max 32 bytes data, separated by spaces)\r\n", io->stdOut);
     *handled = TRUE;
     return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0 || McuUtility_strcmp((char*)cmd, "W25 status")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0 || McuUtility_strcmp((char*)cmd, "McuW25 status")==0) {
     *handled = TRUE;
     return McuW25_PrintStatus(io);
-  } else if (McuUtility_strncmp((char*)cmd, "W25 read ", sizeof("W25 read ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuW25 read ", sizeof("McuW25 read ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 read ")-1;
+    p = cmd+sizeof("McuW25 read ")-1;
     res = McuUtility_xatoi(&p, &val);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"wrong start address\r\n", io->stdErr);
@@ -346,9 +378,9 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
       }
       return ERR_OK;
     }
-  } else if (McuUtility_strncmp((char*)cmd, "W25 write ", sizeof("W25 write ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuW25 write ", sizeof("McuW25 write ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 write ")-1;
+    p = cmd+sizeof("McuW25 write ")-1;
     res = McuUtility_xatoi(&p, &val);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"wrong address\r\n", io->stdErr);
@@ -372,7 +404,7 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
       }
     }
     return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, "W25 erase all")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "McuW25 erase all")==0) {
     *handled = TRUE;
     res = McuW25_EraseAll();
     if (res!=ERR_OK) {
@@ -380,9 +412,9 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
       return ERR_FAILED;
     }
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "W25 erase 4k ", sizeof("W25 erase 4k ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuW25 erase 4k ", sizeof("McuW25 erase 4k ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 erase 4k ")-1;
+    p = cmd+sizeof("McuW25 erase 4k ")-1;
     res = McuUtility_xatoi(&p, &val);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"wrong address\r\n", io->stdErr);
@@ -395,9 +427,9 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
       }
     }
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "W25 erase 32k ", sizeof("W25 erase 32k ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuW25 erase 32k ", sizeof("McuW25 erase 32k ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 erase 32k ")-1;
+    p = cmd+sizeof("McuW25 erase 32k ")-1;
     res = McuUtility_xatoi(&p, &val);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"wrong address\r\n", io->stdErr);
@@ -410,9 +442,9 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
       }
     }
     return ERR_OK;
-  } else if (McuUtility_strncmp((char*)cmd, "W25 erase 64k ", sizeof("W25 erase 64k ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "McuW25 erase 64k ", sizeof("McuW25 erase 64k ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("W25 erase 64k ")-1;
+    p = cmd+sizeof("McuW25 erase 64k ")-1;
     res = McuUtility_xatoi(&p, &val);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"wrong address\r\n", io->stdErr);
@@ -429,11 +461,12 @@ uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuSh
   return ERR_OK;
 }
 
-uint8_t McuW25_Init(void) {
-  uint8_t buf[McuW25_ID_BUF_SIZE];
+void McuW25_Deinit(void) {
+  McuW25_CONFIG_CS_DISABLE(); /* disable chip select by default */
+}
 
-  McuW25_CS_DISABLE();
-  return McuW25_ReadID(buf, sizeof(buf)); /* check ID */
+void McuW25_Init(void) {
+  McuW25_CONFIG_CS_DISABLE(); /* disable chip select by default */
 }
 
 #endif /* MCUW28Q128_CONFIG_ENABLED */
