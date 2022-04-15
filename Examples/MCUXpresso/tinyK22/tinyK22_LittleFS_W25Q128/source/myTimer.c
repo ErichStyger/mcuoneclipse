@@ -20,4 +20,7 @@ void MyTimer_Init(void) {
   if (timer==NULL) {
     for(;;) {} /* error */
   }
+  if (xTimerStart(timer, 0)!=pdPASS) {
+    for(;;) {} /* error */
+  }
 }
