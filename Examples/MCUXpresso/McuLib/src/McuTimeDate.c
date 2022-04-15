@@ -251,7 +251,7 @@ static uint8_t TimeCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
-  McuShell_SendStatusStr((unsigned char*)"McuTimeDate", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuTimeDate", (const unsigned char*)"Date and time information\r\n", io->stdOut);
 #if McuTimeDate_CONFIG_USE_SOFTWARE_RTC
   McuShell_SendStatusStr((unsigned char*)"  SW RTC", (const unsigned char*)"", io->stdOut);
   buf[0] = '\0';
