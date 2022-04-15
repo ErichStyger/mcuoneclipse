@@ -16,6 +16,7 @@ Middleware and dedicated driver folders:
 - SEGGER_SysView: Segger Systemview Library for tracing FreeRTOS (https://www.segger.com/products/development-tools/systemview/)
 - TraceRecorder: Percipio Tracealyzer library for FreeRTOS (https://percepio.com/tz/)
 - LittlevGL: GUI library (https://littlevgl.com/)
+- littleFS: littleFS transactional and high-integrity file system (https://github.com/littlefs-project/littlefs)
 - minIni: a minimal INI file parser: https://www.compuphase.com/minini.htm
 
 Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
@@ -72,6 +73,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuULN2003: stepper motor driver using the ULN2003
 - McuUtility: various safe string manipulation and other utility functions
 - McuWait: Realtime synchronization waiting routines
+- McuW28Q128: driver for the Winbond W28Q128 serial flash (https://mcuoneclipse.com/2019/01/06/driver-and-shell-for-winbond-w25q128-16mbyte-serial-flash-device/)
 - McuX12_017: stepper motor driver for the X12.017 device
 - McuXFormat: tiny formatting and printing, similar to sprintf
 - Output1: subdriver of McuGenericSWSPI

@@ -37,6 +37,7 @@
 
 #include "McuSPI.h"
 #include "McuW25Q128.h"
+#include "McuLittleFS.h"
 
 void PL_InitFromTask(void) {
   /* call here things which need interrupts enabled */
@@ -79,4 +80,5 @@ void PL_Init(void) {
 #endif
   McuSPI_Init();
   McuW25_Init();
+  McuLFS_Init();
 }

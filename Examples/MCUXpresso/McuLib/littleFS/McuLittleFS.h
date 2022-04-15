@@ -16,8 +16,6 @@ bool McuLFS_IsMounted(void);
 
 lfs_t* McuLFS_GetFileSystem(void);
 uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
-uint8_t McuLFS_Init(void);
-uint8_t McuLFS_FormatInit(void);
 void McuLFS_GetFileAccessSemaphore(SemaphoreHandle_t* sema);
 
 uint8_t McuLFS_ReadFile(lfs_file_t* file, bool readFromBeginning, size_t nofBytes, McuShell_ConstStdIOType *io);
@@ -34,5 +32,8 @@ uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t
 char* McuLFS_gets (char* buff,int len, lfs_file_t* fp);
 int McuLFS_putc (char c, lfs_file_t* fp);
 int McuLFS_puts (const char* str, lfs_file_t* fp);
+
+void McuLFS_Deinit(void);
+void McuLFS_Init(void);
 
 #endif /* MCULITTLEFS_H_ */
