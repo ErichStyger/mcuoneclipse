@@ -10,9 +10,8 @@
 // Users can override lfs_util.h with their own configuration by defining
 // LFS_CONFIG as a header file to include (-DLFS_CONFIG=lfs_config.h).
 
-#include "lfs_config.h"
-
-#if LITTLEFS_CONFIG_ENABLED
+#include "lfs_config.h" /* << EST */
+#if LITTLEFS_CONFIG_ENABLED /* << EST */
 
 //
 // If LFS_CONFIG is used, none of the default utils will be emitted and must be
@@ -247,6 +246,6 @@ static inline void lfs_free(void *p) {
 
 #endif
 
-#endif /* LITTLEFS_CONFIG_ENABLED */
+#endif /* << EST LITTLEFS_CONFIG_ENABLED */
 
 #endif
