@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "McuSHT31.h"
 #include "W25Q128.h"
 #include "fs.h"
 #if PL_CONFIG_USE_MININI
@@ -47,6 +48,11 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_littleFS
   FS_ParseCommand,
 #endif
+
+#if PL_CONFIG_USE_SHT31
+  McuSHT31_ParseCommand,
+#endif
+
 
 
 #if PL_CONFIG_USE_SWO

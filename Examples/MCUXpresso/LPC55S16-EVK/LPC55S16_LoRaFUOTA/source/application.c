@@ -19,6 +19,7 @@
 #include "McuTimeDate.h"
 #include "McuDebounce.h"
 #include "McuSWO.h"
+#include "McuSHT31.h"
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
@@ -138,16 +139,23 @@ static void AppTask(void *pv) {
   TickType_t lastUpdateFromRTCtickCount; /* time stamp when last time the SW RTC has been update from HW RTC: it gets updated every hour */
   uint32_t ulNotificationValue;
 
+
   res = McuTimeDate_Init();
   res = McuTimeDate_GetTime(&time);
   McuLog_info("App Task started.");
   BTN_RegisterAppCallback(AppOnDebounceEvent);
   for(;;) {
 	  uint8_t buf[24];
+	  uint16_t sht_status;
+	  float temp;
+	  float hum;
+
 	  McuFontDisplay_PixelDim x, y;
 	  x = 5;
 	  y = 20;
 	  buf[0] = '\0';
+//	  SHT31_ReadStatus(&sht_status);
+	  McuSHT31_ReadTempHum(&temp, &hum);
 	  if (DisplayAddTime(buf, sizeof(buf), McuTimeDate_GetExternalRTCTimeDate)!=ERR_OK) {
 		  return ERR_FAILED;
 	  } else {
@@ -167,12 +175,19 @@ static void AppTask(void *pv) {
       sdDiskPresent = false;
     }
 #endif
-    if (BTN_IsPressed(BTN_UP)) {
-      McuLog_info("User Up pressed.");
+    if (BTN_IsPressed(BTN_BT2)) {
+      McuLog_info("User BT2 pressed.");
       LEDS_Neg(LEDS_BLUE);
+      SHT31_ReadStatus(&sht_status);
+      McuSHT31_Reset();
     }
 #if 1
     BTN_PollDebounce(); /* check and debounce */
+    if (BTN_IsPressed(BTN_BT1)) {
+      McuLog_info("User BTN1 pressed.");
+
+      LEDS_Neg(LEDS_SHIELD_GREEN);
+    }
 #else /* simply button polling */
     if (BTN_IsPressed(BTN_USER)) {
       McuLog_info("User Button pressed.");
@@ -217,7 +232,7 @@ void APP_Run(void) {
     McuWait_Waitms(100);
     LEDS_Off(LEDS_BLUE);
     McuWait_Waitms(100);
-    if (BTN_IsPressed(BTN_USER)) {
+    if (BTN_IsPressed(BTN_BT1)) {
       LEDS_On(LEDS_RED);
       McuWait_Waitms(100);
       LEDS_Off(LEDS_RED);

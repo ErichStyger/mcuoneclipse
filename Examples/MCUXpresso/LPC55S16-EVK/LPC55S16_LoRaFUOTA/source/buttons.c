@@ -31,11 +31,11 @@ bool BTN_IsPressed(BTN_Buttons_e btn) {
 static uint32_t GetButtons(void) {
   uint32_t val = 0;
 
-  if (BTN_IsPressed(BTN_USER)) {
-    val |= BTN_BIT_USER;
+  if (BTN_IsPressed(BTN_BT1)) {
+    val |= BTN_BIT_BT1;
   }
-  if (BTN_IsPressed(BTN_WAKEUP)) {
-    val |= BTN_BIT_WAKEUP;
+  if (BTN_IsPressed(BTN_BT2)) {
+    val |= BTN_BIT_BT2;
   }
   return val;
 }
@@ -113,11 +113,11 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
 }
 
 void BTN_PollDebounce(void) {
-  if (BTN_IsPressed(BTN_USER)) {
-    StartDebounce(BTN_BIT_USER, false);
+  if (BTN_IsPressed(BTN_BT1)) {
+    StartDebounce(BTN_BIT_BT1, false);
   }
-  if (BTN_IsPressed(BTN_WAKEUP)) {
-    StartDebounce(BTN_BIT_WAKEUP, false);
+  if (BTN_IsPressed(BTN_BT2)) {
+    StartDebounce(BTN_BIT_BT2, false);
   }
 }
 
@@ -159,23 +159,17 @@ void BTN_Init(void) {
   McuBtn_GetDefaultConfig(&btnConfig);
 
   btnConfig.isLowActive = true;
-  btnConfig.hw.gpio = BUTTONS_USER_GPIO;
-  btnConfig.hw.port = BUTTONS_USER_PORT;
-  btnConfig.hw.pin = BUTTONS_USER_PIN;
-  BTN_Infos[BTN_USER].handle = McuBtn_InitButton(&btnConfig);
+  btnConfig.hw.gpio = BUTTONS_SHIELD_BTN1_GPIO;
+  btnConfig.hw.port = BUTTONS_SHIELD_BTN1_PORT;
+  btnConfig.hw.pin = BUTTONS_SHIELD_BTN1_PIN;
+  BTN_Infos[BTN_BT1].handle = McuBtn_InitButton(&btnConfig);
 
   btnConfig.isLowActive = true;
-  btnConfig.hw.gpio = BUTTONS_WAKEUP_GPIO;
-  btnConfig.hw.port = BUTTONS_WAKEUP_PORT;
-  btnConfig.hw.pin = BUTTONS_WAKEUP_PIN;
-  BTN_Infos[BTN_WAKEUP].handle = McuBtn_InitButton(&btnConfig);
+  btnConfig.hw.gpio = BUTTONS_SHIELD_BTN2_GPIO;
+  btnConfig.hw.port = BUTTONS_SHIELD_BTN2_PORT;
+  btnConfig.hw.pin = BUTTONS_SHIELD_BTN2_PIN;
+  BTN_Infos[BTN_BT2].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.isLowActive = true;
-  btnConfig.hw.gpio = BUTTONS_UP_GPIO;
-  btnConfig.hw.port = BUTTONS_UP_PORT;
-  btnConfig.hw.pin = BUTTONS_UP_PIN;
-  BTN_Infos[BTN_UP].handle = McuBtn_InitButton(&btnConfig);
-  McuBtn_EnablePullResistor(BTN_Infos[BTN_UP].handle);
 
 #if 0
   SYSCON_AttachSignal(SYSCON, kPINT_PinInt0, kSYSCON_GpioPort0Pin4ToPintsel);

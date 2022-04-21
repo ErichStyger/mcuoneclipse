@@ -71,6 +71,11 @@
   #include "nvmc.h"
 	#include "W25Q128.h"
 #endif
+
+#if PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#endif
+
 #include "application.h"
 
 void PL_Init(void) {
@@ -84,7 +89,11 @@ void PL_Init(void) {
 
  //
   McuLib_Init();
+
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_Init();
+#endif
+
   McuWait_Init();
   McuGPIO_Init();
   McuLED_Init();
@@ -94,8 +103,14 @@ void PL_Init(void) {
 
   /* user modules */
   LEDS_Init();
-  BTN_Init();
+
+  //BTN_Init();
+
+#if PL_CONFIG_USE_SHELL
   SHELL_Init();
+#endif
+
+
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
   McuFatFS_CardPinInit();
@@ -130,6 +145,10 @@ void PL_Init(void) {
   McuShell_Init();
   McuTimeDate_Init();
   McuDbnc_Init();
+
+#if PL_CONFIG_USE_SHT31
+  McuSHT31_Init();
+#endif
 
 #if PL_CONFIG_USE_NVMC
   //NVMC_Init();

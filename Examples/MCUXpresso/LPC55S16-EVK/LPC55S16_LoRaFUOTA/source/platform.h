@@ -7,7 +7,7 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_SHELL       (1) /* if using command line shell */
+#define PL_CONFIG_USE_SHELL       (0) /* if using command line shell */
 #define PL_CONFIG_USE_SHELL_UART  (1 && PL_CONFIG_USE_SHELL) /* if using shell with UART */
 #define PL_CONFIG_USE_RTT         (0) /* if using RTT for shell */
 #define PL_CONFIG_USE_USB_CDC     (0) /* if implementing a USB CDC device and use it for the shell */
@@ -27,9 +27,12 @@
 #define PL_CONFIG_USE_LED2          (0) /* Rx indication, LED not supported on LPC55S16-EVK */
 #define PL_CONFIG_USE_UART2         (0)
 
+#define PL_CONFIG_USE_SHT31			(1)
+
+
 #define PL_CONFIG_USE_W25Q        (1) /* if flash non-volatile memory is used to store data */
 
-#define PL_CONFIG_USE_littleFS        (1) /* if flash non-volatile memory is used to store data */
+#define PL_CONFIG_USE_littleFS        (0) /* if flash non-volatile memory is used to store data */
 
 /* FLASH storage parameters, used for EEPROM Emulation */
 /* 4 pages (2.0 KByte) is reserved for EEPROM emulation buffer
