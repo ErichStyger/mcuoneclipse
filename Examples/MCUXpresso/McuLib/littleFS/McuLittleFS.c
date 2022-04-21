@@ -818,6 +818,12 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
   McuShell_SendStatusStr((const unsigned char*) "McuLittleFS", (const unsigned char*) "McuLittleFS status\r\n", io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (const uint8_t *)"0x");
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_VERSION);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*) "  version", buf, io->stdOut);
+
   McuShell_SendStatusStr((const unsigned char*) "  mounted",  McuLFS_isMounted ? (const uint8_t *)"yes\r\n" : (const uint8_t *)"no\r\n", io->stdOut);
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);

@@ -26,7 +26,9 @@
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
 /* ------------------- I2C ---------------------------*/
-#define USE_HW_I2C           (1)  /* otherwise uses GPIO bit-banging */
+#define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED    MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1 /* Corsin's Shield uses FC1 */
+
+#define USE_HW_I2C                    (1)  /* otherwise uses GPIO bit-banging */
 
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX          (1 && McuLib_CONFIG_SDK_USE_FREERTOS)

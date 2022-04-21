@@ -14,6 +14,14 @@
     /*!< 1: enable module, 0: disable module */
 #endif
 
+#define MCUI2CLIB_CONFIG_HW_TEMPLATE_NONE              (0) /* default, initialization value */
+#define MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1  (1) /* LPC55S69 with I2C bus on FC4 */
+#define MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC4  (2) /* LPC55S69 with I2C bus on FC4 */
+
+#ifndef MCUI2CLIB_CONFIG_HW_TEMPLATE_USED
+  #define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED        MCUI2CLIB_CONFIG_HW_TEMPLATE_NONE
+#endif
+
 #if McuLib_CONFIG_CPU_IS_LPC
   #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 /* LPC845-BRK */
     #define MCUI2CLIB_CONFIG_SCL_GPIO         GPIO
@@ -83,9 +91,73 @@
     #endif
 
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+
+  #if MCUI2CLIB_CONFIG_HW_TEMPLATE_USED==MCUI2CLIB_CONFIG_HW_TEMPLATE_NONE
+    #error "please select hardware used"
+  #elif MCUI2CLIB_CONFIG_HW_TEMPLATE_USED==MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1
+    /* using SCL/SDA on the Arduino header
+     * SDA: FC1_I2C_SDA, MCU pin 71, PIO0_13
+     * SCL: FC1_I2C_SCL, MCU pin 72, PIO0_14
+     */
+
+    /* following values are copied from pin_mux.h */
+    /*!
+     * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+    #define MCUI2CLIB_PIO0_13_DIGIMODE_DIGITAL 0x01u
+    /*!
+     * @brief Selects pin function.: Alternative connection 1. */
+    #define MCUI2CLIB_PIO0_13_FUNC_ALT1 0x01u
+    /*!
+     * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+    #define MCUI2CLIB_PIO0_14_DIGIMODE_DIGITAL 0x01u
+    /*!
+     * @brief Selects pin function.: Alternative connection 1. */
+    #define MCUI2CLIB_PIO0_14_FUNC_ALT1 0x01u
+
+
+    #define MCUI2CLIB_CONFIG_SCL_GPIO                 GPIO
+    #define MCUI2CLIB_CONFIG_SCL_GPIO_PORT            0
+    #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN             14u
+    #define MCUI2CLIB_CONFIG_SCL_IOCON_PIO_FUNC       MCUI2CLIB_PIO0_14_FUNC_ALT1
+    #define MCUI2CLIB_CONFIG_SCL_IOCON_PIO_DIGIMODE   MCUI2CLIB_PIO0_14_DIGIMODE_DIGITAL
+
+    #define MCUI2CLIB_CONFIG_SDA_GPIO                 GPIO
+    #define MCUI2CLIB_CONFIG_SDA_GPIO_PORT            0
+    #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN             13u
+    #define MCUI2CLIB_CONFIG_SDA_IOCON_PIO_FUNC       MCUI2CLIB_PIO0_13_FUNC_ALT1
+    #define MCUI2CLIB_CONFIG_SDA_IOCON_PIO_DIGIMODE   MCUI2CLIB_PIO0_13_DIGIMODE_DIGITAL
+
+    #define MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR      I2C1  /* matching the used FLEXCOM1 */
+    #define MCUI2CLIB_CONFIG_I2C_MASTER_CLK_FREQ      12000000
+
+
+    #ifndef MCUI2CLIB_CONFIG_MUX_I2C_PINS
+      #define MCUI2CLIB_CONFIG_MUX_I2C_PINS() \
+        CLOCK_EnableClock(kCLOCK_Iocon); \
+        IOCON->PIO[MCUI2CLIB_CONFIG_SCL_GPIO_PORT][MCUI2CLIB_CONFIG_SCL_GPIO_PIN] = ((IOCON->PIO[MCUI2CLIB_CONFIG_SCL_GPIO_PORT][MCUI2CLIB_CONFIG_SCL_GPIO_PIN] & \
+                              /* Mask bits to zero which are setting */ \
+                              (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK))) \
+                             /* Selects pin function. */ \
+                             | IOCON_PIO_FUNC(MCUI2CLIB_CONFIG_SCL_IOCON_PIO_FUNC) \
+                             /* Select Digital mode. */ \
+                             | IOCON_PIO_DIGIMODE(MCUI2CLIB_CONFIG_SCL_IOCON_PIO_DIGIMODE)); \
+        IOCON->PIO[MCUI2CLIB_CONFIG_SDA_GPIO_PORT][MCUI2CLIB_CONFIG_SDA_GPIO_PIN] = ((IOCON->PIO[MCUI2CLIB_CONFIG_SDA_GPIO_PORT][MCUI2CLIB_CONFIG_SDA_GPIO_PIN] & \
+                              /* Mask bits to zero which are setting */ \
+                              (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK))) \
+                             /* Selects pin function. */ \
+                             | IOCON_PIO_FUNC(MCUI2CLIB_CONFIG_SDA_IOCON_PIO_FUNC) \
+                             /* Select Digital mode. */ \
+                             | IOCON_PIO_DIGIMODE(MCUI2CLIB_CONFIG_SDA_IOCON_PIO_DIGIMODE));
+    #endif
+
+    #ifndef MCUI2CLIB_CONFIG_CLOCK_SELECT
+      #define MCUI2CLIB_CONFIG_CLOCK_SELECT()    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1); /* attach 12 MHz clock to FLEXCOMM1 (I2C master) */
+    #endif
+
+  #elif MCUI2CLIB_CONFIG_HW_TEMPLATE_USED==MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC4
     /* using SCL/SDA on the Mikro Bus connector
-     * SCL: FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
      * SDA: FC4_I2C_SDA_ARD, MCU pin 30, PIO1_21
+     * SCL: FC4_I2C_SCL_ARD, MCU pin 4, PIO1_20
      */
     #define MCUI2CLIB_CONFIG_SCL_GPIO                 GPIO
     #define MCUI2CLIB_CONFIG_SCL_GPIO_PORT            1
@@ -99,8 +171,8 @@
     #define MCUI2CLIB_CONFIG_SDA_IOCON_PIO_FUNC       PIO1_21_FUNC_ALT5
     #define MCUI2CLIB_CONFIG_SDA_IOCON_PIO_DIGIMODE   PIO1_21_DIGIMODE_DIGITAL
 
-    #define MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR             I2C4  /* matching the used FLEXCOM4 */
-    #define MCUI2CLIB_CONFIG_I2C_MASTER_CLK_FREQ             12000000
+    #define MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR      I2C4  /* matching the used FLEXCOM4 */
+    #define MCUI2CLIB_CONFIG_I2C_MASTER_CLK_FREQ      12000000
 
 
     #ifndef MCUI2CLIB_CONFIG_MUX_I2C_PINS
@@ -125,6 +197,8 @@
     #ifndef MCUI2CLIB_CONFIG_CLOCK_SELECT
       #define MCUI2CLIB_CONFIG_CLOCK_SELECT()    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM4); /* attach 12 MHz clock to FLEXCOMM4 (I2C master) */
     #endif
+
+  #endif /* MCUI2CLIB_CONFIG_HW_TEMPLATE_USED */
 
   #endif /* LPC variants */
 

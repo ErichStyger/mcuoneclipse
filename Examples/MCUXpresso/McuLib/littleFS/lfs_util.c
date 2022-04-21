@@ -1,14 +1,14 @@
 /*
  * lfs util functions
  *
+ * Copyright (c) 2022, The littlefs authors.
  * Copyright (c) 2017, Arm Limited. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #include "lfs_util.h"
 
-#include "lfs_config.h"
-
-#if LITTLEFS_CONFIG_ENABLED
+#include "lfs_config.h" /* << EST */
+#if LITTLEFS_CONFIG_ENABLED /* << EST */
 
 // Only compile if user does not provide custom config
 #ifndef LFS_CONFIG
@@ -36,4 +36,4 @@ uint32_t lfs_crc(uint32_t crc, const void *buffer, size_t size) {
 
 #endif
 
-#endif
+#endif /* << EST LITTLEFS_CONFIG_ENABLED */

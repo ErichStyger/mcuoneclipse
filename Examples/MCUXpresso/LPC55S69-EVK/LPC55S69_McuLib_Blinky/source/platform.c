@@ -43,7 +43,7 @@ void PL_Init(void) {
 #endif
   McuLog_Init();
   //McuShellUart_Init();
-  //McuShell_Init();
+  McuShell_Init();
   McuTimeDate_Init();
   McuDbnc_Init();
 
