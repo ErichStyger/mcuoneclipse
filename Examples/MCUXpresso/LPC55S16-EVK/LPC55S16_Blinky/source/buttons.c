@@ -31,11 +31,16 @@ bool BTN_IsPressed(BTN_Buttons_e btn) {
 static uint32_t GetButtons(void) {
   uint32_t val = 0;
 
+#if PL_CONFIG_HAS_USER_BUTTON
   if (BTN_IsPressed(BTN_USER)) {
     val |= BTN_BIT_USER;
   }
+#endif
   if (BTN_IsPressed(BTN_WAKEUP)) {
     val |= BTN_BIT_WAKEUP;
+  }
+  if (BTN_IsPressed(BTN_UP)) {
+    val |= BTN_BIT_UP;
   }
   return val;
 }
@@ -113,11 +118,16 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
 }
 
 void BTN_PollDebounce(void) {
+#if PL_CONFIG_HAS_USER_BUTTON
   if (BTN_IsPressed(BTN_USER)) {
     StartDebounce(BTN_BIT_USER, false);
   }
+#endif
   if (BTN_IsPressed(BTN_WAKEUP)) {
     StartDebounce(BTN_BIT_WAKEUP, false);
+  }
+  if (BTN_IsPressed(BTN_UP)) {
+    StartDebounce(BTN_BIT_UP, false);
   }
 }
 
@@ -158,11 +168,13 @@ void BTN_Init(void) {
 
   McuBtn_GetDefaultConfig(&btnConfig);
 
+#if PL_CONFIG_HAS_USER_BUTTON
   btnConfig.isLowActive = true;
   btnConfig.hw.gpio = BUTTONS_USER_GPIO;
   btnConfig.hw.port = BUTTONS_USER_PORT;
   btnConfig.hw.pin = BUTTONS_USER_PIN;
   BTN_Infos[BTN_USER].handle = McuBtn_InitButton(&btnConfig);
+#endif
 
   btnConfig.isLowActive = true;
   btnConfig.hw.gpio = BUTTONS_WAKEUP_GPIO;

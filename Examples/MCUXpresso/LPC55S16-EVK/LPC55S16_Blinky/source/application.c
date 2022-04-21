@@ -130,11 +130,13 @@ void APP_Run(void) {
     McuWait_Waitms(100);
     LEDS_Off(LEDS_BLUE);
     McuWait_Waitms(100);
+#if PL_CONFIG_HAS_USER_BUTTON
     if (BTN_IsPressed(BTN_USER)) {
       LEDS_On(LEDS_RED);
       McuWait_Waitms(100);
       LEDS_Off(LEDS_RED);
     }
+#endif
   } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
