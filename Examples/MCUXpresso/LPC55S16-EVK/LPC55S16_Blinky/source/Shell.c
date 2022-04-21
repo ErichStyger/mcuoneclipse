@@ -26,6 +26,12 @@
   #include "McuFatFS.h"
   #include "disk.h"
 #endif
+#if PL_CONFIG_USE_RTC
+  #include "McuTimeDate.h"
+#endif
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  #include "McuExtRTC.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -38,6 +44,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuExtRTC_ParseCommand,
+#endif
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
 #endif

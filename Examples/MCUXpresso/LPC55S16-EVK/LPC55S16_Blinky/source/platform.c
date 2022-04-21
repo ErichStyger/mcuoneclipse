@@ -42,6 +42,9 @@
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
 #endif
+#if PL_CONFIG_HAS_HW_RTC
+  #include "McuExtRTC.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -64,9 +67,13 @@ void PL_Init(void) {
   McuShellUart_Init();
 #endif
   McuShell_Init();
-  McuTimeDate_Init();
   McuDbnc_Init();
-
+#if !McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuTimeDate_Init(); /* if using external RTC it uses I2C, need to do this from clock task */
+#endif
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuExtRTC_Init();
+#endif
   /* user modules */
   LEDS_Init();
   BTN_Init();

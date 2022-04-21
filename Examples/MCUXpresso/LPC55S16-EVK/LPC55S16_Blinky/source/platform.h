@@ -6,7 +6,9 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+#ifndef PL_CONFIG_USE_LORA_SHIELD
+  #error "PL_CONFIG_USE_LORA_SHIELD needs be set in IncludeMcuLibConfig.h!"
+#endif
 
 #define PL_CONFIG_USE_SHELL       (1) /* if using command line shell */
 #define PL_CONFIG_USE_SHELL_UART  (1 && PL_CONFIG_USE_SHELL) /* if using shell with UART */
@@ -27,10 +29,9 @@
 
 #if PL_CONFIG_USE_LORA_SHIELD
   #define PL_CONFIG_HAS_USER_BUTTON    (0) /* pin connected on DIO5 of the transceiver */
-  #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C)
+  #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D53232MZ+ */
 #else
   #define PL_CONFIG_HAS_USER_BUTTON    (1)
-  #define PL_CONFIG_HAS_HW_RTC         (1)
   #define PL_CONFIG_HAS_HW_RTC         (0)
 #endif
 

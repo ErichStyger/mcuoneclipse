@@ -10,6 +10,8 @@
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
+#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
 #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)
 #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69

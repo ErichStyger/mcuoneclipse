@@ -30,6 +30,9 @@ Instructions:
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
+/* global platform configuration */
+#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 /* set the CPU. See McuLibConfig.h for all supported CPUs */
@@ -98,8 +101,21 @@ Instructions:
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 /* -----------------------------------------------------*/
 /* McuTimeDate */
-#define McuTimeDate_CONFIG_TICK_TIME_MS   (100)
+#define McuTimeDate_CONFIG_TICK_TIME_MS                            (100)
+#define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (1) /* enable software RTC */
+#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (1) /* enable external I2C RTC */
+#define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
+#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
+//#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
+
+#define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
+#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
+#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
+#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
+/* -------------------------------------------------*/
+/* McuExtRTC */
+#define McuExtRTC_CONFIG_DEVICE                 3232  /* RTC device used */
 /* -----------------------------------------------------*/
 /* I2C and OLED */
 #define USE_HW_I2C                              (1)  /* otherwise uses GPIO bit-banging */
@@ -111,7 +127,6 @@ Instructions:
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 
 /* I2C Pin Muxing */
-
 #if USE_HW_I2C
   #define McuLib_CONFIG_MCUI2CLIB_ENABLED                        (1)
   #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "McuI2cLib.h"

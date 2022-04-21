@@ -69,6 +69,9 @@ static void AppTask(void *pv) {
 #endif
 
   McuLog_info("App Task started.");
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuTimeDate_Init(); /* if using external RTC it uses I2C, need to do this from clock task */
+#endif
   BTN_RegisterAppCallback(AppOnDebounceEvent);
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
