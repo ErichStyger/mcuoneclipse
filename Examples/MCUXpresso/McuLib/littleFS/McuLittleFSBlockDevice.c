@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLib.h" /* for error codes */
 #include "McuLittleFSBlockDevice.h"
 #include "littleFS/lfs.h"
 
@@ -16,7 +17,7 @@ int McuLittleFS_block_device_read(const struct lfs_config *c, lfs_block_t block,
   uint8_t res;
 
 #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
-  /* NYI */
+  res = ERR_FAILED; /* NYI */
 #elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
   res = McuW25_Read(block * c->block_size + off, buffer, size);
 #endif
@@ -30,7 +31,7 @@ int McuLittleFS_block_device_prog(const struct lfs_config *c, lfs_block_t block,
   uint8_t res;
 
 #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
-  /* NYI */
+  res = ERR_FAILED; /* NYI */
 #elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
   res = McuW25_ProgramPage(block * c->block_size + off, buffer, size);
 #endif
@@ -44,7 +45,7 @@ int McuLittleFS_block_device_erase(const struct lfs_config *c, lfs_block_t block
   uint8_t res;
 
 #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
-  /* NYI */
+  res = ERR_FAILED; /* NYI */
 #elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
   res = McuW25_EraseSector4K(block * c->block_size);
 #endif
