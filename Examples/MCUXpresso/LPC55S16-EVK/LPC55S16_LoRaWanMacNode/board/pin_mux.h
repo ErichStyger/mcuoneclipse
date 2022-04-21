@@ -33,24 +33,6 @@ void BOARD_InitBootPins(void);
 #define PIO0_0_FUNC_ALT0 0x00u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_13_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 0. */
-#define PIO0_13_FUNC_ALT0 0x00u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_14_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 0. */
-#define PIO0_14_FUNC_ALT0 0x00u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_16_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 0. */
-#define PIO0_16_FUNC_ALT0 0x00u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO0_26_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
@@ -66,16 +48,40 @@ void BOARD_InitBootPins(void);
 #define PIO0_30_FUNC_ALT1 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_14_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_14_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_16_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_16_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_17_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_17_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_1_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_1_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_25_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_25_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_2_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 6. */
 #define PIO1_2_FUNC_ALT6 0x06u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO1_31_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 0. */
-#define PIO1_31_FUNC_ALT0 0x00u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_3_DIGIMODE_DIGITAL 0x01u
@@ -100,22 +106,16 @@ void BOARD_InitBootPins(void);
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_8_FUNC_ALT0 0x00u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO1_9_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 0. */
-#define PIO1_9_FUNC_ALT0 0x00u
 
-/*! @name PIO1_9 (number 10), SW3/J12[2]/ARD_BTN_USR_P1_9
+/*! @name PIO1_1 (number 59), NOT_CONNECTED
   @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_RADIO_NSS_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_RADIO_NSS_GPIO_PIN_MASK (1U << 9U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_RADIO_NSS_GPIO_PIN_MASK (1U << 1U) /*!<@brief GPIO pin mask */
 #define BOARD_INITPINS_RADIO_NSS_PORT 1U                  /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_RADIO_NSS_PIN 9U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_RADIO_NSS_PIN_MASK (1U << 9U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_RADIO_NSS_PIN 1U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_RADIO_NSS_PIN_MASK (1U << 1U)      /*!<@brief PORT pin mask */
                                                           /* @} */
 
 /*! @name PIO1_8 (number 24), J9[20]/ARD_P1_8
@@ -129,15 +129,15 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_RADIO_ANT_SW_PIN_MASK (1U << 8U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
-/*! @name PIO0_16 (number 14), NOT_CONNECTED
+/*! @name PIO1_17 (number 43), J12[20]/J13[2]/EXP_P1_17
   @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_RADIO_RESET_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_RADIO_RESET_GPIO_PIN_MASK (1U << 16U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_RADIO_RESET_PORT 0U                   /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_RADIO_RESET_PIN 16U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_RADIO_RESET_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_RADIO_RESET_GPIO_PIN_MASK (1U << 17U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_RADIO_RESET_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_RADIO_RESET_PIN 17U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_RADIO_RESET_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
 /*! @name PIO1_6 (number 5), Q4[G1]/J12[10]/ARD_LEDB_PWM
@@ -193,37 +193,37 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_RADIO_DEVICE_PIN_MASK (1U << 0U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
-/*! @name PIO1_31 (number 91), DIO_0
+/*! @name PIO1_14 (number 57), J12[3]/EXP_P1_14
   @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_RFM96_DIO_0_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_0_GPIO_PIN_MASK (1U << 31U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_RFM96_DIO_0_GPIO_PIN_MASK (1U << 14U) /*!<@brief GPIO pin mask */
 #define BOARD_INITPINS_RFM96_DIO_0_PORT 1U                   /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_0_PIN 31U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_RFM96_DIO_0_PIN_MASK (1U << 31U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_RFM96_DIO_0_PIN 14U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_RFM96_DIO_0_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
-/*! @name PIO0_13 (number 71), DIO_1
+/*! @name PIO1_16 (number 87), J12[18]/J13[4]/EXP_P1_16
   @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_RFM96_DIO_1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_1_GPIO_PIN_MASK (1U << 13U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_RFM96_DIO_1_PORT 0U                   /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_1_PIN 13U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_RFM96_DIO_1_PIN_MASK (1U << 13U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_RFM96_DIO_1_GPIO_PIN_MASK (1U << 16U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_RFM96_DIO_1_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_RFM96_DIO_1_PIN 16U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_RFM96_DIO_1_PIN_MASK (1U << 16U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
-/*! @name PIO0_14 (number 72), DIO_2
+/*! @name PIO1_25 (number 77), J9[15]/J12[5]/I2S_IRQ
   @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_RFM96_DIO_2_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_2_GPIO_PIN_MASK (1U << 14U) /*!<@brief GPIO pin mask */
-#define BOARD_INITPINS_RFM96_DIO_2_PORT 0U                   /*!<@brief PORT peripheral base pointer */
-#define BOARD_INITPINS_RFM96_DIO_2_PIN 14U                   /*!<@brief PORT pin number */
-#define BOARD_INITPINS_RFM96_DIO_2_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
+#define BOARD_INITPINS_RFM96_DIO_2_GPIO_PIN_MASK (1U << 25U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_RFM96_DIO_2_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_RFM96_DIO_2_PIN 25U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_RFM96_DIO_2_PIN_MASK (1U << 25U)      /*!<@brief PORT pin mask */
                                                              /* @} */
 
 /*!

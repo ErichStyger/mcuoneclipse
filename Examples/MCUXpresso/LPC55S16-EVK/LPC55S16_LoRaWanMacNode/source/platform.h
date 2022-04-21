@@ -29,8 +29,8 @@
  * 0x3CC00  MinINI
  * 0x3CE00  MinINI
  */
-#define PL_CONFIG_RADIO_TRANSEIVER_RFM96        (0)  /* if shell support is enabled */
-#define PL_CONFIG_RADIO_TRANSEIVER_SX126x        (1)  /* if shell support is enabled */
+#define PL_CONFIG_RADIO_TRANSEIVER_RFM96        (1)  /* if shell support is enabled */
+#define PL_CONFIG_RADIO_TRANSEIVER_SX126x        (0)  /* if shell support is enabled */
 
 #define PL_CONFIG_FLASH_NVM_ADDR_START      (((0+244*1024)-((PL_CONFIG_FLASH_NVM_NOF_BLOCKS+McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS)*PL_CONFIG_FLASH_NVM_BLOCK_SIZE))) /* last block in FLASH, start address of configuration data in flash */
 #define PL_CONFIG_FLASH_NVM_BLOCK_SIZE      (McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE)   /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */

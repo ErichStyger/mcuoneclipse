@@ -120,20 +120,35 @@ extern "C"
 /**
  * Radio definitions (LoRa Transceiver)
  */
-#define RADIO_NSS_PIN							  PIO1_9  /* MCU pin 10, ARD_P1_10 */
+
+
+#if PL_CONFIG_RADIO_TRANSEIVER_RFM96
+
+#define RADIO_NSS_PIN							PIO1_1  /* MCU pin 10, ARD_P1_10 */
+#define RADIO_RESET_PIN							PIO1_17 /* MCU pin 14,  FC1_I2C_SCL */
+#define RFM95_DIO_0_PIN							PIO1_14  /* MCU pin  */
+#define RFM95_DIO_1_PIN							PIO1_16  /* MCU  */
+#define RFM95_DIO_2_PIN        					PIO1_25  /* MCU pin */
+#define RFM95_DIO_3_PIN							PIO1_10  /* MCU pin  */
+#define RFM95_DIO_4_PIN							PIO0_15  /* MCU  */
+#define RFM95_DIO_5_PIN        					PIO1_9  /* MCU pin */
+#define RADIO_ANT_SWITCH_PIN					PIO0_0  /* MCU pin 14, ARD_P1_8 */ // LED!!!!!
 #define RADIO_TCXO_WAKEUP_TIME      5
+
+#endif
+
+#if  PL_CONFIG_RADIO_TRANSEIVER_SX126x
+
+#define RADIO_NSS_PIN							  PIO1_9  /* MCU pin 10, ARD_P1_10 */
 #define RADIO_RESET_PIN							PIO0_16 /* MCU pin 14,  FC1_I2C_SCL */
+#define RADIO_TCXO_WAKEUP_TIME      5
 #define RADIO_ANT_SWITCH_PIN				PIO1_8  /* MCU pin 14, ARD_P1_8 */
 #define RADIO_BUSY_PIN							PIO1_6  /* MCU pin 5, ARD_LEDB_PWM, blue RGB LED! */
 #define RADIO_DIO_1_PIN							PIO1_4  /* MCU pin 1, ARD_LEDR_PWM, red RGB LED! */
 #define RADIO_DEVICE_SEL_PIN        PIO0_0  /* MCU pin 54, ARD_CMP0_IN_A */
 
-#define RFM95_DIO_0_PIN							PIO1_31  /* MCU pin  */
-#define RFM95_DIO_1_PIN							PIO0_13  /* MCU  */
-#define RFM95_DIO_2_PIN        					PIO0_14  /* MCU pin */
-#define RFM95_DIO_3_PIN							PIO1_22  /* MCU pin  */
-#define RFM95_DIO_4_PIN							PIO1_16  /* MCU  */
-#define RFM95_DIO_5_PIN        					PIO1_17  /* MCU pin */
+#endif
+
 
 /**
  * LED pins

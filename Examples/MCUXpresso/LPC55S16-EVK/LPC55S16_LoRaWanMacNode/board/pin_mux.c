@@ -48,13 +48,18 @@ pin_labels:
 - {pin_num: '94', pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, label: MCU_TX, identifier: DEBUG_UART_RX;DEBUG_UART_TX}
 - {pin_num: '23', pin_signal: PIO0_31/FC0_CTS_SDA_SSEL0/CTIMER0_MAT1/SCT0_OUT3/SECURE_GPIO0_31/ADC0_3, label: NOT_CONNECTED}
 - {pin_num: '11', pin_signal: PIO1_0/FC0_RTS_SCL_SSEL1/CT_INP2/SCT_GPI4/PLU_OUT3/ADC0_11, label: RADIO_BUSY, identifier: RADIO_BUSY}
-- {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: NOT_CONNECTED}
+- {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: NOT_CONNECTED, identifier: RADIO_NSS}
 - {pin_num: '61', pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5, label: NOT_CONNECTED, identifier: SPI_CLK}
 - {pin_num: '62', pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6, label: NOT_CONNECTED, identifier: SPI_MISO}
 - {pin_num: '1', pin_signal: PIO1_4/FC0_SCK/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A, label: 'Q5[G1]/J12[6]/ARD_LEDR_PWM', identifier: LED_RED;RADIO_DIO1}
 - {pin_num: '5', pin_signal: PIO1_6/FC0_TXD_SCL_MISO_WS/CTIMER2_MAT1/SCT_GPI3, label: 'Q4[G1]/J12[10]/ARD_LEDB_PWM', identifier: LED_BLUE;RADIO_BUSY}
 - {pin_num: '24', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SCT0_OUT1/FC4_SSEL2/ADC0_4, label: 'J9[20]/ARD_P1_8', identifier: RADIO_ANT_SW}
 - {pin_num: '10', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, label: 'SW3/J12[2]/ARD_BTN_USR_P1_9', identifier: SW3;USR;RADIO_NSS}
+- {pin_num: '57', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/ACMP0_D, label: 'J12[3]/EXP_P1_14', identifier: RADIO_DIO_0;RFM96_DIO_0}
+- {pin_num: '87', pin_signal: PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3, label: 'J12[18]/J13[4]/EXP_P1_16', identifier: RFM96_DIO_1}
+- {pin_num: '43', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4, label: 'J12[20]/J13[2]/EXP_P1_17', identifier: RADIO_RESET}
+- {pin_num: '77', pin_signal: PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN, label: 'J9[15]/J12[5]/I2S_IRQ', identifier: I2S_IRQ;RFM96_DIO_2}
+- {pin_num: '73', pin_signal: PIO1_28/FC7_SCK/CT_INP2/PLU_IN3, label: 'J9[17]/J18[2]/EXP_ISP_P1_28', identifier: RADIO_NSS}
 - {pin_num: '91', pin_signal: PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0, label: DIO_0, identifier: I2S_MCLK;DIO_0;RFM96_DIO_0}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
@@ -81,9 +86,9 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '10', peripheral: GPIO, signal: 'PIO1, 9', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, identifier: RADIO_NSS, direction: OUTPUT}
+  - {pin_num: '59', peripheral: GPIO, signal: 'PIO1, 1', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, direction: OUTPUT}
   - {pin_num: '24', peripheral: GPIO, signal: 'PIO1, 8', pin_signal: PIO1_8/FC0_CTS_SDA_SSEL0/SCT0_OUT1/FC4_SSEL2/ADC0_4, direction: OUTPUT}
-  - {pin_num: '14', peripheral: GPIO, signal: 'PIO0, 16', pin_signal: PIO0_16/FC4_TXD_SCL_MISO_WS/CLKOUT/CT_INP4/SECURE_GPIO0_16/ADC0_8, direction: OUTPUT, gpio_init_state: 'false'}
+  - {pin_num: '43', peripheral: GPIO, signal: 'PIO1, 17', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4, direction: OUTPUT, gpio_init_state: 'true'}
   - {pin_num: '5', peripheral: GPIO, signal: 'PIO1, 6', pin_signal: PIO1_6/FC0_TXD_SCL_MISO_WS/CTIMER2_MAT1/SCT_GPI3, identifier: RADIO_BUSY, direction: INPUT}
   - {pin_num: '61', peripheral: FLEXCOMM8, signal: HS_SPI_SCK, pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5}
   - {pin_num: '60', peripheral: FLEXCOMM8, signal: HS_SPI_MOSI, pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26,
@@ -93,11 +98,11 @@ BOARD_InitPins:
   - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, identifier: DEBUG_UART_TX}
   - {pin_num: '1', peripheral: GPIO, signal: 'PIO1, 4', pin_signal: PIO1_4/FC0_SCK/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A, identifier: RADIO_DIO1, direction: INPUT}
   - {pin_num: '54', peripheral: GPIO, signal: 'PIO0, 0', pin_signal: PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A, direction: INPUT}
-  - {pin_num: '91', peripheral: GPIO, signal: 'PIO1, 31', pin_signal: PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0, identifier: RFM96_DIO_0, direction: INPUT}
-  - {pin_num: '71', peripheral: GPIO, signal: 'PIO0, 13', pin_signal: PIO0_13/FC1_CTS_SDA_SSEL0/UTICK_CAP0/CT_INP0/SCT_GPI0/FC1_RXD_SDA_MOSI_DATA/PLU_IN0/SECURE_GPIO0_13,
-    identifier: RFM96_DIO_1, direction: INPUT, ssel: no_init, filter_off: no_init}
-  - {pin_num: '72', peripheral: GPIO, signal: 'PIO0, 14', pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14,
-    identifier: RFM96_DIO_2, direction: INPUT, ssel: no_init, filter_off: no_init}
+  - {pin_num: '57', peripheral: GPIO, signal: 'PIO1, 14', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/ACMP0_D, identifier: RFM96_DIO_0,
+    direction: INPUT}
+  - {pin_num: '87', peripheral: GPIO, signal: 'PIO1, 16', pin_signal: PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3, direction: INPUT, ssel: no_init, filter_off: no_init}
+  - {pin_num: '77', peripheral: GPIO, signal: 'PIO1, 25', pin_signal: PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN, identifier: RFM96_DIO_2, direction: INPUT,
+    ssel: no_init, filter_off: no_init}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -127,26 +132,12 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PIO0_0 (pin 54)  */
     GPIO_PinInit(BOARD_INITPINS_RADIO_DEVICE_GPIO, BOARD_INITPINS_RADIO_DEVICE_PORT, BOARD_INITPINS_RADIO_DEVICE_PIN, &RADIO_DEVICE_config);
 
-    gpio_pin_config_t RFM96_DIO_1_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_13 (pin 71)  */
-    GPIO_PinInit(BOARD_INITPINS_RFM96_DIO_1_GPIO, BOARD_INITPINS_RFM96_DIO_1_PORT, BOARD_INITPINS_RFM96_DIO_1_PIN, &RFM96_DIO_1_config);
-
-    gpio_pin_config_t RFM96_DIO_2_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_14 (pin 72)  */
-    GPIO_PinInit(BOARD_INITPINS_RFM96_DIO_2_GPIO, BOARD_INITPINS_RFM96_DIO_2_PORT, BOARD_INITPINS_RFM96_DIO_2_PIN, &RFM96_DIO_2_config);
-
-    gpio_pin_config_t RADIO_RESET_config = {
+    gpio_pin_config_t RADIO_NSS_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
     };
-    /* Initialize GPIO functionality on pin PIO0_16 (pin 14)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_RESET_GPIO, BOARD_INITPINS_RADIO_RESET_PORT, BOARD_INITPINS_RADIO_RESET_PIN, &RADIO_RESET_config);
+    /* Initialize GPIO functionality on pin PIO1_1 (pin 59)  */
+    GPIO_PinInit(BOARD_INITPINS_RADIO_NSS_GPIO, BOARD_INITPINS_RADIO_NSS_PORT, BOARD_INITPINS_RADIO_NSS_PIN, &RADIO_NSS_config);
 
     gpio_pin_config_t RADIO_DIO1_config = {
         .pinDirection = kGPIO_DigitalInput,
@@ -169,19 +160,33 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PIO1_8 (pin 24)  */
     GPIO_PinInit(BOARD_INITPINS_RADIO_ANT_SW_GPIO, BOARD_INITPINS_RADIO_ANT_SW_PORT, BOARD_INITPINS_RADIO_ANT_SW_PIN, &RADIO_ANT_SW_config);
 
-    gpio_pin_config_t RADIO_NSS_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_9 (pin 10)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_NSS_GPIO, BOARD_INITPINS_RADIO_NSS_PORT, BOARD_INITPINS_RADIO_NSS_PIN, &RADIO_NSS_config);
-
     gpio_pin_config_t RFM96_DIO_0_config = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U
     };
-    /* Initialize GPIO functionality on pin PIO1_31 (pin 91)  */
+    /* Initialize GPIO functionality on pin PIO1_14 (pin 57)  */
     GPIO_PinInit(BOARD_INITPINS_RFM96_DIO_0_GPIO, BOARD_INITPINS_RFM96_DIO_0_PORT, BOARD_INITPINS_RFM96_DIO_0_PIN, &RFM96_DIO_0_config);
+
+    gpio_pin_config_t RFM96_DIO_1_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO1_16 (pin 87)  */
+    GPIO_PinInit(BOARD_INITPINS_RFM96_DIO_1_GPIO, BOARD_INITPINS_RFM96_DIO_1_PORT, BOARD_INITPINS_RFM96_DIO_1_PIN, &RFM96_DIO_1_config);
+
+    gpio_pin_config_t RADIO_RESET_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PIO1_17 (pin 43)  */
+    GPIO_PinInit(BOARD_INITPINS_RADIO_RESET_GPIO, BOARD_INITPINS_RADIO_RESET_PORT, BOARD_INITPINS_RADIO_RESET_PIN, &RADIO_RESET_config);
+
+    gpio_pin_config_t RFM96_DIO_2_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO1_25 (pin 77)  */
+    GPIO_PinInit(BOARD_INITPINS_RFM96_DIO_2_GPIO, BOARD_INITPINS_RFM96_DIO_2_PORT, BOARD_INITPINS_RFM96_DIO_2_PIN, &RFM96_DIO_2_config);
 
     IOCON->PIO[0][0] = ((IOCON->PIO[0][0] &
                          /* Mask bits to zero which are setting */
@@ -195,45 +200,6 @@ void BOARD_InitPins(void)
                          * : Enable Digital mode.
                          * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO0_0_DIGIMODE_DIGITAL));
-
-    IOCON->PIO[0][13] = ((IOCON->PIO[0][13] &
-                          /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                         /* Selects pin function.
-                          * : PORT013 (pin 71) is configured as PIO0_13. */
-                         | IOCON_PIO_FUNC(PIO0_13_FUNC_ALT0)
-
-                         /* Select Digital mode.
-                          * : Enable Digital mode.
-                          * Digital input is enabled. */
-                         | IOCON_PIO_DIGIMODE(PIO0_13_DIGIMODE_DIGITAL));
-
-    IOCON->PIO[0][14] = ((IOCON->PIO[0][14] &
-                          /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                         /* Selects pin function.
-                          * : PORT014 (pin 72) is configured as PIO0_14. */
-                         | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT0)
-
-                         /* Select Digital mode.
-                          * : Enable Digital mode.
-                          * Digital input is enabled. */
-                         | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
-
-    IOCON->PIO[0][16] = ((IOCON->PIO[0][16] &
-                          /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                         /* Selects pin function.
-                          * : PORT016 (pin 14) is configured as PIO0_16. */
-                         | IOCON_PIO_FUNC(PIO0_16_FUNC_ALT0)
-
-                         /* Select Digital mode.
-                          * : Enable Digital mode.
-                          * Digital input is enabled. */
-                         | IOCON_PIO_DIGIMODE(PIO0_16_DIGIMODE_DIGITAL));
 
     IOCON->PIO[0][26] = ((IOCON->PIO[0][26] &
                           /* Mask bits to zero which are setting */
@@ -274,6 +240,58 @@ void BOARD_InitPins(void)
                           * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO0_30_DIGIMODE_DIGITAL));
 
+    IOCON->PIO[1][1] = ((IOCON->PIO[1][1] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                        /* Selects pin function.
+                         * : PORT11 (pin 59) is configured as PIO1_1. */
+                        | IOCON_PIO_FUNC(PIO1_1_FUNC_ALT0)
+
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_1_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][14] = ((IOCON->PIO[1][14] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT114 (pin 57) is configured as PIO1_14. */
+                         | IOCON_PIO_FUNC(PIO1_14_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_14_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][16] = ((IOCON->PIO[1][16] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT116 (pin 87) is configured as PIO1_16. */
+                         | IOCON_PIO_FUNC(PIO1_16_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_16_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][17] = ((IOCON->PIO[1][17] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT117 (pin 43) is configured as PIO1_17. */
+                         | IOCON_PIO_FUNC(PIO1_17_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_17_DIGIMODE_DIGITAL));
+
     IOCON->PIO[1][2] = ((IOCON->PIO[1][2] &
                          /* Mask bits to zero which are setting */
                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
@@ -287,6 +305,19 @@ void BOARD_InitPins(void)
                          * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
 
+    IOCON->PIO[1][25] = ((IOCON->PIO[1][25] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT125 (pin 77) is configured as PIO1_25. */
+                         | IOCON_PIO_FUNC(PIO1_25_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_25_DIGIMODE_DIGITAL));
+
     IOCON->PIO[1][3] = ((IOCON->PIO[1][3] &
                          /* Mask bits to zero which are setting */
                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
@@ -299,19 +330,6 @@ void BOARD_InitPins(void)
                          * : Enable Digital mode.
                          * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_3_DIGIMODE_DIGITAL));
-
-    IOCON->PIO[1][31] = ((IOCON->PIO[1][31] &
-                          /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                         /* Selects pin function.
-                          * : PORT131 (pin 91) is configured as PIO1_31. */
-                         | IOCON_PIO_FUNC(PIO1_31_FUNC_ALT0)
-
-                         /* Select Digital mode.
-                          * : Enable Digital mode.
-                          * Digital input is enabled. */
-                         | IOCON_PIO_DIGIMODE(PIO1_31_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][4] = ((IOCON->PIO[1][4] &
                          /* Mask bits to zero which are setting */
@@ -351,19 +369,6 @@ void BOARD_InitPins(void)
                          * : Enable Digital mode.
                          * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_8_DIGIMODE_DIGITAL));
-
-    IOCON->PIO[1][9] = ((IOCON->PIO[1][9] &
-                         /* Mask bits to zero which are setting */
-                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
-
-                        /* Selects pin function.
-                         * : PORT19 (pin 10) is configured as PIO1_9. */
-                        | IOCON_PIO_FUNC(PIO1_9_FUNC_ALT0)
-
-                        /* Select Digital mode.
-                         * : Enable Digital mode.
-                         * Digital input is enabled. */
-                        | IOCON_PIO_DIGIMODE(PIO1_9_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************
  * EOF
