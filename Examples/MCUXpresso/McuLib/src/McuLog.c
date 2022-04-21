@@ -241,8 +241,11 @@ static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool 
   } else { /* scan for separator */
     size_t pos;
     pos = McuUtility_strlen(file)-1; /* end of the string */
-    while(pos>1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) {
+    while(pos>1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) { /* scan back to find the last separator */
       pos--;
+    }
+    if (pos==1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) { /* no separator at all? */
+      pos = 0; /* no separator, start from the beginning */
     }
     p = (const unsigned char*)&file[pos];
   }
