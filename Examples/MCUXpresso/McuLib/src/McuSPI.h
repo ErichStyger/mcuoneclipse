@@ -7,6 +7,7 @@
 #ifndef MCUSPI_H_
 #define MCUSPI_H_
 
+#include "McuSPIconfig.h"
 #include <stdint.h>
 #include <stddef.h>
 
