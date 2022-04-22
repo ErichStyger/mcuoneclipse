@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <inttypes.h>
+#include <inttypes.h>  /* note: does not exist with RedLib: switch to NewLib or NewLib-nano! */
 
 #ifndef LFS_NO_MALLOC
 #include <stdlib.h>
