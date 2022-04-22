@@ -110,7 +110,7 @@ static TimerHandle_t timerHndl;
 
 static void vTimerCallback(TimerHandle_t pxTimer) {
   /* TIMER_PERIOD_MS ms timer */
- // McuTimeDate_AddTick();
+  McuTimeDate_AddTick();
 }
 
 void APP_Run(void) {
