@@ -32,6 +32,9 @@
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   #include "McuExtRTC.h"
 #endif
+#if PL_CONFIG_HAS_SHT31
+  #include "McuSHT31.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -46,6 +49,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuTimeDate_ParseCommand,
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
   McuExtRTC_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_SHT31
+  McuSHT31_ParseCommand,
 #endif
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,

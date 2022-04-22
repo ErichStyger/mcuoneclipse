@@ -45,6 +45,9 @@
 #if PL_CONFIG_HAS_HW_RTC
   #include "McuExtRTC.h"
 #endif
+#if PL_CONFIG_HAS_SHT31
+  #include "McuSHT31.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -97,6 +100,10 @@ void PL_Init(void) {
   McuSSD1306_Init();
   MyGui_Init();
 #endif
+#if PL_CONFIG_HAS_SHT31
+  McuSHT31_Init();
+#endif
+
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();
 #endif

@@ -30,9 +30,13 @@
 #if PL_CONFIG_USE_LORA_SHIELD
   #define PL_CONFIG_HAS_USER_BUTTON    (0) /* pin connected on DIO5 of the transceiver */
   #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D53232MZ+ */
+  #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with */
+  #define PL_CONFIG_HAS_SHT31          (1 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #else
   #define PL_CONFIG_HAS_USER_BUTTON    (1)
-  #define PL_CONFIG_HAS_HW_RTC         (0)
+  #define PL_CONFIG_HAS_HW_RTC         (0 && PL_CONFIG_USE_I2C)
+  #define PL_CONFIG_HAS_LITTLE_FS      (0)
+  #define PL_CONFIG_HAS_SHT31          (0 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #endif
 
 /*!
