@@ -207,7 +207,7 @@ uint8_t McuLFS_Mount(McuShell_ConstStdIOType *io) {
       return ERR_OK;
     } else {
       if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" FAILED!\r\n", io->stdErr);
+        McuShell_SendStr((const uint8_t *)" FAILED! Did you format the device already?\r\n", io->stdErr);
       }
       xSemaphoreGiveRecursive(fileSystemAccessMutex);
       return ERR_FAILED;
@@ -589,8 +589,7 @@ uint8_t McuLFS_writeLine(lfs_file_t* file,uint8_t* line) {
   }
 }
 
-uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t* nofReadChars)
-{
+uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t* nofReadChars) {
   lineBuf[0] = '\0';
   uint8_t ch;
   *nofReadChars = 0;
@@ -609,7 +608,7 @@ uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t
 }
 
 
-//Function for the Shell PrintHex command
+/* Function for the Shell PrintHex command */
 static uint8_t readFromFile(void *hndl, uint32_t addr, uint8_t *buf, size_t bufSize) {
   lfs_file_t *fp;
 
@@ -861,7 +860,7 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
     McuShell_SendHelpStr((unsigned char*) "  help|status",  (const unsigned char*) "Print help or status information\r\n",  io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  format",(const unsigned char*) "Format the file system\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  mount",(const unsigned char*) "Mount the file system\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*) "  unmount",(const unsigned char*) "unmount the file system\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*) "  unmount",(const unsigned char*) "Unmount the file system\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  ls",(const unsigned char*) "List directory and files of root\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  ls <dir>",(const unsigned char*) "List directory and files of dir (ex. /Samples)\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  rm <file>",(const unsigned char*) "Remove a file\r\n", io->stdOut);
