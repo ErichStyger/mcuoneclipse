@@ -35,6 +35,10 @@
 #if PL_CONFIG_HAS_SHT31
   #include "McuSHT31.h"
 #endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  #include "littleFS/McuLittleFS.h"
+  #include "McuW25Q128.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -65,6 +69,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
   DISK_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  McuLFS_ParseCommand,
+  McuW25_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

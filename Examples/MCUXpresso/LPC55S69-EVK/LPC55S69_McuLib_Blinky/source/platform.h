@@ -7,6 +7,10 @@
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
+#ifndef PL_CONFIG_USE_LORA_SHIELD
+  #error "PL_CONFIG_USE_LORA_SHIELD needs be set in IncludeMcuLibConfig.h!"
+#endif
+
 #define PL_CONFIG_USE_SHELL       (1)
 #define PL_CONFIG_USE_USB_CDC     (0)
 

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+ 
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
@@ -12,7 +13,7 @@
 
 #define PL_CONFIG_USE_SHELL       (1) /* if using command line shell */
 #define PL_CONFIG_USE_SHELL_UART  (1 && PL_CONFIG_USE_SHELL) /* if using shell with UART */
-#define PL_CONFIG_USE_RTT         (0) /* if using RTT for shell */
+#define PL_CONFIG_USE_RTT         (1) /* if using RTT for shell */
 #define PL_CONFIG_USE_USB_CDC     (0) /* if implementing a USB CDC device and use it for the shell */
 #define PL_CONFIG_USE_SD_CARD     (0) /* if implementing using a SD card */
 #define PL_CONFIG_USE_MININI      (1 && PL_CONFIG_USE_SD_CARD)
@@ -28,6 +29,8 @@
 
 
 #if PL_CONFIG_USE_LORA_SHIELD
+  /* NOTE: this requires the JP9 on the LPC55S16-EVN to be *installed*, otherwise the SPI signals are driven by the debug interface.
+   * But JP9 installed means it is not possible to use the UART over the LinkServer USB connection: RTT has to be used instead */
   #define PL_CONFIG_HAS_USER_BUTTON    (0) /* pin connected on DIO5 of the transceiver */
   #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D53232MZ+ */
   #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with */

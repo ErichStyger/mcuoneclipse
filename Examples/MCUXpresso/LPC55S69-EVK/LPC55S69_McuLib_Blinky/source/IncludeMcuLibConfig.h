@@ -1,15 +1,36 @@
 /*
- * IncludeMcuLibConfig.h
+ * Copyright (c) 2016-2020, Erich Styger
  *
- *  Created on: 17.02.2019
- *      Author: Erich Styger
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/* header file is included with -include compiler option */
+/* header file is included with -include compiler option
+Instructions:
+ - Remove the 'Template_' from the name and place this file into your 'src' folder.
+ - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibConfig.h"
+ - Add the following to the -I compiler option:
+../McuLib
+../McuLib/config
+../McuLib/config/fonts
+../McuLib/fonts
+../McuLib/src
+../McuLib/FreeRTOS/Source/include
+../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
+../McuLib/SEGGER_RTT
+../McuLib/SEGGER_Sysview
+../McuLib/TraceRecorder
+../McuLib/TraceRecorder/config
+../McuLib/TraceRecorder/include
+../McuLib/TraceRecorder/streamports/Jlink_RTT/include
+../McuLib/HD44780
+../McuLib/FatFS
+../McuLib/FatFS/source
+ */
 
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
+/* global platform configuration */
 #define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
 
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
@@ -37,6 +58,8 @@
 
 #define McuGenericSWI2C_CONFIG_DO_YIELD (1 && McuLib_CONFIG_SDK_USE_FREERTOS) /* because of Yield in GenericSWI2C */
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
+
+/* I2C Pin Muxing */
 #if USE_HW_I2C
   #define McuLib_CONFIG_MCUI2CLIB_ENABLED                        (1)
   #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "McuI2cLib.h"
@@ -82,4 +105,3 @@
 #define McuSWO_CONFIG_SPEED_BAUD      (96000000) /* needed for LinkServer and MCUXpresso IDE 11.5.0 */
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
-

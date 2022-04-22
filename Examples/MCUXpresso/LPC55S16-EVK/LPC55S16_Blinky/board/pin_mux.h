@@ -54,6 +54,30 @@ void BOARD_InitBootPins(void);
 #define PIO0_26_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_2_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_2_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_3_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_3_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_4_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO0_4_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_6_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_6_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_1_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 5. */
@@ -82,6 +106,17 @@ void BOARD_InitBootPins(void);
 /*! @name SWO (number 21), J9[1]/U18[12]/N4M_SWO
   @{ */
 /* @} */
+
+/*! @name PIO0_4 (number 86), J10[16]/U24[14]/FC3_SPI_SSEL0
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_out_GPIO GPIO                /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_out_GPIO_PIN_MASK (1U << 4U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_out_PORT 0U                  /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_out_PIN 4U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_out_PIN_MASK (1U << 4U)      /*!<@brief PORT pin mask */
+                                                    /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

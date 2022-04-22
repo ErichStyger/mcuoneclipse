@@ -48,6 +48,11 @@
 #if PL_CONFIG_HAS_SHT31
   #include "McuSHT31.h"
 #endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  #include "McuSPI.h"
+  #include "littleFS/McuLittleFS.h"
+  #include "McuW25Q128.h"
+#endif
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -103,6 +108,12 @@ void PL_Init(void) {
 #if PL_CONFIG_HAS_SHT31
   McuSHT31_Init();
 #endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  McuSPI_Init();
+  McuW25_Init();
+  McuLFS_Init();
+#endif
+
 
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();

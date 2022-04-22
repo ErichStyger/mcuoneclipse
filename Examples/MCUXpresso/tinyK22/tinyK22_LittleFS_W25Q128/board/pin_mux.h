@@ -57,7 +57,7 @@ void BOARD_InitPins(void);
 #define BOARD_LEDRGB_GREEN_PIN_MASK (1U << 2U)      /*!<@brief PORT pin mask */
                                                     /* @} */
 
-/*! @name PORTD5 (number 62), J2[12]/BLUE_LED
+/*! @name PORTD5 (number 62), SPICLK
   @{ */
 
 /* Symbols to be used with GPIO driver */
@@ -76,7 +76,7 @@ void BOARD_InitPins(void);
  */
 void BOARD_InitLEDsPins(void);
 
-/*! @name PORTB17 (number 40), PUSH_BUTTON1
+/*! @name PORTB17 (number 40), MISO
   @{ */
 
 /* Symbols to be used with GPIO driver */
@@ -220,7 +220,7 @@ void BOARD_InitAccelPins(void);
 #define BOARD_SD_CARD_DAT0_PIN_MASK (1U << 3U)      /*!<@brief PORT pin mask */
                                                     /* @} */
 
-/*! @name PORTB16 (number 39), J1[6]/J8[G1]/SD_CARD_DETECT
+/*! @name PORTB16 (number 39), MOSI
   @{ */
 
 /* Symbols to be used with GPIO driver */

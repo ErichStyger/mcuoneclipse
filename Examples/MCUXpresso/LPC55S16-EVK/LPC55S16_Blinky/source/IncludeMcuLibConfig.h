@@ -60,11 +60,17 @@ Instructions:
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #endif
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define configTOTAL_HEAP_SIZE                (24*1024)
+#define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    (0)
+#define configTOTAL_HEAP_SIZE                   (24*1024)
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
+/* ------------------- McuSPI --------------------------*/
+#define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
+/* ------------------- McuLittleFS --------------------------*/
+#define MCUW28Q128_CONFIG_ENABLED                     (1)
+#define LITTLEFS_CONFIG_ENABLED                       (1)
+#define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS                      (0)
 #define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (0)
@@ -151,7 +157,7 @@ Instructions:
   #define SDA1_CONFIG_PORT_NAME     0
   #define SDA1_CONFIG_PIN_NUMBER    13u
 #endif
-
+/* -------------------------------------------------*/
 #if 1 /* type of OLED */
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
 #else

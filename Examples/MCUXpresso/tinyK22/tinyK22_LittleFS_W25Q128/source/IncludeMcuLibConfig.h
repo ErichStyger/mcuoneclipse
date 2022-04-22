@@ -114,6 +114,8 @@ Instructions:
 #define McuEE24_CONFIG_HAS_WP_PIN               (0)   /* no WP Pin */
 #define McuEE24_CONFIG_DO_ACKNOWLEDGE_POLLING   (0)   /* no acknowledge polling */
 #define McuEE24_CONFIG_USE_TIMEOUT              (0)   /* no timeout */
+/* ------------------- McuSPI --------------------------*/
+#define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1
 /* -------------------------------------------------*/
 /* LittleFS */
 #define LITTLEFS_CONFIG_ENABLED                 (1)

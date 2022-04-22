@@ -18,10 +18,6 @@ int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-  /* Init FSL debug console. */
-//  BOARD_InitDebugConsole();
-#endif
   APP_Run();
   return 0 ;
 }

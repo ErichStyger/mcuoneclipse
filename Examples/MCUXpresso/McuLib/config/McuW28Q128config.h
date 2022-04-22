@@ -12,7 +12,6 @@
 #endif
 
 #if MCUW28Q128_CONFIG_ENABLED
-#include "fsl_dspi.h"
 #include "McuSPI.h"
 
 /* W25Q128 chip select is LOW active */
