@@ -33,7 +33,7 @@ int McuSPI_SendReceiveBlock(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t
   return -1; /* error */
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
   status_t status;
-  spi_transfer_t xfer            = {0};
+  spi_transfer_t xfer;
 
   /*Start Transfer*/
   xfer.txData      = (uint8_t*)txDataBuf;;
@@ -62,6 +62,7 @@ int McuSPI_ReceiveByte(unsigned char *chp) {
   return McuSPI_SendReceiveBlock(NULL, chp, 1);
 }
 
+#if 0
 static void McuSPI_Test(void) {
   uint8_t tx = 'A';
   uint8_t rx;
@@ -74,6 +75,7 @@ static void McuSPI_Test(void) {
     for(;;) { /* error */ }
   }
 }
+#endif
 
 void McuSPI_SetCS_Low(void) {
   McuGPIO_SetLow(McuSPI_CSpin);
@@ -137,12 +139,13 @@ void McuSPI_Init(void) {
   srcFreq            = MCUSPI_CONFIG_HW_SPI_MASTER_CLK_FREQ;
   userConfig.sselNum = (spi_ssel_t)MCUSPI_CONFIG_HW_SPI_SSEL;
   userConfig.sselPol = (spi_spol_t)MCUSPI_CONFIG_HW_SPI_SPOL;
+  userConfig.baudRate_Bps = MCUSPI_CONFIG_TRANSFER_BAUDRATE;
   status = SPI_MasterInit(MCUSPI_CONFIG_HW_SPI_MASTER, &userConfig, srcFreq);
   if (status!=kStatus_Success) {
     for(;;) { /* error */ }
   }
 #endif
-#if 1
+#if 0
   McuSPI_Test();
 #endif
 }

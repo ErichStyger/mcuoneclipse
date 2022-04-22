@@ -44,6 +44,11 @@
     while(McuSPI_SendReceiveByte(write, readP)!=0) {} \
   }
 
+#define SPI_WRITE_READ_BLOCK(write, read, size) \
+  { \
+    while(McuSPI_SendReceiveBlock(write, read, size)!=0) {} \
+  }
+
 uint8_t McuW25_ReadStatus1(uint8_t *status) {
   McuW25_CONFIG_CS_ENABLE();
   SPI_WRITE(McuW25_CMD_READ_STATUS1);
@@ -66,8 +71,6 @@ void McuW25_WaitIfBusy(void) {
 }
 
 uint8_t McuW25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
-  size_t i;
-
   McuW25_WaitIfBusy();
 
   McuW25_CONFIG_CS_ENABLE();
@@ -75,9 +78,7 @@ uint8_t McuW25_Read(uint32_t address, uint8_t *buf, size_t bufSize) {
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
   SPI_WRITE(address);
-  for(i=0;i<bufSize;i++) {
-    SPI_WRITE_READ(0, &buf[i]);
-  }
+  SPI_WRITE_READ_BLOCK(NULL, buf, bufSize);
   McuW25_CONFIG_CS_DISABLE();
   return ERR_OK;
 }
@@ -172,11 +173,15 @@ uint8_t McuW25_ProgramPage(uint32_t address, const uint8_t *data, size_t dataSiz
   SPI_WRITE(address>>16);
   SPI_WRITE(address>>8);
   SPI_WRITE(address);
+#if 0
   while(dataSize>0) {
     SPI_WRITE(*data);
     dataSize--;
     data++;
   }
+#else
+  SPI_WRITE_READ_BLOCK(data, NULL, dataSize);
+#endif
   McuW25_CONFIG_CS_DISABLE();
 
   return ERR_OK;

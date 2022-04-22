@@ -116,6 +116,7 @@ Instructions:
 #define McuEE24_CONFIG_USE_TIMEOUT              (0)   /* no timeout */
 /* ------------------- McuSPI --------------------------*/
 #define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1
+#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* -------------------------------------------------*/
 /* LittleFS */
 #define LITTLEFS_CONFIG_ENABLED                 (1)

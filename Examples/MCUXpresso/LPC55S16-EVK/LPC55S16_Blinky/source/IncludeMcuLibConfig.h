@@ -67,6 +67,7 @@ Instructions:
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* ------------------- McuSPI --------------------------*/
 #define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
+#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* ------------------- McuLittleFS --------------------------*/
 #define MCUW28Q128_CONFIG_ENABLED                     (1)
 #define LITTLEFS_CONFIG_ENABLED                       (1)
