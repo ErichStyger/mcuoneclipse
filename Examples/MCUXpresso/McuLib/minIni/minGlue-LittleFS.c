@@ -17,51 +17,48 @@
 
 #if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_LITTLE_FS
 
-int ini_rename(char *source, const char *dest)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_rename(char *source, const char *dest) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	/* Function f_rename() does not allow drive letters in the destination file */
 	char *drive = strchr(dest, ':');
 	drive = (drive == NULL) ? (char*)dest : drive + 1;
 	return (lfs_rename(FS_lfs, source, dest) == 0);
 }
 
-int ini_fileReadOpen(lfs_file_t *file, const char *name)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileReadOpen(lfs_file_t *file, const char *name) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	return (lfs_file_open(FS_lfs, file, name, LFS_O_RDONLY)== 0);
 }
 
-int ini_fileWriteOpen(lfs_file_t *file, const char *name)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileWriteOpen(lfs_file_t *file, const char *name) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	return (lfs_file_open(FS_lfs, file, name, LFS_O_RDWR | LFS_O_CREAT)== 0);
 }
 
-int ini_fileClose(lfs_file_t *file)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileClose(lfs_file_t *file) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	return (lfs_file_close(FS_lfs, file) == 0);
 }
 
-int ini_fileRemove(const char *filename)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileRemove(const char *filename) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	return (lfs_remove(FS_lfs, filename) == 0);
 }
 
-int ini_fileTell(lfs_file_t *file ,unsigned long* pos)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileTell(lfs_file_t *file ,unsigned long* pos) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	*pos = lfs_file_tell(FS_lfs, file);
 	return TRUE;
 }
 
-int ini_fileSeek(lfs_file_t *file ,unsigned long* pos)
-{
-	lfs_t* FS_lfs = FS_GetFileSystem();
+int ini_fileSeek(lfs_file_t *file ,unsigned long* pos) {
+	lfs_t *FS_lfs = McuLFS_GetFileSystem();
 	lfs_file_seek(FS_lfs, file, *pos, LFS_SEEK_SET);
 	return TRUE;
 }
+
+void ini_init(void) {}
+void ini_deinit(void) {}
+
 
 #endif /* McuMinINI_CONFIG_FS_TYPE_LITTLE_FS */

@@ -22,12 +22,15 @@
   #pragma MESSAGE DISABLE C5909 /* Assignment in condition */
 #endif
 
-#define INI_BUFFERSIZE  100       				 /* maximum line length, maximum path length */
+#define INI_BUFFERSIZE  (McuMinINI_CONFIG_BUFFER_SIZE)       				 /* maximum line length, maximum path length */
 
 /* You must set _USE_STRFUNC to 1 or 2 in the include file ff.h (or tff.h)
  * to enable the "string functions" fgets() and fputs().
  */
 #include "littleFS/lfs.h"
+#include "littleFS/McuLittleFS.h"
+
+#define TCHAR           char
 
 int ini_fileReadOpen(lfs_file_t *file, const char *name);
 int ini_fileWriteOpen(lfs_file_t *file, const char *name);
@@ -38,12 +41,12 @@ int ini_fileRemove(const char *filename);
 int ini_fileTell(lfs_file_t *file ,unsigned long* pos);
 int ini_fileSeek(lfs_file_t *file ,unsigned long* pos);
 
-#define INI_FILETYPE    			  lfs_file_t
+#define INI_FILETYPE    			        lfs_file_t
 #define ini_openread(filename,file)   (ini_fileReadOpen((file), (filename)))
 #define ini_openwrite(filename,file)  (ini_fileWriteOpen((file), (filename)))
 #define ini_close(file)               (ini_fileClose(file))
-#define ini_read(buffer,size,file)    FS_gets((buffer), (size),(file))
-#define ini_write(buffer,file)        FS_puts((buffer), (file))
+#define ini_read(buffer,size,file)    McuLFS_gets((buffer), (size),(file))
+#define ini_write(buffer,file)        McuLFS_puts((buffer), (file))
 #define ini_remove(filename)          (ini_fileRemove(filename))
 
 #define INI_FILEPOS                   unsigned long//DWORD
@@ -51,6 +54,9 @@ int ini_fileSeek(lfs_file_t *file ,unsigned long* pos);
 #define ini_seek(file,pos)            (ini_fileSeek((file),(pos)))
 
 #define ini_assert(condition)         /* empty */
+
+void ini_init(void);
+void ini_deinit(void);
 
 int ini_rename(char *source, const char *dest);
 

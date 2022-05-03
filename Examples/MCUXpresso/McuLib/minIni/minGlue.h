@@ -41,6 +41,8 @@
   #include "minGlue-FatFs.h"
 #elif McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
   #include "minGlue-Flash.h"
+#elif McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_LITTLE_FS
+  #include "minGlue-LittleFS.h"
 #else
   #error "define the type of system"
 #endif
