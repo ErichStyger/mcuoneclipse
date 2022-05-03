@@ -19,6 +19,12 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
+#if PL_CONFIG_USE_MININI
+  #include "minIni/McuMinINI.h"
+#endif
+#if PL_CONFIG_USE_INTERNAL_FLASH
+  #include "minIni/McuFlash.h"
+#endif
 #include "McuTimeDate.h"
 #include "McuLog.h"
 #include "McuButton.h"
@@ -84,4 +90,10 @@ void PL_Init(void) {
   McuW25_Init();
   McuLFS_Init();
   MyTimer_Init();
+#if PL_CONFIG_USE_INTERNAL_FLASH
+  McuFlash_Init();
+#endif
+#if PL_CONFIG_USE_MININI
+  McuMinINI_Init();
+#endif
 }

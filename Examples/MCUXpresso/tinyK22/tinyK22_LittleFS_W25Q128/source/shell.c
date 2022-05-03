@@ -16,6 +16,12 @@
 #include "McuLog.h"
 #include "McuLittleFS.h"
 #include "McuW25Q128.h"
+#if PL_CONFIG_USE_MININI
+  #include "minIni/McuMinINI.h"
+#endif
+#if PL_CONFIG_USE_INTERNAL_FLASH
+  #include "minIni/McuFlash.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -29,6 +35,12 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   APP_ParseCommand,
   McuLFS_ParseCommand,
   McuW25_ParseCommand,
+#if PL_CONFIG_USE_MININI
+  McuMinINI_ParseCommand,
+#endif
+#if PL_CONFIG_USE_INTERNAL_FLASH
+  McuFlash_ParseCommand,
+#endif
   NULL /* Sentinel */
 };
 
@@ -106,7 +118,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      2300/sizeof(StackType_t), /* task stack size */
+      3000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

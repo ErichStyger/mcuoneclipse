@@ -123,5 +123,10 @@ Instructions:
 #define MCUW28Q128_CONFIG_ENABLED               (1)
 #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE   McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 /* -------------------------------------------------*/
+/* McuFlash */
+#define McuFlash_CONFIG_IS_ENABLED              (0)
+/* -------------------------------------------------*/
+/* McuMinIni */
+#define McuMinINI_CONFIG_FS                     McuMinINI_CONFIG_FS_TYPE_LITTLE_FS
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

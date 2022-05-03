@@ -343,9 +343,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.767483644.1837839820" name="/" resourcePath="McuLib/minIni">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1389335111" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1917216697" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.1587387045"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.26731501" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.143056537"/>
+							<tool id="com.crt.advproject.gas.exe.debug.1076638513" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.518760711"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.399460670" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.2021234245"/>
+							<tool id="com.crt.advproject.link.exe.debug.1701400139" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1941415000"/>
+							<tool id="com.crt.advproject.tool.debug.debug.912068259" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.637080991"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|minIni|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
