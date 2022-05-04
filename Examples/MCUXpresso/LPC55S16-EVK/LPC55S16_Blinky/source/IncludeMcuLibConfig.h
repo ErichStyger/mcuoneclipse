@@ -87,7 +87,11 @@ Instructions:
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PULL            McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
 /* -------------------------------------------------*/
 /* MinINI */
-#define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
+#if 0
+  #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
+#else
+  #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_LITTLE_FS
+#endif
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
@@ -171,7 +175,7 @@ Instructions:
 
 /* -----------------------------------------------------*/
 /* McuWait */
-#define McuWait_CONFIG_USE_CYCLE_COUNTER (1)
+#define McuWait_CONFIG_USE_CYCLE_COUNTER         (1)
 
 /* -----------------------------------------------------*/
 /* McuSWO */

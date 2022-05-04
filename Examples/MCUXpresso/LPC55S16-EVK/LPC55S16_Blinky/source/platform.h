@@ -16,7 +16,7 @@
 #define PL_CONFIG_USE_RTT         (1) /* if using RTT for shell */
 #define PL_CONFIG_USE_USB_CDC     (0) /* if implementing a USB CDC device and use it for the shell */
 #define PL_CONFIG_USE_SD_CARD     (0) /* if implementing using a SD card */
-#define PL_CONFIG_USE_MININI      (1 && PL_CONFIG_USE_SD_CARD)
+#define PL_CONFIG_USE_MININI      (1 && (PL_CONFIG_USE_SD_CARD || PL_CONFIG_HAS_LITTLE_FS)) /* configure it as well with McuMinINI_CONFIG_FS in IncludeMcuLibConfig.h */
 #define PL_CONFIG_USE_USB_MSD     (0) /* if using USB MSD device */
 #define PL_CONFIG_USE_SWO         (0) /* for J-Link: need to call SWO_SetSpeed()! */
 #define PL_CONFIG_INIT_SWO        (1 && PL_CONFIG_USE_SWO) /* if SWO shall be initialized by the application and not by the debugger */

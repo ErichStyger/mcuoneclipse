@@ -349,10 +349,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.964463517.219349655" name="/" resourcePath="McuLib/minIni">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1587727486" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.354964834" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2041070601"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.1958455113" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.341432283"/>
+							<tool id="com.crt.advproject.gas.exe.debug.501776074" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1352020453"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.489890483" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.462921836"/>
+							<tool id="com.crt.advproject.link.exe.debug.892928086" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1636572860"/>
+							<tool id="com.crt.advproject.tool.debug.debug.1095970449" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1104060562"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LPC55S16"/>
-						<entry excluding="SEGGER_Sysview|FatFS|minIni|TraceRecorder|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="SEGGER_Sysview|FatFS|TraceRecorder|HD44780|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
