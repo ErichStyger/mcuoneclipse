@@ -91,9 +91,11 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"FatFS\r\n"); break;
     case McuMinINI_CONFIG_FS_TYPE_FLASH_FS:
       McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"FLASH\r\n"); break;
+    case McuMinINI_CONFIG_FS_TYPE_LITTLE_FS:
+      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"littleFS\r\n"); break;
     default:
-      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n"); break;
-    }
+      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"unknown\r\n"); break;
+  }
   McuShell_SendStatusStr((unsigned char*)"  FS", buf, io->stdOut);
   return ERR_OK;
 }
