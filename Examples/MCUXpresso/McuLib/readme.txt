@@ -66,6 +66,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuSHT40: Driver for the Sensirion SHT40 temperature/humidity sensor
 - McuSSD1306: display driver for SSD1306 and SH1106
 - McuSTM32HALI2C: low level I2C driver using STM32 CubeMX HAL
+- McuSPI: Hardware SPI abstraction and interface to the SPI bus
 - McuSWO: SWO (ARM Single Wire Output) library and command line support
 - McuTimeDate: Realtime clock implementation for software, hardware and external I2C RTC
 - McuTimeout: generic driver for timeout handling
