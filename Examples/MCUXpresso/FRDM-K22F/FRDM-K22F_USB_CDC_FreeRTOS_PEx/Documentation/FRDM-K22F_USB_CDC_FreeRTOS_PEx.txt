@@ -42,7 +42,7 @@ Module "LED3"      (component LED)
 Module "WAIT1"     (component Wait)
    - WAIT1_Wait10Cycles -Wait for 10 CPU cycles.
    - WAIT1_Wait100Cycles -Wait for 100 CPU cycles.
-   - WAIT1_WaitCycles -Wait for a specified number of CPU cycles (16bit data type).
+   - WAIT1_WaitCycles -Wait for a specified number of CPU cycles.
    - WAIT1_WaitLongCycles -Wait for a specified number of CPU cycles (32bit data type).
    - WAIT1_Waitms -Wait for a specified time in milliseconds.
    - WAIT1_Waitus -Wait for a specified time in microseconds.
@@ -50,9 +50,10 @@ Module "WAIT1"     (component Wait)
    - WAIT1_WaitOSms -If an RTOS is enabled, this routine will use a non-blocking wait method. Otherwise it will do a 
                 busy/blocking wait.
    - WAIT1_Init -Driver initialization routine.
-   - WAIT1_DeInit -Driver de-initialization routine
+   - WAIT1_Deinit -Driver de-initialization routine
 
 Module "UTIL1"     (component Utility)
+   - UTIL1_SkipSpaces -Skips spaces
    - UTIL1_strcpy -Same as normal strcpy, but safe as it does not write beyond the buffer.
    - UTIL1_strcat -Same as normal strcat, but safe as it does not write beyond the buffer.
    - UTIL1_strcatPad -Same as normal strcat, but safe as it does not write beyond the buffer. The buffer will be filled with a 
@@ -110,6 +111,10 @@ Module "UTIL1"     (component Utility)
    - UTIL1_ScanHex32uNumber -Scans a hexadecimal 32bit number, starting with 0x
    - UTIL1_ScanSeparatedNumbers -Scans multiple numbers separated by character, e.g. "123.68.5.3"
    - UTIL1_ScanDoubleQuotedString -Scans a string inside double quotes and returns it without the double quotes.
+   - UTIL1_ScanRGB -Scans a RGB value and stores it in r, g and b. String can be a single hex number (0x120506) or three 
+                decimal values (18 5 6)
+   - UTIL1_ScanRGB32 -Scans a RGB value and stores it in a single 32bit value. String can be a single hex number (0x120506) or 
+                three decimal values (18 5 6)
    - UTIL1_strcmp -Wrapper to the standard strcmp() routine
    - UTIL1_strncmp -Wrapper to the standard strncmp() routine
    - UTIL1_strFind -Searches a substring inside a string and returns the position.
@@ -190,8 +195,15 @@ Module "CLS1"      (component Shell)
                 the console access.
    - CLS1_ReleaseSerial -Used to release mutual access to the shell console. Only has an effect if using an RTOS with semaphore 
                 for the console access.
+   - CLS1_ReadAndParseWithCommandTableExt -Reads characters from the default input channel and appends it to the buffer. Once a 
+                new line has been detected, the line will be parsed using the handlers in the table.
+   - CLS1_ReadCommandLine -Similar to ReadAndParseWithCommandTableExt, but does not call the parser. Reads characters from the 
+                default input channel and appends it to the buffer. Once a new line has been detected, it  removes it and 
+                returns ERR_OK
    - CLS1_ReadAndParseWithCommandTable -Reads characters from the default input channel and appends it to the buffer. Once a 
                 new line has been detected, the line will be parsed using the handlers in the table.
+   - CLS1_ParseWithCommandTableExt -Parses a shell command. It handles first the internal commands and will call the provided 
+                callback.
    - CLS1_ParseWithCommandTable -Parses a shell command. It handles first the internal commands and will call the provided 
                 callback.
    - CLS1_GetSemaphore -Return the semaphore of the shell.
@@ -249,7 +261,7 @@ Module "FRTOS1"    (component FreeRTOS)
    - FRTOS1_taskDISABLE_INTERRUPTS -Macro to disable all maskable interrupts.
    - FRTOS1_taskENABLE_INTERRUPTS -Macro to enable microcontroller interrupts.
    - FRTOS1_vTaskDelay -Delay a task for a given number of ticks. The actual time that the task remains blocked depends on the 
-                tick rate. The constant portTICK_RATE_MS can be used to calculate real time from the tick rate - with the 
+                tick rate. The macro pdMS_TO_TICKS() can be used to calculate real time from the tick rate - with the 
                 resolution of one tick period.      vTaskDelay() specifies a time at which the task wishes to unblock relative 
                 to the time at which vTaskDelay() is called. For example, specifying a block period of 100 ticks will cause the 
                 task to unblock 100 ticks after vTaskDelay() is called. vTaskDelay() does not therefore provide a good method 

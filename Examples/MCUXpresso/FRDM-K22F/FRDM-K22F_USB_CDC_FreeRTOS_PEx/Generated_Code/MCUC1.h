@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : McuLibConfig
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.016, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **          Configures the drivers for various SDKs and APIs used.
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Init   - void MCUC1_Init(void);
 **         Deinit - void MCUC1_Deinit(void);
 **
-** * Copyright (c) 2016-2018, Erich Styger
+** * Copyright (c) 2016-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

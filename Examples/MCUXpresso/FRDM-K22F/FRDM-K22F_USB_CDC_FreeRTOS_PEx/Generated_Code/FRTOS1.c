@@ -4,14 +4,14 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : FreeRTOS
-**     Version     : Component 01.565, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 18:08, # CodeGen: 9
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : FRTOS1
-**          RTOS Version                                   : V10.1.1
+**          RTOS Version                                   : V10.4.1
 **          SDK                                            : MCUC1
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -202,10 +202,10 @@
 **         Deinit                               - void FRTOS1_Deinit(void);
 **         Init                                 - void FRTOS1_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2018 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2018
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -245,29 +245,57 @@
 
 /* MODULE FRTOS1. */
 #include "FRTOS1.h"
-#include "portTicks.h"                 /* interface to tick counter */
+#if MCUC1_CONFIG_SDK_USE_FREERTOS
 
-
+#if !MCUC1_CONFIG_CPU_IS_ESP32
+  #include "portTicks.h"               /* interface to tick counter */
+#endif
+#if configSYSTICK_USE_LOW_POWER_TIMER && MCUC1_CONFIG_NXP_SDK_USED
+  #include "fsl_clock.h"
+#endif
+#include "UTIL1.h"
 #if configHEAP_SCHEME_IDENTIFICATION
   /* special variable identifying the used heap scheme */
   const uint8_t freeRTOSMemoryScheme = configUSE_HEAP_SCHEME;
 #endif
 
 
+#if (configUSE_TOP_USED_PRIORITY || configLTO_HELPER) && !MCUC1_CONFIG_CPU_IS_ESP32
+  /* This is only really needed for debugging with openOCD:
+   * Since at least FreeRTOS V7.5.3 uxTopUsedPriority is no longer
+   * present in the kernel, so it has to be supplied by other means for
+   * OpenOCD's threads awareness.
+   *
+   * Add this file to your project, and, if you're using --gc-sections,
+   * ``--undefined=uxTopUsedPriority'' (or
+   * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
+   * linking) to your LDFLAGS; same with all the other symbols you need.
+   */
+  const int
+  #ifdef __GNUC__
+  __attribute__((used))
+  #endif
+  uxTopUsedPriority = configMAX_PRIORITIES-1;
+#endif
+
 #if configUSE_SHELL
 static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
+#if tskKERNEL_VERSION_MAJOR>=10 && !MCUC1_CONFIG_CPU_IS_ESP32
   #define SHELL_MAX_NOF_TASKS 16 /* maximum number of tasks, as specified in the properties */
   UBaseType_t nofTasks, i;
   TaskHandle_t taskHandles[SHELL_MAX_NOF_TASKS];
-#if configUSE_TRACE_FACILITY
-  TaskStatus_t taskStatus;
-#endif
   StackType_t *stackBeg, *stackEnd, *topOfStack;
   uint8_t staticallyAllocated;
-  uint8_t buf[32], tmpBuf[32], res;
+  uint8_t tmpBuf[32];
   uint16_t stackSize;
+#endif
+#if configUSE_TRACE_FACILITY && !((tskKERNEL_VERSION_MAJOR<10) || MCUC1_CONFIG_CPU_IS_ESP32)
+  TaskStatus_t taskStatus;
+#endif
+  uint8_t buf[32];
+  uint8_t res;
 #if configGENERATE_RUN_TIME_STATS
-  uint32_t ulTotalTime, ulStatsAsPercentage;
+  uint32_t ulTotalTime;
 #endif
 #if configUSE_TRACE_FACILITY
   #define PAD_STAT_TASK_TCB             (sizeof("TCB ")-1)
@@ -360,6 +388,9 @@ static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
   ulTotalTime /= 100UL; /* For percentage calculations. */
 #endif
 
+#if (tskKERNEL_VERSION_MAJOR<10) || MCUC1_CONFIG_CPU_IS_ESP32 /* otherwise xGetTaskHandles(), vTaskGetStackInfo(), pcTaskGetName() not available */
+  CLS1_SendStr((unsigned char*)"FreeRTOS version must be at least 10.0.0 and not for ESP32\r\n", io->stdOut);
+#else
   nofTasks = uxTaskGetNumberOfTasks();
   if (nofTasks>SHELL_MAX_NOF_TASKS) {
     UTIL1_strcpy(buf, sizeof(buf), (const unsigned char*)"WARNING: more tasks than Shell maximum number of tasks.\r\n");
@@ -497,6 +528,8 @@ static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
       UTIL1_strcpy(tmpBuf, sizeof(tmpBuf), (unsigned char*)"0x");
       UTIL1_strcatNum32Hex(tmpBuf, sizeof(tmpBuf), taskStatus.ulRunTimeCounter);
       if (ulTotalTime>0) { /* to avoid division by zero */
+        uint32_t ulStatsAsPercentage;
+
         /* What percentage of the total run time has the task used?
            This will always be rounded down to the nearest integer.
            ulTotalRunTime has already been divided by 100. */
@@ -515,8 +548,9 @@ static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
       CLS1_SendStr(buf, io->stdOut);
 #endif
       CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-    } /* for */
-  } /* if */
+    } /* if */
+  } /* for */
+#endif /* tskKERNEL_VERSION_MAJOR */
   return res;
 }
 #endif
@@ -525,7 +559,7 @@ static uint8_t PrintTaskList(const CLS1_StdIOType *io) {
 static uint8_t PrintStatus(const CLS1_StdIOType *io) {
   uint8_t buf[16];
 
-  CLS1_SendStatusStr((unsigned char*)"FRTOS1", (unsigned char*)"\r\n", io->stdOut);
+  CLS1_SendStatusStr((unsigned char*)"FRTOS1", (unsigned char*)"FreeRTOS status information\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  Version", (const unsigned char*)tskKERNEL_VERSION_NUMBER, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   CLS1_SendStatusStr((unsigned char*)"  RTOS ticks", (const unsigned char*)"", io->stdOut);
@@ -797,7 +831,7 @@ portBASE_TYPE FRTOS1_xTaskResumeFromISR(xTaskHandle pxTaskToResume)
 **     Description :
 **         Delay a task for a given number of ticks. The actual time
 **         that the task remains blocked depends on the tick rate. The
-**         constant portTICK_RATE_MS can be used to calculate real time
+**         macro pdMS_TO_TICKS() can be used to calculate real time
 **         from the tick rate - with the resolution of one tick period.
 **         vTaskDelay() specifies a time at which the task wishes to
 **         unblock relative to the time at which vTaskDelay() is called.
@@ -2127,13 +2161,21 @@ uint8_t FRTOS1_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_
 */
 void FRTOS1_Init(void)
 {
+#if !MCUC1_CONFIG_CPU_IS_ESP32
   portDISABLE_ALL_INTERRUPTS(); /* disable all interrupts, they get enabled in vStartScheduler() */
+#endif
 #if configSYSTICK_USE_LOW_POWER_TIMER
   /* enable clocking for low power timer, otherwise vPortStopTickTimer() will crash.
     Additionally, Percepio trace needs access to the timer early on. */
+  #if MCUC1_CONFIG_NXP_SDK_USED
+  CLOCK_EnableClock(kCLOCK_Lptmr0);
+  #else /* Processor Expert */
   SIM_PDD_SetClockGate(SIM_BASE_PTR, SIM_PDD_CLOCK_GATE_LPTMR0, PDD_ENABLE);
+  #endif
 #endif
+#if !MCUC1_CONFIG_CPU_IS_ESP32
   vPortStopTickTimer(); /* tick timer shall not run until the RTOS scheduler is started */
+#endif
 #if configUSE_PERCEPIO_TRACE_HOOKS
   McuPercepio_Startup(); /* Startup Percepio Trace. Need to do this before calling any RTOS functions. */
 #endif
@@ -4946,6 +4988,7 @@ void FRTOS1_AppConfigureTimerForRuntimeStats(void)
 #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   /* nothing needed, the RTOS will initialize the tick counter */
 #else
+  extern uint32_t FRTOS1_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   FRTOS1_RunTimeCounter = 0;
 #endif
 }
@@ -4969,6 +5012,7 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void)
   #if configGENERATE_RUN_TIME_STATS_USE_TICKS
   return xTaskGetTickCountFromISR(); /* using RTOS tick counter */
   #else /* using timer counter */
+  extern uint32_t FRTOS1_RunTimeCounter; /* runtime counter, used for configGENERATE_RUNTIME_STATS */
   return FRTOS1_RunTimeCounter;
   #endif
 #else
@@ -4976,6 +5020,7 @@ uint32_t FRTOS1_AppGetRuntimeCounterValueFromISR(void)
 #endif
 }
 
+#endif /* MCUC1_CONFIG_SDK_USE_FREERTOS */
 /* END FRTOS1. */
 
 /*!

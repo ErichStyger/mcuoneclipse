@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : HardFault
-**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.023, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 18:05, # CodeGen: 8
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void HF1_Deinit(void);
 **         Init             - void HF1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

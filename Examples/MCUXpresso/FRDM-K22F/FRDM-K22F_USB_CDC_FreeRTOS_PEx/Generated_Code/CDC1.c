@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : FSL_USB_CDC_Device
-**     Version     : Component 01.094, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.104, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -51,7 +51,7 @@
 **         RecvChar            - uint8_t CDC1_RecvChar(CDC1_TComData *Chr);
 **         SendChar            - uint8_t CDC1_SendChar(CDC1_TComData Chr);
 **         SendString          - uint8_t CDC1_SendString(CDC1_TComData *Chr);
-**         SendBlock           - uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize);
+**         SendBlock           - uint8_t CDC1_SendBlock(uint8_t *data, size_t dataSize);
 **         PutBufferChecked    - uint8_t CDC1_PutBufferChecked(uint8_t *buf, size_t bufSize);
 **         App_Callback        - void CDC1_App_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
 **         Notify_Callback     - void CDC1_Notify_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
@@ -66,7 +66,7 @@
 **         Init                - uint8_t CDC1_Init(void);
 **
 ** * Copyright : USB Stack sources (c) Copyright Freescale, all rights reserved, 2013-2017
-**  * Adopted for Processor Expert: Erich Styger
+**  * Adapted for Processor Expert: Erich Styger, 2015-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -283,7 +283,7 @@ uint8_t CDC1_SendChar(CDC1_TComData Chr)
 **                           ERR_FAILED otherwise.
 ** ===================================================================
 */
-uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize)
+uint8_t CDC1_SendBlock(uint8_t *data, size_t dataSize)
 {
   uint8_t res = ERR_OK;
 
@@ -383,6 +383,9 @@ void CDC1_App_Callback(uint8_t controller_ID, uint8_t event_type, void *val)
   } else if (event_type == USB_APP_ERROR) { /* detach? */
     start_app = FALSE;
     start_transactions = FALSE;
+  } else if (event_type == USB_APP_BUS_SUSPEND) { /* disconnected cable? */
+    start_app = FALSE;
+    start_transactions = FALSE;
   }
 }
 
@@ -437,7 +440,7 @@ void CDC1_RunUsbEngine(void)
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
-uint8_t CDC1_SendDataBlock(uint8_t *data, uint16_t dataSize)
+uint8_t CDC1_SendDataBlock(uint8_t *data, size_t dataSize)
 {
 #if CDC1_CONFIG_USE_TIMEOUT && CDC1_CONFIG_APP_TASK_TIMEOUT_MS>0
   TMOUT1_CounterHandle timeout;
@@ -445,7 +448,7 @@ uint8_t CDC1_SendDataBlock(uint8_t *data, uint16_t dataSize)
   uint8_t res = ERR_OK;
 
   transactionOngoing = TRUE;
-  if (USB_Class_CDC_Interface_DIC_Send_Data(CONTROLLER_ID, data, dataSize)!=USB_OK) {
+  if (USB_Class_CDC_Interface_DIC_Send_Data(CONTROLLER_ID, data, (USB_PACKET_SIZE)dataSize)!=USB_OK) {
     transactionOngoing = FALSE;
     return ERR_FAULT;
   }

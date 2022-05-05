@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : FSL_USB_CDC_Device
-**     Version     : Component 01.094, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.104, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -51,7 +51,7 @@
 **         RecvChar            - uint8_t CDC1_RecvChar(CDC1_TComData *Chr);
 **         SendChar            - uint8_t CDC1_SendChar(CDC1_TComData Chr);
 **         SendString          - uint8_t CDC1_SendString(CDC1_TComData *Chr);
-**         SendBlock           - uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize);
+**         SendBlock           - uint8_t CDC1_SendBlock(uint8_t *data, size_t dataSize);
 **         PutBufferChecked    - uint8_t CDC1_PutBufferChecked(uint8_t *buf, size_t bufSize);
 **         App_Callback        - void CDC1_App_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
 **         Notify_Callback     - void CDC1_Notify_Callback(uint8_t controller_ID, uint8_t event_type, void *val);
@@ -66,7 +66,7 @@
 **         Init                - uint8_t CDC1_Init(void);
 **
 ** * Copyright : USB Stack sources (c) Copyright Freescale, all rights reserved, 2013-2017
-**  * Adopted for Processor Expert: Erich Styger
+**  * Adapted for Processor Expert: Erich Styger, 2015-2020
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -106,7 +106,7 @@
    otherwise there will be data loss. For MC9S08JS16, maximum DATA_BUFF_SIZE
    supported is 16 Bytes
 */
-#define CDC1_DATA_BUFF_SIZE    64
+#define CDC1_DATA_BUFF_SIZE    CDC1_CONFIG_DATA_BUF_SIZE
 
 #define CDC1_USB_ERR_SEND            1  /* Error while sending */
 #define CDC1_USB_ERR_BUSOFF          2  /* Bus not ready */
@@ -367,7 +367,7 @@ void CDC1_RunUsbEngine(void);
 ** ===================================================================
 */
 
-uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize);
+uint8_t CDC1_SendBlock(uint8_t *data, size_t dataSize);
 /*
 ** ===================================================================
 **     Method      :  SendBlock (component FSL_USB_CDC_Device)
@@ -387,7 +387,7 @@ uint8_t CDC1_SendBlock(uint8_t *data, uint16_t dataSize);
 ** ===================================================================
 */
 
-uint8_t CDC1_SendDataBlock(uint8_t *data, uint16_t dataSize);
+uint8_t CDC1_SendDataBlock(uint8_t *data, size_t dataSize);
 /*
 ** ===================================================================
 **     Method      :  CDC1_SendDataBlock (component FSL_USB_CDC_Device)

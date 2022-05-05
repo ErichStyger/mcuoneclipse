@@ -84,7 +84,7 @@ static portTASK_FUNCTION(ShellTask, pvParameters) {
 #if PL_HAS_BLUETOOTH
     (void)CLS1_ReadAndParseWithCommandTable(bluetooth_buf, sizeof(bluetooth_buf), &BT_stdio, CmdParserTable);
 #endif
-    FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
+    FRTOS1_vTaskDelay(pdMS_TO_TICKS(50));
   } /* for */
 }
 

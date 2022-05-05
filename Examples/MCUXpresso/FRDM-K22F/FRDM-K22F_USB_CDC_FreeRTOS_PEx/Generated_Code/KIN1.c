@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : KinetisTools
-**     Version     : Component 01.040, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.044, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 18:05, # CodeGen: 8
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -34,7 +34,7 @@
 **         Deinit                 - void KIN1_Deinit(void);
 **         Init                   - void KIN1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -75,9 +75,20 @@
 /* MODULE KIN1. */
 
 #include "KIN1.h"
+
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+
 #include "UTIL1.h" /* various utility functions */
 #if MCUC1_CONFIG_NXP_SDK_2_0_USED
-  #include "fsl_sim.h" /* system integration module */
+  #include "fsl_common.h"
+  #if MCUC1_CONFIG_CPU_IS_KINETIS && !MCUC1_CONFIG_IS_KINETIS_KE
+    #include "fsl_sim.h" /* system integration module, used for CPU ID */
+  #elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_IS_LPC55xx /* LPC55x */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
+    #include "fsl_iap_ffr.h"
+  #elif MCUC1_CONFIG_CPU_IS_LPC  /* LPC845 */
+    #include "fsl_iap.h" /* if missing, add this module from the MCUXpresso SDK */
+  #endif
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_KINETIS_1_3
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif MCUC1_CONFIG_SDK_VERSION_USED==MCUC1_CONFIG_SDK_S32K
@@ -88,7 +99,7 @@
 
 #if MCUC1_CONFIG_CPU_IS_KINETIS
 #if MCUC1_CONFIG_CORTEX_M==4
-static const unsigned char *KinetisM4FamilyStrings[] =
+static const unsigned char *const KinetisM4FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"K10 or K12 Family",          /* 000 */
   (const unsigned char *)"K20 or K22 Family",          /* 001 */
@@ -101,8 +112,8 @@ static const unsigned char *KinetisM4FamilyStrings[] =
 };
 #endif
 
-#if MCUC1_CONFIG_CORTEX_M==0
-static const unsigned char *KinetisM0FamilyStrings[] =
+#if MCUC1_CONFIG_CORTEX_M==0 && !MCUC1_CONFIG_IS_KINETIS_KE
+static const unsigned char *const KinetisM0FamilyStrings[] =
 { /* FAMID (3 bits) are used as index */
   (const unsigned char *)"KL0x",          /* 0000 */
   (const unsigned char *)"KL1x",          /* 0001 */
@@ -119,14 +130,14 @@ static const unsigned char *KinetisM0FamilyStrings[] =
 #if KIN1_CONFIG_PARSE_COMMAND_ENABLED
 static uint8_t PrintStatus(const CLS1_StdIOType *io)
 {
-#if MCUC1_CONFIG_CPU_IS_KINETIS
+#if MCUC1_CONFIG_CPU_IS_KINETIS || MCUC1_CONFIG_CPU_IS_LPC
   uint8_t buf[1+(16*5)+1+1]; /* "{0xAA,...0xBB}" */
   uint8_t res;
   KIN1_UID uid;
 #endif
 
-  CLS1_SendStatusStr((unsigned char*)"KIN1", (unsigned char*)"\r\n", io->stdOut);
-#if MCUC1_CONFIG_CPU_IS_KINETIS
+  CLS1_SendStatusStr((unsigned char*)"KIN1", (unsigned char*)"Hardware status\r\n", io->stdOut);
+#if MCUC1_CONFIG_CPU_IS_KINETIS || MCUC1_CONFIG_CPU_IS_LPC
   res = KIN1_UIDGet(&uid);
   if (res==ERR_OK) {
     res = KIN1_UIDtoString(&uid, buf, sizeof(buf));
@@ -137,6 +148,31 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io)
   CLS1_SendStatusStr((unsigned char*)"  UID", buf, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
 #endif
+
+#if MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC845
+  uint32_t val;
+
+  res = IAP_ReadPartID(&val);
+  if (res == kStatus_IAP_Success) {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    UTIL1_strcatNum32Hex(buf, sizeof(buf), val);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  CLS1_SendStatusStr((unsigned char*)"  PartID", buf, io->stdOut);
+
+  res = IAP_ReadBootCodeVersion(&val);
+  if (res == kStatus_IAP_Success) {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"Version 0x");
+    UTIL1_strcatNum32Hex(buf, sizeof(buf), val);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
+  }
+  CLS1_SendStatusStr((unsigned char*)"  BootCode", buf, io->stdOut);
+#endif
+
   CLS1_SendStatusStr((unsigned char*)"  Family", (uint8_t*)KIN1_GetKinetisFamilyString(), io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
@@ -205,9 +241,9 @@ void KIN1_SoftwareReset(void)
 uint8_t KIN1_UIDGet(KIN1_UID *uid)
 {
 #if MCUC1_CONFIG_CPU_IS_KINETIS
-#if MCUC1_CONFIG_NXP_SDK_2_0_USED
+  #if MCUC1_CONFIG_NXP_SDK_2_0_USED && !MCUC1_CONFIG_IS_KINETIS_KE
   sim_uid_t tmp;
-  int i, j;
+  unsigned int i, j;
 
   SIM_GetUniqueId(&tmp);
   /* init */
@@ -221,19 +257,38 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
   for(i=0,j=sizeof(KIN1_UID)-sizeof(sim_uid_t);i<sizeof(sim_uid_t)&&i<sizeof(KIN1_UID);i++,j++) {
     uid->id[j] = ((uint8_t*)&tmp)[i];
   }
-#else
-#ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
-#ifdef SIM_UIDH
-  uid->id[0] = (SIM_UIDH>>24)&0xff;
-  uid->id[1] = (SIM_UIDH>>16)&0xff;
-  uid->id[2] = (SIM_UIDH>>8)&0xff;
-  uid->id[3] = SIM_UIDH&0xff;
-#else
+  #elif MCUC1_CONFIG_IS_KINETIS_KE
+  /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
   uid->id[3] = 0;
-#endif
+  uid->id[4] = 0;
+  uid->id[5] = 0;
+  uid->id[6] = 0;
+  uid->id[7] = 0;
+  uid->id[8] = (SIM->UUIDH>>24)&0xff;
+  uid->id[9] = (SIM->UUIDH>>16)&0xff;
+  uid->id[10] = (SIM->UUIDH>>8)&0xff;
+  uid->id[11] = SIM->UUIDH&0xff;
+
+  uid->id[12] = (SIM->UUIDL>>24)&0xff;
+  uid->id[13] = (SIM->UUIDL>>16)&0xff;
+  uid->id[14] = (SIM->UUIDL>>8)&0xff;
+  uid->id[15] = SIM->UUIDL&0xff;
+  #else /* not MCUC1_CONFIG_NXP_SDK_2_0_USED */
+    #ifdef SIM_UIDMH /* 80 or 128 bit UUID: SIM_UIDMH, SIM_UIDML and SIM_UIDL */
+      #ifdef SIM_UIDH
+  uid->id[0] = (SIM_UIDH>>24)&0xff;
+  uid->id[1] = (SIM_UIDH>>16)&0xff;
+  uid->id[2] = (SIM_UIDH>>8)&0xff;
+  uid->id[3] = SIM_UIDH&0xff;
+      #else
+  uid->id[0] = 0;
+  uid->id[1] = 0;
+  uid->id[2] = 0;
+  uid->id[3] = 0;
+      #endif
   uid->id[4] = (SIM_UIDMH>>24)&0xff;
   uid->id[5] = (SIM_UIDMH>>16)&0xff;
   uid->id[6] = (SIM_UIDMH>>8)&0xff;
@@ -248,7 +303,7 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
   uid->id[13] = (SIM_UIDL>>16)&0xff;
   uid->id[14] = (SIM_UIDL>>8)&0xff;
   uid->id[15] = SIM_UIDL&0xff;
-#elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
+    #elif defined(SIM_UUIDMH) /* KE06Z: SIM_UUIDMH, SIM_UUIDML and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -267,7 +322,7 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
+    #else /* some devices like the KE02Z only have 64bit UUID: only SIM_UUIDH and SIM_UUIDL */
   uid->id[0] = 0;
   uid->id[1] = 0;
   uid->id[2] = 0;
@@ -285,9 +340,54 @@ uint8_t KIN1_UIDGet(KIN1_UID *uid)
   uid->id[13] = (SIM_UUIDL>>16)&0xff;
   uid->id[14] = (SIM_UUIDL>>8)&0xff;
   uid->id[15] = SIM_UUIDL&0xff;
-#endif
-#endif /* SDK V2.0 */
+    #endif
+  #endif /* MCUC1_CONFIG_NXP_SDK_2_0_USED */
   return ERR_OK;
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC845
+  uint8_t res;
+
+  res = IAP_ReadUniqueID((uint32_t*)&uid->id[0]);
+  if (res != kStatus_IAP_Success) {
+    return ERR_FAILED;
+  }
+  return ERR_OK;
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  int i;
+  uint8_t *p;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+  p = (uint8_t*)&FLASH_NMPA->UUID_ARRAY[0];
+  for(i=0;i<sizeof(McuArmTools_UID) && i<sizeof(FLASH_NMPA->UUID_ARRAY);i++) {
+    uid->id[i] = *p;
+    p++;
+  }
+  return ERR_OK;
+#elif MCUC1_CONFIG_CPU_IS_LPC && MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  int i;
+
+  /* init */
+  for(i=0;i<sizeof(McuArmTools_UID);i++) {
+    uid->id[i] = 0;
+  }
+#if 0 /* should work for LPC55x59, but fails? */
+  status_t status;
+  flash_config_t flashConfig;
+
+  status = FFR_Init(&flashConfig);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+
+  assert(sizeof(uid->id)*8>=128); /* must be at least 128 bits */
+  status = FFR_GetUUID(&flashConfig, &uid->id[0]);
+  if (status!=kStatus_Success) {
+    return ERR_FAILED;
+  }
+#endif
+  return ERR_FAILED; /* not implemented yet */
 #else
   (void)uid; /* not used */
   return ERR_FAILED;
@@ -417,7 +517,7 @@ uint8_t KIN1_ParseCommand(const unsigned char* cmd, bool *handled, const CLS1_St
 KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
 {
 #if MCUC1_CONFIG_CPU_IS_KINETIS
-#if MCUC1_CONFIG_CORTEX_M==0
+  #if MCUC1_CONFIG_CORTEX_M==0
   #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
@@ -429,7 +529,7 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     }
   #elif defined(SIM_SRSID_FAMID) /* MKE02Z4 defines this, hopefully all other KE too... */
     return (KIN1_ConstCharPtr)"KE0x Family"; /* 0000 only KE0x supported */
-  #elif defined(SIM_SDID_FAMID)
+  #elif defined(SIM_SDID_FAMID) || defined(SIM_SDID_FAMILYID)
     int32_t val;
 
     val = ((SIM->SDID)>>28)&0xF; /* bits 31..28 */
@@ -442,8 +542,8 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     #error "Unknown architecture!"
     return (KIN1_ConstCharPtr)"ERROR";
   #endif
-#elif MCUC1_CONFIG_CORTEX_M==4
-  #ifdef SIM_SDID /* normal Kinetis define this */
+  #elif MCUC1_CONFIG_CORTEX_M==4
+    #ifdef SIM_SDID /* normal Kinetis define this */
     int32_t val;
 
     val = (SIM_SDID>>4)&0x3; /* bits 6..4 */
@@ -452,7 +552,7 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     } else {
       return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #elif defined(SIM_SDID_FAMID)
+    #elif defined(SIM_SDID_FAMID) || defined(SIM_SDID_FAMILYID)
     int32_t val;
 
     val = ((SIM->SDID)>>4)&0x3; /* bits 6..4 */
@@ -461,18 +561,38 @@ KIN1_ConstCharPtr KIN1_GetKinetisFamilyString(void)
     } else {
       return (KIN1_ConstCharPtr)"M4 Family ID out of bounds!";
     }
-  #else
+    #else
     #error "Unknown architecture!"
     return (KIN1_ConstCharPtr)"ERROR";
-  #endif
-#elif MCUC1_CONFIG_CORTEX_M==7
+    #endif
+  #elif MCUC1_CONFIG_CORTEX_M==7
   return (KIN1_ConstCharPtr)"Cortex-M7";
-#else
+  #else
   #error "Unknown architecture!"
   return (KIN1_ConstCharPtr)"ERROR";
-#endif
+  #endif
+#elif MCUC1_CONFIG_CPU_IS_NORDIC_NRF
+  return (KIN1_ConstCharPtr)"Nordic nRF";
+#elif MCUC1_CONFIG_CPU_IS_STM
+  return (KIN1_ConstCharPtr)"STM32";
+#elif MCUC1_CONFIG_CPU_IS_IMXRT
+  return (KIN1_ConstCharPtr)"NXP i.MX RT";
+#elif MCUC1_CONFIG_CPU_IS_S32K
+  return (KIN1_ConstCharPtr)"NXP S32K";
+#elif MCUC1_CONFIG_CPU_IS_LPC
+  #if MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC845
+  return (KIN1_ConstCharPtr)"NXP LPC845";
+  #elif MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S16
+  return (KIN1_ConstCharPtr)"NXP LPC55S16";
+  #elif MCUC1_CONFIG_CPU_VARIANT==MCUC1_CONFIG_CPU_VARIANT_NXP_LPC55S59
+  return (KIN1_ConstCharPtr)"NXP LPC55S69";
+  #elif MCUC1_CONFIG_CPU_IS_LPC55xx
+  return (KIN1_ConstCharPtr)"NXP LPC55xx";
+  #else
+  return (KIN1_ConstCharPtr)"NXP LPC";
+  #endif
 #else
-  return (KIN1_ConstCharPtr)"NOT KINETIS";
+  return (KIN1_ConstCharPtr)"UNKNOWN";
 #endif
 }
 
@@ -686,6 +806,8 @@ void KIN1_Init(void)
   /* Nothing needed */
 }
 
+
+#endif /* MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* END KIN1. */
 
 /*!

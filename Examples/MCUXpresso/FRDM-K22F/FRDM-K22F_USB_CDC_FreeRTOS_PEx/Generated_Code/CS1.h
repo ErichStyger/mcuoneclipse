@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : CriticalSection
-**     Version     : Component 01.013, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.015, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -21,7 +21,7 @@
 **         Deinit           - void CS1_Deinit(void);
 **         Init             - void CS1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -69,8 +69,13 @@
 
 /* other includes needed */
 #if CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
-  #include "FreeRTOS.h"
-  #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #if MCUC1_CONFIG_CPU_IS_ESP32
+    #include "freertos/FreeRTOS.h"
+    #include "freertos/task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #else
+    #include "FreeRTOS.h"
+    #include "task.h"  /* FreeRTOS header file for taskENTER_CRITICAL() and taskEXIT_CRITICAL() macros */
+  #endif
 #endif
 
 #ifdef __cplusplus
@@ -95,7 +100,11 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_CriticalVariable() /* nothing needed */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_CriticalVariable() /* nothing needed */
+  #else
+    #define CS1_CriticalVariable() uint8_t cpuSR; /* variable to store current status */
+  #endif
 #endif
 /*
 ** ===================================================================
@@ -113,8 +122,14 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_EnterCritical()   taskENTER_CRITICAL_FROM_ISR() /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_EnterCritical() \
-    do {                                  \
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_EnterCritical() \
+      do {                                  \
+      __asm volatile( "csrc mstatus, 8" ); /* Disable interrupts */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_EnterCritical() \
+      do {                                  \
       /*lint -save  -esym(529,cpuSR) Symbol 'cpuSR' not subsequently referenced. */\
       __asm (                             \
       "mrs   r0, PRIMASK     \n\t"        \
@@ -123,7 +138,8 @@ extern "C" {
       : [output] "=m" (cpuSR) :: "r0");   \
       __asm ("" ::: "memory");            \
       /*lint -restore Symbol 'cpuSR' not subsequently referenced. */\
-    } while(0)
+      } while(0)
+    #endif
 #endif
 /*
 ** ===================================================================
@@ -141,13 +157,21 @@ extern "C" {
 #elif CS1_CONFIG_USE_RTOS_CRITICAL_SECTION
   #define CS1_ExitCritical()   taskEXIT_CRITICAL_FROM_ISR(0) /* FreeRTOS critical section inside interrupt */
 #elif CS1_CONFIG_USE_CUSTOM_CRITICAL_SECTION
-  #define CS1_ExitCritical() \
-   do{                                  \
+
+  #if MCUC1_CONFIG_CPU_IS_RISC_V
+    #define CS1_ExitCritical() \
+      do {                                  \
+        __asm volatile( "csrs mstatus, 8" ); /* Enable interrupts */ \
+      } while(0)
+  #elif MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+    #define CS1_ExitCritical() \
+     do{                                  \
      __asm (                            \
      "ldrb r0, %[input]    \n\t"        \
      "msr PRIMASK,r0        \n\t"       \
      ::[input] "m" (cpuSR) : "r0");     \
-   } while(0)
+     } while(0)
+  #endif
 #endif
 /*
 ** ===================================================================

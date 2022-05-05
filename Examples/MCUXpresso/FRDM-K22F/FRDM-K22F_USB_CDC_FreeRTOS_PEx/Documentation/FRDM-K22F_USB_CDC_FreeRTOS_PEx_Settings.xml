@@ -393,7 +393,7 @@
       <Waitns v="generate code" />
       <WaitOSms v="generate code" />
       <Init v="generate code" />
-      <DeInit v="generate code" />
+      <Deinit v="generate code" />
     </Methods>
     <Events>
       <EmptySection_DummyValue />
@@ -406,6 +406,7 @@
       <SDK v="MCUC1" />
     </Properties>
     <Methods>
+      <SkipSpaces v="generate code" />
       <strcpy v="generate code" />
       <strcat v="generate code" />
       <strcatPad v="generate code" />
@@ -457,6 +458,8 @@
       <ScanHex32uNumber v="generate code" />
       <ScanSeparatedNumbers v="generate code" />
       <ScanDoubleQuotedString v="generate code" />
+      <ScanRGB v="generate code" />
+      <ScanRGB32 v="generate code" />
       <strcmp v="generate code" />
       <strncmp v="generate code" />
       <strFind v="generate code" />
@@ -529,6 +532,7 @@
               <Device_Subclass v="0" />
             </boolgroup>
             <group name="Configuration">
+              <DATA_BUFF_SIZE v="64" />
               <USB_EP0_SIZE__in_ v="32" />
               <USB_EP1_SIZE__out_ v="32" />
               <USB_EP2_SIZE__notify_ v="32" />
@@ -642,6 +646,7 @@
           <Events>
             <Event_module_name v="Events" />
             <event name="OnError" v="don&amp;apos;t generate code" />
+            <event name="OnLineStateChanged" v="don&amp;apos;t generate code" />
           </Events>
         </inhrbean>
       </boolgroup>
@@ -651,7 +656,6 @@
       <boolgroup name="HID Mouse Device" v="Disabled" />
       <boolgroup name="MSD Device" v="Disabled" />
       <boolgroup name="MSD Host" v="Disabled" />
-      <DATA_BUFF_SIZE v="64" />
       <group name="Initialization">
         <Init_USB_Function v="USB0_Init" />
         <boolgroup name="Inherited USB Init" v="Enabled">
@@ -1132,7 +1136,10 @@
       <GetStdio v="generate code" />
       <RequestSerial v="generate code" />
       <ReleaseSerial v="generate code" />
+      <ReadAndParseWithCommandTableExt v="generate code" />
+      <ReadCommandLine v="generate code" />
       <ReadAndParseWithCommandTable v="generate code" />
+      <ParseWithCommandTableExt v="generate code" />
       <ParseWithCommandTable v="generate code" />
       <GetSemaphore v="generate code" />
       <SendStatusStr v="generate code" />
@@ -1176,6 +1183,9 @@
     <Properties>
       <Component_name v="MCUC1" />
       <SDK v="Processor Expert" />
+      <SDK_Major_Version v="2" />
+      <SDK_Minor_Version v="5" />
+      <SDK_Build_Version v="0" />
       <Config_Files_Folder v="" />
     </Properties>
     <Methods>
@@ -1190,7 +1200,7 @@
     <Enabled v="Y" />
     <Properties>
       <Component_name v="FRTOS1" />
-      <RTOS_Version v="V10.1.1" />
+      <RTOS_Version v="V10.4.1" />
       <SDK v="MCUC1" />
       <boolgroup name="Kinetis SDK" v="Disabled" />
       <group name="Custom Port">
@@ -1204,9 +1214,10 @@
       <Application_Task_Tags v="no" />
       <Thread_Local_Storage_Pointers v="0" />
       <Use_Trace_Facility v="no" />
-      <LinkTimeOptimizer_Helper v="yes" />
       <group name="Debug Helpers">
         <Enable_GDB_Debug_Helper v="no" />
+        <Backward_Compatibility v="no" />
+        <LinkTimeOptimizer_Helper v="yes" />
         <uxTopUsedPriority v="yes" />
         <Heap_Indication_Constant v="yes" />
         <Task_C_Additions v="yes" />
@@ -1225,6 +1236,7 @@
           <RTOS_Interrupt_Priority v="15" />
           <Lowest_Interrupt_Priority v="15" />
           <Compiler_Optimization_Level v="0" />
+          <Reset_MSP v="yes" />
           <MPU v="no" />
           <boolgroup name="SysTick" v="Enabled">
             <Core_Clock v="yes" />
@@ -1431,8 +1443,12 @@
       <event name="vApplicationMallocFailedHook" v="generate code">
         <Event_procedure_name v="FRTOS1_vApplicationMallocFailedHook" />
       </event>
-      <event name="vOnPreSleepProcessing" v="don&amp;apos;t generate code" />
-      <event name="vOnPostSleepProcessing" v="don&amp;apos;t generate code" />
+      <event name="vOnPreSleepProcessing" v="generate code">
+        <Event_procedure_name v="FRTOS1_vOnPreSleepProcessing" />
+      </event>
+      <event name="vOnPostSleepProcessing" v="generate code">
+        <Event_procedure_name v="FRTOS1_vOnPostSleepProcessing" />
+      </event>
     </Events>
   </Bean>
   <Bean name="HF1" type="HardFault">
@@ -1441,6 +1457,7 @@
       <Component_name v="HF1" />
       <SDK v="MCUC1" />
       <Disable_write_buffer v="no" />
+      <Semihosting v="yes" />
     </Properties>
     <Methods>
       <HardFaultHandler v="generate code" />

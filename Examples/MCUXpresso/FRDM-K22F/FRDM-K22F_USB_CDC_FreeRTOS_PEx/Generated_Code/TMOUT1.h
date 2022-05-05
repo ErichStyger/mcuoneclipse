@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : Timeout
-**     Version     : Component 01.037, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.038, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **
 The module implements timeout functionality. With this implementation,
@@ -26,7 +26,7 @@ a periodic interrupt.
 **         AddTick        - void TMOUT1_AddTick(void);
 **         Init           - void TMOUT1_Init(void);
 **
-** * Copyright (c) 2011-2016, Erich Styger
+** * Copyright (c) 2011-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

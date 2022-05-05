@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : HardFault
-**     Version     : Component 01.021, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.023, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 18:05, # CodeGen: 8
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void HF1_Deinit(void);
 **         Init             - void HF1_Init(void);
 **
-** * Copyright (c) 2014-2018, Erich Styger
+** * Copyright (c) 2014-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -58,6 +58,8 @@
 
 #include "HF1.h"
 
+#if MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M
+
 /*
 ** ===================================================================
 **     Method      :  HF1_HandlerC (component HardFault)
@@ -92,33 +94,33 @@ void HF1_HandlerC(uint32_t *hardfault_args)
   static volatile unsigned long _AFSR;
   static volatile unsigned long _BFAR;
   static volatile unsigned long _MMAR;
-  stacked_r0 = ((unsigned long)hardfault_args[0]);          // http://www.asciiworld.com/-Smiley,20-.html
-  stacked_r1 = ((unsigned long)hardfault_args[1]);          //                         oooo$$$$$$$$$$$$oooo
-  stacked_r2 = ((unsigned long)hardfault_args[2]);          //                      oo$$$$$$$$$$$$$$$$$$$$$$$$o
-  stacked_r3 = ((unsigned long)hardfault_args[3]);          //                    oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$
-  stacked_r12 = ((unsigned long)hardfault_args[4]);         //    o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$
-  stacked_lr = ((unsigned long)hardfault_args[5]);          // oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$
-  stacked_pc = ((unsigned long)hardfault_args[6]);          // "$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$
-  stacked_psr = ((unsigned long)hardfault_args[7]);         //   $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$
-                                                            //   $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$$
-  /* Configurable Fault Status Register */                  //    "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$
-  /* Consists of MMSR, BFSR and UFSR */                     //     $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$o
-  _CFSR = (*((volatile unsigned long *)(0xE000ED28)));      //    o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o
-                                                            //    $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooooo$$$$o
-  /* Hard Fault Status Register */                          //   o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$
-  _HFSR = (*((volatile unsigned long *)(0xE000ED2C)));      //   $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""""
-                                                            //  """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$
-  /* Debug Fault Status Register */                         //             "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$
-  _DFSR = (*((volatile unsigned long *)(0xE000ED30)));      //               $$$o          "$$""$$$$$$""""           o$$$
-                                                            //                $$$$o                                o$$$"
-  /* Auxiliary Fault Status Register */                     //                 "$$$$o      o$$$$$$o"$$$$o        o$$$$
-  _AFSR = (*((volatile unsigned long *)(0xE000ED3C)));      //                   "$$$$$oo     ""$$$$o$$$$$o   o$$$$""
-                                                            //                      ""$$$$$oooo  "$$$o$$$$$$$$$"""
-                                                            //                         ""$$$$$$$oo $$$$$$$$$$
-  /* Read the Fault Address Registers. */                   //                                 """"$$$$$$$$$$$
-  /* These may not contain valid values. */                 //                                     $$$$$$$$$$$$
-  /* Check BFARVALID/MMARVALID to see */                    //                                      $$$$$$$$$$"
-  /* if they are valid values */                            //                                       "$$$""
+  stacked_r0 = ((unsigned long)hardfault_args[0]);          /* http://www.asciiworld.com/-Smiley,20-.html                                   */
+  stacked_r1 = ((unsigned long)hardfault_args[1]);          /*                         oooo$$$$$$$$$$$$oooo                                 */
+  stacked_r2 = ((unsigned long)hardfault_args[2]);          /*                      oo$$$$$$$$$$$$$$$$$$$$$$$$o                             */
+  stacked_r3 = ((unsigned long)hardfault_args[3]);          /*                    oo$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o         o$   $$ o$      */
+  stacked_r12 = ((unsigned long)hardfault_args[4]);         /*    o $ oo        o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$o       $$ $$ $$o$     */
+  stacked_lr = ((unsigned long)hardfault_args[5]);          /* oo $ $ "$      o$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$o       $$$o$$o$      */
+  stacked_pc = ((unsigned long)hardfault_args[6]);          /* "$$$$$$o$     o$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$o    $$$$$$$$       */
+  stacked_psr = ((unsigned long)hardfault_args[7]);         /*   $$$$$$$    $$$$$$$$$$$      $$$$$$$$$$$      $$$$$$$$$$$$$$$$$$$$$$$       */
+                                                            /*   $$$$$$$$$$$$$$$$$$$$$$$    $$$$$$$$$$$$$    $$$$$$$$$$$$$$  """$$$         */
+  /* Configurable Fault Status Register */                  /*    "$$$""""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$        */
+  /* Consists of MMSR, BFSR and UFSR */                     /*     $$$   o$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     "$$$o      */
+  _CFSR = (*((volatile unsigned long *)(0xE000ED28)));      /*    o$$"   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$       $$$o     */
+                                                            /*    $$$    $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" "$$$$$$ooooo$$$$o   */
+  /* Hard Fault Status Register */                          /*   o$$$oooo$$$$$  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   o$$$$$$$$$$$$$$$$$  */
+  _HFSR = (*((volatile unsigned long *)(0xE000ED2C)));      /*   $$$$$$$$"$$$$   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     $$$$""""""""        */
+                                                            /*  """"       $$$$    "$$$$$$$$$$$$$$$$$$$$$$$$$$$$"      o$$$                 */
+  /* Debug Fault Status Register */                         /*             "$$$o     """$$$$$$$$$$$$$$$$$$"$$"         $$$                  */
+  _DFSR = (*((volatile unsigned long *)(0xE000ED30)));      /*               $$$o          "$$""$$$$$$""""           o$$$                   */
+                                                            /*                $$$$o                                o$$$"                    */
+  /* Auxiliary Fault Status Register */                     /*                 "$$$$o      o$$$$$$o"$$$$o        o$$$$                      */
+  _AFSR = (*((volatile unsigned long *)(0xE000ED3C)));      /*                   "$$$$$oo     ""$$$$o$$$$$o   o$$$$""                       */
+                                                            /*                      ""$$$$$oooo  "$$$o$$$$$$$$$"""                          */
+                                                            /*                         ""$$$$$$$oo $$$$$$$$$$                               */
+  /* Read the Fault Address Registers. */                   /*                                 """"$$$$$$$$$$$                              */
+  /* These may not contain valid values. */                 /*                                     $$$$$$$$$$$$                             */
+  /* Check BFARVALID/MMARVALID to see */                    /*                                      $$$$$$$$$$"                             */
+  /* if they are valid values */                            /*                                       "$$$""                                 */
   /* MemManage Fault Address Register */
   _MMAR = (*((volatile unsigned long *)(0xE000ED34)));
   /* Bus Fault Address Register */
@@ -158,17 +160,34 @@ void HF1_HardFaultHandler(void)
 #endif
 {
   __asm volatile (
-    " movs r0,#4      \n"  /* load bit mask into R0 */
-    " mov r1, lr      \n"  /* load link register into R1 */
-    " tst r0, r1      \n"  /* compare with bitmask */
-    " beq _MSP        \n"  /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
-    " mrs r0, psp     \n"  /* otherwise: stack pointer is in PSP */
-    " b _GetPC        \n"  /* go to part which loads the PC */
-  "_MSP:              \n"  /* stack pointer is in MSP register */
-    " mrs r0, msp     \n"  /* load stack pointer into R0 */
-  "_GetPC:            \n"  /* find out where the hard fault happened */
-    " ldr r1,[r0,#20] \n"  /* load program counter into R1. R1 contains address of the next instruction where the hard fault happened */
+    ".syntax unified              \n"  /* needed for the 'adds r1,#2' below */
+    " movs r0,#4                  \n"  /* load bit mask into R0 */
+    " mov r1, lr                  \n"  /* load link register into R1 */
+    " tst r0, r1                  \n"  /* compare with bitmask */
+    " beq _MSP                    \n"  /* if bitmask is set: stack pointer is in PSP. Otherwise in MSP */
+    " mrs r0, psp                 \n"  /* otherwise: stack pointer is in PSP */
+    " b _GetPC                    \n"  /* go to part which loads the PC */
+  "_MSP:                          \n"  /* stack pointer is in MSP register */
+    " mrs r0, msp                 \n"  /* load stack pointer into R0 */
+  "_GetPC:                        \n"  /* find out where the hard fault happened */
+    " ldr r1,[r0,#24]             \n"  /* load program counter into R1. R1 contains address of the next instruction where the hard fault happened */
+#if HF1_CONFIG_SETTING_SEMIHOSTING
+  /* The following code checks if the hard fault is caused by a semihosting BKPT instruction which is "BKPT 0xAB" (opcode: 0xBEAB)
+     The idea is taken from the MCUXpresso IDE/SDK code, so credits and kudos to the MCUXpresso IDE team! */
+    " ldrh r2,[r1]                \n"  /* load opcode causing the fault */
+    " ldr r3,=0xBEAB              \n"  /* load constant 0xBEAB (BKPT 0xAB) into R3" */
+    " cmp r2,r3                   \n"  /* is it the BKPT 0xAB? */
+    " beq _SemihostReturn         \n"  /* if yes, return from semihosting */
+    " b HF1_HandlerC   \n"  /* if no, dump the register values and halt the system */
+  "_SemihostReturn:               \n"  /* returning from semihosting fault */
+    " adds r1,#2                  \n"  /* r1 points to the semihosting BKPT instruction. Adjust the PC to skip it (2 bytes) */
+    " str r1,[r0,#24]             \n"  /* store back the adjusted PC value to the interrupt stack frame */
+    " movs r1,#32                 \n"  /* need to pass back a return value to emulate a successful semihosting operation. 32 is an arbitrary value */
+    " str r1,[r0,#0]              \n"  /* store the return value on the stack frame */
+    " bx lr                       \n"  /* return from the exception handler back to the application */
+#else
     " b HF1_HandlerC   \n"  /* decode more information. R0 contains pointer to stack frame */
+#endif
   );
 }
 
@@ -187,7 +206,7 @@ void HF1_Deinit(void)
 #if HF1_CONFIG_SETTING_DISABLE_WRITE_BUFFER
   #if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
     SCB_ACTLR &= ~(SCB_ACTLR_DISDEFWBUF_MASK); /* write buffer bit, see https://community.nxp.com/docs/DOC-103810 */
-  #elif MCUC1_CONFIG_NXP_SDK_USED
+  #elif MCUC1_CONFIG_NXP_SDK_USED && MCUC1_McuLib_CONFIG_CORTEX_M!=7 /* not for M7? */
     SCnSCB->ACTLR &= ~SCnSCB_ACTLR_DISDEFWBUF_Msk;
   #endif
 #endif
@@ -208,12 +227,14 @@ void HF1_Init(void)
 #if HF1_CONFIG_SETTING_DISABLE_WRITE_BUFFER
   #if MCUC1_CONFIG_SDK_VERSION_USED == MCUC1_CONFIG_SDK_PROCESSOR_EXPERT
     SCB_ACTLR |= SCB_ACTLR_DISDEFWBUF_MASK; /* write buffer bit, see https://community.nxp.com/docs/DOC-103810 */
-  #elif MCUC1_CONFIG_NXP_SDK_USED
+  #elif MCUC1_CONFIG_NXP_SDK_USED && MCUC1_McuLib_CONFIG_CORTEX_M!=7 /* not for M7? */
     SCnSCB->ACTLR |= SCnSCB_ACTLR_DISDEFWBUF_Msk;
   #endif
 #endif
 }
 
+
+#endif /* MCUC1_CONFIG_CPU_IS_ARM_CORTEX_M */
 /* END HF1. */
 
 /*!

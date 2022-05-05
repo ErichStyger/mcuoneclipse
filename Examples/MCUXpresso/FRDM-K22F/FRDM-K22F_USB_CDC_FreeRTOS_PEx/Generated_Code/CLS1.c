@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : Shell
-**     Version     : Component 01.106, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 19:14, # CodeGen: 10
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -32,42 +32,45 @@
 **          History                                        : no
 **          Kinetis SDK                                    : MCUC1
 **     Contents    :
-**         PrintPrompt                  - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
-**         SendNum8u                    - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum8s                    - void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum16u                   - void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum16s                   - void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum32u                   - void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendNum32s                   - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
-**         SendCh                       - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
-**         SendStr                      - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
-**         PrintMemory                  - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
-**         printfIO                     - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
-**         printf                       - unsigned CLS1_printf(const char *fmt, ...);
-**         SendData                     - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
-**         PrintStatus                  - uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
-**         ParseCommand                 - uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled,...
-**         IsHistoryCharacter           - bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx,...
-**         ReadLine                     - bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
-**         PrintCommandFailed           - void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
-**         IterateTable                 - uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled,...
-**         SetStdio                     - uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
-**         GetStdio                     - CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
-**         RequestSerial                - void CLS1_RequestSerial(void);
-**         ReleaseSerial                - void CLS1_ReleaseSerial(void);
-**         ReadAndParseWithCommandTable - uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize,...
-**         ParseWithCommandTable        - uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType...
-**         GetSemaphore                 - void* CLS1_GetSemaphore(void);
-**         SendStatusStr                - void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
-**         SendHelpStr                  - void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
-**         ReadChar                     - void CLS1_ReadChar(uint8_t *c);
-**         SendChar                     - void CLS1_SendChar(uint8_t ch);
-**         KeyPressed                   - bool CLS1_KeyPressed(void);
-**         SendCharFct                  - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
-**         Init                         - void CLS1_Init(void);
-**         Deinit                       - void CLS1_Deinit(void);
+**         PrintPrompt                     - void CLS1_PrintPrompt(CLS1_ConstStdIOType *io);
+**         SendNum8u                       - void CLS1_SendNum8u(uint8_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum8s                       - void CLS1_SendNum8s(int8_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum16u                      - void CLS1_SendNum16u(uint16_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum16s                      - void CLS1_SendNum16s(int16_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum32u                      - void CLS1_SendNum32u(uint32_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendNum32s                      - void CLS1_SendNum32s(int32_t val, CLS1_StdIO_OutErr_FctType io);
+**         SendCh                          - void CLS1_SendCh(uint8_t ch, CLS1_StdIO_OutErr_FctType io);
+**         SendStr                         - void CLS1_SendStr(const uint8_t *str, CLS1_StdIO_OutErr_FctType io);
+**         PrintMemory                     - uint8_t CLS1_PrintMemory(void *hndl, uint32_t startAddr, uint32_t endAddr,...
+**         printfIO                        - unsigned CLS1_printfIO(CLS1_ConstStdIOType *io, const char *fmt, ...);
+**         printf                          - unsigned CLS1_printf(const char *fmt, ...);
+**         SendData                        - void CLS1_SendData(const uint8_t *data, uint16_t dataSize,...
+**         PrintStatus                     - uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io);
+**         ParseCommand                    - uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled,...
+**         IsHistoryCharacter              - bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx,...
+**         ReadLine                        - bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize,...
+**         PrintCommandFailed              - void CLS1_PrintCommandFailed(const uint8_t *cmd, CLS1_ConstStdIOType *io);
+**         IterateTable                    - uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled,...
+**         SetStdio                        - uint8_t CLS1_SetStdio(CLS1_ConstStdIOTypePtr stdio);
+**         GetStdio                        - CLS1_ConstStdIOTypePtr CLS1_GetStdio(void);
+**         RequestSerial                   - void CLS1_RequestSerial(void);
+**         ReleaseSerial                   - void CLS1_ReleaseSerial(void);
+**         ReadAndParseWithCommandTableExt - uint8_t CLS1_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t...
+**         ReadCommandLine                 - uint8_t CLS1_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize,...
+**         ReadAndParseWithCommandTable    - uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize,...
+**         ParseWithCommandTableExt        - uint8_t CLS1_ParseWithCommandTableExt(const uint8_t *cmd, CLS1_ConstStdIOType...
+**         ParseWithCommandTable           - uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType...
+**         GetSemaphore                    - void* CLS1_GetSemaphore(void);
+**         SendStatusStr                   - void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus,...
+**         SendHelpStr                     - void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp,...
+**         ReadChar                        - void CLS1_ReadChar(uint8_t *c);
+**         SendChar                        - void CLS1_SendChar(uint8_t ch);
+**         KeyPressed                      - bool CLS1_KeyPressed(void);
+**         SendCharFct                     - void CLS1_SendCharFct(uint8_t ch, uint8_t (*fct)(uint8_t ch));
+**         Init                            - void CLS1_Init(void);
+**         Deinit                          - void CLS1_Deinit(void);
 **
-** * Copyright (c) 2014-2019, Erich Styger
+** * Copyright (c) 2014-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -109,13 +112,22 @@
 #include <ctype.h> /* for isalnum*/
 
 #include "CLS1.h"
+#include "XF1.h"
+#include "UTIL1.h"
+#include "CS1.h"
+#include "WAIT1.h"
+
+#if CLS1_DEFAULT_SERIAL
+  #include CLS1_CONFIG_DEFAULT_SERIAL_INCLUDE
+#endif
+
 
 uint8_t CLS1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
-#if CLS1_HISTORY_ENABLED
-  static uint8_t CLS1_history[CLS1_NOF_HISTORY][CLS1_HIST_LEN]; /* History buffers */
+#if CLS1_CONFIG_HISTORY_ENABLED
+  static uint8_t CLS1_history[CLS1_CONFIG_HISTORY_NOF_ITEMS][CLS1_CONFIG_HISTORY_ITEM_LENGTH]; /* History buffers */
   static uint8_t CLS1_history_index = 0; /* Selected command */
 #endif
-#if CLS1_ECHO_ENABLED
+#if CLS1_CONFIG_ECHO_ENABLED
   static bool CLS1_EchoEnabled = TRUE;
 #endif
 
@@ -129,7 +141,7 @@ uint8_t CLS1_DefaultShellBuffer[CLS1_DEFAULT_SHELL_BUFFER_SIZE]; /* default buff
   #pragma MESSAGE DISABLE C3303 /* implicit concatenation of strings */
 #endif
 #if CLS1_CONFIG_USE_MUTEX
-  static xSemaphoreHandle ShellSem = NULL; /* Semaphore to protect shell SCI access */
+  static SemaphoreHandle_t ShellSem = NULL; /* Semaphore to protect shell SCI access */
 #endif
 
 #if CLS1_DEFAULT_SERIAL
@@ -356,12 +368,12 @@ uint8_t CLS1_ParseCommand(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
     CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"CLS1", (const unsigned char*)"Group of CLS1 commands\r\n", io->stdOut);
     CLS1_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
-#if CLS1_ECHO_ENABLED
+#if CLS1_CONFIG_ECHO_ENABLED
     CLS1_SendHelpStr((unsigned char*)"  echo (on|off)", (const unsigned char*)"Turn echo on or off\r\n", io->stdOut);
 #endif
     *handled = TRUE;
     return ERR_OK;
-#if CLS1_ECHO_ENABLED
+#if CLS1_CONFIG_ECHO_ENABLED
   } else if ((UTIL1_strcmp((char*)cmd, "CLS1 echo on")==0)) {
     *handled = TRUE;
     CLS1_EchoEnabled = TRUE;
@@ -417,15 +429,15 @@ void CLS1_PrintPrompt(CLS1_ConstStdIOType *io)
 bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, bool *isPrev)
 {
   *isPrev = FALSE;
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
   if (   cmdBufIdx==0 /* first character on command line */
       || (UTIL1_strcmp((const char*)cmdBuf, (const char*)CLS1_history[CLS1_history_index])==0) /* pressing prev/next character on previous history element */
       )
   {
-    if (ch==CLS1_HISTORY_PREV_CHAR) {
+    if (ch==CLS1_CONFIG_HISTORY_CHAR_PREV) {
       *isPrev = TRUE;
       return TRUE;
-    } else if (ch==CLS1_HISTORY_NEXT_CHAR) {
+    } else if (ch==CLS1_CONFIG_HISTORY_CHAR_NEXT) {
       *isPrev = FALSE;
       return TRUE;
     }
@@ -446,7 +458,7 @@ bool CLS1_IsHistoryCharacter(uint8_t ch, uint8_t *cmdBuf, size_t cmdBufIdx, bool
         return TRUE;
       }
     }
-    /* \todo: handle TAB and SHIFT-TAB */
+    /* NYI: handle TAB and SHIFT-TAB */
   }
 #endif
 #else
@@ -490,8 +502,8 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
       }
       if (c=='\b' || c=='\177') {      /* check for backspace */
         if (buf > bufStart) {          /* Avoid buffer underflow */
-#if CLS1_ECHO_ENABLED
-           if (CLS1_EchoEnabled) {
+#if CLS1_CONFIG_ECHO_ENABLED
+           if (CLS1_EchoEnabled && io->echoEnabled) {
              io->stdOut('\b');         /* delete character on terminal */
              io->stdOut(' ');
              io->stdOut('\b');
@@ -502,13 +514,13 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
            bufSize++;
         }
       } else if (CLS1_IsHistoryCharacter(c, bufStart, (size_t)(buf-bufStart), &isBackwardHistory)) {
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
         uint8_t cBuf[3]={'\0','\0','\0'}, cBufIdx = 0;
         bool prevInHistory;
 #endif
 
         while (c!='\0') {              /* empty the rx buffer (escape sequence) */
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
            cBuf[cBufIdx] = c;
            cBufIdx++;
            if (cBufIdx==sizeof(cBuf)) {
@@ -518,7 +530,7 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
            c = '\0';                   /* initialize character */
            io->stdIn(&c);              /* read character */
         }
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
         /* if not an alphanumeric switch to history  */
         prevInHistory = cBufIdx==0 && cBuf[0]==0x1b && cBuf[1]==0x5b && (cBuf[2]==0x41 /*up*/ || cBuf[2]==0x44 /*left*/);
         /* up:    0x27 0x5b 0x41
@@ -527,32 +539,37 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
          * left:  0x27 0x5b 0x44
          */
         if (prevInHistory) {
-          UTIL1_strcpy(bufStart, CLS1_HIST_LEN, CLS1_history[CLS1_history_index]);
+          UTIL1_strcpy(bufStart, CLS1_CONFIG_HISTORY_ITEM_LENGTH, CLS1_history[CLS1_history_index]);
           CLS1_history_index++;        /* update the index */
-          if (CLS1_history_index==CLS1_NOF_HISTORY) {
+          if (CLS1_history_index==CLS1_CONFIG_HISTORY_NOF_ITEMS) {
             CLS1_history_index = 0;
           }
         } else {
           if (CLS1_history_index==0) {
-            CLS1_history_index = (CLS1_NOF_HISTORY-1);
+            CLS1_history_index = (CLS1_CONFIG_HISTORY_NOF_ITEMS-1);
           } else {
             CLS1_history_index--;
           }
-          UTIL1_strcpy(bufStart, CLS1_HIST_LEN, CLS1_history[CLS1_history_index]);
+          UTIL1_strcpy(bufStart, CLS1_CONFIG_HISTORY_ITEM_LENGTH, CLS1_history[CLS1_history_index]);
         }
         bufSize = bufSize + buf - bufStart - UTIL1_strlen((const char*)bufStart); /* update the buffer */
         buf = bufStart + UTIL1_strlen((const char*)bufStart);
 #endif
-#if CLS1_ECHO_ENABLED
-        if (CLS1_EchoEnabled) {
+#if CLS1_CONFIG_ECHO_ENABLED
+        if (CLS1_EchoEnabled && io->echoEnabled) {
           CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
           CLS1_PrintPrompt(io);
           CLS1_SendStr(bufStart, io->stdOut);
         }
 #endif
       } else {
-#if CLS1_ECHO_ENABLED
-        if (CLS1_EchoEnabled) {
+#if CLS1_CONFIG_ECHO_ENABLED
+        if (CLS1_EchoEnabled && io->echoEnabled) {
+  #if MCUC1_CONFIG_CPU_IS_ESP32
+          if (c=='\r') { /* idf.py monitor uses '\r' for '\n'? */
+            c = '\n';
+          }
+  #endif
           io->stdOut(c);               /* echo character */
         }
 #endif
@@ -560,24 +577,28 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
         buf++;
         bufSize--;
         if ((c=='\r') || (c=='\n')) {
-#if CLS1_ECHO_ENABLED
-          if (CLS1_EchoEnabled) {
+#if CLS1_CONFIG_ECHO_ENABLED
+          if (CLS1_EchoEnabled && io->echoEnabled) {
+            #if McuLib_CONFIG_CPU_IS_ESP32
+            CLS1_SendStr((unsigned char*)" \n", io->stdOut); /* for ESP32 idf.py monitor it uses '\r' at the end, plus we need a space */
+            #else
             CLS1_SendStr((unsigned char*)"\n", io->stdOut);
+            #endif
           }
 #endif
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
           if ((bufStart[0] != '\0') && (bufStart[0] != '\r') && (bufStart[0] != '\n')) {
             int i;
 
-            for(i=CLS1_NOF_HISTORY-1; i>0;i--) {
-              UTIL1_strcpy(CLS1_history[i], CLS1_HIST_LEN, CLS1_history[i-1]); /* move previous commands */
+            for(i=CLS1_CONFIG_HISTORY_NOF_ITEMS-1; i>0;i--) {
+              UTIL1_strcpy(CLS1_history[i], CLS1_CONFIG_HISTORY_ITEM_LENGTH, CLS1_history[i-1]); /* move previous commands */
             }
             CLS1_history_index = 0;    /* update the history with the current command */
-            UTIL1_strcpy(CLS1_history[0], CLS1_HIST_LEN, bufStart); /* add the current command to the history */
-            if (buf-bufStart <= CLS1_HIST_LEN) { /* size check */
+            UTIL1_strcpy(CLS1_history[0], CLS1_CONFIG_HISTORY_ITEM_LENGTH, bufStart); /* add the current command to the history */
+            if (buf-bufStart <= CLS1_CONFIG_HISTORY_ITEM_LENGTH) { /* size check */
               CLS1_history[0][buf-bufStart-1] = '\0';
             } else {
-              CLS1_history[0][CLS1_HIST_LEN-1] = '\0';
+              CLS1_history[0][CLS1_CONFIG_HISTORY_ITEM_LENGTH-1] = '\0';
             }
           }
 #endif
@@ -610,14 +631,34 @@ bool CLS1_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, CLS1_ConstSt
 */
 uint8_t CLS1_PrintStatus(CLS1_ConstStdIOType *io)
 {
-  CLS1_SendStatusStr((const unsigned char*)"CLS1", (const unsigned char*)"\r\n", io->stdOut);
+  unsigned char buf[16];
+
+  CLS1_SendStatusStr((const unsigned char*)"CLS1", (const unsigned char*)"Commandline shell status\r\n", io->stdOut);
   CLS1_SendStatusStr((const unsigned char*)"  Build", (const unsigned char*)__DATE__, io->stdOut);
   CLS1_SendStr((unsigned char*)" ", io->stdOut);
   CLS1_SendStr((unsigned char*)__TIME__, io->stdOut);
   CLS1_SendStr((unsigned char*)"\r\n", io->stdOut);
-#if CLS1_ECHO_ENABLED
+#if CLS1_CONFIG_ECHO_ENABLED
   CLS1_SendStatusStr((const unsigned char*)"  echo", CLS1_EchoEnabled?(const unsigned char*)"On\r\n":(const unsigned char*)"Off\r\n", io->stdOut);
 #endif
+
+  buf[0] = '\0';
+  if (CLS1_CONFIG_SILENT_PREFIX_CHAR!=CLS1_NO_SILENT_PREFIX_CHAR) {
+    UTIL1_chcat(buf, sizeof(buf), CLS1_CONFIG_SILENT_PREFIX_CHAR);
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"none\r\n");
+  }
+  CLS1_SendStatusStr((const unsigned char*)"  silent", buf, io->stdOut);
+#if McuShell_CONFIG_MULTI_CMD_ENABLED
+  UTIL1_strcpy(buf, sizeof(buf), (unsigned char*)"yes: '");
+  UTIL1_chcat(buf, sizeof(buf), CLS1_CONFIG_MULTI_CMD_CHAR);
+  UTIL1_strcat(buf, sizeof(buf), (unsigned char*)"'\r\n");
+  CLS1_SendStatusStr((const unsigned char*)"  multiCmd", buf, io->stdOut);
+#else
+  CLS1_SendStatusStr((const unsigned char*)"  multiCmd", (unsigned char*)"no\r\n", io->stdOut);
+#endif
+
   return ERR_OK;
 }
 
@@ -687,7 +728,7 @@ uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
 
 /*
 ** ===================================================================
-**     Method      :  ParseWithCommandTable (component Shell)
+**     Method      :  ParseWithCommandTableExt (component Shell)
 **
 **     Description :
 **         Parses a shell command. It handles first the internal
@@ -699,21 +740,24 @@ uint8_t CLS1_IterateTable(const uint8_t *cmd, bool *handled, CLS1_ConstStdIOType
 **       * parseCallback   - Pointer to callback
 **                           which will be called to parse commands in
 **                           the user application, or NULL if not used.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
 **     Returns     :
 **         ---             - Error code
 ** ===================================================================
 */
-uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback)
+uint8_t CLS1_ParseWithCommandTableExt(const uint8_t *cmd, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback, bool silent)
 {
   uint8_t res = ERR_OK;
   bool handled;
 #if CLS1_SILENT_PREFIX_CHAR_ENABLED
-  bool silent = FALSE;
+  bool silentPrefix = FALSE;
 #endif
-#if CLS1_MULTI_CMD_ENABLED
-  uint8_t buf[CLS1_MULTI_CMD_SIZE];
+#if CLS1_CONFIG_MULTI_CMD_ENABLED
+  uint8_t buf[CLS1_CONFIG_MULTI_CMD_SIZE];
   uint8_t i;
   bool parseBuffer, finished;
+  bool insideDoubleQuotes = FALSE; /* with multi-commands: allow the McuShell_CONFIG_MULTI_CMD_CHAR inside double quoted strings */
 #endif
 
   if (io==NULL) { /* no I/O handler? */
@@ -722,25 +766,33 @@ uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, 
   if (*cmd=='\0') { /* empty command */
     return ERR_OK;
   }
-#if CLS1_MULTI_CMD_ENABLED
+#if CLS1_CONFIG_MULTI_CMD_ENABLED
   parseBuffer = FALSE;
   finished = FALSE;
   i = 0;
   for(;;) { /* breaks */
     if (i>sizeof(buf)-2) {
       res = ERR_FAILED;
+      CLS1_PrintCommandFailed(buf, io);
       break; /* buffer overflow */
     }
     buf[i] = *cmd;
+    if (buf[i]=='"') {
+      if (insideDoubleQuotes) { /* already had a double quote? */
+        insideDoubleQuotes = FALSE; /* note: we do not support nested double quotes */
+      } else {
+        insideDoubleQuotes = TRUE; /* mark that we are inside double quotes */
+      }
+    }
     cmd++; i++;
   #if CLS1_SILENT_PREFIX_CHAR_ENABLED
-    if (i==1 && buf[0]==CLS1_SILENT_PREFIX_CHAR) { /* first character is silent character */
-      silent |= (bool)(buf[0]==CLS1_SILENT_PREFIX_CHAR);
+    if (i==1 && buf[0]==CLS1_CONFIG_SILENT_PREFIX_CHAR) { /* first character is silent character */
+      silentPrefix |= (bool)(buf[0]==CLS1_CONFIG_SILENT_PREFIX_CHAR);
       buf[0] = *cmd; /* skip silent character */
       cmd++;
     }
   #endif
-    if (buf[i-1] == CLS1_MULTI_CMD_CHAR) { /* found separator */
+    if (!insideDoubleQuotes && buf[i-1] == CLS1_CONFIG_MULTI_CMD_CHAR) { /* found separator, but not inside double quoted string */
       buf[i-1] = '\0';
       parseBuffer = TRUE;
     } else if (buf[i-1]=='\0') {
@@ -763,8 +815,8 @@ uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, 
   } /* for */
 #else
   #if CLS1_SILENT_PREFIX_CHAR_ENABLED
-  silent = (bool)(*cmd==CLS1_SILENT_PREFIX_CHAR);
-  if (silent) {
+  silentPrefix = (bool)(*cmd==CLS1_CONFIG_SILENT_PREFIX_CHAR);
+  if (silentPrefix) {
     cmd++; /* skip silent character */
   }
   #endif
@@ -776,13 +828,38 @@ uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, 
   }
 #endif
 #if CLS1_SILENT_PREFIX_CHAR_ENABLED
-  if (!silent) {
+  if (!silentPrefix && !silent) {
     CLS1_PrintPrompt(io);
   }
 #else
-  CLS1_PrintPrompt(io);
+  if (!silent) {
+    CLS1_PrintPrompt(io);
+  }
 #endif
   return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  ParseWithCommandTable (component Shell)
+**
+**     Description :
+**         Parses a shell command. It handles first the internal
+**         commands and will call the provided callback.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmd             - Pointer to command string
+**       * io              - Pointer to I/O callbacks
+**       * parseCallback   - Pointer to callback
+**                           which will be called to parse commands in
+**                           the user application, or NULL if not used.
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t CLS1_ParseWithCommandTable(const uint8_t *cmd, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback)
+{
+  return CLS1_ParseWithCommandTableExt(cmd, io, parseCallback, FALSE);
 }
 
 /*
@@ -823,6 +900,117 @@ CLS1_ConstStdIOTypePtr CLS1_GetStdio(void)
 
 /*
 ** ===================================================================
+**     Method      :  ReadAndParseWithCommandTableExt (component Shell)
+**
+**     Description :
+**         Reads characters from the default input channel and appends
+**         it to the buffer. Once a new line has been detected, the
+**         line will be parsed using the handlers in the table.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**       * parseCallback   - Pointer to callback
+**                           table provided by the user application to
+**                           parse commands. The table has a NULL
+**                           sentinel.
+**         silent          - If handling shall be silent, i.e. no
+**                           command prompt printed
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t CLS1_ReadAndParseWithCommandTableExt(uint8_t *cmdBuf, size_t cmdBufSize, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback, bool silent)
+{
+  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
+  uint8_t res = ERR_OK;
+  size_t len;
+
+  if (io==NULL) { /* no I/O handler? */
+    return ERR_FAILED;
+  }
+  len = UTIL1_strlen((const char*)cmdBuf);
+  if (CLS1_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
+    len = UTIL1_strlen((const char*)cmdBuf); /* length of buffer string */
+    if (len==0) { /* error case */
+      return ERR_FAILED;
+    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
+      cmdBuf[0] = '\0';
+    }
+    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
+      (void)CLS1_ParseWithCommandTableExt(cmdBuf, io, parseCallback, silent);
+      cmdBuf[0] = '\0'; /* start again */
+      res = ERR_OVERFLOW;
+    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
+      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
+      res = CLS1_ParseWithCommandTableExt(cmdBuf, io, parseCallback, silent);
+      cmdBuf[0] = '\0';                /* start again */
+    } else {
+      /* continue to append to buffer */
+    }
+  }
+  return res;
+}
+
+/*
+** ===================================================================
+**     Method      :  ReadCommandLine (component Shell)
+**
+**     Description :
+**         Similar to ReadAndParseWithCommandTableExt, but does not
+**         call the parser. Reads characters from the default input
+**         channel and appends it to the buffer. Once a new line has
+**         been detected, it  removes it and returns ERR_OK
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * cmdBuf          - Pointer to buffer provided by the
+**                           caller where to store the command to read
+**                           in. Characters will be appended, so make
+**                           sure string buffer is initialized with a
+**                           zero byte at the beginning.
+**         cmdBufSize      - Size of buffer
+**       * io              - Pointer to I/O channels to be used
+**     Returns     :
+**         ---             - Error code, ERR_OK if a complete line has
+**                           been detected
+** ===================================================================
+*/
+uint8_t CLS1_ReadCommandLine(uint8_t *cmdBuf, size_t cmdBufSize, CLS1_ConstStdIOType *io)
+{
+  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
+  size_t len;
+
+  if (io==NULL) { /* no I/O handler? */
+    return ERR_FAILED;
+  }
+  len = UTIL1_strlen((const char*)cmdBuf);
+  if (CLS1_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
+    len = UTIL1_strlen((const char*)cmdBuf); /* length of buffer string */
+    if (len==0) { /* error case */
+      return ERR_FAILED;
+    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
+      cmdBuf[0] = '\0';
+    }
+    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
+      cmdBuf[0] = '\0'; /* start again */
+      return ERR_OVERFLOW;
+    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
+      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
+      return ERR_OK;
+    } else {
+      /* continue to append to buffer */
+    }
+  }
+  return ERR_BUSY;
+}
+
+/*
+** ===================================================================
 **     Method      :  ReadAndParseWithCommandTable (component Shell)
 **
 **     Description :
@@ -848,34 +1036,7 @@ CLS1_ConstStdIOTypePtr CLS1_GetStdio(void)
 */
 uint8_t CLS1_ReadAndParseWithCommandTable(uint8_t *cmdBuf, size_t cmdBufSize, CLS1_ConstStdIOType *io, CLS1_ConstParseCommandCallback *parseCallback)
 {
-  /* IMPORTANT NOTE: this function *appends* to the buffer, so the buffer needs to be initialized first! */
-  uint8_t res = ERR_OK;
-  size_t len;
-
-  if (io==NULL) { /* no I/O handler? */
-    return ERR_FAILED;
-  }
-  len = UTIL1_strlen((const char*)cmdBuf);
-  if (CLS1_ReadLine(cmdBuf, cmdBuf+len, cmdBufSize-len, io)) {
-    len = UTIL1_strlen((const char*)cmdBuf); /* length of buffer string */
-    if (len==0) { /* error case */
-      return ERR_FAILED;
-    } else if (len==1 && (cmdBuf[0]=='\n' || cmdBuf[0]=='\r')) { /* eat preceding newline characters */
-      cmdBuf[0] = '\0';
-    }
-    if (len>=cmdBufSize-1) {           /* buffer overflow? Parse what we have, will be likely return an error */
-      (void)CLS1_ParseWithCommandTable(cmdBuf, io, parseCallback);
-      cmdBuf[0] = '\0'; /* start again */
-      res = ERR_OVERFLOW;
-    } else if (cmdBuf[len-1]=='\n' || cmdBuf[len-1]=='\r') { /* line end: parse command */
-      cmdBuf[len-1] = '\0';            /* remove line end character for parser */
-      res = CLS1_ParseWithCommandTable(cmdBuf, io, parseCallback);
-      cmdBuf[0] = '\0';                /* start again */
-    } else {
-      /* continue to append to buffer */
-    }
-  }
-  return res;
+  return CLS1_ReadAndParseWithCommandTableExt(cmdBuf, cmdBufSize, io, parseCallback, FALSE);
 }
 
 /*
@@ -985,8 +1146,7 @@ static void SendSeparatedStrings(const uint8_t *strA, const uint8_t *strB, uint8
 */
 void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, CLS1_StdIO_OutErr_FctType io)
 {
-  #define HELP_SEMICOLON_POS  26 /* position of the ';' after the command string */
-  SendSeparatedStrings(strCmd, strHelp, ';', HELP_SEMICOLON_POS, io);
+  SendSeparatedStrings(strCmd, strHelp, ';', CLS1_CONFIG_HELP_SEMICOLON_POS, io);
 }
 
 /*
@@ -1006,8 +1166,7 @@ void CLS1_SendHelpStr(const uint8_t *strCmd, const uint8_t *strHelp, CLS1_StdIO_
 */
 void CLS1_SendStatusStr(const uint8_t *strItem, const uint8_t *strStatus, CLS1_StdIO_OutErr_FctType io)
 {
-  #define STATUS_COLON_POS  13 /* position of the ':' after the item string */
-  SendSeparatedStrings(strItem, strStatus, ':', STATUS_COLON_POS, io);
+  SendSeparatedStrings(strItem, strStatus, ':', CLS1_CONFIG_STATUS_COLON_POS, io);
 }
 
 /*
@@ -1135,17 +1294,17 @@ void CLS1_Init(void)
   }
   vQueueAddToRegistry(ShellSem, "CLS1_Sem");
 #endif
-#if CLS1_HISTORY_ENABLED
+#if CLS1_CONFIG_HISTORY_ENABLED
   {
     int i;
 
     CLS1_history_index = 0;
-    for(i=0; i<CLS1_NOF_HISTORY;i++) {
+    for(i=0; i<CLS1_CONFIG_HISTORY_NOF_ITEMS;i++) {
       CLS1_history[i][0] = '\0';
     }
   }
 #endif
-#if CLS1_ECHO_ENABLED
+#if CLS1_CONFIG_ECHO_ENABLED
   CLS1_EchoEnabled = TRUE;
 #endif
 }

@@ -4,9 +4,9 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : LED
-**     Version     : Component 01.075, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.078, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **          This component implements a universal driver for a single LED.
 **     Settings    :
@@ -28,7 +28,7 @@
 **         Deinit     - void LED2_Deinit(void);
 **         Init       - void LED2_Init(void);
 **
-** * Copyright (c) 2013-2018, Erich Styger
+** * Copyright (c) 2013-2020, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -71,11 +71,8 @@
 
 /* MODULE LED2. */
 #include "MCUC1.h" /* SDK and API used */
-#include "LED2config.h" /* configuration */
-
-/* Include inherited components */
-#include "MCUC1.h"
-#include "LEDpin2.h"
+#include "LED2config.h" /* LED configuration */
+#include "LEDpin2.h" /* interface to pin */
 
 #define LED2_ClrVal()    LEDpin2_ClrVal() /* put the pin on low level */
 #define LED2_SetVal()    LEDpin2_SetVal() /* put the pin on high level */
@@ -85,7 +82,11 @@
 #define LED2_PARSE_COMMAND_ENABLED  0 /* set to 1 if method ParseCommand() is present, 0 otherwise */
 
 
-#define LED2_On() LEDpin2_ClrVal()
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_On() LEDpin2_ClrVal()
+#else
+  #define LED2_On() LEDpin2_SetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  On (component LED)
@@ -97,7 +98,11 @@
 ** ===================================================================
 */
 
-#define LED2_Off() LEDpin2_SetVal()
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_Off() LEDpin2_SetVal()
+#else
+  #define LED2_Off() LEDpin2_ClrVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Off (component LED)
@@ -121,7 +126,11 @@
 ** ===================================================================
 */
 
-#define LED2_Get() (!(LEDpin2_GetVal()))
+#if LED2_CONFIG_IS_LOW_ACTIVE
+  #define LED2_Get() (!(LEDpin2_GetVal()))
+#else
+  #define LED2_Get() LEDpin2_GetVal()
+#endif
 /*
 ** ===================================================================
 **     Method      :  Get (component LED)

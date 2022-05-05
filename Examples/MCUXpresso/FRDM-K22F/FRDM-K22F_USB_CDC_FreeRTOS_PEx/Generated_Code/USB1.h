@@ -4,26 +4,31 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : FSL_USB_Stack
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **         This component implements a wrapper to the FSL USB Stack.
 **     Settings    :
 **          Component name                                 : USB1
 **          Freescale USB Stack Version                    : v4.1.1
-**          USB Init                                       : Init_USB_OTG_VAR0
+**          SDK                                            : MCUC1
 **          Device Class                                   : CDC Device
 **          CDC Device                                     : Enabled
 **            CDCDevice                                    : FSL_USB_CDC_Device
 **          CDC Host                                       : Disabled
 **          HID Keyboard Device                            : Disabled
+**          HID Joystick Device                            : Disabled
 **          HID Mouse Device                               : Disabled
+**          MSD Device                                     : Disabled
 **          MSD Host                                       : Disabled
-**          DATA_BUFF_SIZE                                 : 64
 **          Initialization                                 : 
-**            Use USB Stack Inititalization                : yes
-**            Call Init Method                             : yes
+**            Init USB Function                            : USB0_Init
+**            Inherited USB Init                           : Enabled
+**              USB Init                                   : Init_USB_OTG_VAR0
+**            Initialization                               : 
+**              Use USB Stack Inititalization              : yes
+**              Call Init Method                           : yes
 **     Contents    :
 **         Deinit - uint8_t USB1_Deinit(void);
 **         Init   - uint8_t USB1_Init(void);
@@ -31,7 +36,7 @@
 ** * Original USB Stack: (c) Copyright Freescale, all rights reserved, 2013-2015.
 **  * See separate licensing terms.
 **  * 
-**  * Processor Expert port: Copyright (c) 2016, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -83,10 +88,12 @@
 #include <stddef.h> /* for size_t */
 
 /* Interfaces/wrappers to the CDC device class, needed for Shell if using default serial/connection to USB (CDC): */
-#define USB1_SendString      CDC1_SendString
-#define USB1_RecvChar        CDC1_GetChar
-#define USB1_SendChar        CDC1_SendChar
-#define USB1_GetCharsInRxBuf CDC1_GetCharsInRxBuf
+#define USB1_SendString        CDC1_SendString
+#define USB1_RecvChar          CDC1_GetChar
+#define USB1_SendChar          CDC1_SendChar
+#define USB1_GetCharsInRxBuf   CDC1_GetCharsInRxBuf
+#define USB1_DATA_BUFF_SIZE    CDC1_DATA_BUFF_SIZE /* data buffer size as specified in the properties */
+
 
 #include "Cpu.h"
 
@@ -96,12 +103,6 @@
   typedef uint8_t USB1_TComData ;      /* User type for communication data type. */
 #endif
 
-/*
-   DATA_BUFF_SIZE should be greater than or equal to the endpoint buffer size,
-   otherwise there will be data loss. For MC9S08JS16, maximum DATA_BUFF_SIZE
-   supported is 16 Bytes
-*/
-#define USB1_DATA_BUFF_SIZE    64 /* data buffer size as specified in the properties */
 
 #define USB1_USB_ERR_SEND            1  /* Error while sending */
 #define USB1_USB_ERR_BUSOFF          2  /* Bus not ready */

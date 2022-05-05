@@ -67,6 +67,10 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Shell.h"
 
+void _exit(int i) {
+	for(;;) {}
+}
+
 #if 1
 #include <stdio.h>
 static uint8_t cdc_buffer[USB1_DATA_BUFF_SIZE];
@@ -111,6 +115,7 @@ static void CDC_Run(void) {
   }
 }
 #endif
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -137,7 +142,7 @@ int main(void)
   SHELL_Init();
   vTaskStartScheduler();
 
-  //CDC_Run();
+  CDC_Run();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

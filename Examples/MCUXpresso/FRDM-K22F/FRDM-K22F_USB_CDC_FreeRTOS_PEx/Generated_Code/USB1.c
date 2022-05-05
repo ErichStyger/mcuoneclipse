@@ -4,26 +4,31 @@
 **     Project     : FRDM-K22F_USB_CDC_FreeRTOS_PEx
 **     Processor   : MK22FN512VDC12
 **     Component   : FSL_USB_Stack
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-01-09, 17:40, # CodeGen: 5
+**     Date/Time   : 2022-05-05, 14:58, # CodeGen: 9
 **     Abstract    :
 **         This component implements a wrapper to the FSL USB Stack.
 **     Settings    :
 **          Component name                                 : USB1
 **          Freescale USB Stack Version                    : v4.1.1
-**          USB Init                                       : Init_USB_OTG_VAR0
+**          SDK                                            : MCUC1
 **          Device Class                                   : CDC Device
 **          CDC Device                                     : Enabled
 **            CDCDevice                                    : FSL_USB_CDC_Device
 **          CDC Host                                       : Disabled
 **          HID Keyboard Device                            : Disabled
+**          HID Joystick Device                            : Disabled
 **          HID Mouse Device                               : Disabled
+**          MSD Device                                     : Disabled
 **          MSD Host                                       : Disabled
-**          DATA_BUFF_SIZE                                 : 64
 **          Initialization                                 : 
-**            Use USB Stack Inititalization                : yes
-**            Call Init Method                             : yes
+**            Init USB Function                            : USB0_Init
+**            Inherited USB Init                           : Enabled
+**              USB Init                                   : Init_USB_OTG_VAR0
+**            Initialization                               : 
+**              Use USB Stack Inititalization              : yes
+**              Call Init Method                           : yes
 **     Contents    :
 **         Deinit - uint8_t USB1_Deinit(void);
 **         Init   - uint8_t USB1_Init(void);
@@ -31,7 +36,7 @@
 ** * Original USB Stack: (c) Copyright Freescale, all rights reserved, 2013-2015.
 **  * See separate licensing terms.
 **  * 
-**  * Processor Expert port: Copyright (c) 2016, Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2019, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -153,7 +158,7 @@ uint8_t USB1_Init(void)
 {
   uint8_t err;
 
-  #if 0 /* not needed with KDS V2.0.0? */
+  #if 0 /* not needed with KDS V2.0.0? But needed for K64F */
     MPU_CESR = 0; /* K22FN (Kinetis K2) has memory protection unit, disable it! */
   #endif
   /* Initialize the USB interface */
