@@ -49,15 +49,11 @@ Instructions:
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #endif
 
-#define McuWait_CONFIG_USE_CYCLE_COUNTER  (0) /* if using ARM Cortex Cycle Counter */
-
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
 #define configUSE_HEAP_SCHEME                (4)
 #define configTOTAL_HEAP_SIZE                (3*1024)
-/* #define configUSE_HEAP_SECTION_NAME          (1) */
-/* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 #define configSUPPORT_STATIC_ALLOCATION      (0)
 #define configCHECK_FOR_STACK_OVERFLOW       (1)
 #define configUSE_TIMERS                     (0)
