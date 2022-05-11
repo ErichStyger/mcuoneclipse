@@ -24,6 +24,9 @@
 #include "Shell.h"
 #include "disk.h"
 #include "cr_section_macros.h"
+#if PL_CONFIG_HAS_LITTLE_FS
+  #include "littleFS/McuLittleFS.h"
+#endif
 
 void __assertion_failed(char *_Expr) {
   for(;;) {
@@ -73,6 +76,10 @@ static void AppTask(void *pv) {
   McuTimeDate_Init(); /* if using external RTC it uses I2C, need to do this from clock task */
 #endif
   BTN_RegisterAppCallback(AppOnDebounceEvent);
+#if PL_CONFIG_HAS_LITTLE_FS
+  McuLog_info("Mounting litteFS volume.");
+  (void)McuLFS_Mount(McuShell_GetStdio());
+#endif
   for(;;) {
 #if PL_CONFIG_USE_SD_CARD
     present = DISK_IsInserted((unsigned char*)DISK_DRIVE_SD_CARD);

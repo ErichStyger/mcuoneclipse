@@ -23,6 +23,8 @@ uint8_t McuLFS_FileList(const char *path, McuShell_ConstStdIOType *io);
 uint8_t McuLFS_RemoveFile(const char *filePath, McuShell_ConstStdIOType *io);
 uint8_t McuLFS_MoveFile(const char *srcPath, const char *dstPath,McuShell_ConstStdIOType *io);
 
+uint8_t McuLFS_Mount(McuShell_ConstStdIOType *io);
+
 uint8_t McuLFS_openFile(lfs_file_t* file,uint8_t* filename);
 uint8_t McuLFS_closeFile(lfs_file_t* file);
 uint8_t McuLFS_writeLine(lfs_file_t* file,uint8_t* line);
