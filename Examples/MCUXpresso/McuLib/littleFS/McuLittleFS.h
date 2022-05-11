@@ -16,7 +16,7 @@ bool McuLFS_IsMounted(void);
 
 lfs_t* McuLFS_GetFileSystem(void);
 uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
-void McuLFS_GetFileAccessSemaphore(SemaphoreHandle_t* sema);
+void McuLFS_GetFileAccessMutex(SemaphoreHandle_t* mutex);
 
 uint8_t McuLFS_ReadFile(lfs_file_t* file, bool readFromBeginning, size_t nofBytes, McuShell_ConstStdIOType *io);
 uint8_t McuLFS_FileList(const char *path, McuShell_ConstStdIOType *io);

@@ -11,12 +11,13 @@
 #include "littleFS/lfs.h"
 
 #define McuLFS_FILE_NAME_SIZE  60 /* Length of file name, used in buffers */
-#define McuLFS_ACCESS_MUTEX_WAIT_TIME_MS 5000
 
 /* variables used by the file system */
 static bool McuLFS_isMounted = FALSE;
 static lfs_t McuLFS_lfs;
-static SemaphoreHandle_t fileSystemAccessMutex;
+#if LITTLEFS_CONFIG_THREAD_SAFE
+  static SemaphoreHandle_t fileSystemAccessMutex;
+#endif
 
 #define FILESYSTEM_READ_BUFFER_SIZE 256//256
 #define FILESYSTEM_PROG_BUFFER_SIZE 256//256
@@ -26,6 +27,22 @@ static SemaphoreHandle_t fileSystemAccessMutex;
 bool McuLFS_IsMounted(void) {
   return McuLFS_isMounted;
 }
+
+#if LITTLEFS_CONFIG_THREAD_SAFE
+static int McuLittleFS_lock(const struct lfs_config *c) {
+  if (xSemaphoreTakeRecursive(fileSystemAccessMutex, portMAX_DELAY)== pdTRUE) {
+    return 0; /* ok */
+  }
+  return -1; /* failed */
+}
+
+static int McuLittleFS_unlock(const struct lfs_config *c) {
+  if (xSemaphoreGiveRecursive(fileSystemAccessMutex) == pdTRUE) {
+    return 0; /* ok */
+  }
+  return -1; /* failed */
+}
+#endif /* LITTLEFS_CONFIG_THREAD_SAFE */
 
 /* configuration of the file system is provided by this struct */
 static const struct lfs_config McuLFS_cfg = {
@@ -41,7 +58,11 @@ static const struct lfs_config McuLFS_cfg = {
   .block_count = 16384, /* 16384 * 4K = 64 MByte */
   .cache_size = FILESYSTEM_CACHE_SIZE,
   .lookahead_size = FILESYSTEM_LOOKAHEAD_SIZE,
-  .block_cycles = 500
+  .block_cycles = 500,
+#if LITTLEFS_CONFIG_THREAD_SAFE
+  .lock = McuLittleFS_lock,
+  .unlock = McuLittleFS_unlock,
+#endif
 };
 
 /*-----------------------------------------------------------------------
@@ -60,23 +81,18 @@ char* McuLFS_gets (
   unsigned char s[2];
   uint32_t rc;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    while (n < len - 1) { /* Read characters until buffer gets filled */
-      rc = lfs_file_read(&McuLFS_lfs,fp,s,1);
-      if (rc != 1) break;
-      c = s[0];
+  while (n < len - 1) { /* Read characters until buffer gets filled */
+    rc = lfs_file_read(&McuLFS_lfs,fp,s,1);
+    if (rc != 1) break;
+    c = s[0];
 
-      if (c == '\r') continue; /* Strip '\r' */
-      *p++ = c;
-      n++;
-      if (c == '\n') break;   /* Break on EOL */
-    }
-    *p = 0;
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return n ? buff : 0;      /* When no data read (eof or error), return with error. */
-  } else {
-    return 0;
+    if (c == '\r') continue; /* Strip '\r' */
+    *p++ = c;
+    n++;
+    if (c == '\n') break;   /* Break on EOL */
   }
+  *p = 0;
+  return n ? buff : 0;      /* When no data read (eof or error), return with error. */
 }
 
 /*-----------------------------------------------------------------------*
@@ -126,128 +142,100 @@ int McuLFS_puts (
   putbuff pb;
   uint32_t nw;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    pb.fp = fp;       /* Initialize output buffer */
-    pb.nchr = pb.idx = 0;
+  pb.fp = fp;       /* Initialize output buffer */
+  pb.nchr = pb.idx = 0;
 
-    while (*str)      /* Put the string */
-      putc_bfd(&pb, *str++);
-
-    nw = lfs_file_write(&McuLFS_lfs,pb.fp, pb.buf, (uint32_t)pb.idx);
-
-    if (   pb.idx >= 0    /* Flush buffered characters to the file */
-      && nw>=0
-      && (uint32_t)pb.idx == nw)
-      {
-          xSemaphoreGiveRecursive(fileSystemAccessMutex);
-          return pb.nchr;
-      }
-
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return -1;
-  } else {
-    return 0;
+  while (*str) {     /* Put the string */
+    putc_bfd(&pb, *str++);
   }
+  nw = lfs_file_write(&McuLFS_lfs,pb.fp, pb.buf, (uint32_t)pb.idx);
+
+  if (   pb.idx >= 0    /* Flush buffered characters to the file */
+    && nw>=0
+    && (uint32_t)pb.idx == nw)
+    {
+        return pb.nchr;
+    }
+  return -1;
 }
 
 uint8_t McuLFS_Format(McuShell_ConstStdIOType *io) {
   int res;
 
-  if (xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"File system is mounted, unmount it first.\r\n",io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
+  if (McuLFS_isMounted) {
     if (io != NULL) {
-      McuShell_SendStr((const uint8_t *)"Formatting ...", io->stdOut);
+      McuShell_SendStr((const uint8_t *)"File system is mounted, unmount it first.\r\n",io->stdErr);
     }
-    res = lfs_format(&McuLFS_lfs, &McuLFS_cfg);
-    if (res == LFS_ERR_OK) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_OK;
-    } else {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" FAILED!\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+    return ERR_FAILED;
+  }
+  if (io != NULL) {
+    McuShell_SendStr((const uint8_t *)"Formatting ...", io->stdOut);
+  }
+  res = lfs_format(&McuLFS_lfs, &McuLFS_cfg);
+  if (res == LFS_ERR_OK) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
     }
+    return ERR_OK;
   } else {
-    return ERR_BUSY;
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" FAILED!\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
   }
 }
 
 uint8_t McuLFS_Mount(McuShell_ConstStdIOType *io) {
   int res;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"File system is already mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
+  if (McuLFS_isMounted) {
     if (io != NULL) {
-      McuShell_SendStr((const uint8_t *)"Mounting ...", io->stdOut);
+      McuShell_SendStr((const uint8_t *)"File system is already mounted.\r\n", io->stdErr);
     }
-    res = lfs_mount(&McuLFS_lfs, &McuLFS_cfg);
-    if (res == LFS_ERR_OK) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
-      }
-      McuLFS_isMounted = TRUE;
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_OK;
-    } else {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" FAILED! Did you format the device already?\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+    return ERR_FAILED;
+  }
+  if (io != NULL) {
+    McuShell_SendStr((const uint8_t *)"Mounting ...", io->stdOut);
+  }
+  res = lfs_mount(&McuLFS_lfs, &McuLFS_cfg);
+  if (res == LFS_ERR_OK) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
     }
+    McuLFS_isMounted = TRUE;
+    return ERR_OK;
   } else {
-    return ERR_BUSY;
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" FAILED! Did you format the device already?\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
   }
 }
 
 uint8_t McuLFS_Unmount(McuShell_ConstStdIOType *io) {
   int res;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"File system is already unmounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
+  if (!McuLFS_isMounted) {
     if (io != NULL) {
-      McuShell_SendStr((const uint8_t *)"Unmounting ...", io->stdOut);
+      McuShell_SendStr((const uint8_t *)"File system is already unmounted.\r\n", io->stdErr);
     }
-    res = lfs_unmount(&McuLFS_lfs);
-    if (res == LFS_ERR_OK) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
-      }
-      McuLFS_isMounted = FALSE;
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_OK;
-    } else {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)" FAILED!\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+    return ERR_FAILED;
+  }
+  if (io != NULL) {
+    McuShell_SendStr((const uint8_t *)"Unmounting ...", io->stdOut);
+  }
+  res = lfs_unmount(&McuLFS_lfs);
+  if (res == LFS_ERR_OK) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" done.\r\n", io->stdOut);
     }
+    McuLFS_isMounted = FALSE;
+    return ERR_OK;
   } else {
-    return ERR_BUSY;
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)" FAILED!\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
   }
 }
 
@@ -260,65 +248,59 @@ uint8_t McuLFS_Dir(const char *path, McuShell_ConstStdIOType *io) {
     return ERR_FAILED; /* listing a directory without an I/O channel does not make any sense */
   }
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (!McuLFS_isMounted) {
-      McuShell_SendStr((const uint8_t *)"File system is not mounted, mount it first.\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+  if (!McuLFS_isMounted) {
+    McuShell_SendStr((const uint8_t *)"File system is not mounted, mount it first.\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  if (path == NULL) {
+    path = "/"; /* default path */
+  }
+  res = lfs_dir_open(&McuLFS_lfs, &dir, path);
+  if (res != LFS_ERR_OK) {
+    McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_open()!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  for(;;) {
+    res = lfs_dir_read(&McuLFS_lfs, &dir, &info);
+    if (res < 0) {
+      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_read()!\r\n", io->stdErr);
       return ERR_FAILED;
     }
-    if (path == NULL) {
-      path = "/"; /* default path */
+    if (res == 0) { /* no more files */
+      break;
     }
-    res = lfs_dir_open(&McuLFS_lfs, &dir, path);
-    if (res != LFS_ERR_OK) {
-      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_open()!\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+    switch (info.type) {
+      case LFS_TYPE_REG:
+        McuShell_SendStr((const uint8_t *)"reg ", io->stdOut);
+        break;
+      case LFS_TYPE_DIR:
+        McuShell_SendStr((const uint8_t *)"dir ", io->stdOut);
+        break;
+      default:
+        McuShell_SendStr((const uint8_t *)"?   ", io->stdOut);
+        break;
     }
-    for(;;) {
-      res = lfs_dir_read(&McuLFS_lfs, &dir, &info);
-      if (res < 0) {
-        McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_read()!\r\n", io->stdErr);
-        xSemaphoreGiveRecursive(fileSystemAccessMutex);
-        return ERR_FAILED;
-      }
-      if (res == 0) { /* no more files */
+    static const char *prefixes[] = { "", "K", "M", "G" }; /* prefixes for kilo, mega and giga */
+    unsigned char buf[12];
+
+    for (int i = sizeof(prefixes) / sizeof(prefixes[0]) - 1; i >= 0; i--) {
+      if (info.size >= (1 << 10 * i) - 1) {
+        McuUtility_Num32sToStrFormatted(buf, sizeof(buf), (unsigned int)(info.size >> 10 * i), ' ', 4 - (i != 0));
+        McuUtility_strcat(buf, sizeof(buf), (const unsigned char*)prefixes[i]);
+        McuUtility_chcat(buf, sizeof(buf), ' ');
+        McuShell_SendStr(buf, io->stdOut);
         break;
       }
-      if(!(McuUtility_strcmp(info.name,".") == 0 || McuUtility_strcmp(info.name,"..") == 0 )) {
-        switch (info.type) {
-        case LFS_TYPE_REG:
-          McuShell_SendStr((const uint8_t *)"reg ", io->stdOut);
-          break;
-        case LFS_TYPE_DIR:
-          McuShell_SendStr((const uint8_t *)"dir ", io->stdOut);
-          break;
-        default:
-          McuShell_SendStr((const uint8_t *)"?   ", io->stdOut);
-          break;
-        }
-        static const char *prefixes[] = { "", "K", "M", "G" }; /* prefixes for kilo, mega and giga */
-        for (int i = sizeof(prefixes) / sizeof(prefixes[0]) - 1; i >= 0; i--) {
-          if (info.size >= (1 << 10 * i) - 1) {
-            McuShell_printf("%*u%sB ", 4 - (i != 0), info.size >> 10 * i, prefixes[i]);
-            break;
-          }
-        } /* for */
-        McuShell_SendStr((const uint8_t *)info.name, io->stdOut);
-        McuShell_SendStr((const uint8_t *)"\r\n", io->stdOut);
-      }
     } /* for */
-    res = lfs_dir_close(&McuLFS_lfs, &dir);
-    if (res != LFS_ERR_OK) {
-      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_close()!\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+    McuShell_SendStr((const uint8_t *)info.name, io->stdOut);
+    McuShell_SendStr((const uint8_t *)"\r\n", io->stdOut);
+  } /* for */
+  res = lfs_dir_close(&McuLFS_lfs, &dir);
+  if (res != LFS_ERR_OK) {
+    McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_close()!\r\n", io->stdErr);
+    return ERR_FAILED;
   }
+  return ERR_OK;
 }
 
 /*
@@ -334,60 +316,51 @@ uint8_t McuLFS_FileList(const char *path, McuShell_ConstStdIOType *io) {
   if (io == NULL) {
     return ERR_FAILED; /* listing a directory without an I/O channel does not make any sense */
   }
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS)))  {
-    if (!McuLFS_isMounted) {
-      McuShell_SendStr((const uint8_t *)"File system is not mounted, mount it first.\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+  if (!McuLFS_isMounted) {
+    McuShell_SendStr((const uint8_t *)"File system is not mounted, mount it first.\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  if (path == NULL) {
+    path = "/"; /* default path */
+  }
+  res = lfs_dir_open(&McuLFS_lfs, &dir, path);
+  if (res != LFS_ERR_OK) {
+    McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_open()!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  for(;;) {
+    res = lfs_dir_read(&McuLFS_lfs, &dir, &info);
+    if (res < 0) {
+      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_read()!\r\n", io->stdErr);
       return ERR_FAILED;
     }
-    if (path == NULL) {
-      path = "/"; /* default path */
+    if (res == 0) { /* no more files */
+      break;
     }
-    res = lfs_dir_open(&McuLFS_lfs, &dir, path);
-    if (res != LFS_ERR_OK) {
-      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_open()!\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    for(;;) {
-      res = lfs_dir_read(&McuLFS_lfs, &dir, &info);
-      if (res < 0) {
-        McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_read()!\r\n", io->stdErr);
-        xSemaphoreGiveRecursive(fileSystemAccessMutex);
-        return ERR_FAILED;
-      }
-      if (res == 0) { /* no more files */
+
+    if(!(McuUtility_strcmp(info.name,".") == 0 || McuUtility_strcmp(info.name,"..") == 0 )) {
+      switch (info.type) {
+      case LFS_TYPE_REG:
+        McuShell_SendStr((const uint8_t *)"F:", io->stdOut);
+        break;
+      case LFS_TYPE_DIR:
+        McuShell_SendStr((const uint8_t *)"D:", io->stdOut);
+        break;
+      default:
+        McuShell_SendStr((const uint8_t *)"?:", io->stdOut);
         break;
       }
-
-      if(!(McuUtility_strcmp(info.name,".") == 0 || McuUtility_strcmp(info.name,"..") == 0 )) {
-        switch (info.type) {
-        case LFS_TYPE_REG:
-          McuShell_SendStr((const uint8_t *)"F:", io->stdOut);
-          break;
-        case LFS_TYPE_DIR:
-          McuShell_SendStr((const uint8_t *)"D:", io->stdOut);
-          break;
-        default:
-          McuShell_SendStr((const uint8_t *)"?:", io->stdOut);
-          break;
-        }
-        McuShell_SendStr((const uint8_t *)info.name, io->stdOut);
-        McuShell_SendStr((const uint8_t *)"\r\n", io->stdOut);
-      }
-
-    } /* for */
-    res = lfs_dir_close(&McuLFS_lfs, &dir);
-    if (res != LFS_ERR_OK) {
-      McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_close()!\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+      McuShell_SendStr((const uint8_t *)info.name, io->stdOut);
+      McuShell_SendStr((const uint8_t *)"\r\n", io->stdOut);
     }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+
+  } /* for */
+  res = lfs_dir_close(&McuLFS_lfs, &dir);
+  if (res != LFS_ERR_OK) {
+    McuShell_SendStr((const uint8_t *)"FAILED lfs_dir_close()!\r\n", io->stdErr);
+    return ERR_FAILED;
   }
+  return ERR_OK;
 }
 
 uint8_t McuLFS_CopyFile(const char *srcPath, const char *dstPath,McuShell_ConstStdIOType *io) {
@@ -396,89 +369,73 @@ uint8_t McuLFS_CopyFile(const char *srcPath, const char *dstPath,McuShell_ConstS
   uint8_t buffer[32]; /* copy buffer */
   uint8_t res = ERR_OK;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+  if (!McuLFS_isMounted) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
     }
-
-    /* open source file */
-    result = lfs_file_open(&McuLFS_lfs, &fsrc, srcPath, LFS_O_RDONLY);
-    if (result < 0) {
-      McuShell_SendStr((const unsigned char*) "*** Failed opening source file!\r\n",io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    /* create destination file */
-    result = lfs_file_open(&McuLFS_lfs, &fdst, dstPath, LFS_O_WRONLY | LFS_O_CREAT);
-    if (result < 0) {
-      (void) lfs_file_close(&McuLFS_lfs, &fsrc);
-      McuShell_SendStr((const unsigned char*) "*** Failed opening destination file!\r\n", io->stdErr);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    /* now copy source to destination */
-    for (;;) {
-      nofBytesRead = lfs_file_read(&McuLFS_lfs, &fsrc, buffer, sizeof(buffer));
-      if (nofBytesRead < 0) {
-        McuShell_SendStr((const unsigned char*) "*** Failed reading source file!\r\n",io->stdErr);
-        res = ERR_FAILED;
-        break;
-      }
-      if (nofBytesRead == 0) { /* end of file */
-        break;
-      }
-      result = lfs_file_write(&McuLFS_lfs, &fdst, buffer, nofBytesRead);
-      if (result < 0) {
-        McuShell_SendStr((const unsigned char*) "*** Failed writing destination file!\r\n", io->stdErr);
-        res = ERR_FAILED;
-        break;
-      }
-    } /* for */
-    /* close all files */
-    result = lfs_file_close(&McuLFS_lfs, &fsrc);
-    if (result < 0) {
-      McuShell_SendStr((const unsigned char*) "*** Failed closing source file!\r\n",  io->stdErr);
-      res = ERR_FAILED;
-    }
-    result = lfs_file_close(&McuLFS_lfs, &fdst);
-    if (result < 0) {
-      McuShell_SendStr((const unsigned char*) "*** Failed closing destination file!\r\n", io->stdErr);
-      res = ERR_FAILED;
-    }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return res;
-  } else {
-    return ERR_BUSY;
+    return ERR_FAILED;
   }
+
+  /* open source file */
+  result = lfs_file_open(&McuLFS_lfs, &fsrc, srcPath, LFS_O_RDONLY);
+  if (result < 0) {
+    McuShell_SendStr((const unsigned char*) "*** Failed opening source file!\r\n",io->stdErr);
+    return ERR_FAILED;
+  }
+  /* create destination file */
+  result = lfs_file_open(&McuLFS_lfs, &fdst, dstPath, LFS_O_WRONLY | LFS_O_CREAT);
+  if (result < 0) {
+    (void) lfs_file_close(&McuLFS_lfs, &fsrc);
+    McuShell_SendStr((const unsigned char*) "*** Failed opening destination file!\r\n", io->stdErr);
+    return ERR_FAILED;
+  }
+  /* now copy source to destination */
+  for (;;) {
+    nofBytesRead = lfs_file_read(&McuLFS_lfs, &fsrc, buffer, sizeof(buffer));
+    if (nofBytesRead < 0) {
+      McuShell_SendStr((const unsigned char*) "*** Failed reading source file!\r\n",io->stdErr);
+      res = ERR_FAILED;
+      break;
+    }
+    if (nofBytesRead == 0) { /* end of file */
+      break;
+    }
+    result = lfs_file_write(&McuLFS_lfs, &fdst, buffer, nofBytesRead);
+    if (result < 0) {
+      McuShell_SendStr((const unsigned char*) "*** Failed writing destination file!\r\n", io->stdErr);
+      res = ERR_FAILED;
+      break;
+    }
+  } /* for */
+  /* close all files */
+  result = lfs_file_close(&McuLFS_lfs, &fsrc);
+  if (result < 0) {
+    McuShell_SendStr((const unsigned char*) "*** Failed closing source file!\r\n",  io->stdErr);
+    res = ERR_FAILED;
+  }
+  result = lfs_file_close(&McuLFS_lfs, &fdst);
+  if (result < 0) {
+    McuShell_SendStr((const unsigned char*) "*** Failed closing destination file!\r\n", io->stdErr);
+    res = ERR_FAILED;
+  }
+  return res;
 }
 
 uint8_t McuLFS_MoveFile(const char *srcPath, const char *dstPath,McuShell_ConstStdIOType *io) {
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+  if (!McuLFS_isMounted) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
     }
-    if (lfs_rename(&McuLFS_lfs, srcPath, dstPath) < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: failed renaming file or directory.\r\n",io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+    return ERR_FAILED;
   }
+  if (lfs_rename(&McuLFS_lfs, srcPath, dstPath) < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: failed renaming file or directory.\r\n",io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  return ERR_OK;
 }
-
 
 /*
  * Used to read out data from Files for SDEP communication
@@ -491,71 +448,51 @@ uint8_t McuLFS_ReadFile(lfs_file_t* file, bool readFromBeginning, size_t nofByte
   if( nofBytes > 1024) {
     nofBytes = 1024;
   }
+  if(readFromBeginning) {
+    lfs_file_rewind(&McuLFS_lfs,file);
+    filePos = 0;
+  } else {
+    lfs_file_seek(&McuLFS_lfs,file, filePos,LFS_SEEK_SET);
+  }
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if(readFromBeginning) {
-      lfs_file_rewind(&McuLFS_lfs,file);
-      filePos = 0;
-    } else {
-      lfs_file_seek(&McuLFS_lfs,file, filePos,LFS_SEEK_SET);
-    }
+  fileSize = lfs_file_size(&McuLFS_lfs, file);
+  filePos = lfs_file_tell(&McuLFS_lfs, file);
+  fileSize = fileSize - filePos;
 
-    fileSize = lfs_file_size(&McuLFS_lfs, file);
-    filePos = lfs_file_tell(&McuLFS_lfs, file);
-    fileSize = fileSize - filePos;
+  if (fileSize < 0) {
+    return ERR_FAILED;
+  }
 
-    if (fileSize < 0) {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+  if(fileSize > nofBytes)  {
+    if (lfs_file_read(&McuLFS_lfs, file, buf, nofBytes) < 0) {
       return ERR_FAILED;
     }
-
-    if(fileSize > nofBytes)  {
-      if (lfs_file_read(&McuLFS_lfs, file, buf, nofBytes) < 0) {
-        return ERR_FAILED;
-      }
-      McuShell_SendData(buf,nofBytes,io->stdErr);
-      filePos = filePos + nofBytes;
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_OK;
-    } else {
-      if (lfs_file_read(&McuLFS_lfs, file, buf, fileSize) < 0) {
-        return ERR_FAILED;
-      }
-      McuShell_SendData(buf,fileSize,io->stdErr);
-      filePos = filePos + fileSize;
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_PARAM_SIZE; //EOF
-    }
+    McuShell_SendData(buf,nofBytes,io->stdErr);
+    filePos = filePos + nofBytes;
+    return ERR_OK;
   } else {
-    return ERR_BUSY;
+    if (lfs_file_read(&McuLFS_lfs, file, buf, fileSize) < 0) {
+      return ERR_FAILED;
+    }
+    McuShell_SendData(buf,fileSize,io->stdErr);
+    filePos = filePos + fileSize;
+    return ERR_PARAM_SIZE; //EOF
   }
 }
 
 
 uint8_t McuLFS_openFile(lfs_file_t* file, uint8_t* filename) {
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (lfs_file_open(&McuLFS_lfs, file, (const char*)filename, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND) < 0) {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+  if (lfs_file_open(&McuLFS_lfs, file, (const char*)filename, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND) < 0) {
+    return ERR_FAILED;
   }
+  return ERR_OK;
 }
 
 uint8_t McuLFS_closeFile(lfs_file_t* file) {
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if(lfs_file_close(&McuLFS_lfs, file) ==0) {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_OK;
-    } else {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
+  if(lfs_file_close(&McuLFS_lfs, file) == 0) {
+    return ERR_OK;
   } else {
-    return ERR_BUSY;
+    return ERR_FAILED;
   }
 }
 
@@ -564,17 +501,11 @@ uint8_t McuLFS_writeLine(lfs_file_t* file, uint8_t* line) {
   McuUtility_strcpy(lineBuf, sizeof(lineBuf), line);
   McuUtility_strcat(lineBuf, sizeof(lineBuf), (unsigned char*)"\r\n");
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (lfs_file_write(&McuLFS_lfs, file, lineBuf, McuUtility_strlen((char*)lineBuf)) < 0) {
-      lfs_file_close(&McuLFS_lfs, file);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+  if (lfs_file_write(&McuLFS_lfs, file, lineBuf, McuUtility_strlen((char*)lineBuf)) < 0) {
+    lfs_file_close(&McuLFS_lfs, file);
+    return ERR_FAILED;
   }
+  return ERR_OK;
 }
 
 uint8_t McuLFS_readLine(lfs_file_t* file, uint8_t* lineBuf, size_t bufSize, uint8_t* nofReadChars) {
@@ -582,17 +513,12 @@ uint8_t McuLFS_readLine(lfs_file_t* file, uint8_t* lineBuf, size_t bufSize, uint
   uint8_t ch;
   *nofReadChars = 0;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    while(lfs_file_read(&McuLFS_lfs, file, &ch, 1) != 0 &&  ch != '\n') {
-      (*nofReadChars)++;
-      McuUtility_chcat(lineBuf,200,ch);
-    }
+  while(lfs_file_read(&McuLFS_lfs, file, &ch, 1) != 0 &&  ch != '\n') {
+    (*nofReadChars)++;
     McuUtility_chcat(lineBuf,200,ch);
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
   }
+  McuUtility_chcat(lineBuf,200,ch);
+  return ERR_OK;
 }
 
 /* Function for the Shell PrintHex command */
@@ -612,143 +538,116 @@ uint8_t McuLFS_PrintFile(const char *filePath, McuShell_ConstStdIOType *io, bool
   int32_t fileSize;
   int result;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS)) == pdTRUE) {
-    if (io == NULL) {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED; /* printing a file without an I/O channel does not make any sense */
-    }
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    result = lfs_file_open(&McuLFS_lfs, &file, filePath, LFS_O_RDONLY);
-    if (result < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    fileSize = lfs_file_size(&McuLFS_lfs, &file);
-    if (fileSize < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: getting file size\r\n", io->stdErr);
-        (void) lfs_file_close(&McuLFS_lfs, &file);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    if (inHex) {
-      res = McuShell_PrintMemory(&file, 0, fileSize-1, 4, 16, readFromFile, io);
-      if (res != ERR_OK)
-      {
-        McuShell_SendStr((const uint8_t *)"ERROR while calling PrintMemory()\r\n", io->stdErr);
-      }
-    } else {
-      uint8_t ch;
-
-      while(fileSize>0) {
-        if (lfs_file_read(&McuLFS_lfs, &file, &ch, sizeof(ch)) < 0) {
-          break; /* error case */
-        }
-        McuShell_SendCh(ch, io->stdOut); /* print character */
-        fileSize--;
-      }
-    }
-    (void) lfs_file_close(&McuLFS_lfs, &file);
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return res;
-  } else {
-    return ERR_BUSY;
+  if (io == NULL) {
+    return ERR_FAILED; /* printing a file without an I/O channel does not make any sense */
   }
+  if (!McuLFS_isMounted) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  result = lfs_file_open(&McuLFS_lfs, &file, filePath, LFS_O_RDONLY);
+  if (result < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  fileSize = lfs_file_size(&McuLFS_lfs, &file);
+  if (fileSize < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: getting file size\r\n", io->stdErr);
+      (void) lfs_file_close(&McuLFS_lfs, &file);
+    }
+    return ERR_FAILED;
+  }
+  if (inHex) {
+    res = McuShell_PrintMemory(&file, 0, fileSize-1, 4, 16, readFromFile, io);
+    if (res != ERR_OK)
+    {
+      McuShell_SendStr((const uint8_t *)"ERROR while calling PrintMemory()\r\n", io->stdErr);
+    }
+  } else {
+    uint8_t ch;
+
+    while(fileSize>0) {
+      if (lfs_file_read(&McuLFS_lfs, &file, &ch, sizeof(ch)) < 0) {
+        break; /* error case */
+      }
+      McuShell_SendCh(ch, io->stdOut); /* print character */
+      fileSize--;
+    }
+  }
+  (void) lfs_file_close(&McuLFS_lfs, &file);
+  return res;
 }
 
 static uint8_t McuLFS_CatBinaryTextDataToFile(const char *filePath, McuShell_ConstStdIOType *io, const unsigned char *p) {
   lfs_file_t file;
   int result;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS)) == pdTRUE) {
-    if (io == NULL) {
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED; /* printing a file without an I/O channel does not make any sense */
-    }
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    result = lfs_file_open(&McuLFS_lfs, &file, filePath, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND);
-    if (result < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    result = lfs_file_seek(&McuLFS_lfs, &file, 0, LFS_SEEK_END);
-    if (result < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
-      }
-      (void)lfs_file_close(&McuLFS_lfs, &file);
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-    for(;;) { /* breaks */
-      int32_t v;
-      uint8_t ch, res;
-
-      res = McuUtility_xatoi(&p, &v);
-      if (res!=ERR_OK) {
-        break;
-      }
-      ch = v; /* just one byte */
-      if (lfs_file_write(&McuLFS_lfs, &file, &ch, sizeof(ch)) < 0) {
-        if (io != NULL) {
-          McuShell_SendStr((const uint8_t *)"ERROR: Failed writing to file.\r\n", io->stdErr);
-        }
-        break;
-      }
-    }
-   (void)lfs_file_close(&McuLFS_lfs, &file);
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+  if (io == NULL) {
+    return ERR_FAILED; /* printing a file without an I/O channel does not make any sense */
   }
-}
+  if (!McuLFS_isMounted) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  result = lfs_file_open(&McuLFS_lfs, &file, filePath, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND);
+  if (result < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  result = lfs_file_seek(&McuLFS_lfs, &file, 0, LFS_SEEK_END);
+  if (result < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
+    }
+    (void)lfs_file_close(&McuLFS_lfs, &file);
+    return ERR_FAILED;
+  }
+  for(;;) { /* breaks */
+    int32_t v;
+    uint8_t ch, res;
 
+    res = McuUtility_xatoi(&p, &v);
+    if (res!=ERR_OK) {
+      break;
+    }
+    ch = v; /* just one byte */
+    if (lfs_file_write(&McuLFS_lfs, &file, &ch, sizeof(ch)) < 0) {
+      if (io != NULL) {
+        McuShell_SendStr((const uint8_t *)"ERROR: Failed writing to file.\r\n", io->stdErr);
+      }
+      break;
+    }
+  }
+ (void)lfs_file_close(&McuLFS_lfs, &file);
+  return ERR_OK;
+}
 
 uint8_t McuLFS_RemoveFile(const char *filePath, McuShell_ConstStdIOType *io) {
   int result;
 
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    if (!McuLFS_isMounted) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
+  if (!McuLFS_isMounted) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
     }
-    result = lfs_remove(&McuLFS_lfs, filePath);
-    if (result < 0) {
-      if (io != NULL) {
-        McuShell_SendStr((const uint8_t *)"ERROR: Failed removing file.\r\n", io->stdErr);
-      }
-      xSemaphoreGiveRecursive(fileSystemAccessMutex);
-      return ERR_FAILED;
-    }
-
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
+    return ERR_FAILED;
   }
+  result = lfs_remove(&McuLFS_lfs, filePath);
+  if (result < 0) {
+    if (io != NULL) {
+      McuShell_SendStr((const uint8_t *)"ERROR: Failed removing file.\r\n", io->stdErr);
+    }
+    return ERR_FAILED;
+  }
+  return ERR_OK;
 }
 
 lfs_t* McuLFS_GetFileSystem(void) {
@@ -912,6 +811,7 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
     McuShell_SendHelpStr((unsigned char*) "  rm <file>",(const unsigned char*) "Remove a file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  mv <src> <dst>",(const unsigned char*) "Rename a file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  cp <src> <dst>",(const unsigned char*) "Copy a file\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*) "  mkdir <dir>",(const unsigned char*) "Create a directory\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  bincat <file> <data>",(const unsigned char*) "Add hex numbers as binary data to a file. If file does not exist, it gets created\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  printhex <file>",(const unsigned char*) "Print the file data in hexadecimal format\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  printtxt <file>",(const unsigned char*) "Print the file data in text format\r\n",io->stdOut);
@@ -980,29 +880,38 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
     return ERR_FAILED;
   } else if (McuUtility_strncmp((char*)cmd, "McuLittleFS bincat ", sizeof("McuLittleFS bincat ")-1) == 0) {
     *handled = TRUE;
-
     p = cmd + sizeof("McuLittleFS bincat ") - 1;
     if ((McuUtility_ReadEscapedName(p, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
       p += lenRead;
       return McuLFS_CatBinaryTextDataToFile((const char*)fileNameSrc, io, p);
     }
     return ERR_FAILED;
+  } else if (McuUtility_strncmp((char*)cmd, "McuLittleFS mkdir ", sizeof("McuLittleFS mkdir ")-1) == 0) {
+    *handled = TRUE;
+    p = cmd + sizeof("McuLittleFS mkdir ") - 1;
+    if ((McuUtility_ReadEscapedName(p, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
+      if (lfs_mkdir(&McuLFS_lfs, (const char*)fileNameSrc)!=0) {
+        return ERR_FAILED;
+      }
+      return ERR_OK;
+    }
+    return ERR_FAILED;
   }
   return ERR_OK;
 }
 
-void McuLFS_GetFileAccessSemaphore(SemaphoreHandle_t *sema) {
-  *sema = fileSystemAccessMutex;
+void McuLFS_GetFileAccessSemaphore(SemaphoreHandle_t *mutex) {
+  *mutex = fileSystemAccessMutex;
 }
 
 void McuLFS_Deinit(void) {
-  vQueueDelete(fileSystemAccessMutex);
+  vSemaphoreDelete(fileSystemAccessMutex);
   fileSystemAccessMutex = NULL;
 }
 
 void McuLFS_Init(void) {
   fileSystemAccessMutex = xSemaphoreCreateRecursiveMutex();
-  if(fileSystemAccessMutex == NULL) {
+  if (fileSystemAccessMutex == NULL) {
     for(;;) {} /* Error */
   }
   vQueueAddToRegistry(fileSystemAccessMutex, "littleFSmutex");
