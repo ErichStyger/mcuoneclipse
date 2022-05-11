@@ -32,7 +32,7 @@
   /* NOTE: this requires the JP9 on the LPC55S16-EVN to be *installed*, otherwise the SPI signals are driven by the debug interface.
    * But JP9 installed means it is not possible to use the UART over the LinkServer USB connection: RTT has to be used instead */
   #define PL_CONFIG_HAS_USER_BUTTON    (0) /* pin connected on DIO5 of the transceiver */
-  #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D53232MZ+ */
+  #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D3232MZ+ */
   #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with */
   #define PL_CONFIG_HAS_SHT31          (1 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #else
