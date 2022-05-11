@@ -532,18 +532,6 @@ uint8_t McuLFS_ReadFile(lfs_file_t* file, bool readFromBeginning, size_t nofByte
 }
 
 
-uint8_t McuLFS_getLiDoSampleOutOfFile(lfs_file_t* file,uint8_t* sampleBuf,size_t bufSize,uint8_t* nofReadChars) {
-  sampleBuf[0] = '\0';
-
-  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
-    *nofReadChars = lfs_file_read(&McuLFS_lfs, file, sampleBuf, bufSize);
-    xSemaphoreGiveRecursive(fileSystemAccessMutex);
-    return ERR_OK;
-  } else {
-    return ERR_BUSY;
-  }
-}
-
 uint8_t McuLFS_openFile(lfs_file_t* file, uint8_t* filename) {
   if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS))) {
     if (lfs_file_open(&McuLFS_lfs, file, (const char*)filename, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND) < 0) {
@@ -571,7 +559,7 @@ uint8_t McuLFS_closeFile(lfs_file_t* file) {
   }
 }
 
-uint8_t McuLFS_writeLine(lfs_file_t* file,uint8_t* line) {
+uint8_t McuLFS_writeLine(lfs_file_t* file, uint8_t* line) {
   uint8_t lineBuf[200];
   McuUtility_strcpy(lineBuf, sizeof(lineBuf), line);
   McuUtility_strcat(lineBuf, sizeof(lineBuf), (unsigned char*)"\r\n");
@@ -589,7 +577,7 @@ uint8_t McuLFS_writeLine(lfs_file_t* file,uint8_t* line) {
   }
 }
 
-uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t* nofReadChars) {
+uint8_t McuLFS_readLine(lfs_file_t* file, uint8_t* lineBuf, size_t bufSize, uint8_t* nofReadChars) {
   lineBuf[0] = '\0';
   uint8_t ch;
   *nofReadChars = 0;
@@ -606,7 +594,6 @@ uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t
     return ERR_BUSY;
   }
 }
-
 
 /* Function for the Shell PrintHex command */
 static uint8_t readFromFile(void *hndl, uint32_t addr, uint8_t *buf, size_t bufSize) {
@@ -678,6 +665,64 @@ uint8_t McuLFS_PrintFile(const char *filePath, McuShell_ConstStdIOType *io, bool
     return ERR_BUSY;
   }
 }
+
+static uint8_t McuLFS_CatBinaryTextDataToFile(const char *filePath, McuShell_ConstStdIOType *io, const unsigned char *p) {
+  lfs_file_t file;
+  int result;
+
+  if(xSemaphoreTakeRecursive(fileSystemAccessMutex,pdMS_TO_TICKS(McuLFS_ACCESS_MUTEX_WAIT_TIME_MS)) == pdTRUE) {
+    if (io == NULL) {
+      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+      return ERR_FAILED; /* printing a file without an I/O channel does not make any sense */
+    }
+    if (!McuLFS_isMounted) {
+      if (io != NULL) {
+        McuShell_SendStr((const uint8_t *)"ERROR: File system is not mounted.\r\n", io->stdErr);
+      }
+      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+      return ERR_FAILED;
+    }
+    result = lfs_file_open(&McuLFS_lfs, &file, filePath, LFS_O_RDWR | LFS_O_CREAT| LFS_O_APPEND);
+    if (result < 0) {
+      if (io != NULL) {
+        McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
+      }
+      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+      return ERR_FAILED;
+    }
+    result = lfs_file_seek(&McuLFS_lfs, &file, 0, LFS_SEEK_END);
+    if (result < 0) {
+      if (io != NULL) {
+        McuShell_SendStr((const uint8_t *)"ERROR: Failed opening file.\r\n", io->stdErr);
+      }
+      (void)lfs_file_close(&McuLFS_lfs, &file);
+      xSemaphoreGiveRecursive(fileSystemAccessMutex);
+      return ERR_FAILED;
+    }
+    for(;;) { /* breaks */
+      int32_t v;
+      uint8_t ch, res;
+
+      res = McuUtility_xatoi(&p, &v);
+      if (res!=ERR_OK) {
+        break;
+      }
+      ch = v; /* just one byte */
+      if (lfs_file_write(&McuLFS_lfs, &file, &ch, sizeof(ch)) < 0) {
+        if (io != NULL) {
+          McuShell_SendStr((const uint8_t *)"ERROR: Failed writing to file.\r\n", io->stdErr);
+        }
+        break;
+      }
+    }
+   (void)lfs_file_close(&McuLFS_lfs, &file);
+    xSemaphoreGiveRecursive(fileSystemAccessMutex);
+    return ERR_OK;
+  } else {
+    return ERR_BUSY;
+  }
+}
+
 
 uint8_t McuLFS_RemoveFile(const char *filePath, McuShell_ConstStdIOType *io) {
   int result;
@@ -852,8 +897,9 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
 }
 
 uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShell_StdIOType *io) {
-  unsigned char fileNameSrc[McuLFS_FILE_NAME_SIZE],fileNameDst[McuLFS_FILE_NAME_SIZE];
+  unsigned char fileNameSrc[McuLFS_FILE_NAME_SIZE], fileNameDst[McuLFS_FILE_NAME_SIZE];
   size_t lenRead;
+  const unsigned char *p;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP) == 0|| McuUtility_strcmp((char*)cmd, "McuLittleFS help") == 0) {
     McuShell_SendHelpStr((unsigned char*) "McuLittleFS", (const unsigned char*) "Group of FileSystem (LittleFS) commands\r\n", io->stdOut);
@@ -866,6 +912,7 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
     McuShell_SendHelpStr((unsigned char*) "  rm <file>",(const unsigned char*) "Remove a file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  mv <src> <dst>",(const unsigned char*) "Rename a file\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  cp <src> <dst>",(const unsigned char*) "Copy a file\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*) "  bincat <file> <data>",(const unsigned char*) "Add hex numbers as binary data to a file. If file does not exist, it gets created\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  printhex <file>",(const unsigned char*) "Print the file data in hexadecimal format\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  printtxt <file>",(const unsigned char*) "Print the file data in text format\r\n",io->stdOut);
     McuShell_SendHelpStr((unsigned char*) "  benchmark",(const unsigned char*) "Run a benchmark to measure performance\r\n",io->stdOut);
@@ -929,6 +976,15 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
         && (McuUtility_ReadEscapedName(cmd + sizeof("McuLittleFS cp ") - 1 + lenRead + 1, fileNameDst,sizeof(fileNameDst), NULL, NULL, NULL) == ERR_OK))
     {
       return McuLFS_CopyFile((const char*)fileNameSrc, (const char*)fileNameDst, io);
+    }
+    return ERR_FAILED;
+  } else if (McuUtility_strncmp((char*)cmd, "McuLittleFS bincat ", sizeof("McuLittleFS bincat ")-1) == 0) {
+    *handled = TRUE;
+
+    p = cmd + sizeof("McuLittleFS bincat ") - 1;
+    if ((McuUtility_ReadEscapedName(p, fileNameSrc, sizeof(fileNameSrc), &lenRead, NULL, NULL) == ERR_OK)) {
+      p += lenRead;
+      return McuLFS_CatBinaryTextDataToFile((const char*)fileNameSrc, io, p);
     }
     return ERR_FAILED;
   }
