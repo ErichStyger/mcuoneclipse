@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SeggerRTT
-**     Version     : Component 01.090, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.092, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-23, 19:24, # CodeGen: 710
+**     Date/Time   : 2021-12-17, 13:26, # CodeGen: 759
 **     Abstract    :
 **
 **     Settings    :
@@ -51,11 +51,11 @@
 **         Deinit           - void McuRTT_Deinit(void);
 **         Init             - void McuRTT_Init(void);
 **
-** * (c) Copyright Segger, 2020
+** * (c) Copyright Segger, 2020-2021
 **  * http      : www.segger.com
 **  * See separate Segger licensing terms.
 **  *
-**  * Processor Expert port: Copyright (c) 2016-2019 Erich Styger
+**  * Processor Expert port: Copyright (c) 2016-2021 Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -102,10 +102,13 @@
 
 /* default standard I/O struct */
 McuShell_ConstStdIOType McuRTT_stdio = {
-    (McuShell_StdIO_In_FctType)McuRTT_StdIOReadChar, /* stdin */
-    (McuShell_StdIO_OutErr_FctType)McuRTT_StdIOSendChar, /* stdout */
-    (McuShell_StdIO_OutErr_FctType)McuRTT_StdIOSendChar, /* stderr */
-    McuRTT_StdIOKeyPressed /* if input is not empty */
+    .stdIn = (McuShell_StdIO_In_FctType)McuRTT_StdIOReadChar,
+    .stdOut = (McuShell_StdIO_OutErr_FctType)McuRTT_StdIOSendChar,
+    .stdErr = (McuShell_StdIO_OutErr_FctType)McuRTT_StdIOSendChar,
+    .keyPressed = McuRTT_StdIOKeyPressed, /* if input is not empty */
+  #if McuShell_CONFIG_ECHO_ENABLED
+    .echoEnabled = false,
+  #endif
   };
 uint8_t McuRTT_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 
@@ -293,15 +296,29 @@ void McuRTT_StdIOReadChar(uint8_t *c)
 void McuRTT_StdIOSendChar(uint8_t ch)
 {
 #if McuRTT_CONFIG_BLOCKING_SEND
+  #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    #define RTT_STDIO_CNTR (100)
+    static uint8_t cntr = 0; /* counter to avoid blocking too long if there is no RTT client on the host */
+  #endif
   #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0 && McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
   int timeoutMs = McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS;
   #endif
 
   for(;;) { /* will break */
     if (McuRTT_Write(0, (const char*)&ch, 1)==1) { /* non blocking send, check that we were able to send */
+    #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+      if (cntr>0) {
+        cntr--;
+      }
+    #endif
       break; /* was able to send character, get out of waiting loop */
     }
   #if McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS>0
+    cntr++;
+    if (cntr>=RTT_STDIO_CNTR) { /* waiting for too long, give up */
+      cntr = RTT_STDIO_CNTR;
+      return;
+    }
     McuWait_WaitOSms(McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS);
     #if McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS>0
     if(timeoutMs<=0) {

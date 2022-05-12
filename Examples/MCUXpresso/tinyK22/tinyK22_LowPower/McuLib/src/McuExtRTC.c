@@ -208,7 +208,7 @@ static uint8_t TimeCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[32];
 
-  McuShell_SendStatusStr((unsigned char*)"McuExtRTC", (const unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"McuExtRTC", (const unsigned char*)"Hardware external time and date\r\n", io->stdOut);
   buf[0] = '\0';
   if (AddHWRTCDate(buf, sizeof(buf))!=ERR_OK) {
     McuShell_SendStr((unsigned char*)"*** Failed to get RTC date!\r\n", io->stdErr);

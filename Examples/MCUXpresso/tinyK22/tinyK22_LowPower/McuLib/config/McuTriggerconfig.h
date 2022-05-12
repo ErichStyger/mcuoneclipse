@@ -17,6 +17,6 @@
 #define McuTrigger_EXAMPLE  /* example trigger */ 1
 
 #define McuTrigger_CONFIG_TICK_PERIOD_MS \
-  10                                    /* Period in milliseconds as defined in component properties, at which McuTrigger._AddTick() is called */
+  (1000/1000)                           /* Period in milliseconds as defined in RTOS component properties, at which McuTrigger._AddTick() is called */
 
 #endif /* __McuTrigger_CONFIG_H */

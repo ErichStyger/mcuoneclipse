@@ -20,6 +20,11 @@ extern "C" {
     /*!< 1: use FreeRTOS Heap (default), 0: use stdlib malloc() and free() */
 #endif
 
+#ifndef McuULN2003_CONFIG_USE_ACCELERATION
+  #define McuULN2003_CONFIG_USE_ACCELERATION            (0)
+    /*!< 1: stepper motor uses acceleration table; 0: no acceleration table used */
+#endif
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif

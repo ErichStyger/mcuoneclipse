@@ -89,8 +89,8 @@
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.1319239385" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1610466142" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
@@ -303,9 +303,19 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.crt.advproject.config.exe.debug.1652255002.38670373" name="/" resourcePath="McuLib/littleFS">
+						<toolChain id="com.crt.advproject.toolchain.exe.debug.1864204095" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
+							<tool id="com.crt.advproject.cpp.exe.debug.1264416224" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2132798231"/>
+							<tool id="com.crt.advproject.gcc.exe.debug.2012193214" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1505299104"/>
+							<tool id="com.crt.advproject.gas.exe.debug.697630152" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.625261844"/>
+							<tool id="com.crt.advproject.link.cpp.exe.debug.2062354058" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.1649601390"/>
+							<tool id="com.crt.advproject.link.exe.debug.1440588961" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1999308306"/>
+							<tool id="com.crt.advproject.tool.debug.debug.2003019649" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1585692387"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="TraceRecorder|SEGGER_Sysview|minIni|LittlevGL|HD44780|fonts|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="littleFS|TraceRecorder|SEGGER_Sysview|minIni|LittlevGL|HD44780|fonts|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
@@ -338,8 +348,8 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_MK22FN512xxx12</sdkName>
-		<sdkVersion>2.10.0</sdkVersion>
-		<sdkComponents>middleware.baremetal.MK22F51212;device.MK22F51212_startup.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.pit.MK22F51212;platform.drivers.smc.MK22F51212;platform.Include_dsp.MK22F51212;platform.drivers.rcm.MK22F51212;platform.drivers.pmc.MK22F51212;platform.drivers.lptmr.MK22F51212;platform.drivers.llwu.MK22F51212;</sdkComponents>
+		<sdkVersion>2.11.0</sdkVersion>
+		<sdkComponents>middleware.baremetal.MK22F51212;device.MK22F51212_startup.MK22F51212;platform.Include_common.MK22F51212;platform.Include_core_cm4.MK22F51212;device.MK22F51212_CMSIS.MK22F51212;platform.drivers.gpio.MK22F51212;platform.drivers.clock.MK22F51212;platform.drivers.common.MK22F51212;platform.drivers.sim.MK22F51212;platform.drivers.port.MK22F51212;platform.drivers.pit.MK22F51212;platform.drivers.smc.MK22F51212;platform.Include_dsp.MK22F51212;platform.drivers.rcm.MK22F51212;platform.drivers.pmc.MK22F51212;platform.drivers.lptmr.MK22F51212;platform.drivers.llwu.MK22F51212;CMSIS_Include_core_cm.MK22F51212;</sdkComponents>
 		<package>MK22FN512VLH12</package>
 		<core>cm4</core>
 		<coreId>core0_MK22FN512xxx12</coreId>
