@@ -46,14 +46,12 @@
 #include "McuRTOS.h"
 #if PL_CONFIG_USE_SHELL
   #include "shell.h"
+  #include "McuShell.h"
 #endif
 
 #ifndef ACTIVE_REGION
-
-#warning "No active region defined, LORAMAC_REGION_EU868 will be used as default."
-
-#define ACTIVE_REGION LORAMAC_REGION_EU868
-
+  #warning "No active region defined, LORAMAC_REGION_EU868 will be used as default."
+  #define ACTIVE_REGION LORAMAC_REGION_EU868
 #endif
 
 /*!
@@ -590,10 +588,6 @@ static void UplinkProcess( void )
     }
 }
 #endif
-
-
-
-
 
 static void OnTxPeriodicityChanged( uint32_t periodicity )
 {

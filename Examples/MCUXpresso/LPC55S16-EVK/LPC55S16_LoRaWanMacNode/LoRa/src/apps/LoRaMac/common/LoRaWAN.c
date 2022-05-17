@@ -9,6 +9,7 @@
 #include "McuRTOS.h"
 #include "McuLog.h"
 #include "LoRaWAN.h"
+#include "McuShell.h"
 #include "LmHandler.h"
 #include "LmhpCompliance.h"
 #include "CayenneLpp.h"

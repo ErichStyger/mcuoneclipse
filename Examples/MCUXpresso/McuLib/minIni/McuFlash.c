@@ -228,7 +228,7 @@ uint8_t McuFlash_Program(void *addr, const void *data, size_t dataSize) {
     while (remaining>0) {
       res = McuFlash_Read((void*)pageAddr, buffer, sizeof(buffer)); /* read current flash content */
       if (res!=ERR_OK) {
-        McuLog_fatal("failed reading from Flash");
+        McuLog_fatal("failed reading from Flash at 0x%x", pageAddr);
         return ERR_FAILED;
       }
       if (offset+remaining>McuFlash_CONFIG_FLASH_BLOCK_SIZE) {
@@ -240,7 +240,7 @@ uint8_t McuFlash_Program(void *addr, const void *data, size_t dataSize) {
       /* program new data/page */
       res = McuFlash_ProgramPage((void*)pageAddr, buffer, sizeof(buffer));
       if (res!=ERR_OK) {
-        McuLog_fatal("failed making backup from Flash");
+        McuLog_fatal("failed making backup from Flash at 0x%x", pageAddr);
         return ERR_FAILED;
       }
       pageAddr += McuFlash_CONFIG_FLASH_BLOCK_SIZE;

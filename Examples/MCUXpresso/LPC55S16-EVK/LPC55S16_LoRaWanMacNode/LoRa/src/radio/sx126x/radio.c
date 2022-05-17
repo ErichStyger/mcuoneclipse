@@ -1,3 +1,4 @@
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262
 /*!
  * \file      radio.c
  *
@@ -1382,3 +1383,4 @@ void RadioIrqProcess( void )
         }
     }
 }
+#endif /* #if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262 */
