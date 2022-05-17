@@ -28,7 +28,7 @@ static void CheckFlash(uint32_t startAddr, size_t size, uint32_t blockSize) {
   uint32_t addr = startAddr;
 
   while(addr<startAddr+size) {
-    if (!McuFlash_IsAccessible((const void*)addr, size)) {
+    if (!McuFlash_IsAccessible((const void*)addr, blockSize)) {
       McuLog_info("Flash block at %u with size %u is not accessible, initializing memory ...", addr, blockSize);
       if (McuFlash_Erase((void*)addr, size)!=ERR_OK) {
         McuLog_fatal("Erasing flash memory failed");
