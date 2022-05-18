@@ -8,6 +8,7 @@
 #define FREERTOS_LORAWAN_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /* Task notification values */
 #define LORAWAN_NOTIFICATION_EVENT_LMHANDLER     (1<<0) /* LmHandlerProcess */
@@ -18,6 +19,12 @@
  * \brief Notify LoRaWAN task to process messages and events
  */
 void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event);
+
+#include "McuShell.h"
+uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+
+bool LORAWAN_StartUplink(void);
+bool LORAWAN_StartJoin(void);
 
 /*!
  * \brief Module initialization

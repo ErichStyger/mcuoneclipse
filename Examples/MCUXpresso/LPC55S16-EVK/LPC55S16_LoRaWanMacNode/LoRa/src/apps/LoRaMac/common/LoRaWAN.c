@@ -8,6 +8,7 @@
 #include "McuLib.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
+#include "McuUtility.h"
 #include "LoRaWAN.h"
 #include "McuShell.h"
 #include "LmHandler.h"
@@ -115,6 +116,61 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  */
 #define LORAWAN_APP_PORT                            2
 
+
+/* ----------------------------------------------------------------------------------------------- */
+static bool startUplink = false;
+static bool startJoin = false;
+
+bool LORAWAN_StartUplink(void) {
+  return startUplink;
+}
+
+bool LORAWAN_StartJoin(void) {
+  if (startJoin) {
+    startJoin = false;
+    return true;
+  }
+  return false;
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"lorawan", (unsigned char*)"LoRaWAN Application status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  startUplink", startUplink?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  startJoin", startJoin?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "lorawan help")==0) {
+    McuShell_SendHelpStr((unsigned char*)"lorawan", (const unsigned char*)"Group of LoRaWAN application commands\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  startJoin on|off", (unsigned char*)"Start joining the network\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  startUplink on|off", (unsigned char*)"Send uplink messages\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "lorawan status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan startJoin on")==0) {
+    *handled = TRUE;
+    startJoin = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan startJoin off")==0) {
+    *handled = TRUE;
+    startJoin = false;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan startUplink on")==0) {
+    *handled = TRUE;
+    startUplink = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan startUplink off")==0) {
+    *handled = TRUE;
+    startUplink = false;
+    return ERR_OK;
+  }
+  return ERR_OK;
+}
+/* ----------------------------------------------------------------------------------------------- */
 
 
 static void OnMacProcessNotify( void );

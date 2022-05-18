@@ -406,7 +406,7 @@ int _write( int fd, const void *buf, size_t count )
 #endif
 #if(LPC_NUMBER_OF_USARTS > 0)
     while( UartPutBuffer( &Uart0, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
-#else
+#elif !PL_CONFIG_USE_RTT
     McuShell_ConstStdIOType *io = McuShell_GetStdio();
     if (io!=NULL) {
       McuShell_SendData(buf, count, McuShell_GetStdio()->stdOut);

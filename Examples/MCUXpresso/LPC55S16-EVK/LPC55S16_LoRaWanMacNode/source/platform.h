@@ -8,7 +8,7 @@
 #define PLATFORM_H_
 
 #define PL_CONFIG_USE_SHELL         (1)  /* if shell support is enabled */
-#define PL_CONFIG_USE_SHELL_UART    (1 && McuLib_CONFIG_SDK_USE_FREERTOS)  /* using UART for shell */
+#define PL_CONFIG_USE_SHELL_UART    (0 && McuLib_CONFIG_SDK_USE_FREERTOS)  /* using UART for shell */
 #define PL_CONFIG_USE_RTT           (1)  /* using RTT as shell interface */
 #define PL_CONFIG_USE_USB_CDC       (0)  /* using USB CDC for shell */
 #define PL_CONFIG_USE_MININI        (1)  /* using MinINI with flash */

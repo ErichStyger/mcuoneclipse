@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "LoRaWAN.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
   #include "minGlue-Flash.h"
@@ -37,6 +38,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   ini_ParseCommand,
   McuFlash_ParseCommand,
 #endif
+  LORAWAN_ParseCommand,
   APP_ParseCommand,
   NULL /* Sentinel */
 };
