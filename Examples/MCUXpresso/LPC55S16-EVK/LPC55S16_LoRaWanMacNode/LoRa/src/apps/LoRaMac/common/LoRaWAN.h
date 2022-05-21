@@ -14,6 +14,7 @@
 #define LORAWAN_NOTIFICATION_EVENT_LMHANDLER     (1<<0) /* LmHandlerProcess */
 #define LORAWAN_NOTIFICATION_EVENT_MAC_PENDING   (1<<1) /* MAC process pending */
 #define LORAWAN_NOTIFICATION_EVENT_TX_REQUEST    (1<<2) /* request to send data */
+#define LORAWAN_NOTIFICATION_EVENT_WAKEUP        (1<<3) /* wakeup event */
 
 /*!
  * \brief Notify LoRaWAN task to process messages and events

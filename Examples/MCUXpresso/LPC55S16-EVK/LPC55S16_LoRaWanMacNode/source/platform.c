@@ -22,6 +22,7 @@
 #endif
 #include "McuFlash.h"
 #include "McuWait.h"
+#include "McuTimeDate.h"
 #include "application.h"
 
 static void CheckFlash(uint32_t startAddr, size_t size, uint32_t blockSize) {
@@ -48,6 +49,7 @@ void PL_Init(void) {
 #endif
   McuArmTools_Init();
   McuLog_Init();
+  McuTimeDate_Init();
 #if PL_CONFIG_USE_MININI
   McuMinINI_Init();
 #endif

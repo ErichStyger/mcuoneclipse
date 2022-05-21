@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "McuTimeDate.h"
 #include "LoRaWAN.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
@@ -33,6 +34,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuLog_CONFIG_IS_ENABLED && McuLog_CONFIG_PARSE_COMMAND_ENABLED
   McuLog_ParseCommand,
 #endif
+  McuTimeDate_ParseCommand,
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
   ini_ParseCommand,
@@ -81,7 +83,7 @@ void SHELL_SendString(unsigned char *str) {
 static void ShellTask(void *pv) {
   int i;
 
-  McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
+  McuLog_trace("Shell task started");
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
