@@ -117,7 +117,6 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
 
 /* ----------------------------------------------------------------------------------------------- */
 static bool startUplink = false;
-static bool startJoin = false;
 
 bool LORAWAN_StartUplink(void) {
   if (startUplink) {
@@ -127,18 +126,13 @@ bool LORAWAN_StartUplink(void) {
   return false;
 }
 
-bool LORAWAN_StartJoin(void) {
-  if (startJoin) {
-    startJoin = false;
-    return true;
-  }
-  return false;
+void LORAWAN_StartJoin(void) {
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_START_JOINING);
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"lorawan", (unsigned char*)"LoRaWAN Application status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  startUplink", startUplink?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  startJoin", startJoin?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -146,7 +140,7 @@ uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "lorawan help")==0) {
     McuShell_SendHelpStr((unsigned char*)"lorawan", (const unsigned char*)"Group of LoRaWAN application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-    McuShell_SendHelpStr((unsigned char*)"  startJoin on|off", (unsigned char*)"Start joining the network\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  join", (unsigned char*)"Start joining the network\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  startUplink on|off", (unsigned char*)"Send uplink messages\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  factoryreset", (unsigned char*)"Factory reset NVM Data\r\n", io->stdOut);
     *handled = TRUE;
@@ -154,13 +148,9 @@ uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "lorawan status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
-  } else if (McuUtility_strcmp((char*)cmd, "lorawan startJoin on")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan join")==0) {
     *handled = TRUE;
-    startJoin = true;
-    return ERR_OK;
-  } else if (McuUtility_strcmp((char*)cmd, "lorawan startJoin off")==0) {
-    *handled = TRUE;
-    startJoin = false;
+    LORAWAN_StartJoin();
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "lorawan startUplink on")==0) {
     *handled = TRUE;
@@ -292,7 +282,9 @@ static void OnJoinRequest(LmHandlerJoinParams_t* params) {
   } else {
     LmHandlerRequestClass(LORAWAN_DEFAULT_CLASS);
   }
-  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  if (params->Status==LORAMAC_HANDLER_SUCCESS) {
+    LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_CONNECTED);
+  }
 }
 
 static void OnTxData(LmHandlerTxParams_t* params) {
@@ -433,9 +425,17 @@ static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity ) {
   //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
+typedef enum LoRaTaskState_e {
+  LORA_TASK_STATE_INIT,
+  LORA_TASK_STATE_JOINING,
+  LORA_TASK_STATE_CONNECTED,
+  LORA_TASK_STATE_TX_DATA,
+} LoRaTaskState_e;
+
 static void LoRaTask(void *pv) {
   uint32_t notification;
   BaseType_t res;
+  LoRaTaskState_e state = LORA_TASK_STATE_INIT;
 
   if (LmHandlerInit(&LmHandlerCallbacks, &LmHandlerParams) != LORAMAC_HANDLER_SUCCESS) {
     McuLog_fatal("LoRaMac wasn't properly initialized");
@@ -447,9 +447,6 @@ static void LoRaTask(void *pv) {
   // The LoRa-Alliance Compliance protocol package should always be
   // initialized and activated.
   LmHandlerPackageRegister(PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams);
-#if 0
-  LmHandlerJoin();
-#endif
   //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
 #if 0
   if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
@@ -458,68 +455,57 @@ static void LoRaTask(void *pv) {
   }
 #endif
   for(;;) {
-    if (LORAWAN_StartJoin()) {
-      LmHandlerJoin();
-    }
-    if (LORAWAN_StartUplink()) {
-      //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
-    }
-    //taskENTER_CRITICAL();
+      res = xTaskNotifyWait(0, -1, &notification, portMAX_DELAY);
+      if (res==pdPASS) { /* notification received */
+        LmHandlerProcess();
+        switch(state) {
+          case LORA_TASK_STATE_INIT:
+            if (notification&LORAWAN_NOTIFICATION_START_JOINING) {
+              McuLog_info("start joining ...");
+              LmHandlerJoin();
+              state = LORA_TASK_STATE_JOINING;
+            }
+          break;
+          case LORA_TASK_STATE_JOINING:
+            if (notification&LORAWAN_NOTIFICATION_CONNECTED) { /* join successful? */
+              McuLog_info("... connected");
+              state = LORA_TASK_STATE_CONNECTED;
+            } else { /* wait during joining */
+              for(int i=0; i<70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+                LmHandlerProcess();
+                vTaskDelay(pdMS_TO_TICKS(100));
+              }
+            }
+            break;
+          case LORA_TASK_STATE_CONNECTED:
+            if (notification&LORAWAN_NOTIFICATION_TX_DATA) {
+          //     StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
+             }
+           break;
+          case LORA_TASK_STATE_TX_DATA:
+            //UplinkProcess();
+             state = LORA_TASK_STATE_CONNECTED;
+            break;
+          default:
+            break;
+        } /* switch */
 #if 0
-    if (IsMacProcessPending == 1) {
-      // Clear flag and prevent MCU to go into low power modes.
-      IsMacProcessPending = 0;
-      //taskEXIT_CRITICAL();
-      //printf("process pending\n");
-      McuLog_trace("process pending");
-      LmHandlerProcess();
-    } else {
-#endif
-      //taskEXIT_CRITICAL();
-      /* wait for notification */
-      //LmHandlerProcess();
       // Process application uplinks management
       //UplinkProcess();
-
-      res = xTaskNotifyWait(0, -1, &notification, pdMS_TO_TICKS(1000) /*portMAX_DELAY*/);
-      if (res==pdPASS) { /* notification received */
-        if (notification&LORAWAN_NOTIFICATION_EVENT_WAKEUP) {
+      if (notification&LORAWAN_NOTIFICATION_EVENT_WAKEUP) {
+        LmHandlerProcess();
+      } else if (notification&(LORAWAN_NOTIFICATION_EVENT_LMHANDLER|LORAWAN_NOTIFICATION_EVENT_MAC_PENDING)) {
+        for(int i=0; i<70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
           LmHandlerProcess();
-        } else if (notification&(LORAWAN_NOTIFICATION_EVENT_LMHANDLER|LORAWAN_NOTIFICATION_EVENT_MAC_PENDING)) {
-          for(int i=0; i<7000; i++) { /* need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
-            LmHandlerProcess();
-            vTaskDelay(pdMS_TO_TICKS(1));
-          }
-#if 0
-          if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
-            /* reschedule event processing right away, not to delay things, e.g. to run into Rx2 timeout */
-            LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_WAKEUP);
-          }
-#endif
-          // Process application uplinks management
-                  //UplinkProcess( );
-        //          CRITICAL_SECTION_BEGIN( );
-#if 0
-                  if( IsMacProcessPending == 1 )
-                  {
-                      // Clear flag and prevent MCU to go into low power modes.
-                      IsMacProcessPending = 0;
-                      //printf("*clear\n");
-                      McuLog_trace("clear");
-                  } else {
-                      // The MCU wakes up through events
-                     // printf("*low power\n");
-                      BoardLowPowerHandler( );
-                  }
-#endif
-          //        CRITICAL_SECTION_END( );
-        }
-        if (notification&LORAWAN_NOTIFICATION_EVENT_TX_REQUEST) {
-        	//printf("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received\n");
-          McuLog_trace("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received");
+          vTaskDelay(pdMS_TO_TICKS(100));
         }
       }
-//    }
+#endif
+      if (notification&LORAWAN_NOTIFICATION_EVENT_TX_REQUEST) {
+        //printf("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received\n");
+        McuLog_trace("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received");
+      }
+    } /* if notification received */
   } /* for */
 }
 
@@ -564,7 +550,7 @@ void LoRaWAN_Init(void) {
   }
   wakeup_timer = xTimerCreate(
         "wakeupTimer", /* name */
-        pdMS_TO_TICKS(5000), /* period/time */
+        pdMS_TO_TICKS(20*1000), /* period/time */
         pdTRUE, /* auto reload */
         (void*)0, /* timer ID */
         vTimerCallbackWakeup); /* callback */
@@ -576,5 +562,4 @@ void LoRaWAN_Init(void) {
     McuLog_fatal("failed starting wakeup Timer");
     for(;;); /* failure! */
   }
-
 }
