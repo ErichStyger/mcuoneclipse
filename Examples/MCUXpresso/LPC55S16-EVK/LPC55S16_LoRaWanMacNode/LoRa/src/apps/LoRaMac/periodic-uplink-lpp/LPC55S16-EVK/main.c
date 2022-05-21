@@ -685,6 +685,5 @@ static void OnLedBeaconTimerEvent( void* context )
     GpioWrite( &Led2, 1 );
     TimerStart( &Led2Timer );
 #endif
-
     TimerStart( &LedBeaconTimer );
 }

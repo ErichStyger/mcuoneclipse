@@ -26,7 +26,6 @@ extern const char* MacStatusStrings[];
 #define FIRMWARE_VERSION  0x01020000 // 1.2.0.0
 
 static TaskHandle_t LoRaTaskHandle;
-static volatile uint8_t IsMacProcessPending = 0;
 
 void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -259,7 +258,6 @@ static LmhpComplianceParams_t LmhpComplianceParams =
 
 static void OnMacProcessNotify(void) {
   LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_MAC_PENDING);
-  IsMacProcessPending = 1;
   McuLog_trace("OnMacProcessNotify");
 }
 
@@ -479,19 +477,25 @@ static void LoRaTask(void *pv) {
 #endif
       //taskEXIT_CRITICAL();
       /* wait for notification */
-      LmHandlerProcess();
+      //LmHandlerProcess();
       // Process application uplinks management
       //UplinkProcess();
 
-      res = xTaskNotifyWait(0, -1, &notification, pdMS_TO_TICKS(1) /*portMAX_DELAY*/);
+      res = xTaskNotifyWait(0, -1, &notification, pdMS_TO_TICKS(1000) /*portMAX_DELAY*/);
       if (res==pdPASS) { /* notification received */
         if (notification&LORAWAN_NOTIFICATION_EVENT_WAKEUP) {
           LmHandlerProcess();
         } else if (notification&(LORAWAN_NOTIFICATION_EVENT_LMHANDLER|LORAWAN_NOTIFICATION_EVENT_MAC_PENDING)) {
-         // taskENTER_CRITICAL();
-         // printf("event received\n");
-          LmHandlerProcess();
-          //taskEXIT_CRITICAL();
+          for(int i=0; i<7000; i++) { /* need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+            LmHandlerProcess();
+            vTaskDelay(pdMS_TO_TICKS(1));
+          }
+#if 0
+          if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
+            /* reschedule event processing right away, not to delay things, e.g. to run into Rx2 timeout */
+            LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_WAKEUP);
+          }
+#endif
           // Process application uplinks management
                   //UplinkProcess( );
         //          CRITICAL_SECTION_BEGIN( );
@@ -560,7 +564,7 @@ void LoRaWAN_Init(void) {
   }
   wakeup_timer = xTimerCreate(
         "wakeupTimer", /* name */
-        pdMS_TO_TICKS(1000), /* period/time */
+        pdMS_TO_TICKS(5000), /* period/time */
         pdTRUE, /* auto reload */
         (void*)0, /* timer ID */
         vTimerCallbackWakeup); /* callback */
