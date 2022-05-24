@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FAT_FileSystem
-**     Version     : Component 01.211, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.214, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-08-12, 13:43, # CodeGen: 672
+**     Date/Time   : 2021-05-13, 11:07, # CodeGen: 738
 **     Abstract    :
 **
 **     Settings    :
@@ -92,6 +92,7 @@
 **         f_closedir        - FRESULT McuFatFS_f_closedir(DIR* dp);
 **         get_fattime       - uint32_t McuFatFS_get_fattime(void);
 **         ParseCommand      - uint8_t McuFatFS_ParseCommand(const unsigned char *cmd, bool *handled, const...
+**         StrToDriveNumber  - uint8_t McuFatFS_StrToDriveNumber(uint8_t *drvStr);
 **         CheckCardPresence - uint8_t McuFatFS_CheckCardPresence(bool *cardMounted, uint8_t *drive, FATFS...
 **         MountFileSystem   - uint8_t McuFatFS_MountFileSystem(FATFS *fileSystemObject, uint8_t...
 **         UnMountFileSystem - uint8_t McuFatFS_UnMountFileSystem(uint8_t *logicalDrive, const...
@@ -110,7 +111,7 @@
 **         Deinit            - uint8_t McuFatFS_Deinit(void);
 **         Init              - uint8_t McuFatFS_Init(void);
 **
-** Copyright (c) 2014-2020,  Erich Styger
+** Copyright (c) 2014-2021,  Erich Styger
 ** Web: http://mcuoneclipse.com/
 ** SourceForge: https://sourceforge.net/projects/mcuoneclipse
 ** Git: https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -156,21 +157,6 @@
 #endif
 
 
-/*-----------------------------------------------------------------------*/
-static uint8_t StrToDriveNumber(uint8_t *drvStr) {
-  uint8_t drv = 0;
-  const unsigned char *p;
-
-  if (drvStr==NULL || *drvStr=='\0') { /* default, "" */
-    drv = 0;
-  } else {
-    p = drvStr;
-    if (McuUtility_ScanDecimal8uNumber(&p, &drv)!=ERR_OK) { /* "0", "1", ... */
-      drv = 0; /* error, use default number */
-    }
-  }
-  return drv;
-}
 /*-----------------------------------------------------------------------*/
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 /* Initialize a Drive                                                    */
@@ -1447,10 +1433,10 @@ char* McuFatFS_errDResultMsg(int errNo)
 */
 bool McuFatFS_isWriteProtected(uint8_t *drvStr)
 {
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   uint8_t drv;
 
-  drv = StrToDriveNumber(drvStr);
-#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  drv = McuFatFS_StrToDriveNumber(drvStr);
   switch(drv) {
     case 0:
       return SDCard_isWriteProtected();
@@ -1459,7 +1445,7 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
   } /* switch */
   return TRUE;
 #else
-  return McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(drv);
+  return McuFatFS_CONFIG_IS_WRITE_PROTECTED_CALLBACK(drvStr);
 #endif
 }
 
@@ -1478,10 +1464,10 @@ bool McuFatFS_isWriteProtected(uint8_t *drvStr)
 */
 bool McuFatFS_isDiskPresent(uint8_t *drvStr)
 {
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
   uint8_t drv;
 
-  drv = StrToDriveNumber(drvStr);
-#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+  drv = McuFatFS_StrToDriveNumber(drvStr);
   switch(drv) {
     case 0:
       return SDCard_CardPresent();
@@ -1490,7 +1476,7 @@ bool McuFatFS_isDiskPresent(uint8_t *drvStr)
   } /* switch */
   return FALSE;
 #else
-  return McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(drv);
+  return McuFatFS_CONFIG_IS_DISK_PRESENT_CALLBACK(drvStr);
 #endif
 }
 
@@ -2512,12 +2498,12 @@ uint8_t McuFatFS_PrintDiskInfo(uint8_t *drvStr, const McuShell_StdIOType *io)
   uint8_t driverVersion; /* 0: SPI, 1: SDHC_LDD */
   uint8_t driveNr;
 
-  driveNr = StrToDriveNumber(drvStr);
+  driveNr = McuFatFS_StrToDriveNumber(drvStr);
   if (!McuFatFS_isDiskPresent(drvStr)) {
     McuShell_SendStr((unsigned char*)"disk not present!\r\n", io->stdErr);
     return ERR_FAILED;
   }
-  if ((disk_initialize(StrToDriveNumber(drvStr))&STA_NOINIT)!=0) {
+  if ((disk_initialize(McuFatFS_StrToDriveNumber(drvStr))&STA_NOINIT)!=0) {
     McuShell_SendStr((unsigned char*)"disk initialize failed!\r\n", io->stdErr);
     return ERR_FAILED;
   }
@@ -2997,6 +2983,35 @@ FRESULT McuFatFS_f_readdir(DIR *dj, FILINFO *fno)
   *** method is implemented as macro in the header file
 }
 */
+
+/*
+** ===================================================================
+**     Method      :  StrToDriveNumber (component FAT_FileSystem)
+**
+**     Description :
+**         Transforms a drive string ("0:/") into a drive number (0)
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * drvStr          - Pointer to drive string, e.g. "0:/"
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+uint8_t McuFatFS_StrToDriveNumber(uint8_t *drvStr)
+{
+  uint8_t drv = 0;
+  const unsigned char *p;
+
+  if (drvStr==NULL || *drvStr=='\0') { /* default, "" */
+    drv = 0;
+  } else {
+    p = drvStr;
+    if (McuUtility_ScanDecimal8uNumber(&p, &drv)!=ERR_OK) { /* "0", "1", ... */
+      drv = 0; /* error, use default number */
+    }
+  }
+  return drv;
+}
 
 /* END McuFatFS. */
 

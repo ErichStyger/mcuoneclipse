@@ -1,3 +1,4 @@
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1276
 /*!
  * \file      sx1276.c
  *
@@ -2022,3 +2023,5 @@ static void SX1276OnDio4Irq( void* context )
         break;
     }
 }
+
+#endif /* PL_CONFIG_RADIO_TRANSEIVER_TYPE==1276 */

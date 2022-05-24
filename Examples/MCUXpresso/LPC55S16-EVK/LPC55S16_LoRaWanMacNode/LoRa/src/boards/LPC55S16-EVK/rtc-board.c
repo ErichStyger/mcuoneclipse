@@ -33,7 +33,7 @@
 /*!
  * RTC timer context
  */
-typedef struct {
+typedef struct RtcTimerContext_t {
 	uint32_t Time;  // Reference time
 } RtcTimerContext_t;
 

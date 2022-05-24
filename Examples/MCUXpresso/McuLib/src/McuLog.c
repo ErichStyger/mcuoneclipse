@@ -328,11 +328,31 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 #if McuLog_CONFIG_USE_MUTEX
 static void LockUnlockCallback(void *data, bool lock) {
   (void)data; /* unused */
+#if ((configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY)) || (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY))) && (configCOMPILER==configCOMPILER_ARM_GCC)
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+  if (lock) {
+    if (xPortIsInsideInterrupt()) {
+      xSemaphoreTakeFromISR(McuLog_ConfigData.McuLog_Mutex, &xHigherPriorityTaskWoken);
+      portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    } else {
+      (void)xSemaphoreTakeRecursive(McuLog_ConfigData.McuLog_Mutex, portMAX_DELAY);
+    }
+  } else {
+    if (xPortIsInsideInterrupt()) {
+      xSemaphoreGiveFromISR(McuLog_ConfigData.McuLog_Mutex, &xHigherPriorityTaskWoken);
+      portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+    } else {
+      (void)xSemaphoreGiveRecursive(McuLog_ConfigData.McuLog_Mutex);
+    }
+  }
+#else /* cannot check if inside interrupt? */
   if (lock) {
     (void)xSemaphoreTakeRecursive(McuLog_ConfigData.McuLog_Mutex, portMAX_DELAY);
   } else {
     (void)xSemaphoreGiveRecursive(McuLog_ConfigData.McuLog_Mutex);
   }
+#endif
 }
 #endif
 

@@ -1,146 +1,229 @@
-Application name   : periodic-uplink-lpp
-Application version: 1.2.0
-GitHub base version: 5.0.0
-
-###### ===================================== ######
-
-######   Board UUID: {0x00,0x1B,0x51,0xAF,0x8E,0x43,0x7A,0x5E,0xA6,0xB4,0x90,0xF0,0xCB,0x6C,0x78,0xBE}   ######
 
 
-###### =========== CTXS RESTORED =========== ######
-Size        : 1096
 
 
-###### =========== MLME-Request ============ ######
-######               MLME_JOIN               ######
-###### ===================================== ######
-STATUS      : OK
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-
-###### =========== MLME-Confirm ============ ######
-STATUS      : OK
-###### ===========   JOINED     ============ ######
-
-OTAA
-
-DevAddr     :  260B974B
 
 
-DATA RATE   : DR_0
 
 
-###### ========== MLME-Indication ========== ######
-STATUS      : OK
-
-###### ============ CTXS STORED ============ ######
-Size        : 868
 
 
-###### =========== MCPS-Request ============ ######
-######           MCPS_UNCONFIRMED            ######
-###### ===================================== ######
-STATUS      : OK
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-
-###### =========== MCPS-Confirm ============ ######
-STATUS      : OK
-
-###### =====   UPLINK FRAME        1   ===== ######
-
-CLASS       : A
-
-TX PORT     : 0
-
-DATA RATE   : DR_0
-U/L FREQ    : 868500000
-TX POWER    : 0
-CHANNEL MASK: 00FF 
 
 
-###### ========== MCPS-Indication ========== ######
-STATUS      : OK
-
-###### =====  DOWNLINK FRAME        1  ===== ######
-RX WINDOW   : 1
-RX PORT     : 1
-RX DATA     : 
-02 
-
-DATA RATE   : DR_0
-RX RSSI     : -35
-RX SNR      : 4
 
 
-###### ============ CTXS STORED ============ ######
-Size        : 452
 
 
-###### =========== MCPS-Request ============ ######
-######           MCPS_UNCONFIRMED            ######
-###### ===================================== ######
-STATUS      : OK
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-
-###### =========== MCPS-Confirm ============ ######
-STATUS      : OK
-
-###### =====   UPLINK FRAME        2   ===== ######
-
-CLASS       : A
-
-TX PORT     : 0
-
-DATA RATE   : DR_0
-U/L FREQ    : 867700000
-TX POWER    : 0
-CHANNEL MASK: 00FF 
 
 
-###### ============ CTXS STORED ============ ######
-Size        : 88
 
-*clear
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
-*LmHandlerProcess
-*low power
+
+
+
+
+
+
+
+***********************************************************************************************************************************************
+
+
+
+00> 
+00> ###### ===================================== ######
+00> 
+00> Application name   : periodic-uplink-lpp
+00> Application version: 1.2.0
+00> GitHub base version: 5.0.0
+00> 
+00> ###### ===================================== ######
+00> 
+00> ######   Board UUID: {0x23,0xD7,0xA9,0xED,0x8A,0x5B,0xC7,0x55,0x82,0xC1,0x71,0xFE,0x91,0x1F,0x31,0x64}   ######
+00> 
+00> 
+00> ###### =========== CTXS RESTORED =========== ######
+00> Size        : 1096
+00> 
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Rx 2 timeout
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : OK
+00> ###### ===========   JOINED     ============ ######
+00> 
+00> OTAA
+00> 
+00> DevAddr     :  260B3EE6
+00> 
+00> 
+00> DATA RATE   : DR_0
+00> 
+00> 
+00> ###### ========== MLME-Indication ========== ######
+00> STATUS      : OK
+00> 
+00> ###### ============ CTXS STORED ============ ######
+00> Size        : 1068
+00> 
+00> 
+00> ###### =========== MCPS-Request ============ ######
+00> ######           MCPS_UNCONFIRMED            ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> 
+00> ###### =========== MCPS-Confirm ============ ######
+00> STATUS      : OK
+00> 
+00> ###### =====   UPLINK FRAME        1   ===== ######
+00> 
+00> CLASS       : A
+00> 
+00> TX PORT     : 0
+00> 
+00> DATA RATE   : DR_0
+00> U/L FREQ    : 868300000
+00> TX POWER    : 0
+00> CHANNEL MASK: 00FF 
+00> 
+00> 
+00> ###### ========== MLME-Indication ========== ######
+00> STATUS      : OK
+00> 
+00> ###### ============ CTXS STORED ============ ######
+00> Size        : 88
+00> 
+00> 
+00> ###### =========== MCPS-Request ============ ######
+00> ######           MCPS_UNCONFIRMED            ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> 
+00> ###### =========== MCPS-Confirm ============ ######
+00> STATUS      : OK
+00> 
+00> ###### =====   UPLINK FRAME        2   ===== ######
+00> 
+00> CLASS       : A
+00> 
+00> TX PORT     : 0
+00> 
+00> DATA RATE   : DR_0
+00> U/L FREQ    : 867900000
+00> TX POWER    : 0
+00> CHANNEL MASK: 00FF 
+00> 
+00> 
+00> ###### ========== MLME-Indication ========== ######
+00> STATUS      : OK
+00> 
+00> ###### ============ CTXS STORED ============ ######
+00> Size        : 88
+00> 
+00> 
+00> ###### =========== MCPS-Request ============ ######
+00> ######           MCPS_UNCONFIRMED            ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *low power
+00> *LmHandlerProcess
+00> *clear
+00> *LmHandlerProcess
+00> *low power
+(Connection lost)

@@ -44,16 +44,15 @@
 #include "platform.h"
 #include "LoRaWAN.h"
 #include "McuRTOS.h"
+#include "McuLog.h"
 #if PL_CONFIG_USE_SHELL
   #include "shell.h"
+  #include "McuShell.h"
 #endif
 
 #ifndef ACTIVE_REGION
-
-#warning "No active region defined, LORAMAC_REGION_EU868 will be used as default."
-
-#define ACTIVE_REGION LORAMAC_REGION_EU868
-
+  #warning "No active region defined, LORAMAC_REGION_EU868 will be used as default."
+  #define ACTIVE_REGION LORAMAC_REGION_EU868
 #endif
 
 /*!
@@ -303,7 +302,19 @@ static void LoRaTask(void *pv) {
 }
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
-
+#if 1
+static TimerEvent_t wakeupTimer;
+static volatile uint32_t wakeupPeriodicityMs = 1000;
+/*!
+ * Function executed on wakeupTimer event
+ */
+static void OnWakeupTimerEvent(void *context ) {
+  TimerStop(&wakeupTimer);
+  // Schedule next event
+  TimerSetValue( &wakeupTimer, wakeupPeriodicityMs);
+  TimerStart( &wakeupTimer );
+}
+#endif
 
 /*!
  * Main application entry point.
@@ -365,11 +376,21 @@ int main( void )
     // initialized and activated.
     LmHandlerPackageRegister( PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams );
 
-    LmHandlerJoin();
+#if 1
+    // Schedule timer so we get waked up
+    TimerInit( &wakeupTimer, OnWakeupTimerEvent );
+    TimerSetValue( &wakeupTimer, wakeupPeriodicityMs);
+    OnWakeupTimerEvent( NULL );
+#endif
 
-    StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
     while( 1 )
     {
+      if (LORAWAN_StartJoin()) {
+        LmHandlerJoin();
+      }
+      if (LORAWAN_StartUplink()) {
+        StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
+      }
 #if PL_CONFIG_USE_SHELL
         SHELL_Process(); /* execute shell periodic task */
 #endif
@@ -379,7 +400,7 @@ int main( void )
         CliProcess( &Uart2 );
 #endif
         // Processes the LoRaMac events
-        printf("*LmHandlerProcess\n");
+      //  printf("*LmHandlerProcess\n");
         LmHandlerProcess( );
 
         // Process application uplinks management
@@ -390,12 +411,13 @@ int main( void )
         {
             // Clear flag and prevent MCU to go into low power modes.
             IsMacProcessPending = 0;
-            printf("*clear\n");
+            //printf("*clear\n");
+            McuLog_trace("clear IsMacProcessPending");
         }
         else
         {
             // The MCU wakes up through events
-            printf("*low power\n");
+            //printf("*low power\n");
             BoardLowPowerHandler( );
         }
         CRITICAL_SECTION_END( );
@@ -591,10 +613,6 @@ static void UplinkProcess( void )
 }
 #endif
 
-
-
-
-
 static void OnTxPeriodicityChanged( uint32_t periodicity )
 {
     TxPeriodicity = periodicity;
@@ -667,6 +685,5 @@ static void OnLedBeaconTimerEvent( void* context )
     GpioWrite( &Led2, 1 );
     TimerStart( &Led2Timer );
 #endif
-
     TimerStart( &LedBeaconTimer );
 }

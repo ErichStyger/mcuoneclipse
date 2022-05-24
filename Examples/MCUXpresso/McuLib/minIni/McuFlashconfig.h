@@ -10,8 +10,13 @@
 #include "McuLib.h"
 
 #ifndef McuFlash_CONFIG_IS_ENABLED
-  #define McuFlash_CONFIG_IS_ENABLED   (0)
+  #define McuFlash_CONFIG_IS_ENABLED              (0)
     /*!< if the module MucFlash is enabled or not: 1: enabled; 0: disabled */
+#endif
+
+#ifndef McuFlash_CONFIG_LOGGING_TRACE
+  #define McuFlash_CONFIG_LOGGING_TRACE           (0)
+    /*!< 1: extra trace logging: 0: no extra trace logging */
 #endif
 
 #ifndef McuFlash_CONFIG_FLASH_BLOCK_SIZE

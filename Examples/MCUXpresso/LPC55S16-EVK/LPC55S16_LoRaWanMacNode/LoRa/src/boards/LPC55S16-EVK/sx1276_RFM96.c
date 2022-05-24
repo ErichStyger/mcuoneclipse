@@ -1,3 +1,4 @@
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1276
 /*!
  * \file      sx1261mbxbas-board.c
  *
@@ -337,33 +338,5 @@ void SX1276DbgPinRxWrite( uint8_t state )
 }
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif /* PL_CONFIG_RADIO_TRANSEIVER_TYPE==1276 */
 

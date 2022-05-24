@@ -9,7 +9,7 @@
 
 /* configure the HW/Board version with TINYK22_HAT_VERSION in IncludeMcuLibConfig.h */
 
-#define PL_BOARD_IS_TINYK22   (0)  /* otherwise: FRDM-K22F */
+#define PL_BOARD_IS_TINYK22   (1)  /* otherwise: FRDM-K22F */
 #define PL_CONFIG_USE_RTT     (0)
 
 void PL_Init(void);

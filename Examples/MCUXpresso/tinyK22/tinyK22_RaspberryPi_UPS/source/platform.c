@@ -72,15 +72,18 @@ void PL_Init(void) {
   //McuWait_Waitms(100); /* display needs some time to power up */
   //McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
 #endif
+#if PL_CONFIG_USE_RTT
   McuRTT_Init();
+#endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
   McuGPIO_Init();
   McuLED_Init();
+#if PL_CONFIG_USE_BUTTONS
   McuBtn_Init();
   McuDbnc_Init();
-
+#endif
   /* initialize my own modules */
 #if PL_CONFIG_USE_USB_CDC
   USB_APPInit(); /* Initialize USB first before the UART/Gateway, because this changes the clock settings! */
@@ -117,7 +120,9 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_RASPBERRY
   RGPIO_Init();
 #endif
+#if PL_CONFIG_USE_BUTTONS
   BTN_Init();
+#endif
 }
 
 void PL_Deinit(void) {

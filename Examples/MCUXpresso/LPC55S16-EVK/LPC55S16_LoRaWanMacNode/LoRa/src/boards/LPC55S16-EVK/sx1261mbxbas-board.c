@@ -1,3 +1,4 @@
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261
 /*!
  * \file      sx1261mbxbas-board.c
  *
@@ -350,3 +351,5 @@ static void SX126xDbgPinRxWrite( uint8_t state )
     GpioWrite( &DbgPinRx, state );
 }
 #endif
+
+#endif /* PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 */

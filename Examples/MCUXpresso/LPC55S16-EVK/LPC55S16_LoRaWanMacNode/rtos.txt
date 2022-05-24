@@ -1,0 +1,1866 @@
+ 00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3ba00, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc00, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3be00, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c000, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c200, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c400, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c600, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 1024, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc00, size 1024, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c000, size 1024, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c400, size 1024, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 2048, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3c000, size 2048, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 4096, yes
+00> 
+00> ###### ===================================== ######
+00> 
+00> Application name   : periodic-uplink-lpp
+00> Application version: 1.2.0
+00> GitHub base version: 5.0.0
+00> 
+00> ###### ===================================== ######
+00> 
+00> ######   Board UUID: {0x23,0xD7,0xA9,0xED,0x8A,0x5B,0xC7,0x55,0x82,0xC1,0x71,0xFE,0x91,0x1F,0x31,0x64}   ######
+00> 
+00> Shell task started.
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b834, size 4
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b834, size 4, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b800, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b801, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b801, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b802, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b802, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b803, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b803, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b804, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b804, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b805, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b805, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b806, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b806, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b807, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b807, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b808, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b808, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b809, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b809, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b80a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b80a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b80b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b80b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b80c, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b80c, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b80d, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b80d, size 1, yesize 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb92, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb93, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb93, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb94, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb94, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb95, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb95, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb96, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb96, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb97, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb97, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb98, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb98, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb99, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb99, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb9a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb9b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb9c, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9c, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb9d, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9d, size 1, yes
+00> 00.00.0 00:00:00,00 ash.c:88: Read: 0x3bb9e, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9e, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bb9f, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bb9f, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bba9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bba9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbaa, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbaa, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbab, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbab, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbac, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbac, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbad, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbad, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbae, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbae, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbaf, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbaf, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbb9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbb9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbba, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbba, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbbb, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbbb, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbbc, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbbc, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbbd, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbbd, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbbe, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbbe, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbbf, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbbf, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbc9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbc9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbca, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbca, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbcb, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbcb, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbcc, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbcc, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbcd, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbcd, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbce, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbce, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbcf, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbcf, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbd9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbd9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbda, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbda, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbdb, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbdb, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbdc, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbdc, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbdd, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbdd, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbde, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbde, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbdf, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbdf, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbe9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbe9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbea, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbea, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbeb, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbeb, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbec, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbec, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbed, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbed, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbee, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbee, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbef, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbef, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf0, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf0, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf1, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf1, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf2, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf2, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf3, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf3, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf4, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf4, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf5, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf5, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf6, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf6, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf7, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf7, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf8, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf8, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbf9, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbf9, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbfa, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbfa, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbfb, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbfb, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbfc, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbfc, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbfd, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbfd, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbfe, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbfe, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bbff, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bbff, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc00, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc00, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc01, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc01, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc02, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc02, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc03, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc03, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc04, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc04, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc05, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc05, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc06, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc06, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc07, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc07, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc08, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc08, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc09, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc09, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0c, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0c, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0d, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0d, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0e, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0e, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc0f, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc0f, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc10, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc10, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc11, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc11, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc12, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc12, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc13, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc13, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc14, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc14, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc15, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc15, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc16, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc16, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc17, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc17, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc18, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc18, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc19, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc19, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1c, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1c, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1d, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1d, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1e, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1e, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc1f, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc1f, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc20, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc20, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc21, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc21, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc22, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc22, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc23, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc23, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc24, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc24, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc25, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc25, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc26, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc26, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc27, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc27, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc28, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc28, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc29, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc29, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc2a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc2a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc2b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc2b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc44, size 4
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc44, size 4, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc30, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc30, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc31, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc31, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc32, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc32, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc33, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc33, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc34, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc34, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc35, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc35, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc36, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc36, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc37, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc37, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc38, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc38, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc39, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc39, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3a, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3a, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3b, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3b, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3c, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3c, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3d, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3d, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3e, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3e, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc3f, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc3f, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc40, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc40, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc41, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc41, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc42, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc42, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bc43, size 1
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bc43, size 1, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b800, size 1096
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 1096, yes
+00> 
+00> ###### =========== CTXS RESTORED =========== ######
+00> Size        : 1096
+00> 
+00> DevEui      : 70-B3-D5-7E-D0-04-C8-03
+00> JoinEui     : 00-00-00-00-00-00-00-00
+00> Pin         : 00-00-00-00
+00> 
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : Busy
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : OK
+00> *clear
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MacProcessNotify ============ ######
+00> ######            xxxxxxxxxxxxxxxxxxx             ######
+00> ###### ========================================== ######
+00> 
+00> ###### =========== MLME-Confirm ============ ######
+00> STATUS      : Tx timeout
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3bcb0, size 8
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3bcb0, size 8, yes
+00> 
+00> ###### =========== MLME-Request ============ ######
+00> ######               MLME_JOIN               ######
+00> ###### ===================================== ######
+00> STATUS      : Duty-cycle restricted
+00> Next Tx in  : 3548000 [ms]
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:221: Program: 0x3b800, size 56
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b800, size 512
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:108: ProgramPage: 0x3b800, size 512
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:221: Program: 0x3b838, size 32
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b800, size 512
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:108: ProgramPage: 0x3b800, size 512
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:221: Program: 0x3b858, size 364
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:88: Read: 0x3b800, size 512
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:53: IsAccessible: 0x3b800, size 512, yes
+00> 00.00.0 00:00:00,00 TRACE McuFlash.c:108: ProgramPage: 0x3b800, size 512
+00> 
+00> ###### ============ CTXS STORED ============ ######
+00> Size        : 452
+00> 
+00> *clear
+(Connection lost)

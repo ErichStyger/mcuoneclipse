@@ -27,11 +27,12 @@
 #include "timer.h"
 
 #include "LmHandlerMsgDisplay.h"
+#include "McuLog.h"
 
 /*!
  * MAC status strings
  */
-const char* MacStatusStrings[] =
+static const char* MacStatusStrings[] =
 {
     "OK",                            // LORAMAC_STATUS_OK
     "Busy",                          // LORAMAC_STATUS_BUSY
@@ -62,7 +63,7 @@ const char* MacStatusStrings[] =
 /*!
  * MAC event info status strings.
  */
-const char* EventInfoStatusStrings[] =
+static const char* EventInfoStatusStrings[] =
 { 
     "OK",                            // LORAMAC_EVENT_INFO_STATUS_OK
     "Error",                         // LORAMAC_EVENT_INFO_STATUS_ERROR
@@ -112,6 +113,9 @@ void PrintHexBuffer( uint8_t *buffer, uint8_t size )
 
 void DisplayNvmDataChange( LmHandlerNvmContextStates_t state, uint16_t size )
 {
+#if 1
+  McuLog_trace("OnNvmDataChange %s, size %u", state == LORAMAC_HANDLER_NVM_STORE?"CTXS STORED":"CTXS RESTORED", state, size);
+#else
     if( state == LORAMAC_HANDLER_NVM_STORE )
     {
         printf( "\n###### ============ CTXS STORED ============ ######\n" );
@@ -122,6 +126,7 @@ void DisplayNvmDataChange( LmHandlerNvmContextStates_t state, uint16_t size )
         printf( "\n###### =========== CTXS RESTORED =========== ######\n" );
     }
     printf( "Size        : %i\n\n", size );
+#endif
 }
 
 void DisplayNetworkParametersUpdate( CommissioningParams_t *commissioningParams )
@@ -148,6 +153,23 @@ void DisplayNetworkParametersUpdate( CommissioningParams_t *commissioningParams 
 
 void DisplayMacMcpsRequestUpdate( LoRaMacStatus_t status, McpsReq_t *mcpsReq, TimerTime_t nextTxIn )
 {
+#if 1
+  const unsigned char *reqType;
+  switch(mcpsReq->Type) {
+    case MCPS_CONFIRMED:
+      reqType = (const unsigned char*)"MCPS_CONFIRMED"; break;
+    case MCPS_UNCONFIRMED:
+      reqType = (const unsigned char*)"MCPS_UNCONFIRMED"; break;
+    case MCPS_PROPRIETARY:
+      reqType = (const unsigned char*)"MCPS_PROPRIETARY"; break;
+    default:
+      reqType = (const unsigned char*)"MCPS_ERROR"; break;
+  }
+  McuLog_trace("OnMacMcpsRequest: %s status: %s", reqType, MacStatusStrings[status]);
+  if(status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED) {
+    McuLog_trace("Next Tx in %lu [ms]", nextTxIn);
+  }
+#else
     switch( mcpsReq->Type )
     {
         case MCPS_CONFIRMED:
@@ -184,10 +206,30 @@ void DisplayMacMcpsRequestUpdate( LoRaMacStatus_t status, McpsReq_t *mcpsReq, Ti
     {
         printf( "Next Tx in  : %lu [ms]\n", nextTxIn );
     }
+#endif
 }
 
 void DisplayMacMlmeRequestUpdate( LoRaMacStatus_t status, MlmeReq_t *mlmeReq, TimerTime_t nextTxIn )
 {
+#if 1
+  const unsigned char *reqType;
+  switch(mlmeReq->Type) {
+    case MLME_JOIN:
+      reqType = (const unsigned char*)"MLME_JOIN"; break;
+    case MLME_LINK_CHECK:
+      reqType = (const unsigned char*)"MLME_LINK_CHECK"; break;
+    case MLME_DEVICE_TIME:
+      reqType = (const unsigned char*)"MLME_DEVICE_TIME"; break;
+    case MLME_TXCW:
+      reqType = (const unsigned char*)"MLME_TXCW"; break;
+    default:
+      reqType = (const unsigned char*)"MCPS_ERROR"; break;
+  }
+  McuLog_trace("OnMacMlmeRequest: %s status: %s", reqType, MacStatusStrings[status]);
+  if(status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED) {
+    McuLog_trace("Next Tx in %lu [ms]", nextTxIn);
+  }
+#else
     switch( mlmeReq->Type )
     {
         case MLME_JOIN:
@@ -231,10 +273,24 @@ void DisplayMacMlmeRequestUpdate( LoRaMacStatus_t status, MlmeReq_t *mlmeReq, Ti
     {
         printf( "Next Tx in  : %lu [ms]\n", nextTxIn );
     }
+#endif
 }
 
 void DisplayJoinRequestUpdate( LmHandlerJoinParams_t *params )
 {
+#if 1
+  if(params->CommissioningParams->IsOtaaActivation == true) {
+       if(params->Status == LORAMAC_HANDLER_SUCCESS) {
+         McuLog_trace("JOINED (OTAA), DevAddr: %08lX, DATA RATE: DR_%d", params->CommissioningParams->DevAddr, params->Datarate);
+       }
+   }
+ #if ( OVER_THE_AIR_ACTIVATION == 0 )
+   else
+   {
+     McuLog_trace("JOINED (ABP), DevAddr: %08lX", params->CommissioningParams->DevAddr);
+   }
+ #endif
+#else
     if( params->CommissioningParams->IsOtaaActivation == true )
     {
         if( params->Status == LORAMAC_HANDLER_SUCCESS )
@@ -255,12 +311,75 @@ void DisplayJoinRequestUpdate( LmHandlerJoinParams_t *params )
         printf( "\n\n" );
     }
 #endif
+#endif
 }
 
 void DisplayTxUpdate( LmHandlerTxParams_t *params )
 {
     MibRequestConfirm_t mibGet;
 
+#if 1
+    if(params->IsMcpsConfirm == 0) {
+        McuLog_trace("MLME-Confirm: %s", EventInfoStatusStrings[params->Status]);
+        return;
+    }
+    McuLog_trace("MCPS-Confirm: %s", EventInfoStatusStrings[params->Status]);
+    McuLog_trace("UPLINK FRAME: %8lu", params->UplinkCounter );
+    McuLog_trace( "CLASS: %c, TX PORT %d ", "ABC"[LmHandlerGetCurrentClass()], params->AppData.Port);
+    if( params->AppData.BufferSize != 0 )
+    {
+        if( params->MsgType == LORAMAC_HANDLER_CONFIRMED_MSG )
+        {
+          McuLog_trace( "TX DATA CONFIRMED - %s", ( params->AckReceived != 0 ) ? "ACK" : "NACK" );
+        }
+        else
+        {
+          McuLog_trace( "TX DATA UNCONFIRMED" );
+        }
+        PrintHexBuffer( params->AppData.Buffer, params->AppData.BufferSize );
+    }
+    McuLog_trace( "DATA RATE: DR_%d, TX POWER: %d", params->Datarate, params->TxPower);
+
+    mibGet.Type  = MIB_CHANNELS;
+    if( LoRaMacMibGetRequestConfirm( &mibGet ) == LORAMAC_STATUS_OK )
+    {
+      McuLog_trace( "U/L FREQ: %lu", mibGet.Param.ChannelList[params->Channel].Frequency );
+    }
+
+    mibGet.Type  = MIB_CHANNELS_MASK;
+    if( LoRaMacMibGetRequestConfirm( &mibGet ) == LORAMAC_STATUS_OK )
+    {
+        switch( LmHandlerGetActiveRegion( ) )
+        {
+            case LORAMAC_REGION_AS923:
+            case LORAMAC_REGION_CN779:
+            case LORAMAC_REGION_EU868:
+            case LORAMAC_REGION_IN865:
+            case LORAMAC_REGION_KR920:
+            case LORAMAC_REGION_EU433:
+            case LORAMAC_REGION_RU864:
+            {
+              McuLog_trace( "CHANNEL MASK: %04X", mibGet.Param.ChannelsMask[0] );
+              break;
+            }
+            case LORAMAC_REGION_AU915:
+            case LORAMAC_REGION_CN470:
+            case LORAMAC_REGION_US915:
+            {
+                for( uint8_t i = 0; i < 5; i++)
+                {
+                  McuLog_trace( "CHANNEL MASK: %04X ", mibGet.Param.ChannelsMask[i] );
+                }
+                break;
+            }
+            default:
+            {
+              McuLog_trace( "###### ========= Unknown Region ============ ######" );
+                break;
+            }
+        }
+    }
+#else
     if( params->IsMcpsConfirm == 0 )
     {
         printf( "\n###### =========== MLME-Confirm ============ ######\n" );
@@ -340,19 +459,26 @@ void DisplayTxUpdate( LmHandlerTxParams_t *params )
     }
 
     printf( "\n" );
+#endif
 }
 
 void DisplayRxUpdate( LmHandlerAppData_t *appData, LmHandlerRxParams_t *params )
 {
     const char *slotStrings[] = { "1", "2", "C", "C Multicast", "B Ping-Slot", "B Multicast Ping-Slot" };
 
+#if 1
+    if( params->IsMcpsIndication == 0 ) {
+       McuLog_trace("MLME-Indication: %s", EventInfoStatusStrings[params->Status]);
+       return;
+    }
+#else
     if( params->IsMcpsIndication == 0 )
     {
         printf( "\n###### ========== MLME-Indication ========== ######\n" );
         printf( "STATUS      : %s\n", EventInfoStatusStrings[params->Status] );
         return;
     }
-
+#endif
     printf( "\n###### ========== MCPS-Indication ========== ######\n" );
     printf( "STATUS      : %s\n", EventInfoStatusStrings[params->Status] );
 

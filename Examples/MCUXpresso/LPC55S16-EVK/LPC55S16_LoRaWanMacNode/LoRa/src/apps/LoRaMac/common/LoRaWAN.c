@@ -8,7 +8,10 @@
 #include "McuLib.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
+#include "McuTimeDate.h"
+#include "McuUtility.h"
 #include "LoRaWAN.h"
+#include "McuShell.h"
 #include "LmHandler.h"
 #include "LmhpCompliance.h"
 #include "CayenneLpp.h"
@@ -16,27 +19,9 @@
 #include "Commissioning.h"
 #include "RegionCommon.h"
 #include "boards/board.h"
+#include "NvmDataMgmt.h"
 
 #define FIRMWARE_VERSION  0x01020000 // 1.2.0.0
-
-
-static TaskHandle_t LoRaTaskHandle;
-static uint8_t IsMacProcessPending = 0;
-
-TaskHandle_t  lorawan_task_handle;
-QueueHandle_t lorawan_task_queue;
-
-
-void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
-  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-  if (xPortIsInsideInterrupt()) {
-	  xTaskNotifyAndQueryFromISR(LoRaTaskHandle, event, eSetBits, NULL, &xHigherPriorityTaskWoken );
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-  } else {
-	  xTaskNotifyAndQuery(LoRaTaskHandle, event, eSetBits, NULL);
-  }
-}
 
 /*!
  * User application data buffer size
@@ -83,7 +68,7 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
 #define LORAWAN_ADR_STATE                           LORAMAC_HANDLER_ADR_ON
 
 /*!
- * Default datarate
+ * Default data rate
  *
  * \remark Please note that LORAWAN_DEFAULT_DATARATE is used only when ADR is disabled
  */
@@ -106,16 +91,111 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  */
 #define LORAWAN_DUTYCYCLE_ON                        false
 
-
-
 /*!
  * LoRaWAN application port
  * @remark The allowed port range is from 1 up to 223. Other values are reserved.
  */
 #define LORAWAN_APP_PORT                            2
 
+/* ----------------------------------------------------------------------------------------------- */
+static volatile uint32_t TxPeriodicity = 0;
+static volatile uint8_t IsTxFramePending = 0;
+/*!
+ * Timer to handle the application data transmission duty cycle
+ */
+static TimerEvent_t TxTimer;
+
+/*!
+ * Function executed on TxTimer event
+ */
+static void OnTxTimerEvent( void* context )
+{
+    TimerStop( &TxTimer );
+
+    IsTxFramePending = 1;
+
+    // Schedule next transmission
+    TimerSetValue( &TxTimer, TxPeriodicity );
+    TimerStart( &TxTimer );
+}
 
 
+static TaskHandle_t LoRaTaskHandle;
+
+void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+  if (xPortIsInsideInterrupt()) {
+    xTaskNotifyAndQueryFromISR(LoRaTaskHandle, event, eSetBits, NULL, &xHigherPriorityTaskWoken );
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+  } else {
+    xTaskNotifyAndQuery(LoRaTaskHandle, event, eSetBits, NULL);
+  }
+}
+
+bool LORAWAN_TxData(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_TX_DATA);
+  return false;
+#else
+  static bool txData = false;
+  if (txData) {
+    txData = false;
+    return true;
+  }
+  return false;
+#endif
+}
+
+bool LORAWAN_StartJoin(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_START_JOIN);
+  return false;
+#else
+  static bool startJoin = false;
+  if (startJoin) {
+    startJoin = false;
+    return true;
+  }
+  return false;
+#endif
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"lorawan", (unsigned char*)"LoRaWAN Application status\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "lorawan help")==0) {
+    McuShell_SendHelpStr((unsigned char*)"lorawan", (const unsigned char*)"Group of LoRaWAN application commands\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  join", (unsigned char*)"Start joining the network\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  txdata", (unsigned char*)"Send uplink messages\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  factoryreset", (unsigned char*)"Factory reset NVM Data\r\n", io->stdOut);
+    *handled = TRUE;
+    return ERR_OK;
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "lorawan status")==0)) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan join")==0) {
+    *handled = TRUE;
+    (void)LORAWAN_StartJoin();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan txdata")==0) {
+    *handled = TRUE;
+    (void)LORAWAN_TxData();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "lorawan factoryreset")==0) {
+    *handled = TRUE;
+    if (!NvmDataMgmtFactoryReset()) {
+      return ERR_FAILED;
+    }
+    return ERR_OK;
+  }
+  return ERR_OK;
+}
+/* ----------------------------------------------------------------------------------------------- */
 static void OnMacProcessNotify( void );
 static void OnNvmDataChange( LmHandlerNvmContextStates_t state, uint16_t size );
 static void OnNetworkParametersChange( CommissioningParams_t* params );
@@ -131,8 +211,6 @@ static void OnSysTimeUpdate( bool isSynchronized, int32_t timeCorrection );
 #else
 static void OnSysTimeUpdate( void );
 #endif
-
-//static void UplinkProcess( void );
 
 static LmHandlerCallbacks_t LmHandlerCallbacks =
 {
@@ -165,7 +243,6 @@ static LmHandlerParams_t LmHandlerParams =
   .PingSlotPeriodicity = REGION_COMMON_DEFAULT_PING_SLOT_PERIODICITY,
 };
 
-
 /*!
  * User application data structure
  */
@@ -182,10 +259,6 @@ static LmHandlerAppData_t AppData =
  */
 static bool AppLedStateOn = false;
 
-
-
-
-
 static void OnTxPeriodicityChanged( uint32_t periodicity );
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed );
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity );
@@ -199,30 +272,30 @@ static LmhpComplianceParams_t LmhpComplianceParams =
 };
 
 static void OnMacProcessNotify(void) {
-  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_MAC_PENDING);
-  IsMacProcessPending = 1;
-  printf( "\n###### =========== MacProcessNotify ============ ######\n" );
-  printf( "######            xxxxxxxxxxxxxxxxxxx             ######\n");
-  printf( "###### ========================================== ######\n");
-
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_MAC_PENDING);
+  McuLog_trace("OnMacProcessNotify");
 }
 
 static void OnNvmDataChange(LmHandlerNvmContextStates_t state, uint16_t size) {
+  /* save/restore of NVMC data */
   DisplayNvmDataChange(state, size);
   //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnNetworkParametersChange(CommissioningParams_t* params) {
   DisplayNetworkParametersUpdate(params);
+  McuLog_trace("OnNetworkParametersChange");
  // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnMacMcpsRequest(LoRaMacStatus_t status, McpsReq_t *mcpsReq, TimerTime_t nextTxIn) {
+  /* MAC Common Part Sublayer request */
   DisplayMacMcpsRequestUpdate(status, mcpsReq, nextTxIn);
-  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnMacMlmeRequest(LoRaMacStatus_t status, MlmeReq_t *mlmeReq, TimerTime_t nextTxIn) {
+  /* MAC Layer Management Entity request */
   DisplayMacMlmeRequestUpdate(status, mlmeReq, nextTxIn);
   LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
@@ -232,14 +305,16 @@ static void OnJoinRequest(LmHandlerJoinParams_t* params) {
   if(params->Status == LORAMAC_HANDLER_ERROR) {
     LmHandlerJoin();
   } else {
-    LmHandlerRequestClass( LORAWAN_DEFAULT_CLASS );
+    LmHandlerRequestClass(LORAWAN_DEFAULT_CLASS);
   }
-  //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  if (params->Status==LORAMAC_HANDLER_SUCCESS) {
+    LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_CONNECTED);
+  }
 }
 
 static void OnTxData(LmHandlerTxParams_t* params) {
   DisplayTxUpdate(params);
- // LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnRxData(LmHandlerAppData_t* appData, LmHandlerRxParams_t* params) {
@@ -257,7 +332,7 @@ static void OnRxData(LmHandlerAppData_t* appData, LmHandlerRxParams_t* params) {
 
 static void OnClassChange(DeviceClass_t deviceClass) {
   DisplayClassUpdate( deviceClass );
-
+  McuLog_trace("OnClassChange");
   // Inform the server as soon as possible that the end-device has switched to ClassB
   LmHandlerAppData_t appData =
   {
@@ -300,39 +375,36 @@ static void OnSysTimeUpdate(void) {
 }
 #endif
 
-#if 0
+
 /*!
  * Prepares the payload of the frame and transmits it.
  */
 static void PrepareTxFrame(void) {
-    if( LmHandlerIsBusy( ) == true )
-    {
-        return;
-    }
+  if( LmHandlerIsBusy( ) == true ) {
+      return;
+  }
 
-    uint8_t channel = 0;
+  uint8_t channel = 0;
 
-    AppData.Port = LORAWAN_APP_PORT;
+  AppData.Port = LORAWAN_APP_PORT;
 
-    CayenneLppReset( );
-    CayenneLppAddDigitalInput( channel++, AppLedStateOn );
-    CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
+  CayenneLppReset( );
+  CayenneLppAddDigitalInput( channel++, AppLedStateOn );
+  CayenneLppAddAnalogInput( channel++, BoardGetBatteryLevel( ) * 100 / 254 );
 
-    CayenneLppCopy( AppData.Buffer );
-    AppData.BufferSize = CayenneLppGetSize( );
+  CayenneLppCopy( AppData.Buffer );
+  AppData.BufferSize = CayenneLppGetSize( );
 
-    if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
-    {
-#if PL_CONFIG_USE_LED1
-       // Switch LED 1 ON
-        GpioWrite( &Led1, 1 );
-        TimerStart( &Led1Timer );
+  if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
+  {
+#if 0 && PL_CONFIG_USE_LED1
+     // Switch LED 1 ON
+      GpioWrite( &Led1, 1 );
+      TimerStart( &Led1Timer );
 #endif
-    }
+  }
 }
-#endif
 
-#if 0
 static void UplinkProcess(void) {
     uint8_t isPending = 0;
     CRITICAL_SECTION_BEGIN( );
@@ -341,42 +413,47 @@ static void UplinkProcess(void) {
     CRITICAL_SECTION_END( );
     if( isPending == 1 )
     {
-        PrepareTxFrame( );
+        PrepareTxFrame();
     }
 }
-#endif
 
 static void OnTxPeriodicityChanged(uint32_t periodicity) {
-#if 0
-    TxPeriodicity = periodicity;
+  McuLog_trace("OnTxPeriodicityChanged %u", periodicity);
+  TxPeriodicity = periodicity;
 
-    if( TxPeriodicity == 0 )
-    { // Revert to application default periodicity
-        TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
-    }
-
-    // Update timer periodicity
-    TimerStop( &TxTimer );
-    TimerSetValue( &TxTimer, TxPeriodicity );
-    TimerStart( &TxTimer );
-#endif
+  if( TxPeriodicity == 0 )
+  { // Revert to application default periodicity
+      TxPeriodicity = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
+  }
+  // Update timer periodicity
+  TimerStop( &TxTimer );
+  TimerSetValue( &TxTimer, TxPeriodicity );
+  TimerStart( &TxTimer );
 }
 
 static void OnTxFrameCtrlChanged( LmHandlerMsgTypes_t isTxConfirmed ) {
   LmHandlerParams.IsTxConfirmed = isTxConfirmed;
+  McuLog_trace("OnTxFrameCtrlChanged, isTxConfirmed %u", isTxConfirmed);
   //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
 static void OnPingSlotPeriodicityChanged( uint8_t pingSlotPeriodicity ) {
   LmHandlerParams.PingSlotPeriodicity = pingSlotPeriodicity;
+  McuLog_trace("OnTxFrameCtrlChanged: %u", pingSlotPeriodicity);
   //LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 }
 
-
+typedef enum LoRaTaskState_e {
+  LORA_TASK_STATE_INIT,
+  LORA_TASK_STATE_JOINING,
+  LORA_TASK_STATE_CONNECTED,
+  LORA_TASK_STATE_TX_DATA,
+} LoRaTaskState_e;
 
 static void LoRaTask(void *pv) {
   uint32_t notification;
   BaseType_t res;
+  LoRaTaskState_e state = LORA_TASK_STATE_INIT;
 
   if (LmHandlerInit(&LmHandlerCallbacks, &LmHandlerParams) != LORAMAC_HANDLER_SUCCESS) {
     McuLog_fatal("LoRaMac wasn't properly initialized");
@@ -388,57 +465,78 @@ static void LoRaTask(void *pv) {
   // The LoRa-Alliance Compliance protocol package should always be
   // initialized and activated.
   LmHandlerPackageRegister(PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams);
-
-  LmHandlerJoin();
   //StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
+#if 0
   if( LmHandlerSend( &AppData, LmHandlerParams.IsTxConfirmed ) == LORAMAC_HANDLER_SUCCESS )
   {
 
   }
+#endif
   for(;;) {
-    taskENTER_CRITICAL();
-    if (IsMacProcessPending == 1) {
-      // Clear flag and prevent MCU to go into low power modes.
-      IsMacProcessPending = 0;
-      printf("process pending\n");
-      taskEXIT_CRITICAL();
-      LmHandlerProcess();
-
-    } else {
-      taskEXIT_CRITICAL();
-      /* wait for notification */
-      res = xTaskNotifyWait(0, -1, &notification, pdMS_TO_TICKS(5) /*portMAX_DELAY*/);
+      res = xTaskNotifyWait(0, -1, &notification, portMAX_DELAY);
       if (res==pdPASS) { /* notification received */
-        if (notification&(LORAWAN_NOTIFICATION_EVENT_LMHANDLER|LORAWAN_NOTIFICATION_EVENT_MAC_PENDING)) {
-
-         // taskENTER_CRITICAL();
-         // printf("event received\n");
-          LmHandlerProcess();
-          //taskEXIT_CRITICAL();
-          // Process application uplinks management
-                  //UplinkProcess( );
-
-                  CRITICAL_SECTION_BEGIN( );
-                  if( IsMacProcessPending == 1 )
-                  {
-                      // Clear flag and prevent MCU to go into low power modes.
-                      IsMacProcessPending = 0;
-                      printf("*clear\n");
-                  }
-                  else
-                  {
-                      // The MCU wakes up through events
-                     // printf("*low power\n");
-                      BoardLowPowerHandler( );
-                  }
-                  CRITICAL_SECTION_END( );
-        }
-        if (notification&LORAWAN_NOTIFICATION_EVENT_TX_REQUEST) {
-        	printf("event LORAWAN_NOTIFICATION_EVENT_TX_REQUEST received\n");
-        }
-      }
-    }
+        LmHandlerProcess();
+        switch(state) {
+          case LORA_TASK_STATE_INIT:
+            if (notification&LORAWAN_NOTIFICATION_EVENT_START_JOIN) {
+              McuLog_info("start joining ...");
+              LmHandlerJoin();
+              state = LORA_TASK_STATE_JOINING;
+            }
+          break;
+          case LORA_TASK_STATE_JOINING:
+            if (notification&LORAWAN_NOTIFICATION_EVENT_CONNECTED) { /* join successful? */
+              McuLog_info("... connected");
+              // or: LmHandlerJoinStatus( ) != LORAMAC_HANDLER_SET
+              state = LORA_TASK_STATE_CONNECTED;
+            } else { /* wait during joining */
+              for(int i=0; i<70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+                LmHandlerProcess();
+                vTaskDelay(pdMS_TO_TICKS(100));
+              }
+            }
+            break;
+          case LORA_TASK_STATE_CONNECTED:
+            if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
+              for(int i=0; i<70; i++) {
+                LmHandlerProcess();
+                vTaskDelay(pdMS_TO_TICKS(100));
+              }
+            }
+            UplinkProcess();
+            if (notification&LORAWAN_NOTIFICATION_EVENT_TX_DATA) {
+              McuLog_info("request to tx data");
+              // Schedule 1st packet transmission
+               TimerInit( &TxTimer, OnTxTimerEvent );
+               TimerSetValue(&TxTimer, TxPeriodicity);
+               OnTxTimerEvent(NULL);
+               state = LORA_TASK_STATE_TX_DATA;
+            }
+            break;
+          case LORA_TASK_STATE_TX_DATA:
+            for(int i=0; i<70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+              LmHandlerProcess();
+              vTaskDelay(pdMS_TO_TICKS(100));
+            }
+            state = LORA_TASK_STATE_CONNECTED;
+            break;
+          default:
+            break;
+        } /* switch */
+    } /* if notification received */
   } /* for */
+}
+
+static TimerHandle_t rtc_timer;
+static TimerHandle_t wakeup_timer;
+
+static void vTimerCallbackRTC(TimerHandle_t pxTimer) {
+  McuTimeDate_AddTick();
+}
+
+static void vTimerCallbackWakeup(TimerHandle_t pxTimer) {
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_WAKEUP);
+  McuLog_trace("timer wakeup");
 }
 
 void LoRaWAN_Init(void) {
@@ -453,5 +551,33 @@ void LoRaWAN_Init(void) {
   {
     McuLog_fatal("failed creating LoRaWan task");
     for(;;){} /* error! probably out of memory */
+  }
+  rtc_timer = xTimerCreate(
+        "rtcTimer", /* name */
+        pdMS_TO_TICKS(McuTimeDate_CONFIG_TICK_TIME_MS), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackRTC); /* callback */
+  if (rtc_timer==NULL) {
+    McuLog_fatal("failed creating RTC Timer");
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(rtc_timer, pdMS_TO_TICKS(50))!=pdPASS) {
+    McuLog_fatal("failed starting RTC Timer");
+    for(;;); /* failure! */
+  }
+  wakeup_timer = xTimerCreate(
+        "wakeupTimer", /* name */
+        pdMS_TO_TICKS(20*1000), /* period/time */
+        pdTRUE, /* auto reload */
+        (void*)0, /* timer ID */
+        vTimerCallbackWakeup); /* callback */
+  if (wakeup_timer==NULL) {
+    McuLog_fatal("failed creating wakeup Timer");
+    for(;;); /* failure! */
+  }
+  if (xTimerStart(wakeup_timer, pdMS_TO_TICKS(50))!=pdPASS) {
+    McuLog_fatal("failed starting wakeup Timer");
+    for(;;); /* failure! */
   }
 }

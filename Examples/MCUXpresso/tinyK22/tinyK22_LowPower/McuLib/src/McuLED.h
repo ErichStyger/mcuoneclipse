@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019-2021, Erich Styger
  * All rights reserved.
  *
  * Driver for LEDs

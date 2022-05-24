@@ -1,0 +1,23 @@
+idf_component_register(
+      SRCS 
+          "src/McuLib.c"
+          "src/McuWait.c"
+          "src/McuArmTools.c"
+          "src/McuRTOS.c"
+          "src/McuUtility.c"
+          "src/McuShell.c"
+          "src/McuXFormat.c"
+          "src/McuCriticalSection.c"
+          "src/McuLog.c"
+          "src/McuGPIO.c"
+          "src/McuLED.c"
+          "src/McuTimeDate.c"
+          "src/McuButton.c"
+          "src/McuTrigger.c"
+          "src/McuTimeout.c"
+          "src/McuRB.c"
+          "src/McuUart485.c"
+      INCLUDE_DIRS 
+          "./config"
+          "./src" 
+     )

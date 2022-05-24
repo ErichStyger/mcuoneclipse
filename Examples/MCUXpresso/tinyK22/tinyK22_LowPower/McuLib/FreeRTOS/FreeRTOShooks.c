@@ -132,7 +132,7 @@ void McuRTOS_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
     __asm volatile("wfi");
     __asm volatile("isb");
 #elif McuLib_CONFIG_CPU_IS_RISC_V
-  #warning "NYI" /* \todo */
+  #warning "NYI"
 #elif 0
   /* example for S08/S12/ColdFire V1 (enable SetWaitMode() in CPU): */
   Cpu_SetWaitMode();

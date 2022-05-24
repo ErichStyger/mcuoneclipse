@@ -46,15 +46,15 @@ Instructions:
 /* -------------------------------------------------*/
 /* Segger SystemViewer: */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define SYSVIEW_APP_NAME                     "LPC845 Client"
-#define SYSVIEW_DEVICE_NAME                  "LPC845 Client"
+#define SYSVIEW_APP_NAME                     "LPC845 WorldClock"
+#define SYSVIEW_DEVICE_NAME                  "LPC845"
 /* -------------------------------------------------*/
 /* Percepio Tracealyzer */
 #define configUSE_PERCEPIO_TRACE_HOOKS                  (0)
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 Client"
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "LPC845 WorldClock"
 #define McuShell_MULTI_CMD_ENABLED                    (0)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 /* -------------------------------------------------*/

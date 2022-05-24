@@ -295,7 +295,7 @@ extern void vPortClearInterruptMaskFromISR(unsigned portBASE_TYPE);
     #define portCLEAR_INTERRUPT_MASK()          vPortClearInterruptMask(0)
   #elif (configCOMPILER==configCOMPILER_ARM_GCC)
     /*
-     * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without effecting other
+     * Set basepri to portMAX_SYSCALL_INTERRUPT_PRIORITY without affecting other
      * registers.  r0 is clobbered.
      */
     #define portSET_INTERRUPT_MASK()  \

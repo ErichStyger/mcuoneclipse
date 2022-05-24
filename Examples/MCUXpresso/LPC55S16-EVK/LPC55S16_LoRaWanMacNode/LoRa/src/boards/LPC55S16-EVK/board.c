@@ -30,6 +30,7 @@
 #include "fsl_power.h"
 #include "McuArmTools.h"
 #include "McuUtility.h"
+#include "McuRTT.h"
 #include "sx1276-board.h"
 
 
@@ -153,8 +154,6 @@ void BoardInitMcu( void )
 
 	  //SPI for LoRa transceiver
 #if PL_CONFIG_RADIO_TRANSEIVER_SX126x
-//#define PL_CONFIG_RADIO_TRANSEIVER_RFM96        (1)  /* if shell support is enabled */
-//#define PL_CONFIG_RADIO_TRANSEIVER_SX126x        (0)  /* if shell support is enabled */
   //SPI for LoRa transceiver
 	SpiInit( &SX126x.Spi, SPI_1, NC, NC, NC, NC );
 	SX126xIoInit( );
@@ -365,7 +364,6 @@ static void BoardPutRadioInSleepMode(bool coldstart){
 #elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
     SX1276SetSleep();
 #endif
-
 }
 
 void BoardPrintUUID(void) {
@@ -397,9 +395,18 @@ static void BoardPutSecureElementInSleepMode( void ){
  */
 int _write( int fd, const void *buf, size_t count )
 {
+#if PL_CONFIG_USE_RTT
+  size_t nof = count;
+  char *p = (char*)buf;
+  while(nof>0) {
+    McuRTT_SendChar(*p);
+    p++;
+    nof--;
+  }
+#endif
 #if(LPC_NUMBER_OF_USARTS > 0)
     while( UartPutBuffer( &Uart0, ( uint8_t* )buf, ( uint16_t )count ) != 0 ){ };
-#else
+#elif !PL_CONFIG_USE_RTT
     McuShell_ConstStdIOType *io = McuShell_GetStdio();
     if (io!=NULL) {
       McuShell_SendData(buf, count, McuShell_GetStdio()->stdOut);

@@ -1,10 +1,11 @@
 /*
  * McuButton.c
  *
- * Copyright (c) 2019, 2020, Erich Styger
+ * Copyright (c) 2019-2021, Erich Styger
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLibconfig.h"
 #include "McuButton.h"
 #include <stdlib.h> /* memcpy */
 #include <string.h> /* memset */
@@ -18,13 +19,21 @@ static const McuBtn_Config_t defaultConfig =
 {
     .isLowActive = true,
     .hw = {
+    #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
       .gpio = NULL,
+    #elif McuLib_CONFIG_CPU_IS_STM32
+      .gpio = NULL,
+    #endif
     #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = NULL,
     #elif McuLib_CONFIG_CPU_IS_LPC
       .port = 0,
     #endif
+    #if McuLib_CONFIG_CPU_IS_ESP32
+      .pin = GPIO_NUM_NC,
+    #else
       .pin = 0,
+    #endif
     }
 };
 
@@ -52,7 +61,7 @@ void McuBtn_EnablePullResistor(McuBtn_Handle_t btn) {
   if (button->isLowActive) {
     McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
   } else {
-	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_UP);
+	  McuGPIO_SetPullResistor(button->gpio, McuGPIO_PULL_DOWN);
   }
 }
 
@@ -85,7 +94,7 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
     /* create GPIO pin */
     McuGPIO_GetDefaultConfig(&gpioConfig);
     gpioConfig.isInput = true;
-    memcpy(&gpioConfig.hw, &config->hw, sizeof(gpioConfig.hw));
+    memcpy(&gpioConfig.hw, &config->hw, sizeof(gpioConfig.hw)); /* copy hardware information */
     handle->gpio = McuGPIO_InitGPIO(&gpioConfig);
   }
   return handle;

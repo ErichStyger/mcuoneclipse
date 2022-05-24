@@ -35,7 +35,7 @@ extern "C"
 /**
  * UART definitions
  */
-#if PL_CONFIG_USE_SHELL_UART /* using shell uart? disable USART direcly used by app */
+#if PL_CONFIG_USE_SHELL_UART || PL_CONFIG_USE_RTT /* using shell uart? disable USART directly used by app */
   #define LPC_NUMBER_OF_USARTS                    0
 #else
   #define LPC_NUMBER_OF_USARTS                    1

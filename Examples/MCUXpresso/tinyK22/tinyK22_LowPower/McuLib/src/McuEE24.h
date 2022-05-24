@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : 24AA_EEPROM
-**     Version     : Component 01.041, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.042, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-04-15, 12:58, # CodeGen: 596
+**     Date/Time   : 2021-04-18, 20:37, # CodeGen: 733
 **     Abstract    :
 **         Driver for Microchip 24_AA/LC EEPROMs
 **     Settings    :
@@ -44,7 +44,7 @@
 **         Deinit            - void McuEE24_Deinit(void);
 **         Init              - void McuEE24_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2021, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx

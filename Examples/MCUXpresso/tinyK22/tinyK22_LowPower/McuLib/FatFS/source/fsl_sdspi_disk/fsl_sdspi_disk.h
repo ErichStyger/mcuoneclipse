@@ -24,7 +24,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 /* DSPI clock source */
 #if (BOARD_SDSPI_SPI_BASE == SPI0_BASE)
 #define DSPI_MASTER_CLK_SRC (DSPI0_CLK_SRC)
@@ -61,8 +61,22 @@
 #define DSPI_MASTER_PCS_TRANSFER kDSPI_MasterPcs5
 #endif
 
-#define DSPI_MASTER_CTAR (kDSPI_Ctar0) /* The CTAR to describle the transfer attribute */
+#define DSPI_MASTER_CTAR (kDSPI_Ctar0) /* The CTAR to describe the transfer attribute */
+
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
+
+#define SDSPI_SPI_MASTER          SPI8
+#define SDSPI_SPI_MASTER_IRQ      FLEXCOMM8_IRQn
+#define SDSPI_SPI_MASTER_CLK_SRC  kCLOCK_Flexcomm8
+#define SDSPI_SPI_MASTER_CLK_FREQ CLOCK_GetFlexCommClkFreq(8U)
+#define SDSPI_SPI_SSEL            1
+#define SDSPI_SPI_SPOL            kSPI_SpolActiveAllLow
+#else
+  #error "unknown device"
+#endif /* McuLib_CONFIG_CPU_VARIANT */
+
 #define DSPI_BUS_BAUDRATE (500000U)    /* Transfer baudrate - 500k */
+
 /*************************************************************************************************
  * API - SD disk interface
  ************************************************************************************************/

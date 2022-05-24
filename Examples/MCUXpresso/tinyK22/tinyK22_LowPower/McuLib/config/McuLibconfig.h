@@ -13,8 +13,14 @@
 /* identification of CPU/core used. __CORTEX_M is defined in CMSIS-Core.
    Otherwise CPU Family is set automatically by Processor Expert: detected: Kinetis (supported: "Kinetis", "S32K", "HCS08")
 */
+#if defined(__CORTEX_M)
+  #define McuLib_CPU_IS_ARM_CORTEX_M  (1)
+#else
+  #define McuLib_CPU_IS_ARM_CORTEX_M  (0)
+#endif
+
 #ifndef McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
-  #define McuLib_CONFIG_CPU_IS_ARM_CORTEX_M             (1 || defined(__CORTEX_M))
+  #define McuLib_CONFIG_CPU_IS_ARM_CORTEX_M             (1 || McuLib_CPU_IS_ARM_CORTEX_M)
     /*!< 1: ARM Cortex-M family, 0 otherwise */
 #endif
 #ifndef McuLib_CONFIG_CPU_IS_S32K
@@ -72,7 +78,30 @@
     /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
 
+/* define to identify the CPU variant better */
+#define McuLib_CONFIG_CPU_VARIANT_DEFAULT               (0)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_K02FN             (1)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_K22FN             (2)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_K22FX             (3)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_KE02              (4)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC804            (5)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC845            (6)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC54608          (7)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (8)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (9)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064         (10)
 
+#ifndef McuLib_CONFIG_CPU_VARIANT
+  #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT
+#endif
+
+#ifndef McuLib_CONFIG_IS_KINETIS_KE
+  #define McuLib_CONFIG_IS_KINETIS_KE                   (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_KE02)
+#endif
+
+#if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_DEFAULT
+  #error "Please specify the LPC CPU variant used"
+#endif
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
 #ifndef McuLib_CONFIG_CORTEX_M
@@ -147,12 +176,6 @@
 
 
 /* *****************   Middleware Configuration *******************/
-/* Configuration macro if FreeRTOS is used */
-#ifndef McuLib_CONFIG_SDK_USE_FREERTOS
-  #define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
-    /*!< 1: Use FreeRTOS; 0: no FreeRTOS used */
-#endif
-
 /* Configuration macro if FreeRTOS is used */
 #ifndef McuLib_CONFIG_SDK_USE_FREERTOS
   #define McuLib_CONFIG_SDK_USE_FREERTOS          (1)

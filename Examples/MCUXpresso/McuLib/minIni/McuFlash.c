@@ -50,6 +50,9 @@ bool McuFlash_IsAccessible(const void *addr, size_t nofBytes) {
   status_t status;
 
   status = FLASH_VerifyErase(&s_flashDriver, (uint32_t)addr, nofBytes);
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("IsAccessible: 0x%x, size %u, %s", (uint32_t)addr, nofBytes, status==kStatus_Success?"no":"yes");
+#endif
   if (status==kStatus_Success) {
     return false; /* if it is an erased FLASH: accessing it will cause a hard fault! */
   }
@@ -68,6 +71,9 @@ bool McuFlash_IsErased(const void *addr, size_t nofBytes) {
   status_t status;
 
   status = FLASH_VerifyErase(&s_flashDriver, (uint32_t)addr, nofBytes);
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("IsErased: 0x%x, size %u, %s", (uint32_t)addr, nofBytes, status==kStatus_Success?"yes":"no");
+#endif
   return status==kStatus_Success;  /* true if it is an erased FLASH: accessing it will cause a hard fault! */
 #else
   uint8_t *ptr = (uint8_t*)addr;
@@ -83,6 +89,9 @@ bool McuFlash_IsErased(const void *addr, size_t nofBytes) {
 }
 
 uint8_t McuFlash_Read(const void *addr, void *data, size_t dataSize) {
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("Read: 0x%x, size %u", (uint32_t)addr, dataSize);
+#endif
   if (!McuFlash_IsAccessible(addr, dataSize)) {
     memset(data, 0xff, dataSize);
     return ERR_FAULT;
@@ -102,6 +111,9 @@ uint8_t McuFlash_Read(const void *addr, void *data, size_t dataSize) {
 }
 
 static uint8_t McuFlash_ProgramPage(void *addr, const void *data, size_t dataSize) {
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("ProgramPage: 0x%x, size %u", (uint32_t)addr, dataSize);
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
   status_t status;
   uint8_t res = ERR_OK;
@@ -214,6 +226,9 @@ static uint8_t McuFlash_ProgramPage(void *addr, const void *data, size_t dataSiz
 }
 
 uint8_t McuFlash_Program(void *addr, const void *data, size_t dataSize) {
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("Program: 0x%x, size %u", (uint32_t)addr, dataSize);
+#endif
 #if McuLib_CONFIG_CPU_IS_LPC55xx
   if (((uint32_t)addr%McuFlash_CONFIG_FLASH_BLOCK_SIZE) != 0 || (dataSize!=McuFlash_CONFIG_FLASH_BLOCK_SIZE)) {
     /* address and size not aligned to page boundaries: make backup into buffer */
@@ -228,7 +243,7 @@ uint8_t McuFlash_Program(void *addr, const void *data, size_t dataSize) {
     while (remaining>0) {
       res = McuFlash_Read((void*)pageAddr, buffer, sizeof(buffer)); /* read current flash content */
       if (res!=ERR_OK) {
-        McuLog_fatal("failed reading from Flash");
+        McuLog_fatal("failed reading from Flash at 0x%x", pageAddr);
         return ERR_FAILED;
       }
       if (offset+remaining>McuFlash_CONFIG_FLASH_BLOCK_SIZE) {
@@ -240,7 +255,7 @@ uint8_t McuFlash_Program(void *addr, const void *data, size_t dataSize) {
       /* program new data/page */
       res = McuFlash_ProgramPage((void*)pageAddr, buffer, sizeof(buffer));
       if (res!=ERR_OK) {
-        McuLog_fatal("failed making backup from Flash");
+        McuLog_fatal("failed making backup from Flash at 0x%x", pageAddr);
         return ERR_FAILED;
       }
       pageAddr += McuFlash_CONFIG_FLASH_BLOCK_SIZE;
@@ -262,6 +277,9 @@ uint8_t McuFlash_InitErase(void *addr, size_t nofBytes) {
   /* LPC55Sxx specific: erases the memory, makes it inaccessible */
   status_t status;
 
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("InitErase: 0x%x, size %u", (uint32_t)addr, nofBytes);
+#endif
   if ((nofBytes%McuFlash_CONFIG_FLASH_BLOCK_SIZE)!=0) { /* check if size is multiple of page size */
     McuLog_fatal("wrong erase data size %d, expected multiple %d", nofBytes, McuFlash_CONFIG_FLASH_BLOCK_SIZE);
     return ERR_FAILED;
@@ -279,6 +297,9 @@ uint8_t McuFlash_InitErase(void *addr, size_t nofBytes) {
 #endif
 
 uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
+#if McuFlash_CONFIG_LOGGING_TRACE
+  McuLog_trace("Erase: 0x%x, size %u", (uint32_t)addr, nofBytes);
+#endif
 #if McuLib_CONFIG_CPU_IS_LPC && (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845 || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC804)
   /* determine sector numbers based on block/sector size */
   uint32_t startSector = (uint32_t)addr/McuFlash_CONFIG_FLASH_BLOCK_SIZE;

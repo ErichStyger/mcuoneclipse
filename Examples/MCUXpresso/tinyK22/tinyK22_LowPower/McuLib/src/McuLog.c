@@ -37,7 +37,6 @@
 #include "McuTimeDate.h"
 #include "McuUtility.h"
 #include "McuXFormat.h"
-#include "McuRTT.h"
 #include "McuShell.h"
 #if McuLog_CONFIG_USE_MUTEX
   #include "McuRTOS.h"
@@ -45,7 +44,7 @@
 #if McuLog_CONFIG_USE_FILE
   #include "McuFatFS.h"
 #endif
-#if McuLog_CONFIG_USE_RTT_DATA_LOGGER
+#if McuLog_CONFIG_USE_RTT_DATA_LOGGER || McuLog_CONFIG_USE_RTT_CONSOLE
   #include "McuRTT.h"
 #endif
 
@@ -159,12 +158,15 @@ void McuLog_set_color(bool enable) {
 
 static void OutputCharFctConsole(void *p, char ch) {
   McuShell_StdIO_OutErr_FctType io = (McuShell_StdIO_OutErr_FctType)p;
+
+#if McuLog_CONFIG_USE_RTT_CONSOLE
   if (io==McuRTT_StdIOSendChar) { /* using RTT: check first if we are able to send */
     unsigned int rttUpSize = SEGGER_RTT_GetUpBufferFreeSize(0);
     if (rttUpSize<1) { /* there is NOT enough space available in the RTT up buffer */
       return; /* do not send :-( */
     }
   }
+#endif
   io(ch);
 }
 
@@ -239,8 +241,11 @@ static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool 
   } else { /* scan for separator */
     size_t pos;
     pos = McuUtility_strlen(file)-1; /* end of the string */
-    while(pos>1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) {
+    while(pos>1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) { /* scan back to find the last separator */
       pos--;
+    }
+    if (pos==1 && !(file[pos-1]=='/' || file[pos-1]=='\\')) { /* no separator at all? */
+      pos = 0; /* no separator, start from the beginning */
     }
     p = (const unsigned char*)&file[pos];
   }
@@ -258,12 +263,17 @@ static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool 
 }
 
 void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *fmt, ...) {
-  TIMEREC time;
 #if McuLog_CONFIG_LOG_TIMESTAMP_DATE
   DATEREC date;
   #define DATE_PTR  &date
 #else
   #define DATE_PTR  NULL
+#endif
+#if McuLog_CONFIG_LOG_TIMESTAMP_TIME
+  TIMEREC time;
+  #define TIME_PTR  &time
+#else
+  #define TIME_PTR  NULL
 #endif
   va_list list;
 
@@ -271,15 +281,13 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
     return;
   }
   lock(); /* Acquire lock */
-#if McuLog_CONFIG_LOG_TIMESTAMP_DATE
-  (void)McuTimeDate_GetTimeDate(&time, &date); /* Get current date and time */
-#else
-  (void)McuTimeDate_GetTime(&time); /* Get current time */
+#if McuLog_CONFIG_LOG_TIMESTAMP_DATE || McuLog_CONFIG_LOG_TIMESTAMP_TIME
+  (void)McuTimeDate_GetTimeDate(TIME_PTR, DATE_PTR); /* Get current date and time */
 #endif
   if (!McuLog_ConfigData.quiet) {
     for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
       if(McuLog_ConfigData.consoleIo[i]!=NULL) { /* log to console */
-        LogHeader(DATE_PTR, &time, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
         /* open argument list */
         va_start(list, fmt);
         McuXFormat_xvformat(OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr, fmt, list);
@@ -292,7 +300,7 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   /* log to RTT Data Logger */
   if (McuLog_ConfigData.rttDataLogger) {
-    LogHeader(DATE_PTR, &time, level, false, file, line, OutputCharRttLoggerFct, NULL);
+    LogHeader(DATE_PTR, TIME_PTR, level, false, file, line, OutputCharRttLoggerFct, NULL);
     /* open argument list */
     va_start(list, fmt);
     McuXFormat_xvformat(OutputCharRttLoggerFct, NULL, fmt, list);
@@ -319,6 +327,7 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
 
 #if McuLog_CONFIG_USE_MUTEX
 static void LockUnlockCallback(void *data, bool lock) {
+  (void)data; /* unused */
   if (lock) {
     (void)xSemaphoreTakeRecursive(McuLog_ConfigData.McuLog_Mutex, portMAX_DELAY);
   } else {
@@ -357,7 +366,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"McuLog", (unsigned char*)"Group of McuLog commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  level <level>", (unsigned char*)"Set log level, 0 (TRACE) 1 (DEBUG), 2 (INFO),  3 (WARN), 4 (ERROR), 5 (FATAL)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  level <level>", (unsigned char*)"Set log level, 0 (TRACE), 1 (DEBUG), 2 (INFO), 3 (WARN), 4 (ERROR), 5 (FATAL)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  quiet <on|off>", (unsigned char*)"Set quiet mode for console\r\n", io->stdOut);
 #if McuLog_CONFIG_USE_COLOR
   McuShell_SendHelpStr((unsigned char*)"  color <on|off>", (unsigned char*)"Set color mode\r\n", io->stdOut);
@@ -433,6 +442,7 @@ void McuLog_Init(void) {
   McuLog_set_rtt_logger(true);
 #endif
   McuLog_ConfigData.consoleIo[0] = McuShell_GetStdio(); /* default */
+  McuLog_set_level(McuLog_CONFIG_DEFAULT_LEVEL); /* default level */
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   #if McuLib_CONFIG_SDK_USE_FREERTOS && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && McuSystemView_CONFIG_RTT_CHANNEL==McuLog_RTT_DATA_LOGGER_CHANNEL
     #error "Both RTT Logger and SystemViewer are using the same channel! Change McuSystemView_CONFIG_RTT_CHANNEL to a different value."

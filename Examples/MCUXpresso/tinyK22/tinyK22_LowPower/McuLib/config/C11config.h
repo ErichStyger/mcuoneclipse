@@ -40,6 +40,8 @@
     #define C11_CONFIG_GPIO_NAME       GPIO1
   #elif McuLib_CONFIG_CPU_IS_LPC
     #define C11_CONFIG_GPIO_NAME       GPIO
+  #elif McuLib_CONFIG_CPU_IS_KINETIS && McuLib_CONFIG_IS_KINETIS_KE
+    #define C11_CONFIG_GPIO_NAME       0
   #else /* name from properties */
     #define C11_CONFIG_GPIO_NAME       GPIOA
   #endif

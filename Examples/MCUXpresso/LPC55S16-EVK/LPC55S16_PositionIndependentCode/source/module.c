@@ -34,7 +34,6 @@ void bar(void) {
   foobar();
 }
 
-
 void MODULE_Init(void) {
   var = 1;
   foo();

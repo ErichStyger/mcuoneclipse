@@ -7,16 +7,22 @@
 #include "leds.h"
 #include "McuLED.h"
 
-McuLED_Handle_t tinyLED, hatRedLED, hatBlueLED, hatGreenLED, hatYellowLED;
+McuLED_Handle_t tinyLED;
+McuLED_Handle_t hatRedLED;
+#if TINYK22_HAT_VERSION < 7
+McuLED_Handle_t hatBlueLED;
+#endif
+McuLED_Handle_t hatGreenLED;
+McuLED_Handle_t hatYellowLED;
 
 void LEDS_Deinit(void) {
   tinyLED = McuLED_DeinitLed(tinyLED);
+#if TINYK22_HAT_VERSION < 7
   hatBlueLED = McuLED_DeinitLed(hatBlueLED);
+#endif
   hatRedLED = McuLED_DeinitLed(hatRedLED);
   hatGreenLED = McuLED_DeinitLed(hatGreenLED);
-#if TINYK22_HAT_VERSION < 7
   hatYellowLED = McuLED_DeinitLed(hatYellowLED);
-#endif
   McuLED_Deinit(); /* de-initialize LED module */
 }
 

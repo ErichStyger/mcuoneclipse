@@ -34,10 +34,13 @@ static bool McuShellUart_CharPresent(void) {
 }
 
 McuShell_ConstStdIOType McuShellUart_stdio = {
-    (McuShell_StdIO_In_FctType)McuShellUart_ReadChar, /* stdin */
-    (McuShell_StdIO_OutErr_FctType)McuShellUart_SendChar,  /* stdout */
-    (McuShell_StdIO_OutErr_FctType)McuShellUart_SendChar,  /* stderr */
-    McuShellUart_CharPresent /* if input is not empty */
+    .stdIn = (McuShell_StdIO_In_FctType)McuShellUart_ReadChar,
+    .stdOut = (McuShell_StdIO_OutErr_FctType)McuShellUart_SendChar,
+    .stdErr = (McuShell_StdIO_OutErr_FctType)McuShellUart_SendChar,
+    .keyPressed = McuShellUart_CharPresent, /* if input is not empty */
+  #if McuShell_CONFIG_ECHO_ENABLED
+    .echoEnabled = false,
+  #endif
   };
 
 uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
@@ -57,12 +60,18 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
     }
   }
   McuShellUART_CONFIG_CLEAR_STATUS_FLAGS(McuShellUart_CONFIG_UART_DEVICE, flags);
+#if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M && ((McuLib_CONFIG_CORTEX_M==4) || (McuLib_CONFIG_CORTEX_M==7))
+  /* ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping exception return operation might vector to incorrect interrupt.
+  * For Cortex-M7, if core speed much faster than peripheral register write speed, the peripheral interrupt flags may be still set after exiting ISR, this results to
+  * the same error similar with errata 83869. */
   __DSB();
+#endif
 }
 
 static void InitUart(void) {
   /* NOTE: Muxing of the UART pins and clocking of the UART needs to be done in the Pins/clocks tool! */
   McuShellUart_CONFIG_UART_CONFIG_STRUCT config;
+  status_t status;
 
   McuShellUart_CONFIG_UART_SET_UART_CLOCK();
   McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG(&config);
@@ -71,10 +80,13 @@ static void InitUart(void) {
   config.enableTx     = true;
 
   /* Initialize the USART with configuration. */
-  McuShellUart_CONFIG_UART_INIT(McuShellUart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
+  status = McuShellUart_CONFIG_UART_INIT(McuShellUart_CONFIG_UART_DEVICE, &config, CLOCK_GetFreq(McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT));
+  if (status!=kStatus_Success) {
+    for(;;) {/* error */}
+  }
   McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS(McuShellUart_CONFIG_UART_DEVICE, McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
-  EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
   NVIC_SetPriority(McuShellUart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+  EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
 }
 
 void McuShellUart_Deinit(void) {
@@ -83,12 +95,12 @@ void McuShellUart_Deinit(void) {
 }
 
 void McuShellUart_Init(void) {
-  InitUart();
   uartRxQueue = xQueueCreate(McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
   if (uartRxQueue==NULL) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(uartRxQueue, "UartRxQueue");
+  InitUart();
 }
 
 #endif /* McuShellUart_CONFIG_UART!=McuShellUart_CONFIG_UART_NONE*/

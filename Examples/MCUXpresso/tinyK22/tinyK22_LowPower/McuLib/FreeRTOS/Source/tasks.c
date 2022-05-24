@@ -1051,14 +1051,14 @@ static void prvInitialiseNewTask( TaskFunction_t pxTaskCode,
 
     #if ( configNUM_THREAD_LOCAL_STORAGE_POINTERS != 0 )
         {
-            memset( ( void * ) &( pxNewTCB->pvThreadLocalStoragePointers[ 0 ] ), 0x00, sizeof( pxNewTCB->pvThreadLocalStoragePointers ) );
+            (void)memset( ( void * ) &( pxNewTCB->pvThreadLocalStoragePointers[ 0 ] ), 0x00, sizeof( pxNewTCB->pvThreadLocalStoragePointers ) );
         }
     #endif
 
     #if ( configUSE_TASK_NOTIFICATIONS == 1 )
         {
-            memset( ( void * ) &( pxNewTCB->ulNotifiedValue[ 0 ] ), 0x00, sizeof( pxNewTCB->ulNotifiedValue ) );
-            memset( ( void * ) &( pxNewTCB->ucNotifyState[ 0 ] ), 0x00, sizeof( pxNewTCB->ucNotifyState ) );
+        	(void)memset( ( void * ) &( pxNewTCB->ulNotifiedValue[ 0 ] ), 0x00, sizeof( pxNewTCB->ulNotifiedValue ) );
+        	(void)memset( ( void * ) &( pxNewTCB->ucNotifyState[ 0 ] ), 0x00, sizeof( pxNewTCB->ucNotifyState ) );
         }
     #endif
 
@@ -2202,11 +2202,11 @@ void vTaskEndScheduler( void )
     	/* << EST initialize back things for properly ending the scheduler */
 	/* set back the scheduler and tasks */
 	pxCurrentTCB = NULL;
-	memset(pxReadyTasksLists, 0, sizeof(pxReadyTasksLists));
-  memset(&xDelayedTaskList1, 0, sizeof(xDelayedTaskList1));
+	(void)memset(pxReadyTasksLists, 0, sizeof(pxReadyTasksLists));
+	(void)memset(&xDelayedTaskList1, 0, sizeof(xDelayedTaskList1));
   pxDelayedTaskList = NULL;
   pxOverflowDelayedTaskList = NULL;
-  memset(&xPendingReadyList, 0, sizeof(xPendingReadyList));
+  (void)memset(&xPendingReadyList, 0, sizeof(xPendingReadyList));
 
   uxCurrentNumberOfTasks  = ( UBaseType_t ) 0U;
   xTickCount         = ( TickType_t ) configINITIAL_TICK_COUNT;
@@ -5595,7 +5595,7 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
 
 #endif /* INCLUDE_pxTaskGetStackStart */
 
-#if 1 /* << EST: additional functionality to iterathe through task handles. */
+#if 1 /* << EST: additional functionality to iterate through task handles. */
 static void prvCollectTaskHandlesWithinSingleList( List_t *pxList,  TaskHandle_t taskHandleArray[], UBaseType_t noTaskHandlesInArray, UBaseType_t *idxCounter)
 {
   TCB_t *pxNextTCB, *pxFirstTCB;
