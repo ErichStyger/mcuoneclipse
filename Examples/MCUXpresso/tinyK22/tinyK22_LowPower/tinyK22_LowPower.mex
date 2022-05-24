@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9 http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9.xsd" uuid="611b76b8-3631-4e76-a25d-bbc18730227b" version="1.9" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_11 http://mcuxpresso.nxp.com/XSD/mex_configuration_11.xsd" uuid="611b76b8-3631-4e76-a25d-bbc18730227b" version="11" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_11" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK22FN512xxx12</processor>
       <package>MK22FN512VLH12</package>
@@ -13,15 +13,17 @@
       <validate_boot_init_only>true</validate_boot_init_only>
       <generate_extended_information>false</generate_extended_information>
       <generate_code_modified_registers_only>false</generate_code_modified_registers_only>
+      <update_include_paths>true</update_include_paths>
+      <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="9.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="11.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>11.0.1</processor_version>
             <pin_labels>
                <pin_label pin_num="45" pin_signal="ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS/LPUART0_CTS_b" label="LED_BLUE" identifier="LED_BLUE"/>
                <pin_label pin_num="1" pin_signal="ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT" label="TEST" identifier="TEST"/>
@@ -63,16 +65,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="7.0" enabled="true" update_project_code="true">
-         <generated_project_files>
-            <file path="board/clock_config.c" update_enabled="true"/>
-            <file path="board/clock_config.h" update_enabled="true"/>
-         </generated_project_files>
+      <clocks name="Clocks" version="9.0" enabled="true" update_project_code="true">
+         <generated_project_files/>
          <clocks_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>11.0.1</processor_version>
          </clocks_profile>
          <clock_configurations>
-            <clock_configuration name="BOARD_BootClockRUN">
+            <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
                <description></description>
                <options/>
                <dependencies>
@@ -96,29 +95,18 @@
                         <data>OUTPUT</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Clocks initialization requires the COMMON Driver in the project." problem_level="2" source="Clocks:BOARD_BootClockRUN">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <clock_sources>
                   <clock_source id="OSC.OSC.outFreq" value="8 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
-                  <clock_output id="Bus_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Core_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
-                  <clock_output id="Flash_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FlexBus_clock.outFreq" value="10 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="1 kHz" locked="false" accuracy=""/>
-                  <clock_output id="MCGFFCLK.outFreq" value="250 kHz" locked="false" accuracy=""/>
-                  <clock_output id="System_clock.outFreq" value="20 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
                   <setting id="MCGMode" value="PEE" locked="false"/>
                   <setting id="MCG.FRDIV.scale" value="32" locked="false"/>
-                  <setting id="MCG.IREFS.sel" value="MCG.SLOW_IRCLK" locked="false"/>
-                  <setting id="MCG.PLLS.sel" value="MCG.FLL" locked="false"/>
+                  <setting id="MCG.IREFS.sel" value="MCG.FRDIV" locked="false"/>
+                  <setting id="MCG.PLLS.sel" value="MCG.PLL" locked="false"/>
                   <setting id="MCG.PRDIV.scale" value="2" locked="false"/>
                   <setting id="MCG.VDIV.scale" value="25" locked="false"/>
                   <setting id="MCG_C2_OSC_MODE_CFG" value="ModeOscLowPower" locked="false"/>
@@ -140,7 +128,7 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="9.0" enabled="true" update_project_code="true">
+      <periphs name="Peripherals" version="11.0" enabled="true" update_project_code="true">
          <dependencies>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.lptmr" description="LPTMR Driver not found in the toolchain/IDE project. Project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
@@ -158,7 +146,7 @@
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>9.0.0</processor_version>
+            <processor_version>11.0.1</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="93c877a6-9f8b-4a3f-8c70-0430afa765cb" called_from_default_init="true" id_prefix="" core="core0">
@@ -220,6 +208,15 @@
             <component name="generic_can" uuid="0f842378-169a-4268-ac64-264231c6562a" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
                <config_set_global name="global_can"/>
             </component>
+            <component name="uart_cmsis_common" uuid="b5cfd08b-6716-4f08-a33d-cd8b835eefe5" type_id="uart_cmsis_common_9cb8e302497aa696fdbb5a4fd622c2a8">
+               <config_set_global name="global_USART_CMSIS_common" quick_selection="default"/>
+            </component>
+            <component name="gpio_adapter_common" uuid="55a117b4-9ff9-46a5-b4a0-98fb1d8f9018" type_id="gpio_adapter_common_57579b9ac814fe26bf95df0a384c36b6">
+               <config_set_global name="global_gpio_adapter_common" quick_selection="default"/>
+            </component>
+            <component name="generic_enet" uuid="5d0c3349-fb33-491e-b772-3301ddf8817d" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
+               <config_set_global name="global_enet"/>
+            </component>
          </components>
       </periphs>
       <tee name="TEE" version="3.0" enabled="false" update_project_code="true">
@@ -227,8 +224,6 @@
          <tee_profile>
             <processor_version>N/A</processor_version>
          </tee_profile>
-         <global_options/>
-         <user_memory_regions/>
       </tee>
    </tools>
 </configuration>

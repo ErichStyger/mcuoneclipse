@@ -44,6 +44,7 @@ static McuGPIO_Handle_t measurementTriggerPin;
 static void ConfigureMeasurementPin(void) {
   McuGPIO_Config_t config;
 
+  CLOCK_EnableClock(kCLOCK_PortD);
   McuGPIO_GetDefaultConfig(&config);
   /* PTD2, pin 3 on J3 of FRDM-K22F */
   config.hw.port = PORTD;
@@ -65,31 +66,40 @@ static void MeasurementStop(void) {
 void APP_Run(void) {
   PL_Init(); /* initialize platform */
   ConfigureMeasurementPin();
-  for(int i=0; i<3; i++) {
+  for(int i=0; i<5; i++) {
     McuLED_On(blueLED);
-    McuWait_Waitms(500);
+    McuWait_Waitms(200);
     McuLED_Off(blueLED);
-    McuWait_Waitms(500);
+    McuWait_Waitms(200);
   }
-//  printf("SystemCoreClock: %lu\n", SystemCoreClock);
-  GearShiftSlow(true);
+  //printf("SystemCoreClock: %lu\n", SystemCoreClock);
+  //GearShiftSlow(false); /* 20 MHz */
+  GearShiftSlow(true); /* 10 MHz */
+#if 0 || LP_MODE==LP_MODE_RUN /* Test only: configure LPTMR for 1 second */
+  //LP_StartLPTMR(1000);
+#endif
+
   for(;;) {
-    MeasurementStart();
+//    MeasurementStart();
+#if 1
     McuLED_On(blueLED);
     McuWait_Waitms(100);
     McuLED_Off(blueLED);
-    MeasurementStop();
+#endif
+//    MeasurementStop();
 #if LP_MODE==LP_MODE_RUN
     LP_EnterLowPower(kAPP_PowerModeRun);
     McuWait_Waitms(1000); /* no wakeup, burn cycles here */
 #elif LP_MODE==LP_MODE_WAIT
+    //__asm volatile ("wfi");
     LP_EnterLowPower(kAPP_PowerModeWait);
-    /* PIT configured for 1 sec will wake us up */
+    /* LPTMR configured for 1 sec will wake us up */
 #elif LP_MODE==LP_MODE_STOP
     LP_EnterLowPower(kAPP_PowerModeStop);
-    /* PIT configured for 1 sec will wake us up */
+    /* LPTMR configured for 1 sec will wake us up */
 #elif LP_MODE==LP_MODE_VLPR
-
+    LP_EnterLowPower(kAPP_PowerModeVlpr);
+    /* LPTMR configured for 1 sec will wake us up */
 #endif
   }
 }

@@ -6,6 +6,8 @@
 
 #include "platform.h"
 #include "LowPower.h"
+#include "McuLED.h"
+#include "leds.h"
 #include "fsl_pit.h"
 #include "fsl_smc.h"
 #include "fsl_lptmr.h"
@@ -375,6 +377,17 @@ static app_wakeup_source_t LP_GetWakeupSource(void) {
 #endif
 }
 
+void LP_StartLPTMR(uint32_t ms) {
+  lptmr_config_t lptmrConfig;
+
+  LPTMR_GetDefaultConfig(&lptmrConfig);
+  LPTMR_Init(LPTMR0, &lptmrConfig);
+  LPTMR_SetTimerPeriod(LPTMR0, USEC_TO_COUNT(ms*1000, CLOCK_GetFreq(kCLOCK_LpoClk)));
+  LPTMR_EnableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
+  EnableIRQ(LPTMR0_IRQn);
+  LPTMR_StartTimer(LPTMR0);
+}
+
 void LP_SetWakeupConfig(app_power_mode_t targetMode) {
   /* Set LPTMR timeout value. */
   if (kAPP_WakeupSourceLptmr == s_wakeupSource)
@@ -453,17 +466,25 @@ void LLWU_IRQHandler(void) {
     /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
     exception return operation might vector to incorrect interrupt */
     __DSB();
+    __ISB();
 }
 
 void LPTMR0_IRQHandler(void) {
+#if 0// 1 || LP_MODE==LP_MODE_RUN
+  LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
+  //McuLED_Toggle(blueLED);
+#else
   if (kLPTMR_TimerInterruptEnable & LPTMR_GetEnabledInterrupts(LPTMR0)) {
-      LPTMR_DisableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
-      LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
-      LPTMR_StopTimer(LPTMR0);
+    McuLED_Toggle(blueLED);
+    LPTMR_DisableInterrupts(LPTMR0, kLPTMR_TimerInterruptEnable);
+    LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
+    LPTMR_StopTimer(LPTMR0);
   }
+#endif
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
   exception return operation might vector to incorrect interrupt */
   __DSB();
+  __ISB();
 }
 
 void PORTC_IRQHandler(void) {
@@ -475,9 +496,8 @@ void PORTC_IRQHandler(void) {
   /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
   exception return operation might vector to incorrect interrupt */
   __DSB();
+  __ISB();
 }
-
-
 
 #if LP_MODE==LP_MODE_WAIT || LP_MODE==LP_MODE_STOP
 #define PIT_BASEADDR       PIT
@@ -485,7 +505,6 @@ void PORTC_IRQHandler(void) {
 #define PIT_CHANNEL        kPIT_Chnl_0
 #define PIT_HANDLER        PIT0_IRQHandler
 #define PIT_IRQ_ID         PIT0_IRQn
-
 
 void PIT_HANDLER(void) {
   PIT_ClearStatusFlags(PIT_BASEADDR, PIT_CHANNEL, kPIT_TimerFlag);
@@ -576,7 +595,7 @@ void LP_Init(void) {
 #if LP_MODE==LP_MODE_RUN
   /* not entering any low power mode */
 #elif LP_MODE==LP_MODE_WAIT
-  ConfigurePIT(); /* configure timer used as wake-up source */
+  //ConfigurePIT(); /* configure timer used as wake-up source */
 #elif LP_MODE==LP_MODE_STOP
   ConfigurePIT(); /* configure timer used as wake-up source */
 #endif

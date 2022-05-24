@@ -41,14 +41,21 @@ bool LP_CheckPowerMode(smc_power_state_t curPowerState, app_power_mode_t targetP
 #define LP_MODE_VLPR   (3)  /* VLPR mode */
 
 /* selected low power mode: */
-#define LP_MODE LP_MODE_RUN /* the low power mode to be used */
-//#define LP_MODE LP_MODE_WAIT /* the low power mode to be used */
-//#define LP_MODE LP_MODE_STOP /* the low power mode to be used */
-//#define LP_MODE LP_MODE_VLPR
+#if 0
+  #define LP_MODE LP_MODE_RUN /* normal run mode */
+#elif 0
+  #define LP_MODE LP_MODE_WAIT /* using wait instruction: wait for interrupt */
+#elif 1
+  #define LP_MODE LP_MODE_STOP /* using stop mode */
+#else
+  #define LP_MODE LP_MODE_VLPR /* using very-low-power mode */
+#endif
 
 smc_power_state_t LP_GetCurrPowerMode(void);
 
 void LP_EnterLowPower(app_power_mode_t targetPowerMode);
+
+void LP_StartLPTMR(uint32_t ms);
 
 void LP_Init(void);
 
