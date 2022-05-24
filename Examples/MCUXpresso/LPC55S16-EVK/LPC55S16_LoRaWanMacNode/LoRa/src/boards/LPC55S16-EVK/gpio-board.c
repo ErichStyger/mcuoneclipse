@@ -139,6 +139,10 @@ void GpioMcuSetInterrupt(Gpio_t *obj, IrqModes irqMode,
 		irq->inUse = true;
 		irq->usedBy = obj;
 
+//#if McuLib_CONFIG_SDK_USE_FREERTOS
+//		NVIC_SetPriority(OS_EVENT_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+//#endif
+
 		uint32_t pin = obj->portIndex << 5;
 		pin += obj->pinIndex;
 		inputmux_connection_t connection = pin + (PINTSEL0 << PMUX_SHIFT);

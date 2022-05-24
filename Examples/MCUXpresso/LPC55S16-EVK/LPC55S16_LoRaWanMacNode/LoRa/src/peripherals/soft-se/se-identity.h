@@ -72,7 +72,7 @@ extern "C" {
  * end-device IEEE EUI (big endian)
  * From the TheThingsNetwork: Activation Information: DevEUI
  */
-#define LORAWAN_DEVICE_EUI                                 { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+#define LORAWAN_DEVICE_EUI                                 { 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 }
 
 /*!
  * App/Join server IEEE EUI (big endian)
@@ -105,7 +105,7 @@ extern "C" {
              * From the TheThingsNetwork: Activation Information: AppKey                                            \
              */                                                                                                     \
             .KeyID    = APP_KEY,                                                                                    \
-            .KeyValue = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },  \
+            .KeyValue = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 },  \
         },                                                                                                          \
         {                                                                                                           \
             /*!                                                                                                     \
@@ -114,7 +114,7 @@ extern "C" {
              * From the TheThingsNetwork: Activation Information: NwkKey                                            \
              */                                                                                                     \
             .KeyID    = NWK_KEY,                                                                                    \
-            .KeyValue = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },  \
+            .KeyValue = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 },  \
         },                                                                                                          \
         {                                                                                                           \
             /*!                                                                                                     \

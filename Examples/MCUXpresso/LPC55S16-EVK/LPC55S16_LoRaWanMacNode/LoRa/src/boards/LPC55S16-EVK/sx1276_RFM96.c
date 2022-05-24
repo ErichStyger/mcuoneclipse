@@ -34,6 +34,11 @@
 #include "radio.h"
 #include "sx1276-board.h"
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  #include "LoRaWAN.h"
+	#include "McuRTOS.h"
+#endif
+
 #if defined( USE_RADIO_DEBUG )
 /*!
  * \brief Writes new Tx debug pin state
@@ -122,12 +127,21 @@ void SX1276IoInit( void )
 
 void SX1276IoIrqInit( DioIrqHandler **irqHandlers )
 {
-    GpioSetInterrupt( &SX1276.DIO0, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[0] );
-    GpioSetInterrupt( &SX1276.DIO1, IRQ_RISING_FALLING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[1] );
-    GpioSetInterrupt( &SX1276.DIO2, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[2] );
-    GpioSetInterrupt( &SX1276.DIO3, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[3] );
-    GpioSetInterrupt( &SX1276.DIO4, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[4] );
-    GpioSetInterrupt( &SX1276.DIO5, IRQ_RISING_EDGE, IRQ_HIGH_PRIORITY, irqHandlers[5] );
+    GpioSetInterrupt( &SX1276.DIO0, IRQ_RISING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[0] );
+    GpioSetInterrupt( &SX1276.DIO1, IRQ_RISING_FALLING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[1] );
+    GpioSetInterrupt( &SX1276.DIO2, IRQ_RISING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[2] );
+    GpioSetInterrupt( &SX1276.DIO3, IRQ_RISING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[3] );
+    GpioSetInterrupt( &SX1276.DIO4, IRQ_RISING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[4] );
+    GpioSetInterrupt( &SX1276.DIO5, IRQ_RISING_EDGE, IRQ_VERY_HIGH_PRIORITY, irqHandlers[5] );
+
+	#if McuLib_CONFIG_SDK_USE_FREERTOS
+    NVIC_SetPriority(PIN_INT0_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(PIN_INT1_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(PIN_INT2_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(PIN_INT3_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(PIN_INT4_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(PIN_INT5_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+ 	#endif
 
 }
 

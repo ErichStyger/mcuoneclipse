@@ -44,8 +44,8 @@ pin_labels:
 - {pin_num: '60', pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26, label: NOT_CONNECTED, identifier: MOSI;SPI_MOSI}
 - {pin_num: '27', pin_signal: PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27, label: NOT_CONNECTED}
 - {pin_num: '66', pin_signal: PIO0_28/FC0_SCK/CT_INP11/SCT0_OUT7/USB0_OVERCURRENTN/PLU_OUT1/SECURE_GPIO0_28, label: RADIO_DIO1, identifier: RADIO_DIO1}
-- {pin_num: '92', pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29, label: MCU_RX, identifier: DEBUG_UART_RX}
-- {pin_num: '94', pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, label: MCU_TX, identifier: DEBUG_UART_RX;DEBUG_UART_TX}
+- {pin_num: '92', pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29, label: MCU_RX, identifier: DEBUG_UART_RX;DEBUG_UART_RX2}
+- {pin_num: '94', pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, label: MCU_TX, identifier: DEBUG_UART_RX;DEBUG_UART_TX;DEBUG_UART_TX2}
 - {pin_num: '23', pin_signal: PIO0_31/FC0_CTS_SDA_SSEL0/CTIMER0_MAT1/SCT0_OUT3/SECURE_GPIO0_31/ADC0_3, label: NOT_CONNECTED}
 - {pin_num: '11', pin_signal: PIO1_0/FC0_RTS_SCL_SSEL1/CT_INP2/SCT_GPI4/PLU_OUT3/ADC0_11, label: RADIO_BUSY, identifier: RADIO_BUSY}
 - {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: NOT_CONNECTED, identifier: RADIO_NSS}
@@ -94,8 +94,9 @@ BOARD_InitPins:
   - {pin_num: '60', peripheral: FLEXCOMM8, signal: HS_SPI_MOSI, pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26,
     identifier: SPI_MOSI}
   - {pin_num: '62', peripheral: FLEXCOMM8, signal: HS_SPI_MISO, pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6}
-  - {pin_num: '92', peripheral: FLEXCOMM0, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29}
-  - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, identifier: DEBUG_UART_TX}
+  - {pin_num: '92', peripheral: FLEXCOMM0, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29,
+    identifier: DEBUG_UART_RX2}
+  - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, identifier: DEBUG_UART_TX2}
   - {pin_num: '1', peripheral: GPIO, signal: 'PIO1, 4', pin_signal: PIO1_4/FC0_SCK/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A, identifier: RADIO_DIO1, direction: INPUT}
   - {pin_num: '54', peripheral: GPIO, signal: 'PIO0, 0', pin_signal: PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A, direction: INPUT}
   - {pin_num: '57', peripheral: GPIO, signal: 'PIO1, 14', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/ACMP0_D, identifier: RFM96_DIO_0,
@@ -103,6 +104,8 @@ BOARD_InitPins:
   - {pin_num: '87', peripheral: GPIO, signal: 'PIO1, 16', pin_signal: PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3, direction: INPUT, ssel: no_init, filter_off: no_init}
   - {pin_num: '77', peripheral: GPIO, signal: 'PIO1, 25', pin_signal: PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN, identifier: RFM96_DIO_2, direction: INPUT,
     ssel: no_init, filter_off: no_init}
+  - {pin_num: '3', peripheral: FLEXCOMM2, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6}
+  - {pin_num: '27', peripheral: FLEXCOMM2, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -214,6 +217,19 @@ void BOARD_InitPins(void)
                           * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO0_26_DIGIMODE_DIGITAL));
 
+    IOCON->PIO[0][27] = ((IOCON->PIO[0][27] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT027 (pin 27) is configured as FC2_TXD_SCL_MISO_WS. */
+                         | IOCON_PIO_FUNC(PIO0_27_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_27_DIGIMODE_DIGITAL));
+
     IOCON->PIO[0][29] = ((IOCON->PIO[0][29] &
                           /* Mask bits to zero which are setting */
                           (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
@@ -304,6 +320,19 @@ void BOARD_InitPins(void)
                          * : Enable Digital mode.
                          * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][24] = ((IOCON->PIO[1][24] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT124 (pin 3) is configured as FC2_RXD_SDA_MOSI_DATA. */
+                         | IOCON_PIO_FUNC(PIO1_24_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_24_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][25] = ((IOCON->PIO[1][25] &
                           /* Mask bits to zero which are setting */
