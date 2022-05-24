@@ -280,7 +280,7 @@ extern Uart_t Uart2;
 #endif
 
 
-#if 0 && McuLib_CONFIG_SDK_USE_FREERTOS
+#if 1 && McuLib_CONFIG_SDK_USE_FREERTOS
 
 static void LoRaTask(void *pv) {
   for(;;) {
@@ -343,11 +343,11 @@ int main( void )
     /* GPS is not required for this application. In order to save power consumption, it is disabled here */
     GpsStop();
 
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-    LoRaWAN_Init();
-    vTaskStartScheduler();
-    for(;;) {} /* should not get here */
-#else
+//#if McuLib_CONFIG_SDK_USE_FREERTOS
+//    LoRaWAN_Init();
+//    vTaskStartScheduler();
+//    for(;;) {} /* should not get here */
+//#else
     if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {
         printf( "LoRaMac wasn't properly initialized\n" );
@@ -399,7 +399,7 @@ int main( void )
         }
         CRITICAL_SECTION_END( );
     }
-#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
+// #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 }
 
 static void OnMacProcessNotify( void )

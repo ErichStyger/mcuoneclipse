@@ -121,6 +121,13 @@
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.1534185102" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.276452639" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/uart}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/lists}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source/littleFS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
@@ -129,18 +136,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/boards&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/boards/LPC55S16-EVK&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/system&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/radio&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/mac&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/mac/region&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/apps/LoRaMac/common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/apps/LoRaMac/common/LmHandler&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/apps/LoRaMac/common/LmHandler/packages&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/peripherals&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LoRaSrc}/peripherals/soft-se&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/board}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${MCULIB}/config&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${MCULIB}/config/fonts&quot;"/>
@@ -389,14 +384,13 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/apps/LoRaMac/FW_Update_VM2|src/apps/LoRaMac/FW_Update_VM2/LPC55S16-EVK/janpatch.c|src/apps/LoRaMac/FUOTA|src/radio/sx1276|src/radio/sx1272|src/apps/ping-pong|src/boards/LPC55S16-EVK/sx1262mbxdas-board.c|src/mac/region/RegionUS915.c|src/mac/region/RegionRU864.c|src/mac/region/RegionKR920.c|src/mac/region/RegionIN865.c|src/mac/region/RegionEU433.c|src/mac/region/RegionCN779.c|src/mac/region/RegionCN470B26.c|src/mac/region/RegionCN470B20.c|src/mac/region/RegionCN470A26.c|src/mac/region/RegionCN470A20.c|src/mac/region/RegionCN470.c|src/mac/region/RegionBaseUS.c|src/mac/region/RegionAU915.c|src/mac/region/RegionAS923.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LoRa"/>
-						<entry excluding="littleFS|FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
+						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="freertos_kernel/portable/MemMang/heap_1.c|freertos_kernel/portable/MemMang/heap_2.c|freertos_kernel/portable/MemMang/heap_3.c|freertos_kernel/portable/MemMang/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="freertos"/>
-						<entry excluding="main.c|main-fuota.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="main-fuota.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
@@ -512,6 +506,13 @@
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.undef.symbol.732868857" name="Undefined symbols (-U)" superClass="gnu.c.compiler.option.preprocessor.undef.symbol" useByScannerDiscovery="false"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1862664129" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/uart}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/lists}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/device}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/drivers}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/component/serial_manager}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/utilities}&quot;"/>
@@ -776,14 +777,13 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="CMSIS"/>
-						<entry excluding="src/apps/LoRaMac/FW_Update_VM2|src/apps/LoRaMac/FW_Update_VM2/LPC55S16-EVK/janpatch.c|src/apps/LoRaMac/periodic-uplink-lpp|src/apps/LoRaMac/FUOTA|src/radio/sx1276|src/radio/sx1272|src/apps/ping-pong|src/boards/LPC55S16-EVK/sx1262mbxdas-board.c|src/mac/region/RegionUS915.c|src/mac/region/RegionRU864.c|src/mac/region/RegionKR920.c|src/mac/region/RegionIN865.c|src/mac/region/RegionEU433.c|src/mac/region/RegionCN779.c|src/mac/region/RegionCN470B26.c|src/mac/region/RegionCN470B20.c|src/mac/region/RegionCN470A26.c|src/mac/region/RegionCN470A20.c|src/mac/region/RegionCN470.c|src/mac/region/RegionBaseUS.c|src/mac/region/RegionAU915.c|src/mac/region/RegionAS923.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LoRa"/>
 						<entry excluding="FatFS|FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|SEGGER_RTT|HD44780" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="board"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="component"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 						<entry excluding="freertos_kernel/portable/MemMang/heap_1.c|freertos_kernel/portable/MemMang/heap_2.c|freertos_kernel/portable/MemMang/heap_3.c|freertos_kernel/portable/MemMang/heap_5.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="freertos"/>
-						<entry excluding="main.c|main-fuota.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
+						<entry excluding="main-fuota.c" flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="startup"/>
 						<entry flags="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="utilities"/>
 					</sourceEntries>
@@ -814,7 +814,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso55S16</sdkName>
 		<sdkVersion>2.11.0</sdkVersion>
-		<sdkComponents>platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;CMSIS_Include_core_cm.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.iap1.LPC55S16;platform.drivers.flexcomm_spi.LPC55S16;platform.drivers.lpadc.LPC55S16;platform.drivers.lpc_rtc.LPC55S16;platform.drivers.pint.LPC55S16;platform.drivers.inputmux.LPC55S16;platform.drivers.inputmux_connections.LPC55S16;platform.drivers.ostimer.LPC55S16;platform.drivers.utick.LPC55S16;platform.drivers.flexcomm_spi_dma.LPC55S16;platform.drivers.lpc_dma.LPC55S16;platform.drivers.sctimer.LPC55S16;platform.drivers.flexcomm_i2s.LPC55S16;platform.drivers.ctimer.LPC55S16;platform.drivers.cmp_1.LPC55S16;platform.drivers.cdog.LPC55S16;platform.drivers.sysctl.LPC55S16;platform.drivers.wwdt.LPC55S16;platform.drivers.flexcomm_usart_dma.LPC55S16;platform.drivers.rng_1.LPC55S16;platform.drivers.flexcomm_i2c_dma.LPC55S16;platform.drivers.lpc_crc.LPC55S16;platform.drivers.mrt.LPC55S16;platform.drivers.mcan.LPC55S16;</sdkComponents>
+		<sdkComponents>platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;CMSIS_Include_core_cm.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.hashcrypt.LPC55S16;</sdkComponents>
 		<boardId>lpcxpresso55s16</boardId>
 		<package>LPC55S16JBD100</package>
 		<core>cm33</core>
@@ -830,7 +830,7 @@
 &lt;name&gt;LPC55S16&lt;/name&gt;&#13;
 &lt;family&gt;LPC551x_S1x&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
-&lt;memory can_program="true" id="Flash" is_ro="true" size="246" type="Flash"/&gt;&#13;
+&lt;memory can_program="true" id="Flash" is_ro="true" size="224" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="96" type="RAM"/&gt;&#13;
 &lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" edited="true" id="PROGRAM_FLASH" location="0x0" size="0x3d800"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM" location="0x20000000" size="0x10000"/&gt;&#13;

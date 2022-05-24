@@ -35,6 +35,7 @@ extern "C"
 /**
  * UART definitions
  */
+
 #if PL_CONFIG_USE_SHELL_UART /* using shell uart? disable USART direcly used by app */
   #define LPC_NUMBER_OF_USARTS                    0
 #else
@@ -61,7 +62,7 @@ extern "C"
 /**
  * SPI definitions
  */
-#define LPC_NUMBER_OF_SPI                       2
+#define LPC_NUMBER_OF_SPI                       1
 
 #if(LPC_NUMBER_OF_SPI > 0)
   /* LoRa Transceiver is on FlexComm 8 */
@@ -76,16 +77,15 @@ extern "C"
   #define LPC_SPI1_CONFIG_SPOL                    kSPI_SpolActiveAllLow
 #endif
 #if(LPC_NUMBER_OF_SPI > 1)
-	#define LPC_SPI2_TYPE                           SPI3 /* LoRa Transceiver */
-	#define LPC_SPI2_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(3U)
-	#define LPC_SPI2_SPI_MASTER_IRQ      			  FLEXCOMM3_IRQn
-	#define LPC_SPI2_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
-	#define LPC_SPI2_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
-	#define LPC_SPI2_CONFIG_DIRECTION               kSPI_MsbFirst
-	#define LPC_SPI2_CONFIG_BAUDRATE                500000U
-	#define LPC_SPI2_CONFIG_DATAWIDTH               kSPI_Data8Bits
-	#define LPC_SPI2_CONFIG_SS                      kSPI_Ssel0
-	#define LPC_SPI2_CONFIG_SPOL                    kSPI_SpolActiveAllLow
+  #define LPC_SPI2_TYPE                           SPI7 /* Free */
+  #define LPC_SPI2_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(7U)
+  #define LPC_SPI2_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
+  #define LPC_SPI2_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
+  #define LPC_SPI2_CONFIG_DIRECTION               kSPI_MsbFirst
+  #define LPC_SPI2_CONFIG_BAUDRATE                500000U
+  #define LPC_SPI2_CONFIG_DATAWIDTH               kSPI_Data8Bits
+  #define LPC_SPI2_CONFIG_SS                      kSPI_Ssel0
+  #define LPC_SPI2_CONFIG_SPOL                    kSPI_SpolActiveAllLow
 #endif
 
 /**
@@ -121,13 +121,32 @@ extern "C"
 /**
  * Radio definitions (LoRa Transceiver)
  */
-#define RADIO_NSS_PIN							  PIO1_9  /* MCU pin 10, ARD_P1_10 */
+
+
+#if PL_CONFIG_USE_LORA_SHIELD
+
+#define RADIO_NSS_PIN							PIO1_1  /* MCU pin 10, ARD_P1_10 */
+#define RADIO_RESET_PIN							PIO1_17 /* MCU pin 14,  FC1_I2C_SCL */
+#define RFM95_DIO_0_PIN							PIO1_14  /* MCU pin  */
+#define RFM95_DIO_1_PIN							PIO1_16  /* MCU  */
+#define RFM95_DIO_2_PIN        					PIO1_25  /* MCU pin */
+#define RFM95_DIO_3_PIN							PIO1_10  /* MCU pin  */
+#define RFM95_DIO_4_PIN							PIO0_15  /* MCU  */
+#define RFM95_DIO_5_PIN        					PIO1_9  /* MCU pin */
+#define RADIO_ANT_SWITCH_PIN					PIO0_0  /* MCU pin 14, ARD_P1_8 */ // LED!!!!!
 #define RADIO_TCXO_WAKEUP_TIME      5
+
+#else
+#define RADIO_NSS_PIN							  PIO1_9  /* MCU pin 10, ARD_P1_10 */
 #define RADIO_RESET_PIN							PIO0_16 /* MCU pin 14,  FC1_I2C_SCL */
+#define RADIO_TCXO_WAKEUP_TIME      5
 #define RADIO_ANT_SWITCH_PIN				PIO1_8  /* MCU pin 14, ARD_P1_8 */
 #define RADIO_BUSY_PIN							PIO1_6  /* MCU pin 5, ARD_LEDB_PWM, blue RGB LED! */
 #define RADIO_DIO_1_PIN							PIO1_4  /* MCU pin 1, ARD_LEDR_PWM, red RGB LED! */
 #define RADIO_DEVICE_SEL_PIN        PIO0_0  /* MCU pin 54, ARD_CMP0_IN_A */
+#endif
+
+
 
 /**
  * LED pins

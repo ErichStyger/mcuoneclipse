@@ -13,22 +13,37 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
-#include "McuSHT31.h"
-#include "W25Q128.h"
-#include "fs.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
-  #include "minGlue-Flash.h"
-  #include "McuFlash.h"
 #endif
-#include "application.h"
+#if PL_CONFIG_USE_NVMC
+  #include "nvmc.h"
+#endif
+#if PL_CONFIG_USE_SWO
+  #include "McuSWO.h"
+#endif
+#if PL_CONFIG_USE_SD_CARD || PL_CONFIG_USE_USB_MSD
+  #include "McuFatFS.h"
+  #include "disk.h"
+#endif
+#if PL_CONFIG_USE_RTC
+  #include "McuTimeDate.h"
+#endif
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  #include "McuExtRTC.h"
+#endif
+#if PL_CONFIG_HAS_SHT31
+  #include "McuSHT31.h"
+#endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  #include "littleFS/McuLittleFS.h"
+  #include "McuW25Q128.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
   McuShell_ParseCommand,
-#if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_ParseCommand,
-#endif
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
 #endif
@@ -36,31 +51,28 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuLog_ParseCommand,
 #endif
   McuTimeDate_ParseCommand,
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuExtRTC_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_SHT31
+  McuSHT31_ParseCommand,
+#endif
 #if PL_CONFIG_USE_MININI
   McuMinINI_ParseCommand,
 #endif
 #if PL_CONFIG_USE_NVMC
-  //NVMC_ParseCommand,
+  NVMC_ParseCommand,
 #endif
-#if PL_CONFIG_USE_W25Q
-  W25_ParseCommand,
-#endif
-#if PL_CONFIG_USE_littleFS
-  FS_ParseCommand,
-#endif
-
-#if PL_CONFIG_USE_SHT31
-  McuSHT31_ParseCommand,
-#endif
-
-
-
 #if PL_CONFIG_USE_SWO
   McuSWO_ParseCommand,
 #endif
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_ParseCommand,
   DISK_ParseCommand,
+#endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  McuLFS_ParseCommand,
+  McuW25_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -99,45 +111,33 @@ void SHELL_SendString(unsigned char *str) {
   }
 }
 
-#if McuLib_CONFIG_SDK_USE_FREERTOS
 static void ShellTask(void *pv) {
   int i;
 
-  McuShell_SendStr((uint8_t*)"Shell task started.\r\n", McuShell_GetStdio()->stdOut);
+  McuLog_info("Shell task started.");
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     ios[i].buf[0] = '\0';
   }
   for(;;) {
-    /* process all I/Os */
+   /* process all I/Os */
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
     vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
-#endif
-
-void SHELL_Process(void) {
-  /* process all I/Os */
-  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
-    (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
-  }
-}
 
 void SHELL_Init(void) {
-#if McuLib_CONFIG_SDK_USE_FREERTOS
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
       3000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+1,  /* initial priority */
+      tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
-    ) != pdPASS)
-  {
+    ) != pdPASS) {
      for(;;){} /* error! probably out of memory */
   }
-#endif
   McuShell_SetStdio(ios[0].stdio);
 #if McuLog_CONFIG_IS_ENABLED
   for(int i=0; i<sizeof(ios)/sizeof(ios[0]) && i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {

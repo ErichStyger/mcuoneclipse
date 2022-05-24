@@ -40,9 +40,9 @@
                <pin_label pin_num="74" pin_signal="PIO0_20/FC3_CTS_SDA_SSEL0/CTIMER1_MAT1/CT_INP15/SCT_GPI2/FC7_RXD_SDA_MOSI_DATA/HS_SPI_SSEL0/PLU_IN5/SECURE_GPIO0_20/FC4_TXD_SCL_MISO_WS" label="J19[2]/J9[9]/FC7_I2S_TX" identifier="FC7_I2S_TX;Shield_RTC_RST"/>
                <pin_label pin_num="20" pin_signal="PIO0_23/MCLK/CTIMER1_MAT2/CTIMER3_MAT3/SCT0_OUT4/FC0_CTS_SDA_SSEL0/SECURE_GPIO0_23/ADC0_0" label="J13[3]/JP4[3]/ARD_ADC0_0_P" identifier="ADC_SHIELD_2"/>
                <pin_label pin_num="60" pin_signal="PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26" label="NOT_CONNECTED" identifier="SPI_MOSI"/>
-               <pin_label pin_num="27" pin_signal="PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27" label="J8[4]/J12[14]/ARD_MIK_FC2_USART_TXD" identifier="SHIELD_UART_TXD"/>
-               <pin_label pin_num="92" pin_signal="PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29" label="MCU_RX" identifier="DEBUG_UART_RX"/>
-               <pin_label pin_num="94" pin_signal="PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30" label="MCU_TX" identifier="DEBUG_UART_TX"/>
+               <pin_label pin_num="27" pin_signal="PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27" label="J8[4]/J12[14]/ARD_MIK_FC2_USART_TXD" identifier="SHIELD_UART_TXD;DEBUG_UART_TXD;DEBUG_UART_TX"/>
+               <pin_label pin_num="92" pin_signal="PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29" label="MCU_RX" identifier="DEBUG_UART_RX;DEBUG_UART2_RX"/>
+               <pin_label pin_num="94" pin_signal="PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30" label="MCU_TX" identifier="DEBUG_UART_TX;DEBUG_UART2_TX"/>
                <pin_label pin_num="59" pin_signal="PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4" label="J7[3]/J9[16]/ARD_MIK_HSSPI_SSEL1" identifier="RADIO_NSS"/>
                <pin_label pin_num="61" pin_signal="PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5" label="NOT_CONNECTED" identifier="SPI_CLK"/>
                <pin_label pin_num="62" pin_signal="PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6" label="NOT_CONNECTED" identifier="SPI_MISO"/>
@@ -57,7 +57,7 @@
                <pin_label pin_num="87" pin_signal="PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3" label="J12[18]/J13[4]/EXP_P1_16" identifier="RADIO_BUSY;RADIO_DIO2;RADIO_DIO1"/>
                <pin_label pin_num="43" pin_signal="PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4" label="J12[20]/J13[2]/EXP_P1_17" identifier="RAF;RADIO_RESET"/>
                <pin_label pin_num="41" pin_signal="PIO1_22/CTIMER2_MAT3/SCT_GPI5/FC4_SSEL3/PLU_OUT4/CAN0_RD" label="U25[3]/CAN_RXD" identifier="CAN_RXD;Shield_RTC_;Shield_RTC_INT"/>
-               <pin_label pin_num="3" pin_signal="PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6" label="J8[3]/J12[9]/J12[16]/ARD_MIK_FC2_USART_RXD" identifier="SHIELD_UART_RXD"/>
+               <pin_label pin_num="3" pin_signal="PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6" label="J8[3]/J12[9]/J12[16]/ARD_MIK_FC2_USART_RXD" identifier="SHIELD_UART_RXD;DEBUG_UART_RXD;DEBUG_UART_RX"/>
                <pin_label pin_num="77" pin_signal="PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN" label="J9[15]/J12[5]/I2S_IRQ" identifier="I2S_IRQ;RADIO_DIO3;RADIO_DIO2"/>
                <pin_label pin_num="91" pin_signal="PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0" label="J13[7]/J13[8]/U13[28]/I2S_MCLK" identifier="I2S_MCLK;Shield_BTN3;Shield_BTN2"/>
             </pin_labels>
@@ -69,7 +69,6 @@
                   <callFromInitBoot>true</callFromInitBoot>
                   <coreID>cm33_core0</coreID>
                   <enableClock>true</enableClock>
-                  <fullInit>true</fullInit>
                </options>
                <dependencies>
                   <dependency resourceType="Peripheral" resourceId="FLEXCOMM0" description="Peripheral FLEXCOMM0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
@@ -92,11 +91,6 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="Peripheral" resourceId="ADC0" description="Peripheral ADC0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="Peripheral" resourceId="FLEXCOMM2" description="Peripheral FLEXCOMM2 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
@@ -107,275 +101,58 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_gpio" description="Pins initialization requires the LPC_GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
-                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.lpc_iocon" description="Pins initialization requires the LPC_IOCON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
-                     <feature name="enabled" evaluation="equal" configuration="cm33_core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <pins>
                   <pin peripheral="FLEXCOMM0" signal="RXD_SDA_MOSI_DATA" pin_num="92" pin_signal="PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value="DEBUG_UART2_RX"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="FLEXCOMM0" signal="TXD_SCL_MISO_WS" pin_num="94" pin_signal="PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="FLEXCOMM8" signal="HS_SPI_SCK" pin_num="61" pin_signal="PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5">
-                     <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="FLEXCOMM8" signal="HS_SPI_MOSI" pin_num="60" pin_signal="PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26">
-                     <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value="DEBUG_UART2_TX"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="FLEXCOMM8" signal="HS_SPI_MISO" pin_num="62" pin_signal="PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
-                  <pin peripheral="SWD" signal="SWO" pin_num="21" pin_signal="PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1">
+                  <pin peripheral="FLEXCOMM8" signal="HS_SPI_SCK" pin_num="61" pin_signal="PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="disabled"/>
+                        <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="FLEXCOMM8" signal="HS_SPI_MOSI" pin_num="60" pin_signal="PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="FLEXCOMM8" signal="HS_SPI_SSEL1" pin_num="59" pin_signal="PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4">
+                     <pin_features>
+                        <pin_feature name="identifier" value=""/>
+                     </pin_features>
+                  </pin>
+                  <pin peripheral="SWD" signal="SWO" pin_num="21" pin_signal="PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1"/>
+                  <pin peripheral="FLEXCOMM3" signal="RXD_SDA_MOSI_DATA" pin_num="83" pin_signal="PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3"/>
                   <pin peripheral="FLEXCOMM3" signal="TXD_SCL_MISO_WS" pin_num="81" pin_signal="PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2">
                      <pin_features>
-                        <pin_feature name="mode" value="pullUp"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="FLEXCOMM3" signal="RXD_SDA_MOSI_DATA" pin_num="83" pin_signal="PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3">
-                     <pin_features>
-                        <pin_feature name="identifier" value="EXT_FLASH_MOSI"/>
-                        <pin_feature name="mode" value="pullUp"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
                   <pin peripheral="FLEXCOMM3" signal="SCK" pin_num="89" pin_signal="PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6">
                      <pin_features>
-                        <pin_feature name="mode" value="pullUp"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="FLEXCOMM3" signal="CTS_SDA_SSEL0" pin_num="86" pin_signal="PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4">
-                     <pin_features>
-                        <pin_feature name="mode" value="pullUp"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 5" pin_num="31" pin_signal="PIO1_5/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT0/SCT_GPI0">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="pullDown"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 22" pin_num="41" pin_signal="PIO1_22/CTIMER2_MAT3/SCT_GPI5/FC4_SSEL3/PLU_OUT4/CAN0_RD">
-                     <pin_features>
-                        <pin_feature name="identifier" value="Shield_RTC_INT"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="pullUp"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO0, 20" pin_num="74" pin_signal="PIO0_20/FC3_CTS_SDA_SSEL0/CTIMER1_MAT1/CT_INP15/SCT_GPI2/FC7_RXD_SDA_MOSI_DATA/HS_SPI_SSEL0/PLU_IN5/SECURE_GPIO0_20/FC4_TXD_SCL_MISO_WS">
-                     <pin_features>
-                        <pin_feature name="identifier" value="Shield_RTC_RST"/>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="gpio_init_state" value="true"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 17" pin_num="43" pin_signal="PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4">
-                     <pin_features>
-                        <pin_feature name="identifier" value="RADIO_RESET"/>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="gpio_init_state" value="true"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 1" pin_num="59" pin_signal="PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4">
-                     <pin_features>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="gpio_init_state" value="false"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 9" pin_num="10" pin_signal="PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12">
-                     <pin_features>
-                        <pin_feature name="identifier" value="RADIO_DIO5"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO0, 15" pin_num="22" pin_signal="PIO0_15/FC6_CTS_SDA_SSEL0/UTICK_CAP2/CT_INP16/SCT0_OUT2/SECURE_GPIO0_15/ADC0_2">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 14" pin_num="57" pin_signal="PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/ACMP0_D">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 16" pin_num="87" pin_signal="PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3">
-                     <pin_features>
-                        <pin_feature name="identifier" value="RADIO_DIO1"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 25" pin_num="77" pin_signal="PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN">
-                     <pin_features>
-                        <pin_feature name="identifier" value="RADIO_DIO2"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="ADC0" signal="CH, 8" pin_num="14" pin_signal="PIO0_16/FC4_TXD_SCL_MISO_WS/CLKOUT/CT_INP4/SECURE_GPIO0_16/ADC0_8">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ADC_SHIELD_BAT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="enabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="ADC0" signal="CH, 0" pin_num="20" pin_signal="PIO0_23/MCLK/CTIMER1_MAT2/CTIMER3_MAT3/SCT0_OUT4/FC0_CTS_SDA_SSEL0/SECURE_GPIO0_23/ADC0_0">
-                     <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="enabled"/>
+                        <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
                   <pin peripheral="FLEXCOMM2" signal="RXD_SDA_MOSI_DATA" pin_num="3" pin_signal="PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value="DEBUG_UART_RX"/>
                      </pin_features>
                   </pin>
                   <pin peripheral="FLEXCOMM2" signal="TXD_SCL_MISO_WS" pin_num="27" pin_signal="PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27">
                      <pin_features>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 10" pin_num="40" pin_signal="PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 11" pin_num="93" pin_signal="PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO0, 0" pin_num="54" pin_signal="PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A">
-                     <pin_features>
-                        <pin_feature name="identifier" value="Shield_LED"/>
-                        <pin_feature name="direction" value="OUTPUT"/>
-                        <pin_feature name="gpio_init_state" value="true"/>
-                        <pin_feature name="mode" value="inactive"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
-                        <pin_feature name="asw" value="disabled"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIO" signal="PIO1, 31" pin_num="91" pin_signal="PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0">
-                     <pin_features>
-                        <pin_feature name="identifier" value="Shield_BTN2"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="mode" value="pullDown"/>
-                        <pin_feature name="slew_rate" value="standard"/>
-                        <pin_feature name="invert" value="disabled"/>
-                        <pin_feature name="open_drain" value="disabled"/>
+                        <pin_feature name="identifier" value="DEBUG_UART_TX"/>
                      </pin_features>
                   </pin>
                </pins>

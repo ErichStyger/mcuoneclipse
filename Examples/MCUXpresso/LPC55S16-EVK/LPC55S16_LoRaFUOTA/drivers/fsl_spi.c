@@ -709,7 +709,7 @@ status_t SPI_MasterTransferNonBlocking(SPI_Type *base, spi_master_handle_t *hand
  */
 status_t SPI_MasterHalfDuplexTransferBlocking(SPI_Type *base, spi_half_duplex_transfer_t *xfer)
 {
-    assert(xfer != NULL);
+    assert(xfer);
 
     spi_transfer_t tempXfer = {0};
     status_t status;
@@ -780,8 +780,8 @@ status_t SPI_MasterHalfDuplexTransferNonBlocking(SPI_Type *base,
                                                  spi_master_handle_t *handle,
                                                  spi_half_duplex_transfer_t *xfer)
 {
-    assert(xfer != NULL);
-    assert(handle != NULL);
+    assert(xfer);
+    assert(handle);
     spi_transfer_t tempXfer = {0};
     status_t status;
 

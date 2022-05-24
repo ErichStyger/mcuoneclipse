@@ -30,6 +30,9 @@ Instructions:
 #ifndef INCLUDEMCULIBCONFIG_H_
 #define INCLUDEMCULIBCONFIG_H_
 
+/* global platform configuration */
+#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 /* set the CPU. See McuLibConfig.h for all supported CPUs */
@@ -49,7 +52,6 @@ Instructions:
   #define configENABLE_FPU               (1)
   #define configMINIMAL_SECURE_STACK_SIZE  (600)
 
-
 #elif 0 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
@@ -57,15 +59,19 @@ Instructions:
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #endif
-
-
 /* ------------------- RTOS ---------------------------*/
-#define McuLib_CONFIG_SDK_USE_FREERTOS       (0)
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
-#define configTOTAL_HEAP_SIZE                (24*1024)
+#define McuLib_CONFIG_SDK_USE_FREERTOS          (1)
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    (0)
+#define configTOTAL_HEAP_SIZE                   (24*1024)
 /* #define configUSE_HEAP_SECTION_NAME          (1) */
 /* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
-/* ---------------------------------------------------------------------------------------*/
+/* ------------------- McuSPI --------------------------*/
+#define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
+#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
+/* ------------------- McuLittleFS --------------------------*/
+#define MCUW28Q128_CONFIG_ENABLED                     (1)
+#define LITTLEFS_CONFIG_ENABLED                       (1)
+#define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS                      (0)
 #define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (0)
@@ -79,32 +85,20 @@ Instructions:
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PORT            0
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PIN             17U
 //#define McuFatFS_CONFIG_WRITE_PROTECT_PULL            McuGPIO_PULL_DISABLE /* https://www.pololu.com/product/2587 */
-
-
-
+/* -------------------------------------------------*/
+/* MinINI */
+#if 0
+  #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_FAT_FS
+#else
+  #define McuMinINI_CONFIG_FS                           McuMinINI_CONFIG_FS_TYPE_LITTLE_FS
+#endif
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
 #define McuShell_CONFIG_ECHO_ENABLED                     (1)
-#define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-#define McuShellUart_CONFIG_UART 					          McuShellUart_CONFIG_UART_LPC55S16_USART0
-#endif
-#define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
-#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (96)
-#define McuShell_CONFIG_MULTI_CMD_SIZE              (96) /* maximum size of a single command in a multi-command string */
-#define McuShell_CONFIG_PROMPT_STRING               "LoRa> "
-#define McuShell_CONFIG_ECHO_ENABLED                (1)
-/* ---------------------------------------------------------------------------------------*/
-/* MinINI */
-/* see as well platform.h about the memory layout and EEPROM reservation */
-#define McuMinINI_CONFIG_FS                         McuMinINI_CONFIG_FS_TYPE_FLASH_FS
-#define McuMinINI_CONFIG_FLASH_NVM_ADDR_START      (((0+240*1024)-(McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE))) /* last block in FLASH, start address of configuration data in flash */
-#define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      (0x200)   /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
-#define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (4)       /* number of flash blocks */
-#define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE   (McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS * McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE) /* MUST be multiple of 512 for LPC55! */
-/* ---------------------------------------------------------------------------------------*/
-
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE        (192)
+#define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART2
+/* -----------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP    (1*1024)
 #define McuRTT_CONFIG_BLOCKING_SEND           (1)
@@ -119,26 +113,21 @@ Instructions:
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 /* -----------------------------------------------------*/
 /* McuTimeDate */
-#define McuTimeDate_CONFIG_TICK_TIME_MS   (100)
-
-/* -------------------------------------------------*/
-/* Time/Date */
-#define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (0) /* enable software RTC */
+#define McuTimeDate_CONFIG_TICK_TIME_MS                            (100)
+#define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (1) /* enable software RTC */
 #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (1) /* enable external I2C RTC */
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
 #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
-#define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_EXTERNAL_RTC)
-#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (0) /* if using software RTC */
+//#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
+
+#define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
+#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
 /* -------------------------------------------------*/
-
-/* -------------------------------------------------*/
-/* RTC */
+/* McuExtRTC */
 #define McuExtRTC_CONFIG_DEVICE                 3232  /* RTC device used */
-
-
 /* -----------------------------------------------------*/
 /* I2C and OLED */
 #define USE_HW_I2C                              (1)  /* otherwise uses GPIO bit-banging */
@@ -150,7 +139,6 @@ Instructions:
 #define McuGenericSWI2C_CONFIG_DELAY_NS (0)
 
 /* I2C Pin Muxing */
-
 #if USE_HW_I2C
   #define McuLib_CONFIG_MCUI2CLIB_ENABLED                        (1)
   #define McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE             "McuI2cLib.h"
@@ -166,7 +154,7 @@ Instructions:
 #else
   #define SDA1_CONFIG_DO_PIN_MUXING (1)
   #define SCL1_CONFIG_DO_PIN_MUXING (1)
-
+  
   #define SCL1_CONFIG_GPIO_NAME     GPIO
   #define SCL1_CONFIG_PORT_NAME     0
   #define SCL1_CONFIG_PIN_NUMBER    14u
@@ -175,41 +163,7 @@ Instructions:
   #define SDA1_CONFIG_PORT_NAME     0
   #define SDA1_CONFIG_PIN_NUMBER    13u
 #endif
-
-
-/**
- * SPI definitions
- */
-//#define LPC_NUMBER_OF_SPI                       1
-//
-//#if(LPC_NUMBER_OF_SPI > 0)
-//  /* LoRa Transceiver is on FlexComm 8 */
-//  #define LPC_SPI3_TYPE                           SPI3 /* LoRa Transceiver */
-//  #define LPC_SPI3_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(3U)
-//  #define LPC_SPI3_SPI_MASTER_IRQ      			  FLEXCOMM3_IRQn
-//  #define LPC_SPI3_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
-//  #define LPC_SPI3_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
-//  #define LPC_SPI3_CONFIG_DIRECTION               kSPI_MsbFirst
-//  #define LPC_SPI3_CONFIG_BAUDRATE                500000U
-//  #define LPC_SPI3_CONFIG_DATAWIDTH               kSPI_Data8Bits
-//  #define LPC_SPI3_CONFIG_SS                      kSPI_Ssel0
-//  #define LPC_SPI3_CONFIG_SPOL                    kSPI_SpolActiveAllLow
-//#endif
-//#if(LPC_NUMBER_OF_SPI > 1)
-//  #define LPC_SPI2_TYPE                           SPI7 /* Free */
-//  #define LPC_SPI2_CLK_FRQ                        CLOCK_GetFlexCommClkFreq(7U)
-//  #define LPC_SPI2_CONFIG_POLARITY                kSPI_ClockPolarityActiveHigh
-//  #define LPC_SPI2_CONFIG_PHASE                   kSPI_ClockPhaseFirstEdge
-//  #define LPC_SPI2_CONFIG_DIRECTION               kSPI_MsbFirst
-//  #define LPC_SPI2_CONFIG_BAUDRATE                500000U
-//  #define LPC_SPI2_CONFIG_DATAWIDTH               kSPI_Data8Bits
-//  #define LPC_SPI2_CONFIG_SS                      kSPI_Ssel0
-//  #define LPC_SPI2_CONFIG_SPOL                    kSPI_SpolActiveAllLow
-//#endif
-
-
-
-
+/* -------------------------------------------------*/
 #if 1 /* type of OLED */
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
 #else
@@ -222,17 +176,12 @@ Instructions:
 
 /* -----------------------------------------------------*/
 /* McuWait */
-#define McuWait_CONFIG_USE_CYCLE_COUNTER (1)
+#define McuWait_CONFIG_USE_CYCLE_COUNTER         (1)
 
 /* -----------------------------------------------------*/
 /* McuSWO */
-#define McuSWO_CONFIG_HAS_SWO         (0) /* enable SWO support */
+#define McuSWO_CONFIG_HAS_SWO         (1) /* enable SWO support */
 //#define McuSWO_CONFIG_SPEED_BAUD      (5625000) /* J-Link supports up to 5625 kHz */
 #define McuSWO_CONFIG_SPEED_BAUD      (96000000) /* needed for LinkServer and MCUXpresso IDE 11.5.0 */
-
-
-/* McuFlash */
-#define McuFlash_CONFIG_IS_ENABLED  (1)
-/* ---------------------------------------------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -11,7 +11,6 @@ typedef enum LEDS_Leds_e {
   LEDS_RED,
   LEDS_GREEN,
   LEDS_BLUE,
-  LEDS_SHIELD_GREEN,
 } LEDS_Leds_e;
 
 /* turn LED on */

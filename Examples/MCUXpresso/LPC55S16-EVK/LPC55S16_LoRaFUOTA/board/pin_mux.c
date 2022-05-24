@@ -31,9 +31,9 @@ pin_labels:
 - {pin_num: '20', pin_signal: PIO0_23/MCLK/CTIMER1_MAT2/CTIMER3_MAT3/SCT0_OUT4/FC0_CTS_SDA_SSEL0/SECURE_GPIO0_23/ADC0_0, label: 'J13[3]/JP4[3]/ARD_ADC0_0_P', identifier: ADC_SHIELD_2}
 - {pin_num: '60', pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26, label: NOT_CONNECTED, identifier: SPI_MOSI}
 - {pin_num: '27', pin_signal: PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27, label: 'J8[4]/J12[14]/ARD_MIK_FC2_USART_TXD',
-  identifier: SHIELD_UART_TXD}
-- {pin_num: '92', pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29, label: MCU_RX, identifier: DEBUG_UART_RX}
-- {pin_num: '94', pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, label: MCU_TX, identifier: DEBUG_UART_TX}
+  identifier: SHIELD_UART_TXD;DEBUG_UART_TXD;DEBUG_UART_TX}
+- {pin_num: '92', pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29, label: MCU_RX, identifier: DEBUG_UART_RX;DEBUG_UART2_RX}
+- {pin_num: '94', pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, label: MCU_TX, identifier: DEBUG_UART_TX;DEBUG_UART2_TX}
 - {pin_num: '59', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, label: 'J7[3]/J9[16]/ARD_MIK_HSSPI_SSEL1', identifier: RADIO_NSS}
 - {pin_num: '61', pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5, label: NOT_CONNECTED, identifier: SPI_CLK}
 - {pin_num: '62', pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6, label: NOT_CONNECTED, identifier: SPI_MISO}
@@ -48,7 +48,7 @@ pin_labels:
 - {pin_num: '87', pin_signal: PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3, label: 'J12[18]/J13[4]/EXP_P1_16', identifier: RADIO_BUSY;RADIO_DIO2;RADIO_DIO1}
 - {pin_num: '43', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4, label: 'J12[20]/J13[2]/EXP_P1_17', identifier: RAF;RADIO_RESET}
 - {pin_num: '41', pin_signal: PIO1_22/CTIMER2_MAT3/SCT_GPI5/FC4_SSEL3/PLU_OUT4/CAN0_RD, label: 'U25[3]/CAN_RXD', identifier: CAN_RXD;Shield_RTC_;Shield_RTC_INT}
-- {pin_num: '3', pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6, label: 'J8[3]/J12[9]/J12[16]/ARD_MIK_FC2_USART_RXD', identifier: SHIELD_UART_RXD}
+- {pin_num: '3', pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6, label: 'J8[3]/J12[9]/J12[16]/ARD_MIK_FC2_USART_RXD', identifier: SHIELD_UART_RXD;DEBUG_UART_RXD;DEBUG_UART_RX}
 - {pin_num: '77', pin_signal: PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN, label: 'J9[15]/J12[5]/I2S_IRQ', identifier: I2S_IRQ;RADIO_DIO3;RADIO_DIO2}
 - {pin_num: '91', pin_signal: PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0, label: 'J13[7]/J13[8]/U13[28]/I2S_MCLK', identifier: I2S_MCLK;Shield_BTN3;Shield_BTN2}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
@@ -56,8 +56,6 @@ pin_labels:
 /* clang-format on */
 
 #include "fsl_common.h"
-#include "fsl_gpio.h"
-#include "fsl_iocon.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -75,64 +73,24 @@ void BOARD_InitBootPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitPins:
-- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true', fullInit: 'true'}
+- options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '92', peripheral: FLEXCOMM0, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_29/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT3/SCT0_OUT8/CMP0_OUT/PLU_OUT2/SECURE_GPIO0_29,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '61', peripheral: FLEXCOMM8, signal: HS_SPI_SCK, pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
+    identifier: DEBUG_UART2_RX}
+  - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, identifier: DEBUG_UART2_TX}
+  - {pin_num: '62', peripheral: FLEXCOMM8, signal: HS_SPI_MISO, pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6, identifier: ''}
+  - {pin_num: '61', peripheral: FLEXCOMM8, signal: HS_SPI_SCK, pin_signal: PIO1_2/CAN0_TD/CTIMER0_MAT3/SCT_GPI6/HS_SPI_SCK/USB1_PORTPWRN/PLU_OUT5, identifier: ''}
   - {pin_num: '60', peripheral: FLEXCOMM8, signal: HS_SPI_MOSI, pin_signal: PIO0_26/FC2_RXD_SDA_MOSI_DATA/CLKOUT/CT_INP14/SCT0_OUT5/USB0_IDVALUE/FC0_SCK/HS_SPI_MOSI/SECURE_GPIO0_26,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '62', peripheral: FLEXCOMM8, signal: HS_SPI_MISO, pin_signal: PIO1_3/CAN0_RD/SCT0_OUT4/HS_SPI_MISO/USB0_PORTPWRN/PLU_OUT6, mode: inactive, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
-  - {pin_num: '21', peripheral: SWD, signal: SWO, pin_signal: PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '81', peripheral: FLEXCOMM3, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, mode: pullUp,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '83', peripheral: FLEXCOMM3, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3, identifier: EXT_FLASH_MOSI,
-    mode: pullUp, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '89', peripheral: FLEXCOMM3, signal: SCK, pin_signal: PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6, mode: pullUp, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
-  - {pin_num: '86', peripheral: FLEXCOMM3, signal: CTS_SDA_SSEL0, pin_signal: PIO0_4/CAN0_RD/FC4_SCK/CT_INP12/SCT_GPI4/FC3_CTS_SDA_SSEL0/SECURE_GPIO0_4, mode: pullUp,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '31', peripheral: GPIO, signal: 'PIO1, 5', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/CTIMER2_MAT0/SCT_GPI0, direction: INPUT, mode: pullDown, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
-  - {pin_num: '41', peripheral: GPIO, signal: 'PIO1, 22', pin_signal: PIO1_22/CTIMER2_MAT3/SCT_GPI5/FC4_SSEL3/PLU_OUT4/CAN0_RD, identifier: Shield_RTC_INT, direction: INPUT,
-    mode: pullUp, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '74', peripheral: GPIO, signal: 'PIO0, 20', pin_signal: PIO0_20/FC3_CTS_SDA_SSEL0/CTIMER1_MAT1/CT_INP15/SCT_GPI2/FC7_RXD_SDA_MOSI_DATA/HS_SPI_SSEL0/PLU_IN5/SECURE_GPIO0_20/FC4_TXD_SCL_MISO_WS,
-    identifier: Shield_RTC_RST, direction: OUTPUT, gpio_init_state: 'true', mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '43', peripheral: GPIO, signal: 'PIO1, 17', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4, identifier: RADIO_RESET, direction: OUTPUT, gpio_init_state: 'true',
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '59', peripheral: GPIO, signal: 'PIO1, 1', pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4, direction: OUTPUT,
-    gpio_init_state: 'false', mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '10', peripheral: GPIO, signal: 'PIO1, 9', pin_signal: PIO1_9/FC1_SCK/CT_INP4/SCT0_OUT2/FC4_CTS_SDA_SSEL0/ADC0_12, identifier: RADIO_DIO5, direction: INPUT,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '22', peripheral: GPIO, signal: 'PIO0, 15', pin_signal: PIO0_15/FC6_CTS_SDA_SSEL0/UTICK_CAP2/CT_INP16/SCT0_OUT2/SECURE_GPIO0_15/ADC0_2, direction: INPUT,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '57', peripheral: GPIO, signal: 'PIO1, 14', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/ACMP0_D, direction: INPUT, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '87', peripheral: GPIO, signal: 'PIO1, 16', pin_signal: PIO1_16/FC6_TXD_SCL_MISO_WS/CTIMER1_MAT3, identifier: RADIO_DIO1, direction: INPUT, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '77', peripheral: GPIO, signal: 'PIO1, 25', pin_signal: PIO1_25/FC2_TXD_SCL_MISO_WS/SCT0_OUT2/UTICK_CAP0/PLU_CLKIN, identifier: RADIO_DIO2, direction: INPUT,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '14', peripheral: ADC0, signal: 'CH, 8', pin_signal: PIO0_16/FC4_TXD_SCL_MISO_WS/CLKOUT/CT_INP4/SECURE_GPIO0_16/ADC0_8, identifier: ADC_SHIELD_BAT,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, asw: enabled}
-  - {pin_num: '20', peripheral: ADC0, signal: 'CH, 0', pin_signal: PIO0_23/MCLK/CTIMER1_MAT2/CTIMER3_MAT3/SCT0_OUT4/FC0_CTS_SDA_SSEL0/SECURE_GPIO0_23/ADC0_0, mode: inactive,
-    slew_rate: standard, invert: disabled, open_drain: disabled, asw: enabled}
-  - {pin_num: '3', peripheral: FLEXCOMM2, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6, mode: inactive, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
+    identifier: ''}
+  - {pin_num: '59', peripheral: FLEXCOMM8, signal: HS_SPI_SSEL1, pin_signal: PIO1_1/FC3_RXD_SDA_MOSI_DATA/CT_INP3/SCT_GPI5/HS_SPI_SSEL1/USB1_OVERCURRENTN/PLU_OUT4,
+    identifier: ''}
+  - {pin_num: '21', peripheral: SWD, signal: SWO, pin_signal: PIO0_10/FC6_SCK/CT_INP10/CTIMER2_MAT0/FC1_TXD_SCL_MISO_WS/SCT0_OUT2/SWO/SECURE_GPIO0_10/ADC0_1}
+  - {pin_num: '83', peripheral: FLEXCOMM3, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO0_3/FC3_RXD_SDA_MOSI_DATA/CTIMER0_MAT1/SCT0_OUT1/SCT_GPI3/SECURE_GPIO0_3}
+  - {pin_num: '81', peripheral: FLEXCOMM3, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_2/FC3_TXD_SCL_MISO_WS/CT_INP1/SCT0_OUT0/SCT_GPI2/SECURE_GPIO0_2, identifier: ''}
+  - {pin_num: '89', peripheral: FLEXCOMM3, signal: SCK, pin_signal: PIO0_6/FC3_SCK/CT_INP13/CTIMER4_MAT0/SCT_GPI6/SECURE_GPIO0_6, identifier: ''}
+  - {pin_num: '3', peripheral: FLEXCOMM2, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/FC3_SSEL3/PLU_OUT6, identifier: DEBUG_UART_RX}
   - {pin_num: '27', peripheral: FLEXCOMM2, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_27/FC2_TXD_SCL_MISO_WS/CTIMER3_MAT2/SCT0_OUT6/FC7_RXD_SDA_MOSI_DATA/PLU_OUT0/SECURE_GPIO0_27,
-    mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
-  - {pin_num: '40', peripheral: GPIO, signal: 'PIO1, 10', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, direction: INPUT, mode: inactive, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
-  - {pin_num: '93', peripheral: GPIO, signal: 'PIO1, 11', pin_signal: PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS, direction: INPUT, mode: inactive, slew_rate: standard,
-    invert: disabled, open_drain: disabled}
-  - {pin_num: '54', peripheral: GPIO, signal: 'PIO0, 0', pin_signal: PIO0_0/FC3_SCK/CTIMER0_MAT0/SCT_GPI0/SECURE_GPIO0_0/ACMP0_A, identifier: Shield_LED, direction: OUTPUT,
-    gpio_init_state: 'true', mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled, asw: disabled}
-  - {pin_num: '91', peripheral: GPIO, signal: 'PIO1, 31', pin_signal: PIO1_31/MCLK/CTIMER0_MAT2/SCT0_OUT6/PLU_IN0, identifier: Shield_BTN2, direction: INPUT, mode: pullDown,
-    slew_rate: standard, invert: disabled, open_drain: disabled}
+    identifier: DEBUG_UART_TX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -149,557 +107,161 @@ void BOARD_InitPins(void)
     /* Enables the clock for the I/O controller.: Enable Clock. */
     CLOCK_EnableClock(kCLOCK_Iocon);
 
-    /* Enables the clock for the GPIO0 module */
-    CLOCK_EnableClock(kCLOCK_Gpio0);
+    IOCON->PIO[0][10] = ((IOCON->PIO[0][10] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    /* Enables the clock for the GPIO1 module */
-    CLOCK_EnableClock(kCLOCK_Gpio1);
+                         /* Selects pin function.
+                          * : PORT010 (pin 21) is configured as SWO. */
+                         | IOCON_PIO_FUNC(PIO0_10_FUNC_ALT6)
 
-    gpio_pin_config_t Shield_LED_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 1U
-    };
-    /* Initialize GPIO functionality on pin PIO0_0 (pin 54)  */
-    GPIO_PinInit(BOARD_INITPINS_Shield_LED_GPIO, BOARD_INITPINS_Shield_LED_PORT, BOARD_INITPINS_Shield_LED_PIN, &Shield_LED_config);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_10_DIGIMODE_DIGITAL));
 
-    gpio_pin_config_t RADIO_DIO4_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_15 (pin 22)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO4_GPIO, BOARD_INITPINS_RADIO_DIO4_PORT, BOARD_INITPINS_RADIO_DIO4_PIN, &RADIO_DIO4_config);
+    IOCON->PIO[0][2] = ((IOCON->PIO[0][2] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    gpio_pin_config_t gpio0_pin14_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_16 (pin 14)  */
-    GPIO_PinInit(GPIO, 0U, 16U, &gpio0_pin14_config);
+                        /* Selects pin function.
+                         * : PORT02 (pin 81) is configured as FC3_TXD_SCL_MISO_WS. */
+                        | IOCON_PIO_FUNC(PIO0_2_FUNC_ALT1)
 
-    gpio_pin_config_t Shield_RTC_RST_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 1U
-    };
-    /* Initialize GPIO functionality on pin PIO0_20 (pin 74)  */
-    GPIO_PinInit(BOARD_INITPINS_Shield_RTC_RST_GPIO, BOARD_INITPINS_Shield_RTC_RST_PORT, BOARD_INITPINS_Shield_RTC_RST_PIN, &Shield_RTC_RST_config);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_2_DIGIMODE_DIGITAL));
 
-    gpio_pin_config_t gpio0_pin20_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO0_23 (pin 20)  */
-    GPIO_PinInit(GPIO, 0U, 23U, &gpio0_pin20_config);
+    IOCON->PIO[0][26] = ((IOCON->PIO[0][26] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    gpio_pin_config_t RADIO_NSS_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_1 (pin 59)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_NSS_GPIO, BOARD_INITPINS_RADIO_NSS_PORT, BOARD_INITPINS_RADIO_NSS_PIN, &RADIO_NSS_config);
+                         /* Selects pin function.
+                          * : PORT026 (pin 60) is configured as HS_SPI_MOSI. */
+                         | IOCON_PIO_FUNC(0x09u)
 
-    gpio_pin_config_t Shield_BTN1_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_5 (pin 31)  */
-    GPIO_PinInit(BOARD_INITPINS_Shield_BTN1_GPIO, BOARD_INITPINS_Shield_BTN1_PORT, BOARD_INITPINS_Shield_BTN1_PIN, &Shield_BTN1_config);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_26_DIGIMODE_DIGITAL));
 
-    gpio_pin_config_t RADIO_DIO5_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_9 (pin 10)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO5_GPIO, BOARD_INITPINS_RADIO_DIO5_PORT, BOARD_INITPINS_RADIO_DIO5_PIN, &RADIO_DIO5_config);
+    IOCON->PIO[0][27] = ((IOCON->PIO[0][27] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    gpio_pin_config_t RADIO_DIO3_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_10 (pin 40)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO3_GPIO, BOARD_INITPINS_RADIO_DIO3_PORT, BOARD_INITPINS_RADIO_DIO3_PIN, &RADIO_DIO3_config);
+                         /* Selects pin function.
+                          * : PORT027 (pin 27) is configured as FC2_TXD_SCL_MISO_WS. */
+                         | IOCON_PIO_FUNC(PIO0_27_FUNC_ALT1)
 
-    gpio_pin_config_t SHELD_FLASH_IO2_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_11 (pin 93)  */
-    GPIO_PinInit(BOARD_INITPINS_SHELD_FLASH_IO2_GPIO, BOARD_INITPINS_SHELD_FLASH_IO2_PORT, BOARD_INITPINS_SHELD_FLASH_IO2_PIN, &SHELD_FLASH_IO2_config);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_27_DIGIMODE_DIGITAL));
 
-    gpio_pin_config_t RADIO_DIO0_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_14 (pin 57)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO0_GPIO, BOARD_INITPINS_RADIO_DIO0_PORT, BOARD_INITPINS_RADIO_DIO0_PIN, &RADIO_DIO0_config);
+    IOCON->PIO[0][29] = ((IOCON->PIO[0][29] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    gpio_pin_config_t RADIO_DIO1_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_16 (pin 87)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO1_GPIO, BOARD_INITPINS_RADIO_DIO1_PORT, BOARD_INITPINS_RADIO_DIO1_PIN, &RADIO_DIO1_config);
+                         /* Selects pin function.
+                          * : PORT029 (pin 92) is configured as FC0_RXD_SDA_MOSI_DATA. */
+                         | IOCON_PIO_FUNC(PIO0_29_FUNC_ALT1)
 
-    gpio_pin_config_t RADIO_RESET_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 1U
-    };
-    /* Initialize GPIO functionality on pin PIO1_17 (pin 43)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_RESET_GPIO, BOARD_INITPINS_RADIO_RESET_PORT, BOARD_INITPINS_RADIO_RESET_PIN, &RADIO_RESET_config);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_29_DIGIMODE_DIGITAL));
 
-    gpio_pin_config_t Shield_RTC_INT_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_22 (pin 41)  */
-    GPIO_PinInit(BOARD_INITPINS_Shield_RTC_INT_GPIO, BOARD_INITPINS_Shield_RTC_INT_PORT, BOARD_INITPINS_Shield_RTC_INT_PIN, &Shield_RTC_INT_config);
+    IOCON->PIO[0][3] = ((IOCON->PIO[0][3] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    gpio_pin_config_t RADIO_DIO2_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_25 (pin 77)  */
-    GPIO_PinInit(BOARD_INITPINS_RADIO_DIO2_GPIO, BOARD_INITPINS_RADIO_DIO2_PORT, BOARD_INITPINS_RADIO_DIO2_PIN, &RADIO_DIO2_config);
+                        /* Selects pin function.
+                         * : PORT03 (pin 83) is configured as FC3_RXD_SDA_MOSI_DATA. */
+                        | IOCON_PIO_FUNC(PIO0_3_FUNC_ALT1)
 
-    gpio_pin_config_t Shield_BTN2_config = {
-        .pinDirection = kGPIO_DigitalInput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PIO1_31 (pin 91)  */
-    GPIO_PinInit(BOARD_INITPINS_Shield_BTN2_GPIO, BOARD_INITPINS_Shield_BTN2_PORT, BOARD_INITPINS_Shield_BTN2_PIN, &Shield_BTN2_config);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_3_DIGIMODE_DIGITAL));
 
-    const uint32_t Shield_LED = (/* Pin is configured as PIO0_0 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI |
-                                 /* Analog switch is open (disabled) */
-                                 IOCON_PIO_ASW_DI);
-    /* PORT0 PIN0 (coords: 54) is configured as PIO0_0 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_Shield_LED_PORT, BOARD_INITPINS_Shield_LED_PIN, Shield_LED);
+    IOCON->PIO[0][30] = ((IOCON->PIO[0][30] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t port0_pin10_config = (/* Pin is configured as SWO */
-                                         IOCON_PIO_FUNC6 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI |
-                                         /* Analog switch is open (disabled) */
-                                         IOCON_PIO_ASW_DI);
-    /* PORT0 PIN10 (coords: 21) is configured as SWO */
-    IOCON_PinMuxSet(IOCON, 0U, 10U, port0_pin10_config);
+                         /* Selects pin function.
+                          * : PORT030 (pin 94) is configured as FC0_TXD_SCL_MISO_WS. */
+                         | IOCON_PIO_FUNC(PIO0_30_FUNC_ALT1)
 
-    const uint32_t RADIO_DIO4 = (/* Pin is configured as PIO0_15 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI |
-                                 /* Analog switch is open (disabled) */
-                                 IOCON_PIO_ASW_DI);
-    /* PORT0 PIN15 (coords: 22) is configured as PIO0_15 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO4_PORT, BOARD_INITPINS_RADIO_DIO4_PIN, RADIO_DIO4);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_30_DIGIMODE_DIGITAL));
 
-    const uint32_t port0_pin16_config = (/* Pin is configured as ADC0_8 */
-                                         IOCON_PIO_FUNC0 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables analog function */
-                                         IOCON_PIO_ANALOG_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI |
-                                         /* Analog switch is closed (enabled) */
-                                         IOCON_PIO_ASW_EN);
-    /* PORT0 PIN16 (coords: 14) is configured as ADC0_8 */
-    IOCON_PinMuxSet(IOCON, 0U, 16U, port0_pin16_config);
+    IOCON->PIO[0][6] = ((IOCON->PIO[0][6] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t port0_pin2_config = (/* Pin is configured as FC3_TXD_SCL_MISO_WS */
-                                        IOCON_PIO_FUNC1 |
-                                        /* Selects pull-up function */
-                                        IOCON_PIO_MODE_PULLUP |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN2 (coords: 81) is configured as FC3_TXD_SCL_MISO_WS */
-    IOCON_PinMuxSet(IOCON, 0U, 2U, port0_pin2_config);
+                        /* Selects pin function.
+                         * : PORT06 (pin 89) is configured as FC3_SCK. */
+                        | IOCON_PIO_FUNC(PIO0_6_FUNC_ALT1)
 
-    const uint32_t Shield_RTC_RST = (/* Pin is configured as PIO0_20 */
-                                     IOCON_PIO_FUNC0 |
-                                     /* No addition pin function */
-                                     IOCON_PIO_MODE_INACT |
-                                     /* Standard mode, output slew rate control is enabled */
-                                     IOCON_PIO_SLEW_STANDARD |
-                                     /* Input function is not inverted */
-                                     IOCON_PIO_INV_DI |
-                                     /* Enables digital function */
-                                     IOCON_PIO_DIGITAL_EN |
-                                     /* Open drain is disabled */
-                                     IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN20 (coords: 74) is configured as PIO0_20 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_Shield_RTC_RST_PORT, BOARD_INITPINS_Shield_RTC_RST_PIN, Shield_RTC_RST);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO0_6_DIGIMODE_DIGITAL));
 
-    const uint32_t port0_pin23_config = (/* Pin is configured as ADC0_0 */
-                                         IOCON_PIO_FUNC0 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables analog function */
-                                         IOCON_PIO_ANALOG_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI |
-                                         /* Analog switch is closed (enabled) */
-                                         IOCON_PIO_ASW_EN);
-    /* PORT0 PIN23 (coords: 20) is configured as ADC0_0 */
-    IOCON_PinMuxSet(IOCON, 0U, 23U, port0_pin23_config);
+    IOCON->PIO[1][1] = ((IOCON->PIO[1][1] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t port0_pin26_config = (/* Pin is configured as HS_SPI_MOSI */
-                                         IOCON_PIO_FUNC9 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN26 (coords: 60) is configured as HS_SPI_MOSI */
-    IOCON_PinMuxSet(IOCON, 0U, 26U, port0_pin26_config);
+                        /* Selects pin function.
+                         * : PORT11 (pin 59) is configured as HS_SPI_SSEL1. */
+                        | IOCON_PIO_FUNC(PIO1_1_FUNC_ALT5)
 
-    const uint32_t port0_pin27_config = (/* Pin is configured as FC2_TXD_SCL_MISO_WS */
-                                         IOCON_PIO_FUNC1 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN27 (coords: 27) is configured as FC2_TXD_SCL_MISO_WS */
-    IOCON_PinMuxSet(IOCON, 0U, 27U, port0_pin27_config);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_1_DIGIMODE_DIGITAL));
 
-    const uint32_t port0_pin29_config = (/* Pin is configured as FC0_RXD_SDA_MOSI_DATA */
-                                         IOCON_PIO_FUNC1 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN29 (coords: 92) is configured as FC0_RXD_SDA_MOSI_DATA */
-    IOCON_PinMuxSet(IOCON, 0U, 29U, port0_pin29_config);
+    IOCON->PIO[1][2] = ((IOCON->PIO[1][2] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t port0_pin3_config = (/* Pin is configured as FC3_RXD_SDA_MOSI_DATA */
-                                        IOCON_PIO_FUNC1 |
-                                        /* Selects pull-up function */
-                                        IOCON_PIO_MODE_PULLUP |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN3 (coords: 83) is configured as FC3_RXD_SDA_MOSI_DATA */
-    IOCON_PinMuxSet(IOCON, 0U, 3U, port0_pin3_config);
+                        /* Selects pin function.
+                         * : PORT12 (pin 61) is configured as HS_SPI_SCK. */
+                        | IOCON_PIO_FUNC(PIO1_2_FUNC_ALT6)
 
-    const uint32_t port0_pin30_config = (/* Pin is configured as FC0_TXD_SCL_MISO_WS */
-                                         IOCON_PIO_FUNC1 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
-    IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
 
-    const uint32_t port0_pin4_config = (/* Pin is configured as FC3_CTS_SDA_SSEL0 */
-                                        IOCON_PIO_FUNC8 |
-                                        /* Selects pull-up function */
-                                        IOCON_PIO_MODE_PULLUP |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN4 (coords: 86) is configured as FC3_CTS_SDA_SSEL0 */
-    IOCON_PinMuxSet(IOCON, 0U, 4U, port0_pin4_config);
+    IOCON->PIO[1][24] = ((IOCON->PIO[1][24] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t port0_pin6_config = (/* Pin is configured as FC3_SCK */
-                                        IOCON_PIO_FUNC1 |
-                                        /* Selects pull-up function */
-                                        IOCON_PIO_MODE_PULLUP |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT0 PIN6 (coords: 89) is configured as FC3_SCK */
-    IOCON_PinMuxSet(IOCON, 0U, 6U, port0_pin6_config);
+                         /* Selects pin function.
+                          * : PORT124 (pin 3) is configured as FC2_RXD_SDA_MOSI_DATA. */
+                         | IOCON_PIO_FUNC(PIO1_24_FUNC_ALT1)
 
-    const uint32_t RADIO_NSS = (/* Pin is configured as PIO1_1 */
-                                IOCON_PIO_FUNC0 |
-                                /* No addition pin function */
-                                IOCON_PIO_MODE_INACT |
-                                /* Standard mode, output slew rate control is enabled */
-                                IOCON_PIO_SLEW_STANDARD |
-                                /* Input function is not inverted */
-                                IOCON_PIO_INV_DI |
-                                /* Enables digital function */
-                                IOCON_PIO_DIGITAL_EN |
-                                /* Open drain is disabled */
-                                IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN1 (coords: 59) is configured as PIO1_1 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_NSS_PORT, BOARD_INITPINS_RADIO_NSS_PIN, RADIO_NSS);
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_24_DIGIMODE_DIGITAL));
 
-    const uint32_t RADIO_DIO3 = (/* Pin is configured as PIO1_10 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN10 (coords: 40) is configured as PIO1_10 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO3_PORT, BOARD_INITPINS_RADIO_DIO3_PIN, RADIO_DIO3);
+    IOCON->PIO[1][3] = ((IOCON->PIO[1][3] &
+                         /* Mask bits to zero which are setting */
+                         (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
-    const uint32_t SHELD_FLASH_IO2 = (/* Pin is configured as PIO1_11 */
-                                      IOCON_PIO_FUNC0 |
-                                      /* No addition pin function */
-                                      IOCON_PIO_MODE_INACT |
-                                      /* Standard mode, output slew rate control is enabled */
-                                      IOCON_PIO_SLEW_STANDARD |
-                                      /* Input function is not inverted */
-                                      IOCON_PIO_INV_DI |
-                                      /* Enables digital function */
-                                      IOCON_PIO_DIGITAL_EN |
-                                      /* Open drain is disabled */
-                                      IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN11 (coords: 93) is configured as PIO1_11 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_SHELD_FLASH_IO2_PORT, BOARD_INITPINS_SHELD_FLASH_IO2_PIN, SHELD_FLASH_IO2);
+                        /* Selects pin function.
+                         * : PORT13 (pin 62) is configured as HS_SPI_MISO. */
+                        | IOCON_PIO_FUNC(PIO1_3_FUNC_ALT6)
 
-    const uint32_t RADIO_DIO0 = (/* Pin is configured as PIO1_14 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI |
-                                 /* Analog switch is open (disabled) */
-                                 IOCON_PIO_ASW_DI);
-    /* PORT1 PIN14 (coords: 57) is configured as PIO1_14 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO0_PORT, BOARD_INITPINS_RADIO_DIO0_PIN, RADIO_DIO0);
-
-    const uint32_t RADIO_DIO1 = (/* Pin is configured as PIO1_16 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN16 (coords: 87) is configured as PIO1_16 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO1_PORT, BOARD_INITPINS_RADIO_DIO1_PIN, RADIO_DIO1);
-
-    const uint32_t RADIO_RESET = (/* Pin is configured as PIO1_17 */
-                                  IOCON_PIO_FUNC0 |
-                                  /* No addition pin function */
-                                  IOCON_PIO_MODE_INACT |
-                                  /* Standard mode, output slew rate control is enabled */
-                                  IOCON_PIO_SLEW_STANDARD |
-                                  /* Input function is not inverted */
-                                  IOCON_PIO_INV_DI |
-                                  /* Enables digital function */
-                                  IOCON_PIO_DIGITAL_EN |
-                                  /* Open drain is disabled */
-                                  IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN17 (coords: 43) is configured as PIO1_17 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_RESET_PORT, BOARD_INITPINS_RADIO_RESET_PIN, RADIO_RESET);
-
-    const uint32_t port1_pin2_config = (/* Pin is configured as HS_SPI_SCK */
-                                        IOCON_PIO_FUNC6 |
-                                        /* No addition pin function */
-                                        IOCON_PIO_MODE_INACT |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN2 (coords: 61) is configured as HS_SPI_SCK */
-    IOCON_PinMuxSet(IOCON, 1U, 2U, port1_pin2_config);
-
-    const uint32_t Shield_RTC_INT = (/* Pin is configured as PIO1_22 */
-                                     IOCON_PIO_FUNC0 |
-                                     /* Selects pull-up function */
-                                     IOCON_PIO_MODE_PULLUP |
-                                     /* Standard mode, output slew rate control is enabled */
-                                     IOCON_PIO_SLEW_STANDARD |
-                                     /* Input function is not inverted */
-                                     IOCON_PIO_INV_DI |
-                                     /* Enables digital function */
-                                     IOCON_PIO_DIGITAL_EN |
-                                     /* Open drain is disabled */
-                                     IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN22 (coords: 41) is configured as PIO1_22 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_Shield_RTC_INT_PORT, BOARD_INITPINS_Shield_RTC_INT_PIN, Shield_RTC_INT);
-
-    const uint32_t port1_pin24_config = (/* Pin is configured as FC2_RXD_SDA_MOSI_DATA */
-                                         IOCON_PIO_FUNC1 |
-                                         /* No addition pin function */
-                                         IOCON_PIO_MODE_INACT |
-                                         /* Standard mode, output slew rate control is enabled */
-                                         IOCON_PIO_SLEW_STANDARD |
-                                         /* Input function is not inverted */
-                                         IOCON_PIO_INV_DI |
-                                         /* Enables digital function */
-                                         IOCON_PIO_DIGITAL_EN |
-                                         /* Open drain is disabled */
-                                         IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN24 (coords: 3) is configured as FC2_RXD_SDA_MOSI_DATA */
-    IOCON_PinMuxSet(IOCON, 1U, 24U, port1_pin24_config);
-
-    const uint32_t RADIO_DIO2 = (/* Pin is configured as PIO1_25 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN25 (coords: 77) is configured as PIO1_25 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO2_PORT, BOARD_INITPINS_RADIO_DIO2_PIN, RADIO_DIO2);
-
-    const uint32_t port1_pin3_config = (/* Pin is configured as HS_SPI_MISO */
-                                        IOCON_PIO_FUNC6 |
-                                        /* No addition pin function */
-                                        IOCON_PIO_MODE_INACT |
-                                        /* Standard mode, output slew rate control is enabled */
-                                        IOCON_PIO_SLEW_STANDARD |
-                                        /* Input function is not inverted */
-                                        IOCON_PIO_INV_DI |
-                                        /* Enables digital function */
-                                        IOCON_PIO_DIGITAL_EN |
-                                        /* Open drain is disabled */
-                                        IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN3 (coords: 62) is configured as HS_SPI_MISO */
-    IOCON_PinMuxSet(IOCON, 1U, 3U, port1_pin3_config);
-
-    const uint32_t Shield_BTN2 = (/* Pin is configured as PIO1_31 */
-                                  IOCON_PIO_FUNC0 |
-                                  /* Selects pull-down function */
-                                  IOCON_PIO_MODE_PULLDOWN |
-                                  /* Standard mode, output slew rate control is enabled */
-                                  IOCON_PIO_SLEW_STANDARD |
-                                  /* Input function is not inverted */
-                                  IOCON_PIO_INV_DI |
-                                  /* Enables digital function */
-                                  IOCON_PIO_DIGITAL_EN |
-                                  /* Open drain is disabled */
-                                  IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN31 (coords: 91) is configured as PIO1_31 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_Shield_BTN2_PORT, BOARD_INITPINS_Shield_BTN2_PIN, Shield_BTN2);
-
-    const uint32_t Shield_BTN1 = (/* Pin is configured as PIO1_5 */
-                                  IOCON_PIO_FUNC0 |
-                                  /* Selects pull-down function */
-                                  IOCON_PIO_MODE_PULLDOWN |
-                                  /* Standard mode, output slew rate control is enabled */
-                                  IOCON_PIO_SLEW_STANDARD |
-                                  /* Input function is not inverted */
-                                  IOCON_PIO_INV_DI |
-                                  /* Enables digital function */
-                                  IOCON_PIO_DIGITAL_EN |
-                                  /* Open drain is disabled */
-                                  IOCON_PIO_OPENDRAIN_DI);
-    /* PORT1 PIN5 (coords: 31) is configured as PIO1_5 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_Shield_BTN1_PORT, BOARD_INITPINS_Shield_BTN1_PIN, Shield_BTN1);
-
-    const uint32_t RADIO_DIO5 = (/* Pin is configured as PIO1_9 */
-                                 IOCON_PIO_FUNC0 |
-                                 /* No addition pin function */
-                                 IOCON_PIO_MODE_INACT |
-                                 /* Standard mode, output slew rate control is enabled */
-                                 IOCON_PIO_SLEW_STANDARD |
-                                 /* Input function is not inverted */
-                                 IOCON_PIO_INV_DI |
-                                 /* Enables digital function */
-                                 IOCON_PIO_DIGITAL_EN |
-                                 /* Open drain is disabled */
-                                 IOCON_PIO_OPENDRAIN_DI |
-                                 /* Analog switch is open (disabled) */
-                                 IOCON_PIO_ASW_DI);
-    /* PORT1 PIN9 (coords: 10) is configured as PIO1_9 */
-    IOCON_PinMuxSet(IOCON, BOARD_INITPINS_RADIO_DIO5_PORT, BOARD_INITPINS_RADIO_DIO5_PIN, RADIO_DIO5);
+                        /* Select Digital mode.
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
+                        | IOCON_PIO_DIGIMODE(PIO1_3_DIGIMODE_DIGITAL));
 }
 
 /* clang-format off */

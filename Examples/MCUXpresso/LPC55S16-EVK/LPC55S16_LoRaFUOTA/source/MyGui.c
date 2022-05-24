@@ -110,9 +110,9 @@ void MyGui_Init(void) {
 
   BaseType_t res;
 
-//  res = xTaskCreate(guiTask, "guiTask", 600/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL);
-//  if (res!=pdPASS) {
-//    /* error! */
-//    for(;;) {}
-//  }
+  res = xTaskCreate(guiTask, "guiTask", 600/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL);
+  if (res!=pdPASS) {
+    /* error! */
+    for(;;) {}
+  }
 }

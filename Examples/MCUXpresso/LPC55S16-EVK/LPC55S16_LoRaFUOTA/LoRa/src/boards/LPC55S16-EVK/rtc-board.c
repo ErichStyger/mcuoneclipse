@@ -220,7 +220,7 @@ TimerTime_t RtcTempCompensation(TimerTime_t period, float temperature) {
 
 void RtcOSTimerCallback(void) {
 #if McuLib_CONFIG_SDK_USE_FREERTOS
-  LORAWAN_LmHandlerNotififyTaskRequest();
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
 #endif
 	if (PendingAlarm) {
 		RtcStopAlarm();

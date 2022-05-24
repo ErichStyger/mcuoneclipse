@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2021 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -24,7 +24,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_PINT_DRIVER_VERSION (MAKE_VERSION(2, 1, 9)) /*!< Version 2.1.9 */
+#define FSL_PINT_DRIVER_VERSION (MAKE_VERSION(2, 1, 8)) /*!< Version 2.1.8 */
 /*@}*/
 
 /* Number of interrupt line supported by PINT */

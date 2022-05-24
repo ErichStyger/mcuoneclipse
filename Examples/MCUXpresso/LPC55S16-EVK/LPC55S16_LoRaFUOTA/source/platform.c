@@ -17,7 +17,6 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuDebounce.h"
-#include "McuFlash.h"
 #include "leds.h"
 #include "buttons.h"
 #include "Shell.h"
@@ -32,33 +31,6 @@
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "McuSystemView.h"
 #endif
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
-  #include "McuSystemView.h"
-#endif
-#if PL_CONFIG_USE_RTT
-  #include "McuRTT.h"
-#endif
-#if PL_CONFIG_USE_I2C_SPY
-  #include "McuI2CSpy.h"
-#endif
-#if PL_CONFIG_USE_RTC
-  #include "McuTimeDate.h"
-#endif
-#if PL_CONFIG_USE_EXT_EEPROM
-  #include "McuEE24.h"
-#endif
-#if PL_CONFIG_USE_EXT_I2C_RTC
-  #include "McuExtRTC.h"
-#endif
-#if PL_CONFIG_USE_SHT31
-  #include "McuSHT31.h"
-#endif
-#if PL_CONFIG_USE_LOW_POWER
-  #include "LowPower.h"
-#endif
-#if PL_CONFIG_USE_ESP32_UART
-  #include "ESP32_Uart.h"
-#endif
 #if PL_CONFIG_USE_I2C
   #include "McuI2cLib.h"
   #include "McuGenericI2C.h"
@@ -69,48 +41,51 @@
 #endif
 #if PL_CONFIG_USE_NVMC
   #include "nvmc.h"
-	#include "W25Q128.h"
 #endif
-
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_HAS_HW_RTC
+  #include "McuExtRTC.h"
+#endif
+#if PL_CONFIG_HAS_SHT31
   #include "McuSHT31.h"
 #endif
-
-#include "application.h"
+#if PL_CONFIG_HAS_LITTLE_FS
+  #include "McuSPI.h"
+  #include "littleFS/McuLittleFS.h"
+  #include "McuW25Q128.h"
+#endif
 
 void PL_Init(void) {
-
-
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
   CLOCK_EnableClock(kCLOCK_Gpio0); /* for button on P0_7 */
   GPIO_PortInit(GPIO, 0); /* Initialize GPIO button */
   CLOCK_EnableClock(kCLOCK_Gpio1); /* LEDs and user buttons, plus I2C */
   GPIO_PortInit(GPIO, 1); /* Initialize GPIO for LEDs and User Button */
 
- //
   McuLib_Init();
-
-#if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_Init();
-#endif
-
   McuWait_Init();
   McuGPIO_Init();
   McuLED_Init();
   McuRTT_Init();
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
+  McuSystemView_Init();
+#endif
   McuLog_Init();
-
-
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
+#endif
+  McuShell_Init();
+  McuDbnc_Init();
+#if !McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuTimeDate_Init(); /* if using external RTC it uses I2C, need to do this from clock task */
+#endif
+#if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
+  McuExtRTC_Init();
+#endif
   /* user modules */
   LEDS_Init();
-
-  //BTN_Init();
-
-#if PL_CONFIG_USE_SHELL
+  BTN_Init();
   SHELL_Init();
-#endif
-
-
 #if PL_CONFIG_USE_SD_CARD
   McuFatFS_Init();
   McuFatFS_CardPinInit();
@@ -128,30 +103,20 @@ void PL_Init(void) {
 #endif /* PL_CONFIG_USE_I2C */
 #if PL_CONFIG_USE_OLED
   McuSSD1306_Init();
-  MyGui_Init();
+  //MyGui_Init();
 #endif
-
-#if PL_CONFIG_USE_EXT_I2C_RTC
-  McuExtRTC_Init();
-#endif
-
-#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
-  McuSystemView_Init();
-#endif
-  //McuLog_Init();
-#if PL_CONFIG_USE_SHELL_UART
-  McuShellUart_Init();
-#endif
-  McuShell_Init();
-  McuTimeDate_Init();
-  McuDbnc_Init();
-
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_HAS_SHT31
   McuSHT31_Init();
 #endif
+#if PL_CONFIG_HAS_LITTLE_FS
+  McuSPI_Init();
+  McuW25_Init();
+  McuLFS_Init();
+#endif
+
 
 #if PL_CONFIG_USE_NVMC
-  //NVMC_Init();
+  NVMC_Init();
 #endif
 #if PL_CONFIG_INIT_SWO
   /*!< Switch TRACE to TRACE_DIV */
@@ -159,15 +124,4 @@ void PL_Init(void) {
   McuSWO_Init(SystemCoreClock, McuSWO_CONFIG_SPEED_BAUD); /* if initialization is not done by the debugger, need to do it manually here */
   McuSWO_ChangeSpeed(McuSWO_CONFIG_SPEED_BAUD); /* execute again if J-Link has changed speed */
 #endif
-  McuFlash_Init();
-  McuFlash_RegisterMemory((const void*)PL_CONFIG_FLASH_NVM_ADDR_START, PL_CONFIG_FLASH_NVM_NOF_BLOCKS*PL_CONFIG_FLASH_NVM_BLOCK_SIZE);
-  if (!McuFlash_IsAccessible((const void*)PL_CONFIG_FLASH_NVM_ADDR_START, PL_CONFIG_FLASH_NVM_NOF_BLOCKS*PL_CONFIG_FLASH_NVM_BLOCK_SIZE)) {
-    McuLog_info("Flash for EEPROM emulation is not accessible, initializing memory ...");
-    if (McuFlash_Erase((void*)PL_CONFIG_FLASH_NVM_ADDR_START, PL_CONFIG_FLASH_NVM_NOF_BLOCKS*PL_CONFIG_FLASH_NVM_BLOCK_SIZE)!=ERR_OK) {
-      McuLog_fatal("Erasing flash memory failed");
-      for(;;) {}
-    }
-  }
-  //APP_Init();
-  W25_Init();
 }

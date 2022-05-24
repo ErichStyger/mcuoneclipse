@@ -22,9 +22,4 @@
 #define LEDS_LED_BLUE_PORT      1
 #define LEDS_LED_BLUE_PIN       6
 
-/* Shield Green: P1_6 */
-#define LEDS_SHIELD_GREEN_GPIO      GPIO
-#define LEDS_SHIELD_GREEN_PORT      0
-#define LEDS_SHIELD_GREEN_PIN       0
-
 #endif /* LEDS_CONFIG_H_ */
