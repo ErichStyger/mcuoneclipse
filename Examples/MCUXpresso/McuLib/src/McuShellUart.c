@@ -9,6 +9,7 @@
 #include "McuShellUart.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
+#include "platform.h"
 
 static QueueHandle_t uartRxQueue;
 
