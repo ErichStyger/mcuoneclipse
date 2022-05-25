@@ -38,7 +38,7 @@ bool LP_CheckPowerMode(smc_power_state_t curPowerState, app_power_mode_t targetP
 #define LP_MODE_RUN    (0)  /* run mode, actually no low power mode. */
 #define LP_MODE_WAIT   (1)  /* wait mode, wfi, disables only CPU clock, wake-up is any interrupt. */
 #define LP_MODE_STOP   (2)  /* stop mode, lowest power mode that retains all registers while maintaining LVD detection, wakeup by interrupt or reset.  */
-#define LP_MODE_VLPR   (3)  /* VLPR mode */
+#define LP_MODE_VLPR   (3)  /* VLPR mode, NYI */
 
 /* selected low power mode: */
 #if 0
@@ -47,7 +47,7 @@ bool LP_CheckPowerMode(smc_power_state_t curPowerState, app_power_mode_t targetP
   #define LP_MODE LP_MODE_WAIT /* using wait instruction: wait for interrupt */
 #elif 1
   #define LP_MODE LP_MODE_STOP /* using stop mode */
-#else
+#else /* NYI! */
   #define LP_MODE LP_MODE_VLPR /* using very-low-power mode */
 #endif
 
