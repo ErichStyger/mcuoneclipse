@@ -36,24 +36,6 @@ void BOARD_InitBootPins(void);
 #define PIO0_26_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_27_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 1. */
-#define PIO0_27_FUNC_ALT1 0x01u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_29_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 1. */
-#define PIO0_29_FUNC_ALT1 0x01u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO0_30_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 1. */
-#define PIO0_30_FUNC_ALT1 0x01u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_14_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
@@ -76,12 +58,6 @@ void BOARD_InitBootPins(void);
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_1_FUNC_ALT0 0x00u
-/*!
- * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
-#define PIO1_24_DIGIMODE_DIGITAL 0x01u
-/*!
- * @brief Selects pin function.: Alternative connection 1. */
-#define PIO1_24_FUNC_ALT1 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_25_DIGIMODE_DIGITAL 0x01u
@@ -172,14 +148,6 @@ void BOARD_InitBootPins(void);
 /* @} */
 
 /*! @name HS_SPI_MISO (number 62), NOT_CONNECTED
-  @{ */
-/* @} */
-
-/*! @name FC0_RXD_SDA_MOSI_DATA (number 92), MCU_RX
-  @{ */
-/* @} */
-
-/*! @name FC0_TXD_SCL_MISO_WS (number 94), MCU_TX
   @{ */
 /* @} */
 
