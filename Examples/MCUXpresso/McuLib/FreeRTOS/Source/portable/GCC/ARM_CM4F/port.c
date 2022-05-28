@@ -160,11 +160,11 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #if 1 /* using ARM SysTick Timer */
     #if configSYSTICK_USE_LOW_POWER_TIMER
       /* using Low Power Timer */
-      #if CONFIG_PEX_SDK_USEDMcuLib_CONFIG_PEX_SDK_USED
+      #if McuLib_CONFIG_PEX_SDK_USED
         #define LPTMR_CSR_TCF_MASK           0x80u
         #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0 /* returns TRUE if tick interrupt had fired */
       #else
-        #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR_PDD_GetInterruptFlag(LPTMR0_BASE_PTR)!=0)  /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   ((LPTMR_GetStatusFlags(LPTMR0)&kLPTMR_TimerCompareFlag)!=0) /* returns TRUE if tick interrupt had fired */
       #endif
       #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
       #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
