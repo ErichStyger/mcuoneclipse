@@ -98,6 +98,7 @@ Instructions:
 #define McuShell_CONFIG_ECHO_ENABLED                     (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE        (192)
 #define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART2
+#define McuShellUart_CONFIG_UART_BAUDRATE                (9600)
 /* -----------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP    (1*1024)
