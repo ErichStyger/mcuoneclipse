@@ -178,7 +178,7 @@
 #endif
 
 #ifndef McuShellUart_CONFIG_UART_BAUDRATE
-  #define McuShellUart_CONFIG_UART_BAUDRATE           9600
+  #define McuShellUart_CONFIG_UART_BAUDRATE           115200
 #endif
 
 #endif /* MCUSHELLUARTCONFIG_H_ */
