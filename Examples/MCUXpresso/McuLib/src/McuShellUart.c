@@ -68,11 +68,112 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
 }
 
+#if McuShellUart_CONFIG_DO_PIN_MUXING
+static void InitUartMuxing(void) {
+#if McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC845_USART0
+#error "NYI"
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
+#error "NYI"
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0
+#error "NYI"
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
+#error "NYI"
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
+#error "NYI"
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
+  #define IOCON_PIO_FUNC1 0x01u
+  #define IOCON_PIO_INV_DI 0x00u
+  #define IOCON_PIO_MODE_INACT 0x00u
+  #define IOCON_PIO_SLEW_STANDARD 0x00u
+  #define IOCON_PIO_OPENDRAIN_DI 0x00u
+  #define IOCON_PIO_DIGITAL_EN 0x0100u
+  #define PIO0_3_FUNC_ALT1 0x01u
+  #define PIO0_3_DIGIMODE_DIGITAL 0x01u
+
+  const uint32_t port0_pin29_config = (/* Pin is configured as FC0_RXD_SDA_MOSI_DATA */
+                                       IOCON_PIO_FUNC1 |
+                                       /* No addition pin function */
+                                       IOCON_PIO_MODE_INACT |
+                                       /* Standard mode, output slew rate control is enabled */
+                                       IOCON_PIO_SLEW_STANDARD |
+                                       /* Input function is not inverted */
+                                       IOCON_PIO_INV_DI |
+                                       /* Enables digital function */
+                                       IOCON_PIO_DIGITAL_EN |
+                                       /* Open drain is disabled */
+                                       IOCON_PIO_OPENDRAIN_DI);
+  /* PORT0 PIN29 (coords: 92) is configured as FC0_RXD_SDA_MOSI_DATA */
+  IOCON_PinMuxSet(IOCON, 0U, 29U, port0_pin29_config);
+
+  IOCON->PIO[0][3] = ((IOCON->PIO[0][3] &
+                       /* Mask bits to zero which are setting */
+                       (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                      /* Selects pin function.
+                       * : PORT03 (pin 83) is configured as FC3_RXD_SDA_MOSI_DATA. */
+                      | IOCON_PIO_FUNC(PIO0_3_FUNC_ALT1)
+
+                      /* Select Digital mode.
+                       * : Enable Digital mode.
+                       * Digital input is enabled. */
+                      | IOCON_PIO_DIGIMODE(PIO0_3_DIGIMODE_DIGITAL));
+
+  const uint32_t port0_pin30_config = (/* Pin is configured as FC0_TXD_SCL_MISO_WS */
+                                       IOCON_PIO_FUNC1 |
+                                       /* No addition pin function */
+                                       IOCON_PIO_MODE_INACT |
+                                       /* Standard mode, output slew rate control is enabled */
+                                       IOCON_PIO_SLEW_STANDARD |
+                                       /* Input function is not inverted */
+                                       IOCON_PIO_INV_DI |
+                                       /* Enables digital function */
+                                       IOCON_PIO_DIGITAL_EN |
+                                       /* Open drain is disabled */
+                                       IOCON_PIO_OPENDRAIN_DI);
+  /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
+  IOCON_PinMuxSet(IOCON, 0U, 30U, port0_pin30_config);
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART2
+  #define PIO0_27_FUNC_ALT1 0x01u
+  #define PIO1_24_FUNC_ALT1 0x01u
+  #define PIO0_27_DIGIMODE_DIGITAL 0x01u
+  #define PIO1_24_DIGIMODE_DIGITAL 0x01u
+
+  IOCON->PIO[0][27] = ((IOCON->PIO[0][27] &
+                        /* Mask bits to zero which are setting */
+                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                       /* Selects pin function.
+                        * : PORT027 (pin 27) is configured as FC2_TXD_SCL_MISO_WS. */
+                       | IOCON_PIO_FUNC(PIO0_27_FUNC_ALT1)
+
+                       /* Select Digital mode.
+                        * : Enable Digital mode.
+                        * Digital input is enabled. */
+                       | IOCON_PIO_DIGIMODE(PIO0_27_DIGIMODE_DIGITAL));
+
+  IOCON->PIO[1][24] = ((IOCON->PIO[1][24] &
+                        /* Mask bits to zero which are setting */
+                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                       /* Selects pin function.
+                        * : PORT124 (pin 3) is configured as FC2_RXD_SDA_MOSI_DATA. */
+                       | IOCON_PIO_FUNC(PIO1_24_FUNC_ALT1)
+
+                       /* Select Digital mode.
+                        * : Enable Digital mode.
+                        * Digital input is enabled. */
+                       | IOCON_PIO_DIGIMODE(PIO1_24_DIGIMODE_DIGITAL));
+#endif
+}
+#endif /* McuShellUart_CONFIG_DO_PIN_MUXING */
+
 static void InitUart(void) {
-  /* NOTE: Muxing of the UART pins and clocking of the UART needs to be done in the Pins/clocks tool! */
   McuShellUart_CONFIG_UART_CONFIG_STRUCT config;
   status_t status;
 
+#if McuShellUart_CONFIG_DO_PIN_MUXING
+  InitUartMuxing(); /* NOTE: Clocking of the UART needs still to be done in the clocks tool for the MCUXpresso SDK! */
+#endif
   McuShellUart_CONFIG_UART_SET_UART_CLOCK();
   McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG(&config);
   config.baudRate_Bps = McuShellUart_CONFIG_UART_BAUDRATE;

@@ -14,12 +14,17 @@
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5)
-#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6)
-#define McuShellUart_CONFIG_UART_LPC55S16_USART2    (7)
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6) /* FlexComm0, Pin 92 (Rx) and Pin 94 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART2    (7) /* FlexComm2, Pin  3 (Rx) and Pin 27 (Tx) */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
   #define McuShellUart_CONFIG_UART      McuShellUart_CONFIG_UART_NONE
+#endif
+
+#ifndef McuShellUart_CONFIG_DO_MUXING
+  #define McuShellUart_CONFIG_DO_PIN_MUXING    (1)
+    /*!< 1: Do the pin muxing in the Init(); 0: no pin muxing is done in the Init() */
 #endif
 
 /* UART configuration items */
@@ -40,12 +45,13 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               USART0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     USART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_MainClk
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
   #include "fsl_usart.h"
+  #include "fsl_iocon.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   USART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0)
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking
@@ -59,12 +65,13 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               FLEXCOMM0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     USART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Fro12M
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_Fro12M
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART2
   #include "fsl_usart.h"
+  #include "fsl_iocon.h"
 
   #define McuShellUart_CONFIG_UART_DEVICE                   USART2
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_AttachClk(kFRO12M_to_FLEXCOMM2)
@@ -79,7 +86,7 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               FLEXCOMM2_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     USART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Fro12M
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_Fro12M
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM2_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
@@ -119,7 +126,7 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_CoreSysClk
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
@@ -139,7 +146,7 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               UART1_RX_TX_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     UART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_CoreSysClk
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_CoreSysClk
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
@@ -165,7 +172,7 @@
   #define McuShellUart_CONFIG_UART_IRQ_NUMBER               LPUART0_IRQn
   #define McuShellUart_CONFIG_UART_INIT                     LPUART_Init
   #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
-    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT    /* kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk /* has to match Clocks setting! */
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  /* kCLOCK_Osc0ErClkUndiv */ kCLOCK_PllFllSelClk /* has to match Clocks setting! */
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
