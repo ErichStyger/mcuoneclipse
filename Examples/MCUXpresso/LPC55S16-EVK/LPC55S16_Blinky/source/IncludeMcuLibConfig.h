@@ -31,7 +31,7 @@ Instructions:
 #define INCLUDEMCULIBCONFIG_H_
 
 /* global platform configuration */
-#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+#define PL_CONFIG_USE_LORA_SHIELD (0) /* if using the LoRa Shield developed by Corsin Obrist */
 
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
@@ -100,10 +100,10 @@ Instructions:
 #define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
 /* -----------------------------------------------------*/
 /* RTT */
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP    (1*1024)
-#define McuRTT_CONFIG_BLOCKING_SEND           (1)
-#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS  (20)
-#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS   (5)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP          (1*1024)
+#define McuRTT_CONFIG_BLOCKING_SEND               (1)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS    (20)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS       (5)
 /* -------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
@@ -115,15 +115,26 @@ Instructions:
 /* McuTimeDate */
 #define McuTimeDate_CONFIG_TICK_TIME_MS                            (100)
 #define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (1) /* enable software RTC */
-#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (1) /* enable external I2C RTC */
+#if PL_CONFIG_USE_LORA_SHIELD
+  #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (1) /* enable external I2C RTC */
+#else
+  #define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (0) /* not using external I2C RTC */
+#endif
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
-#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
-//#define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
+#if PL_CONFIG_USE_LORA_SHIELD
+  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
+#else
+  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
+#endif
 
 #define McuTimeDate_CONFIG_USE_GET_TIME_DATE_METHOD                (McuTimeDate_GET_TIME_DATE_METHOD_SOFTWARE_RTC)
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
-#define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
+#if PL_CONFIG_USE_LORA_SHIELD
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (1) /* if using external I2C RTC */
+#else
+  #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (0) /* if using external I2C RTC */
+#endif
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
 /* -------------------------------------------------*/
 /* McuExtRTC */
