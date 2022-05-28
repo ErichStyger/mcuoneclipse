@@ -79,7 +79,11 @@ static void InitUartMuxing(void) {
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
 #error "NYI"
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
-#error "NYI"
+  /* PORTC3 (pin 46) is configured as LPUART0_RX */
+  PORT_SetPinMux(PORTC, 3U, kPORT_MuxAlt7);
+
+  /* PORTC4 (pin 49) is configured as LPUART0_TX */
+  PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
   #define IOCON_PIO_FUNC1 0x01u
   #define IOCON_PIO_INV_DI 0x00u

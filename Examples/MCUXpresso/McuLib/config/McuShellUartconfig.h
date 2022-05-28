@@ -13,7 +13,7 @@
 #define McuShellUart_CONFIG_UART_K22FX512_UART0     (2)
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
-#define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5)
+#define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6) /* FlexComm0, Pin 92 (Rx) and Pin 94 (Tx) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART2    (7) /* FlexComm2, Pin  3 (Rx) and Pin 27 (Tx) */
 
@@ -93,6 +93,7 @@
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
   /* UART0 on K22FX512 */
   #include "fsl_uart.h"
+  #include "fsl_port.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
@@ -113,6 +114,7 @@
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0
   /* UART0 on K22FN512. Mux the pins using the pins muxing tool */
   #include "fsl_uart.h"
+  #include "fsl_port.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
@@ -133,6 +135,7 @@
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
   /* UART1 on K22FN512. Mux the pins using the pins muxing tool */
   #include "fsl_uart.h"
+  #include "fsl_port.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART1
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
@@ -153,6 +156,7 @@
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
   /* LPUART on K22FN512 */
   #include "fsl_lpuart.h"
+  #include "fsl_port.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   LPUART0
 /*! LPUARTSRC - LPUART clock source select
  *  0b00..Clock disabled
