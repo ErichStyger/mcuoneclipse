@@ -65,7 +65,7 @@ static void MeasurementStop(void) {
 
 void APP_Run(void) {
   PL_Init(); /* initialize platform */
-  ConfigureMeasurementPin();
+  //ConfigureMeasurementPin();
   for(int i=0; i<5; i++) {
     McuLED_On(blueLED);
     McuWait_Waitms(200);
@@ -91,7 +91,7 @@ void APP_Run(void) {
     LP_EnterLowPower(kAPP_PowerModeRun);
     McuWait_Waitms(1000); /* no wakeup, burn cycles here */
 #elif LP_MODE==LP_MODE_WAIT
-    //__asm volatile ("wfi");
+   // __asm volatile ("wfi");
     LP_EnterLowPower(kAPP_PowerModeWait);
     /* LPTMR configured for 1 sec will wake us up */
 #elif LP_MODE==LP_MODE_STOP
