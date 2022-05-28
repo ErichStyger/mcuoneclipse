@@ -318,12 +318,23 @@ typedef struct
     uint32_t freqMax;
 } WaitStateInterval_t;
 
+/* clang-format off */
 /* Wait state if frequency is inferior to the one specified */
 static const WaitStateInterval_t IntervalList[] = {
-    {0, 11000000},  {1, 22000000},  {2, 33000000},  {3, 44000000},   {4, 55000000},  {5, 66000000}, {6, 84000000},
-    {7, 104000000}, {8, 119000000}, {9, 129000000}, {10, 144000000}, {11, 150000000} /* Maximum allowed frequency (150
-                                                                                        MHz) */
+    {0, 11000000},
+    {1, 22000000},
+    {2, 33000000},
+    {3, 44000000},
+    {4, 55000000},
+    {5, 66000000},
+    {6, 84000000},
+    {7, 104000000},
+    {8, 119000000},
+    {9, 129000000},
+    {10, 144000000},
+    {11, 150000000} /* Maximum allowed frequency (150 MHz) */
 };
+/* clang-format on */
 
 void CLOCK_SetFLASHAccessCyclesForFreq(uint32_t system_freq_hz)
 {
@@ -359,12 +370,14 @@ void CLOCK_SetFLASHAccessCyclesForFreq(uint32_t system_freq_hz)
 /* Set EXT OSC Clk */
 /**
  * brief   Initialize the external osc clock to given frequency.
+ * Crystal oscillator with an operating frequency of 12 MHz to 32 MHz.
+ * Option for external clock input (bypass mode) for clock frequencies of up to 25 MHz.
  * param   iFreq   : Desired frequency (must be equal to exact rate in Hz)
  * return  returns success or fail status.
  */
 status_t CLOCK_SetupExtClocking(uint32_t iFreq)
 {
-    if (iFreq >= 32000000U)
+    if (iFreq > 32000000U)
     {
         return kStatus_Fail;
     }
@@ -1952,7 +1965,8 @@ bool CLOCK_EnableUsbfs0DeviceClock(clock_usbfs_src_t src, uint32_t freq)
         /* Turn ON FRO HF */
         POWER_DisablePD(kPDRUNCFG_PD_FRO192M);
         /* Enable FRO 96MHz output */
-        ANACTRL->FRO192M_CTRL = ANACTRL->FRO192M_CTRL | ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_MASK;
+        ANACTRL->FRO192M_CTRL =
+            ANACTRL->FRO192M_CTRL | ANACTRL_FRO192M_CTRL_ENA_96MHZCLK_MASK | ANACTRL_FRO192M_CTRL_USBCLKADJ_MASK;
         /* Select FRO 96 or 48 MHz */
         CLOCK_AttachClk(kFRO_HF_to_USB0_CLK);
     }
@@ -2151,4 +2165,12 @@ bool CLOCK_EnableUsbhs0HostClock(clock_usbhs_src_t src, uint32_t freq)
     ANACTRL->XO32M_CTRL |= ANACTRL_XO32M_CTRL_ENABLE_PLL_USB_OUT(1);
 
     return true;
+}
+
+/*! @brief Enable the OSTIMER 32k clock.
+ *  @return  Nothing
+ */
+void CLOCK_EnableOstimer32kClock(void)
+{
+    PMC->OSTIMERr |= PMC_OSTIMER_CLOCKENABLE_MASK;
 }

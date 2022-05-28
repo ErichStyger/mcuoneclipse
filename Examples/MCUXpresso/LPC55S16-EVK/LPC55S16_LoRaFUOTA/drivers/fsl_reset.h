@@ -82,7 +82,7 @@ typedef enum _SYSCON_RSTn
     kUSB1RAM_RST_SHIFT_RSTn    = 131072 | 6U,  /**< USB RAM reset control */
     kUSB1_RST_SHIFT_RSTn       = 131072 | 7U,  /**< USBHS reset control */
     kFREQME_RST_SHIFT_RSTn     = 131072 | 8U,  /**< FREQME reset control */
-    kCWT_RST_SHIFT_RSTn        = 131072 | 11U, /**< Code Watchdog reset control */
+    kCDOG_RST_SHIFT_RSTn       = 131072 | 11U, /**< Code Watchdog reset control */
     kRNG_RST_SHIFT_RSTn        = 131072 | 13U, /**< RNG  reset control */
     kSYSCTL_RST_SHIFT_RSTn     = 131072 | 15U, /**< SYSCTL reset control */
     kUSB0HMR_RST_SHIFT_RSTn    = 131072 | 16U, /**< USB0HMR reset control */
@@ -155,10 +155,10 @@ typedef enum _SYSCON_RSTn
     {                        \
         kPINT_RST_SHIFT_RSTn \
     } /* Reset bits for PINT peripheral */
-#define CWT_RSTS            \
-    {                       \
-        kCWT_RST_SHIFT_RSTn \
-    } /* Reset bits for CWT peripheral */
+#define CDOG_RSTS            \
+    {                        \
+        kCDOG_RST_SHIFT_RSTn \
+    } /* Reset bits for CDOG peripheral */
 #define RNG_RSTS            \
     {                       \
         kRNG_RST_SHIFT_RSTn \

@@ -6,7 +6,6 @@
  */
 
 #include "fsl_hashcrypt.h"
-#include "platform.h"
 
 /* Component ID definition, used by tools. */
 #ifndef FSL_COMPONENT_ID
@@ -20,7 +19,7 @@
 /*!< SHA-1 and SHA-256 block size  */
 #define SHA_BLOCK_SIZE 64U
 /*!< max number of blocks that can be proccessed in one run (master mode) */
-#define SHA_MASTER_MAX_BLOCKS 8U
+#define SHA_MASTER_MAX_BLOCKS 2048U
 
 /*!< Use standard C library memcpy  */
 #define hashcrypt_memcpy memcpy
