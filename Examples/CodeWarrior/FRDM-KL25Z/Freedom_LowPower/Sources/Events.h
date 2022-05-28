@@ -163,7 +163,7 @@ void FRTOS1_vApplicationTickHook(void);
 ** ===================================================================
 */
 
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vOnPreSleepProcessing (module Events)
@@ -196,7 +196,7 @@ void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks);
 */
 void TI1_OnInterrupt(void);
 
-void FRTOS1_vOnPostSleepProcessing(portTickType expectedIdleTicks);
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks);
 /*
 ** ===================================================================
 **     Event       :  FRTOS1_vOnPostSleepProcessing (module Events)

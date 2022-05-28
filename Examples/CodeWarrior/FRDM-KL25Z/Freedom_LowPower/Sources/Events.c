@@ -203,7 +203,7 @@ void FRTOS1_vApplicationTickHook(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vOnPreSleepProcessing(portTickType expectedIdleTicks)
+void FRTOS1_vOnPreSleepProcessing(TickType_t expectedIdleTicks)
 {
 #if PL_HAS_LOW_POWER
   LP_EnterLowPower();
@@ -260,7 +260,7 @@ void TI1_OnInterrupt(void)
 **     Returns     : Nothing
 ** ===================================================================
 */
-void FRTOS1_vOnPostSleepProcessing(portTickType expectedIdleTicks)
+void FRTOS1_vOnPostSleepProcessing(TickType_t expectedIdleTicks)
 {
   (void)expectedIdleTicks; /* not used (yet?) */
   /* Write your code here ... */
