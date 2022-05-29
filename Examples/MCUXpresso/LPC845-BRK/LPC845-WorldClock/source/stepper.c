@@ -234,7 +234,7 @@ static void Timer_Init(void) {
   SCTIMER_GetDefaultConfig(&sctimerInfo);
   SCTIMER_Init(SCT0, &sctimerInfo);
   matchValue = USEC_TO_COUNT(STEPPER_TIME_STEP_US, CLOCK_GetFreq(kCLOCK_CoreSysClk));
-  status = SCTIMER_CreateAndScheduleEvent(SCT0, kSCTIMER_MatchEventOnly, matchValue, 0 /* dummy I/O */, kSCTIMER_Counter_L /* dummy */, &eventNumberOutput);
+  status = SCTIMER_CreateAndScheduleEvent(SCT0, kSCTIMER_MatchEventOnly, matchValue, 0 /* dummy I/O */, kSCTIMER_Counter_U, &eventNumberOutput);
   if (status==kStatus_Fail || eventNumberOutput!=0) {
     for(;;) {} /* should not happen! */
   }
