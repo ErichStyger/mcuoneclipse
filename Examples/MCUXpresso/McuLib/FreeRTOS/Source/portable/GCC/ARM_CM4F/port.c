@@ -119,7 +119,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
   #define COUNTS_UP                   1 /* LPTMR is counting up */
   #if !McuLib_CONFIG_PEX_SDK_USED
     #define SET_TICK_DURATION(val)      LPTMR_SetTimerPeriod(LPTMR0_BASE_PTR, val+1) /* new SDK V2.8 requires a value >0 */
-    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CNR /*!< SDK has no access method for this */
+    #define GET_TICK_DURATION()         LPTMR0_BASE_PTR->CMR /*!< SDK has no access method for getting the counter modulo register */
     #define GET_TICK_CURRENT_VAL(addr)  *(addr)=LPTMR_GetCurrentTimerCount(LPTMR0_BASE_PTR)
   #else
     #define SET_TICK_DURATION(val)      LPTMR_PDD_WriteCompareReg(LPTMR0_BASE_PTR, val)
@@ -164,7 +164,7 @@ typedef unsigned long TickCounter_t; /* enough for 24 bit Systick */
         #define LPTMR_CSR_TCF_MASK           0x80u
         #define TICK_INTERRUPT_HAS_FIRED()   (LPTMR0_BASE_PTR->CSR&LPTMR_CSR_TCF_MASK)!=0 /* returns TRUE if tick interrupt had fired */
       #else
-        #define TICK_INTERRUPT_HAS_FIRED()   ((LPTMR_GetStatusFlags(LPTMR0)&kLPTMR_TimerCompareFlag)!=0) /* returns TRUE if tick interrupt had fired */
+        #define TICK_INTERRUPT_HAS_FIRED()   ((LPTMR_GetStatusFlags(LPTMR0_BASE_PTR)&kLPTMR_TimerCompareFlag)!=0) /* returns TRUE if tick interrupt had fired */
       #endif
       #define TICK_INTERRUPT_FLAG_RESET()  /* not needed */
       #define TICK_INTERRUPT_FLAG_SET()    /* not needed */
@@ -572,7 +572,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     __asm volatile("isb");
 #endif
     /* ----------------------------------------------------------------------------
-     * Here the CPU *HAS TO BE* low power mode, waiting to wake up by an interrupt 
+     * Here the CPU *HAS TO BE* in a low power mode, waiting to wake up by an interrupt
      * ----------------------------------------------------------------------------*/
     McuRTOS_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is

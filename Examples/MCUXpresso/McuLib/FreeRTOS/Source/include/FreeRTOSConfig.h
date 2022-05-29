@@ -99,10 +99,10 @@
   #define configTICK_RATE_HZ                      (1000) /* frequency of tick interrupt */
 #endif
 #ifndef configSYSTICK_USE_LOW_POWER_TIMER
-  #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
+  #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Low Power Timer (LPTMR on Kinetis) instead of SysTick timer */
 #endif
 #ifndef configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ
-  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  1 /* Frequency of low power timer. Set to 1 if not used */
+  #define configSYSTICK_LOW_POWER_TIMER_CLOCK_HZ  (1000) /* Frequency of low power timer.  */
 #endif
 #if McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_GENERIC || McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_NORDIC_NRF5
 /* The CMSIS variable SystemCoreClock contains the current clock speed */
