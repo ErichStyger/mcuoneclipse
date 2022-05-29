@@ -87,6 +87,7 @@ typedef enum _swm_port_pin_type_t
     kSWM_PortPin_P1_19 = 51U, /*!< port_pin number P1_19. */
     kSWM_PortPin_P1_20 = 52U, /*!< port_pin number P1_20. */
     kSWM_PortPin_P1_21 = 53U, /*!< port_pin number P1_21. */
+    kSWM_PortPin_Reset = 0xffU /*!< port_pin reset number. */
 } swm_port_pin_type_t;
 
 /*! @brief SWM movable selection */
@@ -202,17 +203,19 @@ typedef enum _swm_select_fixed_pin_t
     kSWM_CAPT_X2 = SWM_PINENABLE0_CAPT_X2_MASK,      /*!< Fixed-pin function as CAPT_X2. */
     kSWM_CAPT_X3 = (int)SWM_PINENABLE0_CAPT_X3_MASK, /*!< Fixed-pin function as CAPT_X3. */
 
-    kSWM_CAPT_X4 = (int)(SWM_PINENABLE1_CAPT_X4_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_X4. */
-    kSWM_CAPT_X5 = (int)(SWM_PINENABLE1_CAPT_X5_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_X5. */
-    kSWM_CAPT_X6 = (int)(SWM_PINENABLE1_CAPT_X6_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_X6. */
-    kSWM_CAPT_X7 = (int)(SWM_PINENABLE1_CAPT_X7_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_X7. */
-    kSWM_CAPT_X8 = (int)(SWM_PINENABLE1_CAPT_X8_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_X8. */
+    kSWM_CAPT_X4 = (int)(SWM_PINENABLE1_CAPT_X4_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_X4. */
+    kSWM_CAPT_X5 = (int)(SWM_PINENABLE1_CAPT_X5_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_X5. */
+    kSWM_CAPT_X6 = (int)(SWM_PINENABLE1_CAPT_X6_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_X6. */
+    kSWM_CAPT_X7 = (int)(SWM_PINENABLE1_CAPT_X7_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_X7. */
+    kSWM_CAPT_X8 = (int)(SWM_PINENABLE1_CAPT_X8_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_X8. */
     kSWM_CAPT_YL = (int)(SWM_PINENABLE1_CAPT_YL_MASK |
-                         0x80000000), /*!< Fixed-pin function as CAPT_YL, an Y capacitor(the measurement capacitor) . */
-    kSWM_CAPT_YH = (int)(SWM_PINENABLE1_CAPT_YH_MASK | 0x80000000), /*!< Fixed-pin function as CAPT_YH. */
+                         0x80000000U), /*!< Fixed-pin function as CAPT_YL, an Y capacitor(the measurement capacitor) . */
+    kSWM_CAPT_YH = (int)(SWM_PINENABLE1_CAPT_YH_MASK | 0x80000000U), /*!< Fixed-pin function as CAPT_YH. */
 
-    kSWM_FIXEDPIN_NUM_FUNCS = (int)0x80000041, /*!< Fixed-pin function number. */
+    kSWM_FIXEDPIN_NUM_FUNCS = (int)0x80000041U, /*!< Fixed-pin function number. */
 } swm_select_fixed_pin_t;
+
+/*@}*/
 
 /*@}*/
 

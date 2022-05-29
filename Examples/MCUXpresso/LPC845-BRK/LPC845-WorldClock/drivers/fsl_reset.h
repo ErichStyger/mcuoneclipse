@@ -15,7 +15,7 @@
 #include "fsl_device_registers.h"
 
 /*!
- * @addtogroup ksdk_common
+ * @addtogroup reset
  * @{
  */
 

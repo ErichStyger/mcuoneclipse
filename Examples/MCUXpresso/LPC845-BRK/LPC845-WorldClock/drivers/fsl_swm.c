@@ -1,5 +1,5 @@
 /*
- * Copyright  2017 NXP
+ * Copyright  2017-2020 NXP
  * All rights reserved.
  *
  *
@@ -45,12 +45,12 @@ void SWM_SetMovablePinSelect(SWM_Type *base, swm_select_movable_t func, swm_port
     uint32_t pinassign = 0;
     uint32_t shifter   = 0;
 
-    pinassign = func / 4;
-    shifter   = (func % 4) * 8;
+    pinassign = (uint32_t)func / 4U;
+    shifter   = ((uint32_t)func % 4U) * 8U;
 
     temp = base->PINASSIGN_DATA[pinassign];
-    temp &= ~(0xFF << (shifter));
-    temp |= (swm_port_pin << shifter);
+    temp &= ~(0xFFUL << (shifter));
+    temp |= ((uint32_t)swm_port_pin << shifter);
     base->PINASSIGN_DATA[pinassign] = temp;
 }
 
@@ -76,11 +76,11 @@ void SWM_SetFixedMovablePinSelect(SWM_Type *base,
     uint32_t temp;
     uint32_t shifter = 0;
 
-    shifter = func * 2;
+    shifter = (uint32_t)func * 2U;
 
     temp = base->PINASSIGNFIXED0;
-    temp &= ~(0x03 << (shifter));
-    temp |= (swm_port_pin << shifter);
+    temp &= ~(0x03UL << (shifter));
+    temp |= ((uint32_t)swm_port_pin << shifter);
     base->PINASSIGNFIXED0 = temp;
 }
 #endif /* FSL_FEATURE_SWM_HAS_PINASSIGNFIXED0_REGISTER */
@@ -98,31 +98,30 @@ void SWM_SetFixedPinSelect(SWM_Type *base, swm_select_fixed_pin_t func, bool ena
 {
     /* Check arguments */
     assert(NULL != base);
-    assert((func > 0) || func < kSWM_FIXEDPIN_NUM_FUNCS);
 
     if (enable)
     {
-        if (!(func & 0x80000000U))
+        if (((uint32_t)func & 0x80000000U) == 0x00U)
         {
-            base->PINENABLE0 &= ~(func);
+            base->PINENABLE0 &= ~((uint32_t)func);
         }
 #if (defined(FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER) && (FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER == 1))
         else
         {
-            base->PINENABLE1 &= ~(func);
+            base->PINENABLE1 &= ~((uint32_t)func);
         }
 #endif /* FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER */
     }
     else
     {
-        if (!(func & 0x80000000U))
+        if (((uint32_t)func & 0x80000000U) == 0x00U)
         {
-            base->PINENABLE0 |= (func);
+            base->PINENABLE0 |= ((uint32_t)func);
         }
 #if (defined(FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER) && (FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER == 1))
         else
         {
-            base->PINENABLE1 |= (func);
+            base->PINENABLE1 |= ((uint32_t)func);
         }
 #endif /* FSL_FEATURE_SWM_HAS_PINENABLE1_REGISTER */
     }

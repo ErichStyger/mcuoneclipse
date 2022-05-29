@@ -282,7 +282,7 @@ int32_t STEPPER_NormalizePos(STEPPER_Handle_t stepper) {
  * \brief Move clock to absolute degree position
  */
 void STEPPER_MoveClockDegreeAbs(STEPPER_Handle_t stepper, int32_t degree, STEPPER_MoveMode_e mode, uint8_t delay, bool speedUp, bool slowDown) {
-  int32_t currPos, steps;
+  int32_t currPos, steps = 0;
   int32_t currDegree, targetDegree;
   int32_t angle;
   STEPPER_Device_t *device = (STEPPER_Device_t*)stepper;

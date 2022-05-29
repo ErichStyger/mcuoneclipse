@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -23,13 +23,13 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief Defines WWDT driver version 2.1.0. */
-#define FSL_WWDT_DRIVER_VERSION (MAKE_VERSION(2, 1, 0))
+/*! @brief Defines WWDT driver version. */
+#define FSL_WWDT_DRIVER_VERSION (MAKE_VERSION(2, 1, 9))
 /*@}*/
 
 /*! @name Refresh sequence */
 /*@{*/
-#define WWDT_FIRST_WORD_OF_REFRESH (0xAAU)  /*!< First word of refresh sequence */
+#define WWDT_FIRST_WORD_OF_REFRESH  (0xAAU) /*!< First word of refresh sequence */
 #define WWDT_SECOND_WORD_OF_REFRESH (0x55U) /*!< Second word of refresh sequence */
 /*@}*/
 
@@ -43,14 +43,16 @@ typedef struct _wwdt_config
                                            changed after counter is below warning & window values
                                      false: Disable watchdog protect; timeout value can be changed
                                             at any time */
-    bool enableLockOscillator;  /*!< true: Disabling or powering down the watchdog oscillator is prevented
-                                           Once set, this bit can only be cleared by a reset
-                                     false: Do not lock oscillator */
-    uint32_t windowValue;       /*!< Window value, set this to 0xFFFFFF if windowing is not in effect */
-    uint32_t timeoutValue;      /*!< Timeout value */
-    uint32_t warningValue;      /*!< Watchdog time counter value that will generate a
-                                     warning interrupt. Set this to 0 for no warning */
-    uint32_t clockFreq_Hz;      /*!< Watchdog clock source frequency. */
+#if !(defined(FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK) && FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK)
+    bool enableLockOscillator; /*!< true: Disabling or powering down the watchdog oscillator is prevented
+                                          Once set, this bit can only be cleared by a reset
+                                    false: Do not lock oscillator */
+#endif
+    uint32_t windowValue;  /*!< Window value, set this to 0xFFFFFF if windowing is not in effect */
+    uint32_t timeoutValue; /*!< Timeout value */
+    uint32_t warningValue; /*!< Watchdog time counter value that will generate a
+                                warning interrupt. Set this to 0 for no warning */
+    uint32_t clockFreq_Hz; /*!< Watchdog clock source frequency. */
 } wwdt_config_t;
 
 /*!
@@ -78,7 +80,7 @@ extern "C" {
  */
 
 /*!
- * @brief Initializes WWDT configure sturcture.
+ * @brief Initializes WWDT configure structure.
  *
  * This function initializes the WWDT configure structure to default value. The default
  * value are:
@@ -147,6 +149,8 @@ static inline void WWDT_Enable(WWDT_Type *base)
 
 /*!
  * @brief Disables the WWDT module.
+ * @deprecated Do not use this function.  It will be deleted in next release version, for
+ *  once the bit field of WDEN written with a 1, it can not be re-written with a 0.
  *
  * This function write value into WWDT_MOD register to disable the WWDT.
  *
@@ -173,7 +177,18 @@ static inline void WWDT_Disable(WWDT_Type *base)
  */
 static inline uint32_t WWDT_GetStatusFlags(WWDT_Type *base)
 {
+#if defined(FSL_FEATURE_WWDT_WDTRESET_FROM_PMC) && (FSL_FEATURE_WWDT_WDTRESET_FROM_PMC)
+    uint32_t status;
+    /* WDTOF is not set in case of WD reset - get info from PMC instead */
+    status = (base->MOD & (WWDT_MOD_WDTOF_MASK | WWDT_MOD_WDINT_MASK));
+    if (PMC->RESETCAUSE & PMC_RESETCAUSE_WDTRESET_MASK)
+    {
+        status |= kWWDT_TimeoutFlag;
+    }
+    return status;
+#else
     return (base->MOD & (WWDT_MOD_WDTOF_MASK | WWDT_MOD_WDINT_MASK));
+#endif /*FSL_FEATURE_WWDT_WDTRESET_FROM_PMC*/
 }
 
 /*!

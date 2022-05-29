@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 NXP
+ * Copyright 2017-2018, 2020 NXP
  * All rights reserved.
  *
  *
@@ -35,16 +35,18 @@
 
 /*! @brief Definition select redirect toolchain printf, scanf to uart or not. */
 #define DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN 0U /*!< Select toolchain printf and scanf. */
-#define DEBUGCONSOLE_REDIRECT_TO_SDK 1U       /*!< Select SDK version printf, scanf. */
-#define DEBUGCONSOLE_DISABLE 2U               /*!< Disable debugconsole function. */
+#define DEBUGCONSOLE_REDIRECT_TO_SDK       1U /*!< Select SDK version printf, scanf. */
+#define DEBUGCONSOLE_DISABLE               2U /*!< Disable debugconsole function. */
 
 /*! @brief Definition to select sdk or toolchain printf, scanf. */
 #ifndef SDK_DEBUGCONSOLE
-#define SDK_DEBUGCONSOLE 1U
+#define SDK_DEBUGCONSOLE DEBUGCONSOLE_REDIRECT_TO_SDK
 #endif
 
 #if defined(SDK_DEBUGCONSOLE) && !(SDK_DEBUGCONSOLE)
 #include <stdio.h>
+#else
+#include <stdarg.h>
 #endif
 
 /*! @brief Definition to printf the float number. */
@@ -79,14 +81,14 @@
 #define PUTCHAR
 #define GETCHAR
 #elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK /* Select printf, scanf, putchar, getchar of SDK version. */
-#define PRINTF DbgConsole_Printf
-#define SCANF DbgConsole_Scanf
+#define PRINTF  DbgConsole_Printf
+#define SCANF   DbgConsole_Scanf
 #define PUTCHAR DbgConsole_Putchar
 #define GETCHAR DbgConsole_Getchar
 #elif SDK_DEBUGCONSOLE == \
     DEBUGCONSOLE_REDIRECT_TO_TOOLCHAIN /* Select printf, scanf, putchar, getchar of toolchain. \ */
-#define PRINTF printf
-#define SCANF scanf
+#define PRINTF  printf
+#define SCANF   scanf
 #define PUTCHAR putchar
 #define GETCHAR getchar
 #endif /* SDK_DEBUGCONSOLE */
@@ -108,6 +110,7 @@ extern "C" {
 /*! @name Initialization*/
 /* @{ */
 
+#if ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART))
 /*!
  * @brief Initializes the peripheral used for debug messages.
  *
@@ -115,7 +118,13 @@ extern "C" {
  * frequency of peripheral source clock, and base address at the specified baud rate.
  * After this function has returned, stdout and stdin are connected to the selected peripheral.
  *
- * @param instance      The instance of the module.
+ * @param instance      The instance of the module.If the device is kSerialPort_Uart,
+ *                      the instance is UART peripheral instance. The UART hardware peripheral
+ *                      type is determined by UART adapter. For example, if the instance is 1,
+ *                      if the lpuart_adapter.c is added to the current project, the UART periheral
+ *                      is LPUART1.
+ *                      If the uart_adapter.c is added to the current project, the UART periheral
+ *                      is UART1.
  * @param baudRate      The desired baud rate in bits per second.
  * @param device        Low level device type for the debug console, can be one of the following.
  *                      @arg kSerialPort_Uart.
@@ -137,6 +146,33 @@ status_t DbgConsole_Init(uint8_t instance, uint32_t baudRate, serial_port_type_t
  */
 status_t DbgConsole_Deinit(void);
 
+#else
+/*!
+ * Use an error to replace the DbgConsole_Init when SDK_DEBUGCONSOLE is not DEBUGCONSOLE_REDIRECT_TO_SDK and
+ * SDK_DEBUGCONSOLE_UART is not defined.
+ */
+static inline status_t DbgConsole_Init(uint8_t instance,
+                                       uint32_t baudRate,
+                                       serial_port_type_t device,
+                                       uint32_t clkSrcFreq)
+{
+    (void)instance;
+    (void)baudRate;
+    (void)device;
+    (void)clkSrcFreq;
+    return (status_t)kStatus_Fail;
+}
+/*!
+ * Use an error to replace the DbgConsole_Deinit when SDK_DEBUGCONSOLE is not DEBUGCONSOLE_REDIRECT_TO_SDK and
+ * SDK_DEBUGCONSOLE_UART is not defined.
+ */
+static inline status_t DbgConsole_Deinit(void)
+{
+    return (status_t)kStatus_Fail;
+}
+
+#endif /* ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART)) */
+
 #if SDK_DEBUGCONSOLE
 /*!
  * @brief Writes formatted output to the standard output stream.
@@ -147,6 +183,17 @@ status_t DbgConsole_Deinit(void);
  * @return  Returns the number of characters printed or a negative value if an error occurs.
  */
 int DbgConsole_Printf(const char *fmt_s, ...);
+
+/*!
+ * @brief Writes formatted output to the standard output stream.
+ *
+ * Call this function to write a formatted output to the standard output stream.
+ *
+ * @param   fmt_s Format control string.
+ * @param   formatStringArg Format arguments.
+ * @return  Returns the number of characters printed or a negative value if an error occurs.
+ */
+int DbgConsole_Vprintf(const char *fmt_s, va_list formatStringArg);
 
 /*!
  * @brief Writes a character to stdout.
@@ -163,10 +210,10 @@ int DbgConsole_Putchar(int ch);
  *
  * Call this function to read formatted data from the standard input stream.
  *
- * @param   fmt_ptr Format control string.
+ * @param   fmt_s Format control string.
  * @return  Returns the number of fields successfully converted and assigned.
  */
-int DbgConsole_Scanf(char *fmt_ptr, ...);
+int DbgConsole_Scanf(char *fmt_s, ...);
 
 /*!
  * @brief Reads a character from standard input.

@@ -9,7 +9,7 @@
 #include "fsl_common.h"
 #include "fsl_usart.h"
 
-#include "uart.h"
+#include "fsl_adapter_uart.h"
 
 /*******************************************************************************
  * Definitions
@@ -107,6 +107,7 @@ static hal_uart_status_t HAL_UartGetStatus(status_t status)
             uartStatus = kStatus_HAL_UartProtocolError;
             break;
         default:
+            /* This comments for MISRA C-2012 Rule 16.4 */
             break;
     }
     return uartStatus;
@@ -211,7 +212,7 @@ static void HAL_UartInterruptHandle(uint8_t instance)
 
 #endif
 
-hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *config)
+hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, const hal_uart_config_t *config)
 {
     hal_uart_state_t *uartHandle;
     usart_config_t usartConfig;
@@ -221,10 +222,7 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *conf
     assert(config->instance < (sizeof(s_UsartAdapterBase) / sizeof(USART_Type *)));
     assert(s_UsartAdapterBase[config->instance]);
 
-    if (HAL_UART_HANDLE_SIZE < sizeof(hal_uart_state_t))
-    {
-        return kStatus_HAL_UartError;
-    }
+    assert(HAL_UART_HANDLE_SIZE >= sizeof(hal_uart_state_t));
 
     USART_GetDefaultConfig(&usartConfig);
     usartConfig.baudRate_Bps = config->baudRate_Bps;
@@ -250,8 +248,8 @@ hal_uart_status_t HAL_UartInit(hal_uart_handle_t handle, hal_uart_config_t *conf
     {
         usartConfig.stopBitCount = kUSART_OneStopBit;
     }
-    usartConfig.enableRx = config->enableRx;
-    usartConfig.enableTx = config->enableTx;
+    usartConfig.enableRx = (bool)config->enableRx;
+    usartConfig.enableTx = (bool)config->enableTx;
 
     status = USART_Init(s_UsartAdapterBase[config->instance], &usartConfig, config->srcClock_Hz);
 
@@ -339,7 +337,21 @@ hal_uart_status_t HAL_UartSendBlocking(hal_uart_handle_t handle, const uint8_t *
     }
 #endif
 
-    USART_WriteBlocking(s_UsartAdapterBase[uartHandle->instance], data, length);
+    (void)USART_WriteBlocking(s_UsartAdapterBase[uartHandle->instance], data, length);
+
+    return kStatus_HAL_UartSuccess;
+}
+
+hal_uart_status_t HAL_UartEnterLowpower(hal_uart_handle_t handle)
+{
+    assert(handle);
+
+    return kStatus_HAL_UartSuccess;
+}
+
+hal_uart_status_t HAL_UartExitLowpower(hal_uart_handle_t handle)
+{
+    assert(handle);
 
     return kStatus_HAL_UartSuccess;
 }

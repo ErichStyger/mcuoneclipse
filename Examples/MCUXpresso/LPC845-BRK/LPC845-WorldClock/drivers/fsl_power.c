@@ -44,7 +44,7 @@ void POWER_EnterSleep(void)
 /*!
  * brief API to enter deep sleep power mode.
  *
- * param activePart , should be a single or combine value of _power_deep_sleep_active .
+ * param activePart: should be a single or combine value of _power_deep_sleep_active .
  * return none
  */
 void POWER_EnterDeepSleep(uint32_t activePart)
@@ -75,7 +75,7 @@ void POWER_EnterDeepSleep(uint32_t activePart)
 /*!
  * brief API to enter power down mode.
  *
- * param activePart , should be a single or combine value of _power_deep_sleep_active .
+ * param activePart: should be a single or combine value of _power_deep_sleep_active .
  * return none
  */
 void POWER_EnterPowerDown(uint32_t activePart)
@@ -136,15 +136,15 @@ void EnableDeepSleepIRQ(IRQn_Type interrupt)
     if(intNumber >= 24u) 
     {
         /* enable pin interrupt wake up in the STARTERP0 register */
-        SYSCON->STARTERP0 |= 1u << (intNumber - 24u); 
+        SYSCON->STARTERP0 |= 1UL << (intNumber - 24u); 
     }        
     else
     {
         /* enable interrupt wake up in the STARTERP1 register */	 
-        SYSCON->STARTERP1 |= 1u << intNumber;          
+        SYSCON->STARTERP1 |= 1UL << intNumber;          
     }
     /* also enable interrupt at NVIC */
-    EnableIRQ(interrupt); 
+    (void)EnableIRQ(interrupt); 
 }
 
 void DisableDeepSleepIRQ(IRQn_Type interrupt)
@@ -152,16 +152,16 @@ void DisableDeepSleepIRQ(IRQn_Type interrupt)
     uint32_t intNumber = (uint32_t)interrupt;
 	
     /* also disable interrupt at NVIC */
-    DisableIRQ(interrupt); 
+    (void)DisableIRQ(interrupt); 
 	
     if(intNumber >= 24u) 
     {
         /* disable pin interrupt wake up in the STARTERP0 register */
-        SYSCON->STARTERP0 &= ~(1u << (intNumber - 24)); 
+        SYSCON->STARTERP0 &= ~(1UL << (intNumber - 24u)); 
     }  
     else
     {
         /* disable interrupt wake up in the STARTERP1 register */	
-        SYSCON->STARTERP1 &= ~(1u << intNumber);         
+        SYSCON->STARTERP1 &= ~(1UL << intNumber);         
     }
 }

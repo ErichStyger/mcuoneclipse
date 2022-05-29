@@ -1,5 +1,5 @@
 /*
- * Copyright  2017 NXP
+ * Copyright  2017-2021 NXP
  * All rights reserved.
  *
  *
@@ -29,8 +29,8 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief IOCON driver version 2.0.0. */
-#define LPC_IOCON_DRIVER_VERSION (MAKE_VERSION(2, 0, 0))
+/*! @brief IOCON driver version 2.0.1. */
+#define LPC_IOCON_DRIVER_VERSION (MAKE_VERSION(2, 0, 1))
 /*@}*/
 
 /**
@@ -39,7 +39,7 @@
 typedef struct _iocon_group
 {
     uint32_t ionumber : 8;  /* IO number */
-    uint32_t modefunc : 16; /* Function and mode */
+    uint32_t modefunc : 24; /* Function and mode */
 } iocon_group_t;
 
 /**
@@ -47,9 +47,9 @@ typedef struct _iocon_group
  * @note See the User Manual for specific modes and functions supported by the various pins.
  */
 #if defined(IOCON_PIO_MODE_SHIFT)
-#define IOCON_MODE_INACT (0x0 << IOCON_PIO_MODE_SHIFT)    /*!< No addition pin function */
+#define IOCON_MODE_INACT    (0x0 << IOCON_PIO_MODE_SHIFT) /*!< No addition pin function */
 #define IOCON_MODE_PULLDOWN (0x1 << IOCON_PIO_MODE_SHIFT) /*!< Selects pull-down function */
-#define IOCON_MODE_PULLUP (0x2 << IOCON_PIO_MODE_SHIFT)   /*!< Selects pull-up function */
+#define IOCON_MODE_PULLUP   (0x2 << IOCON_PIO_MODE_SHIFT) /*!< Selects pull-up function */
 #define IOCON_MODE_REPEATER (0x3 << IOCON_PIO_MODE_SHIFT) /*!< Selects pin repeater function */
 #endif
 #if defined(IOCON_PIO_HYS_SHIFT)

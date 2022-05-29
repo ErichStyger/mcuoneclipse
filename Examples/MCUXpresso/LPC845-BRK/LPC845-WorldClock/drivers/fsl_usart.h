@@ -1,7 +1,6 @@
 /*
- * Copyright  2017-2019 NXP
+ * Copyright 2017-2021 NXP
  * All rights reserved.
- *
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -21,8 +20,8 @@
  ******************************************************************************/
 /*! @name Driver version */
 /*@{*/
-/*! @brief USART driver version 2.1.0. */
-#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 1, 0))
+/*! @brief USART driver version. */
+#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
 /*@}*/
 
 /*! @brief Macro gate for enable transaction API.  1 for enable, 0 for disable. */
@@ -35,6 +34,7 @@
 #define FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE 1
 #endif /* FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE */
 
+#if !(defined(FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE) && FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE)
 /*! @brief Macro for generating baud rate manually.
  * <pre>
  *  Table of common register values for generating baud rate in specific USART clock frequency.
@@ -46,13 +46,12 @@
  *         115200            |         12,000,000           |       13            |       7        |
  *         115200            |         24,000,000           |       16            |       12       |
  *         115200            |         30,000,000           |       13            |       19       |
+ * </pre>
  *  @note: The formula for generating a baud rate is: baduRate = usartClock_Hz / (OSR * (BRG +1)).
  *        For some devices, there is no OSR register for setting, so the default OSR value is 16 in formula.
  *        If the USART clock source can not generate a precise baud rate, please setting the FRG register
  *        in SYSCON module to get a precise USART clock frequency.
- * </pre>
  */
-#if !(defined(FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE) && FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE)
 /* Macro for setiing OSR register. */
 #ifndef FSL_SDK_USART_OSR_VALUE
 #define FSL_SDK_USART_OSR_VALUE 10U
@@ -64,8 +63,13 @@
 #endif /* FSL_SDK_USART_BRG_VALUE */
 #endif /* FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE */
 
+/*! @brief Retry times for waiting flag. */
+#ifndef UART_RETRY_TIMES
+#define UART_RETRY_TIMES 0U /*!< Defining to zero means to keep waiting for the flag until it is assert/deassert. */
+#endif
+
 /*! @brief Error codes for the USART driver. */
-enum _usart_status
+enum
 {
     kStatus_USART_TxBusy              = MAKE_STATUS(kStatusGroup_LPC_USART, 0),  /*!< Transmitter is busy. */
     kStatus_USART_RxBusy              = MAKE_STATUS(kStatusGroup_LPC_USART, 1),  /*!< Receiver is busy. */
@@ -80,6 +84,7 @@ enum _usart_status
     kStatus_USART_HardwareOverrun     = MAKE_STATUS(kStatusGroup_LPC_USART, 10), /*!< USART hardware over flow. */
     kStatus_USART_BaudrateNotSupport =
         MAKE_STATUS(kStatusGroup_LPC_USART, 11), /*!< Baudrate is not support in current clock source */
+    kStatus_USART_Timeout = MAKE_STATUS(kStatusGroup_LPC_USART, 12), /*!< USART times out. */
 };
 
 /*! @brief USART parity mode. */
@@ -187,6 +192,7 @@ typedef struct _usart_config
     bool enableTx;                        /*!< USART transmit enable.  */
     bool loopback;                        /*!< Enable peripheral loopback */
     bool enableContinuousSCLK;            /*!< USART continuous Clock generation enable in synchronous master mode. */
+    bool enableHardwareFlowControl;       /*!< Enable hardware control RTS/CTS */
     usart_parity_mode_t parityMode;       /*!< Parity mode, disabled (default), even, odd */
     usart_stop_bit_count_t stopBitCount;  /*!< Number of stop bits, 1 stop bit (default) or 2 stop bits  */
     usart_data_len_t bitCountPerChar;     /*!< Data length - 7 bit, 8 bit  */
@@ -198,7 +204,16 @@ typedef struct _usart_config
 /*! @brief USART transfer structure. */
 typedef struct _usart_transfer
 {
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
+    /*
+     * Use separate TX and RX data pointer, because TX data is const data.
+     * The member data is kept for backward compatibility.
+     */
+    union
+    {
+        uint8_t *data;         /*!< The buffer of data to be transfer.*/
+        uint8_t *rxData;       /*!< The buffer to receive data. */
+        const uint8_t *txData; /*!< The buffer of data to be sent. */
+    };
     size_t dataSize; /*!< The byte count to be transfer. */
 } usart_transfer_t;
 
@@ -211,12 +226,12 @@ typedef void (*usart_transfer_callback_t)(USART_Type *base, usart_handle_t *hand
 /*! @brief USART handle structure. */
 struct _usart_handle
 {
-    uint8_t *volatile txData;   /*!< Address of remaining data to send. */
-    volatile size_t txDataSize; /*!< Size of the remaining data to send. */
-    size_t txDataSizeAll;       /*!< Size of the data to send out. */
-    uint8_t *volatile rxData;   /*!< Address of remaining data to receive. */
-    volatile size_t rxDataSize; /*!< Size of the remaining data to receive. */
-    size_t rxDataSizeAll;       /*!< Size of the data to receive. */
+    const uint8_t *volatile txData; /*!< Address of remaining data to send. */
+    volatile size_t txDataSize;     /*!< Size of the remaining data to send. */
+    size_t txDataSizeAll;           /*!< Size of the data to send out. */
+    uint8_t *volatile rxData;       /*!< Address of remaining data to receive. */
+    volatile size_t rxDataSize;     /*!< Size of the remaining data to receive. */
+    size_t rxDataSizeAll;           /*!< Size of the data to receive. */
 
     uint8_t *rxRingBuffer;              /*!< Start address of the receiver ring buffer. */
     size_t rxRingBufferSize;            /*!< Size of the ring buffer. */
@@ -386,7 +401,7 @@ static inline void USART_ClearStatusFlags(USART_Type *base, uint32_t mask)
  */
 static inline void USART_EnableInterrupts(USART_Type *base, uint32_t mask)
 {
-    base->INTENSET = mask & 0x1FF;
+    base->INTENSET = mask & 0x0001FFFFU;
 }
 
 /*!
@@ -404,7 +419,7 @@ static inline void USART_EnableInterrupts(USART_Type *base, uint32_t mask)
  */
 static inline void USART_DisableInterrupts(USART_Type *base, uint32_t mask)
 {
-    base->INTENCLR = mask & 0x1FF;
+    base->INTENCLR = mask & 0x0001FFFFU;
 }
 
 /*!
@@ -525,7 +540,7 @@ static inline void USART_EnableRx(USART_Type *base, bool enable)
     else
     {
         /* If the transmit is disabled too. */
-        if (base->CTL & USART_CTL_TXDIS_MASK)
+        if ((base->CTL & USART_CTL_TXDIS_MASK) != 0U)
         {
             base->CFG &= ~USART_CFG_ENABLE_MASK;
         }
@@ -557,7 +572,7 @@ static inline void USART_WriteByte(USART_Type *base, uint8_t data)
  */
 static inline uint8_t USART_ReadByte(USART_Type *base)
 {
-    return (base->RXDAT & 0x000000FFU);
+    return (uint8_t)base->RXDAT & 0xFFU;
 }
 
 /*!
@@ -568,8 +583,10 @@ static inline uint8_t USART_ReadByte(USART_Type *base)
  * @param base USART peripheral base address.
  * @param data Start address of the data to write.
  * @param length Size of the data to write.
+ * @retval kStatus_USART_Timeout Transmission timed out and was aborted.
+ * @retval kStatus_Success Successfully wrote all data.
  */
-void USART_WriteBlocking(USART_Type *base, const uint8_t *data, size_t length);
+status_t USART_WriteBlocking(USART_Type *base, const uint8_t *data, size_t length);
 
 /*!
  * @brief Read RX data register using a blocking method.
@@ -583,6 +600,7 @@ void USART_WriteBlocking(USART_Type *base, const uint8_t *data, size_t length);
  * @retval kStatus_USART_ParityError Noise error happened while receiving data.
  * @retval kStatus_USART_NoiseError Framing error happened while receiving data.
  * @retval kStatus_USART_RxError Overflow or underflow happened.
+ * @retval kStatus_USART_Timeout Transmission timed out and was aborted.
  * @retval kStatus_Success Successfully received all data.
  */
 status_t USART_ReadBlocking(USART_Type *base, uint8_t *data, size_t length);

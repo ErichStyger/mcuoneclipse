@@ -9,13 +9,13 @@
 
 /* supported UART implementation: */
 #define McuShellUart_CONFIG_UART_NONE               (0)
-#define McuShellUart_CONFIG_UART_LPC845_USART0      (1) /* Rx on Pin 20 (PIO0_24), Tx on Pin 19 (PIO0_25) */
-#define McuShellUart_CONFIG_UART_K22FX512_UART0     (2)
+#define McuShellUart_CONFIG_UART_LPC845_USART0      (1) /* Rx on pin 20 (PIO0_24), Tx on pin 19 (PIO0_25) */
+#define McuShellUart_CONFIG_UART_K22FX512_UART0     (2) /* Rx on PTA1 (pin 27), Tx on PTA2 (pin 28) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0   (5) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6) /* FlexComm0, Pin 92 (Rx) and Pin 94 (Tx) */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART2    (7) /* FlexComm2, Pin  3 (Rx) and Pin 27 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0    (6) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART2    (7) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
