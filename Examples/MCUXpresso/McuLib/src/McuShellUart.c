@@ -71,7 +71,14 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
 #if McuShellUart_CONFIG_DO_PIN_MUXING
 static void InitUartMuxing(void) {
 #if McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC845_USART0
-#error "NYI"
+  /* Enables clock for switch matrix.: enable */
+  CLOCK_EnableClock(kCLOCK_Swm);
+  /* USART0_TXD connect to P0_25 */
+  SWM_SetMovablePinSelect(SWM0, kSWM_USART0_TXD, kSWM_PortPin_P0_25);
+  /* USART0_RXD connect to P0_24 */
+  SWM_SetMovablePinSelect(SWM0, kSWM_USART0_RXD, kSWM_PortPin_P0_24);
+  /* Disable clock for switch matrix. */
+  CLOCK_DisableClock(kCLOCK_Swm);
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
 #error "NYI"
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0

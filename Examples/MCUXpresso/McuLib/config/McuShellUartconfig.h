@@ -9,7 +9,7 @@
 
 /* supported UART implementation: */
 #define McuShellUart_CONFIG_UART_NONE               (0)
-#define McuShellUart_CONFIG_UART_LPC845_USART0      (1)
+#define McuShellUart_CONFIG_UART_LPC845_USART0      (1) /* Rx on Pin 20 (PIO0_24), Tx on Pin 19 (PIO0_25) */
 #define McuShellUart_CONFIG_UART_K22FX512_UART0     (2)
 #define McuShellUart_CONFIG_UART_K22FN512_UART0     (3) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1     (4)
@@ -32,6 +32,7 @@
   /* no UART used */
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC845_USART0
   #include "fsl_usart.h"
+  #include "fsl_swm.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   USART0
   #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_Select(kUART0_Clk_From_MainClk) /* Select the main clock as source clock of USART0. */
   #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking

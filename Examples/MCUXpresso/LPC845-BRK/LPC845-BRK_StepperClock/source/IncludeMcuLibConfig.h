@@ -41,6 +41,9 @@ Instructions:
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING "LPC845-BRK Stepper Clock"
 #define McuShell_MULTI_CMD_ENABLED          (0)
+/* -------------------------------------------------*/
+/* McuShellUart */
+#define McuShellUart_CONFIG_UART  McuShellUart_CONFIG_UART_LPC845_USART0
 /* ------------------- I2C ---------------------------*/
 #define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use software bit banging */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
