@@ -483,7 +483,7 @@ static void ClockTask(void *pv) {
         SetTime(STEPPER_CLOCK_1, AdjustHourForTimeZone(hour, 8), time.Min); /* Beijing, GMT+8, top left */
         SetTime(STEPPER_CLOCK_2, AdjustHourForTimeZone(hour, 1), time.Min); /* Lucerne, GMT+1, top left */
         SetTime(STEPPER_CLOCK_3, AdjustHourForTimeZone(hour, -4), time.Min); /* New York,, GMT-4, top left */
-        STEPBOARD_MoveAndWait(board, 5);
+        STEPBOARD_MoveAndWait(STEPBOARD_GetBoard(), 5);
     #endif
         oldHH = time.Hour;
         oldMM = time.Min;

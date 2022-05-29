@@ -43,6 +43,9 @@ Instructions:
 #define configTIMER_TASK_STACK_DEPTH         (400/sizeof(StackType_t))
 #define configUSE_TIMERS                     (0)
 #define INCLUDE_xTimerPendFunctionCall       (0)
+#define configUSE_TRACE_FACILITY              (0)
+#define configGENERATE_RUN_TIME_STATS         (0)
+
 /* -------------------------------------------------*/
 /* Segger SystemViewer: */
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
@@ -59,6 +62,6 @@ Instructions:
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 /* -------------------------------------------------*/
 /* McuUart485 */
-#define McuUart485_CONFIG_USE_RS_485      (1)
+#define McuUart485_CONFIG_USE_RS_485                  (1)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -26,7 +26,7 @@
   #define PL_CONFIG_BOARD_VERSION   (1) /* 1: V0.1, 10: V1.0 */
 #endif
 
-#define PL_CONFIG_WORLD_CLOCK       (0) /* clock showing different time zones */
+#define PL_CONFIG_WORLD_CLOCK       (1) /* clock showing different time zones */
 
 #define PL_CONFIG_USE_SHELL         (1) /* use command line shell */
 #define PL_CONFIG_USE_RTT           (1 && (PL_CONFIG_IS_CLIENT || PL_CONFIG_IS_TINYK22)) /* use SEGGER RTT (only possible with a J-Link */
