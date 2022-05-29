@@ -9,7 +9,6 @@
 
 #include "McuShell.h"
 #include "littleFS/lfs.h"
-#include "Application.h"
 #include "McuRTOS.h"
 
 bool McuLFS_IsMounted(void);
