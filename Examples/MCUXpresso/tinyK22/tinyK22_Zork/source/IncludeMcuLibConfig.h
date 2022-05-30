@@ -42,6 +42,7 @@ Instructions:
 #elif 1 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
+  #define McuLib_CONFIG_CPU_VARIANT        McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 #elif 0 /* example configuration for i.MX RT */
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
   #define McuLib_CONFIG_CORTEX_M          (7)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
@@ -58,7 +59,7 @@ Instructions:
 #define McuShell_CONFIG_MULTI_CMD_ENABLED             (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (128)
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (250) /* max size of each command */
-#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0
+#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)

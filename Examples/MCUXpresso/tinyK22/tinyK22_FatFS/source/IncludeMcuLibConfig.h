@@ -60,7 +60,7 @@ extern uint32_t AppGetRuntimeCounterValueFromISR(void);
 #define McuPercepio_CONFIG_START_TRACE_IN_STARTUP_MODE  TRC_START
 /* -----------------------------------------------------*/
 /* Shell */
-#define McuShellUart_CONFIG_UART             McuShellUart_CONFIG_UART_K22FN512_LPUART0
+#define McuShellUart_CONFIG_UART             McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
 #define McuShell_CONFIG_PROJECT_NAME_STRING  "tinyK22 FatFS"
 #define McuShell_CONFIG_PROMPT_STRING        "tiny> "
 #define McuShell_CONFIG_ECHO_ENABLED         (1)

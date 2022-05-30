@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,13 +21,19 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief I2C driver version 2.0.6. */
-#define FSL_I2C_DRIVER_VERSION (MAKE_VERSION(2, 0, 6))
+/*! @brief I2C driver version. */
+#define FSL_I2C_DRIVER_VERSION (MAKE_VERSION(2, 0, 9))
 /*@}*/
 
-/*! @brief Timeout times for waiting flag. */
-#ifndef I2C_WAIT_TIMEOUT
-#define I2C_WAIT_TIMEOUT 0U /* Define to zero means keep waiting until the flag is assert/deassert. */
+/*! @brief Retry times for waiting flag. */
+#ifndef I2C_RETRY_TIMES
+#define I2C_RETRY_TIMES 0U /* Define to zero means keep waiting until the flag is assert/deassert. */
+#endif
+
+/*! @brief Mater Fast ack control, control if master needs to manually write ack, this is used to
+low the speed of transfer for SoCs with feature FSL_FEATURE_I2C_HAS_DOUBLE_BUFFERING */
+#ifndef I2C_MASTER_FACK_CONTROL
+#define I2C_MASTER_FACK_CONTROL 0U /* Default defines to zero means master will send ack automatically. */
 #endif
 
 #if (defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT || \
@@ -36,44 +42,38 @@
 #endif /* FSL_FEATURE_I2C_HAS_START_STOP_DETECT / FSL_FEATURE_I2C_HAS_STOP_DETECT */
 
 /*! @brief  I2C status return codes. */
-enum _i2c_status
+enum
 {
-    kStatus_I2C_Busy = MAKE_STATUS(kStatusGroup_I2C, 0),            /*!< I2C is busy with current transfer. */
-    kStatus_I2C_Idle = MAKE_STATUS(kStatusGroup_I2C, 1),            /*!< Bus is Idle. */
-    kStatus_I2C_Nak = MAKE_STATUS(kStatusGroup_I2C, 2),             /*!< NAK received during transfer. */
+    kStatus_I2C_Busy            = MAKE_STATUS(kStatusGroup_I2C, 0), /*!< I2C is busy with current transfer. */
+    kStatus_I2C_Idle            = MAKE_STATUS(kStatusGroup_I2C, 1), /*!< Bus is Idle. */
+    kStatus_I2C_Nak             = MAKE_STATUS(kStatusGroup_I2C, 2), /*!< NAK received during transfer. */
     kStatus_I2C_ArbitrationLost = MAKE_STATUS(kStatusGroup_I2C, 3), /*!< Arbitration lost during transfer. */
-    kStatus_I2C_Timeout = MAKE_STATUS(kStatusGroup_I2C, 4),         /*!< Timeout poling status flags. */
-    kStatus_I2C_Addr_Nak = MAKE_STATUS(kStatusGroup_I2C, 5),        /*!< NAK received during the address probe. */
+    kStatus_I2C_Timeout         = MAKE_STATUS(kStatusGroup_I2C, 4), /*!< Timeout polling status flags. */
+    kStatus_I2C_Addr_Nak        = MAKE_STATUS(kStatusGroup_I2C, 5), /*!< NAK received during the address probe. */
 };
 
 /*!
  * @brief I2C peripheral flags
- *
- * The following status register flags can be cleared:
- * - #kI2C_ArbitrationLostFlag
- * - #kI2C_IntPendingFlag
- * - #kI2C_StartDetectFlag
- * - #kI2C_StopDetectFlag
  *
  * @note These enumerations are meant to be OR'd together to form a bit mask.
  *
  */
 enum _i2c_flags
 {
-    kI2C_ReceiveNakFlag = I2C_S_RXAK_MASK,       /*!< I2C receive NAK flag. */
-    kI2C_IntPendingFlag = I2C_S_IICIF_MASK,      /*!< I2C interrupt pending flag. */
-    kI2C_TransferDirectionFlag = I2C_S_SRW_MASK, /*!< I2C transfer direction flag. */
-    kI2C_RangeAddressMatchFlag = I2C_S_RAM_MASK, /*!< I2C range address match flag. */
-    kI2C_ArbitrationLostFlag = I2C_S_ARBL_MASK,  /*!< I2C arbitration lost flag. */
-    kI2C_BusBusyFlag = I2C_S_BUSY_MASK,          /*!< I2C bus busy flag. */
-    kI2C_AddressMatchFlag = I2C_S_IAAS_MASK,     /*!< I2C address match flag. */
-    kI2C_TransferCompleteFlag = I2C_S_TCF_MASK,  /*!< I2C transfer complete flag. */
+    kI2C_ReceiveNakFlag        = I2C_S_RXAK_MASK,  /*!< I2C receive NAK flag. */
+    kI2C_IntPendingFlag        = I2C_S_IICIF_MASK, /*!< I2C interrupt pending flag. This flag can be cleared. */
+    kI2C_TransferDirectionFlag = I2C_S_SRW_MASK,   /*!< I2C transfer direction flag. */
+    kI2C_RangeAddressMatchFlag = I2C_S_RAM_MASK,   /*!< I2C range address match flag. */
+    kI2C_ArbitrationLostFlag   = I2C_S_ARBL_MASK,  /*!< I2C arbitration lost flag. This flag can be cleared. */
+    kI2C_BusBusyFlag           = I2C_S_BUSY_MASK,  /*!< I2C bus busy flag. */
+    kI2C_AddressMatchFlag      = I2C_S_IAAS_MASK,  /*!< I2C address match flag. */
+    kI2C_TransferCompleteFlag  = I2C_S_TCF_MASK,   /*!< I2C transfer complete flag. */
 #ifdef I2C_HAS_STOP_DETECT
-    kI2C_StopDetectFlag = I2C_FLT_STOPF_MASK << 8, /*!< I2C stop detect flag. */
+    kI2C_StopDetectFlag = I2C_FLT_STOPF_MASK << 8, /*!< I2C stop detect flag. This flag can be cleared. */
 #endif /* FSL_FEATURE_I2C_HAS_START_STOP_DETECT / FSL_FEATURE_I2C_HAS_STOP_DETECT */
 
 #if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
-    kI2C_StartDetectFlag = I2C_FLT_STARTF_MASK << 8, /*!< I2C start detect flag. */
+    kI2C_StartDetectFlag = I2C_FLT_STARTF_MASK << 8, /*!< I2C start detect flag. This flag can be cleared. */
 #endif                                               /* FSL_FEATURE_I2C_HAS_START_STOP_DETECT */
 };
 
@@ -95,14 +95,14 @@ enum _i2c_interrupt_enable
 typedef enum _i2c_direction
 {
     kI2C_Write = 0x0U, /*!< Master transmits to the slave. */
-    kI2C_Read = 0x1U,  /*!< Master receives from the slave. */
+    kI2C_Read  = 0x1U, /*!< Master receives from the slave. */
 } i2c_direction_t;
 
 /*! @brief Addressing mode. */
 typedef enum _i2c_slave_address_mode
 {
     kI2C_Address7bit = 0x0U, /*!< 7-bit addressing mode. */
-    kI2C_RangeMatch = 0X2U,  /*!< Range address match addressing mode. */
+    kI2C_RangeMatch  = 0X2U, /*!< Range address match addressing mode. */
 } i2c_slave_address_mode_t;
 
 /*! @brief I2C transfer control flag. */
@@ -112,7 +112,7 @@ enum _i2c_master_transfer_flags
     kI2C_TransferNoStartFlag = 0x1U,       /*!< A transfer starts without a start signal, only support write only or
                                         write+read with no start flag, do not support read only with no start flag. */
     kI2C_TransferRepeatedStartFlag = 0x2U, /*!< A transfer starts with a repeated start signal. */
-    kI2C_TransferNoStopFlag = 0x4U,        /*!< A transfer ends without a stop signal. */
+    kI2C_TransferNoStopFlag        = 0x4U, /*!< A transfer ends without a stop signal. */
 };
 
 /*!
@@ -128,7 +128,7 @@ enum _i2c_master_transfer_flags
 typedef enum _i2c_slave_transfer_event
 {
     kI2C_SlaveAddressMatchEvent = 0x01U, /*!< Received the slave address after a start or repeated start. */
-    kI2C_SlaveTransmitEvent = 0x02U,     /*!< A callback is requested to provide data to transmit
+    kI2C_SlaveTransmitEvent     = 0x02U, /*!< A callback is requested to provide data to transmit
                                                 (slave-transmitter role). */
     kI2C_SlaveReceiveEvent = 0x04U,      /*!< A callback is requested to provide a buffer in which to place received
                                                  data (slave-receiver role). */
@@ -136,7 +136,7 @@ typedef enum _i2c_slave_transfer_event
 #if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
     kI2C_SlaveStartEvent = 0x10U, /*!< A start/repeated start was detected. */
 #endif
-    kI2C_SlaveCompletionEvent = 0x20U,  /*!< A stop was detected or finished transfer, completing the transfer. */
+    kI2C_SlaveCompletionEvent  = 0x20U, /*!< A stop was detected or finished transfer, completing the transfer. */
     kI2C_SlaveGenaralcallEvent = 0x40U, /*!< Received the general call address after a start or repeated start. */
 
     /*! A bit mask of all available events. */
@@ -146,6 +146,22 @@ typedef enum _i2c_slave_transfer_event
 #endif
                           kI2C_SlaveCompletionEvent | kI2C_SlaveGenaralcallEvent,
 } i2c_slave_transfer_event_t;
+
+/*! @brief Common sets of flags used by the driver. */
+enum
+{
+/*! All flags which are cleared by the driver upon starting a transfer. */
+#if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
+    kClearFlags = kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag | kI2C_StartDetectFlag | kI2C_StopDetectFlag,
+    kIrqFlags   = kI2C_GlobalInterruptEnable | kI2C_StartStopDetectInterruptEnable,
+#elif defined(FSL_FEATURE_I2C_HAS_STOP_DETECT) && FSL_FEATURE_I2C_HAS_STOP_DETECT
+    kClearFlags = kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag | kI2C_StopDetectFlag,
+    kIrqFlags   = kI2C_GlobalInterruptEnable | kI2C_StopDetectInterruptEnable,
+#else
+    kClearFlags = kI2C_ArbitrationLostFlag | kI2C_IntPendingFlag,
+    kIrqFlags   = kI2C_GlobalInterruptEnable,
+#endif
+};
 
 /*! @brief I2C master user configuration. */
 typedef struct _i2c_master_config
@@ -240,12 +256,6 @@ struct _i2c_slave_handle
     i2c_slave_transfer_callback_t callback; /*!< A callback function called at the transfer event. */
     void *userData;                         /*!< A callback parameter passed to the callback. */
 };
-
-/*******************************************************************************
- * Variables
- ******************************************************************************/
-/*! @brief Pointers to i2c bases for each instance. */
-extern I2C_Type *const s_i2cBases[];
 
 /*******************************************************************************
  * API
@@ -349,7 +359,7 @@ uint32_t I2C_GetInstance(I2C_Type *base);
  * I2C_MasterGetDefaultConfig(&config);
  * @endcode
  * @param masterConfig A pointer to the master configuration structure.
-*/
+ */
 void I2C_MasterGetDefaultConfig(i2c_master_config_t *masterConfig);
 
 /*!
@@ -367,7 +377,7 @@ void I2C_MasterGetDefaultConfig(i2c_master_config_t *masterConfig);
 void I2C_SlaveGetDefaultConfig(i2c_slave_config_t *slaveConfig);
 
 /*!
- * @brief Enables or disabless the I2C peripheral operation.
+ * @brief Enables or disables the I2C peripheral operation.
  *
  * @param base I2C base pointer
  * @param enable Pass true to enable and false to disable the module.
@@ -380,7 +390,7 @@ static inline void I2C_Enable(I2C_Type *base, bool enable)
     }
     else
     {
-        base->C1 &= ~I2C_C1_IICEN_MASK;
+        base->C1 &= ~(uint8_t)I2C_C1_IICEN_MASK;
     }
 }
 
@@ -427,7 +437,7 @@ static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMas
 {
 /* Must clear the STARTF / STOPF bits prior to clearing IICIF */
 #if defined(FSL_FEATURE_I2C_HAS_START_STOP_DETECT) && FSL_FEATURE_I2C_HAS_START_STOP_DETECT
-    if (statusMask & kI2C_StartDetectFlag)
+    if ((uint32_t)kI2C_StartDetectFlag == (statusMask & (uint32_t)kI2C_StartDetectFlag))
     {
         /* Shift the odd-ball flags back into place. */
         base->FLT |= (uint8_t)(statusMask >> 8U);
@@ -435,7 +445,7 @@ static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMas
 #endif
 
 #ifdef I2C_HAS_STOP_DETECT
-    if (statusMask & kI2C_StopDetectFlag)
+    if ((uint32_t)kI2C_StopDetectFlag == (statusMask & (uint32_t)kI2C_StopDetectFlag))
     {
         /* Shift the odd-ball flags back into place. */
         base->FLT |= (uint8_t)(statusMask >> 8U);
@@ -450,8 +460,8 @@ static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMas
  *
  * The following status register flags can be cleared kI2C_ArbitrationLostFlag and kI2C_IntPendingFlag
  *
-  * @param base I2C base pointer
-  * @param statusMask The status flag mask, defined in type i2c_status_flag_t.
+ * @param base I2C base pointer
+ * @param statusMask The status flag mask, defined in type i2c_status_flag_t.
  *      The parameter can be any combination of the following values:
  *          @arg kI2C_StartDetectFlag (if available)
  *          @arg kI2C_StopDetectFlag (if available)
@@ -504,7 +514,7 @@ void I2C_DisableInterrupts(I2C_Type *base, uint32_t mask);
  *
  * @param base I2C base pointer
  * @param enable true to enable, false to disable
-*/
+ */
 static inline void I2C_EnableDMA(I2C_Type *base, bool enable)
 {
     if (enable)
@@ -513,7 +523,7 @@ static inline void I2C_EnableDMA(I2C_Type *base, bool enable)
     }
     else
     {
-        base->C1 &= ~I2C_C1_DMAEN_MASK;
+        base->C1 &= ~(uint8_t)I2C_C1_DMAEN_MASK;
     }
 }
 
@@ -586,7 +596,7 @@ status_t I2C_MasterRepeatedStart(I2C_Type *base, uint8_t address, i2c_direction_
  * @param txBuff The pointer to the data to be transferred.
  * @param txSize The length in bytes of the data to be transferred.
  * @param flags Transfer control flag to decide whether need to send a stop, use kI2C_TransferDefaultFlag
-*  to issue a stop and kI2C_TransferNoStop to not send a stop.
+ *  to issue a stop and kI2C_TransferNoStop to not send a stop.
  * @retval kStatus_Success Successfully complete the data transmission.
  * @retval kStatus_I2C_ArbitrationLost Transfer error, arbitration lost.
  * @retval kStataus_I2C_Nak Transfer error, receive NAK during transfer.
@@ -604,7 +614,7 @@ status_t I2C_MasterWriteBlocking(I2C_Type *base, const uint8_t *txBuff, size_t t
  * @param rxBuff The pointer to the data to store the received data.
  * @param rxSize The length in bytes of the data to be received.
  * @param flags Transfer control flag to decide whether need to send a stop, use kI2C_TransferDefaultFlag
-*  to issue a stop and kI2C_TransferNoStop to not send a stop.
+ *  to issue a stop and kI2C_TransferNoStop to not send a stop.
  * @retval kStatus_Success Successfully complete the data transmission.
  * @retval kStatus_I2C_Timeout Send stop signal failed, timeout.
  */
@@ -741,19 +751,19 @@ void I2C_SlaveTransferCreateHandle(I2C_Type *base,
  *
  * The set of events received by the callback is customizable. To do so, set the @a eventMask parameter to
  * the OR'd combination of #i2c_slave_transfer_event_t enumerators for the events you wish to receive.
- * The #kI2C_SlaveTransmitEvent and #kLPI2C_SlaveReceiveEvent events are always enabled and do not need
+ * The kI2C_SlaveTransmitEvent and kLPI2C_SlaveReceiveEvent events are always enabled and do not need
  * to be included in the mask. Alternatively, pass 0 to get a default set of only the transmit and
  * receive events that are always enabled. In addition, the #kI2C_SlaveAllEvents constant is provided as
  * a convenient way to enable all events.
  *
  * @param base The I2C peripheral base address.
- * @param handle Pointer to #i2c_slave_handle_t structure which stores the transfer state.
+ * @param handle Pointer to i2c_slave_handle_t structure which stores the transfer state.
  * @param eventMask Bit mask formed by OR'ing together #i2c_slave_transfer_event_t enumerators to specify
  *      which events to send to the callback. Other accepted values are 0 to get a default set of
  *      only the transmit and receive events, and #kI2C_SlaveAllEvents to enable all events.
  *
- * @retval #kStatus_Success Slave transfers were successfully started.
- * @retval #kStatus_I2C_Busy Slave transfers have already been started on this handle.
+ * @retval kStatus_Success Slave transfers were successfully started.
+ * @retval kStatus_I2C_Busy Slave transfers have already been started on this handle.
  */
 status_t I2C_SlaveTransferNonBlocking(I2C_Type *base, i2c_slave_handle_t *handle, uint32_t eventMask);
 

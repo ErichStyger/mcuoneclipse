@@ -31,6 +31,10 @@
 #endif
 #if PL_CONFIG_USE_SHELL
   #include "Shell.h"
+  #include "McuShell.h"
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  #include "McuShellUart.h"
 #endif
 #if PL_CONFIG_USE_FT6206
   #include "McuFT6206.h"
@@ -44,8 +48,6 @@
 #include "touch.h"
 
 void PL_Init(void) {
-//  InitPins(); /* do all the pin muxing */
-
   /* initialize McuLib modules */
   McuLib_Init();
   McuWait_Init();
@@ -55,7 +57,15 @@ void PL_Init(void) {
   McuCriticalSection_Init();
   McuRB_Init();
   McuXFormat_Init();
+#if PL_CONFIG_USE_RTT
   McuRTT_Init();
+#endif
+#if PL_CONFIG_USE_SHELL
+  McuShell_Init();
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  McuShellUart_Init();
+#endif
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   McuSystemView_Init();
 #endif
@@ -75,13 +85,17 @@ void PL_Init(void) {
 
   /* initialize my own modules */
   McuWait_Waitms(500); /* give hardware time to power-up */
+#if PL_CONFIG_USE_GUI
   McuSPI_Init();
   McuILI9341_Init();
+#endif
 #if PL_CONFIG_USE_SHELL
   SHELL_Init();
 #endif
   LEDS_Init();
+#if PL_CONFIG_USE_GUI
   LCD_Init();
+#endif
 #if PL_CONFIG_USE_FT6206
   McuFT6206_Init();
 #endif

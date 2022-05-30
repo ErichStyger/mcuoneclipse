@@ -68,6 +68,77 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
 }
 
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
+void McuShellUart_Mux(int uart) {
+  switch(uart) {
+    case McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4: /* PTC3, PTC4 */
+      /* PORTC3 (pin 46) is configured as LPUART0_RX */
+      PORT_SetPinMux(PORTC, 3U, kPORT_MuxAlt7);
+      PORTC->PCR[3] = ((PORTC->PCR[3] &
+                        /* Mask bits to zero which are setting */
+                        (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+                       /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                        * corresponding PE field is set. */
+                       | (uint32_t)(kPORT_PullUp));
+
+      /* PORTC4 (pin 49) is configured as LPUART0_TX */
+      PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);
+      PORTC->PCR[4] = ((PORTC->PCR[4] &
+                        /* Mask bits to zero which are setting */
+                        (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+                       /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                        * corresponding PE field is set. */
+                       | (uint32_t)(kPORT_PullUp));
+      break;
+    case McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17: /* PTB16, PTB17 */
+      /* Port B Clock Gate Control: Clock enabled */
+      CLOCK_EnableClock(kCLOCK_PortB);
+      /* PORTB16 (pin 39) is configured as UART0_RX */
+      PORT_SetPinMux(PORTB, 16, kPORT_MuxAlt3);
+      /* PORTB17 (pin 40) is configured as UART0_TX */
+      PORT_SetPinMux(PORTB, 17, kPORT_MuxAlt3);
+
+      #define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
+
+      SIM->SOPT5 = ((SIM->SOPT5 &
+                     /* Mask bits to zero which are setting */
+                     (~(SIM_SOPT5_UART0TXSRC_MASK)))
+                    /* UART 0 transmit data source select: UART0_TX pin. */
+                    | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+      break;
+    case McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0:
+      /* PORTE0 (pin 1) is configured as UART1_TX */
+       PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt3);
+       PORTE->PCR[0] = ((PORTE->PCR[0] &
+                         /* Mask bits to zero which are setting */
+                         (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+                        /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                         * corresponding PE field is set. */
+                        | (uint32_t)(kPORT_PullUp));
+
+       /* PORTE1 (pin 2) is configured as UART1_RX */
+       PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt3);
+
+       PORTE->PCR[1] = ((PORTE->PCR[1] &
+                         /* Mask bits to zero which are setting */
+                         (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+                        /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                         * corresponding PE field is set. */
+                        | (uint32_t)(kPORT_PullUp));
+
+       #define SOPT5_UART1TXSRC_UART_TX 0x00u /*!<@brief UART 1 transmit data source select: UART1_TX pin */
+       SIM->SOPT5 = ((SIM->SOPT5 &
+                      /* Mask bits to zero which are setting */
+                      (~(SIM_SOPT5_UART0TXSRC_MASK | SIM_SOPT5_UART1TXSRC_MASK)))
+                     /* UART 1 transmit data source select: UART1_TX pin. */
+                     | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
+      break;
+    default:
+      for(;;) { /* error */ }
+  } /* switch */
+}
+#endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
+
 #if McuShellUart_CONFIG_DO_PIN_MUXING
 static void InitUartMuxing(void) {
 #if McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC845_USART0
@@ -119,16 +190,12 @@ static void InitUartMuxing(void) {
 
                 /* UART 1 transmit data source select: UART1_TX pin. */
                 | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0
-#error "NYI"
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
-#error "NYI"
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0
-  /* PORTC3 (pin 46) is configured as LPUART0_RX */
-  PORT_SetPinMux(PORTC, 3U, kPORT_MuxAlt7);
-
-  /* PORTC4 (pin 49) is configured as LPUART0_TX */
-  PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt7);
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
+  McuShellUart_Mux(McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4);
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17
+  McuShellUart_Mux(McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17);
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0
+  McuShellUart_Mux(McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0);
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
   #define IOCON_PIO_FUNC1 0x01u
   #define IOCON_PIO_INV_DI 0x00u

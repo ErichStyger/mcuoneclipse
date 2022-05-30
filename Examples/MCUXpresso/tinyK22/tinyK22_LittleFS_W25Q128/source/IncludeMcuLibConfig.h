@@ -34,6 +34,7 @@ Instructions:
 #define McuLib_CONFIG_CPU_IS_LPC         (0)  /* LPC845 */
 #define McuLib_CONFIG_CORTEX_M           (4)  /* K22 is a Cortex-M4 */
 #define McuLib_CONFIG_CPU_IS_KINETIS     (1)  /* K22 is a Kinetis */
+#define McuLib_CONFIG_CPU_VARIANT        McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
@@ -70,7 +71,7 @@ Instructions:
 #define McuShell_CONFIG_MULTI_CMD_ENABLED             (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (256)
 #define McuShell_CONFIG_MULTI_CMD_SIZE                (200) /* max size of each command */
-#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0
+#define McuShellUart_CONFIG_UART                      McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (150)

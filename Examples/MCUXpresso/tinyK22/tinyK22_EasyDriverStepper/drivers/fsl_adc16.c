@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2020 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -79,7 +79,7 @@ void ADC16_Init(ADC_Type *base, const adc16_config_t *config)
         tmp32 |= ADC_CFG1_ADLSMP_MASK;
     }
     tmp32 |= ADC_CFG1_ADIV(config->clockDivider);
-    if (config->enableLowPower)
+    if (true == config->enableLowPower)
     {
         tmp32 |= ADC_CFG1_ADLPC_MASK;
     }
@@ -91,11 +91,11 @@ void ADC16_Init(ADC_Type *base, const adc16_config_t *config)
     {
         tmp32 |= ADC_CFG2_ADLSTS(config->longSampleMode);
     }
-    if (config->enableHighSpeed)
+    if (true == config->enableHighSpeed)
     {
         tmp32 |= ADC_CFG2_ADHSC_MASK;
     }
-    if (config->enableAsynchronousClock)
+    if (true == config->enableAsynchronousClock)
     {
         tmp32 |= ADC_CFG2_ADACKEN_MASK;
     }
@@ -107,7 +107,7 @@ void ADC16_Init(ADC_Type *base, const adc16_config_t *config)
     base->SC2 = tmp32;
 
     /* ADCx_SC3. */
-    if (config->enableContinuousConversion)
+    if (true == config->enableContinuousConversion)
     {
         base->SC3 |= ADC_SC3_ADCO_MASK;
     }
@@ -115,6 +115,10 @@ void ADC16_Init(ADC_Type *base, const adc16_config_t *config)
     {
         base->SC3 &= ~ADC_SC3_ADCO_MASK;
     }
+
+#if defined(FSL_FEATURE_ADC16_HAS_HW_AVERAGE) && FSL_FEATURE_ADC16_HAS_HW_AVERAGE
+    ADC16_SetHardwareAverage(base, config->hardwareAverageMode);
+#endif /* FSL_FEATURE_ADC16_HAS_HW_AVERAGE */
 }
 
 /*!
@@ -153,17 +157,20 @@ void ADC16_GetDefaultConfig(adc16_config_t *config)
     assert(NULL != config);
 
     /* Initializes the configure structure to zero. */
-    memset(config, 0, sizeof(*config));
+    (void)memset(config, 0, sizeof(*config));
 
-    config->referenceVoltageSource = kADC16_ReferenceVoltageSourceVref;
-    config->clockSource = kADC16_ClockSourceAsynchronousClock;
-    config->enableAsynchronousClock = true;
-    config->clockDivider = kADC16_ClockDivider8;
-    config->resolution = kADC16_ResolutionSE12Bit;
-    config->longSampleMode = kADC16_LongSampleDisabled;
-    config->enableHighSpeed = false;
-    config->enableLowPower = false;
+    config->referenceVoltageSource     = kADC16_ReferenceVoltageSourceVref;
+    config->clockSource                = kADC16_ClockSourceAsynchronousClock;
+    config->enableAsynchronousClock    = true;
+    config->clockDivider               = kADC16_ClockDivider8;
+    config->resolution                 = kADC16_ResolutionSE12Bit;
+    config->longSampleMode             = kADC16_LongSampleDisabled;
+    config->enableHighSpeed            = false;
+    config->enableLowPower             = false;
     config->enableContinuousConversion = false;
+#if defined(FSL_FEATURE_ADC16_HAS_HW_AVERAGE) && FSL_FEATURE_ADC16_HAS_HW_AVERAGE
+    config->hardwareAverageMode = kADC16_HardwareAverageDisabled;
+#endif /* FSL_FEATURE_ADC16_HAS_HW_AVERAGE */
 }
 
 #if defined(FSL_FEATURE_ADC16_HAS_CALIBRATION) && FSL_FEATURE_ADC16_HAS_CALIBRATION
@@ -183,7 +190,7 @@ void ADC16_GetDefaultConfig(adc16_config_t *config)
 status_t ADC16_DoAutoCalibration(ADC_Type *base)
 {
     bool bHWTrigger = false;
-    volatile uint32_t tmp32; /* 'volatile' here is for the dummy read of ADCx_R[0] register. */
+    uint32_t tmp32;
     status_t status = kStatus_Success;
 
     /* The calibration would be failed when in hardwar mode.
@@ -196,16 +203,16 @@ status_t ADC16_DoAutoCalibration(ADC_Type *base)
 
     /* Clear the CALF and launch the calibration. */
     base->SC3 |= ADC_SC3_CAL_MASK | ADC_SC3_CALF_MASK;
-    while (0U == (kADC16_ChannelConversionDoneFlag & ADC16_GetChannelStatusFlags(base, 0U)))
+    while (0U == ((uint32_t)kADC16_ChannelConversionDoneFlag & ADC16_GetChannelStatusFlags(base, 0U)))
     {
         /* Check the CALF when the calibration is active. */
-        if (0U != (kADC16_CalibrationFailedFlag & ADC16_GetStatusFlags(base)))
+        if (0U != ((uint32_t)kADC16_CalibrationFailedFlag & ADC16_GetStatusFlags(base)))
         {
             status = kStatus_Fail;
             break;
         }
     }
-    tmp32 = base->R[0]; /* Dummy read to clear COCO caused by calibration. */
+    (void)base->R[0]; /* Dummy read to clear COCO caused by calibration. */
 
     /* Restore the hardware trigger setting if it was enabled before. */
     if (bHWTrigger)
@@ -213,7 +220,7 @@ status_t ADC16_DoAutoCalibration(ADC_Type *base)
         base->SC2 |= ADC_SC2_ADTRG_MASK;
     }
     /* Check the CALF at the end of calibration. */
-    if (0U != (kADC16_CalibrationFailedFlag & ADC16_GetStatusFlags(base)))
+    if (0U != ((uint32_t)kADC16_CalibrationFailedFlag & ADC16_GetStatusFlags(base)))
     {
         status = kStatus_Fail;
     }
@@ -223,13 +230,23 @@ status_t ADC16_DoAutoCalibration(ADC_Type *base)
     }
 
     /* Calculate the calibration values. */
-    tmp32 = base->CLP0 + base->CLP1 + base->CLP2 + base->CLP3 + base->CLP4 + base->CLPS;
-    tmp32 = 0x8000U | (tmp32 >> 1U);
+    tmp32 = base->CLP0;
+    tmp32 += base->CLP1;
+    tmp32 += base->CLP2;
+    tmp32 += base->CLP3;
+    tmp32 += base->CLP4;
+    tmp32 += base->CLPS;
+    tmp32    = 0x8000U | (tmp32 >> 1U);
     base->PG = tmp32;
 
 #if defined(FSL_FEATURE_ADC16_HAS_DIFF_MODE) && FSL_FEATURE_ADC16_HAS_DIFF_MODE
-    tmp32 = base->CLM0 + base->CLM1 + base->CLM2 + base->CLM3 + base->CLM4 + base->CLMS;
-    tmp32 = 0x8000U | (tmp32 >> 1U);
+    tmp32 = base->CLM0;
+    tmp32 += base->CLM1;
+    tmp32 += base->CLM2;
+    tmp32 += base->CLM3;
+    tmp32 += base->CLM4;
+    tmp32 += base->CLMS;
+    tmp32    = 0x8000U | (tmp32 >> 1U);
     base->MG = tmp32;
 #endif /* FSL_FEATURE_ADC16_HAS_DIFF_MODE */
 
@@ -276,7 +293,7 @@ void ADC16_SetHardwareCompareConfig(ADC_Type *base, const adc16_hardware_compare
 {
     uint32_t tmp32 = base->SC2 & ~(ADC_SC2_ACFE_MASK | ADC_SC2_ACFGT_MASK | ADC_SC2_ACREN_MASK);
 
-    if (!config) /* Pass "NULL" to disable the feature. */
+    if (NULL == config) /* Pass "NULL" to disable the feature. */
     {
         base->SC2 = tmp32;
         return;
@@ -299,6 +316,7 @@ void ADC16_SetHardwareCompareConfig(ADC_Type *base, const adc16_hardware_compare
             tmp32 |= ADC_SC2_ACFGT_MASK | ADC_SC2_ACREN_MASK;
             break;
         default:
+            assert(false);
             break;
     }
     base->SC2 = tmp32;
@@ -385,12 +403,12 @@ uint32_t ADC16_GetStatusFlags(ADC_Type *base)
 
     if (0U != (base->SC2 & ADC_SC2_ADACT_MASK))
     {
-        ret |= kADC16_ActiveFlag;
+        ret |= (uint32_t)kADC16_ActiveFlag;
     }
 #if defined(FSL_FEATURE_ADC16_HAS_CALIBRATION) && FSL_FEATURE_ADC16_HAS_CALIBRATION
     if (0U != (base->SC3 & ADC_SC3_CALF_MASK))
     {
-        ret |= kADC16_CalibrationFailedFlag;
+        ret |= (uint32_t)kADC16_CalibrationFailedFlag;
     }
 #endif /* FSL_FEATURE_ADC16_HAS_CALIBRATION */
     return ret;
@@ -405,7 +423,7 @@ uint32_t ADC16_GetStatusFlags(ADC_Type *base)
 void ADC16_ClearStatusFlags(ADC_Type *base, uint32_t mask)
 {
 #if defined(FSL_FEATURE_ADC16_HAS_CALIBRATION) && FSL_FEATURE_ADC16_HAS_CALIBRATION
-    if (0U != (mask & kADC16_CalibrationFailedFlag))
+    if (0U != (mask & (uint32_t)kADC16_CalibrationFailedFlag))
     {
         base->SC3 |= ADC_SC3_CALF_MASK;
     }
@@ -448,13 +466,13 @@ void ADC16_SetChannelConfig(ADC_Type *base, uint32_t channelGroup, const adc16_c
 
 #if defined(FSL_FEATURE_ADC16_HAS_DIFF_MODE) && FSL_FEATURE_ADC16_HAS_DIFF_MODE
     /* Enable the differential conversion. */
-    if (config->enableDifferentialConversion)
+    if (true == config->enableDifferentialConversion)
     {
         sc1 |= ADC_SC1_DIFF_MASK;
     }
 #endif /* FSL_FEATURE_ADC16_HAS_DIFF_MODE */
     /* Enable the interrupt when the conversion is done. */
-    if (config->enableInterruptOnConversionCompleted)
+    if (true == config->enableInterruptOnConversionCompleted)
     {
         sc1 |= ADC_SC1_AIEN_MASK;
     }
@@ -477,7 +495,7 @@ uint32_t ADC16_GetChannelStatusFlags(ADC_Type *base, uint32_t channelGroup)
 
     if (0U != (base->SC1[channelGroup] & ADC_SC1_COCO_MASK))
     {
-        ret |= kADC16_ChannelConversionDoneFlag;
+        ret |= (uint32_t)kADC16_ChannelConversionDoneFlag;
     }
     return ret;
 }

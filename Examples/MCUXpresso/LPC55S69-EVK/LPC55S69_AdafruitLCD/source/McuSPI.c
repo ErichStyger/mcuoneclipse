@@ -6,6 +6,7 @@
  */
 
 #include "platform.h"
+#if PL_CONFIG_USE_SPI
 #include "McuSPIconfig.h"
 #include "McuSPI.h"
 #include "fsl_spi.h"
@@ -169,3 +170,4 @@ void McuSPI_Init(void) {
   }
 #endif
 }
+#endif /* PL_CONFIG_USE_SPI */

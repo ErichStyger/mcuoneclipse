@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2018 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -22,14 +22,21 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief GPIO driver version 2.3.1. */
-#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 3, 1))
+/*! @brief GPIO driver version 2.5.3. */
+#define FSL_GPIO_DRIVER_VERSION (MAKE_VERSION(2, 5, 3))
 /*@}*/
+
+#if defined(FSL_FEATURE_GPIO_REGISTERS_WIDTH) && (FSL_FEATURE_GPIO_REGISTERS_WIDTH == 8U)
+#define GPIO_FIT_REG(value) \
+    ((uint8_t)(value)) /*!< For some platforms with 8-bit register width, cast the type to uint8_t */
+#else
+#define GPIO_FIT_REG(value) (value)
+#endif /*FSL_FEATURE_GPIO_REGISTERS_WIDTH*/
 
 /*! @brief GPIO direction definition */
 typedef enum _gpio_pin_direction
 {
-    kGPIO_DigitalInput = 0U,  /*!< Set current pin as digital input*/
+    kGPIO_DigitalInput  = 0U, /*!< Set current pin as digital input*/
     kGPIO_DigitalOutput = 1U, /*!< Set current pin as digital output*/
 } gpio_pin_direction_t;
 
@@ -76,20 +83,20 @@ typedef struct _gpio_pin_config
 /*! @brief Configures the interrupt generation condition. */
 typedef enum _gpio_interrupt_config
 {
-    kGPIO_InterruptStatusFlagDisabled = 0x0U,   /*!< Interrupt status flag is disabled. */
-    kGPIO_DMARisingEdge = 0x1U,                 /*!< ISF flag and DMA request on rising edge. */
-    kGPIO_DMAFallingEdge = 0x2U,                /*!< ISF flag and DMA request on falling edge. */
-    kGPIO_DMAEitherEdge = 0x3U,                 /*!< ISF flag and DMA request on either edge. */
-    kGPIO_FlagRisingEdge = 0x05U,               /*!< Flag sets on rising edge. */
-    kGPIO_FlagFallingEdge = 0x06U,              /*!< Flag sets on falling edge. */
-    kGPIO_FlagEitherEdge = 0x07U,               /*!< Flag sets on either edge. */
-    kGPIO_InterruptLogicZero = 0x8U,            /*!< Interrupt when logic zero. */
-    kGPIO_InterruptRisingEdge = 0x9U,           /*!< Interrupt on rising edge. */
-    kGPIO_InterruptFallingEdge = 0xAU,          /*!< Interrupt on falling edge. */
-    kGPIO_InterruptEitherEdge = 0xBU,           /*!< Interrupt on either edge. */
-    kGPIO_InterruptLogicOne = 0xCU,             /*!< Interrupt when logic one. */
-    kGPIO_ActiveHighTriggerOutputEnable = 0xDU, /*!< Enable active high-trigger output. */
-    kGPIO_ActiveLowTriggerOutputEnable = 0xEU,  /*!< Enable active low-trigger output. */
+    kGPIO_InterruptStatusFlagDisabled   = 0x0U,  /*!< Interrupt status flag is disabled. */
+    kGPIO_DMARisingEdge                 = 0x1U,  /*!< ISF flag and DMA request on rising edge. */
+    kGPIO_DMAFallingEdge                = 0x2U,  /*!< ISF flag and DMA request on falling edge. */
+    kGPIO_DMAEitherEdge                 = 0x3U,  /*!< ISF flag and DMA request on either edge. */
+    kGPIO_FlagRisingEdge                = 0x05U, /*!< Flag sets on rising edge. */
+    kGPIO_FlagFallingEdge               = 0x06U, /*!< Flag sets on falling edge. */
+    kGPIO_FlagEitherEdge                = 0x07U, /*!< Flag sets on either edge. */
+    kGPIO_InterruptLogicZero            = 0x8U,  /*!< Interrupt when logic zero. */
+    kGPIO_InterruptRisingEdge           = 0x9U,  /*!< Interrupt on rising edge. */
+    kGPIO_InterruptFallingEdge          = 0xAU,  /*!< Interrupt on falling edge. */
+    kGPIO_InterruptEitherEdge           = 0xBU,  /*!< Interrupt on either edge. */
+    kGPIO_InterruptLogicOne             = 0xCU,  /*!< Interrupt when logic one. */
+    kGPIO_ActiveHighTriggerOutputEnable = 0xDU,  /*!< Enable active high-trigger output. */
+    kGPIO_ActiveLowTriggerOutputEnable  = 0xEU,  /*!< Enable active low-trigger output. */
 } gpio_interrupt_config_t;
 #endif
 /*! @} */
@@ -118,13 +125,13 @@ extern "C" {
  *
  * This is an example to define an input pin or an output pin configuration.
  * @code
- * // Define a digital input pin configuration,
+ * Define a digital input pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalInput,
  *   0,
  * }
- * //Define a digital output pin configuration,
+ * Define a digital output pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalOutput,
@@ -154,14 +161,25 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config
  */
 static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
 {
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
     if (output == 0U)
     {
-        base->PCOR = 1U << pin;
+        base->PCOR = GPIO_FIT_REG(1UL << pin);
     }
     else
     {
-        base->PSOR = 1U << pin;
+        base->PSOR = GPIO_FIT_REG(1UL << pin);
     }
+#else
+    if (output == 0U)
+    {
+        base->PDOR |= GPIO_FIT_REG(1UL << pin);
+    }
+    else
+    {
+        base->PDOR &= ~GPIO_FIT_REG(1UL << pin);
+    }
+#endif
 }
 
 /*!
@@ -172,7 +190,11 @@ static inline void GPIO_PinWrite(GPIO_Type *base, uint32_t pin, uint8_t output)
  */
 static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
 {
-    base->PSOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PSOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR |= GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -183,7 +205,11 @@ static inline void GPIO_PortSet(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
 {
-    base->PCOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PCOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR &= ~GPIO_FIT_REG(mask);
+#endif
 }
 
 /*!
@@ -194,7 +220,11 @@ static inline void GPIO_PortClear(GPIO_Type *base, uint32_t mask)
  */
 static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
 {
-    base->PTOR = mask;
+#if !(defined(FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL) && FSL_FEATURE_GPIO_HAS_NO_INDEP_OUTPUT_CONTROL)
+    base->PTOR = GPIO_FIT_REG(mask);
+#else
+    base->PDOR ^= GPIO_FIT_REG(mask);
+#endif
 }
 
 /*@}*/
@@ -213,7 +243,7 @@ static inline void GPIO_PortToggle(GPIO_Type *base, uint32_t mask)
  */
 static inline uint32_t GPIO_PinRead(GPIO_Type *base, uint32_t pin)
 {
-    return (((base->PDIR) >> pin) & 0x01U);
+    return (((uint32_t)(base->PDIR) >> pin) & 0x01UL);
 }
 
 /*@}*/
@@ -269,8 +299,43 @@ static inline void GPIO_SetPinInterruptConfig(GPIO_Type *base, uint32_t pin, gpi
 {
     assert(base);
 
-    base->ICR[pin] = (base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config);
+    base->ICR[pin] = GPIO_FIT_REG((base->ICR[pin] & ~GPIO_ICR_IRQC_MASK) | GPIO_ICR_IRQC(config));
 }
+
+/*!
+ * @brief Read the GPIO interrupt status flags.
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on.)
+ * @return The current GPIO's interrupt status flag.
+ *         '1' means the related pin's flag is set, '0' means the related pin's flag not set.
+ *          For example, the return value 0x00010001 means the pin 0 and 17 have the interrupt pending.
+ */
+uint32_t GPIO_GpioGetInterruptFlags(GPIO_Type *base);
+
+/*!
+ * @brief Read individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on)
+ * @param pin GPIO specific pin number.
+ * @return The current selected pin's interrupt status flag.
+ */
+uint8_t GPIO_PinGetInterruptFlag(GPIO_Type *base, uint32_t pin);
+
+/*!
+ * @brief Clears GPIO pin interrupt status flags.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param mask GPIO pin number macro
+ */
+void GPIO_GpioClearInterruptFlags(GPIO_Type *base, uint32_t mask);
+
+/*!
+ * @brief Clear GPIO individual pin's interrupt status flag.
+ *
+ * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on).
+ * @param pin GPIO specific pin number.
+ */
+void GPIO_PinClearInterruptFlag(GPIO_Type *base, uint32_t pin);
 
 /*!
  * @brief Reads the GPIO DMA request flags.
@@ -310,26 +375,26 @@ static inline void GPIO_SetMultipleInterruptPinsConfig(GPIO_Type *base, uint32_t
 
     if (mask & 0xffffU)
     {
-        base->GICLR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICLR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
-    mask = mask >> 16;
+    mask = mask >> 16U;
     if (mask)
     {
-        base->GICHR = (GPIO_ICR_IRQC(config)) | (mask & 0xffffU);
+        base->GICHR = GPIO_FIT_REG((GPIO_ICR_IRQC(config)) | (mask & 0xffffU));
     }
 }
 #endif
 
 #if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
 /*!
- * @brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
- * words. Each 32-bit data port includes a GACR register, which defines the byte-level
- * attributes required for a successful access to the GPIO programming model. The attribute controls for the 4 data
- * bytes in the GACR follow a standard little endian
- * data convention.
+ * brief The GPIO module supports a device-specific number of data ports, organized as 32-bit
+ * words/8-bit Bytes. Each 32-bit/8-bit data port includes a GACR register, which defines the byte-level
+ * attributes required for a successful access to the GPIO programming model. If the GPIO module's GACR register
+ * organized as 32-bit words, the attribute controls for the 4 data bytes in the GACR follow a standard little
+ * endian data convention.
  *
- * @param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
- * @param mask GPIO pin number macro
+ * @param base      GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * @param attribute GPIO checker attribute
  */
 void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribute);
 #endif
@@ -355,6 +420,7 @@ void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribut
 /*! @name FGPIO Configuration */
 /*@{*/
 
+#if defined(FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL) && FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL
 /*!
  * @brief Initializes the FGPIO peripheral.
  *
@@ -363,6 +429,7 @@ void GPIO_CheckAttributeBytes(GPIO_Type *base, gpio_checker_attribute_t attribut
  * @param base   FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
  */
 void FGPIO_PortInit(FGPIO_Type *base);
+#endif /* FSL_FEATURE_PCC_HAS_FGPIO_CLOCK_GATE_CONTROL */
 
 /*!
  * @brief Initializes a FGPIO pin used by the board.
@@ -372,13 +439,13 @@ void FGPIO_PortInit(FGPIO_Type *base);
  *
  * This is an example to define an input pin or an output pin configuration:
  * @code
- * // Define a digital input pin configuration,
+ * Define a digital input pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalInput,
  *   0,
  * }
- * //Define a digital output pin configuration,
+ * Define a digital output pin configuration,
  * gpio_pin_config_t config =
  * {
  *   kGPIO_DigitalOutput,
@@ -410,11 +477,11 @@ static inline void FGPIO_PinWrite(FGPIO_Type *base, uint32_t pin, uint8_t output
 {
     if (output == 0U)
     {
-        base->PCOR = 1 << pin;
+        base->PCOR = 1UL << pin;
     }
     else
     {
-        base->PSOR = 1 << pin;
+        base->PSOR = 1UL << pin;
     }
 }
 
@@ -497,7 +564,7 @@ uint32_t FGPIO_PortGetInterruptFlags(FGPIO_Type *base);
  */
 void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
 #endif
-#if defined(FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_GPIO_HAS_ATTRIBUTE_CHECKER
+#if defined(FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER) && FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER
 /*!
  * @brief The FGPIO module supports a device-specific number of data ports, organized as 32-bit
  * words. Each 32-bit data port includes a GACR register, which defines the byte-level
@@ -505,11 +572,11 @@ void FGPIO_PortClearInterruptFlags(FGPIO_Type *base, uint32_t mask);
  * bytes in the GACR follow a standard little endian
  * data convention.
  *
- * @param base FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
- * @param mask FGPIO pin number macro
+ * @param base      FGPIO peripheral base pointer (FGPIOA, FGPIOB, FGPIOC, and so on.)
+ * @param attribute FGPIO checker attribute
  */
 void FGPIO_CheckAttributeBytes(FGPIO_Type *base, gpio_checker_attribute_t attribute);
-#endif
+#endif /* FSL_FEATURE_FGPIO_HAS_ATTRIBUTE_CHECKER */
 
 /*@}*/
 

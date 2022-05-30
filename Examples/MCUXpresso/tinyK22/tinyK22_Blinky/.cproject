@@ -264,6 +264,9 @@
 		</cconfiguration>
 		<cconfiguration id="com.crt.advproject.config.exe.debug.760794529.1791326148">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.760794529.1791326148" moduleId="org.eclipse.cdt.core.settings" name="BL_0xA000">
+				<macros>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>

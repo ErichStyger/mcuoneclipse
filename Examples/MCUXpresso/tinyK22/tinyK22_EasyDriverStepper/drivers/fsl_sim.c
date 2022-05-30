@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -34,7 +34,7 @@ void SIM_SetUsbVoltRegulatorEnableMode(uint32_t mask)
 {
     SIM->SOPT1CFG |= (SIM_SOPT1CFG_URWE_MASK | SIM_SOPT1CFG_UVSWE_MASK | SIM_SOPT1CFG_USSWE_MASK);
 
-    SIM->SOPT1 = (SIM->SOPT1 & ~kSIM_UsbVoltRegEnableInAllModes) | mask;
+    SIM->SOPT1 = (SIM->SOPT1 & ~(uint32_t)kSIM_UsbVoltRegEnableInAllModes) | mask;
 }
 #endif /* FSL_FEATURE_SIM_OPT_HAS_USB_VOLTAGE_REGULATOR */
 
@@ -45,16 +45,35 @@ void SIM_SetUsbVoltRegulatorEnableMode(uint32_t mask)
  */
 void SIM_GetUniqueId(sim_uid_t *uid)
 {
-#if defined(SIM_UIDH)
+#if (defined(FSL_FEATURE_SIM_HAS_UIDH) && FSL_FEATURE_SIM_HAS_UIDH)
     uid->H = SIM->UIDH;
-#endif
+#elif defined(SIM_UID0_UID_MASK)
+    uid->H  = SIM->UID0;
+#endif /* FSL_FEATURE_SIM_HAS_UIDH */
+
 #if (defined(FSL_FEATURE_SIM_HAS_UIDM) && FSL_FEATURE_SIM_HAS_UIDM)
     uid->M = SIM->UIDM;
 #else
+
+#if defined(SIM_UID1_UID_MASK)
+    uid->MH = SIM->UID1;
+#else
     uid->MH = SIM->UIDMH;
+#endif /* SIM_UID1_UID_MASK */
+
+#if defined(SIM_UID2_UID_MASK)
+    uid->ML = SIM->UID2;
+#else
     uid->ML = SIM->UIDML;
+#endif /* SIM_UID2_UID_MASK */
+
 #endif /* FSL_FEATURE_SIM_HAS_UIDM */
-    uid->L = SIM->UIDL;
+
+#if defined(SIM_UID3_UID_MASK)
+    uid->L = SIM->UID3;
+#else
+    uid->L  = SIM->UIDL;
+#endif /* SIM_UID3_UID_MASK */
 }
 
 #if (defined(FSL_FEATURE_SIM_HAS_RF_MAC_ADDR) && FSL_FEATURE_SIM_HAS_RF_MAC_ADDR)

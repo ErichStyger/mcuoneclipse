@@ -17,6 +17,7 @@
 #define MCUI2CLIB_CONFIG_HW_TEMPLATE_NONE              (0) /* default, initialization value */
 #define MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1  (1) /* LPC55S69 with I2C bus on FC1 */
 #define MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC4  (2) /* LPC55S69 with I2C bus on FC4 */
+/* other configurations are by CPU */
 
 #ifndef MCUI2CLIB_CONFIG_HW_TEMPLATE_USED
   #define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED        MCUI2CLIB_CONFIG_HW_TEMPLATE_NONE

@@ -21,12 +21,12 @@
 #define configTOTAL_HEAP_SIZE                       (24*1024)
 /* ---------------------------------------------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING         "LPC55S16_LoRaMacNode"
+#define McuShell_CONFIG_PROJECT_NAME_STRING         "LPC55S16_LoRaWanMacNode"
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (64)  /* buffer size for parsing, must be able to include multiple commands */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP            (4*1024)
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-#define McuShellUart_CONFIG_UART 					          McuShellUart_CONFIG_UART_LPC55S16_USART2
-#endif
+#define McuShellUart_CONFIG_UART                    McuShellUart_CONFIG_UART_LPC55S16_USART0 /* using UART over debug USB port: JP9 needs to be open, and JP12 closed */
+//#define McuShellUart_CONFIG_UART 					          McuShellUart_CONFIG_UART_LPC55S16_USART2
+
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96) /* maximum size of a single command in a multi-command string */
 #define McuShell_CONFIG_PROMPT_STRING               "LoRa> "

@@ -13,6 +13,7 @@
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
 #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)
+#define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
 #define McuLib_CONFIG_CORTEX_M          (33)
 
 /* ------------------- RTOS ---------------------------*/
@@ -26,6 +27,7 @@
 
 /* ------------------- I2C ---------------------------*/
 #define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use software bit banging */
+#define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED             MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
 #define McuGenericI2C_CONFIG_USE_ON_REQUEST_BUS_EVENT (0)
 #define McuGenericI2C_CONFIG_USE_MUTEX                (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
