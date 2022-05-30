@@ -31,7 +31,7 @@ Instructions:
 #define INCLUDEMCULIBCONFIG_H_
 
 /* global platform configuration */
-#define PL_CONFIG_USE_LORA_SHIELD (1) /* if using the LoRa Shield developed by Corsin Obrist */
+#define PL_CONFIG_USE_LORA_SHIELD       (0) /* if using the LoRa Shield developed by Corsin Obrist */
 
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
 #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)
@@ -49,7 +49,11 @@ Instructions:
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
 
 /* ------------------- I2C ---------------------------*/
-#define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED    MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1 /* Corsin's Shield uses FC1 */
+#if PL_CONFIG_USE_LORA_SHIELD
+  #define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED    MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1 /* Corsin's Shield uses FC1 */
+#else
+  #define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED    MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC4 /* Using I2C on MicroE Bus */
+#endif
 
 #define USE_HW_I2C                    (1)  /* otherwise uses GPIO bit-banging */
 
