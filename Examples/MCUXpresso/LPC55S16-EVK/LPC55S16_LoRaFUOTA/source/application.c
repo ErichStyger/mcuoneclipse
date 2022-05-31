@@ -251,7 +251,7 @@ static uint8_t W25_read_and_flash(lfs_file_t* file, bool readFromBeginning, size
 	  fileSize = fileSize - nofBytes;
 
 	  }
-
+  return ERR_OK;
 }
 
 
