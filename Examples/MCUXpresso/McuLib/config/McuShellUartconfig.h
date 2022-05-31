@@ -12,14 +12,15 @@
 /* LPC845 */
 #define McuShellUart_CONFIG_UART_LPC845_USART0            (1) /* Rx on pin 20 (PIO0_24), Tx on pin 19 (PIO0_25) */
 /* Kinetis K22FX */
-#define McuShellUart_CONFIG_UART_K22FX512_UART0           (2) /* Rx on PTA1 (pin 27), Tx on PTA2 (pin 28) */
+#define McuShellUart_CONFIG_UART_K22FX512_UART0_A1_A2     (2) /* Rx on PTA1 (pin 27), Tx on PTA2 (pin 28) */
+#define McuShellUart_CONFIG_UART_K22FX512_UART1_E1_E0     (3) /* Rx on PTE1 (pin 2), Tx on PTE2 (pin 1) */
 /* Kinetis K22FN */
-#define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (3) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
-#define McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17   (4) /* PTB16 (Rx), PTB17 (Tx) */
-#define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (5) /* PTE1 (Rx), PTE0 (Tx) */
+#define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (4) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
+#define McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17   (5) /* PTB16 (Rx), PTB17 (Tx) */
+#define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (6) /* PTE1 (Rx), PTE0 (Tx) */
 /* LPC55S16 */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART0          (6) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
-#define McuShellUart_CONFIG_UART_LPC55S16_USART2          (7) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART0          (7) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
+#define McuShellUart_CONFIG_UART_LPC55S16_USART2          (8) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
@@ -95,7 +96,7 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM2_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0_A1_A2
   /* UART0 on K22FX512 */
   #include "fsl_uart.h"
   #include "fsl_port.h"
@@ -116,8 +117,7 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0
-  /* UART0 on K22FN512. Mux the pins using the pins muxing tool */
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17
   #include "fsl_uart.h"
   #include "fsl_port.h"
   #define McuShellUart_CONFIG_UART_DEVICE                   UART0
@@ -137,7 +137,7 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0
   /* UART1 on K22FN512. Mux the pins using the pins muxing tool */
   #include "fsl_uart.h"
   #include "fsl_port.h"

@@ -45,19 +45,16 @@
   #endif
 #endif
 
-#include "McuShellUart.h"
-/* supported UART implementation, taken from the McuShell implementation */
-#define McuESP32_CONFIG_UART_NONE                     (0)
-#define McuESP32_CONFIG_UART_K22FX512_UART1           (McuShellUart_CONFIG_UART_K22FX512_UART1)
-#define McuESP32_CONFIG_UART_K22FN512_UART1_E1_E0     (McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0)
+#include "McuShellUartconfig.h"
 
-/* default UART used */
-#ifndef McuESP32_CONFIG_UART
-  #define McuESP32_CONFIG_UART      McuESP32_CONFIG_UART_NONE
+/* UART used with ESP32: assign one of the McuShell UART to enable it */
+#ifndef McuESP32_CONFIG_SHELL_UART
+  #define McuESP32_CONFIG_SHELL_UART      McuShellUart_CONFIG_UART_NONE
 #endif
 
 /* UART connection to the ESP32 */
-#if McuESP32_CONFIG_UART==McuESP32_CONFIG_UART_K22FX512_UART1 || McuESP32_CONFIG_UART_K22FN512_UART1_E1_E0
+#if   (McuESP32_CONFIG_SHELL_UART==McuShellUart_CONFIG_UART_K22FX512_UART1_E1_E0)  \
+   || (McuESP32_CONFIG_SHELL_UART==McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0)
   #include "fsl_uart.h"
   #define McuESP32_CONFIG_UART_DEVICE                   UART1
   #define McuESP32_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
@@ -75,8 +72,5 @@
   #define McuESP32_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
   #define McuESP32_CONFIG_UART_BAUDRATE                 115200
 #endif
-
-
-
 
 #endif /* MCUESP32CONFIG_H_ */

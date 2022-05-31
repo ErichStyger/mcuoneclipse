@@ -68,9 +68,9 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
 }
 
-#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
 void McuShellUart_MuxUartPins(int uart) {
   switch(uart) {
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
     case McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4: /* PTC3, PTC4 */
       CLOCK_EnableClock(kCLOCK_PortC);
 
@@ -152,11 +152,57 @@ void McuShellUart_MuxUartPins(int uart) {
                      /* UART 1 transmit data source select: UART1_TX pin. */
                      | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
       break;
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FX
+
+    #define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
+    #define SOPT5_UART1TXSRC_UART_TX 0x00u /*!<@brief UART 1 transmit data source select: UART1_TX pin */
+
+    case McuShellUart_CONFIG_UART_K22FX512_UART0_A1_A2:
+      /* PORTA1 (pin 27) is configured as UART0_RX */
+      PORT_SetPinMux(PORTA, 1U, kPORT_MuxAlt2);
+
+      /* PORTA2 (pin 28) is configured as UART0_TX */
+      PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt2);
+
+      SIM->SOPT5 = ((SIM->SOPT5 &
+                     /* Mask bits to zero which are setting */
+                     (~(SIM_SOPT5_UART0TXSRC_MASK | SIM_SOPT5_UART1TXSRC_MASK)))
+                    /* UART 0 transmit data source select: UART0_TX pin. */
+                    | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+      break;
+
+    case McuShellUart_CONFIG_UART_K22FX512_UART1_E1_E0:
+      CLOCK_EnableClock(kCLOCK_PortE);
+      /* PORTE0 (pin 1) is configured as UART1_TX */
+      PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt3);
+      PORTE->PCR[0] = ((PORTE->PCR[0] &
+                        /* Mask bits to zero which are setting */
+                        (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                       /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                        * corresponding Port Pull Enable field is set. */
+                       | (uint32_t)(kPORT_PullUp));
+
+      /* PORTE1 (pin 2) is configured as UART1_RX */
+      PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt3);
+      PORTE->PCR[1] = ((PORTE->PCR[1] &
+                        /* Mask bits to zero which are setting */
+                        (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                       /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                        * corresponding Port Pull Enable field is set. */
+                       | (uint32_t)(kPORT_PullUp));
+      SIM->SOPT5 = ((SIM->SOPT5 &
+                     /* Mask bits to zero which are setting */
+                     (~(SIM_SOPT5_UART0TXSRC_MASK | SIM_SOPT5_UART1TXSRC_MASK)))
+                    /* UART 1 transmit data source select: UART1_TX pin. */
+                    | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
+      break;
+#endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
     default:
       for(;;) { /* error */ }
   } /* switch */
 }
-#endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
 
 #if McuShellUart_CONFIG_DO_PIN_MUXING
 static void InitUartMuxing(void) {

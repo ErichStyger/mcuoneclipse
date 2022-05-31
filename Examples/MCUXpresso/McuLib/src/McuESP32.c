@@ -6,7 +6,7 @@
  */
 
 #include "McuESP32config.h"
-#if McuESP32_CONFIG_UART!=McuESP32_CONFIG_UART_NONE
+#if McuESP32_CONFIG_SHELL_UART!=McuShellUart_CONFIG_UART_NONE
 #include "McuESP32.h"
 #include "McuGPIO.h"
 #include "McuRTOS.h"
@@ -458,7 +458,7 @@ static void InitUart(void) {
   EnableIRQ(McuESP32_CONFIG_UART_IRQ_NUMBER);
   NVIC_SetPriority(McuESP32_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 
-  McuShellUart_MuxUartPins(McuESP32_CONFIG_UART); /* mux the UART pins */
+  McuShellUart_MuxUartPins(McuESP32_CONFIG_SHELL_UART); /* mux the UART pins */
 
   uartRxQueue = xQueueCreate(McuESP32_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
   if (uartRxQueue==NULL) {
@@ -530,4 +530,4 @@ void McuESP32_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
-#endif /* #if McuESP32_CONFIG_UART */
+#endif /* #if McuESP32_CONFIG_SHELL_UART */

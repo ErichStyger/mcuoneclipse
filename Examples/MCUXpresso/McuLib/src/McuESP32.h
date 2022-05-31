@@ -8,7 +8,6 @@
 #ifndef McuESP32_H_
 #define McuESP32_H_
 
-#include "platform.h"
 #include <stdint.h>
 #include "McuESP32config.h"
 
@@ -47,7 +46,14 @@ McuShell_ConstStdIOTypePtr McuESP32_GetRxFromESPStdio(void);
  */
 McuShell_ConstStdIOTypePtr McuESP32_GetTxToESPStdio(void);
 
+/*!
+ * \brief Module de-initialization
+ */
 void McuESP32_Deinit(void);
+
+/*!
+ * \brief Module initialization
+ */
 void McuESP32_Init(void);
 
 #ifdef __cplusplus
