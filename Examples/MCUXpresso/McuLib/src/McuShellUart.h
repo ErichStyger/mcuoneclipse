@@ -21,6 +21,12 @@ extern uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZ
 extern McuShell_ConstStdIOType McuShellUart_stdio;
 
 /*!
+ * \brief perform muxing of the UART pins
+ * \param uart One of the preconfigured and supported UART types, e.g. McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
+ */
+void McuShellUart_MuxUartPins(int uart);
+
+/*!
  * \brief Module de-initialization
  */
 void McuShellUart_Deinit(void);

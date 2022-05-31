@@ -13,6 +13,7 @@
 #include "McuUtility.h"
 #include "McuWait.h"
 #include "McuLog.h"
+#include "McuShellUart.h"
 #if McuESP32_CONFIG_USE_USB_CDC
   #include "virtual_com.h"
 #endif
@@ -443,7 +444,6 @@ static void UartTxTask(void *pv) { /* task handling sending data to the ESP32 mo
 }
 
 static void InitUart(void) {
-  /* NOTE: Muxing of the UART pins needs to be done in the Pins tool! */
   McuESP32_CONFIG_UART_CONFIG_STRUCT config;
 
   McuESP32_CONFIG_UART_SET_UART_CLOCK();
@@ -457,6 +457,8 @@ static void InitUart(void) {
   McuESP32_CONFIG_UART_ENABLE_INTERRUPTS(McuESP32_CONFIG_UART_DEVICE, McuESP32_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
   EnableIRQ(McuESP32_CONFIG_UART_IRQ_NUMBER);
   NVIC_SetPriority(McuESP32_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+
+  McuShellUart_MuxUartPins(McuESP32_CONFIG_UART); /* mux the UART pins */
 
   uartRxQueue = xQueueCreate(McuESP32_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
   if (uartRxQueue==NULL) {

@@ -9,13 +9,15 @@
 
 /* supported UART implementation: */
 #define McuShellUart_CONFIG_UART_NONE                     (0)
+/* LPC845 */
 #define McuShellUart_CONFIG_UART_LPC845_USART0            (1) /* Rx on pin 20 (PIO0_24), Tx on pin 19 (PIO0_25) */
+/* Kinetis K22FX */
 #define McuShellUart_CONFIG_UART_K22FX512_UART0           (2) /* Rx on PTA1 (pin 27), Tx on PTA2 (pin 28) */
-
+/* Kinetis K22FN */
 #define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (3) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17   (4) /* PTB16 (Rx), PTB17 (Tx) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (5) /* PTE1 (Rx), PTE0 (Tx) */
-
+/* LPC55S16 */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART0          (6) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART2          (7) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
 
