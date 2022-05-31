@@ -55,7 +55,7 @@ static void style_mod_cb(lv_style_t *style) {
     style->body.border.color = LV_COLOR_ORANGE;
 
     /*If not empty or has border then emphasis the border*/
-    if(style->body.empty == 0 || style->body.border.width != 0) style->body.border.width = LV_DPI / 50;
+    if(style->body.border.width != 0) style->body.border.width = LV_DPI / 50;
 
     style->body.main_color = lv_color_mix(style->body.main_color, LV_COLOR_ORANGE, LV_OPA_70);
     style->body.grad_color = lv_color_mix(style->body.grad_color, LV_COLOR_ORANGE, LV_OPA_70);

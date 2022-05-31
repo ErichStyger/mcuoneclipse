@@ -17,11 +17,11 @@
 /* clang-format off */
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Clocks v6.0
+product: Clocks v9.0
 processor: LPC55S69
 package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
-processor_version: 6.0.1
+processor_version: 11.0.1
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -89,7 +89,7 @@ void BOARD_BootClockFRO12M(void)
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kFRO12M_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO12M */
 
-    /*< Set SystemCoreClock variable. */
+    /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFRO12M_CORE_CLOCK;
 #endif
 }
@@ -138,7 +138,7 @@ void BOARD_BootClockFROHF96M(void)
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kFRO_HF_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO_HF */
 
-    /*< Set SystemCoreClock variable. */
+    /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKFROHF96M_CORE_CLOCK;
 #endif
 }
@@ -185,6 +185,7 @@ void BOARD_BootClockPLL100M(void)
 
     CLOCK_SetupFROClocking(96000000U);                   /* Enable FRO HF(96MHz) output */
 
+    /*!< Configure XTAL32M */
     POWER_DisablePD(kPDRUNCFG_PD_XTAL32M);                        /* Ensure XTAL32M is powered */
     POWER_DisablePD(kPDRUNCFG_PD_LDOXO32M);                       /* Ensure XTAL32M is powered */
     CLOCK_SetupExtClocking(16000000U);                            /* Enable clk_in clock */
@@ -197,9 +198,9 @@ void BOARD_BootClockPLL100M(void)
     /*!< Set up PLL */
     CLOCK_AttachClk(kEXT_CLK_to_PLL0);                    /*!< Switch PLL0CLKSEL to EXT_CLK */
     POWER_DisablePD(kPDRUNCFG_PD_PLL0);                  /* Ensure PLL is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_PLL0_SSCG);                                       
+    POWER_DisablePD(kPDRUNCFG_PD_PLL0_SSCG);
     const pll_setup_t pll0Setup = {
-        .pllctrl = SYSCON_PLL0CTRL_CLKEN_MASK | SYSCON_PLL0CTRL_SELI(54U) | SYSCON_PLL0CTRL_SELP(26U),
+        .pllctrl = SYSCON_PLL0CTRL_CLKEN_MASK | SYSCON_PLL0CTRL_SELI(53U) | SYSCON_PLL0CTRL_SELP(26U),
         .pllndec = SYSCON_PLL0NDEC_NDIV(4U),
         .pllpdec = SYSCON_PLL0PDEC_PDIV(2U),
         .pllsscg = {0x0U,(SYSCON_PLL0SSCG1_MDIV_EXT(100U) | SYSCON_PLL0SSCG1_SEL_EXT_MASK)},
@@ -214,7 +215,7 @@ void BOARD_BootClockPLL100M(void)
     /*!< Set up clock selectors - Attach clocks to the peripheries */
     CLOCK_AttachClk(kPLL0_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to PLL0 */
 
-    /*< Set SystemCoreClock variable. */
+    /*!< Set SystemCoreClock variable. */
     SystemCoreClock = BOARD_BOOTCLOCKPLL100M_CORE_CLOCK;
 #endif
 }

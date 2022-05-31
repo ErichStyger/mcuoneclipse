@@ -15,6 +15,7 @@
 #include "McuRTOS.h"
 #include "lcd.h"
 #include "McuShell.h"
+#include "McuGDisplaySSD1306.h"
 #if PL_CONFIG_USE_GUI_TOUCH_NAV
   #include "touch.h"
 #endif

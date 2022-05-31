@@ -38,11 +38,11 @@ void BOARD_InitBootPins(void);
  */
 void BOARD_InitPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
-#define PIO1_4_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_4_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_4_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
-#define PIO1_6_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_6_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_6_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
-#define PIO1_7_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
+#define PIO1_7_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_7_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
 
 /*!
@@ -51,15 +51,33 @@ void BOARD_InitPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
  */
 void BOARD_InitLedPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
-#define PIO0_26_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_1_DIGIMODE_DIGITAL 0x01u  /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_1_FUNC_ALT0 0x00u         /*!<@brief Selects pin function.: Alternative connection 0. */
-#define PIO1_2_DIGIMODE_DIGITAL 0x01u  /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_2_FUNC_ALT6 0x06u         /*!<@brief Selects pin function.: Alternative connection 6. */
-#define PIO1_3_DIGIMODE_DIGITAL 0x01u  /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_3_FUNC_ALT6 0x06u         /*!<@brief Selects pin function.: Alternative connection 6. */
-#define PIO1_5_DIGIMODE_DIGITAL 0x01u  /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_5_FUNC_ALT0 0x00u         /*!<@brief Selects pin function.: Alternative connection 0. */
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_26_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_1_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_1_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_2_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 6. */
+#define PIO1_2_FUNC_ALT6 0x06u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_3_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 6. */
+#define PIO1_3_FUNC_ALT6 0x06u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_5_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_5_FUNC_ALT0 0x00u
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
@@ -67,10 +85,18 @@ void BOARD_InitLedPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
  */
 void BOARD_InitSpiPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
-#define PIO1_20_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_20_FUNC_ALT5 0x05u        /*!<@brief Selects pin function.: Alternative connection 5. */
-#define PIO1_21_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_21_FUNC_ALT5 0x05u        /*!<@brief Selects pin function.: Alternative connection 5. */
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_20_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 5. */
+#define PIO1_20_FUNC_ALT5 0x05u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_21_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 5. */
+#define PIO1_21_FUNC_ALT5 0x05u
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
@@ -78,10 +104,18 @@ void BOARD_InitSpiPins(void); /* Function assigned for the Cortex-M33 (Core #0) 
  */
 void BOARD_InitI2cPins(void); /* Function assigned for the Cortex-M33 (Core #0) */
 
-#define PIO1_20_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_20_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
-#define PIO1_21_DIGIMODE_DIGITAL 0x01u /*!<@brief Select Digital mode.: Digital mode, digital input is enabled. */
-#define PIO1_21_FUNC_ALT0 0x00u        /*!<@brief Selects pin function.: Alternative connection 0. */
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_20_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_20_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_21_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_21_FUNC_ALT0 0x00u
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

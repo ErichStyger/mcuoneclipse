@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v6.0
+product: Pins v11.0
 processor: LPC55S69
 package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
-processor_version: 6.0.1
+processor_version: 11.0.1
 pin_labels:
 - {pin_num: '1', pin_signal: PIO1_4/FC0_SCK/SD0_D0/CTIMER2_MAT1/SCT0_OUT0/FREQME_GPIO_CLK_A, label: LED_BLUE}
 - {pin_num: '5', pin_signal: PIO1_6/FC0_TXD_SCL_MISO_WS/SD0_D3/CTIMER2_MAT1/SCT_GPI3, label: LED_RED}
@@ -133,7 +133,8 @@ void BOARD_InitLedPins(void)
                         | IOCON_PIO_FUNC(PIO1_4_FUNC_ALT0)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_4_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][6] = ((IOCON->PIO[1][6] &
@@ -145,7 +146,8 @@ void BOARD_InitLedPins(void)
                         | IOCON_PIO_FUNC(PIO1_6_FUNC_ALT0)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_6_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][7] = ((IOCON->PIO[1][7] &
@@ -157,7 +159,8 @@ void BOARD_InitLedPins(void)
                         | IOCON_PIO_FUNC(PIO1_7_FUNC_ALT0)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_7_DIGIMODE_DIGITAL));
 }
 
@@ -197,7 +200,8 @@ void BOARD_InitSpiPins(void)
                          | IOCON_PIO_FUNC(0x09u)
 
                          /* Select Digital mode.
-                          * : Digital mode, digital input is enabled. */
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO0_26_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][1] = ((IOCON->PIO[1][1] &
@@ -209,7 +213,8 @@ void BOARD_InitSpiPins(void)
                         | IOCON_PIO_FUNC(PIO1_1_FUNC_ALT0)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_1_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][2] = ((IOCON->PIO[1][2] &
@@ -221,7 +226,8 @@ void BOARD_InitSpiPins(void)
                         | IOCON_PIO_FUNC(PIO1_2_FUNC_ALT6)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_2_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][3] = ((IOCON->PIO[1][3] &
@@ -233,7 +239,8 @@ void BOARD_InitSpiPins(void)
                         | IOCON_PIO_FUNC(PIO1_3_FUNC_ALT6)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_3_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][5] = ((IOCON->PIO[1][5] &
@@ -245,7 +252,8 @@ void BOARD_InitSpiPins(void)
                         | IOCON_PIO_FUNC(PIO1_5_FUNC_ALT0)
 
                         /* Select Digital mode.
-                         * : Digital mode, digital input is enabled. */
+                         * : Enable Digital mode.
+                         * Digital input is enabled. */
                         | IOCON_PIO_DIGIMODE(PIO1_5_DIGIMODE_DIGITAL));
 }
 
@@ -282,7 +290,8 @@ void BOARD_InitI2cPins(void)
                          | IOCON_PIO_FUNC(PIO1_20_FUNC_ALT5)
 
                          /* Select Digital mode.
-                          * : Digital mode, digital input is enabled. */
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO1_20_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][21] = ((IOCON->PIO[1][21] &
@@ -294,7 +303,8 @@ void BOARD_InitI2cPins(void)
                          | IOCON_PIO_FUNC(PIO1_21_FUNC_ALT5)
 
                          /* Select Digital mode.
-                          * : Digital mode, digital input is enabled. */
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO1_21_DIGIMODE_DIGITAL));
 }
 
@@ -331,7 +341,8 @@ void BOARD_InitI2cPinsAsGPIO(void)
                          | IOCON_PIO_FUNC(PIO1_20_FUNC_ALT0)
 
                          /* Select Digital mode.
-                          * : Digital mode, digital input is enabled. */
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO1_20_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][21] = ((IOCON->PIO[1][21] &
@@ -343,7 +354,8 @@ void BOARD_InitI2cPinsAsGPIO(void)
                          | IOCON_PIO_FUNC(PIO1_21_FUNC_ALT0)
 
                          /* Select Digital mode.
-                          * : Digital mode, digital input is enabled. */
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO1_21_DIGIMODE_DIGITAL));
 }
 /***********************************************************************************************************************

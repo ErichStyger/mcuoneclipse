@@ -11,6 +11,7 @@
 #define MCUSPI_CONFIG_HW_TEMPLATE_NONE                 0
 #define MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1     1
 #define MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3         2
+#define MCUSPI_CONFIG_HW_TEMPLATE_LPC55S59_FC8         3
 
 /* NOTE: Pin muxing for the MISO/MOSI/CLK has to be done in the pins tool! */
 
@@ -48,6 +49,24 @@
   #define MCUSPI_CONFIG_HW_SPI_INIT() \
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM7); /* attach 12 MHz clock to SPI3 */ \
     RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn); /* reset FLEXCOMM for SPI */
+
+  #define MCUSPI_CONFIG_HW_CS_GPIO   GPIO
+  #define MCUSPI_CONFIG_HW_CS_PORT   0
+  #define MCUSPI_CONFIG_HW_CS_PIN    4
+
+  #define MCUSPI_CONFIG_HW_CS_INIT()  /* noting */
+
+#elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_LPC55S59_FC8
+  #define MCUSPI_CONFIG_HW_SPI_MASTER          SPI8
+  #define MCUSPI_CONFIG_HW_SPI_MASTER_IRQ      FLEXCOMM8_IRQn
+  #define MCUSPI_CONFIG_HW_SPI_MASTER_CLK_SRC  kCLOCK_Flexcomm8
+  #define MCUSPI_CONFIG_HW_SPI_MASTER_CLK_FREQ CLOCK_GetFlexCommClkFreq(8U)
+  #define MCUSPI_CONFIG_HW_SPI_SSEL            1
+  #define MCUSPI_CONFIG_HW_SPI_SPOL            kSPI_SpolActiveAllLow
+
+  #define MCUSPI_CONFIG_HW_SPI_INIT() \
+    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM8); /* attach 12 MHz clock to SPI8 */ \
+    RESET_PeripheralReset(kFC8_RST_SHIFT_RSTn); /* reset FLEXCOMM for SPI */
 
   #define MCUSPI_CONFIG_HW_CS_GPIO   GPIO
   #define MCUSPI_CONFIG_HW_CS_PORT   0

@@ -24,7 +24,9 @@
 #define configENABLE_TRUSTZONE                (0)
 #define configENABLE_FPU                      (1) /* \todo */
 #define configENABLE_MPU                      (0) /* \todo */
-
+/* ----------------------------------------------------- */
+/* McuSPI */
+#define MCUSPI_CONFIG_HW_TEMPLATE         MCUSPI_CONFIG_HW_TEMPLATE_LPC55S59_FC8
 /* ------------------- I2C ---------------------------*/
 #define CONFIG_USE_HW_I2C                             (0) /* if using HW I2C, otherwise use software bit banging */
 #define MCUI2CLIB_CONFIG_HW_TEMPLATE_USED             MCUI2CLIB_CONFIG_HW_TEMPLATE_LPC55S69_I2C_FC1

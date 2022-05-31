@@ -178,7 +178,7 @@ static void I2CLIB_ReleaseBus(void) {
 
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = false;
-  config.isLowOnInit = false;
+  config.isHighOnInit = true;
   config.hw.gpio = I2CLIB_SDA_GPIO;
   config.hw.pin = I2CLIB_SDA_GPIO_PIN;
   config.hw.port = I2CLIB_SDA_GPIO_PORT;

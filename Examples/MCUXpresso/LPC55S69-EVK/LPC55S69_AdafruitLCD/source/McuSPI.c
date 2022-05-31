@@ -152,7 +152,7 @@ void McuSPI_Deinit(void) {
 }
 
 void McuSPI_Init(void) {
-  /* attach 12 MHz clock to SPI3 */
+  /* attach 12 MHz clock to SPI8 */
   CLOCK_AttachClk(kFRO12M_to_FLEXCOMM7);
 
   /* reset FLEXCOMM for SPI */
