@@ -183,7 +183,7 @@ void GUI_MainMenuCreate(void) {
   lv_win_set_title(gui_win, "Main Menu");
 
   /* Add control button to the header */
-  lv_obj_t *close_btn = lv_win_add_btn(gui_win, LV_SYMBOL_CLOSE);           /* Add close button and use built-in close action */
+  //lv_obj_t *close_btn = lv_win_add_btn(gui_win, LV_SYMBOL_CLOSE);           /* Add close button and use built-in close action */
   //lv_obj_set_event_cb(close_btn, lv_win_close_event_cb);
   lv_win_add_btn(gui_win, LV_SYMBOL_SETTINGS);        /*Add a setup button*/
 
