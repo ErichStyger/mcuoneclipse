@@ -8,9 +8,17 @@
 #if McuShellUart_CONFIG_UART!=McuShellUart_CONFIG_UART_NONE
 #include "McuShellUart.h"
 #include "McuShell.h"
-#include "McuRTOS.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  #include "McuRTOS.h"
+#else
+  #include "McuRB.h"
+#endif
 
-static QueueHandle_t uartRxQueue;
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  static QueueHandle_t uartRxQueue;
+#else
+  static McuRB_Handle_t rxRingBuffer;
+#endif
 
 /*********************************************************************************************************/
 /* Shell interface */
@@ -22,15 +30,27 @@ static void McuShellUart_SendChar(unsigned char ch) {
 static void McuShellUart_ReadChar(uint8_t *c) {
   uint8_t ch;
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   if (xQueueReceive(uartRxQueue, &ch, 0)==pdPASS ) {
     *c = ch; /* return received character */
   } else {
     *c = '\0'; /* nothing received */
   }
+#else
+  if (McuRB_Get(rxRingBuffer, &ch)!=ERR_OK) {
+    *c = '\0'; /* nothing received */
+  } else {
+    *c = ch; /* return received character */
+  }
+#endif
 }
 
 static bool McuShellUart_CharPresent(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   return uxQueueMessagesWaiting(uartRxQueue)!=0;
+#else
+  return McuRB_NofElements(rxRingBuffer)!=0;
+#endif
 }
 
 McuShell_ConstStdIOType McuShellUart_stdio = {
@@ -48,16 +68,22 @@ uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* 
 void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   BaseType_t xHigherPriorityTaskWoken;
+#endif
 
   flags = McuShellUart_CONFIG_UART_GET_FLAGS(McuShellUart_CONFIG_UART_DEVICE);
   /* If new data arrived. */
   if (flags&McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS) {
     data = McuShellUart_CONFIG_UART_READ_BYTE(McuShellUart_CONFIG_UART_DEVICE);
+#if McuLib_CONFIG_SDK_USE_FREERTOS
     (void)xQueueSendFromISR(uartRxQueue, &data, &xHigherPriorityTaskWoken);
     if (xHigherPriorityTaskWoken != pdFALSE) {
       vPortYieldFromISR();
     }
+#else
+  McuRB_Put(rxRingBuffer, &data);
+#endif
   }
   McuShellUART_CONFIG_CLEAR_STATUS_FLAGS(McuShellUart_CONFIG_UART_DEVICE, flags);
 #if McuLib_CONFIG_CPU_IS_ARM_CORTEX_M && ((McuLib_CONFIG_CORTEX_M==4) || (McuLib_CONFIG_CORTEX_M==7))
@@ -367,21 +393,40 @@ static void InitUart(void) {
     for(;;) {/* error */}
   }
   McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS(McuShellUart_CONFIG_UART_DEVICE, McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS);
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   NVIC_SetPriority(McuShellUart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
+#endif
   EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
 }
 
 void McuShellUart_Deinit(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   vQueueDelete(uartRxQueue);
   uartRxQueue = NULL;
+#else
+  McuRB_DeinitRB(rxRingBuffer);
+  rxRingBuffer = NULL;
+#endif
 }
 
 void McuShellUart_Init(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   uartRxQueue = xQueueCreate(McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH, sizeof(uint8_t));
   if (uartRxQueue==NULL) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(uartRxQueue, "UartRxQueue");
+#else
+  McuRB_Config_t config;
+
+  McuRB_GetDefaultconfig(&config);
+  config.elementSize = sizeof(uint8_t);
+  config.nofElements = McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH;
+  rxRingBuffer = McuRB_InitRB(&config);
+  if (rxRingBuffer==NULL) {
+    for(;;) {/* error */}
+  }
+#endif
   InitUart();
 }
 
