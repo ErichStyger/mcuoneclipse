@@ -377,7 +377,7 @@ int main( void )
     LmHandlerPackageRegister( PACKAGE_ID_COMPLIANCE, &LmhpComplianceParams );
 
 #if 1
-    // Schedule timer so we get waked up
+    // Schedule timer so we get waked up so we do other things, like handle the shell
     TimerInit( &wakeupTimer, OnWakeupTimerEvent );
     TimerSetValue( &wakeupTimer, wakeupPeriodicityMs);
     OnWakeupTimerEvent( NULL );
@@ -388,7 +388,7 @@ int main( void )
       if (LORAWAN_StartJoin()) {
         LmHandlerJoin();
       }
-      if (LORAWAN_StartUplink()) {
+      if (LORAWAN_TxData()) {
         StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
       }
 #if PL_CONFIG_USE_SHELL
