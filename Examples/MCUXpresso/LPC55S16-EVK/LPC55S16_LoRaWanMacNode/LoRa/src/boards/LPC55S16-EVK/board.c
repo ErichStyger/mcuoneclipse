@@ -351,14 +351,13 @@ void BoardLowPowerHandler( void )
 }
 
 static void BoardPutRadioInSleepMode(bool coldstart){
-    SleepParams_t params = { 0 };
-    params.Fields.WarmStart = coldstart;
-
 #if PL_CONFIG_RADIO_TRANSEIVER_SX126x
-    SX126xSetSleep(params);
+  SleepParams_t params = { 0 };
+  params.Fields.WarmStart = coldstart;
 
+  SX126xSetSleep(params);
 #elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
-    SX1276SetSleep();
+  SX1276SetSleep();
 #endif
 }
 
