@@ -97,6 +97,10 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  */
 #define LORAWAN_APP_PORT                            2
 
+static TimerHandle_t rtc_timer;
+static TimerHandle_t wakeup_timer;
+
+
 /* ----------------------------------------------------------------------------------------------- */
 static volatile uint32_t TxPeriodicity = 0;
 static volatile uint8_t IsTxFramePending = 0;
@@ -291,7 +295,14 @@ static void OnNetworkParametersChange(CommissioningParams_t* params) {
 static void OnMacMcpsRequest(LoRaMacStatus_t status, McpsReq_t *mcpsReq, TimerTime_t nextTxIn) {
   /* MAC Common Part Sublayer request */
   DisplayMacMcpsRequestUpdate(status, mcpsReq, nextTxIn);
-  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  if(status == LORAMAC_STATUS_DUTYCYCLE_RESTRICTED) {
+    /* do not notify: set wakeup timer instead */
+    (void)xTimerReset(wakeup_timer, pdMS_TO_TICKS(50));
+    (void)xTimerChangePeriod(wakeup_timer, pdMS_TO_TICKS(nextTxIn),  pdMS_TO_TICKS(50));
+    (void)xTimerStart(wakeup_timer, pdMS_TO_TICKS(50)); /* start time */
+  } else {
+    LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_LMHANDLER);
+  }
 }
 
 static void OnMacMlmeRequest(LoRaMacStatus_t status, MlmeReq_t *mlmeReq, TimerTime_t nextTxIn) {
@@ -500,6 +511,9 @@ static void LoRaTask(void *pv) {
             if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
               for(int i=0; i<70; i++) {
                 LmHandlerProcess();
+                if (xTimerIsTimerActive(wakeup_timer)==pdTRUE) { /* wakeup timer aktive (e.g. because duty cycle restriction) => do not poll */
+                  break;
+                }
                 vTaskDelay(pdMS_TO_TICKS(100));
               }
             }
@@ -526,9 +540,6 @@ static void LoRaTask(void *pv) {
     } /* if notification received */
   } /* for */
 }
-
-static TimerHandle_t rtc_timer;
-static TimerHandle_t wakeup_timer;
 
 static void vTimerCallbackRTC(TimerHandle_t pxTimer) {
   McuTimeDate_AddTick();
@@ -569,15 +580,17 @@ void LoRaWAN_Init(void) {
   wakeup_timer = xTimerCreate(
         "wakeupTimer", /* name */
         pdMS_TO_TICKS(20*1000), /* period/time */
-        pdTRUE, /* auto reload */
+        pdFALSE, /* one-shot */
         (void*)0, /* timer ID */
         vTimerCallbackWakeup); /* callback */
   if (wakeup_timer==NULL) {
     McuLog_fatal("failed creating wakeup Timer");
     for(;;); /* failure! */
   }
+#if 0
   if (xTimerStart(wakeup_timer, pdMS_TO_TICKS(50))!=pdPASS) {
     McuLog_fatal("failed starting wakeup Timer");
     for(;;); /* failure! */
   }
+#endif
 }
