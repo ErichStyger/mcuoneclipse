@@ -1,3 +1,4 @@
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262
 /*!
  * \file      sx126x.c
  *
@@ -818,3 +819,4 @@ static uint32_t SX126xConvertFreqInHzToPllStep( uint32_t freqInHz )
            ( ( ( stepsFrac << SX126X_PLL_STEP_SHIFT_AMOUNT ) + ( SX126X_PLL_STEP_SCALED >> 1 ) ) /
              SX126X_PLL_STEP_SCALED );
 }
+#endif /* PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262 */

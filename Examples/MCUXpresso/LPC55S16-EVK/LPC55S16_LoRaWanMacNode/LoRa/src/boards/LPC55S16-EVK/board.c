@@ -15,7 +15,6 @@
 #include "uart.h"
 #include "board-config.h"
 #include "board.h"
-#include "sx126x-board.h"
 #include "clock_config.h"
 #include "pin_mux.h"
 #include "gpio.h"
@@ -31,13 +30,10 @@
 #include "McuArmTools.h"
 #include "McuUtility.h"
 #include "McuRTT.h"
-#include "sx1276-board.h"
-
-
 #if PL_CONFIG_RADIO_TRANSEIVER_SX126x
-    #include "sx126x-board.h"
+  #include "sx126x-board.h"
 #elif PL_CONFIG_RADIO_TRANSEIVER_RFM96
-    #include "sx1276-board.h"
+  #include "sx1276-board.h"
 #endif
 
 /*!
