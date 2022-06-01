@@ -89,7 +89,7 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  *
  * \remark Please note that ETSI mandates duty cycled transmissions. Use only for test purposes
  */
-#define LORAWAN_DUTYCYCLE_ON                        false
+#define LORAWAN_DUTYCYCLE_ON                        true
 
 /*!
  * LoRaWAN application port
@@ -176,7 +176,12 @@ static bool LORAWAN_StartJoin(void) {
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[16];
+
   McuShell_SendStatusStr((unsigned char*)"lorawan", (unsigned char*)"LoRaWAN Application status\r\n", io->stdOut);
+  McuUtility_Num32uToStr(buf, sizeof(buf), PL_CONFIG_RADIO_TRANSEIVER_TYPE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  device", buf, io->stdOut);
   return ERR_OK;
 }
 
