@@ -89,7 +89,7 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  *
  * \remark Please note that ETSI mandates duty cycled transmissions. Use only for test purposes
  */
-#define LORAWAN_DUTYCYCLE_ON                        true
+#define LORAWAN_DUTYCYCLE_ON                        false
 
 /*!
  * LoRaWAN application port
@@ -123,7 +123,6 @@ static void OnTxTimerEvent( void* context )
     TimerStart( &TxTimer );
 }
 
-
 static TaskHandle_t LoRaTaskHandle;
 
 void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
@@ -137,31 +136,42 @@ void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event) {
   }
 }
 
-bool LORAWAN_TxData(void) {
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_TX_DATA);
-  return false;
-#else
-  static bool txData = false;
-  if (txData) {
-    txData = false;
-    return true;
-  }
-  return false;
-#endif
-}
+#if !McuLib_CONFIG_SDK_USE_FREERTOS
+static bool txData = false;
+static bool startJoin = false;
 
-bool LORAWAN_StartJoin(void) {
-#if McuLib_CONFIG_SDK_USE_FREERTOS
-  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_START_JOIN);
-  return false;
-#else
-  static bool startJoin = false;
+bool LORAWAN_StartJoinProcess(void) {
   if (startJoin) {
     startJoin = false;
     return true;
   }
   return false;
+}
+
+bool LORAWAN_StartTxProcess(void) {
+  if (txData) {
+    txData = false;
+    return true;
+  }
+  return false;
+}
+#endif
+
+static bool LORAWAN_TxData(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_TX_DATA);
+  return false;
+#else
+  txData = true;
+#endif
+}
+
+static bool LORAWAN_StartJoin(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+  LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_START_JOIN);
+  return false;
+#else
+  startJoin = true;
 #endif
 }
 
@@ -501,20 +511,20 @@ static void LoRaTask(void *pv) {
               // or: LmHandlerJoinStatus( ) != LORAMAC_HANDLER_SET
               state = LORA_TASK_STATE_CONNECTED;
             } else { /* wait during joining */
-              for(int i=0; i<70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+              for(int i=0; i<2*70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
                 LmHandlerProcess();
-                vTaskDelay(pdMS_TO_TICKS(100));
+                vTaskDelay(pdMS_TO_TICKS(50));
               }
             }
             break;
           case LORA_TASK_STATE_CONNECTED:
             if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
-              for(int i=0; i<70; i++) {
+              for(int i=0; i<2*70; i++) {
                 LmHandlerProcess();
                 if (xTimerIsTimerActive(wakeup_timer)==pdTRUE) { /* wakeup timer aktive (e.g. because duty cycle restriction) => do not poll */
                   break;
                 }
-                vTaskDelay(pdMS_TO_TICKS(100));
+                vTaskDelay(pdMS_TO_TICKS(50));
               }
             }
             UplinkProcess();

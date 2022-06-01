@@ -27,8 +27,8 @@ void LORAWAN_LmHandlerNotififyTaskRequest(uint32_t event);
 #include "McuShell.h"
 uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
-bool LORAWAN_StartJoin(void);
-bool LORAWAN_TxData(void);
+bool LORAWAN_StartJoinProcess(void);
+bool LORAWAN_StartTxProcess(void);
 
 /*!
  * \brief Module initialization

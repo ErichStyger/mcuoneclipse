@@ -385,10 +385,10 @@ int main( void )
 
     while( 1 )
     {
-      if (LORAWAN_StartJoin()) {
+      if (LORAWAN_StartJoinProcess()) {
         LmHandlerJoin();
       }
-      if (LORAWAN_TxData()) {
+      if (LORAWAN_StartTxProcess()) {
         StartTxProcess(LORAMAC_HANDLER_TX_ON_TIMER);
       }
 #if PL_CONFIG_USE_SHELL
