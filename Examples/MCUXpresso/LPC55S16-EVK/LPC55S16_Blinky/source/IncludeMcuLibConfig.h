@@ -31,7 +31,7 @@ Instructions:
 #define INCLUDEMCULIBCONFIG_H_
 
 /* global platform configuration */
-#define PL_CONFIG_USE_LORA_SHIELD (0) /* if using the LoRa Shield developed by Corsin Obrist */
+#define PL_CONFIG_USE_LORA_SHIELD         (1) /* if using the LoRa Shield developed by Corsin Obrist */
 
 /* ------------------- SDK/Library ---------------------------*/
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
