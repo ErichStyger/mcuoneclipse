@@ -3,7 +3,6 @@ NOTE: this project uses the M4F FreeRTOS port!
 For UART over the (J-Link or LinkServer) Debug virtual COM port:
 - JP9 (lower left corner, near PMod connector) has to be *open*, and JP12 (left of JP3/UART Header) needs to be *closed*, see https://mcuoneclipse.com/2021/12/30/lorawan-with-nxp-lpc55s16-and-arm-cortex-m33/
 - Mux pin 92 (FC0_RXDA_SDA) and pin 94 (FC0_TXD_SCL) as FLEXCOMM0 in the pins tool
-- Note: UART Tx from host sometimes is garbled? Issue of J-Link firmware?
 
 - PL_CONFIG_USE_SWO
   Start the J-Link SWO viewer in 'attach mode' on port 0:
