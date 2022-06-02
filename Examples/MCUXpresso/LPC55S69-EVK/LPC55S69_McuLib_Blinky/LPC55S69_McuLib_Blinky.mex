@@ -263,10 +263,7 @@
          <dcdx_configurations/>
       </dcdx>
       <periphs name="Peripherals" version="11.0" enabled="true" update_project_code="true">
-         <generated_project_files>
-            <file path="board/boards/peripherals.c" update_enabled="true"/>
-            <file path="board/boards/peripherals.h" update_enabled="true"/>
-         </generated_project_files>
+         <generated_project_files/>
          <peripherals_profile>
             <processor_version>11.0.1</processor_version>
          </peripherals_profile>
@@ -312,7 +309,7 @@
             </component>
          </components>
       </periphs>
-      <tee name="TEE" version="3.0" enabled="true" update_project_code="true">
+      <tee name="TEE" version="3.0" enabled="true" update_project_code="false">
          <generated_project_files>
             <file path="trustzone/resource_config.c" update_enabled="true"/>
             <file path="trustzone/resource_config.h" update_enabled="true"/>

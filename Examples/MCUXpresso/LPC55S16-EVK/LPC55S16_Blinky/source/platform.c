@@ -114,7 +114,6 @@ void PL_Init(void) {
   McuLFS_Init();
 #endif
 
-
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();
 #endif
