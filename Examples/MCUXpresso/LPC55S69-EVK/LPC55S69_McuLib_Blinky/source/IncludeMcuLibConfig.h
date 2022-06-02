@@ -33,6 +33,7 @@ Instructions:
 /* global platform configuration */
 #define PL_CONFIG_USE_LORA_SHIELD       (0) /* if using the LoRa Shield developed by Corsin Obrist */
 
+/* ------------------- McuLib CPU configuration ---------------------------*/
 #define McuLib_CONFIG_CPU_IS_LPC        (1)
 #define McuLib_CONFIG_CPU_IS_LPC55xx    (1)
 #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69

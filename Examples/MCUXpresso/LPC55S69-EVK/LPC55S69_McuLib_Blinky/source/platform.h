@@ -11,7 +11,7 @@
   #error "PL_CONFIG_USE_LORA_SHIELD needs be set in IncludeMcuLibConfig.h!"
 #endif
 
-#define PL_CONFIG_USE_SHELL       (1)
+#define PL_CONFIG_USE_SHELL       (0)
 #define PL_CONFIG_USE_USB_CDC     (0)
 
 #define PL_CONFIG_USE_I2C         (1) /* if I2C peripheral is used */

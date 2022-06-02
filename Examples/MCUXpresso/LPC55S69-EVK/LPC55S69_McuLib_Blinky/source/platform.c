@@ -19,7 +19,9 @@
 #include "McuDebounce.h"
 #include "leds.h"
 //#include "buttons.h"
-//#include "Shell.h"
+#if PL_CONFIG_USE_SHELL
+  #include "Shell.h"
+#endif
 #include "McuI2clib.h"
 #include "McuGenericI2C.h"
 #include "McuSSD1306.h"
@@ -50,7 +52,9 @@ void PL_Init(void) {
   /* user modules */
   LEDS_Init();
   //BTN_Init();
-  //SHELL_Init();
+#if PL_CONFIG_USE_SHELL
+  SHELL_Init();
+#endif
 #if PL_CONFIG_USE_I2C
   McuGenericI2C_Init();
   #if PL_CONFIG_USE_HW_I2C
