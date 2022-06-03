@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "board.h"
+#include "fsl_power.h"
 #include "peripherals.h"
 #include "pin_mux.h"
 #include "clock_config.h"
@@ -18,6 +19,10 @@ int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
   BOARD_InitBootPeripherals();
+
+  /* set BOD VBAT level to 1.65V */
+  POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
+
   APP_Run();
   return 0 ;
 }
