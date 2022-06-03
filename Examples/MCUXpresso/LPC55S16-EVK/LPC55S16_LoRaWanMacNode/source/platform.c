@@ -24,6 +24,7 @@
 #include "McuWait.h"
 #include "McuTimeDate.h"
 #include "application.h"
+#include "fsl_power.h"
 
 static void CheckFlash(uint32_t startAddr, size_t size, uint32_t blockSize) {
   uint32_t addr = startAddr;
@@ -41,6 +42,9 @@ static void CheckFlash(uint32_t startAddr, size_t size, uint32_t blockSize) {
 }
 
 void PL_Init(void) {
+  /* set BOD VBAT level to 1.65V */
+  POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
+
   /* McuLib */
   McuLib_Init();
   McuWait_Init();
