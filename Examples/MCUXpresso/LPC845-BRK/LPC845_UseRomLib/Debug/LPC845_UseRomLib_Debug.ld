@@ -3,7 +3,7 @@ INCLUDE "LPC845_UseRomLib_Debug_library.ld"
 INCLUDE "LPC845_UseRomLib_Debug_memory.ld"
 
 TARGET(binary) /* specify the file format of binary file */
-INPUT ("../RomLib.bin") /* include the file */
+INPUT ("../../LPC845_RomLib/Debug/LPC845_RomLib.bin") /* include the file */
 OUTPUT_FORMAT(default) /* restore the out file format */
 
 ENTRY(ResetISR)
@@ -11,8 +11,8 @@ ENTRY(ResetISR)
 SECTIONS
 {
 
-    .text 0xF000 : {
-      "../RomLib.bin"
+    .text 0xF000 : { /* as a convenience: include the ROM library as BLOB it the build */
+      "../../LPC845_RomLib/Debug/LPC845_RomLib.bin"
     }
     
      /* MAIN TEXT SECTION */
