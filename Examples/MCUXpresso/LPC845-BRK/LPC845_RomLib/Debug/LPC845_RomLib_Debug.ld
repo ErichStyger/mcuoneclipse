@@ -1,13 +1,14 @@
 INCLUDE "LPC845_RomLib_Debug_library.ld"
 
+/* define the memory map for RAM and ROM. Make sure these areas are *not* part of the application */
 MEMORY
 {
   /* Define each memory region */
   PROGRAM_FLASH (rx) : ORIGIN = 0xF000, LENGTH = 0x1000 /* 4K bytes */  
-  SRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 0x100 /* 256 bytes */  
+  SRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 0x10 /* 16 bytes */  
 }
 
-ENTRY(RomLib_Init)
+ENTRY(RomLib_Init)  /* makt it as entry point: everything used by it will not be discarded */
 
 SECTIONS
 {
@@ -15,61 +16,30 @@ SECTIONS
     .text  : ALIGN(4)
     {
         FILL(0xff)
-        KEEP(*(.ROM_LIB_CODE)) /* do not discard anything marked as ROM Lib */
+        KEEP(*(.ROM_LIB_CODE)) /* do not discard anything marked as ROM Lib code */
+        KEEP(*(.ROM_LIB_CONST)) /* do not discard anything marked as ROM constant */
        *(.text*)
        *(.rodata .rodata.* .constdata .constdata.*)
        . = ALIGN(4);
     } > PROGRAM_FLASH
 
-    /* Main DATA section (SRAM): initialized variables */
+    /* Main DATA section (SRAM): data for initialized variables */
     .data : ALIGN(4)
     {
        FILL(0xff)
-       _data = . ;
-       PROVIDE(__start_data_RAM = .) ;
-       PROVIDE(__start_data_SRAM = .) ;
-       *(vtable)
-       *(.ramfunc*)
-       KEEP(*(CodeQuickAccess))
-       KEEP(*(DataQuickAccess))
-       *(RamFunction)
+       KEEP(*(.ROM_LIB_RAM))
        *(.data*)
        . = ALIGN(4) ;
-       _edata = . ;
-       PROVIDE(__end_data_RAM = .) ;
-       PROVIDE(__end_data_SRAM = .) ;
     } > SRAM AT>PROGRAM_FLASH
 
-     /* MAIN BSS SECTION for non-initalized variables */
+     /* MAIN BSS SECTION for un-initialized variables */
     .bss : ALIGN(4)
     {
         _bss = .;
-        PROVIDE(__start_bss_RAM = .) ;
-        PROVIDE(__start_bss_SRAM = .) ;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4) ;
         _ebss = .;
-        PROVIDE(__end_bss_RAM = .) ;
-        PROVIDE(__end_bss_SRAM = .) ;
-        PROVIDE(end = .);
     } > SRAM AT> SRAM
 
-    /* DEFAULT NOINIT SECTION */
-    .noinit (NOLOAD): ALIGN(4)
-    {
-        _noinit = .;
-        PROVIDE(__start_noinit_RAM = .) ;
-        PROVIDE(__start_noinit_SRAM = .) ;
-        *(.noinit*)
-         . = ALIGN(4) ;
-        _end_noinit = .;
-       PROVIDE(__end_noinit_RAM = .) ;
-       PROVIDE(__end_noinit_SRAM = .) ;        
-    } > SRAM AT> SRAM
-
-
-    _image_start = LOADADDR(.text);
-    _image_end = LOADADDR(.data) + SIZEOF(.data);
-    _image_size = _image_end - _image_start;
 }

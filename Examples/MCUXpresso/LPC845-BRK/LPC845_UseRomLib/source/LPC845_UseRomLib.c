@@ -14,11 +14,6 @@
 /* TODO: insert other include files here. */
 #include "RomLib.h"
 
-/* TODO: insert other definitions and declarations here. */
-
-/*
- * @brief   Application entry point.
- */
 int main(void) {
     /* Init board hardware. */
     BOARD_InitBootPins();
@@ -30,7 +25,7 @@ int main(void) {
 #endif
 
     RomLib_Init();
-//    PRINTF("Hello World\n");
+
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
