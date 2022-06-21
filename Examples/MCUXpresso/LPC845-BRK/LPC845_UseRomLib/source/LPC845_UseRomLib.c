@@ -26,6 +26,12 @@ int main(void) {
 
     RomLib_Init();
 
+    int val;
+
+    val = RomLib_Count();
+    val += RomLib_Calculate(RomLib_lookupTable[3]);
+    RomLib_Variable = val;
+
     /* Force the counter to be placed into memory. */
     volatile static int i = 0 ;
     /* Enter an infinite loop, just incrementing a counter. */
