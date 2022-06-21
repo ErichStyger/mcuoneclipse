@@ -12,8 +12,8 @@
 MEMORY
 {
   /* Define each memory region */
-  PROGRAM_FLASH (rx) : ORIGIN = 0x0, LENGTH = 0x10000-0x1000 /* 64K bytes (alias Flash) */  
-  SRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 0x3fe0 /* 16352 bytes (alias RAM) */  
+  PROGRAM_FLASH (rx) : ORIGIN = 0x0, LENGTH = 0x10000-0x1000 /* 64K bytes (alias Flash), minus 4K for the ROM library */  
+  SRAM (rwx) : ORIGIN = 0x10000000+0x10, LENGTH = 0x3fe0-0x10 /* 16352 bytes (alias RAM), minus 16 bytes for the ROM library */  
   IAP_SRAM (rwx) : ORIGIN = 0x10003fe0, LENGTH = 0x20 /* 32 bytes (alias RAM2) */  
 }
 

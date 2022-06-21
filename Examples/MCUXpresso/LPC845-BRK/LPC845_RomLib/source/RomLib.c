@@ -6,9 +6,9 @@
 
 #include "RomLib.h" /* own interface */
 
-static int RomLib_Counter; /* not initialized variable in RAM */
-static int RomLib_InitVar = 0x12345678; /* initialized variable in RAM */
-int RomLib_Variable = 0xfedcba; /* Variable */
+static int RomLib_Counter; /* initialized in RomLib_Init() */
+static int RomLib_InitVar; /* initialized in RomLib_Init() */
+int RomLib_Variable; /* not initialized! */
 
 /* example data/constant table in ROM */
 const int RomLib_lookupTable[16] = {
@@ -25,7 +25,10 @@ int RomLib_Count(void) {
 }
 
 int RomLib_Init(void) {
-  /* here do any special initialization, if needed */
-  RomLib_Counter = 0x10;
+  /* perform initialization, as needed.
+   * Keep in mind that usually ROM libraries do not get initialized by the normal startup code,
+   * so all the initialization is done here */
+  RomLib_Counter = 0x0;
+  RomLib_InitVar = 0x12345678;
   return 0; /* ok */
 }

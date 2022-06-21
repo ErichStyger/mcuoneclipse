@@ -1,9 +1,10 @@
 INCLUDE "LPC845_RomLib_Debug_library.ld"
 
-/* define the memory map for RAM and ROM. Make sure these areas are *not* part of the application */
+/* Memory used for the ROM library.
+ * Make sure these areas are *not* part of the application 
+ */
 MEMORY
 {
-  /* Define each memory region */
   PROGRAM_FLASH (rx) : ORIGIN = 0xF000, LENGTH = 0x1000 /* 4K bytes */  
   SRAM (rwx) : ORIGIN = 0x10000000, LENGTH = 0x10 /* 16 bytes */  
 }
