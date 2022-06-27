@@ -12,6 +12,7 @@
 #include "fsl_power.h"
 #include "application.h"
 
+
 int main(void) {
   /* Init board hardware. */
   BOARD_InitBootPins();

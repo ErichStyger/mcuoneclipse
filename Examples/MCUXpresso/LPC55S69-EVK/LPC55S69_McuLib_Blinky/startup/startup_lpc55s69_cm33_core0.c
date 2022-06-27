@@ -1,10 +1,10 @@
 //*****************************************************************************
 // LPC55S69_cm33_core0 startup code for use with MCUXpresso IDE
 //
-// Version : 220119
+// Version : 010621
 //*****************************************************************************
 //
-// Copyright 2016-2019 NXP
+// Copyright 2016-2021 NXP
 // All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
@@ -44,6 +44,7 @@ extern "C" {
 // by the linker when "Enable Code Read Protect" selected.
 // See crp.h header for more information
 //*****************************************************************************
+
 //*****************************************************************************
 // Declaration of external SystemInit function
 //*****************************************************************************
@@ -66,6 +67,7 @@ WEAK void HardFault_Handler(void);
 WEAK void MemManage_Handler(void);
 WEAK void BusFault_Handler(void);
 WEAK void UsageFault_Handler(void);
+WEAK void SecureFault_Handler(void);
 WEAK void SVC_Handler(void);
 WEAK void DebugMon_Handler(void);
 WEAK void PendSV_Handler(void);
@@ -123,7 +125,7 @@ WEAK void SDIO_IRQHandler(void);
 WEAK void Reserved59_IRQHandler(void);
 WEAK void Reserved60_IRQHandler(void);
 WEAK void Reserved61_IRQHandler(void);
-WEAK void USB1_UTMI_IRQHandler(void);
+WEAK void USB1_PHY_IRQHandler(void);
 WEAK void USB1_IRQHandler(void);
 WEAK void USB1_NEEDCLK_IRQHandler(void);
 WEAK void SEC_HYPERVISOR_CALL_IRQHandler(void);
@@ -136,7 +138,7 @@ WEAK void CASER_IRQHandler(void);
 WEAK void PUF_IRQHandler(void);
 WEAK void PQ_IRQHandler(void);
 WEAK void DMA1_IRQHandler(void);
-WEAK void LSPI_HS_IRQHandler(void);
+WEAK void FLEXCOMM8_IRQHandler(void);
 
 //*****************************************************************************
 // Forward declaration of the driver IRQ handlers. These are aliased
@@ -190,7 +192,7 @@ void SDIO_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void Reserved59_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void Reserved60_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void Reserved61_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void USB1_UTMI_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
+void USB1_PHY_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void USB1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void USB1_NEEDCLK_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void SEC_HYPERVISOR_CALL_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
@@ -203,7 +205,7 @@ void CASER_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PUF_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void PQ_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void DMA1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void LSPI_HS_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
+void FLEXCOMM8_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 
 //*****************************************************************************
 // The entry point for the application.
@@ -223,6 +225,7 @@ extern void _vStackTop(void);
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
 WEAK extern void __valid_user_code_checksum();
+extern void _vStackBase(void);
 
 //*****************************************************************************
 //*****************************************************************************
@@ -233,6 +236,9 @@ WEAK extern void __valid_user_code_checksum();
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //*****************************************************************************
+
+
+
 extern void (* const g_pfnVectors[])(void);
 extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
@@ -246,7 +252,7 @@ void (* const g_pfnVectors[])(void) = {
     MemManage_Handler,                 // The MPU fault handler
     BusFault_Handler,                  // The bus fault handler
     UsageFault_Handler,                // The usage fault handler
-    __valid_user_code_checksum,        // LPC MCU checksum
+    SecureFault_Handler,               // The secure fault handler
     0,                                 // ECRP
     0,                                 // Reserved
     0,                                 // Reserved
@@ -303,7 +309,7 @@ void (* const g_pfnVectors[])(void) = {
     Reserved59_IRQHandler,           // 59: Reserved interrupt
     Reserved60_IRQHandler,           // 60: Reserved interrupt
     Reserved61_IRQHandler,           // 61: Reserved interrupt
-    USB1_UTMI_IRQHandler,            // 62: USB1_UTMI
+    USB1_PHY_IRQHandler,             // 62: USB1_PHY
     USB1_IRQHandler,                 // 63: USB1 interrupt
     USB1_NEEDCLK_IRQHandler,         // 64: USB1 activity
     SEC_HYPERVISOR_CALL_IRQHandler,  // 65: SEC_HYPERVISOR_CALL interrupt
@@ -316,7 +322,8 @@ void (* const g_pfnVectors[])(void) = {
     PUF_IRQHandler,                  // 72: PUF interrupt
     PQ_IRQHandler,                   // 73: PQ interrupt
     DMA1_IRQHandler,                 // 74: DMA1 interrupt
-    LSPI_HS_IRQHandler,              // 75: Flexcomm Interface 8 (SPI, , FLEXCOMM)
+    FLEXCOMM8_IRQHandler,            // 75: Flexcomm Interface 8 (SPI, , FLEXCOMM)
+
 
 }; /* End of g_pfnVectors */
 
@@ -360,11 +367,25 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
-__attribute__ ((section(".after_vectors.reset")))
+__attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
+
 
     // Disable interrupts
     __asm volatile ("cpsid i");
+
+    // Config VTOR & MSPLIM register
+    __asm volatile ("LDR R0, =0xE000ED08  \n"
+                    "STR %0, [R0]         \n"
+                    "LDR R1, [%0]         \n"
+                    "MSR MSP, R1          \n"
+                    "MSR MSPLIM, %1       \n"
+                    :
+                    : "r"(g_pfnVectors), "r"(_vStackBase)
+                    : "r0", "r1");
+
+
+
 
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
@@ -457,6 +478,10 @@ WEAK_AV void BusFault_Handler(void)
 }
 
 WEAK_AV void UsageFault_Handler(void)
+{ while(1) {}
+}
+
+WEAK_AV void SecureFault_Handler(void)
 { while(1) {}
 }
 
@@ -674,8 +699,8 @@ WEAK void Reserved61_IRQHandler(void)
 {   Reserved61_DriverIRQHandler();
 }
 
-WEAK void USB1_UTMI_IRQHandler(void)
-{   USB1_UTMI_DriverIRQHandler();
+WEAK void USB1_PHY_IRQHandler(void)
+{   USB1_PHY_DriverIRQHandler();
 }
 
 WEAK void USB1_IRQHandler(void)
@@ -726,8 +751,8 @@ WEAK void DMA1_IRQHandler(void)
 {   DMA1_DriverIRQHandler();
 }
 
-WEAK void LSPI_HS_IRQHandler(void)
-{   LSPI_HS_DriverIRQHandler();
+WEAK void FLEXCOMM8_IRQHandler(void)
+{   FLEXCOMM8_DriverIRQHandler();
 }
 
 //*****************************************************************************

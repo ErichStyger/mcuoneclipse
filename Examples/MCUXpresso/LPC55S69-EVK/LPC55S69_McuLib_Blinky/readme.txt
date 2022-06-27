@@ -5,6 +5,8 @@ This project implements a 'blinky' with I2C OLED (SSD1306) support for the NXP L
 Support for the OLED can be switched on/off in platform.h
 The I2C connection to the OLED is configured in IncludeMcuLibConfig.h and i2clibconfig.h
 
+SWO: to allow SWO, the SWO pin is muxed in the Pin Muxing Tool.
+
 The project supports direct connection to the OLED using the MikroE headers.
 Otherwise the LoRa Shield created by Corsin Obrist can be used: Set PL_CONFIG_USE_LORA_SHIELD in IncludeLibConfig.h
 
