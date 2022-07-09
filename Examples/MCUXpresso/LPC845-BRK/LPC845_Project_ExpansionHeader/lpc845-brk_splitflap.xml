@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<expansion_board id="lpc845-BRK_splitflap_board" name="LPC845-BRK SplitFlap board"
+  xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/expansion_board_1.0 http://mcuxpresso.nxp.com/XSD/expansion_board_1.0.xsd"
+  xmlns="http://mcuxpresso.nxp.com/XSD/expansion_board_1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <header_connection ref="lpc845-brk">
+    <connectors>
+      <connector ref="CN1_L">
+        <pins>
+          <pin ref="1" name="step" signal_type="digital" description="Step"/>
+          <pin ref="2" name="dir" signal_type="digital" description="Direction"/>
+          <pin ref="3" name="mag" signal_type="digital" description="Magnet Sensor"/>
+          <pin ref="4" name="M0a" signal_type="digital" description="Motor signal a"/>
+          <pin ref="5" name="M0b" signal_type="digital" description="Motor signal b"/>
+          <pin ref="6" name="M0c" signal_type="digital" description="Motor signal c"/>
+          <pin ref="7" name="M0d" signal_type="digital" description="Motor signal c"/>
+          <pin ref="20" name="GND" signal_type="ground" description="Ground"/>
+        </pins>
+      </connector>
+    </connectors>
+  </header_connection>
+  <code_identifiers prefix="SPLITFLAP_"/>
+</expansion_board>

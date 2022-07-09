@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<expansion_header:header_definition id="lpc845-brk" label="LPC845-BRK"
+    xsi:schemaLocation="http://swtools.freescale.net/XSD/expansion_header/2.0 http://swtools.freescale.net/XSD/expansion_header/2.0/expansion_header.xsd"
+    xmlns:expansion_header="http://swtools.freescale.net/XSD/expansion_header/2.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <connectors>
+        <connector id="CN1_L" type="header_1row" num_pins="20" offset_x="0" offset_y="0" angle="90"/>
+        <connector id="CN2_R" type="header_1row" num_pins="20" offset_x="23" offset_y="0" angle="90"/>
+    </connectors>
+    <pinout>
+        <connectors>
+            <connector id="CN1_L">
+                <pins>
+                    <pin id="1" name="PIO0_16" external_signal_types="digital" description="PIO0_16"/>
+                    <pin id="2" name="PIO0_17" external_signal_types="digital" description="PIO0_17"/>
+                    <pin id="3" name="PIO0_18" external_signal_types="digital" description="PIO0_18"/>
+                    <pin id="4" name="PIO0_19" external_signal_types="digital" description="PIO0_19"/>
+                    <pin id="5" name="PIO0_20" external_signal_types="digital" description="PIO0_20"/>
+                    <pin id="6" name="PIO0_21" external_signal_types="digital" description="PIO0_21"/>
+                    <pin id="7" name="PIO0_22" external_signal_types="digital" description="PIO0_22"/>
+                    <pin id="8" name="PIO0_23" external_signal_types="digital" description="PIO0_23"/>
+                    <pin id="9" name="PIO0_05" external_signal_types="digital" description="Reset"/>
+                    <pin id="10" name="PIO0_24" external_signal_types="digital" description="TxD"/>
+                    <pin id="11" name="PIO0_25" external_signal_types="digital" description="RxD"/>
+                    <pin id="12" name="PIO0_26" external_signal_types="digital" description="PIO0_26"/>
+                    <pin id="13" name="PIO0_27" external_signal_types="digital" description="PIO0_27"/>
+                    <pin id="14" name="PIO0_28" external_signal_types="digital" description="PIO0_28"/>
+                    <pin id="15" name="PIO0_29" external_signal_types="digital" description="PIO0_29"/>
+                    <pin id="16" name="PIO0_30" external_signal_types="digital" description="PIO0_30"/>
+                    <pin id="17" name="PIO0_31" external_signal_types="digital" description="PIO0_31"/>
+                    <pin id="18" name="PIO0_09" external_signal_types="digital" description="PIO0_09"/>
+                    <pin id="19" name="PIO0_08" external_signal_types="digital" description="PIO0_08"/>
+                    <pin id="20" name="GND" external_signal_types="ground" description="Ground"/>
+                </pins>
+            </connector>
+            <connector id="CN2_R">
+                <pins>
+                    <pin id="40" name="VDD" external_signal_types="power_supply_3.3V" description="Power supply +3.3V"/>
+                    <pin id="39" name="PIO0_00" external_signal_types="digital" description="Pin"/>
+                    <pin id="38" name="PIO0_01" external_signal_types="digital" description="Pin"/>
+                    <pin id="37" name="PIO0_02" external_signal_types="digital" description="SWDIO"/>
+                    <pin id="36" name="PIO0_03" external_signal_types="digital" description="SWCLK"/>
+                    <pin id="35" name="PIO0_04" external_signal_types="digital" description="User"/>
+                    <pin id="33" name="PIO0_05" external_signal_types="digital" description="Reset"/>
+                    <pin id="33" name="PIO0_06" external_signal_types="digital" description="Pin"/>
+                    <pin id="32" name="PIO0_07" external_signal_types="analog" description="ADC/Pot"/>
+                    <pin id="31" name="PIO1_0" external_signal_types="digital" description="Green LED"/>
+                    <pin id="30" name="PIO1_1" external_signal_types="digital" description="Blue LED"/>
+                    <pin id="29" name="PIO1_2" external_signal_types="digital" description="Red LED"/>
+                    <pin id="28" name="PIO0_13" external_signal_types="digital" description="PIO0_13"/>
+                    <pin id="27" name="PIO0_13" external_signal_types="digital" description="PIO0_13"/>
+                    <pin id="26" name="PIO0_13" external_signal_types="digital" description="PIO0_13"/>
+                    <pin id="25" name="PIO0_12" external_signal_types="digital" description="ISP"/>
+                    <pin id="24" name="PIO0_11" external_signal_types="digital" description="PIO0_11"/>
+                    <pin id="23" name="PIO0_10" external_signal_types="digital" description="PIO0_10"/>
+                    <pin id="22" name="PIO0_09" external_signal_types="digital" description="PIO0_09"/>
+                    <pin id="21" name="PIO0_08" external_signal_types="digital" description="PIO0_08"/>
+                </pins>
+            </connector>
+        </connectors>
+    </pinout>
+</expansion_header:header_definition>
