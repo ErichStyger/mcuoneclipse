@@ -89,7 +89,7 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
  *
  * \remark Please note that ETSI mandates duty cycled transmissions. Use only for test purposes
  */
-#define LORAWAN_DUTYCYCLE_ON                        true
+#define LORAWAN_DUTYCYCLE_ON                        false
 
 /*!
  * LoRaWAN application port
@@ -99,7 +99,6 @@ static uint8_t AppDataBuffer[LORAWAN_APP_DATA_BUFFER_MAX_SIZE];
 
 static TimerHandle_t rtc_timer;
 static TimerHandle_t wakeup_timer;
-
 
 /* ----------------------------------------------------------------------------------------------- */
 static volatile uint32_t TxPeriodicity = 0;
@@ -516,7 +515,7 @@ static void LoRaTask(void *pv) {
               // or: LmHandlerJoinStatus( ) != LORAMAC_HANDLER_SET
               state = LORA_TASK_STATE_CONNECTED;
             } else { /* wait during joining */
-              for(int i=0; i<2*70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
+              for(int i=0; i<10*70; i++) { /* 7s: need to process multiple messages: Rx1 delay is 5s and RX2 is at 6s */
                 LmHandlerProcess();
                 vTaskDelay(pdMS_TO_TICKS(50));
               }
@@ -524,7 +523,7 @@ static void LoRaTask(void *pv) {
             break;
           case LORA_TASK_STATE_CONNECTED:
             if (notification&LORAWAN_NOTIFICATION_EVENT_MAC_PENDING) {
-              for(int i=0; i<2*70; i++) {
+              for(int i=0; i<10*70; i++) {
                 LmHandlerProcess();
                 if (xTimerIsTimerActive(wakeup_timer)==pdTRUE) { /* wakeup timer aktive (e.g. because duty cycle restriction) => do not poll */
                   break;

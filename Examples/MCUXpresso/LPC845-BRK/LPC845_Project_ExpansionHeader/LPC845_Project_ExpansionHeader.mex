@@ -25,6 +25,10 @@
          </generated_project_files>
          <pins_profile>
             <processor_version>11.0.1</processor_version>
+            <pin_labels>
+               <pin_label pin_num="1" pin_signal="PIO1_8/CAPT_YL" label="S1/PIO1_8/CAPT_YL" identifier="CAPY_LOW;PIO0_17;PIO0_18"/>
+               <pin_label pin_num="3" pin_signal="PIO1_9/CAPT_YH" label="S1/PIO1_9/CAPT_YH" identifier="CAPY_HIGH;PIO0_16"/>
+            </pin_labels>
             <expansion_headers>
                <expansion_header id="lpc845-brk" name="LPC845"/>
                <expansion_header id="lpc845-brk" name="LPC845-BRK">
@@ -71,6 +75,11 @@
                            <pins>
                               <pin ref="1" name="step" signal_type="digital" description="Step"/>
                               <pin ref="2" name="dir" signal_type="digital" description="Direction"/>
+                              <pin ref="3" name="mag" signal_type="digital" description="Magnet Sensor"/>
+                              <pin ref="4" name="M0a" signal_type="digital" description="Motor signal a"/>
+                              <pin ref="5" name="M0b" signal_type="digital" description="Motor signal b"/>
+                              <pin ref="6" name="M0c" signal_type="digital" description="Motor signal c"/>
+                              <pin ref="7" name="M0d" signal_type="digital" description="Motor signal c"/>
                               <pin ref="20" name="GND" signal_type="ground" description="Ground"/>
                            </pins>
                         </connector>
@@ -80,7 +89,7 @@
                </expansion_board>
             </expansion_boards>
             <connected_expansion_boards>
-               <connected_board board="lpc845-BRK_splitflap_board" header="LPC845-BRK" identifier_mode="headerNames"/>
+               <connected_board board="lpc845-BRK_splitflap_board" header="LPC845-BRK" function="LPC845-BRK_SplitFlap_board_1" identifier_mode="headerNames"/>
             </connected_expansion_boards>
          </pins_profile>
          <functions_list>
@@ -357,6 +366,7 @@
                <pins>
                   <pin peripheral="CAPT" signal="CAPTYL" pin_num="1" pin_signal="PIO1_8/CAPT_YL">
                      <pin_features>
+                        <pin_feature name="identifier" value="CAPY_LOW"/>
                         <pin_feature name="mode" value="inactive"/>
                         <pin_feature name="invert" value="disabled"/>
                         <pin_feature name="hysteresis" value="enabled"/>
@@ -367,6 +377,7 @@
                   </pin>
                   <pin peripheral="CAPT" signal="CAPTYH" pin_num="3" pin_signal="PIO1_9/CAPT_YH">
                      <pin_features>
+                        <pin_feature name="identifier" value="CAPY_HIGH"/>
                         <pin_feature name="mode" value="inactive"/>
                         <pin_feature name="invert" value="disabled"/>
                         <pin_feature name="hysteresis" value="enabled"/>
@@ -396,6 +407,23 @@
                      </pin_features>
                   </pin>
                </pins>
+            </function>
+            <function name="LPC845_BRK_SplitFlap_board_1">
+               <description>Configures pin routing and optionally pin electrical features.</description>
+               <options>
+                  <callFromInitBoot>true</callFromInitBoot>
+                  <prefix>SPLITFLAP_1_</prefix>
+                  <coreID>core0</coreID>
+                  <enableClock>true</enableClock>
+               </options>
+               <dependencies>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:LPC845_BRK_SplitFlap_board_1">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <pins/>
             </function>
          </functions_list>
       </pins>

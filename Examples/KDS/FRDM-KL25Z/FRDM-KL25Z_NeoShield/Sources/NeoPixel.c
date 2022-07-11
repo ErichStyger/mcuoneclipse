@@ -24,7 +24,7 @@
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
-#define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel */
+#define NEO_NOF_BITS_PIXEL  24  /* 24 bits for pixel: RGB */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 /* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for all the RGB bits. The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24]. */
 static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL];

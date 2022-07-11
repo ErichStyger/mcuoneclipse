@@ -308,5 +308,3 @@ uint8_t NEO_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 void NEO_Init(void) {
   NEO_ClearAllPixel();
 }
-
-
