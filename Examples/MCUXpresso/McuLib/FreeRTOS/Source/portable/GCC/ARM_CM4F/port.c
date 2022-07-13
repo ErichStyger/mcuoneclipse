@@ -1136,7 +1136,7 @@ void vPortStartFirstTask(void) {
 #if( configINCLUDE_FREERTOS_TASK_C_ADDITIONS_H == 1 && configUSE_TRACE_FACILITY==1)
   /* reference FreeRTOSDebugConfig, otherwise it might get removed by the linker or optimizations */
   {
-    extern const uint8_t FreeRTOSDebugConfig[];
+    extern volatile const uint8_t FreeRTOSDebugConfig[]; /* need to make it volatile, otherwise -O1 might remove it, with issue for LinkServer Thread Awareness */
     if (FreeRTOSDebugConfig[0]==0) { /* just use it, so the linker cannot remove FreeRTOSDebugConfig[] */
       for(;;); /* FreeRTOSDebugConfig[0] should always be non-zero, so this should never happen! */
     }

@@ -89,7 +89,7 @@ char *const portArch_Name = NULL;
 #endif	// tskKERNEL_VERSION_MAJOR
 
 #if defined(__GNUC__)
-  const uint8_t FreeRTOSDebugConfig[] __attribute__((section(".rodata"))) =
+  const uint8_t FreeRTOSDebugConfig[] __attribute__((used)) __attribute__((section(".rodata"))) =
 #elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
   const uint8_t FreeRTOSDebugConfig[] __attribute__((used)) =
 #elif defined(__IAR_SYSTEMS_ICC__)
