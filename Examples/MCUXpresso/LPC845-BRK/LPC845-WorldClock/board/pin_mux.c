@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v11.0
+product: Pins v12.0
 processor: LPC845
 package_id: LPC845M301JBD48
 mcu_data: ksdk2_0
-processor_version: 11.0.1
+processor_version: 12.0.0
 board: LPC845BREAKOUT
 pin_labels:
 - {pin_num: '11', pin_signal: PIO1_0/CAPT_X1, label: M2_STEP, identifier: M2_STEP}
