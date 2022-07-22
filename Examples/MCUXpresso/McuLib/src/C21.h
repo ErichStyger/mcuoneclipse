@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.027, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-08-20, 16:02, # CodeGen: 747
+**     Date/Time   : 2022-01-22, 12:01, # CodeGen: 775
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :

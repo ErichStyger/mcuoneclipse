@@ -501,7 +501,7 @@ void vPortYieldHandler(void);
   void vPortTickHandler(void); /* Systick interrupt handler */
 #endif
 
-#if ((configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY)) || (configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY))) && (configCOMPILER==configCOMPILER_ARM_GCC)
+#if (configCPU_FAMILY_IS_ARM_M33(configCPU_FAMILY) || configCPU_FAMILY_IS_ARM_M4_M7(configCPU_FAMILY)) && (configCOMPILER==configCOMPILER_ARM_GCC)
   #define portINLINE  __inline
 
   #ifndef portFORCE_INLINE

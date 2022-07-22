@@ -93,6 +93,8 @@
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_S32K
   #include "Cpu.h" /* include CPU related interfaces and defines */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  /* nothing needed */
 #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   /* include device specific header file for CMSIS inside "McuArmToolsconfig.h" */
 #endif
@@ -211,6 +213,13 @@ void McuArmTools_SoftwareReset(void)
   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_S32K
   S32_SCB->AIRCR = S32_SCB_AIRCR_VECTKEY(0x5FA) | S32_SCB_AIRCR_SYSRESETREQ_MASK;
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+#define SCB_AIRCR       (*((uint32_t*)(0xe0000000+0xed0c)))
+#define SCB_AIRCR_VECTKEY_Pos              16U                                            /*!< SCB AIRCR: VECTKEY Position */
+#define SCB_AIRCR_SYSRESETREQ_Pos           2U                                            /*!< SCB AIRCR: SYSRESETREQ Position */
+#define SCB_AIRCR_SYSRESETREQ_Msk          (1UL << SCB_AIRCR_SYSRESETREQ_Pos)             /*!< SCB AIRCR: SYSRESETREQ Mask */
+
+  SCB_AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #else
   SCB->AIRCR = (0x5FA<<SCB_AIRCR_VECTKEY_Pos)|SCB_AIRCR_SYSRESETREQ_Msk;
 #endif
@@ -592,6 +601,8 @@ McuArmTools_ConstCharPtr McuArmTools_GetKinetisFamilyString(void)
   #else
   return (McuArmTools_ConstCharPtr)"NXP LPC";
   #endif
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  return (McuArmTools_ConstCharPtr)"Raspberry Pi Pico";
 #else
   return (McuArmTools_ConstCharPtr)"UNKNOWN";
 #endif

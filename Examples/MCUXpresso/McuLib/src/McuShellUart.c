@@ -82,7 +82,7 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
       vPortYieldFromISR();
     }
 #else
-  McuRB_Put(rxRingBuffer, &data);
+    McuRB_Put(rxRingBuffer, &data);
 #endif
   }
   McuShellUART_CONFIG_CLEAR_STATUS_FLAGS(McuShellUart_CONFIG_UART_DEVICE, flags);

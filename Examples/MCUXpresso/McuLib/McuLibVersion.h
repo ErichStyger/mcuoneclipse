@@ -18,7 +18,7 @@
   /*!< McuLib major version number */
 #define McuLib_VERSION_VERSION_MINOR   (0)
   /*!< McuLib minor version number */
-#define McuLib_VERSION_VERSION_BUILD   (6)
+#define McuLib_VERSION_VERSION_BUILD   (7)
   /*!< McuLib build version number */
 
 #endif /* SOURCES_MCULIBVERSION_H_ */

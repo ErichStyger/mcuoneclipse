@@ -66,6 +66,9 @@
   #define McuLib_CONFIG_CPU_IS_ESP32                    (__XTENSA__)
     /*!< 1: ESP32 CPU family, 0: otherwise. The ESP32 compiler defines __XTENSA__ with a value of 1 */
 #endif
+#ifndef McuLib_CONFIG_CPU_IS_RPxxxx
+  #define McuLib_CONFIG_CPU_IS_RPxxxx                  (0)  /* Raspberry Pi RP, e.g. RP2040 */
+#endif
 
 #ifndef McuLib_CONFIG_CPU_IS_KINETIS
   #define McuLib_CONFIG_CPU_IS_KINETIS                 (1 && McuLib_CONFIG_CPU_IS_ARM_CORTEX_M \
@@ -77,6 +80,8 @@
                                                             && !(McuLib_CONFIG_CPU_IS_S32K))
     /*!< 1: NXP Kinetis CPU family, 0: otherwise */
 #endif
+
+
 
 /* define to identify the CPU variant better */
 #define McuLib_CONFIG_CPU_VARIANT_DEFAULT               (0)
@@ -90,17 +95,18 @@
 #define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16          (8)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (9)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064         (10)
+#define McuLib_CONFIG_CPU_VARIANT_RP2040                (11)
 
 #ifndef McuLib_CONFIG_CPU_VARIANT
   #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT
 #endif
 
-#ifndef McuLib_CONFIG_IS_KINETIS_KE
-  #define McuLib_CONFIG_IS_KINETIS_KE                   (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_KE02)
-#endif
-
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_DEFAULT
   #error "Please specify the LPC CPU variant used"
+#endif
+
+#ifndef McuLib_CONFIG_IS_KINETIS_KE
+  #define McuLib_CONFIG_IS_KINETIS_KE                   (McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_KE02)
 #endif
 
 /* identification of Cortex-M core. __FPU_USED can be defined in CMSIS-Core */
@@ -139,6 +145,8 @@
   /*!< SDK for S32K */
 #define McuLib_CONFIG_SDK_NORDIC_NRF5         (6)
   /*!< Nordic nRF5 SDK */
+#define McuLib_CONFIG_SDK_RPI_PICO            (7)
+  /*!< Raspberry Pi Pico SDK */
 
 #ifndef McuLib_CONFIG_SDK_VERSION_MAJOR
   #define McuLib_CONFIG_SDK_VERSION_MAJOR   (2)

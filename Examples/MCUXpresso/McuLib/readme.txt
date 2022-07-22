@@ -3,6 +3,10 @@ readme.txt
 
 Repository and more details: https://github.com/ErichStyger/McuOnEclipseLibrary
 
+For CMake based build systems, templates are provided:
+- ESP32:  ESP32_CMakeLists.txt
+- Raspberry Pi Pico (RP2040): RP2040_CMakeLists.txt
+
 This folder contains all the library sources:
 - config: application specific configuration files
 - src: source files

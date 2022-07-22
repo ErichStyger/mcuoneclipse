@@ -572,7 +572,7 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime) {
     __asm volatile("isb");
 #endif
     /* ----------------------------------------------------------------------------
-     * Here the CPU *HAS TO BE* in a low power mode, waiting to wake up by an interrupt
+     * Here the CPU *HAS TO BE* in a low power mode, waiting to wake up by an interrupt 
      * ----------------------------------------------------------------------------*/
     McuRTOS_vOnPostSleepProcessing(xExpectedIdleTime); /* process post-low power actions */
     /* Stop tick counter. Again, the time the tick counter is stopped for is
@@ -1020,7 +1020,9 @@ void vPortTickHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+void isr_systick(void) {
+#elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 #if configSYSTICK_USE_LOW_POWER_TIMER
 void LPTMR0_IRQHandler(void) { /* low power timer */
 #else
@@ -1241,7 +1243,9 @@ __asm void vPortSVCHandler(void) {
 #endif
 /*-----------------------------------------------------------*/
 #if (configCOMPILER==configCOMPILER_ARM_GCC)
-#if !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+__attribute__((naked)) void isr_svcall(void) {
+#eliif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __attribute__ ((naked)) void SVC_Handler(void) {
 #else
 __attribute__ ((naked)) void vPortSVCHandler(void) {
@@ -1377,6 +1381,8 @@ __attribute__ ((naked, used)) void vPortPendSVHandler_native(void);
 __attribute__ ((naked, used)) void PendSV_Handler_jumper(void);
 
 __attribute__ ((naked, used)) void vPortPendSVHandler_native(void) {
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+__attribute__((naked, used)) void isr_pendsv(void) {
 #elif !McuLib_CONFIG_PEX_SDK_USED /* the SDK expects different interrupt handler names */
 __attribute__ ((naked, used)) void PendSV_Handler(void) {
 #else
