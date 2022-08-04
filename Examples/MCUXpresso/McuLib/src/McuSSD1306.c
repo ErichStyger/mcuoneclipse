@@ -6,7 +6,7 @@
 **     Component   : SSD1306
 **     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-12-13, 20:30, # CodeGen: 757
+**     Date/Time   : 2022-08-04, 11:37, # CodeGen: 784
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
