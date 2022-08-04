@@ -3,7 +3,8 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
+#include <stdio.h>
+#include <string.h>
 #include "platform.h"
 #include "application.h"
 #include "board.h"

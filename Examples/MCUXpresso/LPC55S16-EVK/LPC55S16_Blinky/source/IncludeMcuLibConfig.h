@@ -174,6 +174,7 @@ Instructions:
   #define SDA1_CONFIG_PORT_NAME     0
   #define SDA1_CONFIG_PIN_NUMBER    13u
 #endif
+#define MCUI2CLIB_CONFIG_ADD_DELAY  (0)
 /* -------------------------------------------------*/
 #if 1 /* type of OLED */
   #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
@@ -183,12 +184,11 @@ Instructions:
 
 #define McuSSD1306_CONFIG_INIT_DELAY_MS (500)  /* extra delay to give hardware time for power-up */
 //#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
-#define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US   (0)
-
+#define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US         (0)
+#define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION  (0)
 /* -----------------------------------------------------*/
 /* McuWait */
 #define McuWait_CONFIG_USE_CYCLE_COUNTER         (1)
-
 /* -----------------------------------------------------*/
 /* McuSWO */
 #define McuSWO_CONFIG_HAS_SWO         (1) /* enable SWO support */

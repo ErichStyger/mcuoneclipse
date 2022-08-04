@@ -296,8 +296,14 @@
 
 #endif /* Kinetis or LPC */
 
-#define MCUI2CLIB_CONFIG_I2C_BAUDRATE       400000U /* the desired I2C SCL clock frequency */
-#define MCUI2CLIB_CONFIG_ADD_DELAY          (1)    /* needed for FXOS sensor? As well for RTC: otherwise the address is not on the bus? */
-#define MCUI2CLIB_CONFIG_ADD_DELAY_US       (10)   /* added delay in microseconds */
+#ifndef MCUI2CLIB_CONFIG_I2C_BAUDRATE
+  #define MCUI2CLIB_CONFIG_I2C_BAUDRATE       400000U /* the desired I2C SCL clock frequency */
+#endif
+#ifndef MCUI2CLIB_CONFIG_ADD_DELAY
+  #define MCUI2CLIB_CONFIG_ADD_DELAY          (1)    /* needed for FXOS sensor? As well for RTC: otherwise the address is not on the bus? */
+#endif
+#ifndef MCUI2CLIB_CONFIG_ADD_DELAY_US
+  #define MCUI2CLIB_CONFIG_ADD_DELAY_US       (10)   /* added delay in microseconds */
+#endif
 
 #endif /* I2CLIBCONFIG_H_ */

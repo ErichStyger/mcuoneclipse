@@ -525,7 +525,9 @@ McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void)
 */
 void McuSSD1306_SetDisplayOrientation(McuSSD1306_DisplayOrientation newOrientation)
 {
+#if McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
   currentOrientation = newOrientation;
+#endif
   switch(newOrientation) {
     case McuSSD1306_ORIENTATION_LANDSCAPE:
       SSD1306_WriteCommand(SSD1306_MEMORY_MODE);                     /* set memory mode */
