@@ -46,9 +46,8 @@
 
 #ifndef McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET
   #define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET  (0)
-    /*!< Some SH1106 displays need a start colum of 2 instead of the default 0 */
+    /*!< Some SH1106 displays need a start column of 2 instead of the default 0 */
 #endif
-
 
 #ifndef McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US
   #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US    (100)
@@ -80,7 +79,6 @@
   #define McuSSD1306_CONFIG_INITIALIZE_IN_INIT (1)
   /*!< 1: Initialize LCD during PE_low_level_init(); 0: Do not initialize during PE_low_level_init() */
 #endif
-
 
 #ifndef McuSSD1306_CONFIG_CLEAR_DISPLAY_IN_INIT
   #define McuSSD1306_CONFIG_CLEAR_DISPLAY_IN_INIT (0)
