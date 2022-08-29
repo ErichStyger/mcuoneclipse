@@ -29,7 +29,7 @@ uint8_t McuLFS_closeFile(lfs_file_t* file);
 uint8_t McuLFS_writeLine(lfs_file_t* file,uint8_t* line);
 uint8_t McuLFS_readLine(lfs_file_t* file,uint8_t* lineBuf,size_t bufSize,uint8_t* nofReadChars);
 
-//Functions ported from FatFS (Used by MiniIni)
+/* Functions ported from FatFS (Used by MiniIni) */
 char* McuLFS_gets (char* buff,int len, lfs_file_t* fp);
 int McuLFS_putc (char c, lfs_file_t* fp);
 int McuLFS_puts (const char* str, lfs_file_t* fp);

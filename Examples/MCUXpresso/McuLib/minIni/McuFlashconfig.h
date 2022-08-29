@@ -26,6 +26,9 @@
   #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x200)
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x800)
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  #include "hardware/flash.h"
+  #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (FLASH_PAGE_SIZE) /* \todo, just a guess: FLASH_PAGE_SIZE */
 #else /* default */
   #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x400)
 #endif

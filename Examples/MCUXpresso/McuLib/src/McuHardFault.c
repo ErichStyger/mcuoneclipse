@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : HardFault
-**     Version     : Component 01.023, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.024, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-13, 06:28, # CodeGen: 701
+**     Date/Time   : 2022-07-19, 17:00, # CodeGen: 782
 **     Abstract    :
 **          Component to simplify hard faults for ARM (Kinetis, S32K).
 **     Settings    :
@@ -16,7 +16,7 @@
 **         Deinit           - void McuHardFault_Deinit(void);
 **         Init             - void McuHardFault_Init(void);
 **
-** * Copyright (c) 2014-2020, Erich Styger
+** * Copyright (c) 2014-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -153,7 +153,9 @@ void McuHardFault_HandlerC(uint32_t *hardfault_args)
 */
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 __attribute__((naked))
-#if McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+void isr_hardfault(void)
+#elif McuLib_CONFIG_SDK_VERSION_USED != McuLib_CONFIG_SDK_PROCESSOR_EXPERT
 void HardFault_Handler(void)
 #else
 void McuHardFault_HardFaultHandler(void)

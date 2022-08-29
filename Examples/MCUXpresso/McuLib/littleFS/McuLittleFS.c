@@ -5,6 +5,7 @@
  */
 
 #include "McuLittleFS.h"
+#include "McuLittleFSconfig.h"
 #include "McuLittleFSBlockDevice.h"
 #include "McuShell.h"
 #include "McuTimeDate.h"
@@ -54,8 +55,8 @@ static const struct lfs_config McuLFS_cfg = {
   /* block device configuration */
   .read_size = FILESYSTEM_READ_BUFFER_SIZE,
   .prog_size = FILESYSTEM_PROG_BUFFER_SIZE,
-  .block_size = 4096,
-  .block_count = 16384, /* 16384 * 4K = 64 MByte */
+  .block_size = MCULITTLEFS_CONFIG_BLOCK_SIZE,
+  .block_count = MCULITTLEFS_CONFIG_BLOCK_COUNT,
   .cache_size = FILESYSTEM_CACHE_SIZE,
   .lookahead_size = FILESYSTEM_LOOKAHEAD_SIZE,
   .block_cycles = 500,

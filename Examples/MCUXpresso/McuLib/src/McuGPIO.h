@@ -22,8 +22,9 @@
   #include "stm32f3xx_hal.h"
 #elif McuLib_CONFIG_CPU_IS_ESP32
   #include "driver/gpio.h"
-#endif
-#if McuLib_CONFIG_CPU_IS_IMXRT
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/gpio.h"
+#elif McuLib_CONFIG_CPU_IS_IMXRT
   #include "fsl_iomuxc.h"
 #endif
 #include "McuLibconfig.h"

@@ -51,6 +51,7 @@ file(GLOB FILES
   src/McuWait.c
   src/McuXFormat.c
   
+  # FreeRTOS
   FreeRTOS/FreeRTOShooks.c
   FreeRTOS/Source/croutine.c
   FreeRTOS/Source/event_groups.c
@@ -68,9 +69,22 @@ file(GLOB FILES
   FreeRTOS/Source/portable/MemMang/heap_useNewlib.c
   FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
   
+  # littleFS
+  littleFS/lfs_util.c
+  littleFS/lfs.c
+  littleFS/McuLittleFS.c
+  littleFS/McuLittleFSBlockDevice.c
+  
+  # MinINI
+  minIni/McuMinINI.c
+  minIni/McuFlash.c
+  minIni/minIni.c
+  minIni/minGlue-FatSs.c
+  minIni/minGlue-Flash.c
+  minIni/minGlue-LittleFS.c
 )
 
-#add_compile_options(-include ../src/IncludeMcuLibConfig.h)
+# add_compile_options(-include "../src/IncludeMcuLibConfig.h")
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument, here its pico-shift-register, is the name of the library, 
@@ -78,7 +92,7 @@ file(GLOB FILES
 add_library(McuLib ${FILES})
 
 # target_link_libraries: If you link with other libraries, list them here
-target_link_libraries(McuLib pico_stdlib hardware_pio)
+target_link_libraries(McuLib pico_stdlib hardware_pio hardware_flash hardware_sync)
 
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 
@@ -86,6 +100,7 @@ target_link_libraries(McuLib pico_stdlib hardware_pio)
 target_include_directories(
   McuLib 
   PUBLIC
+  ./
   ./src/ 
   ./config/ 
   ./FreeRTOS/Source/include/
@@ -94,6 +109,5 @@ target_include_directories(
   ./config/fonts/
   ./SEGGER_RTT/
   ./SEGGER_Sysview/
+  ./MinIni
   )
-
-

@@ -41,7 +41,6 @@ bool McuFlash_IsErased(const void *addr, size_t nofBytes);
  */
 uint8_t McuFlash_Erase(void *addr, size_t nofBytes);
 
-
 /*!
  * \brief For LPC55Sxx only: initializes memory with an erase, making it inaccessible
  * \param addr Start address of memory, must be 0x200 aligned

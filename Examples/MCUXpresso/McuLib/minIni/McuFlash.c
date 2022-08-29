@@ -7,15 +7,20 @@
 #include "McuFlash.h"
 #if McuFlash_CONFIG_IS_ENABLED
 #include "McuLib.h"
-#if McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_KINETIS /* currently limited support, only for these CPUs */
+#if McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_RPxxxx /* currently limited support, only for these CPUs */
+
 #include "McuLog.h"
 #include "McuUtility.h"
+
 #if McuLib_CONFIG_CPU_IS_LPC
   #include "fsl_iap.h"
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_flash.h"
   #include "fsl_smc.h"
   #include "McuWait.h"
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  #include "hardware/flash.h"
+  #include "hardware/sync.h"
 #endif
 
 typedef struct {
@@ -32,6 +37,8 @@ static McuFlash_Memory McuFlash_RegisteredMemory; /* used in shell status, for i
      || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K02FN \
      || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   static flash_config_t s_flashDriver;
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  /* \todo */
 #else
   #error "device not yet supported"
 #endif
@@ -219,6 +226,22 @@ static uint8_t McuFlash_ProgramPage(void *addr, const void *data, size_t dataSiz
     }
   }
   return result;
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  uint32_t base, size;
+
+  base = (uint32_t)addr-XIP_BASE;
+  if ((base%FLASH_PAGE_SIZE)!=0) {
+    return ERR_FAILED; /* address must be page size aligned! */
+  }
+  size = dataSize;
+  if ((size%FLASH_PAGE_SIZE)!=0) {
+    return ERR_FAILED; /* size must multiple of a page! */
+  }
+  /* need to turn off interrupts. But: only for this core. If other core is running, problems might occur! */
+  uint32_t ints = save_and_disable_interrupts();
+  flash_range_program(base, (const uint8_t *)data, size);
+  restore_interrupts(ints);
+  return ERR_OK;
 #else
   #error "target not supported yet!"
   return ERR_FAILED;
@@ -400,6 +423,19 @@ uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
     }
   }
   return res;
+#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  uint32_t base, size;
+
+  base = (uint32_t)addr-XIP_BASE;
+  if ((base%FLASH_SECTOR_SIZE)!=0) {
+    return ERR_FAILED; /* address must be sector aligned! */
+  }
+  size = nofBytes;
+  if ((size%FLASH_SECTOR_SIZE)!=0) {
+    return ERR_FAILED; /* size must multiple of a sector! */
+  }
+  flash_range_erase(base, size);
+  return ERR_OK;
 #else
   #error "target not supported yet!"
 #endif
@@ -414,6 +450,28 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  block", buf, io->stdOut);
 
+#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"page 0x");
+  McuUtility_strcatNum16Hex(buf, sizeof(buf), FLASH_PAGE_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", sector 0x");
+  McuUtility_strcatNum16Hex(buf, sizeof(buf), FLASH_SECTOR_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", block 0x");
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), FLASH_BLOCK_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  RP240 Flash", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), PICO_FLASH_SIZE_BYTES);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", ");
+  McuUtility_strcatNum32u(buf, sizeof(buf), PICO_FLASH_SIZE_BYTES/(1024*1024));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" MBytes\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  RP240 size", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"base 0x");
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), XIP_BASE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  RP240 XIP", buf, io->stdOut);
+#endif
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"addr 0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), McuFlash_RegisteredMemory.addr);

@@ -26,7 +26,7 @@
 int ini_openread(const TCHAR *filename, INI_FILETYPE *file) {
   /* open file in read-only mode. This will use directly the data in FLASH */
   memset(file, 0, sizeof(INI_FILETYPE));
-  file->header = (MinIniFlashFileHeader*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START;
+  file->header = (MinIniFlashFileHeader*)(McuMinINI_CONFIG_FLASH_NVM_ADDR_START);
   file->data = (unsigned char*)file->header + sizeof(MinIniFlashFileHeader);
   if (file->header->magicNumber != MININI_FLASH_MAGIC_DATA_NUMBER_ID) {
     return 0; /* failed, magic number does not match */

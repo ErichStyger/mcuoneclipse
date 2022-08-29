@@ -29,6 +29,8 @@
   #include "stm32f3xx_hal.h"
 #elif McuLib_CONFIG_CPU_IS_ESP32
   #include "driver/gpio.h"
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/gpio.h"
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* LPC845 specific defines, not available in SDK */
@@ -171,6 +173,12 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
     gpio_set_level(pin->hw.pin, isHighOnInit?1:0);
     pin->isHigh = isHighOnInit;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  if (isInput) {
+    gpio_set_dir(pin->hw.pin, GPIO_IN);
+  } else {
+    gpio_set_dir(pin->hw.pin, GPIO_OUT);
+  }
 #endif
 }
 
@@ -226,6 +234,9 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
     handle->isInput = config->isInput;
     memcpy(&handle->hw, &config->hw, sizeof(handle->hw)); /* copy hardware information */
   }
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_init(config->hw.pin);
+#endif
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
   McuGPIO_SetPullResistor(handle, config->hw.pull);
   /* do the pin muxing */
@@ -295,6 +306,8 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   /* no muxing */
 #elif McuLib_CONFIG_CPU_IS_ESP32
  /* no muxing needed */
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  /* no muxing needed */
 #endif
   return handle;
 }
@@ -330,6 +343,8 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   gpio_set_level(pin->hw.pin, 0); /* low */
   pin->isHigh = false;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_put(pin->hw.pin, 0);
 #endif
 }
 
@@ -354,6 +369,8 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   gpio_set_level(pin->hw.pin, 1); /* high */
   pin->isHigh = true;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_put(pin->hw.pin, 1);
 #endif
 }
 
@@ -383,6 +400,8 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
     gpio_set_level(pin->hw.pin, 1);
     pin->isHigh = true;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_xor_mask(1<<pin->hw.pin);
 #endif
 }
 
@@ -427,6 +446,8 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   gpio_set_level(pin->hw.pin, 0); /* low */
   pin->isHigh = false;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_put(pin->hw.pin, val?1:0);
 #endif
   }
 }
@@ -455,6 +476,8 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   return HAL_GPIO_ReadPin(pin->hw.gpio, pin->hw.pin);
 #elif McuLib_CONFIG_CPU_IS_ESP32
   return gpio_get_level(pin->hw.pin);
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  return gpio_get(pin->hw.pin)!=0;
 #endif
   return false;
 }
@@ -610,6 +633,14 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
   McuGPIO_ConfigurePin(pin->isInput, false /* don't care as only for output */, &pin->hw);
 #elif McuLib_CONFIG_CPU_IS_ESP32
   /* NYI */
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  if (pull == McuGPIO_PULL_DISABLE) {
+    gpio_disable_pulls(pin->hw.pin);
+  } else if (pull == McuGPIO_PULL_UP) {
+    gpio_pull_up(pin->hw.pin);
+  } else if (pull == McuGPIO_PULL_DOWN) {
+    gpio_pull_down(pin->hw.pin);
+  }
 #endif
 }
 
