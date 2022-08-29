@@ -6,7 +6,7 @@
 **     Component   : SDK_BitIO
 **     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2022-07-19, 17:00, # CodeGen: 782
+**     Date/Time   : 2022-08-09, 17:49, # CodeGen: 786
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -502,7 +502,7 @@ void DB71_Init(void)
   McuGPIO_Config_t config;
 
   McuGPIO_GetDefaultConfig(&config);
-  config.hw.pin = SCL1_CONFIG_PIN_NUMBER;
+  config.hw.pin = DB71_CONFIG_PIN_NUMBER;
   config.isInput = true;
   pin = McuGPIO_InitGPIO(&config);
 #endif

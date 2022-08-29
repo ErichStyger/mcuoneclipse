@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SDK_BitIO
-**     Version     : Component 01.027, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.029, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-09-18, 09:57, # CodeGen: 748
+**     Date/Time   : 2022-08-09, 17:49, # CodeGen: 786
 **     Abstract    :
 **          GPIO component usable with NXP SDK
 **     Settings    :
@@ -90,6 +90,8 @@
   #include "pins_driver.h" /* include SDK header file for GPIO */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   #include "nrf_gpio.h"
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  #include "McuGPIO.h"
 #else
   #error "Unsupported SDK!"
 #endif
@@ -155,6 +157,8 @@
       .pinName = GPIO_PINS_OUT_OF_RANGE,
     }
   };
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  static McuGPIO_Handle_t pin;
 #endif
 
 static bool EN2_isOutput = false;
@@ -184,6 +188,8 @@ void EN2_ClrVal(void)
   PINS_GPIO_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, 0);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_clear(EN2_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetLow(pin);
 #endif
 }
 
@@ -213,6 +219,8 @@ void EN2_SetVal(void)
   PINS_GPIO_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, 1);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_set(EN2_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetHigh(pin);
 #endif
 }
 
@@ -249,6 +257,8 @@ void EN2_NegVal(void)
   }
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_pin_toggle(EN2_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_Toggle(pin);
 #endif
 }
 
@@ -281,6 +291,8 @@ bool EN2_GetVal(void)
   return (PINS_DRV_ReadPins(EN2_CONFIG_PORT_NAME)&(1<<EN2_CONFIG_PIN_NUMBER))!=0;
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   return nrf_gpio_pin_read(EN2_CONFIG_PIN_NUMBER)!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  return McuGPIO_GetValue(pin);
 #else
   return FALSE;
 #endif
@@ -350,6 +362,8 @@ void EN2_SetInput(void)
   PINS_DRV_SetPinsDirection(EN2_CONFIG_PORT_NAME, val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_cfg_input(EN2_CONFIG_PIN_NUMBER, NRF_GPIO_PIN_NOPULL);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsInput(pin);
 #endif
   EN2_isOutput = false;
 }
@@ -380,6 +394,8 @@ void EN2_SetOutput(void)
   PINS_DRV_SetPinsDirection(EN2_CONFIG_PORT_NAME, val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   nrf_gpio_cfg_output(EN2_CONFIG_PIN_NUMBER);
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetAsOutput(pin, false /* don't care */);
 #endif
   EN2_isOutput = true;
 }
@@ -425,6 +441,8 @@ void EN2_PutVal(bool Val)
   PINS_DRV_WritePin(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, Val);
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   /* NYI */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_SetValue(pin, Val);
 #endif
 }
 
@@ -443,25 +461,25 @@ void EN2_Init(void)
 #if McuLib_CONFIG_NXP_SDK_2_0_USED
   #if EN2_CONFIG_DO_PIN_MUXING
       #if McuLib_CONFIG_CPU_IS_LPC
-        #define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
-        #define IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
-        #define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
-        #define IOCON_PIO_MODE_PULLUP 0x20u   /*!<@brief Selects pull-up function */
-        #define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
-        #define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+        #define _IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
+        #define _IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
+        #define _IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
+        #define _IOCON_PIO_MODE_PULLUP 0x10u   /*!<@brief Selects pull-up function */
+        #define _IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
+        #define _IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
         const uint32_t port_pin_config = (/* Pin is configured as PI<portname>_<pinnumber> */
-                                      IOCON_PIO_FUNC0 |
+                                      _IOCON_PIO_FUNC0 |
                                       /* Selects pull-up function */
-                                      IOCON_PIO_MODE_PULLUP |
+                                      _IOCON_PIO_MODE_PULLUP |
                                       /* Standard mode, output slew rate control is enabled */
-                                      IOCON_PIO_SLEW_STANDARD |
+                                      _IOCON_PIO_SLEW_STANDARD |
                                       /* Input function is not inverted */
-                                      IOCON_PIO_INV_DI |
+                                      _IOCON_PIO_INV_DI |
                                       /* Enables digital function */
-                                      IOCON_PIO_DIGITAL_EN |
+                                      _IOCON_PIO_DIGITAL_EN |
                                       /* Open drain is disabled */
-                                      IOCON_PIO_OPENDRAIN_DI);
+                                      _IOCON_PIO_OPENDRAIN_DI);
         #if (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0)
           IOCON_PinMuxSet(EN2_CONFIG_PORT_NAME, EN2_CONFIG_PIN_NUMBER, port_pin_config);
         #else
@@ -480,6 +498,13 @@ void EN2_Init(void)
   */
 #elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_NORDIC_NRF5
   /* nothing needed */
+#elif McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  McuGPIO_Config_t config;
+
+  McuGPIO_GetDefaultConfig(&config);
+  config.hw.pin = EN2_CONFIG_PIN_NUMBER;
+  config.isInput = true;
+  pin = McuGPIO_InitGPIO(&config);
 #endif
 #if EN2_CONFIG_INIT_PIN_DIRECTION == EN2_CONFIG_INIT_PIN_DIRECTION_INPUT
   EN2_SetInput();
@@ -500,7 +525,9 @@ void EN2_Init(void)
 */
 void EN2_Deinit(void)
 {
-  /* nothing needed */
+#if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_RPI_PICO
+  pin = McuGPIO_DeinitGPIO(pin);
+#endif
 }
 
 /* END EN2. */
