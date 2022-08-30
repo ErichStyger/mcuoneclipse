@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : SSD1306
-**     Version     : Component 01.048, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-01-30, 15:10, # CodeGen: 729
+**     Date/Time   : 2022-08-30, 10:39, # CodeGen: 787
 **     Abstract    :
 **         Display driver for the SSD1306 OLED module
 **     Settings    :
@@ -43,6 +43,7 @@
 **         GetShorterSide        - McuSSD1306_PixelDim McuSSD1306_GetShorterSide(void);
 **         SetDisplayOrientation - void McuSSD1306_SetDisplayOrientation(McuSSD1306_DisplayOrientation...
 **         GetDisplayOrientation - McuSSD1306_DisplayOrientation McuSSD1306_GetDisplayOrientation(void);
+**         ClearBuffer           - void McuSSD1306_ClearBuffer(McuSSD1306_PixelColor color);
 **         PutPixel              - void McuSSD1306_PutPixel(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y,...
 **         Clear                 - void McuSSD1306_Clear(void);
 **         UpdateFull            - void McuSSD1306_UpdateFull(void);
@@ -60,7 +61,7 @@
 **         Deinit                - void McuSSD1306_Deinit(void);
 **         Init                  - void McuSSD1306_Init(void);
 **
-** * Copyright (c) 2017-2021, Erich Styger
+** * Copyright (c) 2017-2022, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -544,6 +545,20 @@ uint8_t McuSSD1306_SetDisplayClockDiv(uint8_t clockDiv);
 **         clockDiv        - Clock Divider (default 0x80).
 **     Returns     :
 **         ---             - Error code
+** ===================================================================
+*/
+
+void McuSSD1306_ClearBuffer(McuSSD1306_PixelColor color);
+/*
+** ===================================================================
+**     Method      :  ClearBuffer (component SSD1306)
+**
+**     Description :
+**         Writes a color to the full display buffer and clears it.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         color           - color value of the pixel
+**     Returns     : Nothing
 ** ===================================================================
 */
 
