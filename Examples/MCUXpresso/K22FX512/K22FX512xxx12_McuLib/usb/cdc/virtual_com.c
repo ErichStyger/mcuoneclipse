@@ -105,16 +105,16 @@ static bool USB_CdcStdIOKeyPressed(void) {
 }
 
 McuShell_ConstStdIOType USB_CdcStdio = {
-    (McuShell_StdIO_In_FctType)USB_CdcStdIOReadChar, /* stdin */
-    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stdout */
-    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stderr */
-    USB_CdcStdIOKeyPressed /* if input is not empty */
+    .stdIn = (McuShell_StdIO_In_FctType)USB_CdcStdIOReadChar, /* stdin */
+    .stdOut = (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stdout */
+    .stdErr = (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendChar, /* stderr */
+    .keyPressed = USB_CdcStdIOKeyPressed, /* if input is not empty */
   };
 McuShell_ConstStdIOType USB_CdcStdioNonBlockingSend = {
-    (McuShell_StdIO_In_FctType)USB_CdcStdIOReadChar, /* stdin */
-    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendCharNonBlocking, /* stdout */
-    (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendCharNonBlocking, /* stderr */
-    USB_CdcStdIOKeyPressed /* if input is not empty */
+    .stdIn = (McuShell_StdIO_In_FctType)USB_CdcStdIOReadChar, /* stdin */
+    .stdOut = (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendCharNonBlocking, /* stdout */
+    .stdErr = (McuShell_StdIO_OutErr_FctType)USB_CdcStdIOSendCharNonBlocking, /* stderr */
+    .keyPressed = USB_CdcStdIOKeyPressed, /* if input is not empty */
   };
 
 
@@ -398,7 +398,7 @@ usb_status_t USB_DeviceCdcVcomCallback(class_handle_t handle, uint32_t event, vo
             //  0: Deactivate carrier.
             //  1: Activate carrier.
             //  The device ignores the value of this bit when operating in full duplex mode.
-        #if PL_CONFIG_USE_ESP32
+        #if PL_CONFIG_USE_ESP32 && McuESP32_CONFIG_USE_USB_CDC
             McuESP32_UartState_Callback(acmInfo->uartState);
         #endif
         #if ENABLED_USB_CDC_LOGGING
@@ -592,6 +592,7 @@ usb_status_t USB_DeviceCallback(usb_device_handle handle, uint32_t event, void *
 void APPTask(void);
 
 static void UsbTask(void *pv) {
+  (void)pv; /* not used */
   USB_DeviceIsrEnable();
   USB_DeviceRun(s_cdcVcom.deviceHandle);
   for(;;) {
