@@ -8,8 +8,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)
 
 # Setup project, output and linker file
+set(BUILD_FOLDER ./debug)
 project(FRDM-K22F_Simple)
 set(EXECUTABLE ${PROJECT_NAME}.elf)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/debug)
 set(LINKER_FILE ${CMAKE_SOURCE_DIR}/device/MK22FN512xxx12_flash.ld)
 
 enable_language(C ASM)
