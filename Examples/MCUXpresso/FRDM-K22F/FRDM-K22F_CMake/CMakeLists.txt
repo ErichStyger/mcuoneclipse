@@ -71,7 +71,7 @@ target_link_options(${EXECUTABLE} PRIVATE
         -specs=nosys.specs
         -lc
         -lm
-        -Wl,-Map=${PROJECT_NAME}.map,--cref
+        -Wl,-Map=${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.map,--cref
         -Wl,--gc-sections
         -Xlinker -print-memory-usage -Xlinker
         )
@@ -79,11 +79,11 @@ target_link_options(${EXECUTABLE} PRIVATE
 # Optional: Print executable size as part of the post build process
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE})
+        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE})
 
 # Optional: Create hex, bin and S-Record files after the build
 add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE} ${PROJECT_NAME}.s19
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE} ${PROJECT_NAME}.hex
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin)
+        COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE} ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.s19
+        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE} ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex
+        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE} ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.bin)
