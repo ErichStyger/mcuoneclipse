@@ -2,75 +2,26 @@
 <projectDescription>
 	<name>LPC55S69_cmake_template-Debug@debug</name>
 	<comment></comment>
-	<projects>
-	</projects>
+	<projects></projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.cdt.make.core.makeBuilder</name>
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 				<dictionary>
-					<key>org.eclipse.cdt.core.errorOutputParser</key>
-					<value>org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.append_environment</key>
-					<value>true</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
-					<value>all</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.arguments</key>
-					<value>-j8</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.command</key>
-					<value>C:/Strawberry/c/bin/gmake.exe</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.location</key>
-					<value>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/debug</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.auto</key>
-					<value>all</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.clean</key>
-					<value>clean</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.build.target.inc</key>
-					<value>all</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value></value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/debug</value>
-				</dictionary>
-				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
 					<value>clean</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.contents</key>
-					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
-					<value>false</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
 					<value>true</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
 					<value>true</value>
 				</dictionary>
 				<dictionary>
@@ -78,27 +29,74 @@
 					<value>true</value>
 				</dictionary>
 				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value>-j8</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/debug</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
 					<key>org.eclipse.cdt.make.core.environment</key>
 					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
 					<value>all</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.stopOnError</key>
-					<value>true</value>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
-					<value>false</value>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/debug</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
-			<arguments>
-			</arguments>
+			<arguments/>
 		</buildCommand>
 	</buildSpec>
 	<natures>
@@ -119,14 +117,19 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>[Subprojects]/LPC55S69_cmake_template</name>
+			<type>2</type>
+			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src</location>
+		</link>
+		<link>
 			<name>[Targets]</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>[Subprojects]/LPC55S69_cmake_template</name>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf</name>
 			<type>2</type>
-			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src</location>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/</name>
@@ -134,44 +137,9 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/CMake Rules</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Header Files</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Object Files</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Object Libraries</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Precompile Header File</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Resources</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Source Files</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Source Files/boot_multicore_slave.c</name>
-			<type>1</type>
-			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src/startup/boot_multicore_slave.c</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Source Files/main.c</name>
@@ -184,9 +152,44 @@
 			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src/startup/startup_lpc55s69_cm33_core0.c</location>
 		</link>
 		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Source Files/boot_multicore_slave.c</name>
+			<type>1</type>
+			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src/startup/boot_multicore_slave.c</location>
+		</link>
+		<link>
 			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Source Files/system_LPC55S69_cm33_core0.c</name>
 			<type>1</type>
 			<location>C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/src/device/system_LPC55S69_cm33_core0.c</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Precompile Header File</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Object Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] LPC55S69_cmake_template.elf/Object Libraries</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -469,21 +469,21 @@
 			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 				<buildTargets>
 					<target name="[exe] LPC55S69_cmake_template.elf" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>LPC55S69_cmake_template.elf</buildTarget>
 						<stopOnError>true</stopOnError>
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name="[exe] LPC55S69_cmake_template.elf/fast" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>LPC55S69_cmake_template.elf/fast</buildTarget>
 						<stopOnError>true</stopOnError>
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name="Build" path="[Targets]/[exe] LPC55S69_cmake_template.elf" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-C "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/MCUXpresso/LPC55S69-EVK/LPC55S69_CMake_Template/debug" -j8</buildArguments>
 						<buildTarget>LPC55S69_cmake_template.elf</buildTarget>
 						<stopOnError>true</stopOnError>
@@ -497,28 +497,28 @@
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name=": edit_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>edit_cache</buildTarget>
 						<stopOnError>true</stopOnError>
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name=": rebuild_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>rebuild_cache</buildTarget>
 						<stopOnError>true</stopOnError>
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name=": all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>all</buildTarget>
 						<stopOnError>true</stopOnError>
 						<useDefaultCommand>false</useDefaultCommand>
 					</target>
 					<target name=": clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
-						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildCommand>make</buildCommand>
 						<buildArguments>-j8</buildArguments>
 						<buildTarget>clean</buildTarget>
 						<stopOnError>true</stopOnError>
@@ -544,7 +544,7 @@
 						<parser enabled="true"/>
 					</buildOutputProvider>
 					<scannerInfoProvider id="makefileGenerator">
-						<runAction arguments="-f ${project_name}_scd.mk" command="C:/Strawberry/c/bin/gmake.exe" useDefault="true"/>
+						<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
 						<parser enabled="true"/>
 					</scannerInfoProvider>
 				</profile>
