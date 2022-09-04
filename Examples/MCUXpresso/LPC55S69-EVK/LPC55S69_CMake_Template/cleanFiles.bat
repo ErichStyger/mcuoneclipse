@@ -1,2 +1,0 @@
-rmdir /S /Q debug
-

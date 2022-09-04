@@ -1,4 +1,10 @@
 # CMake template file
+# Use this file with
+# mkdir build
+# cd build
+# cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ECLIPSE_VERSION="4.5" -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE -DCMAKE_ECLIPSE_MAKE_ARGUMENTS=-j8 -DCMAKE_ECLIPSE_EXECUTABLE="C:\NXP\MCUXpressoIDE_11.6.0_8187\ide\mcuxpressoide.exe" ../src 
+#
+
 cmake_minimum_required(VERSION 3.15.3)
 
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
