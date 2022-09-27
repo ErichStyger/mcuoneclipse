@@ -31,7 +31,6 @@
     /*!< 1: Use double-buffering for display memory in RAM; 0: No display double-buffering */
 #endif
 
-
 #if McuGDisplaySSD1306_CONFIG_USE_WINDOW_CAPABILITY
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_OPENWINDOW     McuSSD1306_OpenWindow
   #define McuGDisplaySSD1306_CONFIG_FCT_NAME_WRITEPIXEL     McuSSD1306_WritePixel

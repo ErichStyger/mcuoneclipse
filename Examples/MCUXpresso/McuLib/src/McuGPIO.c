@@ -238,16 +238,14 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   gpio_init(config->hw.pin);
 #endif
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
-  McuGPIO_SetPullResistor(handle, config->hw.pull);
+  McuGPIO_SetPullResistor(handle, config->hw.pull); /* GPIO muxing might be done with setting the pull registers, e.g. for LPC845 */
   /* do the pin muxing */
 #if McuLib_CONFIG_IS_KINETIS_KE
   /* no pin muxing needed */
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   PORT_SetPinMux(config->hw.port, config->hw.pin, kPORT_MuxAsGpio);
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
-  const uint32_t IOCON_config = (McuGPIO_IOCON_PIO_MODE_PULL_INACTIVE | McuGPIO_IOCON_PIO_DEFAULTS);
-  assert(config->hw.iocon!=-1); /* must be set! */
-  IOCON_PinMuxSet(IOCON, config->hw.iocon, IOCON_config);
+  /* nothing needed here, because IOCON_PinMuxSet() is already called with the McuGPIO_SetPullResistor() above. */
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==33 /* LPC55S69 for LPC55S16 */
   #define _IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
   #define _IOCON_PIO_FUNC0 0x00u         /*!<@brief Selects pin function 0 */
@@ -493,28 +491,28 @@ void McuGPIO_GetPinStatusString(McuGPIO_Handle_t gpio, unsigned char *buf, size_
   if (McuGPIO_IsOutput(gpio)) {
     McuUtility_strcat(buf, bufSize, (unsigned char*)"Output");
   } else {
-    McuUtility_strcat(buf, bufSize, (unsigned char*)"Input");
+    McuUtility_strcat(buf, bufSize, (unsigned char*)"Input ");
   }
   if (McuGPIO_IsHigh(gpio)) {
-    McuUtility_strcat(buf, bufSize, (unsigned char*)", HIGH");
+    McuUtility_strcat(buf, bufSize, (unsigned char*)" HIGH");
   } else {
-    McuUtility_strcat(buf, bufSize, (unsigned char*)", LOW ");
+    McuUtility_strcat(buf, bufSize, (unsigned char*)" LOW ");
   }
 #if (McuLib_CONFIG_NXP_SDK_USED || McuLib_CONFIG_CPU_IS_STM32) && !McuLib_CONFIG_IS_KINETIS_KE
-  McuUtility_strcat(buf, bufSize, (unsigned char*)", gpio:0x");
+  McuUtility_strcat(buf, bufSize, (unsigned char*)" gpio:0x");
   McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.gpio); /* write address */
 #endif
 #if McuLib_CONFIG_CPU_IS_KINETIS
-  McuUtility_strcat(buf, bufSize, (unsigned char*)", port:0x");
+  McuUtility_strcat(buf, bufSize, (unsigned char*)" port:0x");
   McuUtility_strcatNum32Hex(buf, bufSize, (uint32_t)pin->hw.port); /* write address */
 #elif McuLib_CONFIG_CPU_IS_LPC /* all LPC, including M33 and M0+ */
-  McuUtility_strcat(buf, bufSize, (unsigned char*)", port:");
+  McuUtility_strcat(buf, bufSize, (unsigned char*)" port:");
   McuUtility_strcatNum32u(buf, bufSize, (uint32_t)pin->hw.port); /* write port number */
 #endif
-  McuUtility_strcat(buf, bufSize, (unsigned char*)", pin:");
+  McuUtility_strcat(buf, bufSize, (unsigned char*)" pin:");
   McuUtility_strcatNum32u(buf, bufSize, (uint32_t)pin->hw.pin); /* write pin number */
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0
-  McuUtility_strcat(buf, bufSize, (unsigned char*)", iocon:");
+  McuUtility_strcat(buf, bufSize, (unsigned char*)" iocon:");
   McuUtility_strcatNum32u(buf, bufSize, (uint32_t)pin->hw.iocon); /* write IOCON number */
 #endif
 }

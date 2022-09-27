@@ -40,7 +40,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   ini_ParseCommand,
   McuFlash_ParseCommand,
 #endif
+#if PL_CONFIG_USE_LORAWAN==1
   LORAWAN_ParseCommand,
+#endif
   APP_ParseCommand,
   NULL /* Sentinel */
 };
@@ -66,6 +68,22 @@ static const SHELL_IODesc ios[] =
   {&McuSWO_stdio,  McuSWO_DefaultShellBuffer,  sizeof(McuSWO_DefaultShellBuffer)},
 #endif
 };
+
+unsigned SHELL_printf(const char *fmt, ...) {
+  va_list args;
+  unsigned int count = 0;
+
+  va_start(args,fmt);
+#if PL_CONFIG_USE_RTT
+  count = McuXFormat_xvformat(McuShell_printfPutChar, (void*)McuRTT_stdio.stdOut, fmt, args);
+#endif
+#if PL_CONFIG_USE_SHELL_UART
+  count = McuXFormat_xvformat(McuShell_printfPutChar, (void*)McuShellUart_stdio.stdOut, fmt, args);
+#endif
+  va_end(args);
+  return count;
+}
+
 
 void SHELL_SendChar(unsigned char ch) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {

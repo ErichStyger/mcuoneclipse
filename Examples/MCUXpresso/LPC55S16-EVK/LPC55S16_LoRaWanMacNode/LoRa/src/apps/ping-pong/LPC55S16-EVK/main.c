@@ -238,7 +238,7 @@ int main(void)
                     if( strncmp( ( const char* )Buffer, ( const char* )PongMsg, 4 ) == 0 )
                     {
                         // Indicates on a LED that the received frame is a PONG
-                        printf("Received a Pong!\r\n");
+                        SHELL_printf("Received a Pong!\r\n");
 
                         // Send the next PING frame
                         Buffer[0] = 'P';
@@ -272,7 +272,7 @@ int main(void)
                     if( strncmp( ( const char* )Buffer, ( const char* )PingMsg, 4 ) == 0 )
                     {
                         // Indicates on a LED that the received frame is a PING
-                        printf("Received a Ping!\r\n");
+                        SHELL_printf("Received a Ping!\r\n");
 
                         // Send the reply to the PONG string
                         Buffer[0] = 'P';
@@ -299,7 +299,7 @@ int main(void)
         case TX:
             // Indicates on a LED that we have sent a PING [Master]
             // Indicates on a LED that we have sent a PONG [Slave]
-            printf("Sent a ping or pong!\r\n");
+            SHELL_printf("Sent a ping or pong!\r\n");
             Radio.Rx( RX_TIMEOUT_VALUE );
             State = LOWPOWER;
             break;

@@ -7,6 +7,7 @@
 #ifndef SHELL_H_
 #define SHELL_H_
 
+unsigned SHELL_printf(const char *fmt, ...);
 void SHELL_SendString(unsigned char *str);
 void SHELL_SendChar(unsigned char ch);
 
