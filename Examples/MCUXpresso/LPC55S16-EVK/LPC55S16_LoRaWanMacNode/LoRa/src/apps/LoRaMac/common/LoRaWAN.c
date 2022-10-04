@@ -156,19 +156,17 @@ bool LORAWAN_StartTxProcess(void) {
 }
 #endif
 
-static bool LORAWAN_TxData(void) {
+static void LORAWAN_TxData(void) {
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_TX_DATA);
-  return false;
 #else
   txData = true;
 #endif
 }
 
-static bool LORAWAN_StartJoin(void) {
+static void LORAWAN_StartJoin(void) {
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   LORAWAN_LmHandlerNotififyTaskRequest(LORAWAN_NOTIFICATION_EVENT_START_JOIN);
-  return false;
 #else
   startJoin = true;
 #endif
@@ -198,11 +196,11 @@ uint8_t LORAWAN_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, "lorawan join")==0) {
     *handled = TRUE;
-    (void)LORAWAN_StartJoin();
+    LORAWAN_StartJoin();
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "lorawan txdata")==0) {
     *handled = TRUE;
-    (void)LORAWAN_TxData();
+    LORAWAN_TxData();
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "lorawan factoryreset")==0) {
     *handled = TRUE;

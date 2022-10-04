@@ -31,3 +31,11 @@ If using the LoRa Shield with OLED: use external J-Link for debug, power the boa
 
 For bare-metal: turn off McuLib_CONFIG_SDK_USE_FREERTOS in IncludeMcuLibConfig.h
 
+
+To change the region from EU868 to US915
+in project settings, change preprocessor symbol
+REGION_EU868
+to
+REGION_US915
+
+
