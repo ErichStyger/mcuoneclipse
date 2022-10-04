@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "McuXFormat.h"
 #include "McuTimeDate.h"
 #include "LoRaWAN.h"
 #if PL_CONFIG_USE_MININI
