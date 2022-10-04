@@ -186,7 +186,6 @@ uint8_t UartMcuGetBuffer(Uart_t *obj, uint8_t *buffer, uint16_t size,
   * uartId defined above.
   */
 static void MapUartIdToHandle(UartId_t uartId, lpcUartHandle_t **handle) {
-
 #if(LPC_NUMBER_OF_USARTS > 0)
 	if(UsartHandle0.id == uartId){
 		*handle = &UsartHandle0;
@@ -196,6 +195,9 @@ static void MapUartIdToHandle(UartId_t uartId, lpcUartHandle_t **handle) {
 	if(UsartHandle1.id == uartId){
 		*handle = &UsartHandle1;
 	}
+#endif
+#if LPC_NUMBER_OF_USARTS==0
+	*handle = NULL; /* always initialize */
 #endif
 }
 
