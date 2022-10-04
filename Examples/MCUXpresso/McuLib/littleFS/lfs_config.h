@@ -7,7 +7,7 @@
 #ifndef LITTLEFS_LFSCONFIG_H_
 #define LITTLEFS_LFSCONFIG_H_
 
-#include "McuLibConfig.h" /* to know if RTOS is used */
+#include "McuLibconfig.h" /* to know if RTOS is used */
 #include "McuRTOS.h" /* for RTOS malloc()/free() */
 
 #ifndef LITTLEFS_CONFIG_ENABLED
