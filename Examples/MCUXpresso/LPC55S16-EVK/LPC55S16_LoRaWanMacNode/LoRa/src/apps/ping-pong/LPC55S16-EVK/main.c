@@ -169,14 +169,14 @@ int main(void)
     BoardInitPeriph();
 
     PL_Init();
-    printf("Hello from the LPC55S16-EVK\r\n");
+    SHELL_printf("Hello from the LPC55S16-EVK\r\n");
 
 #if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262
     uint8_t id = SX126xGetDeviceId(); /* get device ID based on jumper on board */
     switch(id) {
-      case SX1261: printf("Device is SX1261\r\n"); break;
-      case SX1262: printf("Device is SX1262\r\n"); break;
-      default: printf("Illegal device id '%d'!\r\n", id); break;
+      case SX1261: SHELL_printf("Device is SX1261\r\n"); break;
+      case SX1262: SHELL_printf("Device is SX1262\r\n"); break;
+      default: SHELL_printf("Illegal device id '%d'!\r\n", id); break;
     }
 #endif
 
@@ -349,38 +349,38 @@ int main(void)
 
 void OnTxDone( void )
 {
-    Radio.Sleep( );
-    State = TX;
+  Radio.Sleep( );
+  State = TX;
 }
 
 void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 {
-    printf("rx done\r\n");
-    Radio.Sleep( );
-    BufferSize = size;
-    memcpy( Buffer, payload, BufferSize );
-    RssiValue = rssi;
-    SnrValue = snr;
-    State = RX;
+  SHELL_printf("rx done\r\n");
+  Radio.Sleep( );
+  BufferSize = size;
+  memcpy( Buffer, payload, BufferSize );
+  RssiValue = rssi;
+  SnrValue = snr;
+  State = RX;
 }
 
 void OnTxTimeout( void )
 {
-  printf("tx timeout\r\n");
-    Radio.Sleep( );
-    State = TX_TIMEOUT;
+  SHELL_printf("tx timeout\r\n");
+  Radio.Sleep( );
+  State = TX_TIMEOUT;
 }
 
 void OnRxTimeout( void )
 {
-  printf("rx timeout\r\n");
-    Radio.Sleep( );
-    State = RX_TIMEOUT;
+  SHELL_printf("rx timeout\r\n");
+  Radio.Sleep( );
+  State = RX_TIMEOUT;
 }
 
 void OnRxError( void )
 {
-  printf("rx error\r\n");
-    Radio.Sleep( );
-    State = RX_ERROR;
+  SHELL_printf("rx error\r\n");
+  Radio.Sleep( );
+  State = RX_ERROR;
 }

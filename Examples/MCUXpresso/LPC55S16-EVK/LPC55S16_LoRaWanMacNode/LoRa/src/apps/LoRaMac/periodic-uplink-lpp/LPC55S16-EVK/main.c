@@ -326,6 +326,7 @@ int main( void )
 
     PL_Init();
 
+    SHELL_printf("Starting application...\r\n");
 #if PL_CONFIG_USE_LED1
     TimerInit( &Led1Timer, OnLed1TimerEvent );
     TimerSetValue( &Led1Timer, 25 );
@@ -362,7 +363,7 @@ int main( void )
 #else
     if ( LmHandlerInit( &LmHandlerCallbacks, &LmHandlerParams ) != LORAMAC_HANDLER_SUCCESS )
     {
-        printf( "LoRaMac wasn't properly initialized\n" );
+        SHELL_printf( "LoRaMac wasn't properly initialized\n" );
         // Fatal error, endless loop.
         while ( 1 )
         {
