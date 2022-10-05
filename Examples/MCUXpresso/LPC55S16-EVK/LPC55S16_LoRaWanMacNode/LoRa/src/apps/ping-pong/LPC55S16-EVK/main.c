@@ -171,12 +171,14 @@ int main(void)
     PL_Init();
     printf("Hello from the LPC55S16-EVK\r\n");
 
-    uint8_t id = SX126xGetDeviceId();
+#if PL_CONFIG_RADIO_TRANSEIVER_TYPE==1261 || PL_CONFIG_RADIO_TRANSEIVER_TYPE==1262
+    uint8_t id = SX126xGetDeviceId(); /* get device ID based on jumper on board */
     switch(id) {
       case SX1261: printf("Device is SX1261\r\n"); break;
       case SX1262: printf("Device is SX1262\r\n"); break;
       default: printf("Illegal device id '%d'!\r\n", id); break;
     }
+#endif
 
     // Radio initialization
     RadioEvents.TxDone = OnTxDone;
