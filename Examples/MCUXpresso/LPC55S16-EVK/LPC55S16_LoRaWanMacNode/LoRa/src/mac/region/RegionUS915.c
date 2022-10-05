@@ -1,3 +1,4 @@
+#if defined(REGION_US915)
 /*!
  * \file      RegionUS915.c
  *
@@ -928,3 +929,4 @@ void RegionUS915RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr )
     // Store downlink datarate
     *outDr = US915_BEACON_CHANNEL_DR;
 }
+#endif /* defined(REGION_US915) */
