@@ -12,6 +12,11 @@
 #include "McuGPIO.h"
 #include "McuWait.h"
 #include "McuUtility.h"
+#if MCUULN2003_CONFIG_USE_FREERTOS_HEAP
+  #include "McuRTOS.h"
+#else
+  #include <stdlib.h> /* for malloc()/free() */
+#endif
 
 typedef struct {
   int32_t pos; /* current position */

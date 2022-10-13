@@ -14,6 +14,8 @@
 #endif
 #if MCUULN2003_CONFIG_USE_FREERTOS_HEAP
   #include "McuRTOS.h"
+#else
+  #include <stdlib.h> /* for malloc()/free() */
 #endif
 
 #if McuULN2003_CONFIG_USE_ACCELERATION

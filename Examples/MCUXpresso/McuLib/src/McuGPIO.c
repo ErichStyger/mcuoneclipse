@@ -14,6 +14,8 @@
 #include <assert.h>
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   #include "McuRTOS.h"
+#else
+  #include <stdlib.h> /* for malloc()/free() */
 #endif
 #if McuLib_CONFIG_NXP_SDK_USED
   #include "fsl_gpio.h"
