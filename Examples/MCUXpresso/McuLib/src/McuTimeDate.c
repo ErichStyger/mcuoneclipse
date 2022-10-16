@@ -818,7 +818,7 @@ uint8_t McuTimeDate_ParseCommand(const unsigned char *cmd, bool *handled, const 
 **     Returns     : Nothing
 ** ===================================================================
 */
-void McuTimeDate_DeInit(void)
+void McuTimeDate_Deinit(void)
 {
   /* Nothing to do */
 }
