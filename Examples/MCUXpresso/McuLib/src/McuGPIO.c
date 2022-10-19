@@ -427,6 +427,8 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   gpio_set_level(pin->hw.pin, 1); /* high */
   pin->isHigh = true;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_put(pin->hw.pin, 1);
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -447,7 +449,7 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
   gpio_set_level(pin->hw.pin, 0); /* low */
   pin->isHigh = false;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
-  gpio_put(pin->hw.pin, val?1:0);
+  gpio_put(pin->hw.pin, 0);
 #endif
   }
 }
