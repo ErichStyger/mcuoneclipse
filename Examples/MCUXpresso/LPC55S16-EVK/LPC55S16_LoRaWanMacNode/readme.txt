@@ -45,3 +45,13 @@ ACTIVE_REGION=LORAMAC_REGION_US915
 
 
 
+Usage LoRaWAN:
+- enable FreeRTOS usage
+- check/update credentials
+- Build periodic uplink app
+- debug with J-Link
+- connect with RTT
+- run application: shall connect to the LoRaWAN
+- Use RTT Shell to send data
+
+
