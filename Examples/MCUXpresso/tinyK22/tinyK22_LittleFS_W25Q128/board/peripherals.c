@@ -10,7 +10,7 @@ product: Peripherals v11.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 11.0.1
+processor_version: 12.0.0
 board: FRDM-K22F
 functionalGroups:
 - name: BOARD_InitPeripherals

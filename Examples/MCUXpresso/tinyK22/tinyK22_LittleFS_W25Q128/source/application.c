@@ -12,7 +12,6 @@
 #include "leds.h"
 
 #if PL_CONFIG_USE_SHELL
-
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"App", (unsigned char*)"Application status\r\n", io->stdOut);
   return ERR_OK;

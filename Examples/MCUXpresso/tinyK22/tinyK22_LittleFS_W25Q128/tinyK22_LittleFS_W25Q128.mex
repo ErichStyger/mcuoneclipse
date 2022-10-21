@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="MK22FN512xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_11 http://mcuxpresso.nxp.com/XSD/mex_configuration_11.xsd" uuid="f5facf10-d169-4f23-8583-438d4126d62c" version="11" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_11" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="MK22FN512xxx12" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="f5facf10-d169-4f23-8583-438d4126d62c" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>MK22FN512xxx12</processor>
       <package>MK22FN512VLH12</package>
@@ -18,13 +18,13 @@
       <generate_registers_defines>false</generate_registers_defines>
    </preferences>
    <tools>
-      <pins name="Pins" version="11.0" enabled="true" update_project_code="true">
+      <pins name="Pins" version="12.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/pin_mux.c" update_enabled="true"/>
             <file path="board/pin_mux.h" update_enabled="true"/>
          </generated_project_files>
          <pins_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>12.0.0</processor_version>
             <pin_labels>
                <pin_label pin_num="22" pin_signal="PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK" label="J11[4]/SWD_CLK_TGTMCU"/>
                <pin_label pin_num="23" pin_signal="PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI" label="J2[4]/RED_LED" identifier="LEDRGB_RED"/>
@@ -146,11 +146,13 @@
                         <pin_feature name="identifier" value=""/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="SPI1" signal="PCS1" pin_num="1" pin_signal="ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT"/>
                </pins>
             </function>
             <function name="BOARD_InitLEDsPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -209,6 +211,7 @@
             <function name="BOARD_InitButtonsPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -254,7 +257,7 @@
             <function name="BOARD_InitDEBUG_UARTPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
-                  <callFromInitBoot>true</callFromInitBoot>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -300,6 +303,7 @@
             <function name="BOARD_InitAccelPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -370,6 +374,7 @@
             <function name="BOARD_InitSDHCPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -446,6 +451,7 @@
             <function name="BOARD_InitOSCPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -489,6 +495,7 @@
             <function name="BOARD_InitPOTPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -525,6 +532,7 @@
             <function name="BOARD_InitLSENSEPins">
                <description>Configures pin routing and optionally pin electrical features.</description>
                <options>
+                  <callFromInitBoot>false</callFromInitBoot>
                   <prefix>BOARD_</prefix>
                   <coreID>core0</coreID>
                   <enableClock>true</enableClock>
@@ -547,13 +555,13 @@
             </function>
          </functions_list>
       </pins>
-      <clocks name="Clocks" version="9.0" enabled="true" update_project_code="true">
+      <clocks name="Clocks" version="10.0" enabled="true" update_project_code="true">
          <generated_project_files>
             <file path="board/clock_config.c" update_enabled="true"/>
             <file path="board/clock_config.h" update_enabled="true"/>
          </generated_project_files>
          <clocks_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>12.0.0</processor_version>
          </clocks_profile>
          <clock_configurations>
             <clock_configuration name="BOARD_BootClockRUN" id_prefix="" prefix_user_defined="false">
@@ -841,7 +849,7 @@
             <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
-            <processor_version>11.0.1</processor_version>
+            <processor_version>12.0.0</processor_version>
          </peripherals_profile>
          <functional_groups>
             <functional_group name="BOARD_InitPeripherals" uuid="ebfc8d2b-b9e6-4f4d-9b67-3fe7b316db9a" called_from_default_init="true" id_prefix="" core="core0">

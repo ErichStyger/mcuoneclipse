@@ -7,11 +7,11 @@
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 !!GlobalInfo
-product: Pins v11.0
+product: Pins v12.0
 processor: MK22FN512xxx12
 package_id: MK22FN512VLH12
 mcu_data: ksdk2_0
-processor_version: 11.0.1
+processor_version: 12.0.0
 board: FRDM-K22F
 pin_labels:
 - {pin_num: '22', pin_signal: PTA0/UART0_CTS_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK, label: 'J11[4]/SWD_CLK_TGTMCU'}
@@ -97,7 +97,6 @@ pin_labels:
 void BOARD_InitBootPins(void)
 {
     BOARD_InitPins();
-    BOARD_InitDEBUG_UARTPins();
 }
 
 /* clang-format off */
@@ -110,6 +109,7 @@ BOARD_InitPins:
   - {pin_num: '39', peripheral: SPI1, signal: SOUT, pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN, identifier: ''}
   - {pin_num: '40', peripheral: SPI1, signal: SIN, pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, identifier: ''}
   - {pin_num: '62', peripheral: SPI1, signal: SCK, pin_signal: ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK, identifier: ''}
+  - {pin_num: '1', peripheral: SPI1, signal: PCS1, pin_signal: ADC1_SE4a/PTE0/CLKOUT32K/SPI1_PCS1/UART1_TX/I2C1_SDA/RTC_CLKOUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -128,6 +128,8 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_PortB);
     /* Port D Clock Gate Control: Clock enabled */
     CLOCK_EnableClock(kCLOCK_PortD);
+    /* Port E Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortE);
 
     /* PORTA2 (pin 24) is configured as TRACE_SWO */
     PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt7);
@@ -151,13 +153,16 @@ void BOARD_InitPins(void)
 
     /* PORTD5 (pin 62) is configured as SPI1_SCK */
     PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt7);
+
+    /* PORTE0 (pin 1) is configured as SPI1_PCS1 */
+    PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt2);
 }
 
 /* clang-format off */
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitLEDsPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '23', peripheral: GPIOA, signal: 'GPIO, 1', pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI, direction: OUTPUT, gpio_init_state: 'true', slew_rate: slow,
     open_drain: disable, pull_select: down, pull_enable: disable}
@@ -259,7 +264,7 @@ void BOARD_InitLEDsPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitButtonsPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '40', peripheral: GPIOB, signal: 'GPIO, 17', pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b, direction: INPUT, slew_rate: fast, open_drain: disable,
     pull_select: up, pull_enable: enable}
@@ -335,7 +340,7 @@ void BOARD_InitButtonsPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitDEBUG_UARTPins:
-- options: {callFromInitBoot: 'true', prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '2', peripheral: UART1, signal: RX, pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/I2C1_SCL/SPI1_SIN, slew_rate: fast, open_drain: disable, pull_select: down,
     pull_enable: disable}
@@ -402,7 +407,7 @@ void BOARD_InitDEBUG_UARTPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitAccelPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '37', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3, identifier: ACCEL_SCL, slew_rate: fast, open_drain: enable,
     pull_select: up, pull_enable: enable}
@@ -516,7 +521,7 @@ void BOARD_InitAccelPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitSDHCPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '49', peripheral: SPI0, signal: PCS0_SS, pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT/LPUART0_TX, direction: INPUT, slew_rate: fast,
     open_drain: disable, drive_strength: low, pull_select: down, pull_enable: disable}
@@ -644,7 +649,7 @@ void BOARD_InitSDHCPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitOSCPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '32', peripheral: OSC, signal: EXTAL0, pin_signal: EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0, slew_rate: no_init, open_drain: no_init, pull_select: no_init,
     pull_enable: no_init}
@@ -676,7 +681,7 @@ void BOARD_InitOSCPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitPOTPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '37', peripheral: ADC0, signal: 'SE, 12', pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/FTM0_FLT3, identifier: POT_5K, slew_rate: fast, open_drain: disable,
     pull_select: down, pull_enable: disable}
@@ -717,7 +722,7 @@ void BOARD_InitPOTPins(void)
 /*
  * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
 BOARD_InitLSENSEPins:
-- options: {prefix: BOARD_, coreID: core0, enableClock: 'true'}
+- options: {callFromInitBoot: 'false', prefix: BOARD_, coreID: core0, enableClock: 'true'}
 - pin_list:
   - {pin_num: '11', peripheral: ADC0, signal: 'SE, 3', pin_signal: ADC1_DP0/ADC0_DP3}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
