@@ -69,7 +69,7 @@ Instructions:
 #define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* ------------------- McuLittleFS --------------------------*/
-#define MCUW28Q128_CONFIG_ENABLED                     (1)
+#define MCUW25Q128_CONFIG_ENABLED                     (1)
 #define LITTLEFS_CONFIG_ENABLED                       (1)
 #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 /* ------------------- FatFS ---------------------------*/

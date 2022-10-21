@@ -5,7 +5,7 @@
  */
 
 #include "McuW25Q128.h"
-#if MCUW28Q128_CONFIG_ENABLED
+#if MCUW25Q128_CONFIG_ENABLED
 #include "McuUtility.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
@@ -474,4 +474,4 @@ void McuW25_Init(void) {
   McuW25_CONFIG_CS_DISABLE(); /* disable chip select by default */
 }
 
-#endif /* MCUW28Q128_CONFIG_ENABLED */
+#endif /* MCUW25Q128_CONFIG_ENABLED */
