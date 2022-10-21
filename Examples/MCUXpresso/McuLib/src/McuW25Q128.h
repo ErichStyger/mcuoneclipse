@@ -7,19 +7,19 @@
 #ifndef MCU_W25Q128_H_
 #define MCU_W25Q128_H_
 
-#include "McuW28Q128config.h"
+#include "McuW25Q128config.h"
 #include <stdint.h>
 #include <stddef.h>
 #include "McuShell.h"
 
 /* supported devices */
 typedef enum {
-  McuW28_DEVICE_UNKNOWN,
-  McuW28_DEVICE_W28Q128JV_IQ_JQ,
-  McuW28_DEVICE_W28Q128JV_IM_JM,
-} McuW28_Device_e;
+  McuW25_DEVICE_UNKNOWN,
+  McuW25_DEVICE_W25Q128JV_IQ_JQ,
+  McuW25_DEVICE_W25Q128JV_IM_JM,
+} McuW25_Device_e;
 
-McuW28_Device_e McuW28_GetDeviceType(void);
+McuW25_Device_e McuW25_GetDeviceType(void);
 
 uint8_t McuW25_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 

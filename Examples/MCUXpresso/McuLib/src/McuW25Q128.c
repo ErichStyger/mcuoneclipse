@@ -242,26 +242,26 @@ uint8_t McuW25_ReadID(uint8_t *buf, size_t bufSize) {
   return ERR_OK; /* not expected part */
 }
 
-McuW28_Device_e McuW28_GetDeviceType(void) {
+McuW25_Device_e McuW25_GetDeviceType(void) {
   uint8_t id[McuW25_ID_BUF_SIZE] = {0,0,0};
   uint8_t res;
 
   res = McuW25_ReadID(id, sizeof(id)); /* check ID */
   if (res!=ERR_OK) {
-    return McuW28_DEVICE_UNKNOWN; /* error case */
+    return McuW25_DEVICE_UNKNOWN; /* error case */
   }
   if (id[0]==McuW25_ID0_WINBOND && id[1]==McuW25_ID1_WINBOND_xQ && id[2]==McuW25_ID2_WINBOND_xQ) {
-    return McuW28_DEVICE_W28Q128JV_IQ_JQ;
+    return McuW25_DEVICE_W25Q128JV_IQ_JQ;
   } else if (id[0]==McuW25_ID0_WINBOND && id[1]==McuW25_ID1_WINBOND_xM && id[2]==McuW25_ID2_WINBOND_xM) {
-    return McuW28_DEVICE_W28Q128JV_IM_JM;
+    return McuW25_DEVICE_W25Q128JV_IM_JM;
   }
-  return McuW28_DEVICE_UNKNOWN; /* error case */
+  return McuW25_DEVICE_UNKNOWN; /* error case */
 }
 
 static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[60];
   uint8_t id[McuW25_ID_BUF_SIZE] = {0,0,0};
-  McuW28_Device_e devID;
+  McuW25_Device_e devID;
   uint8_t serial[McuW25_SERIAL_BUF_SIZE] = {0,0,0,0,0,0,0,0};
   uint8_t res, status;
   uint32_t capacity;
@@ -278,15 +278,15 @@ static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
   } else {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"ERROR reading ID, ");
  }
-  devID = McuW28_GetDeviceType();
+  devID = McuW25_GetDeviceType();
   switch(devID) {
-    case McuW28_DEVICE_W28Q128JV_IQ_JQ:
+    case McuW25_DEVICE_W25Q128JV_IQ_JQ:
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Winbond W25Q128JV-IQ/JQ)\r\n");
       break;
-    case McuW28_DEVICE_W28Q128JV_IM_JM:
+    case McuW25_DEVICE_W25Q128JV_IM_JM:
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Winbond W25Q128JV-IM/JM)\r\n");
       break;
-    case McuW28_DEVICE_UNKNOWN:
+    case McuW25_DEVICE_UNKNOWN:
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (Unknown)\r\n");
       break;
     default:

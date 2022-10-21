@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef MCUW28Q128CONFIG_H_
-#define MCUW28Q128CONFIG_H_
+#ifndef MCUW25Q128CONFIG_H_
+#define MCUW25Q128CONFIG_H_
 
-#ifndef MCUW28Q128_CONFIG_ENABLED
+#ifndef MCUW25Q128_CONFIG_ENABLED
   #define MCUW25Q128_CONFIG_ENABLED  (0)
 #endif
 
@@ -20,4 +20,4 @@
 
 #endif /* MCUW25Q128_CONFIG_ENABLED */
 
-#endif /* MCUW28Q128CONFIG_H_ */
+#endif /* MCUW25Q128CONFIG_H_ */
