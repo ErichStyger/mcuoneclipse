@@ -24,7 +24,7 @@
   #define MCUSPI_CONFIG_HW_SPI_MASTER_CLK_SRC             DSPI1_CLK_SRC
   #define MCUSPI_CONFIG_HW_SPI_MASTER_CLK_FREQ            CLOCK_GetFreq(DSPI1_CLK_SRC)
   #define MCUSPI_CONFIG_HW_SPI_MASTER_PCS_FOR_INIT        kDSPI_Pcs1
-  #define MCUSPI_CONFIG_HW_SPI_MASTER_PCS_FOR_TRANSFER    kDSPI_MasterPcs1
+  #define MCUSPI_CONFIG_HW_SPI_MASTER_PCS_FOR_TRANSFER    kDSPI_MasterPcs1 /* note that this is actually not used: the CS pin below is used instead */
 
   #define MCUSPI_CONFIG_HW_CS_GPIO   GPIOB
   #define MCUSPI_CONFIG_HW_CS_PORT   PORTB
