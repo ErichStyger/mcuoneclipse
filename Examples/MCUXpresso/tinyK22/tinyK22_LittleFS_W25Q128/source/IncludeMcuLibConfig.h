@@ -121,7 +121,7 @@ Instructions:
 /* -------------------------------------------------*/
 /* LittleFS */
 #define LITTLEFS_CONFIG_ENABLED                 (1)
-#define MCUW28Q128_CONFIG_ENABLED               (1)
+#define MCUW25Q128_CONFIG_ENABLED               (1)
 #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE   McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 /* -------------------------------------------------*/
 /* McuFlash */
