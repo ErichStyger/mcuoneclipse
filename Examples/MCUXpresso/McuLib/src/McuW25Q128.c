@@ -267,7 +267,7 @@ static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
   uint32_t capacity;
   int i;
 
-  McuShell_SendStatusStr((const unsigned char*)"McuWW25", (const unsigned char*)"Winbond W25Q128 Flash status\r\n", io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"McuW25", (const unsigned char*)"Winbond W25Q128 Flash status\r\n", io->stdOut);
 
   res = McuW25_ReadID(id, sizeof(id));
   buf[0] = '\0';
