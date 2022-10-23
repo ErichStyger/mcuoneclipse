@@ -10,7 +10,9 @@ The pins are configured for SPI in the Pins Tool:
 SPI CLK:  PTD5
 SPI SOUT: PTB16
 SPI SIN:  PTB17
-SPI CS:   PTB18 (NOT configured by SPI1_PCS1, but as normal GPIO pin with MCUSPI_CONFIG_HW_CS_GPIO!)
+
+Configured and muxed by McuGPIO:
+SPI CS:   PTB18 (SPI1_PCS1 is NOT used. Instead, a normal GPIO pin with MCUSPI_CONFIG_HW_CS_GPIO is ocnfigured)
 
 
 Using it:
