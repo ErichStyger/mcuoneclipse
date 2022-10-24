@@ -41,6 +41,7 @@ ${MCULIB}/TraceRecorder/config
 ${MCULIB}/TraceRecorder/include
 ${MCULIB}/TraceRecorder/streamports/Jlink_RTT/include
 ${MCULIB}/HD44780
+${MCULIB}/minIni
 ${MCULIB}/FatFS
 ${MCULIB}/FatFS/source
  */

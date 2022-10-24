@@ -17,16 +17,16 @@
 #include "McuLib.h"
 #if McuLib_CONFIG_USE_FAT_FS
 
-#include "ffconf.h"     /* FatFs configuration options */
-#include "ff.h"			/* Obtains integer types */
+#include "ffconf.h"   /* FatFs configuration options */
+#include "ff.h"			  /* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 
 #ifdef RAM_DISK_ENABLE
-#include "fsl_ram_disk.h"
+#include "FatFS/source/fsl_ram_disk/fsl_ram_disk.h"
 #endif
 
 #ifdef USB_DISK_ENABLE
-#include "fsl_usb_disk.h"
+#include "FatFS/source/fsl_usb_disk/fsl_usb_disk.h"
 #endif
 
 #ifdef SD_DISK_ENABLE
@@ -38,7 +38,7 @@
 #endif
 
 #ifdef SDSPI_DISK_ENABLE
-#include "fsl_sdspi_disk.h"
+#include "FatFS/source/fsl_sdspi_disk/fsl_sdspi_disk.h"
 #endif
 
 #ifdef NAND_DISK_ENABLE
