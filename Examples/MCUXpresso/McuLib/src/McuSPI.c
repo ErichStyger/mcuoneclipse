@@ -17,7 +17,7 @@
 static McuGPIO_Handle_t McuSPI_CSpin;
 
 int McuSPI_SendReceiveBlock(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t dataSize) {
-#if MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1
+#if (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI0) || (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1)
   dspi_transfer_t masterXfer;
   status_t status;
 
@@ -62,14 +62,16 @@ int McuSPI_ReceiveByte(unsigned char *chp) {
   return McuSPI_SendReceiveBlock(NULL, chp, 1);
 }
 
-#if 0
+#if 0 /* for testing only */
 static void McuSPI_Test(void) {
   uint8_t tx = 'A';
   uint8_t rx;
   int res;
 
+  /* testing CS toggling */
   McuGPIO_SetLow(McuSPI_CSpin);
   McuGPIO_SetHigh(McuSPI_CSpin);
+  /* testing a transfer */
   res = McuSPI_SendReceiveBlock(&tx, &rx, sizeof(tx));
   if (res!=0) {
     for(;;) { /* error */ }
@@ -104,7 +106,7 @@ static void McuSPI_InitCS(void) {
 
 void McuSPI_Init(void) {
   McuSPI_InitCS();
-#if MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1
+#if (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI0) || (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1)
   dspi_master_config_t masterConfig;
   uint32_t srcClock_Hz;
 
