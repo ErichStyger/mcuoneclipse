@@ -26,7 +26,9 @@
 //*****************************************************************************
 extern "C" {
     extern void __libc_init_array(void);
+    extern void __libc_fini_array(void);
 }
+
 #endif
 #endif
 
@@ -502,7 +504,7 @@ void ResetISR(void) {
 #else
     main();
 #endif
-
+    __libc_fini_array();
     //
     // main() shouldn't return, but if it does, we'll just enter an infinite loop
     //
