@@ -15,9 +15,9 @@
 #define McuShellUart_CONFIG_UART_K22FX512_UART0_A1_A2     (2) /* Rx on PTA1 (pin 27), Tx on PTA2 (pin 28) */
 #define McuShellUart_CONFIG_UART_K22FX512_UART1_E1_E0     (3) /* Rx on PTE1 (pin 2), Tx on PTE2 (pin 1) */
 /* Kinetis K22FN */
-#define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (4) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) */
+#define McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4   (4) /* PTC3: Rx, (pin 46), PTC4: Tx (pin 49) (OpenSDA UART on tinyK22) */
 #define McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17   (5) /* PTB16 (Rx), PTB17 (Tx) */
-#define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (6) /* PTE1 (Rx), PTE0 (Tx) */
+#define McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0     (6) /* PTE1 (Rx), PTE0 (Tx) (OpenSDA UART on FRDM-K22F) */
 /* LPC55S16 */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART0          (7) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART2          (8) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
