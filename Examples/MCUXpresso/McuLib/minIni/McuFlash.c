@@ -577,12 +577,12 @@ void McuFlash_Init(void) {
   result = FLASH_Init(&s_flashDriver);
 #if McuLib_CONFIG_CPU_IS_KINETIS
   if (result!=kStatus_FTFx_Success) {
-    McuLog_fatal("NVMC_Init() failed!");
+    McuLog_fatal("McuFlash_Init() failed!");
     for(;;) { /* error */ }
   }
 #elif McuLib_CONFIG_CPU_IS_LPC55xx
   if (result!=kStatus_Success) {
-    McuLog_fatal("NVMC_Init() failed!");
+    McuLog_fatal("McuFlash_Init() failed!");
     for(;;) { /* error */ }
   }
 #endif
