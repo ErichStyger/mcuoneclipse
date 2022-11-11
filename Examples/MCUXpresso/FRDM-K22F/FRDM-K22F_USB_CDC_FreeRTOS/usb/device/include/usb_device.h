@@ -1,35 +1,15 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
  * Copyright 2016 NXP
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef __USB_DEVICE_H__
 #define __USB_DEVICE_H__
+
+#include "usb.h"
 
 /*!
  * @addtogroup usb_device_driver
@@ -57,6 +37,9 @@ typedef enum _usb_device_status
     kUSB_DeviceStatusBusResume,      /*!< Bus resume */
     kUSB_DeviceStatusRemoteWakeup,   /*!< Remote wakeup state */
     kUSB_DeviceStatusBusSleepResume, /*!< Bus resume */
+#if defined(USB_DEVICE_CONFIG_GET_SOF_COUNT) && (USB_DEVICE_CONFIG_GET_SOF_COUNT > 0U)
+    kUSB_DeviceStatusGetCurrentFrameCount, /*!< Get current frame count */
+#endif
 } usb_device_status_t;
 
 /*! @brief Defines USB 2.0 device state */
@@ -68,24 +51,6 @@ typedef enum _usb_device_state
     kUSB_DeviceStateAddressing,      /*!< Device state, Address setting*/
     kUSB_DeviceStateTestMode,        /*!< Device state, Test mode*/
 } usb_device_state_t;
-
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
-typedef enum _usb_dcd_detection_sequence_status
-{
-    kUSB_DcdDetectionNotEnabled = 0x0U,
-    kUSB_DcdDataPinDetectionCompleted = 0x01U,
-    kUSB_DcdChargingPortDetectionCompleted = 0x02U,
-    kUSB_DcdChargerTypeDetectionCompleted = 0x03U,
-} usb_dcd_detection_sequence_status_t;
-
-typedef enum _usb_dcd_detection_sequence_results
-{
-    kUSB_DcdDetectionNoResults = 0x0U,
-    kUSB_DcdDetectionStandardHost = 0x01U,
-    kUSB_DcdDetectionChargingPort = 0x02U,
-    kUSB_DcdDetectionDedicatedCharger = 0x03U,
-} usb_dcd_detection_sequence_results_t;
-#endif
 
 /*! @brief Defines endpoint state */
 typedef enum _usb_endpoint_status
@@ -99,8 +64,10 @@ typedef enum _usb_endpoint_status
 /*! @brief Control endpoint maxPacketSize */
 #define USB_CONTROL_MAX_PACKET_SIZE (64U)
 
-#if (USB_DEVICE_CONFIG_EHCI && (USB_CONTROL_MAX_PACKET_SIZE != (64U)))
+#if defined(USB_DEVICE_CONFIG_EHCI) && (USB_DEVICE_CONFIG_EHCI > 0U)
+#if (USB_CONTROL_MAX_PACKET_SIZE != (64U))
 #error For high speed, USB_CONTROL_MAX_PACKET_SIZE must be 64!!!
+#endif
 #endif
 
 /*! @brief The setup packet size of USB control transfer. */
@@ -108,8 +75,33 @@ typedef enum _usb_endpoint_status
 /*! @brief  USB endpoint mask */
 #define USB_ENDPOINT_NUMBER_MASK (0x0FU)
 
-/*! @brief Default invalid value or the endpoint callback length of cancelled transfer */
+/*! @brief uninitialized value */
 #define USB_UNINITIALIZED_VAL_32 (0xFFFFFFFFU)
+
+/*! @brief the endpoint callback length of cancelled transfer */
+#define USB_CANCELLED_TRANSFER_LENGTH (0xFFFFFFFFU)
+
+/*! @brief invalid tranfer buffer addresss */
+#define USB_INVALID_TRANSFER_BUFFER (0xFFFFFFFEU)
+
+#if defined(USB_DEVICE_CONFIG_GET_SOF_COUNT) && (USB_DEVICE_CONFIG_GET_SOF_COUNT > 0U)
+/* USB device IP3511 max frame count */
+#define USB_DEVICE_IP3511_MAX_FRAME_COUNT (0x000007FFU)
+/* USB device EHCI max frame count */
+#define USB_DEVICE_EHCI_MAX_FRAME_COUNT (0x00003FFFU)
+/* USB device EHCI max frame count */
+#define USB_DEVICE_KHCI_MAX_FRAME_COUNT (0x000007FFU)
+
+/*! @brief usb device controller max frame count */
+#if ((defined(USB_DEVICE_CONFIG_KHCI)) && (USB_DEVICE_CONFIG_KHCI > 0U))
+#define USB_DEVICE_MAX_FRAME_COUNT (USB_DEVICE_KHCI_MAX_FRAME_COUNT)
+#elif (((defined(USB_DEVICE_CONFIG_LPCIP3511FS)) && (USB_DEVICE_CONFIG_LPCIP3511FS > 0U)) || \
+       ((defined(USB_DEVICE_CONFIG_LPCIP3511HS)) && (USB_DEVICE_CONFIG_LPCIP3511HS > 0U)))
+#define USB_DEVICE_MAX_FRAME_COUNT (USB_DEVICE_IP3511_MAX_FRAME_COUNT)
+#elif ((defined(USB_DEVICE_CONFIG_EHCI)) && (USB_DEVICE_CONFIG_EHCI > 0U))
+#define USB_DEVICE_MAX_FRAME_COUNT (USB_DEVICE_EHCI_MAX_FRAME_COUNT)
+#endif
+#endif
 
 /*! @brief Available common EVENT types in device callback */
 typedef enum _usb_device_event
@@ -119,7 +111,7 @@ typedef enum _usb_device_event
     kUSB_DeviceEventResume,    /*!< USB bus resume signal detected. The resume signal is driven by itself or a host */
     kUSB_DeviceEventSleeped,   /*!< USB bus LPM suspend signal detected */
     kUSB_DeviceEventLPMResume, /*!< USB bus LPM resume signal detected. The resume signal is driven by itself or a host
-                                  */
+                                */
     kUSB_DeviceEventError,     /*!< An error is happened in the bus. */
     kUSB_DeviceEventDetach,    /*!< USB device is disconnected from a host. */
     kUSB_DeviceEventAttach,    /*!< USB device is connected to a host. */
@@ -139,13 +131,8 @@ typedef enum _usb_device_event
     kUSB_DeviceEventGetConfiguration,             /*!< Get current configuration index */
     kUSB_DeviceEventGetInterface,                 /*!< Get current interface alternate setting value */
     kUSB_DeviceEventSetBHNPEnable,
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
-    kUSB_DeviceEventDcdTimeOut,               /*!< Dcd detect result is timeout */
-    kUSB_DeviceEventDcdUnknownType,           /*!< Dcd detect result is unknown type */
-    kUSB_DeviceEventSDPDetected,              /*!< The SDP facility is detected */
-    kUSB_DeviceEventChargingPortDetected,     /*!< The charging port is detected */
-    kUSB_DeviceEventChargingHostDetected,     /*!< The CDP facility is detected */
-    kUSB_DeviceEventDedicatedChargerDetected, /*!< The DCP facility is detected */
+#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
+    kUSB_DeviceEventDcdDetectionfinished, /*!< The DCD detection finished */
 #endif
 } usb_device_event_t;
 
@@ -205,6 +192,7 @@ typedef struct _usb_device_endpoint_init_struct
     uint8_t endpointAddress; /*!< Endpoint address*/
     uint8_t transferType;    /*!< Endpoint transfer type*/
     uint8_t zlt;             /*!< ZLT flag*/
+    uint8_t interval;        /*!< Endpoint interval*/
 } usb_device_endpoint_init_struct_t;
 
 /*! @brief Endpoint status structure */
@@ -213,18 +201,6 @@ typedef struct _usb_device_endpoint_status_struct
     uint8_t endpointAddress; /*!< Endpoint address */
     uint16_t endpointStatus; /*!< Endpoint status : idle or stalled */
 } usb_device_endpoint_status_struct_t;
-
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
-/*! @brief USB DCD charge timing specification structure */
-typedef struct _usb_device_dcd_charging_time
-{
-    uint16_t dcdSeqInitTime;      /*!< The dcd sequence init time */
-    uint16_t dcdDbncTime;         /*!< The debounce time period on DP signal */
-    uint16_t dcdDpSrcOnTime;      /*!< The time period comparator enabled */
-    uint16_t dcdTimeWaitAfterPrD; /*!< The time period between primary and secondary detection */
-    uint8_t dcdTimeDMSrcOn;       /*!< The amount of time that the modules enable the Vdm_src */
-} usb_device_dcd_charging_time_t;
-#endif
 
 #if defined(__cplusplus)
 extern "C" {
@@ -253,7 +229,7 @@ extern "C" {
  * @retval kStatus_USB_Busy                 Cannot allocate a device handle.
  * @retval kStatus_USB_ControllerNotFound   Cannot find the controller according to the controller id.
  * @retval kStatus_USB_InvalidControllerInterface  The controller driver interfaces is invalid. There is an empty
- * 													interface entity.
+ *                                                     interface entity.
  * @retval kStatus_USB_Error                The macro USB_DEVICE_CONFIG_ENDPOINTS is more than the IP's endpoint number.
  *                                          Or, the device has been initialized.
  *                                          Or, the mutex or message queue is created failed.
@@ -385,19 +361,19 @@ extern usb_status_t USB_DeviceCancel(usb_device_handle handle, uint8_t endpointA
  *
  * @param[in] handle The device handle received from #USB_DeviceInit.
  * @param[in] epInit Endpoint initialization structure. See the structure usb_device_endpoint_init_struct_t.
- * @param[in] endpointCallback Endpoint callback structure. See the structure
+ * @param[in] epCallback Endpoint callback structure. See the structure
  * usb_device_endpoint_callback_struct_t.
  *
  * @retval kStatus_USB_Success              The endpoint is initialized successfully.
  * @retval kStatus_USB_InvalidHandle        The handle is a NULL pointer. Or the controller handle is invalid.
- * @retval kStatus_USB_InvalidParameter     The epInit or endpointCallback is NULL pointer. Or the endpoint number is
+ * @retval kStatus_USB_InvalidParameter     The epInit or epCallback is NULL pointer. Or the endpoint number is
  * more than USB_DEVICE_CONFIG_ENDPOINTS.
  * @retval kStatus_USB_Busy                 The endpoint is busy in EHCI driver.
  * @retval kStatus_USB_ControllerNotFound   Cannot find the controller.
  */
 extern usb_status_t USB_DeviceInitEndpoint(usb_device_handle handle,
                                            usb_device_endpoint_init_struct_t *epInit,
-                                           usb_device_endpoint_callback_struct_t *endpointCallback);
+                                           usb_device_endpoint_callback_struct_t *epCallback);
 
 /*!
  * @brief Deinitializes a specified endpoint.
@@ -431,14 +407,14 @@ extern usb_status_t USB_DeviceDeinitEndpoint(usb_device_handle handle, uint8_t e
 extern usb_status_t USB_DeviceStallEndpoint(usb_device_handle handle, uint8_t endpointAddress);
 
 /*!
- * @brief Unstalls a specified endpoint.
+ * @brief Un-stall a specified endpoint.
  *
  * The function is used to unstall a specified endpoint.
  *
  * @param[in] handle The device handle received from #USB_DeviceInit.
  * @param[in] endpointAddress Endpoint address, bit7 is the direction of endpoint, 1U - IN, and 0U - OUT.
  *
- * @retval kStatus_USB_Success              The endpoint is unstalled successfully.
+ * @retval kStatus_USB_Success              The endpoint is un-stalled successfully.
  * @retval kStatus_USB_InvalidHandle        The handle is a NULL pointer. Or the controller handle is invalid.
  * @retval kStatus_USB_InvalidParameter     The endpoint number is more than USB_DEVICE_CONFIG_ENDPOINTS.
  * @retval kStatus_USB_ControllerNotFound   Cannot find the controller.
@@ -478,46 +454,37 @@ extern usb_status_t USB_DeviceGetStatus(usb_device_handle handle, usb_device_sta
  */
 extern usb_status_t USB_DeviceSetStatus(usb_device_handle handle, usb_device_status_t type, void *param);
 
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
+#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
 /*!
- * @brief Initializes the device dcd module.
+ * @brief Enable the device dcd module.
  *
- * The function initializes the device dcd module.
+ * The function enable the device dcd module.
  *
  * @param[in] handle The device handle got from #USB_DeviceInit.
- * @param[in] time_param The time parameter used to config the dcd timing registers.
  *
- * @retval kStatus_USB_Success              The device is run successfully.
+ * @retval kStatus_USB_Success              The device could run.
  * @retval kStatus_USB_ControllerNotFound   Cannot find the controller.
  * @retval kStatus_USB_InvalidHandle        The device handle is a NULL pointer. Or the controller handle is invalid.
  *
  */
-extern usb_status_t USB_DeviceDcdInitModule(usb_device_handle handle, void *time_param);
+extern usb_status_t USB_DeviceDcdEnable(usb_device_handle handle);
 
 /*!
- * @brief De-initializes the device dcd module.
+ * @brief Disable the device dcd module.
  *
- * The function de-initializes the device dcd module specified by the handle.
+ * The function disable the device dcd module.
  *
  * @param[in] handle The device handle got from #USB_DeviceInit.
  *
- * @retval kStatus_USB_Success 			 The device is stopped successfully.
- * @retval kStatus_USB_InvalidHandle		 The device handle is a NULL pointer or the controller handle is invalid.
+ * @retval kStatus_USB_Success              The dcd is reset and stopped.
+ * @retval kStatus_USB_ControllerNotFound   Cannot find the controller.
+ * @retval kStatus_USB_InvalidHandle        The device handle is a NULL pointer or the controller handle is invalid.
+ *
  */
-extern usb_status_t USB_DeviceDcdDeinitModule(usb_device_handle handle);
-
-/*!
- * @brief Get the device attach status.
- *
- * The function Get the device attach status.
- *
- * @param[in] handle The device handle got from #USB_DeviceInit.
- *
- * @retval kStatus_USB_EHCIAttached 		  The device is attached.
- * @retval kStatus_USB_EHCIDetached		  The device is detached.
- */
-extern usb_status_t USB_DeviceGetAttachStatus(usb_device_handle handle);
+extern usb_status_t USB_DeviceDcdDisable(usb_device_handle handle);
 #endif
+
+#if ((defined(USB_DEVICE_CONFIG_USE_TASK)) && (USB_DEVICE_CONFIG_USE_TASK > 0U))
 /*!
  * @brief Device task function.
  *
@@ -527,8 +494,10 @@ extern usb_status_t USB_DeviceGetAttachStatus(usb_device_handle handle);
  * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
  */
 extern void USB_DeviceTaskFunction(void *deviceHandle);
+#endif
 
 #if ((defined(USB_DEVICE_CONFIG_KHCI)) && (USB_DEVICE_CONFIG_KHCI > 0U))
+#if ((defined(USB_DEVICE_CONFIG_USE_TASK)) && (USB_DEVICE_CONFIG_USE_TASK > 0U))
 /*!
  * @brief Device KHCI task function.
  *
@@ -540,8 +509,10 @@ extern void USB_DeviceTaskFunction(void *deviceHandle);
  */
 #define USB_DeviceKhciTaskFunction(deviceHandle) USB_DeviceTaskFunction(deviceHandle)
 #endif
+#endif
 
 #if ((defined(USB_DEVICE_CONFIG_EHCI)) && (USB_DEVICE_CONFIG_EHCI > 0U))
+#if ((defined(USB_DEVICE_CONFIG_USE_TASK)) && (USB_DEVICE_CONFIG_USE_TASK > 0U))
 /*!
  * @brief Device EHCI task function.
  *
@@ -552,20 +523,24 @@ extern void USB_DeviceTaskFunction(void *deviceHandle);
  * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
  */
 #define USB_DeviceEhciTaskFunction(deviceHandle) USB_DeviceTaskFunction(deviceHandle)
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
+#endif
+#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
+#if (defined(FSL_FEATURE_SOC_USBHSDCD_COUNT) && (FSL_FEATURE_SOC_USBHSDCD_COUNT > 0U))
 /*!
- * @brief Device EHCI DCD ISR function.
+ * @brief Device ehci DCD ISR function.
  *
- * The function is the EHCI DCD interrupt service routine.
+ * The function is the ehci DCD interrupt service routine.
  *
  * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
  */
-extern void USB_DeviceDcdHSIsrFunction(void *deviceHandle);
+extern void USB_DeviceEhciIsrHSDCDFunction(void *deviceHandle);
+#endif
 #endif
 #endif
 
 #if (((defined(USB_DEVICE_CONFIG_LPCIP3511FS)) && (USB_DEVICE_CONFIG_LPCIP3511FS > 0U)) || \
      ((defined(USB_DEVICE_CONFIG_LPCIP3511HS)) && (USB_DEVICE_CONFIG_LPCIP3511HS > 0U)))
+#if ((defined(USB_DEVICE_CONFIG_USE_TASK)) && (USB_DEVICE_CONFIG_USE_TASK > 0U))
 /*!
  * @brief Device LPC ip3511 controller task function.
  *
@@ -577,6 +552,19 @@ extern void USB_DeviceDcdHSIsrFunction(void *deviceHandle);
  */
 #define USB_DeviceLpcIp3511TaskFunction(deviceHandle) USB_DeviceTaskFunction(deviceHandle)
 #endif
+#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
+#if (defined(FSL_FEATURE_SOC_USBHSDCD_COUNT) && (FSL_FEATURE_SOC_USBHSDCD_COUNT > 0U))
+/*!
+ * @brief Device IP3511 DCD ISR function.
+ *
+ * The function is the IP3511 DCD interrupt service routine.
+ *
+ * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
+ */
+extern void USB_DeviceLpcIp3511IsrDCDFunction(void *deviceHandle);
+#endif
+#endif
+#endif
 
 #if ((defined(USB_DEVICE_CONFIG_KHCI)) && (USB_DEVICE_CONFIG_KHCI > 0U))
 /*!
@@ -587,7 +575,9 @@ extern void USB_DeviceDcdHSIsrFunction(void *deviceHandle);
  * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
  */
 extern void USB_DeviceKhciIsrFunction(void *deviceHandle);
-#if (defined(USB_DEVICE_CHARGER_DETECT_ENABLE) && (USB_DEVICE_CHARGER_DETECT_ENABLE > 0U))
+#if (defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U))
+#if (defined(FSL_FEATURE_SOC_USBDCD_COUNT) && (FSL_FEATURE_SOC_USBDCD_COUNT > 0U))
+#if 0U /* it is not implemented yet */
 /*!
  * @brief Device KHCI DCD ISR function.
  *
@@ -596,6 +586,8 @@ extern void USB_DeviceKhciIsrFunction(void *deviceHandle);
  * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
  */
 extern void USB_DeviceDcdIsrFunction(void *deviceHandle);
+#endif
+#endif
 #endif
 #endif
 
@@ -622,6 +614,18 @@ extern void USB_DeviceEhciIsrFunction(void *deviceHandle);
 extern void USB_DeviceLpcIp3511IsrFunction(void *deviceHandle);
 #endif
 
+#if (((defined(USB_DEVICE_CONFIG_DWC3)) && (USB_DEVICE_CONFIG_DWC3 > 0U)) || \
+     ((defined(USB_DEVICE_CONFIG_DWC3)) && (USB_DEVICE_CONFIG_DWC3 > 0U)))
+/*!
+ * @brief Device USB DWC3 ISR function.
+ *
+ * The function is the USB interrupt service routine.
+ *
+ * @param[in] deviceHandle The device handle got from #USB_DeviceInit.
+ */
+extern void USB_DeviceDwc3IsrFunction(void *deviceHandle);
+#endif
+
 /*!
  * @brief Gets the device stack version function.
  *
@@ -632,7 +636,9 @@ extern void USB_DeviceLpcIp3511IsrFunction(void *deviceHandle);
  */
 extern void USB_DeviceGetVersion(uint32_t *version);
 
-#if ((defined(USB_DEVICE_CONFIG_REMOTE_WAKEUP)) && (USB_DEVICE_CONFIG_REMOTE_WAKEUP > 0U))
+#if ((defined(USB_DEVICE_CONFIG_REMOTE_WAKEUP)) && (USB_DEVICE_CONFIG_REMOTE_WAKEUP > 0U)) ||   \
+    (((defined(USB_DEVICE_CONFIG_CHARGER_DETECT) && (USB_DEVICE_CONFIG_CHARGER_DETECT > 0U)) && \
+      (defined(FSL_FEATURE_SOC_USB_ANALOG_COUNT) && (FSL_FEATURE_SOC_USB_ANALOG_COUNT > 0U))))
 /*!
  * @brief Update the hardware tick.
  *

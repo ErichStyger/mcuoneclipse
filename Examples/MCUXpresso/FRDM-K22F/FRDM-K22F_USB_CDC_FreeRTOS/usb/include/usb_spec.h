@@ -1,31 +1,9 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
  * Copyright 2016 NXP
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef __USB_SPEC_H__
@@ -39,6 +17,7 @@
 #define USB_SPEED_FULL (0x00U)
 #define USB_SPEED_LOW (0x01U)
 #define USB_SPEED_HIGH (0x02U)
+#define USB_SPEED_SUPER (0x04U)
 
 /* Set up packet structure */
 typedef struct _usb_setup_struct
@@ -65,9 +44,12 @@ typedef struct _usb_setup_struct
 #define USB_DESCRIPTOR_LENGTH_CONFIGURE (0x09U)
 #define USB_DESCRIPTOR_LENGTH_INTERFACE (0x09U)
 #define USB_DESCRIPTOR_LENGTH_ENDPOINT (0x07U)
+#define USB_DESCRIPTOR_LENGTH_ENDPOINT_COMPANION (0x06U)
 #define USB_DESCRIPTOR_LENGTH_DEVICE_QUALITIER (0x0AU)
 #define USB_DESCRIPTOR_LENGTH_OTG_DESCRIPTOR (5U)
 #define USB_DESCRIPTOR_LENGTH_BOS_DESCRIPTOR (5U)
+#define USB_DESCRIPTOR_LENGTH_DEVICE_CAPABILITY_USB20_EXTENSION (0x07U)
+#define USB_DESCRIPTOR_LENGTH_DEVICE_CAPABILITY_SUPERSPEED (0x0AU)
 
 /* USB Device Capability Type Codes */
 #define USB_DESCRIPTOR_TYPE_DEVICE_CAPABILITY_WIRELESS (0x01U)
@@ -91,6 +73,8 @@ typedef struct _usb_setup_struct
 #define USB_DESCRIPTOR_TYPE_HID (0x21U)
 #define USB_DESCRIPTOR_TYPE_HID_REPORT (0x22U)
 #define USB_DESCRIPTOR_TYPE_HID_PHYSICAL (0x23U)
+
+#define USB_DESCRIPTOR_TYPE_ENDPOINT_COMPANION (0x30U)
 
 /* USB standard request type */
 #define USB_REQUEST_TYPE_DIR_MASK (0x80U)
@@ -191,7 +175,6 @@ typedef struct _usb_setup_struct
 #define USB_DESCRIPTOR_DEVICE_CAPABILITY_USB20_EXTENSION_BESL_MASK (0x04U)
 #define USB_DESCRIPTOR_DEVICE_CAPABILITY_USB20_EXTENSION_BESL_SHIFT (2U)
 
-
 /* Language structure */
 typedef struct _usb_language
 {
@@ -268,29 +251,49 @@ typedef struct _usb_descriptor_endpoint
     uint8_t bInterval;
 } usb_descriptor_endpoint_t;
 
+typedef struct _usb_descriptor_endpoint_companion
+{
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bMaxBurst;
+    uint8_t bmAttributes;
+    uint8_t wBytesPerInterval[2];
+} usb_descriptor_endpoint_companion_t;
+
 typedef struct _usb_descriptor_binary_device_object_store
 {
-    uint8_t bLength;            /* Descriptor size in bytes = 5U */
-    uint8_t bDescriptorType;    /* BOS Descriptor type = 0FU*/
-    uint8_t wTotalLength[2];    /*Length of this descriptor and all of its sub descriptors*/
-    uint8_t bNumDeviceCaps;     /*The number of separate device capability descriptors in the BOS*/
+    uint8_t bLength;         /* Descriptor size in bytes = 5U */
+    uint8_t bDescriptorType; /* BOS Descriptor type = 0FU*/
+    uint8_t wTotalLength[2]; /*Length of this descriptor and all of its sub descriptors*/
+    uint8_t bNumDeviceCaps;  /*The number of separate device capability descriptors in the BOS*/
 } usb_descriptor_bos_t;
 
 typedef struct _usb_descriptor_usb20_extension
 {
     uint8_t bLength;            /* Descriptor size in bytes = 7U */
     uint8_t bDescriptorType;    /* DEVICE CAPABILITY Descriptor type = 0x10U*/
-    uint8_t bDevCapabilityType;  /*Length of this descriptor and all of its sub descriptors*/
-    uint8_t bmAttributes[4];     /*Bitmap encoding of supported device level features.*/
+    uint8_t bDevCapabilityType; /*Length of this descriptor and all of its sub descriptors*/
+    uint8_t bmAttributes[4];    /*Bitmap encoding of supported device level features.*/
 } usb_descriptor_usb20_extension_t;
-
+typedef struct _usb_descriptor_super_speed_device_capability
+{
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint8_t bDevCapabilityType;
+    uint8_t bmAttributes;
+    uint8_t wSpeedsSupported[2];
+    uint8_t bFunctionalitySupport;
+    uint8_t bU1DevExitLat;
+    uint8_t wU2DevExitLat[2];
+} usb_bos_device_capability_susperspeed_desc_t;
 typedef union _usb_descriptor_union
 {
-    usb_descriptor_common_t common;               /* Common descriptor */
-    usb_descriptor_device_t device;               /* Device descriptor */
-    usb_descriptor_configuration_t configuration; /* Configuration descriptor */
-    usb_descriptor_interface_t interface;         /* Interface descriptor */
-    usb_descriptor_endpoint_t endpoint;           /* Endpoint descriptor */
+    usb_descriptor_common_t common;                        /* Common descriptor */
+    usb_descriptor_device_t device;                        /* Device descriptor */
+    usb_descriptor_configuration_t configuration;          /* Configuration descriptor */
+    usb_descriptor_interface_t interface;                  /* Interface descriptor */
+    usb_descriptor_endpoint_t endpoint;                    /* Endpoint descriptor */
+    usb_descriptor_endpoint_companion_t endpointCompanion; /* Endpoint companion descriptor */
 } usb_descriptor_union_t;
 
 #endif /* __USB_SPEC_H__ */

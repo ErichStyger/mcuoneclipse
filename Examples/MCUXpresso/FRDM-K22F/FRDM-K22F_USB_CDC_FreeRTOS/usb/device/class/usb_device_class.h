@@ -1,31 +1,9 @@
 /*
  * Copyright (c) 2015 - 2016, Freescale Semiconductor, Inc.
  * Copyright 2016 NXP
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef __USB_DEVICE_CLASS_H__
@@ -39,9 +17,12 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
+#if 1 /* << EST */
+#include "usb_device.h"
+#endif
 
 /*! @brief Macro to define class handle */
-#define class_handle_t uint32_t
+typedef void *class_handle_t;
 
 /*! @brief Available class types. */
 typedef enum _usb_usb_device_class_type
@@ -49,6 +30,7 @@ typedef enum _usb_usb_device_class_type
     kUSB_DeviceClassTypeHid = 1U,
     kUSB_DeviceClassTypeCdc,
     kUSB_DeviceClassTypeMsc,
+    kUSB_DeviceClassTypeMtp,
     kUSB_DeviceClassTypeAudio,
     kUSB_DeviceClassTypePhdc,
     kUSB_DeviceClassTypeVideo,
@@ -79,14 +61,15 @@ typedef struct _usb_device_endpoint_struct
     uint8_t endpointAddress; /*!< Endpoint address*/
     uint8_t transferType;    /*!< Endpoint transfer type*/
     uint16_t maxPacketSize;  /*!< Endpoint maximum packet size */
+    uint8_t interval;        /*!< Endpoint interval*/
 } usb_device_endpoint_struct_t;
 
 /*!
-* @brief Obtains the endpoint group.
-*
-* Structure representing endpoints and the number of endpoints that the user wants.
-*
-*/
+ * @brief Obtains the endpoint group.
+ *
+ * Structure representing endpoints and the number of endpoints that the user wants.
+ *
+ */
 typedef struct _usb_device_endpoint_list
 {
     uint8_t count;                          /*!< How many endpoints in current interface*/
@@ -247,8 +230,8 @@ typedef struct _usb_device_get_configuration_descriptor_struct
 /*! @brief Obtains the control get bos descriptor request structure. */
 typedef struct _usb_device_get_bos_descriptor_struct
 {
-    uint8_t *buffer;       /*!< Pass the buffer address. */
-    uint32_t length;       /*!< Pass the buffer length. */
+    uint8_t *buffer; /*!< Pass the buffer address. */
+    uint32_t length; /*!< Pass the buffer length. */
 } usb_device_get_bos_descriptor_struct_t;
 
 /*! @brief Obtains the control get string descriptor request structure. */
@@ -325,7 +308,7 @@ typedef struct _usb_device_common_class_struct
 {
     usb_device_handle handle;                          /*!< USB device handle*/
     usb_device_class_config_list_struct_t *configList; /*!< USB device configure list*/
-    uint8_t setupBuffer[USB_SETUP_PACKET_SIZE];        /*!< Setup packet data buffer*/
+    uint8_t *setupBuffer;                              /*!< Setup packet data buffer*/
     uint16_t standardTranscationBuffer;                /*!<
                                                         * This variable is used in:
                                                         *           get status request
@@ -360,7 +343,7 @@ extern "C" {
  *                           kinds of class handles. However, there is only one device handle. Therefore, the handle
  * points to
  *                           a device instead of a class. The class handle can be received from the
- *                           #usb_device_class_config_struct_t::classHandle after the the function successfully.
+ *                           #usb_device_class_config_struct_t::classHandle after the function successfully.
  *
  * @return A USB error code or kStatus_USB_Success.
  */
@@ -432,6 +415,23 @@ usb_status_t USB_DeviceClassCallback(usb_device_handle handle, uint32_t event, v
  * @retval kStatus_USB_InvalidParameter     The device handle can't be found.
  */
 usb_status_t USB_DeviceClassGetDeviceHandle(uint8_t controllerId, usb_device_handle *handle);
+
+#if defined(USB_DEVICE_CONFIG_GET_SOF_COUNT) && (USB_DEVICE_CONFIG_GET_SOF_COUNT > 0U)
+/*!
+ * @brief Get the USB SOF count.
+ *
+ * This function is used to get the USB SOF count.
+ *
+ * @param controllerId   The controller id of the USB IP. Please refer to the enumeration usb_controller_index_t.
+ * @param currentFrameCount           It is an OUT parameter, return current sof count of the controller.
+ *                                    HS: micro frame count, FS: frame count
+ *
+ * @return A USB error code or kStatus_USB_Success.
+ */
+usb_status_t USB_DeviceClassGetCurrentFrameCount(uint8_t controllerId,       /*!< [IN] Controller ID */
+                                                 uint32_t *currentFrameCount /*!< [OUT] Current frame count */
+);
+#endif
 
 #if defined(__cplusplus)
 }

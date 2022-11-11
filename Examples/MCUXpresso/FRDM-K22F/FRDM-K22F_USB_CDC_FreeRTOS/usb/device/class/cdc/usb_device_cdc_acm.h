@@ -1,31 +1,9 @@
 /*
  * Copyright (c) 2015, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016,2019 NXP
+ * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * o Redistributions of source code must retain the above copyright notice, this list
- *   of conditions and the following disclaimer.
- *
- * o Redistributions in binary form must reproduce the above copyright notice, this
- *   list of conditions and the following disclaimer in the documentation and/or
- *   other materials provided with the distribution.
- *
- * o Neither the name of the copyright holder nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * SPDX-License-Identifier: BSD-3-Clause
  */
 #ifndef _USB_DEVICE_CDC_ACM_H_
 #define _USB_DEVICE_CDC_ACM_H_
@@ -38,9 +16,9 @@
 /*******************************************************************************
 * Definitions
 ******************************************************************************/
-#define USB_DEVICE_CONFIG_CDC_ACM_MAX_INSTANCE (1)   /*!< The maximum number of CDC device instance. */
-#define USB_DEVICE_CONFIG_CDC_COMM_CLASS_CODE (0x02) /*!< The CDC communication class code. */
-#define USB_DEVICE_CONFIG_CDC_DATA_CLASS_CODE (0x0A) /*!< The CDC data class code. */
+#define USB_DEVICE_CONFIG_CDC_ACM_MAX_INSTANCE (1U)   /*!< The maximum number of CDC device instance. */
+#define USB_DEVICE_CONFIG_CDC_COMM_CLASS_CODE (0x02U) /*!< The CDC communication class code. */
+#define USB_DEVICE_CONFIG_CDC_DATA_CLASS_CODE (0x0AU) /*!< The CDC data class code. */
 
 #define USB_DEVICE_CDC_REQUEST_SEND_ENCAPSULATED_COMMAND \
     (0x00) /*!< The CDC class request code for SEND_ENCAPSULATED_COMMAND. */
@@ -118,8 +96,8 @@
 /*! @brief Definition of CDC class event. */
 typedef enum _usb_device_cdc_acm_event
 {
-    kUSB_DeviceCdcEventSendResponse = 0x01,     /*!< This event indicates the bulk send transfer is complete. */
-    kUSB_DeviceCdcEventRecvResponse,            /*!< This event indicates the bulk receive transfer is complete. */
+    kUSB_DeviceCdcEventSendResponse = 0x01,     /*!< This event indicates the bulk send transfer is complete or cancelled etc. */
+    kUSB_DeviceCdcEventRecvResponse,            /*!< This event indicates the bulk receive transfer is complete or cancelled etc.. */
     kUSB_DeviceCdcEventSerialStateNotif,        /*!< This event indicates the serial state has been sent to the host. */
     kUSB_DeviceCdcEventSendEncapsulatedCommand, /*!< This event indicates the device received the
                                                    SEND_ENCAPSULATED_COMMAND request. */
@@ -149,7 +127,11 @@ typedef struct _usb_device_cdc_acm_request_param_struct
 /*! @brief Definition of pipe structure. */
 typedef struct _usb_device_cdc_acm_pipe
 {
-    usb_osa_mutex_handle mutex; /*!< The mutex of the pipe. */
+    osa_mutex_handle_t mutex; /*!< The mutex of the pipe. */
+    uint32_t mutexBuffer[(OSA_MUTEX_HANDLE_SIZE + 3)/4];
+    uint8_t *pipeDataBuffer;      /*!< pipe data buffer backup when stall */
+    uint32_t pipeDataLen;         /*!< pipe data length backup when stall  */
+    uint8_t pipeStall;            /*!< pipe is stall  */
     uint8_t ep;                 /*!< The endpoint number of the pipe. */
     uint8_t isBusy;             /*!< 1: The pipe is transferring packet, 0: The pipe is idle. */
 } usb_device_cdc_acm_pipe_t;
@@ -252,6 +234,8 @@ extern usb_status_t USB_DeviceCdcAcmEvent(void *handle, uint32_t event, void *pa
  * @retval kStatus_USB_Busy The endpoint is busy in transferring.
  * @retval kStatus_USB_InvalidHandle The CDC ACM device handle or the CDC ACM class handle is invalid.
  * @retval kStatus_USB_ControllerNotFound The controller interface is invalid.
+ *
+ * @note The function can only be called in the same context.
  */
 extern usb_status_t USB_DeviceCdcAcmSend(class_handle_t handle, uint8_t ep, uint8_t *buffer, uint32_t length);
 /*!
@@ -270,6 +254,8 @@ extern usb_status_t USB_DeviceCdcAcmSend(class_handle_t handle, uint8_t ep, uint
  * @retval kStatus_USB_Busy The endpoint is busy in transferring.
  * @retval kStatus_USB_InvalidHandle The CDC ACM device handle or the CDC ACM class handle is invalid.
  * @retval kStatus_USB_ControllerNotFound The controller interface is invalid.
+ *
+ * @note The function can only be called in the same context.
  */
 extern usb_status_t USB_DeviceCdcAcmRecv(class_handle_t handle, uint8_t ep, uint8_t *buffer, uint32_t length);
 
