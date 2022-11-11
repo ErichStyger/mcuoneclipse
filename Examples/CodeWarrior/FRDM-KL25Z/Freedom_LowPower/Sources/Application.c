@@ -47,7 +47,7 @@ static portTASK_FUNCTION(T2, pvParameters) {
   xLastWakeTime = xTaskGetTickCount();
   for(;;) {
     BitTask_NegVal();
-    FRTOS1_vTaskDelayUntil(&xLastWakeTime, 100/portTICK_RATE_MS);
+    FRTOS1_vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
   } /* for */
 }
 
