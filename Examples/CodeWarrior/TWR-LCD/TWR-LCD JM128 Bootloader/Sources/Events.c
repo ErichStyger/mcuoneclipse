@@ -62,6 +62,8 @@ void S191_OnSRecord(uint8_t *returnCode, uint8_t type, uint32_t addr, uint8_t *d
 void S191_OnError(S191_ErrorCode errorCode, S191_ParserStruct *iteratorInfo)
 {
   /* place breakpoint in error hook */
+  (void)iteratorInfo;
+  (void)errorCode;
 }
 
 /* END Events */
