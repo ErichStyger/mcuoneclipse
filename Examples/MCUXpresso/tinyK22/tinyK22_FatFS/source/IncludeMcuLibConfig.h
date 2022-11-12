@@ -41,6 +41,9 @@
 
 #define configTICK_RATE_HZ                          (1000)
 
+/* configuration for FreeRTOS static allocation */
+#define configSUPPORT_STATIC_ALLOCATION             (1)
+
 /* -----------------------------------------------------*/
 /* performance counter: */
 #include <stdint.h>

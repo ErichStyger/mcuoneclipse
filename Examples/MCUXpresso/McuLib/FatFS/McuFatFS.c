@@ -767,7 +767,7 @@ void ff_memfree (void* ptr) {  /* Free memory block */
 * \return TRUE: Function succeeded, FALSE: Could not create due to any error
 */
 #if configSUPPORT_STATIC_ALLOCATION
-  static StaticSemaphore_t xMutexBuffer[_VOLUMES];
+  static StaticSemaphore_t xMutexBuffer[FF_VOLUMES];
 #endif
 
 int ff_cre_syncobj(uint8_t vol, McuFatFS_SYNC_t *sobj) {
