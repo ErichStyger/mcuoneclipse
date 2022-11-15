@@ -442,8 +442,23 @@ void McuSSD1306_Clear(void)
 void McuSSD1306_UpdateRegion(McuSSD1306_PixelDim x, McuSSD1306_PixelDim y, McuSSD1306_PixelDim w, McuSSD1306_PixelDim h)
 {
   int page, pageBeg, pageEnd, colStart;
+  McuSSD1306_PixelDim d_width = McuSSD1306_GetWidth();
+  McuSSD1306_PixelDim d_height = McuSSD1306_GetHeight();
 
-  pageBeg = y/8;
+  /* check boundaries */
+  if (x>=d_width) {
+    x = d_width-1;
+  }
+  if (y>=d_height) {
+    y = d_height-1;
+  }
+  if (x+w>=d_width) {
+    w = d_width-x;
+  }
+  if (y+h>=d_height) {
+    h = d_height-y;
+  }
+  pageBeg = (y/8);
   pageEnd = (y+h-1)/8;
   colStart = x;
   for(page = pageBeg; page<=pageEnd; page++) {
