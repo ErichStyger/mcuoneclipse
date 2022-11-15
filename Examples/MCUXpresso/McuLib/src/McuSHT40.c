@@ -103,8 +103,6 @@ uint8_t McuSHT40_ReadTempHum(float *temperature, float *humidity) {
   uint8_t res;
   uint8_t cmd[1];
 
-  *temperature = 0.0f;
-  *humidity = 0.0f;
   cmd[0] = SHT40_MEAS_HIGHREP;
   res = McuGenericI2C_ReadAddressWait(McuSHT40_CONFIG_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
   if (res!=ERR_OK) {
