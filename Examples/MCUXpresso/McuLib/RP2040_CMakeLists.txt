@@ -34,9 +34,18 @@ file(GLOB FILES
   src/McuRingBuffer.c
   src/McuRTOS.c
   src/McuRTT.c
+  
+  # SEGGER RTT
   SEGGER_RTT/RTT_Syscalls_GCC.c
   SEGGER_RTT/SEGGER_RTT_printf.c
   SEGGER_RTT/SEGGER_RTT.c
+  
+  # SEGGER SystemView
+  SEGGER_SysView/McuSystemView.c
+  SEGGER_SysView/SEGGER_SYSVIEW.c
+  SEGGER_SysView/SEGGER_SYSVIEW_Config_FreeRTOS.c
+  SEGGER_SysView/SEGGER_SYSVIEW_FreeRTOS.c
+  
   src/McuShell.c
   src/McuShellUart.c
   src/McuSHT31.c
@@ -46,9 +55,11 @@ file(GLOB FILES
   src/McuTimeout.c
   src/McuTrigger.c
   src/McuUart485.c
+  src/McuULN2003.c
   src/McuUtility.c
-  src/McuW28Q128.c
+  src/McuW25Q128.c
   src/McuWait.c
+  src/McuX12_017.c
   src/McuXFormat.c
   
   # FreeRTOS

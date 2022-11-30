@@ -590,6 +590,12 @@ void vPortYieldHandler(void);
 	/*-----------------------------------------------------------*/
 #endif
 
+/* << EST needed for PICO-W lwIP, IPSR would be available on M4 too */
+#define portCHECK_IF_IN_ISR() ({                          \
+        uint32_t ulIPSR;                                  \
+       __asm volatile ("mrs %0, IPSR" : "=r" (ulIPSR)::); \
+       ((uint8_t)ulIPSR)>0;})
+
 #if configUSE_TICKLESS_IDLE_DECISION_HOOK /* << EST */
   BaseType_t configUSE_TICKLESS_IDLE_DECISION_HOOK_NAME(void); /* return pdTRUE if RTOS can enter tickless idle mode, pdFALSE otherwise */
 #endif

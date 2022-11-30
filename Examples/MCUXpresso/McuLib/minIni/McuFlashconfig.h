@@ -28,7 +28,7 @@
   #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x800)
 #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
   #include "hardware/flash.h"
-  #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (FLASH_PAGE_SIZE) /* \todo, just a guess: FLASH_PAGE_SIZE */
+  #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x1000) /* size of block which can be erased, 4K on RP2040 */
 #else /* default */
   #define McuFlash_CONFIG_FLASH_BLOCK_SIZE         (0x400)
 #endif

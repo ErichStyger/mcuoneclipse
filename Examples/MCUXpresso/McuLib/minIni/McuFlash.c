@@ -11,6 +11,7 @@
 
 #include "McuLog.h"
 #include "McuUtility.h"
+#include "McuCriticalSection.h"
 
 #if McuLib_CONFIG_CPU_IS_LPC
   #include "fsl_iap.h"
@@ -38,7 +39,7 @@ static McuFlash_Memory McuFlash_RegisteredMemory; /* used in shell status, for i
      || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   static flash_config_t s_flashDriver;
 #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
-  /* \todo */
+  /* nothing  needed */
 #else
   #error "device not yet supported"
 #endif
@@ -237,10 +238,17 @@ static uint8_t McuFlash_ProgramPage(void *addr, const void *data, size_t dataSiz
   if ((size%FLASH_PAGE_SIZE)!=0) {
     return ERR_FAILED; /* size must multiple of a page! */
   }
+
+  /* first, erase the flash */
+  if (McuFlash_Erase(addr, dataSize)!=ERR_OK) {
+    return ERR_FAILED;
+  }
   /* need to turn off interrupts. But: only for this core. If other core is running, problems might occur! */
-  uint32_t ints = save_and_disable_interrupts();
+  McuCriticalSection_CriticalVariable();
+
+  McuCriticalSection_EnterCritical();
   flash_range_program(base, (const uint8_t *)data, size);
-  restore_interrupts(ints);
+  McuCriticalSection_ExitCritical();
   return ERR_OK;
 #else
   #error "target not supported yet!"
@@ -426,7 +434,7 @@ uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
 #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_RP2040
   uint32_t base, size;
 
-  base = (uint32_t)addr-XIP_BASE;
+  base = (uint32_t)addr-XIP_BASE; /* flash erase operation is without the XIP_BASE offset */
   if ((base%FLASH_SECTOR_SIZE)!=0) {
     return ERR_FAILED; /* address must be sector aligned! */
   }
@@ -434,7 +442,14 @@ uint8_t McuFlash_Erase(void *addr, size_t nofBytes) {
   if ((size%FLASH_SECTOR_SIZE)!=0) {
     return ERR_FAILED; /* size must multiple of a sector! */
   }
+
+  /* need to turn off interrupts. But: only for this core. If other core is running, problems might occur! */
+  McuCriticalSection_CriticalVariable();
+
+  McuCriticalSection_EnterCritical();
   flash_range_erase(base, size);
+  McuCriticalSection_ExitCritical();
+
   return ERR_OK;
 #else
   #error "target not supported yet!"
@@ -458,19 +473,19 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", block 0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), FLASH_BLOCK_SIZE);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  RP240 Flash", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  Flash", buf, io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), PICO_FLASH_SIZE_BYTES);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", ");
   McuUtility_strcatNum32u(buf, sizeof(buf), PICO_FLASH_SIZE_BYTES/(1024*1024));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" MBytes\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  RP240 size", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  Size", buf, io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"base 0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), XIP_BASE);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  RP240 XIP", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  XIP", buf, io->stdOut);
 #endif
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"addr 0x");
