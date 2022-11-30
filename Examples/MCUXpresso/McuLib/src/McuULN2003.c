@@ -9,6 +9,7 @@
 #include "McuULN2003.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
+#include <string.h> /* for memcpy() */
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
 #endif
