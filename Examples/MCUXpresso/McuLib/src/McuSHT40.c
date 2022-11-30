@@ -75,7 +75,6 @@ uint8_t SHT40_ReadSerialNumber(uint32_t *serial) {
 
   cmd[0] = SHT40_READSERIALNUM;
   res = McuGenericI2C_ReadAddressWait(McuSHT40_CONFIG_I2C_ADDR, cmd, sizeof(cmd), 20, readbuffer, sizeof(readbuffer));
-//  res = McuGenericI2C_ReadAddress(McuSHT40_CONFIG_I2C_ADDR, cmd, sizeof(cmd), readbuffer, sizeof(readbuffer));
   if (res!=ERR_OK) {
     *serial = 0;
     return res;
@@ -97,7 +96,7 @@ uint8_t McuSHT40_Reset(void) {
 }
 
 uint8_t McuSHT40_ReadTempHum(float *temperature, float *humidity) {
-  double stemp, shum;
+  float stemp, shum;
   uint16_t ST, SRH;
   uint8_t readbuffer[6];
   uint8_t res;
@@ -125,8 +124,14 @@ uint8_t McuSHT40_ReadTempHum(float *temperature, float *humidity) {
   *temperature = stemp;
 
   shum = SRH;
-  shum *= 100;
+  shum *= 125;
   shum /= 0xFFFF;
+  shum = -6 + shum;
+  if (shum>100.0f) {
+    shum = 100.0f;
+  } else if (shum<0.0f) {
+    shum = 0.0f;
+  }
   *humidity = shum;
 
   return ERR_OK;

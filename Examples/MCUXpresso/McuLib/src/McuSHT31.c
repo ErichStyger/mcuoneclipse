@@ -94,7 +94,6 @@ uint8_t McuSHT31_Reset(void) {
 }
 
 uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
-  double stemp, shum;
   uint16_t ST, SRH;
   uint8_t readbuffer[6];
   uint8_t res;
@@ -116,17 +115,40 @@ uint8_t McuSHT31_ReadTempHum(float *temperature, float *humidity) {
     return ERR_CRC;
   }
 
+#if 0
+  float stemp;
+
   stemp = ST;
   stemp *= 175;
   stemp /= 0xffff;
   stemp = -45 + stemp;
   *temperature = stemp;
+#else /* source: https://github.com/adafruit/Adafruit_SHT31/blob/master/Adafruit_SHT31.cpp */
+  int32_t stemp = (int32)ST;
+  // simplified (65536 instead of 65535) integer version of:
+  // temp = (stemp * 175.0f) / 65535.0f - 45.0f;
+  stemp = ((4375 * stemp) >> 14) - 4500;
+  *temperature = (float)stemp / 100.0f;
+#endif
 
+#if 0
+  float shum;
   shum = SRH;
   shum *= 100;
   shum /= 0xFFFF;
+  if (shum>100.0f) {
+    shum = 100.0f;
+  } else if (shum<0.0f) {
+    shum = 0.0f;
+  }
   *humidity = shum;
-
+#else /* source: https://github.com/adafruit/Adafruit_SHT31/blob/master/Adafruit_SHT31.cpp */
+  uint32_t shum = (uint32_t)SRH;
+   // simplified (65536 instead of 65535) integer version of:
+   // humidity = (shum * 100.0f) / 65535.0f;
+   shum = (625 * shum) >> 12;
+   *humidity = (float)shum / 100.0f;
+#endif
   return ERR_OK;
 }
 
