@@ -464,6 +464,10 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   DecodeUARTFlags(flags, io) ;
 #endif
 
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuUart485_CONFIG_UART_BAUDRATE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  baud", buf, io->stdOut);
+
 #if McuLib_CONFIG_CPU_IS_ESP32
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"buffer: ");
   McuUtility_strcatNum32u(buf, sizeof(buf), RS485_ESP_BUF_SIZE);
