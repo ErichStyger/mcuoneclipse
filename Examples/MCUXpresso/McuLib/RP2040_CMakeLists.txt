@@ -50,6 +50,7 @@ file(GLOB FILES
   src/McuShellUart.c
   src/McuSHT31.c
   src/McuSHT40.c
+  src/McuSPI.c
   src/McuSSD1306.c
   src/McuTimeDate.c
   src/McuTimeout.c
@@ -103,7 +104,14 @@ file(GLOB FILES
 add_library(McuLib ${FILES})
 
 # target_link_libraries: If you link with other libraries, list them here
-target_link_libraries(McuLib pico_stdlib hardware_pio hardware_flash hardware_sync)
+target_link_libraries(
+  McuLib 
+  pico_stdlib 
+  hardware_pio 
+  hardware_flash
+  hardware_spi
+  hardware_sync
+)
 
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 

@@ -11,10 +11,15 @@
   #include "fsl_dspi.h"
 #elif McuLib_CONFIG_CPU_IS_LPC55xx
   #include "fsl_spi.h"
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/spi.h"
 #endif
 #include "McuGPIO.h"
 
 static McuGPIO_Handle_t McuSPI_CSpin;
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  static spi_inst_t *spiHandle;
+#endif
 
 int McuSPI_SendReceiveBlock(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t dataSize) {
 #if (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI0) || (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1)
@@ -45,7 +50,16 @@ int McuSPI_SendReceiveBlock(const uint8_t *txDataBuf, uint8_t *rxDataBuf, size_t
     return 0; /* ok */
   }
   return -1; /* error */
+#elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
+  int res;
+
+  res = spi_write_read_blocking(spiHandle, txDataBuf, rxDataBuf, dataSize);
+  if (res==dataSize) { /* res is number of bytes written/read */
+    return 0; /* ok */
+  }
+  return -1; /* failed */
 #else
+  #error "not implemented?"
   return -1; /* error */
 #endif
 }
@@ -92,8 +106,10 @@ static void McuSPI_InitCS(void) {
 
   MCUSPI_CONFIG_HW_CS_INIT();
   McuGPIO_GetDefaultConfig(&config);
+#if !McuLib_CONFIG_CPU_IS_RPxxxx /* Raspberry Pi Pico only has pin number */
   config.hw.gpio = MCUSPI_CONFIG_HW_CS_GPIO;
   config.hw.port = MCUSPI_CONFIG_HW_CS_PORT;
+#endif
   config.hw.pin = MCUSPI_CONFIG_HW_CS_PIN;
   config.isInput = false;
   config.isHighOnInit = true; /* CS is LOW active */
@@ -146,6 +162,14 @@ void McuSPI_Init(void) {
   if (status!=kStatus_Success) {
     for(;;) { /* error */ }
   }
+#elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
+  spiHandle = spi1;
+  spi_init(spiHandle, 1000*1000);
+  gpio_set_function(MCUSPI_CONFIG_HW_MISO_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(MCUSPI_CONFIG_HW_MOSI_PIN, GPIO_FUNC_SPI);
+  gpio_set_function(MCUSPI_CONFIG_HW_SCLK_PIN, GPIO_FUNC_SPI);
+#else
+  #error "SPI target not supported"
 #endif
 #if 0
   McuSPI_Test();

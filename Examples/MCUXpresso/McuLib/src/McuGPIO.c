@@ -181,6 +181,9 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
   } else {
     gpio_set_dir(pin->hw.pin, GPIO_OUT);
   }
+  if (!isInput) {
+    gpio_put(pin->hw.pin, isHighOnInit); /* set initial logic level */
+  }
 #endif
 }
 

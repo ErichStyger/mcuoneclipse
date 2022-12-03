@@ -277,7 +277,7 @@ static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
     }
   } else {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"ERROR reading ID, ");
- }
+  }
   devID = McuW25_GetDeviceType();
   switch(devID) {
     case McuW25_DEVICE_W25Q128JV_IQ_JQ:
