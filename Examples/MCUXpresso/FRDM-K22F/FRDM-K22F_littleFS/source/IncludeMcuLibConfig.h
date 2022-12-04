@@ -148,10 +148,14 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 #endif
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* -------------------------------------------------*/
-/* LittleFS */
-#define LITTLEFS_CONFIG_ENABLED                 (1)
+/* McuW25Q128 */
 #define MCUW25Q128_CONFIG_ENABLED               (1)
-#define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE   McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+/* -------------------------------------------------*/
+/* McuLittleFS */
+#define LITTLEFS_CONFIG_ENABLED                       (1)
+#define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+#define McuLittleFS_CONFIG_BLOCK_SIZE                (4096) /* W25Q128 has blocks of 4 KByte */
+#define McuLittleFS_CONFIG_BLOCK_COUNT               (16777216/McuLittleFS_CONFIG_BLOCK_SIZE) /* W25Q128 has 16 MByte */
 /* -------------------------------------------------*/
 /* McuFlash */
 #define McuFlash_CONFIG_IS_ENABLED              (0)
