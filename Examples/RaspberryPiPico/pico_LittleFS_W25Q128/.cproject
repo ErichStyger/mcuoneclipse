@@ -1,0 +1,1816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 4.0.0?>
+<cproject>
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="org.eclipse.cdt.core.default.config.1">
+			<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.1" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser">
+						<attribute key="addr2line" value="addr2line"/>
+						<attribute key="c++filt" value="c++filt"/>
+					</extension>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+				<project-mappings/>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+				<pathentry kind="src" path="[Subprojects]"/>
+				<pathentry excluding="**/CMakeFiles/" kind="out" path=""/>
+				<pathentry kind="mac" name="__STDC__" path="" value="1"/>
+				<pathentry kind="mac" name="__STDC_VERSION__" path="" value="201710L"/>
+				<pathentry kind="mac" name="__STDC_UTF_16__" path="" value="1"/>
+				<pathentry kind="mac" name="__STDC_UTF_32__" path="" value="1"/>
+				<pathentry kind="mac" name="__STDC_HOSTED__" path="" value="1"/>
+				<pathentry kind="mac" name="__GNUC__" path="" value="11"/>
+				<pathentry kind="mac" name="__GNUC_MINOR__" path="" value="2"/>
+				<pathentry kind="mac" name="__GNUC_PATCHLEVEL__" path="" value="1"/>
+				<pathentry kind="mac" name="__VERSION__" path="" value="&quot;11.2.1 20220111&quot;"/>
+				<pathentry kind="mac" name="__ATOMIC_RELAXED" path="" value="0"/>
+				<pathentry kind="mac" name="__ATOMIC_SEQ_CST" path="" value="5"/>
+				<pathentry kind="mac" name="__ATOMIC_ACQUIRE" path="" value="2"/>
+				<pathentry kind="mac" name="__ATOMIC_RELEASE" path="" value="3"/>
+				<pathentry kind="mac" name="__ATOMIC_ACQ_REL" path="" value="4"/>
+				<pathentry kind="mac" name="__ATOMIC_CONSUME" path="" value="1"/>
+				<pathentry kind="mac" name="__FINITE_MATH_ONLY__" path="" value="0"/>
+				<pathentry kind="mac" name="__SIZEOF_INT__" path="" value="4"/>
+				<pathentry kind="mac" name="__SIZEOF_LONG__" path="" value="4"/>
+				<pathentry kind="mac" name="__SIZEOF_LONG_LONG__" path="" value="8"/>
+				<pathentry kind="mac" name="__SIZEOF_SHORT__" path="" value="2"/>
+				<pathentry kind="mac" name="__SIZEOF_FLOAT__" path="" value="4"/>
+				<pathentry kind="mac" name="__SIZEOF_DOUBLE__" path="" value="8"/>
+				<pathentry kind="mac" name="__SIZEOF_LONG_DOUBLE__" path="" value="8"/>
+				<pathentry kind="mac" name="__SIZEOF_SIZE_T__" path="" value="4"/>
+				<pathentry kind="mac" name="__CHAR_BIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__BIGGEST_ALIGNMENT__" path="" value="8"/>
+				<pathentry kind="mac" name="__ORDER_LITTLE_ENDIAN__" path="" value="1234"/>
+				<pathentry kind="mac" name="__ORDER_BIG_ENDIAN__" path="" value="4321"/>
+				<pathentry kind="mac" name="__ORDER_PDP_ENDIAN__" path="" value="3412"/>
+				<pathentry kind="mac" name="__BYTE_ORDER__" path="" value="__ORDER_LITTLE_ENDIAN__"/>
+				<pathentry kind="mac" name="__FLOAT_WORD_ORDER__" path="" value="__ORDER_LITTLE_ENDIAN__"/>
+				<pathentry kind="mac" name="__SIZEOF_POINTER__" path="" value="4"/>
+				<pathentry kind="mac" name="__GNUC_EXECUTION_CHARSET_NAME" path="" value="&quot;UTF-8&quot;"/>
+				<pathentry kind="mac" name="__GNUC_WIDE_EXECUTION_CHARSET_NAME" path="" value="&quot;UTF-32LE&quot;"/>
+				<pathentry kind="mac" name="__SIZE_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__PTRDIFF_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__WCHAR_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__WINT_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__INTMAX_TYPE__" path="" value="long long int"/>
+				<pathentry kind="mac" name="__UINTMAX_TYPE__" path="" value="long long unsigned int"/>
+				<pathentry kind="mac" name="__CHAR16_TYPE__" path="" value="short unsigned int"/>
+				<pathentry kind="mac" name="__CHAR32_TYPE__" path="" value="long unsigned int"/>
+				<pathentry kind="mac" name="__SIG_ATOMIC_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__INT8_TYPE__" path="" value="signed char"/>
+				<pathentry kind="mac" name="__INT16_TYPE__" path="" value="short int"/>
+				<pathentry kind="mac" name="__INT32_TYPE__" path="" value="long int"/>
+				<pathentry kind="mac" name="__INT64_TYPE__" path="" value="long long int"/>
+				<pathentry kind="mac" name="__UINT8_TYPE__" path="" value="unsigned char"/>
+				<pathentry kind="mac" name="__UINT16_TYPE__" path="" value="short unsigned int"/>
+				<pathentry kind="mac" name="__UINT32_TYPE__" path="" value="long unsigned int"/>
+				<pathentry kind="mac" name="__UINT64_TYPE__" path="" value="long long unsigned int"/>
+				<pathentry kind="mac" name="__INT_LEAST8_TYPE__" path="" value="signed char"/>
+				<pathentry kind="mac" name="__INT_LEAST16_TYPE__" path="" value="short int"/>
+				<pathentry kind="mac" name="__INT_LEAST32_TYPE__" path="" value="long int"/>
+				<pathentry kind="mac" name="__INT_LEAST64_TYPE__" path="" value="long long int"/>
+				<pathentry kind="mac" name="__UINT_LEAST8_TYPE__" path="" value="unsigned char"/>
+				<pathentry kind="mac" name="__UINT_LEAST16_TYPE__" path="" value="short unsigned int"/>
+				<pathentry kind="mac" name="__UINT_LEAST32_TYPE__" path="" value="long unsigned int"/>
+				<pathentry kind="mac" name="__UINT_LEAST64_TYPE__" path="" value="long long unsigned int"/>
+				<pathentry kind="mac" name="__INT_FAST8_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__INT_FAST16_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__INT_FAST32_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__INT_FAST64_TYPE__" path="" value="long long int"/>
+				<pathentry kind="mac" name="__UINT_FAST8_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__UINT_FAST16_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__UINT_FAST32_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__UINT_FAST64_TYPE__" path="" value="long long unsigned int"/>
+				<pathentry kind="mac" name="__INTPTR_TYPE__" path="" value="int"/>
+				<pathentry kind="mac" name="__UINTPTR_TYPE__" path="" value="unsigned int"/>
+				<pathentry kind="mac" name="__GXX_ABI_VERSION" path="" value="1016"/>
+				<pathentry kind="mac" name="__SCHAR_MAX__" path="" value="0x7f"/>
+				<pathentry kind="mac" name="__SHRT_MAX__" path="" value="0x7fff"/>
+				<pathentry kind="mac" name="__INT_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__LONG_MAX__" path="" value="0x7fffffffL"/>
+				<pathentry kind="mac" name="__LONG_LONG_MAX__" path="" value="0x7fffffffffffffffLL"/>
+				<pathentry kind="mac" name="__WCHAR_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__WCHAR_MIN__" path="" value="0U"/>
+				<pathentry kind="mac" name="__WINT_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__WINT_MIN__" path="" value="0U"/>
+				<pathentry kind="mac" name="__PTRDIFF_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__SIZE_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__SCHAR_WIDTH__" path="" value="8"/>
+				<pathentry kind="mac" name="__SHRT_WIDTH__" path="" value="16"/>
+				<pathentry kind="mac" name="__INT_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__LONG_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__LONG_LONG_WIDTH__" path="" value="64"/>
+				<pathentry kind="mac" name="__WCHAR_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__WINT_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__PTRDIFF_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__SIZE_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INTMAX_MAX__" path="" value="0x7fffffffffffffffLL"/>
+				<pathentry kind="mac" name="__INTMAX_C(c)" path="" value="c ## LL"/>
+				<pathentry kind="mac" name="__UINTMAX_MAX__" path="" value="0xffffffffffffffffULL"/>
+				<pathentry kind="mac" name="__UINTMAX_C(c)" path="" value="c ## ULL"/>
+				<pathentry kind="mac" name="__INTMAX_WIDTH__" path="" value="64"/>
+				<pathentry kind="mac" name="__SIG_ATOMIC_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__SIG_ATOMIC_MIN__" path="" value="(-__SIG_ATOMIC_MAX__ - 1)"/>
+				<pathentry kind="mac" name="__SIG_ATOMIC_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INT8_MAX__" path="" value="0x7f"/>
+				<pathentry kind="mac" name="__INT16_MAX__" path="" value="0x7fff"/>
+				<pathentry kind="mac" name="__INT32_MAX__" path="" value="0x7fffffffL"/>
+				<pathentry kind="mac" name="__INT64_MAX__" path="" value="0x7fffffffffffffffLL"/>
+				<pathentry kind="mac" name="__UINT8_MAX__" path="" value="0xff"/>
+				<pathentry kind="mac" name="__UINT16_MAX__" path="" value="0xffff"/>
+				<pathentry kind="mac" name="__UINT32_MAX__" path="" value="0xffffffffUL"/>
+				<pathentry kind="mac" name="__UINT64_MAX__" path="" value="0xffffffffffffffffULL"/>
+				<pathentry kind="mac" name="__INT_LEAST8_MAX__" path="" value="0x7f"/>
+				<pathentry kind="mac" name="__INT8_C(c)" path="" value="c"/>
+				<pathentry kind="mac" name="__INT_LEAST8_WIDTH__" path="" value="8"/>
+				<pathentry kind="mac" name="__INT_LEAST16_MAX__" path="" value="0x7fff"/>
+				<pathentry kind="mac" name="__INT16_C(c)" path="" value="c"/>
+				<pathentry kind="mac" name="__INT_LEAST16_WIDTH__" path="" value="16"/>
+				<pathentry kind="mac" name="__INT_LEAST32_MAX__" path="" value="0x7fffffffL"/>
+				<pathentry kind="mac" name="__INT32_C(c)" path="" value="c ## L"/>
+				<pathentry kind="mac" name="__INT_LEAST32_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INT_LEAST64_MAX__" path="" value="0x7fffffffffffffffLL"/>
+				<pathentry kind="mac" name="__INT64_C(c)" path="" value="c ## LL"/>
+				<pathentry kind="mac" name="__INT_LEAST64_WIDTH__" path="" value="64"/>
+				<pathentry kind="mac" name="__UINT_LEAST8_MAX__" path="" value="0xff"/>
+				<pathentry kind="mac" name="__UINT8_C(c)" path="" value="c"/>
+				<pathentry kind="mac" name="__UINT_LEAST16_MAX__" path="" value="0xffff"/>
+				<pathentry kind="mac" name="__UINT16_C(c)" path="" value="c"/>
+				<pathentry kind="mac" name="__UINT_LEAST32_MAX__" path="" value="0xffffffffUL"/>
+				<pathentry kind="mac" name="__UINT32_C(c)" path="" value="c ## UL"/>
+				<pathentry kind="mac" name="__UINT_LEAST64_MAX__" path="" value="0xffffffffffffffffULL"/>
+				<pathentry kind="mac" name="__UINT64_C(c)" path="" value="c ## ULL"/>
+				<pathentry kind="mac" name="__INT_FAST8_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__INT_FAST8_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INT_FAST16_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__INT_FAST16_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INT_FAST32_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__INT_FAST32_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__INT_FAST64_MAX__" path="" value="0x7fffffffffffffffLL"/>
+				<pathentry kind="mac" name="__INT_FAST64_WIDTH__" path="" value="64"/>
+				<pathentry kind="mac" name="__UINT_FAST8_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__UINT_FAST16_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__UINT_FAST32_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__UINT_FAST64_MAX__" path="" value="0xffffffffffffffffULL"/>
+				<pathentry kind="mac" name="__INTPTR_MAX__" path="" value="0x7fffffff"/>
+				<pathentry kind="mac" name="__INTPTR_WIDTH__" path="" value="32"/>
+				<pathentry kind="mac" name="__UINTPTR_MAX__" path="" value="0xffffffffU"/>
+				<pathentry kind="mac" name="__GCC_IEC_559" path="" value="0"/>
+				<pathentry kind="mac" name="__GCC_IEC_559_COMPLEX" path="" value="0"/>
+				<pathentry kind="mac" name="__FLT_EVAL_METHOD__" path="" value="0"/>
+				<pathentry kind="mac" name="__FLT_EVAL_METHOD_TS_18661_3__" path="" value="0"/>
+				<pathentry kind="mac" name="__DEC_EVAL_METHOD__" path="" value="2"/>
+				<pathentry kind="mac" name="__FLT_RADIX__" path="" value="2"/>
+				<pathentry kind="mac" name="__FLT_MANT_DIG__" path="" value="24"/>
+				<pathentry kind="mac" name="__FLT_DIG__" path="" value="6"/>
+				<pathentry kind="mac" name="__FLT_MIN_EXP__" path="" value="(-125)"/>
+				<pathentry kind="mac" name="__FLT_MIN_10_EXP__" path="" value="(-37)"/>
+				<pathentry kind="mac" name="__FLT_MAX_EXP__" path="" value="128"/>
+				<pathentry kind="mac" name="__FLT_MAX_10_EXP__" path="" value="38"/>
+				<pathentry kind="mac" name="__FLT_DECIMAL_DIG__" path="" value="9"/>
+				<pathentry kind="mac" name="__FLT_MAX__" path="" value="3.4028234663852886e+38F"/>
+				<pathentry kind="mac" name="__FLT_NORM_MAX__" path="" value="3.4028234663852886e+38F"/>
+				<pathentry kind="mac" name="__FLT_MIN__" path="" value="1.1754943508222875e-38F"/>
+				<pathentry kind="mac" name="__FLT_EPSILON__" path="" value="1.1920928955078125e-7F"/>
+				<pathentry kind="mac" name="__FLT_DENORM_MIN__" path="" value="1.4012984643248171e-45F"/>
+				<pathentry kind="mac" name="__FLT_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__DBL_MANT_DIG__" path="" value="53"/>
+				<pathentry kind="mac" name="__DBL_DIG__" path="" value="15"/>
+				<pathentry kind="mac" name="__DBL_MIN_EXP__" path="" value="(-1021)"/>
+				<pathentry kind="mac" name="__DBL_MIN_10_EXP__" path="" value="(-307)"/>
+				<pathentry kind="mac" name="__DBL_MAX_EXP__" path="" value="1024"/>
+				<pathentry kind="mac" name="__DBL_MAX_10_EXP__" path="" value="308"/>
+				<pathentry kind="mac" name="__DBL_DECIMAL_DIG__" path="" value="17"/>
+				<pathentry kind="mac" name="__DBL_MAX__" path="" value="((double)1.7976931348623157e+308L)"/>
+				<pathentry kind="mac" name="__DBL_NORM_MAX__" path="" value="((double)1.7976931348623157e+308L)"/>
+				<pathentry kind="mac" name="__DBL_MIN__" path="" value="((double)2.2250738585072014e-308L)"/>
+				<pathentry kind="mac" name="__DBL_EPSILON__" path="" value="((double)2.2204460492503131e-16L)"/>
+				<pathentry kind="mac" name="__DBL_DENORM_MIN__" path="" value="((double)4.9406564584124654e-324L)"/>
+				<pathentry kind="mac" name="__DBL_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__DBL_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__DBL_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__DBL_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__LDBL_MANT_DIG__" path="" value="53"/>
+				<pathentry kind="mac" name="__LDBL_DIG__" path="" value="15"/>
+				<pathentry kind="mac" name="__LDBL_MIN_EXP__" path="" value="(-1021)"/>
+				<pathentry kind="mac" name="__LDBL_MIN_10_EXP__" path="" value="(-307)"/>
+				<pathentry kind="mac" name="__LDBL_MAX_EXP__" path="" value="1024"/>
+				<pathentry kind="mac" name="__LDBL_MAX_10_EXP__" path="" value="308"/>
+				<pathentry kind="mac" name="__DECIMAL_DIG__" path="" value="17"/>
+				<pathentry kind="mac" name="__LDBL_DECIMAL_DIG__" path="" value="17"/>
+				<pathentry kind="mac" name="__LDBL_MAX__" path="" value="1.7976931348623157e+308L"/>
+				<pathentry kind="mac" name="__LDBL_NORM_MAX__" path="" value="1.7976931348623157e+308L"/>
+				<pathentry kind="mac" name="__LDBL_MIN__" path="" value="2.2250738585072014e-308L"/>
+				<pathentry kind="mac" name="__LDBL_EPSILON__" path="" value="2.2204460492503131e-16L"/>
+				<pathentry kind="mac" name="__LDBL_DENORM_MIN__" path="" value="4.9406564584124654e-324L"/>
+				<pathentry kind="mac" name="__LDBL_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__LDBL_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__LDBL_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__LDBL_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__FLT32_MANT_DIG__" path="" value="24"/>
+				<pathentry kind="mac" name="__FLT32_DIG__" path="" value="6"/>
+				<pathentry kind="mac" name="__FLT32_MIN_EXP__" path="" value="(-125)"/>
+				<pathentry kind="mac" name="__FLT32_MIN_10_EXP__" path="" value="(-37)"/>
+				<pathentry kind="mac" name="__FLT32_MAX_EXP__" path="" value="128"/>
+				<pathentry kind="mac" name="__FLT32_MAX_10_EXP__" path="" value="38"/>
+				<pathentry kind="mac" name="__FLT32_DECIMAL_DIG__" path="" value="9"/>
+				<pathentry kind="mac" name="__FLT32_MAX__" path="" value="3.4028234663852886e+38F32"/>
+				<pathentry kind="mac" name="__FLT32_NORM_MAX__" path="" value="3.4028234663852886e+38F32"/>
+				<pathentry kind="mac" name="__FLT32_MIN__" path="" value="1.1754943508222875e-38F32"/>
+				<pathentry kind="mac" name="__FLT32_EPSILON__" path="" value="1.1920928955078125e-7F32"/>
+				<pathentry kind="mac" name="__FLT32_DENORM_MIN__" path="" value="1.4012984643248171e-45F32"/>
+				<pathentry kind="mac" name="__FLT32_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__FLT64_MANT_DIG__" path="" value="53"/>
+				<pathentry kind="mac" name="__FLT64_DIG__" path="" value="15"/>
+				<pathentry kind="mac" name="__FLT64_MIN_EXP__" path="" value="(-1021)"/>
+				<pathentry kind="mac" name="__FLT64_MIN_10_EXP__" path="" value="(-307)"/>
+				<pathentry kind="mac" name="__FLT64_MAX_EXP__" path="" value="1024"/>
+				<pathentry kind="mac" name="__FLT64_MAX_10_EXP__" path="" value="308"/>
+				<pathentry kind="mac" name="__FLT64_DECIMAL_DIG__" path="" value="17"/>
+				<pathentry kind="mac" name="__FLT64_MAX__" path="" value="1.7976931348623157e+308F64"/>
+				<pathentry kind="mac" name="__FLT64_NORM_MAX__" path="" value="1.7976931348623157e+308F64"/>
+				<pathentry kind="mac" name="__FLT64_MIN__" path="" value="2.2250738585072014e-308F64"/>
+				<pathentry kind="mac" name="__FLT64_EPSILON__" path="" value="2.2204460492503131e-16F64"/>
+				<pathentry kind="mac" name="__FLT64_DENORM_MIN__" path="" value="4.9406564584124654e-324F64"/>
+				<pathentry kind="mac" name="__FLT64_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT64_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT64_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT64_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__FLT32X_MANT_DIG__" path="" value="53"/>
+				<pathentry kind="mac" name="__FLT32X_DIG__" path="" value="15"/>
+				<pathentry kind="mac" name="__FLT32X_MIN_EXP__" path="" value="(-1021)"/>
+				<pathentry kind="mac" name="__FLT32X_MIN_10_EXP__" path="" value="(-307)"/>
+				<pathentry kind="mac" name="__FLT32X_MAX_EXP__" path="" value="1024"/>
+				<pathentry kind="mac" name="__FLT32X_MAX_10_EXP__" path="" value="308"/>
+				<pathentry kind="mac" name="__FLT32X_DECIMAL_DIG__" path="" value="17"/>
+				<pathentry kind="mac" name="__FLT32X_MAX__" path="" value="1.7976931348623157e+308F32x"/>
+				<pathentry kind="mac" name="__FLT32X_NORM_MAX__" path="" value="1.7976931348623157e+308F32x"/>
+				<pathentry kind="mac" name="__FLT32X_MIN__" path="" value="2.2250738585072014e-308F32x"/>
+				<pathentry kind="mac" name="__FLT32X_EPSILON__" path="" value="2.2204460492503131e-16F32x"/>
+				<pathentry kind="mac" name="__FLT32X_DENORM_MIN__" path="" value="4.9406564584124654e-324F32x"/>
+				<pathentry kind="mac" name="__FLT32X_HAS_DENORM__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32X_HAS_INFINITY__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32X_HAS_QUIET_NAN__" path="" value="1"/>
+				<pathentry kind="mac" name="__FLT32X_IS_IEC_60559__" path="" value="2"/>
+				<pathentry kind="mac" name="__SFRACT_FBIT__" path="" value="7"/>
+				<pathentry kind="mac" name="__SFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__SFRACT_MIN__" path="" value="(-0.5HR-0.5HR)"/>
+				<pathentry kind="mac" name="__SFRACT_MAX__" path="" value="0X7FP-7HR"/>
+				<pathentry kind="mac" name="__SFRACT_EPSILON__" path="" value="0x1P-7HR"/>
+				<pathentry kind="mac" name="__USFRACT_FBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__USFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__USFRACT_MIN__" path="" value="0.0UHR"/>
+				<pathentry kind="mac" name="__USFRACT_MAX__" path="" value="0XFFP-8UHR"/>
+				<pathentry kind="mac" name="__USFRACT_EPSILON__" path="" value="0x1P-8UHR"/>
+				<pathentry kind="mac" name="__FRACT_FBIT__" path="" value="15"/>
+				<pathentry kind="mac" name="__FRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__FRACT_MIN__" path="" value="(-0.5R-0.5R)"/>
+				<pathentry kind="mac" name="__FRACT_MAX__" path="" value="0X7FFFP-15R"/>
+				<pathentry kind="mac" name="__FRACT_EPSILON__" path="" value="0x1P-15R"/>
+				<pathentry kind="mac" name="__UFRACT_FBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__UFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__UFRACT_MIN__" path="" value="0.0UR"/>
+				<pathentry kind="mac" name="__UFRACT_MAX__" path="" value="0XFFFFP-16UR"/>
+				<pathentry kind="mac" name="__UFRACT_EPSILON__" path="" value="0x1P-16UR"/>
+				<pathentry kind="mac" name="__LFRACT_FBIT__" path="" value="31"/>
+				<pathentry kind="mac" name="__LFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__LFRACT_MIN__" path="" value="(-0.5LR-0.5LR)"/>
+				<pathentry kind="mac" name="__LFRACT_MAX__" path="" value="0X7FFFFFFFP-31LR"/>
+				<pathentry kind="mac" name="__LFRACT_EPSILON__" path="" value="0x1P-31LR"/>
+				<pathentry kind="mac" name="__ULFRACT_FBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__ULFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__ULFRACT_MIN__" path="" value="0.0ULR"/>
+				<pathentry kind="mac" name="__ULFRACT_MAX__" path="" value="0XFFFFFFFFP-32ULR"/>
+				<pathentry kind="mac" name="__ULFRACT_EPSILON__" path="" value="0x1P-32ULR"/>
+				<pathentry kind="mac" name="__LLFRACT_FBIT__" path="" value="63"/>
+				<pathentry kind="mac" name="__LLFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__LLFRACT_MIN__" path="" value="(-0.5LLR-0.5LLR)"/>
+				<pathentry kind="mac" name="__LLFRACT_MAX__" path="" value="0X7FFFFFFFFFFFFFFFP-63LLR"/>
+				<pathentry kind="mac" name="__LLFRACT_EPSILON__" path="" value="0x1P-63LLR"/>
+				<pathentry kind="mac" name="__ULLFRACT_FBIT__" path="" value="64"/>
+				<pathentry kind="mac" name="__ULLFRACT_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__ULLFRACT_MIN__" path="" value="0.0ULLR"/>
+				<pathentry kind="mac" name="__ULLFRACT_MAX__" path="" value="0XFFFFFFFFFFFFFFFFP-64ULLR"/>
+				<pathentry kind="mac" name="__ULLFRACT_EPSILON__" path="" value="0x1P-64ULLR"/>
+				<pathentry kind="mac" name="__SACCUM_FBIT__" path="" value="7"/>
+				<pathentry kind="mac" name="__SACCUM_IBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__SACCUM_MIN__" path="" value="(-0X1P7HK-0X1P7HK)"/>
+				<pathentry kind="mac" name="__SACCUM_MAX__" path="" value="0X7FFFP-7HK"/>
+				<pathentry kind="mac" name="__SACCUM_EPSILON__" path="" value="0x1P-7HK"/>
+				<pathentry kind="mac" name="__USACCUM_FBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__USACCUM_IBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__USACCUM_MIN__" path="" value="0.0UHK"/>
+				<pathentry kind="mac" name="__USACCUM_MAX__" path="" value="0XFFFFP-8UHK"/>
+				<pathentry kind="mac" name="__USACCUM_EPSILON__" path="" value="0x1P-8UHK"/>
+				<pathentry kind="mac" name="__ACCUM_FBIT__" path="" value="15"/>
+				<pathentry kind="mac" name="__ACCUM_IBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__ACCUM_MIN__" path="" value="(-0X1P15K-0X1P15K)"/>
+				<pathentry kind="mac" name="__ACCUM_MAX__" path="" value="0X7FFFFFFFP-15K"/>
+				<pathentry kind="mac" name="__ACCUM_EPSILON__" path="" value="0x1P-15K"/>
+				<pathentry kind="mac" name="__UACCUM_FBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__UACCUM_IBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__UACCUM_MIN__" path="" value="0.0UK"/>
+				<pathentry kind="mac" name="__UACCUM_MAX__" path="" value="0XFFFFFFFFP-16UK"/>
+				<pathentry kind="mac" name="__UACCUM_EPSILON__" path="" value="0x1P-16UK"/>
+				<pathentry kind="mac" name="__LACCUM_FBIT__" path="" value="31"/>
+				<pathentry kind="mac" name="__LACCUM_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__LACCUM_MIN__" path="" value="(-0X1P31LK-0X1P31LK)"/>
+				<pathentry kind="mac" name="__LACCUM_MAX__" path="" value="0X7FFFFFFFFFFFFFFFP-31LK"/>
+				<pathentry kind="mac" name="__LACCUM_EPSILON__" path="" value="0x1P-31LK"/>
+				<pathentry kind="mac" name="__ULACCUM_FBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__ULACCUM_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__ULACCUM_MIN__" path="" value="0.0ULK"/>
+				<pathentry kind="mac" name="__ULACCUM_MAX__" path="" value="0XFFFFFFFFFFFFFFFFP-32ULK"/>
+				<pathentry kind="mac" name="__ULACCUM_EPSILON__" path="" value="0x1P-32ULK"/>
+				<pathentry kind="mac" name="__LLACCUM_FBIT__" path="" value="31"/>
+				<pathentry kind="mac" name="__LLACCUM_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__LLACCUM_MIN__" path="" value="(-0X1P31LLK-0X1P31LLK)"/>
+				<pathentry kind="mac" name="__LLACCUM_MAX__" path="" value="0X7FFFFFFFFFFFFFFFP-31LLK"/>
+				<pathentry kind="mac" name="__LLACCUM_EPSILON__" path="" value="0x1P-31LLK"/>
+				<pathentry kind="mac" name="__ULLACCUM_FBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__ULLACCUM_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__ULLACCUM_MIN__" path="" value="0.0ULLK"/>
+				<pathentry kind="mac" name="__ULLACCUM_MAX__" path="" value="0XFFFFFFFFFFFFFFFFP-32ULLK"/>
+				<pathentry kind="mac" name="__ULLACCUM_EPSILON__" path="" value="0x1P-32ULLK"/>
+				<pathentry kind="mac" name="__QQ_FBIT__" path="" value="7"/>
+				<pathentry kind="mac" name="__QQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__HQ_FBIT__" path="" value="15"/>
+				<pathentry kind="mac" name="__HQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__SQ_FBIT__" path="" value="31"/>
+				<pathentry kind="mac" name="__SQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__DQ_FBIT__" path="" value="63"/>
+				<pathentry kind="mac" name="__DQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__TQ_FBIT__" path="" value="127"/>
+				<pathentry kind="mac" name="__TQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__UQQ_FBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__UQQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__UHQ_FBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__UHQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__USQ_FBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__USQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__UDQ_FBIT__" path="" value="64"/>
+				<pathentry kind="mac" name="__UDQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__UTQ_FBIT__" path="" value="128"/>
+				<pathentry kind="mac" name="__UTQ_IBIT__" path="" value="0"/>
+				<pathentry kind="mac" name="__HA_FBIT__" path="" value="7"/>
+				<pathentry kind="mac" name="__HA_IBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__SA_FBIT__" path="" value="15"/>
+				<pathentry kind="mac" name="__SA_IBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__DA_FBIT__" path="" value="31"/>
+				<pathentry kind="mac" name="__DA_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__TA_FBIT__" path="" value="63"/>
+				<pathentry kind="mac" name="__TA_IBIT__" path="" value="64"/>
+				<pathentry kind="mac" name="__UHA_FBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__UHA_IBIT__" path="" value="8"/>
+				<pathentry kind="mac" name="__USA_FBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__USA_IBIT__" path="" value="16"/>
+				<pathentry kind="mac" name="__UDA_FBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__UDA_IBIT__" path="" value="32"/>
+				<pathentry kind="mac" name="__UTA_FBIT__" path="" value="64"/>
+				<pathentry kind="mac" name="__UTA_IBIT__" path="" value="64"/>
+				<pathentry kind="mac" name="__REGISTER_PREFIX__" path="" value=" "/>
+				<pathentry kind="mac" name="__USER_LABEL_PREFIX__" path="" value=" "/>
+				<pathentry kind="mac" name="__GNUC_STDC_INLINE__" path="" value="1"/>
+				<pathentry kind="mac" name="__NO_INLINE__" path="" value="1"/>
+				<pathentry kind="mac" name="__CHAR_UNSIGNED__" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_BOOL_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_CHAR_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_CHAR16_T_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_CHAR32_T_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_WCHAR_T_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_SHORT_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_INT_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_LONG_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_LLONG_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_TEST_AND_SET_TRUEVAL" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ATOMIC_POINTER_LOCK_FREE" path="" value="1"/>
+				<pathentry kind="mac" name="__HAVE_SPECULATION_SAFE_VALUE" path="" value="1"/>
+				<pathentry kind="mac" name="__PRAGMA_REDEFINE_EXTNAME" path="" value="1"/>
+				<pathentry kind="mac" name="__SIZEOF_WCHAR_T__" path="" value="4"/>
+				<pathentry kind="mac" name="__SIZEOF_WINT_T__" path="" value="4"/>
+				<pathentry kind="mac" name="__SIZEOF_PTRDIFF_T__" path="" value="4"/>
+				<pathentry kind="mac" name="__ARM_32BIT_STATE" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_SIZEOF_MINIMAL_ENUM" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_SIZEOF_WCHAR_T" path="" value="4"/>
+				<pathentry kind="mac" name="__arm__" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_ARCH" path="" value="4"/>
+				<pathentry kind="mac" name="__ARM_ARCH_ISA_ARM" path="" value="1"/>
+				<pathentry kind="mac" name="__APCS_32__" path="" value="1"/>
+				<pathentry kind="mac" name="__GCC_ASM_FLAG_OUTPUTS__" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_ARCH_ISA_THUMB" path="" value="1"/>
+				<pathentry kind="mac" name="__ARMEL__" path="" value="1"/>
+				<pathentry kind="mac" name="__SOFTFP__" path="" value="1"/>
+				<pathentry kind="mac" name="__VFP_FP__" path="" value="1"/>
+				<pathentry kind="mac" name="__THUMB_INTERWORK__" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_ARCH_4T__" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_PCS" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_EABI__" path="" value="1"/>
+				<pathentry kind="mac" name="__ARM_FEATURE_COPROC" path="" value="1"/>
+				<pathentry kind="mac" name="__GXX_TYPEINFO_EQUALITY_INLINE" path="" value="0"/>
+				<pathentry kind="mac" name="__ELF__" path="" value="1"/>
+				<pathentry kind="mac" name="__USES_INITFINI__" path="" value="1"/>
+				<pathentry kind="mac" name="__cplusplus" path="" value="201703L"/>
+				<pathentry kind="mac" name="__GNUG__" path="" value="11"/>
+				<pathentry kind="mac" name="__GXX_WEAK__" path="" value="1"/>
+				<pathentry kind="mac" name="__DEPRECATED" path="" value="1"/>
+				<pathentry kind="mac" name="__GXX_RTTI" path="" value="1"/>
+				<pathentry kind="mac" name="__cpp_rtti" path="" value="199711L"/>
+				<pathentry kind="mac" name="__GXX_EXPERIMENTAL_CXX0X__" path="" value="1"/>
+				<pathentry kind="mac" name="__cpp_binary_literals" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_hex_float" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_runtime_arrays" path="" value="198712L"/>
+				<pathentry kind="mac" name="__cpp_raw_strings" path="" value="200710L"/>
+				<pathentry kind="mac" name="__cpp_unicode_literals" path="" value="200710L"/>
+				<pathentry kind="mac" name="__cpp_user_defined_literals" path="" value="200809L"/>
+				<pathentry kind="mac" name="__cpp_lambdas" path="" value="200907L"/>
+				<pathentry kind="mac" name="__cpp_decltype" path="" value="200707L"/>
+				<pathentry kind="mac" name="__cpp_attributes" path="" value="200809L"/>
+				<pathentry kind="mac" name="__cpp_rvalue_reference" path="" value="200610L"/>
+				<pathentry kind="mac" name="__cpp_rvalue_references" path="" value="200610L"/>
+				<pathentry kind="mac" name="__cpp_variadic_templates" path="" value="200704L"/>
+				<pathentry kind="mac" name="__cpp_initializer_lists" path="" value="200806L"/>
+				<pathentry kind="mac" name="__cpp_delegating_constructors" path="" value="200604L"/>
+				<pathentry kind="mac" name="__cpp_nsdmi" path="" value="200809L"/>
+				<pathentry kind="mac" name="__cpp_inheriting_constructors" path="" value="201511L"/>
+				<pathentry kind="mac" name="__cpp_ref_qualifiers" path="" value="200710L"/>
+				<pathentry kind="mac" name="__cpp_alias_templates" path="" value="200704L"/>
+				<pathentry kind="mac" name="__cpp_return_type_deduction" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_init_captures" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_generic_lambdas" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_decltype_auto" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_aggregate_nsdmi" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_variable_templates" path="" value="201304L"/>
+				<pathentry kind="mac" name="__cpp_digit_separators" path="" value="201309L"/>
+				<pathentry kind="mac" name="__cpp_unicode_characters" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_static_assert" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_namespace_attributes" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_enumerator_attributes" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_nested_namespace_definitions" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_fold_expressions" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_nontype_template_args" path="" value="201411L"/>
+				<pathentry kind="mac" name="__cpp_range_based_for" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_constexpr" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_if_constexpr" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_capture_star_this" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_inline_variables" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_aggregate_bases" path="" value="201603L"/>
+				<pathentry kind="mac" name="__cpp_deduction_guides" path="" value="201703L"/>
+				<pathentry kind="mac" name="__cpp_noexcept_function_type" path="" value="201510L"/>
+				<pathentry kind="mac" name="__cpp_template_auto" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_structured_bindings" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_variadic_using" path="" value="201611L"/>
+				<pathentry kind="mac" name="__cpp_guaranteed_copy_elision" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_nontype_template_parameter_auto" path="" value="201606L"/>
+				<pathentry kind="mac" name="__cpp_sized_deallocation" path="" value="201309L"/>
+				<pathentry kind="mac" name="__cpp_aligned_new" path="" value="201606L"/>
+				<pathentry kind="mac" name="__STDCPP_DEFAULT_NEW_ALIGNMENT__" path="" value="8"/>
+				<pathentry kind="mac" name="__cpp_template_template_args" path="" value="201611L"/>
+				<pathentry kind="mac" name="__cpp_threadsafe_static_init" path="" value="200806L"/>
+				<pathentry kind="mac" name="__EXCEPTIONS" path="" value="1"/>
+				<pathentry kind="mac" name="__cpp_exceptions" path="" value="199711L"/>
+				<pathentry kind="mac" name="__WCHAR_UNSIGNED__" path="" value="1"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/src" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/src" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/config" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/FreeRTOS/Source/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/fonts" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/config/fonts" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/SEGGER_RTT" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/SEGGER_Sysview" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib/minIni" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_stdlib/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_gpio/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_base/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/generated/pico_base" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/boards/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_platform/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2040/hardware_regs/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_base/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2040/hardware_structs/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_claim/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_sync/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_irq/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_sync/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_time/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_timer/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_util/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_uart/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_divider/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_runtime/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_clocks/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_resets/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_pll/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_vreg/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_watchdog/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_xosc/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_printf/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_bootrom/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_bit_ops/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_divider/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_double/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_int64_ops/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_float/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_malloc/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/boot_stage2/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_binary_info/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_stdio/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_stdio_usb/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/lib/tinyusb/src" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/lib/tinyusb/src/common" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/lib/tinyusb/hw" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_unique_id/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_flash/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/common/pico_usb_reset_interface/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_pio/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_spi/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_adc/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/hardware_rtc/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/boot_stage2/asminclude" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Raspy/pico/pico-sdk/src/rp2_common/pico_stdio_uart/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/lib/gcc/arm-none-eabi/11.2.1/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/lib/gcc/arm-none-eabi/11.2.1/include-fixed" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/arm-none-eabi/include" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/arm-none-eabi/include/c++/11.2.1" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/arm-none-eabi/include/c++/11.2.1/arm-none-eabi" kind="inc" path="" system="true"/>
+				<pathentry include="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/arm-none-eabi/include/c++/11.2.1/backward" kind="inc" path="" system="true"/>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+				<buildTargets>
+					<target name="[exe] pico_LittleFS_W25Q128" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>pico_LittleFS_W25Q128</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[exe] pico_LittleFS_W25Q128/fast" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>pico_LittleFS_W25Q128/fast</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Build" path="[Targets]/[exe] pico_LittleFS_W25Q128" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments>-C "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128" </buildArguments>
+						<buildTarget>pico_LittleFS_W25Q128</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Clean" path="[Targets]/[exe] pico_LittleFS_W25Q128" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Program Files/CMake/bin/cmake.exe</buildCommand>
+						<buildArguments>-E chdir "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128" "C:/Program Files/CMake/bin/cmake.exe" -P "CMakeFiles/pico_LittleFS_W25Q128.dir/cmake_clean.cmake"</buildArguments>
+						<buildTarget></buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": ELF2UF2Build" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>ELF2UF2Build</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": edit_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>edit_cache</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": rebuild_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>rebuild_cache</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/tools" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/tools" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/boot_picoboot" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/boot_picoboot" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/boot_uf2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/boot_uf2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_base" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_base" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_usb_reset_interface" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_usb_reset_interface" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_bit_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_bit_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_binary_info" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_binary_info" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_sync" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_sync" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_time" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_time" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_util" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_util" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/common/pico_stdlib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/common/pico_stdlib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_base" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_base" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_claim" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_claim" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_adc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_adc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_clocks" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_clocks" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_dma" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_dma" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_exception" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_exception" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_flash" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_flash" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_gpio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_gpio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_i2c" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_i2c" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_interp" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_interp" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_irq" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_irq" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_pio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_pio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_pll" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_pll" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_pwm" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_pwm" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_resets" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_resets" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_rtc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_rtc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_spi" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_spi" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_sync" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_sync" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_timer" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_timer" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_uart" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_uart" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_vreg" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_vreg" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_watchdog" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_watchdog" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/hardware_xosc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/hardware_xosc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_bootrom" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_bootrom" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_platform" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_platform" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[exe] bs2_default" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>bs2_default</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[exe] bs2_default/fast" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>bs2_default/fast</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Build" path="[Targets]/[exe] bs2_default" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments>-C "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128" </buildArguments>
+						<buildTarget>bs2_default</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Clean" path="[Targets]/[exe] bs2_default" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Program Files/CMake/bin/cmake.exe</buildCommand>
+						<buildArguments>-E chdir "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/pico-sdk/src/rp2_common/boot_stage2" "C:/Program Files/CMake/bin/cmake.exe" -P "CMakeFiles/bs2_default.dir/cmake_clean.cmake"</buildArguments>
+						<buildTarget></buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": bs2_default_bin" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>bs2_default_bin</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": bs2_default_padded_checksummed_asm" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>bs2_default_padded_checksummed_asm</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/boot_stage2" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_bootsel_via_double_reset" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_bootsel_via_double_reset" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_multicore" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_multicore" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_unique_id" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_unique_id" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_bit_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_bit_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_divider" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_double" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_double" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_int64_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_int64_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_float" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_float" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_mem_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_mem_ops" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_malloc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_malloc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_printf" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_printf" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_stdio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_stdio" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_stdio_semihosting" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_stdio_semihosting" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_stdio_uart" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_stdio_uart" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/cmsis" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/cmsis" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/tinyusb" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/tinyusb" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_stdio_usb" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_stdio_usb" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": cyw43_firmware_package" path="pico-sdk/src/rp2_common/cyw43_driver" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>cyw43_firmware_package</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": PioasmBuild" path="pico-sdk/src/rp2_common/cyw43_driver" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>PioasmBuild</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": cyw43_driver_picow_cyw43_bus_pio_spi_pio_h" path="pico-sdk/src/rp2_common/cyw43_driver" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>cyw43_driver_picow_cyw43_bus_pio_spi_pio_h</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/cyw43_driver" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/cyw43_driver" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_lwip" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_lwip" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_cyw43_arch" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_cyw43_arch" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_stdlib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_stdlib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_cxx_options" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_cxx_options" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_standard_link" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_standard_link" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_fix" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_fix" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2_common/pico_runtime" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2_common/pico_runtime" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2040" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2040" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2040/hardware_regs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2040/hardware_regs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/src/rp2040/hardware_structs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/src/rp2040/hardware_structs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="pico-sdk/docs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="pico-sdk/docs" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[lib] McuLib" path="McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>McuLib</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[lib] McuLib/fast" path="McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>McuLib/fast</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Build" path="[Targets]/[lib] McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments>-C "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128" </buildArguments>
+						<buildTarget>McuLib</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Clean" path="[Targets]/[lib] McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Program Files/CMake/bin/cmake.exe</buildCommand>
+						<buildArguments>-E chdir "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/McuLib" "C:/Program Files/CMake/bin/cmake.exe" -P "CMakeFiles/McuLib.dir/cmake_clean.cmake"</buildArguments>
+						<buildTarget></buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="McuLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[lib] SrcLib" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>SrcLib</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="[lib] SrcLib/fast" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>SrcLib/fast</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Build" path="[Targets]/[lib] SrcLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments>-C "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128" </buildArguments>
+						<buildTarget>SrcLib</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name="Clean" path="[Targets]/[lib] SrcLib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Program Files/CMake/bin/cmake.exe</buildCommand>
+						<buildArguments>-E chdir "C:/Users/erich/Data/GitRepos/McuOnEclipse/Examples/RaspberryPiPico/pico_LittleFS_W25Q128/src" "C:/Program Files/CMake/bin/cmake.exe" -P "CMakeFiles/SrcLib.dir/cmake_clean.cmake"</buildArguments>
+						<buildTarget></buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": all" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>all</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+					<target name=": clean" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+						<buildCommand>C:/Strawberry/c/bin/gmake.exe</buildCommand>
+						<buildArguments></buildArguments>
+						<buildTarget>clean</buildTarget>
+						<stopOnError>true</stopOnError>
+						<useDefaultCommand>false</useDefaultCommand>
+					</target>
+				</buildTargets>
+			</storageModule>
+			<storageModule moduleId="scannerConfiguration">
+				<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+				<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+					<buildOutputProvider>
+						<openAction enabled="true" filePath=""/>
+						<parser enabled="true"/>
+					</buildOutputProvider>
+					<scannerInfoProvider id="specsFile">
+						<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="C:/Program Files (x86)/Arm GNU Toolchain arm-none-eabi/11.2 2022.02/bin/arm-none-eabi-gcc.exe" useDefault="true"/>
+						<parser enabled="true"/>
+					</scannerInfoProvider>
+				</profile>
+				<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+					<buildOutputProvider>
+						<openAction enabled="true" filePath=""/>
+						<parser enabled="true"/>
+					</buildOutputProvider>
+					<scannerInfoProvider id="makefileGenerator">
+						<runAction arguments="-f ${project_name}_scd.mk" command="C:/Strawberry/c/bin/gmake.exe" useDefault="true"/>
+						<parser enabled="true"/>
+					</scannerInfoProvider>
+				</profile>
+			</storageModule>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="pico_LittleFS_W25Q128.null.1" name="pico_LittleFS_W25Q128"/>
+	</storageModule>
+</cproject>
