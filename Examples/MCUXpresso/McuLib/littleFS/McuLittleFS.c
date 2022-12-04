@@ -11,19 +11,12 @@
 #include "McuTimeDate.h"
 #include "littleFS/lfs.h"
 
-#define McuLFS_FILE_NAME_SIZE  60 /* Length of file name, used in buffers */
-
 /* variables used by the file system */
 static bool McuLFS_isMounted = FALSE;
 static lfs_t McuLFS_lfs;
 #if LITTLEFS_CONFIG_THREAD_SAFE
   static SemaphoreHandle_t fileSystemAccessMutex;
 #endif
-
-#define FILESYSTEM_READ_BUFFER_SIZE 256//256
-#define FILESYSTEM_PROG_BUFFER_SIZE 256//256
-#define FILESYSTEM_LOOKAHEAD_SIZE 256 //128
-#define FILESYSTEM_CACHE_SIZE 256
 
 bool McuLFS_IsMounted(void) {
   return McuLFS_isMounted;
@@ -53,12 +46,12 @@ static const struct lfs_config McuLFS_cfg = {
   .erase = McuLittleFS_block_device_erase,
   .sync = McuLittleFS_block_device_sync,
   /* block device configuration */
-  .read_size = FILESYSTEM_READ_BUFFER_SIZE,
-  .prog_size = FILESYSTEM_PROG_BUFFER_SIZE,
-  .block_size = MCULITTLEFS_CONFIG_BLOCK_SIZE,
-  .block_count = MCULITTLEFS_CONFIG_BLOCK_COUNT,
-  .cache_size = FILESYSTEM_CACHE_SIZE,
-  .lookahead_size = FILESYSTEM_LOOKAHEAD_SIZE,
+  .read_size = McuLittleFS_CONFIG_FILESYSTEM_READ_BUFFER_SIZE,
+  .prog_size = McuLittleFS_CONFIG_FILESYSTEM_PROG_BUFFER_SIZE,
+  .block_size = McuLittleFS_CONFIG_BLOCK_SIZE,
+  .block_count = McuLittleFS_CONFIG_BLOCK_COUNT,
+  .cache_size = McuLittleFS_CONFIG_FILESYSTEM_CACHE_SIZE,
+  .lookahead_size = McuLittleFS_CONFIG_FILESYSTEM_LOOKAHEAD_SIZE,
   .block_cycles = 500,
 #if LITTLEFS_CONFIG_THREAD_SAFE
   .lock = McuLittleFS_lock,
@@ -766,38 +759,48 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcpy(buf, sizeof(buf), (const uint8_t *)"0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), LFS_VERSION);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  version", buf, io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"  version", buf, io->stdOut);
+
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_GENERIC
+  McuShell_SendStatusStr((const unsigned char*)"  memory", (const unsigned char*)"Generic\r\n", io->stdOut);
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  McuShell_SendStatusStr((const unsigned char*)"  memory", (const unsigned char*)"Winbond W25Q128\r\n", io->stdOut);
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_MCU_FLASH
+  McuShell_SendStatusStr((const unsigned char*)"  memory", (const unsigned char*)"MCU Flash\r\n", io->stdOut);
+#else
+  #error "unknown type"
+#endif
 
   McuShell_SendStatusStr((const unsigned char*) "  mounted",  McuLFS_isMounted ? (const uint8_t *)"yes\r\n" : (const uint8_t *)"no\r\n", io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
-  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)" bytes\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  space", buf, io->stdOut);
-
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.read_size);
-  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  read_size", buf, io->stdOut);
-
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.prog_size);
-  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  prog_size", buf, io->stdOut);
-
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_size);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  block_size", buf, io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"  block_size", buf, io->stdOut);
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  block_count", buf, io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"  block_count", buf, io->stdOut);
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)" bytes\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  space", buf, io->stdOut);
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.read_size);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  read_size", buf, io->stdOut);
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.prog_size);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  prog_size", buf, io->stdOut);
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.lookahead_size);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*) "  lookahead", buf, io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"  lookahead", buf, io->stdOut);
   return ERR_OK;
 }
 
 uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShell_StdIOType *io) {
-  unsigned char fileNameSrc[McuLFS_FILE_NAME_SIZE], fileNameDst[McuLFS_FILE_NAME_SIZE];
+  unsigned char fileNameSrc[McuLittleFS_CONFIG_FILE_NAME_SIZE], fileNameDst[McuLittleFS_CONFIG_FILE_NAME_SIZE];
   size_t lenRead;
   const unsigned char *p;
 

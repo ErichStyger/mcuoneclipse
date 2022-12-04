@@ -164,7 +164,7 @@ void McuSPI_Init(void) {
   }
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
   spiHandle = spi1;
-  spi_init(spiHandle, 1000*1000);
+  spi_init(spiHandle, MCUSPI_CONFIG_TRANSFER_BAUDRATE);
   gpio_set_function(MCUSPI_CONFIG_HW_MISO_PIN, GPIO_FUNC_SPI);
   gpio_set_function(MCUSPI_CONFIG_HW_MOSI_PIN, GPIO_FUNC_SPI);
   gpio_set_function(MCUSPI_CONFIG_HW_SCLK_PIN, GPIO_FUNC_SPI);
