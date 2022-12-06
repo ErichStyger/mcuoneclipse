@@ -10,6 +10,11 @@
 #include "McuShell.h"
 #include "McuTimeDate.h"
 #include "littleFS/lfs.h"
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+  #include "McuW25Q128.h"
+#elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_MCU_FLASH
+  #include "McuFlash.h"
+#endif
 
 /* variables used by the file system */
 static bool McuLFS_isMounted = FALSE;
@@ -40,6 +45,7 @@ static int McuLittleFS_unlock(const struct lfs_config *c) {
 
 /* configuration of the file system is provided by this struct */
 static const struct lfs_config McuLFS_cfg = {
+  .context = NULL,
   /* block device operations */
   .read = McuLittleFS_block_device_read,
   .prog = McuLittleFS_block_device_prog,
@@ -780,6 +786,11 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  block_count", buf, io->stdOut);
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuLittleFS_CONFIG_BLOCK_OFFSET);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  block offset", buf, io->stdOut);
+
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)" bytes\r\n");

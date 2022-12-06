@@ -305,6 +305,10 @@ static uint8_t McuW25_PrintStatus(McuShell_ConstStdIOType *io) {
   }
   McuShell_SendStatusStr((const unsigned char*)"  Capacity", buf, io->stdOut);
 
+  McuUtility_Num32uToStr(buf, sizeof(buf), MCUW25Q128_CONFIG_SIZE_KBYTES);
+  McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  kBytes", buf, io->stdOut);
+
   res = McuW25_ReadSerialNumber(serial, sizeof(serial)); /* check serial number */
   if(res==ERR_OK) {
     buf[0] = '\0';

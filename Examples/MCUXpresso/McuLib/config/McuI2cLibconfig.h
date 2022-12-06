@@ -202,6 +202,12 @@
   #endif /* MCUI2CLIB_CONFIG_HW_TEMPLATE_USED */
 
   #endif /* LPC variants */
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+
+   #define MCUI2CLIB_CONFIG_I2C_DEVICE       i2c0
+
+   #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     16u
+   #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     17u
 
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   /* set of predefined pin configurations for Kinetis devices: only one can be active! */

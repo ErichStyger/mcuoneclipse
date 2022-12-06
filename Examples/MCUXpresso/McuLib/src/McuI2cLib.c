@@ -9,22 +9,27 @@
 #if McuLib_CONFIG_MCUI2CLIB_ENABLED
 #include "McuLib.h"
 #include "McuI2cLib.h"
-#include "fsl_i2c.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
+  #include "fsl_i2c.h"
 #elif McuLib_CONFIG_CPU_IS_LPC
   #include "pin_mux.h"
   #include "fsl_iocon.h"
+  #include "fsl_i2c.h"
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/i2c.h"
 #endif
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #include "fsl_swm.h"
+  #include "fsl_i2c.h"
 #endif
 
 static uint8_t i2cSlaveDeviceAddr; /* used to store the current I2C device address used */
 
 uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   status_t status;
 
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -36,18 +41,33 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  /* nothing needed */
+#endif
+
 #if MCUI2CLIB_CONFIG_ADD_DELAY
   McuWait_Waitus(MCUI2CLIB_CONFIG_ADD_DELAY_US);
 #endif
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   status = I2C_MasterWriteBlocking(MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR, Ptr, Siz, kI2C_TransferNoStartFlag|kI2C_TransferNoStopFlag);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  int nofBytesWritten;
+
+  nofBytesWritten = i2c_write_blocking(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false);
+  if (nofBytesWritten!=Siz) {
+    *Snt = nofBytesWritten;
+    return ERR_FAILED;
+  }
+#endif
   *Snt = Siz;
   return ERR_OK;
 }
 
 uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   status_t status;
 
   status = I2C_MasterRepeatedStart(MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR, i2cSlaveDeviceAddr, kI2C_Read);
@@ -61,17 +81,30 @@ uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  int nofBytesRead;
+
+  nofBytesRead = i2c_read_blocking(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false);
+  if (nofBytesRead!=Siz) {
+    *Rcv = nofBytesRead;
+    return ERR_FAILED;
+  }
+#endif
   *Rcv = Siz;
   return ERR_OK;
 }
 
 uint8_t McuI2cLib_SendStop(void) {
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   status_t status;
 
   status = I2C_MasterStop(MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR);
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  return ERR_FAILED; /* not implemented */
+#endif
   return ERR_OK;
 }
 
@@ -88,14 +121,18 @@ static void McuI2cLib_ReleaseBus(void) {
   McuGPIO_GetDefaultConfig(&config);
   config.isInput = false;
   config.isHighOnInit = true;
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   config.hw.gpio = MCUI2CLIB_CONFIG_SDA_GPIO;
-  config.hw.pin = MCUI2CLIB_CONFIG_SDA_GPIO_PIN;
   config.hw.port = MCUI2CLIB_CONFIG_SDA_GPIO_PORT;
+#endif
+  config.hw.pin = MCUI2CLIB_CONFIG_SDA_GPIO_PIN;
   sdaPin = McuGPIO_InitGPIO(&config);
 
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   config.hw.gpio = MCUI2CLIB_CONFIG_SCL_GPIO;
-  config.hw.pin = MCUI2CLIB_CONFIG_SCL_GPIO_PIN;
   config.hw.port = MCUI2CLIB_CONFIG_SCL_GPIO_PORT;
+#endif
+  config.hw.pin = MCUI2CLIB_CONFIG_SCL_GPIO_PIN;
   sclPin = McuGPIO_InitGPIO(&config);
 
   /* Drive SDA low first to simulate a start */
@@ -136,6 +173,11 @@ static void McuI2cLib_ConfigureI2cPins(void) {
     || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69 \
     || McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   MCUI2CLIB_CONFIG_MUX_I2C_PINS();
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  gpio_set_function(MCUI2CLIB_CONFIG_SDA_GPIO_PIN, GPIO_FUNC_I2C);
+  gpio_set_function(MCUI2CLIB_CONFIG_SCL_GPIO_PIN, GPIO_FUNC_I2C);
+  gpio_pull_up(MCUI2CLIB_CONFIG_SDA_GPIO_PIN);
+  gpio_pull_up(MCUI2CLIB_CONFIG_SCL_GPIO_PIN);
 #else
   #error "unknown configuration and MCU"
 #endif
@@ -151,12 +193,15 @@ void McuI2cLib_Init(void) {
      || McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69 \
      || McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   MCUI2CLIB_CONFIG_CLOCK_SELECT();
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  i2c_init(MCUI2CLIB_CONFIG_I2C_DEVICE, MCUI2CLIB_CONFIG_I2C_BAUDRATE);
 #else
   #error "unknown configuration and MCU"
 #endif
 
   McuI2cLib_ConfigureI2cPins();
 
+#if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
   i2c_master_config_t masterConfig;
   uint32_t sourceClock;
   /*
@@ -169,5 +214,8 @@ void McuI2cLib_Init(void) {
   masterConfig.baudRate_Bps = MCUI2CLIB_CONFIG_I2C_BAUDRATE;
   sourceClock = MCUI2CLIB_CONFIG_I2C_MASTER_CLK_FREQ;
   I2C_MasterInit(MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  /* nothing needed */
+#endif
 }
-#endif /* McuGenericI2C_CONFIG_INTERFACE_HEADER_FILE */
+#endif /* McuLib_CONFIG_MCUI2CLIB_ENABLED */

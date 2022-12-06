@@ -194,5 +194,8 @@ Instructions:
 #define McuSWO_CONFIG_HAS_SWO         (1) /* enable SWO support */
 //#define McuSWO_CONFIG_SPEED_BAUD      (5625000) /* J-Link supports up to 5625 kHz */
 #define McuSWO_CONFIG_SPEED_BAUD      (96000000) /* needed for LinkServer and MCUXpresso IDE 11.5.0 */
+/* -----------------------------------------------------*/
+/* McuW25Q128 */
+#define MCUW25Q128_CONFIG_ENABLED     (1)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

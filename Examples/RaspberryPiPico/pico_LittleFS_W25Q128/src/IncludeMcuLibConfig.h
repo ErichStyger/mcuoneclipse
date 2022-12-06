@@ -96,18 +96,6 @@
 #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE       (0x1000) /* just use a single block */
 #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE    (0x1000) /* must be multiple of 4K */
 #define McuMinINI_CONFIG_BUFFER_SIZE                (128) /* maximum line and path length */
-/* ---------------------------------------------------------------------- */
-#if 0 /* old */
-/* McuMinINI */
-#define McuMinINI_CONFIG_FS      (McuMinINI_CONFIG_FS_TYPE_FLASH_FS)
-#if McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
-  /* values for MinINI Flash FS: */
-  #define McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS      (1) /* number of blocks */
-  #define McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE      (McuFlash_CONFIG_FLASH_BLOCK_SIZE) /* block size, must be FLASH_SECTOR_SIZE on RP2040 */
-  #define McuMinINI_CONFIG_FLASH_NVM_ADDR_START      (CONFIG_FLASH_ADDRESS_START)
-  #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE   (CONFIG_FLASH_SIZE)
-#endif
-#endif
 /* -------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
@@ -116,15 +104,17 @@
 #define McuLog_CONFIG_USE_COLOR                 (0)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 /* -------------------------------------------------*/
-/* McuW25Q128 */
-#define MCUW25Q128_CONFIG_ENABLED               (1)
-/* -------------------------------------------------*/
 /* McuSPI */
 #define MCUSPI_CONFIG_HW_TEMPLATE               (MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1) /* using SPI1 with template */
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (24*1000*1000)
 /* -------------------------------------------------*/
+/* McuW25Q128 */
+#define MCUW25Q128_CONFIG_ENABLED               (1)
+#define MCUW25Q128_CONFIG_SIZE_KBYTES           (16*1024*1024)
+/* -------------------------------------------------*/
 /* McuLittleFS */
 #define LITTLEFS_CONFIG_ENABLED                       (1)
 #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
-#define McuLittleFS_CONFIG_BLOCK_SIZE                (4096) /* W25Q128 has blocks of 4 KByte */
-#define McuLittleFS_CONFIG_BLOCK_COUNT               (16777216/McuLittleFS_CONFIG_BLOCK_SIZE) /* W25Q128 has 16 MByte */
+#define McuLittleFS_CONFIG_BLOCK_SIZE                 (4096) /* W25Q128 has blocks of 4 KByte */
+#define McuLittleFS_CONFIG_BLOCK_COUNT                ((MCUW25Q128_CONFIG_SIZE_KBYTES*1024)/McuLittleFS_CONFIG_BLOCK_SIZE) /* W25Q128 has 16 MByte */
+#define McuLittleFS_CONFIG_BLOCK_OFFSET               (0)

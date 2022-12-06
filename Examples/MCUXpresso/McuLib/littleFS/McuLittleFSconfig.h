@@ -17,6 +17,11 @@
     /*!< number of blocks used for the file system */
 #endif
 
+#ifndef McuLittleFS_CONFIG_BLOCK_OFFSET
+  #define McuLittleFS_CONFIG_BLOCK_OFFSET    (0)
+    /*!< block offset number for the block device */
+#endif
+
 #ifndef McuLittleFS_CONFIG_FILE_NAME_SIZE
   #define McuLittleFS_CONFIG_FILE_NAME_SIZE     (60)
     /*!< Length of file name, used in buffers */

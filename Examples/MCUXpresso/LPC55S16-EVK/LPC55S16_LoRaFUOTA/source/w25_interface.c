@@ -49,7 +49,5 @@ uint8_t W25_read_block_for_SHA(lfs_t *lfs, lfs_file_t* file, size_t nofBytes,  v
 		filePos = lfs_file_tell(lfs, file);
 		fileSize = fileSize - nofBytes;
 	}
-
-
-
+  return 0;
 }

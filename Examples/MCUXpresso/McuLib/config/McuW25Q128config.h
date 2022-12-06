@@ -9,6 +9,12 @@
 
 #ifndef MCUW25Q128_CONFIG_ENABLED
   #define MCUW25Q128_CONFIG_ENABLED  (0)
+    /*!< By default, the module is disabled. Enable it with 1 */
+#endif
+
+#ifndef MCUW25Q128_CONFIG_SIZE_KBYTES
+  #define MCUW25Q128_CONFIG_SIZE_KBYTES  (16*1024)
+    /*!< Size in KBytes. By default it uses the 128MBit (16 MByte) version */
 #endif
 
 #if MCUW25Q128_CONFIG_ENABLED
