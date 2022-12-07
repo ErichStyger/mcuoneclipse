@@ -133,11 +133,14 @@ void PL_Init(void) {
   BTN_Init();
   Debounce_Init();
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MINI && McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
+#if PL_CONFIG_USE_MINI
   McuMinINI_Init();
 #endif
+
 #if PL_CONFIG_USE_ROAD
   Road_Init();
 #endif

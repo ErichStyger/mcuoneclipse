@@ -124,6 +124,8 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_MINI
   McuMinINI_ParseCommand,
+#endif
+#if PL_CONFIG_USE_MINI && McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
   ini_ParseCommand,
 #endif
 #if McuLog_CONFIG_IS_ENABLED
@@ -171,7 +173,7 @@ static void ShellTask(void *pvParameters) {
 }
 
 void SHELL_Init(void) {
-  if (xTaskCreate(ShellTask, "Shell", 2000/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(ShellTask, "Shell", 2500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
     for(;;){} /* error */
   }
 #if PL_CONFIG_USE_RTT

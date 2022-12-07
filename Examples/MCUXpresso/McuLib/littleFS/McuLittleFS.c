@@ -789,7 +789,7 @@ static uint8_t McuLFS_PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLittleFS_CONFIG_BLOCK_OFFSET);
   McuUtility_strcat(buf, sizeof(buf), (const uint8_t *)"\r\n");
-  McuShell_SendStatusStr((const unsigned char*)"  block offset", buf, io->stdOut);
+  McuShell_SendStatusStr((const unsigned char*)"  blockoffset", buf, io->stdOut);
 
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuLFS_cfg.block_count * McuLFS_cfg.block_size);
