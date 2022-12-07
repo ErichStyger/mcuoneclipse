@@ -87,6 +87,15 @@ file(GLOB FILES
   littleFS/McuLittleFS.c
   littleFS/McuLittleFSBlockDevice.c
   
+  # lvgl
+  LittlevGL/lvgl/src/lv_core/*.c
+  LittlevGL/lvgl/src/lv_draw/*.c
+  LittlevGL/lvgl/src/lv_font/*.c
+  LittlevGL/lvgl/src/lv_hal/*.c
+  LittlevGL/lvgl/src/lv_misc/*.c
+  LittlevGL/lvgl/src/lv_objx/*.c
+  LittlevGL/lvgl/src/lv_themes/*.c
+  
   # MinINI
   minIni/McuMinINI.c
   minIni/McuFlash.c
