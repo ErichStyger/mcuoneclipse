@@ -55,6 +55,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              USART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
+  #define McuShellUart_CONFIG_HAS_FIFO                      (0)
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART0
   #include "fsl_usart.h"
   #include "fsl_iocon.h"
@@ -75,6 +77,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
+  #define McuShellUart_CONFIG_HAS_FIFO                      (0) /* not sure? */
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S16_USART2
   #include "fsl_usart.h"
   #include "fsl_iocon.h"
@@ -96,6 +100,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM2_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
+  #define McuShellUart_CONFIG_HAS_FIFO                      (0) /* not sure? */
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FX512_UART0_A1_A2
   /* UART0 on K22FX512 */
   #include "fsl_uart.h"
@@ -117,6 +123,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag)
+  #define McuShellUart_CONFIG_HAS_FIFO                      (1)
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART0_B16_B17
   #include "fsl_uart.h"
   #include "fsl_port.h"
@@ -137,6 +145,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag)
+  #define McuShellUart_CONFIG_HAS_FIFO                      (1)
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_UART1_E1_E0
   /* UART1 on K22FN512. Mux the pins using the pins muxing tool */
   #include "fsl_uart.h"
@@ -158,6 +168,8 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag)
+  #define McuShellUart_CONFIG_HAS_FIFO                      (1)
 #elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_K22FN512_LPUART0_C3_C4
   /* LPUART on K22FN512 */
   #include "fsl_lpuart.h"
@@ -185,8 +197,10 @@
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              LPUART0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
+  #define McuShellUart_CONFIG_HAS_FIFO                      (0)
 #else
-  /* you have to put your config here */
+  /* you have to put your configuration here */
 #endif
 
 #ifndef McuShellUart_CONFIG_UART_RX_QUEUE_LENGTH
@@ -195,6 +209,11 @@
 
 #ifndef McuShellUart_CONFIG_UART_BAUDRATE
   #define McuShellUart_CONFIG_UART_BAUDRATE           115200
+#endif
+
+#ifndef McuShellUart_CONFIG_USE_FREERTOS
+  #define McuShellUart_CONFIG_USE_FREERTOS  (McuLib_CONFIG_SDK_USE_FREERTOS)
+    /*!< If FreeRTOS (Queues) shall be used or not */
 #endif
 
 #endif /* MCUSHELLUARTCONFIG_H_ */
