@@ -521,6 +521,47 @@ void vPortInitializeHeap(void) {
   xMinimumEverFreeBytesRemaining = 0;
   xBlockAllocatedBit = 0;
 }
+
+#include <string.h> /* for memcpy() */
+
+void *pvPortRealloc(void *ptr, size_t new_size) {
+  void *newBlock;
+  uint8_t *puc;
+  BlockLink_t *pxLink;
+  size_t old_size;
+
+  if (ptr==NULL) { /* if it is NULL, return a new block */
+    return pvPortMalloc(new_size);
+  }
+  if (new_size==0) { /* if new size is zero, free up memory and return NULL */
+    vPortFree(ptr);
+    return NULL;
+  }
+  /* The memory being freed will have an BlockLink_t structure immediately
+   * before it. */
+  puc = (uint8_t*)ptr;
+  puc -= xHeapStructSize;
+
+  /* This casting is to keep the compiler from issuing warnings. */
+  pxLink = (void *)puc;
+  configASSERT( ( pxLink->xBlockSize & xBlockAllocatedBit ) != 0 );
+
+  old_size = (pxLink->xBlockSize & ~xBlockAllocatedBit)-xHeapStructSize;
+  if (new_size==old_size) { /* same size: don't need to do anything */
+    return ptr;
+  }
+  newBlock = pvPortMalloc(new_size); /* allocate new block */
+  if (newBlock==NULL) {
+    return NULL; /* if there is not enough memory, the old block is not freed and NULL is returned */
+  }
+  if (old_size>new_size) { /* shrink memory block? */
+    old_size = new_size; /* make sure we only copy up to the new size */
+  }
+  memcpy(newBlock, ptr, old_size); /* copy old content to new block */
+  vPortFree(ptr); /* free old block */
+  return newBlock;
+}
+
 #endif
 #endif /* configUSE_HEAP_SCHEME==4 */ /* << EST */
 
