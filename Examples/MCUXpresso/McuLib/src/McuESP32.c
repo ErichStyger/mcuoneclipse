@@ -137,25 +137,35 @@ void McuESP32_UartState_Callback(uint8_t state) { /* callback for DTR and RTS li
           DeassertReset();
           McuWait_Waitus(100); /* block for a short time (in the ISR!!!) ==> should have a 100 uF added to the reset line */
           DeassertBootloaderMode();
-          //McuLog_trace("Release both: %d", DtrRts);
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
+         McuLog_trace("Release both: %d", DtrRts);
+#endif
           break;
         case 1:
           AssertBootloaderMode();
-          //McuLog_trace("assert BL: %d", DtrRts);
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
+          McuLog_trace("assert BL: %d", DtrRts);
+#endif
           break;
         case 2:
           if (McuGPIO_IsLow(McuESP32_RF_EN_Pin)) {
             if (McuGPIO_IsLow(McuESP32_RF_IO0_Pin)) {
               McuESP32_IsProgramming = true; /* the DeassertReset() below will enter bootloader mode */
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
               McuLog_trace("Enter Bootloader Mode");
+#endif
             } else {
               McuESP32_IsProgramming = false; /* the DeassertReset() below will do a reset without bootloader */
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
               McuLog_trace("Reset");
+#endif
             }
           }
           DeassertReset();
           McuWait_Waitus(100); /* block for a short time (in the ISR!!!) ==> should have a 100 uF added to the reset line */
-          //McuLog_trace("release reset: %d", DtrRts);
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
+          McuLog_trace("release reset: %d", DtrRts);
+#endif
           break;
         case 3:
           AssertReset();
@@ -167,7 +177,9 @@ void McuESP32_UartState_Callback(uint8_t state) { /* callback for DTR and RTS li
         // State: 0 DtrRts: 0 Release both: 0
         // State: 2 DtrRts: 1 assert BL: 1
         // State: 0 DtrRts: 0 Release both: 0
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
         McuLog_info("Request Reset");
+#endif
         McuESP32_ScheduleReset = true; /* cannot do reset sequence here, as called from an interrupt, so we cannot block */
         McuESP32_IsProgramming = false;
       }
@@ -238,7 +250,8 @@ static uint8_t McuESP32_PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  usbprg auto|on|off", (unsigned char*)"Use USB CDC to UART for programming\r\n", io->stdOut);
 #endif
 #endif
-  McuShell_SendHelpStr((unsigned char*)"  send <cmd>", (unsigned char*)"Send a command or string to the ESP32\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  send <cmd>", (unsigned char*)"Send a command or string to the ESP32 (non-blocking), <cmd> can be double quoted\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  sendwait <ms> <cmd>", (unsigned char*)"Send a command or string to the ESP32 and wait ms time for the response, cmd can be double quoted\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -281,6 +294,9 @@ static uint8_t McuESP32_PrintStatus(const McuShell_StdIOType *io) {
 }
 
 uint8_t McuESP32_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  unsigned char cmd_buffer[McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE];
+  const unsigned char *p;
+
   if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, (char*)"esp32 help")==0) {
     *handled = true;
     return McuESP32_PrintHelp(io);
@@ -351,20 +367,45 @@ uint8_t McuESP32_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     return ERR_OK;
 #endif
   } else if (McuUtility_strncmp((char*)cmd, (char*)"esp32 send ", sizeof("esp32 send ")-1)==0) {
-    const unsigned char *p;
-    unsigned char buffer[McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE];
-
     *handled = true;
     p = cmd+sizeof("esp32 send ")-1;
     if (*p=='"') { /* double-quoted command: it can contain multiple commands */
-      if (McuUtility_ScanDoubleQuotedString(&p, buffer, sizeof(buffer))!=ERR_OK) {
+      if (McuUtility_ScanDoubleQuotedString(&p, cmd_buffer, sizeof(cmd_buffer))!=ERR_OK) {
         return ERR_FAILED;
       }
-      p = buffer;
+      p = cmd_buffer;
     }
-    /* send command string */
     McuShell_SendStr(p, McuESP32_GetTxToESPStdio()->stdOut);
     McuShell_SendStr((unsigned char*)"\r\n", McuESP32_GetTxToESPStdio()->stdOut);
+    return ERR_OK;
+  } else if (McuUtility_strncmp((char*)cmd, (char*)"esp32 sendwait ", sizeof("esp32 sendwait ")-1)==0) {
+    /* this sends a command, but captures output with a timeout so it can show it on the io used for the command, e.g. on RTT */
+    uint32_t ms;
+
+    *handled = true;
+    p = cmd+sizeof("esp32 sendwait ")-1;
+    if (McuUtility_ScanDecimal32uNumber(&p, &ms)!=ERR_OK) {
+      return ERR_FAILED;
+    }
+    while(*p==' ') {
+      p++; /* skip spaces */
+    }
+    if (*p=='"') { /* double-quoted command: it can contain multiple commands */
+      if (McuUtility_ScanDoubleQuotedString(&p, cmd_buffer, sizeof(cmd_buffer))!=ERR_OK) {
+        return ERR_FAILED;
+      }
+      p = cmd_buffer;
+    }
+    /* send command string: temporarily change where the response from the ESP32 goes to  */
+    McuShell_ConstStdIOType *prevIO;
+
+    prevIO = McuESP32_GetRxFromESPStdio(); /* get current I/O */
+    McuESP32_SetRxFromESPStdio(io); /* set current shell I/O as output channel for what's coming from the ESP */
+    McuShell_SendStr(p, McuESP32_GetTxToESPStdio()->stdOut);
+    McuShell_SendStr((unsigned char*)"\r\n", McuESP32_GetTxToESPStdio()->stdOut);
+    vTaskDelay(pdMS_TO_TICKS(ms)); /* wait for the ESP to send the response */
+    McuESP32_SetRxFromESPStdio(prevIO); /* restore previous io */
+
     return ERR_OK;
   }
   return ERR_OK;
@@ -396,7 +437,9 @@ static void UartRxTask(void *pv) { /* task handling characters sent by the ESP32
         }
       }
     } else {
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
       McuLog_fatal("ESP32 UartRxTask queue failed");
+#endif
     }
   }
 }
@@ -411,7 +454,9 @@ static void UartTxTask(void *pv) { /* task handling sending data to the ESP32 mo
 #if McuESP32_CONFIG_USE_USB_CDC
     if (McuESP32_ScheduleReset) {
       McuESP32_ScheduleReset = false;
+#if McuESP32_CONFIG_VERBOSE_CONTROL_SIGNALS
       McuLog_info("Performing reset");
+#endif
       DoReset();
     }
 #endif
@@ -510,7 +555,7 @@ void McuESP32_Init(void) {
       "ESP32UartRx", /* task name for kernel awareness debugging */
       500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+3,  /* initial priority */
+      tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
@@ -522,7 +567,7 @@ void McuESP32_Init(void) {
       "ESP32UartTx", /* task name for kernel awareness debugging */
       500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY+3,  /* initial priority */
+      tskIDLE_PRIORITY+4,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {

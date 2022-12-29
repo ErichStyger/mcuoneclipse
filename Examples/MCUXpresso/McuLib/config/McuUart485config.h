@@ -93,8 +93,8 @@
  #define McuUart485_CONFIG_UART_DEVICE                    UART_NUM_2
  #define McuUart485_CONFIG_TXD_PIN                        GPIO_NUM_4
  #define McuUart485_CONFIG_RXD_PIN                        GPIO_NUM_5
- #define McuUart485_CONFIG_RTS_PIN                       (GPIO_NUM_26) /* RTS for RS485 Half-Duplex Mode manages DE/~RE */
- #define McuUart485_CONFIG_ECHO_TEST_CTS                 (UART_PIN_NO_CHANGE) /* CTS (~RE) is always on to detect collisions */
+ #define McuUart485_CONFIG_RTS_PIN                       (GPIO_NUM_23) /* RTS, ~RE for RS485, managed by UART */
+ #define McuUart485_CONFIG_CTS_PIN                       (/*GPIO_NUM_26*//*not used*/) /* CTS, DE for RS485, but not used! Make sure ~RE/DE are */
 
 #else
   /* you have to put your config here */
@@ -126,7 +126,7 @@
   #if McuLib_CONFIG_CPU_IS_KINETIS || (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845)
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
   #elif McuLib_CONFIG_CPU_IS_ESP32
-    #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)
+    #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* on ESP32, the transceiver is controlled by the UART directly with the RTS pin */
   #endif
 #endif
 
@@ -144,7 +144,7 @@
     #endif
   #elif McuLib_CONFIG_CPU_IS_ESP32 /* default for ESP32 */
     #ifndef McuUart485_CONFIG_RE_PIN
-      #define McuUart485_CONFIG_RE_PIN           (GPIO_NUM_23) /* ~RE_ESP32 pin: IO23, RE (Receiver Enable) is low active */
+      #define McuUart485_CONFIG_RE_PIN           (McuUart485_CONFIG_CTS_PIN) /* ~DE_ESP32 pin: DE (Data Enable) is low active */
     #endif
   #endif
 #endif

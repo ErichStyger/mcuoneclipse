@@ -10,6 +10,7 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
+#include "McuGPIO.h"
 
 #if McuLib_CONFIG_CPU_IS_ESP32
   #include "esp_system.h"
@@ -17,7 +18,6 @@
 #endif
 
 #if !McuUart485_CONFIG_USE_HW_OE_RTS
-#include "McuGPIO.h"
 
 static McuGPIO_Handle_t RS485_TxEn;
 
@@ -38,7 +38,7 @@ static void McuUart485_GPIO_Init(void) {
 
   McuGPIO_GetDefaultConfig(&config);
 #if McuLib_CONFIG_CPU_IS_ESP32
-  config.hw.pin = McuUart485_CONFIG_RE_PIN;
+  config.hw.pin = McuUart485_CONFIG_TX_EN_GPIO;
 #else
   config.hw.gpio  = McuUart485_CONFIG_TX_EN_GPIO;
   config.hw.port  = McuUart485_CONFIG_TX_EN_PORT;
@@ -303,30 +303,51 @@ static void InitUart(void) {
   NVIC_SetPriority(McuUart485_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
   EnableIRQ(McuUart485_CONFIG_UART_IRQ_NUMBER);
 #elif McuLib_CONFIG_CPU_IS_ESP32
+#if !McuUart485_CONFIG_USE_HW_OE_RTS
   McuUart485_GPIO_Init();
+#endif
+  // Timeout threshold for UART = number of symbols (~10 tics) with unchanged state on receive pin
+  #define UART_CONFIG_READ_TOUT          (3) // 3.5T * 8 = 28 ticks, TOUT=3 -> ~24..33 ticks
 
   uart_config_t uart_config = {
       .baud_rate = McuUart485_CONFIG_UART_BAUDRATE,
       .data_bits = UART_DATA_8_BITS,
       .parity = UART_PARITY_DISABLE,
       .stop_bits = UART_STOP_BITS_1,
-      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+      .flow_ctrl = UART_HW_FLOWCTRL_DISABLE, /* UART_HW_FLOWCTRL_CTS */ /*UART_HW_FLOWCTRL_RTS,*/ /* UART_HW_FLOWCTRL_CTS_RTS, */
       .rx_flow_ctrl_thresh = 122,
-  };
+      .source_clk = UART_SCLK_APB,
+ };
 
-  /* Set UART log level */
-  /* esp_log_level_set(TAG, ESP_LOG_INFO); */
-
-  /* Configure UART parameters */
-  uart_param_config(McuUart485_CONFIG_UART_DEVICE, &uart_config);
   McuLog_trace("UART set pins, mode and install driver.");
-  uart_set_pin(McuUart485_CONFIG_UART_DEVICE, McuUart485_CONFIG_TXD_PIN, McuUart485_CONFIG_RXD_PIN, McuUart485_CONFIG_RTS_PIN, McuUart485_CONFIG_ECHO_TEST_CTS);
 
   /* Install UART driver (we don't need an event queue here) */
-  uart_driver_install(McuUart485_CONFIG_UART_DEVICE, RS485_ESP_BUF_SIZE*2, RS485_ESP_BUF_SIZE*2, 0, NULL, 0);
+  ESP_ERROR_CHECK(uart_driver_install(
+      McuUart485_CONFIG_UART_DEVICE, /* usart device */
+      RS485_ESP_BUF_SIZE*2, /* RX Buffer */
+      RS485_ESP_BUF_SIZE*2, /* TX Buffer */
+      0, /* event queue size */
+      NULL, /* event queue handle */
+      0 /* interrupt alloc flags */
+     )
+   );
+
+  /* Configure UART parameters */
+  ESP_ERROR_CHECK(uart_param_config(McuUart485_CONFIG_UART_DEVICE, &uart_config));
+
+  /* RE (Receiver Enable, IO23) shall be HIGH during Tx, RE (Low Active, IO26) shall be LOW during Tx */
+  ESP_ERROR_CHECK(uart_set_pin(McuUart485_CONFIG_UART_DEVICE,
+      McuUart485_CONFIG_TXD_PIN, /* TX pin */
+      McuUart485_CONFIG_RXD_PIN, /* RX pin */
+      McuUart485_CONFIG_RTS_PIN, /* RTS pin */
+      UART_PIN_NO_CHANGE         /* CTS pin */
+   ));
 
   /* Set RS485 half duplex mode */
-  uart_set_mode(McuUart485_CONFIG_UART_DEVICE, UART_MODE_RS485_HALF_DUPLEX);
+  ESP_ERROR_CHECK(uart_set_mode(McuUart485_CONFIG_UART_DEVICE, UART_MODE_RS485_HALF_DUPLEX));
+
+  // Set read timeout of UART TOUT feature
+  ESP_ERROR_CHECK(uart_set_rx_timeout(McuUart485_CONFIG_UART_DEVICE, UART_CONFIG_READ_TOUT));
 #endif
 }
 
