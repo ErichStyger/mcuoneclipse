@@ -14,10 +14,31 @@
     /*!< by default, this module is disabled */
 #endif
 
+#ifndef McuUart485_CONFIG_USE_MODBUS
+  #define McuUart485_CONFIG_USE_MODBUS  (0)
+    /*!< if using the Modbus protocol */
+#endif
+
+#ifndef McuUart485_CONFIG_USE_LOGGER
+  #define McuUart485_CONFIG_USE_LOGGER  (0)
+    /*!< if using a logger in the interrupt RX routine. 0: disabled; 1: enabled */
+#endif
+
+#ifndef McuUart485_CONFIG_LOGGER_CALLBACK_NAME
+  #define McuUart485_CONFIG_LOGGER_CALLBACK_NAME  McuRTT_SendChar
+    /*!< function name to be called to write a char from the logger inside the Rx interrupt */
+#endif
+extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype of logger function callback */
+
 #if McuUart485_CONFIG_USE_RS_485
 /* UART configuration items */
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #include "fsl_usart.h"
+
+  #ifndef McuUart485_CONFIG_UART_PARITY
+    #define McuUart485_CONFIG_UART_PARITY                 kUART_ParityDisabled /* or kUART_ParityEven or kUART_ParityOdd */
+  #endif
+
   #define McuUart485_CONFIG_UART_DEVICE                   USART1
   #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         CLOCK_Select(kUART1_Clk_From_MainClk) /* Select the main clock as source clock of USART0. */
   #define McuUart485_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking
@@ -34,59 +55,62 @@
   #define McuUart485_CONFIG_UART_IRQ_HANDLER              USART1_IRQHandler
   #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 #elif McuLib_CONFIG_CPU_IS_KINETIS
+  #ifndef McuUart485_CONFIG_UART_PARITY
+    #define McuUart485_CONFIG_UART_PARITY                 kUART_ParityDisabled /* or kUART_ParityEven or kUART_ParityOdd */
+  #endif
 
-#if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FX
-  #include "fsl_uart.h"
-  #define McuUart485_CONFIG_UART_DEVICE                   UART0
-  #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
-  #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
-  #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
-  #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
-  #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
-  #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
-  #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
-  #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
-  #define McuUart485_CONFIG_UART_INIT                     UART_Init
-  #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
-  #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
-  #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K02FN
-  #include "fsl_uart.h"
-  #define McuUart485_CONFIG_UART_DEVICE                   UART1
-  #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
-  #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
-  #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
-  #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
-  #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
-  #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
-  #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable | kUART_RxFifoOverflowInterruptEnable)
-  #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART1_RX_TX_IRQn
-  #define McuUart485_CONFIG_UART_INIT                     UART_Init
-  #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_McgFllClk
-  #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
-  #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
-  #include "fsl_uart.h"
-  #define McuUart485_CONFIG_UART_DEVICE                   UART0
-  #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
-  #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
-  #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
-  #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
-  #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
-  #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
-  #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
-  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable | kUART_RxFifoOverflowInterruptEnable)
-  #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
-  #define McuUart485_CONFIG_UART_INIT                     UART_Init
-  #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_PllFllSelClk
-  #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
-  #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
-#endif
+  #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FX
+    #include "fsl_uart.h"
+    #define McuUart485_CONFIG_UART_DEVICE                   UART0
+    #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+    #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
+    #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
+    #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
+    #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
+    #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
+    #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable)
+    #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
+    #define McuUart485_CONFIG_UART_INIT                     UART_Init
+    #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
+    #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+    #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K02FN
+    #include "fsl_uart.h"
+    #define McuUart485_CONFIG_UART_DEVICE                   UART1
+    #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+    #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
+    #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
+    #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
+    #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
+    #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
+    #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable | kUART_RxFifoOverflowInterruptEnable)
+    #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART1_RX_TX_IRQn
+    #define McuUart485_CONFIG_UART_INIT                     UART_Init
+    #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_McgFllClk
+    #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART1_RX_TX_IRQHandler
+    #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K22FN
+    #include "fsl_uart.h"
+    #define McuUart485_CONFIG_UART_DEVICE                   UART0
+    #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+    #define McuUart485_CONFIG_UART_WRITE_BLOCKING           UART_WriteBlocking
+    #define McuUart485_CONFIG_UART_GET_FLAGS                UART_GetStatusFlags
+    #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUART_RxDataRegFullFlag|kUART_RxOverrunFlag)
+    #define McuUart485_CONFIG_UART_READ_BYTE                UART_ReadByte
+    #define McuUart485_CONFIG_UART_CONFIG_STRUCT            uart_config_t
+    #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       UART_GetDefaultConfig
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        UART_EnableInterrupts
+    #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable | kUART_RxFifoOverflowInterruptEnable)
+    #define McuUart485_CONFIG_UART_IRQ_NUMBER               UART0_RX_TX_IRQn
+    #define McuUart485_CONFIG_UART_INIT                     UART_Init
+    #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_PllFllSelClk
+    #define McuUart485_CONFIG_UART_IRQ_HANDLER              UART0_RX_TX_IRQHandler
+    #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            UART_ClearStatusFlags
+  #endif
 
 #elif McuLib_CONFIG_CPU_IS_ESP32
  #include "driver/uart.h"

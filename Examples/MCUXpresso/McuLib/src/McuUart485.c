@@ -11,6 +11,7 @@
 #include "McuUtility.h"
 #include "McuLog.h"
 #include "McuGPIO.h"
+#include <ctype.h> /* for isprint() */
 
 #if McuLib_CONFIG_CPU_IS_ESP32
   #include "esp_system.h"
@@ -51,17 +52,31 @@ static void McuUart485_GPIO_Init(void) {
   McuUart485_GPIO_RxEnable();
 }
 #endif /* McuUart485_CONFIG_USE_HW_OE_RTS */
-
 /* -------------------------------------------------------------------------------------- */
-static QueueHandle_t RS485UartRxQueue; /* queue for the shell */
-static QueueHandle_t RS485UartResponseQueue; /* queue for the OK or NOK response */
+static QueueHandle_t RS485UartRxQueue; /* queue of the received bytes */
+#if !McuUart485_CONFIG_USE_MODBUS /* shell response queue only used in non-Modbus mode */
+  static QueueHandle_t RS485UartResponseQueue; /* queue for the OK or NOK response */
+#endif
+#if McuUart485_CONFIG_USE_LOGGER
+  static bool McuUart485_doLogging = false; /* if logging is turned on or off */
+#endif
 
 void McuUart485_ClearRxQueue(void) {
   xQueueReset(RS485UartRxQueue);
 }
 
+#if !McuUart485_CONFIG_USE_MODBUS
 void McuUart485_ClearResponseQueue(void) {
   xQueueReset(RS485UartResponseQueue);
+}
+#endif
+
+uint8_t McuUart485_GetRxQueueByte(unsigned char *data, TickType_t ticksToWait) {
+  if (xQueueReceive(RS485UartRxQueue, data, ticksToWait)==pdPASS ) {
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
 }
 
 uint8_t McuUart485_GetRxQueueChar(void) {
@@ -75,6 +90,7 @@ uint8_t McuUart485_GetRxQueueChar(void) {
   return ch;
 }
 
+#if !McuUart485_CONFIG_USE_MODBUS
 uint8_t McuUart485_GetResponseQueueChar(void) {
   uint8_t ch;
 
@@ -85,6 +101,7 @@ uint8_t McuUart485_GetResponseQueueChar(void) {
   }
   return ch;
 }
+#endif
 /* -------------------------------------------------------------------------------------- */
 
 #if McuLib_CONFIG_CPU_IS_ESP32
@@ -214,8 +231,10 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
   BaseType_t xHigherPriorityTaskWoken1 = false, xHigherPriorityTaskWoken2 = false;
+#if !McuUart485_CONFIG_USE_MODBUS
   static unsigned char prevChar = '\n';
   static bool responseLine = false;
+#endif
   uint8_t count;
 
   flags = McuUart485_CONFIG_UART_GET_FLAGS(McuUart485_CONFIG_UART_DEVICE);
@@ -233,7 +252,10 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
     while(count!=0) {
       data = McuUart485_CONFIG_UART_READ_BYTE(McuUart485_CONFIG_UART_DEVICE);
-      if (data!=0) { /* data==0 could happen especially after power-up, ignore it */
+    #if !McuUart485_CONFIG_USE_MODBUS
+      if (data!=0) { /* data==0 could happen especially after power-up, ignore it if we are in shell/non-Modbus mode */
+    #endif
+      #if !McuUart485_CONFIG_USE_MODBUS
         /* only store into RS485UartResponseQueue if we have a line starting with '@' */
         if (prevChar=='\n' && data=='@') {
           responseLine = true;
@@ -245,10 +267,28 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
         if (responseLine && data=='\n') { /* end of line while on response line */
           responseLine = false;
         }
+      #endif
         (void)xQueueSendFromISR(RS485UartRxQueue, &data, &xHigherPriorityTaskWoken2);
+      #if McuUart485_CONFIG_USE_LOGGER
+        if (McuUart485_doLogging) {
+          extern uint8_t McuRTT_SendChar(uint8_t ch);
+          unsigned char buf[3];
+          buf[0] = '\0';
+          McuUtility_strcatNum8Hex(buf, sizeof(buf), data);
+          (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME(buf[0]);
+          (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME(buf[1]);
+          if (isprint(data)) {
+            (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME((unsigned char)' ');
+            (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME(data);
+          }
+          (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME((unsigned char)'\n');
+        }
+      #endif
+        count--;
       }
-      count--;
+  #if !McuUart485_CONFIG_USE_MODBUS
     }
+  #endif
   }
 #if McuLib_CONFIG_CPU_IS_KINETIS
   flags |= kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag; /* always clear these flags, as they might been set? Not clearing them will not generate future interrupts */
@@ -270,6 +310,7 @@ static void InitUart(void) {
   McuUart485_CONFIG_UART_SET_UART_CLOCK();
   McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG(&config);
   config.baudRate_Bps = McuUart485_CONFIG_UART_BAUDRATE;
+  config.parityMode   = McuUart485_CONFIG_UART_PARITY;
   config.enableRx     = true;
   config.enableTx     = true;
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -467,7 +508,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   uint8_t buf[96];
 
   McuShell_SendStatusStr((unsigned char*)"McuUart485", (unsigned char*)"RS-485 UART settings\r\n", io->stdOut);
-
+#if McuUart485_CONFIG_USE_LOGGER
+  McuShell_SendStatusStr((unsigned char*)"  logging", McuUart485_doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+#endif
   McuShell_SendStatusStr((unsigned char*)"  HW TxEn", McuUart485_CONFIG_USE_HW_OE_RTS?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   uint32_t flags;
@@ -511,15 +554,16 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   McuShell_SendHelpStr((unsigned char*)"  clear <flags>", (unsigned char*)"Clear UART ISR flags\r\n", io->stdOut);
 #endif
+  McuShell_SendHelpStr((unsigned char*)"  log on|off", (unsigned char*)"Turn logging on or off\r\n", io->stdOut);
   return ERR_OK;
 }
 
 uint8_t McuUart485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "McuUart485 help")==0) {
-    *handled = TRUE;
+    *handled = true;
     return PrintHelp(io);
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "McuUart485 status")==0)) {
-    *handled = TRUE;
+    *handled = true;
     return PrintStatus(io);
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   } else if (McuUtility_strncmp((char*)cmd, "McuUart485 clear ", sizeof("McuUart485 clear ")-1)==0) {
@@ -544,6 +588,16 @@ uint8_t McuUart485_ParseCommand(const unsigned char *cmd, bool *handled, const M
     }
     return ERR_FAILED;
 #endif
+#if McuUart485_CONFIG_USE_LOGGER
+  } else if (McuUtility_strcmp((char*)cmd, "McuUart485 log on")==0) {
+    *handled = TRUE;
+    McuUart485_doLogging = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "McuUart485 log off")==0) {
+    *handled = TRUE;
+    McuUart485_doLogging = false;
+    return ERR_OK;
+#endif
   }
   return ERR_OK;
 }
@@ -551,8 +605,10 @@ uint8_t McuUart485_ParseCommand(const unsigned char *cmd, bool *handled, const M
 void McuUart485_Deinit(void) {
   vQueueDelete(RS485UartRxQueue);
   RS485UartRxQueue = NULL;
+#if !McuUart485_CONFIG_USE_MODBUS
   vQueueDelete(RS485UartResponseQueue);
   RS485UartResponseQueue = NULL;
+#endif
 #if !McuUart485_CONFIG_USE_HW_OE_RTS
   McuUart485_GPIO_Deinit();
 #endif
@@ -566,14 +622,14 @@ void McuUart485_Init(void) {
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(RS485UartRxQueue, "RS485UartRxQueue");
-
+#if !McuUart485_CONFIG_USE_MODBUS
   RS485UartResponseQueue = xQueueCreate(McuUart485_CONFIG_UART_RESPONSE_QUEUE_LENGTH, sizeof(uint8_t));
   if (RS485UartResponseQueue==NULL) {
     McuLog_fatal("failed creating RS-485 response queue");
     for(;;){} /* out of memory? */
   }
   vQueueAddToRegistry(RS485UartResponseQueue, "RS485UartResponseQueue");
-
+#endif
 #if McuLib_CONFIG_CPU_IS_ESP32
   BaseType_t res;
 

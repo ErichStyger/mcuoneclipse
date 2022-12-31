@@ -9,6 +9,7 @@
 
 #include "McuUart485config.h"
 #include "McuShell.h"
+#include "McuRTOS.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +43,15 @@ void McuUart485_ClearResponseQueue(void);
  * \brief Clear the Rx queue.
  */
 void McuUart485_ClearRxQueue(void);
+
+
+/*!
+ * \brief Return a byte from the response queue
+ * \param data Pointer to where to store the queue element
+ * \param ticksToWait Number of RTOS ticks to wait for a queue element
+ * \return ERR_OK if element received, ERR_FAILED otherwise
+ */
+uint8_t McuUart485_GetRxQueueByte(unsigned char *data, TickType_t ticksToWait);
 
 /*!
  * \brief Pull (dequeue) a character from the response queue
