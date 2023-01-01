@@ -632,25 +632,163 @@ uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, cons
   return ERR_OK;
 }
 
+typedef enum {
+  Wallbox_State_None,
+  Wallbox_State_Connected,
+  Wallbox_State_Vehicle_Plugged,
+  Wallbox_State_Vehicle_Charging,
+  Wallbox_State_Error,
+} WallboxState_e;
+
 static void wallboxTask(void *pv) {
   uint8_t res;
+  WallboxState_e state = Wallbox_State_None;
+  uint16_t prevWallboxCharingState;
 
+  McuHeidelbergInfo.isActive = false;
   for(;;) {
-    res = McuHeidelberg_ReadRegisterLayoutVersion(McuHeidelberg_deviceID, &McuHeidelbergInfo.version);
-    McuHeidelbergInfo.isActive = res==ERR_OK;
-    if (res!=ERR_OK) {
-      McuLog_error("communication failed, unit in standby?");
-      vTaskDelay(pdMS_TO_TICKS(10000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
-    } else { /* read the other values only if we have a working communication */
-      (void)McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState);
-      (void)McuHeidelberg_ReadCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.current[0]);
-      (void)McuHeidelberg_ReadTemperature(McuHeidelberg_deviceID, &McuHeidelbergInfo.temperature);
-      (void)McuHeidelberg_ReadVoltage(McuHeidelberg_deviceID, &McuHeidelbergInfo.voltage[0]);
-      (void)McuHeidelberg_ReadLockstate(McuHeidelberg_deviceID, &McuHeidelbergInfo.lockState);
-      (void)McuHeidelberg_ReadPower(McuHeidelberg_deviceID, &McuHeidelbergInfo.power); /* actual power */
-      (void)McuHeidelberg_ReadEnergySincePowerOn(McuHeidelberg_deviceID, &McuHeidelbergInfo.energySincePowerOn); /* actual power */
-    }
-    vTaskDelay(pdMS_TO_TICKS(5000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
+    vTaskDelay(pdMS_TO_TICKS(100)); /* standard delay time */
+    switch(state) {
+      case Wallbox_State_None:
+        McuHeidelbergInfo.isActive = false;
+        /* no state yet: probe layout register to check if we can reach the charger */
+        res = McuHeidelberg_ReadRegisterLayoutVersion(McuHeidelberg_deviceID, &McuHeidelbergInfo.version);
+        if (res==ERR_OK) {
+          McuLog_trace("connected with charger");
+          McuHeidelbergInfo.isActive = true;
+          prevWallboxCharingState = 0; /* reset */
+          state = Wallbox_State_Connected;
+        } else {
+          McuLog_error("communication failed, charger in standby? Retry in 10 seconds...");
+          vTaskDelay(pdMS_TO_TICKS(10000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
+        }
+        break;
+      case Wallbox_State_Connected:
+        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
+          if (prevWallboxCharingState != McuHeidelbergInfo.chargingState) { /* state change? */
+            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxCharingState, McuHeidelbergInfo.chargingState);
+            switch(McuHeidelbergInfo.chargingState) {
+              case McuHeidelberg_ChargerState_A1:
+              case McuHeidelberg_ChargerState_A2:
+                /* no vehicle plugged, stay in current state */
+                break;
+
+              case McuHeidelberg_ChargerState_B1:
+              case McuHeidelberg_ChargerState_B2:
+              case McuHeidelberg_ChargerState_C1:
+              case McuHeidelberg_ChargerState_C2:
+                 McuLog_trace("vehicle plugged");
+                state = Wallbox_State_Vehicle_Plugged;
+                break;
+
+              case McuHeidelberg_ChargerState_Derating:
+              case McuHeidelberg_ChargerState_E:
+              case McuHeidelberg_ChargerState_F:
+              case McuHeidelberg_ChargerState_Error:
+              default:
+                state = Wallbox_State_Error; /* error case */
+                break;
+            }
+            prevWallboxCharingState = McuHeidelbergInfo.chargingState;
+          } /* if state changed */
+        } else {
+          McuLog_error("unable to get charging state");
+          state = Wallbox_State_Error;
+        }
+        break;
+
+      case Wallbox_State_Vehicle_Plugged:
+        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
+          if (prevWallboxCharingState != McuHeidelbergInfo.chargingState) { /* state change? */
+            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxCharingState, McuHeidelbergInfo.chargingState);
+            switch(McuHeidelbergInfo.chargingState) {
+              case McuHeidelberg_ChargerState_A1:
+              case McuHeidelberg_ChargerState_A2:
+                McuLog_trace("vehicle not plugged any more");
+                state = Wallbox_State_Connected;
+                break;
+
+              case McuHeidelberg_ChargerState_B1:
+              case McuHeidelberg_ChargerState_B2:
+                /* vehicle plugged, but no charging request: stay in this state */
+                break;
+
+              case McuHeidelberg_ChargerState_C1:
+              case McuHeidelberg_ChargerState_C2:
+                McuLog_trace("vehicle plugged, with charging request");
+                state = Wallbox_State_Vehicle_Charging;
+                break;
+
+              case McuHeidelberg_ChargerState_Derating:
+              case McuHeidelberg_ChargerState_E:
+              case McuHeidelberg_ChargerState_F:
+              case McuHeidelberg_ChargerState_Error:
+              default:
+                state = Wallbox_State_Error; /* error case */
+                break;
+            }
+            prevWallboxCharingState = McuHeidelbergInfo.chargingState;
+          } /* if state changed */
+        } else {
+          McuLog_error("unable to get charging state");
+          state = Wallbox_State_Error;
+        }
+        break;
+
+      case Wallbox_State_Vehicle_Charging:
+        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
+          if (prevWallboxCharingState != McuHeidelbergInfo.chargingState) { /* state change? */
+            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxCharingState, McuHeidelbergInfo.chargingState);
+            switch(McuHeidelbergInfo.chargingState) {
+              case McuHeidelberg_ChargerState_A1:
+              case McuHeidelberg_ChargerState_A2:
+                McuLog_trace("vehicle not plugged any more");
+                state = Wallbox_State_Connected;
+                break;
+
+              case McuHeidelberg_ChargerState_B1:
+              case McuHeidelberg_ChargerState_B2:
+                McuLog_trace("vehicle plugged, but dropped charging request");
+                state = Wallbox_State_Connected;
+                break;
+
+              case McuHeidelberg_ChargerState_C1:
+              case McuHeidelberg_ChargerState_C2:
+                /* vehicle plugged, with charging request: stay in this state */
+                break;
+
+              case McuHeidelberg_ChargerState_Derating:
+              case McuHeidelberg_ChargerState_E:
+              case McuHeidelberg_ChargerState_F:
+              case McuHeidelberg_ChargerState_Error:
+              default:
+                state = Wallbox_State_Error; /* error case */
+                break;
+            }
+            prevWallboxCharingState = McuHeidelbergInfo.chargingState;
+          } /* if state changed */
+        } else {
+          McuLog_error("unable to get charging state");
+          state = Wallbox_State_Error;
+        }
+       break;
+
+      case Wallbox_State_Error:
+        McuLog_error("error in state, reinitializing");
+        state = Wallbox_State_None;
+        break;
+
+      default:
+        (void)McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState);
+        (void)McuHeidelberg_ReadCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.current[0]);
+        (void)McuHeidelberg_ReadTemperature(McuHeidelberg_deviceID, &McuHeidelbergInfo.temperature);
+        (void)McuHeidelberg_ReadVoltage(McuHeidelberg_deviceID, &McuHeidelbergInfo.voltage[0]);
+        (void)McuHeidelberg_ReadLockstate(McuHeidelberg_deviceID, &McuHeidelbergInfo.lockState);
+        (void)McuHeidelberg_ReadPower(McuHeidelberg_deviceID, &McuHeidelbergInfo.power);
+        (void)McuHeidelberg_ReadEnergySincePowerOn(McuHeidelberg_deviceID, &McuHeidelbergInfo.energySincePowerOn);
+        vTaskDelay(pdMS_TO_TICKS(5000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
+        break;
+    } /* switch */
   }
 }
 
