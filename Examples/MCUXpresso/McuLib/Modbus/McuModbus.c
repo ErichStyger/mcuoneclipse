@@ -14,6 +14,22 @@
 
 #define McuModbus_TELEGRAM_SIZE   (8)
 
+#if McuModbus_CONFIG_USE_MUTEX
+  static SemaphoreHandle_t McuModbus_Mutex = NULL; /* Semaphore to protect bus access */
+#endif
+
+#if McuModbus_CONFIG_USE_MUTEX
+static bool McuModbus_RequestBus(void) {
+  return xSemaphoreTakeRecursive(McuModbus_Mutex, portMAX_DELAY)==pdPASS;
+}
+#endif
+
+#if McuModbus_CONFIG_USE_MUTEX
+static void McuModbus_ReleaseBus(void) {
+  (void)xSemaphoreGiveRecursive(McuModbus_Mutex);
+}
+#endif
+
 static uint16_t McuModbus_CRC(uint8_t *buf, size_t len) {
   uint16_t crc = 0xFFFF;
 
@@ -107,9 +123,16 @@ static uint8_t McuModbus_ReadRegister(uint8_t deviceID, McuModbus_Func_Code_e fu
   uint8_t res;
 
   McuModbus_CreateReadTelegram(telegram, deviceID, function, addr, nofRegs);
-  McuModbus_SendTelegram(telegram, sizeof(telegram));
-  res = McuModbus_ReceiveResponseInputRegister(deviceID, function, result, nofRegs, McuModbus_CONFIG_RX_TIMEOUT_MS);
-  vTaskDelay(pdMS_TO_TICKS(McuModbus_CONFIG_BUS_WAIT_TIME_MS));
+#if McuModbus_CONFIG_USE_MUTEX
+  if (McuModbus_RequestBus()) {
+#endif
+    McuModbus_SendTelegram(telegram, sizeof(telegram));
+    res = McuModbus_ReceiveResponseInputRegister(deviceID, function, result, nofRegs, McuModbus_CONFIG_RX_TIMEOUT_MS);
+    vTaskDelay(pdMS_TO_TICKS(McuModbus_CONFIG_BUS_WAIT_TIME_MS));
+#if McuModbus_CONFIG_USE_MUTEX
+    McuModbus_ReleaseBus();
+  }
+#endif
   return res;
 }
 
@@ -117,8 +140,15 @@ static uint8_t McuModbus_WriteRegister(uint8_t deviceID, McuModbus_Func_Code_e f
   uint8_t telegram[McuModbus_TELEGRAM_SIZE];
 
   McuModbus_CreateWriteTelegram(telegram, deviceID, function, addr, value);
-  McuModbus_SendTelegram(telegram, sizeof(telegram));
-  vTaskDelay(pdMS_TO_TICKS(McuModbus_CONFIG_BUS_WAIT_TIME_MS));
+#if McuModbus_CONFIG_USE_MUTEX
+  if (McuModbus_RequestBus()) {
+#endif
+    McuModbus_SendTelegram(telegram, sizeof(telegram));
+    vTaskDelay(pdMS_TO_TICKS(McuModbus_CONFIG_BUS_WAIT_TIME_MS));
+#if McuModbus_CONFIG_USE_MUTEX
+    McuModbus_ReleaseBus();
+  }
+#endif
   return ERR_OK;
 }
 
@@ -157,9 +187,21 @@ uint8_t McuModbus_ParseCommand(const unsigned char *cmd, bool *handled, const Mc
 }
 
 void McuModbus_Deinit(void) {
+#if McuModbus_CONFIG_USE_MUTEX
+  vSemaphoreDelete(McuModbus_Mutex);
+  McuModbus_Mutex = NULL;
+#endif
 }
 
 void McuModbus_Init(void) {
+#if McuModbus_CONFIG_USE_MUTEX
+  McuModbus_Mutex = xSemaphoreCreateRecursiveMutex();
+  if (McuModbus_Mutex==NULL) { /* semaphore creation failed */
+    McuLog_fatal("failed creating mutex");
+    for(;;) {} /* error, not enough memory? */
+  }
+  vQueueAddToRegistry(McuModbus_Mutex, "McuModbus_Mutex");
+#endif
 }
 
 #endif /* McuModbus_CONFIG_IS_ENABLED */
