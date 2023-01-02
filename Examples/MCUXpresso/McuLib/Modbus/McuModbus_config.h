@@ -23,7 +23,7 @@
 #endif
 
 #ifndef McuModbus_CONFIG_BUS_WAIT_TIME_MS
-  #define McuModbus_CONFIG_BUS_WAIT_TIME_MS  (5)
+  #define McuModbus_CONFIG_BUS_WAIT_TIME_MS  (15)
     /*!< forced waiting time after a bus transfer */
 #endif
 
