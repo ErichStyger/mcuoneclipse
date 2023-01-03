@@ -89,7 +89,8 @@ typedef enum ChargingMode_e {
 static struct McuHeidelbergInfo_s {
   WallboxState_e state;         /* state of the wallbox task */
   ChargingMode_e chargingMode;  /* selected charging mode */
-  uint32_t solarPowerW;         /* available solar power in Watt (note: solar minus site!) */
+  uint32_t solarPowerW;         /* available solar power in Watt */
+  uint32_t sitePowerW;          /* used power by the building or site */
   uint8_t nofPhases;            /* number of active phases */
   bool isActive;                /* if unit is in standby or not */
   uint16_t version;             /* register layout version */
@@ -112,7 +113,7 @@ static struct mock {
 } mock;
 #endif
 
-const unsigned char *McuHeidelberg_GetChargingStateString(uint16_t state) {
+static const unsigned char *McuHeidelberg_GetChargingStateString(ChargingState_e state) {
   const unsigned char *str;
   switch(state) {
     case McuHeidelberg_ChargerState_A1:       str = (unsigned char*)"A1: no vehicle plugged, wallbox doesn't allow charging"; break;
@@ -126,6 +127,24 @@ const unsigned char *McuHeidelberg_GetChargingStateString(uint16_t state) {
     case McuHeidelberg_ChargerState_F:        str = (unsigned char*)"F: wallbox locked or not ready"; break;
     case McuHeidelberg_ChargerState_Error:    str = (unsigned char*)"--: Error"; break;
     default:                                  str = (unsigned char*)"ERROR, unknown state!"; break;
+  }
+  return str;
+}
+
+static const unsigned char *McuHeidelberg_GetShortChargingStateString(ChargingState_e state) {
+  const unsigned char *str;
+  switch(state) {
+    case McuHeidelberg_ChargerState_A1:       str = (unsigned char*)"A1"; break;
+    case McuHeidelberg_ChargerState_A2:       str = (unsigned char*)"A2"; break;
+    case McuHeidelberg_ChargerState_B1:       str = (unsigned char*)"B1"; break;
+    case McuHeidelberg_ChargerState_B2:       str = (unsigned char*)"B2"; break;
+    case McuHeidelberg_ChargerState_C1:       str = (unsigned char*)"C1"; break;
+    case McuHeidelberg_ChargerState_C2:       str = (unsigned char*)"C2"; break;
+    case McuHeidelberg_ChargerState_Derating: str = (unsigned char*)"derating"; break;
+    case McuHeidelberg_ChargerState_E:        str = (unsigned char*)"E"; break;
+    case McuHeidelberg_ChargerState_F:        str = (unsigned char*)"F"; break;
+    case McuHeidelberg_ChargerState_Error:    str = (unsigned char*)"Error"; break;
+    default:                                  str = (unsigned char*)"ERROR!"; break;
   }
   return str;
 }
@@ -441,6 +460,10 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
   McuShell_SendStatusStr((unsigned char*)"  solar power", buf, io->stdOut);
 
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelbergInfo.sitePowerW);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  site power", buf, io->stdOut);
+
   McuShell_SendStatusStr((unsigned char*)"  wallbox", McuHeidelbergInfo.isActive?(unsigned char*)"active\r\n":(unsigned char*)"standby or powered off\r\n", io->stdOut);
 
   McuUtility_Num8uToStr(buf, sizeof(buf), McuHeidelberg_deviceID);
@@ -634,8 +657,9 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  set chargemode <m>", (unsigned char*)"Set charge mode: 0 (stop), 1 (fast), 2 (slow), 3 (slow+PV), 4 (PV) \r\n", io->stdOut);
 #if McuHeidelberg_CONFIG_USE_MOCK
   McuShell_SendHelpStr((unsigned char*)"  setmock state <value>", (unsigned char*)"Set mock wb state register value (2-11)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  setmock solar <value>", (unsigned char*)"Set mock solar power value (W)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  setmock phases <value>", (unsigned char*)"Set mock number of phases (1-3)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  setmock solar <w>", (unsigned char*)"Set mock solar panel power value (W)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  setmock site <w>", (unsigned char*)"Set mock site or residual power value (W)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  setmock phases <nof>", (unsigned char*)"Set mock number of phases (1-3)\r\n", io->stdOut);
 #endif
   return ERR_OK;
 }
@@ -735,6 +759,16 @@ uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, cons
     return ERR_FAILED;
 #endif
 #if McuHeidelberg_CONFIG_USE_MOCK
+  } else if (McuUtility_strncmp((char*)cmd, "McuHeidelberg setmock site ", sizeof("McuHeidelberg setmock site ")-1)==0) {
+    *handled = true;
+    p = cmd+sizeof("McuHeidelberg setmock site ")-1;
+    if (McuUtility_ScanDecimal16uNumber(&p, &val16u)==ERR_OK) {
+      McuHeidelbergInfo.sitePowerW = val16u;
+      return ERR_OK;
+    }
+    return ERR_FAILED;
+#endif
+#if McuHeidelberg_CONFIG_USE_MOCK
   } else if (McuUtility_strncmp((char*)cmd, "McuHeidelberg setmock phases ", sizeof("McuHeidelberg setmock phases ")-1)==0) {
     *handled = true;
     p = cmd+sizeof("McuHeidelberg setmock phases ")-1;
@@ -748,9 +782,23 @@ uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, cons
   return ERR_OK;
 }
 
+static uint32_t calculateMinimalWallboxPower(void) {
+  return McuHeidelbergInfo.minCurrent*230*McuHeidelbergInfo.nofPhases; /* minimal power setting possible */
+}
+
+static uint32_t calculateAvailableSolarPower(void) {
+  uint32_t solar, site;
+
+  solar = McuHeidelbergInfo.solarPowerW;
+  site = McuHeidelbergInfo.sitePowerW;
+  if (solar>site) { /* more solar power than currently used? */
+    return solar-site; /* return difference as surplus */
+  }
+  return 0; /* nothing available */
+}
+
 static uint16_t CalculateChargingCurrentdA(void) {
   uint16_t current = 0; /* in dA units, e.g. 60 is 6.0 A */
-  int power;
 
   if (McuHeidelbergInfo.chargingMode==ChargingMode_Stop) {
     current = 0;
@@ -759,16 +807,18 @@ static uint16_t CalculateChargingCurrentdA(void) {
   } else if (McuHeidelbergInfo.chargingMode==ChargingMode_Fast) {
     current = McuHeidelbergInfo.maxCurrent*10;
   } else if (McuHeidelbergInfo.chargingMode==ChargingMode_SlowPlusPV) {
-    power = McuHeidelbergInfo.minCurrent*230*McuHeidelbergInfo.nofPhases;
-    if (McuHeidelbergInfo.solarPowerW>power) { /* more solar power than the minimal amount: use that power */
-      current = (McuHeidelbergInfo.solarPowerW*10)/230;
+    int power = calculateMinimalWallboxPower();
+    int availableSolarP = calculateAvailableSolarPower();
+    if (availableSolarP>power) { /* more solar power available than the minimal amount: use that extra power to charge the vehicle */
+      current = McuHeidelbergInfo.minCurrent*10 + (availableSolarP*10)/230; /* increase power */
     } else {
-      current = McuHeidelbergInfo.minCurrent*10;
+      current = McuHeidelbergInfo.minCurrent*10; /* keep it at the base and minimal level */
     }
   } else if (McuHeidelbergInfo.chargingMode==ChargingMode_OnlyPV) {
-    int power = McuHeidelbergInfo.minCurrent*230*McuHeidelbergInfo.nofPhases; /* minimal power setting possible */
-    if (McuHeidelbergInfo.solarPowerW>=power) {
-      current = (McuHeidelbergInfo.solarPowerW*10)/230;
+    int power = calculateMinimalWallboxPower();
+    int availableSolarP = calculateAvailableSolarPower();
+    if (availableSolarP>=power) {
+      current = (availableSolarP*10)/230; /* charge with what we have available */
     } else {
       current = 0; /* stop charging */ /*!\todo: need to use a hysteresis: check for at least a minute */
     }
@@ -823,25 +873,37 @@ static void wallboxTask(void *pv) {
  * To stop the charging, write 0 to register 261 (McuHeidelberg_Addr_MaxCurrentCommand).
  */
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(100)); /* standard delay time */
+    vTaskDelay(pdMS_TO_TICKS(200)); /* standard delay time */
+
+    if (McuHeidelbergInfo.state!=Wallbox_State_None) { /* as soon as we have a connection, check the wallbox state for changes */
+      if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
+        if (prevWallboxChargingState != McuHeidelbergInfo.chargingState) { /* state changed? */
+          McuLog_trace("wallbox state changed from %s (%d) to %s (%d)", McuHeidelberg_GetShortChargingStateString(prevWallboxChargingState), prevWallboxChargingState, McuHeidelberg_GetShortChargingStateString(McuHeidelbergInfo.chargingState), McuHeidelbergInfo.chargingState);
+          prevWallboxChargingState = McuHeidelbergInfo.chargingState;
+        }
+      } else {
+        McuLog_error("failed to get charger state");
+        McuHeidelbergInfo.state = Wallbox_State_Error;
+      }
+    }
+
     switch(McuHeidelbergInfo.state) {
       case Wallbox_State_None:
         McuHeidelbergInfo.isActive = false;
         /* no state yet: probe layout register to check if we can reach the charger */
         res = McuHeidelberg_ReadRegisterLayoutVersion(McuHeidelberg_deviceID, &McuHeidelbergInfo.version);
         if (res==ERR_OK) {
-          McuLog_trace("connected with charger");
+          McuLog_info("connected with charger");
           McuHeidelbergInfo.isActive = true;
-          prevWallboxChargingState = 0; /* reset */
+          prevWallboxChargingState = McuHeidelbergInfo.chargingState; /* reset */
           McuHeidelbergInfo.state = Wallbox_State_Connected;
           /* set initial charger current to zero */
           if (McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, 0)!=ERR_OK) {
             McuLog_error("failed writing max current");
           }
-          //vTaskDelay(10);
           /* read static values from wallbox */
           if (McuHeidelberg_ReadHardwareMinCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.minCurrent)!=ERR_OK) {
-            McuLog_error("failed reding min current");
+            McuLog_error("failed reading min current");
           }
           if (McuHeidelberg_ReadHardwareMaxCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.maxCurrent)!=ERR_OK) {
             McuLog_error("failed read max current");
@@ -877,79 +939,64 @@ static void wallboxTask(void *pv) {
         break;
 
       case Wallbox_State_Connected:
-        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
-          if (prevWallboxChargingState != McuHeidelbergInfo.chargingState) { /* state change? */
-            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxChargingState, McuHeidelbergInfo.chargingState);
-            switch(McuHeidelbergInfo.chargingState) {
-              case McuHeidelberg_ChargerState_A1:
-              case McuHeidelberg_ChargerState_A2:
-                /* no vehicle plugged, stay in current state */
-                break;
+         switch(McuHeidelbergInfo.chargingState) {
+          case McuHeidelberg_ChargerState_A1:
+          case McuHeidelberg_ChargerState_A2:
+            /* no vehicle plugged, stay in current state */
+            break;
 
-              case McuHeidelberg_ChargerState_B1:
-              case McuHeidelberg_ChargerState_B2:
-              case McuHeidelberg_ChargerState_C1:
-              case McuHeidelberg_ChargerState_C2:
-                 McuLog_trace("vehicle plugged");
-                 McuHeidelbergInfo.state = Wallbox_State_Vehicle_Plugged;
-                break;
+          case McuHeidelberg_ChargerState_B1:
+          case McuHeidelberg_ChargerState_B2:
+          case McuHeidelberg_ChargerState_C1:
+          case McuHeidelberg_ChargerState_C2:
+            McuLog_info("vehicle plugged");
+            McuHeidelbergInfo.state = Wallbox_State_Vehicle_Plugged;
+            break;
 
-              case McuHeidelberg_ChargerState_Derating:
-              case McuHeidelberg_ChargerState_E:
-              case McuHeidelberg_ChargerState_F:
-              case McuHeidelberg_ChargerState_Error:
-              default:
-                McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
-                break;
-            }
-            prevWallboxChargingState = McuHeidelbergInfo.chargingState;
-          } /* if state changed */
-        } else {
-          McuLog_error("unable to get charging state");
-          McuHeidelbergInfo.state = Wallbox_State_Error;
-        }
+          case McuHeidelberg_ChargerState_Derating:
+          case McuHeidelberg_ChargerState_E:
+          case McuHeidelberg_ChargerState_F:
+          case McuHeidelberg_ChargerState_Error:
+          default:
+            McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
+            break;
+        } /* switch */
         break;
 
       case Wallbox_State_Vehicle_Plugged:
-        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
-          if (prevWallboxChargingState != McuHeidelbergInfo.chargingState) { /* state change? */
-            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxChargingState, McuHeidelbergInfo.chargingState);
-            switch(McuHeidelbergInfo.chargingState) {
-              case McuHeidelberg_ChargerState_A1:
-              case McuHeidelberg_ChargerState_A2:
-                McuLog_trace("vehicle not plugged any more");
-                McuHeidelbergInfo.state = Wallbox_State_Connected;
-                break;
+        switch(McuHeidelbergInfo.chargingState) {
+          case McuHeidelberg_ChargerState_A1:
+          case McuHeidelberg_ChargerState_A2:
+            McuLog_trace("vehicle not plugged any more");
+            McuHeidelbergInfo.state = Wallbox_State_Connected;
+            break;
 
-              case McuHeidelberg_ChargerState_B1:
-              case McuHeidelberg_ChargerState_B2:
-                /* vehicle plugged, but no charging request: stay in this state */
-                break;
+          case McuHeidelberg_ChargerState_B1:
+          case McuHeidelberg_ChargerState_B2:
+            /* vehicle plugged, but no charging request: stay in this state */
+            break;
 
-              case McuHeidelberg_ChargerState_C1:
-              case McuHeidelberg_ChargerState_C2:
-                McuLog_trace("vehicle plugged, with charging request");
-                McuHeidelbergInfo.state = Wallbox_State_Vehicle_Start_Charging;
-                break;
+          case McuHeidelberg_ChargerState_C1:
+            /* charging request from vehicle, but wallbox does not allow charging: stay here */
+            break;
 
-              case McuHeidelberg_ChargerState_Derating:
-              case McuHeidelberg_ChargerState_E:
-              case McuHeidelberg_ChargerState_F:
-              case McuHeidelberg_ChargerState_Error:
-              default:
-                McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
-                break;
-            }
-            prevWallboxChargingState = McuHeidelbergInfo.chargingState;
-          } /* if state changed */
-        } else {
-          McuLog_error("unable to get charging state");
-          McuHeidelbergInfo.state = Wallbox_State_Error;
-        }
+          case McuHeidelberg_ChargerState_C2:
+            McuLog_trace("vehicle plugged, with charging request");
+            McuHeidelbergInfo.state = Wallbox_State_Vehicle_Start_Charging;
+            break;
+
+          case McuHeidelberg_ChargerState_Derating:
+          case McuHeidelberg_ChargerState_E:
+          case McuHeidelberg_ChargerState_F:
+          case McuHeidelberg_ChargerState_Error:
+          default:
+            McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
+            break;
+        } /* switch */
         break;
 
       case Wallbox_State_Vehicle_Start_Charging:
-        McuLog_trace("start charging");
+        McuLog_info("start charging");
         currChargingCurrentdA = CalculateChargingCurrentdA();
         McuLog_info("setting charging current to %d.%d A (%d W)", currChargingCurrentdA/10, currChargingCurrentdA%10, McuHeidelbergInfo.nofPhases*currChargingCurrentdA*230/10);
         McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, currChargingCurrentdA); /* set value in dA */
@@ -958,58 +1005,49 @@ static void wallboxTask(void *pv) {
         break;
 
       case Wallbox_State_Vehicle_Charging:
-        if (McuHeidelberg_ReadChargingState(McuHeidelberg_deviceID, &McuHeidelbergInfo.chargingState)==ERR_OK) {
-          if (prevWallboxChargingState != McuHeidelbergInfo.chargingState) { /* state change? */
-            McuLog_trace("wallbox state changed from '%d' to '%d'", prevWallboxChargingState, McuHeidelbergInfo.chargingState);
-            switch(McuHeidelbergInfo.chargingState) {
-              case McuHeidelberg_ChargerState_A1:
-              case McuHeidelberg_ChargerState_A2:
-                McuLog_trace("vehicle not plugged any more");
-                McuHeidelbergInfo.state = Wallbox_State_Connected;
-                break;
+        switch(McuHeidelbergInfo.chargingState) {
+          case McuHeidelberg_ChargerState_A1:
+          case McuHeidelberg_ChargerState_A2:
+            McuLog_trace("vehicle not plugged any more");
+            McuHeidelbergInfo.state = Wallbox_State_Connected;
+            break;
 
-              case McuHeidelberg_ChargerState_B1:
-              case McuHeidelberg_ChargerState_B2:
-                McuLog_trace("vehicle plugged, but dropped charging request");
-                McuHeidelbergInfo.state = Wallbox_State_Connected;
-                break;
+          case McuHeidelberg_ChargerState_B1:
+          case McuHeidelberg_ChargerState_B2:
+            McuLog_trace("vehicle plugged, but dropped charging request");
+            McuHeidelbergInfo.state = Wallbox_State_Connected;
+            break;
 
-              case McuHeidelberg_ChargerState_C1:
-              case McuHeidelberg_ChargerState_C2:
-                /* vehicle plugged, with charging request: stay in this state */
-                vTaskDelay(pdMS_TO_TICKS(2000));
-                break;
+          case McuHeidelberg_ChargerState_C1:
+          case McuHeidelberg_ChargerState_C2:
+            /* vehicle plugged, with charging request: stay in this state */
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            break;
 
-              case McuHeidelberg_ChargerState_Derating:
-                McuLog_trace("derating while charging, waiting 5 seconds");
-                vTaskDelay(pdMS_TO_TICKS(5000));
-                break;
-              case McuHeidelberg_ChargerState_E:
-              case McuHeidelberg_ChargerState_F:
-              case McuHeidelberg_ChargerState_Error:
-              default:
-                McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
-                break;
-            } /* switch */
-            prevWallboxChargingState = McuHeidelbergInfo.chargingState;
-          } /* if state changed */
-          if (McuHeidelbergInfo.chargingState==McuHeidelberg_ChargerState_C2) {
-            /* calculate charging current */
-            currChargingCurrentdA = CalculateChargingCurrentdA();
-            if (currChargingCurrentdA!=prevChargingCurrentdA) {
-              McuLog_info("changing charging current from %d.%d A to %d.%d A (%d W)", prevChargingCurrentdA/10, prevChargingCurrentdA%10, currChargingCurrentdA/10, currChargingCurrentdA%10, McuHeidelbergInfo.nofPhases*currChargingCurrentdA*230/10);
-              McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, currChargingCurrentdA); /* set value in dA */
-              prevChargingCurrentdA = currChargingCurrentdA;
-            }
+          case McuHeidelberg_ChargerState_Derating:
+            McuLog_trace("derating while charging, waiting 5 seconds");
+            vTaskDelay(pdMS_TO_TICKS(5000));
+            break;
+          case McuHeidelberg_ChargerState_E:
+          case McuHeidelberg_ChargerState_F:
+          case McuHeidelberg_ChargerState_Error:
+          default:
+            McuHeidelbergInfo.state = Wallbox_State_Error; /* error case */
+            break;
+        } /* switch */
+        if (McuHeidelbergInfo.chargingState==McuHeidelberg_ChargerState_C2) {
+          /* calculate charging current */
+          currChargingCurrentdA = CalculateChargingCurrentdA();
+          if (currChargingCurrentdA!=prevChargingCurrentdA) {
+            McuLog_info("changing charging current from %d.%d A to %d.%d A (%d W)", prevChargingCurrentdA/10, prevChargingCurrentdA%10, currChargingCurrentdA/10, currChargingCurrentdA%10, McuHeidelbergInfo.nofPhases*currChargingCurrentdA*230/10);
+            McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, currChargingCurrentdA); /* set value in dA */
+            prevChargingCurrentdA = currChargingCurrentdA;
           }
-        } else {
-          McuLog_error("unable to get charging state");
-          McuHeidelbergInfo.state = Wallbox_State_Error;
         }
         break;
 
       case Wallbox_State_Vehicle_Stop_Charging:
-        McuLog_trace("stop charging");
+        McuLog_info("stop charging");
         McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, 0); /* stop charging */
         McuHeidelbergInfo.state = Wallbox_State_Connected;
         break;
