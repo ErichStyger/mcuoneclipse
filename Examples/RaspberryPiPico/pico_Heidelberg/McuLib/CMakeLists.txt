@@ -170,6 +170,10 @@ file(GLOB FILES
   minIni/minGlue-FatSs.c
   minIni/minGlue-Flash.c
   minIni/minGlue-LittleFS.c
+  
+  # Modbus
+  Modbus/McuHeidelberg.c
+  Modbus/McuModbus.c
 )
 
 # add_compile_options(-include "../src/IncludeMcuLibConfig.h")
@@ -207,4 +211,5 @@ target_include_directories(
   ./SEGGER_Sysview/
   ./MinIni
   ./LittlevGL
-  )
+  ./Modbus
+ )

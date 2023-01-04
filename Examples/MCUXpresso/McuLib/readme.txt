@@ -22,6 +22,7 @@ Middleware and dedicated driver folders:
 - LittlevGL: GUI library (https://littlevgl.com/)
 - littleFS: littleFS transactional and high-integrity file system (https://github.com/littlefs-project/littlefs)
 - minIni: a minimal INI file parser: https://www.compuphase.com/minini.htm
+- Modbus: Modbus implementation, Heidelberg Energy Control EV charger
 
 Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - C11, C21: subdrivers of McuQuadCounter

@@ -536,28 +536,25 @@ void McuGPIO_SetPullResistor(McuGPIO_Handle_t gpio, McuGPIO_PullType pull) {
     PORT_SetPinPullUpEnable(pin->hw.port, pin->hw.portType, pin->hw.pin, true);
   }
 #elif McuLib_CONFIG_CPU_IS_KINETIS
+   /* mask out bits for Pull-Select, Pull-Enable and Interrupt status flags, then OR-ing the new flags */
   if (pull == McuGPIO_PULL_DISABLE) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
-                      * corresponding Port Pull Enable field is set. */
-                     | (uint32_t)(kPORT_PullUp)
-                     | PORT_PCR_PE(kPORT_PullDisable));
+                     | PORT_PCR_PE(0)); /* disable pull resistor */
   } else if (pull == McuGPIO_PULL_UP) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
-                      * corresponding Port Pull Enable field is set. */
-                     | (uint32_t)(kPORT_PullUp));
+                     /* | PORT_PCR_PFE(1) */ /* enable passive filter */
+                     | PORT_PCR_PS(1) /* pull select 1: pull-up */
+                     | PORT_PCR_PE(1)); /* enable pull resistor */
   } else if (pull == McuGPIO_PULL_DOWN) {
     pin->hw.port->PCR[pin->hw.pin] = ((pin->hw.port->PCR[pin->hw.pin] &
                       /* Mask bits to zero which are setting */
                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
-                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
-                      * corresponding Port Pull Enable field is set. */
-                     | (uint32_t)(kPORT_PullDown));
+                     | PORT_PCR_PS(0) /* pull select 0: pull-down */
+                     | PORT_PCR_PE(1)); /* enable pull resistor */
   }
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CORTEX_M==0 /* e.g. LPC845 */
   uint32_t IOCON_config;

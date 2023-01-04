@@ -630,7 +630,7 @@ bool McuShell_ReadLine(uint8_t *bufStart, uint8_t *buf, size_t bufSize, McuShell
 */
 uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io)
 {
-  unsigned char buf[16];
+  unsigned char buf[32];
 
   McuShell_SendStatusStr((const unsigned char*)"McuShell", (const unsigned char*)"Commandline shell status\r\n", io->stdOut);
   McuShell_SendStatusStr((const unsigned char*)"  Build", (const unsigned char*)__DATE__, io->stdOut);
@@ -652,11 +652,17 @@ uint8_t McuShell_PrintStatus(McuShell_ConstStdIOType *io)
 #if McuShell_CONFIG_MULTI_CMD_ENABLED
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"yes: '");
   McuUtility_chcat(buf, sizeof(buf), McuShell_CONFIG_MULTI_CMD_CHAR);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"'\r\n");
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"', size: ");
+  McuUtility_strcatNum32u(buf, sizeof(buf), McuShell_CONFIG_MULTI_CMD_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((const unsigned char*)"  multiCmd", buf, io->stdOut);
 #else
   McuShell_SendStatusStr((const unsigned char*)"  multiCmd", (unsigned char*)"no\r\n", io->stdOut);
 #endif
+
+  McuUtility_Num32uToStr(buf, sizeof(buf), McuShell_DEFAULT_SHELL_BUFFER_SIZE);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" bytes default size\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  size", buf, io->stdOut);
 
   return ERR_OK;
 }
