@@ -59,8 +59,15 @@
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
+#if McuUart485_CONFIG_USE_RS_485
+  #include "McuUart485.h"
+#endif
+#if McuModbus_CONFIG_IS_ENABLED
+  #include "Modbus/McuModbus.h"
+  #include "Modbus/McuHeidelberg.h"
+#endif
 
-/* \Todo need to have it globally defined, as not present anywhere else */
+/* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
 
 void PL_Init(void) {
@@ -119,5 +126,12 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();
+#endif
+#if McuUart485_CONFIG_USE_RS_485
+  McuUart485_Init();
+#endif
+#if McuModbus_CONFIG_IS_ENABLED
+  McuModbus_Init();
+  McuHeidelberg_Init();
 #endif
 }

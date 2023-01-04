@@ -32,6 +32,13 @@
 #if PL_CONFIG_USE_PICO_W
   #include "PicoWiFi.h"
 #endif
+#if McuUart485_CONFIG_USE_RS_485
+  #include "McuUart485.h"
+#endif
+#if McuModbus_CONFIG_IS_ENABLED
+  #include "Modbus/McuModbus.h"
+  #include "Modbus/McuHeidelberg.h"
+#endif
 #include "application.h"
 
 typedef struct {
@@ -99,6 +106,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_MINI
   McuMinINI_ParseCommand,
   ini_ParseCommand,
+#endif
+#if McuUart485_CONFIG_USE_RS_485
+  McuUart485_ParseCommand,
+#endif
+#if McuModbus_CONFIG_IS_ENABLED
+  McuModbus_ParseCommand,
+  McuHeidelberg_ParseCommand,
 #endif
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
