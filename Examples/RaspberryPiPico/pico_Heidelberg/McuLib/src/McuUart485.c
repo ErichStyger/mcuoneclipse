@@ -256,35 +256,16 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC /* no flags for RPxxxx */
   if (flags&McuUart485_CONFIG_UART_HW_RX_READY_FLAGS) {
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
-  while (uart_is_readable(McuUart485_CONFIG_UART_DEVICE)) {
-#elif 0
-  uint8_t ch;
-  while(uart_is_readable(McuUart485_CONFIG_UART_DEVICE)) {
-    ch = uart_getc(McuUart485_CONFIG_UART_DEVICE);
-    (void)xQueueSendFromISR(RS485UartRxQueue, &ch, &xHigherPriorityTaskWoken2);
-  }
-  return;
-  //if (irq_is_enabled(McuUart485_CONFIG_UART_DEVICE==uart0?UART0_IRQ : UART1_IRQ)) { /* because we have a shared interrupt handler */
+  while (uart_is_readable(McuUart485_CONFIG_UART_DEVICE)) { /* check if we have data available */
 #endif
 
 #if McuUart485_CONFIG_HAS_FIFO
     count = McuUart485_CONFIG_UART_DEVICE->RCFIFO;
-#elif McuLib_CONFIG_CPU_IS_RPxxxx
-    count = 1;
-#elif 0
-    if ((uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->imsc & UART_UARTIMSC_RXIM_BITS) && (uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->mis&UART_UARTRIS_RXRIS_BITS)) {
-      count = 1; /* have received data */
-    } else {
-      count = 0;
-      hw_clear_bits((uint32_t*)uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->icr, UART_UARTICR_RXIC_BITS);
-    }
 #else
     count = 1;
 #endif
     while(count!=0) {
-      // data = McuUart485_CONFIG_UART_READ_BYTE(McuUart485_CONFIG_UART_DEVICE);
       data = McuUart485_CONFIG_UART_READ_BYTE(McuUart485_CONFIG_UART_DEVICE);
-      //hw_clear_bits((uint32_t*)uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->icr, UART_UARTICR_RXIC_BITS);
     #if !McuUart485_CONFIG_USE_MODBUS
       if (data!=0) { /* data==0 could happen especially after power-up, ignore it if we are in shell/non-Modbus mode */
     #endif
@@ -337,22 +318,6 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
   #endif
 }
 #endif
-
-  int chars_rxed;
-
-  void on_uart_rx(void) {
-      while (uart_is_readable(McuUart485_CONFIG_UART_DEVICE)) {
-          uint8_t ch = uart_getc(McuUart485_CONFIG_UART_DEVICE);
-          // Can we send it back?
-          if (uart_is_writable(McuUart485_CONFIG_UART_DEVICE)) {
-              // Change it slightly first!
-              ch++;
-              uart_putc(McuUart485_CONFIG_UART_DEVICE, ch);
-          }
-          chars_rxed++;
-      }
-  }
-
 
 static void InitUart(void) {
 #if !McuUart485_CONFIG_USE_HW_OE_RTS
@@ -450,9 +415,8 @@ static void InitUart(void) {
   /* setup interrupt */
   int UART_IRQ = McuUart485_CONFIG_UART_DEVICE == uart0 ? UART0_IRQ : UART1_IRQ; /* find out which UART is used */
   irq_set_exclusive_handler(UART_IRQ, McuUart485_CONFIG_UART_IRQ_HANDLER /* on_uart_rx*/); /* setup IRQ handler */
-  //irq_add_shared_handler(UART_IRQ, McuUart485_CONFIG_UART_IRQ_HANDLER, PICO_SHARED_IRQ_HANDLER_DEFAULT_ORDER_PRIORITY);
   irq_set_enabled(UART_IRQ, true); /* enable interrupt */
-  //irq_set_priority(UART_IRQ, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
+  irq_set_priority(UART_IRQ, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
   uart_set_irq_enables(McuUart485_CONFIG_UART_DEVICE, true, false); /* enable UART interrupt output, Rx only */
 #else
   #error "need to initialize UART!"
