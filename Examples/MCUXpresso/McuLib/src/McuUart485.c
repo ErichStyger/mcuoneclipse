@@ -40,6 +40,8 @@ static void McuUart485_GPIO_Init(void) {
   McuGPIO_GetDefaultConfig(&config);
 #if McuLib_CONFIG_CPU_IS_ESP32
   config.hw.pin = McuUart485_CONFIG_TX_EN_GPIO;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  config.hw.pin   = McuUart485_CONFIG_TX_EN_PIN;
 #else
   config.hw.gpio  = McuUart485_CONFIG_TX_EN_GPIO;
   config.hw.port  = McuUart485_CONFIG_TX_EN_PORT;
@@ -178,6 +180,9 @@ void McuUart485_SendBlock(unsigned char *data, size_t dataSize) {
   #endif
   McuUart485_CONFIG_UART_WRITE_BLOCKING(McuUart485_CONFIG_UART_DEVICE, data, dataSize);
   #if !McuUart485_CONFIG_USE_HW_OE_RTS
+  #if McuLib_CONFIG_CPU_IS_RPxxxx
+  uart_tx_wait_blocking(McuUart485_CONFIG_UART_DEVICE); /* wait until all bytes are sent */
+  #endif
   McuUart485_GPIO_RxEnable();
   #endif
 #endif
@@ -226,10 +231,12 @@ McuShell_ConstStdIOType McuUart485_stdio = {
 
 uint8_t McuUart485_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
-#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC || McuLib_CONFIG_CPU_IS_RPxxxx
 void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC /* no flags for RPxxxx */
   uint32_t flags;
+#endif
   BaseType_t xHigherPriorityTaskWoken1 = false, xHigherPriorityTaskWoken2 = false;
 #if !McuUart485_CONFIG_USE_MODBUS
   static unsigned char prevChar = '\n';
@@ -237,14 +244,21 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
 #endif
   uint8_t count;
 
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC /* no flags for RPxxxx */
   flags = McuUart485_CONFIG_UART_GET_FLAGS(McuUart485_CONFIG_UART_DEVICE);
+#endif
 #if McuUart485_CONFIG_HAS_FIFO
   if (flags&kUART_RxFifoOverflowFlag) {
     count = 0; /* statement to allow debugger to set a breakpoint here */
   }
 #endif
   /* new data arrived. */
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC /* no flags for RPxxxx */
   if (flags&McuUart485_CONFIG_UART_HW_RX_READY_FLAGS) {
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  while (uart_is_readable(McuUart485_CONFIG_UART_DEVICE)) { /* check if we have data available */
+#endif
+
 #if McuUart485_CONFIG_HAS_FIFO
     count = McuUart485_CONFIG_UART_DEVICE->RCFIFO;
 #else
@@ -255,7 +269,7 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
     #if !McuUart485_CONFIG_USE_MODBUS
       if (data!=0) { /* data==0 could happen especially after power-up, ignore it if we are in shell/non-Modbus mode */
     #endif
-      #if !McuUart485_CONFIG_USE_MODBUS
+    #if !McuUart485_CONFIG_USE_MODBUS
         /* only store into RS485UartResponseQueue if we have a line starting with '@' */
         if (prevChar=='\n' && data=='@') {
           responseLine = true;
@@ -284,24 +298,31 @@ void McuUart485_CONFIG_UART_IRQ_HANDLER(void) {
           (void)McuUart485_CONFIG_LOGGER_CALLBACK_NAME((unsigned char)'\n');
         }
       #endif
-        count--;
-      }
-  #if !McuUart485_CONFIG_USE_MODBUS
-    }
-  #endif
+    #if !McuUart485_CONFIG_USE_MODBUS
+      } /* if data != 0 */
+    #endif
+      count--;
+    } /* while count != 0 */
   }
 #if McuLib_CONFIG_CPU_IS_KINETIS
   flags |= kUART_RxOverrunFlag|kUART_RxFifoOverflowFlag; /* always clear these flags, as they might been set? Not clearing them will not generate future interrupts */
 #endif
+#if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC /* no clearing needed for RPxxxx */
   McuUart485_CONFIG_CLEAR_STATUS_FLAGS(McuUart485_CONFIG_UART_DEVICE, flags);
+#endif
   if (xHigherPriorityTaskWoken1 != pdFALSE || xHigherPriorityTaskWoken2 != pdFALSE) {
     vPortYieldFromISR();
   }
-  __DSB();
+  #if McuLib_CONFIG_CORTEX_M==4
+    __DSB(); /* ARM Cortex-M4 errata Notice 838869: dsb required because "Store immediate overlapping exception return operation might vector to incorrect interrupt" */
+  #endif
 }
 #endif
 
 static void InitUart(void) {
+#if !McuUart485_CONFIG_USE_HW_OE_RTS
+  McuUart485_GPIO_Init();
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   /* NOTE: Muxing of the UART pins needs to be done in the Pins tool! */
   McuUart485_CONFIG_UART_CONFIG_STRUCT config;
@@ -332,8 +353,6 @@ static void InitUart(void) {
   McuUart485_CONFIG_UART_DEVICE->CFG |= USART_CFG_OEPOL(1); /* 1: the output enable signal is high active */
   McuUart485_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */
   #endif
-#else
-  McuUart485_GPIO_Init();
 #endif
 #if McuUart485_CONFIG_HAS_FIFO
   UART_EnableRxFIFO(McuUart485_CONFIG_UART_DEVICE, true); /* enable UART Rx FIFO */
@@ -344,9 +363,6 @@ static void InitUart(void) {
   NVIC_SetPriority(McuUart485_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
   EnableIRQ(McuUart485_CONFIG_UART_IRQ_NUMBER);
 #elif McuLib_CONFIG_CPU_IS_ESP32
-#if !McuUart485_CONFIG_USE_HW_OE_RTS
-  McuUart485_GPIO_Init();
-#endif
   // Timeout threshold for UART = number of symbols (~10 tics) with unchanged state on receive pin
   #define UART_CONFIG_READ_TOUT          (3) // 3.5T * 8 = 28 ticks, TOUT=3 -> ~24..33 ticks
 
@@ -389,6 +405,21 @@ static void InitUart(void) {
 
   // Set read timeout of UART TOUT feature
   ESP_ERROR_CHECK(uart_set_rx_timeout(McuUart485_CONFIG_UART_DEVICE, UART_CONFIG_READ_TOUT));
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  uart_init(McuUart485_CONFIG_UART_DEVICE, McuUart485_CONFIG_UART_BAUDRATE);
+  gpio_set_function(McuUart485_CONFIG_TXD_PIN, GPIO_FUNC_UART);
+  gpio_set_function(McuUart485_CONFIG_RXD_PIN, GPIO_FUNC_UART);
+  uart_set_fifo_enabled(McuUart485_CONFIG_UART_DEVICE, false);
+  uart_set_format(McuUart485_CONFIG_UART_DEVICE, 8, 1, McuUart485_CONFIG_UART_PARITY);
+  uart_set_hw_flow(McuUart485_CONFIG_UART_DEVICE, false, false); /* disable flow control, cannot use CTS/RTS */
+  /* setup interrupt */
+  int UART_IRQ = McuUart485_CONFIG_UART_DEVICE == uart0 ? UART0_IRQ : UART1_IRQ; /* find out which UART is used */
+  irq_set_exclusive_handler(UART_IRQ, McuUart485_CONFIG_UART_IRQ_HANDLER /* on_uart_rx*/); /* setup IRQ handler */
+  irq_set_enabled(UART_IRQ, true); /* enable interrupt */
+  irq_set_priority(UART_IRQ, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY); /* required as we are using FreeRTOS API calls */
+  uart_set_irq_enables(McuUart485_CONFIG_UART_DEVICE, true, false); /* enable UART interrupt output, Rx only */
+#else
+  #error "need to initialize UART!"
 #endif
 }
 

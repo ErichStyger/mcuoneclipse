@@ -113,15 +113,41 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
   #endif
 
 #elif McuLib_CONFIG_CPU_IS_ESP32
- #include "driver/uart.h"
- #define McuUart485_CONFIG_UART_DEVICE                    UART_NUM_2
- #define McuUart485_CONFIG_TXD_PIN                        GPIO_NUM_4
- #define McuUart485_CONFIG_RXD_PIN                        GPIO_NUM_5
- #define McuUart485_CONFIG_RTS_PIN                       (GPIO_NUM_23) /* RTS, ~RE for RS485, managed by UART */
- #define McuUart485_CONFIG_CTS_PIN                       (/*GPIO_NUM_26*//*not used*/) /* CTS, DE for RS485, but not used! Make sure ~RE/DE are */
+  #include "driver/uart.h"
+  #define McuUart485_CONFIG_UART_DEVICE                    UART_NUM_2
+  #define McuUart485_CONFIG_TXD_PIN                        GPIO_NUM_4
+  #define McuUart485_CONFIG_RXD_PIN                        GPIO_NUM_5
+  #define McuUart485_CONFIG_RTS_PIN                       (GPIO_NUM_23) /* RTS, ~RE for RS485, managed by UART */
+  #define McuUart485_CONFIG_CTS_PIN                       (/*GPIO_NUM_26*//*not used*/) /* CTS, DE for RS485, but not used! RE/DE must be wired together on the hardware */
 
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/uart.h"
+  #ifndef McuUart485_CONFIG_UART_DEVICE
+    #define McuUart485_CONFIG_UART_DEVICE                   uart1
+  #endif
+  #ifndef McuUart485_CONFIG_TXD_PIN
+    #define McuUart485_CONFIG_TXD_PIN                       (4u)
+  #endif
+  #ifndef McuUart485_CONFIG_RXD_PIN
+    #define McuUart485_CONFIG_RXD_PIN                       (5u)
+  #endif
+  #ifndef McuUart485_CONFIG_RTS_PIN
+    #define McuUart485_CONFIG_RTS_PIN                       (3u) /* RTS, ~RE for RS485 */
+  #endif
+  #ifndef McuUart485_CONFIG_CTS_PIN
+    #define McuUart485_CONFIG_CTS_PIN                       (3u) /* CTS, DE for RS485! */
+  #endif
+  #ifndef McuUart485_CONFIG_UART_WRITE_BLOCKING
+    #define McuUart485_CONFIG_UART_WRITE_BLOCKING           uart_write_blocking
+  #endif
+  #ifndef McuUart485_CONFIG_UART_PARITY
+    #define McuUart485_CONFIG_UART_PARITY                   UART_PARITY_NONE /* UART_PARITY_NONE, UART_PARITY_EVEN, UART_PARITY_ODD */
+  #endif
+  #ifndef McuUart485_CONFIG_UART_READ_BYTE
+    #define McuUart485_CONFIG_UART_READ_BYTE                uart_getc
+  #endif
 #else
-  /* you have to put your config here */
+  /* you have to put your configuration here */
 #endif
 
 #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
@@ -151,6 +177,8 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
   #elif McuLib_CONFIG_CPU_IS_ESP32
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* on ESP32, the transceiver is controlled by the UART directly with the RTS pin */
+  #elif McuLib_CONFIG_CPU_IS_RPxxxx
+    #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)  /* on RP2040, need to control RE/DE pin manually */
   #endif
 #endif
 
@@ -169,6 +197,10 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
   #elif McuLib_CONFIG_CPU_IS_ESP32 /* default for ESP32 */
     #ifndef McuUart485_CONFIG_RE_PIN
       #define McuUart485_CONFIG_RE_PIN           (McuUart485_CONFIG_CTS_PIN) /* ~DE_ESP32 pin: DE (Data Enable) is low active */
+    #endif
+  #elif McuLib_CONFIG_CPU_IS_RPxxxx
+    #ifndef McuUart485_CONFIG_RE_PIN
+      #define McuUart485_CONFIG_TX_EN_PIN        (McuUart485_CONFIG_CTS_PIN) /* ~DE_ESP32 pin: DE (Data Enable) is low active */
     #endif
   #endif
 #endif
