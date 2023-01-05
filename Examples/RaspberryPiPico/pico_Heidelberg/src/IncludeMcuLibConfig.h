@@ -81,7 +81,7 @@
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (256)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING  "picoHouse"
+#define McuShell_CONFIG_PROJECT_NAME_STRING  "picoCharger"
 #define McuShell_CONFIG_PROMPT_STRING        "pico> "
 /* ---------------------------------------------------------------------- */
 /* McuFlash */
