@@ -40,6 +40,9 @@
 #define PL_CONFIG_USE_EXT_FLASH       (0 && !PL_CONFIG_USE_BUTTONS) /* if using externals SPI flash (uses nav switch button pins!) */
 #define PL_CONFIG_USE_LITTLE_FS       (0 && PL_CONFIG_USE_EXT_FLASH) /* if using littleFS as file system, not supported yet! */
 
+
+#define PL_CONFIG_USE_RS485_SHELL     (1 && McuUart485_CONFIG_USE_RS_485)
+
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */

@@ -35,6 +35,9 @@
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
 #endif
+#if PL_CONFIG_USE_RS485_SHELL
+  #include "rs485.h"
+#endif
 #if McuModbus_CONFIG_IS_ENABLED
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
@@ -110,6 +113,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if McuUart485_CONFIG_USE_RS_485
   McuUart485_ParseCommand,
 #endif
+#if PL_CONFIG_USE_RS485_SHELL
+  RS485_ParseCommand,
+#endif
 #if McuModbus_CONFIG_IS_ENABLED
   McuModbus_ParseCommand,
   McuHeidelberg_ParseCommand,
@@ -126,6 +132,31 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   App_ParseCommand,
   NULL /* Sentinel */
 };
+
+void SHELL_SendStringToIO(const unsigned char *str, McuShell_ConstStdIOType *io) {
+  McuShell_SendStr(str, io->stdOut);
+}
+
+void SHELL_SendString(const unsigned char *str) {
+  for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
+    McuShell_SendStr(str, ios[i].stdio->stdOut);
+  }
+}
+
+uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOType *io, bool silent) {
+  if (io==NULL) { /* use a default */
+#if PL_CONFIG_USE_SHELL_UART
+    io = &McuShellUart_stdio;
+#elif PL_CONFIG_USE_USB_CDC
+    io = &USB_CdcStdio;
+#elif PL_CONFIG_USE_RTT
+    io = &McuRTT_stdio;
+#else
+  #error "no shell std IO?"
+#endif
+  }
+  return McuShell_ParseWithCommandTableExt(command, io, CmdParserTable, silent);
+}
 
 static void ShellTask(void *pvParameters) {
   int i;

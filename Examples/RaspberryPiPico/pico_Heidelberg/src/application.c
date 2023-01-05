@@ -145,7 +145,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   const unsigned char *p;
 
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "app help")==0) {
-    McuShell_SendHelpStr((unsigned char*)"light", (const unsigned char*)"Group of application commands\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"app", (const unsigned char*)"Group of application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     *handled = true;
     return ERR_OK;

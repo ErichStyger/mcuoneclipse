@@ -62,6 +62,9 @@
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
 #endif
+#if PL_CONFIG_USE_RS485_SHELL
+  #include "rs485.h"
+#endif
 #if McuModbus_CONFIG_IS_ENABLED
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
@@ -129,6 +132,9 @@ void PL_Init(void) {
 #endif
 #if McuUart485_CONFIG_USE_RS_485
   McuUart485_Init();
+#endif
+#if PL_CONFIG_USE_RS485_SHELL
+  RS485_Init();
 #endif
 #if McuModbus_CONFIG_IS_ENABLED
   McuModbus_Init();

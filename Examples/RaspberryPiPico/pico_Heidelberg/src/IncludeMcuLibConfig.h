@@ -132,3 +132,18 @@
   #include "lv_conf.h"
 #endif /* !__ASSEMBLER__ */
 
+/* ---------------------------------------------------------------------------------------*/
+/* McuModBus */
+#define McuModbus_CONFIG_IS_ENABLED           (0) /* Modbus with Heidelberg wallbox */
+/* ---------------------------------------------------------------------------------------*/
+/* McuUart485 */
+#define McuUart485_CONFIG_USE_RS_485          (1)
+#define McuUart485_CONFIG_USE_MODBUS          (McuModbus_CONFIG_IS_ENABLED)
+#define McuUart485_CONFIG_USE_LOGGER          (1)
+#if McuModbus_CONFIG_IS_ENABLED
+  #define McuUart485_CONFIG_UART_BAUDRATE      (19200)
+  #define McuUart485_CONFIG_UART_PARITY        UART_PARITY_EVEN
+#else
+  #define McuUart485_CONFIG_UART_BAUDRATE      (115200)
+#endif
+

@@ -20,6 +20,7 @@ file(GLOB FILES
   gui.c
   lcd.c
   image/customSymbols_12.c
+  rs485.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory
