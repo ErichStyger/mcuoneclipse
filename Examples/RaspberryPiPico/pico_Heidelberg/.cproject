@@ -30,6 +30,7 @@
 									<listOptionValue builtIn="false" value="McuUart485_CONFIG_USE_RS_485=1"/>
 									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_KINETIS=0"/>
 									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_RPxxxx=1"/>
+									<listOptionValue builtIn="false" value="McuUart485_CONFIG_USE_MODBUS=1"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1984849194" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/common/pico_time/include&quot;"/>
@@ -59,7 +60,11 @@
 		<project id="pico_Heidelberg.null.649044358" name="pico_Heidelberg"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Build (GNU)">
+			<resource resourceType="PROJECT" workspacePath="/pico_Heidelberg"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -70,4 +75,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

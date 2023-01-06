@@ -811,7 +811,7 @@ static uint16_t CalculateChargingCurrentdA(void) {
     int power = calculateMinimalWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>power) { /* more solar power available than the minimal amount: use that extra power to charge the vehicle */
-      current = McuHeidelbergInfo.minCurrent*10 + (availableSolarP*10)/230; /* increase power */
+      current = McuHeidelbergInfo.minCurrent*10 + ((availableSolarP/McuHeidelbergInfo.nofPhases)*10)/230; /* increase power */
     } else {
       current = McuHeidelbergInfo.minCurrent*10; /* keep it at the base and minimal level */
     }
@@ -819,7 +819,7 @@ static uint16_t CalculateChargingCurrentdA(void) {
     int power = calculateMinimalWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>=power) {
-      current = (availableSolarP*10)/230; /* charge with what we have available */
+      current = ((availableSolarP/McuHeidelbergInfo.nofPhases)*10)/230; /* charge with what we have available */
     } else {
       current = 0; /* stop charging */ /*!\todo: need to use a hysteresis: check for at least a minute */
     }
@@ -864,7 +864,7 @@ static void wallboxTask(void *pv) {
   McuHeidelbergInfo.isActive = false;
   McuHeidelbergInfo.state = Wallbox_State_None;
   McuHeidelbergInfo.chargingMode = ChargingMode_Stop;
-#if McuHeidelberg_CONFIG_USE_MOCK
+#if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
   mock.chargingState = McuHeidelberg_ChargerState_A1;
 #endif
 /*
@@ -974,9 +974,11 @@ static void wallboxTask(void *pv) {
 
           case McuHeidelberg_ChargerState_B1: /* plugged, no charging request, but charging not possible */
             currChargingCurrentdA = CalculateChargingCurrentdA();
-            McuLog_info("B1, setting charging current to %d.%d A (%d W)", currChargingCurrentdA/10, currChargingCurrentdA%10, McuHeidelbergInfo.nofPhases*currChargingCurrentdA*230/10);
-            McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, currChargingCurrentdA); /* set value in dA */
-            prevChargingCurrentdA = currChargingCurrentdA;
+            if (currChargingCurrentdA!=prevChargingCurrentdA) {
+              McuLog_info("B1, setting charging current to %d.%d A (%d W)", currChargingCurrentdA/10, currChargingCurrentdA%10, McuHeidelbergInfo.nofPhases*currChargingCurrentdA*230/10);
+              McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, currChargingCurrentdA); /* set value in dA */
+              prevChargingCurrentdA = currChargingCurrentdA;
+            }
             vTaskDelay(pdMS_TO_TICKS(2000));
             break;
 

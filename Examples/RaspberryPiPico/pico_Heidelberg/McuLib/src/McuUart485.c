@@ -24,9 +24,15 @@ static McuGPIO_Handle_t RS485_TxEn;
 
 void McuUart485_GPIO_RxEnable(void) {
   McuGPIO_SetLow(RS485_TxEn);
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->cr |= UART_UARTCR_RXE_BITS; /* enable receiver for half duplex communication */
+#endif
 }
 
 void McuUart485_GPIO_TxEnable(void) {
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  uart_get_hw(McuUart485_CONFIG_UART_DEVICE)->cr &= ~UART_UARTCR_RXE_BITS; /* disable receiver for half duplex communication */
+#endif
   McuGPIO_SetHigh(RS485_TxEn);
 }
 
@@ -412,6 +418,7 @@ static void InitUart(void) {
   uart_set_fifo_enabled(McuUart485_CONFIG_UART_DEVICE, false);
   uart_set_format(McuUart485_CONFIG_UART_DEVICE, 8, 1, McuUart485_CONFIG_UART_PARITY);
   uart_set_hw_flow(McuUart485_CONFIG_UART_DEVICE, false, false); /* disable flow control, cannot use CTS/RTS */
+  uart_set_translate_crlf(McuUart485_CONFIG_UART_DEVICE, false); /* do not translate */
   /* setup interrupt */
   int UART_IRQ = McuUart485_CONFIG_UART_DEVICE == uart0 ? UART0_IRQ : UART1_IRQ; /* find out which UART is used */
   irq_set_exclusive_handler(UART_IRQ, McuUart485_CONFIG_UART_IRQ_HANDLER /* on_uart_rx*/); /* setup IRQ handler */

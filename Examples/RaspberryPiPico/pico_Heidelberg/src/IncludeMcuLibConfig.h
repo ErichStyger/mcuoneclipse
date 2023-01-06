@@ -131,10 +131,9 @@
 #if !__ASSEMBLER__ /* set if file is included by GNU as. Do not include normal C header files if running the assembler for example to assemble the pico startup code */
   #include "lv_conf.h"
 #endif /* !__ASSEMBLER__ */
-
 /* ---------------------------------------------------------------------------------------*/
 /* McuModBus */
-#define McuModbus_CONFIG_IS_ENABLED           (0) /* Modbus with Heidelberg wallbox */
+#define McuModbus_CONFIG_IS_ENABLED           (1) /* Modbus with Heidelberg wallbox */
 /* ---------------------------------------------------------------------------------------*/
 /* McuUart485 */
 #define McuUart485_CONFIG_USE_RS_485          (1)
