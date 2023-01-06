@@ -43,6 +43,8 @@ static struct guiObjects {
   lv_obj_t *screens[GUI_SCREEN_NOF_SCREENS]; /* screen 0 or GUI_SCREEN_SETTINGS is the one with the settings */
   /* styles */
   lv_style_t style_customFont; /* style for custom font with symbols, needs to be global */
+  /* global objects */
+  lv_obj_t *label_charger_status;
 } guiObjects;
 
 /*
@@ -79,6 +81,7 @@ static struct guiObjects {
  * Size: 12
  * Bpp: 1 bit-per-pixel
  * Options: all three disabled
+ * TTF/WOFF: select file 'FontAwesome5-Solid+Brands+Regular.woff' inside image folder of this project
  * Range:  0xf207,0xf0eb,0xf057,0xf185,0xf062,0xf063,0xf362,   (use the Unicode!)
  * Add the ones below which are part of LVGL:
 61441,61448,61451,61452,61452,61453,61457,61459,61461,61465,
@@ -88,7 +91,7 @@ static struct guiObjects {
 61674,61683,61724,61732,61787,61931,62016,62017,62018,62019,
 62020,62087,62099,62212,62189,62810,63426,63650
  * Browse: use image/FontAwesome5-Solid+Brands+Regular.woff  (Note: that's version 5, not all symbols are available)
- * Symbols: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY0123456789
+ * Symbols: abcdefghijklmnopqrstuvwxyz +-ABCDEFGHIJKLMNOPQRSTUVWXY0123456789
  */
 LV_FONT_DECLARE(customSymbols_12); /* font name with custom symbols plus the normal symbols/characters */
 /* IDs of the symbols, use the Hex UTF-8 code: */
@@ -110,6 +113,13 @@ static void event_handler_drop_down_chargingMode(lv_event_t *e) {
   }
 }
 
+static void event_handler_charger_status(lv_event_t *e) {
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t *label = lv_event_get_target(e);
+  if (code==LV_EVENT_VALUE_CHANGED) {
+    lv_label_set_text(label, McuHeidelberg_GetShortHWChargerStateString(McuHeidelberg_GetHWChargerState()));
+  }
+}
 
 static void createGUI(void) {
   /* initialize and create the screens */
@@ -133,9 +143,11 @@ static void createGUI(void) {
     /* Create a drop down for the charger modes */
     lv_obj_t *dd = lv_dropdown_create(panel_charger);
     lv_dropdown_set_options(dd,
-        MY_SYMBOL_ARROW_UP "\n"
-        MY_SYMBOL_ARROW_DOWN "\n"
-        MY_SYMBOL_ARROW_LEFT_RIGHT);
+        LV_SYMBOL_STOP "\n"
+        MY_SYMBOL_CAR " fast" "\n"
+        MY_SYMBOL_CAR " slow" "\n"
+        "slow " MY_SYMBOL_SUN "\n"
+        MY_SYMBOL_SUN);
     lv_obj_set_width(dd, 40);
     lv_obj_set_height(dd, 20);
     lv_obj_set_pos(dd, 0, 23);
@@ -151,11 +163,33 @@ static void createGUI(void) {
   #if PL_CONFIG_USE_GUI_KEY_NAV
     GUI_AddObjToGroup(dd);
   #endif
+
+    /* label for the charger status */
+    guiObjects.label_charger_status = lv_label_create(panel_charger);
+    lv_label_set_text(guiObjects.label_charger_status, McuHeidelberg_GetShortHWChargerStateString(McuHeidelberg_GetHWChargerState()));
+    lv_obj_add_style(guiObjects.label_charger_status, &guiObjects.style_customFont, LV_PART_MAIN);
+    lv_obj_set_pos(guiObjects.label_charger_status, 0, 2);
+    lv_obj_add_event_cb(guiObjects.label_charger_status, event_handler_charger_status, LV_EVENT_VALUE_CHANGED, NULL);
+
   }
+
 }
 
+/* event callback from the wallbox */
+static void WallboxEventCallback(McuHeidelberg_Event_e event) {
+  switch(event) {
+    case McuHeidelberg_Event_HW_State_Changed:
+      if (guiObjects.label_charger_status!=NULL) {
+        lv_event_send(guiObjects.label_charger_status, LV_EVENT_VALUE_CHANGED, NULL); /* set an event to update the value */
+      }
+      break;
+    default:
+      break;
+  }
+}
 /* ------------------------------------------------------- creating main screen/menu ----------------------------------------------- */
 static void Gui_Create(void) {
+  McuHeidelberg_RegisterEventCallback(WallboxEventCallback); /* register callback */
  #if PL_CONFIG_USE_GUI_KEY_NAV
   GUI_GroupPush();
 #endif
