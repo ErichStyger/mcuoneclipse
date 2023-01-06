@@ -18,6 +18,7 @@ file(GLOB FILES
   # files for GUI with lvgl:
   lv.c
   gui.c
+  guiGroup.c
   lcd.c
   image/customSymbols_12.c
   rs485.c

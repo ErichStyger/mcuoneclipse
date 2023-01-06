@@ -77,19 +77,9 @@ typedef enum WallboxState_e {
   Wallbox_State_Error,
 } WallboxState_e;
 
-/* types of charging strategies and modes */
-typedef enum ChargingMode_e {
-  ChargingMode_Stop,        /* stop immediately the charging */
-  ChargingMode_Fast,        /* charge immediately with maximum power */
-  ChargingMode_Slow,        /* charge immediately with the minimal power */
-  ChargingMode_SlowPlusPV,  /* charge immediately with the minimal power. If PV supports more power, the power level gets increased */
-  ChargingMode_OnlyPV,      /* charge only with the PV power available */
-  ChargingMode_NofChargingMode, /* sentinel, must be last in list! */
-} ChargingMode_e;
-
 static struct McuHeidelbergInfo_s {
   WallboxState_e state;         /* state of the wallbox task */
-  ChargingMode_e chargingMode;  /* selected charging mode */
+  McuHeidelberg_ChargingMode_e chargingMode;  /* selected charging mode */
   uint32_t solarPowerW;         /* available solar power in Watt */
   uint32_t sitePowerW;          /* used power by the building or site */
   uint8_t nofPhases;            /* number of active phases */
@@ -163,7 +153,7 @@ static const unsigned char *McuHeidelberg_GetStateString(WallboxState_e state) {
   return str;
 }
 
-static const unsigned char *McuHeidelberg_GetChargingMode(ChargingMode_e mode) {
+static const unsigned char *McuHeidelberg_GetChargingModeString(McuHeidelberg_ChargingMode_e mode) {
   const unsigned char *str;
   switch(mode) {
     case ChargingMode_Stop:         str = (unsigned char*)"stop"; break;
@@ -174,6 +164,14 @@ static const unsigned char *McuHeidelberg_GetChargingMode(ChargingMode_e mode) {
     default:                        str = (unsigned char*)"ERROR, unknown mode!"; break;
   }
   return str;
+}
+
+McuHeidelberg_ChargingMode_e McuHeidelberg_GetChargingMode(void) {
+  return McuHeidelbergInfo.chargingMode;
+}
+
+void McuHeidelberg_SetChargingMode(McuHeidelberg_ChargingMode_e mode) {
+  McuHeidelbergInfo.chargingMode = mode;
 }
 
 uint8_t McuHeidelberg_ReadRegisterLayoutVersion(uint8_t id, uint16_t *version) {
@@ -445,9 +443,10 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  task state", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.chargingMode);
+  McuHeidelberg_ChargingMode_e mode = McuHeidelberg_GetChargingMode();
+  McuUtility_Num16uToStr(buf, sizeof(buf), mode);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": ");
-  McuUtility_strcat(buf, sizeof(buf), McuHeidelberg_GetChargingMode(McuHeidelbergInfo.chargingMode));
+  McuUtility_strcat(buf, sizeof(buf), McuHeidelberg_GetChargingModeString(mode));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  charge mode", buf, io->stdOut);
 
@@ -735,7 +734,7 @@ uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, cons
      *handled = true;
      p = cmd+sizeof("McuHeidelberg set chargemode ")-1;
      if (McuUtility_ScanDecimal16uNumber(&p, &val16u)==ERR_OK && val16u>=0 && val16u<ChargingMode_NofChargingMode) {
-       McuHeidelbergInfo.chargingMode = val16u;
+       McuHeidelberg_SetChargingMode(val16u);
        return ERR_OK;
      }
      return ERR_FAILED;
@@ -800,14 +799,15 @@ static uint32_t calculateAvailableSolarPower(void) {
 
 static uint16_t CalculateChargingCurrentdA(void) {
   uint16_t current = 0; /* in dA units, e.g. 60 is 6.0 A */
+  McuHeidelberg_ChargingMode_e mode = McuHeidelberg_GetChargingMode();
 
-  if (McuHeidelbergInfo.chargingMode==ChargingMode_Stop) {
+  if (mode==ChargingMode_Stop) {
     current = 0;
-  } else if (McuHeidelbergInfo.chargingMode==ChargingMode_Slow) {
+  } else if (mode==ChargingMode_Slow) {
     current = McuHeidelbergInfo.minCurrent*10;
-  } else if (McuHeidelbergInfo.chargingMode==ChargingMode_Fast) {
+  } else if (mode==ChargingMode_Fast) {
     current = McuHeidelbergInfo.maxCurrent*10;
-  } else if (McuHeidelbergInfo.chargingMode==ChargingMode_SlowPlusPV) {
+  } else if (mode==ChargingMode_SlowPlusPV) {
     int power = calculateMinimalWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>power) { /* more solar power available than the minimal amount: use that extra power to charge the vehicle */
@@ -815,7 +815,7 @@ static uint16_t CalculateChargingCurrentdA(void) {
     } else {
       current = McuHeidelbergInfo.minCurrent*10; /* keep it at the base and minimal level */
     }
-  } else if (McuHeidelbergInfo.chargingMode==ChargingMode_OnlyPV) {
+  } else if (mode==ChargingMode_OnlyPV) {
     int power = calculateMinimalWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>=power) {

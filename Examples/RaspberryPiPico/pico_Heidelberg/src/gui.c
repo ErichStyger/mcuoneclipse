@@ -9,6 +9,7 @@
 
 #include "gui.h"
 #include "gui_config.h"
+#include "guiGroup.h"
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuRTOS.h"
@@ -18,6 +19,7 @@
 #include "McuFontDisplay.h"
 #include "McuUtility.h"
 #include "McuLog.h"
+#include "Modbus/McuHeidelberg.h"
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
 static TimerHandle_t timerHndlGuiExpired; /* timeout user actions */
@@ -28,55 +30,7 @@ static TimerHandle_t timerHndlCycleScreens; /* timer for cycling screens */
 #define GUI_TASK_NOTIFY_GUI_TIMEOUT     (1<<1)  /* user did not press a button for some time */
 #define GUI_TASK_NOTIFY_NEXT_SCREEN     (1<<2)  /* show the next cycling screen */
 
-#if PL_CONFIG_USE_GUI_KEY_NAV && LV_USE_GROUP
-#define GUI_GROUP_NOF_IN_STACK   4
-typedef struct GUI_Group_t {
-  lv_group_t *stack[GUI_GROUP_NOF_IN_STACK]; /* stack of GUI groups */
-  uint8_t sp; /* stack pointer, points to next free element */
-} GUI_Group_t;
-static GUI_Group_t groups;
-
-void GUI_AddObjToGroup(lv_obj_t *obj) {
-  lv_group_add_obj(GUI_GroupPeek(), obj);
-}
-
-void GUI_RemoveObjFromGroup(lv_obj_t *obj) {
-  lv_group_remove_obj(obj);
-}
-
-lv_group_t *GUI_GroupPeek(void) {
-  if (groups.sp == 0) {
-    return NULL;
-  }
-  return groups.stack[groups.sp-1];
-}
-
-void GUI_GroupPull(void) {
-  if (groups.sp == 0) {
-    return;
-  }
-  lv_group_del(groups.stack[groups.sp-1]);
-  groups.sp--;
-  lv_indev_set_group(LV_GetInputDevice(), groups.stack[groups.sp-1]); /* assign group to input device */
-}
-
-void GUI_GroupPush(void) {
-  lv_group_t *gui_group;
-
-  if (groups.sp >= GUI_GROUP_NOF_IN_STACK) {
-    return;
-  }
-  gui_group = lv_group_create();
-  lv_indev_set_group(LV_GetInputDevice(), gui_group); /* assign group to input device */
-  /* change the default focus style which is an orange'ish thing */
-  //lv_group_set_style_mod_cb(gui_group, style_mod_cb);
-  groups.stack[groups.sp] = gui_group;
-  groups.sp++;
-}
-#endif /* PL_CONFIG_USE_GUI_KEY_NAV */
-
-
-/* ------------------------------------------------------- PicoHouse GUI ----------------------------------------------- */
+/* ------------------------------------------------------- GUI ----------------------------------------------- */
 /* global GUI elements */
 typedef enum GuiScreens_e {
   GUI_SCREEN_SETTINGS, /* Settings, must be first in list! */
@@ -89,7 +43,6 @@ static struct guiObjects {
   lv_obj_t *screens[GUI_SCREEN_NOF_SCREENS]; /* screen 0 or GUI_SCREEN_SETTINGS is the one with the settings */
   /* styles */
   lv_style_t style_customFont; /* style for custom font with symbols, needs to be global */
-
 } guiObjects;
 
 /*
@@ -148,6 +101,16 @@ LV_FONT_DECLARE(customSymbols_12); /* font name with custom symbols plus the nor
 #define MY_SYMBOL_ARROW_LEFT_RIGHT  "\xEF\x8D\xA2" /* two arrows pointing left and right */
 
 /* ---------------------------------------------------------------------------------- */
+static void event_handler_drop_down_chargingMode(lv_event_t *e) {
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t *obj = lv_event_get_target(e);
+  if(code == LV_EVENT_VALUE_CHANGED) {
+    int idx = lv_dropdown_get_selected(obj); /* 0: fw, 1: bw, 2: auto */
+    McuHeidelberg_SetChargingMode((McuHeidelberg_ChargingMode_e)idx);
+  }
+}
+
+
 static void createGUI(void) {
   /* initialize and create the screens */
   for(int i = 0; i<sizeof(guiObjects.screens)/sizeof(guiObjects.screens[0]); i++) {
@@ -159,7 +122,36 @@ static void createGUI(void) {
 
   /* create the different screens */
   lv_scr_load(guiObjects.screens[GUI_SCREEN_SETTINGS]);
-  /* \todo add widgets */
+
+  lv_obj_t *panel_charger;
+  {
+    panel_charger = lv_obj_create(lv_scr_act());
+    lv_obj_set_pos(panel_charger, 0, 0);
+    lv_obj_set_size(panel_charger, 120, 28+22);
+    lv_obj_add_flag(panel_charger, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+
+    /* Create a drop down for the charger modes */
+    lv_obj_t *dd = lv_dropdown_create(panel_charger);
+    lv_dropdown_set_options(dd,
+        MY_SYMBOL_ARROW_UP "\n"
+        MY_SYMBOL_ARROW_DOWN "\n"
+        MY_SYMBOL_ARROW_LEFT_RIGHT);
+    lv_obj_set_width(dd, 40);
+    lv_obj_set_height(dd, 20);
+    lv_obj_set_pos(dd, 0, 23);
+    lv_dropdown_set_selected(dd, McuHeidelberg_GetChargingMode());
+    lv_obj_add_style(dd, &guiObjects.style_customFont, LV_PART_MAIN); /* assign custom font */
+
+    /* assign font to the list of items, when drop-down is open */
+    lv_obj_t *list;
+    list = lv_dropdown_get_list(dd); /* get the list */
+    lv_obj_add_style(list, &guiObjects.style_customFont, LV_PART_MAIN); /* assign custom font */
+
+    lv_obj_add_event_cb(dd, event_handler_drop_down_chargingMode, LV_EVENT_ALL, NULL);
+  #if PL_CONFIG_USE_GUI_KEY_NAV
+    GUI_AddObjToGroup(dd);
+  #endif
+  }
 }
 
 /* ------------------------------------------------------- creating main screen/menu ----------------------------------------------- */
