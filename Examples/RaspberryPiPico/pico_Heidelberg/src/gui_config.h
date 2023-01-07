@@ -8,7 +8,7 @@
 #define GUI_CONFIG_H_
 
 #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (10*60)
-  /*!< Time in seconds after which with no user (button) interaction it will do screen cycling (or screen saving) */
+  /*!< Time in seconds with no user (button) interaction after which it will do screen cycling (or screen saving) */
 
 #define GUI_CONFIG_SCREEN_CYLCING_INTERVAL_SEC  (5)
   /*!< Time in seconds betwen the screen cycling (logos, energy status, ...) */

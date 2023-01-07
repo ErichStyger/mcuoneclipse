@@ -606,7 +606,7 @@
 #define LV_USE_FLEX 1 /* 1 */
 
 /*A layout similar to Grid in CSS.*/
-#define LV_USE_GRID 0
+#define LV_USE_GRID 1
 
 /*====================
  * 3RD PARTS LIBRARIES
