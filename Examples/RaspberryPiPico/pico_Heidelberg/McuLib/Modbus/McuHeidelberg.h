@@ -9,7 +9,13 @@
 #define MODBUS_MCUHEIDELBERG_H_
 
 typedef enum McuHeidelberg_Event_e {
-  McuHeidelberg_Event_HW_State_Changed, /* hardware charger state has changed */
+  McuHeidelberg_Event_HW_State_Changed,           /* hardware charger state has changed */
+  McuHeidelberg_Event_UserChargingMode_Changed,   /* user charging mode has changed */
+  McuHeidelberg_Event_ChargingSetCurrent_Changed, /* current in the charger has changed */
+  McuHeidelberg_Event_SolarPower_Changed,         /* produced solar power has changed */
+  McuHeidelberg_Event_SitePower_Changed,          /* used power by site has changed */
+  McuHeidelberg_Event_CarMaxPower_Changed,        /* maximum power for charging the car */
+  McuHeidelberg_Event_CurrChargerPower_Changed,   /* current power charging the car */
 } McuHeidelberg_Event_e;
 
 typedef void (*McuHeidelberg_EventCallback)(McuHeidelberg_Event_e);
@@ -23,16 +29,16 @@ void McuHeidelberg_RegisterEventCallback(McuHeidelberg_EventCallback callback);
 
 /* types of charging strategies and modes */
 typedef enum McuHeidelberg_ChargingMode_e {
-  ChargingMode_Stop,        /* stop immediately the charging */
-  ChargingMode_Fast,        /* charge immediately with maximum power */
-  ChargingMode_Slow,        /* charge immediately with the minimal power */
-  ChargingMode_SlowPlusPV,  /* charge immediately with the minimal power. If PV supports more power, the power level gets increased */
-  ChargingMode_OnlyPV,      /* charge only with the PV power available */
-  ChargingMode_NofChargingMode, /* sentinel, must be last in list! */
-} McuHeidelberg_ChargingMode_e;
+  McuHeidelberg_User_ChargingMode_Stop,             /* stop immediately the charging */
+  McuHeidelberg_User_ChargingMode_OnlyPV,           /* charge only with the PV power available */
+  McuHeidelberg_User_ChargingMode_Slow,             /* charge immediately with the minimal power */
+  McuHeidelberg_User_ChargingMode_SlowPlusPV,       /* charge immediately with the minimal power. If PV supports more power, the power level gets increased */
+  McuHeidelberg_User_ChargingMode_Fast,             /* charge immediately with maximum power */
+  McuHeidelberg_User_ChargingMode_NofChargingMode,  /* sentinel, must be last in list! */
+} McuHeidelberg_UserChargingMode_e;
 
-McuHeidelberg_ChargingMode_e McuHeidelberg_GetChargingMode(void);
-void McuHeidelberg_SetChargingMode(McuHeidelberg_ChargingMode_e mode);
+McuHeidelberg_UserChargingMode_e McuHeidelberg_GetUserChargingMode(void);
+void McuHeidelberg_SetUserChargingMode(McuHeidelberg_UserChargingMode_e mode);
 
 /* state of the hardware wallbox */
 typedef enum McuHeidelbergChargerState_e {
@@ -50,6 +56,11 @@ typedef enum McuHeidelbergChargerState_e {
 
 McuHeidelbergChargerState_e McuHeidelberg_GetHWChargerState(void);
 const unsigned char *McuHeidelberg_GetShortHWChargerStateString(McuHeidelbergChargerState_e state);
+
+uint32_t McuHeidelberg_GetSolarPowerWatt(void);
+uint32_t McuHeidelberg_GetSitePowerWatt(void);
+uint32_t McuHeidelberg_GetMaxCarPower(void);
+uint32_t McuHeidelberg_GetCurrChargerPower(void);
 
 #include "McuShell.h"
 uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
