@@ -22,7 +22,7 @@ typedef enum {
   WIFI_PASSWORD_METHOD_WPA2,
 } WiFi_PasswordMethod_e;
 
-#define CONFIG_USE_EEE   (1)
+#define CONFIG_USE_EEE   (0) /* EDUROAM does not yet work with the Pico W! */
 
 #if CONFIG_USE_EEE
 static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_WPA2;
@@ -35,7 +35,7 @@ static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
   static const char pass[] = "erD5LU1SOKNccnq8WdCx";
   static const unsigned char name[]="eee-02063";
   static const char hostname[] = "eee-02063";
-#else
+#else /* test network */
   static char const ssid[] = "Stockli25_2.4GHz";
   static const char pass[] = "Hello-Office-25-Shared-Key";
   static const char hostname[] = "pico";
@@ -75,7 +75,6 @@ static void WiFiTask(void *pv) {
 #if CONFIG_USE_EEE
   if (networkMode == WIFI_PASSWORD_METHOD_WPA2) {
     McuLog_info("using WPA2");
-    // set
   }
 #endif
 

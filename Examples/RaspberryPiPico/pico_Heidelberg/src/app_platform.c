@@ -130,13 +130,13 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_GUI
   GUI_Init();
 #endif
-#if McuUart485_CONFIG_USE_RS_485
+#if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
   McuUart485_Init();
 #endif
 #if PL_CONFIG_USE_RS485_SHELL
   RS485_Init();
 #endif
-#if McuModbus_CONFIG_IS_ENABLED
+#if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
   McuModbus_Init();
   McuHeidelberg_Init();
 #endif

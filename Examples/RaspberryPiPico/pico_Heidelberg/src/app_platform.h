@@ -23,15 +23,18 @@
 #define PL_CONFIG_HW_ACTIVE_HW_VERSION  (PL_CONFIG_HW_VERSION_0_3)
 /* Note: depending on model, change SSD1306 orientation with McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION in IncludeMcuLibConfig.h */
 
-#define PL_CONFIG_USE_PICO_W          (0) /* if using Pico W with WiFi */
-  /* added 'library pico_cyw43_arch_none' to CMakeLists.txt of src folder */
+#define PL_CONFIG_USE_PICO_W          (1) /* if using Pico W with WiFi */
+  /* Note:
+   * a) add 'library pico_cyw43_arch_none' to CMakeLists.txt of src folder
+   * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
+   * */
 
-#define PL_CONFIG_USE_I2C             (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3)) /* if using I2C */
-#define PL_CONFIG_USE_GUI             (1) /* if using lvgl GUI or not */
+#define PL_CONFIG_USE_BUTTONS         (0) /* if using push button/navigation switch */
+#define PL_CONFIG_USE_I2C             (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3)) /* if using I2C */
+#define PL_CONFIG_USE_GUI             (0) /* if using lvgl GUI or not */
 #define PL_CONFIG_USE_GUI_KEY_NAV     (1 && PL_CONFIG_USE_GUI && PL_CONFIG_USE_BUTTONS)
 #define PL_CONFIG_USE_OLED            (1 & PL_CONFIG_USE_I2C && !PL_CONFIG_USE_GUI) /* if using OLED module (simple GUI, not lvgl!) */
 #define PL_CONFIG_USE_OLED_CLOCK      (1 && PL_CONFIG_USE_OLED) /* if showing clock/time/date on OLED. Note: no true RTC yet! */
-#define PL_CONFIG_USE_BUTTONS         (1) /* if using push button/navigation switch */
 #define PL_CONFIG_USE_USB_CDC         (0) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT             (1) /* if using SEGGER RTT */
 #define PL_CONFIG_USE_SHELL_UART      (0) /* NYI, using the physical UART */
@@ -40,7 +43,8 @@
 #define PL_CONFIG_USE_EXT_FLASH       (0 && !PL_CONFIG_USE_BUTTONS) /* if using externals SPI flash (uses nav switch button pins!) */
 #define PL_CONFIG_USE_LITTLE_FS       (0 && PL_CONFIG_USE_EXT_FLASH) /* if using littleFS as file system, not supported yet! */
 
-#define PL_CONFIG_USE_RS485_SHELL     (1 && McuUart485_CONFIG_USE_RS_485 && !McuModbus_CONFIG_IS_ENABLED)
+#define PL_CONFIG_USE_RS485           (0) /* controls RS-485 and Modbus in app_platform.c */
+#define PL_CONFIG_USE_RS485_SHELL     (1 && PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485 && !McuModbus_CONFIG_IS_ENABLED)
 
 void PL_Init(void);
 

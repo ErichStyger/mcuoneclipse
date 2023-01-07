@@ -7,7 +7,7 @@
 
 // allow override in some examples
 #ifndef NO_SYS
-  #define NO_SYS                     0  /* with FreeRTOS (pico_cyw43_arch_lwip_sys_freertos), this needs to be set to 0 */
+  #define NO_SYS                     1  /* with FreeRTOS (pico_cyw43_arch_lwip_sys_freertos), this needs to be set to 0 */
 #endif
 // allow override in some examples
 #ifndef LWIP_SOCKET
