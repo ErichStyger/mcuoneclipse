@@ -17,7 +17,7 @@
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configMINIMAL_STACK_SIZE                    (500)
-#define configTOTAL_HEAP_SIZE                       (52*1024)
+#define configTOTAL_HEAP_SIZE                       (128*1024)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
 /* -------------------------------------------------*/
 /* I2C */
@@ -76,9 +76,9 @@
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
 #define McuRTT_CONFIG_BLOCKING_SEND                   (1)
-#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (10)
-#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (5)
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (256)
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (20)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (10)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2048)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING  "picoCharger"

@@ -39,7 +39,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_USE_PICO_W
+#if PL_CONFIG_USE_PING
 #include "lwip/opt.h"
 
 #if LWIP_RAW /* don't build if not configured for use in lwipopts.h */
@@ -63,6 +63,7 @@
 #endif /* PING_USE_SOCKETS */
 
 #include "McuShell.h"
+#include "McuRTOS.h"
 
 /**
  * PING_DEBUG: Enable debugging for PING.
@@ -107,7 +108,7 @@ static struct raw_pcb *ping_pcb;
 #endif /* PING_USE_SOCKETS */
 
 #define PING_NOF_PING  (5)
-int ping_counter = PING_NOF_PING;
+static int ping_counter = PING_NOF_PING;
 
 static void printIPAddress(const ip_addr_t *addr) {
   if (IP_IS_V4(addr)) {
@@ -222,7 +223,7 @@ ping_recv(int s)
 #endif /* LWIP_IPV6 */
 
       McuShell_printf("ping: recv ");
-      printIPAddress(fromaddr);
+      printIPAddress(&fromaddr);
       McuShell_printf(" %"U32_F" ms\n", (sys_now() - ping_time));
       /* todo: support ICMP6 echo */
 #if LWIP_IPV4
@@ -267,6 +268,7 @@ ping_thread(void *arg)
   timeout.tv_usec = (PING_RCV_TIMEO%1000)*1000;
 #endif
   LWIP_UNUSED_ARG(arg);
+  int pingCounter = PING_NOF_PING;
 
 #if LWIP_IPV6
   if(IP_IS_V4(ping_target) || ip6_addr_isipv4mappedipv6(ip_2_ip6(ping_target))) {
@@ -285,7 +287,7 @@ ping_thread(void *arg)
   LWIP_ASSERT("setting receive timeout failed", ret == 0);
   LWIP_UNUSED_ARG(ret);
 
-  while (1) {
+  while (pingCounter>0) {
     if (ping_send(s, ping_target) == ERR_OK) {
       McuShell_printf("ping: send ");
       printIPAddress(ping_target);
@@ -301,7 +303,9 @@ ping_thread(void *arg)
       McuShell_printf(" - error\n");
     }
     sys_msleep(PING_DELAY);
+    pingCounter--;
   }
+  vTaskDelete(NULL);
 }
 
 #else /* PING_USE_SOCKETS */
@@ -416,4 +420,4 @@ ping_init(const ip_addr_t* ping_addr)
 
 #endif /* LWIP_RAW */
 
-#endif /* PL_CONFIG_USE_PICO_W */
+#endif /* PL_CONFIG_USE_PING */

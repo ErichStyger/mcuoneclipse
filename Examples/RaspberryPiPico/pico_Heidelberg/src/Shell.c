@@ -110,13 +110,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuMinINI_ParseCommand,
   ini_ParseCommand,
 #endif
-#if McuUart485_CONFIG_USE_RS_485
+#if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
   McuUart485_ParseCommand,
 #endif
-#if PL_CONFIG_USE_RS485_SHELL
+#if PL_CONFIG_USE_RS485 && PL_CONFIG_USE_RS485_SHELL
   RS485_ParseCommand,
 #endif
-#if McuModbus_CONFIG_IS_ENABLED
+#if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
   McuModbus_ParseCommand,
   McuHeidelberg_ParseCommand,
 #endif

@@ -56,6 +56,9 @@
 #if PL_CONFIG_USE_PICO_W
   #include "PicoWiFi.h"
 #endif
+#if PL_CONFIG_USE_NTP_CLIENT
+  #include "ntp_client.h"
+#endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
@@ -123,6 +126,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_PICO_W
   PicoWiFi_Init();
+#endif
+#if PL_CONFIG_USE_NTP_CLIENT
+  NtpClient_Init();
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();

@@ -25,9 +25,11 @@
 
 #define PL_CONFIG_USE_PICO_W          (1) /* if using Pico W with WiFi */
   /* Note:
-   * a) add 'library pico_cyw43_arch_none' to CMakeLists.txt of src folder
+   * a) enable 'library pico_cyw43_arch_lwip_sys_freertos' in CMakeLists.txt of src folder
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
-   * */
+   */
+#define PL_CONFIG_USE_PING            (1 && PL_CONFIG_USE_PICO_W)
+#define PL_CONFIG_USE_NTP_CLIENT      (1 && PL_CONFIG_USE_PICO_W)
 
 #define PL_CONFIG_USE_BUTTONS         (0) /* if using push button/navigation switch */
 #define PL_CONFIG_USE_I2C             (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3)) /* if using I2C */

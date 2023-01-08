@@ -12,7 +12,12 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
-#include "ping.h"
+#if PL_CONFIG_USE_PING
+  #include "ping.h"
+#endif
+#if PL_CONFIG_USE_NTP_CLIENT
+  #include "ntp_client.h"
+#endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
@@ -59,6 +64,7 @@ static uint8_t GetMAC(uint8_t mac[6], uint8_t *macStr, size_t macStrSize) {
   return ERR_OK;
 }
 
+#if PL_CONFIG_USE_PING
 static void ping_setup(const char *host) {
   static ip_addr_t ping_addr; /* has to be global! */
 
@@ -67,6 +73,7 @@ static void ping_setup(const char *host) {
     ping_init(&ping_addr);
   }
 }
+#endif
 
 static void WiFiTask(void *pv) {
   int res;
@@ -80,6 +87,7 @@ static void WiFiTask(void *pv) {
 
   McuLog_info("started WiFi task");
   if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
+    McuLog_error("failed setting country code");
     for(;;) {}
   }
   McuLog_info("enabling STA mode");
@@ -88,9 +96,10 @@ static void WiFiTask(void *pv) {
   McuLog_info("set hostname: %s", hostname);
   netif_set_hostname(&cyw43_state.netif[0], hostname);
 
-#if 1 /* does not work with pico_cyw43_arch_lwip_sys_freertos? */
+  vTaskDelay(pdMS_TO_TICKS(1000)); /* give network tasks time to start up */
+
   McuLog_info("connecting to AP '%s'...", ssid);
-  res = cyw43_arch_wifi_connect_timeout_ms(ssid, pass, CYW43_AUTH_WPA2_AES_PSK, 10000);
+  res = cyw43_arch_wifi_connect_timeout_ms(ssid, pass, CYW43_AUTH_WPA2_AES_PSK, 20000);
   if (res!=0) {
     for(;;) {
       McuLog_error("connection failed after timeout! code %d", res);
@@ -99,8 +108,10 @@ static void WiFiTask(void *pv) {
   } else {
     McuLog_info("success!");
     wifi.isConnected = true;
-  }
+#if PL_CONFIG_USE_NTP_CLIENT
+    NtpClient_TaskResume();
 #endif
+  }
   for(;;) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
@@ -115,7 +126,7 @@ static void WiFiTask(void *pv) {
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t mac[6];
   uint8_t macStr[] = "00:00:00:00:00:00\r\n";
-  uint8_t buf[24];
+  uint8_t buf[48];
   int val;
 
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
@@ -146,7 +157,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  IP", buf, io->stdOut);
 
-  McuShell_SendStatusStr((uint8_t*)"  hostname", netif_get_hostname(&cyw43_state.netif[0]), io->stdOut);
+  McuUtility_strcpy(buf, sizeof(buf), netif_get_hostname(&cyw43_state.netif[0]));
+  McuUtility_strcat(buf, sizeof(buf), "\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  hostname", buf, io->stdOut);
 
   return ERR_OK;
 }
@@ -157,17 +170,21 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
   if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "wifi help")==0) {
     McuShell_SendHelpStr((unsigned char*)"wifi", (const unsigned char*)"Group of WiFi application commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
+  #if PL_CONFIG_USE_PING
     McuShell_SendHelpStr((unsigned char*)"  ping <host>", (const unsigned char*)"Ping host\r\n", io->stdOut);
+  #endif
     *handled = TRUE;
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "wifi status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
+  #if PL_CONFIG_USE_PING
   } else if (McuUtility_strncmp((char*)cmd, "wifi ping ", sizeof("wifi ping ")-1)==0) {
     *handled = TRUE;
     p = cmd + sizeof("wifi ping ")-1;
     ping_setup(p);
     return ERR_OK;
+  #endif
   }
   return ERR_OK;
 }
@@ -181,12 +198,13 @@ void PicoWiFi_Init(void) {
   if (xTaskCreate(
       WiFiTask,  /* pointer to the task */
       "WiFi", /* task name for kernel awareness debugging */
-      2000/sizeof(StackType_t), /* task stack size */
+      4096/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
+    McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
 }

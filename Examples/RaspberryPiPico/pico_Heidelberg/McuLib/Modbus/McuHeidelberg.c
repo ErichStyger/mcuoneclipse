@@ -831,7 +831,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelbergInfo.nofPhases);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  phases", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  nof phases", buf, io->stdOut);
 
   McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelberg_GetSolarPowerWatt());
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
@@ -855,69 +855,113 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  Modbus ID", buf, io->stdOut);
 
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  McuUtility_strcatNum16Hex(buf, sizeof(buf), McuHeidelbergInfo.hw.version);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum16Hex(buf, sizeof(buf), McuHeidelbergInfo.hw.version);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  version", buf, io->stdOut);
 
-  McuHeidelbergChargerState_e chargerState = McuHeidelberg_GetHWChargerState();
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  McuUtility_strcatNum16Hex(buf, sizeof(buf), chargerState);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
-  McuUtility_strcat(buf, sizeof(buf), McuHeidelberg_GetHWChargerStateString(chargerState));
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuHeidelbergChargerState_e chargerState = McuHeidelberg_GetHWChargerState();
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcatNum16Hex(buf, sizeof(buf), chargerState);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
+    McuUtility_strcat(buf, sizeof(buf), McuHeidelberg_GetHWChargerStateString(chargerState));
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  HW state", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]/10);
-  McuUtility_chcat(buf, sizeof(buf), '.');
-  McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]%10, '0', 1);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]/10);
+    McuUtility_chcat(buf, sizeof(buf), '.');
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]%10, '0', 1);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L1", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]/10);
-  McuUtility_chcat(buf, sizeof(buf), '.');
-  McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]%10, '0', 1);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]/10);
+    McuUtility_chcat(buf, sizeof(buf), '.');
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]%10, '0', 1);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L2", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]/10);
-  McuUtility_chcat(buf, sizeof(buf), '.');
-  McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]%10, '0', 1);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]/10);
+    McuUtility_chcat(buf, sizeof(buf), '.');
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]%10, '0', 1);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L3", buf, io->stdOut);
 
-  int16_t val = McuHeidelbergInfo.hw.temperature;
-  McuUtility_Num16sToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.temperature/10);
-  McuUtility_chcat(buf, sizeof(buf), '.');
-  if (val<0) {
-    val = -val;
+  if (McuHeidelbergInfo.isActive) {
+    int16_t val = McuHeidelbergInfo.hw.temperature;
+    McuUtility_Num16sToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.temperature/10);
+    McuUtility_chcat(buf, sizeof(buf), '.');
+    if (val<0) {
+      val = -val;
+    }
+    McuUtility_chcat(buf, sizeof(buf), '0'+(val%10));
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" C\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
-  McuUtility_chcat(buf, sizeof(buf), '0'+(val%10));
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" C\r\n");
   McuShell_SendStatusStr((unsigned char*)"  temperature", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[0]);
-   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[0]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L1", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[1]);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[1]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L2", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[2]);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[2]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  L3", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.lockState);
-  if (McuHeidelbergInfo.hw.lockState==0) {
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system locked\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.lockState);
+    if (McuHeidelbergInfo.hw.lockState==0) {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system locked\r\n");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system unlocked\r\n");
+    }
   } else {
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system unlocked\r\n");
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  lock", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.power);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W (sum of all phases)\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.power);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W (sum of all phases)\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
 
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadEnergySinceInstallation(McuHeidelberg_deviceID, &value32u)==ERR_OK) {
@@ -928,10 +972,14 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   }
   McuShell_SendStatusStr((unsigned char*)"  energy", buf, io->stdOut);
 
-  McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.minCurrent);
-  McuUtility_chcat(buf, sizeof(buf), '-');
-  McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelbergInfo.hw.maxCurrent);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.minCurrent);
+    McuUtility_chcat(buf, sizeof(buf), '-');
+    McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelbergInfo.hw.maxCurrent);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
+  } else {
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
   McuShell_SendStatusStr((unsigned char*)"  I min-max", buf, io->stdOut);
 
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadHardwareVariant(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
