@@ -43,7 +43,7 @@ static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
 #else /* test network */
   static char const ssid[] = "Stockli25_2.4GHz";
   static const char pass[] = "Hello-Office-25-Shared-Key";
-  static const char hostname[] = "pico";
+  static const char hostname[] = "heidelberg";
 #endif
 
 static struct {
