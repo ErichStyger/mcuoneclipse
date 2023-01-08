@@ -15,7 +15,11 @@ file(GLOB FILES
   rosc.c # dito
   PicoWiFi.c
   ntp_client.c
+  udp_server.c
+  mqtt.c
+  mqtt_client.c
   ping.c
+  
   # files for GUI with lvgl:
   lv.c
   gui.c

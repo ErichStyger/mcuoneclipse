@@ -59,6 +59,12 @@
 #if PL_CONFIG_USE_NTP_CLIENT
   #include "ntp_client.h"
 #endif
+#if PL_CONFIG_USE_UDP_SERVER
+  #include "udp_server.h"
+#endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  #include "mqtt_client.h"
+#endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
@@ -129,6 +135,12 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT
   NtpClient_Init();
+#endif
+#if PL_CONFIG_USE_UDP_SERVER
+  UdpServer_Init();
+#endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  MqttClient_Init();
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();
