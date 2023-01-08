@@ -7,6 +7,8 @@
 #ifndef SRC_MQTT_CLIENT_H_
 #define SRC_MQTT_CLIENT_H_
 
+void MqttClient_Connect(void);
+
 void MqttClient_Init(void);
 
 #endif /* SRC_MQTT_CLIENT_H_ */

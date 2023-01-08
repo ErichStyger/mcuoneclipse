@@ -18,6 +18,9 @@
 #if PL_CONFIG_USE_NTP_CLIENT
   #include "ntp_client.h"
 #endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  #include "mqtt_client.h"
+#endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
@@ -108,9 +111,12 @@ static void WiFiTask(void *pv) {
   } else {
     McuLog_info("success!");
     wifi.isConnected = true;
-#if PL_CONFIG_USE_NTP_CLIENT
+  #if PL_CONFIG_USE_NTP_CLIENT
     NtpClient_TaskResume();
-#endif
+  #endif
+  #if PL_CONFIG_USE_MQTT_CLIENT
+    MqttClient_Connect();
+  #endif
   }
   for(;;) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);

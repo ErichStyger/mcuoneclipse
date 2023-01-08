@@ -17,7 +17,7 @@
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configMINIMAL_STACK_SIZE                    (500)
-#define configTOTAL_HEAP_SIZE                       (128*1024)
+#define configTOTAL_HEAP_SIZE                       (64*1024)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
 /* -------------------------------------------------*/
 /* I2C */
