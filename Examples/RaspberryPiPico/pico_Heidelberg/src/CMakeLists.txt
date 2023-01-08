@@ -22,6 +22,7 @@ file(GLOB FILES
   guiGroup.c
   lcd.c
   image/customSymbols_12.c
+  
   rs485.c
 )
 
