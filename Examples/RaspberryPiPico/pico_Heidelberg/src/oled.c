@@ -21,6 +21,8 @@
 #include "McuTimeDate.h"
 #if PL_CONFIG_USE_SHT31
   #include "McuSHT31.h"
+#elif PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
 #endif
 
 static const uint8_t vh_pixData[] = {
@@ -353,12 +355,18 @@ static void OledTask(void *pv) {
   McuTimeDate_Init();
 #if PL_CONFIG_USE_SHT31
   McuSHT31_Init();
+#elif PL_CONFIG_USE_SHT40
+  McuSHT40_Init();
 #endif
   for(;;) {
     ShowVHimage();
     vTaskDelay(pdMS_TO_TICKS(2000));
+  #if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   #if PL_CONFIG_USE_SHT31
     McuSHT31_ReadTempHum(&temperature, &humidity);
+  #elif PL_CONFIG_USE_SHT40
+    McuSHT40_ReadTempHum(&temperature, &humidity);
+  #endif
     Sensor_ShowTemperature(temperature);
     vTaskDelay(pdMS_TO_TICKS(2000));
     Sensor_ShowHumidity(humidity);

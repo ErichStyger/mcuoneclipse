@@ -238,29 +238,30 @@ static void button_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
 
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
   /* assign the key to return to LVGL */
-#if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 /* only have nav switch */
-  /* idea: https://github.com/foldedtoad/ssd1306_lvgl
-   * btn0: iterate through screens
-   * btn1: iterate through editable items (group)
-   * btn2: increase field value
-   * btn3: decrease field value
-   */
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
   switch(keyData&0xff) {
-    case LV_BTN_MASK_PREV:      data->key = LV_KEY_ESC;  break; /* dummy */
-    case LV_BTN_MASK_NEXT:      data->key = LV_KEY_ESC;  break; /* dummy */
-    case LV_BTN_MASK_LEFT:      data->key = LV_KEY_PREV;  break;
-    case LV_BTN_MASK_RIGHT:     data->key = LV_KEY_NEXT; break;
+    case LV_BTN_MASK_PREV:      data->key = LV_KEY_PREV;  break;
+    case LV_BTN_MASK_NEXT:      data->key = LV_KEY_NEXT;  break;
+    case LV_BTN_MASK_LEFT:      data->key = LV_KEY_LEFT;  break;
+    case LV_BTN_MASK_RIGHT:     data->key = LV_KEY_RIGHT; break;
     case LV_BTN_MASK_UP:        data->key = LV_KEY_UP;    break;
     case LV_BTN_MASK_DOWN:      data->key = LV_KEY_DOWN;  break;
     case LV_BTN_MASK_CENTER:    data->key = LV_KEY_ENTER; break;
     default:  data->key = LV_KEY_ESC; break;
   } /* switch */
 #else
+  /* only have nav switch */
+  /* other idea: https://github.com/foldedtoad/ssd1306_lvgl
+   * btn0: iterate through screens
+   * btn1: iterate through editable items (group)
+   * btn2: increase field value
+   * btn3: decrease field value
+   */
   switch(keyData&0xff) {
-    case LV_BTN_MASK_PREV:      data->key = LV_KEY_PREV;  break;
-    case LV_BTN_MASK_NEXT:      data->key = LV_KEY_NEXT;  break;
-    case LV_BTN_MASK_LEFT:      data->key = LV_KEY_LEFT;  break;
-    case LV_BTN_MASK_RIGHT:     data->key = LV_KEY_RIGHT; break;
+    case LV_BTN_MASK_PREV:      data->key = LV_KEY_ESC;   break; /* dummy */
+    case LV_BTN_MASK_NEXT:      data->key = LV_KEY_ESC;   break; /* dummy */
+    case LV_BTN_MASK_LEFT:      data->key = LV_KEY_PREV;  break;
+    case LV_BTN_MASK_RIGHT:     data->key = LV_KEY_NEXT;  break;
     case LV_BTN_MASK_UP:        data->key = LV_KEY_UP;    break;
     case LV_BTN_MASK_DOWN:      data->key = LV_KEY_DOWN;  break;
     case LV_BTN_MASK_CENTER:    data->key = LV_KEY_ENTER; break;
@@ -303,7 +304,6 @@ void LV_Init(void) {
   lv_theme_t* theme = lv_theme_mono_init(disp, true/*dark bg*/, LV_FONT_DEFAULT);
   lv_disp_set_theme(disp, theme);
 
-#if 1
   /*************************
    * Input device interface
    *************************/
@@ -319,7 +319,6 @@ void LV_Init(void) {
   indev_drv.read_cb = button_read;
 #endif
   inputDevicePtr = lv_indev_drv_register(&indev_drv);              /*Finally register the driver*/
-#endif
 
   /* use FreeRTOS tick timer as timer base for LVGL, so it works with tickless idle mode too */
   timerHndlLvglTick = xTimerCreate(

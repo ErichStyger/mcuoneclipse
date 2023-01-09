@@ -35,7 +35,7 @@
 #define configTOTAL_HEAP_SIZE                       (16*1024)
 #define configUSE_HEAP_SECTION_NAME                 (1)
 #define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
-
+#define configSUPPORT_STATIC_ALLOCATION             (1)
 #define configUSE_TICKLESS_IDLE                     (0)
 
 #define configTICK_RATE_HZ                          (1000)

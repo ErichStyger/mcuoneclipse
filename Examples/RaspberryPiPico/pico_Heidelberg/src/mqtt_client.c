@@ -18,7 +18,7 @@ static const struct mqtt_connect_client_info_t mqtt_client_info =
 {
   "pico",
   "homeassistant", /* user */
-  "moo", /* pass */
+  "mooM1Eik6uh9maepai6ia2pahw2xaiM3Oaril6ahrug7ihejae6eith9uec6sahc", /* pass */
   100,  /* keep alive */
   NULL, /* will_topic */
   NULL, /* will_msg */

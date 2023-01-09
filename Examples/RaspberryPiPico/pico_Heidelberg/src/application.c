@@ -30,6 +30,12 @@
   #include <stdio.h>
   #include "pico/stdlib.h"
 #endif
+#if PL_CONFIG_USE_LED_COUNTER_APP
+  #include "neoCounter.h"
+#endif
+#if PL_CONFIG_USE_ROAD
+  #include "road.h"
+#endif
 #if PL_CONFIG_USE_GUI_KEY_NAV
   #include "lv.h"
 #endif
@@ -49,8 +55,10 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     case BTN_NAV_RIGHT:   McuUtility_strcat(buf, sizeof(buf), "right"); break;
     case BTN_NAV_DOWN:    McuUtility_strcat(buf, sizeof(buf), "down"); break;
     case BTN_NAV_CENTER:  McuUtility_strcat(buf, sizeof(buf), "center"); break;
-    case BTN_NAV_SET:     McuUtility_strcat(buf, sizeof(buf), "set"); break;
-    case BTN_NAV_RESET:   McuUtility_strcat(buf, sizeof(buf), "reset"); break;
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+    case BTN_NAV_NEXT:    McuUtility_strcat(buf, sizeof(buf), "next"); break;
+    case BTN_NAV_PREV:    McuUtility_strcat(buf, sizeof(buf), "prev"); break;
+#endif
     default:              McuUtility_strcat(buf, sizeof(buf), "???"); break;
   }
   switch (kind) {
@@ -63,12 +71,12 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     default:                                McuUtility_strcat(buf, sizeof(buf), "???"); break;
   }
   McuUtility_strcat(buf, sizeof(buf), "\n");
-#if 0 && PL_CONFIG_USE_RTT
+#if 0 && PL_CONFIG_USE_RTT /* debugging only */
   McuRTT_printf(0, buf);
 #endif
 #if PL_CONFIG_USE_ROAD && !PL_CONFIG_USE_GUI
   if (kind==MCUDBNC_EVENT_RELEASED) {
-    Road_DemoToggle();
+    Road_SetIsOn(!Road_GetIsOn()); /* use button to start/stop running the car */
   }
 #endif
 #if PL_CONFIG_USE_LED_COUNTER_APP
@@ -84,8 +92,10 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     case BTN_NAV_RIGHT:   btn = LV_BTN_MASK_RIGHT; break;
     case BTN_NAV_DOWN:    btn = LV_BTN_MASK_DOWN; break;
     case BTN_NAV_CENTER:  btn = LV_BTN_MASK_CENTER; break;
-    case BTN_NAV_SET:     btn = LV_BTN_MASK_PREV; break;
-    case BTN_NAV_RESET:   btn = LV_BTN_MASK_NEXT; break;
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+    case BTN_NAV_NEXT:    btn = LV_BTN_MASK_NEXT; break;
+    case BTN_NAV_PREV:    btn = LV_BTN_MASK_PREV; break;
+#endif
     default:              btn = 0; break;
   }
   switch (kind) {

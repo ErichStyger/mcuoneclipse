@@ -51,12 +51,14 @@ uint32_t BTN_GetButtons(void) {
   if (BTN_IsPressed(BTN_NAV_CENTER)) {
     val |= BTN_BIT_NAV_CENTER;
   }
-  if (BTN_IsPressed(BTN_NAV_SET)) {
-    val |= BTN_BIT_NAV_SET;
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+  if (BTN_IsPressed(BTN_NAV_NEXT)) {
+    val |= BTN_BIT_NAV_NEXT;
   }
-  if (BTN_IsPressed(BTN_NAV_RESET)) {
-    val |= BTN_BIT_NAV_RESET;
+  if (BTN_IsPressed(BTN_NAV_PREV)) {
+    val |= BTN_BIT_NAV_PREV;
   }
+#endif
   return val;
 }
 
@@ -81,27 +83,29 @@ static void gpio_IsrCallback(uint gpio, uint32_t events) {
   BaseType_t xHigherPriorityTaskWoken = false;
 
   switch(gpio) {
-    case BUTTONS_PINS_HATNAVCENTER_PIN:
+    case BUTTONS_PINS_NAV_CENTER_PIN:
       button = BTN_BIT_NAV_CENTER;
       break;
-    case BUTTONS_PINS_HATNAVUP_PIN:
+    case BUTTONS_PINS_NAV_UP_PIN:
       button = BTN_BIT_NAV_UP;
       break;
-    case BUTTONS_PINS_HATNAVDOWN_PIN:
+    case BUTTONS_PINS_NAV_DOWN_PIN:
       button = BTN_BIT_NAV_DOWN;
       break;
-    case BUTTONS_PINS_HATNAVLEFT_PIN:
+    case BUTTONS_PINS_NAV_LEFT_PIN:
       button = BTN_BIT_NAV_LEFT;
       break;
-    case BUTTONS_PINS_HATNAVRIGHT_PIN:
+    case BUTTONS_PINS_NAV_RIGHT_PIN:
       button = BTN_BIT_NAV_RIGHT;
       break;
-    case BUTTONS_PINS_HATNAVSET_PIN:
-      button = BTN_BIT_NAV_SET;
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+    case BUTTONS_PINS_NAV_NEXT_PIN:
+      button = BTN_BIT_NAV_NEXT;
       break;
-    case BUTTONS_PINS_HATNAVRESET_PIN:
-      button = BTN_BIT_NAV_RESET;
+    case BUTTONS_PINS_NAV_PREV_PIN:
+      button = BTN_BIT_NAV_PREV;
       break;
+#endif
     default:
       button = 0;
       break;
@@ -124,41 +128,45 @@ void BTN_Init(void) {
   McuBtn_GetDefaultConfig(&btnConfig);
   btnConfig.isLowActive = true;
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVCENTER_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_CENTER_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
   BTN_Infos[BTN_NAV_CENTER].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVLEFT_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_LEFT_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
   BTN_Infos[BTN_NAV_LEFT].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVRIGHT_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_RIGHT_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
   BTN_Infos[BTN_NAV_RIGHT].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVUP_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_UP_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
   BTN_Infos[BTN_NAV_UP].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVDOWN_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_DOWN_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
   BTN_Infos[BTN_NAV_DOWN].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVSET_PIN;
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_NEXT_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
-  BTN_Infos[BTN_NAV_SET].handle = McuBtn_InitButton(&btnConfig);
+  BTN_Infos[BTN_NAV_NEXT].handle = McuBtn_InitButton(&btnConfig);
 
-  btnConfig.hw.pin = BUTTONS_PINS_HATNAVRESET_PIN;
+  btnConfig.hw.pin = BUTTONS_PINS_NAV_PREV_PIN;
   btnConfig.hw.pull = McuGPIO_PULL_UP;
-  BTN_Infos[BTN_NAV_RESET].handle = McuBtn_InitButton(&btnConfig);
+  BTN_Infos[BTN_NAV_PREV].handle = McuBtn_InitButton(&btnConfig);
+#endif
 
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVCENTER_PIN, GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVUP_PIN,     GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVDOWN_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVLEFT_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVRIGHT_PIN,  GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVSET_PIN,    GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
-  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_HATNAVRESET_PIN,  GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_CENTER_PIN, GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_UP_PIN,     GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_DOWN_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_LEFT_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_RIGHT_PIN,  GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+#if PL_CONFIG_USE_BUTTON_NEXT_PREV
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_NEXT_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+  gpio_set_irq_enabled_with_callback(BUTTONS_PINS_NAV_PREV_PIN,   GPIO_IRQ_EDGE_FALL, true, &gpio_IsrCallback);
+#endif
 }
 
 #endif /* #if PL_CONFIG_USE_BUTTONS */
