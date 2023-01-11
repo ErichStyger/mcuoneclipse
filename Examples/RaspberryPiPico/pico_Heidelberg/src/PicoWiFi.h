@@ -11,6 +11,13 @@
 
 uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
+
+/*!
+ * \brief Determine if the Cygwin WiFi chip has been initialized, because only afterwards calls to the lwIP or Cygwin device can be used.
+ * \return true if cyw43_arch_init has been called, false otherwise
+ */
+bool PicoWiFi_ArchIsInit(void);
+
 /*!
  * \brief Module de-initialization
  */

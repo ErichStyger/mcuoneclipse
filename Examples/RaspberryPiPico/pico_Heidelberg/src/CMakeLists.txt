@@ -27,6 +27,7 @@ file(GLOB FILES
   lcd.c
   image/customSymbols_12.c
   
+  power.c
   rs485.c
 )
 

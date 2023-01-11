@@ -51,6 +51,7 @@ static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
 
 static struct {
   bool isConnected;
+  bool isInitialized;
 } wifi;
 
 static uint8_t GetMAC(uint8_t mac[6], uint8_t *macStr, size_t macStrSize) {
@@ -78,6 +79,10 @@ static void ping_setup(const char *host) {
 }
 #endif
 
+bool PicoWiFi_ArchIsInit(void) {
+  return wifi.isInitialized;
+}
+
 static void WiFiTask(void *pv) {
   int res;
   bool ledIsOn = false;
@@ -93,6 +98,7 @@ static void WiFiTask(void *pv) {
     McuLog_error("failed setting country code");
     for(;;) {}
   }
+  wifi.isInitialized = true;
   McuLog_info("enabling STA mode");
   cyw43_arch_enable_sta_mode();
 
@@ -197,10 +203,13 @@ uint8_t PicoWiFi_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
 
 void PicoWiFi_Deinit(void) {
   cyw43_arch_deinit();
+  wifi.isConnected = false;
+  wifi.isInitialized = false;
 }
 
 void PicoWiFi_Init(void) {
   wifi.isConnected = false;
+  wifi.isInitialized = false;
   if (xTaskCreate(
       WiFiTask,  /* pointer to the task */
       "WiFi", /* task name for kernel awareness debugging */

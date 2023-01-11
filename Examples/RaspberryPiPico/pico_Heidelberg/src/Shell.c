@@ -42,6 +42,9 @@
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
 #endif
+#if PL_CONFIG_USE_POWER
+  #include "power.h"
+#endif
 #include "application.h"
 
 typedef struct {
@@ -128,6 +131,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_PICO_W
   PicoWiFi_ParseCommand,
+#endif
+#if PL_CONFIG_USE_POWER
+  Power_ParseCommand,
 #endif
   App_ParseCommand,
   NULL /* Sentinel */

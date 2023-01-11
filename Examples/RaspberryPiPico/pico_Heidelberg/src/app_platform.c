@@ -65,6 +65,9 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
+#if PL_CONFIG_USE_POWER
+  #include "power.h"
+#endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
@@ -144,6 +147,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();
+#endif
+#if PL_CONFIG_USE_POWER
+  Power_Init();
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();
