@@ -10,14 +10,26 @@
 #include "app_platform.h"
 
 /* GPIO pins for buttons */
-#define BUTTONS_PINS_NAV_UP_PIN       15u /* GPIO15 */
-#define BUTTONS_PINS_NAV_DOWN_PIN     14u /* GPIO14 */
-#define BUTTONS_PINS_NAV_LEFT_PIN     13u /* GPIO13 */
-#define BUTTONS_PINS_NAV_RIGHT_PIN    12u /* GPIO12 */
-#define BUTTONS_PINS_NAV_CENTER_PIN   11u /* GPIO11 */
-#if PL_CONFIG_USE_BUTTON_NEXT_PREV
-#define BUTTONS_PINS_NAV_NEXT_PIN     10u /* GPIO10 */
-#define BUTTONS_PINS_NAV_PREV_PIN     9u  /* GPIO9 */
+#if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+  #define BUTTONS_PINS_NAV_UP_PIN       3u
+  #define BUTTONS_PINS_NAV_DOWN_PIN     6u
+  #define BUTTONS_PINS_NAV_LEFT_PIN     4u
+  #define BUTTONS_PINS_NAV_RIGHT_PIN    7u
+  #define BUTTONS_PINS_NAV_CENTER_PIN   8u
+  #if PL_CONFIG_USE_BUTTON_NEXT_PREV
+    #define BUTTONS_PINS_NAV_NEXT_PIN     9u
+    #define BUTTONS_PINS_NAV_PREV_PIN     5u
+  #endif
+#else
+  #define BUTTONS_PINS_NAV_UP_PIN       15u /* GPIO15 */
+  #define BUTTONS_PINS_NAV_DOWN_PIN     14u /* GPIO14 */
+  #define BUTTONS_PINS_NAV_LEFT_PIN     13u /* GPIO13 */
+  #define BUTTONS_PINS_NAV_RIGHT_PIN    12u /* GPIO12 */
+  #define BUTTONS_PINS_NAV_CENTER_PIN   11u /* GPIO11 */
+  #if PL_CONFIG_USE_BUTTON_NEXT_PREV
+    #define BUTTONS_PINS_NAV_NEXT_PIN     10u /* GPIO10 */
+    #define BUTTONS_PINS_NAV_PREV_PIN     9u  /* GPIO9 */
+  #endif
 #endif
 
 #define BUTTONS_ENABLE_CLOCK()  /* enable clocking */
