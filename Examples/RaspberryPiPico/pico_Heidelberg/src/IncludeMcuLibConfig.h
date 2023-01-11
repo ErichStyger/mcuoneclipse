@@ -6,6 +6,17 @@
 
 /* header file is included with -include compiler option */
 
+/* different HW/PCB versions: */
+#define PL_CONFIG_HW_VERSION_0_1    (1)  /* V0.1, 65x65mm green PCB with Pico, only with USB battery charger, without road */
+#define PL_CONFIG_HW_VERSION_0_2    (2)  /* V0.2, 95x95mm green PCB with Pico, added slots for house and solar connector, without road */
+#define PL_CONFIG_HW_VERSION_0_3    (3)  /* V0.3, 165x200 mm green 4-Layer PCB by Christian Jost, with road */
+#define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' */
+#define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023) by Christian Jost: added on/off circuit, energy storage, extra sensor */
+
+/* active PCB/Hardware version */
+#define PL_CONFIG_HW_ACTIVE_HW_VERSION  (PL_CONFIG_HW_VERSION_0_1)
+
+
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
 #define McuLib_CONFIG_CPU_IS_KINETIS                (0)
@@ -23,7 +34,16 @@
 /* I2C */
 #define CONFIG_USE_HW_I2C                             (1) /* if using HW I2C, otherwise use software bit banging */
 #define CONFIG_USE_HW_RTC                             (0) /* if using external HW RTC */
-/* -------------------------------------------------*/
+#if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+  #define MCUI2CLIB_CONFIG_I2C_DEVICE       i2c0
+  #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     12u
+  #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     13u
+#else
+  #define MCUI2CLIB_CONFIG_I2C_DEVICE       i2c0
+  #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     16u
+  #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     17u
+#endif
+  /* -------------------------------------------------*/
 /* McuGenericI2C */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
 #define McuGenericI2C_CONFIG_USE_ON_RELEASE_BUS_EVENT (0)
@@ -70,8 +90,8 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuSSD1306 */
 #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE         (1106)
-#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180 /* PL_CONFIG_HW_VERSION_0_1 */
-//#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE /* version with road */
+#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
+//#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
