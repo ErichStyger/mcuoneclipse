@@ -131,7 +131,6 @@ static void AppTask(void *pv) {
     McuLog_info("Mounting failed please format device first");
   }
 #endif
-
   for(;;) {
   #if !PL_CONFIG_USE_PICO_W
     McuLED_Toggle(led);
@@ -165,7 +164,6 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   }
   return ERR_OK;
 }
-
 
 void APP_Run(void) {
   PL_Init();

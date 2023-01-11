@@ -91,13 +91,13 @@ static void ntp_dns_found(const char *hostname, const ip_addr_t *ipaddr, void *a
   }
 }
 
-// NTP data received
+/* lwIP callback for NTP data received */
 static void ntp_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t *addr, u16_t port) {
   NTP_T *state = (NTP_T*)arg;
   uint8_t mode = pbuf_get_at(p, 0) & 0x7;
   uint8_t stratum = pbuf_get_at(p, 1);
 
-  // Check the result
+  /* Check the result */
   if (ip_addr_cmp(addr, &state->ntp_server_address) && port == NTP_PORT && p->tot_len == NTP_MSG_LEN &&
     mode == 0x4 && stratum != 0) {
     uint8_t seconds_buf[4] = {0};
@@ -113,7 +113,7 @@ static void ntp_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
   pbuf_free(p);
 }
 
-// Perform initialisation
+/* Perform initialization */
 static NTP_T* ntp_init(void) {
   NTP_T *state = calloc(1, sizeof(NTP_T));
   if (!state) {
