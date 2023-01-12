@@ -6,6 +6,8 @@ file(GLOB FILES
   main.c
   app_platform.c
   application.c
+  ws2812.c
+  NeoPixel.c
   Shell.c
   OLED.c
   buttons.c
@@ -32,7 +34,7 @@ file(GLOB FILES
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory
-#pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
@@ -44,7 +46,7 @@ target_link_libraries(
   SrcLib 
   McuLib 
   pico_stdlib
-#  hardware_pio  # WS2812B
+  hardware_pio  # WS2812B
 #  hardware_adc  # internal temperature and ADC
   hardware_rtc  # RTC for sleep.c
 #  hardware_spi  # for SPI (external flash)
