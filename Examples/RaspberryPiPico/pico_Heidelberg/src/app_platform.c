@@ -27,6 +27,10 @@
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   #include "McuRTOS.h"
 #endif
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+  #include "NeoPixel.h"
+  #include "ws2812.h"
+#endif
 #if PL_CONFIG_USE_I2C
   #include "McuGenericSWI2C.h"
   #include "McuGenericI2C.h"
@@ -65,12 +69,6 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
-#if PL_CONFIG_USE_POWER
-  #include "power.h"
-#endif
-#if PL_CONFIG_USE_GUI
-  #include "gui.h"
-#endif
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
 #endif
@@ -80,6 +78,12 @@
 #if McuModbus_CONFIG_IS_ENABLED
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
+#endif
+#if PL_CONFIG_USE_POWER
+  #include "power.h"
+#endif
+#if PL_CONFIG_USE_GUI
+  #include "gui.h"
 #endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
@@ -111,6 +115,13 @@ void PL_Init(void) {
   McuHardFault_Init();
 
   SHELL_Init();
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+  WS2812_Init();
+  NEO_Init();
+#endif
+#if PL_CONFIG_USE_LIGHTS
+  Lights_Init();
+#endif
 #if PL_CONFIG_USE_I2C
   #if CONFIG_USE_HW_I2C
     McuI2cLib_Init();

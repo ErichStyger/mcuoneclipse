@@ -17,6 +17,9 @@
 #if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+  #include "NeoPixel.h"
+#endif
 #if McuFlash_CONFIG_IS_ENABLED
   #include "McuFlash.h"
 #endif
@@ -106,6 +109,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
   McuArmTools_ParseCommand,
   McuTimeDate_ParseCommand,
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+  NEO_ParseCommand,
+#endif
 #if McuFlash_CONFIG_IS_ENABLED
   McuFlash_ParseCommand,
 #endif
