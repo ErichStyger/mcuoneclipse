@@ -87,6 +87,14 @@
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_SOFTWARE_RTC  (1) /* if using software RTC */
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_EXTERNAL_RTC  (McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC) /* if using external I2C RTC */
 #define McuTimeDate_CONFIG_SET_TIME_DATE_METHOD_USES_INTERNAL_RTC  (0) /* if using internal HW RTC */
+
+/* start values */
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR  0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN   0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC   0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2020
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 1
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   1
 /* ---------------------------------------------------------------------------------------*/
 /* McuSSD1306 */
 #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE         (1106)
@@ -126,7 +134,7 @@
 #define McuLog_CONFIG_USE_FILE                  (0)
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (1)
 #define McuLog_CONFIG_USE_COLOR                 (0)
-#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
+#define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* -------------------------------------------------*/
 /* McuSPI */
 #define MCUSPI_CONFIG_HW_TEMPLATE               (MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1) /* using SPI1 with template */
