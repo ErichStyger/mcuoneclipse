@@ -21,6 +21,7 @@
 #define PL_CONFIG_USE_PING            (1 && PL_CONFIG_USE_PICO_W)
 #define PL_CONFIG_USE_NTP_CLIENT      (1 && PL_CONFIG_USE_PICO_W)
 #define PL_CONFIG_USE_UDP_SERVER      (1 && PL_CONFIG_USE_PICO_W)
+#define PL_CONFIG_USE_TCP_SERVER      (1 && PL_CONFIG_USE_PICO_W)
 #define PL_CONFIG_USE_MQTT_CLIENT     (1 && PL_CONFIG_USE_PICO_W)
 
 #define PL_CONFIG_USE_BUTTONS           (1) /* if using push button/navigation switch */
@@ -37,7 +38,7 @@
 #define PL_CONFIG_USE_LITTLE_FS         (0 && PL_CONFIG_USE_EXT_FLASH) /* if using littleFS as file system, not supported yet! */
 #define PL_CONFIG_USE_SHELL_UART        (0) /* NYI, using the physical UART */
 
-#define PL_CONFIG_USE_NEO_PIXEL_HW      (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* using WS2812B */
+#define PL_CONFIG_USE_NEO_PIXEL_HW      (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* using WS2812B */
 #define PL_CONFIG_USE_PWM_LED           (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* using 3 RGB LEDs with PWM */
 #define PL_CONFIG_USE_ADC               (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* if analog converter is used */
 #define PL_CONFIG_USE_SHT31             (0 & PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
@@ -47,7 +48,7 @@
 #define PL_CONFIG_USE_OLED_CLOCK        (0 && PL_CONFIG_USE_OLED) /* if showing clock/time/date on OLED. Note: no true RTC yet! */
 #define PL_CONFIG_USE_POWER             (1)
 
-#define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW)) /* simple VHS house light application with neopixels */
+#define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW)) /* VHS house light application */
 #define PL_CONFIG_USE_LED_COUNTER_APP   (0 && !PL_CONFIG_USE_LIGHTS && PL_CONFIG_USE_NEO_PIXEL_HW && PL_CONFIG_USE_BUTTONS) /* application to control LEDs with nav switch */
 
 void PL_Init(void);
