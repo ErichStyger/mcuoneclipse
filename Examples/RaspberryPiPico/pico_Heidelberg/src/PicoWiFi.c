@@ -21,6 +21,10 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
+#if PL_CONFIG_USE_MINI
+  #include "minIni/McuMinINI.h"
+  #include "MinIniKeys.h"
+#endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
@@ -38,20 +42,17 @@ static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_WPA2;
 static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
 #endif
 
-#if CONFIG_USE_EEE
-  static char const ssid[] = "EEE";
-  static const char pass[] = "erD5LU1SOKNccnq8WdCx";
-  static const unsigned char name[]="eee-02063";
-  static const char hostname[] = "eee-02063";
-#else /* test network */
-  static char const ssid[] = "Stockli25_2.4GHz";
-  static const char pass[] = "Hello-Office-25-Shared-Key";
-  static const char hostname[] = "heidelberg";
-#endif
+/* default values for network */
+#define WIFI_DEFAULT_HOSTNAME   "pico"
+#define WIFI_DEFAULT_SSID       "ssid"
+#define WIFI_DEFAULT_PASS       "password"
 
-static struct {
+static struct wifi {
   bool isConnected;
   bool isInitialized;
+  unsigned char hostname[32];
+  unsigned char ssid[32];
+  unsigned char pass[64];
 } wifi;
 
 static uint8_t GetMAC(uint8_t mac[6], uint8_t *macStr, size_t macStrSize) {
@@ -101,14 +102,22 @@ static void WiFiTask(void *pv) {
   wifi.isInitialized = true;
   McuLog_info("enabling STA mode");
   cyw43_arch_enable_sta_mode();
-
-  McuLog_info("set hostname: %s", hostname);
-  netif_set_hostname(&cyw43_state.netif[0], hostname);
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_HOSTNAME, wifi.hostname, sizeof(wifi.hostname), NVMC_MININI_FILE_NAME);
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_SSID, wifi.ssid, sizeof(wifi.ssid), NVMC_MININI_FILE_NAME);
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_WIFI, NVMC_MININI_KEY_WIFI_HOSTNAME, WIFI_DEFAULT_PASS, wifi.pass, sizeof(wifi.pass), NVMC_MININI_FILE_NAME);
+#else
+  McuUtility_strcpy(wifi.hostname, sizeof(wifi.hostname), WIFI_DEFAULT_HOSTNAME);
+  McuUtility_strcpy(wifi.ssid, sizeof(wifi.ssid), WIFI_DEFAULT_SSID);
+  McuUtility_strcpy(wifi.pass, sizeof(wifi.pass), WIFI_DEFAULT_PASS);
+#endif
+  McuLog_info("seting hostname: %s", wifi.hostname);
+  netif_set_hostname(&cyw43_state.netif[0], wifi.hostname);
 
   vTaskDelay(pdMS_TO_TICKS(1000)); /* give network tasks time to start up */
 
-  McuLog_info("connecting to AP '%s'...", ssid);
-  res = cyw43_arch_wifi_connect_timeout_ms(ssid, pass, CYW43_AUTH_WPA2_AES_PSK, 20000);
+  McuLog_info("connecting to SSID '%s'...", wifi.ssid);
+  res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 20000);
   if (res!=0) {
     for(;;) {
       McuLog_error("connection failed after timeout! code %d", res);
@@ -143,6 +152,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
   McuShell_SendStatusStr((uint8_t*)"  connected", wifi.isConnected?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), wifi.ssid);
+  McuUtility_strcat(buf, sizeof(buf), "\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  SSID", buf, io->stdOut);
 
   val = cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA);
   if (val<0) {
