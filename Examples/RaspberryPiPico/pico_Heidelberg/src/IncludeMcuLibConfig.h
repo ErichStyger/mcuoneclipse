@@ -10,8 +10,9 @@
 #define PL_CONFIG_HW_VERSION_0_1    (1)  /* V0.1, 65x65mm green PCB with Pico, only with USB battery charger, without road */
 #define PL_CONFIG_HW_VERSION_0_2    (2)  /* V0.2, 95x95mm green PCB with Pico, added slots for house and solar connector, without road */
 #define PL_CONFIG_HW_VERSION_0_3    (3)  /* V0.3, 165x200 mm green 4-Layer PCB by Christian Jost, with road */
-#define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' */
+#define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' with LED countdown application */
 #define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023) by Christian Jost: added on/off circuit, energy storage, extra sensor */
+#define PL_CONFIG_HW_VERSION_0_6    (6)  /* V0.6, EVCC January 2023 */
 
 /* active PCB/Hardware version */
 #define PL_CONFIG_HW_ACTIVE_HW_VERSION  (PL_CONFIG_HW_VERSION_0_1)
