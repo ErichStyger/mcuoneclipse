@@ -8,6 +8,8 @@ file(GLOB FILES
   application.c
   ws2812.c
   NeoPixel.c
+  NeoCounter.c
+  lights.c
   Shell.c
   OLED.c
   buttons.c
@@ -28,7 +30,6 @@ file(GLOB FILES
   guiGroup.c
   lcd.c
   image/customSymbols_12.c
-  
   power.c
   rs485.c
 )
