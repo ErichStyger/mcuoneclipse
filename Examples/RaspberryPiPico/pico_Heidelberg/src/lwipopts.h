@@ -99,4 +99,9 @@
   #define LWIP_TCPIP_CORE_LOCKING_INPUT 1
 #endif
 
+/* You need to increase MEMP_NUM_SYS_TIMEOUT by one if you use MQTT!
+ * see https://forums.raspberrypi.com/viewtopic.php?t=341914
+ */
+#define MEMP_NUM_SYS_TIMEOUT   (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 1)
+
 #endif

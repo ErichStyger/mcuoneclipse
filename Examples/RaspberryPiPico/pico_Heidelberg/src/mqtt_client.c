@@ -2,13 +2,17 @@
  * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Useful read: https://github.com/particle-iot/lwip/blob/master/doc/mqtt_client.txt
  */
 
 #include "app_platform.h"
 #if PL_CONFIG_USE_MQTT_CLIENT
 
+#include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
 #include "McuLog.h"
+#include "McuUtility.h"
 
 #if LWIP_TCP
 
@@ -19,7 +23,7 @@ static const struct mqtt_connect_client_info_t mqtt_client_info =
   "pico",
   "homeassistant", /* user */
   "mooM1Eik6uh9maepai6ia2pahw2xaiM3Oaril6ahrug7ihejae6eith9uec6sahc", /* pass */
-  100,  /* keep alive */
+  100,  /* keep alive timeout in seconds */
   NULL, /* will_topic */
   NULL, /* will_msg */
   0,    /* will_qos */
@@ -29,17 +33,84 @@ static const struct mqtt_connect_client_info_t mqtt_client_info =
 #endif
 };
 
+#define TOPIC_NAME_TEST                 "PW2_Solar" /* test only */
+/* Homeassistant Tesla Powerwall topics */
+#define TOPIC_NAME_GRID_POWER           "homeassistant/sensor/powerwall_site_now/state"
+#define TOPIC_NAME_SOLAR_POWER          "homeassistant/sensor/powerwall_solar_now/state"
+#define TOPIC_NAME_BATTERY_POWER        "homeassistant/sensor/powerwall_battery_now/state"
+#define TOPIC_NAME_BATTERY_PERCENTAGE   "homeassistant/sensor/powerwall_charge/state"
+
+typedef enum topic_ID_e {
+  Topic_ID_None,
+  Topic_ID_Test,
+  Topic_ID_Solar_Power,
+  Topic_ID_Grid_Power,
+  Topic_ID_Battery_Power,
+  Topic_ID_Battery_Percentage,
+} topic_ID_e;
+
+static topic_ID_e in_pub_ID =  Topic_ID_None; /* incoming published ID */
+
+static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, u16_t len) {
+  buf[0] = '\0';
+  for(int i=0; i<len; i++){
+    McuUtility_chcat(buf, bufSize, data[i]);
+  }
+}
+
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
   LWIP_UNUSED_ARG(data);
+  unsigned char buf[32];
 
-  McuLog_trace("MQTT client \"%s\" data cb: len %d, flags %d", client_info->client_id, (int)len, (int)flags);
+//  McuLog_trace("MQTT client \"%s\" data cb: len %d, flags %d", client_info->client_id, (int)len, (int)flags);
+  if(flags & MQTT_DATA_FLAG_LAST) {
+    /* Last fragment of payload received (or whole part if payload fits receive buffer. See MQTT_VAR_HEADER_BUFFER_LEN)  */
+    if(in_pub_ID == Topic_ID_Solar_Power) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("solarP: mqtt_incoming_data_cb: %s", buf);
+#if 0
+    } else if(in_pub_ID == Topic_ID_Test) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("test: mqtt_incoming_data_cb: %s", buf);
+#endif
+    } else if(in_pub_ID == Topic_ID_Grid_Power) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("gridP: mqtt_incoming_data_cb: %s", buf);
+    } else if(in_pub_ID == Topic_ID_Battery_Power) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("battP: mqtt_incoming_data_cb: %s", buf);
+    } else if(in_pub_ID == Topic_ID_Battery_Percentage) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("bat \%: mqtt_incoming_data_cb: %s", buf);
+    } else {
+      McuLog_trace("mqtt_incoming_data_cb: Ignoring payload...");
+    }
+  } else {
+    McuLog_trace("mqtt_incoming_data_cb: fragmented payload ...");
+    /* Handle fragmented payload, store in buffer, write to file or whatever */
+  }
 }
 
 static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
 
-  McuLog_trace("MQTT client \"%s\" publish cb: topic %s, len %d", client_info->client_id, topic, (int)tot_len);
+  if (McuUtility_strcmp(topic, TOPIC_NAME_SOLAR_POWER)==0) {
+  in_pub_ID = Topic_ID_Solar_Power;
+#if 0
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_TEST)==0) {
+    in_pub_ID = Topic_ID_Test;
+#endif
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_GRID_POWER)==0) {
+    in_pub_ID = Topic_ID_Grid_Power;
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_POWER)==0) {
+    in_pub_ID = Topic_ID_Battery_Power;
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_PERCENTAGE)==0) {
+    in_pub_ID = Topic_ID_Battery_Percentage;
+  } else { /* unknown */
+    McuLog_trace("MQTT client \"%s\" publish cb: topic %s, len %d", client_info->client_id, topic, (int)tot_len);
+    in_pub_ID = Topic_ID_None;
+  }
 }
 
 static void mqtt_request_cb(void *arg, err_t err) {
@@ -51,6 +122,7 @@ static void mqtt_request_cb(void *arg, err_t err) {
 static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status) {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
   LWIP_UNUSED_ARG(client);
+  err_t err;
 
   McuLog_trace("MQTT client \"%s\" connection cb: status %d", client_info->client_id, (int)status);
 
@@ -58,20 +130,53 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     McuLog_trace("MQTT connect accepted");
 #if 0
     mqtt_sub_unsub(client,
-            "homeassistant/sensor/powerwall_site_now", 1,
-            mqtt_request_cb, LWIP_CONST_CAST(void*, client_info),
+            TOPIC_NAME_TEST,
+            0,
+            mqtt_request_cb,
+            LWIP_CONST_CAST(void*, client_info),
             1);
 #endif
-    mqtt_sub_unsub(client,
-            "PW2_Solar", 0,
+    err = mqtt_sub_unsub(client,
+            TOPIC_NAME_SOLAR_POWER, /* solar P in kW */
+            1, /* quos: 0: fire&forget, 1: at least once */
+            mqtt_request_cb, /* callback */
+            LWIP_CONST_CAST(void*, client_info),
+            1 /* subscribe */
+            );
+    if (err!=ERR_OK) {
+      McuLog_error("failed subscribing");
+    }
+    err = mqtt_sub_unsub(client,
+            TOPIC_NAME_GRID_POWER, /* grid P in kW */
+            1, /* quos */
+            mqtt_request_cb,
+            LWIP_CONST_CAST(void*, client_info),
+            1);
+    if (err!=ERR_OK) {
+      McuLog_error("failed subscribing");
+    }
+    err = mqtt_sub_unsub(client,
+            TOPIC_NAME_BATTERY_POWER, /* battery P in kW */
+            1, /* quos */
+            mqtt_request_cb,
+            LWIP_CONST_CAST(void*, client_info),
+            1);
+    if (err!=ERR_OK) {
+      McuLog_error("failed subscribing");
+    }
+    err = mqtt_sub_unsub(client,
+        TOPIC_NAME_BATTERY_PERCENTAGE,  /* topic: percentage of battery charge */
+            1,  /* quos */
             mqtt_request_cb, LWIP_CONST_CAST(void*, client_info),
             1);
+    if (err!=ERR_OK) {
+      McuLog_error("failed subscribing");
+    }
   } else if (status==MQTT_CONNECT_DISCONNECTED) {
     McuLog_trace("MQTT connect disconnect");
   }
 }
 #endif /* LWIP_TCP */
-
 
 static ip_addr_t mqttServerAddr;
 
@@ -85,10 +190,12 @@ void MqttClient_Connect(void) {
           mqtt_incoming_data_cb,
           LWIP_CONST_CAST(void*, &mqtt_client_info));
 
+  cyw43_arch_lwip_begin();
   mqtt_client_connect(mqtt_client,
           &mqttServerAddr, MQTT_PORT,
           mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
           &mqtt_client_info);
+  cyw43_arch_lwip_end();
 #endif /* LWIP_TCP */
 }
 
