@@ -11,12 +11,15 @@
 
 #include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
+#include "lwip/dns.h"
 #include "McuLog.h"
 #include "McuUtility.h"
+#include "McuRTOS.h"
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
+#include "Modbus/McuHeidelberg.h"
 
 #if LWIP_TCP
 
@@ -27,12 +30,16 @@ static mqtt_client_t* mqtt_client;
 #define MQTT_DEFAULT_USER     "user"
 #define MQTT_DEFAULT_PASS     "password"
 
-static struct mqtt {
+typedef struct mqtt_t {
+  ip_addr_t mqtt_broker_address;
+  bool dns_request_sent;
+  bool dns_response_received;
   unsigned char broker[32];
   unsigned char client_id[32];
   unsigned char client_user[32];
-  unsigned char client_pass[64];
-} mqtt;
+  unsigned char client_pass[96];
+} mqtt_t;
+static mqtt_t mqtt;
 
 static const struct mqtt_connect_client_info_t mqtt_client_info =
 {
@@ -50,16 +57,18 @@ static const struct mqtt_connect_client_info_t mqtt_client_info =
 };
 
 /* HomeAssistant Tesla Powerwall topics */
-#define TOPIC_NAME_GRID_POWER           "homeassistant/sensor/powerwall_site_now/state"
 #define TOPIC_NAME_SOLAR_POWER          "homeassistant/sensor/powerwall_solar_now/state"
+#define TOPIC_NAME_SITE_POWER           "homeassistant/sensor/powerwall_load_now/state"
+#define TOPIC_NAME_GRID_POWER           "homeassistant/sensor/powerwall_site_now/state"
 #define TOPIC_NAME_BATTERY_POWER        "homeassistant/sensor/powerwall_battery_now/state"
 #define TOPIC_NAME_BATTERY_PERCENTAGE   "homeassistant/sensor/powerwall_charge/state"
 
 typedef enum topic_ID_e {
   Topic_ID_None,
-  Topic_ID_Solar_Power,
-  Topic_ID_Grid_Power,
-  Topic_ID_Battery_Power,
+  Topic_ID_Solar_Power,   /* power from PV panels */
+  Topic_ID_Site_Power,    /* power to the house/site */
+  Topic_ID_Grid_Power,    /* power from/to grid */
+  Topic_ID_Battery_Power, /* power from/to battery */
   Topic_ID_Battery_Percentage,
 } topic_ID_e;
 
@@ -72,26 +81,60 @@ static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, 
   }
 }
 
+static int scanWattValue(unsigned char *str) {
+  /* string in in kW and it returns the number in Watt, so for example:
+   * "1" => 1000
+   * "1.2" => 1200
+   * "3.025" = 3025
+   * "-1.002" = -1002
+   */
+  unsigned char *p = str;
+  int32_t integral;
+  uint32_t fractional;
+  uint8_t nofFractionalZeros;
+  int32_t watt;
+  float f;
+
+  if (sscanf(str, "%f", &f)!=1) {
+    McuLog_error("failed conversion of %s", str);
+    return 0; /* conversion failed, return 0 */
+  }
+  watt = (int)(f*1000.0f);
+  return watt;
+}
+
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
   LWIP_UNUSED_ARG(data);
   unsigned char buf[32];
+  int32_t watt;
 
 //  McuLog_trace("MQTT client \"%s\" data cb: len %d, flags %d", client_info->client_id, (int)len, (int)flags);
   if(flags & MQTT_DATA_FLAG_LAST) {
     /* Last fragment of payload received (or whole part if payload fits receive buffer. See MQTT_VAR_HEADER_BUFFER_LEN)  */
     if(in_pub_ID == Topic_ID_Solar_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("solarP: mqtt_incoming_data_cb: %s", buf);
+      McuLog_trace("solarP: %s", buf);
+      watt = scanWattValue(buf);
+      if (watt>=0) { /* can only be positive */
+        McuHeidelberg_SetSolarPowerWatt(watt);
+      }
+    } else if(in_pub_ID == Topic_ID_Site_Power) {
+      GetDataString(buf, sizeof(buf), data, len);
+      McuLog_trace("siteP: %s", buf);
+      watt = scanWattValue(buf);
+      if (watt>=0) { /* can only be positive */
+        McuHeidelberg_SetSitePowerWatt(watt);
+      }
     } else if(in_pub_ID == Topic_ID_Grid_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("gridP: mqtt_incoming_data_cb: %s", buf);
+      McuLog_trace("gridP: %s", buf);
     } else if(in_pub_ID == Topic_ID_Battery_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("battP: mqtt_incoming_data_cb: %s", buf);
+      McuLog_trace("battP: %s", buf);
     } else if(in_pub_ID == Topic_ID_Battery_Percentage) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("bat \%: mqtt_incoming_data_cb: %s", buf);
+      McuLog_trace("bat : %s%%", buf);
     } else {
       McuLog_trace("mqtt_incoming_data_cb: Ignoring payload...");
     }
@@ -105,7 +148,9 @@ static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
 
   if (McuUtility_strcmp(topic, TOPIC_NAME_SOLAR_POWER)==0) {
-  in_pub_ID = Topic_ID_Solar_Power;
+    in_pub_ID = Topic_ID_Solar_Power;
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_SITE_POWER)==0) {
+    in_pub_ID = Topic_ID_Site_Power;
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_GRID_POWER)==0) {
     in_pub_ID = Topic_ID_Grid_Power;
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_POWER)==0) {
@@ -144,6 +189,15 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
       McuLog_error("failed subscribing");
     }
     err = mqtt_sub_unsub(client,
+            TOPIC_NAME_SITE_POWER, /* site/house P in kW */
+            1, /* quos */
+            mqtt_request_cb,
+            LWIP_CONST_CAST(void*, client_info),
+            1);
+    if (err!=ERR_OK) {
+      McuLog_error("failed subscribing");
+    }
+    err = mqtt_sub_unsub(client,
             TOPIC_NAME_GRID_POWER, /* grid P in kW */
             1, /* quos */
             mqtt_request_cb,
@@ -175,13 +229,26 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 }
 #endif /* LWIP_TCP */
 
-static ip_addr_t mqttServerAddr;
+/* Call back with a DNS result */
+static void mqtt_dns_found(const char *hostname, const ip_addr_t *ipaddr, void *arg) {
+  mqtt_t *state = (mqtt_t*)arg;
+  mqtt.dns_response_received = true;
+  if (ipaddr!=NULL) {
+    state->mqtt_broker_address = *ipaddr; /* store address */
+    McuLog_info("mqtt address %s", ip4addr_ntoa(ipaddr));
+    state->dns_request_sent = false;
+  } else {
+    McuLog_error("mqtt dns request failed");
+    /* keep dns_request_sent set, so caller knows that it is an error */
+  }
+}
 
 void MqttClient_Connect(void) {
 #if LWIP_TCP
   mqtt_client = mqtt_client_new();
 
 #if PL_CONFIG_USE_MINI
+  McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, MQTT_DEFAULT_BROKER, mqtt.broker, sizeof(mqtt.broker), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, MQTT_DEFAULT_CLIENT, mqtt.client_id, sizeof(mqtt.client_id), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_USER, MQTT_DEFAULT_USER, mqtt.client_user, sizeof(mqtt.client_user), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_PASS, MQTT_DEFAULT_PASS, mqtt.client_pass, sizeof(mqtt.client_pass), NVMC_MININI_FILE_NAME);
@@ -191,7 +258,39 @@ void MqttClient_Connect(void) {
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
 #endif
 
-  ip4_addr_set_u32(&mqttServerAddr, ipaddr_addr(MQTT_DEFAULT_BROKER));
+  if (mqtt.broker[0]>='0' && mqtt.broker[0]<='9') { /* Assuming IP address */
+    u32_t addr = ipaddr_addr(mqtt.broker); /* convert ASCII (e.g. "192.168.1.1") to a value in network order */
+    ip4_addr_set_u32(&mqtt.mqtt_broker_address, addr); /* set the IP address given as u32_t */
+  } else {
+    McuLog_fatal("only numeric IP addresses supported");
+    for(;;) {} /* NYI */
+
+    mqtt.dns_response_received = false;
+    cyw43_arch_lwip_begin();
+    int err = dns_gethostbyname(mqtt.broker, &mqtt.mqtt_broker_address, mqtt_dns_found, &mqtt);
+    cyw43_arch_lwip_end();
+
+    mqtt.dns_request_sent = true;
+    if (err == ERR_OK) {
+      McuLog_error("dns request OK");
+    } else if (err != ERR_INPROGRESS) { // ERR_INPROGRESS means expect a callback
+      McuLog_error("dns request failed");
+    }
+    int timeout = 10;
+    while(timeout>0 && !mqtt.dns_response_received) {
+      vTaskDelay(pdMS_TO_TICKS(100)); /* wait for response */
+    }
+    if (timeout<=0) {
+      McuLog_error("dns request timeout");
+      return;
+    }
+    if (mqtt.dns_response_received && mqtt.dns_request_sent) {
+      /* sent flag not reset? error */
+      McuLog_error("dns request received, but not sucessful");
+      return;
+    }
+
+  }
   mqtt_set_inpub_callback(mqtt_client,
           mqtt_incoming_publish_cb,
           mqtt_incoming_data_cb,
@@ -199,7 +298,8 @@ void MqttClient_Connect(void) {
 
   cyw43_arch_lwip_begin();
   mqtt_client_connect(mqtt_client,
-          &mqttServerAddr, MQTT_PORT,
+          &mqtt.mqtt_broker_address,
+          MQTT_PORT,
           mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
           &mqtt_client_info);
   cyw43_arch_lwip_end();
