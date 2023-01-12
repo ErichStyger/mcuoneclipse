@@ -167,6 +167,7 @@ uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOTy
 static void ShellTask(void *pvParameters) {
   int i;
 
+  McuLog_trace("started shell task");
   (void)pvParameters; /* not used */
   /* initialize buffers */
   for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
