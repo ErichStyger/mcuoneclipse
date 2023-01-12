@@ -521,7 +521,7 @@ uint32_t McuHeidelberg_GetSolarPowerWatt(void) {
   return McuHeidelbergInfo.solarPowerW;
 }
 
-static void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW) {
+void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW) {
   if (McuHeidelbergInfo.solarPowerW!=powerW) {
     McuHeidelbergInfo.solarPowerW = powerW;
     CallEventCallback(McuHeidelberg_Event_SolarPower_Changed);
@@ -534,7 +534,7 @@ uint32_t McuHeidelberg_GetSitePowerWatt(void) {
   return McuHeidelbergInfo.sitePowerW;
 }
 
-static void McuHeidelberg_SetSitePowerWatt(uint32_t powerW) {
+void McuHeidelberg_SetSitePowerWatt(uint32_t powerW) {
   if (McuHeidelbergInfo.sitePowerW!=powerW) {
     McuHeidelbergInfo.sitePowerW = powerW;
     CallEventCallback(McuHeidelberg_Event_SitePower_Changed);

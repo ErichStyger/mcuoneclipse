@@ -58,7 +58,11 @@ McuHeidelbergChargerState_e McuHeidelberg_GetHWChargerState(void);
 const unsigned char *McuHeidelberg_GetShortHWChargerStateString(McuHeidelbergChargerState_e state);
 
 uint32_t McuHeidelberg_GetSolarPowerWatt(void);
+void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW);
+
 uint32_t McuHeidelberg_GetSitePowerWatt(void);
+void McuHeidelberg_SetSitePowerWatt(uint32_t powerW);
+
 uint32_t McuHeidelberg_GetMaxCarPower(void);
 uint32_t McuHeidelberg_GetCurrChargerPower(void);
 
