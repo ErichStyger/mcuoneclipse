@@ -110,8 +110,10 @@
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2048)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING  "picoCharger"
-#define McuShell_CONFIG_PROMPT_STRING        "pico> "
+#define McuShell_CONFIG_PROJECT_NAME_STRING         "picoCharger"
+#define McuShell_CONFIG_PROMPT_STRING               "pico> "
+#define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
+#define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (128)
 /* ---------------------------------------------------------------------- */
 /* McuFlash */
 #define McuFlash_CONFIG_IS_ENABLED          (1) /* enable for MinINI with Flash FS */
