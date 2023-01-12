@@ -29,12 +29,12 @@ typedef struct NTP_T_ {
   alarm_id_t ntp_resend_alarm;
 } NTP_T;
 
-#define NTP_SERVER "pool.ntp.org"
-#define NTP_MSG_LEN 48
-#define NTP_PORT 123
-#define NTP_DELTA 2208988800 // seconds between 1 Jan 1900 and 1 Jan 1970
-#define NTP_TEST_TIME (30 * 1000)
-#define NTP_RESEND_TIME (10 * 1000)
+#define NTP_SERVER        "pool.ntp.org"
+#define NTP_MSG_LEN       48
+#define NTP_PORT          123
+#define NTP_DELTA         2208988800 // seconds between 1 Jan 1900 and 1 Jan 1970
+#define NTP_TEST_TIME     (30 * 1000)
+#define NTP_RESEND_TIME   (10 * 1000)
 
 // Called with results of operation
 static void ntp_result(NTP_T* state, int status, time_t *result) {
@@ -78,10 +78,10 @@ static int64_t ntp_failed_handler(alarm_id_t id, void *user_data) {
   return 0;
 }
 
-// Call back with a DNS result
+/* Call back with a DNS result */
 static void ntp_dns_found(const char *hostname, const ip_addr_t *ipaddr, void *arg) {
   NTP_T *state = (NTP_T*)arg;
-  if (ipaddr) {
+  if (ipaddr!=NULL) {
     state->ntp_server_address = *ipaddr;
     McuLog_info("ntp address %s", ip4addr_ntoa(ipaddr));
     ntp_request(state);
