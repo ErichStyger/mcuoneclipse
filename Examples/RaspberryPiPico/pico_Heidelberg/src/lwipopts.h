@@ -103,5 +103,6 @@
  * see https://forums.raspberrypi.com/viewtopic.php?t=341914
  */
 #define MEMP_NUM_SYS_TIMEOUT   (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 1)
+#define MQTT_REQ_MAX_IN_FLIGHT  (5) /* maximum of subscribe requests */
 
 #endif
