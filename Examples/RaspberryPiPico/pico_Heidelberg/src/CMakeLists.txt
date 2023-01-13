@@ -23,6 +23,7 @@ file(GLOB FILES
   mqtt.c
   mqtt_client.c
   ping.c
+  dns_resolver.c
   
   # files for GUI with lvgl:
   lv.c
