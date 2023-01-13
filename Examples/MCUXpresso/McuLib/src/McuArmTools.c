@@ -94,7 +94,7 @@
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_S32K
   #include "Cpu.h" /* include CPU related interfaces and defines */
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
-  #include "hardware/flash.h" /* for UID */
+  #include "pico/unique_id.h" /* for UID */
 #elif McuLib_CONFIG_CPU_IS_ARM_CORTEX_M
   /* include device specific header file for CMSIS inside "McuArmToolsconfig.h" */
 #endif
@@ -400,7 +400,14 @@ uint8_t McuArmTools_UIDGet(McuArmTools_UID *uid)
   return ERR_FAILED; /* not implemented yet */
 #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
   memset(uid, 0, sizeof(McuArmTools_UID));
-  flash_get_unique_id(uid->id);
+ /* We do *not* use flash_get_unique_id() of the flash API, because this requires interrupts disabled for *both* cores.
+   * Instead, we use the one stored by the RP2040 boot code with pico_get_unique_board_id() */
+  pico_unique_board_id_t id;
+
+  pico_get_unique_board_id(&id);
+  for(int i=0; i<sizeof(uid->id) && i<sizeof(id.id); i++) {
+    uid->id[i] = id.id[i];
+  }
   return ERR_OK;
 #else
   (void)uid; /* not used */
