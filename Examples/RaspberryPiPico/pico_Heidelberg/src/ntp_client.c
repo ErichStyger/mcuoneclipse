@@ -125,13 +125,13 @@ static void ntpTask(void *pv) {
   for(;;) {
     do {
       /* Set timeout alarm in case udp requests are lost */
-      ntp_state.ntp_timeout_alarm = add_alarm_in_ms(NTP_TIMEOUT_TIME, ntp_timeout_handler, &ntp_state, true);
+      ntp_state.ntp_timeout_alarm = add_alarm_in_ms(NTP_TIMEOUT_TIME_MS, ntp_timeout_handler, &ntp_state, true);
       ntp_request(&ntp_state);
       do {
         vTaskDelay(pdMS_TO_TICKS(100)); /* wait for response or timeout */
       } while (ntp_state.ntp_timeout_alarm>0); /* request still going on, timeout not expired? */
     } while (ntp_state.ntp_timeout_alarm>0); /* retry */
-    vTaskDelay(pdMS_TO_TICKS(NTP_TEST_TIME)); /* delay until next ntp request */
+    vTaskDelay(pdMS_TO_TICKS(NTP_PERIOD_TIME_MS)); /* delay until next ntp request */
   }
 }
 
