@@ -56,8 +56,6 @@ int main(void) {
 #if 1 /* working */
   POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
 
-  /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
-  //CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH);
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
 
   BOARD_InitBootPins();
@@ -65,7 +63,6 @@ int main(void) {
   CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 2U, false);          /* Set AHBCLKDIV divider to value 2 */
   CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
 
-  //BOARD_InitDebugConsole();
   BOARD_InitDebugConsoleSWO(McuSWO_CONFIG_TERMINAL_CHANNEL, McuSWO_CONFIG_SPEED_BAUD);
 #endif
   for(;;) {
