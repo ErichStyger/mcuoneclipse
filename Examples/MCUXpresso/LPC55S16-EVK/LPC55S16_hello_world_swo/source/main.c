@@ -29,11 +29,6 @@
 #define DEMO_DEBUG_CONSOLE_SWO_PORT     (0U)
 #define DEMO_DEBUG_CONSOLE_SWO_BAUDRATE (4000000U)
 
-/*******************************************************************************
- * Prototypes
- ******************************************************************************/
-void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate);
-
 void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate) {
   SystemCoreClockUpdate();
   uint32_t clkSrcFreq = SystemCoreClock;
@@ -46,10 +41,10 @@ int main(void) {
   /* set BOD VBAT level to 1.65V */
   POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
   /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
-  CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH);
+  //CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH);
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
 
-  BOARD_InitBootPins();
+  //BOARD_InitBootPins();
   BOARD_BootClockFROHF96M();
 
   CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 2U, false);          /* Set AHBCLKDIV divider to value 2 */
@@ -58,7 +53,7 @@ int main(void) {
   BOARD_InitDebugConsole();
   BOARD_InitDebugConsoleSWO(DEMO_DEBUG_CONSOLE_SWO_PORT, DEMO_DEBUG_CONSOLE_SWO_BAUDRATE);
 
-  PL_Init();
+  //PL_Init();
 
   for(;;) {
     printf("swo hello!\n");

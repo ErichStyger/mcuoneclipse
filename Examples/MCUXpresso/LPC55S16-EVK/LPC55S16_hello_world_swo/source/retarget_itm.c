@@ -41,7 +41,8 @@
 // Value identifying ITM_RxBuffer is ready for next character
 #define ITM_RXBUFFER_EMPTY    0x5AA55AA5
 // variable to receive ITM input characters
-volatile int32_t ITM_RxBuffer = ITM_RXBUFFER_EMPTY;
+//volatile int32_t ITM_RxBuffer = ITM_RXBUFFER_EMPTY;
+extern volatile int32_t ITM_RxBuffer;
 
 // ******************************************************************
 // Redlib C Library function : __sys_write

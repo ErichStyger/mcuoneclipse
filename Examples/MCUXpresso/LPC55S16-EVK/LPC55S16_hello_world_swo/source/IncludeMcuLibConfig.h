@@ -1,30 +1,7 @@
 /*
- * Copyright (c) 2016-2020, Erich Styger
+ * Copyright (c) 2016-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
- */
-
-/* header file is included with -include compiler option
-Instructions:
- - Remove the 'Template_' from the name and place this file into your 'src' folder.
- - Include it with the -include compiler option with:  "${ProjDirPath}/source/IncludeMcuLibConfig.h"
- - Add the following to the -I compiler option:
-../McuLib
-../McuLib/config
-../McuLib/config/fonts
-../McuLib/fonts
-../McuLib/src
-../McuLib/FreeRTOS/Source/include
-../McuLib/FreeRTOS/Source/portable/GCC/ARM_CM4F
-../McuLib/SEGGER_RTT
-../McuLib/SEGGER_Sysview
-../McuLib/TraceRecorder
-../McuLib/TraceRecorder/config
-../McuLib/TraceRecorder/include
-../McuLib/TraceRecorder/streamports/Jlink_RTT/include
-../McuLib/HD44780
-../McuLib/FatFS
-../McuLib/FatFS/source
  */
 
 #ifndef INCLUDEMCULIBCONFIG_H_
@@ -42,8 +19,6 @@ Instructions:
 #define McuLib_CONFIG_SDK_USE_FREERTOS          (0)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    (0)
 #define configTOTAL_HEAP_SIZE                   (24*1024)
-/* #define configUSE_HEAP_SECTION_NAME          (1) */
-/* #define configHEAP_SECTION_NAME_STRING       ".bss.$SRAM_LOWER.FreeRTOS" */
 /* -----------------------------------------------------*/
 /* Shell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S16"
@@ -63,24 +38,13 @@ Instructions:
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2)
 #define McuLog_CONFIG_USE_COLOR                 (0)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
-/* -------------------------------------------------*/
-#if 1 /* type of OLED */
-  #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1106)
-#else
-  #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE  (1306)
-#endif
-
-#define McuSSD1306_CONFIG_INIT_DELAY_MS (500)  /* extra delay to give hardware time for power-up */
-//#define McuSSD1306_CONFIG_SSD1306_START_COLUMN_OFFSET (0) /* needed for 1.3" Banggood display */
-#define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US         (0)
-#define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION  (0)
-/* -----------------------------------------------------*/
-/* McuWait */
-#define McuWait_CONFIG_USE_CYCLE_COUNTER         (1)
 /* -----------------------------------------------------*/
 /* McuSWO */
-#define McuSWO_CONFIG_HAS_SWO         (0) /* enable SWO support */
+#define McuSWO_CONFIG_HAS_SWO         (1) /* enable SWO support */
 #define McuSWO_CONFIG_SPEED_BAUD      (400000) /* J-Link supports up to 5625 kHz */
+#define McuSWO_CONFIG_DO_MUXING       (1) /* muxing is done with pins tool */
+#define McuSWO_CONFIG_DO_CLOCKING     (1) /* clock settings are done by the application */
+#define McuSWO_CONFIG_DO_SWO_INIT     (1) /* SWO configuration is done by the debugger */
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

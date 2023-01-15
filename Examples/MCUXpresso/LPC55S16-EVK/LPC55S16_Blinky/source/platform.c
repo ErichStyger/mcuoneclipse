@@ -119,8 +119,7 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_INIT_SWO
   /*!< Switch TRACE to TRACE_DIV */
-  CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /* needed for SWO */
-  McuSWO_Init(SystemCoreClock, McuSWO_CONFIG_SPEED_BAUD); /* if initialization is not done by the debugger, need to do it manually here */
+  McuSWO_Init(); /* if initialization is not done by the debugger, need to do it manually here */
   McuSWO_ChangeSpeed(McuSWO_CONFIG_SPEED_BAUD); /* execute again if J-Link has changed speed */
 #elif PL_CONFIG_USE_SWO
   /* muxing of the SWO pin needs to be done in BOARD_InitBootPins()! */

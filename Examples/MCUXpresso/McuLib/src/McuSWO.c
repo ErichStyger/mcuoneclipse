@@ -56,7 +56,9 @@ void McuSWO_SendStr(const unsigned char *str) {
   PrintString(str, McuSWO_CONFIG_TERMINAL_CHANNEL);
 }
 
-volatile int32_t ITM_RxBuffer; /* implementation of buffer for Rx */
+#define McuSWO_ITM_RXBUFFER_EMPTY    ITM_RXBUFFER_EMPTY /* 0x5AA55AA5: special pattern to indicate empty buffer */
+
+volatile int32_t ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* implementation of buffer for Rx */
 
 bool McuSWO_StdIOKeyPressed(void) {
   if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY) {
@@ -95,21 +97,31 @@ static void MuxSWOPin(void) {
   CLOCK_EnableClock(kCLOCK_Iocon);
   #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16
   /* local settings copied from pin_mux.h: have them local here in case muxing is not done in Pins Tool */
-  #define PIO0_10_FUNC_ALT6_SWO           0x06u
-  #define PIO0_10_DIGIMODE_DIGITAL_SWO    0x01u
+    #define IOCON_PIO_ASW_DI_SWO 0x00u        /*!<@brief Analog switch is open (disabled) */
+    #define IOCON_PIO_DIGITAL_EN_SWO 0x0100u  /*!<@brief Enables digital function */
+    #define IOCON_PIO_FUNC6_SWO 0x06u         /*!<@brief Selects pin function 6 */
+    #define IOCON_PIO_INV_DI_SWO 0x00u        /*!<@brief Input function is not inverted */
+    #define IOCON_PIO_MODE_INACT_SWO 0x00u    /*!<@brief No addition pin function */
+    #define IOCON_PIO_OPENDRAIN_DI_SWO 0x00u  /*!<@brief Open drain is disabled */
+    #define IOCON_PIO_SLEW_STANDARD_SWO 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
 
-  IOCON->PIO[0][10] = ((IOCON->PIO[0][10] &
-                        /* Mask bits to zero which are setting */
-                        (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+    const uint32_t port0_pin10_config = (/* Pin is configured as SWO */
+                                         IOCON_PIO_FUNC6_SWO |
+                                         /* No addition pin function */
+                                         IOCON_PIO_MODE_INACT_SWO |
+                                         /* Standard mode, output slew rate control is enabled */
+                                         IOCON_PIO_SLEW_STANDARD_SWO |
+                                         /* Input function is not inverted */
+                                         IOCON_PIO_INV_DI_SWO |
+                                         /* Enables digital function */
+                                         IOCON_PIO_DIGITAL_EN_SWO |
+                                         /* Open drain is disabled */
+                                         IOCON_PIO_OPENDRAIN_DI_SWO |
+                                         /* Analog switch is open (disabled) */
+                                         IOCON_PIO_ASW_DI_SWO);
+    /* PORT0 PIN10 (coords: 21) is configured as SWO */
+    IOCON_PinMuxSet(IOCON, 0U, 10U, port0_pin10_config);
 
-                       /* Selects pin function.
-                        * : PORT010 (pin 21) is configured as SWO. */
-                       | IOCON_PIO_FUNC(PIO0_10_FUNC_ALT6_SWO)
-
-                       /* Select Digital mode.
-                        * : Enable Digital mode.
-                        * Digital input is enabled. */
-                       | IOCON_PIO_DIGIMODE(PIO0_10_DIGIMODE_DIGITAL));
   #elif McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
   /* local settings copied from pin_mux.h: have them local here in case muxing is not done in Pins Tool */
   #define PIO0_10_FUNC_ALT6_SWO           0x06u
@@ -299,9 +311,11 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
  * \param cpuCoreFreqHz CPU core clock frequency in Hz
  */
 static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
+#if McuSWO_CONFIG_DO_MUXING
   /* Enables the clock for the I/O controller: Enable Clock. */
   MuxSWOPin();
-
+#endif
+#if McuSWO_CONFIG_DO_CLOCKING
   /*!< Set up dividers */
   CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
   CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);     /*!< Reset TRACECLKDIV divider counter and halt it */
@@ -309,7 +323,8 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
 
   /*!< Switch TRACE to TRACE_DIV */
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
-
+#endif
+#if McuSWO_CONFIG_DO_SWO_INIT
   CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk; /* enable trace in core debug */
   TPI->SPPR = 0x2; /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ (UART), 1: SWO Manchester encoding) */
   SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate */
@@ -332,14 +347,15 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
 #endif
     ;
   TPI->FFCR = (1<<TPI_FFCR_TrigIn_Pos); /* Formatter and Flush Control Register */
+#endif /* McuSWO_CONFIG_DO_SWO_INIT */
 }
 
 void McuSWO_ChangeSpeed(uint32_t baud) {
   SetSWOSpeed(SWO_traceClock, baud);
 }
 
-void McuSWO_Init(uint32_t traceClock, uint32_t baud) {
-  SWO_traceClock = traceClock; /* just the default! */
-  Init(1, SWO_traceClock, baud);
+void McuSWO_Init(void) {
+  SWO_traceClock = SystemCoreClock; /* just the default! */
+  Init(1, SWO_traceClock, McuSWO_CONFIG_SPEED_BAUD);
 }
 #endif /* McuSWO_CONFIG_HAS_SWO */

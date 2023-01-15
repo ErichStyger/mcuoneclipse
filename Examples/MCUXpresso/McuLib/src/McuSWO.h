@@ -28,8 +28,8 @@ void McuSWO_ChangeTraceClock(uint32_t traceClock);
 /* used to change speed to the desired value */
 void McuSWO_ChangeSpeed(uint32_t baud);
 
-/* call this to initialize the module. Possible usage:  McuSWO_Init(SystemCoreClock, McuSWO_CONFIG_SPEED_BAUD); */
-void McuSWO_Init(uint32_t traceClock, uint32_t baud);
+/* called to initialize the module. */
+void McuSWO_Init(void);
 
 #ifdef __cplusplus
 }

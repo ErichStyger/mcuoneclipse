@@ -195,6 +195,9 @@ Instructions:
 #define McuSWO_CONFIG_SPEED_BAUD      (115200) /* J-Link supports up to 5625 kHz */
 //#define McuSWO_CONFIG_SPEED_BAUD      (5625000) /* J-Link supports up to 5625 kHz */
 //#define McuSWO_CONFIG_SPEED_BAUD      (96000000) /* needed for LinkServer and MCUXpresso IDE 11.5.0 */
+#define McuSWO_CONFIG_DO_MUXING       (1) /* use own muxing */
+#define McuSWO_CONFIG_DO_CLOCKING     (1) /* do clock settings */
+#define McuSWO_CONFIG_DO_SWO_INIT     (1) /* SWO configuration is done by module */
 /* -----------------------------------------------------*/
 /* McuW25Q128 */
 #define MCUW25Q128_CONFIG_ENABLED     (1)

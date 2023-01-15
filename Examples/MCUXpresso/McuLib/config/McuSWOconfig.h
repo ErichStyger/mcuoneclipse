@@ -19,7 +19,22 @@
 
 #ifndef McuSWO_CONFIG_TERMINAL_CHANNEL
   #define McuSWO_CONFIG_TERMINAL_CHANNEL   (0)
-  /*!< default SWO channel for terminal */
+  /*!< default SWO channel/stimulus for terminal */
+#endif
+
+#ifndef McuSWO_CONFIG_DO_MUXING
+  #define McuSWO_CONFIG_DO_MUXING        (1)
+    /*! if SWO pin muxing shall be done inside McuSWO_Init(). Otherwise pin muxing is responsible of the application */
+#endif
+
+#ifndef McuSWO_CONFIG_DO_CLOCKING
+  #define McuSWO_CONFIG_DO_CLOCKING    (1)
+    /*! if SWO clocking shall be configured inside McuSWO_Init(). Otherwise pin muxing is responsible of the application */
+#endif
+
+#ifndef McuSWO_CONFIG_DO_SWO_INIT
+  #define McuSWO_CONFIG_DO_SWO_INIT    (1)
+    /*! if SWO/ITM device shall be initialized inside McuSWO_Init(). Otherwise it needs to be done in the application or in the debugger. */
 #endif
 
 #ifndef McuSWO_CONFIG_PC_SAMPLING
