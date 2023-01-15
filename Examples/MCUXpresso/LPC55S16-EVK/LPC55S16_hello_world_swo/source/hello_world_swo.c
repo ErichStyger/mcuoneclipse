@@ -11,6 +11,7 @@
 #include "board.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #if defined(FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER) && FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER
 #include "fsl_syscon.h"
 #else
@@ -106,6 +107,7 @@ int main(void) {
     }
   }
   while (1) {
+    printf("swo hello!\n");
     if (g_userPress) {
       DbgConsole_Printf("SWO: hello_world\r\n");
       g_userPress = false;
