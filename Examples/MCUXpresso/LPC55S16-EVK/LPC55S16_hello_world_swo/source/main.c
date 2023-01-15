@@ -19,6 +19,10 @@
 #endif /* FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER */
 #include "fsl_pint.h"
 #include "fsl_power.h"
+
+#include "platform.h"
+#include "McuWait.h"
+
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -29,39 +33,6 @@
  * Prototypes
  ******************************************************************************/
 void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate);
-/*******************************************************************************
- * Variables
- ******************************************************************************/
-static volatile bool g_userPress = false;
-//static volatile bool g_timeOut = false;
-//static volatile uint32_t g_systickCounter = 1000U;
-
-void pint_intr_callback(pint_pin_int_t pintr, uint32_t pmatch_status) {
-  g_userPress = true;
-}
-
-void BOARD_InitKey(void) {
-#if defined(FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER) && FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER
-  /* Connect trigger sources to PINT */
-  SYSCON_AttachSignal(SYSCON, kPINT_PinInt0, kINPUTMUX_GpioPort0Pin5ToPintsel);
-#else
-  /* Connect trigger sources to PINT */
-  INPUTMUX_Init(INPUTMUX);
-  INPUTMUX_AttachSignal(INPUTMUX, kPINT_PinInt0, kINPUTMUX_GpioPort0Pin5ToPintsel);
-  /* Turnoff clock to inputmux to save power. Clock is only needed to make changes */
-  INPUTMUX_Deinit(INPUTMUX);
-#endif /* FSL_FEATURE_SYSCON_HAS_PINT_SEL_REGISTER */
-
-  /* Initialize PINT */
-  PINT_Init(PINT);
-
-  /* Setup Pin Interrupt 0 for rising edge */
-  PINT_PinInterruptConfig(PINT, kPINT_PinInt0, kPINT_PinIntEnableRiseEdge, pint_intr_callback);
-
-  /* Enable callbacks for PINT */
-  PINT_EnableCallback(PINT);
-}
-
 
 void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate) {
   SystemCoreClockUpdate();
@@ -69,17 +40,6 @@ void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate) {
 
   DbgConsole_Init(port, baudrate, kSerialPort_Swo, clkSrcFreq);
 }
-
-#if 0
-void SysTick_Handler(void) {
-  if (g_systickCounter != 0U) {
-    g_systickCounter--;
-  } else {
-    g_systickCounter = 1000U;
-    g_timeOut = true;
-  }
-}
-#endif
 
 int main(void) {
   /* Init board hardware. */
@@ -96,30 +56,12 @@ int main(void) {
   CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
 
   BOARD_InitDebugConsole();
-  BOARD_InitKey();
   BOARD_InitDebugConsoleSWO(DEMO_DEBUG_CONSOLE_SWO_PORT, DEMO_DEBUG_CONSOLE_SWO_BAUDRATE);
 
-#if 0
-  /* Set systick reload value to generate 1ms interrupt */
-  if (SysTick_Config(SystemCoreClock / 1000U)) {
-    while (1) {
-    }
-  }
-#endif
-  while (1) {
+  PL_Init();
+
+  for(;;) {
     printf("swo hello!\n");
-    for (volatile int i=0; i<1000000; i++) {
-      __asm("nop");
-    }
-#if 0
-    if (g_userPress) {
-      DbgConsole_Printf("SWO: hello_world\r\n");
-      g_userPress = false;
-    }
-    if (g_timeOut) {
-      DbgConsole_Printf("SWO: timer_trigger\r\n");
-      g_timeOut = false;
-    }
-#endif
+    McuWait_Waitms(1000);
   }
 }
