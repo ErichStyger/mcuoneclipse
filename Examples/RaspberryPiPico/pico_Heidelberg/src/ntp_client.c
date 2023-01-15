@@ -20,25 +20,23 @@
 #include "McuTimeDate.h"
 #include "dns_resolver.h"
 
-static TaskHandle_t taskHandle;
+static TaskHandle_t taskHandle; /* task handle of ntp task */
 
-typedef struct NTP_T_ {
-  DnsResolver_info_t addr; /* DNS resolved address information of DNS server */
-  bool ntp_request_sent;
+typedef struct ntp_desc_t {
+  DnsResolver_info_t addr;       /* DNS resolved address information of DNS server */
   struct udp_pcb *ntp_pcb;       /* UDP protocol block */
-  absolute_time_t ntp_test_time; /* time stamp in ms for the next ntp request */
-  alarm_id_t ntp_resend_alarm;
-} NTP_T;
+  alarm_id_t ntp_timeout_alarm;   /* timeout alarm id, zero if no timeout is running */
+} ntp_desc_t;
 
-#define NTP_SERVER        "pool.ntp.org"
-#define NTP_MSG_LEN       48
-#define NTP_PORT          123   /* ntp udp port number */
-#define NTP_DELTA         2208988800  /* seconds between 1 Jan 1900 and 1 Jan 1970 */
-#define NTP_TEST_TIME     (30 * 1000)
-#define NTP_RESEND_TIME   (10 * 1000)
+#define NTP_SERVER          "pool.ntp.org"  /* ntp server name */
+#define NTP_MSG_LEN         48
+#define NTP_PORT            123             /* ntp udp port number */
+#define NTP_DELTA           2208988800      /* seconds between 1 Jan 1900 and 1 Jan 1970 */
+#define NTP_PERIOD_TIME_MS  (30*60*1000)    /* period in ms between ntp requests */
+#define NTP_TIMEOUT_TIME_MS (10*1000)       /* timeout time in ms if there is no ntp response */
 
 /* Called with results of operation */
-static void ntp_result(NTP_T *state, int status, time_t *result) {
+static void ntp_result(ntp_desc_t *state, int status, time_t *result) {
   if (status == 0 && result!=NULL) {
     struct tm *utc = gmtime(result);
     McuLog_info("got ntp response: %02d/%02d/%04d %02d:%02d:%02d",
@@ -47,16 +45,14 @@ static void ntp_result(NTP_T *state, int status, time_t *result) {
     McuTimeDate_SetDate(utc->tm_year+1900, utc->tm_mon+1, utc->tm_mday);
     McuTimeDate_SetTime(utc->tm_hour, utc->tm_min, utc->tm_sec, 0);
   }
-  if (state->ntp_resend_alarm > 0) {
-    cancel_alarm(state->ntp_resend_alarm);
-    state->ntp_resend_alarm = 0;
+  if (state->ntp_timeout_alarm > 0) { /* cancel timeout pending alarm, as we have received a response */
+    cancel_alarm(state->ntp_timeout_alarm);
+    state->ntp_timeout_alarm = 0;
   }
-  state->ntp_test_time = make_timeout_time_ms(NTP_TEST_TIME); /* create new time stamp for the next ntp request */
-  state->ntp_request_sent = false; /* reset flag */
 }
 
-/* Make an NTP request */
-static void ntp_request(NTP_T *state) {
+/* send an UDP NTP request message */
+static void ntp_request(ntp_desc_t *state) {
   // cyw43_arch_lwip_begin/end should be used around calls into lwIP to ensure correct locking.
   // You can omit them if you are in a callback from lwIP. Note that when using pico_cyw_arch_poll
   // these calls are a no-op and can be omitted, but it is a good practice to use them in
@@ -72,16 +68,16 @@ static void ntp_request(NTP_T *state) {
 }
 
 /* alarm callback handler */
-static int64_t ntp_failed_handler(alarm_id_t id, void *user_data) {
-  NTP_T* state = (NTP_T*)user_data;
-  McuLog_error("ntp request failed");
+static int64_t ntp_timeout_handler(alarm_id_t id, void *user_data) {
+  ntp_desc_t *state = (ntp_desc_t*)user_data;
+  McuLog_error("ntp request timeout");
   ntp_result(state, -1, NULL); /* abort */
   return 0;
 }
 
 /* lwIP callback for NTP data received */
 static void ntp_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t *addr, u16_t port) {
-  NTP_T *state = (NTP_T*)arg;
+  ntp_desc_t *state = (ntp_desc_t*)arg;
   uint8_t mode = pbuf_get_at(p, 0) & 0x7;
   uint8_t stratum = pbuf_get_at(p, 1);
 
@@ -100,50 +96,43 @@ static void ntp_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
   pbuf_free(p);
 }
 
-/* Perform initialization and send udp request */
-static NTP_T *ntp_init(void) {
-  NTP_T *state = calloc(1, sizeof(NTP_T));
-  if (!state) {
-    McuLog_error("failed to allocate state");
-    return NULL;
+static int ntp_init(ntp_desc_t *ntp_state) {
+  memset(ntp_state, 0, sizeof(ntp_desc_t));
+  ntp_state->ntp_pcb = udp_new_ip_type(IPADDR_TYPE_ANY); /* setup udp protocol block */
+  if (!ntp_state->ntp_pcb) {
+    McuLog_error("failed to create udp pcb");
+    return -1; /* failed */
   }
-  state->ntp_pcb = udp_new_ip_type(IPADDR_TYPE_ANY);
-  if (!state->ntp_pcb) {
-    McuLog_error("failed to create pcb");
-    free(state);
-    return NULL;
-  }
-  udp_recv(state->ntp_pcb, ntp_recv, state);
-  return state;
+  udp_recv(ntp_state->ntp_pcb, ntp_recv, ntp_state); /* set receive callback */
+  return 0; /* ok */
 }
 
 static void ntpTask(void *pv) {
-  vTaskSuspend(NULL); /* will be resumed by WiFi task */
+  ntp_desc_t ntp_state;
 
-  NTP_T *state = ntp_init();
-  if (!state) {
+  vTaskSuspend(NULL); /* will be resumed by WiFi task */
+  if (ntp_init(&ntp_state)!=0) {
     McuLog_fatal("failed initializing ntp");
     for(;;) {
       vTaskSuspend(NULL);
     }
   }
-  state->ntp_request_sent = false; /* reset flag */
+  /* resolve NTP server name */
+  while (DnsResolver_ResolveName(NTP_SERVER, &ntp_state.addr, 5*1000)!=0) {
+    McuLog_error("dns request for '%s' failed", NTP_SERVER);
+    vTaskDelay(pdMS_TO_TICKS(30*1000));
+  } /* retry until success */
   for(;;) {
-    if (   absolute_time_diff_us(get_absolute_time(), state->ntp_test_time) < 0 /* time elapsed for a new ntp request? */
-        && !state->ntp_request_sent) {
-      /* Set alarm in case udp requests are lost */
-      state->ntp_resend_alarm = add_alarm_in_ms(NTP_RESEND_TIME, ntp_failed_handler, state, true);
-      if (DnsResolver_ResolveName(NTP_SERVER, &state->addr, 5*1000)!=0) {
-        McuLog_error("dns request for '%s' failed", NTP_SERVER);
-        ntp_result(state, -1, NULL); /* abort */
-      } else {
-        state->ntp_request_sent = true;
-        ntp_request(state);
-      }
-    }
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    do {
+      /* Set timeout alarm in case udp requests are lost */
+      ntp_state.ntp_timeout_alarm = add_alarm_in_ms(NTP_TIMEOUT_TIME, ntp_timeout_handler, &ntp_state, true);
+      ntp_request(&ntp_state);
+      do {
+        vTaskDelay(pdMS_TO_TICKS(100)); /* wait for response or timeout */
+      } while (ntp_state.ntp_timeout_alarm>0); /* request still going on, timeout not expired? */
+    } while (ntp_state.ntp_timeout_alarm>0); /* retry */
+    vTaskDelay(pdMS_TO_TICKS(NTP_TEST_TIME)); /* delay until next ntp request */
   }
-  free(state);
 }
 
 void NtpClient_TaskResume(void) {
