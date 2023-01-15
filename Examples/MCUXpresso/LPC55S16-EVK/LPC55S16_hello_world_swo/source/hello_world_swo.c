@@ -33,8 +33,8 @@ void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate);
  * Variables
  ******************************************************************************/
 static volatile bool g_userPress = false;
-static volatile bool g_timeOut = false;
-static volatile uint32_t g_systickCounter = 1000U;
+//static volatile bool g_timeOut = false;
+//static volatile uint32_t g_systickCounter = 1000U;
 
 void pint_intr_callback(pint_pin_int_t pintr, uint32_t pmatch_status) {
   g_userPress = true;
@@ -70,6 +70,7 @@ void BOARD_InitDebugConsoleSWO(uint32_t port, uint32_t baudrate) {
   DbgConsole_Init(port, baudrate, kSerialPort_Swo, clkSrcFreq);
 }
 
+#if 0
 void SysTick_Handler(void) {
   if (g_systickCounter != 0U) {
     g_systickCounter--;
@@ -78,18 +79,15 @@ void SysTick_Handler(void) {
     g_timeOut = true;
   }
 }
+#endif
 
-/*!
- * @brief Main function
- */
 int main(void) {
   /* Init board hardware. */
   /* set BOD VBAT level to 1.65V */
   POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
   /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
   CLOCK_AttachClk(BOARD_DEBUG_UART_CLK_ATTACH);
-  /*!< Switch TRACE to TRACE_DIV */
-  CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
+  CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
 
   BOARD_InitBootPins();
   BOARD_BootClockFROHF96M();
@@ -101,13 +99,19 @@ int main(void) {
   BOARD_InitKey();
   BOARD_InitDebugConsoleSWO(DEMO_DEBUG_CONSOLE_SWO_PORT, DEMO_DEBUG_CONSOLE_SWO_BAUDRATE);
 
+#if 0
   /* Set systick reload value to generate 1ms interrupt */
   if (SysTick_Config(SystemCoreClock / 1000U)) {
     while (1) {
     }
   }
+#endif
   while (1) {
     printf("swo hello!\n");
+    for (volatile int i=0; i<1000000; i++) {
+      __asm("nop");
+    }
+#if 0
     if (g_userPress) {
       DbgConsole_Printf("SWO: hello_world\r\n");
       g_userPress = false;
@@ -116,5 +120,6 @@ int main(void) {
       DbgConsole_Printf("SWO: timer_trigger\r\n");
       g_timeOut = false;
     }
+#endif
   }
 }
