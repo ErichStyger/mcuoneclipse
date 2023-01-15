@@ -7,6 +7,7 @@ For UART over the (J-Link or LinkServer) Debug virtual COM port:
 - PL_CONFIG_USE_SWO
   Start the J-Link SWO viewer in 'attach mode' on port 0:
   JLinkSWOViewerCL -swoattach on -swofreq 64000 -device LPC55S16 -itmport 0x0
+  Match the swofreq to the baud configured for SWO.
   
 
 Notes:

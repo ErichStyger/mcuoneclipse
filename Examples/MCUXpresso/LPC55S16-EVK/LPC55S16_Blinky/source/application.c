@@ -124,7 +124,7 @@ void APP_Run(void) {
   PL_Init(); /* init modules */
 
   for(int i=0;i<2;i++) {
-//  for(;;) {
+  for(;;) {
 #if PL_CONFIG_USE_SWO
     McuSWO_SendStr((unsigned char*)"Hello World using ITM console.\n");
 #endif
@@ -147,6 +147,7 @@ void APP_Run(void) {
       LEDS_Off(LEDS_RED);
     }
 #endif
+  }
   } /* for */
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
