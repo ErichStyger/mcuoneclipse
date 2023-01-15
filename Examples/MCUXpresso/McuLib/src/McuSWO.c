@@ -326,27 +326,18 @@ static void Init(uint32_t traceClockHz, uint32_t SWOSpeed, uint32_t port) {
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
 #endif
 #if McuSWO_CONFIG_DO_SWO_INIT
-#if 1 /* serial manager init */
+#if 1 /* new initialization */
   CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk;
   if ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk) == 0U) {
     assert(false);
   }
-  /* Lock access */
-  ITM->LAR = 0xC5ACCE55U;
-  /* Disable ITM */
-  ITM->TER &= ~(1UL << port); /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
-  ITM->TCR = 0U;
-  /* select SWO encoding protocol */
-  //TPI->SPPR = (uint32_t)swoConfig->protocol;
+  ITM->LAR = 0xC5ACCE55U; /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
+  ITM->TER &= ~(1UL << port); /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. Disable it */
+  ITM->TCR = 0U; /* ITM Trace Control Register */
   TPI->SPPR = 0x2; /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ (UART), 1: SWO Manchester encoding) */
-
-  /* select asynchronous clock prescaler */
-  //TPI->ACPR = prescaler & 0xFFFFU;
-  SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate */
-
+  SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate with prescaler */
   ITM->TPR = 0U; /* allow unprivileged access */
-  /* enable ITM */
-  ITM->TCR = ITM_TCR_ITMENA_Msk | ITM_TCR_SYNCENA_Msk
+  ITM->TCR = ITM_TCR_ITMENA_Msk | ITM_TCR_SYNCENA_Msk /* enable ITM */
   #ifdef ITM_TCR_TraceBusID_Msk
              | ITM_TCR_TraceBusID_Msk
   #elif defined(ITM_TCR_TRACEBUSID_Msk)
