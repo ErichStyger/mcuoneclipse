@@ -5,8 +5,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "fsl_device_registers.h"
-#include "fsl_debug_console.h"
 #include "pin_mux.h"
 #include "board.h"
 
@@ -32,7 +30,7 @@ int main(void) {
   PL_Init();
   McuSWO_SendStr("Application using SWO\n");
   for(;;) {
-    //printf("swo hello!\n");
+    printf("swo hello from printf!\n");
     McuSWO_SendStr("test\n");
     McuWait_Waitms(1000);
   }

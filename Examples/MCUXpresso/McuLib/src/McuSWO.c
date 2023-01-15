@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Erich Styger
+ * Copyright (c) 2021-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -14,42 +14,82 @@
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
-/*!
- * \brief Sends a character over the SWO channel
- * \param c Character to be sent
- * \param portNo SWO channel number, value in the range of 0 to 31
- */
-void SWO_PrintChar(char c, uint8_t portNo) {
+static bool SWO_WriteChar(char c, uint8_t portNo) {
   volatile int timeout;
 
-  /* Check if Trace Control Register (ITM->TCR at 0xE0000E80) is set */
-  if ((ITM->TCR&ITM_TCR_ITMENA_Msk) == 0) { /* check Trace Control Register if ITM trace is enabled*/
-    return; /* not enabled? */
-  }
-  /* Check if the requested channel stimulus port (ITM->TER at 0xE0000E00) is enabled */
-  if ((ITM->TER & (1ul<<portNo))==0) { /* check Trace Enable Register if requested port is enabled */
-    return; /* requested port not enabled? */
-  }
   timeout = 5000; /* arbitrary timeout value */
   while (ITM->PORT[portNo].u32 == 0) {
     /* Wait until STIMx is ready, then send data */
     timeout--;
     if (timeout==0) {
-      return; /* not able to send */
+      return false; /* not able to send */
     }
   }
   ITM->PORT[portNo].u8 = c;
+  return true;
 }
+
+static void SWO_WriteBuf(char *buf, size_t count, uint8_t portNo) {
+  while(count>0) {
+    SWO_WriteChar(*buf, portNo);
+    buf++;
+    count--;
+  }
+}
+
+static bool SWO_Enabled(uint8_t portNo) {
+  /* Check if Trace Control Register (ITM->TCR at 0xE0000E80) is set */
+  if ((ITM->TCR&ITM_TCR_ITMENA_Msk) == 0) { /* check Trace Control Register if ITM trace is enabled*/
+    return false; /* not enabled? */
+  }
+  /* Check if the requested channel stimulus port (ITM->TER at 0xE0000E00) is enabled */
+  if ((ITM->TER & (1ul<<portNo))==0) { /* check Trace Enable Register if requested port is enabled */
+    return false; /* requested port not enabled? */
+  }
+  return true;
+}
+
+/*!
+ * \brief Sends a character over the SWO channel
+ * \param c Character to be sent
+ * \param portNo SWO channel number, value in the range of 0 to 31
+ */
+void McuSWO_PrintChar(char c, uint8_t portNo) {
+  if (!SWO_Enabled(portNo)) {
+    return;
+  }
+  (void)SWO_WriteChar(c, portNo);
+}
+
+#if McuSWO_CONFIG_RETARGET_STDOUT
+/* retarget low level stdout write routines to SWO */
+#if defined (__REDLIB__) /* low level functions depend on library used */
+int __sys_write(int fd, char *buffer, int count) {
+#elif defined (__NEWLIB__)
+int _write(int fd, char *buffer, unsigned int count) {
+#endif
+  int32_t i;
+
+  if(fd!=1) { /* 1 is stdout */
+    return -1; /* failed */
+  }
+  if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
+    return -1; /* failed */
+  }
+  SWO_WriteBuf(buffer, count, McuSWO_CONFIG_TERMINAL_CHANNEL);
+  return count; /* return the number of chars written */
+}
+#endif /* McuSWO_CONFIG_RETARGET_STDOUT */
 
 /*!
  * \brief Sends a string over SWO to the host
  * \param s String to send
  * \param portNumber Port number, 0-31, use 0 for normal debug strings
  */
-void PrintString(const unsigned char *s, uint8_t portNumber) {
+static void PrintString(const unsigned char *s, uint8_t portNumber) {
   while (*s!='\0') {
-    //SWO_PrintChar(*s++, portNumber);
-    ITM_SendChar(*s++);
+    McuSWO_PrintChar(*s++, portNumber);
+    //ITM_SendChar(*s++); /* CMSIS version, does no support port number */
   }
 }
 
