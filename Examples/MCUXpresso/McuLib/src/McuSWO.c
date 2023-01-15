@@ -10,6 +10,7 @@
 #include "McuShell.h"
 #include "board.h"
 #include "pin_mux.h"
+#include <assert.h>
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
@@ -310,7 +311,7 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
  * \param portBits Port bit mask to be configured
  * \param cpuCoreFreqHz CPU core clock frequency in Hz
  */
-static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
+static void Init(uint32_t traceClockHz, uint32_t SWOSpeed, uint32_t port) {
 #if McuSWO_CONFIG_DO_MUXING
   /* Enables the clock for the I/O controller: Enable Clock. */
   MuxSWOPin();
@@ -325,37 +326,71 @@ static void Init(uint32_t portBits, uint32_t traceClockHz, uint32_t SWOSpeed) {
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
 #endif
 #if McuSWO_CONFIG_DO_SWO_INIT
-  CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk; /* enable trace in core debug */
+#if 1 /* serial manager init */
+  CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk;
+  if ((CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk) == 0U) {
+    assert(false);
+  }
+  /* Lock access */
+  ITM->LAR = 0xC5ACCE55U;
+  /* Disable ITM */
+  ITM->TER &= ~(1UL << port); /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
+  ITM->TCR = 0U;
+  /* select SWO encoding protocol */
+  //TPI->SPPR = (uint32_t)swoConfig->protocol;
   TPI->SPPR = 0x2; /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ (UART), 1: SWO Manchester encoding) */
+
+  /* select asynchronous clock prescaler */
+  //TPI->ACPR = prescaler & 0xFFFFU;
   SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate */
-  ITM->LAR = 0xC5ACCE55; /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
-  /* enable trace with the TCR: this includes DWT and ITM packets to be sent */
-  ITM->TCR = ITM_TCR_DWTENA_Msk | ITM_TCR_ITMENA_Msk | ITM_TCR_TRACEBUSID_Msk | ITM_TCR_SWOENA_Msk | ITM_TCR_SYNCENA_Msk; /* ITM Trace Control Register */
-  ITM->TPR = ITM_TPR_PRIVMASK_Msk; /* ITM Trace Privilege Register */
-  ITM->TER = portBits; /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
-  DWT->CTRL = /* see https://interrupt.memfault.com/blog/profiling-firmware-on-cortex-m#enabling-pc-sampling-with-itm-and-openocd */
-          (  4<<DWT_CTRL_NUMCOMP_Pos)    /* 4 bits */
-#if McuSWO_CONFIG_PC_SAMPLING
-        | (  1<<DWT_CTRL_PCSAMPLENA_Pos) /* 1 bit: enable PC sampling */
+
+  ITM->TPR = 0U; /* allow unprivileged access */
+  /* enable ITM */
+  ITM->TCR = ITM_TCR_ITMENA_Msk | ITM_TCR_SYNCENA_Msk
+  #ifdef ITM_TCR_TraceBusID_Msk
+             | ITM_TCR_TraceBusID_Msk
+  #elif defined(ITM_TCR_TRACEBUSID_Msk)
+             | ITM_TCR_TRACEBUSID_Msk
+  #endif
+             | ITM_TCR_SWOENA_Msk | ITM_TCR_DWTENA_Msk;
+  ITM->TER = 1UL << port; /* enable the port bits */
+#else /* old */
+    CoreDebug->DEMCR = CoreDebug_DEMCR_TRCENA_Msk; /* enable trace in core debug */
+    TPI->SPPR = 0x2; /* "Selected PIN Protocol Register": Select which protocol to use for trace output (2: SWO NRZ (UART), 1: SWO Manchester encoding) */
+    SetSWOSpeed(traceClockHz, SWOSpeed); /* set baud rate */
+    ITM->LAR = 0xC5ACCE55; /* ITM Lock Access Register, C5ACCE55 enables more write access to Control Register 0xE00 :: 0xFFC */
+    /* enable trace with the TCR: this includes DWT and ITM packets to be sent */
+    ITM->TCR = ITM_TCR_DWTENA_Msk | ITM_TCR_ITMENA_Msk | ITM_TCR_TRACEBUSID_Msk | ITM_TCR_SWOENA_Msk | ITM_TCR_SYNCENA_Msk; /* ITM Trace Control Register */
+    ITM->TPR = ITM_TPR_PRIVMASK_Msk; /* ITM Trace Privilege Register */
+    ITM->TER = portBits; /* ITM Trace Enable Register. Enabled tracing on stimulus ports. One bit per stimulus port. */
+    DWT->CTRL = /* see https://interrupt.memfault.com/blog/profiling-firmware-on-cortex-m#enabling-pc-sampling-with-itm-and-openocd */
+            (  4<<DWT_CTRL_NUMCOMP_Pos)    /* 4 bits */
+  #if McuSWO_CONFIG_PC_SAMPLING
+          | (  1<<DWT_CTRL_PCSAMPLENA_Pos) /* 1 bit: enable PC sampling */
+  #endif
+          | (  0<<DWT_CTRL_SYNCTAP_Pos)    /* 2 bits */
+          | (  1<<DWT_CTRL_CYCTAP_Pos)     /* 1 bits: This selects which bit in the cycle counter is used to trigger PC sampling events. A 1 selects bit 10 to tap, a 0 selects bit 6 to tap. */
+          | (0xF<<DWT_CTRL_POSTINIT_Pos)   /* 4 bits */
+          | (0xF<<DWT_CTRL_POSTPRESET_Pos) /* 4 bits: These bits control how many times the time bit must toggle before a PC sample event is generated. */
+  #if McuWait_CONFIG_USE_CYCLE_COUNTER || McuSWO_CONFIG_PC_SAMPLING
+          | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
+  #endif
+      ;
+    TPI->FFCR = (1<<TPI_FFCR_TrigIn_Pos); /* Formatter and Flush Control Register */
 #endif
-        | (  0<<DWT_CTRL_SYNCTAP_Pos)    /* 2 bits */
-        | (  1<<DWT_CTRL_CYCTAP_Pos)     /* 1 bits: This selects which bit in the cycle counter is used to trigger PC sampling events. A 1 selects bit 10 to tap, a 0 selects bit 6 to tap. */
-        | (0xF<<DWT_CTRL_POSTINIT_Pos)   /* 4 bits */
-        | (0xF<<DWT_CTRL_POSTPRESET_Pos) /* 4 bits: These bits control how many times the time bit must toggle before a PC sample event is generated. */
-#if McuWait_CONFIG_USE_CYCLE_COUNTER || McuSWO_CONFIG_PC_SAMPLING
-        | (  1<<DWT_CTRL_CYCCNTENA_Pos)  /* 1 bit: enable CYCCNT which is required for PC sampling */
-#endif
-    ;
-  TPI->FFCR = (1<<TPI_FFCR_TrigIn_Pos); /* Formatter and Flush Control Register */
 #endif /* McuSWO_CONFIG_DO_SWO_INIT */
 }
 
 void McuSWO_ChangeSpeed(uint32_t baud) {
+  SystemCoreClockUpdate();
+  SWO_traceClock = SystemCoreClock; /* store new speed */
+  assert(baud<=SWO_traceClock);
   SetSWOSpeed(SWO_traceClock, baud);
 }
 
 void McuSWO_Init(void) {
+  SystemCoreClockUpdate();
   SWO_traceClock = SystemCoreClock; /* just the default! */
-  Init(1, SWO_traceClock, McuSWO_CONFIG_SPEED_BAUD);
+  Init(SWO_traceClock, McuSWO_CONFIG_SPEED_BAUD, McuSWO_CONFIG_TERMINAL_CHANNEL);
 }
 #endif /* McuSWO_CONFIG_HAS_SWO */

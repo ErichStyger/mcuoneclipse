@@ -58,14 +58,17 @@ int main(void) {
 
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
 
+#if !McuSWO_CONFIG_DO_MUXING
   BOARD_InitBootPins();
+#endif
   BOARD_BootClockFROHF96M();
   CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 2U, false);          /* Set AHBCLKDIV divider to value 2 */
   CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
-
+#if !McuSWO_CONFIG_DO_SWO_INIT
   BOARD_InitDebugConsoleSWO(McuSWO_CONFIG_TERMINAL_CHANNEL, McuSWO_CONFIG_SPEED_BAUD);
-
+#endif
   PL_Init();
+  McuSWO_SendStr("Application using SWO\n");
 #endif
   for(;;) {
     //printf("swo hello!\n");
