@@ -176,4 +176,3 @@
 #else
   #define McuUart485_CONFIG_UART_BAUDRATE      (115200)
 #endif
-
