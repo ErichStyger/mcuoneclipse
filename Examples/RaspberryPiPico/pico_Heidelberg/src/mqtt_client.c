@@ -51,7 +51,7 @@ typedef enum topic_ID_e {
 #define MQTT_DEFAULT_PASS     "password"
 
 typedef struct mqtt_t {
-  ip_addr_t mqtt_broker_address;    /* broker lwip address, resolved by DNS if hostname is used */
+  DnsResolver_info_t addr;      /* broker lwip address, resolved by DNS if hostname is used */
   unsigned char broker[32];         /* broker IP or hostname string. For hostname, DNS will be used */
   unsigned char client_id[32];      /* client ID used for connection */
   unsigned char client_user[32];    /* client user name used for connection */
@@ -242,7 +242,7 @@ void MqttClient_Connect(void) {
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
 #endif
 
-  if (DnsResolver_ResolveName(mqtt.broker, &mqtt.mqtt_broker_address, 1000)!=0) {
+  if (DnsResolver_ResolveName(mqtt.broker, &mqtt.addr, 1000)!=0) {
     McuLog_error("failed to resolve broker name %s", mqtt.broker);
     return;
   }
@@ -255,7 +255,7 @@ void MqttClient_Connect(void) {
   cyw43_arch_lwip_begin();
   mqtt_client_connect(
       mqtt_client,
-      &mqtt.mqtt_broker_address,
+      &mqtt.addr.resolved_addr,
       MQTT_PORT,
       mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
       &mqtt_client_info);
