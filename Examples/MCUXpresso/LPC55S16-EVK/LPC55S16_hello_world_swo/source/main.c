@@ -64,6 +64,8 @@ int main(void) {
   CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
 
   BOARD_InitDebugConsoleSWO(McuSWO_CONFIG_TERMINAL_CHANNEL, McuSWO_CONFIG_SPEED_BAUD);
+
+  PL_Init();
 #endif
   for(;;) {
     //printf("swo hello!\n");
