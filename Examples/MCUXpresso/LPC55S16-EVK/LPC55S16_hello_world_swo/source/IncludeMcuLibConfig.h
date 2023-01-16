@@ -46,8 +46,8 @@
 #define McuSWO_CONFIG_DO_MUXING         (1) /* muxing is done with pins tool */
 #define McuSWO_CONFIG_DO_CLOCKING       (0) /* clock settings are done by the application */
 #define McuSWO_CONFIG_DO_SWO_INIT       (1) /* SWO configuration is done by the debugger */
-#define McuSWO_CONFIG_RETARGET_STDIN    (1) /* stdin, printf */
-#define McuSWO_CONFIG_RETARGET_STDOUT   (1) /* stdout, scanf */
+#define McuSWO_CONFIG_RETARGET_STDIN    (1) /* stdin, scanf */
+#define McuSWO_CONFIG_RETARGET_STDOUT   (1) /* stdout, printf */
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
