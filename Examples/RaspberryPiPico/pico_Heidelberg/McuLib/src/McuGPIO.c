@@ -176,13 +176,13 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
     pin->isHigh = isHighOnInit;
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
+  if (!isInput) { /* set output level first */
+    gpio_put(pin->hw.pin, isHighOnInit); /* set initial logic level */
+  }
   if (isInput) {
     gpio_set_dir(pin->hw.pin, GPIO_IN);
   } else {
     gpio_set_dir(pin->hw.pin, GPIO_OUT);
-  }
-  if (!isInput) {
-    gpio_put(pin->hw.pin, isHighOnInit); /* set initial logic level */
   }
 #endif
 }

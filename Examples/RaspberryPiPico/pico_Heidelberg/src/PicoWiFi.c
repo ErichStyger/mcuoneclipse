@@ -48,11 +48,13 @@ static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
 #define WIFI_DEFAULT_PASS       "password"
 
 static struct wifi {
-  bool isConnected;
   bool isInitialized;
+  bool isConnected;
+#if PL_CONFIG_USE_WIFI
   unsigned char hostname[32];
   unsigned char ssid[32];
   unsigned char pass[64];
+#endif
 } wifi;
 
 static uint8_t GetMAC(uint8_t mac[6], uint8_t *macStr, size_t macStrSize) {
@@ -100,6 +102,7 @@ static void WiFiTask(void *pv) {
     for(;;) {}
   }
   wifi.isInitialized = true;
+#if PL_CONFIG_USE_WIFI
   McuLog_info("enabling STA mode");
   cyw43_arch_enable_sta_mode();
 #if PL_CONFIG_USE_MINI
@@ -142,6 +145,14 @@ static void WiFiTask(void *pv) {
       vTaskDelay(pdMS_TO_TICKS(50));
     }
   }
+#else /* not using WiFi */
+  for(;;) {
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
+    ledIsOn = !ledIsOn;
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  vTaskDelete(NULL);
+#endif
 }
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
@@ -152,7 +163,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
 
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
   McuShell_SendStatusStr((uint8_t*)"  connected", wifi.isConnected?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
-
+#if PL_CONFIG_USE_WIFI
   McuUtility_strcpy(buf, sizeof(buf), wifi.ssid);
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  SSID", buf, io->stdOut);
@@ -170,14 +181,14 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
     }
   }
   McuShell_SendStatusStr((uint8_t*)"  link", buf, io->stdOut);
-
+#endif
   if (GetMAC(mac, macStr, sizeof(macStr))==ERR_OK) {
     McuUtility_strcat(macStr, sizeof(macStr), "\r\n");
   } else {
     McuUtility_strcpy(macStr, sizeof(macStr), "ERROR\r\n");
   }
   McuShell_SendStatusStr((uint8_t*)"  MAC", macStr, io->stdOut);
-
+#if PL_CONFIG_USE_WIFI
   McuUtility_strcpy(buf, sizeof(buf), ip4addr_ntoa(netif_ip4_addr(netif_list)));
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  IP", buf, io->stdOut);
@@ -185,7 +196,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcpy(buf, sizeof(buf), netif_get_hostname(&cyw43_state.netif[0]));
   McuUtility_strcat(buf, sizeof(buf), "\r\n");
   McuShell_SendStatusStr((uint8_t*)"  hostname", buf, io->stdOut);
-
+#endif
   return ERR_OK;
 }
 
@@ -237,4 +248,4 @@ void PicoWiFi_Init(void) {
   }
 }
 
-#endif /* PL_CONFIG_USE_PICO_W */
+#endif /* PL_CONFIG_USE_WIFI */

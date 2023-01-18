@@ -80,10 +80,10 @@ NEO_PixelColor NEO_BrightnessPercentColor(NEO_PixelColor color, uint8_t percent)
 #if NEOC_NOF_COLORS==4
   white = ((uint32_t)white*percent)/100;
 #endif
-#if NEOC_NOF_COLORS==3
-  color = (red<<16)|(green<<8)|blue;
-#elif NEOC_NOF_COLORS==4
+#if NEOC_NOF_COLORS==4
   color = (white<<24)|(red<<16)|(green<<8)|blue;
+#else
+  color = (red<<16)|(green<<8)|blue;
 #endif
   return color;
 }
@@ -105,10 +105,10 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
   white = ((uint32_t)white*factor)/255;
 #endif
 
-#if NEOC_NOF_COLORS==3
-  color = (red<<16)|(green<<8)|blue;
-#elif NEOC_NOF_COLORS==4
+#if NEOC_NOF_COLORS==4
   color = (white<<24)|(red<<16)|(green<<8)|blue;
+#else
+  color = (red<<16)|(green<<8)|blue;
 #endif
   return color;
 }

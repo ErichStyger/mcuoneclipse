@@ -20,8 +20,14 @@
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
 #endif
+#if PL_CONFIG_USE_LED_COUNTER_APP
+  #include "neoCounter.h"
+#endif
+#if PL_CONFIG_USE_LIGHTS
+  #include "lights.h"
+#endif
 #if McuFlash_CONFIG_IS_ENABLED
-  #include "McuFlash.h"
+  #include "MinINI/McuFlash.h"
 #endif
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
@@ -34,6 +40,9 @@
 #endif
 #if PL_CONFIG_USE_PICO_W
   #include "PicoWiFi.h"
+#endif
+#if PL_CONFIG_USE_EXT_FLASH
+  #include "McuW25Q128.h"
 #endif
 #if McuUart485_CONFIG_USE_RS_485
   #include "McuUart485.h"
@@ -112,12 +121,14 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   NEO_ParseCommand,
 #endif
-#if McuFlash_CONFIG_IS_ENABLED
-  McuFlash_ParseCommand,
+#if PL_CONFIG_USE_LIGHTS
+  Lights_ParseCommand,
 #endif
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ParseCommand,
-  ini_ParseCommand,
+#if PL_CONFIG_USE_EXT_FLASH
+  McuW25_ParseCommand,
+#endif
+#if PL_CONFIG_USE_LED_COUNTER_APP
+  NeoCounter_ParseCommand,
 #endif
 #if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
   McuUart485_ParseCommand,
@@ -128,6 +139,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
   McuModbus_ParseCommand,
   McuHeidelberg_ParseCommand,
+#endif
+#if McuFlash_CONFIG_IS_ENABLED
+  McuFlash_ParseCommand,
+#endif
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ParseCommand,
+  ini_ParseCommand,
 #endif
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,

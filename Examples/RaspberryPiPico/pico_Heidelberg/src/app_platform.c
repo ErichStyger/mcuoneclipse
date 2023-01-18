@@ -31,6 +31,12 @@
   #include "NeoPixel.h"
   #include "ws2812.h"
 #endif
+#if PL_CONFIG_USE_LED_COUNTER_APP
+  #include "neoCounter.h"
+#endif
+#if PL_CONFIG_USE_LIGHTS
+  #include "lights.h"
+#endif
 #if PL_CONFIG_USE_I2C
   #include "McuGenericSWI2C.h"
   #include "McuGenericI2C.h"
@@ -63,6 +69,10 @@
 #if PL_CONFIG_USE_NTP_CLIENT
   #include "ntp_client.h"
 #endif
+#if PL_CONFIG_USE_EXT_FLASH
+  #include "McuW25Q128.h"
+  #include "McuSPI.h"
+#endif
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server.h"
 #endif
@@ -84,9 +94,6 @@
 #endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
-#endif
-#if PL_CONFIG_USE_LIGHTS
-  #include "lights.h"
 #endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
@@ -142,6 +149,9 @@ void PL_Init(void) {
   BTN_Init();
   Debounce_Init();
 #endif
+#if PL_CONFIG_USE_LED_COUNTER_APP
+  NeoCounter_Init();
+#endif
 #if PL_CONFIG_USE_MINI
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
@@ -158,6 +168,10 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_MQTT_CLIENT
   MqttClient_Init();
+#endif
+#if PL_CONFIG_USE_EXT_FLASH
+  McuSPI_Init();
+  McuW25_Init();
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();

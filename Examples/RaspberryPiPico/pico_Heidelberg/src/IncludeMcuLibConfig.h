@@ -15,8 +15,7 @@
 #define PL_CONFIG_HW_VERSION_0_6    (6)  /* V0.6, EVCC January 2023 */
 
 /* active PCB/Hardware version */
-#define PL_CONFIG_HW_ACTIVE_HW_VERSION  (PL_CONFIG_HW_VERSION_0_1)
-
+#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)
 
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
@@ -35,7 +34,7 @@
 /* I2C */
 #define CONFIG_USE_HW_I2C                             (1) /* if using HW I2C, otherwise use software bit banging */
 #define CONFIG_USE_HW_RTC                             (0) /* if using external HW RTC */
-#if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+#if LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
   #define MCUI2CLIB_CONFIG_I2C_DEVICE       i2c0
   #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     12u
   #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     13u
@@ -112,6 +111,7 @@
 /* McuShell */
 #define McuShell_CONFIG_PROJECT_NAME_STRING         "picoCharger"
 #define McuShell_CONFIG_PROMPT_STRING               "pico> "
+#define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (128)
 /* ---------------------------------------------------------------------- */

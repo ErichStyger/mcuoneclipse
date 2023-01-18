@@ -172,7 +172,12 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   LWIP_UNUSED_ARG(client);
   err_t err;
 
+#if MQTT_EXTRA_LOGS
   McuLog_trace("MQTT client \"%s\" connection cb: status %d", client_info->client_id, (int)status);
+#endif
+  if (status!=MQTT_CONNECT_ACCEPTED) {
+    McuLog_error("MQTT client \"%s\" connection cb: FAILED status %d", client_info->client_id, (int)status);
+  }
 
   if (status == MQTT_CONNECT_ACCEPTED) {
     McuLog_trace("MQTT connect accepted");
