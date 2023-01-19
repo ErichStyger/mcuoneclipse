@@ -103,7 +103,7 @@ uint8_t McuI2cLib_SendStop(void) {
     return ERR_FAILED;
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
-  return ERR_FAILED; /* not implemented */
+  return ERR_OK; /* not implemented */
 #endif
   return ERR_OK;
 }
