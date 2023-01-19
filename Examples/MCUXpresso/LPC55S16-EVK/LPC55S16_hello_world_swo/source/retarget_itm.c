@@ -1,3 +1,4 @@
+#if 0
 //*****************************************************************************
 // retarget_itm.c - Provides retargeting of C library printf/scanf
 //                  functions via ITM / SWO Trace
@@ -44,6 +45,7 @@
 //volatile int32_t ITM_RxBuffer = ITM_RXBUFFER_EMPTY;
 extern volatile int32_t ITM_RxBuffer;
 
+#if 0
 // ******************************************************************
 // Redlib C Library function : __sys_write
 // Newlib C library function : _write
@@ -82,7 +84,9 @@ int _write(int iFileHandle, char *pcBuffer, int iLength) {
 		// Function returns number of unwritten bytes if error
 		return (iLength);
 }
+#endif
 
+#if 0
 #if defined (__REDLIB__)
 // ******************************************************************
 // Redlib C Library function : __sys_readc
@@ -166,4 +170,7 @@ int _read(int iFileHandle, char *pcBuffer, int iLength) {
 }
 
 #endif // NEWLIB _read()
+#endif
 
+
+#endif
