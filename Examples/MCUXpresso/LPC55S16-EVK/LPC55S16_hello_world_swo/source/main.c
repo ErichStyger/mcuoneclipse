@@ -22,11 +22,12 @@ static void SwoTest(void) {
 
   McuSWO_SendStr((unsigned char*)"Application using SWO\n"); /* stop with the debugger here and configure SWO */
   for(;;) {
+    putc('*', stdout);
+    putchar('!');
+    printf("Using printf() with SWO\n");
     McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
-	//printf("swo hello from printf!\n");
-	//printf("Please enter a key:\n");
-   // scanf("%c", &c);
-	//c = getc(stdin);
+    // scanf("%c", &c);
+    //c = getc(stdin);
     buf[0] = '\0'; /* init buffer */
     for(;;) { /* breaks */
     	if (McuSWO_StdIOKeyPressed()) {
@@ -39,12 +40,9 @@ static void SwoTest(void) {
     		}
     	}
     }
-	McuSWO_SendStr((unsigned char*)"Received: ");
-	McuSWO_SendStr(buf);
-
+	  McuSWO_SendStr((unsigned char*)"Received: ");
+	  McuSWO_SendStr(buf);
 	//printf("character entered:\n");
-	//putc(ch, stdout);
-	//McuWait_Waitms(100);
   }
 }
 
