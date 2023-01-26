@@ -19,15 +19,20 @@
 static void SwoTest(void) {
   unsigned char ch;
   unsigned char buf[64];
+  int c;
 
   McuSWO_SendStr((unsigned char*)"Application using SWO\n"); /* stop with the debugger here and configure SWO */
   for(;;) {
     putc('*', stdout);
+    putc('#', stderr);
     putchar('!');
     printf("Using printf() with SWO\n");
     McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
     // scanf("%c", &c);
-    //c = getc(stdin);
+    do {
+      c = getc(stdin);
+    } while(c==EOF);
+    printf("getc(): '%c'\n", c);
     buf[0] = '\0'; /* init buffer */
     for(;;) { /* breaks */
     	if (McuSWO_StdIOKeyPressed()) {
