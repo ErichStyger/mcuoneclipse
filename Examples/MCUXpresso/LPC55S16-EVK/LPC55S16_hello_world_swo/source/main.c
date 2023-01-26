@@ -49,18 +49,12 @@ static void SwoTest(void) {
 }
 
 int main(void) {
-  POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
-#if !McuSWO_CONFIG_DO_MUXING
+  POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false); /* required for LPC55Sxx, otherwise might generate brown-out reset */
+#if !McuSWO_CONFIG_DO_MUXING /* if Muxing will be done inside McuSWO_Init() */
   BOARD_InitBootPins();
 #endif
-#if 1  /* << if commented out, SWO configuration fails */
-  BOARD_BootClockFROHF96M();
-#endif
-//  CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 2U, false);          /* Set AHBCLKDIV divider to value 2 */
-//  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
-//  PL_Init();
-  McuSWO_Init();
-  CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
+  BOARD_BootClockFROHF96M(); /* Note: need this, otherwise debugger fails to configure SWO */
+  PL_Init(); /* initializes modules including SWO */
   SwoTest(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
   for(;;) {
 	  __asm("nop");
