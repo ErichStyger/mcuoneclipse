@@ -50,15 +50,16 @@ static void SwoTest(void) {
 
 int main(void) {
   POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
-//#if !McuSWO_CONFIG_DO_MUXING
+#if !McuSWO_CONFIG_DO_MUXING
   BOARD_InitBootPins();
-//#endif
+#endif
 #if 1  /* << if commented out, SWO configuration fails */
   BOARD_BootClockFROHF96M();
 #endif
 //  CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 2U, false);          /* Set AHBCLKDIV divider to value 2 */
 //  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 2U, false);     /* Set ARMTRCLKDIV divider to value 2 */
 //  PL_Init();
+  McuSWO_Init();
   CLOCK_AttachClk(kTRACE_DIV_to_TRACE); /*!< Switch TRACE to TRACE_DIV */
   SwoTest(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
   for(;;) {
