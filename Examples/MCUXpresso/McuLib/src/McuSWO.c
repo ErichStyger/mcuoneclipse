@@ -8,6 +8,7 @@
 #if McuSWO_CONFIG_HAS_SWO
 #include "McuUtility.h"
 #include "McuShell.h"
+#include "McuXFormat.h"
 #include "board.h"
 #include "pin_mux.h"
 #include <assert.h>
@@ -70,7 +71,7 @@ int _write(int fd, char *buffer, unsigned int count) {
 #endif
   int32_t i;
 
-  if(fd!=1) { /* 1 is stdout */
+  if(fd!=1 && fd!=2) { /* 1 is stdout, 2 is stderr */
     return -1; /* failed */
   }
   if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
@@ -89,7 +90,6 @@ int _write(int fd, char *buffer, unsigned int count) {
 static void PrintString(const unsigned char *s, uint8_t portNumber) {
   while (*s!='\0') {
     McuSWO_PrintChar(*s++, portNumber);
-    //ITM_SendChar(*s++); /* CMSIS version, does no support port number */
   }
 }
 
@@ -97,12 +97,22 @@ void McuSWO_SendStr(const unsigned char *str) {
   PrintString(str, McuSWO_CONFIG_TERMINAL_CHANNEL);
 }
 
+unsigned McuSWO_printf(const char *fmt, ...) {
+  va_list args;
+  unsigned int count = 0;
+
+  va_start(args,fmt);
+  count = McuXFormat_xvformat(McuShell_printfPutChar, (void*)McuSWO_GetStdio()->stdOut, fmt, args);
+  va_end(args);
+  return count;
+}
+
 #define McuSWO_ITM_RXBUFFER_EMPTY    0x5AA55AA5 /* special pattern to indicate empty buffer */
 
-volatile int32_t ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* implementation of buffer for Rx */
+volatile int32_t ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* implementation of buffer for Rx, must use this variable name as checked by the debugger */
 
 bool McuSWO_StdIOKeyPressed(void) {
-  if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY) {
+  if (ITM_RxBuffer != McuSWO_ITM_RXBUFFER_EMPTY) {
     return true;
   }
   return false;
@@ -121,12 +131,12 @@ void McuSWO_StdIOReadChar(uint8_t *c) {
 
 #if McuSWO_CONFIG_RETARGET_STDIN
 
-static int32_t SWO_ReceiveChar(void) {
+int32_t SWO_ReceiveChar(void) {
   int32_t ch = -1; /* EOF, no character available */
 
-  if (ITM_RxBuffer != ITM_RXBUFFER_EMPTY) {
+  if (ITM_RxBuffer != McuSWO_ITM_RXBUFFER_EMPTY) {
     ch = ITM_RxBuffer;
-    ITM_RxBuffer = ITM_RXBUFFER_EMPTY; /* ready for next character */
+    ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* mark it ready for next character */
   }
   return ch;
 }

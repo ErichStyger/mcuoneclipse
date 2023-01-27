@@ -19,6 +19,12 @@ extern uint8_t McuSWO_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /*
 extern McuShell_ConstStdIOType McuSWO_stdio; /* default standard I/O */
 
 /*!
+ * \brief Return the SWO stdio handle
+ * \return Standard I/O handle
+ */
+McuShell_ConstStdIOTypePtr McuSWO_GetStdio(void);
+
+/*!
  * \brief Sending a character to the SWO/ITM console
  * \param ch Character to send
  */
@@ -34,6 +40,12 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
 
 /* send a string through SWO ITM Port 0 (0x1) */
 void McuSWO_SendStr(const unsigned char *str);
+
+/*!
+ * \brief Writing SWO output using printf style
+ * \param fmt Format string
+ */
+unsigned McuSWO_printf(const char *fmt, ...);
 
 /* The TraceClock is used to configure the SWO speed. Use this method if the clock has been changed */
 void McuSWO_ChangeTraceClock(uint32_t traceClock);

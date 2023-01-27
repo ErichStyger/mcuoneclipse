@@ -19,6 +19,8 @@
 static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
   unsigned char ch;
 
+  /* McuLib way: */
+  McuSWO_SendStr((unsigned char*)"McuLib: Enter some text and press ENTER:\n");
   buf[0] = '\0'; /* init buffer */
   for(;;) { /* breaks */
     if (McuSWO_StdIOKeyPressed()) {
@@ -31,21 +33,51 @@ static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
       } /* if */
     } /* if */
   } /* for */
+  McuSWO_SendStr((unsigned char*)"McuLib: ");
+  McuSWO_SendStr(buf);
 }
 
 static void ReadLine_getc(unsigned char *buf, size_t bufSize) {
   int c;
   size_t i = 0;
 
+  /* C standard library way with getc() */
+  printf("getc: Enter some text and press ENTER:\n");
   do {
     do {
       c = getc(stdin);
-    } while(c==EOF);
+    } while(c==EOF); /* poll for input */
     if (i<bufSize) { /* avoid buffer overflow */
-      buf[i] = c;
+      buf[i++] = c;
     }
   } while(c!='\n');
   buf[bufSize-1] = '\0';
+  printf("getc: %s", buf);
+}
+
+static void ReadLine_getchar(unsigned char *buf, size_t bufSize) {
+  int c;
+  size_t i = 0;
+
+  /* C standard library way with getchar() */
+  printf("getchar: Enter some text and press ENTER:\n");
+  do {
+    do {
+      c = getchar();
+    } while(c==EOF);
+    if (i<bufSize) { /* avoid buffer overflow */
+      buf[i++] = c;
+    }
+  } while(c!='\n');
+  buf[bufSize-1] = '\0';
+  printf("getchar: %s", buf);
+}
+
+static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
+  /* C standard library way with scanf() */
+  printf("scanf: Enter some text and press ENTER:\n");
+  int res = scanf("%s", buf);
+  printf("scanf: %s, res: %d\n", buf, res);
 }
 
 static void TestStdOut(void) {
@@ -64,19 +96,10 @@ static void SwoTest(void) {
   McuSWO_SendStr((unsigned char*)"Application using SWO\n"); /* stop with the debugger here and configure SWO */
   TestStdOut();
   for(;;) {
-    printf("Enter some text and press ENTER:\n");
+    ReadLine_McuLib(buf, sizeof(buf));
     ReadLine_getc(buf, sizeof(buf));
-#if 0
-    // scanf("%c", &c);
-    do {
-      c = getc(stdin);
-    } while(c==EOF);
-    printf("getc(): '%c'\n", c);
-#endif
-    McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
-	  ReadLine_McuLib(buf, sizeof(buf));
-    McuSWO_SendStr((unsigned char*)"McuLib: ");
-    McuSWO_SendStr(buf);
+    ReadLine_getchar(buf, sizeof(buf));
+    ReadLine_scanf(buf, sizeof(buf));
   }
 }
 
@@ -85,7 +108,7 @@ int main(void) {
 #if !McuSWO_CONFIG_DO_MUXING /* if Muxing will be done inside McuSWO_Init() */
   BOARD_InitBootPins();
 #endif
-  BOARD_BootClockFROHF96M(); /* Note: need this, otherwise debugger fails to configure SWO */
+  BOARD_BootClockFROHF96M(); /* Note: SystemCoreClock needs to be set and used, otherwise SWO in the debugger might fail. */
   PL_Init(); /* initializes modules including SWO */
   SwoTest(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
   for(;;) {
