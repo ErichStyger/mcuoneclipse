@@ -129,6 +129,23 @@ void McuSWO_StdIOReadChar(uint8_t *c) {
   }
 }
 
+void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
+  unsigned char ch;
+
+  buf[0] = '\0'; /* init buffer */
+  for(;;) { /* breaks */
+    if (McuSWO_StdIOKeyPressed()) {
+      McuSWO_stdio.stdIn(&ch);
+      if (ch!='\0') {
+        McuUtility_chcat(buf, bufSize, ch);
+        if (ch=='\n') {
+          break;
+        }
+      } /* if */
+    } /* if */
+  } /* for */
+}
+
 #if McuSWO_CONFIG_RETARGET_STDIN
 
 int32_t SWO_ReceiveChar(void) {
