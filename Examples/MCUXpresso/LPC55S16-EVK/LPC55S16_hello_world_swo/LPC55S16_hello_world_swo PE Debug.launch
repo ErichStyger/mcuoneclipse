@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.pemicro.debug.gdbjtag.pne.launchConfigurationType">
-    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEMC473BB"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal FX Rev B (PEMC473BB)"/>
+    <stringAttribute key="InstructionTraceInfo" value="eJytVNFOwjAUfTfxH5q+IxsIjoRJYEBiwgiBiY+mbJcx2dal7QT/3nbr0CWAJtqn9tzT03tPb9sfHJMYvQPjEU1tbN4ZGEHq0yBKQxs/e9OGhQePtzd9EAmIzRgEiWKuAI+wEMQUiMgZcOSSN8rWlY5UcaO0Bqg9E88dEQ5oIXdAKmy8JTEH3FSx8YtXxIZBIKPcxo1Ou2t1u5bZxV8bBMs1/0lr1fkPRs9sneVPvNHFs91rMVn1QVxO+yCGLFlbDmWwisKdcGiS0VTSkMNn1N/beJ7HcTnHSNKXEK6EZEtTzo6OdR6vRnA9bHR+iG+NnoW149vq+lR9Ncs1wZfVEEZkvhzN82QDzMb3ZeWrPMsoExAgJ8lcIvydths5H34MDs1ToegltmB0W0AaUArKKt1RaEwEUevKXDSL0r15Wrnk6BK+LzqrysMo8/ijivkvKq1/UWmXKs2TtbrDlHlRLJ+kNpXr23l1vOUMrUmcw8mO5iV+89t9V8QLrVu8L5H8rqfLU+vfQQHVv4xPyQ5atA=="/>
+    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="PEMicroPEMFA9867"/>
+    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB1 - Multilink Universal FX Rev C (PEMFA9867)"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
     <intAttribute key="com.nxp.mcuxpresso.core.datamodels.ui.launchers.PELaunchConfigHandler.version" value="1"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="P&amp;E Microcomputer Systems"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal FX Rev B (PEMC473BB)"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="USB1 - Multilink Universal FX Rev C (PEMFA9867)"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB1"/>
     <booleanAttribute key="com.nxp.mcuxpresso.pemicro.flash.cyclone.image" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.pemicro.flash.program.action" value="Erase, blank check, program and verify"/>
@@ -106,8 +108,8 @@
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_IP" value="false"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SPECIFY_NETWORK_CARD" value="false"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.ml.STARTUP_USE_SWD" value="true"/>
-    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_MULTILINK_VALUE" value="-1.000000"/>
-    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_TARGET_VALUE" value="-1.000000"/>
+    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_MULTILINK_VALUE" value="10.000000"/>
+    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.ml.SWO_BAUDRATE_SWITCH_TARGET_VALUE" value="18.000000"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.otherRunCommands" value=""/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.partitionParam" value="0"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.preserveMemory0" value="false"/>
@@ -210,5 +212,6 @@
     <mapAttribute key="org.eclipse.debug.core.preferred_launchers">
         <mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.pe.delegate.id"/>
     </mapAttribute>
+    <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;"/>
     <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
 </launchConfiguration>
