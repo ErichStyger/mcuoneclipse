@@ -12,13 +12,26 @@
 #include "board.h"
 #include "pin_mux.h"
 #include <assert.h>
+#include <stdio.h>
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
-static bool SWO_WriteChar(char c, uint8_t portNo) {
-  volatile int timeout;
+#define McuSWO_ITM_RXBUFFER_EMPTY    ((int32_t)0x5AA55AA5) /* special pattern to indicate empty buffer */
 
-  timeout = 5000; /* arbitrary timeout value */
+volatile int32_t ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* implementation of buffer for Rx, must use this variable name as checked by the debugger */
+
+static inline int32_t SWO_ReceiveChar(void) {
+  int32_t ch = EOF; /* EOF, no character available */
+
+  if (ITM_RxBuffer != McuSWO_ITM_RXBUFFER_EMPTY) {
+    ch = ITM_RxBuffer;
+    ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* mark it ready for next character */
+  }
+  return ch;
+}
+
+static inline bool SWO_WriteChar(char c, uint8_t portNo) {
+  volatile int timeout = 5000; /* arbitrary timeout value */
   while (ITM->PORT[portNo].u32 == 0) {
     /* Wait until STIMx is ready, then send data */
     timeout--;
@@ -38,7 +51,7 @@ static void SWO_WriteBuf(char *buf, size_t count, uint8_t portNo) {
   }
 }
 
-static bool SWO_Enabled(uint8_t portNo) {
+static inline bool SWO_Enabled(uint8_t portNo) {
   /* Check if Trace Control Register (ITM->TCR at 0xE0000E80) is set */
   if ((ITM->TCR&ITM_TCR_ITMENA_Msk) == 0) { /* check Trace Control Register if ITM trace is enabled*/
     return false; /* not enabled? */
@@ -72,13 +85,13 @@ int _write(int fd, char *buffer, unsigned int count) {
   int32_t i;
 
   if(fd!=1 && fd!=2) { /* 1 is stdout, 2 is stderr */
-    return -1; /* failed */
+    return EOF; /* failed */
   }
   if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
-    return -1; /* failed */
+    return EOF; /* failed */
   }
   SWO_WriteBuf(buffer, count, McuSWO_CONFIG_TERMINAL_CHANNEL);
-  return count; /* return the number of chars written */
+  return count; /* return the number of chars written */ /* \TODO */
 }
 #endif /* McuSWO_CONFIG_RETARGET_STDOUT */
 
@@ -107,10 +120,6 @@ unsigned McuSWO_printf(const char *fmt, ...) {
   return count;
 }
 
-#define McuSWO_ITM_RXBUFFER_EMPTY    0x5AA55AA5 /* special pattern to indicate empty buffer */
-
-volatile int32_t ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* implementation of buffer for Rx, must use this variable name as checked by the debugger */
-
 bool McuSWO_StdIOKeyPressed(void) {
   if (ITM_RxBuffer != McuSWO_ITM_RXBUFFER_EMPTY) {
     return true;
@@ -121,7 +130,7 @@ bool McuSWO_StdIOKeyPressed(void) {
 void McuSWO_StdIOReadChar(uint8_t *c) {
   int res;
 
-  res = ITM_ReceiveChar();
+  res = SWO_ReceiveChar();
   if (res==-1) { /* no character present */
     *c = '\0';
   } else {
@@ -147,59 +156,62 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
 }
 
 #if McuSWO_CONFIG_RETARGET_STDIN
-
-int32_t SWO_ReceiveChar(void) {
-  int32_t ch = -1; /* EOF, no character available */
-
-  if (ITM_RxBuffer != McuSWO_ITM_RXBUFFER_EMPTY) {
-    ch = ITM_RxBuffer;
-    ITM_RxBuffer = McuSWO_ITM_RXBUFFER_EMPTY; /* mark it ready for next character */
-  }
-  return ch;
-}
-
-
 #if defined (__REDLIB__)
+  int __sys_readc(void) {
+    int32_t c = -1;
 
-int __sys_readc(void) {
-  int32_t c = -1;
-
-  if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
-    return -1; /* eof */
+    if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
+      return -1; /* eof */
+    }
+    return SWO_ReceiveChar();
   }
-  return SWO_ReceiveChar();
-}
-
 #elif defined (__NEWLIB__)
+  int _read(int fd, char *buffer, int size) {
+    /* note: with newlib (nohost) size is always 1. But with newlib-nano (nohost) size is 1024! That's why a timeout is implemented :-( */
+  //  volatile int timeout = 5000; /* arbitrary timeout value */
+   // int count;
 
-int _read(int fd, char *buffer, int size) {
-  int count;
-
-  if(fd!=0) { /* 0 is stdin */
-    return -1; /* failed */
-  }
-  if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
-    return -1; /* eof */
-  }
-  count  = 0;
-  while(size>0) {
+    if(fd!=0) { /* 0 is stdin */
+      return EOF; /* failed */
+    }
+    if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
+      return EOF; /* failed */
+    }
+#if 0
+    count  = 0;
+    while(size>0 /*&& timeout>0*/) {
+      int32_t c;
+      do {
+        c = SWO_ReceiveChar();
+  //      timeout--;
+      } while (c==-1 /*&& timeout>0*/); /* blocking */
+  #if 0
+      if (timeout==0) {
+        break; /* leave loop */
+      }
+  #endif
+      *buffer = (char)c;
+      buffer++;
+      count++;
+      size--;
+    } /* for */
+    return count;
+#else
+    /* only read a single byte */
     int32_t c;
     do {
       c = SWO_ReceiveChar();
-    } while (c==-1); /* blocking */
-    *buffer = (char)c;
-    buffer++;
-    count++;
-    size--;
-  } /* for */
-  return count;
-}
+    } while (c==EOF); /* blocking */
+    *buffer = c;
+    return 1; /* number of bytes read */
 #endif
+  }
+#endif /* newlib or redlib */
 
 #endif /* McuSWO_CONFIG_RETARGET_STDIN */
 
 void McuSWO_StdIOSendChar(uint8_t ch) {
-  ITM_SendChar(ch);
+  (void)SWO_WriteChar(ch, 0);
 }
 
 /* default standard I/O struct */

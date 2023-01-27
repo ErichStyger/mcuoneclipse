@@ -64,9 +64,13 @@ static void ReadLine_getchar(unsigned char *buf, size_t bufSize) {
 
 static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
   /* C standard library way with scanf() */
-  printf("scanf: Enter some text and press ENTER:\n");
-  int res = scanf("%s", buf);
-  printf("scanf: %s, res: %d\n", buf, res);
+  int res;
+  char ch;
+
+  printf("scanf: Enter a single name/word and press ENTER:\n");
+  assert(bufSize>=20);
+  res = scanf("%20s%c", buf, &ch); /* note: ch for the newline */
+  printf("scanf: %s, res: %d, ch:%d\n", buf, res, ch);
 }
 
 static void TestStdOut(void) {
@@ -83,11 +87,11 @@ static void SwoTest(void) {
   int c;
 
   McuSWO_SendStr((unsigned char*)"Application using SWO\n"); /* stop with the debugger here and configure SWO */
-  TestStdOut();
+ // TestStdOut();
   for(;;) {
-    ReadLine_McuLib(buf, sizeof(buf));
-    ReadLine_getc(buf, sizeof(buf));
-    ReadLine_getchar(buf, sizeof(buf));
+   // ReadLine_McuLib(buf, sizeof(buf));
+  //  ReadLine_getc(buf, sizeof(buf));
+  //  ReadLine_getchar(buf, sizeof(buf));
     ReadLine_scanf(buf, sizeof(buf));
   }
 }
