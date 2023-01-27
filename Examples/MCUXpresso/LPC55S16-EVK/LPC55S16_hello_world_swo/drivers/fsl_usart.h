@@ -22,7 +22,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief USART driver version. */
-#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 6, 0))
+#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 5, 1))
 /*@}*/
 
 #define USART_FIFOTRIG_TXLVL_GET(base) (((base)->FIFOTRIG & USART_FIFOTRIG_TXLVL_MASK) >> USART_FIFOTRIG_TXLVL_SHIFT)
@@ -710,6 +710,10 @@ status_t USART_TransferCreateHandle(USART_Type *base,
  * returns directly without waiting for all data to be written to the TX register. When
  * all data is written to the TX register in the IRQ handler, the USART driver calls the callback
  * function and passes the @ref kStatus_USART_TxIdle as status parameter.
+ *
+ * @note The kStatus_USART_TxIdle is passed to the upper layer when all data is written
+ * to the TX register. However it does not ensure that all data are sent out. Before disabling the TX,
+ * check the kUSART_TransmissionCompleteFlag to ensure that the TX is finished.
  *
  * @param base USART peripheral base address.
  * @param handle USART handle pointer.

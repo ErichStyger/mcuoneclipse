@@ -376,7 +376,6 @@ typedef enum _serial_port_type
     kSerialPort_UartDma,   /*!< Serial port UART DMA*/
     kSerialPort_SpiMaster, /*!< Serial port SPIMASTER*/
     kSerialPort_SpiSlave,  /*!< Serial port SPISLAVE*/
-    kSerialPort_None,      /*!< Serial port is none */
 } serial_port_type_t;
 
 /*! @brief serial manager type*/
@@ -808,24 +807,6 @@ serial_manager_status_t SerialManager_EnterLowpower(serial_handle_t serialHandle
  * @retval kStatus_SerialManager_Success Successful operation.
  */
 serial_manager_status_t SerialManager_ExitLowpower(serial_handle_t serialHandle);
-
-/*!
- * @brief Check if need polling ISR.
- *
- * This function is used to check if need polling ISR.
- *
- * @retval TRUE if need polling.
- */
-static inline bool SerialManager_needPollingIsr(void)
-{
-#if (defined(__DSC__) && defined(__CW__))
-    return !(isIRQAllowed());
-#elif defined(__GIC_PRIO_BITS)
-    return (0x13 == (__get_CPSR() & CPSR_M_Msk));
-#else
-    return (0U != __get_IPSR());
-#endif
-}
 
 #if defined(__cplusplus)
 }

@@ -414,7 +414,7 @@ status_t FFR_Init(flash_config_t *config)
     {
         assert(VERSION0_FLASH_API_TREE);
         status = VERSION0_FLASH_API_TREE->ffr_init(config);
-        if (status != (status_t)kStatus_FLASH_Success)
+        if (status != kStatus_FLASH_Success)
         {
             return status;
         }
@@ -424,7 +424,7 @@ status_t FFR_Init(flash_config_t *config)
     {
         assert(VERSION1_FLASH_API_TREE);
         status = VERSION1_FLASH_API_TREE->ffr_init(config);
-        if (status != (status_t)kStatus_FLASH_Success)
+        if (status != kStatus_FLASH_Success)
         {
             return status;
         }

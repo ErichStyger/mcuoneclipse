@@ -20,20 +20,9 @@ static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
   unsigned char ch;
 
   /* McuLib way: */
-  McuSWO_SendStr((unsigned char*)"McuLib: Enter some text and press ENTER:\n");
-  buf[0] = '\0'; /* init buffer */
-  for(;;) { /* breaks */
-    if (McuSWO_StdIOKeyPressed()) {
-      McuSWO_stdio.stdIn(&ch);
-      if (ch!='\0') {
-        McuUtility_chcat(buf, bufSize, ch);
-        if (ch=='\n') {
-          break;
-        }
-      } /* if */
-    } /* if */
-  } /* for */
-  McuSWO_SendStr((unsigned char*)"McuLib: ");
+  McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
+  McuSWO_ReadLine(buf, bufSize);
+  McuSWO_SendStr((unsigned char*)"Received: ");
   McuSWO_SendStr(buf);
 }
 
@@ -104,11 +93,11 @@ static void SwoTest(void) {
 }
 
 int main(void) {
-  POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false); /* required for LPC55Sxx, otherwise might generate brown-out reset */
 #if !McuSWO_CONFIG_DO_MUXING /* if Muxing will be done inside McuSWO_Init() */
   BOARD_InitBootPins();
 #endif
-  BOARD_BootClockFROHF96M(); /* Note: SystemCoreClock needs to be set and used, otherwise SWO in the debugger might fail. */
+  BOARD_InitBootClocks();
+
   PL_Init(); /* initializes modules including SWO */
   SwoTest(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
   for(;;) {

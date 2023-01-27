@@ -60,8 +60,6 @@
 #define __WEAK_FUNC __weak
 #elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
 #define __WEAK_FUNC __attribute__((weak))
-#elif defined(__DSC__) || defined(__CW__)
-#define __WEAK_FUNC __attribute__((weak))
 #endif
 
 #define SERIAL_EVENT_DATA_RECEIVED   (0U)
@@ -94,12 +92,10 @@ typedef struct _serial_manager_transfer
 /* write handle structure */
 typedef struct _serial_manager_send_handle
 {
+    struct _serial_manager_handle *serialManagerHandle;
 #if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
     list_element_t link; /*!< list element of the link */
     serial_manager_transfer_t transfer;
-#endif
-    struct _serial_manager_handle *serialManagerHandle;
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
     serial_manager_callback_t callback;
     void *callbackParam;
     uint32_t tag;
@@ -124,9 +120,6 @@ typedef struct _serial_manager_read_ring_buffer
     volatile uint32_t ringTail;
 } serial_manager_read_ring_buffer_t;
 
-#if defined(__CC_ARM)
-#pragma anon_unions
-#endif
 typedef struct _serial_manager_block_handle
 {
     serial_manager_type_t handleType;
@@ -144,6 +137,9 @@ typedef struct _serial_manager_block_handle
 } serial_manager_block_handle_t;
 #endif
 
+#if defined(__CC_ARM)
+#pragma anon_unions
+#endif
 /* The serial manager handle structure */
 typedef struct _serial_manager_handle
 {
@@ -262,6 +258,7 @@ static serial_manager_status_t SerialManager_StartWriting(serial_manager_handle_
 
     if (writeHandle != NULL)
     {
+        writeHandle = (serial_manager_write_handle_t *)((uint32_t)writeHandle - 4U);
         switch (handle->type)
         {
 #if (defined(SERIAL_PORT_TYPE_UART) && (SERIAL_PORT_TYPE_UART > 0U))
@@ -577,6 +574,7 @@ static void SerialManager_Task(void *param)
                 (serial_manager_write_handle_t *)(void *)LIST_GetHead(&handle->completedWriteHandleHead);
             while (NULL != serialWriteHandle)
             {
+                serialWriteHandle = (serial_manager_write_handle_t *)((uint32_t)serialWriteHandle - 4U);
                 SerialManager_RemoveHead(&handle->completedWriteHandleHead);
                 msg.buffer                         = serialWriteHandle->transfer.buffer;
                 msg.length                         = serialWriteHandle->transfer.soFar;
@@ -700,6 +698,7 @@ static void SerialManager_TxCallback(void *callbackParam,
 
     if (NULL != writeHandle)
     {
+        writeHandle = (serial_manager_write_handle_t *)((uint32_t)writeHandle - 4U);
         SerialManager_RemoveHead(&handle->runningWriteHandleHead);
 
 #if (defined(OSA_USED) && defined(SERIAL_MANAGER_TASK_HANDLE_TX) && (SERIAL_MANAGER_TASK_HANDLE_TX == 1))
@@ -755,7 +754,7 @@ void SerialManager_RxCallback(void *callbackParam,
     serial_manager_handle_t *handle;
 #if (!((defined(SERIAL_PORT_TYPE_SPI_MASTER) && (SERIAL_PORT_TYPE_SPI_MASTER > 0U))) && \
      !((defined(SERIAL_PORT_TYPE_SPI_SLAVE) && (SERIAL_PORT_TYPE_SPI_SLAVE > 0U))))
-    uint32_t ringBufferLength = 0;
+    uint32_t ringBufferLength;
     uint32_t primask;
 #endif
     assert(NULL != callbackParam);
@@ -821,7 +820,7 @@ void SerialManager_RxCallback(void *callbackParam,
     }
     else /*No wrap is expected so do a memcpy*/
     {
-        (void)memcpy(&handle->ringBuffer.ringBuffer[handle->ringBuffer.ringHead], message->buffer, message->length);
+        memcpy(&handle->ringBuffer.ringBuffer[handle->ringBuffer.ringHead], message->buffer, message->length);
         handle->ringBuffer.ringHead += message->length;
     }
 
@@ -1029,7 +1028,11 @@ static serial_manager_status_t SerialManager_Write(serial_write_handle_t writeHa
     {
         while (serialWriteHandle->transfer.length > serialWriteHandle->transfer.soFar)
         {
-            if (SerialManager_needPollingIsr())
+#if defined(__GIC_PRIO_BITS)
+            if (0x13 == (__get_CPSR() & CPSR_M_Msk))
+#else
+            if (0U != __get_IPSR())
+#endif
             {
                 SerialManager_IsrFunction(handle);
             }
@@ -1079,7 +1082,7 @@ static serial_manager_status_t SerialManager_Read(serial_read_handle_t readHandl
     /* This code is reached if (handle->handleType != kSerialManager_Blocking)*/
 #if (!((defined(SERIAL_PORT_TYPE_USBCDC) && (SERIAL_PORT_TYPE_USBCDC > 0U))) && \
      !((defined(SERIAL_PORT_TYPE_VIRTUAL) && (SERIAL_PORT_TYPE_VIRTUAL > 0U))))
-    if (length == 1U)
+    if (length == 1)
     {
         if (handle->ringBuffer.ringHead != handle->ringBuffer.ringTail)
         {
@@ -1218,10 +1221,6 @@ serial_manager_status_t SerialManager_Init(serial_handle_t serialHandle, const s
     (void)memset(handle, 0, SERIAL_MANAGER_HANDLE_SIZE);
 #endif
     handle->type = config->type;
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-    handle->ringBuffer.ringBuffer     = config->ringBuffer;
-    handle->ringBuffer.ringBufferSize = config->ringBufferSize;
-#endif
 
     switch (config->type)
     {
@@ -1236,27 +1235,6 @@ serial_manager_status_t SerialManager_Init(serial_handle_t serialHandle, const s
 
                 (void)Serial_UartInstallRxCallback(((serial_handle_t)&handle->lowLevelhandleBuffer[0]),
                                                    SerialManager_RxCallback, handle);
-            }
-#endif
-            break;
-#endif
-#if (defined(SERIAL_PORT_TYPE_UART_DMA) && (SERIAL_PORT_TYPE_UART_DMA > 0U))
-        case kSerialPort_UartDma:
-            status = Serial_UartDmaInit(((serial_handle_t)&handle->lowLevelhandleBuffer[0]), config->portConfig);
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE) && (SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE > 0U))
-            if (config->blockType == kSerialManager_Blocking)
-            {
-                return status;
-            }
-#endif /* SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE */
-            if ((serial_manager_status_t)kStatus_SerialManager_Success == status)
-            {
-                (void)Serial_UartDmaInstallTxCallback(((serial_handle_t)&handle->lowLevelhandleBuffer[0]),
-                                                      SerialManager_TxCallback, handle);
-
-                (void)Serial_UartDmaInstallRxCallback(((serial_handle_t)&handle->lowLevelhandleBuffer[0]),
-                                                      SerialManager_RxCallback, handle);
             }
 #endif
             break;
@@ -1406,6 +1384,11 @@ serial_manager_status_t SerialManager_Init(serial_handle_t serialHandle, const s
 
 #endif
 
+#endif
+
+#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
+    handle->ringBuffer.ringBuffer     = config->ringBuffer;
+    handle->ringBuffer.ringBufferSize = config->ringBufferSize;
 #endif
     return status;
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding= "UTF-8" ?>
-<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="68c7ec0f-9159-47ba-82b1-ba741050692b" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<configuration name="LPC55S16" xsi:schemaLocation="http://mcuxpresso.nxp.com/XSD/mex_configuration_12 http://mcuxpresso.nxp.com/XSD/mex_configuration_12.xsd" uuid="beaa42de-704e-4089-ae9f-8ccb55fa335d" version="12" xmlns="http://mcuxpresso.nxp.com/XSD/mex_configuration_12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <common>
       <processor>LPC55S16</processor>
       <package>LPC55S16JBD100</package>
@@ -8,7 +8,7 @@
       <cores selected="cm33_core0">
          <core name="Cortex-M33" id="cm33_core0" description="M33 core"/>
       </cores>
-      <description></description>
+      <description>Configuration imported from LPC55S16_hello_world_swo</description>
    </common>
    <preferences>
       <validate_boot_init_only>true</validate_boot_init_only>
@@ -94,16 +94,12 @@
                      </feature>
                   </dependency>
                </dependencies>
-               <clock_sources>
-                  <clock_source id="ANACTRL.fro_hf.outFreq" value="96 MHz" locked="false" enabled="false"/>
-               </clock_sources>
+               <clock_sources/>
                <clock_outputs>
                   <clock_output id="FRO_12MHz_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="12 MHz" locked="false" accuracy=""/>
                </clock_outputs>
-               <clock_settings>
-                  <setting id="ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG" value="Enable" locked="false"/>
-               </clock_settings>
+               <clock_settings/>
                <called_from_default_init>false</called_from_default_init>
             </clock_configuration>
             <clock_configuration name="BOARD_BootClockFROHF96M" id_prefix="" prefix_user_defined="false">
@@ -180,7 +176,6 @@
                   </dependency>
                </dependencies>
                <clock_sources>
-                  <clock_source id="ANACTRL.fro_hf.outFreq" value="96 MHz" locked="false" enabled="false"/>
                   <clock_source id="SYSCON.XTAL32M.outFreq" value="16 MHz" locked="false" enabled="true"/>
                </clock_sources>
                <clock_outputs>
@@ -189,14 +184,12 @@
                </clock_outputs>
                <clock_settings>
                   <setting id="PLL0_Mode" value="Normal" locked="false"/>
-                  <setting id="ANALOG_CONTROL_FRO192M_CTRL_ENDI_FRO_96M_CFG" value="Enable" locked="false"/>
                   <setting id="ENABLE_CLKIN_ENA" value="Enabled" locked="false"/>
                   <setting id="ENABLE_SYSTEM_CLK_OUT" value="Enabled" locked="false"/>
                   <setting id="SYSCON.MAINCLKSELB.sel" value="SYSCON.PLL0_BYPASS" locked="false"/>
                   <setting id="SYSCON.PLL0CLKSEL.sel" value="SYSCON.CLK_IN_EN" locked="false"/>
                   <setting id="SYSCON.PLL0M_MULT.scale" value="100" locked="true"/>
                   <setting id="SYSCON.PLL0N_DIV.scale" value="4" locked="true"/>
-                  <setting id="SYSCON.PLL0_PDEC.scale" value="4" locked="true"/>
                </clock_settings>
                <called_from_default_init>false</called_from_default_init>
             </clock_configuration>
@@ -327,18 +320,18 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="9.0" enabled="false" update_project_code="true">
+      <periphs name="Peripherals" version="12.0" enabled="true" update_project_code="true">
          <generated_project_files/>
          <peripherals_profile>
-            <processor_version>0.10.3</processor_version>
+            <processor_version>N/A</processor_version>
          </peripherals_profile>
          <functional_groups>
-            <functional_group name="BOARD_InitPeripherals" uuid="28c1a0a8-6364-4978-b705-8aaffcc97490" called_from_default_init="true" id_prefix="" core="cm33_core0">
+            <functional_group name="BOARD_InitPeripherals" uuid="e48301ba-6eae-42f0-b2e4-0109e547ef26" called_from_default_init="true" id_prefix="" core="cm33_core0">
                <description></description>
                <options/>
                <dependencies/>
                <instances>
-                  <instance name="NVIC" uuid="0380fa7d-c728-4cc5-8e55-89451a805758" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC" uuid="bba430c9-b0cf-4d0b-ac4c-91037040ed04" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table"/>
                         <array name="interrupts"/>
@@ -348,27 +341,15 @@
             </functional_group>
          </functional_groups>
          <components>
-            <component name="system" uuid="2ae4fa77-4fa5-4fd3-b43e-0ff68011c131" type_id="system_54b53072540eeeb8f8e9343e71f28176">
+            <component name="system" uuid="437c1e6c-f782-46a9-8612-5cc74c1c2801" type_id="system_54b53072540eeeb8f8e9343e71f28176">
                <config_set_global name="global_system_definitions">
                   <setting name="user_definitions" value=""/>
                   <setting name="user_includes" value=""/>
                </config_set_global>
             </component>
-            <component name="msg" uuid="a86cd802-2411-47a0-9873-8678f17915a7" type_id="msg_6e2baaf3b97dbeef01c0043275f9a0e7">
-               <config_set_global name="global_messages"/>
-            </component>
-            <component name="generic_uart" uuid="bd3c1c1c-d53e-486c-8fe2-9a62b7fa1f5e" type_id="generic_uart_8cae00565451cf2346eb1b8c624e73a6">
-               <config_set_global name="global_uart"/>
-            </component>
-            <component name="generic_enet" uuid="8fa35314-d25a-45a6-ab75-73b6fd0fec92" type_id="generic_enet_74db5c914f0ddbe47d86af40cb77a619">
-               <config_set_global name="global_enet"/>
-            </component>
-            <component name="generic_can" uuid="2ad5d8cc-fd09-447f-8213-17ce904c7bdc" type_id="generic_can_1bfdd78b1af214566c1f23cf6a582d80">
-               <config_set_global name="global_can"/>
-            </component>
          </components>
       </periphs>
-      <tee name="TEE" version="2.0" enabled="false" update_project_code="true">
+      <tee name="TEE" version="4.0" enabled="false" update_project_code="true">
          <generated_project_files/>
          <tee_profile>
             <processor_version>N/A</processor_version>

@@ -449,7 +449,7 @@ static status_t I2C_PendingStatusWait(I2C_Type *base)
         I2C_MasterEnable(base, false);
         I2C_MasterEnable(base, true);
 #endif
-        return kStatus_I2C_Timeout;
+        return (uint32_t)kStatus_I2C_Timeout;
     }
 #else
     } while ((status & (uint32_t)kI2C_MasterPendingFlag) == 0U);
@@ -1984,8 +1984,8 @@ void I2C_SlaveTransferHandleIRQ(I2C_Type *base, i2c_slave_handle_t *handle)
 
         if (slaveAddress)
         {
-            I2C_SlaveInvokeEvent(base, handle, kI2C_SlaveAddressMatchEvent);
             (void)I2C_SlaveAddressIRQ(base, handle);
+            I2C_SlaveInvokeEvent(base, handle, kI2C_SlaveAddressMatchEvent);
         }
         else
         {

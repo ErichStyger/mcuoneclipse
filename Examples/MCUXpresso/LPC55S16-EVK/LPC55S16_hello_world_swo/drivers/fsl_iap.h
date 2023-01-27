@@ -30,7 +30,7 @@
 #endif
 
 /*! @brief Flash driver version for SDK*/
-#define FSL_FLASH_DRIVER_VERSION (MAKE_VERSION(2, 1, 4)) /*!< Version 2.1.4. */
+#define FSL_FLASH_DRIVER_VERSION (MAKE_VERSION(2, 1, 3)) /*!< Version 2.1.3. */
 
 /*! @brief Flash driver version for ROM*/
 enum _flash_driver_version_constants

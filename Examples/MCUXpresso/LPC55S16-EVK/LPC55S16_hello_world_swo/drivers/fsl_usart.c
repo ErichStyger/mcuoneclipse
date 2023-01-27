@@ -708,9 +708,13 @@ status_t USART_TransferCreateHandle(USART_Type *base,
  * all data is written to the TX register in the IRQ handler, the USART driver calls the callback
  * function and passes the ref kStatus_USART_TxIdle as status parameter.
  *
+ * note The kStatus_USART_TxIdle is passed to the upper layer when all data is written
+ * to the TX register. However it does not ensure that all data are sent out. Before disabling the TX,
+ * check the kUSART_TransmissionCompleteFlag to ensure that the TX is finished.
+ *
  * param base USART peripheral base address.
  * param handle USART handle pointer.
- * param xfer USART transfer structure. See #usart_transfer_t.
+ * param xfer USART transfer structure. See  #usart_transfer_t.
  * retval kStatus_Success Successfully start the data transmission.
  * retval kStatus_USART_TxBusy Previous transmission still not finished, data not all written to TX register yet.
  * retval kStatus_InvalidArgument Invalid argument.

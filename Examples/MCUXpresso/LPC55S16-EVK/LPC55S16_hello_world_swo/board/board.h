@@ -101,11 +101,6 @@
 #define BOARD_SW4_IRQ_HANDLER       PIN_INT0_IRQHandler
 #define BOARD_SW4_GPIO_PININT_INDEX 1
 
-/* USB PHY condfiguration */
-#define BOARD_USB_PHY_D_CAL     (0x05U)
-#define BOARD_USB_PHY_TXCAL45DP (0x0AU)
-#define BOARD_USB_PHY_TXCAL45DM (0x0AU)
-
 #define BOARD_SDIF_BASEADDR       SDIF
 #define BOARD_SDIF_CLKSRC         kCLOCK_SDio
 #define BOARD_SDIF_CLK_FREQ       CLOCK_GetSdioClkFreq()
