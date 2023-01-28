@@ -13,7 +13,13 @@
 #include "pin_mux.h"
 #include <assert.h>
 #include <stdio.h>
-#include <sys/stat.h>
+#if defined (__NEWLIB__)
+  #include <sys/stat.h>
+#endif
+
+#if defined (__REDLIB__) && McuSWO_CONFIG_RETARGET_STDIO
+  #error "SWO standard I/O redirection does not work with RedLib: use newlib or newlib-nano instead"
+#endif
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
@@ -157,6 +163,7 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
 }
 
 #if McuSWO_CONFIG_RETARGET_STDIO
+#if defined (__NEWLIB__)
   int _close_r(struct _reent *p, int fd) {
     return -1; /* 0: ok, -1 error.  Because no file should have been opened, we return an error */
   }
@@ -176,6 +183,7 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   int _lseek_r(struct _reent *p, int fd, int offset, int whence) {
     return 0; /* return new position. Simply return 0 which implies the file is empty */
   }
+#endif /* __NEWLIB__ */
 
   void _kill(int pid, int sig) {
     return; /* do nothing */
@@ -186,6 +194,22 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   }
 
 #if defined (__REDLIB__)
+  void __sys_appexit(void) {
+    for(;;) {}
+  }
+
+  int __sys_seek(int fd, int pos) {
+    return 0;
+  }
+
+  int __sys_flen(int fd) {
+    return 0;
+  }
+
+  int __sys_istty(int fd) {
+    return 1; /* return 1 if fd is a terminal file descriptor, otherwise return 0 */
+  }
+
   int __sys_readc(void) {
     int32_t c = -1;
 
@@ -193,6 +217,11 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
       return -1; /* eof */
     }
     return SWO_ReceiveChar();
+  }
+
+  int __sys_read(int file, char *buf, int len) {
+    *buf = __sys_readc();
+    return 1;
   }
 #elif defined (__NEWLIB__)
   int _read(int fd, char *buffer, int size) {
@@ -312,7 +341,6 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
     McuSWO_SendStr((unsigned char*)"Finished testing SWO ITM stdout redirection\n");
   }
 #endif
-
 
 void McuSWO_StdIOSendChar(uint8_t ch) {
   (void)SWO_WriteChar(ch, 0);
