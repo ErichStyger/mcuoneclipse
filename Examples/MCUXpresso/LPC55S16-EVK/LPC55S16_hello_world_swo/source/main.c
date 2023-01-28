@@ -22,7 +22,7 @@ static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
   /* McuLib way: */
   McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
   McuSWO_ReadLine(buf, bufSize);
-  McuSWO_SendStr((unsigned char*)"Received: ");
+  McuSWO_printf("Received: %d", buf[0]);
   McuSWO_SendStr(buf);
 }
 
@@ -31,6 +31,7 @@ static void ReadLine_getc(unsigned char *buf, size_t bufSize) {
   size_t i = 0;
 
   /* C standard library way with getc() */
+  memset(buf, 0, bufSize); /* initialize buffer */
   printf("getc: Enter some text and press ENTER:\n");
   do {
     do {
@@ -40,7 +41,7 @@ static void ReadLine_getc(unsigned char *buf, size_t bufSize) {
       buf[i++] = c;
     }
   } while(c!='\n');
-  buf[bufSize-1] = '\0';
+  buf[bufSize-1] = '\0'; /* terminate */
   printf("getc: %s", buf);
 }
 
@@ -49,6 +50,7 @@ static void ReadLine_getchar(unsigned char *buf, size_t bufSize) {
   size_t i = 0;
 
   /* C standard library way with getchar() */
+  memset(buf, 0, bufSize); /* initialize buffer */
   printf("getchar: Enter some text and press ENTER:\n");
   do {
     do {
@@ -60,6 +62,20 @@ static void ReadLine_getchar(unsigned char *buf, size_t bufSize) {
   } while(c!='\n');
   buf[bufSize-1] = '\0';
   printf("getchar: %s", buf);
+}
+
+static void ReadLine_fgets(unsigned char *buf, size_t bufSize) {
+  /* C standard library way with fgets() */
+  int res;
+  char *p;
+
+  printf("fgets: Enter a line and press ENTER:\n");
+  p = fgets(buf, bufSize, stdin);
+  if (p!=NULL) {
+    printf("fgets: %s\n", buf);
+  } else {
+    printf("fgets FAILED\n");
+  }
 }
 
 static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
@@ -74,7 +90,7 @@ static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
 }
 
 static void TestStdOut(void) {
-  printf("Using printf() with SWO\n");
+  printf("Using printf(), putc and putchar with SWO\n");
   putc('*', stdout);
   putc('#', stderr);
   putchar('!');
@@ -87,11 +103,12 @@ static void SwoTest(void) {
   int c;
 
   McuSWO_SendStr((unsigned char*)"Application using SWO\n"); /* stop with the debugger here and configure SWO */
- // TestStdOut();
+  TestStdOut();
   for(;;) {
-   // ReadLine_McuLib(buf, sizeof(buf));
-  //  ReadLine_getc(buf, sizeof(buf));
-  //  ReadLine_getchar(buf, sizeof(buf));
+    ReadLine_McuLib(buf, sizeof(buf));
+    ReadLine_getc(buf, sizeof(buf));
+    ReadLine_getchar(buf, sizeof(buf));
+    ReadLine_fgets(buf, sizeof(buf));
     ReadLine_scanf(buf, sizeof(buf));
   }
 }

@@ -18,3 +18,16 @@ Then in the SWO Trace Config (menu Analysis > SWO Trace Config) check with the b
 Use the SWO ITM Console (menu Analysis > SWO ITM Console) and start recording with the 'play' button.
 Continue running with the debugger: you should see the text output in the SWO ITM Console.
 To enter text, you have to press the <ENTER> key at the end: then you should see the entered text shown in the console too.
+
+
+Status:
+- P&E and SEGGER: output works, input fails
+- McuSWO dedicated routines work
+- scanf() works
+- printf(), putc() and putchar() ok
+- getc() and getchar() ok
+- redlib fails
+- newlib and newlib-nano works (nohost)
+- should use (none)
+
+NOTE: Do not debug code, as it interfere with the debugger engine?

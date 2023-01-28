@@ -37,14 +37,9 @@
     /*! if SWO/ITM device shall be initialized inside McuSWO_Init(). Otherwise it needs to be done in the application or in the debugger. */
 #endif
 
-#ifndef McuSWO_CONFIG_RETARGET_STDIN
-  #define McuSWO_CONFIG_RETARGET_STDIN    (0)
-    /*! 1: implement hooks to retarget stdin (e.g. scanf() input. */
-#endif
-
-#ifndef McuSWO_CONFIG_RETARGET_STDOUT
-  #define McuSWO_CONFIG_RETARGET_STDOUT    (0)
-    /*! 1: implement hooks to retarget stdout (e.g.) printf()) output */
+#ifndef McuSWO_CONFIG_RETARGET_STDIO
+  #define McuSWO_CONFIG_RETARGET_STDIO    (0)
+    /*! 1: implement hooks to re-target stdin (e.g. scanf()) input and stdout (printf()) output. */
 #endif
 
 #ifndef McuSWO_CONFIG_PC_SAMPLING

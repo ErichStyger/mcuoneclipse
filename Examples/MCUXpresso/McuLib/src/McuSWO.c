@@ -13,6 +13,7 @@
 #include "pin_mux.h"
 #include <assert.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
@@ -75,7 +76,7 @@ void McuSWO_PrintChar(char c, uint8_t portNo) {
   (void)SWO_WriteChar(c, portNo);
 }
 
-#if McuSWO_CONFIG_RETARGET_STDOUT
+#if McuSWO_CONFIG_RETARGET_STDIO
 /* retarget low level stdout write routines to SWO */
 #if defined (__REDLIB__) /* low level functions depend on library used */
 int __sys_write(int fd, char *buffer, int count) {
@@ -93,7 +94,7 @@ int _write(int fd, char *buffer, unsigned int count) {
   SWO_WriteBuf(buffer, count, McuSWO_CONFIG_TERMINAL_CHANNEL);
   return count; /* return the number of chars written */ /* \TODO */
 }
-#endif /* McuSWO_CONFIG_RETARGET_STDOUT */
+#endif /* McuSWO_CONFIG_RETARGET_STDIO */
 
 /*!
  * \brief Sends a string over SWO to the host
@@ -155,7 +156,35 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   } /* for */
 }
 
-#if McuSWO_CONFIG_RETARGET_STDIN
+#if McuSWO_CONFIG_RETARGET_STDIO
+  int _close_r(struct _reent *p, int fd) {
+    return -1; /* 0: ok, -1 error.  Because no file should have been opened, we return an error */
+  }
+
+  /* return the status of an open file */
+  int _fstat_r(struct _reent *p, int fd, struct stat *stp) {
+    stp->st_mode = S_IFCHR; /* identify as character special device. This forces it as a one-byte-read device */
+    return 0; /* ok */
+  }
+
+  /* checks if a descriptor is a file or a terminal (tty) */
+  int _isatty_r(struct _reent *p, int fd) {
+    return 1; /* return 1 if fd is a terminal file descriptor, otherwise return 0 */
+  }
+
+  /* position the offset within file */
+  int _lseek_r(struct _reent *p, int fd, int offset, int whence) {
+    return 0; /* return new position. Simply return 0 which implies the file is empty */
+  }
+
+  void _kill(int pid, int sig) {
+    return; /* do nothing */
+  }
+
+  int _getpid(void) {
+    return -1; /* no process */
+  }
+
 #if defined (__REDLIB__)
   int __sys_readc(void) {
     int32_t c = -1;
@@ -167,36 +196,12 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   }
 #elif defined (__NEWLIB__)
   int _read(int fd, char *buffer, int size) {
-    /* note: with newlib (nohost) size is always 1. But with newlib-nano (nohost) size is 1024! That's why a timeout is implemented :-( */
-  //  volatile int timeout = 5000; /* arbitrary timeout value */
-   // int count;
-
     if(fd!=0) { /* 0 is stdin */
       return EOF; /* failed */
     }
     if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
       return EOF; /* failed */
     }
-#if 0
-    count  = 0;
-    while(size>0 /*&& timeout>0*/) {
-      int32_t c;
-      do {
-        c = SWO_ReceiveChar();
-  //      timeout--;
-      } while (c==-1 /*&& timeout>0*/); /* blocking */
-  #if 0
-      if (timeout==0) {
-        break; /* leave loop */
-      }
-  #endif
-      *buffer = (char)c;
-      buffer++;
-      count++;
-      size--;
-    } /* for */
-    return count;
-#else
     /* only read a single byte */
     int32_t c;
     do {
@@ -204,11 +209,10 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
     } while (c==EOF); /* blocking */
     *buffer = c;
     return 1; /* number of bytes read */
-#endif
   }
 #endif /* newlib or redlib */
 
-#endif /* McuSWO_CONFIG_RETARGET_STDIN */
+#endif /* McuSWO_CONFIG_RETARGET_STDIO */
 
 void McuSWO_StdIOSendChar(uint8_t ch) {
   (void)SWO_WriteChar(ch, 0);
@@ -223,6 +227,9 @@ McuShell_ConstStdIOType McuSWO_stdio = {
   };
 uint8_t McuSWO_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 
+McuShell_ConstStdIOTypePtr McuSWO_GetStdio(void) {
+  return &McuSWO_stdio;
+}
 
 static void MuxSWOPin(void) {
 #if McuLib_CONFIG_CPU_IS_LPC

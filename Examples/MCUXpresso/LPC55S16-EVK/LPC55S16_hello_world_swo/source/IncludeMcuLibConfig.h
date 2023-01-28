@@ -46,8 +46,7 @@
 #define McuSWO_CONFIG_DO_MUXING         (1) /* muxing is done with pins tool */
 #define McuSWO_CONFIG_DO_CLOCKING       (1) /* 1: do SWO clock settings  */
 #define McuSWO_CONFIG_DO_SWO_INIT       (0) /* 1: SWO register configuration */
-#define McuSWO_CONFIG_RETARGET_STDIN    (1) /* stdin, scanf */
-#define McuSWO_CONFIG_RETARGET_STDOUT   (1) /* stdout, printf */
+#define McuSWO_CONFIG_RETARGET_STDIO    (1) /* STDIO redirection: printf(), scanf() */
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
