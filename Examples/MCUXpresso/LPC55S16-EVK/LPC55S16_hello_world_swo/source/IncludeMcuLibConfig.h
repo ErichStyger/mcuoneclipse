@@ -45,7 +45,7 @@
 #define McuSWO_CONFIG_SPEED_BAUD        (4000000) /* J-Link supports up to 5625 kHz */
 #define McuSWO_CONFIG_DO_MUXING         (1) /* muxing is done with pins tool */
 #define McuSWO_CONFIG_DO_CLOCKING       (1) /* 1: do SWO clock settings  */
-#define McuSWO_CONFIG_DO_SWO_INIT       (0) /* 1: SWO register configuration */
+#define McuSWO_CONFIG_DO_SWO_INIT       (1) /* 1: SWO register configuration */
 #define McuSWO_CONFIG_RETARGET_STDIO    (1) /* STDIO redirection: printf(), scanf() */
 /* -----------------------------------------------------*/
 

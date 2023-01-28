@@ -226,7 +226,7 @@ extern void _vStackTop(void);
 //*****************************************************************************
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
-WEAK extern void __valid_user_code_checksum();
+//WEAK extern void __valid_user_code_checksum();
 extern void _vStackBase(void);
 
 //*****************************************************************************
@@ -242,7 +242,7 @@ extern void _vStackBase(void);
 
 
 extern void (* const g_pfnVectors[])(void);
-extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
+//extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
 __attribute__ ((used, section(".isr_vector")))
 void (* const g_pfnVectors[])(void) = {
@@ -362,7 +362,7 @@ void bss_init(unsigned int start, unsigned int len) {
 //*****************************************************************************
 extern unsigned int __data_section_table;
 extern unsigned int __data_section_table_end;
-extern unsigned int __bss_section_table;
+//extern unsigned int __bss_section_table;
 extern unsigned int __bss_section_table_end;
 
 //*****************************************************************************
