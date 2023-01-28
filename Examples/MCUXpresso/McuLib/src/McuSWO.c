@@ -293,7 +293,7 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
     char *p;
 
     printf("fgets: Enter a line and press ENTER:\n");
-    p = fgets(buf, bufSize, stdin);
+    p = fgets((char*)buf, bufSize, stdin);
     if (p!=NULL) {
       printf("fgets: %s\n", buf);
     } else {
