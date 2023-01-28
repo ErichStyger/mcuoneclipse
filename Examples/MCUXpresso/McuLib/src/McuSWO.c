@@ -89,8 +89,6 @@ int __sys_write(int fd, char *buffer, int count) {
 #elif defined (__NEWLIB__)
 int _write(int fd, char *buffer, unsigned int count) {
 #endif
-  int32_t i;
-
   if(fd!=1 && fd!=2) { /* 1 is stdout, 2 is stderr */
     return EOF; /* failed */
   }
@@ -245,8 +243,6 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
 
 #if McuSWO_CONFIG_RETARGET_STDIO
   static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
-    unsigned char ch;
-
     /* McuLib way: */
     McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
     McuSWO_ReadLine(buf, bufSize);
@@ -294,7 +290,6 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
 
   static void ReadLine_fgets(unsigned char *buf, size_t bufSize) {
     /* C standard library way with fgets() */
-    int res;
     char *p;
 
     printf("fgets: Enter a line and press ENTER:\n");
@@ -326,9 +321,7 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   }
 
   void McuSWO_TestStdio(void) {
-    unsigned char ch;
     unsigned char buf[64];
-    int c;
 
     McuSWO_SendStr((unsigned char*)"Starting testing SWO ITM stdout redirection\n");
     TestStdOut();
@@ -359,6 +352,7 @@ McuShell_ConstStdIOTypePtr McuSWO_GetStdio(void) {
   return &McuSWO_stdio;
 }
 
+#if McuSWO_CONFIG_DO_MUXING
 static void MuxSWOPin(void) {
 #if McuLib_CONFIG_CPU_IS_LPC
   CLOCK_EnableClock(kCLOCK_Iocon);
@@ -413,6 +407,7 @@ static void MuxSWOPin(void) {
   #error "NYI"
 #endif
 }
+#endif /* #if McuSWO_CONFIG_DO_MUXING */
 
 static void SetSWOSpeed(uint32_t traceClockHz, uint32_t SWOSpeed) {
   uint32_t SWOPrescaler = (traceClockHz / SWOSpeed) - 1; /* SWOSpeed in Hz, note that traceClockHz is expected to be match the CPU core clock */
@@ -420,6 +415,7 @@ static void SetSWOSpeed(uint32_t traceClockHz, uint32_t SWOSpeed) {
   TPI->ACPR = SWOPrescaler; /* "Async Clock Prescaler Register". Scale the baud rate of the asynchronous output */
 }
 
+#if McuSWO_CONFIG_SHELL_ENABLED
 static void PrintRegHex(McuShell_ConstStdIOType *io, uint32_t regVal, const char *statusStr, const char *desc) {
   uint8_t buf[48];
 
@@ -571,6 +567,7 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
   }
   return ERR_OK; /* no error */
 }
+#endif /* McuSWO_CONFIG_SHELL_ENABLED */
 
 /*!
  * \brief Initialize the SWO trace port for debug message printing

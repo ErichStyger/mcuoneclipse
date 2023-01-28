@@ -47,4 +47,9 @@
   /*!< if SWO PC sampling is turned on */
 #endif
 
+#ifndef McuSWO_CONFIG_SHELL_ENABLED
+  #define McuSWO_CONFIG_SHELL_ENABLED    (1)
+    /*!< 1: Shell support enabled; 0: no command line shell */
+#endif
+
 #endif /* MCUSWOCONFIG_H_ */
