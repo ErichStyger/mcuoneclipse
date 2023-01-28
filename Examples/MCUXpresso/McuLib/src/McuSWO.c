@@ -214,6 +214,106 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
 
 #endif /* McuSWO_CONFIG_RETARGET_STDIO */
 
+#if McuSWO_CONFIG_RETARGET_STDIO
+  static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
+    unsigned char ch;
+
+    /* McuLib way: */
+    McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
+    McuSWO_ReadLine(buf, bufSize);
+    McuSWO_printf("Received:");
+    McuSWO_SendStr(buf);
+  }
+
+  static void ReadLine_getc(unsigned char *buf, size_t bufSize) {
+    int c;
+    size_t i = 0;
+
+    /* C standard library way with getc() */
+    memset(buf, 0, bufSize); /* initialize buffer */
+    printf("getc: Enter some text and press ENTER:\n");
+    do {
+      do {
+        c = getc(stdin);
+      } while(c==EOF); /* poll for input */
+      if (i<bufSize) { /* avoid buffer overflow */
+        buf[i++] = c;
+      }
+    } while(c!='\n');
+    buf[bufSize-1] = '\0'; /* terminate */
+    printf("getc: %s", buf);
+  }
+
+  static void ReadLine_getchar(unsigned char *buf, size_t bufSize) {
+    int c;
+    size_t i = 0;
+
+    /* C standard library way with getchar() */
+    memset(buf, 0, bufSize); /* initialize buffer */
+    printf("getchar: Enter some text and press ENTER:\n");
+    do {
+      do {
+        c = getchar();
+      } while(c==EOF);
+      if (i<bufSize) { /* avoid buffer overflow */
+        buf[i++] = c;
+      }
+    } while(c!='\n');
+    buf[bufSize-1] = '\0';
+    printf("getchar: %s", buf);
+  }
+
+  static void ReadLine_fgets(unsigned char *buf, size_t bufSize) {
+    /* C standard library way with fgets() */
+    int res;
+    char *p;
+
+    printf("fgets: Enter a line and press ENTER:\n");
+    p = fgets(buf, bufSize, stdin);
+    if (p!=NULL) {
+      printf("fgets: %s\n", buf);
+    } else {
+      printf("fgets FAILED\n");
+    }
+  }
+
+  static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
+    /* C standard library way with scanf() */
+    int res;
+    char ch;
+
+    printf("scanf: Enter a single name/word and press ENTER:\n");
+    assert(bufSize>=20);
+    res = scanf("%20s%c", buf, &ch); /* note: ch for the newline */
+    printf("scanf: %s, res: %d, ch:%d\n", buf, res, ch);
+  }
+
+  static void TestStdOut(void) {
+    printf("Using printf(), putc and putchar with SWO\n");
+    putc('*', stdout);
+    putc('#', stderr);
+    putchar('!');
+    putchar('\n');
+  }
+
+  void McuSWO_TestStdio(void) {
+    unsigned char ch;
+    unsigned char buf[64];
+    int c;
+
+    McuSWO_SendStr((unsigned char*)"Starting testing SWO ITM stdout redirection\n");
+    TestStdOut();
+    /* test varioud methods using stdin */
+    ReadLine_McuLib(buf, sizeof(buf));
+    ReadLine_getc(buf, sizeof(buf));
+    ReadLine_getchar(buf, sizeof(buf));
+    ReadLine_fgets(buf, sizeof(buf));
+    ReadLine_scanf(buf, sizeof(buf));
+    McuSWO_SendStr((unsigned char*)"Finished testing SWO ITM stdout redirection\n");
+  }
+#endif
+
+
 void McuSWO_StdIOSendChar(uint8_t ch) {
   (void)SWO_WriteChar(ch, 0);
 }

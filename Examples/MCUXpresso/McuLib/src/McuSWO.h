@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Erich Styger
+ * Copyright (c) 2021-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -61,6 +61,11 @@ void McuSWO_SendStr(const unsigned char *str);
  * \param fmt Format string
  */
 unsigned McuSWO_printf(const char *fmt, ...);
+
+/*!
+ * \brief Test routine for various stdio redirection.
+ */
+void McuSWO_TestStdio(void);
 
 /*! The TraceClock is used to configure the SWO speed. Use this method if the clock has been changed */
 void McuSWO_ChangeTraceClock(uint32_t traceClock);
