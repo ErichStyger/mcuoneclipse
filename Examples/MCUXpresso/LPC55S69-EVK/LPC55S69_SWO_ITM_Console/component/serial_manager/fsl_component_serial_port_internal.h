@@ -45,18 +45,6 @@ serial_manager_status_t Serial_UartDmaDeinit(serial_handle_t serialHandle);
 serial_manager_status_t Serial_UartDmaWrite(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
 
 #if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-serial_manager_status_t Serial_UartDmaWriteBlocking(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
-#endif /* SERIAL_MANAGER_NON_BLOCKING_MODE */
-
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE) && (SERIAL_MANAGER_NON_BLOCKING_DUAL_MODE > 0U))
-serial_manager_status_t Serial_UartDmaRead(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
-#endif
-#else
-serial_manager_status_t Serial_UartDmaRead(serial_handle_t serialHandle, uint8_t *buffer, uint32_t length);
-#endif
-
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
 serial_manager_status_t Serial_UartDmaCancelWrite(serial_handle_t serialHandle);
 serial_manager_status_t Serial_UartDmaInstallTxCallback(serial_handle_t serialHandle,
                                                         serial_manager_callback_t callback,

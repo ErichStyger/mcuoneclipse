@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 NXP
+ * Copyright 2018-2022 NXP
  * All rights reserved.
  *
  *
@@ -238,33 +238,14 @@
 #error SERIAL_PORT_TYPE_UART, SERIAL_PORT_TYPE_USBCDC, SERIAL_PORT_TYPE_SWO and SERIAL_PORT_TYPE_VIRTUAL should not be cleared at same time.
 #endif
 
-#if defined(OSA_USED)
-#include "fsl_component_common_task.h"
-#endif
 /*! @brief Macro to determine whether use common task. */
 #ifndef SERIAL_MANAGER_USE_COMMON_TASK
 #define SERIAL_MANAGER_USE_COMMON_TASK (0U)
-#if (defined(COMMON_TASK_ENABLE) && (COMMON_TASK_ENABLE == 0U))
-#undef SERIAL_MANAGER_USE_COMMON_TASK
-#define SERIAL_MANAGER_USE_COMMON_TASK (0U)
-#endif
-#endif
-
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-#if (defined(OSA_USED) && !(defined(SERIAL_MANAGER_USE_COMMON_TASK) && (SERIAL_MANAGER_USE_COMMON_TASK > 0U)))
-#include "fsl_os_abstraction.h"
-#endif
 #endif
 
 #if defined(OSA_USED)
+#if (defined(SERIAL_MANAGER_USE_COMMON_TASK) && (SERIAL_MANAGER_USE_COMMON_TASK > 0U))
 #include "fsl_component_common_task.h"
-#endif
-/*! @brief Macro to determine whether use common task. */
-#ifndef SERIAL_MANAGER_USE_COMMON_TASK
-#define SERIAL_MANAGER_USE_COMMON_TASK (0U)
-#if (defined(COMMON_TASK_ENABLE) && (COMMON_TASK_ENABLE == 0U))
-#undef SERIAL_MANAGER_USE_COMMON_TASK
-#define SERIAL_MANAGER_USE_COMMON_TASK (0U)
 #endif
 #endif
 
@@ -365,9 +346,12 @@ typedef void *serial_write_handle_t;
 /*! @brief The read handle of the serial manager module */
 typedef void *serial_read_handle_t;
 
+#ifndef _SERIAL_PORT_T_
+#define _SERIAL_PORT_T_
 /*! @brief serial port type*/
 typedef enum _serial_port_type
 {
+    kSerialPort_None = 0U, /*!< Serial port is none */
     kSerialPort_Uart = 1U, /*!< Serial port UART */
     kSerialPort_UsbCdc,    /*!< Serial port USB CDC */
     kSerialPort_Swo,       /*!< Serial port SWO */
@@ -376,8 +360,8 @@ typedef enum _serial_port_type
     kSerialPort_UartDma,   /*!< Serial port UART DMA*/
     kSerialPort_SpiMaster, /*!< Serial port SPIMASTER*/
     kSerialPort_SpiSlave,  /*!< Serial port SPISLAVE*/
-    kSerialPort_None,      /*!< Serial port is none */
 } serial_port_type_t;
+#endif
 
 /*! @brief serial manager type*/
 typedef enum _serial_manager_type
@@ -421,11 +405,18 @@ typedef struct _serial_manager_callback_message
     uint32_t length; /*!< Transferred data length */
 } serial_manager_callback_message_t;
 
-/*! @brief callback function */
+/*! @brief serial manager callback function */
 typedef void (*serial_manager_callback_t)(void *callbackParam,
                                           serial_manager_callback_message_t *message,
                                           serial_manager_status_t status);
 
+/*! @brief serial manager Lowpower Critical callback function */
+typedef void (*serial_manager_lowpower_critical_callback_t)(void);
+typedef struct _serial_manager_lowpower_critical_CBs_t
+{
+    serial_manager_lowpower_critical_callback_t serialEnterLowpowerCriticalFunc;
+    serial_manager_lowpower_critical_callback_t serialExitLowpowerCriticalFunc;
+} serial_manager_lowpower_critical_CBs_t;
 /*******************************************************************************
  * API
  ******************************************************************************/
@@ -787,6 +778,27 @@ serial_manager_status_t SerialManager_InstallRxCallback(serial_read_handle_t rea
                                                         serial_manager_callback_t callback,
                                                         void *callbackParam);
 
+/*!
+ * @brief Check if need polling ISR.
+ *
+ * This function is used to check if need polling ISR.
+ *
+ * @retval TRUE if need polling.
+ */
+static inline bool SerialManager_needPollingIsr(void)
+{
+#if (defined(__DSC__) && defined(__CW__))
+    return !(isIRQAllowed());
+#elif defined(CPSR_M_Msk)
+    return (0x13 == (__get_CPSR() & CPSR_M_Msk));
+#elif defined(DAIF_I_BIT)
+    return (__get_DAIF() & DAIF_I_BIT);
+#elif defined(__XCC__)
+    return (xthal_get_interrupt() & xthal_get_intenable());
+#else
+    return (0U != __get_IPSR());
+#endif
+}
 #endif
 
 /*!
@@ -810,22 +822,14 @@ serial_manager_status_t SerialManager_EnterLowpower(serial_handle_t serialHandle
 serial_manager_status_t SerialManager_ExitLowpower(serial_handle_t serialHandle);
 
 /*!
- * @brief Check if need polling ISR.
+ * @brief This function performs initialization of the callbacks structure used to disable lowpower
+ *          when serial manager is active.
  *
- * This function is used to check if need polling ISR.
  *
- * @retval TRUE if need polling.
+ * @param  pfCallback Pointer to the function structure used to allow/disable lowpower.
+ *
  */
-static inline bool SerialManager_needPollingIsr(void)
-{
-#if (defined(__DSC__) && defined(__CW__))
-    return !(isIRQAllowed());
-#elif defined(__GIC_PRIO_BITS)
-    return (0x13 == (__get_CPSR() & CPSR_M_Msk));
-#else
-    return (0U != __get_IPSR());
-#endif
-}
+void SerialManager_SetLowpowerCriticalCb(const serial_manager_lowpower_critical_CBs_t *pfCallback);
 
 #if defined(__cplusplus)
 }

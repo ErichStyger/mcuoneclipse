@@ -58,15 +58,6 @@ typedef enum _serial_port_uart_stop_bit_count
     kSerialManager_UartTwoStopBit = 1U, /*!< Two stop bits */
 } serial_port_uart_stop_bit_count_t;
 
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-/*! @brief serial port uart block mode*/
-typedef enum _serial_port_uart_block_mode
-{
-    kSerialManager_UartNonBlockMode = 0x0U, /*!< Uart NonBlock Mode */
-    kSerialManager_UartBlockMode    = 0x1U, /*!< Uart Block Mode */
-} serial_port_uart_block_mode_t;
-#endif /* SERIAL_MANAGER_NON_BLOCKING_MODE */
-
 typedef struct _serial_port_uart_config
 {
     uint32_t clockRate;                             /*!< clock rate  */
@@ -80,9 +71,7 @@ typedef struct _serial_port_uart_config
     uint8_t enableTxCTS; /*!< Enable TX CTS */
     uint8_t instance;    /*!< Instance (0 - UART0, 1 - UART1, ...), detail information
                               please refer to the SOC corresponding RM. */
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-    serial_port_uart_block_mode_t mode; /*!< serial port uart block mode */
-#endif                                  /* SERIAL_MANAGER_NON_BLOCKING_MODE */
+
 #if (defined(HAL_UART_ADAPTER_FIFO) && (HAL_UART_ADAPTER_FIFO > 0u))
     uint8_t txFifoWatermark;
     uint8_t rxFifoWatermark;
@@ -102,9 +91,6 @@ typedef struct _serial_port_uart_dma_config
     uint8_t enableTxCTS; /*!< Enable TX CTS */
     uint8_t instance;    /*!< Instance (0 - UART0, 1 - UART1, ...), detail information
                               please refer to the SOC corresponding RM. */
-#if (defined(SERIAL_MANAGER_NON_BLOCKING_MODE) && (SERIAL_MANAGER_NON_BLOCKING_MODE > 0U))
-    serial_port_uart_block_mode_t mode; /*!< serial port uart block mode */
-#endif                                  /* SERIAL_MANAGER_NON_BLOCKING_MODE */
 #if (defined(HAL_UART_ADAPTER_FIFO) && (HAL_UART_ADAPTER_FIFO > 0u))
     uint8_t txFifoWatermark;
     uint8_t rxFifoWatermark;

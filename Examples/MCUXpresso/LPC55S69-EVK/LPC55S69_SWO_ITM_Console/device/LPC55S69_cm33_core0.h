@@ -11,13 +11,13 @@
 **
 **     Reference manual:    LPC55S6x/LPC55S2x/LPC552x User manual(UM11126) Rev.1.3  16 May 2019
 **     Version:             rev. 1.1, 2019-05-16
-**     Build:               b211009
+**     Build:               b220718
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for LPC55S69_cm33_core0
 **
 **     Copyright 1997-2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2021 NXP
+**     Copyright 2016-2022 NXP
 **     All rights reserved.
 **
 **     SPDX-License-Identifier: BSD-3-Clause
@@ -3764,256 +3764,256 @@ typedef struct {
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_MASK (0x1U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_SHIFT (0U)
 /*! SYS_IRQ - Watchdog Timer, Brown Out Detectors and Flash Controller interrupts
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SYS_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_MASK (0x2U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_SHIFT (1U)
 /*! SDMA0_IRQ - System DMA 0 (non-secure) interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SDMA0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_MASK (0x4U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_SHIFT (2U)
 /*! GPIO_GLOBALINT0_IRQ - GPIO Group 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_MASK (0x8U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_SHIFT (3U)
 /*! GPIO_GLOBALINT1_IRQ - GPIO Group 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_GLOBALINT1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_MASK (0x10U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_SHIFT (4U)
 /*! GPIO_INT0_IRQ0 - Pin interrupt 0 or pattern match engine slice 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_MASK (0x20U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_SHIFT (5U)
 /*! GPIO_INT0_IRQ1 - Pin interrupt 1 or pattern match engine slice 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_MASK (0x40U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_SHIFT (6U)
 /*! GPIO_INT0_IRQ2 - Pin interrupt 2 or pattern match engine slice 2 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_MASK (0x80U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_SHIFT (7U)
 /*! GPIO_INT0_IRQ3 - Pin interrupt 3 or pattern match engine slice 3 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_GPIO_INT0_IRQ3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_MASK (0x100U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_SHIFT (8U)
 /*! UTICK_IRQ - Micro Tick Timer interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_UTICK_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_MASK (0x200U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_SHIFT (9U)
 /*! MRT_IRQ - Multi-Rate Timer interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MRT_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_MASK (0x400U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_SHIFT (10U)
 /*! CTIMER0_IRQ - Standard counter/timer 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_MASK (0x800U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_SHIFT (11U)
 /*! CTIMER1_IRQ - Standard counter/timer 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_MASK (0x1000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_SHIFT (12U)
 /*! SCT_IRQ - SCTimer/PWM interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_SCT_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_MASK (0x2000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_SHIFT (13U)
 /*! CTIMER3_IRQ - Standard counter/timer 3 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_CTIMER3_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_MASK (0x4000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_SHIFT (14U)
 /*! FLEXCOMM0_IRQ - Flexcomm 0 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_MASK (0x8000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_SHIFT (15U)
 /*! FLEXCOMM1_IRQ - Flexcomm 1 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_MASK (0x10000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_SHIFT (16U)
 /*! FLEXCOMM2_IRQ - Flexcomm 2 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM2_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_MASK (0x20000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_SHIFT (17U)
 /*! FLEXCOMM3_IRQ - Flexcomm 3 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM3_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_MASK (0x40000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_SHIFT (18U)
 /*! FLEXCOMM4_IRQ - Flexcomm 4 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM4_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_MASK (0x80000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_SHIFT (19U)
 /*! FLEXCOMM5_IRQ - Flexcomm 5 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM5_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_MASK (0x100000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_SHIFT (20U)
 /*! FLEXCOMM6_IRQ - Flexcomm 6 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM6_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_MASK (0x200000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_SHIFT (21U)
 /*! FLEXCOMM7_IRQ - Flexcomm 7 interrupt (USART, SPI, I2C, I2S).
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_FLEXCOMM7_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_MASK (0x400000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_SHIFT (22U)
 /*! ADC_IRQ - General Purpose ADC interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ADC_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_MASK (0x800000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_SHIFT (23U)
 /*! RESERVED0 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_MASK (0x1000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_SHIFT (24U)
 /*! ACMP_IRQ - Analog Comparator interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_ACMP_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_MASK (0x2000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_SHIFT (25U)
 /*! RESERVED1 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_MASK (0x4000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_SHIFT (26U)
 /*! RESERVED2 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_MASK (0x8000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_SHIFT (27U)
 /*! USB0_NEEDCLK - USB Full Speed Controller Clock request interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_NEEDCLK_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_MASK (0x10000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_SHIFT (28U)
 /*! USB0_IRQ - USB Full Speed Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_USB0_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_MASK (0x20000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_SHIFT (29U)
 /*! RTC_IRQ - RTC_LITE0_ALARM_IRQ, RTC_LITE0_WAKEUP_IRQ
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RTC_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_MASK (0x40000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_SHIFT (30U)
 /*! RESERVED3 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_RESERVED3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_MASK (0x80000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_SHIFT (31U)
 /*! MAILBOX_IRQ - Mailbox interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK0_MAILBOX_IRQ_MASK)
 /*! @} */
@@ -4024,224 +4024,224 @@ typedef struct {
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_MASK (0x1U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_SHIFT (0U)
 /*! GPIO_INT0_IRQ4 - Pin interrupt 4 or pattern match engine slice 4 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ4_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_MASK (0x2U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_SHIFT (1U)
 /*! GPIO_INT0_IRQ5 - Pin interrupt 5 or pattern match engine slice 5 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ5_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_MASK (0x4U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_SHIFT (2U)
 /*! GPIO_INT0_IRQ6 - Pin interrupt 6 or pattern match engine slice 6 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ6_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_MASK (0x8U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_SHIFT (3U)
 /*! GPIO_INT0_IRQ7 - Pin interrupt 7 or pattern match engine slice 7 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_GPIO_INT0_IRQ7_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_MASK (0x10U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_SHIFT (4U)
 /*! CTIMER2_IRQ - Standard counter/timer 2 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER2_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_MASK (0x20U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_SHIFT (5U)
 /*! CTIMER4_IRQ - Standard counter/timer 4 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CTIMER4_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_MASK (0x40U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_SHIFT (6U)
 /*! OS_EVENT_TIMER_IRQ - OS Event Timer and OS Event Timer Wakeup interrupts
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_OS_EVENT_TIMER_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_MASK (0x80U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_SHIFT (7U)
 /*! RESERVED0 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_MASK (0x100U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_SHIFT (8U)
 /*! RESERVED1 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_MASK (0x200U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_SHIFT (9U)
 /*! RESERVED2 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED2_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_MASK (0x400U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_SHIFT (10U)
 /*! SDIO_IRQ - SDIO Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDIO_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_MASK (0x800U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_SHIFT (11U)
 /*! RESERVED3 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED3_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_MASK (0x1000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_SHIFT (12U)
 /*! RESERVED4 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED4_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_MASK (0x2000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_SHIFT (13U)
 /*! RESERVED5 - Reserved. Read value is undefined, only zero should be written.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_RESERVED5_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_MASK (0x4000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_SHIFT (14U)
 /*! USB1_PHY_IRQ - USB High Speed PHY Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_PHY_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_MASK (0x8000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_SHIFT (15U)
 /*! USB1_IRQ - USB High Speed Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_MASK (0x10000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_SHIFT (16U)
 /*! USB1_NEEDCLK - USB High Speed Controller Clock request interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_USB1_NEEDCLK_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_MASK (0x20000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_SHIFT (17U)
 /*! SEC_HYPERVISOR_CALL_IRQ - Secure fault Hyper Visor call interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_HYPERVISOR_CALL_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_MASK (0x40000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_SHIFT (18U)
 /*! SEC_GPIO_INT0_IRQ0 - Secure Pin interrupt 0 or pattern match engine slice 0 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ0_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_MASK (0x80000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_SHIFT (19U)
 /*! SEC_GPIO_INT0_IRQ1 - Secure Pin interrupt 1 or pattern match engine slice 1 interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_GPIO_INT0_IRQ1_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_MASK (0x100000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_SHIFT (20U)
 /*! PLU_IRQ - Programmable Look-Up Controller interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PLU_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_MASK (0x200000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_SHIFT (21U)
 /*! SEC_VIO_IRQ - Security Violation interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SEC_VIO_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_MASK (0x400000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_SHIFT (22U)
 /*! SHA_IRQ - HASH-AES interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SHA_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_MASK (0x800000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_SHIFT (23U)
 /*! CASPER_IRQ - CASPER interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_CASPER_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_MASK (0x1000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_SHIFT (24U)
 /*! PUFKEY_IRQ - PUF interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PUFKEY_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_MASK (0x2000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_SHIFT (25U)
 /*! PQ_IRQ - Power Quad interrupt.
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_PQ_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_MASK (0x4000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_SHIFT (26U)
 /*! SDMA1_IRQ - System DMA 1 (Secure) interrupt
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_SDMA1_IRQ_MASK)
 
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_MASK (0x8000000U)
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_SHIFT (27U)
 /*! LSPI_HS_IRQ - High Speed SPI interrupt
- *  0b0..
- *  0b1..
+ *  0b0..Interrupt is blocked to CPU1.
+ *  0b1..Interrupt is readable by CPU1.
  */
 #define AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ(x) (((uint32_t)(((uint32_t)(x)) << AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_SHIFT)) & AHB_SECURE_CTRL_SEC_CPU_INT_MASK1_LSPI_HS_IRQ_MASK)
 /*! @} */
@@ -6726,6 +6726,11 @@ typedef struct {
 #endif
 /** Interrupt vectors for the CTIMER peripheral type */
 #define CTIMER_IRQS                              { CTIMER0_IRQn, CTIMER1_IRQn, CTIMER2_IRQn, CTIMER3_IRQn, CTIMER4_IRQn }
+/* Backward compatibility for bitfield SHADOW */
+#define CTIMER_MSR_MATCH_SHADOW_MASK   CTIMER_MSR_SHADOW_MASK
+#define CTIMER_MSR_MATCH_SHADOW_SHIFT   CTIMER_MSR_SHADOW_SHIFT
+#define CTIMER_MSR_MATCH_SHADOW   CTIMER_MSR_SHADOW
+
 
 /*!
  * @}
@@ -14619,7 +14624,7 @@ typedef struct {
   __IO uint32_t MISCCTRL;                          /**< Dummy Control bus to PMU [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0x90 */
        uint8_t RESERVED_10[4];
   __IO uint32_t RTCOSC32K;                         /**< RTC 1 KHZ and 1 Hz clocks source control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x98 */
-  __IO uint32_t OSTIMERr;                          /**< OS Timer control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x9C */
+  __IO uint32_t OSTIMERr;                          /**< OS Timer control register [Reset by: PoR, Brown Out Detectors Reset], offset: 0x9C, 'r' suffix has been added to avoid a clash with peripheral base pointer macro 'OSTIMER' */
        uint8_t RESERVED_11[24];
   __IO uint32_t PDRUNCFG0;                         /**< Controls the power to various analog blocks [Reset by: PoR, Pin Reset, Brown Out Detectors Reset, Deep Power Down Reset, Software Reset], offset: 0xB8 */
        uint8_t RESERVED_12[4];
@@ -28984,7 +28989,7 @@ typedef struct {
   __IO uint32_t USB1_VBUS_DETECT_CLR;              /**< USB PHY VBUS Detect Control Register, offset: 0xC8 */
   __IO uint32_t USB1_VBUS_DETECT_TOG;              /**< USB PHY VBUS Detect Control Register, offset: 0xCC */
        uint8_t RESERVED_2[48];
-  __IO uint32_t ANACTRLr;                          /**< USB PHY Analog Control Register, offset: 0x100 */
+  __IO uint32_t ANACTRLr;                          /**< USB PHY Analog Control Register, offset: 0x100, 'r' suffix has been added to avoid a clash with peripheral base pointer macro 'ANACTRL' */
   __IO uint32_t ANACTRL_SET;                       /**< USB PHY Analog Control Register, offset: 0x104 */
   __IO uint32_t ANACTRL_CLR;                       /**< USB PHY Analog Control Register, offset: 0x108 */
   __IO uint32_t ANACTRL_TOG;                       /**< USB PHY Analog Control Register, offset: 0x10C */

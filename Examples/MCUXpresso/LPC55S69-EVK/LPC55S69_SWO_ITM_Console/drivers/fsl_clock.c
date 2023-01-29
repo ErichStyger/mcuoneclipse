@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2020 , NXP
+ * Copyright 2017 - 2021 , NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -127,7 +127,7 @@ void CLOCK_AttachClk(clock_attach_id_t connection)
                 sel = GET_ID_ITEM_SEL(item);
                 if (mux == CM_RTCOSC32KCLKSEL)
                 {
-                    PMC->RTCOSC32K |= sel;
+                    PMC->RTCOSC32K = (PMC->RTCOSC32K & ~PMC_RTCOSC32K_SEL_MASK) | PMC_RTCOSC32K_SEL(sel);
                 }
                 else
                 {
@@ -848,12 +848,14 @@ uint32_t CLOCK_GetFlexCommInputClock(uint32_t id)
 /* Get FLEXCOMM Clk */
 uint32_t CLOCK_GetFlexCommClkFreq(uint32_t id)
 {
-    uint32_t freq = 0U;
-    uint32_t temp;
+    uint32_t freq   = 0U;
+    uint32_t frgMul = 0U;
+    uint32_t frgDiv = 0U;
 
-    freq = CLOCK_GetFlexCommInputClock(id);
-    temp = SYSCON->FLEXFRGXCTRL[id] & SYSCON_FLEXFRG0CTRL_MULT_MASK;
-    return freq / (1U + (temp) / ((SYSCON->FLEXFRGXCTRL[id] & SYSCON_FLEXFRG0CTRL_DIV_MASK) + 1U));
+    freq   = CLOCK_GetFlexCommInputClock(id);
+    frgMul = (SYSCON->FLEXFRGXCTRL[id] & SYSCON_FLEXFRG0CTRL_MULT_MASK) >> 8U;
+    frgDiv = SYSCON->FLEXFRGXCTRL[id] & SYSCON_FLEXFRG0CTRL_DIV_MASK;
+    return (uint32_t)(((uint64_t)freq * ((uint64_t)frgDiv + 1ULL)) / (frgMul + frgDiv + 1UL));
 }
 
 /* Get HS_LPSI Clk */
@@ -1159,7 +1161,7 @@ static float findPll0MMult(void)
                        (float)(uint32_t)(1UL << PLL0_SSCG_MD_INT_P));
         mMult       = (float)mMult_int + mMult_fract;
     }
-    if (mMult == 0.0F)
+    if (0ULL == ((uint64_t)mMult))
     {
         mMult = 1.0F;
     }
