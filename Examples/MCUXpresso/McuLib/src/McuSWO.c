@@ -23,7 +23,7 @@
 #endif
 
 #if defined (__REDLIB__) && McuSWO_CONFIG_RETARGET_STDIO
-  #error "SWO standard I/O redirection does not work with RedLib: use newlib or newlib-nano instead"
+  #error "SWO standard I/O redirection does not work with RedLib: use newlib (none) or newlib-nano (none) instead"
 #endif
 
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
