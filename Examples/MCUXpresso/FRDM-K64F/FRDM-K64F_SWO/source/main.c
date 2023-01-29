@@ -42,7 +42,7 @@ int main(void) {
 
   PL_Init(); /* initializes modules including SWO */
   //McuSWO_TestStdio(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
-  while(1) {
+  for(;;) {
     ReadLineTimeout();
     McuSWO_printf("hello from SWO: %d\n", i);
     i++;
