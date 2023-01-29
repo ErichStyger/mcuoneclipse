@@ -14,7 +14,7 @@
 
 #ifndef McuSWO_CONFIG_SPEED_BAUD
   #define McuSWO_CONFIG_SPEED_BAUD       (96000000)
-  /*!< baud of SWO data */
+  /*!< baud of SWO data. Note that the J-Link can consume up to 400 kHz. */
 #endif
 
 #ifndef McuSWO_CONFIG_TERMINAL_CHANNEL

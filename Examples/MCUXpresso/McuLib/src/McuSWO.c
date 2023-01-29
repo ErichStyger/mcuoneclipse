@@ -6,6 +6,7 @@
 
 #include "McuSWO.h"
 #if McuSWO_CONFIG_HAS_SWO
+#include "McuLib.h"
 #include "McuUtility.h"
 #include "McuShell.h"
 #include "McuXFormat.h"
@@ -15,6 +16,10 @@
 #include <stdio.h>
 #if defined (__NEWLIB__)
   #include <sys/stat.h>
+#endif
+#if McuLib_CONFIG_CPU_IS_KINETIS
+  #include "fsl_clock.h"
+  #include "fsl_port.h"
 #endif
 
 #if defined (__REDLIB__) && McuSWO_CONFIG_RETARGET_STDIO
@@ -96,7 +101,7 @@ int _write(int fd, char *buffer, unsigned int count) {
     return EOF; /* failed */
   }
   SWO_WriteBuf(buffer, count, McuSWO_CONFIG_TERMINAL_CHANNEL);
-  return count; /* return the number of chars written */ /* \TODO */
+  return count; /* return the number of chars written */
 }
 #endif /* McuSWO_CONFIG_RETARGET_STDIO */
 
@@ -410,6 +415,27 @@ static void MuxSWOPin(void) {
   #else
     #error "NYI"
   #endif
+#elif McuLib_CONFIG_CPU_IS_KINETIS && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_K64FN
+  /* Port A Clock Gate Control: Clock enabled */
+  CLOCK_EnableClock(kCLOCK_PortA);
+
+  /* PORTA2 (pin 36) is configured as TRACE_SWO */
+  PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt7);
+
+  PORTA->PCR[2] = ((PORTA->PCR[2] &
+                    /* Mask bits to zero which are setting */
+                    (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_DSE_MASK | PORT_PCR_ISF_MASK)))
+
+                   /* Pull Select: Internal pulldown resistor is enabled on the corresponding pin, if the
+                    * corresponding PE field is set. */
+                   | PORT_PCR_PS(kPORT_PullDown)
+
+                   /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
+                   | PORT_PCR_PE(kPORT_PullDisable)
+
+                   /* Drive Strength Enable: Low drive strength is configured on the corresponding pin, if pin
+                    * is configured as a digital output. */
+                   | PORT_PCR_DSE(kPORT_LowDriveStrength));
 #else
   #error "NYI"
 #endif
@@ -494,7 +520,9 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   PrintRegHex(io, ITM->TPR, "   TPR", " (trace privilege)\r\n");
   PrintRegHex(io, ITM->TCR, "   TCR", " (trace control)\r\n");
   PrintRegHex(io, ITM->LSR, "   LSR", " (lock status)\r\n");
+#if McuLib_CONFIG_CORTEX_M==33
   PrintRegHex(io, ITM->DEVARCH, "   DEVARCH", " (device architecture, M33 only)\r\n");
+#endif
   PrintRegHex(io, ITM->PID0, "   PID0", " (peripheral identification 0)\r\n");
   PrintRegHex(io, ITM->PID1, "   PID1", " (peripheral identification 1)\r\n");
   PrintRegHex(io, ITM->PID2, "   PID2", " (peripheral identification 2)\r\n");
@@ -516,12 +544,18 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   PrintRegHex(io, TPI->SPPR,  "   SPPR",  " (Selected Pin Protocol)\r\n");
   PrintRegHex(io, TPI->FFSR,  "   FFSR",  " (Formatter and Flush Status)\r\n");
   PrintRegHex(io, TPI->FFCR,  "   FFSR",  " (Formatter and Flush Control)\r\n");
+#if McuLib_CONFIG_CORTEX_M==33
   PrintRegHex(io, TPI->PSCR,  "   PSCR",  " (Periodic Synchronization Control)\r\n");
+#endif
   PrintRegHex(io, TPI->TRIGGER,  "   TRIGGER",  " (Trigger)\r\n");
+#if McuLib_CONFIG_CORTEX_M==33
   PrintRegHex(io, TPI->ITFTTD0,  "   ITFTTD0",  " (Integration Test FIFO Test Data 0)\r\n");
+#endif
   PrintRegHex(io, TPI->ITATBCTR2,  "   ITATBCTR2",  " (Integration Test ATB Control 2)\r\n");
   PrintRegHex(io, TPI->ITATBCTR0,  "   ITATBCTR0",  " (Integration Test ATB Control 0)\r\n");
+#if McuLib_CONFIG_CORTEX_M==33
   PrintRegHex(io, TPI->ITFTTD1,  "   ITFTTD1",  " (Integration Test FIFO Test Data 1)\r\n");
+#endif
   PrintRegHex(io, TPI->ITCTRL,  "   ITCTRL",  " (Integration Mode Control)\r\n");
   PrintRegHex(io, TPI->CLAIMSET,  "   CLAIMSET",  " (Claim tag set)\r\n");
   PrintRegHex(io, TPI->CLAIMCLR,  "   CLAIMCLR",  " (Claim tag clear)\r\n");
@@ -587,13 +621,15 @@ static void Init(uint32_t traceClockHz, uint32_t SWOSpeed, uint32_t port) {
   MuxSWOPin();
 #endif
 #if McuSWO_CONFIG_DO_CLOCKING
-  /*!< Set up dividers */
-  CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
-  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);     /*!< Reset TRACECLKDIV divider counter and halt it */
-  CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);    /*!< Set TRACECLKDIV divider to value 1 */
+  #if McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_IS_LPC55xx
+    /*!< Set up dividers */
+    CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 0U, true);     /*!< Reset TRACECLKDIV divider counter and halt it */
+    CLOCK_SetClkDiv(kCLOCK_DivArmTrClkDiv, 1U, false);    /*!< Set TRACECLKDIV divider to value 1 */
 
-  /*!< Switch TRACE to TRACE_DIV */
-  CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
+    /*!< Switch TRACE to TRACE_DIV */
+    CLOCK_AttachClk(kTRACE_DIV_to_TRACE);
+  #endif
 #endif
 #if McuSWO_CONFIG_DO_SWO_INIT
 #if 1 /* new initialization */

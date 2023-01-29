@@ -86,6 +86,7 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
   #define McuLib_CONFIG_CPU_VARIANT       (McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69) /* for LPC need to specify the actual device */
 #elif 1 /* example configuration for Kinetis K22 */
   #define McuLib_CONFIG_CPU_IS_KINETIS    (1)  /* NXP Kinetis family */
+  #define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_K64FN
   #define McuLib_CONFIG_CORTEX_M          (4)  /*!< 0: Cortex-M0, 3: M3, 4: M4, 7: M7, 33: M33, -1 otherwise */
 #elif 0 /* example configuration for i.MX RT */
   #define McuLib_CONFIG_CPU_IS_IMXRT      (1)  /* i.MX RT family */
@@ -108,10 +109,10 @@ add_compile_options(-include "../config/IncludeMcuLibConfig.h")
 #define McuSWO_CONFIG_HAS_SWO           (1) /* enable SWO support */
 #define McuSWO_CONFIG_TERMINAL_CHANNEL  (0)
 #define McuSWO_CONFIG_SPEED_BAUD        (4000000) /* J-Link supports up to 4000 kHz */
-#define McuSWO_CONFIG_DO_MUXING         (0) /* muxing is done with pins tool */
-#define McuSWO_CONFIG_DO_CLOCKING       (0) /* 1: do SWO clock settings  */
+#define McuSWO_CONFIG_DO_MUXING         (1) /* if muxing is done with McuSWO */
+#define McuSWO_CONFIG_DO_CLOCKING       (1) /* 1: do SWO clock settings  */
 #define McuSWO_CONFIG_DO_SWO_INIT       (1) /* 1: SWO register configuration */
 #define McuSWO_CONFIG_RETARGET_STDIO    (1) /* STDIO redirection: printf(), scanf() */
-#define McuSWO_CONFIG_SHELL_ENABLED     (0)
+#define McuSWO_CONFIG_SHELL_ENABLED     (1) /* if shell support is enabled or not */
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
