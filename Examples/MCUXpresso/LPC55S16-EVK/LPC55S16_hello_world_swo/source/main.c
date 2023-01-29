@@ -10,6 +10,23 @@
 #include "platform.h"
 #include "McuSWO.h"
 #include "McuWait.h"
+#include "McuUtility.h"
+
+static void SimpleAdder(void) {
+  unsigned char buf[32];
+  const unsigned char *p;
+  int32_t a, b;
+
+  McuSWO_SendStr("\nSimple SWO Adder\n----------------\nType the first number and press ENTER:\n");
+  McuSWO_ReadLineBlocking(buf, sizeof(buf));
+  p = buf;
+  McuUtility_xatoi(&p, &a);
+  McuSWO_SendStr("Type a second number and press ENTER:\n");
+  McuSWO_ReadLineBlocking(buf, sizeof(buf));
+  p = buf;
+  McuUtility_xatoi(&p, &b);
+//  McuSWO_printf("The result of %d + %d is %d\n", a, b, a+b);
+}
 
 static void ReadLineTimeout(void) {
   unsigned char buf[32], res;
@@ -18,7 +35,7 @@ static void ReadLineTimeout(void) {
   buf[0] = '\0'; /* init */
   McuSWO_printf("Enter a line of text:\n", buf);
   for(;;) { /* breaks */
-    res = McuSWO_AppendLine(buf, sizeof(buf));
+    res = McuSWO_ReadAppendLine(buf, sizeof(buf));
     if (res==ERR_OK) {
       McuSWO_printf("received: %s\n", buf);
       break;
@@ -40,11 +57,16 @@ int main(void) {
   BOARD_InitBootClocks(); /* note: SystemCoreClock has to be set, otherwise SWO debugger will fail! */
 
   PL_Init(); /* initializes modules including SWO */
-  //McuSWO_TestStdio(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
+  McuSWO_TestStdio(); /* set a breakpoint here and configure SWO (SWO Trace Config) and enable SWO ITM Console */
+ // for(;;) {
+//    SimpleAdder();
+ // }
+#if 1
   for(;;) {
     ReadLineTimeout();
 	  McuSWO_printf("hello from SWO: %d\n", i);
 	  i++;
 	  McuWait_Waitms(1000);
   }
+#endif
 }
