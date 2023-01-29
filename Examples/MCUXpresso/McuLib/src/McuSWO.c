@@ -143,20 +143,27 @@ void McuSWO_StdIOReadChar(uint8_t *c) {
   }
 }
 
-void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
+uint8_t McuSWO_AppendLine(unsigned char *buf, size_t bufSize) {
   unsigned char ch;
 
+  if (McuSWO_StdIOKeyPressed()) { /* character present? */
+    McuSWO_stdio.stdIn(&ch); /* read character */
+    if (ch!='\0') { /* still available? */
+      McuUtility_chcat(buf, bufSize, ch);
+      if (ch=='\n') {
+        return ERR_OK;
+      }
+    } /* if */
+  } /* if */
+  return ERR_BUSY; /* not reached the end of line yet */
+}
+
+void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize) {
   buf[0] = '\0'; /* init buffer */
   for(;;) { /* breaks */
-    if (McuSWO_StdIOKeyPressed()) {
-      McuSWO_stdio.stdIn(&ch);
-      if (ch!='\0') {
-        McuUtility_chcat(buf, bufSize, ch);
-        if (ch=='\n') {
-          break;
-        }
-      } /* if */
-    } /* if */
+    if (McuSWO_AppendLine(buf, bufSize)) { /* '\n' received */
+      return;
+    }
   } /* for */
 }
 
@@ -245,7 +252,7 @@ void McuSWO_ReadLine(unsigned char *buf, size_t bufSize) {
   static void ReadLine_McuLib(unsigned char *buf, size_t bufSize) {
     /* McuLib way: */
     McuSWO_SendStr((unsigned char*)"Enter some text and press ENTER:\n");
-    McuSWO_ReadLine(buf, bufSize);
+    McuSWO_ReadLineBlocking(buf, bufSize);
     McuSWO_printf("Received:");
     McuSWO_SendStr(buf);
   }

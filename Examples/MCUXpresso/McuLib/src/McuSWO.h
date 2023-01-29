@@ -51,7 +51,15 @@ uint8_t McuSWO_ParseCommand(const uint8_t *cmd, bool *handled, McuShell_ConstStd
  * \param buf Buffer where to store the data
  * \param bufSize Size of the buffer in bytes
  */
-void McuSWO_ReadLine(unsigned char *buf, size_t bufSize);
+void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize);
+
+/*!
+ * \brief Non-blocking version of reading a line. It appends characters to a buffer.
+ * \param buf Pointer to where to store the characters. Note that the buffer has to be initialized with a '\0' by the caller.
+ * \param bufSize Size of buffer in bytes
+ * \return ERR_OK if '\n' has added, ERR_BUSY otherwise.
+ */
+uint8_t McuSWO_AppendLine(unsigned char *buf, size_t bufSize);
 
 /*! send a string through SWO ITM Port 0 (0x1) */
 void McuSWO_SendStr(const unsigned char *str);
