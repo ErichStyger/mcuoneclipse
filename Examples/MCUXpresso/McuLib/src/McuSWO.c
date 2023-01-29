@@ -26,6 +26,11 @@
   #error "SWO standard I/O redirection does not work with RedLib: use newlib (none) or newlib-nano (none) instead"
 #endif
 
+/* standard I/O handles */
+#define McuSWO_StdIn   (0)
+#define McuSWO_StdOut  (1)
+#define McuSWO_StdErr  (2)
+
 static uint32_t SWO_traceClock; /* clock feed into the ARM CoreSight */
 
 #define McuSWO_ITM_RXBUFFER_EMPTY    ((int32_t)0x5AA55AA5) /* special pattern to indicate empty buffer */
@@ -94,7 +99,7 @@ int __sys_write(int fd, char *buffer, int count) {
 #elif defined (__NEWLIB__)
 int _write(int fd, char *buffer, unsigned int count) {
 #endif
-  if(fd!=1 && fd!=2) { /* 1 is stdout, 2 is stderr */
+  if(fd!=McuSWO_StdOut && fd!=McuSWO_StdErr) {
     return EOF; /* failed */
   }
   if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
@@ -137,18 +142,18 @@ bool McuSWO_StdIOKeyPressed(void) {
   return false;
 }
 
-void McuSWO_StdIOReadChar(uint8_t *c) {
+void McuSWO_StdIOReadChar(uint8_t *ch) {
   int res;
 
   res = SWO_ReceiveChar();
   if (res==-1) { /* no character present */
-    *c = '\0';
+    *ch = '\0';
   } else {
-    *c = (uint8_t)res; /* return character */
+    *ch = (uint8_t)res; /* return character */
   }
 }
 
-uint8_t McuSWO_AppendLine(unsigned char *buf, size_t bufSize) {
+uint8_t McuSWO_ReadAppendLine(unsigned char *buf, size_t bufSize) {
   unsigned char ch;
 
   if (McuSWO_StdIOKeyPressed()) { /* character present? */
@@ -166,7 +171,7 @@ uint8_t McuSWO_AppendLine(unsigned char *buf, size_t bufSize) {
 void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize) {
   buf[0] = '\0'; /* init buffer */
   for(;;) { /* breaks */
-    if (McuSWO_AppendLine(buf, bufSize)) { /* '\n' received */
+    if (McuSWO_ReadAppendLine(buf, bufSize)==ERR_OK) { /* '\n' received */
       return;
     }
   } /* for */
@@ -235,7 +240,7 @@ void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize) {
   }
 #elif defined (__NEWLIB__)
   int _read(int fd, char *buffer, int size) {
-    if(fd!=0) { /* 0 is stdin */
+    if(fd!=McuSWO_StdIn) { /* 0 is stdin */
       return EOF; /* failed */
     }
     if (!SWO_Enabled(McuSWO_CONFIG_TERMINAL_CHANNEL)) {
@@ -314,7 +319,7 @@ void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize) {
   }
 
   static void ReadLine_scanf(unsigned char *buf, size_t bufSize) {
-    /* C standard library way with scanf() */
+    /* C standard library way with scanf(). Actually, you better do NOT use scanf() for this, use fgets() instead! */
     int res;
     char ch;
 

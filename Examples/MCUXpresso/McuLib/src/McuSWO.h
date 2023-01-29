@@ -31,6 +31,12 @@ McuShell_ConstStdIOTypePtr McuSWO_GetStdio(void);
 void McuSWO_StdIOSendChar(uint8_t ch);
 
 /*!
+ * \brief Reads a character from the standard input
+ * \param ch Pointer where to store the character, stores '\0' if no character was received
+ */
+void McuSWO_StdIOReadChar(uint8_t *ch);
+
+/*!
  * \brief Checks if there is input from SWO/ITM console
  * \return true if there is input, false otherwise
  */
@@ -59,9 +65,12 @@ void McuSWO_ReadLineBlocking(unsigned char *buf, size_t bufSize);
  * \param bufSize Size of buffer in bytes
  * \return ERR_OK if '\n' has added, ERR_BUSY otherwise.
  */
-uint8_t McuSWO_AppendLine(unsigned char *buf, size_t bufSize);
+uint8_t McuSWO_ReadAppendLine(unsigned char *buf, size_t bufSize);
 
-/*! send a string through SWO ITM Port 0 (0x1) */
+/*!
+ * \brief Send a string through SWO ITM Port 0 (0x1)
+ * \param str String to send
+ */
 void McuSWO_SendStr(const unsigned char *str);
 
 /*!
