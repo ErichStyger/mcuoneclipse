@@ -21,7 +21,7 @@ static void ReadLineTimeout(void) {
   buf[0] = '\0'; /* init */
   McuSWO_printf("Enter a line of text:\n", buf);
   for(;;) { /* breaks */
-    res = McuSWO_AppendLine(buf, sizeof(buf));
+    res = McuSWO_ReadAppendLine(buf, sizeof(buf));
     if (res==ERR_OK) {
       McuSWO_printf("received: %s\n", buf);
       break;
