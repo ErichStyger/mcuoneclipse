@@ -13,13 +13,8 @@ int main(void) {
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
-  BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-  /* Init FSL debug console. */
-  BOARD_InitDebugConsole();
-#endif
 
-  printf("hello world with semihosting!\n");
+  //printf("hello world with semihosting!\n");
 
   McuWait_Init();
   McuSemiHost_Init();

@@ -20,8 +20,8 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* SEGGER specific */
   McuSemihost_Op_SYS_OPEN         = 0x01,
   McuSemihost_Op_SYS_CLOSE        = 0x02,
-  McuSemihost_Op_SYS_WRITEC       = 0x03,
-  McuSemihost_Op_SYS_WRITE0       = 0x04,
+  McuSemihost_Op_SYS_WRITEC       = 0x03, /* write a character byte, pointed to by R1 */
+  McuSemihost_Op_SYS_WRITE0       = 0x04, /* writes a null terminated string. R1 points to the first byte */
   McuSemihost_Op_SYS_WRITE        = 0x05,
   McuSemihost_Op_SYS_READ         = 0x06,
   McuSemihost_Op_SYS_READC        = 0x07,
@@ -33,8 +33,8 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_TMPNAME      = 0x0D,
   McuSemihost_Op_SYS_REMOVE       = 0x0E,
   McuSemihost_Op_SYS_RENAME       = 0x0F,
-  McuSemihost_Op_SYS_CLOCK        = 0x10,
-  McuSemihost_Op_SYS_TIME         = 0x11, /* time in seconds since 1970 */
+  McuSemihost_Op_SYS_CLOCK        = 0x10, /* returns the number of centi-seconds since execution started */
+  McuSemihost_Op_SYS_TIME         = 0x11, /* time in seconds since Jan 1st 1970 */
   McuSemihost_Op_SYS_SYSTEM       = 0x12,
   McuSemihost_Op_SYS_ERRNO        = 0x13,
   /* 0x14? */
@@ -54,100 +54,61 @@ typedef enum McuSemihost_Op_e {
 #define McuSemihost_ERROUT          2
 
 /* File modes for McuSemihost_Op_SYS_OPEN */
-#define SYS_FILE_MODE_READ              0   // Open the file for reading "r"
-#define SYS_FILE_MODE_READBINARY        1   // Open the file for reading "rb"
-#define SYS_FILE_MODE_READWRITE         2   // Open the file for reading and writing "r+"
-#define SYS_FILE_MODE_READWRITEBINARY   3   // Open the file for reading and writing "r+"
-#define SYS_FILE_MODE_WRITE             4   // Open and truncate or create the file for writing "w"
-#define SYS_FILE_MODE_WRITEBINARY       5   // Open and truncate or create the file for writing "wb"
-#define SYS_FILE_MODE_WRITEREAD         6   // Open and truncate or create the file for writing and reading "w+"
-#define SYS_FILE_MODE_WRITEREADBINARY   7   // Open and truncate or create the file for writing and reading "w+b"
-#define SYS_FILE_MODE_APPEND            8   // Open or create the file for writing "a"
-#define SYS_FILE_MODE_APPENDBINARY      9   // Open or create the file for writing "ab"
-#define SYS_FILE_MODE_APPENDREAD        10  // Open or create the file for writing and reading "a+"
-#define SYS_FILE_MODE_APPENDREADBINARY  11  // Open or create the file for writing and reading "a+b"
+#define SYS_FILE_MODE_READ              0   /* Open the file for reading "r" */
+#define SYS_FILE_MODE_READBINARY        1   /* Open the file for reading "rb" */
+#define SYS_FILE_MODE_READWRITE         2   /* Open the file for reading and writing "r+" */
+#define SYS_FILE_MODE_READWRITEBINARY   3   /* Open the file for reading and writing "r+" */
+#define SYS_FILE_MODE_WRITE             4   /* Open and truncate or create the file for writing "w" */
+#define SYS_FILE_MODE_WRITEBINARY       5   /* Open and truncate or create the file for writing "wb" */
+#define SYS_FILE_MODE_WRITEREAD         6   /* Open and truncate or create the file for writing and reading "w+" */
+#define SYS_FILE_MODE_WRITEREADBINARY   7   /* Open and truncate or create the file for writing and reading "w+b" */
+#define SYS_FILE_MODE_APPEND            8   /* Open or create the file for writing "a" */
+#define SYS_FILE_MODE_APPENDBINARY      9   /* Open or create the file for writing "ab" */
+#define SYS_FILE_MODE_APPENDREAD        10  /* Open or create the file for writing and reading "a+" */
+#define SYS_FILE_MODE_APPENDREADBINARY  11  /* Open or create the file for writing and reading "a+b" */
 
+//static inline
+int
+//__attribute__ ((always_inline))
+McuSemihost_HostRequest(int reason, void *arg)
+{
+  int value;
+  asm volatile (
+      " mov r0, %[rsn] \n"
+      " mov r1, %[arg] \n"
+      " nop \n"
+      " bkpt 0xAB      \n"
+      " mov %[val], r0"
 
-/* notify the debugger with a breakpoint */
-static inline int __attribute__ ((always_inline)) McuSemihost_CallHost(int op, void *p1, void *p2) {
+      : [val] "=r" (value) /* outputs */
+      : [rsn] "r" (reason), [arg] "r" (arg) /* inputs */
+      : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc" /* clobber */
+  );
+  return value;
+}
+
+int McuSemihost_CallHost_other(int op, void *p1, void *p2) {
   register int r0 asm("r0");
   register int r1 asm("r1") __attribute__((unused));
   register int r2 asm("r2") __attribute__((unused));
 
   r0 = op;
-  r1 = (int)p1;
-  r2 = (int)p2;
-  __asm volatile(
-      " bkpt 0xAB\n"
-      : "=r"(r0) /* outputs */
-      : /* input */
-      : /* clobber */
+  r1 = (int) p1;
+  r2 = (int) p2;
+
+  asm volatile(
+      " bkpt 0xAB \n"
+      : "=r"(r0) // out
+      :// in
+      :// clobber
   );
   return r0;
 }
 
-// SWI numbers and reason codes for RDI (Angel) monitors.
-#define AngelSWI_ARM                    0x123456
-#ifdef __thumb__
-#define AngelSWI                        0xAB
-#else
-#define AngelSWI                        AngelSWI_ARM
-#endif
-// For thumb only architectures use the BKPT instruction instead of SWI.
-#if defined(__ARM_ARCH_7M__)     \
-    || defined(__ARM_ARCH_7EM__) \
-    || defined(__ARM_ARCH_6M__)
-#define AngelSWIInsn                    "bkpt"
-#define AngelSWIAsm                     bkpt
-#else
-#define AngelSWIInsn                    "swi"
-#define AngelSWIAsm                     swi
-#endif
-
-#if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
-// Testing the local semihosting handler cannot use another BKPT, since this
-// configuration cannot trigger HaedFault exceptions while the debugger is
-// connected, so we use an illegal op code, that will trigger an
-// UsageFault exception.
-#define AngelSWITestFault       "setend be"
-#define AngelSWITestFaultOpCode (0xB658)
-#endif
-
-//static inline
-int
-//__attribute__ ((always_inline))
-call_host (int reason, void *arg)
-{
-  int value;
-  asm volatile (
-      " mov r0, %[rsn]  \n"
-      " mov r1, %[arg]  \n"
-#if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
-      " " AngelSWITestFault " \n"
-#else
-      " " AngelSWIInsn " %[swi] \n"
-#endif
-      " mov %[val], r0"
-
-      : [val] "=r" (value) /* Outputs */
-      : [rsn] "r" (reason), [arg] "r" (arg), [swi] "i" (AngelSWI) /* Inputs */
-      : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc"
-      // Clobbers r0 and r1, and lr if in supervisor mode
-  );
-
-  // Accordingly to page 13-77 of ARM DUI 0040D other registers
-  // can also be clobbered. Some memory positions may also be
-  // changed by a system call, so they should not be kept in
-  // registers. Note: we are assuming the manual is right and
-  // Angel is respecting the APCS.
-  return value;
-}
-
-
-static int McuSemihost_HostRequest(McuSemihost_Op_e op, void *param) {
-  return call_host(op, param);
-  //return McuSemihost_CallHost(op, param, 0);
-}
+//static int McuSemihost_HostRequest(McuSemihost_Op_e op, void *param) {
+//  return McuSemihost_CallHost(op, param);
+  //return McuSemihost_CallHost(op, param, 0); /* SEGGER way */
+//}
 
 /*!
  * \brief Return the current system time
@@ -249,7 +210,7 @@ int McuSemihost_ReadChar(void) {
 }
 
 int McuSemihost_WriteChar(char ch) {
-  int32_t param = ch; /* address must be aligned, so we are using a 32bit value here */
+  int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   /* Write a character byte, pointed to by R1 */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEC, &param);
 }
@@ -324,8 +285,9 @@ static void TestFileOperations(void) {
   int r;
   char buf[24];
 
-  printf("hello semihosting\n");
+#if 0
   /* quick test */
+  /* Note: file will be created as C:\NXP\MCUXpressoIDE_11.7.0_9198\ide\testxx.txt */
   hFile = McuSemihost_FileOpen("testxx.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("testxx.txt"));
   if (hFile == -1) {
     McuSemihost_WriteString((unsigned char*)"Failed\n");
@@ -333,8 +295,8 @@ static void TestFileOperations(void) {
     McuSemihost_WriteString((unsigned char*)"OK\n");
     McuSemihost_FileClose(hFile);
   }
-
-  McuSemihost_WriteString((unsigned char*)"Open and create file on host system (SYS_OPEN):");
+#endif
+  McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Open and create file on host:");
   McuSemihost_WriteString((unsigned char*)_FILENAME_OPEN);
   McuSemihost_WriteString((unsigned char*)"\n");
   hFile = McuSemihost_FileOpen(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
@@ -433,40 +395,44 @@ static void TestFileOperations(void) {
   }
 }
 
-#if 0
 static void ConsoleInputOutput(void) {
   /* test of console input and output */
   int c;
 
-  McuSemihost_WriteString((unsigned char*)"Please type a character and press <ENTER>:\n"); /* writing zero terminated string */
+  McuSemihost_WriteString((unsigned char*)"READ_C: Please type a character and press <ENTER>:\n"); /* writing zero terminated string */
   do {
     c = McuSemihost_ReadChar();
   } while(c<0);
-  McuSemihost_printf("You entered: %c\n", c);
+  McuSemihost_printf("You typed: %c\n", c);
 }
-#endif
 
-
-void McuSemiHost_Init(void) {
+void McuSemiHost_Test(void) {
   unsigned char buf[64];
   TIMEREC time;
   DATEREC date;
   int value;
 
-  McuSemihost_WriteString((unsigned char*)"McuSemihost testing start...\n");
-  int secs = McuSemihost_HostTime();
+  const unsigned char *txt = (unsigned char*)"This is a SYS_WRITEC test\n";
+
+  while(*txt!='\0') {
+    McuSemihost_WriteChar(*txt); /* using SYS_WRITEC */
+    txt++;
+  }
+  McuSemihost_WriteString((unsigned char*)"This is a SYS_WRITE0 test\n"); /* using SYS_WRITE0 */
+
+  int secs = McuSemihost_HostTime(); /* using SYS_TIME */
   McuTimeDate_UnixSecondsToTimeDateCustom(secs, -1 /* winter time */, &time, &date, 1970);
-  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"host time: ");
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"SYS_TIME: time: ");
   McuTimeDate_AddTimeString(buf, sizeof(buf), &time, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_TIME_FORMAT_STR);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
   McuTimeDate_AddDateString(buf, sizeof(buf), &date, (unsigned char*)McuTimeDate_CONFIG_DEFAULT_DATE_FORMAT_STR);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\n");
   McuSemihost_WriteString(buf);
 
-  value = McuSemihost_HostClock();
-  McuSemihost_printf("Execution time: %d centi-seconds\n", value);
+  value = McuSemihost_HostClock(); /* using SYS_CLOCK */
+  McuSemihost_printf("SYS_CLOCK: Execution time: %d centi-seconds\n", value); /* test with printf and SYS_WRITE_C */
 
-//  ConsoleInputOutput();
+  ConsoleInputOutput();
   TestFileOperations();
   McuSemihost_WriteString((unsigned char*)"McuSemihost testing done!\n");
 }
@@ -477,10 +443,20 @@ void McuSemiHost_Deinit(void) {
 }
 
 void McuSemiHost_Init(void) {
-#if 0 /* cannot open it twice (restart)? */
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES /* cannot open it twice (restart)? */
   /* initialize standard I/O handler, see https://developer.arm.com/documentation/dui0471/g/Semihosting/SYS-OPEN--0x01- */
-  (void)McuSemihost_FileOpen(":tt", SYS_FILE_MODE_READ, strlen(":tt")); /* stdin */
-  (void)McuSemihost_FileOpen(":tt", SYS_FILE_MODE_WRITE, strlen(":tt")); /* stdout */
-  (void)McuSemihost_FileOpen(":tt", SYS_FILE_MODE_APPEND, strlen(":tt")); /* stderr */
+  int fh;
+  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_READ, strlen(":tt")); /* stdin */
+  if (fh!=McuSemihost_STDIN) {
+    for(;;) {}
+  }
+  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_WRITE, strlen(":tt")); /* stdout */
+  if (fh!=McuSemihost_STDOUT) {
+    for(;;) {}
+  }
+  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_APPEND, strlen(":tt")); /* stderr */
+  if (fh!=McuSemihost_STDERR) {
+    for(;;) {}
+  }
 #endif
 }
