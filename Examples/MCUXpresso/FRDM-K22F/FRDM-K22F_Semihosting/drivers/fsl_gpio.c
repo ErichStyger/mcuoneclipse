@@ -110,6 +110,15 @@ void GPIO_PinInit(GPIO_Type *base, uint32_t pin, const gpio_pin_config_t *config
     }
 }
 
+#if defined(FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER) && FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER
+void GPIO_GetVersionInfo(GPIO_Type *base, gpio_version_info_t *info)
+{
+    info->feature = (uint16_t)base->VERID;
+    info->minor   = (uint8_t)(base->VERID >> GPIO_VERID_MINOR_SHIFT);
+    info->major   = (uint8_t)(base->VERID >> GPIO_VERID_MAJOR_SHIFT);
+}
+#endif /* FSL_FEATURE_GPIO_HAS_VERSION_INFO_REGISTER */
+
 #if !(defined(FSL_FEATURE_PORT_HAS_NO_INTERRUPT) && FSL_FEATURE_PORT_HAS_NO_INTERRUPT)
 /*!
  * brief Reads the GPIO port interrupt status flag.
@@ -145,7 +154,22 @@ uint32_t GPIO_GpioGetInterruptFlags(GPIO_Type *base)
 {
     return base->ISFR[0];
 }
-
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*!
+ * brief Read the GPIO interrupt status flags based on selected interrupt channel(IRQS).
+ * param base GPIO peripheral base pointer. (GPIOA, GPIOB, GPIOC, and so on.)
+ * param channel '0' means selete interrupt channel 0, '1' means selete interrupt channel 1.
+ * 
+ * return The current GPIO's interrupt status flag based on the selected interrupt channel.
+ *         '1' means the related pin's flag is set, '0' means the related pin's flag not set.
+ *          For example, the return value 0x00010001 means the pin 0 and 17 have the interrupt pending.
+ */
+uint32_t GPIO_GpioGetInterruptChannelFlags(GPIO_Type *base, uint32_t channel)
+{
+    assert(channel < 2U);
+    return base->ISFR[channel];
+}
+#endif /* FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT */
 /*!
  * brief Read individual pin's interrupt status flag.
  *
@@ -185,7 +209,20 @@ void GPIO_GpioClearInterruptFlags(GPIO_Type *base, uint32_t mask)
 {
     base->ISFR[0] = GPIO_FIT_REG(mask);
 }
-
+#if (defined(FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT) && FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT)
+/*!
+ * brief Clears GPIO pin interrupt status flags based on selected interrupt channel(IRQS).
+ *
+ * param base GPIO peripheral base pointer (GPIOA, GPIOB, GPIOC, and so on.)
+ * param mask GPIO pin number macro
+ * param channel '0' means selete interrupt channel 0, '1' means selete interrupt channel 1.
+ */
+void GPIO_GpioClearInterruptChannelFlags(GPIO_Type *base, uint32_t mask, uint32_t channel)
+{
+    assert(channel < 2U);
+    base->ISFR[channel] = GPIO_FIT_REG(mask);
+}
+#endif /* FSL_FEATURE_GPIO_HAS_INTERRUPT_CHANNEL_SELECT */
 /*!
  * brief Clear GPIO individual pin's interrupt status flag.
  *
