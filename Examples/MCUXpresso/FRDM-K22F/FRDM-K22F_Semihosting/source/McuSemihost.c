@@ -25,13 +25,17 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_READ         = 0x06, /* read data from a file */
   McuSemihost_Op_SYS_READC        = 0x07, /* read a character from stdin */
   McuSemihost_Op_SYS_ISERROR      = 0x08,
-  McuSemihost_Op_SYS_ISTTY        = 0x09,
-  McuSemihost_Op_SYS_SEEK         = 0x0A,
+  McuSemihost_Op_SYS_ISTTY        = 0x09, /* check if it is a TTY */
+  McuSemihost_Op_SYS_SEEK         = 0x0A, /* move current file position */
   /* 0x0B ? */
-  McuSemihost_Op_SYS_FLEN         = 0x0C,
+  McuSemihost_Op_SYS_FLEN         = 0x0C, /* tell the file length */
   McuSemihost_Op_SYS_TMPNAME      = 0x0D,
-  McuSemihost_Op_SYS_REMOVE       = 0x0E,
-  McuSemihost_Op_SYS_RENAME       = 0x0F,
+#if McuSemihost_CONFIG_HAS_SYS_REMOVE
+  McuSemihost_Op_SYS_REMOVE       = 0x0E, /* remove a file */
+#endif
+#if McuSemihost_CONFIG_HAS_SYS_RENAME
+  McuSemihost_Op_SYS_RENAME       = 0x0F, /* rename a file */
+#endif
   McuSemihost_Op_SYS_CLOCK        = 0x10, /* returns the number of centi-seconds since execution started */
   McuSemihost_Op_SYS_TIME         = 0x11, /* time in seconds since Jan 1st 1970 */
   McuSemihost_Op_SYS_SYSTEM       = 0x12,
@@ -45,7 +49,7 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_ELLAPSED     = 0x30,
   McuSemihost_Op_SYS_TICKFREQ     = 0x31,
 
-#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
   McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected */
   McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host */
 #endif
@@ -73,18 +77,16 @@ static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
 #define SYS_FILE_MODE_APPENDREAD        10  /* Open or create the file for writing and reading "a+" */
 #define SYS_FILE_MODE_APPENDREADBINARY  11  /* Open or create the file for writing and reading "a+b" */
 
-static inline
-int
-__attribute__ ((always_inline))
-McuSemihost_HostRequest(int reason, void *arg)
-{
+static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int reason, void *arg) {
   int value;
   asm volatile (
-      " mov r0, %[rsn] \n"
-      " mov r1, %[arg] \n"
-      " nop \n"
-      " bkpt 0xAB      \n"
-      " mov %[val], r0"
+      "mov r0, %[rsn] \n"
+      "mov r1, %[arg] \n"
+    #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+      "mov r2, #0    \n"
+    #endif
+      "bkpt 0xAB     \n"
+      "mov %[val], r0"
 
       : [val] "=r" (value) /* outputs */
       : [rsn] "r" (reason), [arg] "r" (arg) /* inputs */
@@ -93,7 +95,7 @@ McuSemihost_HostRequest(int reason, void *arg)
   return value;
 }
 
-#if McuSemihost_CONFIG_DEBUG_PROBE == McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_DEBUG_CONNECTION == McuSemihost_DEBUG_CONNECTION_SEGGER
 /*!
  * \brief Checks if the debugger is connected. Only supported for SEGGER
  * \return true if a J-Link is connected
@@ -104,7 +106,8 @@ int McuSemihost_SeggerIsConnected(void) {
    */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_IS_CONNECTED, NULL)==1; /* result is 1 if connected */
 }
-#endif /* McuSemihost_CONFIG_DEBUG_PROBE */
+#endif /* McuSemihost_CONFIG_DEBUG_CONNECTION */
+
 /*!
  * \brief Return the current system time
  * \return System time in seconds since 1970
@@ -165,6 +168,13 @@ int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READ, &param[0]);
 }
 
+/*!
+ * \brief Write data to a file
+ * \param fh File handle
+ * \param data Pointer to data
+ * \param nofBytes Number of data bytes to write
+ * \return 0 for success, in error case the number of bytes not written
+ */
 int McuSemihost_FileWrite(int fh, const unsigned char *data, size_t nofBytes) {
   int32_t param[3];
 
@@ -174,9 +184,11 @@ int McuSemihost_FileWrite(int fh, const unsigned char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE, &param[0]);
 }
 
-#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_HAS_SYS_REMOVE
 /* J-Link denies this with
  * ERROR: Semi hosting error: SYS_REMOVE: Target tries to remove file. Declined for security reasons.
+ * PyOCD reports:
+ *  0039753 W Semihost: unimplemented request pc=3120 r0=e r1=2000fef4 [semihost]
  */
 int McuSemihost_FileRemove(const unsigned char *filePath) {
   int32_t param[2];
@@ -187,9 +199,11 @@ int McuSemihost_FileRemove(const unsigned char *filePath) {
 }
 #endif
 
-#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_HAS_SYS_RENAME
 /* J-Link denies this with
- * ERROR: Semi hosting error: SYS_RENAME: Target tries to rename file. Declined for security reasons.
+ *  ERROR: Semi hosting error: SYS_RENAME: Target tries to rename file. Declined for security reasons.
+ * PyOCD reports:
+ *  0039579 W Semihost: unimplemented request pc=316a r0=f r1=2000feec [semihost]
  */
 int McuSemihost_FileRename(const unsigned char *filePath, const unsigned char *fileNewPath) {
   int32_t param[4];
@@ -268,7 +282,7 @@ int McuSemihost_WriteString(const unsigned char *str) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
 }
 
-#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
 /*!
  * \brief Write a printf-style string, with formatting done on the host
  * \param format Format string
@@ -284,7 +298,7 @@ int McuSemihost_WriteF(const unsigned char *format, va_list *arg) {
 }
 #endif
 
-#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
 int McuSemihost_WriteFormatted(const unsigned char *format, ...) {
   va_list va;
   int res;
@@ -465,7 +479,7 @@ static int TestFileOperations(void) {
     McuSemihost_FileClose(fh);
   }
 
-#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_HAS_SYS_RENAME
   const unsigned char *newFileName = (const unsigned char*)"c:\\tmp\\copy.txt";
   /* renaming a file */
   McuSemihost_WriteString((unsigned char*)"SYS_RENAME: rename file ");
@@ -478,27 +492,54 @@ static int TestFileOperations(void) {
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_RENAME OK\n");
   }
-#else
-  McuSemihost_WriteString((unsigned char*)"SYS_RENAME not supported by J-Link for security reasons.\n");
 #endif
 
-#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_HAS_SYS_REMOVE
   /* removing a file */
-  McuSemihost_WriteString((unsigned char*)"SYS_REMOVE: delete file ");
+  McuSemihost_WriteString((unsigned char*)"SYS_REMOVE: remove file ");
   McuSemihost_WriteString((unsigned char*)newFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  if (McuSemihost_FileRemove(copyFileName) != 0) {
-    McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
+  fh = McuSemihost_FileOpen(newFileName, SYS_FILE_MODE_WRITEREADBINARY); /* create file, if it does not exist */
+  if (fh == -1) {
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
+    res = -1; /* failed */
   } else {
-    McuSemihost_WriteString((unsigned char*)"SYS_REMOVE OK\n");
+    if (McuSemihost_FileRemove(newFileName) != 0) {
+      McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
+    } else {
+      McuSemihost_WriteString((unsigned char*)"SYS_REMOVE OK\n");
+    }
   }
-#else
-  McuSemihost_WriteString((unsigned char*)"SYS_REMOVE not supported by J-Link for security reasons.\n");
 #endif
 
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
   /* writing to stdout */
-  //McuSemihost_FileWrite((int)stdout, buf, sizeof(buf)-r);
-  //McuSemihost_WriteString((unsigned char*)"\n");
+  McuSemihost_WriteString((unsigned char*)"Writing to stdout:\n");
+  const unsigned char *testString = (const unsigned char*)"this is a test\n";
+  if (McuSemihost_FileWrite(McuSemihost_tty_handles[McuSemihost_STDOUT], testString, McuUtility_strlen((char*)testString))!=0) {
+    McuSemihost_WriteString((unsigned char*)"Failed writing to stdout!\n");
+    res = -1;
+  }
+
+  /* writing to stderr */
+  McuSemihost_WriteString((unsigned char*)"Writing to stderr:\n");
+  if (McuSemihost_FileWrite(McuSemihost_tty_handles[McuSemihost_STDERR], testString, McuUtility_strlen((char*)testString))!=0) {
+    McuSemihost_WriteString((unsigned char*)"Failed writing to stderr!\n");
+    res = -1;
+  }
+  /* writing to stderr */
+  McuSemihost_WriteString((unsigned char*)"Reading from stdin: enter 3 character\n");
+  if (McuSemihost_FileRead(McuSemihost_tty_handles[McuSemihost_STDIN], data, 3)!=0) {
+    McuSemihost_WriteString((unsigned char*)"Failed reading from stdin!\n");
+    res = -1;
+  } else {
+    McuSemihost_WriteString((unsigned char*)"you entered: ");
+    McuSemihost_WriteChar(data[0]);
+    McuSemihost_WriteChar(data[1]);
+    McuSemihost_WriteChar(data[2]);
+    McuSemihost_WriteChar('\n');
+  }
+#endif
   return res;
 }
 
@@ -508,6 +549,30 @@ static int ConsoleInputOutput(void) {
   int res = 0;
 
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+  /* Note:
+   * J-Link returns -256 for all handles, but 0, 1 and 2 are used
+   * Linkserver returns 0, 1 and 2
+   * PyPCD returns 1, 2, and 3 and expects them
+   */
+  const int expectedHandles[3] = {
+    #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD
+      1, 2, 3
+    #else
+      0, 1, 2
+    #endif
+  };
+  if (McuSemihost_tty_handles[McuSemihost_STDIN]!=expectedHandles[McuSemihost_STDIN]) {
+    McuSemihost_printf("Expecting %d for stdin handle, but is %d?\n", McuSemihost_STDIN, McuSemihost_tty_handles[McuSemihost_STDIN]);
+    res = -1; /* failed */
+  }
+  if (McuSemihost_tty_handles[McuSemihost_STDOUT]!=expectedHandles[McuSemihost_STDOUT]) {
+    McuSemihost_printf("Expecting %d for stdout handle, but is %d?\n", McuSemihost_STDOUT, McuSemihost_tty_handles[McuSemihost_STDOUT]);
+    res = -1; /* failed */
+  }
+  if (McuSemihost_tty_handles[McuSemihost_STDERR]!=expectedHandles[McuSemihost_STDERR]) {
+    McuSemihost_printf("Expecting %d for stderr handle, but is %d?\n", McuSemihost_STDERR, McuSemihost_tty_handles[McuSemihost_STDERR]);
+    res = -1; /* failed */
+  }
   for(int i=0; i<sizeof(McuSemihost_tty_handles)/sizeof(McuSemihost_tty_handles[0]); i++) {
     if (McuSemihost_IsTTY(McuSemihost_tty_handles[i])==1) {
       McuSemihost_printf("SYS_ISTTY: handle %d OK\n", McuSemihost_tty_handles[i]);
@@ -521,7 +586,9 @@ static int ConsoleInputOutput(void) {
   do {
     c = McuSemihost_ReadChar();
   } while(c<0);
-  McuSemihost_printf("You typed: %c\n", c);
+  McuSemihost_WriteString((unsigned char*)"You typed: ");
+  McuSemihost_WriteChar(c);
+  McuSemihost_WriteChar('\n');
   return res;
 }
 
@@ -532,7 +599,21 @@ int McuSemiHost_Test(void) {
   int value;
   int result = 0;
 
-#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_GENERIC
+  McuSemihost_WriteString((unsigned char*)"Connection: Generic\n");
+#elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+  McuSemihost_WriteString((unsigned char*)"Connection: SEGGER J-Link\n");
+#elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER
+  McuSemihost_WriteString((unsigned char*)"Connection: NXP Linkserver\n");
+#elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO
+  McuSemihost_WriteString((unsigned char*)"Connection: PEMICRO\n");
+#elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD
+  McuSemihost_WriteString((unsigned char*)"Connection: PyOCD\n");
+#else
+  #error "unknown connection"
+#endif
+
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
   if (McuSemihost_SeggerIsConnected()) { /* \todo: always returns 0? Should be supported, but is not with gdb? */
     McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link connected\n");
   } else {
@@ -541,13 +622,13 @@ int McuSemiHost_Test(void) {
   }
 #endif
 
-  const unsigned char *txt = (unsigned char*)"This is a SYS_WRITEC test\n";
+  const unsigned char *txt = (unsigned char*)"SYS_WRITEC test\n";
 
   while(*txt!='\0') {
     McuSemihost_WriteChar(*txt); /* using SYS_WRITEC */
     txt++;
   }
-  McuSemihost_WriteString((unsigned char*)"This is a SYS_WRITE0 test\n"); /* using SYS_WRITE0 */
+  McuSemihost_WriteString((unsigned char*)"SYS_WRITE0 test\n"); /* using SYS_WRITE0 */
 
   int secs = McuSemihost_HostTime(); /* using SYS_TIME */
   McuTimeDate_UnixSecondsToTimeDateCustom(secs, -1 /* winter time */, &time, &date, 1970);
@@ -560,7 +641,10 @@ int McuSemiHost_Test(void) {
 
   value = McuSemihost_HostClock(); /* using SYS_CLOCK */
   if (value>=0) {
-    McuSemihost_printf("SYS_CLOCK: Execution time: %d centi-seconds\n", value);
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char *)"SYS_CLOCK: Execution time: ");
+    McuUtility_strcatNum32s(buf, sizeof(buf), value);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char *)" centi-seconds\n");
+    McuSemihost_WriteString(buf);
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_CLOCK: failed\n");
     result = -1; /* failed */
@@ -584,17 +668,25 @@ int McuSemiHost_Test(void) {
 
 void McuSemiHost_Deinit(void) {
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER /* SEGGER does not really allocate those handles? So cannot close them. */
   for(int i=0; i<sizeof(McuSemihost_tty_handles)/sizeof(McuSemihost_tty_handles[0]); i++) {
     McuSemihost_FileClose(McuSemihost_tty_handles[i]);
   }
+#endif
 #endif
 }
 
 void McuSemiHost_Init(void) {
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES /* cannot open it twice (restart)? */
   /* initialize standard I/O handler, see https://developer.arm.com/documentation/dui0471/g/Semihosting/SYS-OPEN--0x01- */
-  McuSemihost_tty_handles[0] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_READ); /* stdin */
-  McuSemihost_tty_handles[1] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_WRITE); /* stdout */
-  McuSemihost_tty_handles[2] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_APPEND); /* stderr */
+  McuSemihost_tty_handles[McuSemihost_STDIN] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_READ); /* stdin */
+  McuSemihost_tty_handles[McuSemihost_STDOUT] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_WRITE); /* stdout */
+  McuSemihost_tty_handles[McuSemihost_STDERR] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_APPEND); /* stderr */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+  /* for some reasons, SEGGER always returns -256 for stdin, stdout and stderr file handles. Fix them: */
+  McuSemihost_tty_handles[McuSemihost_STDIN] = McuSemihost_STDIN;
+  McuSemihost_tty_handles[McuSemihost_STDOUT] = McuSemihost_STDOUT;
+  McuSemihost_tty_handles[McuSemihost_STDERR] = McuSemihost_STDERR;
+#endif
 #endif
 }
