@@ -46,6 +46,7 @@ file(GLOB FILES
   SEGGER_SysView/SEGGER_SYSVIEW_Config_FreeRTOS.c
   SEGGER_SysView/SEGGER_SYSVIEW_FreeRTOS.c
   
+  src/McuSemihst.c
   src/McuShell.c
   src/McuShellUart.c
   src/McuSHT31.c
@@ -186,7 +187,7 @@ add_library(McuLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   McuLib 
-  pico_stdlib 
+  pico_stdlib
   pico_unique_id
   hardware_pio 
   hardware_flash
