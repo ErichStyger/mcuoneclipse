@@ -13,9 +13,11 @@
 #include <stdint.h>
 #include "McuShell.h"
 
-extern uint8_t McuSWO_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+extern uint8_t McuSemiHost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
+  /*!< default buffer which can be used by the application or shell */
 
-extern McuShell_ConstStdIOType McuSWO_stdio; /* default standard I/O */
+extern McuShell_ConstStdIOType McuSemiHost_stdio;
+  /*!< Default standard I/O handler, can be used for a shell intergration */
 
 /*!
  * \brief Return the SWO stdio handle

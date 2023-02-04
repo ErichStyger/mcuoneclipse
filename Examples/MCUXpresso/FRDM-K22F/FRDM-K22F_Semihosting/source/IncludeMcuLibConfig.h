@@ -121,4 +121,8 @@ Instructions:
 #define McuMinINI_CONFIG_READ_ONLY                  (0)
 #define McuMinINI_CONFIG_USE_REAL                   (0)
 
+/* ---------------------------------------------------------------------------------------*/
+/* McuSemihost */
+#define McuSemihost_CONFIG_DEBUG_PROBE    McuSemihost_DEBUG_PROBE_SEGGER
+
 #endif /* INCLUDEMCULIBCONFIG_H_ */

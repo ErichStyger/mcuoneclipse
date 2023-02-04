@@ -17,14 +17,13 @@
  * See https://wiki.segger.com/Semihosting
  */
 typedef enum McuSemihost_Op_e {
-  McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* SEGGER specific */
-  McuSemihost_Op_SYS_OPEN         = 0x01,
-  McuSemihost_Op_SYS_CLOSE        = 0x02,
+  McuSemihost_Op_SYS_OPEN         = 0x01, /* open a file */
+  McuSemihost_Op_SYS_CLOSE        = 0x02, /* close a file */
   McuSemihost_Op_SYS_WRITEC       = 0x03, /* write a character byte, pointed to by R1 */
   McuSemihost_Op_SYS_WRITE0       = 0x04, /* writes a null terminated string. R1 points to the first byte */
-  McuSemihost_Op_SYS_WRITE        = 0x05,
-  McuSemihost_Op_SYS_READ         = 0x06,
-  McuSemihost_Op_SYS_READC        = 0x07,
+  McuSemihost_Op_SYS_WRITE        = 0x05, /* write data to a file */
+  McuSemihost_Op_SYS_READ         = 0x06, /* read data from a file */
+  McuSemihost_Op_SYS_READC        = 0x07, /* read a character from stdin */
   McuSemihost_Op_SYS_ISERROR      = 0x08,
   McuSemihost_Op_SYS_ISTTY        = 0x09,
   McuSemihost_Op_SYS_SEEK         = 0x0A,
@@ -46,7 +45,10 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_ELLAPSED     = 0x30,
   McuSemihost_Op_SYS_TICKFREQ     = 0x31,
 
-  McuSemihost_Op_SYS_WRITEF       = 0x40, /* SEGGER specific */
+#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+  McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected */
+  McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host */
+#endif
 } McuSemihost_Op_e;
 
 #define McuSemihost_STDIN           0
@@ -67,9 +69,9 @@ typedef enum McuSemihost_Op_e {
 #define SYS_FILE_MODE_APPENDREAD        10  /* Open or create the file for writing and reading "a+" */
 #define SYS_FILE_MODE_APPENDREADBINARY  11  /* Open or create the file for writing and reading "a+b" */
 
-//static inline
+static inline
 int
-//__attribute__ ((always_inline))
+__attribute__ ((always_inline))
 McuSemihost_HostRequest(int reason, void *arg)
 {
   int value;
@@ -87,29 +89,18 @@ McuSemihost_HostRequest(int reason, void *arg)
   return value;
 }
 
-int McuSemihost_CallHost_other(int op, void *p1, void *p2) {
-  register int r0 asm("r0");
-  register int r1 asm("r1") __attribute__((unused));
-  register int r2 asm("r2") __attribute__((unused));
-
-  r0 = op;
-  r1 = (int) p1;
-  r2 = (int) p2;
-
-  asm volatile(
-      " bkpt 0xAB \n"
-      : "=r"(r0) // out
-      :// in
-      :// clobber
-  );
-  return r0;
+#if McuSemihost_CONFIG_DEBUG_PROBE == McuSemihost_DEBUG_PROBE_SEGGER
+/*!
+ * \brief Checks if the debugger is connected. Only supported for SEGGER
+ * \return true if a J-Link is connected
+ */
+int McuSemihost_SeggerIsConnected(void) {
+  /* note: SEGGER documents the op code 0x0 (SysIsConnected), but with V7.68 it reports that it is not supported?
+   * WARNING: Unsupported semihosting functionality (R0 = 0x00).
+   */
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_IS_CONNECTED, NULL)==1; /* result is 1 if connected */
 }
-
-//static int McuSemihost_HostRequest(McuSemihost_Op_e op, void *param) {
-//  return McuSemihost_CallHost(op, param);
-  //return McuSemihost_CallHost(op, param, 0); /* SEGGER way */
-//}
-
+#endif /* McuSemihost_CONFIG_DEBUG_PROBE */
 /*!
  * \brief Return the current system time
  * \return System time in seconds since 1970
@@ -120,7 +111,7 @@ int McuSemihost_HostTime(void) {
 
 /*!
  * \brief Return the number of centi-seconds the executable is running
- * \return -1 for error, otherwise the number of centiseconds of the execution
+ * \return -1 for error, otherwise the number of centi-seconds of the execution
  */
 int McuSemihost_HostClock(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_CLOCK, NULL);
@@ -161,7 +152,7 @@ int McuSemihost_FileClose(int fh) {
  * \param nofBytes Number of bytes to read
  * \return 0: success. If it is nofBytes, then the call has failed and the end of the file has been reached. If smaller than nofBytes, then the buffer has not been filled.
  */
-int McuSemihost_FileRead(int fh, const char *data, size_t nofBytes) {
+int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes) {
   int32_t param[3];
 
   param[0] = fh;
@@ -170,7 +161,7 @@ int McuSemihost_FileRead(int fh, const char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READ, &param[0]);
 }
 
-int McuSemihost_FileWrite(int fh, const char *data, size_t nofBytes) {
+int McuSemihost_FileWrite(int fh, const unsigned char *data, size_t nofBytes) {
   int32_t param[3];
 
   param[0] = fh;
@@ -179,6 +170,10 @@ int McuSemihost_FileWrite(int fh, const char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE, &param[0]);
 }
 
+#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+/* J-Link denies this with
+ * ERROR: Semi hosting error: SYS_REMOVE: Target tries to remove file. Declined for security reasons.
+ */
 int McuSemihost_FileRemove(const unsigned char *filePath) {
   int32_t param[2];
 
@@ -186,7 +181,12 @@ int McuSemihost_FileRemove(const unsigned char *filePath) {
   param[1] = McuUtility_strlen((char*)filePath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_REMOVE, &param[0]);
 }
+#endif
 
+#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+/* J-Link denies this with
+ * ERROR: Semi hosting error: SYS_RENAME: Target tries to rename file. Declined for security reasons.
+ */
 int McuSemihost_FileRename(const unsigned char *filePath, const unsigned char *fileNewPath) {
   int32_t param[4];
 
@@ -196,7 +196,13 @@ int McuSemihost_FileRename(const unsigned char *filePath, const unsigned char *f
   param[1] = McuUtility_strlen((char*)fileNewPath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_RENAME, &param[0]);
 }
+#endif
 
+/*!
+ * \brief Return the length of a file
+ * \param fh File handle
+ * \return Current length of the file, -1 for an error
+ */
 int McuSemihost_FileLen(int fh) {
   int32_t param;
 
@@ -204,22 +210,38 @@ int McuSemihost_FileLen(int fh) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_FLEN, &param);
 }
 
+/*!
+ * \brief Seeks for a specified position in a file
+ * \param fh File handle
+ * \param pos Target position. Seeking outside of the size of the file is undefined
+ * \return 0 for success, negative for an error. McuSemihost_Op_SYS_ERRNO can be used to read the error value.
+ */
 int McuSemihost_FileSeek(int fh, int pos) {
   int32_t param[2];
 
   param[0] = fh;
   param[1] = pos;
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_FLEN, &param[0]);
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_SEEK, &param[0]);
 }
 
+/*!
+ * \brief Read a character from the console or stdin
+ * \return The character read
+ */
 int McuSemihost_ReadChar(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READC, NULL);
 }
 
+/*!
+ * \brief Write a character to the stdout console.
+ * \param ch Character to write
+ * \return always zero for success
+ */
 int McuSemihost_WriteChar(char ch) {
   int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   /* Write a character byte, pointed to by R1 */
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEC, &param);
+  (void)McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEC, &param); /* does not return valid value, R0 is corrupted */
+  return 0; /* success */
 }
 
 /*!
@@ -232,13 +254,33 @@ int McuSemihost_WriteString(const unsigned char *str) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
 }
 
-int McuSemihost_WriteFormatted(const unsigned char *format, va_list *arg) {
+#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+/*!
+ * \brief Write a printf-style string, with formatting done on the host
+ * \param format Format string
+ * \param arg Argument list
+ * \return Number of bytes printed (>=0), negative for error
+ */
+int McuSemihost_WriteF(const unsigned char *format, va_list *arg) {
   int32_t param[2];
 
   param[0] = (int32_t)format;
   param[1] = (int32_t)arg;
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEF, &param[0]);
 }
+#endif
+
+#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+int McuSemihost_WriteFormatted(const unsigned char *format, ...) {
+  va_list va;
+  int res;
+
+  va_start(va, format);
+  res = McuSemihost_WriteF(format, &va);
+  va_end(va);
+  return res;
+}
+#endif
 
 bool McuSemihost_StdIOKeyPressed(void) {
   return false; /* \todo */
@@ -283,12 +325,13 @@ unsigned McuSemihost_printf(const char *fmt, ...) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-static void TestFileOperations(void) {
+static int TestFileOperations(void) {
   int hFile;
   int r;
   char buf[24];
+  unsigned char data[32];
   const unsigned char *testFileName = (const unsigned char*)"c:\\tmp\\semihosting.txt";
-  const unsigned char *copyFileName = (const unsigned char*)"c:\\tmp\\copy.txt";
+  int res = 0; /* 0: ok, -1: failed */
 
 #if 0
   /* quick test */
@@ -306,13 +349,15 @@ static void TestFileOperations(void) {
   McuSemihost_WriteString((unsigned char*)"\n");
   hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
+    res = -1; /* failed */
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN: OK\n");
     if (McuSemihost_FileClose(hFile)==0) {
       McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: OK\n");
     } else {
       McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: Failed\n");
+      res = -1; /* failed */
     }
   }
 
@@ -322,84 +367,104 @@ static void TestFileOperations(void) {
   McuSemihost_WriteString((unsigned char*)"\n");
   hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
   } else {
-    const char *msg = "test file write 0123456789ABCDEF Hello World!";
-    r = McuSemihost_FileWrite(hFile, msg, strlen(msg));
+    const unsigned char *msg = (const unsigned char*)"test file write 0123456789ABCDEF Hello World!";
+    r = McuSemihost_FileWrite(hFile, msg, strlen((char*)msg));
     if (r != 0) {
-      McuSemihost_WriteString((unsigned char*)"SYS_WRITE Failed\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_WRITE: failed\n");
+      res = -1; /* failed */
     } else {
       McuSemihost_WriteString((unsigned char*)"SYS_WRITE OK\n");
     }
     McuSemihost_FileClose(hFile);
   }
 
-  /* reading from file */
+  /* read from file */
   McuSemihost_WriteString((unsigned char*)"SYS_READ: Read from file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
   if (hFile == -1) {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
+    res = -1; /* failed */
   } else {
-    memset(buf, 0, sizeof(buf));
-    r = McuSemihost_FileRead(hFile, buf, sizeof(buf));
-    if (r < 0) {
-      McuSemihost_WriteString((unsigned char*)"Failed\n");
-    } else if (r == sizeof(buf)) {
-      McuSemihost_WriteString((unsigned char*)"Failed. Read EOF\n");
-    } else {
-      McuSemihost_FileWrite((int)stdout, buf, sizeof(buf) - r);
+    memset(data, 0, sizeof(data)); /* initialize data */
+    r = McuSemihost_FileRead(hFile, data, sizeof(data));
+    if (r==0) { /* success */
+      unsigned char b[8];
+      McuSemihost_WriteString((unsigned char*)"SYS_READ: OK, data:\n");
+      for(int i=0; i<sizeof(data); i++) {
+        McuUtility_strcpy(b, sizeof(b), (unsigned char*)"0x");
+        McuUtility_strcatNum8Hex(b, sizeof(b), data[i]);
+        McuUtility_chcat(b, sizeof(b), ' ');
+        McuUtility_chcat(b, sizeof(b), data[i]);
+        McuUtility_chcat(b, sizeof(b), ' ');
+        McuSemihost_WriteString(b);
+      }
       McuSemihost_WriteString((unsigned char*)"\n");
-      snprintf(buf, sizeof(buf), "Read %d bytes\n", sizeof(buf) - r);
-      McuSemihost_WriteString((unsigned char*)buf);
-      McuSemihost_WriteString((unsigned char*)"OK");
+    } else if (r < 0) {
+      McuSemihost_WriteString((unsigned char*)"SYS_READ failed\n");
+      res = -1; /* failed */
+    } else if (r == sizeof(buf)) {
+      McuSemihost_WriteString((unsigned char*)"SYS_READ: failed, reading EOF\n");
+      res = -1; /* failed */
+    } else { /* unknown return code? */
+      McuSemihost_printf("SYS_READ: failed with return code %d\n");
+      res = -1; /* failed */
     }
     McuSemihost_FileClose(hFile);
   }
 
-  /* seek position in file */
+  /* seek position in file, length of a file */
   McuSemihost_WriteString((unsigned char*)"SYS_FLEN: Size of file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
+    res = -1; /* failed */
   } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
-    r = McuSemihost_FileSeek(hFile, 6);
+    r = McuSemihost_FileSeek(hFile, 6); /* go to pos 6 or enlarge file to 6 bytes */
     if (r != 0) {
-      McuSemihost_WriteString((unsigned char*)"SYS_FLEN failed\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_SEEK failed\n");
+      res = -1; /* failed */
     } else {
-      McuSemihost_WriteString((unsigned char*)"SYS_FLEN OK\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_SEEK: OK\n");
     }
     /* file length */
     r = McuSemihost_FileLen(hFile);
     if (r >= 0) {
-      snprintf(buf, sizeof(buf), "File size: %d\n", r);
-      McuSemihost_WriteString((unsigned char*)buf);
+      McuSemihost_printf("SYS_FLEN: file size: %d\n", r);
     } else {
-      McuSemihost_WriteString((unsigned char*)"Failed\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_FLEN failed\n");
+      res = -1; /* failed */
     }
     McuSemihost_FileClose(hFile);
   }
 
+#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
+  const unsigned char *newFileName = (const unsigned char*)"c:\\tmp\\copy.txt";
   /* renaming a file */
   McuSemihost_WriteString((unsigned char*)"SYS_RENAME: rename file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)" to ");
-  McuSemihost_WriteString((unsigned char*)copyFileName);
+  McuSemihost_WriteString((unsigned char*)newFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  r = McuSemihost_FileRename(testFileName, copyFileName);
+  r = McuSemihost_FileRename(testFileName, newFileName);
   if (r != 0) {
     McuSemihost_WriteString((unsigned char*)"SYS_RENAME failed\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_RENAME OK\n");
   }
+#else
+  McuSemihost_WriteString((unsigned char*)"SYS_RENAME not supported by J-Link for security reasons.\n");
+#endif
 
+#if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
   /* removing a file */
   McuSemihost_WriteString((unsigned char*)"SYS_REMOVE: delete file ");
-  McuSemihost_WriteString((unsigned char*)copyFileName);
+  McuSemihost_WriteString((unsigned char*)newFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
   r = McuSemihost_FileRemove(copyFileName);
   if (r != 0) {
@@ -407,6 +472,14 @@ static void TestFileOperations(void) {
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_REMOVE OK\n");
   }
+#else
+  McuSemihost_WriteString((unsigned char*)"SYS_REMOVE not supported by J-Link for security reasons.\n");
+#endif
+
+  /* writing to stdout */
+  //McuSemihost_FileWrite((int)stdout, buf, sizeof(buf)-r);
+  //McuSemihost_WriteString((unsigned char*)"\n");
+  return res;
 }
 
 static void ConsoleInputOutput(void) {
@@ -425,6 +498,14 @@ void McuSemiHost_Test(void) {
   TIMEREC time;
   DATEREC date;
   int value;
+
+#if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
+  if (McuSemihost_SeggerIsConnected()) { /* \todo: always returns 0? Should be supported, but is not with gdb? */
+    McuSemihost_WriteString((unsigned char*)"J-Link connected\n");
+  } else {
+    McuSemihost_WriteString((unsigned char*)"J-Link NOT connected\n");
+  }
+#endif
 
   const unsigned char *txt = (unsigned char*)"This is a SYS_WRITEC test\n";
 
@@ -447,8 +528,11 @@ void McuSemiHost_Test(void) {
   McuSemihost_printf("SYS_CLOCK: Execution time: %d centi-seconds\n", value); /* test with printf and SYS_WRITE_C */
 
   ConsoleInputOutput();
-  TestFileOperations();
-  McuSemihost_WriteString((unsigned char*)"McuSemihost testing done!\n");
+  if (TestFileOperations()!=0) {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost test: FAILED!\n");
+  } else {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost testing done!\n");
+  }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
