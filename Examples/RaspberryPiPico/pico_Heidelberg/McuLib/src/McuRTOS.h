@@ -277,6 +277,8 @@
 
 /* MODULE McuRTOS. */
 #include "McuLib.h" /* SDK and API used */
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+
 #if McuLib_CONFIG_CPU_IS_ESP32
   #include "freertos/FreeRTOSConfig.h"
 #else
@@ -4703,6 +4705,8 @@ uint32_t McuRTOS_AppGetRuntimeCounterValueFromISR(void);
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
 #endif
 /* ifndef __McuRTOS_H */
