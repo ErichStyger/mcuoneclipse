@@ -7,8 +7,7 @@
 #include "board.h"
 #include "pin_mux.h"
 #include "clock_config.h"
-#include "MK22F51212.h"
-#include "fsl_debug_console.h"
+#include "MKL25Z4.h"
 
 #include "McuSemihost.h"
 #include "McuWait.h"
