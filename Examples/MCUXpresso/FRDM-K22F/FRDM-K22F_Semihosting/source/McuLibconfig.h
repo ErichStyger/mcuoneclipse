@@ -96,6 +96,7 @@
 #define McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69          (9)
 #define McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064         (10)
 #define McuLib_CONFIG_CPU_VARIANT_RP2040                (11)
+#define McuLib_CONFIG_CPU_VARIANT_NXP_K64FN             (12)
 
 #ifndef McuLib_CONFIG_CPU_VARIANT
   #define McuLib_CONFIG_CPU_VARIANT  McuLib_CONFIG_CPU_VARIANT_DEFAULT
