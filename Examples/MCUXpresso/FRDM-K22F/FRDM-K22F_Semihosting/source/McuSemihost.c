@@ -53,7 +53,11 @@ typedef enum McuSemihost_Op_e {
 
 #define McuSemihost_STDIN           0
 #define McuSemihost_STDOUT          1
-#define McuSemihost_ERROUT          2
+#define McuSemihost_STDERR          2
+
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
+#endif
 
 /* File modes for McuSemihost_Op_SYS_OPEN */
 #define SYS_FILE_MODE_READ              0   /* Open the file for reading "r" */
@@ -245,6 +249,16 @@ int McuSemihost_WriteChar(char ch) {
 }
 
 /*!
+ * \brief Decides if a file handle is a standard io handle or not.
+ * \param fg File handle
+ * \return 1 if it a interactive device, 0 if not, any other value is an error
+ */
+int McuSemihost_IsTTY(int fh) {
+  int32_t param = fh;
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_ISTTY, &param);
+}
+
+/*!
  * \brief Write a zero byte terminated character array (string) to stdout
  * \param str String, zero byte terminated
  * \return 0: ok, -1 error
@@ -326,8 +340,7 @@ unsigned McuSemihost_printf(const char *fmt, ...) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 static int TestFileOperations(void) {
-  int hFile;
-  int r;
+  int fh;
   char buf[24];
   unsigned char data[32];
   const unsigned char *testFileName = (const unsigned char*)"c:\\tmp\\semihosting.txt";
@@ -336,24 +349,30 @@ static int TestFileOperations(void) {
 #if 0
   /* quick test */
   /* Note: file will be created as C:\NXP\MCUXpressoIDE_11.7.0_9198\ide\test.txt */
-  hFile = McuSemihost_FileOpen("test.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("test.txt"));
-  if (hFile == -1) {
+  fh = McuSemihost_FileOpen("test.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("test.txt"));
+  if (fh == -1) {
     McuSemihost_WriteString((unsigned char*)"Failed\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"OK\n");
-    McuSemihost_FileClose(hFile);
+    McuSemihost_FileClose(fh);
   }
 #endif
   McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Open and create file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
-  if (hFile == -1) {
+  fh = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
+  if (fh == -1) {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
     res = -1; /* failed */
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN: OK\n");
-    if (McuSemihost_FileClose(hFile)==0) {
+    if (McuSemihost_IsTTY(fh)==0) {
+      McuSemihost_WriteString((unsigned char*)"SYS_ISTTY: OK\n");
+    } else {
+      McuSemihost_WriteString((unsigned char*)"SYS_ISTTY: failed\n");
+      res = -1; /* failed */
+    }
+    if (McuSemihost_FileClose(fh)==0) {
       McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: OK\n");
     } else {
       McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: Failed\n");
@@ -365,32 +384,33 @@ static int TestFileOperations(void) {
   McuSemihost_WriteString((unsigned char*)"SYS_WRITE: Write to file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
-  if (hFile == -1) {
+  fh = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
+  if (fh == -1) {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
   } else {
     const unsigned char *msg = (const unsigned char*)"test file write 0123456789ABCDEF Hello World!";
-    r = McuSemihost_FileWrite(hFile, msg, strlen((char*)msg));
-    if (r != 0) {
+    if (McuSemihost_FileWrite(fh, msg, strlen((char*)msg)) != 0) {
       McuSemihost_WriteString((unsigned char*)"SYS_WRITE: failed\n");
       res = -1; /* failed */
     } else {
       McuSemihost_WriteString((unsigned char*)"SYS_WRITE OK\n");
     }
-    McuSemihost_FileClose(hFile);
+    McuSemihost_FileClose(fh);
   }
 
   /* read from file */
   McuSemihost_WriteString((unsigned char*)"SYS_READ: Read from file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
-  if (hFile == -1) {
+  fh = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
+  if (fh == -1) {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
     res = -1; /* failed */
   } else {
+    int r;
+
     memset(data, 0, sizeof(data)); /* initialize data */
-    r = McuSemihost_FileRead(hFile, data, sizeof(data));
+    r = McuSemihost_FileRead(fh, data, sizeof(data));
     if (r==0) { /* success */
       unsigned char b[8];
       McuSemihost_WriteString((unsigned char*)"SYS_READ: OK, data:\n");
@@ -413,19 +433,21 @@ static int TestFileOperations(void) {
       McuSemihost_printf("SYS_READ: failed with return code %d\n");
       res = -1; /* failed */
     }
-    McuSemihost_FileClose(hFile);
+    McuSemihost_FileClose(fh);
   }
 
   /* seek position in file, length of a file */
   McuSemihost_WriteString((unsigned char*)"SYS_FLEN: Size of file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
-  if (hFile == -1) {
+  fh = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_READ);
+  if (fh == -1) {
     McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
     res = -1; /* failed */
   } else {
-    r = McuSemihost_FileSeek(hFile, 6); /* go to pos 6 or enlarge file to 6 bytes */
+    int r;
+
+    r = McuSemihost_FileSeek(fh, 6); /* go to pos 6 or enlarge file to 6 bytes */
     if (r != 0) {
       McuSemihost_WriteString((unsigned char*)"SYS_SEEK failed\n");
       res = -1; /* failed */
@@ -433,14 +455,14 @@ static int TestFileOperations(void) {
       McuSemihost_WriteString((unsigned char*)"SYS_SEEK: OK\n");
     }
     /* file length */
-    r = McuSemihost_FileLen(hFile);
+    r = McuSemihost_FileLen(fh);
     if (r >= 0) {
       McuSemihost_printf("SYS_FLEN: file size: %d\n", r);
     } else {
       McuSemihost_WriteString((unsigned char*)"SYS_FLEN failed\n");
       res = -1; /* failed */
     }
-    McuSemihost_FileClose(hFile);
+    McuSemihost_FileClose(fh);
   }
 
 #if McuSemihost_CONFIG_DEBUG_PROBE!=McuSemihost_DEBUG_PROBE_SEGGER
@@ -451,8 +473,7 @@ static int TestFileOperations(void) {
   McuSemihost_WriteString((unsigned char*)" to ");
   McuSemihost_WriteString((unsigned char*)newFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  r = McuSemihost_FileRename(testFileName, newFileName);
-  if (r != 0) {
+  if (McuSemihost_FileRename(testFileName, newFileName) != 0) {
     McuSemihost_WriteString((unsigned char*)"SYS_RENAME failed\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_RENAME OK\n");
@@ -466,8 +487,7 @@ static int TestFileOperations(void) {
   McuSemihost_WriteString((unsigned char*)"SYS_REMOVE: delete file ");
   McuSemihost_WriteString((unsigned char*)newFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  r = McuSemihost_FileRemove(copyFileName);
-  if (r != 0) {
+  if (McuSemihost_FileRemove(copyFileName) != 0) {
     McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_REMOVE OK\n");
@@ -482,28 +502,42 @@ static int TestFileOperations(void) {
   return res;
 }
 
-static void ConsoleInputOutput(void) {
+static int ConsoleInputOutput(void) {
   /* test of console input and output */
   int c;
+  int res = 0;
 
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+  for(int i=0; i<sizeof(McuSemihost_tty_handles)/sizeof(McuSemihost_tty_handles[0]); i++) {
+    if (McuSemihost_IsTTY(McuSemihost_tty_handles[i])==1) {
+      McuSemihost_printf("SYS_ISTTY: handle %d OK\n", McuSemihost_tty_handles[i]);
+    } else {
+      McuSemihost_printf("SYS_ISTTY: handle %d failed\n", McuSemihost_tty_handles[i]);
+      res = -1; /* failed */
+    }
+  }
+#endif
   McuSemihost_WriteString((unsigned char*)"READ_C: Please type a character and press <ENTER>:\n"); /* writing zero terminated string */
   do {
     c = McuSemihost_ReadChar();
   } while(c<0);
   McuSemihost_printf("You typed: %c\n", c);
+  return res;
 }
 
-void McuSemiHost_Test(void) {
+int McuSemiHost_Test(void) {
   unsigned char buf[64];
   TIMEREC time;
   DATEREC date;
   int value;
+  int result = 0;
 
 #if McuSemihost_CONFIG_DEBUG_PROBE==McuSemihost_DEBUG_PROBE_SEGGER
   if (McuSemihost_SeggerIsConnected()) { /* \todo: always returns 0? Should be supported, but is not with gdb? */
-    McuSemihost_WriteString((unsigned char*)"J-Link connected\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link connected\n");
   } else {
-    McuSemihost_WriteString((unsigned char*)"J-Link NOT connected\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link NOT connected, failed\n");
+    result = -1; /* failed */
   }
 #endif
 
@@ -525,36 +559,42 @@ void McuSemiHost_Test(void) {
   McuSemihost_WriteString(buf);
 
   value = McuSemihost_HostClock(); /* using SYS_CLOCK */
-  McuSemihost_printf("SYS_CLOCK: Execution time: %d centi-seconds\n", value); /* test with printf and SYS_WRITE_C */
-
-  ConsoleInputOutput();
-  if (TestFileOperations()!=0) {
-    McuSemihost_WriteString((unsigned char*)"McuSemihost test: FAILED!\n");
+  if (value>=0) {
+    McuSemihost_printf("SYS_CLOCK: Execution time: %d centi-seconds\n", value);
   } else {
-    McuSemihost_WriteString((unsigned char*)"McuSemihost testing done!\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_CLOCK: failed\n");
+    result = -1; /* failed */
   }
+  if (ConsoleInputOutput()!=0) {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost console I/O operations: FAILED!\n");
+    result = -1; /* failed */
+  }
+  if (TestFileOperations()!=0) {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost file operations: FAILED!\n");
+    result = -1; /* failed */
+  }
+  if (result!=0) {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost test FAILED!\n");
+  } else {
+    McuSemihost_WriteString((unsigned char*)"McuSemihost test OK!\n");
+  }
+  return result;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 void McuSemiHost_Deinit(void) {
-  /* \todo */
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+  for(int i=0; i<sizeof(McuSemihost_tty_handles)/sizeof(McuSemihost_tty_handles[0]); i++) {
+    McuSemihost_FileClose(McuSemihost_tty_handles[i]);
+  }
+#endif
 }
 
 void McuSemiHost_Init(void) {
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES /* cannot open it twice (restart)? */
   /* initialize standard I/O handler, see https://developer.arm.com/documentation/dui0471/g/Semihosting/SYS-OPEN--0x01- */
-  int fh;
-  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_READ, strlen(":tt")); /* stdin */
-  if (fh!=McuSemihost_STDIN) {
-    for(;;) {}
-  }
-  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_WRITE, strlen(":tt")); /* stdout */
-  if (fh!=McuSemihost_STDOUT) {
-    for(;;) {}
-  }
-  fh = McuSemihost_FileOpen(":tt", SYS_FILE_MODE_APPEND, strlen(":tt")); /* stderr */
-  if (fh!=McuSemihost_STDERR) {
-    for(;;) {}
-  }
+  McuSemihost_tty_handles[0] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_READ); /* stdin */
+  McuSemihost_tty_handles[1] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_WRITE); /* stdout */
+  McuSemihost_tty_handles[2] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_APPEND); /* stderr */
 #endif
 }

@@ -21,6 +21,4 @@
     /*!< if standard I/O handles (stdin, stdout, stderr) shall be initialized (1) or not (0) */
 #endif
 
-
-
 #endif /* MCUSEMIHOST_CONFIG_H_ */

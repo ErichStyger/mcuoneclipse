@@ -20,6 +20,8 @@ int main(void) {
   McuSemiHost_Init();
 
   McuSemiHost_Test();
+  McuSemiHost_Deinit();
+
   for(;;) {}
   return 0;
 }

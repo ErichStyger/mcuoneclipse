@@ -45,8 +45,9 @@ bool McuSemiHost_StdIOKeyPressed(void);
 
 /*!
  * \brief Testing the semihost functionality and API
+ * \return 0 for success, -1 for error
  */
-void McuSemiHost_Test(void);
+int McuSemiHost_Test(void);
 
 /*!
  * \brief Module de-initialization

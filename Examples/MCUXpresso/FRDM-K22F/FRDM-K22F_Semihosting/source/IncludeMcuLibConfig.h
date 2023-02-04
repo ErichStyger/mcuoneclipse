@@ -120,9 +120,9 @@ Instructions:
 #define McuMinINI_CONFIG_FLASH_NVM_MAX_DATA_SIZE    (256) /* must be 64, 128, 256, ... */
 #define McuMinINI_CONFIG_READ_ONLY                  (0)
 #define McuMinINI_CONFIG_USE_REAL                   (0)
-
 /* ---------------------------------------------------------------------------------------*/
 /* McuSemihost */
-#define McuSemihost_CONFIG_DEBUG_PROBE    McuSemihost_DEBUG_PROBE_SEGGER
+#define McuSemihost_CONFIG_DEBUG_PROBE          McuSemihost_DEBUG_PROBE_SEGGER
+#define McuSemihost_CONFIG_INIT_STDIO_HANDLES   (1)
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */
