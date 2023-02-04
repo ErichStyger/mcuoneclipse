@@ -133,12 +133,12 @@ int McuSemihost_HostClock(void) {
  * \param fileNameLenght
  * \return -1 if failed, otherwise file handle
  */
-int McuSemihost_FileOpen(const char *filename, int mode, int fileNameLenght) {
+int McuSemihost_FileOpen(const unsigned char *filename, int mode) {
   int32_t param[3];
 
   param[0] = (int32_t)filename;
   param[1] = mode;
-  param[2] = fileNameLenght;
+  param[2] = McuUtility_strlen((char*)filename);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_OPEN, &param[0]);
 }
 
@@ -154,6 +154,13 @@ int McuSemihost_FileClose(int fh) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_CLOSE, &param);
 }
 
+/*!
+ * \brief Read from a file
+ * \param fh File handle
+ * \param data Pointer where to store the data
+ * \param nofBytes Number of bytes to read
+ * \return 0: success. If it is nofBytes, then the call has failed and the end of the file has been reached. If smaller than nofBytes, then the buffer has not been filled.
+ */
 int McuSemihost_FileRead(int fh, const char *data, size_t nofBytes) {
   int32_t param[3];
 
@@ -172,21 +179,21 @@ int McuSemihost_FileWrite(int fh, const char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE, &param[0]);
 }
 
-int McuSemihost_FileRemove(const unsigned char *filePath, size_t numBytesFilePath) {
+int McuSemihost_FileRemove(const unsigned char *filePath) {
   int32_t param[2];
 
   param[0] = (int32_t)filePath;
-  param[1] = numBytesFilePath;
+  param[1] = McuUtility_strlen((char*)filePath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_REMOVE, &param[0]);
 }
 
-int McuSemihost_FileRename(const unsigned char *filePath, size_t numBytesFilePath, const unsigned char *fileNewPath, size_t numBytesNewFilePath) {
+int McuSemihost_FileRename(const unsigned char *filePath, const unsigned char *fileNewPath) {
   int32_t param[4];
 
   param[0] = (int32_t)filePath;
-  param[1] = numBytesFilePath;
+  param[1] = McuUtility_strlen((char*)filePath);
   param[0] = (int32_t)fileNewPath;
-  param[1] = numBytesNewFilePath;
+  param[1] = McuUtility_strlen((char*)fileNewPath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_RENAME, &param[0]);
 }
 
@@ -276,19 +283,17 @@ unsigned McuSemihost_printf(const char *fmt, ...) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-#define _FILENAME_OPEN    "c:\\tmp\\test_semihosting2.txt"
-#define _FILENAME_RENAME  "c:\\tmp\\test_semihosting_renamed.txt"
-#define _FILENAME_REMOVE  "c:\\tmp\\test_semihosting_removed.txt"
-
 static void TestFileOperations(void) {
   int hFile;
   int r;
   char buf[24];
+  const unsigned char *testFileName = (const unsigned char*)"c:\\tmp\\semihosting.txt";
+  const unsigned char *copyFileName = (const unsigned char*)"c:\\tmp\\copy.txt";
 
 #if 0
   /* quick test */
-  /* Note: file will be created as C:\NXP\MCUXpressoIDE_11.7.0_9198\ide\testxx.txt */
-  hFile = McuSemihost_FileOpen("testxx.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("testxx.txt"));
+  /* Note: file will be created as C:\NXP\MCUXpressoIDE_11.7.0_9198\ide\test.txt */
+  hFile = McuSemihost_FileOpen("test.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("test.txt"));
   if (hFile == -1) {
     McuSemihost_WriteString((unsigned char*)"Failed\n");
   } else {
@@ -296,102 +301,111 @@ static void TestFileOperations(void) {
     McuSemihost_FileClose(hFile);
   }
 #endif
-  McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Open and create file on host:");
-  McuSemihost_WriteString((unsigned char*)_FILENAME_OPEN);
+  McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Open and create file ");
+  McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
-  hFile = McuSemihost_FileOpen(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"Open: Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Failed\n");
   } else {
-    McuSemihost_WriteString((unsigned char*)"Open: OK\n");
-    McuSemihost_FileClose(hFile);
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN: OK\n");
+    if (McuSemihost_FileClose(hFile)==0) {
+      McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: OK\n");
+    } else {
+      McuSemihost_WriteString((unsigned char*)"SYS_CLOSE: Failed\n");
+    }
   }
 
   /* writing to file */
-  const char *msg = "test file write 0123456789ABCDEF Hello Worlds";
-
-  hFile = McuSemihost_FileOpen(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
+  McuSemihost_WriteString((unsigned char*)"SYS_WRITE: Write to file ");
+  McuSemihost_WriteString((unsigned char*)testFileName);
+  McuSemihost_WriteString((unsigned char*)"\n");
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
   } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
+    const char *msg = "test file write 0123456789ABCDEF Hello World!";
     r = McuSemihost_FileWrite(hFile, msg, strlen(msg));
     if (r != 0) {
-      McuSemihost_WriteString((unsigned char*)"Failed\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_WRITE Failed\n");
     } else {
-      McuSemihost_WriteString((unsigned char*)"OK\n");
+      McuSemihost_WriteString((unsigned char*)"SYS_WRITE OK\n");
     }
     McuSemihost_FileClose(hFile);
   }
 
   /* reading from file */
-  hFile = McuSemihost_FileOpen(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
+  McuSemihost_WriteString((unsigned char*)"SYS_READ: Read from file ");
+  McuSemihost_WriteString((unsigned char*)testFileName);
+  McuSemihost_WriteString((unsigned char*)"\n");
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
   } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
+    memset(buf, 0, sizeof(buf));
+    r = McuSemihost_FileRead(hFile, buf, sizeof(buf));
+    if (r < 0) {
+      McuSemihost_WriteString((unsigned char*)"Failed\n");
+    } else if (r == sizeof(buf)) {
+      McuSemihost_WriteString((unsigned char*)"Failed. Read EOF\n");
+    } else {
+      McuSemihost_FileWrite((int)stdout, buf, sizeof(buf) - r);
+      McuSemihost_WriteString((unsigned char*)"\n");
+      snprintf(buf, sizeof(buf), "Read %d bytes\n", sizeof(buf) - r);
+      McuSemihost_WriteString((unsigned char*)buf);
+      McuSemihost_WriteString((unsigned char*)"OK");
+    }
+    McuSemihost_FileClose(hFile);
   }
-  McuSemihost_WriteString((unsigned char*)"Reading from file:\n");
-  memset(buf, 0, sizeof(buf));
-  r = McuSemihost_FileRead(hFile, buf, sizeof(buf));
-  if (r < 0) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
-  } else if (r == sizeof(buf)) {
-    McuSemihost_WriteString((unsigned char*)"Failed. Read EOF\n");
-  } else {
-    McuSemihost_FileWrite((int)stdout, buf, sizeof(buf) - r);
-    McuSemihost_WriteString((unsigned char*)"\n");
-    snprintf(buf, sizeof(buf), "Read %d bytes\n", sizeof(buf) - r);
-    McuSemihost_WriteString((unsigned char*)buf);
-    McuSemihost_WriteString((unsigned char*)"OK");
-  }
-  McuSemihost_FileClose(hFile);
 
   /* seek position in file */
-  hFile = McuSemihost_FileOpen(_FILENAME_OPEN, SYS_FILE_MODE_WRITEREADBINARY, strlen(_FILENAME_OPEN));
+  McuSemihost_WriteString((unsigned char*)"SYS_FLEN: Size of file ");
+  McuSemihost_WriteString((unsigned char*)testFileName);
+  McuSemihost_WriteString((unsigned char*)"\n");
+  hFile = McuSemihost_FileOpen(testFileName, SYS_FILE_MODE_WRITEREADBINARY);
   if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_OPEN failed\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"OK\n");
-  }
-  r = McuSemihost_FileSeek(hFile, 6);
-   if (r != 0) {
-     McuSemihost_WriteString((unsigned char*)"Failed\n");
-   } else {
-     McuSemihost_WriteString((unsigned char*)"OK\n");
-   }
-   /* file len */
-   r = McuSemihost_FileLen(hFile);
+    r = McuSemihost_FileSeek(hFile, 6);
+    if (r != 0) {
+      McuSemihost_WriteString((unsigned char*)"SYS_FLEN failed\n");
+    } else {
+      McuSemihost_WriteString((unsigned char*)"SYS_FLEN OK\n");
+    }
+    /* file length */
+    r = McuSemihost_FileLen(hFile);
     if (r >= 0) {
-      snprintf(buf, sizeof(buf), "Filesize: %d\n", r);
+      snprintf(buf, sizeof(buf), "File size: %d\n", r);
       McuSemihost_WriteString((unsigned char*)buf);
-      McuSemihost_WriteString((unsigned char*)"OK\n");
     } else {
       McuSemihost_WriteString((unsigned char*)"Failed\n");
     }
     McuSemihost_FileClose(hFile);
+  }
+
+  /* renaming a file */
+  McuSemihost_WriteString((unsigned char*)"SYS_RENAME: rename file ");
+  McuSemihost_WriteString((unsigned char*)testFileName);
+  McuSemihost_WriteString((unsigned char*)" to ");
+  McuSemihost_WriteString((unsigned char*)copyFileName);
+  McuSemihost_WriteString((unsigned char*)"\n");
+  r = McuSemihost_FileRename(testFileName, copyFileName);
+  if (r != 0) {
+    McuSemihost_WriteString((unsigned char*)"SYS_RENAME failed\n");
+  } else {
+    McuSemihost_WriteString((unsigned char*)"SYS_RENAME OK\n");
+  }
 
   /* removing a file */
-  hFile = McuSemihost_FileOpen(_FILENAME_REMOVE, SYS_FILE_MODE_WRITEBINARY, strlen(_FILENAME_REMOVE));
-  if (hFile == -1) {
-    McuSemihost_WriteString((unsigned char*)"Failed to create file\n");
-  } else {
-    McuSemihost_FileClose(hFile);
-  }
-
-  r = McuSemihost_FileRemove((unsigned char*)_FILENAME_REMOVE, strlen(_FILENAME_REMOVE));
+  McuSemihost_WriteString((unsigned char*)"SYS_REMOVE: delete file ");
+  McuSemihost_WriteString((unsigned char*)copyFileName);
+  McuSemihost_WriteString((unsigned char*)"\n");
+  r = McuSemihost_FileRemove(copyFileName);
   if (r != 0) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
   } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
-  }
-
-   /* renaming a file ==> fails? */
-  r = McuSemihost_FileRename((unsigned char*)_FILENAME_OPEN, strlen(_FILENAME_OPEN), (unsigned char*)_FILENAME_RENAME, strlen(_FILENAME_RENAME));
-  if (r != 0) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
-  } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
+    McuSemihost_WriteString((unsigned char*)"SYS_REMOVE OK\n");
   }
 }
 
