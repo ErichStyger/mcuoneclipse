@@ -88,3 +88,5 @@ Memory region         Used Size  Region Size  %age Used
       SRAM_UPPER:        8256 B        64 KB     12.60%
       SRAM_LOWER:          0 GB        64 KB      0.00%
 
+
+--defsym=vfprintf=__i_vfprintf

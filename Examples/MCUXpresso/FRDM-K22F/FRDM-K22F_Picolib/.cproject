@@ -268,7 +268,7 @@
 									<listOptionValue builtIn="false" value="-print-memory-usage"/>
 									<listOptionValue builtIn="false" value="--sort-section=alignment"/>
 									<listOptionValue builtIn="false" value="--cref"/>
-									<listOptionValue builtIn="false" value="--defsym=vfprintf=__i_vfprintf"/>
+									<listOptionValue builtIn="false" value=""/>
 								</option>
 								<option id="gnu.c.link.option.userobjs.1606714739" name="Other objects" superClass="gnu.c.link.option.userobjs" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.shared.29124987" name="Shared (-shared)" superClass="gnu.c.link.option.shared" useByScannerDiscovery="false"/>
@@ -282,8 +282,8 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.2090246411" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.fpu.792305140" name="Floating point" superClass="com.crt.advproject.link.fpu" useByScannerDiscovery="false" value="com.crt.advproject.link.fpu.fpv4.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.2004108806" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="false" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.93008383" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="Picolib_Debug.ld" valueType="string"/>
-								<option id="com.crt.advproject.link.scriptdir.703320912" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="../picolib" valueType="string"/>
+								<option id="com.crt.advproject.link.script.93008383" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="FRDM-K22F_Picolib_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.scriptdir.703320912" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.1471335714" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.679447805" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.ecrp.1246956383" name="Enhanced CRP" superClass="com.crt.advproject.link.ecrp" useByScannerDiscovery="false"/>
@@ -384,5 +384,9 @@
 &lt;/infoList&gt;&#13;
 &lt;/TargetConfig&gt;</projectStorage>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/FRDM-K22F_Picolib"/>
+		</configuration>
+	</storageModule>
 </cproject>
