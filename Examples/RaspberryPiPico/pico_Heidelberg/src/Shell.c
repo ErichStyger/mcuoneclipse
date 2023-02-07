@@ -178,7 +178,7 @@ uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOTy
 #if PL_CONFIG_USE_SHELL_UART
     io = &McuShellUart_stdio;
 #elif PL_CONFIG_USE_USB_CDC
-    io = &USB_CdcStdio;
+    io = &cdc_stdio;
 #elif PL_CONFIG_USE_RTT
     io = &McuRTT_stdio;
 #else
