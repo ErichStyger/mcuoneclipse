@@ -18,6 +18,7 @@ uint32_t Lights_GetColor(void);
 
 void Lights_SetBrightnessPercent(uint8_t percent);
 uint8_t Lights_GetBrightnessPercent(void);
+uint8_t Lights_GetBrightnessValue(void);
 
 bool Lights_GetLightIsOn(void);
 void Lights_SetLightIsOn(bool on);

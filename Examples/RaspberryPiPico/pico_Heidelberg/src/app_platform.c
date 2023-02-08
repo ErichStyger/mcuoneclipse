@@ -99,6 +99,9 @@
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
 
+void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
+}
+
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
   stdio_init_all(); /* needed for USB CDC, but problems with debugger?? */

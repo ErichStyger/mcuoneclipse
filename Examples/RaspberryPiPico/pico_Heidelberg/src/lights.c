@@ -19,7 +19,7 @@
   #include "MinIniKeys.h"
 #endif
 #if PL_CONFIG_USE_PWM_LED
-  #include "pwLed.h"
+  #include "pwmLed.h"
 #endif
 
 /* defaults */
@@ -74,6 +74,11 @@ void Lights_SetBrightnessPercent(uint8_t percent) {
 #if PL_CONFIG_USE_MINI
   McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, lights.brightness, NVMC_MININI_FILE_NAME);
 #endif
+}
+
+uint8_t Lights_GetBrightnessValue(void) {
+  /* return the percentage */
+  return lights.brightness;
 }
 
 uint8_t Lights_GetBrightnessPercent(void) {

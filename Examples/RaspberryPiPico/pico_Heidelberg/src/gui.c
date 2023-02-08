@@ -445,10 +445,16 @@ static void GuiTask(void *pv) {
 
   (void)pv; /* not used */
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
+#if PL_CONFIG_USE_SHT31
+  McuSHT31_Init();
+#elif PL_CONFIG_USE_SHT40
+  McuSHT40_Init();
+#endif
   McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
   McuSSD1306_Clear();
   Gui_Create();
   lv_scr_load(guiObjects.screens[GUI_SCREEN_SETTINGS]);
+  LV_ClearButtonEventQueue(); /* clear any pending button events created during startup */
   for(;;) {
     /* handle notification events */
     res = xTaskNotifyWait(0UL, /* pre-clear flags */
