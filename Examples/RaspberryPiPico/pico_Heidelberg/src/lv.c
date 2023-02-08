@@ -236,7 +236,9 @@ static void button_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
   }
   GUI_NotifyUserAction(); /* inform about a user action */
 
+#if McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
   keyData = (keyData&0xff00) | MapKeyOrientation(keyData&0xff);
+#endif
   /* assign the key to return to LVGL */
 #if PL_CONFIG_USE_BUTTON_NEXT_PREV
   switch(keyData&0xff) {
@@ -281,6 +283,10 @@ static void button_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
     data->state = LV_INDEV_STATE_RELEASED;
   }
   data->continue_reading = McuRB_NofElements(ringBufferHndl)!=0;   /* return true if we have more data */
+}
+
+void LV_ClearButtonEventQueue(void) {
+  McuRB_Clear(ringBufferHndl);
 }
 
 #define DISP_BUF_SIZE (LV_HOR_RES*LV_VER_RES/8)

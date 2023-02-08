@@ -22,7 +22,9 @@
 #include "Modbus/McuHeidelberg.h"
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
-static TimerHandle_t timerHndlGuiExpired; /* timeout user actions */
+#if GUI_CONFIG_USE_SCREENSAVER
+  static TimerHandle_t timerHndlGuiExpired; /* timeout user actions */
+#endif
 static TimerHandle_t timerHndlCycleScreens; /* timer for cycling screens */
 
 /* direct task notification bits */
@@ -424,15 +426,19 @@ typedef enum GuiState_e {
   GUI_STATE_START_CYCLING_SCREEN,   /* start the cycling screens */
   GUI_STATE_SHOW_CYCLING_SCREEN,    /* show cycling screens */
   GUI_STATE_IDLE_CYCLING_SCREEN,    /* idle between screen cycling */
+#if GUI_CONFIG_USE_SCREENSAVER
   GUI_STATE_ENTER_SCREEN_SAVER,     /* enter screen saver mode */
   GUI_STATE_ACTIVE_SCREEN_SAVER,    /* screen saver running */
   GUI_STATE_EXIT_SCREEN_SAVER,      /* exit screen saver mode */
+#endif
 } GuiState_e;
 
 static void GuiTask(void *pv) {
   GuiScreens_e currScreen = GUI_SCREEN_SETTINGS;
+#if GUI_CONFIG_USE_SCREENSAVER
   int turnDisplayOffTimeout = GUI_CONFIG_NOF_SCREEN_CYCLING_UNTIL_DISPLAY_OFF;
   bool screenSaverIsOn = false;
+#endif
   GuiState_e state = GUI_STATE_SHOW_SETTINGS;
   BaseType_t res;
   uint32_t notifcationValue;
@@ -464,11 +470,11 @@ static void GuiTask(void *pv) {
             }
             state = GUI_STATE_SHOW_SETTINGS;
             break;
-
+      #if GUI_CONFIG_USE_SCREENSAVER
           case GUI_STATE_ACTIVE_SCREEN_SAVER: /* button press during screen saver: turn on display and show settings */
             state = GUI_STATE_EXIT_SCREEN_SAVER;
             break;
-
+      #endif
           default:
             break;
         } /* switch */
@@ -493,16 +499,22 @@ static void GuiTask(void *pv) {
             currScreen++;
             if (currScreen>=sizeof(guiObjects.screens)/sizeof(guiObjects.screens[0])) { /* reached the end of the list */
               currScreen = GUI_SCREEN_FIRST_CYCLING;
+          #if GUI_CONFIG_USE_SCREENSAVER
               turnDisplayOffTimeout--; /* count the iteration */
+          #endif
             }
             if (currScreen==GUI_SCREEN_SETTINGS) {
               currScreen++; /* skip settings screen */
             }
+          #if GUI_CONFIG_USE_SCREENSAVER
             if (turnDisplayOffTimeout<=0) {
               state = GUI_STATE_ENTER_SCREEN_SAVER;
             } else {
               state = GUI_STATE_SHOW_CYCLING_SCREEN;
             }
+          #else
+            state = GUI_STATE_SHOW_CYCLING_SCREEN;
+          #endif
             break;
 
           default:
@@ -522,7 +534,9 @@ static void GuiTask(void *pv) {
 
       case GUI_STATE_START_CYCLING_SCREEN:
         currScreen = GUI_SCREEN_FIRST_CYCLING;
+      #if GUI_CONFIG_USE_SCREENSAVER
         turnDisplayOffTimeout = GUI_CONFIG_NOF_SCREEN_CYCLING_UNTIL_DISPLAY_OFF;
+      #endif
         if (xTimerStart(timerHndlCycleScreens, pdMS_TO_TICKS(10))!=pdPASS) {
           McuLog_fatal("failed starting timer");
           for(;;); /* failure!?! */
@@ -538,7 +552,8 @@ static void GuiTask(void *pv) {
       case GUI_STATE_IDLE_CYCLING_SCREEN:
         break;
 
-      case GUI_STATE_ENTER_SCREEN_SAVER:
+#if GUI_CONFIG_USE_SCREENSAVER
+     case GUI_STATE_ENTER_SCREEN_SAVER:
         McuSSD1306_DisplayOn(false); /* turn off */
         /* stop all timers */
         if (xTimerStop(timerHndlGuiExpired, pdMS_TO_TICKS(10))!=pdPASS) {
@@ -559,7 +574,7 @@ static void GuiTask(void *pv) {
         McuSSD1306_DisplayOn(true); /* turn display on */
         state = GUI_STATE_SHOW_SETTINGS;
         break;
-
+#endif
       default:
         break;
     } /* switch */
@@ -568,6 +583,7 @@ static void GuiTask(void *pv) {
   }
 }
 
+#if GUI_CONFIG_USE_SCREENSAVER
 static void StartOrResetGuiTimeoutTimer(void) {
   if (xTimerIsTimerActive(timerHndlGuiExpired)==pdFALSE) {
     /* timer is not active: start it */
@@ -582,10 +598,13 @@ static void StartOrResetGuiTimeoutTimer(void) {
     }
   }
 }
+#endif
 
 void GUI_NotifyUserAction(void) {
   /* called for each key press or user action. */
+#if GUI_CONFIG_USE_SCREENSAVER
   StartOrResetGuiTimeoutTimer();
+#endif
   (void)xTaskNotify(GUI_TaskHndl, GUI_TASK_NOTIFY_BUTTON_PRESSED, eSetBits);
 }
 
@@ -606,6 +625,7 @@ void GUI_Init(void) {
     for(;;){} /* error */
   }
 
+#if GUI_CONFIG_USE_SCREENSAVER
   /* create a timer to timeout user actions */
   timerHndlGuiExpired = xTimerCreate(
     "guiExpired", /* name */
@@ -621,6 +641,7 @@ void GUI_Init(void) {
     McuLog_fatal("failed starting timer");
     for(;;); /* failure!?! */
   }
+#endif
 
   /* timer for screen cycling */
   timerHndlCycleScreens = xTimerCreate(

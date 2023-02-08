@@ -13,6 +13,7 @@
 #define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' with LED countdown application */
 #define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023) by Christian Jost: added on/off circuit, energy storage, extra sensor */
 #define PL_CONFIG_HW_VERSION_0_6    (6)  /* V0.6, EVCC January 2023 */
+#define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB 07-Feb-2023 */
 
 /* active PCB/Hardware version */
 #define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)

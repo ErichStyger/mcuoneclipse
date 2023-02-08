@@ -18,6 +18,9 @@
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
+#if PL_CONFIG_USE_PWM_LED
+  #include "pwLed.h"
+#endif
 
 /* defaults */
 #define LIGHTS_DEFAULT_IS_ON      (false)
@@ -29,6 +32,16 @@ static struct lights_t {
   uint32_t color; /* current color, in WRGB format, 8bit each */
   uint8_t brightness; /* current brightness, 0..255 */
 } lights;
+
+void Lights_SetLed(uint32_t color) {
+  /* setting LEDs directly, without storing values. Can be used for example during startup */
+#if PL_CONFIG_USE_PWM_LED
+  PwmLed_SetColor(color);
+#elif PL_CONFIG_USE_NEO_PIXEL_HW
+  NEO_SetAllPixelColor(color);
+  (void)NEO_TransferPixels();
+#endif
+}
 
 bool Lights_GetLightIsOn(void) {
   return lights.isOn;
@@ -78,6 +91,11 @@ static void Lights_Task(void *pv) {
   lights.color = LIGHTS_DEFAULT_COLOR;
   lights.brightness = LIGHTS_DEFAULT_BRIGHTNESS;
 #endif
+  /* indicate power-on with a short blink */
+  Lights_SetLed(0x1100); /* green */
+  vTaskDelay(pdMS_TO_TICKS(500));
+  Lights_SetLed(0); /* off */
+  vTaskDelay(pdMS_TO_TICKS(1000));
   for(;;) {
     if (!lights.isOn) { /* turned off */
     #if PL_CONFIG_USE_NEO_PIXEL_HW

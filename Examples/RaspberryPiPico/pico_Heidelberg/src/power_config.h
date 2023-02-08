@@ -9,6 +9,8 @@
 
 #include "app_platform.h"
 
+#define POWER_MINIMAL_BATTERY_LEVEL    (5) /* turn off below this % number */
+
 #define POWER_CONFIG_USE_EN_VCC2   (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) /* FET to power SHT40, OLED (Connector) and VCC2 on interconnect */
 #if POWER_CONFIG_USE_EN_VCC2
   #define POWER_CONFIG_VCC2_PIN           11u

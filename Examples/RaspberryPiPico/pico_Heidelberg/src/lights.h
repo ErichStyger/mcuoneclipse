@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+void Lights_SetLed(uint32_t color);
+
 void Lights_SetColor(uint32_t color);
 uint32_t Lights_GetColor(void);
 
