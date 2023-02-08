@@ -88,7 +88,7 @@ Memory region         Used Size  Region Size  %age Used
       SRAM_UPPER:        8256 B        64 KB     12.60%
       SRAM_LOWER:          0 GB        64 KB      0.00%
 
-
+-specs=picolibc.specs
 --defsym=vfprintf=__i_vfprintf
 
 /build/picolibc/builds/build-arm-tk/../../newlib/libc/picolib/picosbrk.c:49: undefined reference to `__heap_start'
