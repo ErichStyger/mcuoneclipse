@@ -9,8 +9,8 @@
  * MCUXpresso IDE v11.7.0 [Build 9198] [2023-01-17] on Feb 4, 2023, 6:56:41 PM
  */
 
-INCLUDE "Picolib_Debug_library.ld"
-INCLUDE "Picolib_Debug_memory.ld"
+INCLUDE "FRDM-K22F_Picolib_Debug_library.ld"
+INCLUDE "FRDM-K22F_Picolib_Debug_memory.ld"
 
 ENTRY(ResetISR)
 
@@ -187,8 +187,10 @@ SECTIONS
     .heap (NOLOAD) :  ALIGN(4)
     {
         _pvHeapStart = .;
+        __heap_start = .; /* << required for Picolib */
         . += _HeapSize;
         . = ALIGN(4);
+        __heap_end = .; /* << required for Picolib */
         _pvHeapLimit = .;
     } > SRAM_UPPER
 

@@ -39,27 +39,36 @@
 #include "clock_config.h"
 #include "MK22F51212.h"
 #include "fsl_debug_console.h"
-/* TODO: insert other include files here. */
+
+static void stdlib_test(void) {
+  static const float f = 3.5f;
+  static const double d = 7.25;
+  char *buf;
+
+  /* doing a few calls to the standard library for tests */
+  printf("hello world!\n");
+  printf("f: %f, d: %f\n", f, d);
+  buf = malloc(64);
+  if (buf!=NULL) {
+    memset(buf, 0, sizeof(buf));
+    strcpy(buf, "hello!");
+    printf("%s", buf);
+    free(buf);
+  }
+  unsigned char ch;
+  if (scanf("Enter a character: %c", &ch)==1) {
+    printf("You entered %c\n", ch);
+  }
+}
 
 int main(void) {
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
- // BOARD_InitBootPeripherals();
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-  /* Init FSL debug console. */
-//  BOARD_InitDebugConsole();
-#endif
 
-  printf("Hello World\n");
+  stdlib_test();
 
-  /* Force the counter to be placed into memory. */
-  volatile static int i = 0 ;
-  /* Enter an infinite loop, just incrementing a counter. */
-  while(1) {
-      i++ ;
-      /* 'Dummy' NOP to allow source level single stepping of
-          tight while() loop */
-      __asm volatile ("nop");
+  for(;;) {
+  __asm volatile ("nop");
   }
   return 0 ;
 }

@@ -90,3 +90,5 @@ Memory region         Used Size  Region Size  %age Used
 
 
 --defsym=vfprintf=__i_vfprintf
+
+/build/picolibc/builds/build-arm-tk/../../newlib/libc/picolib/picosbrk.c:49: undefined reference to `__heap_start'
