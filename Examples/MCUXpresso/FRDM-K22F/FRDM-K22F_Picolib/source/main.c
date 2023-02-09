@@ -26,16 +26,47 @@ static void stdlib_test(void) {
     free(buf);
   }
   unsigned char ch;
-  if (scanf("Enter a character: %c", &ch)==1) {
+  printf("Enter a character:\n");
+  if (scanf("%c", &ch)==1) {
     printf("You entered %c\n", ch);
   }
 }
 
+extern uint32_t _vStackTop;
+extern uint32_t _vStackBase;
+
+static uint32_t getStackSize(void) {
+  uint32_t base = (uint32_t)&_vStackBase;
+  uint32_t top = (uint32_t)&_vStackTop;
+  return top-base;
+}
+
+static void initStack(void) {
+  uint32_t base = (uint32_t)&_vStackBase;
+  uint32_t top = (uint32_t)&_vStackTop - 0x40; /* save offset from locals */
+  memset((void*)base, 0xde, top-base);
+}
+
+static uint32_t stackUnused(void) {
+  uint32_t unused = 0;
+  char *p = (char*)&_vStackBase;
+
+  while (*p==0xde) {
+    p++;
+    unused++;
+  }
+  return unused;
+}
+
 int main(void) {
+  initStack();
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
 
   stdlib_test();
+
+  uint32_t used = getStackSize()-stackUnused();
+  printf("stack size used: %ld\n", used);
 
   for(;;) {
   __asm volatile ("nop");

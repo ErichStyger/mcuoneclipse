@@ -191,7 +191,7 @@ SECTIONS
         . += _HeapSize;
         . = ALIGN(4);
         __heap_end = .; /* << required for Picolib */
-        _pvHeapLimit = .;
+         _pvHeapLimit = .; 
     } > SRAM_UPPER
 
      _StackSize = 0x1000;
