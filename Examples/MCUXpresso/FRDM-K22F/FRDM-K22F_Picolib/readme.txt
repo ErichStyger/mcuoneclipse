@@ -1,7 +1,7 @@
 readme.txt
 ----------
-Project for the FRDM-K22F using Piclib
-
+Project for the FRDM-K22F using Piclib, see
+https://mcuoneclipse.com/2023/02/05/debugging-embedded-targets-with-pyocd-and-eclipse/
 
 Links:
 https://github.com/picolibc/picolibc
