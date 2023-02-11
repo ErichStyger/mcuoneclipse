@@ -114,7 +114,7 @@ static void WiFiTask(void *pv) {
   McuUtility_strcpy(wifi.ssid, sizeof(wifi.ssid), WIFI_DEFAULT_SSID);
   McuUtility_strcpy(wifi.pass, sizeof(wifi.pass), WIFI_DEFAULT_PASS);
 #endif
-  McuLog_info("seting hostname: %s", wifi.hostname);
+  McuLog_info("setting hostname: %s", wifi.hostname);
   netif_set_hostname(&cyw43_state.netif[0], wifi.hostname);
 
   vTaskDelay(pdMS_TO_TICKS(1000)); /* give network tasks time to start up */

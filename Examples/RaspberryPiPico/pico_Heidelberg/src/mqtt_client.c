@@ -24,9 +24,7 @@
 
 #if LWIP_TCP
 
-#define MQTT_EXTRA_LOGS    (0)  /* set to 1 to produce extra log output */
-
-static mqtt_client_t *mqtt_client;
+#define MQTT_EXTRA_LOGS       (0)  /* set to 1 to produce extra log output */
 
 /* HomeAssistant Tesla Powerwall topics */
 #define TOPIC_NAME_SOLAR_POWER          "homeassistant/sensor/powerwall_solar_now/state"
@@ -51,7 +49,8 @@ typedef enum topic_ID_e {
 #define MQTT_DEFAULT_PASS     "password"
 
 typedef struct mqtt_t {
-  DnsResolver_info_t addr;      /* broker lwip address, resolved by DNS if hostname is used */
+  mqtt_client_t *mqtt_client;       /* lwIP MQTT client handle */
+  DnsResolver_info_t addr;          /* broker lwip address, resolved by DNS if hostname is used */
   unsigned char broker[32];         /* broker IP or hostname string. For hostname, DNS will be used */
   unsigned char client_id[32];      /* client ID used for connection */
   unsigned char client_user[32];    /* client user name used for connection */
@@ -59,13 +58,12 @@ typedef struct mqtt_t {
   topic_ID_e in_pub_ID;             /* incoming published ID, set in the incoming_publish_cb and used in the incoming_data_cb */
 } mqtt_t;
 
-static mqtt_t mqtt;
+static mqtt_t mqtt; /* information used for MQTT connection */
 
-static const struct mqtt_connect_client_info_t mqtt_client_info =
-{
-  mqtt.client_id,
-  mqtt.client_user,
-  mqtt.client_pass,
+static const struct mqtt_connect_client_info_t mqtt_client_info = {
+  mqtt.client_id, /* client ID */
+  mqtt.client_user, /* client user name */
+  mqtt.client_pass, /* client password */
   100,  /* keep alive timeout in seconds */
   NULL, /* will_topic */
   NULL, /* will_msg */
@@ -178,7 +176,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   if (status!=MQTT_CONNECT_ACCEPTED) {
     McuLog_error("MQTT client \"%s\" connection cb: FAILED status %d", client_info->client_id, (int)status);
   }
-
+  /* subscribe to topics */
   if (status == MQTT_CONNECT_ACCEPTED) {
     McuLog_trace("MQTT connect accepted");
     err = mqtt_sub_unsub(client,
@@ -234,8 +232,9 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
 void MqttClient_Connect(void) {
 #if LWIP_TCP
-  mqtt_client = mqtt_client_new();
+  mqtt_client = mqtt_client_new(); /* create client handle */
 
+  /* setup connection information */
 #if PL_CONFIG_USE_MINI
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_BROKER, MQTT_DEFAULT_BROKER, mqtt.broker, sizeof(mqtt.broker), NVMC_MININI_FILE_NAME);
   McuMinINI_ini_gets(NVMC_MININI_SECTION_MQTT, NVMC_MININI_KEY_MQTT_CLIENT, MQTT_DEFAULT_CLIENT, mqtt.client_id, sizeof(mqtt.client_id), NVMC_MININI_FILE_NAME);
@@ -247,25 +246,33 @@ void MqttClient_Connect(void) {
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
 #endif
 
-  if (DnsResolver_ResolveName(mqtt.broker, &mqtt.addr, 1000)!=0) {
+  /* resolve hostname to IP address: */
+  if (DnsResolver_ResolveName(mqtt.broker, &mqtt.addr, 1000)!=0) { /* use DNS to resolve name to IP address */
     McuLog_error("failed to resolve broker name %s", mqtt.broker);
     return;
   }
+  /* setup callbacks for incoming data: */
   mqtt_set_inpub_callback(
-      mqtt_client,
-      mqtt_incoming_publish_cb,
-      mqtt_incoming_data_cb,
-      LWIP_CONST_CAST(void*, &mqtt_client_info));
-
-  cyw43_arch_lwip_begin();
+      mqtt_client, /* client handle */
+      mqtt_incoming_publish_cb, /* callback for incoming publish messages */
+      mqtt_incoming_data_cb, /* callback for incoming data */
+      LWIP_CONST_CAST(void*, &mqtt_client_info) /* argument for callbacks */
+      );
+  /* connect to broker */
+  cyw43_arch_lwip_begin(); /* start section for to lwIP access */
   mqtt_client_connect(
       mqtt_client,
       &mqtt.addr.resolved_addr,
       MQTT_PORT,
       mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
-      &mqtt_client_info);
-  cyw43_arch_lwip_end();
+      &mqtt_client_info
+      );
+  cyw43_arch_lwip_end(); /* end section accessing lwIP */
 #endif /* LWIP_TCP */
+}
+
+void MqttClient_Deinit(void) {
+  /* nothing needed */
 }
 
 void MqttClient_Init(void) {

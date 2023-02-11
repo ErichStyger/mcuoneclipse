@@ -423,9 +423,11 @@ static void Gui_Create(void) {
 typedef enum GuiState_e {
   GUI_STATE_IDLE,                   /* idle mode */
   GUI_STATE_SHOW_SETTINGS,          /* show settings screen */
+#if GUI_CONFIG_USE_CYCLING_SCREEN
   GUI_STATE_START_CYCLING_SCREEN,   /* start the cycling screens */
   GUI_STATE_SHOW_CYCLING_SCREEN,    /* show cycling screens */
   GUI_STATE_IDLE_CYCLING_SCREEN,    /* idle between screen cycling */
+#endif
 #if GUI_CONFIG_USE_SCREENSAVER
   GUI_STATE_ENTER_SCREEN_SAVER,     /* enter screen saver mode */
   GUI_STATE_ACTIVE_SCREEN_SAVER,    /* screen saver running */
@@ -458,13 +460,21 @@ static void GuiTask(void *pv) {
   for(;;) {
     /* handle notification events */
     res = xTaskNotifyWait(0UL, /* pre-clear flags */
-        GUI_TASK_NOTIFY_BUTTON_PRESSED|GUI_TASK_NOTIFY_GUI_TIMEOUT|GUI_TASK_NOTIFY_NEXT_SCREEN, /* flags to check */
+        GUI_TASK_NOTIFY_BUTTON_PRESSED
+#if GUI_CONFIG_USE_SCREENSAVER
+        |GUI_TASK_NOTIFY_GUI_TIMEOUT
+#endif
+#if GUI_CONFIG_USE_CYCLING_SCREEN
+        |GUI_TASK_NOTIFY_NEXT_SCREEN
+#endif
+        , /* flags to check */
         &notifcationValue, /* where to store the bits */
         pdMS_TO_TICKS(20) /* timeout */
     );
     if (res==pdTRUE) { /* received notification */
       if (notifcationValue&GUI_TASK_NOTIFY_BUTTON_PRESSED) { /* user pressed a button */
         switch(state) {
+      #if GUI_CONFIG_USE_CYCLING_SCREEN
           case GUI_STATE_START_CYCLING_SCREEN:
           case GUI_STATE_IDLE_CYCLING_SCREEN:
           case GUI_STATE_SHOW_CYCLING_SCREEN: /* button press during cycling screens: show settings */
@@ -476,6 +486,7 @@ static void GuiTask(void *pv) {
             }
             state = GUI_STATE_SHOW_SETTINGS;
             break;
+      #endif
       #if GUI_CONFIG_USE_SCREENSAVER
           case GUI_STATE_ACTIVE_SCREEN_SAVER: /* button press during screen saver: turn on display and show settings */
             state = GUI_STATE_EXIT_SCREEN_SAVER;
@@ -485,6 +496,7 @@ static void GuiTask(void *pv) {
             break;
         } /* switch */
       } /* if */
+#if GUI_CONFIG_USE_SCREENSAVER
       if (notifcationValue&GUI_TASK_NOTIFY_GUI_TIMEOUT) { /* no user action or button press for some time */
         switch(state) {
           case GUI_STATE_IDLE:
@@ -495,6 +507,8 @@ static void GuiTask(void *pv) {
              break;
         } /* switch */
       } /* if */
+#endif
+#if GUI_CONFIG_USE_CYCLING_SCREEN
       if (notifcationValue&GUI_TASK_NOTIFY_NEXT_SCREEN) { /* request to cycle to next screen */
         switch(state) {
           case GUI_STATE_IDLE:
@@ -527,6 +541,7 @@ static void GuiTask(void *pv) {
              break;
         } /* switch */
       } /* if */
+#endif
     } /* if notification received */
 
     switch(state) {
@@ -538,6 +553,7 @@ static void GuiTask(void *pv) {
         state = GUI_STATE_IDLE;
         break;
 
+#if GUI_CONFIG_USE_CYCLING_SCREEN
       case GUI_STATE_START_CYCLING_SCREEN:
         currScreen = GUI_SCREEN_FIRST_CYCLING;
       #if GUI_CONFIG_USE_SCREENSAVER
@@ -557,6 +573,7 @@ static void GuiTask(void *pv) {
 
       case GUI_STATE_IDLE_CYCLING_SCREEN:
         break;
+#endif
 
 #if GUI_CONFIG_USE_SCREENSAVER
      case GUI_STATE_ENTER_SCREEN_SAVER:
@@ -566,10 +583,12 @@ static void GuiTask(void *pv) {
           McuLog_fatal("failed stopping timer");
           for(;;); /* failure!?! */
         }
+#if GUI_CONFIG_USE_CYCLING_SCREEN
         if (xTimerStop(timerHndlCycleScreens, pdMS_TO_TICKS(10))!=pdPASS) {
           McuLog_fatal("failed stopping timer");
           for(;;); /* failure!?! */
         }
+#endif
         state = GUI_STATE_ACTIVE_SCREEN_SAVER;
         break;
 
@@ -614,16 +633,20 @@ void GUI_NotifyUserAction(void) {
   (void)xTaskNotify(GUI_TaskHndl, GUI_TASK_NOTIFY_BUTTON_PRESSED, eSetBits);
 }
 
+#if GUI_CONFIG_USE_SCREENSAVER
 static void vTimerCallbackGuiExpired(TimerHandle_t pxTimer) {
   (void)pxTimer; /* not used */
   /* start cycling screen timer */
   (void)xTaskNotify(GUI_TaskHndl, GUI_TASK_NOTIFY_GUI_TIMEOUT, eSetBits);
 }
+#endif
 
+#if GUI_CONFIG_USE_CYCLING_SCREEN
 static void vTimerCallbackCycleScreen(TimerHandle_t pxTimer) {
   (void)pxTimer; /* not used */
   (void)xTaskNotify(GUI_TaskHndl, GUI_TASK_NOTIFY_NEXT_SCREEN, eSetBits);
 }
+#endif
 
 void GUI_Init(void) {
   LV_Init(); /* initialize GUI library */
