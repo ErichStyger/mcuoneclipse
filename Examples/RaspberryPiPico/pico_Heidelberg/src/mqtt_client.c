@@ -261,11 +261,11 @@ void MqttClient_Connect(void) {
   /* connect to broker */
   cyw43_arch_lwip_begin(); /* start section for to lwIP access */
   mqtt_client_connect(
-      mqtt_client,
-      &mqtt.addr.resolved_addr,
-      MQTT_PORT,
-      mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
-      &mqtt_client_info
+      mqtt_client, /* client handle */
+      &mqtt.addr.resolved_addr, /* broker IP address */
+      MQTT_PORT, /* port to be used */
+      mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info), /* connection callback with argument */
+      &mqtt_client_info /* client information */
       );
   cyw43_arch_lwip_end(); /* end section accessing lwIP */
 #endif /* LWIP_TCP */
