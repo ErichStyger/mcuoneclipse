@@ -46,6 +46,7 @@ file(GLOB FILES
   SEGGER_SysView/SEGGER_SYSVIEW_Config_FreeRTOS.c
   SEGGER_SysView/SEGGER_SYSVIEW_FreeRTOS.c
   
+  src/McuSemihst.c
   src/McuShell.c
   src/McuShellUart.c
   src/McuSHT31.c

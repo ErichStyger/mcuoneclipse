@@ -64,6 +64,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuRingBuffer: Generic Ring Buffer implementation
 - McuRTOS: wrapper for FreeRTOS
 - McuRTT: wrapper for Segger RTT
+- McuSemihost: Low level semihosting for multiple debug probes, including file I/O
 - McuSharpMemoryDisplay: Driver for the Sharp Memory displays
 - McuShell: Driver for a command line shell
 - McuShellUart: UART driver for the McuShell

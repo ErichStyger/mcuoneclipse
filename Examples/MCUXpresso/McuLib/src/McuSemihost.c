@@ -10,7 +10,9 @@
 #include "McuXFormat.h"
 #include "McuWait.h"
 #include <stdio.h>
+#include "McuLib.h"
 
+#if McuLib_CONFIG_CORTEX_M >= 0 /* only on ARM Cortex-M */
 /*
  * ARM Semihosting operations, see https://developer.arm.com/documentation/dui0471/g/Semihosting
  * See https://github.com/cnoviello/mastering-stm32/blob/master/nucleo-f411RE/system/include/arm/semihosting.h
@@ -690,3 +692,5 @@ void McuSemiHost_Init(void) {
 #endif
 #endif
 }
+
+#endif /* McuLib_CONFIG_CORTEX_M */
