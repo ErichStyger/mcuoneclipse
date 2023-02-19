@@ -32,41 +32,107 @@ static void stdlib_test(void) {
   }
 }
 
-extern uint32_t _vStackTop;
-extern uint32_t _vStackBase;
+void *McuArmTools_GetSP(void) {
+#ifdef __GNUC__
+  void *sp;
 
-static uint32_t getStackSize(void) {
-  uint32_t base = (uint32_t)&_vStackBase;
-  uint32_t top = (uint32_t)&_vStackTop;
-  return top-base;
+  __asm__ __volatile__ ("mrs %0, msp" : "=r"(sp));
+  return sp;
+#else
+  #warning "only for GCC"
+  return NULL;
+#endif
 }
 
-static void initStack(void) {
-  uint32_t base = (uint32_t)&_vStackBase;
-  uint32_t top = (uint32_t)&_vStackTop - 0x40; /* save offset from locals */
-  memset((void*)base, 0xde, top-base);
+
+#ifndef McuArmTools_CONFIG_STACK_CHECK_PATTERN
+  #define McuArmTools_CONFIG_STACK_CHECK_PATTERN  (0xdeadbeef)
+    /*!< Byte pattern on stack, to mark it is 'unused' */
+#endif
+
+/* The two symbols below shall be set by the linker script file to mark top and bottom of stack. Note that the two addresses need to be 32bit aligned! */
+#ifndef McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP
+  #define McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP  _vStackTop
+#endif
+
+#ifndef McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE
+  #define McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE _vStackBase
+#endif
+
+/* on ARM Cortex, the stack grows from 'top' (higher address) to the 'bottom' (lower address) */
+extern uint32_t McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE; /*!< base address of stack, this is a numerically lower address than the top */
+extern uint32_t McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP;  /*!< top or end of stack, at the top. Highest address. Stack is growing from base to top */
+
+/*!
+ * \brief Return the stack bottom, as configured in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+uint32_t *McuArmTools_GetLinkerMainStackBase(void) {
+  return &McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
 }
 
-static uint32_t stackUnused(void) {
-  uint32_t unused = 0;
-  char *p = (char*)&_vStackBase;
+/*!
+ * \brief Return the stack top, as set in the linker file. The stack grows from the top (higher address) to the base (lower address).
+ * \return Return the address of the top (last) stack unit
+ */
+uint32_t *McuArmTools_GetLinkerMainStackTop(void) {
+  return &McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP;
+}
 
-  while (*p==0xde) {
-    p++;
-    unused++;
+/*!
+ * \brief Returns the size of the main (MSP) stack size, using linker symbols for top (higher address) and base (lower address).
+ * \return Number of bytes allocated by the linker for the stack
+ */
+uint32_t McuArmTools_GetLinkerMainStackSize(void) {
+  return (uint32_t)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_TOP - (uint32_t)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+}
+
+/*!
+ * \brief Fill the stack space with the checking pattern, up to the current MSP.
+ */
+void McuArmTools_FillMainStackSpace(void) {
+  uint32_t *base = (uint32_t*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+  uint32_t *msp = McuArmTools_GetSP(); /* get current MSP stack pointer */
+  /* the current MSP is near the top */
+  while(base<msp) { /* fill from the base to the top */
+    *base = McuArmTools_CONFIG_STACK_CHECK_PATTERN;
+    base++;
   }
-  return unused;
+}
+
+/*!
+ * \brief Calculates the unused stack space, based on the checking pattern.
+ * \return Number of unused main stack space.
+ */
+uint32_t McuArmTools_GetUnusedMainStackSpace(void) {
+  uint32_t unused = 0; /* number of unused bytes */
+  uint32_t *p = (uint32_t*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
+
+  /* check if the pattern stored on the stack has been changed */
+  while (*p==McuArmTools_CONFIG_STACK_CHECK_PATTERN) {
+    unused += sizeof(uint32_t); /* count number of unused bytes */
+    p++;
+  }
+  return unused; /* return the number of unused bytes */
+}
+
+/*!
+ * \brief Returns the used main stack space, based on the overwritten checking pattern.
+ * \return Number of used main stack bytes
+ */
+uint32_t McuArmTools_GetUsedMainStackSpace(void) {
+  return McuArmTools_GetLinkerMainStackSize()-McuArmTools_GetUnusedMainStackSpace();
 }
 
 int main(void) {
-  initStack();
+  McuArmTools_FillMainStackSpace();
+
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
 
   stdlib_test();
 
-  uint32_t used = getStackSize()-stackUnused();
-  printf("stack size used: %ld\n", used);
+  printf("stack size used: %ld\n", McuArmTools_GetUsedMainStackSpace());
 
   for(;;) {
   __asm volatile ("nop");
