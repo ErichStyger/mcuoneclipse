@@ -232,7 +232,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
 void MqttClient_Connect(void) {
 #if LWIP_TCP
-  mqtt_client = mqtt_client_new(); /* create client handle */
+  mqtt.mqtt_client = mqtt_client_new(); /* create client handle */
 
   /* setup connection information */
 #if PL_CONFIG_USE_MINI
@@ -253,7 +253,7 @@ void MqttClient_Connect(void) {
   }
   /* setup callbacks for incoming data: */
   mqtt_set_inpub_callback(
-      mqtt_client, /* client handle */
+      mqtt.mqtt_client, /* client handle */
       mqtt_incoming_publish_cb, /* callback for incoming publish messages */
       mqtt_incoming_data_cb, /* callback for incoming data */
       LWIP_CONST_CAST(void*, &mqtt_client_info) /* argument for callbacks */
@@ -261,7 +261,7 @@ void MqttClient_Connect(void) {
   /* connect to broker */
   cyw43_arch_lwip_begin(); /* start section for to lwIP access */
   mqtt_client_connect(
-      mqtt_client, /* client handle */
+      mqtt.mqtt_client, /* client handle */
       &mqtt.addr.resolved_addr, /* broker IP address */
       MQTT_PORT, /* port to be used */
       mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info), /* connection callback with argument */
