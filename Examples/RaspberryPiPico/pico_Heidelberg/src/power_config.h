@@ -9,9 +9,10 @@
 
 #include "app_platform.h"
 
-#define POWER_MINIMAL_BATTERY_LEVEL    (5) /* turn off below this % number */
+#define POWER_BATTERY_LEVEL_TURN_OFF    (10) /* turn system off below this % number */
+#define POWER_BATTERY_LEVEL_STARTUP     (20) /* battery level must be above this to startup the system */
 
-#define POWER_CONFIG_USE_EN_VCC2   (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) /* FET to power SHT40, OLED (Connector) and VCC2 on interconnect */
+#define POWER_CONFIG_USE_EN_VCC2   ((PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)|| (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* FET to power SHT40, OLED (Connector) and VCC2 on interconnect */
 #if POWER_CONFIG_USE_EN_VCC2
   #define POWER_CONFIG_VCC2_PIN           11u
 #endif
@@ -25,7 +26,7 @@
   - MCU pulls EN_Pwr to LOW (no USB power connected).
   - with powered off, current flowing from the energy storage should be less than <1uA
  */
-#define POWER_CONFIG_USE_EN_PWR    (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) /* pin to power off */
+#define POWER_CONFIG_USE_EN_PWR    ((PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7) ) /* pin to power off */
 #if POWER_CONFIG_USE_EN_PWR
   #define POWER_CONFIG_EN_PWR_PIN         15u
 #endif
@@ -37,7 +38,7 @@
    *   PS=1: PWM mode (less ripple, but worse efficiency at light loads
    */
 #if POWER_CONFIG_USE_PS
-  #if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+  #if (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
     #define POWER_CONFIG_PS_PIN           14u
   #elif PL_CONFIG_USE_PICO_W /* not connected to the MCU, but through the WLAN module */
     #define POWER_CONFIG_PS_PIN           1u  /* WL_GPIO1 */
@@ -49,7 +50,7 @@
 #define POWER_CONFIG_SENSE_USB   (1)
   /*!< if it has the ability to sense if the USB provides power (cable is plugged in) */
 #if POWER_CONFIG_SENSE_USB
-  #if PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+  #if (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
     #define POWER_CONFIG_SENSE_USB_PIN           10u /* 'wakeup2' pin */
     #define POWER_CONFIG_SENSE_USB_PIN_PULL_DOWN (1) /* if pull-down shall be activated or not */
   #elif PL_CONFIG_USE_PICO_W /* not connected to the MCU, but through the WLAN module */

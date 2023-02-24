@@ -37,6 +37,12 @@
 #if PL_CONFIG_USE_LIGHTS
   #include "lights.h"
 #endif
+#if PL_CONFIG_USE_ROAD
+  #include "road.h"
+#endif
+#if PL_CONFIG_USE_ADC
+  #include "analog.h"
+#endif
 #if PL_CONFIG_USE_I2C
   #include "McuGenericSWI2C.h"
   #include "McuGenericI2C.h"
@@ -89,11 +95,20 @@
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
 #endif
+#if PL_CONFIG_USE_PWM_LED
+  #include "PwmLed.h"
+#endif
+#if PL_CONFIG_USE_PCF85063A
+  #include "McuPCF85063A.h"
+#endif
 #if PL_CONFIG_USE_POWER
   #include "power.h"
 #endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
+#endif
+#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
+  #include "energy.h"
 #endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
@@ -104,7 +119,7 @@ void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
-  stdio_init_all(); /* needed for USB CDC, but problems with debugger?? */
+  stdio_init_all(); /* needed for USB CDC, but might cause issues while debugging, because USB traffic might stall */
 #endif
   McuLib_Init();
 #if McuLib_CONFIG_SDK_USE_FREERTOS
@@ -179,8 +194,23 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();
 #endif
+#if PL_CONFIG_USE_ROAD
+  Road_Init();
+#endif
+#if PL_CONFIG_USE_ADC
+  Analog_Init();
+#endif
+#if PL_CONFIG_USE_PWM_LED
+  PwmLed_Init();
+#endif
+#if PL_CONFIG_USE_PCF85063A
+  McuPCF85063A_Init();
+#endif
 #if PL_CONFIG_USE_POWER
   Power_Init();
+#endif
+#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
+  Energy_Init();
 #endif
 #if PL_CONFIG_USE_GUI
   GUI_Init();

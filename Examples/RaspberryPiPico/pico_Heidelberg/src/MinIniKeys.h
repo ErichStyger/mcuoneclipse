@@ -23,6 +23,12 @@
 #define NVMC_MININI_KEY_LIGHT_COLOR             "color"   /* 32bit RGB value */
 #define NVMC_MININI_KEY_LIGHT_BRIGHTNESS        "bright"  /* brightness: 0..255  */
 
+/* section for vehicle/car settings */
+#define NVMC_MININI_SECTION_CAR               "Car"
+#define NVMC_MININI_KEY_CAR_ON                  "on"      /* 0: stopped, 1: on */
+#define NVMC_MININI_KEY_CAR_SPEED               "speed"   /* 0..100 (%) */
+#define NVMC_MININI_KEY_CAR_MODE                "mode"    /* 0: fw, 1: bw, 2: auto */
+
 /* section for WiFi settings */
 #define NVMC_MININI_SECTION_WIFI              "WiFi"
 #define NVMC_MININI_KEY_WIFI_SSID                "ssid"     /* SSID of network */
@@ -35,5 +41,11 @@
 #define NVMC_MININI_KEY_MQTT_CLIENT              "client"   /* client ID */
 #define NVMC_MININI_KEY_MQTT_USER                "user"     /* username */
 #define NVMC_MININI_KEY_MQTT_PASS                "pass"     /* password */
+
+#define NVMC_MININI_SECTION_LED     "LED"
+#define NVMC_MININI_KEY_LED_POS         "pos"     /* counter.pos */
+#define NVMC_MININI_KEY_LED_COLOR       "color"   /* counter.color */
+ #define NVMC_MININI_KEY_LED_MODE        "mode"    /* counter.mode */
+#define NVMC_MININI_KEY_LED_BRIGHTNESS  "bright"  /* counter.brightness */
 
 #endif /* MININIKEYS_H_ */

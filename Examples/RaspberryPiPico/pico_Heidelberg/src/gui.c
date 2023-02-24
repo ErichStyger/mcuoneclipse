@@ -18,6 +18,7 @@
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
 #include "McuUtility.h"
+#include "McuTimeDate.h"
 #include "McuLog.h"
 #include "Modbus/McuHeidelberg.h"
 

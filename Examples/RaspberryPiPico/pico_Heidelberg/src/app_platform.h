@@ -28,11 +28,11 @@
 #define PL_CONFIG_USE_MQTT_CLIENT     (1 && PL_CONFIG_USE_WIFI)
 
 #define PL_CONFIG_USE_BUTTONS           (1) /* if using push button/navigation switch */
-#define PL_CONFIG_USE_BUTTON_NEXT_PREV  (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* if having 'next' and 'previous' buttons */
-#define PL_CONFIG_USE_I2C               (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* if using I2C */
+#define PL_CONFIG_USE_BUTTON_NEXT_PREV  (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if having 'next' and 'previous' buttons */
+#define PL_CONFIG_USE_I2C               (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if using I2C */
 #define PL_CONFIG_USE_GUI               (1 && PL_CONFIG_USE_I2C) /* if using lvgl GUI or not */
 #define PL_CONFIG_USE_GUI_KEY_NAV       (1 && PL_CONFIG_USE_GUI && PL_CONFIG_USE_BUTTONS) /* if using navigation keys for GUI */
-#define PL_CONFIG_USE_GUI_ENERGY_DASHBOARD   (1) /* energy flow dashboard */
+#define PL_CONFIG_USE_GUI_ENERGY_DASHBOARD   (1 && PL_CONFIG_IS_APP_VHS) /* energy flow dash-board */
 #define PL_CONFIG_USE_USB_CDC           (1) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */
 #define PL_CONFIG_USE_NVMC              (1) /* if using NVMC in Flash, needs to be turned on too */
@@ -44,18 +44,26 @@
 #define PL_CONFIG_USE_SHELL_UART        (0) /* NYI, using the physical UART */
 
 #define PL_CONFIG_USE_NEO_PIXEL_HW      (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_1 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* using WS2812B */
-#define PL_CONFIG_USE_PWM_LED           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* using RGB LEDs with PWM */
-#define PL_CONFIG_USE_ADC               (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* if analog converter is used */
+#define PL_CONFIG_USE_PWM_LED           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* using RGB LEDs with PWM */
+#define PL_CONFIG_USE_ADC               (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_2 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if analog converter is used */
 #define PL_CONFIG_USE_SHT31             (0 & PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
-#define PL_CONFIG_USE_SHT40             (1 & PL_CONFIG_USE_I2C && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) /* if using SHT31 sensor */
-#define PL_CONFIG_USE_ROAD              (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* if having support for the magnetic/coil road */
+#define PL_CONFIG_USE_SHT40             (1 & PL_CONFIG_USE_I2C && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7) /* if using SHT40 sensor */
+#define PL_CONFIG_USE_ROAD              (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if having support for the magnetic/coil road */
 #define PL_CONFIG_USE_OLED              (0 & PL_CONFIG_USE_I2C && !PL_CONFIG_USE_GUI) /* if using OLED module (simple GUI, not lvgl!) */
-#define PL_CONFIG_USE_OLED_CLOCK        (0 && PL_CONFIG_USE_OLED) /* if showing clock/time/date on OLED. Note: no true RTC yet! */
+#define PL_CONFIG_USE_OLED_CLOCK        (1 && PL_CONFIG_USE_GUI) /* if showing clock/time/date on OLED. */
 #define PL_CONFIG_USE_POWER             (1)
-#define PL_CONFIG_USE_PCF85063A         (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)) /* using external RTC */
+#define PL_CONFIG_USE_PCF85063A         (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* using external RTC */
+
+/* application modes: only one should be activated */
+#define PL_CONFIG_IS_APP_EVCC           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* electric vehicle charging app */
+#define PL_CONFIG_IS_APP_LED_COUNTER    (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* application as LED count-down/counter app */
+#define PL_CONFIG_IS_APP_VHS            (1 && !PL_CONFIG_IS_APP_EVCC && !PL_CONFIG_IS_APP_LED_COUNTER) /* Verkehrshaus application */
+#if (PL_CONFIG_IS_APP_EVCC+PL_CONFIG_IS_APP_LED_COUNTER+PL_CONFIG_IS_APP_VHS)!=1
+  #error "only one application shall be active"
+#endif
 
 #define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW)) /* VHS house light application */
-#define PL_CONFIG_USE_LED_COUNTER_APP   (0 && !PL_CONFIG_USE_LIGHTS && PL_CONFIG_USE_NEO_PIXEL_HW && PL_CONFIG_USE_BUTTONS) /* application to control LEDs with nav switch */
+#define PL_CONFIG_USE_LED_COUNTER_APP   (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* application to control LEDs with nav switch */
 
 void PL_Init(void);
 

@@ -21,6 +21,9 @@
 #if PL_CONFIG_USE_PWM_LED
   #include "pwmLed.h"
 #endif
+#if PL_CONFIG_USE_GUI
+  #include "gui.h"
+#endif
 
 /* defaults */
 #define LIGHTS_DEFAULT_IS_ON      (false)
@@ -48,17 +51,21 @@ bool Lights_GetLightIsOn(void) {
 }
 
 void Lights_SetLightIsOn(bool on) {
-  lights.isOn = on;
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, lights.isOn, NVMC_MININI_FILE_NAME);
-#endif
+  if (lights.isOn!=on) {
+    lights.isOn = on;
+  #if PL_CONFIG_USE_MINI
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, lights.isOn, NVMC_MININI_FILE_NAME);
+  #endif
+  }
 }
 
 void Lights_SetColor(uint32_t color) {
-  lights.color = color;
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, lights.color, NVMC_MININI_FILE_NAME);
-#endif
+  if (lights.color!=color) {
+    lights.color = color;
+  #if PL_CONFIG_USE_MINI
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, lights.color, NVMC_MININI_FILE_NAME);
+  #endif
+  }
 }
 
 uint32_t Lights_GetColor(void) {
@@ -66,14 +73,19 @@ uint32_t Lights_GetColor(void) {
 }
 
 void Lights_SetBrightnessPercent(uint8_t percent) {
+  uint8_t val;
+
   /* transform percent into a value */
   if (percent>100) {
     percent = 100;
   }
-  lights.brightness = McuUtility_map(percent, 0, 100, 0, 255);
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, lights.brightness, NVMC_MININI_FILE_NAME);
-#endif
+  val = McuUtility_map(percent, 0, 100, 0, 255);
+  if (lights.brightness!=val) {
+    lights.brightness = val;
+  #if PL_CONFIG_USE_MINI
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, lights.brightness, NVMC_MININI_FILE_NAME);
+  #endif
+  }
 }
 
 uint8_t Lights_GetBrightnessValue(void) {
@@ -160,10 +172,16 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, "light on")==0) {
     Lights_SetLightIsOn(true);
+  #if PL_CONFIG_USE_GUI
+    GUI_SendEvent(Gui_Event_LightOnOff_Changed);
+  #endif
     *handled = true;
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "light off")==0) {
     Lights_SetLightIsOn(false);
+  #if PL_CONFIG_USE_GUI
+    GUI_SendEvent(Gui_Event_LightOnOff_Changed);
+  #endif
     *handled = true;
     return ERR_OK;
   } else if (McuUtility_strncmp((char*)cmd, "light brightness ", sizeof("light brightness ")-1)==0) {
@@ -171,6 +189,9 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     p = cmd + sizeof("light brightness ")-1;
     if (McuUtility_xatoi(&p, &value)==ERR_OK && value>=0 && value<=100) {
       Lights_SetBrightnessPercent(value);
+    #if PL_CONFIG_USE_GUI
+      GUI_SendEvent(Gui_Event_LightBrightness_Changed);
+    #endif
       return ERR_OK;
     } else {
       return ERR_FAILED;
@@ -180,6 +201,9 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     p = cmd + sizeof("light color ")-1;
     if (McuUtility_xatoi(&p, &value)==ERR_OK) {
       Lights_SetColor(value);
+    #if PL_CONFIG_USE_GUI
+      GUI_SendEvent(Gui_Event_LightColor_Changed);
+    #endif
       return ERR_OK;
     } else {
       return ERR_FAILED;

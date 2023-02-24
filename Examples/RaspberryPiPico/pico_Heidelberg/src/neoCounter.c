@@ -20,16 +20,6 @@
 #define NeoCounter_MIN_BRIGHTNESS   (15)
 #define NeoColor_DEFAULT            (0xff000000) /* warm white default color */
 
-#if PL_CONFIG_USE_MINI
-  #define NVMC_MININI_FILE_NAME       "led.ini" /* 'file' name used */
-
-  #define NVMC_MININI_SECTION_LED     "LED"
-  #define NVMC_MININI_KEY_LED_POS         "pos"     /* counter.pos */
-  #define NVMC_MININI_KEY_LED_COLOR       "color"   /* counter.color */
-  #define NVMC_MININI_KEY_LED_MODE        "mode"    /* counter.mode */
-  #define NVMC_MININI_KEY_LED_BRIGHTNESS  "bright"  /* counter.brightness */
-#endif
-
 typedef enum {
   MODE_NORMAL, /* normal on with warm light */
   MODE_FADE,   /* fading color from 0 to brightness */

@@ -16,7 +16,7 @@
 #define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB 07-Feb-2023 */
 
 /* active PCB/Hardware version */
-#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)
+#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_4)
 
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
@@ -110,7 +110,13 @@
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2048)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING         "picoCharger"
+#if LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_4
+  #define McuShell_CONFIG_PROJECT_NAME_STRING         "LedApp"
+#elif LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_6
+  #define McuShell_CONFIG_PROJECT_NAME_STRING         "picoCharger"
+#else
+  #error "unknown board config"
+#endif
 #define McuShell_CONFIG_PROMPT_STRING               "pico> "
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96)

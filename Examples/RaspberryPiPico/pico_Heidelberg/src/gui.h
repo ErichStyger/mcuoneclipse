@@ -7,6 +7,8 @@
 #ifndef GUI_H_
 #define GUI_H_
 
+#include "gui_config.h"
+
 typedef enum Gui_Event_e {
   Gui_Event_Battery_Charge_Changed,
   Gui_Event_USB_Connection_Changed,

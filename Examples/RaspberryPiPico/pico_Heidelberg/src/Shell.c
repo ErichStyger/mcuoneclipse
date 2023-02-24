@@ -26,6 +26,17 @@
 #if PL_CONFIG_USE_LIGHTS
   #include "lights.h"
 #endif
+#if PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#elif PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
+#endif
+#if PL_CONFIG_USE_ROAD
+  #include "road.h"
+#endif
+#if PL_CONFIG_USE_ADC
+  #include "analog.h"
+#endif
 #if McuFlash_CONFIG_IS_ENABLED
   #include "MinINI/McuFlash.h"
 #endif
@@ -54,8 +65,17 @@
   #include "Modbus/McuModbus.h"
   #include "Modbus/McuHeidelberg.h"
 #endif
+#if PL_CONFIG_USE_PWM_LED
+  #include "PwmLed.h"
+#endif
+#if PL_CONFIG_USE_PCF85063A
+  #include "McuPCF85063A.h"
+#endif
 #if PL_CONFIG_USE_POWER
   #include "power.h"
+#endif
+#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
+  #include "energy.h"
 #endif
 #include "application.h"
 
@@ -127,8 +147,25 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_EXT_FLASH
   McuW25_ParseCommand,
 #endif
+#if PL_CONFIG_USE_SHT31
+  McuSHT31_ParseCommand,
+#elif PL_CONFIG_USE_SHT40
+  McuSHT40_ParseCommand,
+#endif
+#if PL_CONFIG_USE_ADC
+  Analog_ParseCommand,
+#endif
 #if PL_CONFIG_USE_LED_COUNTER_APP
   NeoCounter_ParseCommand,
+#endif
+#if PL_CONFIG_USE_ROAD
+  Road_ParseCommand,
+#endif
+#if PL_CONFIG_USE_PWM_LED
+  PwmLed_ParseCommand,
+#endif
+#if PL_CONFIG_USE_PCF85063A
+  McuPCF85063A_ParseCommand,
 #endif
 #if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
   McuUart485_ParseCommand,
@@ -158,6 +195,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_POWER
   Power_ParseCommand,
+#endif
+#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
+  Energy_ParseCommand,
 #endif
   App_ParseCommand,
   NULL /* Sentinel */

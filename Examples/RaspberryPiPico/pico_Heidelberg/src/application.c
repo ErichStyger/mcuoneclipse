@@ -18,6 +18,11 @@
 #include "McuLog.h"
 #include "McuWait.h"
 #include "McuUtility.h"
+#include "McuArmTools.h"
+#include "McuTimeDate.h"
+#if PL_CONFIG_USE_PCF85063A
+  #include "McuPCF85063A.h"
+#endif
 #if PL_CONFIG_USE_BUTTONS
   #include "buttons.h"
   #include "debounce.h"
@@ -38,6 +43,22 @@
 #endif
 #if PL_CONFIG_USE_GUI_KEY_NAV
   #include "lv.h"
+#endif
+#if PL_CONFIG_USE_POWER
+  #include "power.h"
+#endif
+#if PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#endif
+#if PL_CONFIG_USE_SHT40
+  #include "McuSHT40.h"
+#elif PL_CONFIG_USE_SHT31
+  #include "McuSHT31.h"
+#endif
+#include "gui.h"
+#include "lights.h"
+#if PL_CONFIG_USE_ADC
+  #include "analog.h"
 #endif
 
 #if !PL_CONFIG_USE_PICO_W
@@ -112,8 +133,31 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
 }
 #endif
 
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+static float App_SensorTemperature, App_SensorHumidity;
+
+uint8_t App_GetSensorValues(float *temperature, float *humidity) {
+  *temperature = App_SensorTemperature;
+  *humidity = App_SensorHumidity;
+  return ERR_OK;
+}
+#endif
+
 static void AppTask(void *pv) {
-#if !PL_CONFIG_USE_PICO_W
+#define APP_HAS_ONBOARD_GREEN_LED   !PL_CONFIG_USE_PICO_W && !(PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
+  uint8_t prevBatteryCharge=200, currBatteryCharge;
+  uint8_t prevUSBConnectionStatus = -1, currUSBConnectionStatus;
+#if PL_CONFIG_USE_OLED_CLOCK && PL_CONFIG_USE_PCF85063A
+  #define RTC_UPDATE_PERIOD_SEC  (60*60)
+  int32_t RTCupdateCntrSec = 0;
+#endif
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+  #define SENSOR_UPDATE_PERIOD_SEC  (5)
+  int32_t sensorUpdateCntrSec = 0;
+#endif
+
+#if APP_HAS_ONBOARD_GREEN_LED
+  /* only for pico boards which have an on-board green LED */
   McuLED_Config_t config;
   McuLED_Handle_t led;
 
@@ -122,6 +166,7 @@ static void AppTask(void *pv) {
   config.isLowActive = false;
   led = McuLED_InitLed(&config);
   if (led==NULL) {
+    McuLog_fatal("failed initializing LED");
     for(;;){}
   }
 #endif
@@ -131,11 +176,90 @@ static void AppTask(void *pv) {
     McuLog_info("Mounting failed please format device first");
   }
 #endif
+#if PL_CONFIG_USE_PCF85063A && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+  /* on this board, the RTC PCF85063A has the CLKOE put to VCC3, which enables CLKOUT signal. Later boards will have it pulled low */
+  if (McuPCF85063A_WriteClockOutputFrequency(McuPCF85063A_COF_FREQ_OFF)!=ERR_OK) {
+    McuLog_fatal("failed writing COF");
+  }
+#endif
+  vTaskDelay(pdMS_TO_TICKS(1500));
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+  #if POWER_CONFIG_USE_EN_VCC2
+    if (!Power_GetVcc2IsOn()) {
+      McuLog_info("turn on Vcc2 for sensor");
+      Power_SetVcc2IsOn(true);
+      vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up: otherwise sensors or OLED cannot be properly initialized */
+    }
+  #endif
+  #if PL_CONFIG_USE_SHT31
+    McuSHT31_Init();
+  #elif PL_CONFIG_USE_SHT40
+    McuSHT40_Init();
+  #endif
+#endif
   for(;;) {
-  #if !PL_CONFIG_USE_PICO_W
+  #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);
   #endif
-    vTaskDelay(pdMS_TO_TICKS(500));
+  #if ANALOG_CONFIG_HAS_ADC_BAT
+    currBatteryCharge = Power_GetBatteryChargeLevel();
+    if (currBatteryCharge<POWER_BATTERY_LEVEL_TURN_OFF) {
+      McuLog_fatal("charge level below %d%%, turning off system", POWER_BATTERY_LEVEL_TURN_OFF);
+      vTaskSuspendAll();
+      Road_SetIsOn(false); /* turn off running car */
+    #if POWER_CONFIG_USE_EN_VCC2
+      Power_SetVcc2IsOn(false); /* turn off power VCC2 for OLED and SHT sensor */
+    #endif
+      /* \todo: put everything into sleep mode */
+      Power_SetEnPwrIsOn(false); /* turn off power, only effective if USB is *not* connected */
+      for(;;) {
+        McuArmTools_SoftwareReset(); /* perform a new start */
+      }
+    }
+    if (prevBatteryCharge!=currBatteryCharge) {
+      GUI_SendEvent(Gui_Event_Battery_Charge_Changed); /* update with new battery charge level */
+      prevBatteryCharge = currBatteryCharge;
+    }
+  #endif
+  #if POWER_CONFIG_SENSE_USB
+    currUSBConnectionStatus = Power_GetUsbPowerIsOn();
+    if (currUSBConnectionStatus!=prevUSBConnectionStatus) {
+  #if PL_CONFIG_USE_GUI
+      GUI_SendEvent(Gui_Event_USB_Connection_Changed); /* update USB status */
+  #endif
+      prevUSBConnectionStatus = currUSBConnectionStatus;
+    }
+  #endif
+#if PL_CONFIG_USE_OLED_CLOCK
+  #if PL_CONFIG_USE_OLED_CLOCK && PL_CONFIG_USE_PCF85063A
+  TIMEREC time;
+  DATEREC date;
+
+  if (RTCupdateCntrSec<=0) {
+    if (McuPCF85063A_GetTimeDate(&time, &date)==ERR_OK) {
+      McuTimeDate_SetTimeDate(&time, &date);
+    }
+    RTCupdateCntrSec = RTC_UPDATE_PERIOD_SEC;
+  }
+  RTCupdateCntrSec--;
+  #endif
+   GUI_SendEvent(Gui_Event_Clock_Changed);
+#endif
+
+#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+   if (sensorUpdateCntrSec<=0) {
+     float f, h;
+
+     if (McuSHT40_ReadTempHum(&f, &h)==ERR_OK) {
+       App_SensorTemperature = f;
+       App_SensorHumidity = h;
+     }
+     sensorUpdateCntrSec = SENSOR_UPDATE_PERIOD_SEC;
+   }
+   sensorUpdateCntrSec--;
+   GUI_SendEvent(Gui_Event_Sensor_Changed);
+#endif
+   vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
@@ -167,6 +291,9 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 
 void APP_Run(void) {
   PL_Init();
+#if PL_CONFIG_USE_POWER /* check battery level */
+  Power_WaitForSufficientBatteryChargeAtStartup();
+#endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */

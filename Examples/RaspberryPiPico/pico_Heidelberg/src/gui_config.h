@@ -7,11 +7,13 @@
 #ifndef GUI_CONFIG_H_
 #define GUI_CONFIG_H_
 
-#define GUI_CONFIG_USE_SCREENSAVER         (0)
+#include "app_platform.h"
+
+#define GUI_CONFIG_USE_SCREENSAVER         (1)
   /*!< if using a screensaver or not */
 
 #if GUI_CONFIG_USE_SCREENSAVER
-  #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (10*60)
+  #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (5*60)
     /*!< Time in seconds with no user (button) interaction after which it will do screen cycling (or screen saving). */
 #endif
 
@@ -26,6 +28,10 @@
 #if GUI_CONFIG_USE_CYCLING_SCREEN && GUI_CONFIG_USE_SCREENSAVER
   #define GUI_CONFIG_NOF_SCREEN_CYCLING_UNTIL_DISPLAY_OFF  (3)
     /*!< Number of complete screen cycling until it enters low power mode with the display turning off */
+#endif
+
+#ifndef GUI_CONFIG_USE_SENSOR
+  #define GUI_CONFIG_USE_SENSOR  (1 && (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40))
 #endif
 
 #endif /* GUI_CONFIG_H_ */
