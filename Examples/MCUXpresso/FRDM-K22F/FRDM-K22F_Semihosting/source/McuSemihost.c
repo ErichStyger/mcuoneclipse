@@ -52,8 +52,8 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_TICKFREQ     = 0x31,
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
-  McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected */
-  McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host */
+  McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected: note that this is not implemented with GDB server */
+  McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host: seems not be implemented with GDB server */
 #endif
 } McuSemihost_Op_e;
 
@@ -98,6 +98,7 @@ static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int re
 }
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION == McuSemihost_DEBUG_CONNECTION_SEGGER
+#if 0 /* not implemented by SEGGER */
 /*!
  * \brief Checks if the debugger is connected. Only supported for SEGGER
  * \return true if a J-Link is connected
@@ -109,6 +110,7 @@ int McuSemihost_SeggerIsConnected(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_IS_CONNECTED, NULL)==1; /* result is 1 if connected */
 }
 #endif /* McuSemihost_CONFIG_DEBUG_CONNECTION */
+#endif
 
 /*!
  * \brief Return the current system time
@@ -285,6 +287,7 @@ int McuSemihost_WriteString(const unsigned char *str) {
 }
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+#if 0 /* not implemented by SEGGER */
 /*!
  * \brief Write a printf-style string, with formatting done on the host
  * \param format Format string
@@ -298,6 +301,7 @@ int McuSemihost_WriteF(const unsigned char *format, va_list *arg) {
   param[1] = (int32_t)arg;
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEF, &param[0]);
 }
+#endif
 #endif
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
@@ -616,7 +620,7 @@ int McuSemiHost_Test(void) {
 #endif
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
-  if (McuSemihost_SeggerIsConnected()) { /* \todo: always returns 0? Should be supported, but is not with gdb? */
+  if (McuSemihost_SeggerIsConnected()) { /* always returns 0? Should be supported according to the documentation, but is not with gdb? */
     McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link connected\n");
   } else {
     McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link NOT connected, failed\n");
