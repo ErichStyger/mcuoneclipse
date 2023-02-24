@@ -35,7 +35,7 @@
   #include <stdio.h>
   #include "pico/stdlib.h"
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   #include "neoCounter.h"
 #endif
 #if PL_CONFIG_USE_ROAD
@@ -55,8 +55,12 @@
 #elif PL_CONFIG_USE_SHT31
   #include "McuSHT31.h"
 #endif
-#include "gui.h"
-#include "lights.h"
+#if PL_CONFIG_USE_GUI
+  #include "gui.h"
+#endif
+#if PL_CONFIG_USE_LIGHTS
+  #include "lights.h"
+#endif
 #if PL_CONFIG_USE_ADC
   #include "analog.h"
 #endif
@@ -100,7 +104,7 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
     Road_SetIsOn(!Road_GetIsOn()); /* use button to start/stop running the car */
   }
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   NeoCounter_OnButtonEvent(button, kind);
 #endif
 #if PL_CONFIG_USE_GUI_KEY_NAV
@@ -201,7 +205,7 @@ static void AppTask(void *pv) {
   #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);
   #endif
-  #if ANALOG_CONFIG_HAS_ADC_BAT
+  #if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
     currBatteryCharge = Power_GetBatteryChargeLevel();
     if (currBatteryCharge<POWER_BATTERY_LEVEL_TURN_OFF) {
       McuLog_fatal("charge level below %d%%, turning off system", POWER_BATTERY_LEVEL_TURN_OFF);
@@ -242,8 +246,8 @@ static void AppTask(void *pv) {
     RTCupdateCntrSec = RTC_UPDATE_PERIOD_SEC;
   }
   RTCupdateCntrSec--;
+  GUI_SendEvent(Gui_Event_Clock_Changed);
   #endif
-   GUI_SendEvent(Gui_Event_Clock_Changed);
 #endif
 
 #if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40

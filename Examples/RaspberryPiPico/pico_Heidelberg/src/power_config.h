@@ -9,8 +9,10 @@
 
 #include "app_platform.h"
 
-#define POWER_BATTERY_LEVEL_TURN_OFF    (10) /* turn system off below this % number */
-#define POWER_BATTERY_LEVEL_STARTUP     (20) /* battery level must be above this to startup the system */
+#if PL_CONFIG_USE_ADC
+  #define POWER_BATTERY_LEVEL_TURN_OFF    (10) /* turn system off below this % number */
+  #define POWER_BATTERY_LEVEL_STARTUP     (20) /* battery level must be above this to startup the system */
+#endif
 
 #define POWER_CONFIG_USE_EN_VCC2   ((PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5)|| (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* FET to power SHT40, OLED (Connector) and VCC2 on interconnect */
 #if POWER_CONFIG_USE_EN_VCC2

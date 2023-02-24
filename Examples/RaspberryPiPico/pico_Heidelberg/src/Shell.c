@@ -20,7 +20,7 @@
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   #include "neoCounter.h"
 #endif
 #if PL_CONFIG_USE_LIGHTS
@@ -155,7 +155,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_ADC
   Analog_ParseCommand,
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   NeoCounter_ParseCommand,
 #endif
 #if PL_CONFIG_USE_ROAD

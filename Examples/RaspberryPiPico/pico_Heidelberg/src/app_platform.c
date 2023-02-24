@@ -31,7 +31,7 @@
   #include "NeoPixel.h"
   #include "ws2812.h"
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   #include "neoCounter.h"
 #endif
 #if PL_CONFIG_USE_LIGHTS
@@ -47,10 +47,6 @@
   #include "McuGenericSWI2C.h"
   #include "McuGenericI2C.h"
   #include "McuI2cLib.h"
-#endif
-#if PL_CONFIG_USE_OLED
-  #include "McuSSD1306.h"
-  #include "oled.h"
 #endif
 #if PL_CONFIG_USE_BUTTONS
   #include "McuButton.h"
@@ -158,16 +154,12 @@ void PL_Init(void) {
   #endif
   McuGenericI2C_Init();
 #endif
-#if PL_CONFIG_USE_OLED
-  /* McuSSD1306_Init(); */ /* done in OledTask()! */
-  OLED_Init();
-#endif
 #if PL_CONFIG_USE_BUTTONS
   McuBtn_Init();
   BTN_Init();
   Debounce_Init();
 #endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
+#if PL_CONFIG_IS_APP_LED_COUNTER
   NeoCounter_Init();
 #endif
 #if PL_CONFIG_USE_MINI

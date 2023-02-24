@@ -30,6 +30,7 @@ file(GLOB FILES
   src/McuLED.c
   src/McuLib.c
   src/McuLog.c
+  src/McuPCF85063A.c
   src/McuRB.c
   src/McuRingBuffer.c
   src/McuRTOS.c

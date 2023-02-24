@@ -11,12 +11,12 @@
 #define PL_CONFIG_HW_VERSION_0_2    (2)  /* V0.2, 95x95mm green PCB with Pico, added slots for house and solar connector, without road */
 #define PL_CONFIG_HW_VERSION_0_3    (3)  /* V0.3, 165x200 mm green 4-Layer PCB by Christian Jost, with road */
 #define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' with LED countdown application */
-#define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023) by Christian Jost: added on/off circuit, energy storage, extra sensor */
+#define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023): added on/off circuit, energy storage, extra sensor */
 #define PL_CONFIG_HW_VERSION_0_6    (6)  /* V0.6, EVCC January 2023 */
-#define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB 07-Feb-2023 */
+#define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB (07-Feb-2023) */
 
 /* active PCB/Hardware version */
-#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_4)
+#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)
 
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */
@@ -35,7 +35,7 @@
 /* I2C */
 #define CONFIG_USE_HW_I2C                             (1) /* if using HW I2C, otherwise use software bit banging */
 #define CONFIG_USE_HW_RTC                             (0) /* if using external HW RTC */
-#if LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_5
+#if (LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
   #define MCUI2CLIB_CONFIG_I2C_DEVICE       i2c0
   #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     12u
   #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     13u
@@ -44,6 +44,8 @@
   #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     16u
   #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     17u
 #endif
+#define MCUI2CLIB_CONFIG_ADD_DELAY_US      (0)
+#define MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US   (1000)
   /* -------------------------------------------------*/
 /* McuGenericI2C */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
@@ -99,7 +101,8 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuSSD1306 */
 #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE         (1106)
-#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
+#define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION  (0)
+//#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
 //#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
 /* -------------------------------------------------*/
 /* RTT */

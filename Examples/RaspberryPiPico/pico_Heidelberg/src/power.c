@@ -32,14 +32,12 @@ static struct power_s {
       McuGPIO_Handle_t pin; /* high active */
     } en_pwr;
   #endif
-  #if POWER_CONFIG_USE_PS
+  #if POWER_CONFIG_USE_PS && !PL_CONFIG_USE_PICO_W /* on Pico-W, this pin is not directly connected to the RP2040, but through the Cypress chip and WL_GPIO1 */
     struct ps {
-    #if !PL_CONFIG_USE_PICO_W
       McuGPIO_Handle_t pin; /* low active */
-    #endif
     } ps;
   #endif
-  #if POWER_CONFIG_SENSE_USB && !PL_CONFIG_USE_PICO_W
+  #if POWER_CONFIG_SENSE_USB && !PL_CONFIG_USE_PICO_W /* Pico-W uses WL_GPIO2 */
     struct usb_sense {
       McuGPIO_Handle_t pin; /* low active. */
     } usb_sense;
@@ -112,12 +110,20 @@ void Power_SetPsIsOn(bool on) {
 
 #if POWER_CONFIG_USE_PS
 bool Power_GetPsIsOn(void) {
+#if PL_CONFIG_USE_PICO_W
+  if (!PicoWiFi_ArchIsInit()) {
+    McuLog_error("Wifi Arch is not initialized");
+    return false;
+  }
+  return cyw43_arch_gpio_get(POWER_CONFIG_PS_PIN)!=0;
+#else
   return !McuGPIO_GetValue(power.ps.pin); /* false/LOW: on, true/HIGH: off */
+#endif
 }
 #endif
 
 uint8_t Power_GetBatteryChargeLevel(void) {
-#if ANALOG_CONFIG_HAS_ADC_BAT
+#if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
   static uint8_t avgArr[3]; /* build average */
   static uint8_t avgIdx= 0;
   avgArr[avgIdx++] = Analog_GetBatteryChargeLevel();
@@ -136,7 +142,7 @@ uint8_t Power_GetBatteryChargeLevel(void) {
 }
 
 void Power_WaitForSufficientBatteryChargeAtStartup(void) {
-#if ANALOG_CONFIG_HAS_ADC_BAT
+#if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
   McuWait_Waitms(5); /* C20 startup charging: 1 nF*1.5MOhm ==> ~1.5ms */
   if (Power_GetBatteryChargeLevel()<POWER_BATTERY_LEVEL_TURN_OFF) {
     Lights_SetLed(0x050000); /* turn led to red to indicate problem */
@@ -170,12 +176,14 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[64];
 
   McuShell_SendStatusStr((unsigned char*)"power", (const unsigned char*)"Status of power\r\n", io->stdOut);
+#if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
   McuUtility_strcpy(buf, sizeof(buf),(unsigned char*)"Turn off at ");
   McuUtility_strcatNum8u(buf, sizeof(buf), POWER_BATTERY_LEVEL_TURN_OFF);
   McuUtility_strcat(buf, sizeof(buf),(unsigned char*)"%, startup at ");
   McuUtility_strcatNum8u(buf, sizeof(buf), POWER_BATTERY_LEVEL_STARTUP);
   McuUtility_strcat(buf, sizeof(buf),(unsigned char*)"%\r\n");
   McuShell_SendStatusStr((unsigned char*)"  levels", buf, io->stdOut);
+#endif
 #if POWER_CONFIG_USE_EN_VCC2
   McuGPIO_GetPinStatusString(power.vcc2.pin, buf, sizeof(buf));
   McuUtility_strcat(buf, sizeof(buf), Power_GetVcc2IsOn()?(unsigned char*)", power on\r\n":(unsigned char*)", power off\r\n");

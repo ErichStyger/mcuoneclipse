@@ -49,21 +49,19 @@
 #define PL_CONFIG_USE_SHT31             (0 & PL_CONFIG_USE_I2C) /* if using SHT31 sensor */
 #define PL_CONFIG_USE_SHT40             (1 & PL_CONFIG_USE_I2C && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7) /* if using SHT40 sensor */
 #define PL_CONFIG_USE_ROAD              (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_3 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* if having support for the magnetic/coil road */
-#define PL_CONFIG_USE_OLED              (0 & PL_CONFIG_USE_I2C && !PL_CONFIG_USE_GUI) /* if using OLED module (simple GUI, not lvgl!) */
 #define PL_CONFIG_USE_OLED_CLOCK        (1 && PL_CONFIG_USE_GUI) /* if showing clock/time/date on OLED. */
 #define PL_CONFIG_USE_POWER             (1)
 #define PL_CONFIG_USE_PCF85063A         (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)) /* using external RTC */
+#define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW) && !PL_CONFIG_IS_APP_LED_COUNTER) /* lights module which interfaces both the normal LED and WS2812b */
 
 /* application modes: only one should be activated */
 #define PL_CONFIG_IS_APP_EVCC           (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6)) /* electric vehicle charging app */
 #define PL_CONFIG_IS_APP_LED_COUNTER    (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* application as LED count-down/counter app */
-#define PL_CONFIG_IS_APP_VHS            (1 && !PL_CONFIG_IS_APP_EVCC && !PL_CONFIG_IS_APP_LED_COUNTER) /* Verkehrshaus application */
+#define PL_CONFIG_IS_APP_NAME_PLATE     (1 && PL_CONFIG_IS_APP_LED_COUNTER) /* name plate app with just 2 LEDs, depends on PL_CONFIG_IS_APP_LED_COUNTER */
+#define PL_CONFIG_IS_APP_VHS            (1 && !PL_CONFIG_IS_APP_EVCC && !PL_CONFIG_IS_APP_LED_COUNTER)    /* Verkehrshaus application */
 #if (PL_CONFIG_IS_APP_EVCC+PL_CONFIG_IS_APP_LED_COUNTER+PL_CONFIG_IS_APP_VHS)!=1
   #error "only one application shall be active"
 #endif
-
-#define PL_CONFIG_USE_LIGHTS            (1 && (PL_CONFIG_USE_PWM_LED|PL_CONFIG_USE_NEO_PIXEL_HW)) /* VHS house light application */
-#define PL_CONFIG_USE_LED_COUNTER_APP   (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_4)) /* application to control LEDs with nav switch */
 
 void PL_Init(void);
 

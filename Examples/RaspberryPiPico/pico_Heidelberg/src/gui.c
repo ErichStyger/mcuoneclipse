@@ -13,26 +13,38 @@
 #include "lv.h"
 #include "LittlevGL/lvgl/lvgl.h"
 #include "McuRTOS.h"
-#include "oled.h"
 #include "McuSSD1306.h"
 #include "McuGDisplaySSD1306.h"
 #include "McuFontDisplay.h"
 #include "McuUtility.h"
 #include "McuTimeDate.h"
 #include "McuLog.h"
+#include "lights.h"
+#include "NeoPixel.h"
+#if PL_CONFIG_USE_ROAD
+  #include "road.h"
+#endif
+#if PL_CONFIG_USE_POWER
+  #include "power.h"
+#endif
 #include "Modbus/McuHeidelberg.h"
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
 #if GUI_CONFIG_USE_SCREENSAVER
   static TimerHandle_t timerHndlGuiExpired; /* timeout user actions */
 #endif
-static TimerHandle_t timerHndlCycleScreens; /* timer for cycling screens */
+#if GUI_CONFIG_USE_CYCLING_SCREEN
+  static TimerHandle_t timerHndlCycleScreens; /* timer for cycling screens */
+#endif
 
 /* direct task notification bits */
 #define GUI_TASK_NOTIFY_BUTTON_PRESSED  (1<<0)  /* a button has been pressed */
+#if GUI_CONFIG_USE_SCREENSAVER
 #define GUI_TASK_NOTIFY_GUI_TIMEOUT     (1<<1)  /* user did not press a button for some time */
-#define GUI_TASK_NOTIFY_NEXT_SCREEN     (1<<2)  /* show the next cycling screen */
-
+#endif
+#if GUI_CONFIG_USE_CYCLING_SCREEN
+  #define GUI_TASK_NOTIFY_NEXT_SCREEN     (1<<2)  /* show the next cycling screen */
+#endif
 /* ------------------------------------------------------- GUI ----------------------------------------------- */
 /* global GUI elements */
 typedef enum GuiScreens_e {
@@ -453,7 +465,7 @@ static void GuiTask(void *pv) {
 #elif PL_CONFIG_USE_SHT40
   McuSHT40_Init();
 #endif
-  McuSSD1306_Init(); /* requires I2C interrupts enabled if using HW I2C! */
+  McuSSD1306_Init();
   McuSSD1306_Clear();
   Gui_Create();
   lv_scr_load(guiObjects.screens[GUI_SCREEN_SETTINGS]);
@@ -626,6 +638,106 @@ static void StartOrResetGuiTimeoutTimer(void) {
 }
 #endif
 
+void GUI_SendEvent(Gui_Event_e event) {
+  switch(event) {
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_Battery_Charge_Changed:
+      if (guiObjects.label_battery!=NULL) {
+        lv_event_send(guiObjects.label_battery, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      if (guiObjects.bar_battery!=NULL) {
+        lv_bar_set_value(guiObjects.bar_battery, Power_GetBatteryChargeLevel(), LV_ANIM_ON);
+      }
+      break;
+    case Gui_Event_USB_Connection_Changed:
+      if (guiObjects.button_power!=NULL) {
+        lv_event_send(guiObjects.button_power, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      break;
+#endif
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_HomePower_Changed:
+      if (guiObjects.bar_home!=NULL) {
+        lv_bar_set_value(guiObjects.bar_home, Energy_GetHousePowerW(), LV_ANIM_ON);
+      }
+      break;
+    case Gui_Event_CarPower_Changed:
+      if (guiObjects.bar_car!=NULL) {
+        lv_bar_set_value(guiObjects.bar_car, Energy_GetCarPowerW(), LV_ANIM_ON);
+      }
+      break;
+#endif
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_LightOnOff_Changed:
+      if (guiObjects.switch_light!=NULL) {
+        if (Lights_GetLightIsOn()) {
+          lv_obj_add_state(guiObjects.switch_light, LV_STATE_CHECKED);
+        } else {
+          lv_obj_clear_state(guiObjects.switch_light, LV_STATE_CHECKED);
+        }
+        lv_event_send(guiObjects.switch_light, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      break;
+#endif
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_LightColor_Changed:
+      int32_t r, g, b;
+      if (Lights_GetLightIsOn()) {
+        uint32_t color = Lights_GetColor();
+        r = McuUtility_map(NEO_SPLIT_R(color), 0, 0xff, 0, 100);
+        g = McuUtility_map(NEO_SPLIT_G(color), 0, 0xff, 0, 100);
+        b = McuUtility_map(NEO_SPLIT_B(color), 0, 0xff, 0, 100);
+      } else {
+        r = g = b = 0;
+      }
+      if (guiObjects.slider_color_red!=NULL) {
+        lv_slider_set_value(guiObjects.slider_color_red, r, LV_ANIM_ON);
+        lv_event_send(guiObjects.slider_color_red, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      if (guiObjects.slider_color_green!=NULL) {
+        lv_slider_set_value(guiObjects.slider_color_green, g, LV_ANIM_ON);
+        lv_event_send(guiObjects.slider_color_green, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      if (guiObjects.slider_color_blue!=NULL) {
+        lv_slider_set_value(guiObjects.slider_color_blue, b, LV_ANIM_ON);
+        lv_event_send(guiObjects.slider_color_blue, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+     	break;
+#endif
+
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_LightBrightness_Changed:
+      if (guiObjects.slider_light_brightness!=NULL) {
+        lv_slider_set_value(guiObjects.slider_light_brightness, Lights_GetLightIsOn()?Lights_GetBrightnessPercent():0, LV_ANIM_ON);
+        lv_event_send(guiObjects.slider_light_brightness, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      break;
+#endif
+
+#if PL_CONFIG_IS_APP_VHS
+    case Gui_Event_Clock_Changed:
+      if (guiObjects.label_clock!=NULL) {
+        lv_event_send(guiObjects.label_clock, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      break;
+#endif
+
+#if GUI_CONFIG_USE_SENSOR
+    case Gui_Event_Sensor_Changed:
+      if (guiObjects.label_sensor!=NULL) {
+        lv_event_send(guiObjects.label_sensor, LV_EVENT_VALUE_CHANGED, NULL);
+      }
+      break;
+#endif
+    case Gui_Event_Road_Changed:
+       /* \todo */
+      break;
+
+    default:
+      break;
+  }
+}
+
 void GUI_NotifyUserAction(void) {
   /* called for each key press or user action. */
 #if GUI_CONFIG_USE_SCREENSAVER
@@ -673,6 +785,7 @@ void GUI_Init(void) {
   }
 #endif
 
+#if GUI_CONFIG_USE_CYCLING_SCREEN
   /* timer for screen cycling */
   timerHndlCycleScreens = xTimerCreate(
     "cycleScreen", /* name */
@@ -684,5 +797,6 @@ void GUI_Init(void) {
     McuLog_fatal("failed creating timer");
     for(;;); /* failure! */
   }
+#endif
 }
 #endif /* PL_CONFIG_HAS_GUI */

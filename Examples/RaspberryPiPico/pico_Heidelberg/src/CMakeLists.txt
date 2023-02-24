@@ -11,7 +11,6 @@ file(GLOB FILES
   NeoCounter.c
   lights.c
   Shell.c
-  OLED.c
   buttons.c
   debounce.c
   FreeRTOShooks.c
