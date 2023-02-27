@@ -23,6 +23,9 @@ int main(void) {
   McuSemiHost_Test();
   McuSemiHost_Deinit();
 
-  for(;;) {}
+  for(;;) {
+    McuSemihost_WriteString((const unsigned char*)"hello with semihosting!\n");
+    McuWait_Waitms(500);
+  }
   return 0;
 }

@@ -31,7 +31,7 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_SEEK         = 0x0A, /* move current file position */
   /* 0x0B ? */
   McuSemihost_Op_SYS_FLEN         = 0x0C, /* tell the file length */
-  McuSemihost_Op_SYS_TMPNAME      = 0x0D,
+  McuSemihost_Op_SYS_TMPNAME      = 0x0D, /* get a temporary file handle */
 #if McuSemihost_CONFIG_HAS_SYS_REMOVE
   McuSemihost_Op_SYS_REMOVE       = 0x0E, /* remove a file */
 #endif
@@ -51,15 +51,15 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_ELLAPSED     = 0x30,
   McuSemihost_Op_SYS_TICKFREQ     = 0x31,
 
-#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
   McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected: note that this is not implemented with GDB server */
   McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host: seems not be implemented with GDB server */
 #endif
 } McuSemihost_Op_e;
 
-#define McuSemihost_STDIN           0
-#define McuSemihost_STDOUT          1
-#define McuSemihost_STDERR          2
+#define McuSemihost_STDIN           0 /*!< handle for standard input */
+#define McuSemihost_STDOUT          1 /*!< handle for standard output */
+#define McuSemihost_STDERR          2 /*!< handle for standard error */
 
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
 static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
@@ -85,9 +85,9 @@ static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int re
       "mov r0, %[rsn] \n"
       "mov r1, %[arg] \n"
     #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
-      "mov r2, #0    \n"
+      "mov r2, #0     \n"
     #endif
-      "bkpt 0xAB     \n"
+      "bkpt 0xAB      \n"
       "mov %[val], r0"
 
       : [val] "=r" (value) /* outputs */
@@ -112,29 +112,14 @@ int McuSemihost_SeggerIsConnected(void) {
 #endif /* McuSemihost_CONFIG_DEBUG_CONNECTION */
 #endif
 
-/*!
- * \brief Return the current system time
- * \return System time in seconds since 1970
- */
 int McuSemihost_HostTime(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_TIME, NULL);
 }
 
-/*!
- * \brief Return the number of centi-seconds the executable is running
- * \return -1 for error, otherwise the number of centi-seconds of the execution
- */
 int McuSemihost_HostClock(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_CLOCK, NULL);
 }
 
-/*!
- * \brief Open a file on the host
- * \param filename
- * \param mode
- * \param fileNameLenght
- * \return -1 if failed, otherwise file handle
- */
 int McuSemihost_FileOpen(const unsigned char *filename, int mode) {
   int32_t param[3];
 
@@ -144,11 +129,6 @@ int McuSemihost_FileOpen(const unsigned char *filename, int mode) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_OPEN, &param[0]);
 }
 
-/*!
- * \brief Closes a file handle
- * \param fh File handle previously opened
- * \return 0: ok, otherwise -1 if failed
- */
 int McuSemihost_FileClose(int fh) {
   int32_t param;
 
@@ -156,13 +136,6 @@ int McuSemihost_FileClose(int fh) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_CLOSE, &param);
 }
 
-/*!
- * \brief Read from a file
- * \param fh File handle
- * \param data Pointer where to store the data
- * \param nofBytes Number of bytes to read
- * \return 0: success. If it is nofBytes, then the call has failed and the end of the file has been reached. If smaller than nofBytes, then the buffer has not been filled.
- */
 int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes) {
   int32_t param[3];
 
@@ -172,13 +145,6 @@ int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READ, &param[0]);
 }
 
-/*!
- * \brief Write data to a file
- * \param fh File handle
- * \param data Pointer to data
- * \param nofBytes Number of data bytes to write
- * \return 0 for success, in error case the number of bytes not written
- */
 int McuSemihost_FileWrite(int fh, const unsigned char *data, size_t nofBytes) {
   int32_t param[3];
 
@@ -220,11 +186,6 @@ int McuSemihost_FileRename(const unsigned char *filePath, const unsigned char *f
 }
 #endif
 
-/*!
- * \brief Return the length of a file
- * \param fh File handle
- * \return Current length of the file, -1 for an error
- */
 int McuSemihost_FileLen(int fh) {
   int32_t param;
 
@@ -232,12 +193,6 @@ int McuSemihost_FileLen(int fh) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_FLEN, &param);
 }
 
-/*!
- * \brief Seeks for a specified position in a file
- * \param fh File handle
- * \param pos Target position. Seeking outside of the size of the file is undefined
- * \return 0 for success, negative for an error. McuSemihost_Op_SYS_ERRNO can be used to read the error value.
- */
 int McuSemihost_FileSeek(int fh, int pos) {
   int32_t param[2];
 
@@ -246,19 +201,19 @@ int McuSemihost_FileSeek(int fh, int pos) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_SEEK, &param[0]);
 }
 
-/*!
- * \brief Read a character from the console or stdin
- * \return The character read
- */
+int McuSemihost_TmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize) {
+  int32_t param[3];
+
+  param[0] = (int32_t)buffer;
+  param[1] = fileID;
+  param[2] = bufSize;
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_TMPNAME, &param[0]);
+}
+
 int McuSemihost_ReadChar(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READC, NULL);
 }
 
-/*!
- * \brief Write a character to the stdout console.
- * \param ch Character to write
- * \return always zero for success
- */
 int McuSemihost_WriteChar(char ch) {
   int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   /* Write a character byte, pointed to by R1 */
@@ -266,21 +221,11 @@ int McuSemihost_WriteChar(char ch) {
   return 0; /* success */
 }
 
-/*!
- * \brief Decides if a file handle is a standard io handle or not.
- * \param fg File handle
- * \return 1 if it a interactive device, 0 if not, any other value is an error
- */
 int McuSemihost_IsTTY(int fh) {
   int32_t param = fh;
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_ISTTY, &param);
 }
 
-/*!
- * \brief Write a zero byte terminated character array (string) to stdout
- * \param str String, zero byte terminated
- * \return 0: ok, -1 error
- */
 int McuSemihost_WriteString(const unsigned char *str) {
   /* R1 to point to the first byte of the string */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
@@ -304,7 +249,7 @@ int McuSemihost_WriteF(const unsigned char *format, va_list *arg) {
 #endif
 #endif
 
-#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER /* SEGGER has not implemented this */
 int McuSemihost_WriteFormatted(const unsigned char *format, ...) {
   va_list va;
   int res;
@@ -546,6 +491,14 @@ static int TestFileOperations(void) {
     McuSemihost_WriteChar('\n');
   }
 #endif
+
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
+  {
+    unsigned char buffer[64];
+
+    res = McuSemihost_TmpName(0, buffer, sizeof(buffer)); /* note: Ozone declines this operation for security reasons */
+  }
+#endif
   return res;
 }
 
@@ -618,8 +571,7 @@ int McuSemiHost_Test(void) {
 #else
   #error "unknown connection"
 #endif
-
-#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER /* SEGGER has not implemented this */
   if (McuSemihost_SeggerIsConnected()) { /* always returns 0? Should be supported according to the documentation, but is not with gdb? */
     McuSemihost_WriteString((unsigned char*)"SYS_IS_CONNECTED: J-Link connected\n");
   } else {
@@ -670,7 +622,7 @@ int McuSemiHost_Test(void) {
   }
   return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////
+/*--------------------------------------------------------------------------------------*/
 
 void McuSemiHost_Deinit(void) {
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
