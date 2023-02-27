@@ -19,3 +19,14 @@ Import the project as 'existing make file project' into Eclipse: File > Import >
 
 or: simply run 'make' to build it
 
+
+LED Counter App:
+----------------
+button view with USB connector on the left
+left (usb side): decrement counter
+right: increment counter
+up: increment brightness, keep pressed for faster increment
+down: decrement brightness, keep pressed for aster decrememnt
+middle: change light mode (warm white, fading, random, ...)
+long press middle: turn on/off
+
