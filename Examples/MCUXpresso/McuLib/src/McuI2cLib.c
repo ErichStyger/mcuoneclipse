@@ -55,8 +55,11 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   int nofBytesWritten;
-
+#if MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US==0
   nofBytesWritten = i2c_write_blocking(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false);
+#else
+  nofBytesWritten = i2c_write_timeout_us(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false, Siz*MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US);
+#endif
   if (nofBytesWritten!=Siz) {
     *Snt = nofBytesWritten;
     return ERR_FAILED;

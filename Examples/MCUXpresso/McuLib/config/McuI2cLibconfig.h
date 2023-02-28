@@ -216,6 +216,10 @@
     #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     17u
   #endif
 
+  #ifndef MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US
+    #define MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US 1000
+  #endif
+
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   /* set of predefined pin configurations for Kinetis devices: only one can be active! */
   #ifndef MCUI2CLIB_CONFIG_USE_PORTB_B0_B1

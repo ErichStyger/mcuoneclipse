@@ -8,6 +8,7 @@
 #define MCUI2CLIB_H_
 
 #include <stdint.h>
+#include "McuI2cLibconfig.h"
 
 typedef enum McuI2cLib_EnumStartFlags_ {
   MCUI2CLIB_SEND_START,        /* Start is sent */
