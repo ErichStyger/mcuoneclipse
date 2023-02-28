@@ -303,7 +303,23 @@ unsigned McuSemihost_printf(const char *fmt, ...) {
   return count;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
+/*!
+ * \brief Get the date and time from the host
+ * \param time Pointer to where to store the time information
+ * \param date Pointer to where to store the date information
+ * \param offsetHour Pass -1 if during wintertime
+ * \return ERR_OK if ok, error code otherwise
+ */
+uint8_t McuSemihost_GetTimeDateFromHost(TIMEREC *time, DATEREC *date, int offsetHour) {
+  int secs = McuSemihost_HostTime(); /* using SYS_TIME */
+  if (secs<=0) {
+    return ERR_FAILED;
+  }
+  McuTimeDate_UnixSecondsToTimeDateCustom(secs, offsetHour, time, date, 1970);
+  return ERR_OK;
+}
+
+/*------------------------------------------------------------------------------*/
 static int TestFileOperations(void) {
   int fh;
   char buf[24];
