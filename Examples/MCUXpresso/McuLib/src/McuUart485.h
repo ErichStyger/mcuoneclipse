@@ -15,6 +15,8 @@
 extern "C" {
 #endif
 
+#if McuUart485_CONFIG_USE_RS_485
+
 /*! buffers for the RS-485 shell parser */
 extern uint8_t McuUart485_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 
@@ -79,6 +81,8 @@ void McuUart485_Deinit(void);
 
 /*! \brief Module initialization */
 void McuUart485_Init(void);
+
+#endif /* #if McuUart485_CONFIG_USE_RS_485 */
 
 #ifdef __cplusplus
 }  /* extern "C" */
