@@ -84,7 +84,9 @@
 /* MODULE McuArmTools. */
 #include "McuLib.h" /* SDK and API used */
 #include "McuArmToolsconfig.h" /* configuration */
-
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  #include "pico/unique_id.h" /* for UID */
+#endif
 #include <stddef.h> /* for size_t */
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   #include "McuShell.h" /* Command line shell */
@@ -116,7 +118,11 @@
 #endif
 
 typedef struct {
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  uint8_t id[sizeof(pico_unique_board_id_t)]; /* 8 bytes, 64 bits */
+#else
   uint8_t id[16]; /* 128 bit ID */
+#endif
 } McuArmTools_UID;
 
 typedef enum {
