@@ -358,7 +358,7 @@ uint8_t McuPCF85063A_GetTime(TIMEREC *time) {
   return ERR_OK;
 }
 
-uint8_t McuPCF85063A_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100) {
+uint8_t McuPCF85063A_SetTimeInfo(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100) {
   McuPCF85063A_TTIME ttime;
 
   ttime.hour = Hour;
@@ -368,6 +368,10 @@ uint8_t McuPCF85063A_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec
   ttime.mode = McuPCF85063A_TTIME_MODE_24H;
   ttime.am_pm = McuPCF85063A_TTIME_AMPM_AM;
   return McuPCF85063A_WriteTime(&ttime);
+}
+
+uint8_t McuPCF85063A_SetTime(TIMEREC *time) {
+  return McuPCF85063A_SetTimeInfo(time->Hour, time->Min, time->Sec, time->Sec100);
 }
 
 uint8_t McuPCF85063A_GetDate(DATEREC *date) {
@@ -383,7 +387,7 @@ uint8_t McuPCF85063A_GetDate(DATEREC *date) {
   return ERR_OK;
 }
 
-uint8_t McuPCF85063A_SetDate(uint16_t Year, uint8_t Month, uint8_t Day) {
+uint8_t McuPCF85063A_SetDateInfo(uint16_t Year, uint8_t Month, uint8_t Day) {
   McuPCF85063A_TDATE tdate;
 
   tdate.year = (uint8_t)(Year-2000);
@@ -391,6 +395,10 @@ uint8_t McuPCF85063A_SetDate(uint16_t Year, uint8_t Month, uint8_t Day) {
   tdate.day = Day;
   tdate.dayOfWeek = McuUtility_WeekDay(Year, Month, Day);
   return McuPCF85063A_WriteDate(&tdate);
+}
+
+uint8_t McuPCF85063A_SetDate(DATEREC *date) {
+  return McuPCF85063A_SetDateInfo(date->Year, date->Month, date->Day);
 }
 
 uint8_t McuPCF85063A_GetTimeDate(TIMEREC *time, DATEREC *date) {
@@ -514,7 +522,7 @@ static uint8_t DateCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
 
   if (McuUtility_ScanDate(&cmd, &day, &month, &year) == ERR_OK) { /* ok, format fine */
     /* update real time clock */
-    res = McuPCF85063A_SetDate(year, month, day);
+    res = McuPCF85063A_SetDateInfo(year, month, day);
     if (res!=ERR_OK) {
       McuShell_SendStr((unsigned char*)"*** Failure setting RTC\r\n", io->stdErr);
       res = ERR_FAILED;
@@ -534,7 +542,7 @@ static uint8_t TimeCmd(const unsigned char *cmd, McuShell_ConstStdIOType *io) {
 
   if (McuUtility_ScanTime(&cmd, &hour, &minute, &second, &hSecond)==ERR_OK) { /* format fine */
     /* set RTC time */
-    res = McuPCF85063A_SetTime(hour, minute, second, hSecond);
+    res = McuPCF85063A_SetTimeInfo(hour, minute, second, hSecond);
     if (res != ERR_OK) {
       McuShell_SendStr((unsigned char*)"*** Failure setting RTC time\r\n", io->stdErr);
       res = ERR_FAILED;
@@ -576,7 +584,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[64];
   uint8_t res, data;
 
-  McuShell_SendStatusStr((unsigned char*)"pcf", (const unsigned char*)"Status of PCF85063A RTC\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"rtc", (const unsigned char*)"Status of PCF85063A RTC\r\n", io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   McuUtility_strcatNum8Hex(buf, sizeof(buf), McuPCF85063A_I2C_DEVICE_ADDRESS);
@@ -677,11 +685,11 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
   int32_t val;
   const unsigned char *p;
   bool enabled;
-  uint8_t dummy, val8u;
+  uint8_t dummy;
 
-  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "pcf help")==0) {
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "rtc help")==0) {
     *handled = true;
-    McuShell_SendHelpStr((unsigned char*)"pcf", (const unsigned char*)"Group of PCF85063 RTC commands\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"rtc", (const unsigned char*)"Group of PCF85063 RTC commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  reset", (const unsigned char*)"Send software reset command to device\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  write ram <val>", (const unsigned char*)"Write a byte value to the RAM\r\n", io->stdOut);
@@ -692,26 +700,26 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
     McuShell_SendHelpStr((unsigned char*)"  alarm AIE on|off", (const unsigned char*)"Enable alarm interrupt for second, minute or hour\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  alarm reset AF", (const unsigned char*)"Reset alarm interrupt flag\r\n", io->stdOut);
     return ERR_OK;
-  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "pcf status")==0)) {
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "rtc status")==0)) {
     *handled = true;
     return PrintStatus(io);
-  } else if (McuUtility_strncmp((char*)cmd, "pcf write ram ", sizeof("pcf write ram ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc write ram ", sizeof("rtc write ram ")-1)==0) {
     *handled = true;
-    p = cmd + sizeof("pcf write ram ")-1;
+    p = cmd + sizeof("rtc write ram ")-1;
     if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
       return McuPCF85063A_WriteRamByte(val);
     }
-  } else if (McuUtility_strncmp((char*)cmd, "pcf date ", sizeof("pcf date ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc date ", sizeof("rtc date ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("pcf date ")-1;
+    p = cmd + sizeof("rtc date ")-1;
     return DateCmd(p, io);
-  } else if (McuUtility_strncmp((char*)cmd, "pcf time ", sizeof("pcf time ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc time ", sizeof("rtc time ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("pcf time ")-1;
+    p = cmd + sizeof("rtc time ")-1;
     return TimeCmd(p, io);
-  } else if (McuUtility_strncmp((char*)cmd, "pcf alarm s ", sizeof("pcf alarm s ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm s ", sizeof("rtc alarm s ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("pcf alarm s ")-1;
+    p = cmd + sizeof("rtc alarm s ")-1;
     if (McuPCF85063A_ReadAlarmSecond(&dummy, &enabled)!=ERR_OK) { /* get enabled state */
       return ERR_FAILED;
     }
@@ -719,9 +727,9 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
       return McuPCF85063A_WriteAlarmSecond(val, enabled);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "pcf alarm m ", sizeof("pcf alarm m ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm m ", sizeof("rtc alarm m ")-1)==0) {
     *handled = TRUE;
-    p = cmd + sizeof("pcf alarm m")-1;
+    p = cmd + sizeof("rtc alarm m")-1;
     if (McuPCF85063A_ReadAlarmMinute(&dummy, &enabled)!=ERR_OK) { /* get enabled state */
       return ERR_FAILED;
     }
@@ -729,10 +737,10 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
       return McuPCF85063A_WriteAlarmMinute(val, enabled);
     }
     return ERR_FAILED;
-  } else if (McuUtility_strncmp((char*)cmd, "pcf alarm h ", sizeof("pcf alarm h ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm h ", sizeof("rtc alarm h ")-1)==0) {
     bool is24h, isAM;
     *handled = TRUE;
-    p = cmd + sizeof("pcf alarm h")-1;
+    p = cmd + sizeof("rtc alarm h")-1;
     if (McuPCF85063A_ReadAlarmHour(&dummy, &enabled, &is24h, &isAM)!=ERR_OK) { /* get enabled state */
       return ERR_FAILED;
     }
@@ -740,24 +748,24 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
       return McuPCF85063A_WriteAlarmHour(val, enabled, true, false); /* only supporting 24h format */
     }
     return ERR_FAILED;
-  } else if (McuUtility_strcmp((char*)cmd, "pcf reset")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "rtc reset")==0) {
     *handled = true;
     return McuPCF85063A_WriteSoftwareReset();
-  } else if (McuUtility_strcmp((char*)cmd, "pcf alarm AIE on")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "rtc alarm AIE on")==0) {
     *handled = true;
     return McuPCF85063A_WriteAlarmInterrupt(true);
-  } else if (McuUtility_strcmp((char*)cmd, "pcf alarm AIE off")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "rtc alarm AIE off")==0) {
     *handled = true;
     return McuPCF85063A_WriteAlarmInterrupt(false);
-  } else if (McuUtility_strcmp((char*)cmd, "pcf alarm reset AF")==0) {
+  } else if (McuUtility_strcmp((char*)cmd, "rtc alarm reset AF")==0) {
     *handled = true;
     return McuPCF85063A_WriteResetAlarmInterrupt();
-  } else if (McuUtility_strncmp((char*)cmd, "pcf alarm on ", sizeof("pcf alarm on ")-1)==0) {
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm on ", sizeof("rtc alarm on ")-1)==0) {
     *handled = true;
-    return CmdAlarmEnable(cmd+sizeof("pcf alarm on ")-1, true);
-  } else if (McuUtility_strncmp((char*)cmd, "pcf alarm off ", sizeof("pcf alarm off ")-1)==0) {
+    return CmdAlarmEnable(cmd+sizeof("rtc alarm on ")-1, true);
+  } else if (McuUtility_strncmp((char*)cmd, "rtc alarm off ", sizeof("rtc alarm off ")-1)==0) {
     *handled = true;
-    return CmdAlarmEnable(cmd+sizeof("pcf alarm off ")-1, false);
+    return CmdAlarmEnable(cmd+sizeof("rtc alarm off ")-1, false);
   }
   return ERR_OK;
 }

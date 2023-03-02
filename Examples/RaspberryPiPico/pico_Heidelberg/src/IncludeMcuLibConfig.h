@@ -16,7 +16,7 @@
 #define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB (07-Feb-2023) */
 
 /* active PCB/Hardware version */
-#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)
+#define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_4)
 
 /* ---------------------------------------------------------------------------------------*/
 /* SDK */

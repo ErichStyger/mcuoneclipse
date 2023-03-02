@@ -15,10 +15,12 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
 
 uint8_t McuPCF85063A_GetTime(TIMEREC *time);
 uint8_t McuPCF85063A_GetDate(DATEREC *date);
+uint8_t McuPCF85063A_SetTime(TIMEREC *time);
+uint8_t McuPCF85063A_SetDate(DATEREC *date);
 uint8_t McuPCF85063A_GetTimeDate(TIMEREC *time, DATEREC *date);
 
-uint8_t McuPCF85063A_SetTime(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100);
-uint8_t McuPCF85063A_SetDate(uint16_t Year, uint8_t Month, uint8_t Day);
+uint8_t McuPCF85063A_SetTimeInfo(uint8_t Hour, uint8_t Min, uint8_t Sec, uint8_t Sec100);
+uint8_t McuPCF85063A_SetDateInfo(uint16_t Year, uint8_t Month, uint8_t Day);
 
 typedef enum McuPCF85063A_COF_Frequency_e {
   McuPCF85063A_COF_FREQ_32768 = 0,

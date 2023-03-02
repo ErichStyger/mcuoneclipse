@@ -16,6 +16,8 @@
 extern "C" {
 #endif
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+
 typedef enum {
   MCUDBMC_STATE_IDLE = 0,       /*!< initial state, not doing anything */
   MCUDBMC_STATE_START,          /*!< starting debouncing, entered after a button press */
@@ -56,6 +58,8 @@ void McuDbnc_Process(McuDbnc_Desc_t *data);
 
 void McuDbnc_Deinit(void);
 void McuDbnc_Init(void);
+
+#endif /* #if McuLib_CONFIG_SDK_USE_FREERTOS */
 
 #ifdef __cplusplus
 }  /* extern "C" */
