@@ -11,6 +11,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "McuTimeDate.h"
 #include "McuShell.h"
 
 extern uint8_t McuSemiHost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE];
@@ -146,6 +147,15 @@ bool McuSemiHost_StdIOKeyPressed(void);
  * \return Number of characters written
  */
 unsigned McuSemihost_printf(const char *fmt, ...);
+
+/*!
+ * \brief Get the date and time from the host
+ * \param time Pointer to where to store the time information
+ * \param date Pointer to where to store the date information
+ * \param offsetHour Pass -1 if during wintertime
+ * \return ERR_OK if ok, error code otherwise
+ */
+uint8_t McuSemihost_GetTimeDateFromHost(TIMEREC *time, DATEREC *date, int offsetHour);
 
 /*!
  * \brief Testing the semihost functionality and API
