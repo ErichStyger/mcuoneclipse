@@ -11,6 +11,8 @@
 #include "McuWait.h"
 #include <stdio.h>
 #include "McuLib.h"
+#include "McuShell.h"
+#include "McuCriticalSection.h"
 
 #if McuLib_CONFIG_CORTEX_M >= 0 /* only on ARM Cortex-M */
 /*
@@ -21,11 +23,11 @@
 typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_OPEN         = 0x01, /* open a file */
   McuSemihost_Op_SYS_CLOSE        = 0x02, /* close a file */
-  McuSemihost_Op_SYS_WRITEC       = 0x03, /* write a character byte, pointed to by R1 */
-  McuSemihost_Op_SYS_WRITE0       = 0x04, /* writes a null terminated string. R1 points to the first byte */
+  McuSemihost_Op_SYS_WRITEC       = 0x03, /* write a character byte, pointed to by R1: not implemented by PEMICRO */
+  McuSemihost_Op_SYS_WRITE0       = 0x04, /* writes a null terminated string. R1 points to the first byte, not supported by PEMICRO */
   McuSemihost_Op_SYS_WRITE        = 0x05, /* write data to a file */
-  McuSemihost_Op_SYS_READ         = 0x06, /* read data from a file */
-  McuSemihost_Op_SYS_READC        = 0x07, /* read a character from stdin */
+  McuSemihost_Op_SYS_READ         = 0x06, /* read data from a file: not implemented reading from stdin by PEMICRO */
+  McuSemihost_Op_SYS_READC        = 0x07, /* read a character from stdin: not implemented by PEMICRO */
   McuSemihost_Op_SYS_ISERROR      = 0x08,
   McuSemihost_Op_SYS_ISTTY        = 0x09, /* check if it is a TTY */
   McuSemihost_Op_SYS_SEEK         = 0x0A, /* move current file position */
@@ -65,19 +67,49 @@ typedef enum McuSemihost_Op_e {
 static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
 #endif
 
-/* File modes for McuSemihost_Op_SYS_OPEN */
-#define SYS_FILE_MODE_READ              0   /* Open the file for reading "r" */
-#define SYS_FILE_MODE_READBINARY        1   /* Open the file for reading "rb" */
-#define SYS_FILE_MODE_READWRITE         2   /* Open the file for reading and writing "r+" */
-#define SYS_FILE_MODE_READWRITEBINARY   3   /* Open the file for reading and writing "r+" */
-#define SYS_FILE_MODE_WRITE             4   /* Open and truncate or create the file for writing "w" */
-#define SYS_FILE_MODE_WRITEBINARY       5   /* Open and truncate or create the file for writing "wb" */
-#define SYS_FILE_MODE_WRITEREAD         6   /* Open and truncate or create the file for writing and reading "w+" */
-#define SYS_FILE_MODE_WRITEREADBINARY   7   /* Open and truncate or create the file for writing and reading "w+b" */
-#define SYS_FILE_MODE_APPEND            8   /* Open or create the file for writing "a" */
-#define SYS_FILE_MODE_APPENDBINARY      9   /* Open or create the file for writing "ab" */
-#define SYS_FILE_MODE_APPENDREAD        10  /* Open or create the file for writing and reading "a+" */
-#define SYS_FILE_MODE_APPENDREADBINARY  11  /* Open or create the file for writing and reading "a+b" */
+bool McuSemihost_StdIOKeyPressed(void) {
+  return false; /* \todo */
+}
+
+void McuSemihost_StdIOReadChar(uint8_t *ch) {
+  int res;
+
+  res = McuSemihost_ReadChar();
+  if (res==-1) { /* no character present */
+    *ch = '\0';
+  } else {
+    *ch = (uint8_t)res; /* return character */
+  }
+}
+
+void McuSemihost_StdIOSendChar(uint8_t ch) {
+#if McuSemihost_CONFIG_USE_BUFFERED_IO
+  static unsigned char buf[McuSemihost_CONFIG_BUFFER_IO_SIZE] = "";
+  static size_t bufIdx = 0;
+
+  buf[bufIdx++] = ch;
+  if (ch=='\n' || bufIdx==sizeof(buf)-1) {
+    buf[bufIdx] = '\0';
+    McuSemihost_WriteString(buf);
+    bufIdx = 0;
+  }
+#else
+  (void)McuSemihost_WriteChar(ch);
+#endif
+}
+
+/* default standard I/O struct */
+McuShell_ConstStdIOType McuSemihost_stdio = {
+    (McuShell_StdIO_In_FctType)McuSemihost_StdIOReadChar, /* stdin */
+    (McuShell_StdIO_OutErr_FctType)McuSemihost_StdIOSendChar, /* stdout */
+    (McuShell_StdIO_OutErr_FctType)McuSemihost_StdIOSendChar, /* stderr */
+    McuSemihost_StdIOKeyPressed /* if input is not empty */
+  };
+uint8_t McuSemihost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
+
+McuShell_ConstStdIOTypePtr McuSemihost_GetStdio(void) {
+  return &McuSemihost_stdio;
+}
 
 static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int reason, void *arg) {
   int value;
@@ -88,7 +120,7 @@ static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int re
       "mov r2, #0     \n"
     #endif
       "bkpt 0xAB      \n"
-      "mov %[val], r0"
+      "mov %[val], r0 \n"
 
       : [val] "=r" (value) /* outputs */
       : [rsn] "r" (reason), [arg] "r" (arg) /* inputs */
@@ -215,9 +247,14 @@ int McuSemihost_ReadChar(void) {
 }
 
 int McuSemihost_WriteChar(char ch) {
-  int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   /* Write a character byte, pointed to by R1 */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* PEMICRO does not implement SYS_WRITEC? */
+  //printf("%c", ch); /* use standard library instead: both putc() and putchar() do not work with PEMICRO */
+  putchar(ch);
+#else
+  int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   (void)McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEC, &param); /* does not return valid value, R0 is corrupted */
+#endif
   return 0; /* success */
 }
 
@@ -227,8 +264,12 @@ int McuSemihost_IsTTY(int fh) {
 }
 
 int McuSemihost_WriteString(const unsigned char *str) {
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
   /* R1 to point to the first byte of the string */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
+#else
+  return McuSemihost_FileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
+#endif
 }
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
@@ -260,38 +301,6 @@ int McuSemihost_WriteFormatted(const unsigned char *format, ...) {
   return res;
 }
 #endif
-
-bool McuSemihost_StdIOKeyPressed(void) {
-  return false; /* \todo */
-}
-
-void McuSemihost_StdIOReadChar(uint8_t *ch) {
-  int res;
-
-  res = McuSemihost_ReadChar();
-  if (res==-1) { /* no character present */
-    *ch = '\0';
-  } else {
-    *ch = (uint8_t)res; /* return character */
-  }
-}
-
-void McuSemihost_StdIOSendChar(uint8_t ch) {
-  (void)McuSemihost_WriteChar(ch);
-}
-
-/* default standard I/O struct */
-McuShell_ConstStdIOType McuSemihost_stdio = {
-    (McuShell_StdIO_In_FctType)McuSemihost_StdIOReadChar, /* stdin */
-    (McuShell_StdIO_OutErr_FctType)McuSemihost_StdIOSendChar, /* stdout */
-    (McuShell_StdIO_OutErr_FctType)McuSemihost_StdIOSendChar, /* stderr */
-    McuSemihost_StdIOKeyPressed /* if input is not empty */
-  };
-uint8_t McuSemihost_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
-
-McuShell_ConstStdIOTypePtr McuSemihost_GetStdio(void) {
-  return &McuSemihost_stdio;
-}
 
 unsigned McuSemihost_printf(const char *fmt, ...) {
   va_list args;
@@ -327,17 +336,6 @@ static int TestFileOperations(void) {
   const unsigned char *testFileName = (const unsigned char*)"c:\\tmp\\semihosting.txt";
   int res = 0; /* 0: ok, -1: failed */
 
-#if 0
-  /* quick test */
-  /* Note: file will be created as C:\NXP\MCUXpressoIDE_11.7.0_9198\ide\test.txt */
-  fh = McuSemihost_FileOpen("test.txt", SYS_FILE_MODE_WRITEREADBINARY, strlen("test.txt"));
-  if (fh == -1) {
-    McuSemihost_WriteString((unsigned char*)"Failed\n");
-  } else {
-    McuSemihost_WriteString((unsigned char*)"OK\n");
-    McuSemihost_FileClose(fh);
-  }
-#endif
   McuSemihost_WriteString((unsigned char*)"SYS_OPEN: Open and create file ");
   McuSemihost_WriteString((unsigned char*)testFileName);
   McuSemihost_WriteString((unsigned char*)"\n");
@@ -494,7 +492,8 @@ static int TestFileOperations(void) {
     McuSemihost_WriteString((unsigned char*)"Failed writing to stderr!\n");
     res = -1;
   }
-  /* writing to stderr */
+  /* reading from stdin */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO
   McuSemihost_WriteString((unsigned char*)"Reading from stdin: enter 3 character\n");
   if (McuSemihost_FileRead(McuSemihost_tty_handles[McuSemihost_STDIN], data, 3)!=0) {
     McuSemihost_WriteString((unsigned char*)"Failed reading from stdin!\n");
@@ -506,6 +505,10 @@ static int TestFileOperations(void) {
     McuSemihost_WriteChar(data[2]);
     McuSemihost_WriteChar('\n');
   }
+#else
+  McuSemihost_WriteString((unsigned char*)"Reading from stdin: not implemented by PEMICRO\n");
+#endif
+
 #endif
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
@@ -520,7 +523,6 @@ static int TestFileOperations(void) {
 
 static int ConsoleInputOutput(void) {
   /* test of console input and output */
-  int c;
   int res = 0;
 
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
@@ -557,6 +559,9 @@ static int ConsoleInputOutput(void) {
     }
   }
 #endif
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* SYS_READ_C not implemented by PEMICRO */
+  int c;
+
   McuSemihost_WriteString((unsigned char*)"READ_C: Please type a character and press <ENTER>:\n"); /* writing zero terminated string */
   do {
     c = McuSemihost_ReadChar();
@@ -564,6 +569,9 @@ static int ConsoleInputOutput(void) {
   McuSemihost_WriteString((unsigned char*)"You typed: ");
   McuSemihost_WriteChar(c);
   McuSemihost_WriteChar('\n');
+#else
+  McuSemihost_WriteString((unsigned char*)"READ_C: not implemented by PEMICRO\n");
+#endif
   return res;
 }
 

@@ -33,4 +33,13 @@
   #define McuSemihost_CONFIG_HAS_SYS_REMOVE  (!(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD))
 #endif
 
+#ifndef McuSemihost_CONFIG_USE_BUFFERED_IO
+  #define McuSemihost_CONFIG_USE_BUFFERED_IO   (1)
+    /*!< if std I/O shall use a buffer and only write on buffer end or after a '\n' */
+#endif
+
+#ifndef McuSemihost_CONFIG_BUFFER_IO_SIZE
+  #define McuSemihost_CONFIG_BUFFER_IO_SIZE    (64)
+    /*!< size in bytes for I/O buffer */
+#endif
 #endif /* MCUSEMIHOST_CONFIG_H_ */

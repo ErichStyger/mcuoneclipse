@@ -38,11 +38,24 @@ int McuSemihost_HostTime(void);
  */
 int McuSemihost_HostClock(void);
 
+/* File modes for McuSemihost_FileOpen() */
+#define SYS_FILE_MODE_READ              0   /* Open the file for reading "r" */
+#define SYS_FILE_MODE_READBINARY        1   /* Open the file for reading "rb" */
+#define SYS_FILE_MODE_READWRITE         2   /* Open the file for reading and writing "r+" */
+#define SYS_FILE_MODE_READWRITEBINARY   3   /* Open the file for reading and writing "r+" */
+#define SYS_FILE_MODE_WRITE             4   /* Open and truncate or create the file for writing "w" */
+#define SYS_FILE_MODE_WRITEBINARY       5   /* Open and truncate or create the file for writing "wb" */
+#define SYS_FILE_MODE_WRITEREAD         6   /* Open and truncate or create the file for writing and reading "w+" */
+#define SYS_FILE_MODE_WRITEREADBINARY   7   /* Open and truncate or create the file for writing and reading "w+b" */
+#define SYS_FILE_MODE_APPEND            8   /* Open or create the file for writing "a" */
+#define SYS_FILE_MODE_APPENDBINARY      9   /* Open or create the file for writing "ab" */
+#define SYS_FILE_MODE_APPENDREAD        10  /* Open or create the file for writing and reading "a+" */
+#define SYS_FILE_MODE_APPENDREADBINARY  11  /* Open or create the file for writing and reading "a+b" */
+
 /*!
  * \brief Open a file on the host
  * \param filename
  * \param mode
- * \param fileNameLenght
  * \return -1 if failed, otherwise file handle
  */
 int McuSemihost_FileOpen(const unsigned char *filename, int mode);
@@ -127,19 +140,19 @@ int McuSemihost_WriteString(const unsigned char *str);
  * \brief Sending a character to the SWO/ITM console
  * \param ch Character to send
  */
-void McuSemiHost_StdIOSendChar(uint8_t ch);
+void McuSemihost_StdIOSendChar(uint8_t ch);
 
 /*!
  * \brief Reads a character from the standard input
  * \param ch Pointer where to store the character, stores '\0' if no character was received
  */
-void McuSemiHost_StdIOReadChar(uint8_t *ch);
+void McuSemihost_StdIOReadChar(uint8_t *ch);
 
 /*!
  * \brief Checks if there is input from SWO/ITM console
  * \return true if there is input, false otherwise
  */
-bool McuSemiHost_StdIOKeyPressed(void);
+bool McuSemihost_StdIOKeyPressed(void);
 
 /*!
  * \brief 'printf'-style writing with semihosting

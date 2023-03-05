@@ -12,6 +12,8 @@
 
 #include "McuSemihost.h"
 #include "McuWait.h"
+#include "benchmark.h"
+#include <stdio.h>
 
 int main(void) {
   BOARD_InitBootPins();
@@ -20,12 +22,15 @@ int main(void) {
   McuWait_Init();
   McuSemiHost_Init();
 
+  Benchmark_Run();
+#if 0
   McuSemiHost_Test();
   McuSemiHost_Deinit();
-
+#endif
   //for(;;) {
     McuSemihost_WriteString((const unsigned char*)"hello with semihosting!\n");
     McuWait_Waitms(500);
   //}
+  for(;;) {}
   return 0;
 }
