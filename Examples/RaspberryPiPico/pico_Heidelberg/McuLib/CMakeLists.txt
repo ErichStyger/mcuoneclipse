@@ -29,8 +29,8 @@ file(GLOB FILES
   src/McuI2cSpy.c
   src/McuLED.c
   src/McuLib.c
-  src/McuLog.c
   src/McuPCF85063A.c
+  src/McuLog.c
   src/McuRB.c
   src/McuRingBuffer.c
   src/McuRTOS.c
@@ -47,7 +47,7 @@ file(GLOB FILES
   SEGGER_SysView/SEGGER_SYSVIEW_Config_FreeRTOS.c
   SEGGER_SysView/SEGGER_SYSVIEW_FreeRTOS.c
   
-  src/McuSemihst.c
+  src/McuSemihost.c
   src/McuShell.c
   src/McuShellUart.c
   src/McuSHT31.c
