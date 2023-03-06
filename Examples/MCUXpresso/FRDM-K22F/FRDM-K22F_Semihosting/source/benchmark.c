@@ -31,7 +31,7 @@ static void BenchMark_McuLib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("McuLib putchar");
 
-#if (McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO) && (McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PYOCD)  /* file I/O fails with PEMCIRCO && pyOCD */
+#if BENCHMARK_USE_FILE_IO ||(McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO) && (McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PYOCD)  /* file I/O fails with PEMCIRCO && pyOCD */
   CCOUNTER_START();
   int file;
   unsigned char data[64];
@@ -64,6 +64,8 @@ static void BenchMark_McuLib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("McuLib file read");
 #endif
+  McuSemihost_WriteString((unsigned char*)"finished!\n");
+  McuSemihost_StdIOFlush();
 }
 #endif
 
@@ -89,7 +91,7 @@ static void Benchmark_Stdlib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("Stdlib putchar 1024 bytes");
 
-#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
+#if BENCHMARK_USE_FILE_IO || McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
   CCOUNTER_START();
   FILE *file;
   unsigned char data[64];
@@ -122,6 +124,7 @@ static void Benchmark_Stdlib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("Stdlib file read");
 #endif
+  puts("finished!\n");
 }
 #endif
 

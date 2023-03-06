@@ -27,6 +27,11 @@ extern McuShell_ConstStdIOType McuSemiHost_stdio;
 McuShell_ConstStdIOTypePtr McuSemiHost_GetStdio(void);
 
 /*!
+ * \brief Flush the standard I/O output. Needed if using McuSemihost_CONFIG_BUFFER_IO_FLUSH.
+ */
+void McuSemihost_StdIOFlush(void);
+
+/*!
  * \brief Return the current system time
  * \return System time in seconds since 1970
  */

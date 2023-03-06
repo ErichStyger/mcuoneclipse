@@ -64,6 +64,7 @@ void Cycles_LogTime(const char *msg) {
 #if BENCHMARK_USE_STDLIB
   printf
 #else
+  McuSemihost_printf
 #endif
   ("%s: delta: %ld, overhead: %d cycles: %lu; time: %lu us\n", msg, delta, CCOUNTER_OVERHEAD, cycles, us);
 }

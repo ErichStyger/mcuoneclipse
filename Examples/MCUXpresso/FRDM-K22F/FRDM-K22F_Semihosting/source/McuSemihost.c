@@ -82,16 +82,34 @@ void McuSemihost_StdIOReadChar(uint8_t *ch) {
   }
 }
 
+#if McuSemihost_CONFIG_USE_BUFFERED_IO
+  static unsigned char io_buf[McuSemihost_CONFIG_BUFFER_IO_SIZE] = "";
+  static size_t io_bufIdx = 0; /* index into io_buf */
+#endif
+
+void McuSemihost_StdIOFlush(void) {
+#if McuSemihost_CONFIG_BUFFER_IO_FLUSH
+  io_buf[io_bufIdx] = '\0';
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD
+  McuSemihost_FileWrite(McuSemihost_STDOUT+1, io_buf, io_bufIdx); /* for pyOCD, need to write to handle 2???? */
+#else
+  McuSemihost_WriteString(io_buf);
+#endif
+  io_bufIdx = 0;
+#endif
+}
+
 void McuSemihost_StdIOSendChar(uint8_t ch) {
 #if McuSemihost_CONFIG_USE_BUFFERED_IO
-  static unsigned char buf[McuSemihost_CONFIG_BUFFER_IO_SIZE] = "";
-  static size_t bufIdx = 0;
 
-  buf[bufIdx++] = ch;
-  if (ch=='\n' || bufIdx==sizeof(buf)-1) {
-    buf[bufIdx] = '\0';
-    McuSemihost_WriteString(buf);
-    bufIdx = 0;
+  io_buf[io_bufIdx++] = ch;
+  if ( io_bufIdx==sizeof(io_buf)-1 /* buffer full */
+    #if !McuSemihost_CONFIG_BUFFER_IO_FLUSH
+      || ch=='\n' /* newline: flush buffer */
+    #endif
+     )
+  {
+    McuSemihost_StdIOFlush();
   }
 #else
   (void)McuSemihost_WriteChar(ch);
@@ -267,7 +285,7 @@ int McuSemihost_WriteString(const unsigned char *str) {
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
   return McuSemihost_FileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
 #elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD /* PyOCD only supports WRITEC */
-  McuSemihost_FileWrite(McuSemihost_STDOUT+1, str, strlen((char*)str)); /* for pyOCD, need to write to handle 2???? */
+  McuShell_SendStr(str, McuSemihost_stdio.stdOut); /* buffer it, then write to a file during flush */
   return ERR_OK;
 #else
   /* R1 to point to the first byte of the string */

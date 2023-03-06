@@ -27,10 +27,12 @@ int main(void) {
   McuSemiHost_Test();
   McuSemiHost_Deinit();
 #endif
-  //for(;;) {
+#if 0
+  for(;;) {
     McuSemihost_WriteString((const unsigned char*)"hello with semihosting!\n");
     McuWait_Waitms(500);
-  //}
+  }
+#endif
   for(;;) {}
   return 0;
 }

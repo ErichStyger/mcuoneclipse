@@ -35,11 +35,17 @@
 
 #ifndef McuSemihost_CONFIG_USE_BUFFERED_IO
   #define McuSemihost_CONFIG_USE_BUFFERED_IO   (1)
-    /*!< if std I/O shall use a buffer and only write on buffer end or after a '\n' */
+    /*!< if std I/O shall use a buffer and only write on buffer end or after a '\n' or based on McuSemihost_CONFIG_BUFFER_IO_FLUSH */
 #endif
 
 #ifndef McuSemihost_CONFIG_BUFFER_IO_SIZE
   #define McuSemihost_CONFIG_BUFFER_IO_SIZE    (64)
     /*!< size in bytes for I/O buffer */
 #endif
+
+#ifndef McuSemihost_CONFIG_BUFFER_IO_FLUSH
+  #define McuSemihost_CONFIG_BUFFER_IO_FLUSH    (1)
+    /*!< 1: I/O buffer is written with or if buffer is full; 0: I/O buffer is written after a '\n' */
+#endif
+
 #endif /* MCUSEMIHOST_CONFIG_H_ */
