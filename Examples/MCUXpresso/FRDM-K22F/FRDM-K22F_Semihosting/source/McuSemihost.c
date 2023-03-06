@@ -264,11 +264,14 @@ int McuSemihost_IsTTY(int fh) {
 }
 
 int McuSemihost_WriteString(const unsigned char *str) {
-#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
+#if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
+  return McuSemihost_FileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
+#elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD /* PyOCD only supports WRITEC */
+  McuSemihost_FileWrite(McuSemihost_STDOUT+1, str, strlen((char*)str)); /* for pyOCD, need to write to handle 2???? */
+  return ERR_OK;
+#else
   /* R1 to point to the first byte of the string */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
-#else
-  return McuSemihost_FileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
 #endif
 }
 

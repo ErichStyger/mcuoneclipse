@@ -7,7 +7,12 @@
 #include "platform.h"
 #include "cycles.h"
 #include "fsl_common.h"
-#include <stdio.h>
+#include "benchmark.h"
+#if BENCHMARK_USE_STDLIB
+  #include <stdio.h>
+#else
+  #include "McuSemihost.h"
+#endif
 
 #if PL_CONFIG_IS_TINY
   /*! \todo determine overhead for measurements */
@@ -56,7 +61,11 @@ void Cycles_LogTime(const char *msg) {
     cycles = 0;
   }
   us = COUNT_TO_USEC(cycles, SystemCoreClock);
-  printf("%s: delta: %ld, overhead: %d cycles: %lu; time: %lu us\n", msg, delta, CCOUNTER_OVERHEAD, cycles, us);
+#if BENCHMARK_USE_STDLIB
+  printf
+#else
+#endif
+  ("%s: delta: %ld, overhead: %d cycles: %lu; time: %lu us\n", msg, delta, CCOUNTER_OVERHEAD, cycles, us);
 }
 
 #if PL_CONFIG_IS_LPC

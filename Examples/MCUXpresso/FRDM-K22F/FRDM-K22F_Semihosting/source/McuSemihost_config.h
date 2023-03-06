@@ -11,7 +11,7 @@
 #define McuSemihost_DEBUG_CONNECTION_LINKSERVER  (1) /*!< NXP Linkserver debug probe */
 #define McuSemihost_DEBUG_CONNECTION_SEGGER      (2) /*!< SEGGER J-Link debug probe */
 #define McuSemihost_DEBUG_CONNECTION_PEMICRO     (3) /*!< P&E Multilink debug probe */
-#define McuSemihost_DEBUG_CONNECTION_PYOCD       (4) /*!< P&E Multilink debug probe */
+#define McuSemihost_DEBUG_CONNECTION_PYOCD       (4) /*!< PyOCD debug probe */
 
 #ifndef McuSemihost_CONFIG_DEBUG_CONNECTION
   #define McuSemihost_CONFIG_DEBUG_CONNECTION    McuSemihost_DEBUG_CONNECTION_GENERIC

@@ -7,6 +7,9 @@
 #ifndef BENCHMARK_H_
 #define BENCHMARK_H_
 
+
+#define BENCHMARK_USE_STDLIB   (1) /* if using the standard library or McuLib for the benchmarking */
+
 void Benchmark_Run(void);
 
 #endif /* BENCHMARK_H_ */

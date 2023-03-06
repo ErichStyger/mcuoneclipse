@@ -9,6 +9,7 @@
 #include "McuSemihost.h"
 #include <stdio.h>
 
+#if !BENCHMARK_USE_STDLIB
 static void BenchMark_McuLib(void) {
   CCOUNTER_START();
   McuSemihost_WriteString((unsigned char*)"hello world!\n");
@@ -30,12 +31,12 @@ static void BenchMark_McuLib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("McuLib putchar");
 
-#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
+#if (McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO) && (McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PYOCD)  /* file I/O fails with PEMCIRCO && pyOCD */
   CCOUNTER_START();
   int file;
   unsigned char data[64];
 
-  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test2.txt", SYS_FILE_MODE_WRITE);
+  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_WRITE);
   if (file>=0) {
     for(int i=0; i<1024; i++) {
       McuSemihost_FileWrite(file, (unsigned char*)"hello world to a file\n", sizeof("hello world to a file\n")-1);
@@ -51,7 +52,7 @@ static void BenchMark_McuLib(void) {
   Cycles_LogTime("McuLib file write");
 
   CCOUNTER_START();
-  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test2.txt", SYS_FILE_MODE_READ);
+  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_READ);
   if (file>=0) { /* success */
     for(int i=0; i<100; i++) {
       McuSemihost_FileRead(file, data, sizeof(data));
@@ -64,7 +65,9 @@ static void BenchMark_McuLib(void) {
   Cycles_LogTime("McuLib file read");
 #endif
 }
+#endif
 
+#if BENCHMARK_USE_STDLIB
 static void Benchmark_Stdlib(void) {
   CCOUNTER_START();
   puts("hello world!\n");
@@ -86,7 +89,7 @@ static void Benchmark_Stdlib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("Stdlib putchar 1024 bytes");
 
-#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
+#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
   CCOUNTER_START();
   FILE *file;
   unsigned char data[64];
@@ -120,8 +123,12 @@ static void Benchmark_Stdlib(void) {
   Cycles_LogTime("Stdlib file read");
 #endif
 }
+#endif
 
 void Benchmark_Run(void) {
-  BenchMark_McuLib();
+#if BENCHMARK_USE_STDLIB
   Benchmark_Stdlib();
+#else
+  BenchMark_McuLib();
+#endif
 }

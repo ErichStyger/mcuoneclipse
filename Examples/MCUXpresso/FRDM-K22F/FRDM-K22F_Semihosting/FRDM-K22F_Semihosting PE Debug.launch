@@ -13,12 +13,20 @@
     <stringAttribute key="com.nxp.mcuxpresso.pemicro.flash.program.action" value="Erase, blank check, program and verify"/>
     <booleanAttribute key="com.nxp.mcuxpresso.pemicro.flash.reset.target" value="true"/>
     <listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES"/>
+    <listAttribute key="com.pemicro.debug.gdbjtag.pne.ELVES_OFFSET"/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.NUMBER_ELVES" value="0"/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.BUSERR" value="true"/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.CHKERR" value="true"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.CORERESET" value="true"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.DEVICE_NAME" value="NXP_K2x_K22FN512M12"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.GDB_OPTIONS" value=""/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.HARDERR" value="true"/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.PE.HARDWARE_INTERFACE" value="0"/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.INTERR" value="true"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.LAST_ATTRIBUTE_HEADER" value="com.pemicro.debug.gdbjtag.pne.ml."/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.MMERR" value="true"/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.NOCPERR" value="true"/>
+    <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.STATERR" value="true"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.STREAMING_ENABLE_PORT1" value="true"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.PE.STREAMING_SERVER_PORT1" value="10224"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.PE.USE_EXTERNAL_SERVER" value="true"/>
@@ -82,7 +90,7 @@
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.enableSemihostingIoclientTelnet" value="true"/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.eraseOptionIndex" value="0"/>
     <booleanAttribute key="com.pemicro.debug.gdbjtag.pne.eraseOptionsenabled" value="false"/>
-    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#10;set tcp auto-retry on&#10;set tcp connect-timeout 240&#10;set remotetimeout 60"/>
+    <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherCommands" value="set mem inaccessible-by-default off&#13;&#10;set tcp auto-retry on&#13;&#10;set tcp connect-timeout 240&#13;&#10;set remotetimeout 60"/>
     <stringAttribute key="com.pemicro.debug.gdbjtag.pne.gdbClientOtherOptions" value=""/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbServerTelnetPortNumber" value="51795"/>
     <intAttribute key="com.pemicro.debug.gdbjtag.pne.gdbmiPortNumber" value="6225"/>
@@ -178,6 +186,7 @@
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="GNU ARM PEMicro Interface"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDeviceId" value="com.pemicro.debug.gdbjtag.pne.jtagdeviceid"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
@@ -193,10 +202,16 @@
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForSymbols" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useRemoteTarget" value="true"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="arm-none-eabi-gdb"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
+    <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=".gdbinit"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
+    <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
+    <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
+    <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\FRDM-K22F_Semihosting.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-K22F_Semihosting"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
