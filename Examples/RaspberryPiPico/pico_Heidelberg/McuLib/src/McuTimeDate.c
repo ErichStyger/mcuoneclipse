@@ -6,7 +6,7 @@
 **     Component   : GenericTimeDate
 **     Version     : Component 01.068, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-02-28, 09:38, # CodeGen: 794
+**     Date/Time   : 2023-02-28, 09:47, # CodeGen: 795
 **     Abstract    :
 **         Software date/time module.
 **     Settings    :
@@ -109,7 +109,7 @@
 #include "McuTimeDate.h"
 #include <stdlib.h> /* for NULL */
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
-  #include "McuExtRTC.h"
+  #include McuTimeDate_CONFIG_EXT_RTC_HEADER_FILE_NAME /* header file for the external RTC */
 #endif
 
 
