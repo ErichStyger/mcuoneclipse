@@ -28,10 +28,10 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_WRITE        = 0x05, /* write data to a file */
   McuSemihost_Op_SYS_READ         = 0x06, /* read data from a file: not implemented reading from stdin by PEMICRO */
   McuSemihost_Op_SYS_READC        = 0x07, /* read a character from stdin: not implemented by PEMICRO */
-  McuSemihost_Op_SYS_ISERROR      = 0x08,
+  McuSemihost_Op_SYS_ISERROR      = 0x08, /* Determines whether the return code from another semihosting call is an error status or not.  */
   McuSemihost_Op_SYS_ISTTY        = 0x09, /* check if it is a TTY */
   McuSemihost_Op_SYS_SEEK         = 0x0A, /* move current file position */
-  /* 0x0B ? */
+
   McuSemihost_Op_SYS_FLEN         = 0x0C, /* tell the file length */
   McuSemihost_Op_SYS_TMPNAME      = 0x0D, /* get a temporary file handle */
 #if McuSemihost_CONFIG_HAS_SYS_REMOVE
@@ -42,18 +42,18 @@ typedef enum McuSemihost_Op_e {
 #endif
   McuSemihost_Op_SYS_CLOCK        = 0x10, /* returns the number of centi-seconds since execution started */
   McuSemihost_Op_SYS_TIME         = 0x11, /* time in seconds since Jan 1st 1970 */
-  McuSemihost_Op_SYS_SYSTEM       = 0x12,
-  McuSemihost_Op_SYS_ERRNO        = 0x13,
-  /* 0x14? */
-  McuSemihost_Op_SYS_GET_CMDLINE  = 0x15,
-  McuSemihost_Op_SYS_HEAPINFO     = 0x16,
-  McuSemihost_Op_SYS_ENTER_SVC    = 0x17,
-  McuSemihost_Op_SYS_EXCEPTION    = 0x18, /* Exit */
+  McuSemihost_Op_SYS_SYSTEM       = 0x12, /* Passes a command to the host command-line interpreter. */
+  McuSemihost_Op_SYS_ERRNO        = 0x13, /* get the current error number*/
 
-  McuSemihost_Op_SYS_ELLAPSED     = 0x30,
-  McuSemihost_Op_SYS_TICKFREQ     = 0x31,
+  McuSemihost_Op_SYS_GET_CMDLINE  = 0x15, /* Returns the command line used for the call to the executable */
+  McuSemihost_Op_SYS_HEAPINFO     = 0x16, /* Returns the system stack and heap parameters. */
+  McuSemihost_Op_SYS_ENTER_SVC    = 0x17, /* Sets the processor to Supervisor mode and disables all interrupts */
+  McuSemihost_Op_SYS_EXCEPTION    = 0x18, /* Exit application */
 
-#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
+  McuSemihost_Op_SYS_ELLAPSED     = 0x30, /* Returns the number of elapsed target ticks since execution started. */
+  McuSemihost_Op_SYS_TICKFREQ     = 0x31, /* Returns the tick frequency. */
+
+#if 0 && McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER /* documented by SEGGER, but not implemented? */
   McuSemihost_Op_SYS_IS_CONNECTED = 0x00, /* check if debugger is connected: note that this is not implemented with GDB server */
   McuSemihost_Op_SYS_WRITEF       = 0x40, /* write a printf-style string, but formatting is on the host: seems not be implemented with GDB server */
 #endif
@@ -64,7 +64,7 @@ typedef enum McuSemihost_Op_e {
 #define McuSemihost_STDERR          2 /*!< handle for standard error */
 
 #if McuSemihost_CONFIG_INIT_STDIO_HANDLES
-static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
+  static int McuSemihost_tty_handles[3]; /* stdin, stdout and stderr */
 #endif
 
 bool McuSemihost_StdIOKeyPressed(void) {
@@ -131,7 +131,7 @@ McuShell_ConstStdIOTypePtr McuSemihost_GetStdio(void) {
 
 static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int reason, void *arg) {
   int value;
-  asm volatile (
+  __asm volatile (
       "mov r0, %[rsn] \n"
       "mov r1, %[arg] \n"
     #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
