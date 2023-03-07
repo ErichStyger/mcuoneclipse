@@ -91,7 +91,7 @@ void McuSemihost_StdIOFlush(void) {
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD
   McuSemihost_FileWrite(McuSemihost_STDOUT+1, io_buf, io_bufIdx); /* for pyOCD, need to write to handle 2???? */
 #else
-  McuSemihost_WriteString(io_buf);
+  McuSemihost_WriteString0(io_buf);
 #endif
   io_bufIdx = 0;
 #endif

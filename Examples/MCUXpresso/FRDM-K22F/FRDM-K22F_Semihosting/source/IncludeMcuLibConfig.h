@@ -18,8 +18,8 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuSemihost */
 //#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_GENERIC
-//#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_LINKSERVER
-#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_SEGGER
+#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_LINKSERVER
+//#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_SEGGER
 //#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_PEMICRO
 //#define McuSemihost_CONFIG_DEBUG_CONNECTION          McuSemihost_DEBUG_CONNECTION_PYOCD
 
