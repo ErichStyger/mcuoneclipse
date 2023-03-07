@@ -7,19 +7,36 @@
 #include "benchmark.h"
 #include "cycles.h"
 #include "McuSemihost.h"
+#include "McuArmTools.h"
+#include "McuWait.h"
 #include <stdio.h>
+
+static const uint8_t file_data[] =
+{
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,    0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,     0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+};
 
 #if !BENCHMARK_USE_STDLIB
 static void BenchMark_McuLib(void) {
   CCOUNTER_START();
-  McuSemihost_WriteString((unsigned char*)"hello world!\n");
-  CCOUNTER_STOP();
-  Cycles_LogTime("McuLib write string hello world");
-
-  CCOUNTER_START();
   McuSemihost_printf("hello world!\n");
   CCOUNTER_STOP();
   Cycles_LogTime("McuLib printf hello world");
+
+  CCOUNTER_START();
+  McuSemihost_WriteString((unsigned char*)"hello world!\n");
+  CCOUNTER_STOP();
+  Cycles_LogTime("McuLib write string hello world");
 
   CCOUNTER_START();
   for(int j=0; j<128; j++) {
@@ -38,8 +55,8 @@ static void BenchMark_McuLib(void) {
 
   file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_WRITE);
   if (file>=0) {
-    for(int i=0; i<1024; i++) {
-      McuSemihost_FileWrite(file, (unsigned char*)"hello world to a file\n", sizeof("hello world to a file\n")-1);
+    for(int i=0; i<10; i++) {
+      McuSemihost_FileWrite(file, file_data, sizeof(file_data));
     }
     if (McuSemihost_FileLen(file)<4000) {
       for(;;) {} /* error */
@@ -72,14 +89,14 @@ static void BenchMark_McuLib(void) {
 #if BENCHMARK_USE_STDLIB
 static void Benchmark_Stdlib(void) {
   CCOUNTER_START();
-  puts("hello world!\n");
-  CCOUNTER_STOP();
-  Cycles_LogTime("Stdlib write string hello world");
-
-  CCOUNTER_START();
   printf("hello world!\n");
   CCOUNTER_STOP();
   Cycles_LogTime("Stdlib printf hello world");
+
+  CCOUNTER_START();
+  puts("hello world!\n");
+  CCOUNTER_STOP();
+  Cycles_LogTime("Stdlib write string hello world");
 
   CCOUNTER_START();
   for(int j=0; j<128; j++) {
@@ -91,15 +108,15 @@ static void Benchmark_Stdlib(void) {
   CCOUNTER_STOP();
   Cycles_LogTime("Stdlib putchar 1024 bytes");
 
-#if BENCHMARK_USE_FILE_IO || McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_PEMICRO /* file I/O fails with PEMCIRCO */
+#if BENCHMARK_USE_FILE_IO /* file I/O fails with PEMCIRCO? */
   CCOUNTER_START();
   FILE *file;
   unsigned char data[64];
 
   file = fopen("c:\\tmp\\test2.txt", "w");
   if (file!=NULL) {
-    for(int i=0; i<1024; i++) {
-      (void)fwrite("hello world to a file\n", sizeof("hello world to a file\n")-1, 1, file);
+    for(int i=0; i<10; i++) {
+      (void)fwrite(file_data, sizeof(file_data), 1, file);
     }
     if (ftell(file)<4000) {
       for(;;) {} /* error */
@@ -129,9 +146,17 @@ static void Benchmark_Stdlib(void) {
 #endif
 
 void Benchmark_Run(void) {
+  McuArmTools_FillMainStackSpace();
 #if BENCHMARK_USE_STDLIB
   Benchmark_Stdlib();
 #else
   BenchMark_McuLib();
+#endif
+  int32_t size = McuArmTools_GetUsedMainStackSpace();
+#if BENCHMARK_USE_STDLIB
+  printf("stack size: %ld\n", size);
+#else
+  McuSemihost_printf("stack size: %d\n", size);
+  McuSemihost_StdIOFlush();
 #endif
 }

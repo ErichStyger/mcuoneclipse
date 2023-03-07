@@ -7,8 +7,8 @@
 #ifndef BENCHMARK_H_
 #define BENCHMARK_H_
 
-#define BENCHMARK_USE_STDLIB   (0) /* if using the standard library or McuLib for the benchmarking */
-#define BENCHMARK_USE_FILE_IO  (0) /* if using file I/O operations */
+#define BENCHMARK_USE_STDLIB   (1) /* if using the standard library or McuLib for the benchmarking */
+#define BENCHMARK_USE_FILE_IO  (1) /* if using file I/O operations */
 
 void Benchmark_Run(void);
 

@@ -20,7 +20,10 @@ int main(void) {
   BOARD_InitBootClocks();
 
   McuWait_Init();
+#if !BENCHMARK_USE_STDLIB
   McuSemiHost_Init();
+#endif
+  //printf("hello world!\n");
 
   Benchmark_Run();
 #if 0

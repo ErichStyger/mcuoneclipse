@@ -8,11 +8,9 @@
 #include "McuUtility.h"
 #include "McuTimeDate.h"
 #include "McuXFormat.h"
-#include "McuWait.h"
-#include <stdio.h>
 #include "McuLib.h"
 #include "McuShell.h"
-#include "McuCriticalSection.h"
+#include <stdio.h>
 
 #if McuLib_CONFIG_CORTEX_M >= 0 /* only on ARM Cortex-M */
 /*
@@ -132,19 +130,19 @@ McuShell_ConstStdIOTypePtr McuSemihost_GetStdio(void) {
 static inline int __attribute__ ((always_inline)) McuSemihost_HostRequest(int reason, void *arg) {
   int value;
   __asm volatile (
-      "mov r0, %[rsn] \n"
-      "mov r1, %[arg] \n"
+      "mov r0, %[rsn] \n" /* place semihost operation code into R0 */
+      "mov r1, %[arg] \n" /* R1 points to the argument array */
     #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
-      "mov r2, #0     \n"
+      "mov r2, #0     \n" /* J-Link needs R2 initialzed too */
     #endif
-      "bkpt 0xAB      \n"
-      "mov %[val], r0 \n"
+      "bkpt 0xAB      \n" /* call debugger */
+      "mov %[val], r0 \n" /* debugger has stored result code in R0 */
 
       : [val] "=r" (value) /* outputs */
       : [rsn] "r" (reason), [arg] "r" (arg) /* inputs */
       : "r0", "r1", "r2", "r3", "ip", "lr", "memory", "cc" /* clobber */
   );
-  return value;
+  return value; /* return result code */
 }
 
 #if McuSemihost_CONFIG_DEBUG_CONNECTION == McuSemihost_DEBUG_CONNECTION_SEGGER
@@ -282,13 +280,18 @@ int McuSemihost_IsTTY(int fh) {
 }
 
 int McuSemihost_WriteString(const unsigned char *str) {
+  McuShell_SendStr(str, McuSemihost_stdio.stdOut); /* buffer it, then write to a file during flush */
+  return ERR_OK;
+}
+
+int McuSemihost_WriteString0(const unsigned char *str) {
+  /* R1 to point to the first byte of the string */
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* WRITE0 does nothing with PEMCIRO? */
   return McuSemihost_FileWrite(McuSemihost_STDOUT, str, strlen((char*)str));
 #elif McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD /* PyOCD only supports WRITEC */
   McuShell_SendStr(str, McuSemihost_stdio.stdOut); /* buffer it, then write to a file during flush */
   return ERR_OK;
 #else
-  /* R1 to point to the first byte of the string */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITE0, (void*)str);
 #endif
 }

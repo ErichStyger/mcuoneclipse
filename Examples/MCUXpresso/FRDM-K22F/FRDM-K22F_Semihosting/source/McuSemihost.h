@@ -135,11 +135,18 @@ int McuSemihost_WriteChar(char ch);
 int McuSemihost_IsTTY(int fh);
 
 /*!
- * \brief Write a zero byte terminated character array (string) to stdout
+ * \brief Write a zero byte terminated character array (string) to stdout, using buffering.
  * \param str String, zero byte terminated
  * \return 0: ok, -1 error
  */
 int McuSemihost_WriteString(const unsigned char *str);
+
+/*!
+ * \brief Write a zero byte terminated character array without buffering directly to the debugger.
+ * \param str String, zero byte terminated
+ * \return 0: ok, -1 error
+ */
+int McuSemihost_WriteString0(const unsigned char *str);
 
 /*!
  * \brief Sending a character to the SWO/ITM console
