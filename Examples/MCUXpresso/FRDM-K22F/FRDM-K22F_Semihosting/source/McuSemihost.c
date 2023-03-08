@@ -31,16 +31,20 @@ typedef enum McuSemihost_Op_e {
   McuSemihost_Op_SYS_SEEK         = 0x0A, /* move current file position */
 
   McuSemihost_Op_SYS_FLEN         = 0x0C, /* tell the file length */
-  McuSemihost_Op_SYS_TMPNAME      = 0x0D, /* get a temporary file handle */
+#if !(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER)
+  McuSemihost_Op_SYS_TMPNAME      = 0x0D, /* get a temporary file handle. Not implemented by SEGGER */
+#endif
 #if McuSemihost_CONFIG_HAS_SYS_REMOVE
-  McuSemihost_Op_SYS_REMOVE       = 0x0E, /* remove a file */
+  McuSemihost_Op_SYS_REMOVE       = 0x0E, /* remove a file. Not implemented by SEGGER. */
 #endif
 #if McuSemihost_CONFIG_HAS_SYS_RENAME
-  McuSemihost_Op_SYS_RENAME       = 0x0F, /* rename a file */
+  McuSemihost_Op_SYS_RENAME       = 0x0F, /* rename a file. Not implemented by SEGGER. */
 #endif
   McuSemihost_Op_SYS_CLOCK        = 0x10, /* returns the number of centi-seconds since execution started */
   McuSemihost_Op_SYS_TIME         = 0x11, /* time in seconds since Jan 1st 1970 */
-  McuSemihost_Op_SYS_SYSTEM       = 0x12, /* Passes a command to the host command-line interpreter. */
+#if !(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER)
+  McuSemihost_Op_SYS_SYSTEM       = 0x12, /* Passes a command to the host command-line interpreter. Not implemented by SEGGER */
+#endif
   McuSemihost_Op_SYS_ERRNO        = 0x13, /* get the current error number*/
 
   McuSemihost_Op_SYS_GET_CMDLINE  = 0x15, /* Returns the command line used for the call to the executable */
@@ -249,6 +253,7 @@ int McuSemihost_FileSeek(int fh, int pos) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_SEEK, &param[0]);
 }
 
+#if !(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER)
 int McuSemihost_TmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize) {
   int32_t param[3];
 
@@ -257,6 +262,7 @@ int McuSemihost_TmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize) {
   param[2] = bufSize;
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_TMPNAME, &param[0]);
 }
+#endif
 
 int McuSemihost_ReadChar(void) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_READC, NULL);
@@ -265,8 +271,7 @@ int McuSemihost_ReadChar(void) {
 int McuSemihost_WriteChar(char ch) {
   /* Write a character byte, pointed to by R1 */
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* PEMICRO does not implement SYS_WRITEC? */
-  //printf("%c", ch); /* use standard library instead: both putc() and putchar() do not work with PEMICRO */
-  putchar(ch);
+  putchar(ch); /* PEMICRO does not implement SYS_WRITEC */
 #else
   int32_t param = ch; /* need to store it here into a 32bit variable, otherwise don't work? */
   (void)McuSemihost_HostRequest(McuSemihost_Op_SYS_WRITEC, &param); /* does not return valid value, R0 is corrupted */
@@ -689,7 +694,7 @@ void McuSemiHost_Init(void) {
   McuSemihost_tty_handles[McuSemihost_STDOUT] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_WRITE); /* stdout */
   McuSemihost_tty_handles[McuSemihost_STDERR] = McuSemihost_FileOpen((unsigned char*)":tt", SYS_FILE_MODE_APPEND); /* stderr */
 #if McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER
-  /* for some reasons, SEGGER always returns -256 for stdin, stdout and stderr file handles. Fix them: */
+  /* SEGGER always returns -256 for stdin, stdout and stderr file handles. Fix them: */
   McuSemihost_tty_handles[McuSemihost_STDIN] = McuSemihost_STDIN;
   McuSemihost_tty_handles[McuSemihost_STDOUT] = McuSemihost_STDOUT;
   McuSemihost_tty_handles[McuSemihost_STDERR] = McuSemihost_STDERR;
