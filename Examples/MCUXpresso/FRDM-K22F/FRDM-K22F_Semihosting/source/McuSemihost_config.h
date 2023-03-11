@@ -25,12 +25,21 @@
 /* certain functionality is not implemented depending on the debug connection */
 #ifndef McuSemihost_CONFIG_HAS_SYS_RENAME
   /* SEGGER does not allow it for security reason, PyOCD reports 'unimplemented request' */
-  #define McuSemihost_CONFIG_HAS_SYS_RENAME  (!(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD))
+  #define McuSemihost_CONFIG_HAS_SYS_RENAME  (!(   McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER \
+                                                || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER \
+                                                || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOC \
+                                               ) \
+                                              )
 #endif
 
 #ifndef McuSemihost_CONFIG_HAS_SYS_REMOVE
   /* SEGGER does not allow it for security reason, PyOCD reports 'unimplemented request' */
   #define McuSemihost_CONFIG_HAS_SYS_REMOVE  (!(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD))
+#endif
+
+#ifndef McuSemihost_CONFIG_HAS_SYS_TMPNAME
+  /* SEGGER does not allow it for security reason, PyOCD reports 'unimplemented request' */
+  #define McuSemihost_CONFIG_HAS_SYS_TMPNAME  (!(McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_SEGGER || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PYOCD))
 #endif
 
 #ifndef McuSemihost_CONFIG_USE_BUFFERED_IO
@@ -44,8 +53,8 @@
 #endif
 
 #ifndef McuSemihost_CONFIG_BUFFER_IO_FLUSH
-  #define McuSemihost_CONFIG_BUFFER_IO_FLUSH    (1)
-    /*!< 1: I/O buffer is written with or if buffer is full; 0: I/O buffer is written after a '\n' */
+  #define McuSemihost_CONFIG_BUFFER_IO_FLUSH    (0)
+    /*!< 1: I/O buffer is written buffer is full or with McuSemihost_StdIOFlush(); 0: I/O buffer is written after a '\n' */
 #endif
 
 #endif /* MCUSEMIHOST_CONFIG_H_ */

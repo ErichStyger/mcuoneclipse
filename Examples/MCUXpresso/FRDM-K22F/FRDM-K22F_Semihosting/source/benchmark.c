@@ -53,15 +53,15 @@ static void BenchMark_McuLib(void) {
   int file;
   unsigned char data[64];
 
-  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_WRITE);
+  file = McuSemihost_SysFileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_WRITE);
   if (file>=0) {
     for(int i=0; i<10; i++) {
-      McuSemihost_FileWrite(file, file_data, sizeof(file_data));
+      McuSemihost_SysFileWrite(file, file_data, sizeof(file_data));
     }
-    if (McuSemihost_FileLen(file)<4000) {
+    if (McuSemihost_SysFileLen(file)<4000) {
       for(;;) {} /* error */
     }
-    McuSemihost_FileClose(file);
+    McuSemihost_SysFileClose(file);
   } else {
     for(;;) {} /* failed */
   }
@@ -69,12 +69,12 @@ static void BenchMark_McuLib(void) {
   Cycles_LogTime("McuLib file write");
 
   CCOUNTER_START();
-  file = McuSemihost_FileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_READ);
+  file = McuSemihost_SysFileOpen((unsigned char*)"c:\\tmp\\test1.txt", SYS_FILE_MODE_READ);
   if (file>=0) { /* success */
     for(int i=0; i<100; i++) {
-      McuSemihost_FileRead(file, data, sizeof(data));
+      McuSemihost_SysFileRead(file, data, sizeof(data));
     }
-    McuSemihost_FileClose(file);
+    McuSemihost_SysFileClose(file);
   } else {
     for(;;) {} /* failed */
   }

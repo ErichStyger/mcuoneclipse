@@ -25,9 +25,9 @@ int main(void) {
 #endif
   //printf("hello world!\n");
 
-  Benchmark_Run();
-#if 0
+  //Benchmark_Run();
   McuSemiHost_Test();
+#if !BENCHMARK_USE_STDLIB
   McuSemiHost_Deinit();
 #endif
 #if 0

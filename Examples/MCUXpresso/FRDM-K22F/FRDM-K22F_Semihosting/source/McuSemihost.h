@@ -32,16 +32,24 @@ McuShell_ConstStdIOTypePtr McuSemiHost_GetStdio(void);
 void McuSemihost_StdIOFlush(void);
 
 /*!
+ * \brief Write a character to the stdout console.
+ * \param ch Character to write
+ * \return always zero for success
+ */
+int McuSemihost_WriteChar(char ch);
+
+
+/*!
  * \brief Return the current system time
  * \return System time in seconds since 1970
  */
-int McuSemihost_HostTime(void);
+int McuSemihost_SysHostTime(void);
 
 /*!
  * \brief Return the number of centi-seconds the executable is running
  * \return -1 for error, otherwise the number of centi-seconds of the execution
  */
-int McuSemihost_HostClock(void);
+int McuSemihost_SysHostClock(void);
 
 /* File modes for McuSemihost_FileOpen() */
 #define SYS_FILE_MODE_READ              0   /* Open the file for reading "r" */
@@ -63,14 +71,14 @@ int McuSemihost_HostClock(void);
  * \param mode
  * \return -1 if failed, otherwise file handle
  */
-int McuSemihost_FileOpen(const unsigned char *filename, int mode);
+int McuSemihost_SysFileOpen(const unsigned char *filename, int mode);
 
 /*!
  * \brief Closes a file handle
  * \param fh File handle previously opened
  * \return 0: ok, otherwise -1 if failed
  */
-int McuSemihost_FileClose(int fh);
+int McuSemihost_SysFileClose(int fh);
 
 /*!
  * \brief Read from a file
@@ -79,7 +87,7 @@ int McuSemihost_FileClose(int fh);
  * \param nofBytes Number of bytes to read
  * \return 0: success. If it is nofBytes, then the call has failed and the end of the file has been reached. If smaller than nofBytes, then the buffer has not been filled.
  */
-int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes);
+int McuSemihost_SysFileRead(int fh, unsigned char *data, size_t nofBytes);
 
 /*!
  * \brief Write data to a file
@@ -88,14 +96,31 @@ int McuSemihost_FileRead(int fh, unsigned char *data, size_t nofBytes);
  * \param nofBytes Number of data bytes to write
  * \return 0 for success, in error case the number of bytes not written
  */
-int McuSemihost_FileWrite(int fh, const unsigned char *data, size_t nofBytes);
+int McuSemihost_SysFileWrite(int fh, const unsigned char *data, size_t nofBytes);
+
+#if McuSemihost_CONFIG_HAS_SYS_REMOVE
+/*!
+ * \brief Remove a file on the host
+ * \param filePath Name and path of the file to remove
+ */
+int McuSemihost_SysFileRemove(const unsigned char *filePath);
+#endif
+
+#if McuSemihost_CONFIG_HAS_SYS_RENAME
+/*!
+ * \brief Rename a file on the host
+ * \param filePath Name and path of the source file
+ * \param fileNewPath Name and path of new file
+ */
+int McuSemihost_SysFileRename(const unsigned char *filePath, const unsigned char *fileNewPath);
+#endif
 
 /*!
  * \brief Return the length of a file
  * \param fh File handle
  * \return Current length of the file, -1 for an error
  */
-int McuSemihost_FileLen(int fh);
+int McuSemihost_SysFileLen(int fh);
 
 /*!
  * \brief Seeks for a specified position in a file
@@ -103,8 +128,9 @@ int McuSemihost_FileLen(int fh);
  * \param pos Target position. Seeking outside of the size of the file is undefined
  * \return 0 for success, negative for an error. McuSemihost_Op_SYS_ERRNO can be used to read the error value.
  */
-int McuSemihost_FileSeek(int fh, int pos);
+int McuSemihost_SysFileSeek(int fh, int pos);
 
+#if McuSemihost_CONFIG_HAS_SYS_TMPNAME
 /*!
  * \brief Returns a temporary name for a file identified by a system file identifier.
  * \param fileID target identifier for the file name. Must be in the range 0..255
@@ -112,27 +138,86 @@ int McuSemihost_FileSeek(int fh, int pos);
  * \param bufSize Buffer size in bytes
  * \return 0 for success, -1 for an error
  */
-int McuSemihost_TmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize);
+int McuSemihost_SysTmpName(uint8_t fileID, unsigned char *buffer, size_t bufSize);
+#endif
 
 /*!
- * \brief Read a character from the console or stdin
+ * \brief Read a character using SYS_READC
  * \return The character read
  */
-int McuSemihost_ReadChar(void);
+int McuSemihost_SysReadC(void);
 
 /*!
- * \brief Write a character to the stdout console.
+ * \brief Write a character using the SYS_WRITEC call.
  * \param ch Character to write
- * \return always zero for success
+ * \return zero for success
  */
-int McuSemihost_WriteChar(char ch);
+int McuSemihost_SysWriteC(char ch);
+
 
 /*!
  * \brief Decides if a file handle is a standard io handle or not.
  * \param fg File handle
  * \return 1 if it a interactive device, 0 if not, any other value is an error
  */
-int McuSemihost_IsTTY(int fh);
+int McuSemihost_SysIsTTY(int fh);
+
+/*!
+ * \brief Determines whether the return code from another semihosting call is an error status or not.
+ * \param errorCode Return code from a previous semihosting call
+ * \return 0 if it is not an error, non-zero if it is an error
+ */
+int McuSemihost_SysIsError(int32_t errorCode);
+
+/*!
+ * \brief Returns the value of the C library errno variable associated with the host implementation of the semihosting.
+ *        The errno variable gets set by calls file operations, but others too.
+ * \return The value of the host errno variable.
+ */
+int McuSemihost_SysErrNo(void);
+
+/*!
+ * \brief Returns the command line used for the call to the executable, that is, argc and argv.
+ * \return 0 for success, -1 for error
+ */
+int McuSemihost_SysGetCmdLine(unsigned char *cmd, size_t cmdSize);
+
+typedef struct McuSemihost_HeapInfo_t {
+  uint32_t heap_base;
+  uint32_t heap_limit;
+  uint32_t stack_base;
+  uint32_t stack_limit;
+} McuSemihost_HeapInfo_t;
+
+/*!
+ * \brief Returns the system stack and heap parameters.
+ * \param heapInfo Pointer to heap info to be filled in
+ * \return 0 for success, non-zero otherwise
+ */
+int McuSemihost_SysHeapInfo(McuSemihost_HeapInfo_t *heapInfo);
+
+/*!
+ * \brief Sets the processor to supervisor mode and disables all interrupts
+ * \return address to be called to return to user mode.
+ */
+int McuSemihost_SysEnterSVC(void);
+
+typedef enum McuSemihost_Exception_e {
+  ADP_Stopped_ApplicationExit = 0x20026, /* exit target application */
+} McuSemihost_Exception_e;
+
+/*!
+ * \brief Raises one of predefined excetptions to the debugger
+ * \param exception Exception to be raised
+ * \return 0 for success, non-zero otherwise
+ */
+int McuSemihost_SysException(McuSemihost_Exception_e exception);
+
+/*!
+ * \brief Return the tick frequency
+ * \return Tick frequency, -1 if debugger does not know the value of one tick
+ */
+int McuSemihost_SysTickFreq(void);
 
 /*!
  * \brief Write a zero byte terminated character array (string) to stdout, using buffering.
