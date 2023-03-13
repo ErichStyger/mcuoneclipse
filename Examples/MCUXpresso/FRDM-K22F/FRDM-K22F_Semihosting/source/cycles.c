@@ -5,6 +5,7 @@
  */
 
 #include "platform.h"
+#if PL_CONFIG_DO_CYCLE_COUNTING
 #include "cycles.h"
 #include "fsl_common.h"
 #include "benchmark.h"
@@ -144,3 +145,4 @@ void Cycles_Init(void) {
   Cycles_Test_NOP(); /* testing only */
 }
 
+#endif /* PL_CONFIG_DO_CYCLE_COUNTING */

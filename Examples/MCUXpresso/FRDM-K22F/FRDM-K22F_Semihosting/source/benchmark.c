@@ -5,6 +5,7 @@
  */
 
 #include "benchmark.h"
+#if BENCHMARK_DO_BENCHMARK
 #include "cycles.h"
 #include "McuSemihost.h"
 #include "McuArmTools.h"
@@ -160,3 +161,5 @@ void Benchmark_Run(void) {
   McuSemihost_StdIOFlush();
 #endif
 }
+
+#endif /* BENCHMARK_DO_BENCHMARK */
