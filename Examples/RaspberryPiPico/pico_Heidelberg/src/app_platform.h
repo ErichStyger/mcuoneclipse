@@ -17,6 +17,7 @@
 
 #define PL_CONFIG_USE_PICO_W          (1 && PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6) /* if using Pico W board */
   /* Note:
+   * if using Pico-W:
    * a) enable 'library pico_cyw43_arch_lwip_sys_freertos' in CMakeLists.txt of src folder
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
