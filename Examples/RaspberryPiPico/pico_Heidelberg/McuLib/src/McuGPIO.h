@@ -41,7 +41,11 @@ typedef enum {
   McuGPIO_PULL_DOWN,
 } McuGPIO_PullType;
 
-typedef void *McuGPIO_Handle_t;
+
+typedef struct McuGPIO_Dummy_s { int dummy; } McuGPIO_Dummy_s; /*!< using a pointer to a struct instead a pointer to void for handle, used for handle type 'safety' only */
+
+typedef McuGPIO_Dummy_s *McuGPIO_Handle_t; /*!< GPIO handle type */
+
 
 typedef struct {
 #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
