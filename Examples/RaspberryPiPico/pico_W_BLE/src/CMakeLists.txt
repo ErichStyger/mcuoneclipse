@@ -8,7 +8,12 @@ file(GLOB FILES
   application.c
   Shell.c
   FreeRTOShooks.c
+  myBLE.c
 )
+
+
+set(BTSTACK_ROOT ${PICO_SDK_PATH}/lib/btstack)
+
 
 # generate PIO header "ws2812.pio.h" inside the src directory
 #pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
@@ -31,6 +36,11 @@ target_link_libraries(
 #  # pico_cyw43_arch_lwip_poll
 #  # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1
   pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0
+  #pico_btstack_bnep_lwip_sys_freertos
+  
+  pico_btstack_ble # Adds Bluetooth Low Energy (LE) support.
+  #pico_btstack_classic
+  #pico_btstack_cyw43
 )
 
 # target_include_directories: Libraries need to publish their header files 

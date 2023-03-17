@@ -75,7 +75,9 @@
   #include "McuW25Q128.h"
   #include "McuSPI.h"
 #endif
-
+#if PL_CONFIG_USE_BLE
+  #include "myBLE.h"
+#endif
 /* \Todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
 
@@ -156,6 +158,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();
+#endif
+#if PL_CONFIG_USE_BLE
+  BLE_Init();
 #endif
 }
 
