@@ -13,6 +13,8 @@
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include "btstack.h"
+#include "McuRTOS.h"
+#include "McuLog.h"
 
 #if defined(WIFI_SSID) && defined(WIFI_PASSWORD)
 #define TEST_BTWIFI 1
@@ -70,8 +72,9 @@ static void iperf_report(void *arg, enum lwiperf_report_type report_type,
 
 int picow_bt_example_init(void) {
     // initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1)
+    stdio_init_all();
     if (cyw43_arch_init()) {
-        printf("failed to initialize cyw43_arch\n");
+        McuLog_fatal("failed to initialize cyw43_arch\n");
         return -1;
     }
 
@@ -88,7 +91,7 @@ int picow_bt_example_init(void) {
 
 void picow_bt_example_main(void) {
 
-   // btstack_main(0, NULL);
+    btstack_main(0, NULL);
 
 #if TEST_BTWIFI
     uint32_t start_ms = to_ms_since_boot(get_absolute_time());
@@ -104,7 +107,6 @@ void picow_bt_example_main(void) {
 #endif
 }
 
-
 void BLE_Run(void) {
   picow_bt_example_init();
   picow_bt_example_main();
@@ -114,13 +116,63 @@ void BLE_Deinit(void) {
  // pico_btstack_deinit();
 }
 
-void BLE_Init(void) {
 
-  //btstack_init();
+void test(void) {
+  l2cap_init();
+  sm_init();
+  sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
+  gatt_client_init();
 
-  int res = picow_bt_example_init();
-  if (res){
-      return;
+ // hci_event_callback_registration.callback = &hci_event_handler;
+ // hci_add_event_handler(&hci_event_callback_registration);
+
+  // set one-shot btstack timer
+ // heartbeat.process = &heartbeat_handler;
+ // btstack_run_loop_set_timer(&heartbeat, LED_SLOW_FLASH_DELAY_MS);
+//  btstack_run_loop_add_timer(&heartbeat);
+
+  // turn on!
+  hci_power_control(HCI_POWER_ON);
+
+  btstack_run_loop_execute();
+
+}
+
+static void BleTask(void *pv) {
+  // setup BTstack memory pools
+  test();
+
+  if (cyw43_arch_init()) {
+    McuLog_fatal("failed to initialize cyw43_arch\n");
+    for(;;) {}
   }
-  BLE_Run();
+  // inform about BTstack state
+  hci_event_callback_registration.callback = &packet_handler;
+  hci_add_event_handler(&hci_event_callback_registration);
+
+  //btstack_main(0, NULL); /* ????? */
+  btstack_run_loop_execute(); /* does not return */
+  for(;;) {
+      vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+
+#include "client.h"
+#include "server.h"
+
+void BLE_Init(void) {
+  Client_Run();
+  Server_Run();
+
+  if (xTaskCreate(
+      BleTask,  /* pointer to the task */
+      "BLE", /* task name for kernel awareness debugging */
+      1000/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY+2,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    for(;;){} /* error! probably out of memory */
+  }
 }

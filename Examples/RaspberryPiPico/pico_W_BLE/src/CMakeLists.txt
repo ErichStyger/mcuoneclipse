@@ -9,11 +9,10 @@ file(GLOB FILES
   Shell.c
   FreeRTOShooks.c
   myBLE.c
+  client.c
+  server.c
+  server_common.c
 )
-
-
-set(BTSTACK_ROOT ${PICO_SDK_PATH}/lib/btstack)
-
 
 # generate PIO header "ws2812.pio.h" inside the src directory
 #pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
@@ -40,10 +39,12 @@ target_link_libraries(
   
   pico_btstack_ble # Adds Bluetooth Low Energy (LE) support.
   #pico_btstack_classic
-  #pico_btstack_cyw43
+  pico_btstack_cyw43
 )
 
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 
 # - typically in an include directory of your projects.
 target_include_directories(SrcLib PUBLIC .)
+
+pico_btstack_make_gatt_header(SrcLib PRIVATE "${CMAKE_CURRENT_LIST_DIR}/temp_sensor.gatt")
