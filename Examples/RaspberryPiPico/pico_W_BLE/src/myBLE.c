@@ -161,7 +161,7 @@ static void BleTask(void *pv) {
 #include "server.h"
 
 void BLE_Init(void) {
-  Client_Run();
+ // Client_Run();
   Server_Run();
 
   if (xTaskCreate(
