@@ -273,7 +273,7 @@ void Client_Init(void) {
       "BLEclient", /* task name for kernel awareness debugging */
       1200/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY,  /* initial priority */
+      tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {

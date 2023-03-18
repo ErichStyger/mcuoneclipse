@@ -34,7 +34,8 @@
   #include "PicoWiFi.h"
 #endif
 #if PL_CONFIG_USE_BLE
-  #include "myBLE.h"
+  #include "server.h"
+  #include "client.h"
 #endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
@@ -42,7 +43,7 @@ uint32_t SystemCoreClock = 120000000;
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
-  stdio_init_all(); /* needed for USB CDC, but problems with debugger?? */
+  stdio_init_all(); /* needed for USB CDC, but can cause problems while debugging */
 #endif
   McuLib_Init();
 #if McuLib_CONFIG_SDK_USE_FREERTOS
@@ -69,7 +70,13 @@ void PL_Init(void) {
   PicoWiFi_Init();
 #endif
 #if PL_CONFIG_USE_BLE
-  BLE_Init();
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+  Client_Init();
+#elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+  Server_Init();
+#else
+  #error"unknown configuration"
+#endif
 #endif
 }
 

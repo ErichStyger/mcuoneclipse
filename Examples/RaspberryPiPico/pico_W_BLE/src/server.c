@@ -5,12 +5,12 @@
  */
 #include "app_platform.h"
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#include "pico/cyw43_arch.h"
+#include "pico/btstack_cyw43.h"
 #include "McuLog.h"
 #include "McuRTOS.h"
 #include <stdio.h>
 #include "btstack.h"
-#include "pico/cyw43_arch.h"
-#include "pico/btstack_cyw43.h"
 #include "hardware/adc.h"
 #include "pico/stdlib.h"
 #include "temp_sensor.h"
@@ -19,11 +19,11 @@
 
 #define APP_AD_FLAGS 0x06
 static uint8_t adv_data[] = {
-    // Flags general discoverable
-    0x02, BLUETOOTH_DATA_TYPE_FLAGS, APP_AD_FLAGS,
-    // Name
-    0x17, BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME, 'P', 'i', 'c', 'o', ' ', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0',
-    0x03, BLUETOOTH_DATA_TYPE_COMPLETE_LIST_OF_16_BIT_SERVICE_CLASS_UUIDS, 0x1a, 0x18,
+  // Flags general discoverable
+  0x02, BLUETOOTH_DATA_TYPE_FLAGS, APP_AD_FLAGS,
+  // Name
+  0x17, BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME, 'P', 'i', 'c', 'o', ' ', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0', ':', '0', '0',
+  0x03, BLUETOOTH_DATA_TYPE_COMPLETE_LIST_OF_16_BIT_SERVICE_CLASS_UUIDS, 0x1a, 0x18,
 };
 static const uint8_t adv_data_len = sizeof(adv_data);
 
@@ -156,20 +156,19 @@ static void serverTask(void *pv) {
 
   att_server_init(profile_data, att_read_callback, att_write_callback);
 
-  // inform about BTstack state
+  /* inform about BTstack state */
   hci_event_callback_registration.callback = &packet_handler;
   hci_add_event_handler(&hci_event_callback_registration);
 
-  // register for ATT event
+  /* register for ATT event */
   att_server_register_packet_handler(packet_handler);
 
-  // set one-shot btstack timer
+  /* set one-shot btstack timer */
   heartbeat.process = &heartbeat_handler;
   btstack_run_loop_set_timer(&heartbeat, HEARTBEAT_PERIOD_MS);
   btstack_run_loop_add_timer(&heartbeat);
 
-  // turn on bluetooth!
-  hci_power_control(HCI_POWER_ON);
+  hci_power_control(HCI_POWER_ON); /* turn it on */
   for(;;) {
     btstack_run_loop_execute(); /* does not return */
   }
@@ -178,10 +177,10 @@ static void serverTask(void *pv) {
 void Server_Init(void) {
   if (xTaskCreate(
       serverTask,  /* pointer to the task */
-      "server", /* task name for kernel awareness debugging */
+      "BLEserver", /* task name for kernel awareness debugging */
       1200/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
-      tskIDLE_PRIORITY,  /* initial priority */
+      tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {

@@ -27,6 +27,9 @@
 #define PL_CONFIG_USE_USB_CDC         (1)
 #define PL_CONFIG_USE_SHELL_UART      (0)
 
+/*!
+ * \brief Module initialization
+ */
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */
