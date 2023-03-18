@@ -176,6 +176,7 @@ static void BleTask(void *pv) {
   #include "server.h"
 #endif
 
+#if 0
 int btstack_main(int argc, const char * argv[]){
     (void)argc;
     (void)argv;
@@ -195,6 +196,7 @@ int btstack_main(int argc, const char * argv[]){
 #endif
     return 0;
 }
+#endif
 
 void BLE_Init(void) {
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT

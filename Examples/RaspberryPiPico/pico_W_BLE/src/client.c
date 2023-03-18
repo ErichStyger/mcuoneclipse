@@ -253,7 +253,6 @@ void Client_Run(void) {
         printf("failed to initialise cyw43_arch\n");
         for(;;){}
     }
-
     l2cap_init();
     sm_init();
     sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);

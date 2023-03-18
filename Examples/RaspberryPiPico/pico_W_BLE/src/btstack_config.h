@@ -5,6 +5,8 @@
 #error Please link to pico_btstack_ble
 #endif
 
+#include "app_platform.h"
+
 // BTstack features that can be enabled
 #define ENABLE_LE_PERIPHERAL
 #define ENABLE_LOG_INFO
@@ -12,7 +14,7 @@
 #define ENABLE_PRINTF_HEXDUMP
 
 // for the client
-#if RUNNING_AS_CLIENT
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT //1 || RUNNING_AS_CLIENT
 #define ENABLE_LE_CENTRAL
 #define MAX_NR_GATT_CLIENTS 1
 #else
