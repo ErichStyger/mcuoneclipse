@@ -43,9 +43,7 @@
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
 #endif
-#if McuLog_CONFIG_IS_ENABLED
-  #include "McuLog.h"
-#endif
+#include "McuLog.h"
 #if PL_CONFIG_USE_LITTLE_FS
   #include "littleFS/McuLittleFS.h"
 #endif
