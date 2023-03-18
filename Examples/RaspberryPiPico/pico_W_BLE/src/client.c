@@ -11,7 +11,7 @@
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
-#if 0
+#if 1
 #define DEBUG_LOG(...) printf(__VA_ARGS__)
 #else
 #define DEBUG_LOG(...)

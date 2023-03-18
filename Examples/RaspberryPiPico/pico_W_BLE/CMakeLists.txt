@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-# set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
+set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
 
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()

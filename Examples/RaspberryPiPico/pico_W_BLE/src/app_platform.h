@@ -12,21 +12,11 @@
  * CONFIG_USE_HW_RTC
  */
 
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0)
+/* picow_ble_temp_reader, acts as client to the server */
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0 /*RUNNING_AS_CLIENT*/)  /* set RUNNING_AS_CLIENT to 1 in src/CMakeLists.txt */
 
-/* picow_ble_temp_sensor:
-add_executable(picow_ble_temp_sensor
-    server.c server_common.c
-    )
-target_link_libraries(picow_ble_temp_sensor
-    pico_stdlib
-    pico_btstack_ble
-    pico_btstack_cyw43
-    pico_cyw43_arch_none
-    hardware_adc
-    )
- * */
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
+/* picow_ble_temp_sensor acts as Server, providing temperature values: */
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT) /* set RUNNING_AS_CLIENT to 0 in src/CMakeLists.txt */
 
 /* different HW/PCB versions: */
 #define PL_CONFIG_HW_VERSION_0_1    (1)  /* V0.1, 65x65mm green PCB with Pico, only with USB battery charger, without road */

@@ -2,6 +2,8 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
+set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
+
 file(GLOB FILES
   main.c
   app_platform.c
@@ -25,14 +27,11 @@ file(GLOB FILES
 # the second argument are the files that will be compiled to create your library.
 add_library(SrcLib ${FILES})
 
-
 target_compile_definitions(SrcLib PRIVATE
-    RUNNING_AS_CLIENT=1  #configures btstack_config.h! Otherwise gap_set_scan_parameters is missing.
+  CYW43_ENABLE_BLUETOOTH=1  # otherwise cyw43_arch_init() will not initialize BLE
+  CYW43_LWIP=0
+  RUNNING_AS_CLIENT=0  # configures btstack_config.h! Otherwise gap_set_scan_parameters is missing.
 )
-
-target_compile_definitions(SrcLib PRIVATE
-        CYW43_ENABLE_BLUETOOTH=1  # otherwise cyw43_arch_init() will not initialize BLE
-        )
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
@@ -44,11 +43,10 @@ target_link_libraries(
   hardware_rtc  # RTC for sleep.c
   hardware_spi  # for SPI (external flash) 
   
-# PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  
   pico_btstack_ble
-  #pico_btstack_classic
   pico_btstack_cyw43
   pico_cyw43_arch_none
+
 #pico_btstack_bnep_lwip_sys_freertos  # Adds Bluetooth Network Encapsulation Protocol (BNEP) support using LwIP with FreeRTOS for NO_SYS=0.
 #  cyw43_driver_picow
 #  pico_btstack_run_loop_async_context
