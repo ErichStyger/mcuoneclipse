@@ -13,8 +13,6 @@ file(GLOB FILES
   myBLE.c
   client.c
   server.c
-  server_common.c
-  server_with_wifi.c
   picow_bt_example_common.c
 )
 

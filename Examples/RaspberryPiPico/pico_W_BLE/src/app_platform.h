@@ -8,7 +8,7 @@
 #define APP_PLATFORM_H_
 
 /* client: getting data from the server */
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (1)
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0)
 
 /* server: providing temperature values to the client */
 #define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
