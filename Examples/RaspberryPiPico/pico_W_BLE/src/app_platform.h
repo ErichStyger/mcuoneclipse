@@ -12,7 +12,20 @@
  * CONFIG_USE_HW_RTC
  */
 
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (1)
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0)
+
+/* picow_ble_temp_sensor:
+add_executable(picow_ble_temp_sensor
+    server.c server_common.c
+    )
+target_link_libraries(picow_ble_temp_sensor
+    pico_stdlib
+    pico_btstack_ble
+    pico_btstack_cyw43
+    pico_cyw43_arch_none
+    hardware_adc
+    )
+ * */
 #define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
 
 /* different HW/PCB versions: */

@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#if 0 && PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
 #include <stdio.h>
 #include "btstack.h"
 #include "pico/cyw43_arch.h"
