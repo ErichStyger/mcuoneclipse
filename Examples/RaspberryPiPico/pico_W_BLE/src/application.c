@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_USE_PICO_W
+#if PL_CONFIG_USE_WIFI
   #include "pico/cyw43_arch.h"
 #endif
 #include "application.h"

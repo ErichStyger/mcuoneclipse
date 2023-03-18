@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "app_platform.h"
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
 #include <stdio.h>
 #include "btstack.h"
 #include "pico/cyw43_arch.h"
@@ -271,3 +273,4 @@ void Client_Run(void) {
     btstack_run_loop_execute(); /* does not return */
  //   return 0;
 }
+#endif

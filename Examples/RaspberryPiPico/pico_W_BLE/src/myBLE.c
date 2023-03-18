@@ -4,8 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "app_platform.h"
 #include "myBLE.h"
-
+#include "McuRTOS.h"
+#include "McuLog.h"
+#if 0
 //#include "btstack_audio.h"
 #include "btstack_event.h"
 //#include "hal_led.h"
@@ -13,8 +16,6 @@
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include "btstack.h"
-#include "McuRTOS.h"
-#include "McuLog.h"
 
 #if defined(WIFI_SSID) && defined(WIFI_PASSWORD)
 #define TEST_BTWIFI 1
@@ -137,33 +138,77 @@ void test(void) {
   btstack_run_loop_execute();
 
 }
+#endif
 
+#if 0
 static void BleTask(void *pv) {
-  // setup BTstack memory pools
-  test();
-
-  if (cyw43_arch_init()) {
-    McuLog_fatal("failed to initialize cyw43_arch\n");
-    for(;;) {}
+  int res = picow_bt_example_init();
+  if (res){
+      return;
   }
-  // inform about BTstack state
-  hci_event_callback_registration.callback = &packet_handler;
-  hci_add_event_handler(&hci_event_callback_registration);
 
-  //btstack_main(0, NULL); /* ????? */
-  btstack_run_loop_execute(); /* does not return */
-  for(;;) {
-      vTaskDelay(pdMS_TO_TICKS(100));
+// If we're using lwip but not via cyw43 (e.g. pan) we have to call this
+#if HAVE_LWIP && !CYW43_LWIP
+  lwip_freertos_init(cyw43_arch_async_context());
+#endif
+
+  picow_bt_example_main();
+
+#ifdef TEST_BLINK_TASK
+  xTaskCreate(blink_task, "BlinkThread", configMINIMAL_STACK_SIZE, NULL, BLINK_TASK_PRIORITY, NULL);
+#endif
+
+  while(true) {
+      vTaskDelay(1000);
   }
+
+  pico_btstack_deinit();
+
+#if HAVE_LWIP && !CYW43_LWIP
+  lwip_freertos_deinit(cyw43_arch_async_context());
+#endif
+}
+#endif
+
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+  #include "client.h"
+#elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+  #include "server.h"
+#endif
+
+int btstack_main(int argc, const char * argv[]){
+    (void)argc;
+    (void)argv;
+#if 0
+    hci_event_callback_registration.callback = &packet_handler;
+    hci_add_event_handler(&hci_event_callback_registration);
+
+    l2cap_init();
+
+#ifdef ENABLE_BLE
+    // Initialize LE Security Manager. Needed for cross-transport key derivation
+    sm_init();
+#endif
+
+    // turn on!
+    hci_power_control(HCI_POWER_ON);
+#endif
+    return 0;
 }
 
-#include "client.h"
-#include "server.h"
-
 void BLE_Init(void) {
- // Client_Run();
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+  Client_Run();
+#elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
   Server_Run();
+#else
+  extern int main_poll(void);
 
+  main_poll();
+#endif
+
+
+#if 0
   if (xTaskCreate(
       BleTask,  /* pointer to the task */
       "BLE", /* task name for kernel awareness debugging */
@@ -175,4 +220,5 @@ void BLE_Init(void) {
   {
     for(;;){} /* error! probably out of memory */
   }
+#endif
 }

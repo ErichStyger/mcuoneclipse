@@ -12,6 +12,9 @@ file(GLOB FILES
   client.c
   server.c
   server_common.c
+  server_with_wifi.c
+  picow_bt_example_common.c
+  picow_bt_example_poll.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory
@@ -22,6 +25,11 @@ file(GLOB FILES
 # the second argument are the files that will be compiled to create your library.
 add_library(SrcLib ${FILES})
 
+
+target_compile_definitions(SrcLib PRIVATE
+    RUNNING_AS_CLIENT=1  #configures btstack_config.h! Otherwise gap_set_scan_parameters is missing.
+)
+
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   SrcLib 
@@ -31,16 +39,35 @@ target_link_libraries(
   hardware_adc  # internal temperature and ADC
   hardware_rtc  # RTC for sleep.c
   hardware_spi  # for SPI (external flash) 
+  
+# PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  
+  pico_btstack_ble
+  #pico_btstack_classic
+  pico_btstack_cyw43
+  pico_cyw43_arch_none
+  #pico_btstack_bnep_lwip_sys_freertos  # Adds Bluetooth Network Encapsulation Protocol (BNEP) support using LwIP with FreeRTOS for NO_SYS=0.
+#  cyw43_driver_picow
+#  pico_btstack_run_loop_async_context
+#  pico_btstack_sbc_encoder # Adds Bluetooth Sub Band Coding (SBC) encoder support (audio).
+#  pico_btstack_sbc_decoder # Adds Bluetooth Sub Band Coding (SBC) decoder support (audio).
+  #pico_cyw43_arch_lwip_threadsafe_background
+  
 #  #pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 #  # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1
-  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0
+  #pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0
   #pico_btstack_bnep_lwip_sys_freertos
   
-  pico_btstack_ble # Adds Bluetooth Low Energy (LE) support.
-  #pico_btstack_classic
-  pico_btstack_cyw43
+  # add common stuff for BLE
+#  pico_btstack_ble # Adds Bluetooth Low Energy (LE) support.
+#  pico_btstack_classic
+ # pico_btstack_cyw43
+
+#  pico_cyw43_arch_sys_freertos
+#  pico_btstack_bnep_lwip_sys_freertos
+#  pico_lwip_freertos
 )
+
 
 # target_include_directories: Libraries need to publish their header files 
 # so that you can import them in source code. This statement expresses where to find the files 

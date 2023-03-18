@@ -12,6 +12,9 @@
  * CONFIG_USE_HW_RTC
  */
 
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (1)
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
+
 /* different HW/PCB versions: */
 #define PL_CONFIG_HW_VERSION_0_1    (1)  /* V0.1, 65x65mm green PCB with Pico, only with USB battery charger, without road */
 #define PL_CONFIG_HW_VERSION_0_2    (2)  /* V0.2, 95x95mm green PCB with Pico, added slots for house and solar connector, without road */

@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "app_platform.h"
+#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
 #include <stdio.h>
 #include "btstack.h"
 #include "hardware/adc.h"
@@ -104,3 +106,4 @@ void poll_temp(void) {
     current_temp = deg_c * 100;
     printf("Write temp %.2f degc\n", deg_c);
  }
+#endif

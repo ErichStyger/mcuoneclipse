@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_USE_USB_CDC
+#if 1 || PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
 #include "McuLib.h"
@@ -78,13 +78,17 @@
 #if PL_CONFIG_USE_BLE
   #include "myBLE.h"
 #endif
-/* \Todo need to have it globally defined, as not present anywhere else */
+/* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
   stdio_init_all(); /* needed for USB CDC, but problems with debugger?? */
 #endif
+#if PL_CONFIG_USE_BLE
+  BLE_Init();
+#endif
+#if 0
   McuLib_Init();
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   McuRTOS_Init();
@@ -159,8 +163,7 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_LITTLE_FS
   McuLFS_Init();
 #endif
-#if PL_CONFIG_USE_BLE
-  BLE_Init();
+
 #endif
 }
 

@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
+#if 1
 #include "btstack_audio.h"
 #include "btstack_event.h"
 #include "hal_led.h"
@@ -99,3 +99,4 @@ void picow_bt_example_main(void) {
     lwiperf_start_tcp_server_default(&iperf_report, NULL);
 #endif
 }
+#endif
