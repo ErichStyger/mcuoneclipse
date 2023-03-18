@@ -236,34 +236,34 @@ static void AppTask(void *pv) {
   #endif
 #if PL_CONFIG_USE_OLED_CLOCK
   #if PL_CONFIG_USE_OLED_CLOCK && PL_CONFIG_USE_PCF85063A
-  TIMEREC time;
-  DATEREC date;
+   TIMEREC time;
+   DATEREC date;
 
-  if (RTCupdateCntrSec<=0) {
-    if (McuPCF85063A_GetTimeDate(&time, &date)==ERR_OK) {
-      McuTimeDate_SetTimeDate(&time, &date);
-    }
-    RTCupdateCntrSec = RTC_UPDATE_PERIOD_SEC;
-  }
-  RTCupdateCntrSec--;
-  GUI_SendEvent(Gui_Event_Clock_Changed);
+   if (RTCupdateCntrSec<=0) {
+     if (McuPCF85063A_GetTimeDate(&time, &date)==ERR_OK) {
+       McuTimeDate_SetTimeDate(&time, &date);
+     }
+     RTCupdateCntrSec = RTC_UPDATE_PERIOD_SEC;
+   }
+   RTCupdateCntrSec--;
+   GUI_SendEvent(Gui_Event_Clock_Changed);
   #endif
 #endif
 
 #if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
-   if (sensorUpdateCntrSec<=0) {
-     float f, h;
+    if (sensorUpdateCntrSec<=0) {
+      float f, h;
 
-     if (McuSHT40_ReadTempHum(&f, &h)==ERR_OK) {
-       App_SensorTemperature = f;
-       App_SensorHumidity = h;
-     }
-     sensorUpdateCntrSec = SENSOR_UPDATE_PERIOD_SEC;
-   }
-   sensorUpdateCntrSec--;
-   GUI_SendEvent(Gui_Event_Sensor_Changed);
+      if (McuSHT40_ReadTempHum(&f, &h)==ERR_OK) {
+        App_SensorTemperature = f;
+        App_SensorHumidity = h;
+      }
+      sensorUpdateCntrSec = SENSOR_UPDATE_PERIOD_SEC;
+    }
+    sensorUpdateCntrSec--;
+    GUI_SendEvent(Gui_Event_Sensor_Changed);
 #endif
-   vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(1000));
   }
 }
 
