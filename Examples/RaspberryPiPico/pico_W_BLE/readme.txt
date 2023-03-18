@@ -1,5 +1,12 @@
 Project for the Raspberry Pi Pico using the BLE module and functionality.
 
+The project implements a client and a server (standalone BLE):
+The server provides temperature data, and the client gets the data from the server.
+
+To switch between client and server:
+a) change PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT in src/app_platform.h
+b) touch the file src/btstack_config.h to force a recompilation of the BT library
+
 Files needed: (besides this readme.txt):
 ./pico_sdk_import.cmake
 ./CMakeLists.txt

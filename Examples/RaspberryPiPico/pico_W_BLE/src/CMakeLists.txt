@@ -2,7 +2,7 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
-set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
+#set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
 
 file(GLOB FILES
   main.c
@@ -29,9 +29,7 @@ add_library(SrcLib ${FILES})
 
 target_compile_definitions(SrcLib PRIVATE
   CYW43_ENABLE_BLUETOOTH=1  # otherwise cyw43_arch_init() will not initialize BLE
-  CYW43_LWIP=0
-  
-  # RUNNING_AS_CLIENT=1  # configures btstack_config.h! NEED TO TOUCH FILE!!!!!
+#  CYW43_LWIP=0
 )
 
 # target_link_libraries: If you link with other libraries, list them here
