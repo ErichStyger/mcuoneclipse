@@ -88,7 +88,7 @@ static void handle_gatt_client_event(uint8_t packet_type, uint16_t channel, uint
         case GATT_EVENT_QUERY_COMPLETE:
           att_status = gatt_event_query_complete_get_att_status(packet);
           if (att_status != ATT_ERROR_SUCCESS){
-              printf("SERVICE_QUERY_RESULT, ATT Error 0x%02x.", att_status);
+            McuLog_info("SERVICE_QUERY_RESULT, ATT Error 0x%02x.", att_status);
               gap_disconnect(connection_handle);
               break;
           }
@@ -158,89 +158,89 @@ static void handle_gatt_client_event(uint8_t packet_type, uint16_t channel, uint
         }
           break;
       default:
-          printf("error");
+        McuLog_error("error");
           break;
   }
 }
 
 static void hci_event_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size) {
-    UNUSED(size);
-    UNUSED(channel);
-    bd_addr_t local_addr;
-    if (packet_type != HCI_EVENT_PACKET) return;
+  UNUSED(size);
+  UNUSED(channel);
+  bd_addr_t local_addr;
+  if (packet_type != HCI_EVENT_PACKET) return;
 
-    uint8_t event_type = hci_event_packet_get_type(packet);
-    switch(event_type){
-        case BTSTACK_EVENT_STATE:
-            if (btstack_event_state_get_state(packet) == HCI_STATE_WORKING) {
-                gap_local_bd_addr(local_addr);
-                printf("BTstack up and running on %s.", bd_addr_to_str(local_addr));
-                client_start();
-            } else {
-                state = TC_OFF;
-            }
-            break;
-        case GAP_EVENT_ADVERTISING_REPORT:
-            if (state != TC_W4_SCAN_RESULT) return;
-            // check name in advertisement
-            if (!advertisement_report_contains_service(ORG_BLUETOOTH_SERVICE_ENVIRONMENTAL_SENSING, packet)) return;
-            // store address and type
-            gap_event_advertising_report_get_address(packet, server_addr);
-            server_addr_type = gap_event_advertising_report_get_address_type(packet);
-            // stop scanning, and connect to the device
-            state = TC_W4_CONNECT;
-            gap_stop_scan();
-            printf("Connecting to device with addr %s.", bd_addr_to_str(server_addr));
-            gap_connect(server_addr, server_addr_type);
-            break;
-        case HCI_EVENT_LE_META:
-            // wait for connection complete
-            switch (hci_event_le_meta_get_subevent_code(packet)) {
-                case HCI_SUBEVENT_LE_CONNECTION_COMPLETE:
-                    if (state != TC_W4_CONNECT) return;
-                    connection_handle = hci_subevent_le_connection_complete_get_connection_handle(packet);
-                    // initialize gatt client context with handle, and add it to the list of active clients
-                    // query primary services
-                    McuLog_info("Search for env sensing service.");
-                    state = TC_W4_SERVICE_RESULT;
-                    gatt_client_discover_primary_services_by_uuid16(handle_gatt_client_event, connection_handle, ORG_BLUETOOTH_SERVICE_ENVIRONMENTAL_SENSING);
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case HCI_EVENT_DISCONNECTION_COMPLETE:
-            // unregister listener
-            connection_handle = HCI_CON_HANDLE_INVALID;
-            if (listener_registered){
-                listener_registered = false;
-                gatt_client_stop_listening_for_characteristic_value_updates(&notification_listener);
-            }
-            printf("Disconnected %s", bd_addr_to_str(server_addr));
-            if (state == TC_OFF) break;
+  uint8_t event_type = hci_event_packet_get_type(packet);
+  switch(event_type){
+    case BTSTACK_EVENT_STATE:
+        if (btstack_event_state_get_state(packet) == HCI_STATE_WORKING) {
+            gap_local_bd_addr(local_addr);
+            McuLog_info("BTstack up and running on %s.", bd_addr_to_str(local_addr));
             client_start();
-            break;
-        default:
-            break;
-    }
+        } else {
+            state = TC_OFF;
+        }
+        break;
+    case GAP_EVENT_ADVERTISING_REPORT:
+        if (state != TC_W4_SCAN_RESULT) return;
+        // check name in advertisement
+        if (!advertisement_report_contains_service(ORG_BLUETOOTH_SERVICE_ENVIRONMENTAL_SENSING, packet)) return;
+        // store address and type
+        gap_event_advertising_report_get_address(packet, server_addr);
+        server_addr_type = gap_event_advertising_report_get_address_type(packet);
+        // stop scanning, and connect to the device
+        state = TC_W4_CONNECT;
+        gap_stop_scan();
+        McuLog_info("Connecting to device with addr %s.", bd_addr_to_str(server_addr));
+        gap_connect(server_addr, server_addr_type);
+        break;
+    case HCI_EVENT_LE_META:
+        // wait for connection complete
+        switch (hci_event_le_meta_get_subevent_code(packet)) {
+            case HCI_SUBEVENT_LE_CONNECTION_COMPLETE:
+                if (state != TC_W4_CONNECT) return;
+                connection_handle = hci_subevent_le_connection_complete_get_connection_handle(packet);
+                // initialize gatt client context with handle, and add it to the list of active clients
+                // query primary services
+                McuLog_info("Search for env sensing service.");
+                state = TC_W4_SERVICE_RESULT;
+                gatt_client_discover_primary_services_by_uuid16(handle_gatt_client_event, connection_handle, ORG_BLUETOOTH_SERVICE_ENVIRONMENTAL_SENSING);
+                break;
+            default:
+                break;
+        }
+        break;
+    case HCI_EVENT_DISCONNECTION_COMPLETE:
+        // unregister listener
+        connection_handle = HCI_CON_HANDLE_INVALID;
+        if (listener_registered){
+            listener_registered = false;
+            gatt_client_stop_listening_for_characteristic_value_updates(&notification_listener);
+        }
+        McuLog_info("Disconnected %s", bd_addr_to_str(server_addr));
+        if (state == TC_OFF) break;
+        client_start();
+        break;
+    default:
+        break;
+  }
 }
 
 static void heartbeat_handler(struct btstack_timer_source *ts) {
-    // Invert the led
-    static bool quick_flash;
-    static bool led_on = true;
+  // Invert the led
+  static bool quick_flash;
+  static bool led_on = true;
 
-    led_on = !led_on;
-    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
-    if (listener_registered && led_on) {
-        quick_flash = !quick_flash;
-    } else if (!listener_registered) {
-        quick_flash = false;
-    }
+  led_on = !led_on;
+  cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
+  if (listener_registered && led_on) {
+      quick_flash = !quick_flash;
+  } else if (!listener_registered) {
+      quick_flash = false;
+  }
 
-    // Restart timer
-    btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS : LED_SLOW_FLASH_DELAY_MS);
-    btstack_run_loop_add_timer(ts);
+  // Restart timer
+  btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS : LED_SLOW_FLASH_DELAY_MS);
+  btstack_run_loop_add_timer(ts);
 }
 
 static void clientTask(void *pv) {
@@ -282,6 +282,7 @@ void Client_Init(void) {
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
+    McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
 }

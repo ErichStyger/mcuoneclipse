@@ -80,7 +80,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuShell_ParseCommand, /* McuShell component, is first in list */
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
   McuArmTools_ParseCommand,
-  McuTimeDate_ParseCommand,
+//  McuTimeDate_ParseCommand,
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
 #endif
@@ -117,9 +117,9 @@ void SHELL_Init(void) {
  // McuShell_SetStdio(&McuShellUart_stdio); /* use UART as the default */
 #endif
 #if McuLog_CONFIG_IS_ENABLED
-  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_SHELL_UART && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
+  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_USB_CDC && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
     McuLog_set_console(McuRTT_GetStdio(), 0);
-    McuLog_set_console(&McuShellUart_stdio, 1);
+    McuLog_set_console(&cdc_stdio, 1);
   #elif PL_CONFIG_USE_RTT /* only RTT */
     McuLog_set_console(McuRTT_GetStdio(), 0);
   #elif PL_CONFIG_USE_SHELL_UART /* only UART */

@@ -34,6 +34,7 @@
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
 #define McuLog_CONFIG_USE_FILE                  (0)
-#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (1)
+#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2)
 #define McuLog_CONFIG_USE_COLOR                 (0)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
+/* -------------------------------------------------*/

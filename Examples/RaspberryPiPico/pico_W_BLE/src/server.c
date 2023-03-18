@@ -5,6 +5,8 @@
  */
 #include "app_platform.h"
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#include "McuLog.h"
+#include "McuRTOS.h"
 #include <stdio.h>
 #include "btstack.h"
 #include "pico/cyw43_arch.h"
@@ -41,40 +43,54 @@ static void heartbeat_handler(struct btstack_timer_source *ts) {
     btstack_run_loop_add_timer(ts);
 }
 
-void Server_Run(void) {
-    stdio_init_all();
+static void serverTask(void *pv) {
+  // initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1)
+  if (cyw43_arch_init()) {
+      printf("failed to initialise cyw43_arch\n");
+      for(;;) {}
+  }
 
-    // initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1)
-    if (cyw43_arch_init()) {
-        printf("failed to initialise cyw43_arch\n");
-        for(;;) {}
-    }
+  /* Initialize adc for the temp sensor */
+  adc_init();
+  adc_select_input(ADC_CHANNEL_TEMPSENSOR);
+  adc_set_temp_sensor_enabled(true);
 
-    // Initialise adc for the temp sensor
-    adc_init();
-    adc_select_input(ADC_CHANNEL_TEMPSENSOR);
-    adc_set_temp_sensor_enabled(true);
+  l2cap_init();
+  sm_init();
 
-    l2cap_init();
-    sm_init();
+  att_server_init(profile_data, att_read_callback, att_write_callback);
 
-    att_server_init(profile_data, att_read_callback, att_write_callback);    
+  // inform about BTstack state
+  hci_event_callback_registration.callback = &packet_handler;
+  hci_add_event_handler(&hci_event_callback_registration);
 
-    // inform about BTstack state
-    hci_event_callback_registration.callback = &packet_handler;
-    hci_add_event_handler(&hci_event_callback_registration);
+  // register for ATT event
+  att_server_register_packet_handler(packet_handler);
 
-    // register for ATT event
-    att_server_register_packet_handler(packet_handler);
+  // set one-shot btstack timer
+  heartbeat.process = &heartbeat_handler;
+  btstack_run_loop_set_timer(&heartbeat, HEARTBEAT_PERIOD_MS);
+  btstack_run_loop_add_timer(&heartbeat);
 
-    // set one-shot btstack timer
-    heartbeat.process = &heartbeat_handler;
-    btstack_run_loop_set_timer(&heartbeat, HEARTBEAT_PERIOD_MS);
-    btstack_run_loop_add_timer(&heartbeat);
-
-    // turn on bluetooth!
-    hci_power_control(HCI_POWER_ON);
-
+  // turn on bluetooth!
+  hci_power_control(HCI_POWER_ON);
+  for(;;) {
     btstack_run_loop_execute(); /* does not return */
+  }
+}
+
+void Server_Init(void) {
+  if (xTaskCreate(
+      serverTask,  /* pointer to the task */
+      "server", /* task name for kernel awareness debugging */
+      1200/sizeof(StackType_t), /* task stack size */
+      (void*)NULL, /* optional task startup argument */
+      tskIDLE_PRIORITY,  /* initial priority */
+      (TaskHandle_t*)NULL /* optional task handle to create */
+    ) != pdPASS)
+  {
+    McuLog_fatal("failed creating task");
+    for(;;){} /* error! probably out of memory */
+  }
 }
 #endif

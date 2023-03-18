@@ -7,6 +7,6 @@
 #ifndef SRC_SERVER_H_
 #define SRC_SERVER_H_
 
-void Server_Run(void);
+void Server_Init(void);
 
 #endif /* SRC_SERVER_H_ */
