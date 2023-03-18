@@ -26,7 +26,6 @@ add_library(SrcLib ${FILES})
 
 target_compile_definitions(SrcLib PRIVATE
   CYW43_ENABLE_BLUETOOTH=1  # otherwise cyw43_arch_init() will not initialize BLE
-#  CYW43_LWIP=0
 )
 
 # target_link_libraries: If you link with other libraries, list them here
@@ -41,9 +40,9 @@ target_link_libraries(
   
   pico_btstack_ble
   pico_btstack_cyw43
-  pico_cyw43_arch_none
+#  pico_cyw43_arch_none
 
-#pico_btstack_bnep_lwip_sys_freertos  # Adds Bluetooth Network Encapsulation Protocol (BNEP) support using LwIP with FreeRTOS for NO_SYS=0.
+#  pico_btstack_bnep_lwip_sys_freertos  # Adds Bluetooth Network Encapsulation Protocol (BNEP) support using LwIP with FreeRTOS for NO_SYS=0.
 #  cyw43_driver_picow
 #  pico_btstack_run_loop_async_context
 #  pico_btstack_sbc_encoder # Adds Bluetooth Sub Band Coding (SBC) encoder support (audio).
@@ -53,17 +52,7 @@ target_link_libraries(
 #  #pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 #  # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1
-#pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0
-#pico_btstack_bnep_lwip_sys_freertos
-  
-# add common stuff for BLE
-#  pico_btstack_ble # Adds Bluetooth Low Energy (LE) support.
-#  pico_btstack_classic
-# pico_btstack_cyw43
-
-#  pico_cyw43_arch_sys_freertos
-#  pico_btstack_bnep_lwip_sys_freertos
-#  pico_lwip_freertos
+  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0
 )
 
 

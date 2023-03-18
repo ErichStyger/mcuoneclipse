@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include "btstack.h"
 #include "btstack_run_loop.h"
-#include "platform/freertos/btstack_run_loop_freertos.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include "McuLog.h"
@@ -210,7 +209,7 @@ static void hci_event_handler(uint8_t packet_type, uint16_t channel, uint8_t *pa
         }
         break;
     case HCI_EVENT_DISCONNECTION_COMPLETE:
-        // unregister listener
+        /* unregister listener */
         connection_handle = HCI_CON_HANDLE_INVALID;
         if (listener_registered){
             listener_registered = false;
@@ -226,19 +225,18 @@ static void hci_event_handler(uint8_t packet_type, uint16_t channel, uint8_t *pa
 }
 
 static void heartbeat_handler(struct btstack_timer_source *ts) {
-  // Invert the led
+  /* Invert the led */
   static bool quick_flash;
   static bool led_on = true;
 
   led_on = !led_on;
   cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
   if (listener_registered && led_on) {
-      quick_flash = !quick_flash;
+    quick_flash = !quick_flash;
   } else if (!listener_registered) {
-      quick_flash = false;
+    quick_flash = false;
   }
-
-  // Restart timer
+  /* Restart timer */
   btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS : LED_SLOW_FLASH_DELAY_MS);
   btstack_run_loop_add_timer(ts);
 }
@@ -257,17 +255,14 @@ static void clientTask(void *pv) {
   hci_event_callback_registration.callback = &hci_event_handler;
   hci_add_event_handler(&hci_event_callback_registration);
 
-  // set one-shot btstack timer
+  /* set one-shot btstack timer */
   heartbeat.process = &heartbeat_handler;
   btstack_run_loop_set_timer(&heartbeat, LED_SLOW_FLASH_DELAY_MS);
   btstack_run_loop_add_timer(&heartbeat);
 
-  // turn on!
-  hci_power_control(HCI_POWER_ON);
+  hci_power_control(HCI_POWER_ON); /* turn it on */
 
- // btstack_run_loop_init(btstack_run_loop_freertos_get_instance());
   for(;;) {
-    //btstack_run_loop_freertos_execute_code_on_main_thread();
     btstack_run_loop_execute(); /* does not return */
   }
 }
@@ -275,7 +270,7 @@ static void clientTask(void *pv) {
 void Client_Init(void) {
   if (xTaskCreate(
       clientTask,  /* pointer to the task */
-      "client", /* task name for kernel awareness debugging */
+      "BLEclient", /* task name for kernel awareness debugging */
       1200/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY,  /* initial priority */
