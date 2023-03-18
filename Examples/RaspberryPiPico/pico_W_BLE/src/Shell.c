@@ -14,44 +14,12 @@
 #include "McuShellUart.h"
 #include "McuArmTools.h"
 #include "McuTimeDate.h"
+#include "McuLog.h"
 #if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
-#if PL_CONFIG_USE_NEO_PIXEL_HW
-  #include "NeoPixel.h"
-#endif
-#if PL_CONFIG_USE_LED_DEMO_APP
-  #include "neoApp.h"
-#endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
-  #include "neoCounter.h"
-#endif
-#if PL_CONFIG_USE_SHT31
-  #include "McuSHT31.h"
-#endif
-#if PL_CONFIG_USE_ROAD
-  #include "road.h"
-#endif
-#if McuFlash_CONFIG_IS_ENABLED
-  #include "McuFlash.h"
-#endif
-#if PL_CONFIG_USE_MINI
-  #include "McuMinINI.h"
-#endif
-#if PL_CONFIG_USE_ADC
-  #include "analog.h"
-#endif
-#if McuLog_CONFIG_IS_ENABLED
-  #include "McuLog.h"
-#endif
-#if PL_CONFIG_USE_LITTLE_FS
-  #include "littleFS/McuLittleFS.h"
-#endif
 #if PL_CONFIG_USE_WIFI
   #include "PicoWiFi.h"
-#endif
-#if PL_CONFIG_USE_EXT_FLASH
-  #include "McuW25Q128.h"
 #endif
 
 typedef struct {
@@ -113,44 +81,11 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
   McuArmTools_ParseCommand,
   McuTimeDate_ParseCommand,
-#if PL_CONFIG_USE_NEO_PIXEL_HW
-  NEO_ParseCommand,
-#endif
-#if PL_CONFIG_USE_SHT31
-  McuSHT31_ParseCommand,
-#endif
-#if McuFlash_CONFIG_IS_ENABLED
-  McuFlash_ParseCommand,
-#endif
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ParseCommand,
-#endif
-#if PL_CONFIG_USE_MINI && McuMinINI_CONFIG_FS==McuMinINI_CONFIG_FS_TYPE_FLASH_FS
-  ini_ParseCommand,
-#endif
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
 #endif
-#if PL_CONFIG_USE_ADC
-  Analog_ParseCommand,
-#endif
-#if PL_CONFIG_USE_LITTLE_FS
-  McuLFS_ParseCommand,
-#endif
-#if PL_CONFIG_USE_ROAD
-  Road_ParseCommand,
-#endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_ParseCommand,
-#endif
-#if PL_CONFIG_USE_LED_DEMO_APP
-  NeoApp_ParseCommand,
-#endif
-#if PL_CONFIG_USE_LED_COUNTER_APP
-  NeoCounter_ParseCommand,
-#endif
-#if PL_CONFIG_USE_EXT_FLASH
-  McuW25_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

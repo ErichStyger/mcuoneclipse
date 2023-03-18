@@ -16,7 +16,6 @@ file(GLOB FILES
   server_common.c
   server_with_wifi.c
   picow_bt_example_common.c
-  picow_bt_example_poll.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory

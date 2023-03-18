@@ -200,7 +200,8 @@ int btstack_main(int argc, const char * argv[]){
 
 void BLE_Init(void) {
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
-  Client_Run();
+  Client_Init();
+  //Client_Run();
 #elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
   Server_Run();
 #else

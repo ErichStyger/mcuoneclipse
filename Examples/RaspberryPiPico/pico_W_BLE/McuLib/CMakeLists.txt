@@ -3,7 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  fonts/*.c
+#  fonts/*.c
 
   src/McuArmTools.c
   src/McuButton.c
@@ -90,80 +90,80 @@ file(GLOB FILES
   littleFS/McuLittleFSBlockDevice.c
   
   # lvgl
-  LittlevGL/lvgl/src/extra/*.c
-  LittlevGL/lvgl/src/extra/layouts/flex/*.c
-  LittlevGL/lvgl/src/extra/layouts/grid/*.c
-  LittlevGL/lvgl/src/extra/themes/mono/*.c
-  LittlevGL/lvgl/src/widgets/*.c
+ # LittlevGL/lvgl/src/extra/*.c
+ # LittlevGL/lvgl/src/extra/layouts/flex/*.c
+ # LittlevGL/lvgl/src/extra/layouts/grid/*.c
+ # LittlevGL/lvgl/src/extra/themes/mono/*.c
+ # LittlevGL/lvgl/src/widgets/*.c
 
-  LittlevGL/lvgl/src/core/*.c
-  LittlevGL/lvgl/src/draw/*.c
-  LittlevGL/lvgl/src/draw/arm2d/*.c
-  LittlevGL/lvgl/src/draw/gd32_ipa/*.c
-  LittlevGL/lvgl/src/draw/nxp/*.c
-  LittlevGL/lvgl/src/draw/sdl/*.c
-  LittlevGL/lvgl/src/draw/stm32_dma2d/*.c
-  LittlevGL/lvgl/src/draw/sw/*.c
-  LittlevGL/lvgl/src/draw/swm341_dma2d/*.c
-  LittlevGL/lvgl/src/font/*.c
-  LittlevGL/lvgl/src/hal/*.c
-  LittlevGL/lvgl/src/layouts/flex/*.c
-  LittlevGL/lvgl/src/layouts/grid/*.c
-  LittlevGL/lvgl/src/libs/bmp/*.c
-  LittlevGL/lvgl/src/libs/ffmpeg/*.c
-  LittlevGL/lvgl/src/libs/freetype/*.c
-  LittlevGL/lvgl/src/libs/fsdrv/*.c
-  LittlevGL/lvgl/src/libs/gif/*.c
-  LittlevGL/lvgl/src/libs/png/*.c
-  LittlevGL/lvgl/src/libs/qrcode/*.c
-  LittlevGL/lvgl/src/libs/rlottie/*.c
-  LittlevGL/lvgl/src/libs/sjpg/*.c
-  LittlevGL/lvgl/src/libs/tiny_ttf/*.c
-  LittlevGL/lvgl/src/misc/*.c
-  LittlevGL/lvgl/src/others/file_explorer/*.c
-  LittlevGL/lvgl/src/others/fragment/*.c
-  LittlevGL/lvgl/src/others/gridnav/*.c
-  LittlevGL/lvgl/src/others/ime/*.c
-  LittlevGL/lvgl/src/others/imgfont/*.c
-  LittlevGL/lvgl/src/others/monkey/*.c
-  LittlevGL/lvgl/src/others/msg/*.c
-  LittlevGL/lvgl/src/others/snapshot/*.c
-  LittlevGL/lvgl/src/themes/basic/*.c
-  LittlevGL/lvgl/src/themes/default/*.c
-  LittlevGL/lvgl/src/themes/mono/*.c
-  LittlevGL/lvgl/src/widgets/animimg/*.c
-  LittlevGL/lvgl/src/widgets/arc/*.c
-  LittlevGL/lvgl/src/widgets/bar/*.c
-  LittlevGL/lvgl/src/widgets/btn/*.c
-  LittlevGL/lvgl/src/widgets/btnmatrix/*.c
-  LittlevGL/lvgl/src/widgets/calendar/*.c
-  LittlevGL/lvgl/src/widgets/canvas/*.c
-  LittlevGL/lvgl/src/widgets/chart/*.c
-  LittlevGL/lvgl/src/widgets/checkbox/*.c
-  LittlevGL/lvgl/src/widgets/colorwheel/*.c
-  LittlevGL/lvgl/src/widgets/dropdown/*.c
-  LittlevGL/lvgl/src/widgets/img/*.c
-  LittlevGL/lvgl/src/widgets/imgbtn/*.c
-  LittlevGL/lvgl/src/widgets/keyboard/*.c
-  LittlevGL/lvgl/src/widgets/label/*.c
-  LittlevGL/lvgl/src/widgets/led/*.c
-  LittlevGL/lvgl/src/widgets/line/*.c
-  LittlevGL/lvgl/src/widgets/list/*.c
-  LittlevGL/lvgl/src/widgets/menu/*.c
-  LittlevGL/lvgl/src/widgets/meter/*.c
-  LittlevGL/lvgl/src/widgets/msgbox/*.c
-  LittlevGL/lvgl/src/widgets/objx_templ/*.c
-  LittlevGL/lvgl/src/widgets/roller/*.c
-  LittlevGL/lvgl/src/widgets/slider/*.c
-  LittlevGL/lvgl/src/widgets/span/*.c
-  LittlevGL/lvgl/src/widgets/spinbox/*.c
-  LittlevGL/lvgl/src/widgets/spinner/*.c
-  LittlevGL/lvgl/src/widgets/switch/*.c
-  LittlevGL/lvgl/src/widgets/table/*.c
-  LittlevGL/lvgl/src/widgets/tabview/*.c
-  LittlevGL/lvgl/src/widgets/textarea/*.c
-  LittlevGL/lvgl/src/widgets/tileview/*.c
-  LittlevGL/lvgl/src/widgets/win/*.c
+#  LittlevGL/lvgl/src/core/*.c
+#  LittlevGL/lvgl/src/draw/*.c
+#  LittlevGL/lvgl/src/draw/arm2d/*.c
+#  LittlevGL/lvgl/src/draw/gd32_ipa/*.c
+#  LittlevGL/lvgl/src/draw/nxp/*.c
+#  LittlevGL/lvgl/src/draw/sdl/*.c
+#  LittlevGL/lvgl/src/draw/stm32_dma2d/*.c
+#  LittlevGL/lvgl/src/draw/sw/*.c
+#  LittlevGL/lvgl/src/draw/swm341_dma2d/*.c
+#  LittlevGL/lvgl/src/font/*.c
+#  LittlevGL/lvgl/src/hal/*.c
+#  LittlevGL/lvgl/src/layouts/flex/*.c
+#  LittlevGL/lvgl/src/layouts/grid/*.c
+#  LittlevGL/lvgl/src/libs/bmp/*.c
+#  LittlevGL/lvgl/src/libs/ffmpeg/*.c
+#  LittlevGL/lvgl/src/libs/freetype/*.c
+#  LittlevGL/lvgl/src/libs/fsdrv/*.c
+#  LittlevGL/lvgl/src/libs/gif/*.c
+#  LittlevGL/lvgl/src/libs/png/*.c
+#  LittlevGL/lvgl/src/libs/qrcode/*.c
+#  LittlevGL/lvgl/src/libs/rlottie/*.c
+#  LittlevGL/lvgl/src/libs/sjpg/*.c
+#  LittlevGL/lvgl/src/libs/tiny_ttf/*.c
+#  LittlevGL/lvgl/src/misc/*.c
+#  LittlevGL/lvgl/src/others/file_explorer/*.c
+#  LittlevGL/lvgl/src/others/fragment/*.c
+#  LittlevGL/lvgl/src/others/gridnav/*.c
+#  LittlevGL/lvgl/src/others/ime/*.c
+#  LittlevGL/lvgl/src/others/imgfont/*.c
+#  LittlevGL/lvgl/src/others/monkey/*.c
+#  LittlevGL/lvgl/src/others/msg/*.c
+#  LittlevGL/lvgl/src/others/snapshot/*.c
+#  LittlevGL/lvgl/src/themes/basic/*.c
+#  LittlevGL/lvgl/src/themes/default/*.c
+#  LittlevGL/lvgl/src/themes/mono/*.c
+#  LittlevGL/lvgl/src/widgets/animimg/*.c
+#  LittlevGL/lvgl/src/widgets/arc/*.c
+#  LittlevGL/lvgl/src/widgets/bar/*.c
+#  LittlevGL/lvgl/src/widgets/btn/*.c
+#  LittlevGL/lvgl/src/widgets/btnmatrix/*.c
+#  LittlevGL/lvgl/src/widgets/calendar/*.c
+#  LittlevGL/lvgl/src/widgets/canvas/*.c
+#  LittlevGL/lvgl/src/widgets/chart/*.c
+#  LittlevGL/lvgl/src/widgets/checkbox/*.c
+#  LittlevGL/lvgl/src/widgets/colorwheel/*.c
+#  LittlevGL/lvgl/src/widgets/dropdown/*.c
+#  LittlevGL/lvgl/src/widgets/img/*.c
+#  LittlevGL/lvgl/src/widgets/imgbtn/*.c
+#  LittlevGL/lvgl/src/widgets/keyboard/*.c
+#  LittlevGL/lvgl/src/widgets/label/*.c
+#  LittlevGL/lvgl/src/widgets/led/*.c
+#  LittlevGL/lvgl/src/widgets/line/*.c
+#  LittlevGL/lvgl/src/widgets/list/*.c
+#  LittlevGL/lvgl/src/widgets/menu/*.c
+#  LittlevGL/lvgl/src/widgets/meter/*.c
+#  LittlevGL/lvgl/src/widgets/msgbox/*.c
+#  LittlevGL/lvgl/src/widgets/objx_templ/*.c
+#  LittlevGL/lvgl/src/widgets/roller/*.c
+#  LittlevGL/lvgl/src/widgets/slider/*.c
+#  LittlevGL/lvgl/src/widgets/span/*.c
+#  LittlevGL/lvgl/src/widgets/spinbox/*.c
+#  LittlevGL/lvgl/src/widgets/spinner/*.c
+#  LittlevGL/lvgl/src/widgets/switch/*.c
+#  LittlevGL/lvgl/src/widgets/table/*.c
+#  LittlevGL/lvgl/src/widgets/tabview/*.c
+#  LittlevGL/lvgl/src/widgets/textarea/*.c
+#  LittlevGL/lvgl/src/widgets/tileview/*.c
+#  LittlevGL/lvgl/src/widgets/win/*.c
   
   # MinINI
   minIni/McuMinINI.c

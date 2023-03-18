@@ -7,6 +7,6 @@
 #ifndef SRC_CLIENT_H_
 #define SRC_CLIENT_H_
 
-void Client_Run(void);
+void Client_Init(void);
 
 #endif /* SRC_CLIENT_H_ */
