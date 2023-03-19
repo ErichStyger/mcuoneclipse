@@ -39,21 +39,21 @@ static void poll_temperature(void) {
   uint32_t raw32 = adc_read();
   const uint32_t bits = 12;
 
-  // Scale raw reading to 16 bit value using a Taylor expansion (for 8 <= bits <= 16)
+  /* Scale raw reading to 16 bit value using a Taylor expansion (for 8 <= bits <= 16) */
   uint16_t raw16 = raw32 << (16 - bits) | raw32 >> (2 * bits - 16);
 
-  // ref https://github.com/raspberrypi/pico-micropython-examples/blob/master/adc/temperature.py
+  /* ref https://github.com/raspberrypi/pico-micropython-examples/blob/master/adc/temperature.py */
   const float conversion_factor = 3.3 / (65535);
   float reading = raw16 * conversion_factor;
 
-  // The temperature sensor measures the Vbe voltage of a biased bipolar diode, connected to the fifth ADC channel
-  // Typically, Vbe = 0.706V at 27 degrees C, with a slope of -1.721mV (0.001721) per degree.
+  /* The temperature sensor measures the Vbe voltage of a biased bipolar diode, connected to the fifth ADC channel
+     Typically, Vbe = 0.706V at 27 degrees C, with a slope of -1.721mV (0.001721) per degree. */
   float deg_c = 27 - (reading - 0.706) / 0.001721;
   current_temperature = deg_c * 100;
   McuLog_info("ADC: temperature %.2f degc", deg_c);
 }
 
-void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size) {
+static void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size) {
   UNUSED(size);
   UNUSED(channel);
   bd_addr_t local_addr;
@@ -93,7 +93,7 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
   }
 }
 
-uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t offset, uint8_t * buffer, uint16_t buffer_size) {
+static uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t offset, uint8_t * buffer, uint16_t buffer_size) {
   UNUSED(connection_handle);
 
   if (att_handle == ATT_CHARACTERISTIC_ORG_BLUETOOTH_CHARACTERISTIC_TEMPERATURE_01_VALUE_HANDLE) {
@@ -103,7 +103,7 @@ uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t att_hand
   return 0;
 }
 
-int att_write_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t transaction_mode, uint16_t offset, uint8_t *buffer, uint16_t buffer_size) {
+static int att_write_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t transaction_mode, uint16_t offset, uint8_t *buffer, uint16_t buffer_size) {
   UNUSED(transaction_mode);
   UNUSED(offset);
   UNUSED(buffer_size);
@@ -125,27 +125,31 @@ int att_write_callback(hci_con_handle_t connection_handle, uint16_t att_handle, 
 
 static btstack_packet_callback_registration_t hci_event_callback_registration;
 
+static void callbackSendData(void) { /* callback is called every second */
+  static uint32_t counter = 0;
+  counter++;
+  if ((counter%10) == 0) { /* Update the temperature every 10s */
+    poll_temperature();
+    if (le_notification_enabled) {
+      att_server_request_can_send_now_event(con_handle);
+    }
+  }
+}
+
+static void callbackToggleLED(void) { /* called every second */
+  /* Invert the led */
+  static int led_on = true;
+  led_on = !led_on;
+  cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
+}
+
 #if PL_CONFIG_USE_WIFI
   static void heartbeat_handler(async_context_t *context, async_at_time_worker_t *worker);
   static async_at_time_worker_t heartbeat_worker = { .do_work = heartbeat_handler };
 
   static void heartbeat_handler(async_context_t *context, async_at_time_worker_t *worker) {
-    static uint32_t counter = 0;
-    counter++;
-
-    /* Update the temperature every 10s */
-    if (counter % 10 == 0) {
-      poll_temperature();
-      if (le_notification_enabled) {
-        att_server_request_can_send_now_event(con_handle);
-      }
-    }
-
-    /* Invert the led */
-    static int led_on = true;
-    led_on = !led_on;
-    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
-
+    callbackSendData();
+    callbackToggleLED();
     /* Restart timer */
     async_context_add_at_time_worker_in_ms(context, &heartbeat_worker, HEARTBEAT_PERIOD_MS);
   }
@@ -153,22 +157,8 @@ static btstack_packet_callback_registration_t hci_event_callback_registration;
   static btstack_timer_source_t heartbeat;
 
   static void heartbeat_handler(struct btstack_timer_source *ts) {
-    static uint32_t counter = 0;
-    counter++;
-
-    /* Update the temperature every 10s */
-    if (counter % 10 == 0) {
-      poll_temperature();
-      if (le_notification_enabled) {
-        att_server_request_can_send_now_event(con_handle);
-      }
-    }
-
-    /* Invert the led */
-    static int led_on = true;
-    led_on = !led_on;
-    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
-
+    callbackSendData();
+    callbackToggleLED();
     /* Restart timer */
     btstack_run_loop_set_timer(ts, HEARTBEAT_PERIOD_MS);
     btstack_run_loop_add_timer(ts);
