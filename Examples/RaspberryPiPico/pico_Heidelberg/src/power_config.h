@@ -9,7 +9,7 @@
 
 #include "app_platform.h"
 
-#if PL_CONFIG_USE_ADC
+#if PL_CONFIG_USE_POWER
   #define POWER_BATTERY_LEVEL_TURN_OFF    (10) /* turn system off below this % number */
   #define POWER_BATTERY_LEVEL_STARTUP     (20) /* battery level must be above this to startup the system */
 #endif

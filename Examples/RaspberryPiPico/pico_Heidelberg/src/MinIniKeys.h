@@ -28,13 +28,18 @@
 #if PL_CONFIG_USE_ROAD
   /* section for vehicle/car settings */
   #define NVMC_MININI_SECTION_CAR               "Car"
-  #define NVMC_MININI_KEY_CAR_ON                  "on"      /* 0: stopped, 1: on */
-  #define NVMC_MININI_KEY_CAR_SPEED               "speed"   /* 0..100 (%) */
-  #define NVMC_MININI_KEY_CAR_MODE                "mode"    /* 0: fw, 1: bw, 2: auto */
+  #define NVMC_MININI_KEY_CAR_ON                  "on"            /* 0: stopped, 1: on (not stored, always off at reboot to save power) */
+  #define NVMC_MININI_KEY_CAR_SPEED               "speed"         /* 0..100 (%) */
+  #define NVMC_MININI_KEY_CAR_MODE                "mode"          /* 0: fw, 1: bw, 2: auto */
+  #define NVMC_MININI_KEY_CAR_SWITCH_SEG          "switchSeg"     /* 1: switch segments (saves power); 0: no segment switching */
 #endif
 
 #if PL_CONFIG_USE_WIFI
-  /* section for WiFi settings */
+  /* section for WiFi settings
+   * configure them using the shell and the following commands:
+   * McuMinINI write settings.ini WiFi ssid YOUR_SSID
+   * McuMinINI write settings.ini WiFi pass YOUR_PASSWORD
+   */
   #define NVMC_MININI_SECTION_WIFI              "WiFi"
   #define NVMC_MININI_KEY_WIFI_SSID                "ssid"     /* SSID of network */
   #define NVMC_MININI_KEY_WIFI_PASS                "pass"     /* pass */

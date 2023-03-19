@@ -7,6 +7,7 @@
  */
 
 #include "app_platform.h"
+#if PL_CONFIG_USE_SHELL
 #include "Shell.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
@@ -74,6 +75,12 @@
 #endif
 #if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
   #include "energy.h"
+#endif
+#if PL_CONFIG_USE_UNIT_TESTS
+  #include "UnitTest.h"
+#endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "wdt.h"
 #endif
 #include "application.h"
 
@@ -145,9 +152,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_EXT_FLASH
   McuW25_ParseCommand,
 #endif
-#if PL_CONFIG_USE_SHT31
+#if PL_CONFIG_USE_SENSOR && PL_CONFIG_USE_SHT31
   McuSHT31_ParseCommand,
-#elif PL_CONFIG_USE_SHT40
+#elif PL_CONFIG_USE_SENSOR && PL_CONFIG_USE_SHT40
   McuSHT40_ParseCommand,
 #endif
 #if PL_CONFIG_USE_ADC
@@ -197,6 +204,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
   Energy_ParseCommand,
 #endif
+#if PL_CONFIG_USE_UNIT_TESTS
+  UnitTest_ParseCommand,
+#endif
   App_ParseCommand,
   NULL /* Sentinel */
 };
@@ -240,7 +250,10 @@ static void ShellTask(void *pvParameters) {
     for(i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(50));
+  #if PL_CONFIG_USE_WATCHDOG
+    WDT_Report(WDT_REPORT_ID_TASK_SHELL, 50);
+  #endif
   } /* for */
 }
 
@@ -251,10 +264,13 @@ void SHELL_Init(void) {
 #if PL_CONFIG_USE_RTT
   McuShell_SetStdio(McuRTT_GetStdio()); /* use RTT as the default */
 #else
- // McuShell_SetStdio(&McuShellUart_stdio); /* use UART as the default */
+  // McuShell_SetStdio(&McuShellUart_stdio); /* use UART as the default */
 #endif
 #if McuLog_CONFIG_IS_ENABLED
-  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_USB_CDC && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
+  #if PL_CONFIG_USE_RTT && PL_CONFIG_USE_SHELL_UART && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
+    McuLog_set_console(McuRTT_GetStdio(), 0);
+    McuLog_set_console(&McuShellUart_stdio, 1);
+  #elif PL_CONFIG_USE_RTT && PL_CONFIG_USE_USB_CDC && McuLog_CONFIG_NOF_CONSOLE_LOGGER==2 /* both */
     McuLog_set_console(McuRTT_GetStdio(), 0);
     McuLog_set_console(&cdc_stdio, 1);
   #elif PL_CONFIG_USE_RTT /* only RTT */
@@ -268,3 +284,4 @@ void SHELL_Init(void) {
 void SHELL_Deinit(void) {
   McuShell_SetStdio(NULL);
 }
+#endif /* PL_CONFIG_USE_SHELL */

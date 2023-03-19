@@ -47,13 +47,8 @@
 #if PL_CONFIG_USE_POWER
   #include "power.h"
 #endif
-#if PL_CONFIG_USE_SHT31
-  #include "McuSHT31.h"
-#endif
-#if PL_CONFIG_USE_SHT40
-  #include "McuSHT40.h"
-#elif PL_CONFIG_USE_SHT31
-  #include "McuSHT31.h"
+#if PL_CONFIG_USE_SENSOR
+  #include "sensor.h"
 #endif
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
@@ -64,6 +59,14 @@
 #if PL_CONFIG_USE_ADC
   #include "analog.h"
 #endif
+#if PL_CONFIG_USE_UNIT_TESTS
+  #include "UnitTest.h"
+#endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "wdt.h"
+#endif
+
+#define APP_CONFIG_TEST_WATCHDOG  (0 && PL_CONFIG_USE_WATCHDOG)
 
 #if !PL_CONFIG_USE_PICO_W
   #define LED_PIN   (25) /* GPIO 25 */
@@ -137,7 +140,7 @@ void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
 }
 #endif
 
-#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
+#if PL_CONFIG_USE_SENSOR
 static float App_SensorTemperature, App_SensorHumidity;
 
 uint8_t App_GetSensorValues(float *temperature, float *humidity) {
@@ -152,11 +155,11 @@ static void AppTask(void *pv) {
   uint8_t prevBatteryCharge=200, currBatteryCharge;
   uint8_t prevUSBConnectionStatus = -1, currUSBConnectionStatus;
 #if PL_CONFIG_USE_OLED_CLOCK && PL_CONFIG_USE_PCF85063A
-  #define RTC_UPDATE_PERIOD_SEC  (60*60)
-  int32_t RTCupdateCntrSec = 0;
+  #define HW_RTC_UPDATE_PERIOD_SEC  (60*60) /* update time/date from RTC every hour */
+  int32_t HW_RTCupdateCntrSec = 0; /* count-down to update SW RTC from HW RTC: if <= 0, it gets time from hardware RTC */
 #endif
-#if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
-  #define SENSOR_UPDATE_PERIOD_SEC  (5)
+#if PL_CONFIG_USE_SENSOR
+  #define SENSOR_UPDATE_PERIOD_SEC  (5) /* now often the sensor values shall be updated */
   int32_t sensorUpdateCntrSec = 0;
 #endif
 
@@ -301,12 +304,13 @@ void APP_Run(void) {
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      1000/sizeof(StackType_t), /* task stack size */
+      1500/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
+    McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
   vTaskStartScheduler();

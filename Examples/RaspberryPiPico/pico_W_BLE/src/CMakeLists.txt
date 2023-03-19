@@ -12,6 +12,7 @@ file(GLOB FILES
   FreeRTOShooks.c
   client.c
   server.c
+  PicoWiFi.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory

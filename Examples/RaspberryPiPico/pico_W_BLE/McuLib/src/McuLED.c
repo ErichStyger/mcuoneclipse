@@ -89,7 +89,7 @@ McuLED_Handle_t McuLED_InitLed(McuLED_Config_t *config) {
     handle->gpio = gpio;
     handle->isLowActive = config->isLowActive;
   }
-	return handle;
+	return (McuLED_Handle_t)handle;
 }
 
 McuLED_Handle_t McuLED_DeinitLed(McuLED_Handle_t led) {

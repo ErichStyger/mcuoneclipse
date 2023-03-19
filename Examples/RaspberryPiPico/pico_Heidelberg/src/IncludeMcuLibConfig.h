@@ -13,7 +13,8 @@
 #define PL_CONFIG_HW_VERSION_0_4    (4)  /* V0.4, 'House of LEDs' with LED countdown application */
 #define PL_CONFIG_HW_VERSION_0_5    (5)  /* V0.5, new PCB (January 2023): added on/off circuit, energy storage, extra sensor */
 #define PL_CONFIG_HW_VERSION_0_6    (6)  /* V0.6, EVCC January 2023 */
-#define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB (07-Feb-2023) */
+#define PL_CONFIG_HW_VERSION_0_7    (7)  /* V0.7, new VHS PCB (07-Feb-2023), used for workshops April 2023 */
+#define PL_CONFIG_HW_VERSION_0_8    (8)  /* V0.8, new 'large' VHS PCB (15-Mar-2023), with large PMMA/Plexi */
 
 /* active PCB/Hardware version */
 #define LIB_CONFIG_HW_VERSION  (PL_CONFIG_HW_VERSION_0_6)
@@ -82,7 +83,12 @@
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
-  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_EXTERNAL_RTC)
+  #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS) /* initialize first from software defaults, will update later from HW RTC */
+  #define McuTimeDate_CONFIG_EXT_RTC_HEADER_FILE_NAME                "../../src/extRTC.h"
+  #define McuTimeDate_CONFIG_EXT_RTC_GET_TIME_FCT                    ExtRTC_GetTime
+  #define McuTimeDate_CONFIG_EXT_RTC_SET_TIME_FCT                    ExtRTC_SetTimeInfo
+  #define McuTimeDate_CONFIG_EXT_RTC_GET_DATE_FCT                    ExtRTC_GetDate
+  #define McuTimeDate_CONFIG_EXT_RTC_SET_DATE_FCT                    ExtRTC_SetDateInfo
 #else
   #define McuTimeDate_CONFIG_INIT_SOFTWARE_RTC_METHOD                (McuTimeDate_INIT_SOFTWARE_RTC_FROM_DEFAULTS)
 #endif
@@ -102,15 +108,18 @@
 /* McuSSD1306 */
 #define McuSSD1306_CONFIG_SSD1306_DRIVER_TYPE         (1106)
 #define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION  (0)
-//#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
-//#define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
+#if LIB_CONFIG_HW_VERSION ==PL_CONFIG_HW_VERSION_0_1 || LIB_CONFIG_HW_VERSION ==PL_CONFIG_HW_VERSION_0_2
+  #define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE180
+#else
+  #define McuSSD1306_CONFIG_FIXED_DISPLAY_ORIENTATION    McuSSD1306_CONFIG_ORIENTATION_LANDSCAPE
+#endif
 /* -------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_DOWN            (128)
-#define McuRTT_CONFIG_BLOCKING_SEND                   (1)
-#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (20)
-#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (10)
-#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (2048)
+#define McuRTT_CONFIG_BLOCKING_SEND                   (1) /* 0: do not block if buffer full */
+#define McuRTT_CONFIG_BLOCKING_SEND_TIMEOUT_MS        (5)
+#define McuRTT_CONFIG_BLOCKING_SEND_WAIT_MS           (1)
+#define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
 #if LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_4
@@ -145,8 +154,9 @@
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
 #define McuLog_CONFIG_USE_FILE                  (0)
-#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2)
-#define McuLog_CONFIG_USE_COLOR                 (0)
+#define McuLog_CONFIG_USE_RTT_CONSOLE           (1)
+#define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2) /* RTT and USB CDC */
+#define McuLog_CONFIG_USE_COLOR                 (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* -------------------------------------------------*/
 /* McuSPI */
@@ -167,11 +177,13 @@
 /* LittlevGL */
 #define LV_CONFIG_DPI                  (25)
 #define LV_CONF_INCLUDE_SIMPLE   /* use lv_conf.h inside src folder */
-//#define LV_CONF_SUPPRESS_DEFINE_CHECK  /* avoid bogus warning with gcc about including lv_conf.h */
-
-#if !__ASSEMBLER__ /* set if file is included by GNU as. Do not include normal C header files if running the assembler for example to assemble the pico startup code */
+#define LV_CONF_SUPPRESS_DEFINE_CHECK  /* avoid bogus warning with gcc about including lv_conf.h */
+#if !__ASSEMBLER__ /* set if file is included by GNU as (assembler). Do not include normal C header files if running the assembler for example to assemble the pico startup code */
   #include "lv_conf.h"
 #endif /* !__ASSEMBLER__ */
+/* ---------------------------------------------------------------------------------------*/
+/* McuSemihost */
+#define McuSemihost_CONFIG_DEBUG_CONNECTION  McuSemihost_DEBUG_CONNECTION_SEGGER
 /* ---------------------------------------------------------------------------------------*/
 /* McuModBus */
 #define McuModbus_CONFIG_IS_ENABLED           (1) /* Modbus with Heidelberg wallbox */

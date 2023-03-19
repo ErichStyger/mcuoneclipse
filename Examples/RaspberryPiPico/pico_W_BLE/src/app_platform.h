@@ -8,7 +8,7 @@
 #define APP_PLATFORM_H_
 
 /* client: getting data from the server */
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (1)
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0) /* << change this to switch between client and server implementation */
 
 /* server: providing temperature values to the client */
 #define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
@@ -20,12 +20,21 @@
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
 
-#define PL_CONFIG_USE_WIFI            (0 && PL_CONFIG_USE_PICO_W)
-#define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W)
+#define PL_CONFIG_USE_WIFI            (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
+#define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
 
-#define PL_CONFIG_USE_RTT             (1)
-#define PL_CONFIG_USE_USB_CDC         (1)
-#define PL_CONFIG_USE_SHELL_UART      (0)
+#define PL_CONFIG_USE_RTT             (1) /* if using SEGGER RTT with J-Link */
+#define PL_CONFIG_USE_USB_CDC         (1) /* if using USB CDC as shell interface */
+#define PL_CONFIG_USE_SHELL_UART      (0) /* if using UART for shell (NYI) */
+#define PL_CONFIG_USE_MCUFLASH        (1) /* used to enable McuFlash, needed for MinINI */
+#define PL_CONFIG_USE_MINI            (1 && PL_CONFIG_USE_MCUFLASH) /* if using MinINI to store values in FLASH */
+
+/* WiFi configuration items */
+#define PL_CONFIG_USE_PING            (0 && PL_CONFIG_USE_WIFI)   /* using ping application */
+#define PL_CONFIG_USE_NTP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* using ntp application */
+#define PL_CONFIG_USE_UDP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* using udp server application */
+#define PL_CONFIG_USE_TCP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* if running TCP server */
+#define PL_CONFIG_USE_MQTT_CLIENT     (0 && PL_CONFIG_USE_WIFI)   /* if running MQTT client */
 
 /*!
  * \brief Module initialization

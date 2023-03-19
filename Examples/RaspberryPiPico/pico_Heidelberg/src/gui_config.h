@@ -13,7 +13,7 @@
   /*!< if using a screensaver or not */
 
 #if GUI_CONFIG_USE_SCREENSAVER
-  #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (5*60)
+  #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (10*60)
     /*!< Time in seconds with no user (button) interaction after which it will do screen cycling (or screen saving). */
 #endif
 
@@ -31,7 +31,7 @@
 #endif
 
 #ifndef GUI_CONFIG_USE_SENSOR
-  #define GUI_CONFIG_USE_SENSOR  (1 && (PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40))
+  #define GUI_CONFIG_USE_SENSOR  (1 && PL_CONFIG_USE_SENSOR)
 #endif
 
 #endif /* GUI_CONFIG_H_ */

@@ -243,7 +243,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
   gpio_init(config->hw.pin);
 #endif
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
-  McuGPIO_SetPullResistor(handle, config->hw.pull); /* GPIO muxing might be done with setting the pull registers, e.g. for LPC845 */
+  McuGPIO_SetPullResistor((McuGPIO_Handle_t)handle, config->hw.pull); /* GPIO muxing might be done with setting the pull registers, e.g. for LPC845 */
   /* do the pin muxing */
 #if McuLib_CONFIG_IS_KINETIS_KE
   /* no pin muxing needed */
@@ -312,7 +312,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   /* no muxing needed */
 #endif
-  return handle;
+  return (McuGPIO_Handle_t)handle;
 }
 
 McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio) {

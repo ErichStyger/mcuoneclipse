@@ -18,7 +18,9 @@
 extern "C" {
 #endif
 
-typedef void *McuBtn_Handle_t;
+typedef struct McuButton_Dummy_s { int dummy; } McuButton_Dummy_s; /*!< using a pointer to a struct instead a pointer to void for handle, used for handle type 'safety' only */
+
+typedef McuButton_Dummy_s *McuBtn_Handle_t; /*!< Button handle type */
 
 typedef struct {
   bool isLowActive;      /* default: true */

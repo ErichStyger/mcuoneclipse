@@ -381,7 +381,7 @@ uint8_t McuPCF85063A_GetDate(DATEREC *date) {
   if (McuPCF85063A_ReadTimeDate(&ttime, &tdate)!=ERR_OK) {
     return ERR_FAILED;
   }
-  date->Year = (uint16_t)(tdate.year+2000);
+  date->Year = (uint16_t)(tdate.year+2000); /* assume we are after the year 2000 */
   date->Month = tdate.month;
   date->Day = tdate.day;
   return ERR_OK;
@@ -390,7 +390,11 @@ uint8_t McuPCF85063A_GetDate(DATEREC *date) {
 uint8_t McuPCF85063A_SetDateInfo(uint16_t Year, uint8_t Month, uint8_t Day) {
   McuPCF85063A_TDATE tdate;
 
-  tdate.year = (uint8_t)(Year-2000);
+  if (Year>=2000) {
+    tdate.year = (uint8_t)(Year-2000);
+  } else if (Year>=1900) {
+    tdate.year = (uint8_t)(Year-1900);
+  }
   tdate.month = Month;
   tdate.day = Day;
   tdate.dayOfWeek = McuUtility_WeekDay(Year, Month, Day);
@@ -442,7 +446,7 @@ static uint8_t StrCatHWTimeDate(uint8_t *buf, size_t bufSize) {
   McuUtility_chcat(buf, bufSize, '.');
   McuUtility_strcatNum16uFormatted(buf, bufSize, tdate.month, '0', 2);
   McuUtility_chcat(buf, bufSize, '.');
-  McuUtility_strcatNum16u(buf, bufSize, (uint16_t)tdate.year+2000);
+  McuUtility_strcatNum16u(buf, bufSize, (uint16_t)tdate.year);
   McuUtility_strcat(buf, bufSize, (unsigned char*)", ");
   McuUtility_strcatNum16sFormatted(buf, bufSize, ttime.hour, '0', 2);
   McuUtility_chcat(buf, bufSize, ':');
@@ -581,7 +585,7 @@ static uint8_t CmdAlarmEnable(const unsigned char *p, bool enable) {
 }
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
-  unsigned char buf[64];
+  unsigned char buf[96];
   uint8_t res, data;
 
   McuShell_SendStatusStr((unsigned char*)"rtc", (const unsigned char*)"Status of PCF85063A RTC\r\n", io->stdOut);
@@ -595,10 +599,31 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   if (res==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum8Hex(buf, sizeof(buf), data);
-    if (data&(1<<1)) { /* 12_24 */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", 12h");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": ");
+    if (data&(1<<7)) { /* EXT_TEST */
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"7:test(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", 24h");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"7:normal(0), ");
+    }
+    if (data&(1<<5)) { /* STOP*/
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"5:RCTstopped(1), ");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"5:RTCruns(0), ");
+    }
+    if (data&(1<<3)) { /* CIE: correction interrupt enable */
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"3:CIEoff(1), ");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"3:CIEon(0), ");
+    }
+    if (data&(1<<1)) { /* 12_24 */
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"1:12h(1), ");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"1:24h(0), ");
+    }
+    if (data&(1<<0)) { /* CAP_SEL */
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0:12.5pF(1)");
+    } else {
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0:7pF(0)");
     }
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   } else {
@@ -610,34 +635,35 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   if (res==ERR_OK) {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum8Hex(buf, sizeof(buf), data);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": ");
     if (data&(1<<7)) { /* AIE */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", AIE on");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"7:AIEon(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", AIE off");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"7:AIEoff(0), ");
     }
     if (data&(1<<6)) { /* AF */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", AF on");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"6:AFon(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", AF off");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"6:AFoff(0), ");
     }
     if (data&(1<<5)) { /* MI */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", MI on");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"5:MIon(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", MI off");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"5:MIoff(0), ");
     }
     if (data&(1<<4)) { /* HMI */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", HMI on");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"4:HMIon(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", HMI off");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"4:HMIoff(0), ");
     }
     if (data&(1<<3)) { /* TF */
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", TF on");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"3:TFon(1), ");
     } else {
-      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", TF off");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"3:TFoff(0), ");
     }
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", COF ");
-    McuUtility_strcatNum8u(buf, sizeof(buf), data&0x3);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"2..0:COF(");
+    McuUtility_strcatNum8u(buf, sizeof(buf), data&0x0);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)")\r\n");
   } else {
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"ERROR\r\n");
   }
@@ -693,6 +719,9 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  reset", (const unsigned char*)"Send software reset command to device\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  write ram <val>", (const unsigned char*)"Write a byte value to the RAM\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  write ctrl1 <val>", (const unsigned char*)"Write a byte to the Control_1 (00h) register\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  write ctrl2 <val>", (const unsigned char*)"Write a byte to the Control_2 (01h) register\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  write offset <val>", (const unsigned char*)"Write a byte to the Offset (02h) register\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  time [hh:mm:ss[,z]]", (const unsigned char*)"Set the current time\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  date [dd.mm.yyyy]", (const unsigned char*)"Set the current date\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  alarm s|m|h <v>", (const unsigned char*)"Set alarm value for second, minute or hour\r\n", io->stdOut);
@@ -708,6 +737,24 @@ uint8_t McuPCF85063A_ParseCommand(const unsigned char *cmd, bool *handled, const
     p = cmd + sizeof("rtc write ram ")-1;
     if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
       return McuPCF85063A_WriteRamByte(val);
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "rtc write ctrl1 ", sizeof("rtc write ctrl1 ")-1)==0) {
+    *handled = true;
+    p = cmd + sizeof("rtc write ctrl1 ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
+      return McuPCF85063A_WriteControl1(val);
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "rtc write ctrl2 ", sizeof("rtc write ctrl2 ")-1)==0) {
+    *handled = true;
+    p = cmd + sizeof("rtc write ctrl2 ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
+      return McuPCF85063A_WriteControl2(val);
+    }
+  } else if (McuUtility_strncmp((char*)cmd, "rtc write offset ", sizeof("rtc write offset ")-1)==0) {
+    *handled = true;
+    p = cmd + sizeof("rtc write offset ")-1;
+    if (McuUtility_xatoi(&p, &val)==ERR_OK && val>=0 && val<=0xff) {
+      return McuPCF85063A_WriteOffset(val);
     }
   } else if (McuUtility_strncmp((char*)cmd, "rtc date ", sizeof("rtc date ")-1)==0) {
     *handled = TRUE;

@@ -15,6 +15,12 @@
 #include "McuArmTools.h"
 #include "McuTimeDate.h"
 #include "McuLog.h"
+#if PL_CONFIG_USE_MCUFLASH
+  #include "MinINI/McuFlash.h"
+#endif
+#if PL_CONFIG_USE_MINI
+  #include "minIni/McuMinINI.h"
+#endif
 #if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
@@ -83,6 +89,13 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 //  McuTimeDate_ParseCommand,
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
+#endif
+#if PL_CONFIG_USE_MCUFLASH
+  McuFlash_ParseCommand,
+#endif
+#if PL_CONFIG_USE_MINI
+  McuMinINI_ParseCommand,
+  ini_ParseCommand,
 #endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_ParseCommand,

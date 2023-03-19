@@ -23,7 +23,9 @@
   #include "McuSystemView.h"
 #endif
 #include "McuLog.h"
-#include "Shell.h"
+#if PL_CONFIG_USE_SHELL
+  #include "Shell.h"
+#endif
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   #include "McuRTOS.h"
 #endif
@@ -94,9 +96,6 @@
 #if PL_CONFIG_USE_PWM_LED
   #include "PwmLed.h"
 #endif
-#if PL_CONFIG_USE_PCF85063A
-  #include "McuPCF85063A.h"
-#endif
 #if PL_CONFIG_USE_POWER
   #include "power.h"
 #endif
@@ -106,6 +105,21 @@
 #if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
   #include "energy.h"
 #endif
+#if PL_CONFIG_USE_UNIT_TESTS
+  #include "UnitTest.h"
+#endif
+#if PL_CONFIG_USE_SEMIHOSTING
+  #include "McuSemihost.h"
+#endif
+#if PL_CONFIG_USE_SENSOR
+  #include "sensor.h"
+#endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "wdt.h"
+#endif
+#if PL_CONFIG_USE_EXT_RTC
+  #include "extRTC.h"
+#endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
@@ -114,6 +128,9 @@ void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
 }
 
 void PL_Init(void) {
+#if PL_CONFIG_USE_WATCHDOG
+  WDT_EnableWatchdog(); /* Enable watchdog timer early, to catch any deadlocks during initialization */
+#endif
 #if PL_CONFIG_USE_USB_CDC
   stdio_init_all(); /* needed for USB CDC, but might cause issues while debugging, because USB traffic might stall */
 #endif
@@ -133,12 +150,16 @@ void PL_Init(void) {
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_Init();
 #endif
+#if PL_CONFIG_USE_WATCHDOG
+  WDT_Init();
+#endif
   McuWait_Init();
   McuArmTools_Init();
   McuUtility_Init();
   McuHardFault_Init();
-
+#if PL_CONFIG_USE_SHELL
   SHELL_Init();
+#endif
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   WS2812_Init();
   NEO_Init();
@@ -195,8 +216,8 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_PWM_LED
   PwmLed_Init();
 #endif
-#if PL_CONFIG_USE_PCF85063A
-  McuPCF85063A_Init();
+#if PL_CONFIG_USE_EXT_RTC
+  ExtRTC_Init();
 #endif
 #if PL_CONFIG_USE_POWER
   Power_Init();
@@ -216,5 +237,14 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
   McuModbus_Init();
   McuHeidelberg_Init();
+#endif
+#if PL_CONFIG_USE_UNIT_TESTS
+  UnitTest_Init();
+#endif
+#if PL_CONFIG_USE_SEMIHOSTING
+  McuSemiHost_Init();
+#endif
+#if PL_CONFIG_USE_SENSOR
+  Sensor_Init();
 #endif
 }

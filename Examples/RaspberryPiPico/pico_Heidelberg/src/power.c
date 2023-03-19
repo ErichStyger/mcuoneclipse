@@ -13,6 +13,18 @@
 #if PL_CONFIG_USE_ADC
   #include "analog.h"
 #endif
+#if PL_CONFIG_USE_GUI
+  #include "gui.h"
+#endif
+#if PL_CONFIG_USE_SENSOR
+  #include "sensor.h"
+#endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "wdt.h"
+#endif
+#if PL_CONFIG_USE_EXT_RTC
+  #include "extRTC.h"
+#endif
 #include "power.h"
 #include "lights.h"
 #include "McuUtility.h"
@@ -20,6 +32,7 @@
 #include "McuLog.h"
 #include "McuWait.h"
 #include "McuArmTools.h"
+#include "McuI2cLib.h"
 
 static struct power_s {
   #if POWER_CONFIG_USE_EN_VCC2
@@ -61,9 +74,9 @@ bool Power_GetUsbPowerIsOn(void) {
 #if POWER_CONFIG_USE_EN_VCC2
 void Power_SetVcc2IsOn(bool on) {
   if (on) {
-    McuGPIO_SetLow(power.vcc2.pin); /* LOW: turn it on */
+    McuGPIO_SetLow(power.vcc2.pin); /* LOW: turn power on */
   } else {
-    McuGPIO_SetHigh(power.vcc2.pin); /* HIGH: turn it off */
+    McuGPIO_SetHigh(power.vcc2.pin); /* HIGH: turn power off */
   }
 }
 #endif
@@ -124,9 +137,19 @@ bool Power_GetPsIsOn(void) {
 
 uint8_t Power_GetBatteryChargeLevel(void) {
 #if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
-  static uint8_t avgArr[3]; /* build average */
+  static uint8_t avgArr[8]; /* build average */
   static uint8_t avgIdx= 0;
-  avgArr[avgIdx++] = Analog_GetBatteryChargeLevel();
+  static bool isFirstTime = true;
+  uint8_t chargeLevel;
+
+  chargeLevel = Analog_GetBatteryChargeLevel();
+  avgArr[avgIdx++] = chargeLevel;
+  if (isFirstTime) { /* first time after boot: fill array with what we have */
+    isFirstTime = false;
+    while(avgIdx<sizeof(avgArr)/sizeof(avgArr[0])) {
+      avgArr[avgIdx++] = chargeLevel;
+    }
+  }
   if (avgIdx>=sizeof(avgArr)/sizeof(avgArr[0])) {
     avgIdx = 0;
   }
@@ -134,7 +157,11 @@ uint8_t Power_GetBatteryChargeLevel(void) {
   for(int i=0;i<sizeof(avgArr)/sizeof(avgArr[0]); i++) {
     avg += avgArr[i];
   }
-  avg = avg/(sizeof(avgArr)/sizeof(avgArr[0]));
+  avg = avg/((sizeof(avgArr)/sizeof(avgArr[0])));
+  avg++; /* round up */
+  if (avg>100) { /* make sure it is 100% max */
+    avg = 100;
+  }
   return avg;
 #else
   return 100; /* assume full battery */
@@ -169,6 +196,36 @@ void Power_WaitForSufficientBatteryChargeAtStartup(void) {
     McuArmTools_SoftwareReset();
     __asm("nop"); /* \todo: enter low power mode if running RTOS */
   }
+#endif
+}
+
+void Power_SuspendVcc2(void) {
+#if PL_CONFIG_USE_EXT_RT
+  ExtRTC_Suspend();
+#endif
+#if PL_CONFIG_USE_SENSOR
+  Sensor_Suspend();
+#endif
+#if PL_CONFIG_USE_GUI
+  GUI_Suspend();
+#endif
+#if POWER_CONFIG_USE_EN_VCC2
+  Power_SetVcc2IsOn(false); /* turn off power with Vcc2 pin */
+#endif
+}
+
+void Power_ResumeVcc2(void) {
+#if POWER_CONFIG_USE_EN_VCC2
+  Power_SetVcc2IsOn(true); /* turn on power with Vcc2 pin */
+#endif
+#if PL_CONFIG_USE_GUI
+  GUI_Resume();
+#endif
+#if PL_CONFIG_USE_SENSOR
+  Sensor_Resume();
+#endif
+#if PL_CONFIG_USE_EXT_RTC
+  ExtRTC_Resume();
 #endif
 }
 
@@ -232,7 +289,8 @@ uint8_t Power_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
     McuShell_SendHelpStr((unsigned char*)"  ps on|off", (const unsigned char*)"Turn DC converter power saving on or off\r\n", io->stdOut);
 #endif
 #if POWER_CONFIG_USE_EN_VCC2
-    McuShell_SendHelpStr((unsigned char*)"  vcc2 on|off", (const unsigned char*)"Turn VCC2 on or off\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  vcc2 on|off", (const unsigned char*)"Turn Vcc2 pin on or off\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  vcc2 suspend|resume", (const unsigned char*)"Shutdown or restart Vcc2 devices, including Vcc2 pin\r\n", io->stdOut);
 #endif
     return ERR_OK;
   } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "power status")==0)) {
@@ -251,11 +309,21 @@ uint8_t Power_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
 #if POWER_CONFIG_USE_EN_VCC2
   } else if (McuUtility_strcmp((char*)cmd, "power vcc2 on")==0) {
     *handled = TRUE;
-    Power_SetVcc2IsOn(true);
+    Power_SetVcc2IsOn(true); /* turning on */
     return ERR_OK;
   } else if (McuUtility_strcmp((char*)cmd, "power vcc2 off")==0) {
     *handled = TRUE;
-    Power_SetVcc2IsOn(false);
+    Power_SetVcc2IsOn(false); /* turning off */
+    return ERR_OK;
+#endif
+#if POWER_CONFIG_USE_EN_VCC2
+  } else if (McuUtility_strcmp((char*)cmd, "power vcc2 suspend")==0) {
+    *handled = TRUE;
+    Power_SuspendVcc2();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "power vcc2 resume")==0) {
+    *handled = TRUE;
+    Power_ResumeVcc2();
     return ERR_OK;
 #endif
 #if POWER_CONFIG_USE_EN_PWR
@@ -284,7 +352,7 @@ void Power_Init(void) {
     McuGPIO_GetDefaultConfig(&config);
     config.hw.pull = McuGPIO_PULL_DISABLE;
     config.isInput = false; /* output */
-    config.isHighOnInit = true; /* VCC2 PMOSFET pin is low active: turn off power at startup */
+    config.isHighOnInit = true; /* VCC2 PMOSFET pin is low active: turn off power at startup with HIGH */
     config.hw.pin = POWER_CONFIG_VCC2_PIN;
     power.vcc2.pin = McuGPIO_InitGPIO(&config);
   }

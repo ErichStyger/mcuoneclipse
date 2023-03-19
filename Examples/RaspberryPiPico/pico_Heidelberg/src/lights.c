@@ -24,17 +24,44 @@
 #if PL_CONFIG_USE_GUI
   #include "gui.h"
 #endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "wdt.h"
+#endif
 
 /* defaults */
 #define LIGHTS_DEFAULT_IS_ON      (false)
 #define LIGHTS_DEFAULT_COLOR      (0xff)
 #define LIGHTS_DEFAULT_BRIGHTNESS (0x50)
 
-static struct lights_t {
+typedef struct lights_t {
   bool isOn; /* if light is on or not */
   uint32_t color; /* current color, in WRGB format, 8bit each */
   uint8_t brightness; /* current brightness, 0..255 */
-} lights;
+} lights_t;
+
+static lights_t currLights; /* current light values and values stored in FLASH */
+#if PL_CONFIG_USE_MINI
+  static lights_t storedLights; /* values stored in FLASH */
+#endif
+
+static TaskHandle_t Lights_TaskHandle;
+
+void Lights_StoreValues(void) {
+#if PL_CONFIG_USE_MINI
+  if (currLights.isOn!=storedLights.isOn) {
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, currLights.isOn, NVMC_MININI_FILE_NAME);
+    storedLights.isOn = currLights.isOn;
+  }
+  if (currLights.color!=storedLights.color) {
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, currLights.color, NVMC_MININI_FILE_NAME);
+    storedLights.color = currLights.color;
+  }
+  if (currLights.brightness!=storedLights.brightness) {
+    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, currLights.brightness, NVMC_MININI_FILE_NAME);
+    storedLights.brightness = currLights.brightness;
+  }
+#endif
+}
 
 void Lights_SetLed(uint32_t color) {
   /* setting LEDs directly, without storing values. Can be used for example during startup */
@@ -47,29 +74,19 @@ void Lights_SetLed(uint32_t color) {
 }
 
 bool Lights_GetLightIsOn(void) {
-  return lights.isOn;
+  return currLights.isOn;
 }
 
 void Lights_SetLightIsOn(bool on) {
-  if (lights.isOn!=on) {
-    lights.isOn = on;
-  #if PL_CONFIG_USE_MINI
-    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, lights.isOn, NVMC_MININI_FILE_NAME);
-  #endif
-  }
+  currLights.isOn = on;
 }
 
 void Lights_SetColor(uint32_t color) {
-  if (lights.color!=color) {
-    lights.color = color;
-  #if PL_CONFIG_USE_MINI
-    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, lights.color, NVMC_MININI_FILE_NAME);
-  #endif
-  }
+  currLights.color = color;
 }
 
 uint32_t Lights_GetColor(void) {
-  return lights.color;
+  return currLights.color;
 }
 
 void Lights_SetBrightnessPercent(uint8_t percent) {
@@ -80,41 +97,58 @@ void Lights_SetBrightnessPercent(uint8_t percent) {
     percent = 100;
   }
   val = McuUtility_map(percent, 0, 100, 0, 255);
-  if (lights.brightness!=val) {
-    lights.brightness = val;
-  #if PL_CONFIG_USE_MINI
-    McuMinINI_ini_putl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, lights.brightness, NVMC_MININI_FILE_NAME);
-  #endif
-  }
+  currLights.brightness = val;
 }
 
 uint8_t Lights_GetBrightnessValue(void) {
   /* return the percentage */
-  return lights.brightness;
+  return currLights.brightness;
 }
 
 uint8_t Lights_GetBrightnessPercent(void) {
   /* return the percentage */
-  return McuUtility_map(lights.brightness, 0, 255, 0, 100);
+  return McuUtility_map(currLights.brightness, 0, 255, 0, 100);
 }
+
+void Lights_Suspend(void) {
+  vTaskSuspend(Lights_TaskHandle);
+}
+
+void Lights_Resume(void) {
+  vTaskResume(Lights_TaskHandle);
+}
+
 
 static void Lights_Task(void *pv) {
 #if PL_CONFIG_USE_MINI
-  lights.isOn = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, LIGHTS_DEFAULT_IS_ON, NVMC_MININI_FILE_NAME);
-  lights.color = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, LIGHTS_DEFAULT_COLOR, NVMC_MININI_FILE_NAME);
-  lights.brightness = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, LIGHTS_DEFAULT_BRIGHTNESS, NVMC_MININI_FILE_NAME);
+  currLights.isOn = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, LIGHTS_DEFAULT_IS_ON, NVMC_MININI_FILE_NAME);
+  currLights.color = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_COLOR, LIGHTS_DEFAULT_COLOR, NVMC_MININI_FILE_NAME);
+  currLights.brightness = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_BRIGHTNESS, LIGHTS_DEFAULT_BRIGHTNESS, NVMC_MININI_FILE_NAME);
+  storedLights.isOn = currLights.isOn;
+  storedLights.color = currLights.color;
+  storedLights.brightness = currLights.brightness;
 #else
-  lights.isOn = LIGHTS_DEFAULT_IS_ON;
-  lights.color = LIGHTS_DEFAULT_COLOR;
-  lights.brightness = LIGHTS_DEFAULT_BRIGHTNESS;
+  currLights.isOn = LIGHTS_DEFAULT_IS_ON;
+  currLights.color = LIGHTS_DEFAULT_COLOR;
+  currLights.brightness = LIGHTS_DEFAULT_BRIGHTNESS;
 #endif
   /* indicate power-on with a short blink */
   Lights_SetLed(0x1100); /* green */
-  vTaskDelay(pdMS_TO_TICKS(500));
+  for(int i=0; i<5; i++) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+  #if PL_CONFIG_USE_WATCHDOG
+    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+  #endif
+  }
   Lights_SetLed(0); /* off */
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  for(int i=0; i<10; i++) {
+    vTaskDelay(pdMS_TO_TICKS(100));
+  #if PL_CONFIG_USE_WATCHDOG
+    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+  #endif
+  }
   for(;;) {
-    if (!lights.isOn) { /* turned off */
+    if (!currLights.isOn) { /* turned off */
     #if PL_CONFIG_USE_NEO_PIXEL_HW
       NEO_ClearAllPixel();
       (void)NEO_TransferPixels();
@@ -124,8 +158,8 @@ static void Lights_Task(void *pv) {
     } else {
       uint32_t c;
 
-      c = NEO_GammaCorrect32(lights.color); /* gamma color level correction */
-      c = NEO_BrightnessFactorColor(c, lights.brightness); /* linear brightness correction */
+      c = NEO_GammaCorrect32(currLights.color); /* gamma color level correction */
+      c = NEO_BrightnessFactorColor(c, currLights.brightness); /* linear brightness correction */
     #if PL_CONFIG_USE_NEO_PIXEL_HW
       NEO_SetAllPixelColor(c);
       (void)NEO_TransferPixels();
@@ -134,6 +168,9 @@ static void Lights_Task(void *pv) {
     #endif
     }
     vTaskDelay(pdMS_TO_TICKS(100));
+  #if PL_CONFIG_USE_WATCHDOG
+    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+  #endif
   }
 }
 
@@ -141,15 +178,15 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
 
   McuShell_SendStatusStr((unsigned char*)"light", (const unsigned char*)"Status of light\r\n", io->stdOut);
-  McuShell_SendStatusStr((uint8_t*)"  on", lights.isOn?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+  McuShell_SendStatusStr((uint8_t*)"  on", currLights.isOn?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  McuUtility_strcatNum32Hex(buf, sizeof(buf), lights.color);
+  McuUtility_strcatNum32Hex(buf, sizeof(buf), currLights.color);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  color", (unsigned char*)buf, io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
-  McuUtility_strcatNum8Hex(buf, sizeof(buf), lights.brightness);
+  McuUtility_strcatNum8Hex(buf, sizeof(buf), currLights.brightness);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (0-0xFF) ");
-  McuUtility_strcatNum8u(buf, sizeof(buf), McuUtility_map(lights.brightness, 0, 0xff, 0, 100));
+  McuUtility_strcatNum8u(buf, sizeof(buf), McuUtility_map(currLights.brightness, 0, 0xff, 0, 100));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\%\r\n");
   McuShell_SendStatusStr((uint8_t*)"  brightness", (unsigned char*)buf, io->stdOut);
   return ERR_OK;
@@ -213,7 +250,7 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
 }
 
 void Lights_Init(void) {
-  if (xTaskCreate(Lights_Task, "light", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, NULL) != pdPASS) {
+  if (xTaskCreate(Lights_Task, "light", 500/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+1, &Lights_TaskHandle) != pdPASS) {
     McuLog_fatal("failed creating task");
     for(;;){} /* error */
   }

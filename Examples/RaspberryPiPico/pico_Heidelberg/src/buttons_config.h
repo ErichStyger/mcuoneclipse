@@ -9,6 +9,8 @@
 
 #include "app_platform.h"
 
+#if PL_CONFIG_USE_BUTTONS
+
 /* GPIO pins for buttons */
 #if (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
   #define BUTTONS_PINS_NAV_UP_PIN       3u
@@ -58,13 +60,12 @@ typedef enum {
 #define BTN_BIT_NAV_PREV      (1<<6)
 #endif
 
-#include "app_platform.h"
 #if PL_CONFIG_HW_ACTIVE_HW_VERSION ==PL_CONFIG_HW_VERSION_0_1
   #define BTN_CONFIG_ROTATION  (180)
 #elif PL_CONFIG_HW_ACTIVE_HW_VERSION ==PL_CONFIG_HW_VERSION_0_2
-  #define BTN_CONFIG_ROTATION  (0)
+  #define BTN_CONFIG_ROTATION  (180)
 #elif PL_CONFIG_HW_ACTIVE_HW_VERSION ==PL_CONFIG_HW_VERSION_0_3
-  #define BTN_CONFIG_ROTATION  (0) /* todo */
+  #define BTN_CONFIG_ROTATION  (0) /* \todo check */
 #elif PL_CONFIG_HW_ACTIVE_HW_VERSION ==PL_CONFIG_HW_VERSION_0_4
   #define BTN_CONFIG_ROTATION  (0)
 #elif (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5) || (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
@@ -72,5 +73,7 @@ typedef enum {
 #else
   #define BTN_CONFIG_ROTATION  (0) /* 180 for rotated nav PCB 180 degree */
 #endif
+
+#endif /* PL_CONFIG_USE_BUTTONS */
 
 #endif /* BUTTONS_CONFIG_H_ */

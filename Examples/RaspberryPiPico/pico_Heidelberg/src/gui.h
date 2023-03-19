@@ -18,7 +18,16 @@ typedef enum Gui_Event_e {
   Gui_Event_LightColor_Changed,
   Gui_Event_LightBrightness_Changed,
   Gui_Event_LightOnOff_Changed,
+#if PL_CONFIG_USE_OLED_CLOCK
   Gui_Event_Clock_Changed,
+
+  Gui_Event_Hour_Changed,
+  Gui_Event_Minute_Changed,
+
+  Gui_Event_Day_Changed,
+  Gui_Event_Month_Changed,
+  Gui_Event_Year_Changed,
+#endif
 #if GUI_CONFIG_USE_SENSOR
   Gui_Event_Sensor_Changed,
 #endif
@@ -26,6 +35,9 @@ typedef enum Gui_Event_e {
 } Gui_Event_e;
 
 void GUI_SendEvent(Gui_Event_e event);
+
+void GUI_Suspend(void);
+void GUI_Resume(void);
 
 void GUI_NotifyUserAction(void);
 

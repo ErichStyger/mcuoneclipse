@@ -910,7 +910,7 @@ uint32_t McuArmTools_GetUnusedMainStackSpace(void)
 void McuArmTools_FillMainStackSpace(void)
 {
   uint32_t *base = (uint32_t*)&McuArmTools_CONFIG_LINKER_SYMBOL_STACK_BASE;
-  uint32_t *msp = McuArmTools_GetSP(); /* get current MSP stack pointer */
+  uint32_t *msp = McuArmTools_GetSP()-32; /* get current MSP stack pointer, with a safety margin of 32 */
   /* the current MSP is near the top */
   while(base<msp) { /* fill from the base to the top */
     *base = McuArmTools_CONFIG_STACK_CHECK_PATTERN;

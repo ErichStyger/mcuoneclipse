@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if 1 || PL_CONFIG_USE_USB_CDC
+#if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
 #include "McuLib.h"
@@ -37,6 +37,12 @@
   #include "server.h"
   #include "client.h"
 #endif
+#if PL_CONFIG_USE_MCUFLASH
+  #include "minIni/McuFlash.h"
+#endif
+#if PL_CONFIG_USE_MINI
+  #include "minIni/McuMinINI.h"
+#endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
@@ -66,6 +72,13 @@ void PL_Init(void) {
   McuUtility_Init();
   McuHardFault_Init();
   SHELL_Init();
+#if PL_CONFIG_USE_MCUFLASH
+  McuFlash_Init();
+  McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
+#if PL_CONFIG_USE_MINI
+  McuMinINI_Init();
+#endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
 #endif

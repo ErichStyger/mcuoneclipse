@@ -21,6 +21,7 @@
 							<builder id="org.eclipse.cdt.build.core.settings.default.builder.1012905869" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.635362309" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.816950561" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.undef.symbols.1534215330" name="Undefined Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.undef.symbols"/>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.646711681" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.155280981" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
@@ -34,6 +35,26 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="0.1832296965.1706964356" name="/" resourcePath="McuLib">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1344972990" name="No ToolChain" superClass="org.eclipse.cdt.build.core.prefbase.toolchain" unusedChildren="">
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1805695295" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs.635362309"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1703084198" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder.816950561">
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1564079454" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.901166819" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder.155280981">
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.813382091" languageId="com.crt.advproject.com.crt.mcu.assembly" languageName="Assembly" sourceContentType="com.crt.advproject.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.886827956" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder.792776829">
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1119037007" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.900992585" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder.1038420835">
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1664051462" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -49,4 +70,6 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

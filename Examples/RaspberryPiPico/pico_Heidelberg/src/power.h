@@ -44,7 +44,7 @@ bool Power_GetUsbPowerIsOn(void);
 
 #if POWER_CONFIG_USE_EN_VCC2
   /*!
-   * \brief Return the status of VCC2 pin
+   * \brief Return the status of VCC2 pin, used to turn off supply for OLED and sensor.
    * \return true: Vcc2 is on, false: it is off
    */
   bool Power_GetVcc2IsOn(void);
@@ -54,6 +54,16 @@ bool Power_GetUsbPowerIsOn(void);
    * \param on Turn it on with true, off with false
    */
   void Power_SetVcc2IsOn(bool on);
+
+  /*!
+     \brief Shut down or suspend components and software using Vcc2, which is the sensor and the OLED
+   */
+  void Power_SuspendVcc2(void);
+
+  /*!
+     \brief Restart or resume components and software using Vcc2 after Power_ShutdownVcc2, which is the sensor and the OLED
+   */
+  void Power_ResumeVcc2(void);
 #endif
 
 /*!

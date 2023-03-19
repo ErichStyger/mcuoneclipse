@@ -7,6 +7,8 @@
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
 
+#include "app_platform.h"
+#if PL_CONFIG_USE_BUTTONS
 #include <stdbool.h>
 #include <stdint.h>
 #include "buttons_config.h"
@@ -33,5 +35,7 @@ void BTN_Deinit(void);
  * \brief Module initialization
  */
 void BTN_Init(void);
+
+#endif /* PL_CONFIG_USE_BUTTONS */
 
 #endif /* BUTTONS_H_ */

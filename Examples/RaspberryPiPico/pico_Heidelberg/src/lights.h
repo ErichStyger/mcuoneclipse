@@ -11,6 +11,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/*!
+ * \brief Setting lights directly, without storing value in NVMC
+ * \param color (W)RGB color information
+ */
 void Lights_SetLed(uint32_t color);
 
 void Lights_SetColor(uint32_t color);
@@ -22,6 +26,21 @@ uint8_t Lights_GetBrightnessValue(void);
 
 bool Lights_GetLightIsOn(void);
 void Lights_SetLightIsOn(bool on);
+
+/*!
+ * \brief Suspends the light task
+ */
+void Lights_Suspend(void);
+
+/*!
+ * \brief Resumes the light task
+ */
+void Lights_Resume(void);
+
+/*!
+ * \brief Used to store the light values to flash, used for delayed and reduced storage.
+ */
+void Lights_StoreValues(void);
 
 uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 

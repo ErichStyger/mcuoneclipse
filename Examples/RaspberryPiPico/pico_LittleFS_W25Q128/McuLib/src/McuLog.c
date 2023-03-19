@@ -287,12 +287,12 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
   if (!McuLog_ConfigData.quiet) {
     for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
       if(McuLog_ConfigData.consoleIo[i]!=NULL) { /* log to console */
-        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdOut);
         /* open argument list */
         va_start(list, fmt);
         McuXFormat_xvformat(OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr, fmt, list);
         va_end(list);
-        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdOut);
       }
     } /* for */
   }

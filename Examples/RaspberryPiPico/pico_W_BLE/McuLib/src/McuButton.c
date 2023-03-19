@@ -97,7 +97,7 @@ McuBtn_Handle_t McuBtn_InitButton(McuBtn_Config_t *config) {
     memcpy(&gpioConfig.hw, &config->hw, sizeof(gpioConfig.hw)); /* copy hardware information */
     handle->gpio = McuGPIO_InitGPIO(&gpioConfig);
   }
-  return handle;
+  return (McuBtn_Handle_t)handle;
 }
 
 McuBtn_Handle_t McuBtn_DeinitButton(McuBtn_Handle_t button) {
