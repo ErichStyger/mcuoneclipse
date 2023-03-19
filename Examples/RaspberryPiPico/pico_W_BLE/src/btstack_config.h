@@ -2,7 +2,7 @@
 #define _PICO_BTSTACK_BTSTACK_CONFIG_H
 
 #ifndef ENABLE_BLE
-#error Please link to pico_btstack_ble
+  #error Please link to pico_btstack_ble
 #endif
 
 #include "app_platform.h"
@@ -14,11 +14,11 @@
 #define ENABLE_PRINTF_HEXDUMP
 
 // for the client
-#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
-#define ENABLE_LE_CENTRAL
-#define MAX_NR_GATT_CLIENTS 1
+#if PL_CONFIG_STANDALONE_BLE_CLIENT
+  #define ENABLE_LE_CENTRAL
+  #define MAX_NR_GATT_CLIENTS 1
 #else
-#define MAX_NR_GATT_CLIENTS 0
+  #define MAX_NR_GATT_CLIENTS 0
 #endif
 
 // BTstack configuration. buffers, sizes, ...

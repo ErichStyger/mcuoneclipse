@@ -26,6 +26,7 @@
   #include "MinIniKeys.h"
 #endif
 #if PL_CONFIG_USE_BLE
+  #include "ble_client.h"
   #include "ble_server.h"
 #endif
 

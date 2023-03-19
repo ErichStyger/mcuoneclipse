@@ -93,9 +93,9 @@ void PL_Init(void) {
   NtpClient_Init();
 #endif
 #if PL_CONFIG_USE_BLE
-#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+#if PL_CONFIG_STANDALONE_BLE_CLIENT
   BleClient_Init();
-#elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#elif PL_CONFIG_STANDALONE_BLE_SERVER
   BleServer_Init();
 #else
   #error"unknown configuration"

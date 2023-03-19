@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+#if PL_CONFIG_STANDALONE_BLE_CLIENT
 #include "ble_client.h"
 #include <stdio.h>
 #include "btstack.h"
@@ -286,4 +286,4 @@ void BleClient_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
-#endif
+#endif /* PL_CONFIG_STANDALONE_BLE_CLIENT */

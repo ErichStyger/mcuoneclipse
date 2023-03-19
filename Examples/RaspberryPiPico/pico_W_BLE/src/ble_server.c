@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #include "app_platform.h"
-#if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#if PL_CONFIG_STANDALONE_BLE_SERVER
 #include "ble_server.h"
 #include "pico/cyw43_arch.h"
 #include "pico/btstack_cyw43.h"
@@ -224,4 +224,4 @@ void BleServer_Init(void) {
   }
 #endif
 }
-#endif
+#endif /* PL_CONFIG_STANDALONE_BLE_SERVER */
