@@ -86,7 +86,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuShell_ParseCommand, /* McuShell component, is first in list */
   McuRTOS_ParseCommand, /* FreeRTOS shell parser */
   McuArmTools_ParseCommand,
-//  McuTimeDate_ParseCommand,
+  McuTimeDate_ParseCommand,
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
 #endif

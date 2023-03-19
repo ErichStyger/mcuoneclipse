@@ -26,7 +26,7 @@
   #include "MinIniKeys.h"
 #endif
 #if PL_CONFIG_USE_BLE
-  #include "server.h"
+  #include "ble_server.h"
 #endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
@@ -109,7 +109,7 @@ static void WiFiTask(void *pv) {
     for(;;) {}
   }
 #if PL_CONFIG_USE_BLE
-  Server_ResumeBLETask();
+  BleServer_ResumeTask();
 #endif
   wifi.isInitialized = true;
 #if PL_CONFIG_USE_WIFI

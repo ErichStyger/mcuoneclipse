@@ -6,6 +6,7 @@
 
 #include "app_platform.h"
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
+#include "ble_client.h"
 #include <stdio.h>
 #include "btstack.h"
 #include "btstack_run_loop.h"

@@ -5,6 +5,7 @@
  */
 #include "app_platform.h"
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
+#include "ble_server.h"
 #include "pico/cyw43_arch.h"
 #include "pico/btstack_cyw43.h"
 #include "McuLog.h"
@@ -174,7 +175,7 @@ static btstack_packet_callback_registration_t hci_event_callback_registration;
   }
 #endif
 
-void Server_ResumeBLETask(void) {
+void BleServer_ResumeTask(void) {
   if (taskHandle!=NULL) {
     vTaskResume(taskHandle);
   }
@@ -226,7 +227,7 @@ static void serverTask(void *pv) {
   }
 }
 
-void Server_Init(void) {
+void BleServer_Init(void) {
   if (xTaskCreate(
       serverTask,  /* pointer to the task */
       "BLEserver", /* task name for kernel awareness debugging */

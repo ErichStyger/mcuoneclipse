@@ -10,9 +10,11 @@ file(GLOB FILES
   application.c
   Shell.c
   FreeRTOShooks.c
-  client.c
-  server.c
+  ble_client.c
+  ble_server.c
   PicoWiFi.c
+  ntp_client.c
+  dns_resolver.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory

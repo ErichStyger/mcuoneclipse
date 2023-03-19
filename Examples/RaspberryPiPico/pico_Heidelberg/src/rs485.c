@@ -409,7 +409,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"rs", (unsigned char*)"Group of RS-485 commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-#if PL_CONFIG_USE_NVMC
+#if PL_CONFIG_USE_MCUFLASH
   McuShell_SendHelpStr((unsigned char*)"  addr <addr>", (unsigned char*)"Set RS-485 address\r\n", io->stdOut);
 #endif
   McuShell_SendHelpStr((unsigned char*)"  send <text>", (unsigned char*)"Send a text to the RS-485 bus\r\n", io->stdOut);
@@ -439,7 +439,7 @@ uint8_t RS485_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
       return ERR_OK;
     }
     return ERR_FAILED;
-#if PL_CONFIG_USE_NVMC
+#if PL_CONFIG_USE_MCUFLASH
   } else if (McuUtility_strncmp((char*)cmd, "rs addr ", sizeof("rs addr ")-1)==0) {
     *handled = true;
     p = cmd + sizeof("rs addr ")-1;

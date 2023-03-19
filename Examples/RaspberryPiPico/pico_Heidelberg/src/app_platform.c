@@ -55,7 +55,7 @@
   #include "buttons.h"
   #include "debounce.h"
 #endif
-#if PL_CONFIG_USE_NVMC
+#if PL_CONFIG_USE_MCUFLASH
   #include "minIni/McuFlash.h"
 #endif
 #if PL_CONFIG_USE_MINI
@@ -67,7 +67,7 @@
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
 #endif
-#if PL_CONFIG_USE_PICO_W
+#if PL_CONFIG_USE_WIFI
   #include "PicoWiFi.h"
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT
@@ -183,12 +183,14 @@ void PL_Init(void) {
 #if PL_CONFIG_IS_APP_LED_COUNTER
   NeoCounter_Init();
 #endif
-#if PL_CONFIG_USE_MINI
+#if PL_CONFIG_USE_MCUFLASH
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
+#if PL_CONFIG_USE_MINI
   McuMinINI_Init();
 #endif
-#if PL_CONFIG_USE_PICO_W
+#if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT

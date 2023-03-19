@@ -23,19 +23,14 @@
   #include "McuSystemView.h"
 #endif
 #include "McuLog.h"
-#include "Shell.h"
+#if PL_CONFIG_USE_SHELL
+  #include "Shell.h"
+#endif
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   #include "McuRTOS.h"
 #endif
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
-#endif
-#if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
-#endif
-#if PL_CONFIG_USE_BLE
-  #include "server.h"
-  #include "client.h"
 #endif
 #if PL_CONFIG_USE_MCUFLASH
   #include "minIni/McuFlash.h"
@@ -43,13 +38,23 @@
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
 #endif
+#if PL_CONFIG_USE_WIFI
+  #include "PicoWiFi.h"
+#endif
+#if PL_CONFIG_USE_NTP_CLIENT
+  #include "ntp_client.h"
+#endif
+#if PL_CONFIG_USE_BLE
+  #include "ble_server.h"
+  #include "ble_client.h"
+#endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
-  stdio_init_all(); /* needed for USB CDC, but can cause problems while debugging */
+  stdio_init_all(); /* needed for USB CDC, but might cause issues while debugging, because USB traffic might stall */
 #endif
   McuLib_Init();
 #if McuLib_CONFIG_SDK_USE_FREERTOS
@@ -71,7 +76,9 @@ void PL_Init(void) {
   McuArmTools_Init();
   McuUtility_Init();
   McuHardFault_Init();
+#if PL_CONFIG_USE_SHELL
   SHELL_Init();
+#endif
 #if PL_CONFIG_USE_MCUFLASH
   McuFlash_Init();
   McuFlash_RegisterMemory((void*)McuMinINI_CONFIG_FLASH_NVM_ADDR_START, McuMinINI_CONFIG_FLASH_NVM_NOF_BLOCKS*McuMinINI_CONFIG_FLASH_NVM_BLOCK_SIZE);
@@ -82,14 +89,16 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
 #endif
+#if PL_CONFIG_USE_NTP_CLIENT
+  NtpClient_Init();
+#endif
 #if PL_CONFIG_USE_BLE
 #if PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT
-  Client_Init();
+  BleClient_Init();
 #elif PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER
-  Server_Init();
+  BleServer_Init();
 #else
   #error"unknown configuration"
 #endif
 #endif
 }
-

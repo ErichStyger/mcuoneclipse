@@ -35,8 +35,8 @@
 #define PL_CONFIG_USE_GUI_ENERGY_DASHBOARD   (1 && PL_CONFIG_IS_APP_VHS) /* energy flow dash-board */
 #define PL_CONFIG_USE_USB_CDC           (1) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */
-#define PL_CONFIG_USE_NVMC              (1) /* if using NVMC in Flash, needs to be turned on too */
-#define PL_CONFIG_USE_MINI              (1 && PL_CONFIG_USE_NVMC)
+#define PL_CONFIG_USE_MCUFLASH          (1) /* if using NVMC in Flash, needs to be turned on too */
+#define PL_CONFIG_USE_MINI              (1 && PL_CONFIG_USE_MCUFLASH)
 #define PL_CONFIG_USE_RS485             (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6))
 
 #define PL_CONFIG_USE_EXT_FLASH         (0 && !PL_CONFIG_USE_BUTTONS) /* if using externals SPI flash (uses nav switch button pins!) */
