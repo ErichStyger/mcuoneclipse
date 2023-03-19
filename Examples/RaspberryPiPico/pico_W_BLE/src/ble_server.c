@@ -178,7 +178,7 @@ void BleServer_SetupBLE(void) {
   /* setup one-shot btstack timer */
 #if PL_CONFIG_USE_WIFI /* use cyw43 timer */
   async_context_add_at_time_worker_in_ms(cyw43_arch_async_context(), &heartbeat_worker, HEARTBEAT_PERIOD_MS);
-#else /* ue BTStack timer */
+#else /* use BTStack timer */
   heartbeat.process = &heartbeat_handler;
   btstack_run_loop_set_timer(&heartbeat, HEARTBEAT_PERIOD_MS);
   btstack_run_loop_add_timer(&heartbeat);

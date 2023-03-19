@@ -7,6 +7,8 @@
 #ifndef SRC_BLECLIENT_H_
 #define SRC_BLECLIENT_H_
 
+void BleClient_SetupBLE(void);
+
 void BleClient_Init(void);
 
 #endif /* SRC_BLECLIENT_H_ */

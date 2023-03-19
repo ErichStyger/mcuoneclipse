@@ -109,8 +109,10 @@ static void WiFiTask(void *pv) {
     McuLog_error("failed setting country code");
     for(;;) {}
   }
-#if PL_CONFIG_USE_BLE
+#if PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_SERVER
   BleServer_SetupBLE();
+#elif PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_CLIENT
+  BleClient_SetupBLE();
 #endif
   wifi.isInitialized = true;
 #if PL_CONFIG_USE_WIFI

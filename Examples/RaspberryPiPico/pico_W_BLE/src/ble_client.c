@@ -18,7 +18,7 @@
 #define LED_QUICK_FLASH_DELAY_MS 100
 #define LED_SLOW_FLASH_DELAY_MS 1000
 
-typedef enum {
+typedef enum gc_state_t {
   TC_OFF,
   TC_IDLE,
   TC_W4_SCAN_RESULT,
@@ -38,7 +38,6 @@ static gatt_client_service_t server_service;
 static gatt_client_characteristic_t server_characteristic;
 static bool listener_registered; /* if we are connected */
 static gatt_client_notification_t notification_listener;
-static btstack_timer_source_t heartbeat;
 
 static void client_start(void){
   McuLog_info("Start scanning!");
@@ -229,7 +228,7 @@ static void hci_event_handler(uint8_t packet_type, uint16_t channel, uint8_t *pa
   }
 }
 
-static void heartbeat_handler(struct btstack_timer_source *ts) {
+static bool callbackToggleLED(void) { /* called every second */
   /* Invert the led */
   static bool quick_flash;
   static bool led_on = true;
@@ -241,17 +240,35 @@ static void heartbeat_handler(struct btstack_timer_source *ts) {
   } else if (!listener_registered) { /* faster flashing if we are connected */
     quick_flash = false;
   }
-  /* Restart timer */
-  btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
-  btstack_run_loop_add_timer(ts);
+  return (led_on || quick_flash); /* time for delay: short for quick flash or if LED is on */
 }
 
-static void clientTask(void *pv) {
-  /* initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1) */
-  if (cyw43_arch_init()) {
-    McuLog_fatal("failed to initialize cyw43_arch");
-    for(;;){}
+#if PL_CONFIG_USE_WIFI
+  static void heartbeat_handler(async_context_t *context, async_at_time_worker_t *worker);
+  static async_at_time_worker_t heartbeat_worker = { .do_work = heartbeat_handler };
+
+  static void heartbeat_handler(async_context_t *context, async_at_time_worker_t *worker) {
+    bool useShortDelay;
+
+    useShortDelay = callbackToggleLED();
+    /* Restart timer */
+    async_context_add_at_time_worker_in_ms(context, &heartbeat_worker, useShortDelay?LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
   }
+#else
+  static btstack_timer_source_t heartbeat;
+
+  static void heartbeat_handler(struct btstack_timer_source *ts) {
+    bool useShortDelay;
+
+    useShortDelay = callbackToggleLED();
+    /* Restart timer */
+    btstack_run_loop_set_timer(ts, useShortDelay?LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
+    btstack_run_loop_add_timer(ts);
+  }
+#endif
+
+
+void BleClient_SetupBLE(void) {
   l2cap_init();
   sm_init();
   sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
@@ -261,18 +278,32 @@ static void clientTask(void *pv) {
   hci_add_event_handler(&hci_event_callback_registration);
 
   /* set one-shot btstack timer */
+#if PL_CONFIG_USE_WIFI /* use cyw43 timer */
+  async_context_add_at_time_worker_in_ms(cyw43_arch_async_context(), &heartbeat_worker, LED_SLOW_FLASH_DELAY_MS);
+#else /* use BTStack timer */
   heartbeat.process = &heartbeat_handler;
   btstack_run_loop_set_timer(&heartbeat, LED_SLOW_FLASH_DELAY_MS);
   btstack_run_loop_add_timer(&heartbeat);
-
+#endif
   hci_power_control(HCI_POWER_ON); /* turn it on */
+}
 
+#if !PL_CONFIG_USE_WIFI
+static void clientTask(void *pv) {
+  /* initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1) */
+  if (cyw43_arch_init()) {
+    McuLog_fatal("failed to initialize cyw43_arch");
+    for(;;){}
+  }
+  BleClient_SetupBLE();
   for(;;) {
     btstack_run_loop_execute(); /* does not return */
   }
 }
+#endif
 
 void BleClient_Init(void) {
+#if !PL_CONFIG_USE_WIFI /* if using WiFi, will do the BLE stuff from the WiFi task */
   if (xTaskCreate(
       clientTask,  /* pointer to the task */
       "BLEclient", /* task name for kernel awareness debugging */
@@ -285,5 +316,6 @@ void BleClient_Init(void) {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
+#endif
 }
 #endif /* PL_CONFIG_STANDALONE_BLE_CLIENT */
