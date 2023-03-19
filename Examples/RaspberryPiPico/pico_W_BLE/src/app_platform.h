@@ -20,7 +20,7 @@
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
 
-#define PL_CONFIG_USE_WIFI            (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
+#define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 #define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
 
 #define PL_CONFIG_USE_RTT             (1) /* if using SEGGER RTT with J-Link */

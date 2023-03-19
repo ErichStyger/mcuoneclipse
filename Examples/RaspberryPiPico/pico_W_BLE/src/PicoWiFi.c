@@ -5,7 +5,7 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_USE_PICO_W
+#if PL_CONFIG_USE_WIFI
 #include "pico/cyw43_arch.h"
 #include "lwip/ip4_addr.h"
 #include "PicoWiFi.h"
@@ -24,6 +24,9 @@
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
+#endif
+#if PL_CONFIG_USE_BLE
+  #include "server.h"
 #endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
@@ -97,11 +100,17 @@ static void WiFiTask(void *pv) {
 #endif
 
   McuLog_info("started WiFi task");
+  /* initialize CYW43 architecture
+      - will enable BT if CYW43_ENABLE_BLUETOOTH == 1
+      - will enable lwIP if CYW43_LWIP == 1
+   */
   if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
     McuLog_error("failed setting country code");
     for(;;) {}
   }
-
+#if PL_CONFIG_USE_BLE
+  Server_ResumeBLETask();
+#endif
   wifi.isInitialized = true;
 #if PL_CONFIG_USE_WIFI
   McuLog_info("enabling STA mode");

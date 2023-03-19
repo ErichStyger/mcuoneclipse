@@ -31,14 +31,6 @@ add_subdirectory(./src)
 # generate extra files (map/bin/hex/uf2)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
 
-#target_compile_definitions(${CMAKE_PROJECT_NAME} INTERFACE
-#        HAVE_LWIP=1 # stops btstack calling lwip_init
-#        )
-#target_compile_definitions(${CMAKE_PROJECT_NAME} INTERFACE
-#        CYW43_TASK_STACK_SIZE=1024
-#        NO_SYS=0
-#        )
-
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
