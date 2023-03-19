@@ -17,6 +17,8 @@
   void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind);
 #endif
 
+#define APP_VERSION_STR  "v1.0b"
+
 uint8_t App_GetSensorValues(float *temperature, float *humidity);
 
 uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);

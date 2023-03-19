@@ -32,6 +32,7 @@ file(GLOB FILES
   image/customSymbols_12.c
   power.c
   rs485.c
+  wdt.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory

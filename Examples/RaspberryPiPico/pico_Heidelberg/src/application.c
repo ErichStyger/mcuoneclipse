@@ -76,6 +76,9 @@
 void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind) {
   unsigned char buf[32];
 
+#if PL_CONFIG_USE_UNIT_TESTS
+  UnitTest_OnButtonEvent(button, kind);
+#endif
   buf[0] = '\0';
   switch(button) {
     case BTN_NAV_UP:      McuUtility_strcat(buf, sizeof(buf), "up"); break;
@@ -277,6 +280,11 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_Num32uToStr(buf, sizeof(buf), PL_CONFIG_HW_ACTIVE_HW_VERSION);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  HW", (unsigned char*)buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)APP_VERSION_STR);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  version", buf, io->stdOut);
+
   return ERR_OK;
 }
 
@@ -313,6 +321,11 @@ void APP_Run(void) {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
+#if APP_CONFIG_TEST_WATCHDOG
+  for(int i=0;i<50; i++) {
+    McuWait_Waitms(100);
+  }
+#endif
   vTaskStartScheduler();
   for(;;) {
     /* shall not get here */

@@ -79,7 +79,7 @@
 /* -------------------------------------------------*/
 /* Time/Date */
 #define McuTimeDate_CONFIG_USE_SOFTWARE_RTC                        (1) /* enable software RTC */
-#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (CONFIG_USE_HW_RTC) /* enable external I2C RTC */
+#define McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC                     (LIB_CONFIG_HW_VERSION==PL_CONFIG_HW_VERSION_0_7) /* enable external I2C RTC, only for DSxxx RTC */
 #define McuTimeDate_CONFIG_USE_INTERNAL_HW_RTC                     (0) /* no internal RTC */
 
 #if McuTimeDate_CONFIG_USE_EXTERNAL_HW_RTC
