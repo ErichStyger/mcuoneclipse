@@ -251,7 +251,7 @@ static bool callbackToggleLED(void) { /* called every second */
     bool useShortDelay;
 
     useShortDelay = callbackToggleLED();
-    /* Restart timer */
+    /* restart timer */
     async_context_add_at_time_worker_in_ms(context, &heartbeat_worker, useShortDelay?LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
   }
 #else
@@ -261,7 +261,7 @@ static bool callbackToggleLED(void) { /* called every second */
     bool useShortDelay;
 
     useShortDelay = callbackToggleLED();
-    /* Restart timer */
+    /* restart timer */
     btstack_run_loop_set_timer(ts, useShortDelay?LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
     btstack_run_loop_add_timer(ts);
   }
@@ -269,16 +269,16 @@ static bool callbackToggleLED(void) { /* called every second */
 
 
 void BleClient_SetupBLE(void) {
-  l2cap_init();
-  sm_init();
-  sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
-  gatt_client_init();
+  l2cap_init(); /* Set up L2CAP and register L2CAP with HCI layer */
+  sm_init(); /* setup security manager */
+  sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT); /* set security manager that we want to connect automatically */
+  gatt_client_init(); /* initialize client */
 
-  hci_event_callback_registration.callback = &hci_event_handler;
-  hci_add_event_handler(&hci_event_callback_registration);
+  hci_event_callback_registration.callback = &hci_event_handler; /* configure callback structure */
+  hci_add_event_handler(&hci_event_callback_registration); /* register callback */
 
-  /* set one-shot btstack timer */
-#if PL_CONFIG_USE_WIFI /* use cyw43 timer */
+  /* setup timer */
+#if PL_CONFIG_USE_WIFI /* use cyw43/lwip timer */
   async_context_add_at_time_worker_in_ms(cyw43_arch_async_context(), &heartbeat_worker, LED_SLOW_FLASH_DELAY_MS);
 #else /* use BTStack timer */
   heartbeat.process = &heartbeat_handler;

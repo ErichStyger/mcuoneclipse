@@ -148,7 +148,7 @@ static void callbackToggleLED(void) { /* called every second */
   static void heartbeat_handler(async_context_t *context, async_at_time_worker_t *worker) {
     callbackSendData();
     callbackToggleLED();
-    /* Restart timer */
+    /* restart timer */
     async_context_add_at_time_worker_in_ms(context, &heartbeat_worker, HEARTBEAT_PERIOD_MS);
   }
 #else
@@ -157,25 +157,25 @@ static void callbackToggleLED(void) { /* called every second */
   static void heartbeat_handler(struct btstack_timer_source *ts) {
     callbackSendData();
     callbackToggleLED();
-    /* Restart timer */
+    /* restart timer */
     btstack_run_loop_set_timer(ts, HEARTBEAT_PERIOD_MS);
     btstack_run_loop_add_timer(ts);
   }
 #endif
 
 void BleServer_SetupBLE(void) {
-  l2cap_init();
-  sm_init();
-  att_server_init(profile_data, att_read_callback, att_write_callback);
+  l2cap_init(); /* Set up L2CAP and register L2CAP with HCI layer */
+  sm_init(); /* setup security manager */
+  att_server_init(profile_data, att_read_callback, att_write_callback); /* setup attribute callbacks */
 
   /* inform about BTstack state */
-  hci_event_callback_registration.callback = &packet_handler;
-  hci_add_event_handler(&hci_event_callback_registration);
+  hci_event_callback_registration.callback = &packet_handler; /* setup callback for events */
+  hci_add_event_handler(&hci_event_callback_registration); /* register callback handler */
 
   /* register for ATT event */
-  att_server_register_packet_handler(packet_handler);
+  att_server_register_packet_handler(packet_handler); /* register packet handler */
 
-  /* setup one-shot btstack timer */
+  /* setup timer */
 #if PL_CONFIG_USE_WIFI /* use cyw43 timer */
   async_context_add_at_time_worker_in_ms(cyw43_arch_async_context(), &heartbeat_worker, HEARTBEAT_PERIOD_MS);
 #else /* use BTStack timer */

@@ -8,7 +8,7 @@
 #define APP_PLATFORM_H_
 
 /* client: getting data from the server */
-#define PL_CONFIG_STANDALONE_BLE_CLIENT  (1) /* << change this to switch between client and server implementation */
+#define PL_CONFIG_STANDALONE_BLE_CLIENT  (0) /* << change this to switch between client and server implementation */
 
 /* server: providing temperature values to the client */
 #define PL_CONFIG_STANDALONE_BLE_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_CLIENT)
