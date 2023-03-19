@@ -272,7 +272,7 @@ static void clientTask(void *pv) {
   }
 }
 
-void Client_Init(void) {
+void BleClient_Init(void) {
   if (xTaskCreate(
       clientTask,  /* pointer to the task */
       "BLEclient", /* task name for kernel awareness debugging */
