@@ -31,6 +31,14 @@
 #define McuShell_CONFIG_PROJECT_NAME_STRING  "picoBLE"
 #define McuShell_CONFIG_PROMPT_STRING        "pico> "
 /* ---------------------------------------------------------------------------------------*/
+/* McuTimeDate */
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_HOUR  0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_MIN   0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_TIME_SEC   0
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_YEAR  2023
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_MONTH 1
+#define McuTimeDate_CONFIG_DEFAULT_INITIAL_DATE_DAY   1
+/* ---------------------------------------------------------------------------------------*/
 /* McuLog */
 #define McuLog_CONFIG_IS_ENABLED                (1)
 #define McuLog_CONFIG_USE_FILE                  (0)

@@ -109,7 +109,7 @@ static void WiFiTask(void *pv) {
     for(;;) {}
   }
 #if PL_CONFIG_USE_BLE
-  BleServer_ResumeTask();
+  BleServer_SetupBLE();
 #endif
   wifi.isInitialized = true;
 #if PL_CONFIG_USE_WIFI

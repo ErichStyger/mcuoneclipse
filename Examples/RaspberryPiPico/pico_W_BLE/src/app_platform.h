@@ -8,7 +8,7 @@
 #define APP_PLATFORM_H_
 
 /* client: getting data from the server */
-#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (1) /* << change this to switch between client and server implementation */
+#define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT  (0) /* << change this to switch between client and server implementation */
 
 /* server: providing temperature values to the client */
 #define PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_SERVER  (1 && !PL_CONFIG_STANDALONE_BLE_TEMP_SENSOR_CLIENT)
@@ -20,7 +20,7 @@
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
 
-#define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
+#define PL_CONFIG_USE_WIFI            (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 #define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
 
 #define PL_CONFIG_USE_SHELL           (1) /* if using a command line shell */

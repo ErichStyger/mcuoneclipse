@@ -7,7 +7,7 @@
 #ifndef SRC_BLESERVER_H_
 #define SRC_BLESERVER_H_
 
-void BleServer_ResumeTask(void);
+void BleServer_SetupBLE(void);
 
 void BleServer_Init(void);
 

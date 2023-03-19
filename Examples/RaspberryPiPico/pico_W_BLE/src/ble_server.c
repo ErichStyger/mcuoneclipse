@@ -16,8 +16,6 @@
 #include "pico/stdlib.h"
 #include "temp_sensor.h"
 
-static TaskHandle_t taskHandle = NULL;
-
 #define ADC_CHANNEL_TEMPSENSOR 4
 
 #define APP_AD_FLAGS 0x06
@@ -165,28 +163,7 @@ static void callbackToggleLED(void) { /* called every second */
   }
 #endif
 
-void BleServer_ResumeTask(void) {
-  if (taskHandle!=NULL) {
-    vTaskResume(taskHandle);
-  }
-  vTaskDelay(pdMS_TO_TICKS(2000)); /* give BLE task time to execute */
-}
-
-static void serverTask(void *pv) {
-#if PL_CONFIG_USE_WIFI
-  vTaskSuspend(NULL); /* suspend task. It will be resumed by the WiFi task */
-#else/* if using WiFi, the cyw43 initialization is done inside the WiFi Task */
-  /* initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1) */
-  if (cyw43_arch_init()) {
-    McuLog_fatal("failed to initialize cyw43_arch");
-    for(;;) {}
-  }
-#endif
-  /* Initialize adc for the temp sensor */
-  adc_init();
-  adc_select_input(ADC_CHANNEL_TEMPSENSOR);
-  adc_set_temp_sensor_enabled(true);
-
+void BleServer_SetupBLE(void) {
   l2cap_init();
   sm_init();
   att_server_init(profile_data, att_read_callback, att_write_callback);
@@ -207,28 +184,44 @@ static void serverTask(void *pv) {
   btstack_run_loop_add_timer(&heartbeat);
 #endif
   hci_power_control(HCI_POWER_ON); /* turn BLE on */
-  for(;;) {
-#if PL_CONFIG_USE_WIFI
-    //sleep_ms(1000); /* For threadsafe background we can just enter a loop */
-    vTaskDelay(pdMS_TO_TICKS(1000));
-#else
-    btstack_run_loop_execute(); /* does not return */
-#endif
-  }
 }
 
+static void SetupTemperatureSensor(void) {
+  /* Initialize adc for the temperature sensor */
+  adc_init();
+  adc_select_input(ADC_CHANNEL_TEMPSENSOR);
+  adc_set_temp_sensor_enabled(true);
+}
+
+#if !PL_CONFIG_USE_WIFI /* if using WiFi, will do the BLE stuff from the WiFi task */
+static void serverTask(void *pv) {
+  /* initialize CYW43 driver architecture (will enable BT if/because CYW43_ENABLE_BLUETOOTH == 1) */
+  if (cyw43_arch_init()) {
+    McuLog_fatal("failed to initialize cyw43_arch");
+    for(;;) {}
+  }
+  BleServer_SetupBLE();
+  for(;;) {
+    btstack_run_loop_execute(); /* does not return */
+  }
+}
+#endif /* !PL_CONFIG_USE_WIFI */
+
 void BleServer_Init(void) {
+  SetupTemperatureSensor();
+#if !PL_CONFIG_USE_WIFI /* if using WiFi, will do the BLE stuff from the WiFi task */
   if (xTaskCreate(
       serverTask,  /* pointer to the task */
       "BLEserver", /* task name for kernel awareness debugging */
       1200/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
-      &taskHandle /* optional task handle to create */
+      (TaskHandle_t*)NULL /* optional task handle to create */
     ) != pdPASS)
   {
     McuLog_fatal("failed creating task");
     for(;;){} /* error! probably out of memory */
   }
+#endif
 }
 #endif

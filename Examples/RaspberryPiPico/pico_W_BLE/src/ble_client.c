@@ -242,7 +242,7 @@ static void heartbeat_handler(struct btstack_timer_source *ts) {
     quick_flash = false;
   }
   /* Restart timer */
-  btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS : LED_SLOW_FLASH_DELAY_MS);
+  btstack_run_loop_set_timer(ts, (led_on || quick_flash) ? LED_QUICK_FLASH_DELAY_MS:LED_SLOW_FLASH_DELAY_MS);
   btstack_run_loop_add_timer(ts);
 }
 
