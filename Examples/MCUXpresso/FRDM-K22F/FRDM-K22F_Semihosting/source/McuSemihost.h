@@ -38,7 +38,6 @@ void McuSemihost_StdIOFlush(void);
  */
 int McuSemihost_WriteChar(char ch);
 
-
 /*!
  * \brief Return the current system time
  * \return System time in seconds since 1970

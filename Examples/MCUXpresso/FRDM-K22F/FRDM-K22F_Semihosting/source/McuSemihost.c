@@ -236,8 +236,8 @@ int McuSemihost_SysFileRename(const unsigned char *filePath, const unsigned char
 
   param[0] = (int32_t)filePath;
   param[1] = McuUtility_strlen((char*)filePath);
-  param[0] = (int32_t)fileNewPath;
-  param[1] = McuUtility_strlen((char*)fileNewPath);
+  param[2] = (int32_t)fileNewPath;
+  param[3] = McuUtility_strlen((char*)fileNewPath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_RENAME, &param[0]);
 }
 #endif
@@ -547,6 +547,10 @@ static int TestFileOperations(void) {
       McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
       res = -1; /* failed */
     } else {
+      if (McuSemihost_SysFileClose(fh)!=0) { /* close the file we have open above */
+        McuSemihost_WriteString((unsigned char*)"failed closing file\n");
+        res = -1; /* failed */
+      }
       if (McuSemihost_SysFileRemove(newFileName) != 0) {
         McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
       } else {
@@ -641,7 +645,7 @@ static int ConsoleInputOutput(void) {
 #endif
 #if   McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* SYS_READ_C not implemented by PEMICRO */ \
    || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER /* fails in MCUXpresso 11.7.0, check with later versions */
-    McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_READC does not work\n");
+    McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_READC does not work? Check for a newer release than 11.7.0\n");
 #else
   int c;
 
@@ -652,6 +656,9 @@ static int ConsoleInputOutput(void) {
   McuSemihost_WriteString((unsigned char*)"You typed: ");
   McuSemihost_WriteChar(c);
   McuSemihost_WriteChar('\n');
+
+  char dummy[16]; /* the input is buffered and delivered only if the user presses enter. So there might be more characters in the stream: read them */
+  (void)McuSemihost_FileRead(McuSemihost_tty_handles[McuSemihost_STDIN], dummy, sizeof(dummy));
 #endif
   return res;
 }
@@ -729,15 +736,15 @@ int McuSemiHost_Test(void) {
     result = -1; /* failed */
   }
 
-  if (McuSemihost_SysIsError(0)) {
+  if (McuSemihost_SysIsError(0)!=0) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: 0 should not be error!\n");
     result = -1; /* failed */
   }
-  if (!McuSemihost_SysIsError(1)) {
+  if (!McuSemihost_SysIsError(1)) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: 1 should be error!\n");
     result = -1; /* failed */
   }
-  if (!McuSemihost_SysIsError(-1)) {
+  if (!McuSemihost_SysIsError(-1)) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: -1 should be error!\n");
     result = -1; /* failed */
   }
