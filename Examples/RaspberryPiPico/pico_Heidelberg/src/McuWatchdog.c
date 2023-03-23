@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
-#if PL_CONFIG_USE_WATCHDOG
-#include "wdt.h"
+#include "McuWatchdog.h"
+#if McuWatchdog_CONFIG_USE_WATCHDOG
 #include "McuRTOS.h"
 #include "McuLog.h"
 #include "hardware/watchdog.h"
@@ -14,11 +13,6 @@
 #include "McuUtility.h"
 #include "McuArmTools.h"
 #include "Shell.h"
-
-#define WDT_WATCHDOG_TIMEOUT_MS   (1000) /* number of ms for watchdog timer */
-
-#define WDT_DISABLED_FOR_DEBUG (0)  /* set to 1 for easier debugging */
-#define WDT_REPORT_TIME_VALUES (0)  /* 1: report time values during safety check */
 
 static uint16_t WDT_State = 0; /* additional watchdog protection with state variable */
 
@@ -33,6 +27,7 @@ typedef struct {
 
 static WDT_Reports WDT_ReportingBoundaries[WDT_REPORT_ID_NOF] = { /* order must match WDT_ReportID_e! */
   {.id=WDT_REPORT_ID_TASK_APP, .str=(const unsigned char*)"App", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=120},
+#if 0
 #if PL_CONFIG_USE_GUI
   {.id=WDT_REPORT_ID_TASK_GUI, .str=(const unsigned char*)"GUI", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=120},
 #endif
@@ -48,6 +43,7 @@ static WDT_Reports WDT_ReportingBoundaries[WDT_REPORT_ID_NOF] = { /* order must 
 #if PL_CONFIG_USE_ROAD
   {.id=WDT_REPORT_ID_TASK_ROAD, .str=(const unsigned char*)"road", .reportMsPerSec = 1000, .minPercent=70, .maxPercent=120},
 #endif
+#endif
 };
 
 typedef struct {
@@ -57,13 +53,13 @@ typedef struct {
 
 static WDT_Recording_s WDT_Recordings[WDT_REPORT_ID_NOF]; /* array were we record the time reported */
 
-void WDT_SetTaskHandle(WDT_ReportID_e id, TaskHandle_t task) {
+void McuWatchdog_SetTaskHandle(WDT_ReportID_e id, TaskHandle_t task) {
   if (id<WDT_REPORT_ID_NOF) {
     WDT_Recordings[id].task = task;
   }
 }
 
-void WDT_Report(WDT_ReportID_e id, uint32_t ms) {
+void McuWatchdog_Report(WDT_ReportID_e id, uint32_t ms) {
   if (id==WDT_REPORT_ID_CURR_TASK) { /* get current task handle */
     TaskHandle_t handle;
 
@@ -191,7 +187,7 @@ static void WatchdogTask(void *pv) {
   }
 }
 
-void WDT_EnableWatchdog(void) {
+void McuWatchdog_EnableTimer(void) {
 #if WDT_DISABLED_FOR_DEBUG
   #warning "watchdog is disbled"
 #else
@@ -201,7 +197,7 @@ void WDT_EnableWatchdog(void) {
 #endif
 }
 
-void WDT_Init(void) {
+void McuWatchdog_Init(void) {
   if (watchdog_caused_reboot()) {
     McuLog_fatal("Rebooted by Watchdog");
   } else {
@@ -217,4 +213,4 @@ void WDT_Init(void) {
   }
 }
 
-#endif /* PL_CONFIG_USE_WATCHDOG */
+#endif /* McuWatchdog_CONFIG_USE_WATCHDOG */

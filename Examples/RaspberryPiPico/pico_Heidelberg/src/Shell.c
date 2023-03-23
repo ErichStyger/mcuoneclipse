@@ -80,7 +80,7 @@
   #include "UnitTest.h"
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  #include "wdt.h"
+  #include "McuWatchdog.h"
 #endif
 #include "application.h"
 
@@ -252,7 +252,7 @@ static void ShellTask(void *pvParameters) {
     }
     vTaskDelay(pdMS_TO_TICKS(50));
   #if PL_CONFIG_USE_WATCHDOG
-    WDT_Report(WDT_REPORT_ID_TASK_SHELL, 50);
+    McuWatchdog_Report(WDT_REPORT_ID_TASK_SHELL, 50);
   #endif
   } /* for */
 }

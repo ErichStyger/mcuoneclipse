@@ -314,7 +314,7 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr, Mcu
     } else { /* empty response buffer: check normal incoming characters */
       vTaskDelay(pdMS_TO_TICKS(50));
     #if PL_CONFIG_USE_WDT
-      WDT_Report(WDT_REPORT_ID_CURR_TASK, 50);
+      McuWatchdog_Report(WDT_REPORT_ID_CURR_TASK, 50);
     #endif
       timeoutMs -= 50;
       if (timeoutMs<=0) {
@@ -545,7 +545,7 @@ static void RS485Task(void *pv) {
     while (!McuUart485_stdio.keyPressed()) { /* if nothing in input queue, give back some CPU time */
       vTaskDelay(pdMS_TO_TICKS(10));
     #if PL_CONFIG_USE_WDT
-      WDT_Report(WDT_REPORT_ID_TASK_RS485, 10);
+      McuWatchdog_Report(WDT_REPORT_ID_TASK_RS485, 10);
     #endif
     }
     if (McuShell_ReadCommandLine(cmdBuf, sizeof(cmdBuf), &RS485Parse_stdio)==ERR_OK) {

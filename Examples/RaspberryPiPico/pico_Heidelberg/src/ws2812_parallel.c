@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
+#if 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -319,3 +319,4 @@ int main() {
         memset(&states, 0, sizeof(states)); // clear out errors
     }
 }
+#endif

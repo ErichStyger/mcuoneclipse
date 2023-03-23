@@ -198,3 +198,6 @@
 #else
   #define McuUart485_CONFIG_UART_BAUDRATE      (115200)
 #endif
+/* ---------------------------------------------------------------------------------------*/
+/* McuWatchdog */
+#define McuWatchdog_CONFIG_USE_WATCHDOG       (1)

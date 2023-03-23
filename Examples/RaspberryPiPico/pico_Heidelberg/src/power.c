@@ -20,7 +20,7 @@
   #include "sensor.h"
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  #include "wdt.h"
+  #include "McuWatchdog.h"
 #endif
 #if PL_CONFIG_USE_EXT_RTC
   #include "extRTC.h"

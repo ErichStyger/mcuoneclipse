@@ -115,7 +115,7 @@
   #include "sensor.h"
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  #include "wdt.h"
+  #include "McuWatchdog.h"
 #endif
 #if PL_CONFIG_USE_EXT_RTC
   #include "extRTC.h"
@@ -129,7 +129,7 @@ void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_WATCHDOG
-  WDT_EnableWatchdog(); /* Enable watchdog timer early, to catch any deadlocks during initialization */
+  McuWatchdog_EnableTimer(); /* Enable watchdog timer early, to catch any deadlocks during initialization */
 #endif
 #if PL_CONFIG_USE_USB_CDC
   stdio_init_all(); /* needed for USB CDC, but might cause issues while debugging, because USB traffic might stall */
@@ -151,7 +151,7 @@ void PL_Init(void) {
   McuLog_Init();
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  WDT_Init();
+  McuWatchdog_Init();
 #endif
   McuWait_Init();
   McuArmTools_Init();

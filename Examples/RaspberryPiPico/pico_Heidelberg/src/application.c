@@ -63,7 +63,7 @@
   #include "UnitTest.h"
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  #include "wdt.h"
+  #include "McuWatchdog.h"
 #endif
 
 #define APP_CONFIG_TEST_WATCHDOG  (0 && PL_CONFIG_USE_WATCHDOG)

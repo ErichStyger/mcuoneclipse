@@ -25,7 +25,7 @@
   #include "gui.h"
 #endif
 #if PL_CONFIG_USE_WATCHDOG
-  #include "wdt.h"
+  #include "McuWatchdog.h"
 #endif
 
 /* defaults */
@@ -118,7 +118,6 @@ void Lights_Resume(void) {
   vTaskResume(Lights_TaskHandle);
 }
 
-
 static void Lights_Task(void *pv) {
 #if PL_CONFIG_USE_MINI
   currLights.isOn = McuMinINI_ini_getl(NVMC_MININI_SECTION_LIGHT, NVMC_MININI_KEY_LIGHT_ON, LIGHTS_DEFAULT_IS_ON, NVMC_MININI_FILE_NAME);
@@ -137,14 +136,14 @@ static void Lights_Task(void *pv) {
   for(int i=0; i<5; i++) {
     vTaskDelay(pdMS_TO_TICKS(100));
   #if PL_CONFIG_USE_WATCHDOG
-    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
   #endif
   }
   Lights_SetLed(0); /* off */
   for(int i=0; i<10; i++) {
     vTaskDelay(pdMS_TO_TICKS(100));
   #if PL_CONFIG_USE_WATCHDOG
-    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
   #endif
   }
   for(;;) {
@@ -169,7 +168,7 @@ static void Lights_Task(void *pv) {
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   #if PL_CONFIG_USE_WATCHDOG
-    WDT_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
   #endif
   }
 }
