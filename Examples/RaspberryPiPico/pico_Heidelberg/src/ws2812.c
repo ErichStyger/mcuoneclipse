@@ -51,7 +51,6 @@ int WS2812_Transfer(void) {
     put_pixel_wrgb(uwrgb_u32(w, r, g, b));
 #endif
   }
-  //sleep_ms(10); /* latch */
   vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
   return 0;
 }
