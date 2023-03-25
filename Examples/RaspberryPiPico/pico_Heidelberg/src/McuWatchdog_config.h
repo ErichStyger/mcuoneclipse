@@ -15,7 +15,7 @@
 
 #define WDT_WATCHDOG_TIMEOUT_MS   (1000) /* number of ms for watchdog timer */
 
-#define WDT_DISABLED_FOR_DEBUG (0)  /* set to 1 for easier debugging */
+#define WDT_DISABLED_FOR_DEBUG (1)  /* set to 1 for easier debugging */
 #define WDT_REPORT_TIME_VALUES (0)  /* 1: report time values during safety check */
 
 
