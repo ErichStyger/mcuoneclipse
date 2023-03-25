@@ -189,7 +189,7 @@ static void WatchdogTask(void *pv) {
 
 void McuWatchdog_EnableTimer(void) {
 #if WDT_DISABLED_FOR_DEBUG
-  #warning "watchdog is disbled"
+  #warning "Watchdog is disabled"
 #else
   /* Enable the watchdog, requiring the watchdog to be updated or the chip will reboot
     second arg is pause on debug which means the watchdog will pause when stepping through code */
