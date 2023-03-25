@@ -303,24 +303,22 @@ int McuSemihost_SysGetCmdLine(unsigned char *cmd, size_t cmdSize) {
 
 int McuSemihost_SysHeapInfo(McuSemihost_HeapInfo_t *heapInfo) {
   int32_t param;
-  int32_t res;
 
   param = (int32_t)heapInfo;
-  res = McuSemihost_HostRequest(McuSemihost_Op_SYS_HEAPINFO, &param); /* LinkServer fails */
-  if (res==(int32_t)&param) {
-    return 0; /* success */
-  }
-  return -1; /* failed */
+  (void)McuSemihost_HostRequest(McuSemihost_Op_SYS_HEAPINFO, &param);
+  /* https://github.com/ARM-software/abi-aa/blob/main/semihosting/semihosting.rst#sys-heapinfo-0x16
+   * On exit, the PARAMETER REGISTER is unchanged and the data block has been updated. */
+  return 0; /* success: caller would have to inspect the heapinfo values. */
 }
 
 int McuSemihost_SysEnterSVC(void) {
   int32_t param = 0; /* not used */
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_ENTER_SVC, &param); /* LinkServer fails */
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_ENTER_SVC, &param);
 }
 
 int McuSemihost_SysException(McuSemihost_Exception_e exception) {
   int32_t param = exception; /* not used */
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_EXCEPTION, &param); /* LinkServer fails */
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_EXCEPTION, &param);
 }
 
 int McuSemihost_SysTickFreq(void) {
