@@ -35,6 +35,7 @@
 
 typedef struct lights_t {
   bool isOn; /* if light is on or not */
+  bool isSupended; /* if suspended or not */
   uint32_t color; /* current color, in WRGB format, 8bit each */
   uint8_t brightness; /* current brightness, 0..255 */
 } lights_t;
@@ -111,11 +112,13 @@ uint8_t Lights_GetBrightnessPercent(void) {
 }
 
 void Lights_Suspend(void) {
+  currLights.isSupended = true;
   vTaskSuspend(Lights_TaskHandle);
 }
 
 void Lights_Resume(void) {
   vTaskResume(Lights_TaskHandle);
+  currLights.isSupended = false;
 }
 
 static void Lights_Task(void *pv) {
@@ -131,6 +134,9 @@ static void Lights_Task(void *pv) {
   currLights.color = LIGHTS_DEFAULT_COLOR;
   currLights.brightness = LIGHTS_DEFAULT_BRIGHTNESS;
 #endif
+
+  Lights_Suspend();
+
   /* indicate power-on with a short blink */
   Lights_SetLed(0x1100); /* green */
   for(int i=0; i<5; i++) {
@@ -177,6 +183,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   unsigned char buf[48];
 
   McuShell_SendStatusStr((unsigned char*)"light", (const unsigned char*)"Status of light\r\n", io->stdOut);
+  McuShell_SendStatusStr((uint8_t*)"  suspended", currLights.isSupended?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   McuShell_SendStatusStr((uint8_t*)"  on", currLights.isOn?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
   McuUtility_strcatNum32Hex(buf, sizeof(buf), currLights.color);
@@ -199,6 +206,7 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
     McuShell_SendHelpStr((unsigned char*)"light", (const unsigned char*)"Group of light commands\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  on|off", (const unsigned char*)"Turn light on or off\r\n", io->stdOut);
+    McuShell_SendHelpStr((unsigned char*)"  suspend|resume", (const unsigned char*)"Suspend or resume light task\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  color <rgb>", (const unsigned char*)"Set light color\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  brightness <val>", (const unsigned char*)"Set light brightness (0-100\%)\r\n", io->stdOut);
     *handled = true;
@@ -218,6 +226,14 @@ uint8_t Lights_ParseCommand(const unsigned char *cmd, bool *handled, const McuSh
   #if PL_CONFIG_USE_GUI
     GUI_SendEvent(Gui_Event_LightOnOff_Changed);
   #endif
+    *handled = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "light suspend")==0) {
+    *handled = true;
+    Lights_Suspend();
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "light resume")==0) {
+    Lights_Resume();
     *handled = true;
     return ERR_OK;
   } else if (McuUtility_strncmp((char*)cmd, "light brightness ", sizeof("light brightness ")-1)==0) {
