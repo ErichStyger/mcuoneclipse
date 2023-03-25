@@ -220,10 +220,10 @@ static struct semaphore reset_delay_complete_sem;
 alarm_id_t reset_delay_alarm_id;
 
 int64_t reset_delay_complete(alarm_id_t id, void *user_data) {
-    reset_delay_alarm_id = 0;
-    sem_release(&reset_delay_complete_sem);
-    // no repeat
-    return 0;
+  reset_delay_alarm_id = 0;
+  sem_release(&reset_delay_complete_sem);
+  // no repeat
+  return 0;
 }
 
 void __isr dma_complete_handler() {
@@ -246,10 +246,10 @@ void dma_init(PIO pio, uint sm) {
     channel_config_set_irq_quiet(&channel_config, true);
     dma_channel_configure(DMA_CHANNEL,
                           &channel_config,
-                          &pio->txf[sm],
-                          NULL, // set by chain
-                          8, // 8 words for 8 bit planes
-                          false);
+                          &pio->txf[sm], /* Write address (only need to set this once) */
+                          NULL, /* Don't provide a read address yet */
+                          8, /* number of transfers, 8 words for 8 bit planes */
+                          false); /* don't start yet */
 
     // chain channel sends single word pointer to start of fragment each time
     dma_channel_config chain_config = dma_channel_get_default_config(DMA_CB_CHANNEL);
