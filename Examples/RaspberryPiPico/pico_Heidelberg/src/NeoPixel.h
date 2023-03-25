@@ -15,13 +15,14 @@
 #define NEO_LANE_END            NEOC_LANE_END  /* end lane number */
 #define NEO_NOF_LEDS_IN_LANE    NEOC_NOF_LEDS_IN_LANE /* number of LEDS in each lane */
 #define NEO_NOF_PIXEL           NEOC_NOF_PIXEL /* total number of pixels */
+#define NEO_NOF_BITS_PIXEL      (NEOC_NOF_COLORS*8)  /* number of bits for pixel */
 
 #define NEO_PIXEL_FIRST         (0) /* index of first pixel */
 
 uint8_t NEO_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
 typedef uint32_t NEO_PixelIdxT;
-typedef uint32_t NEO_PixelColor;
+typedef uint32_t NEO_PixelColor; /* bit coding is WRGB or 0RGB, depending on number of colors */
 
 #define NEO_SPLIT_W(u32)    (((u32)>>24)&0xff)
 #define NEO_SPLIT_R(u32)    (((u32)>>16)&0xff)

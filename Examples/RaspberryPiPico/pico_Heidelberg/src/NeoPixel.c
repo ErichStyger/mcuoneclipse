@@ -62,7 +62,7 @@ uint32_t NEO_GammaCorrect32(uint32_t wrgb) {
   return wrgb;
 }
 
-/* the ones below do not depend on hardware */
+/* the functions below do not depend on hardware */
 
 NEO_PixelColor NEO_BrightnessPercentColor(NEO_PixelColor color, uint8_t percent) {
   uint8_t red, green, blue;
@@ -118,9 +118,19 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
-#define NEO_NOF_BITS_PIXEL  (NEOC_NOF_COLORS*8)  /* number of bits for pixel */
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
-/* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for all the RGB bits. The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24]. */
+/* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for RGB and 32 bytes for RGBW.
+ * The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24] (RGB) or at transmitBuf[32] for RGBW.
+ * For the Kinetis DMA, the data lines are organized in bytes: each byte corresponds to to a data to the GPIO output register (e.g. PTD7 to PTD0):
+ * Bits get shifted out in grb or grbw order
+ * transmitBuf[0]:  g7 g7 g7 g7 g7 g7 g7 g7   ==> bits get written to PTD7 to PTD0, where the pin number corresponds to the lane number
+ * transmitBuf[1]:  g6 g6 g6 g6 g6 g6 g6 g6
+ * ...
+ * transmitBuf[7]:  g0 g0 g0 g0 g0 g0 g0 g0
+ * transmitBuf[8]:  r7 r7 r7 r7 r7 r7 r7 r7
+ * ..
+ * transmitBuf[23]: b0 b0 b0 b0 b0 b0 b0 b0
+ * */
 static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL];
 
 uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *color) {
@@ -433,7 +443,7 @@ uint8_t NEO_TransferPixels(void) {
 #if NEOC_USE_DMA
   return PIXDMA_Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
 #else
-  return WS2812_Transfer();
+  return WS2812_Transfer(&transmitBuf[0], sizeof(transmitBuf));
 #endif
 }
 
@@ -441,6 +451,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[32];
 
   McuShell_SendStatusStr((unsigned char*)"neo", (const unsigned char*)"Status of NeoPixels\r\n", io->stdOut);
+  McuUtility_Num32uToStr(buf, sizeof(buf), NEOC_PIN_START);
+  McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  pin start", buf, io->stdOut);
+
   McuUtility_Num32uToStr(buf, sizeof(buf), NEO_LANE_END-NEO_LANE_START+1);
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  nofLanes", buf, io->stdOut);
