@@ -29,7 +29,9 @@ static int sm = 0; /* state machine index. \todo should find a free SM */
 
 #if WS2812_USE_MULTIPLE_LANES
 
-#define FRAC_BITS 4
+#define RESET_TIME_US 400
+
+//#define FRAC_BITS 4
 
 //#define VALUE_PLANE_COUNT (8+FRAC_BITS)
 /* we store value (8 bits + fractional bits of a single color (R/G/B/W) value) for multiple
@@ -61,7 +63,12 @@ static int64_t reset_delay_complete(alarm_id_t id, void *user_data) {
   return 0;
 }
 
-void __isr dma_complete_handler(void) {
+//static int64_t dma_start(alarm_id_t id, void *user_data) {
+//  dma_channel_set_read_addr(dma_chan, pixels, true);
+//  return 0;
+//}
+
+void /*__isr*/ dma_complete_handler(void) {
   if (dma_hw->ints0 & DMA_CHANNEL_MASK) {
     /* clear IRQ */
     dma_hw->ints0 = DMA_CHANNEL_MASK;
@@ -69,7 +76,7 @@ void __isr dma_complete_handler(void) {
     if (reset_delay_alarm_id) {
       cancel_alarm(reset_delay_alarm_id);
     }
-    reset_delay_alarm_id = add_alarm_in_us(400, reset_delay_complete, NULL, true);
+    reset_delay_alarm_id = add_alarm_in_us(RESET_TIME_US, reset_delay_complete, NULL, true);
   }
 }
 
@@ -80,7 +87,7 @@ static void dma_init(PIO pio, uint sm) {
   dma_channel_config channel_config = dma_channel_get_default_config(DMA_CHANNEL);
   channel_config_set_dreq(&channel_config, pio_get_dreq(pio, sm, true));
 //  channel_config_set_chain_to(&channel_config, DMA_CB_CHANNEL);
-  channel_config_set_irq_quiet(&channel_config, true);
+//  channel_config_set_irq_quiet(&channel_config, true); /* configure quiet mode: IRQ only raised if NULL is written to the trigger register */
   dma_channel_configure(DMA_CHANNEL,
                         &channel_config,
                         &pio->txf[sm], /* write address: write to PIO FIFO */
@@ -130,12 +137,19 @@ const uint32_t pixel[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x1, /* b */
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
 };
+const uint32_t pixel0[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
+    /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* g */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* r */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* b */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
+};
 
 int WS2812_Transfer(uint8_t *data, size_t dataSize) {
 #if WS2812_USE_MULTIPLE_LANES
 
   for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel[i]);
+    pio_sm_put_blocking(pio0, sm, pixel0[i]);
   }
   sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
  // dma_channel_set_read_addr(DMA_CB_CHANNEL, pixel, true);
