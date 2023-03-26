@@ -15,10 +15,10 @@
 
 #define McuWatchdog_CONFIG_HEALT_CHECK_TIME_SEC (5)  /*!< interval for checking health */
 
-#define McuWatchdog_CONFIG_TIMEOUT_MS   (1000) /*!< number of ms for hardware watchdog timer */
+#define McuWatchdog_CONFIG_TIMEOUT_MS           (1000) /*!< number of ms for hardware watchdog timer */
 
-#define McuWatchdog_CONFIG_DISABLED_FOR_DEBUG (0)  /* set to 1 for easier debugging, set to 0 for production code! */
-#define McuWatchdog_CONFIG_REPORT_TIME_VALUES (0)  /* 1: report time values during safety check, useful for debugging */
+#define McuWatchdog_CONFIG_DISABLED_FOR_DEBUG   (0)  /* set to 1 for easier debugging, set to 0 for production code! */
+#define McuWatchdog_CONFIG_REPORT_TIME_VALUES   (0)  /* 1: report time values during safety check, useful for debugging */
 
 /* list of IDs to identify items monitored by the watchdog task */
 typedef enum McuWatchdog_ReportID_e {

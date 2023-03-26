@@ -7,6 +7,10 @@
 #ifndef SRC_MCUWATCHDOG_H_
 #define SRC_MCUWATCHDOG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "McuWatchdog_config.h"
 #if McuWatchdog_CONFIG_USE_WATCHDOG
 #include "McuRTOS.h"
@@ -79,10 +83,19 @@ void McuWatchdog_Report(McuWatchdog_ReportID_e id, uint32_t ms);
 void McuWatchdog_EnableTimer(void);
 
 /*!
+ * \brief Module de-initialization.
+ */
+void McuWatchdog_Deinit(void);
+
+/*!
  * \brief Module initialization. This creates the monitoring watchdog task.
  */
 void McuWatchdog_Init(void);
 
 #endif /* McuWatchdog_CONFIG_USE_WATCHDOG */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* SRC_MCUWATCHDOG_H_ */

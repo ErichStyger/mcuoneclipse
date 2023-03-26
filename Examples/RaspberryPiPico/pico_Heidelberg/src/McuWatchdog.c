@@ -220,8 +220,12 @@ void McuWatchdog_EnableTimer(void) {
 #else
   /* Enable the watchdog, requiring the watchdog to be updated or the chip will reboot
      second arg is pause on debug which means the watchdog will pause when stepping through code */
-  watchdog_enable(McuWatchdog_CONFIG_TIMEOUT_MS, true); /* enable RP2040 watchdog */
+  watchdog_enable(McuWatchdog_CONFIG_TIMEOUT_MS, true); /* enable watchdog timer */
 #endif
+}
+
+void McuWatchdog_Deinit(void) {
+  /* nothing needed */
 }
 
 void McuWatchdog_Init(void) {
@@ -234,7 +238,7 @@ void McuWatchdog_Init(void) {
     McuWatchdog_Recordings[i].ms = 0;
     McuWatchdog_Recordings[i].task = NULL;
   }
-  if (xTaskCreate(WatchdogTask, "Watchdog", 900/sizeof(StackType_t), NULL, tskIDLE_PRIORITY+4, NULL) != pdPASS) {
+  if (xTaskCreate(WatchdogTask, "Watchdog", 900/sizeof(StackType_t), NULL, tskIDLE_PRIORITY, NULL) != pdPASS) {
     McuLog_fatal("failed creating Watchdog task");
     for(;;){} /* error */
   }
