@@ -29,49 +29,24 @@ static int sm = 0; /* state machine index. \todo should find a free SM */
 
 #if WS2812_USE_MULTIPLE_LANES
 
-#define RESET_TIME_US 400
 
-//#define FRAC_BITS 4
+#define DMA_CHANNEL         (0) /* bit plane content DMA channel */
+#define DMA_CHANNEL_MASK    (1u << DMA_CHANNEL)
+#define DMA_CHANNELS_MASK   (DMA_CHANNEL_MASK)
 
-//#define VALUE_PLANE_COUNT (8+FRAC_BITS)
-/* we store value (8 bits + fractional bits of a single color (R/G/B/W) value) for multiple
- * strings, in bit planes. bit plane N has the Nth bit of each string. */
-//typedef struct {
-//  uint32_t planes[VALUE_PLANE_COUNT]; /* stored MSB first */
-//} value_bits_t;
-
-/* bit plane content DMA channel */
-#define DMA_CHANNEL 0
-/* chain channel for configuring main DMA channel to output from disjoint 8 word fragments of memory */
-//#define DMA_CB_CHANNEL 1
-
-#define DMA_CHANNEL_MASK (1u << DMA_CHANNEL)
-//#define DMA_CB_CHANNEL_MASK (1u << DMA_CB_CHANNEL)
-//#define DMA_CHANNELS_MASK (DMA_CHANNEL_MASK | DMA_CB_CHANNEL_MASK)
-#define DMA_CHANNELS_MASK (DMA_CHANNEL_MASK)
-
-//static uintptr_t fragment_start[NEOC_NOF_LEDS_IN_LANE*4 + 1]; /* start of each value fragment (+1 for NULL terminator) */
-
-static struct semaphore reset_delay_complete_sem; /* posted when it is safe to output a new set of values */
-
-static alarm_id_t reset_delay_alarm_id; /*  alarm handle for handling delay */
+#define RESET_TIME_US     (100)  /* spec: 50 us. need to pause bit stream for this time at the end to latch the values into the LED */
+static struct semaphore reset_delay_complete_sem; /* semaphore used to make a delay at the end of the transfer. Posted when it is safe to output a new set of values */
+static alarm_id_t reset_delay_alarm_id; /*  alarm id handle for handling delay */
 
 static int64_t reset_delay_complete(alarm_id_t id, void *user_data) {
-  reset_delay_alarm_id = 0;
-  sem_release(&reset_delay_complete_sem);
-  /* no repeat */
-  return 0;
+  reset_delay_alarm_id = 0; /* reset alarm id */
+  sem_release(&reset_delay_complete_sem); /* release semaphore */
+  return 0; /* no repeat */
 }
-
-//static int64_t dma_start(alarm_id_t id, void *user_data) {
-//  dma_channel_set_read_addr(dma_chan, pixels, true);
-//  return 0;
-//}
 
 void /*__isr*/ dma_complete_handler(void) {
   if (dma_hw->ints0 & DMA_CHANNEL_MASK) {
-    /* clear IRQ */
-    dma_hw->ints0 = DMA_CHANNEL_MASK;
+    dma_hw->ints0 = DMA_CHANNEL_MASK; /* clear IRQ */
     /* when the DMA is complete we start the reset delay timer */
     if (reset_delay_alarm_id) {
       cancel_alarm(reset_delay_alarm_id);
@@ -81,35 +56,21 @@ void /*__isr*/ dma_complete_handler(void) {
 }
 
 static void dma_init(PIO pio, uint sm) {
-  dma_claim_mask(DMA_CHANNELS_MASK);
-
-  /* main DMA channel outputs 8 word fragments, and then chains back to the chain channel */
-  dma_channel_config channel_config = dma_channel_get_default_config(DMA_CHANNEL);
-  channel_config_set_dreq(&channel_config, pio_get_dreq(pio, sm, true));
-//  channel_config_set_chain_to(&channel_config, DMA_CB_CHANNEL);
-//  channel_config_set_irq_quiet(&channel_config, true); /* configure quiet mode: IRQ only raised if NULL is written to the trigger register */
+  dma_claim_mask(DMA_CHANNELS_MASK); /* check that the DMA channel we want is available */
+  dma_channel_config channel_config = dma_channel_get_default_config(DMA_CHANNEL); /* get default configuration */
+  channel_config_set_dreq(&channel_config, pio_get_dreq(pio, sm, true)); /* configure data request. true: sending data to the PIO state machine */
+  channel_config_set_transfer_data_size(&channel_config, DMA_SIZE_32); /* data transfer size is 32 bits */
+  channel_config_set_read_increment(&channel_config, true); /* each read of the data will increase the read pointer */
   dma_channel_configure(DMA_CHANNEL,
                         &channel_config,
                         &pio->txf[sm], /* write address: write to PIO FIFO */
                         NULL, /* don't provide a read address yet */
-                        NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL,/*8,*/ /* number of transfers: 8 words for 8 bit planes */
+                        NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL,/* number of transfers */
                         false); /* don't start yet */
-#if 0
-  /* chain channel sends single word pointer to start of fragment each time */
-  dma_channel_config chain_config = dma_channel_get_default_config(DMA_CB_CHANNEL);
-  dma_channel_configure(DMA_CB_CHANNEL,
-                        &chain_config,
-                        &dma_channel_hw_addr( /* write address */
-                                DMA_CHANNEL)->al3_read_addr_trig,  /* ch DMA config (target "ring" buffer size 4) - this is (read_addr trigger) */
-                        NULL, /* read address, set later */
-                        1, /* number of transfers */
-                        false); /* don't start yet */
-#endif
-  irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler);
-  dma_channel_set_irq0_enabled(DMA_CHANNEL, true);
-  irq_set_enabled(DMA_IRQ_0, true);
+  irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler); /* after DMA all data, raise an interrupt */
+  dma_channel_set_irq0_enabled(DMA_CHANNEL, true); /* map DMA channel to interrupt */
+  irq_set_enabled(DMA_IRQ_0, true); /* enable interrupt */
 }
-
 #endif /* WS2812_USE_MULTIPLE_LANES */
 
 #if !WS2812_USE_MULTIPLE_LANES
@@ -132,10 +93,10 @@ static inline uint32_t uwrgb_u32(uint8_t w, uint8_t r, uint8_t g, uint8_t b) {
 
 const uint32_t pixel[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
     /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
-    0x2, 0x2, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0, /* g */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* r */
+    0x2, 0x2, 0x2, 0x2, 0x0, 0x0, 0x0, 0x1, /* g */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, /* r */
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x1, /* b */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
+    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, /* w */
 };
 const uint32_t pixel0[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
     /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
@@ -145,15 +106,36 @@ const uint32_t pixel0[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
 };
 
+const uint32_t pixel_g[] = { /* grbw order: bytes are processed LSB to MSB */
+    0x00000000, 0x01000000, /* g */
+    0x0, 0x00, /* r */
+    0x0, 0x00, /* b */
+    0x0, 0x00, /* w */
+};
+
 int WS2812_Transfer(uint8_t *data, size_t dataSize) {
 #if WS2812_USE_MULTIPLE_LANES
 
-  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel0[i]);
+  //pio_sm_put_blocking(pio0, sm, 0x11223311);
+  for(int i=0; i<8; i++) {
+    pio_sm_put_blocking(pio0, sm, pixel_g[i]);
   }
+#if 0
+  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
+    pio_sm_put_blocking(pio0, sm, pixel[i]);
+  }
+#endif
+#if 0
+  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
+    pio_sm_put_blocking(pio0, sm, pixel[i]);
+  }
+#endif
+#if 0
   sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
- // dma_channel_set_read_addr(DMA_CB_CHANNEL, pixel, true);
-  dma_channel_set_read_addr(DMA_CHANNEL, pixel, true);
+  dma_channel_set_read_addr(DMA_CHANNEL, pixel0, true); /* trigger DMA transfer */
+  sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
+  dma_channel_set_read_addr(DMA_CHANNEL, pixel, true); /* trigger DMA transfer */
+#endif
 #else
   uint8_t r, g, b;
 

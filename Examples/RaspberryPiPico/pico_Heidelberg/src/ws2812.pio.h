@@ -66,25 +66,26 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
 // --------------- //
 
 #define ws2812_parallel_wrap_target 0
-#define ws2812_parallel_wrap 3
+#define ws2812_parallel_wrap 4
 
-#define ws2812_parallel_T1 2
-#define ws2812_parallel_T2 5
-#define ws2812_parallel_T3 3
+#define ws2812_parallel_T1 4
+#define ws2812_parallel_T2 2
+#define ws2812_parallel_T3 4
 
 static const uint16_t ws2812_parallel_program_instructions[] = {
             //     .wrap_target
-    0x6020, //  0: out    x, 32                      
-    0xa10b, //  1: mov    pins, !null            [1] 
-    0xa401, //  2: mov    pins, x                [4] 
-    0xa103, //  3: mov    pins, null             [1] 
+    0xa023, //  0: mov    x, null                    
+    0x6028, //  1: out    x, 8                       
+    0xa10b, //  2: mov    pins, !null            [1] 
+    0xa301, //  3: mov    pins, x                [3] 
+    0xa003, //  4: mov    pins, null                 
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program ws2812_parallel_program = {
     .instructions = ws2812_parallel_program_instructions,
-    .length = 4,
+    .length = 5,
     .origin = -1,
 };
 
