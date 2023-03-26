@@ -37,7 +37,7 @@
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */
 #define PL_CONFIG_USE_MCUFLASH          (1) /* if using NVMC in Flash, needs to be turned on too */
 #define PL_CONFIG_USE_MINI              (1 && PL_CONFIG_USE_MCUFLASH)
-#define PL_CONFIG_USE_RS485             (1 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6))
+#define PL_CONFIG_USE_RS485             (0 && (PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_6))
 
 #define PL_CONFIG_USE_EXT_FLASH         (0 && !PL_CONFIG_USE_BUTTONS) /* if using externals SPI flash (uses nav switch button pins!) */
 #define PL_CONFIG_USE_LITTLE_FS         (0 && PL_CONFIG_USE_EXT_FLASH) /* if using littleFS as file system, not supported yet! */

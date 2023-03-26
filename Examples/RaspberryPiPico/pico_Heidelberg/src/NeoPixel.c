@@ -455,7 +455,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  pin start", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), NEO_LANE_END-NEO_LANE_START+1);
+  McuUtility_Num32uToStr(buf, sizeof(buf), NEOC_NOF_LANES);
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)"\r\n");
   McuShell_SendStatusStr((uint8_t*)"  nofLanes", buf, io->stdOut);
 

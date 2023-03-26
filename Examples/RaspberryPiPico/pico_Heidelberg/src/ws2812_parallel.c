@@ -270,7 +270,7 @@ void output_strings_dma(value_bits_t *bits, uint value_length) {
     for (uint i = 0; i < value_length; i++) {
         fragment_start[i] = (uintptr_t) bits[i].planes; // MSB first
     }
-    fragment_start[value_length] = 0;
+    fragment_start[value_length] = 0; /* latch? */
     dma_channel_hw_addr(DMA_CB_CHANNEL)->al3_read_addr_trig = (uintptr_t) fragment_start;
 }
 

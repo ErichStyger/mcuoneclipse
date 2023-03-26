@@ -23,7 +23,7 @@
 #include "pico/sem.h"
 
 /* see https://www.raspberrypi.com/news/how-to-power-loads-of-leds-with-a-single-raspberry-pi-pico/ */
-#define WS2812_USE_MULTIPLE_LANES (0 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
+#define WS2812_USE_MULTIPLE_LANES (1 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
 
 static int sm = 0; /* state machine index. \todo should find a free SM */
 
@@ -41,13 +41,14 @@ static int sm = 0; /* state machine index. \todo should find a free SM */
 /* bit plane content DMA channel */
 #define DMA_CHANNEL 0
 /* chain channel for configuring main DMA channel to output from disjoint 8 word fragments of memory */
-#define DMA_CB_CHANNEL 1
+//#define DMA_CB_CHANNEL 1
 
 #define DMA_CHANNEL_MASK (1u << DMA_CHANNEL)
-#define DMA_CB_CHANNEL_MASK (1u << DMA_CB_CHANNEL)
-#define DMA_CHANNELS_MASK (DMA_CHANNEL_MASK | DMA_CB_CHANNEL_MASK)
+//#define DMA_CB_CHANNEL_MASK (1u << DMA_CB_CHANNEL)
+//#define DMA_CHANNELS_MASK (DMA_CHANNEL_MASK | DMA_CB_CHANNEL_MASK)
+#define DMA_CHANNELS_MASK (DMA_CHANNEL_MASK)
 
-static uintptr_t fragment_start[NEOC_NOF_LEDS_IN_LANE*4 + 1]; /* start of each value fragment (+1 for NULL terminator) */
+//static uintptr_t fragment_start[NEOC_NOF_LEDS_IN_LANE*4 + 1]; /* start of each value fragment (+1 for NULL terminator) */
 
 static struct semaphore reset_delay_complete_sem; /* posted when it is safe to output a new set of values */
 
@@ -78,25 +79,25 @@ static void dma_init(PIO pio, uint sm) {
   /* main DMA channel outputs 8 word fragments, and then chains back to the chain channel */
   dma_channel_config channel_config = dma_channel_get_default_config(DMA_CHANNEL);
   channel_config_set_dreq(&channel_config, pio_get_dreq(pio, sm, true));
-  channel_config_set_chain_to(&channel_config, DMA_CB_CHANNEL);
+//  channel_config_set_chain_to(&channel_config, DMA_CB_CHANNEL);
   channel_config_set_irq_quiet(&channel_config, true);
   dma_channel_configure(DMA_CHANNEL,
                         &channel_config,
-                        &pio->txf[sm], /* write address */
+                        &pio->txf[sm], /* write address: write to PIO FIFO */
                         NULL, /* don't provide a read address yet */
-                        8, /* number of transfers: 8 words for 8 bit planes */
+                        NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL,/*8,*/ /* number of transfers: 8 words for 8 bit planes */
                         false); /* don't start yet */
-
+#if 0
   /* chain channel sends single word pointer to start of fragment each time */
   dma_channel_config chain_config = dma_channel_get_default_config(DMA_CB_CHANNEL);
   dma_channel_configure(DMA_CB_CHANNEL,
                         &chain_config,
-                        &dma_channel_hw_addr(
-                                DMA_CHANNEL)->al3_read_addr_trig,  // ch DMA config (target "ring" buffer size 4) - this is (read_addr trigger)
-                        NULL, // set later
+                        &dma_channel_hw_addr( /* write address */
+                                DMA_CHANNEL)->al3_read_addr_trig,  /* ch DMA config (target "ring" buffer size 4) - this is (read_addr trigger) */
+                        NULL, /* read address, set later */
                         1, /* number of transfers */
                         false); /* don't start yet */
-
+#endif
   irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler);
   dma_channel_set_irq0_enabled(DMA_CHANNEL, true);
   irq_set_enabled(DMA_IRQ_0, true);
@@ -122,8 +123,9 @@ static inline uint32_t uwrgb_u32(uint8_t w, uint8_t r, uint8_t g, uint8_t b) {
 }
 #endif
 
-const uint8_t pixel[] = {
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* g */
+const uint32_t pixel[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
+    /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
+    0x2, 0x2, 0x2, 0x2, 0x0, 0x0, 0x0, 0x0, /* g */
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* r */
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x1, /* b */
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
@@ -132,28 +134,12 @@ const uint8_t pixel[] = {
 int WS2812_Transfer(uint8_t *data, size_t dataSize) {
 #if WS2812_USE_MULTIPLE_LANES
 
-  for(int i=0; i<sizeof(pixel); i++) {
+  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
     pio_sm_put_blocking(pio0, sm, pixel[i]);
   }
-#if 0
-  /* LSB is channel 0 (GPIO2) */
-  pio_sm_put_blocking(pio0, sm, 0xAfffffff);
-  pio_sm_put_blocking(pio0, sm, 0xBfffffff);
-  pio_sm_put_blocking(pio0, sm, 0xCfffffff);
-  pio_sm_put_blocking(pio0, sm, 0xDfffffff);
-  pio_sm_put_blocking(pio0, sm, 0xEfffffff);
-  pio_sm_put_blocking(pio0, sm, 0xfffffff1);
-  pio_sm_put_blocking(pio0, sm, 0xfffffff2);
-  pio_sm_put_blocking(pio0, sm, 0xfffffff3);
-  pio_sm_put_blocking(pio0, sm, 0b0);
-  pio_sm_put_blocking(pio0, sm, 0b1);
-  pio_sm_put_blocking(pio0, sm, 0b1);
-  pio_sm_put_blocking(pio0, sm, 0b0);
-  pio_sm_put_blocking(pio0, sm, 0b0);
-  pio_sm_put_blocking(pio0, sm, 0b1);
-#endif
   sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
-  dma_channel_set_read_addr(DMA_CB_CHANNEL, data, true);
+ // dma_channel_set_read_addr(DMA_CB_CHANNEL, pixel, true);
+  dma_channel_set_read_addr(DMA_CHANNEL, pixel, true);
 #else
   uint8_t r, g, b;
 
@@ -178,8 +164,8 @@ void WS2812_Init(void) {
   sm = 0; /* could be local? */
 #if WS2812_USE_MULTIPLE_LANES
   uint offset = pio_add_program(pio, &ws2812_parallel_program);
-  ws2812_parallel_program_init(pio, sm, offset, NEOC_PIN_START, NECO_NOF_LANES, 800000);
-  sem_init(&reset_delay_complete_sem, 1, 1); /* initially posted so we don't block first time */
+  ws2812_parallel_program_init(pio, sm, offset, NEOC_PIN_START, NEOC_NOF_LANES, 800000);
+  sem_init(&reset_delay_complete_sem, 1, 1); /* semaphore initially posted so we don't block first time */
   dma_init(pio, sm);
 #else /* single lane */
   uint offset = pio_add_program(pio, &ws2812_program);
