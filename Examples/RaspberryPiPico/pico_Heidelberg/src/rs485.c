@@ -314,7 +314,7 @@ static RS485_Response_e WaitForResponse(int32_t timeoutMs, uint8_t fromAddr, Mcu
     } else { /* empty response buffer: check normal incoming characters */
       vTaskDelay(pdMS_TO_TICKS(50));
     #if PL_CONFIG_USE_WDT
-      McuWatchdog_Report(WDT_REPORT_ID_CURR_TASK, 50);
+      McuWatchdog_Report(McuWatchDog_REPORT_ID_CURR_TASK, 50);
     #endif
       timeoutMs -= 50;
       if (timeoutMs<=0) {

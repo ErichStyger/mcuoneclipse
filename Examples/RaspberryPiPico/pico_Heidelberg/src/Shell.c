@@ -252,7 +252,7 @@ static void ShellTask(void *pvParameters) {
     }
     vTaskDelay(pdMS_TO_TICKS(50));
   #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(WDT_REPORT_ID_TASK_SHELL, 50);
+    McuWatchdog_Report(McuWatchdog_REPORT_ID_TASK_SHELL, 50);
   #endif
   } /* for */
 }

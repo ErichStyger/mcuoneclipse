@@ -13,21 +13,55 @@
 #include "app_platform.h"
 #include <stdint.h>
 
-#define WDT_REPORT_ID_CURR_TASK (WDT_REPORT_ID_NOF) /* special id to report time for the current task, which has been registered earlier with WDT_SetTaskHandle()  */
+#define McuWatchdog_REPORT_ID_CURR_TASK (McuWatchdog_REPORT_ID_NOF) /* special id to report time for the current task, which has been registered earlier with McuWatchdog_SetTaskHandle()  */
 
 /*!
- * \brief Set the task handle for an id. With this we can report time using WDT_REPORT_ID_CURR_TASK
+ * \brief Used to start measuring a time for later reporting
+ * \return Number of RTOS ticks at the start, at the time of call.
+ */
+TickType_t McuWatchdog_ReportTimeStart(void);
+
+/*!
+ * \brief Report the time spent, which has been recorded with McuWatchdog_ReportTimeStart()
+ * \param id Task ID
+ * \param startTickCount Tick count previously recorded with McuWatchdog_ReportTimeStart()
+ */
+void McuWatchdog_ReportTimeEnd(McuWatchdog_ReportID_e id, TickType_t startTickCount) ;
+
+/*!
+ * \brief Delay a task with vTaskDelay for a given number of times, each time for ms, and report the delay.
+ * \param id Task ID
+ * \param ms Iteration delay time in milliseconds
+ * \param nof Number of delays
+ */
+void McuWatchdog_DelayAndReport(McuWatchdog_ReportID_e id, uint32_t nof, uint32_t ms);
+
+/*!
+ * \brief Set the task handle for an id. With this we can report time using McuWatchdog_REPORT_ID_CURR_TASK
  * \param id ID of item
  * \param task FreeRTOS task handle
  */
-void McuWatchdog_SetTaskHandle(WDT_ReportID_e id, TaskHandle_t task);
+void McuWatchdog_SetTaskHandle(McuWatchdog_ReportID_e id, TaskHandle_t task);
+
+/*!
+ * \brief Suspend checking for a given id
+ * \param id ID of item to be suspended
+ */
+void McuWatchdog_SuspendCheck(McuWatchdog_ReportID_e id);
+
+/*!
+ * \brief Resume checking for a given id
+ * \param id ID of item to be suspended
+ */
+void McuWatchdog_ResumeCheck(McuWatchdog_ReportID_e id);
+
 
 /*!
  * \brief Report the time spent for an item (id)
  * \param id ID of item
  * \param ms Time in milliseconds
  */
-void McuWatchdog_Report(WDT_ReportID_e id, uint32_t ms);
+void McuWatchdog_Report(McuWatchdog_ReportID_e id, uint32_t ms);
 
 /*!
  * \brief Enable the watchdog timer. Do this early in the application.

@@ -113,11 +113,17 @@ uint8_t Lights_GetBrightnessPercent(void) {
 
 void Lights_Suspend(void) {
   currLights.isSupended = true;
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_LIGHTS);
+#endif
   vTaskSuspend(Lights_TaskHandle);
 }
 
 void Lights_Resume(void) {
   vTaskResume(Lights_TaskHandle);
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_LIGHTS);
+#endif
   currLights.isSupended = false;
 }
 
@@ -139,19 +145,17 @@ static void Lights_Task(void *pv) {
 
   /* indicate power-on with a short blink */
   Lights_SetLed(0x1100); /* green */
-  for(int i=0; i<5; i++) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
-  #endif
-  }
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_LIGHTS, 5, 100);
+#else
+  vTaskDelay(pdMS_TO_TICKS(5*100));
+#endif
   Lights_SetLed(0); /* off */
-  for(int i=0; i<10; i++) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
-  #endif
-  }
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_LIGHTS, 10, 100);
+#else
+  vTaskDelay(pdMS_TO_TICKS(10*100));
+#endif
   for(;;) {
     if (!currLights.isOn) { /* turned off */
     #if PL_CONFIG_USE_NEO_PIXEL_HW
@@ -174,7 +178,7 @@ static void Lights_Task(void *pv) {
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(WDT_REPORT_ID_TASK_LIGHTS, 100);
+    McuWatchdog_Report(McuWatchdog_REPORT_ID_TASK_LIGHTS, 100);
   #endif
   }
 }

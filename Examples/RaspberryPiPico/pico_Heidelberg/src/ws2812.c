@@ -23,7 +23,7 @@
 #include "pico/sem.h"
 
 /* see https://www.raspberrypi.com/news/how-to-power-loads-of-leds-with-a-single-raspberry-pi-pico/ */
-#define WS2812_USE_MULTIPLE_LANES (1 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
+#define WS2812_USE_MULTIPLE_LANES (0 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
 
 static int sm = 0; /* state machine index. \todo should find a free SM */
 

@@ -192,7 +192,11 @@ static void AppTask(void *pv) {
     McuLog_fatal("failed writing COF");
   }
 #endif
-  vTaskDelay(pdMS_TO_TICKS(1500));
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_APP, 15, 100);
+#else
+  vTaskDelay(pdMS_TO_TICKS(15*100));
+#endif
 #if PL_CONFIG_USE_SHT31 || PL_CONFIG_USE_SHT40
   #if POWER_CONFIG_USE_EN_VCC2
     if (!Power_GetVcc2IsOn()) {
@@ -269,7 +273,11 @@ static void AppTask(void *pv) {
     sensorUpdateCntrSec--;
     GUI_SendEvent(Gui_Event_Sensor_Changed);
 #endif
-    vTaskDelay(pdMS_TO_TICKS(1000));
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_APP, 10, 100);
+#else
+  vTaskDelay(pdMS_TO_TICKS(10*100));
+#endif
   }
 }
 

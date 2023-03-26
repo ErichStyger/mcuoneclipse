@@ -27,6 +27,9 @@
 #if PL_CONFIG_USE_POWER
   #include "power.h"
 #endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "McuWatchdog.h"
+#endif
 #include "Modbus/McuHeidelberg.h"
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
@@ -457,10 +460,17 @@ static void GuiTask(void *pv) {
   GuiState_e state = GUI_STATE_SHOW_SETTINGS;
   BaseType_t res;
   uint32_t notifcationValue;
+#if PL_CONFIG_USE_WATCHDOG
+  TickType_t xLastWakeTime;
+#endif
 
   (void)pv; /* not used */
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_GUI, 5, 100);
+#else
   vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
-#if PL_CONFIG_USE_SHT31
+#endif
+  #if PL_CONFIG_USE_SHT31
   McuSHT31_Init();
 #elif PL_CONFIG_USE_SHT40
   McuSHT40_Init();
@@ -471,6 +481,9 @@ static void GuiTask(void *pv) {
   lv_scr_load(guiObjects.screens[GUI_SCREEN_SETTINGS]);
   LV_ClearButtonEventQueue(); /* clear any pending button events created during startup */
   for(;;) {
+  #if PL_CONFIG_USE_WATCHDOG
+    xLastWakeTime = McuWatchdog_ReportTimeStart();
+  #endif
     /* handle notification events */
     res = xTaskNotifyWait(0UL, /* pre-clear flags */
         GUI_TASK_NOTIFY_BUTTON_PRESSED
@@ -618,6 +631,9 @@ static void GuiTask(void *pv) {
     } /* switch */
     LV_Task(); /* call this every 1-20 ms */
     vTaskDelay(pdMS_TO_TICKS(20));
+  #if PL_CONFIG_USE_WATCHDOG
+    McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_GUI, xLastWakeTime);
+  #endif
   }
 }
 

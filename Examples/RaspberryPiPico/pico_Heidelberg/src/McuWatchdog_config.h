@@ -13,32 +13,32 @@
   #define McuWatchdog_CONFIG_USE_WATCHDOG (0)
 #endif
 
-#define WDT_WATCHDOG_TIMEOUT_MS   (1000) /* number of ms for watchdog timer */
+#define McuWatchdog_CONFIG_HEALT_CHECK_TIME_SEC (5)  /*!< interval for checking health */
 
-#define WDT_DISABLED_FOR_DEBUG (1)  /* set to 1 for easier debugging */
-#define WDT_REPORT_TIME_VALUES (0)  /* 1: report time values during safety check */
+#define McuWatchdog_CONFIG_TIMEOUT_MS   (1000) /*!< number of ms for hardware watchdog timer */
 
+#define McuWatchdog_CONFIG_DISABLED_FOR_DEBUG (0)  /* set to 1 for easier debugging, set to 0 for production code! */
+#define McuWatchdog_CONFIG_REPORT_TIME_VALUES (0)  /* 1: report time values during safety check, useful for debugging */
 
 /* list of IDs to identify items monitored by the watchdog task */
-typedef enum {
-  WDT_REPORT_ID_TASK_APP,
+typedef enum McuWatchdog_ReportID_e {
+  McuWatchdog_REPORT_ID_TASK_APP,
 #if PL_CONFIG_USE_GUI
-  WDT_REPORT_ID_TASK_GUI,
+  McuWatchdog_REPORT_ID_TASK_GUI,
 #endif
 #if PL_CONFIG_USE_SHELL
-  WDT_REPORT_ID_TASK_SHELL,
+  McuWatchdog_REPORT_ID_TASK_SHELL,
 #endif
 #if PL_CONFIG_USE_LIGHTS
-  WDT_REPORT_ID_TASK_LIGHTS,
+  McuWatchdog_REPORT_ID_TASK_LIGHTS,
 #endif
-#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
-  WDT_REPORT_ID_TASK_EMONITOR,
+#if PL_CONFIG_USE_WIFI
+  McuWatchdog_REPORT_ID_TASK_WIFI,
 #endif
-#if PL_CONFIG_USE_ROAD
-  WDT_REPORT_ID_TASK_ROAD,
-#endif
-  WDT_REPORT_ID_NOF /* sentinel, must be last! */
-} WDT_ReportID_e;
+  McuWatchdog_REPORT_ID_NOF /* sentinel, must be last! */
+} McuWatchdog_ReportID_e;
+
+#define McuWatchdog_CONFIG_INIT_REPORT_FUNCTON     App_
 
 
 #endif /* MCUWATCHDOG_CONFIG_H_ */
