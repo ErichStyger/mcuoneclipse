@@ -16,6 +16,16 @@
 #define McuWatchdog_REPORT_ID_CURR_TASK (McuWatchdog_REPORT_ID_NOF) /* special id to report time for the current task, which has been registered earlier with McuWatchdog_SetTaskHandle()  */
 
 /*!
+ * \brief Initialize the report structure
+ * @param id ID of the entry
+ * @param name Name for the entry
+ * @param msForOneSec Number of average milliseconds reporting time per second, usually 1000
+ * @param minPercent Minimum percentage of time reporting needed
+ * @param maxPercent Maximum percentage of allowed time reporting
+ */
+void McuWatchdog_InitReportEntry(McuWatchdog_ReportID_e id, const unsigned char *name, uint32_t msForOneSec, uint8_t minPercent, uint8_t maxPercent);
+
+/*!
  * \brief Used to start measuring a time for later reporting
  * \return Number of RTOS ticks at the start, at the time of call.
  */

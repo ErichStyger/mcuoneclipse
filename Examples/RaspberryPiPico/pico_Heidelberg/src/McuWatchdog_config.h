@@ -38,7 +38,5 @@ typedef enum McuWatchdog_ReportID_e {
   McuWatchdog_REPORT_ID_NOF /* sentinel, must be last! */
 } McuWatchdog_ReportID_e;
 
-#define McuWatchdog_CONFIG_INIT_REPORT_FUNCTON     App_
-
 
 #endif /* MCUWATCHDOG_CONFIG_H_ */

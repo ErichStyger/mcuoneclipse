@@ -127,8 +127,27 @@ uint32_t SystemCoreClock = 120000000;
 void McuGenericI2C_CONFIG_ON_ERROR_EVENT(void) {
 }
 
+#if PL_CONFIG_USE_WATCHDOG
+void PL_InitWatchdogReportTable(void) {
+  McuWatchdog_InitReportEntry(McuWatchdog_REPORT_ID_TASK_APP, "App", 1000, 70, 120);
+  #if PL_CONFIG_USE_GUI
+  McuWatchdog_InitReportEntry(McuWatchdog_REPORT_ID_TASK_GUI, "Gui", 1000, 70, 120);
+  #endif
+  #if PL_CONFIG_USE_SHELL
+    McuWatchdog_InitReportEntry(McuWatchdog_REPORT_ID_TASK_SHELL, "Shell", 1000, 70, 120);
+  #endif
+  #if PL_CONFIG_USE_LIGHTS
+    McuWatchdog_InitReportEntry(McuWatchdog_REPORT_ID_TASK_LIGHTS, "Lights", 1000, 70, 120);
+  #endif
+  #if PL_CONFIG_USE_WIFI
+    McuWatchdog_InitReportEntry(McuWatchdog_REPORT_ID_TASK_WIFI, "WiFi", 1000, 70, 120);
+  #endif
+}
+#endif
+
 void PL_Init(void) {
 #if PL_CONFIG_USE_WATCHDOG
+  PL_InitWatchdogReportTable();
   McuWatchdog_EnableTimer(); /* Enable watchdog timer early, to catch any deadlocks during initialization */
 #endif
 #if PL_CONFIG_USE_USB_CDC
