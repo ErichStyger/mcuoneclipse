@@ -156,7 +156,9 @@ uint8_t App_GetSensorValues(float *temperature, float *humidity) {
 static void AppTask(void *pv) {
 #define APP_HAS_ONBOARD_GREEN_LED   !PL_CONFIG_USE_PICO_W && !(PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_5 || PL_CONFIG_HW_ACTIVE_HW_VERSION==PL_CONFIG_HW_VERSION_0_7)
   uint8_t prevBatteryCharge=200, currBatteryCharge;
+#if PL_CONFIG_USE_GUI && POWER_CONFIG_SENSE_USB
   uint8_t prevUSBConnectionStatus = -1, currUSBConnectionStatus;
+#endif
 #if PL_CONFIG_USE_OLED_CLOCK && PL_CONFIG_USE_PCF85063A
   #define HW_RTC_UPDATE_PERIOD_SEC  (60*60) /* update time/date from RTC every hour */
   int32_t HW_RTCupdateCntrSec = 0; /* count-down to update SW RTC from HW RTC: if <= 0, it gets time from hardware RTC */
@@ -235,7 +237,7 @@ static void AppTask(void *pv) {
       prevBatteryCharge = currBatteryCharge;
     }
   #endif
-  #if POWER_CONFIG_SENSE_USB
+  #if POWER_CONFIG_SENSE_USB && PL_CONFIG_USE_GUI
     currUSBConnectionStatus = Power_GetUsbPowerIsOn();
     if (currUSBConnectionStatus!=prevUSBConnectionStatus) {
   #if PL_CONFIG_USE_GUI
@@ -314,6 +316,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
 
 void APP_Run(void) {
   PL_Init();
+#if 1
 #if PL_CONFIG_USE_POWER /* check battery level */
   Power_WaitForSufficientBatteryChargeAtStartup();
 #endif
@@ -333,6 +336,7 @@ void APP_Run(void) {
   for(int i=0;i<50; i++) {
     McuWait_Waitms(100);
   }
+#endif
 #endif
   vTaskStartScheduler();
   for(;;) {
