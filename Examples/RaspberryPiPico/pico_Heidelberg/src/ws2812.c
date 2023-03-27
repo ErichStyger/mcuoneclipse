@@ -136,14 +136,8 @@ int WS2812_Transfer(uint32_t address, size_t nofBytes) {
   dma_channel_set_read_addr(DMA_CHANNEL, pixel, true); /* trigger DMA transfer */
 #endif
 #else
-  for(int i=0; i<NEOC_NOF_PIXEL; i++) {
-  #if NEOC_NOF_COLORS==3
-    uint8_t r, g, b;
-    NEO_GetPixelRGB(0, i, &r, &g, &b);
-    put_pixel_rgb(urgb_u32(r, g, b)); /* use the PIO to shift out the 24bits (grb) of the 32bit value passed, with MSB first */
-  #elif NEOC_NOF_COLORS==4
+  for(int i=0; i<NEOC_NOF_PIXEL; i++) { /* without DMA: writing one after each other */
     put_pixel_wrgb(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
-  #endif
   }
   vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
 #endif
