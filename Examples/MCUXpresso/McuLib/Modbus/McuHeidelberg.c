@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2022-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,6 +11,9 @@
 #include "McuModbus.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
+#if McuHeidelberg_CONFIG_USE_WATCHDOG
+  #include "McuWatchdog.h"
+#endif
 
 typedef enum McuHeidelberg_AddrMap_e{
   McuHeidelberg_Addr_ModbusRegisterLayoutVersion    = 4,

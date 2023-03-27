@@ -14,8 +14,15 @@ extern "C" {
 #include "McuWatchdog_config.h"
 #if McuWatchdog_CONFIG_USE_WATCHDOG
 #include "McuRTOS.h"
-#include "app_platform.h"
 #include <stdint.h>
+
+#include McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE
+
+/* list of IDs to identify items monitored by the watchdog task */
+typedef enum McuWatchdog_ReportID_e {
+  #include McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE
+  McuWatchdog_REPORT_ID_NOF /* sentinel, must be last! */
+} McuWatchdog_ReportID_e;
 
 #define McuWatchdog_REPORT_ID_CURR_TASK (McuWatchdog_REPORT_ID_NOF) /* special id to report time for the current task, which has been registered earlier with McuWatchdog_SetTaskHandle()  */
 

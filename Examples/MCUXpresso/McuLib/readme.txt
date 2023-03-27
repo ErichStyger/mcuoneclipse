@@ -80,6 +80,7 @@ Components of the McuOnEclipse (in alphabetical order) inside the 'src' Folder:
 - McuULN2003: stepper motor driver using the ULN2003
 - McuUtility: various safe string manipulation and other utility functions
 - McuWait: Realtime synchronization waiting routines
+- McuWatchdog: COP/Watchdog timer module
 - McuW28Q128: driver for the Winbond W28Q128 serial flash (https://mcuoneclipse.com/2019/01/06/driver-and-shell-for-winbond-w25q128-16mbyte-serial-flash-device/)
 - McuX12_017: stepper motor driver for the X12.017 device
 - McuXFormat: tiny formatting and printing, similar to sprintf

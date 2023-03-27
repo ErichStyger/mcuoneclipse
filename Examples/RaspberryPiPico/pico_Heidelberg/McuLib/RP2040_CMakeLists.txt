@@ -64,6 +64,7 @@ file(GLOB FILES
   src/McuUtility.c
   src/McuW25Q128.c
   src/McuWait.c
+  src/McuWatchdog.c
   src/McuX12_017.c
   src/McuXFormat.c
   

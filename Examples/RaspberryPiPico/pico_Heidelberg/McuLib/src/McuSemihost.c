@@ -236,8 +236,8 @@ int McuSemihost_SysFileRename(const unsigned char *filePath, const unsigned char
 
   param[0] = (int32_t)filePath;
   param[1] = McuUtility_strlen((char*)filePath);
-  param[0] = (int32_t)fileNewPath;
-  param[1] = McuUtility_strlen((char*)fileNewPath);
+  param[2] = (int32_t)fileNewPath;
+  param[3] = McuUtility_strlen((char*)fileNewPath);
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_RENAME, &param[0]);
 }
 #endif
@@ -303,24 +303,22 @@ int McuSemihost_SysGetCmdLine(unsigned char *cmd, size_t cmdSize) {
 
 int McuSemihost_SysHeapInfo(McuSemihost_HeapInfo_t *heapInfo) {
   int32_t param;
-  int32_t res;
 
   param = (int32_t)heapInfo;
-  res = McuSemihost_HostRequest(McuSemihost_Op_SYS_HEAPINFO, &param); /* LinkServer fails */
-  if (res==(int32_t)&param) {
-    return 0; /* success */
-  }
-  return -1; /* failed */
+  (void)McuSemihost_HostRequest(McuSemihost_Op_SYS_HEAPINFO, &param);
+  /* https://github.com/ARM-software/abi-aa/blob/main/semihosting/semihosting.rst#sys-heapinfo-0x16
+   * On exit, the PARAMETER REGISTER is unchanged and the data block has been updated. */
+  return 0; /* success: caller would have to inspect the heapinfo values. */
 }
 
 int McuSemihost_SysEnterSVC(void) {
   int32_t param = 0; /* not used */
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_ENTER_SVC, &param); /* LinkServer fails */
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_ENTER_SVC, &param);
 }
 
 int McuSemihost_SysException(McuSemihost_Exception_e exception) {
   int32_t param = exception; /* not used */
-  return McuSemihost_HostRequest(McuSemihost_Op_SYS_EXCEPTION, &param); /* LinkServer fails */
+  return McuSemihost_HostRequest(McuSemihost_Op_SYS_EXCEPTION, &param);
 }
 
 int McuSemihost_SysTickFreq(void) {
@@ -547,6 +545,10 @@ static int TestFileOperations(void) {
       McuSemihost_WriteString((unsigned char*)"SYS_OPEN: failed\n");
       res = -1; /* failed */
     } else {
+      if (McuSemihost_SysFileClose(fh)!=0) { /* close the file we have open above */
+        McuSemihost_WriteString((unsigned char*)"failed closing file\n");
+        res = -1; /* failed */
+      }
       if (McuSemihost_SysFileRemove(newFileName) != 0) {
         McuSemihost_WriteString((unsigned char*)"SYS_REMOVE failed\n");
       } else {
@@ -641,7 +643,7 @@ static int ConsoleInputOutput(void) {
 #endif
 #if   McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_PEMICRO /* SYS_READ_C not implemented by PEMICRO */ \
    || McuSemihost_CONFIG_DEBUG_CONNECTION==McuSemihost_DEBUG_CONNECTION_LINKSERVER /* fails in MCUXpresso 11.7.0, check with later versions */
-    McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_READC does not work\n");
+    McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_READC does not work? Check for a newer release than 11.7.0\n");
 #else
   int c;
 
@@ -652,6 +654,11 @@ static int ConsoleInputOutput(void) {
   McuSemihost_WriteString((unsigned char*)"You typed: ");
   McuSemihost_WriteChar(c);
   McuSemihost_WriteChar('\n');
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+  char dummy[16]; /* the input is buffered and delivered only if the user presses enter. So there might be more characters in the stream: read them */
+  (void)McuSemihost_SysFileRead(McuSemihost_tty_handles[McuSemihost_STDIN], dummy, sizeof(dummy));
+#endif
+
 #endif
   return res;
 }
@@ -729,15 +736,15 @@ int McuSemiHost_Test(void) {
     result = -1; /* failed */
   }
 
-  if (McuSemihost_SysIsError(0)) {
+  if (McuSemihost_SysIsError(0)!=0) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: 0 should not be error!\n");
     result = -1; /* failed */
   }
-  if (!McuSemihost_SysIsError(1)) {
+  if (!McuSemihost_SysIsError(1)) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: 1 should be error!\n");
     result = -1; /* failed */
   }
-  if (!McuSemihost_SysIsError(-1)) {
+  if (!McuSemihost_SysIsError(-1)) { /* returns 0 for 'no error' */
     McuSemihost_WriteString((unsigned char*)"SYS_ERRNO: -1 should be error!\n");
     result = -1; /* failed */
   }

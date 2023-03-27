@@ -201,3 +201,5 @@
 /* ---------------------------------------------------------------------------------------*/
 /* McuWatchdog */
 #define McuWatchdog_CONFIG_USE_WATCHDOG       (1)
+#define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_HEADER_FILE  "../src/app_platform.h"
+#define McuWatchdog_CONFIG_REPORT_ID_INCLUDE_FILE         "../src/McuWatchdog_IDs.inc"

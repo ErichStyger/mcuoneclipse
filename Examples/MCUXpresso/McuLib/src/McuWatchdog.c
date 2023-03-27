@@ -12,7 +12,6 @@
 #include "McuWait.h"
 #include "McuUtility.h"
 #include "McuArmTools.h"
-#include "Shell.h"
 
 static uint16_t McuWatchdog_State = 0; /* additional watchdog protection with state variable */
 
