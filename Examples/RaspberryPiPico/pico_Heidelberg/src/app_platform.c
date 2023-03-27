@@ -211,6 +211,8 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
+#elif PL_CONFIG_USE_WIFI
+  cyw43_arch_init(); /* need to init for accessing LEDs and other pins */
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT
   NtpClient_Init();
