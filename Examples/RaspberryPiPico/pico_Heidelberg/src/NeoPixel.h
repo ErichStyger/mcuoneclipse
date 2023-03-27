@@ -56,12 +56,12 @@ uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color)
 uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t *color);
 
 /*!
- * \brief Return the pixel value as 32bit value ready to transmit, means it will be in grbw order
+ * \brief Return the pixel value as 32bit value ready to transmit for the RP2040 PIO, means it will be in grbw order
  * \param lane Lane to be used.
  * \param pos Position of pixel in lane
- * \return Pixel value in grbw order
+ * \return Pixel value in grbw order, or 0xggrrbbww. For rgb, the white part will be zero
  */
-uint32_t NEO_GetPixel32bitWRGBValue(NEO_PixelIdxT lane, NEO_PixelIdxT pos);
+uint32_t NEO_GetPixel32bitForPIO(NEO_PixelIdxT lane, NEO_PixelIdxT pos);
 
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
 

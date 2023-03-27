@@ -112,7 +112,7 @@ const uint32_t pixel_g[] = { /* grbw order: bytes are processed LSB to MSB */
     0x0, 0x00, /* w */
 };
 
-int WS2812_Transfer(uint8_t *data, size_t dataSize) {
+int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 #if WS2812_USE_MULTIPLE_LANES
 
   //pio_sm_put_blocking(pio0, sm, 0x11223311);
@@ -136,19 +136,13 @@ int WS2812_Transfer(uint8_t *data, size_t dataSize) {
   dma_channel_set_read_addr(DMA_CHANNEL, pixel, true); /* trigger DMA transfer */
 #endif
 #else
-  uint8_t r, g, b;
-
   for(int i=0; i<NEOC_NOF_PIXEL; i++) {
   #if NEOC_NOF_COLORS==3
+    uint8_t r, g, b;
     NEO_GetPixelRGB(0, i, &r, &g, &b);
     put_pixel_rgb(urgb_u32(r, g, b)); /* use the PIO to shift out the 24bits (grb) of the 32bit value passed, with MSB first */
   #elif NEOC_NOF_COLORS==4
-    //uint8_t w;
-
-    //NEO_GetPixelWRGB(NEOC_LANE_START, i, &w, &r, &g, &b);
-    //put_pixel_wrgb(uwrgb_u32(w, r, g, b)); /* use the PIO to shift out 32bits (grbw) of the 32bit value passed, with MSB first */
-
-    put_pixel_wrgb(NEO_GetPixel32bitWRGBValue(NEOC_LANE_START, i));
+    put_pixel_wrgb(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
   #endif
   }
   vTaskDelay(pdMS_TO_TICKS(10)); /* latch */

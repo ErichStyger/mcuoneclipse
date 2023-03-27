@@ -7,7 +7,9 @@
 #ifndef WS2812_H_
 #define WS2812_H_
 
-int WS2812_Transfer(uint8_t *data, size_t dataSize);
+#include <stdint.h>
+
+int WS2812_Transfer(uint32_t address, size_t nofBytes);
 
 void WS2812_Init(void);
 
