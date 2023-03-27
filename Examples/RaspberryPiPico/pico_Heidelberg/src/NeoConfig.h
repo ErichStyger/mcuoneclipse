@@ -39,6 +39,8 @@
 
 #define NEOC_USE_DMA     (0) /* if using DMA. Not supported for RP2040 as using PLU */
 
+#define NEOC_SINGLE_LANE_PIXELS_IN_ROWS   (1 && NEOC_NOF_LANES==1) /* default or single lane on RP2040: data is organized as byte array, with grb(w), with MSB sent first (pixel LSB) */
+
 #endif /* PL_CONFIG_USE_NEO_PIXEL_HW */
 
 #endif /* NEOCONFIG_H_ */

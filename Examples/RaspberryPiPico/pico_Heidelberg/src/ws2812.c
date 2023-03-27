@@ -29,7 +29,6 @@ static int sm = 0; /* state machine index. \todo should find a free SM */
 
 #if WS2812_USE_MULTIPLE_LANES
 
-
 #define DMA_CHANNEL         (0) /* bit plane content DMA channel */
 #define DMA_CHANNEL_MASK    (1u << DMA_CHANNEL)
 #define DMA_CHANNELS_MASK   (DMA_CHANNEL_MASK)
@@ -144,10 +143,12 @@ int WS2812_Transfer(uint8_t *data, size_t dataSize) {
     NEO_GetPixelRGB(0, i, &r, &g, &b);
     put_pixel_rgb(urgb_u32(r, g, b)); /* use the PIO to shift out the 24bits (grb) of the 32bit value passed, with MSB first */
   #elif NEOC_NOF_COLORS==4
-    uint8_t w;
+    //uint8_t w;
 
-    NEO_GetPixelWRGB(NEOC_LANE_START, i, &w, &r, &g, &b);
-    put_pixel_wrgb(uwrgb_u32(w, r, g, b)); /* use the PIO to shift out 32bits (grbw) of the 32bit value passed, with MSB first */
+    //NEO_GetPixelWRGB(NEOC_LANE_START, i, &w, &r, &g, &b);
+    //put_pixel_wrgb(uwrgb_u32(w, r, g, b)); /* use the PIO to shift out 32bits (grbw) of the 32bit value passed, with MSB first */
+
+    put_pixel_wrgb(NEO_GetPixel32bitWRGBValue(NEOC_LANE_START, i));
   #endif
   }
   vTaskDelay(pdMS_TO_TICKS(10)); /* latch */

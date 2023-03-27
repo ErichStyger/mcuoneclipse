@@ -13,9 +13,11 @@
 
 #define NEO_LANE_START          NEOC_LANE_START  /* starting lane number */
 #define NEO_LANE_END            NEOC_LANE_END  /* end lane number */
+#define NEO_NOF_LANES           NEOC_NOF_LANES
 #define NEO_NOF_LEDS_IN_LANE    NEOC_NOF_LEDS_IN_LANE /* number of LEDS in each lane */
 #define NEO_NOF_PIXEL           NEOC_NOF_PIXEL /* total number of pixels */
 #define NEO_NOF_BITS_PIXEL      (NEOC_NOF_COLORS*8)  /* number of bits for pixel */
+#define NEO_NOF_BYTES_PIXEL     (NEOC_NOF_COLORS)
 
 #define NEO_PIXEL_FIRST         (0) /* index of first pixel */
 
@@ -52,6 +54,14 @@ uint8_t NEO_ClearAllPixel(void);
 uint8_t NEO_SetAllPixelColor(uint32_t color);
 uint8_t NEO_SetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t color);
 uint8_t NEO_GetPixelColor(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint32_t *color);
+
+/*!
+ * \brief Return the pixel value as 32bit value ready to transmit, means it will be in grbw order
+ * \param lane Lane to be used.
+ * \param pos Position of pixel in lane
+ * \return Pixel value in grbw order
+ */
+uint32_t NEO_GetPixel32bitWRGBValue(NEO_PixelIdxT lane, NEO_PixelIdxT pos);
 
 uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint8_t green, uint8_t blue);
 

@@ -119,6 +119,20 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
 #define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  #if NEO_NOF_LANES!=1
+    #error "only single lane allowed"
+  #endif
+  /* the pixels are organized in rows, in order 'grb' or 'grbw', each color part as a byte.
+   * Because we will read the grbw value as 32bit and ARM is Little-Endian, the bytes are stored as wbrg
+   * transmitBuf[0]: w
+   * transmitBuf[1]: b
+   * transmitBuf[2]: r
+   * transmitBuf[3]: g
+   * ....
+   *  */
+  static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BYTES_PIXEL];
+#else
 /* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for RGB and 32 bytes for RGBW.
  * The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24] (RGB) or at transmitBuf[32] for RGBW.
  * For the Kinetis DMA, the data lines are organized in bytes: each byte corresponds to to a data to the GPIO output register (e.g. PTD7 to PTD0):
@@ -131,7 +145,8 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
  * ..
  * transmitBuf[23]: b0 b0 b0 b0 b0 b0 b0 b0
  * */
-static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL];
+  static uint8_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL];
+#endif
 
 uint8_t NEO_GetPixelColor(NEO_PixelIdxT column, NEO_PixelIdxT row, uint32_t *color) {
   uint8_t res, r,g,b;
@@ -164,6 +179,14 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint
   if (!(lane>=NEO_LANE_START && lane<=NEO_LANE_END) || pos>=NEO_NOF_LEDS_IN_LANE) {
     return ERR_RANGE; /* error, out of range */
   }
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  /* \todo */
+  idx = pos*NEO_NOF_BYTES_PIXEL;
+  /* \todo reverse */
+  transmitBuf[idx] = blue;
+  transmitBuf[idx+1] = red;
+  transmitBuf[idx+2] = green;
+#else
   idx = pos*NEO_NOF_BITS_PIXEL; /* find index in array: Y==0 is at index 0, Y==1 is at index 24, and so on */
   /* green */
   for(i=0;i<8;i++) {
@@ -195,6 +218,7 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint
     blue <<= 1; /* next bit */
     idx++;
   }
+#endif
   return ERR_OK;
 }
 
@@ -206,6 +230,14 @@ uint8_t NEO_SetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t white, u
   if (!(lane>=NEO_LANE_START && lane<=NEO_LANE_END) || pos>=NEO_NOF_LEDS_IN_LANE) {
     return ERR_RANGE; /* error, out of range */
   }
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  idx = pos*NEO_NOF_BYTES_PIXEL;
+  /* \todo reverse */
+  transmitBuf[idx] = white;
+  transmitBuf[idx+1] = blue;
+  transmitBuf[idx+2] = red;
+  transmitBuf[idx+3] = green;
+#else
   idx = pos*NEO_NOF_BITS_PIXEL; /* find index in array: Y==0 is at index 0, Y==1 is at index 24, and so on */
   /* green */
   for(i=0;i<8;i++) {
@@ -247,6 +279,7 @@ uint8_t NEO_SetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t white, u
     white <<= 1; /* next bit */
     idx++;
   }
+#endif
   return ERR_OK;
 }
 #endif /* NEOC_NOF_COLORS */
@@ -261,6 +294,13 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, ui
     return ERR_RANGE; /* error, out of range */
   }
   red = green = blue = 0; /* init */
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  idx = pos*NEO_NOF_BYTES_PIXEL;
+  /* \todo reverse bits */
+  blue = transmitBuf[idx];
+  red = transmitBuf[idx+1];
+  green = transmitBuf[idx+2];
+#else
   idx = pos*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
@@ -286,6 +326,7 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, ui
     }
     idx++; /* next bit */
   }
+#endif
   *redP = red;
   *greenP = green;
   *blueP = blue;
@@ -302,6 +343,14 @@ uint8_t NEO_GetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *whiteP,
     return ERR_RANGE; /* error, out of range */
   }
   red = green = blue = white = 0; /* init */
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  idx = pos*NEO_NOF_BYTES_PIXEL;
+  /* \todo reverse bits */
+  white = transmitBuf[idx];
+  blue = transmitBuf[idx+1];
+  red = transmitBuf[idx+2];
+  green = transmitBuf[idx+3];
+#else
   idx = pos*NEO_NOF_BITS_PIXEL;
   /* green */
   for(i=0;i<8;i++) {
@@ -335,6 +384,7 @@ uint8_t NEO_GetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *whiteP,
     }
     idx++; /* next bit */
   }
+#endif
   *redP = red;
   *greenP = green;
   *blueP = blue;
@@ -342,6 +392,20 @@ uint8_t NEO_GetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *whiteP,
   return ERR_OK;
 }
 #endif /* NEOC_NOF_COLORS */
+
+uint32_t NEO_GetPixel32bitWRGBValue(NEO_PixelIdxT lane, NEO_PixelIdxT pos) {
+  uint32_t val;
+
+#if NEOC_SINGLE_LANE_PIXELS_IN_ROWS
+  val = *((int32_t*)&transmitBuf[pos*NEO_NOF_BYTES_PIXEL]); /* bytes are already in correct order in memory */
+#else
+  uint8_t r, g, b, w;
+
+  NEO_GetPixelWRGB(lane, pos, &w, &r, &g, &b);
+  val = ((uint32_t)(g)<<24) | ((uint32_t)(r)<<16) | ((uint32_t)(b)<<8) | (uint32_t)(w);
+#endif
+  return val;
+}
 
 /* binary OR the color of an individual pixel */
 uint8_t NEO_OrPixelRGB(NEO_PixelIdxT x, NEO_PixelIdxT y, uint8_t red, uint8_t green, uint8_t blue) {
