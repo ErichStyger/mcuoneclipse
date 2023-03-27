@@ -19,9 +19,6 @@
 #if PL_CONFIG_USE_SENSOR
   #include "sensor.h"
 #endif
-#if PL_CONFIG_USE_WATCHDOG
-  #include "McuWatchdog.h"
-#endif
 #if PL_CONFIG_USE_EXT_RTC
   #include "extRTC.h"
 #endif

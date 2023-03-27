@@ -114,7 +114,7 @@ static struct guiObjects {
 61674,61683,61724,61732,61787,61931,62016,62017,62018,62019,
 62020,62087,62099,62212,62189,62810,63426,63650
  * Browse: use image/FontAwesome5-Solid+Brands+Regular.woff  (Note: that's version 5, not all symbols are available)
- * Symbols: abcdefghijklmnopqrstuvwxyz +-.:ABCDEFGHIJKLMNOPQRSTUVWXY0123456789
+ * Symbols: abcdefghijklmnopqrstuvwxyz +-.,;:ABCDEFGHIJKLMNOPQRSTUVWXY0123456789
  */
 LV_FONT_DECLARE(customSymbols_12); /* font name with custom symbols plus the normal symbols/characters */
 /* IDs of the symbols, use the Hex UTF-8 code: */
@@ -468,7 +468,7 @@ static void GuiTask(void *pv) {
 #if PL_CONFIG_USE_WATCHDOG
   McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_GUI, 5, 100);
 #else
-  vTaskDelay(pdMS_TO_TICKS(500)); /* give hardware time to power up */
+  vTaskDelay(pdMS_TO_TICKS(5*100)); /* give hardware time to power up */
 #endif
   #if PL_CONFIG_USE_SHT31
   McuSHT31_Init();
@@ -522,7 +522,7 @@ static void GuiTask(void *pv) {
             break;
         } /* switch */
       } /* if */
-#if GUI_CONFIG_USE_SCREENSAVER
+    #if GUI_CONFIG_USE_SCREENSAVER
       if (notifcationValue&GUI_TASK_NOTIFY_GUI_TIMEOUT) { /* no user action or button press for some time */
         switch(state) {
           case GUI_STATE_IDLE:
@@ -533,8 +533,8 @@ static void GuiTask(void *pv) {
              break;
         } /* switch */
       } /* if */
-#endif
-#if GUI_CONFIG_USE_CYCLING_SCREEN
+    #endif
+    #if GUI_CONFIG_USE_CYCLING_SCREEN
       if (notifcationValue&GUI_TASK_NOTIFY_NEXT_SCREEN) { /* request to cycle to next screen */
         switch(state) {
           case GUI_STATE_IDLE:
@@ -567,7 +567,7 @@ static void GuiTask(void *pv) {
              break;
         } /* switch */
       } /* if */
-#endif
+    #endif
     } /* if notification received */
 
     switch(state) {
@@ -579,7 +579,7 @@ static void GuiTask(void *pv) {
         state = GUI_STATE_IDLE;
         break;
 
-#if GUI_CONFIG_USE_CYCLING_SCREEN
+    #if GUI_CONFIG_USE_CYCLING_SCREEN
       case GUI_STATE_START_CYCLING_SCREEN:
         currScreen = GUI_SCREEN_FIRST_CYCLING;
       #if GUI_CONFIG_USE_SCREENSAVER
@@ -599,9 +599,9 @@ static void GuiTask(void *pv) {
 
       case GUI_STATE_IDLE_CYCLING_SCREEN:
         break;
-#endif
+    #endif
 
-#if GUI_CONFIG_USE_SCREENSAVER
+    #if GUI_CONFIG_USE_SCREENSAVER
      case GUI_STATE_ENTER_SCREEN_SAVER:
         McuSSD1306_DisplayOn(false); /* turn off */
         /* stop all timers */
@@ -609,12 +609,12 @@ static void GuiTask(void *pv) {
           McuLog_fatal("failed stopping timer");
           for(;;); /* failure!?! */
         }
-#if GUI_CONFIG_USE_CYCLING_SCREEN
+    #if GUI_CONFIG_USE_CYCLING_SCREEN
         if (xTimerStop(timerHndlCycleScreens, pdMS_TO_TICKS(10))!=pdPASS) {
           McuLog_fatal("failed stopping timer");
           for(;;); /* failure!?! */
         }
-#endif
+    #endif
         state = GUI_STATE_ACTIVE_SCREEN_SAVER;
         break;
 
@@ -625,7 +625,7 @@ static void GuiTask(void *pv) {
         McuSSD1306_DisplayOn(true); /* turn display on */
         state = GUI_STATE_SHOW_SETTINGS;
         break;
-#endif
+    #endif
       default:
         break;
     } /* switch */
@@ -653,6 +653,16 @@ static void StartOrResetGuiTimeoutTimer(void) {
   }
 }
 #endif
+
+void GUI_Suspend(void) {
+  vTaskSuspend(GUI_TaskHndl);
+  McuSSD1306_DisplayOn(false); /* turn off display */
+}
+
+void GUI_Resume(void) {
+  McuSSD1306_Init();
+  vTaskResume(GUI_TaskHndl);
+}
 
 void GUI_SendEvent(Gui_Event_e event) {
   switch(event) {
