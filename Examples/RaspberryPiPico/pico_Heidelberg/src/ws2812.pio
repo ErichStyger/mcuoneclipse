@@ -52,16 +52,16 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
 
 .program ws2812_parallel
 
-.define public T1 4          ; Timing until end of 0 bit
-.define public T2 2          ; plus timing end of 1 bit
-.define public T3 4          ; plus timing end of cycle 
+.define public T1 5          ; Timing until end of 0 bit
+.define public T2 4          ; plus timing end of 1 bit
+.define public T3 1          ; plus timing end of cycle 
 
 .wrap_target
     mov x, null           ; [1] clear X scratch register
     out x, 8              ; [1] copy 8bits from OSR to X
-    mov pins, !null [1]   ; [2] set all pins HIGH (!NULL)
-    mov pins, x     [3]   ; [2] pulse width: keep pins high (for 1 bits) or pull low (for 0 bits)
-    mov pins, null  [0]   ; [2] pull all pins low
+    mov pins, !null [2]   ; [3] T1: set all pins HIGH (!NULL)
+    mov pins, x     [3]   ; [4] T2: pulse width: keep pins high (for 1 bits) or pull low (for 0 bits)
+    mov pins, null        ; [1] T3: pull all pins low
  .wrap
  
 % c-sdk {
