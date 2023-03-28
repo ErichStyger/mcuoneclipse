@@ -2,7 +2,7 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
-add_subdirectory(LittlevGL)
+#add_subdirectory(LittlevGL)
 
 file(GLOB FILES
   fonts/*.c

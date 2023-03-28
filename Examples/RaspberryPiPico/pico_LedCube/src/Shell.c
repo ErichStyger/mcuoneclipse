@@ -21,66 +21,9 @@
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
 #endif
-#if PL_CONFIG_IS_APP_LED_COUNTER
-  #include "neoCounter.h"
-#endif
-#if PL_CONFIG_USE_LIGHTS
-  #include "lights.h"
-#endif
-#if PL_CONFIG_USE_SHT31
-  #include "McuSHT31.h"
-#elif PL_CONFIG_USE_SHT40
-  #include "McuSHT40.h"
-#endif
-#if PL_CONFIG_USE_ROAD
-  #include "road.h"
-#endif
-#if PL_CONFIG_USE_ADC
-  #include "analog.h"
-#endif
-#if McuFlash_CONFIG_IS_ENABLED
-  #include "MinINI/McuFlash.h"
-#endif
-#if PL_CONFIG_USE_MINI
-  #include "minIni/McuMinINI.h"
-#endif
 #include "McuLog.h"
-#if PL_CONFIG_USE_LITTLE_FS
-  #include "littleFS/McuLittleFS.h"
-#endif
 #if PL_CONFIG_USE_PICO_W
   #include "PicoWiFi.h"
-#endif
-#if PL_CONFIG_USE_EXT_FLASH
-  #include "McuW25Q128.h"
-#endif
-#if McuUart485_CONFIG_USE_RS_485
-  #include "McuUart485.h"
-#endif
-#if PL_CONFIG_USE_RS485_SHELL
-  #include "rs485.h"
-#endif
-#if McuModbus_CONFIG_IS_ENABLED
-  #include "Modbus/McuModbus.h"
-  #include "Modbus/McuHeidelberg.h"
-#endif
-#if PL_CONFIG_USE_PWM_LED
-  #include "PwmLed.h"
-#endif
-#if PL_CONFIG_USE_PCF85063A
-  #include "McuPCF85063A.h"
-#endif
-#if PL_CONFIG_USE_POWER
-  #include "power.h"
-#endif
-#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
-  #include "energy.h"
-#endif
-#if PL_CONFIG_USE_UNIT_TESTS
-  #include "UnitTest.h"
-#endif
-#if PL_CONFIG_USE_WATCHDOG
-  #include "McuWatchdog.h"
 #endif
 #include "application.h"
 
@@ -146,66 +89,11 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   NEO_ParseCommand,
 #endif
-#if PL_CONFIG_USE_LIGHTS
-  Lights_ParseCommand,
-#endif
-#if PL_CONFIG_USE_EXT_FLASH
-  McuW25_ParseCommand,
-#endif
-#if PL_CONFIG_USE_SENSOR && PL_CONFIG_USE_SHT31
-  McuSHT31_ParseCommand,
-#elif PL_CONFIG_USE_SENSOR && PL_CONFIG_USE_SHT40
-  McuSHT40_ParseCommand,
-#endif
-#if PL_CONFIG_USE_ADC
-  Analog_ParseCommand,
-#endif
-#if PL_CONFIG_IS_APP_LED_COUNTER
-  NeoCounter_ParseCommand,
-#endif
-#if PL_CONFIG_USE_ROAD
-  Road_ParseCommand,
-#endif
-#if PL_CONFIG_USE_PWM_LED
-  PwmLed_ParseCommand,
-#endif
-#if PL_CONFIG_USE_PCF85063A
-  McuPCF85063A_ParseCommand,
-#endif
-#if PL_CONFIG_USE_RS485 && McuUart485_CONFIG_USE_RS_485
-  McuUart485_ParseCommand,
-#endif
-#if PL_CONFIG_USE_RS485 && PL_CONFIG_USE_RS485_SHELL
-  RS485_ParseCommand,
-#endif
-#if PL_CONFIG_USE_RS485 && McuModbus_CONFIG_IS_ENABLED
-  McuModbus_ParseCommand,
-  McuHeidelberg_ParseCommand,
-#endif
-#if McuFlash_CONFIG_IS_ENABLED
-  McuFlash_ParseCommand,
-#endif
-#if PL_CONFIG_USE_MINI
-  McuMinINI_ParseCommand,
-  ini_ParseCommand,
-#endif
 #if McuLog_CONFIG_IS_ENABLED
   McuLog_ParseCommand,
 #endif
-#if PL_CONFIG_USE_LITTLE_FS
-  McuLFS_ParseCommand,
-#endif
 #if PL_CONFIG_USE_PICO_W
   PicoWiFi_ParseCommand,
-#endif
-#if PL_CONFIG_USE_POWER
-  Power_ParseCommand,
-#endif
-#if PL_CONFIG_USE_GUI_ENERGY_DASHBOARD
-  Energy_ParseCommand,
-#endif
-#if PL_CONFIG_USE_UNIT_TESTS
-  UnitTest_ParseCommand,
 #endif
   App_ParseCommand,
   NULL /* Sentinel */
@@ -251,9 +139,6 @@ static void ShellTask(void *pvParameters) {
       (void)McuShell_ReadAndParseWithCommandTable(ios[i].buf, ios[i].bufSize, ios[i].stdio, CmdParserTable);
     }
     vTaskDelay(pdMS_TO_TICKS(50));
-  #if PL_CONFIG_USE_WATCHDOG
-    McuWatchdog_Report(McuWatchdog_REPORT_ID_TASK_SHELL, 50);
-  #endif
   } /* for */
 }
 

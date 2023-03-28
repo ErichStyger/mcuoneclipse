@@ -25,14 +25,9 @@
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.635761367" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.17235602" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="LV_CONF_INCLUDE_SIMPLE"/>
-									<listOptionValue builtIn="false" value="LV_CONF_SUPPRESS_DEFINE_CHECK"/>
-									<listOptionValue builtIn="false" value="McuUart485_CONFIG_USE_RS_485=1"/>
 									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_KINETIS=0"/>
 									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_RPxxxx=1"/>
-									<listOptionValue builtIn="false" value="McuUart485_CONFIG_USE_MODBUS=1"/>
 									<listOptionValue builtIn="false" value="LWIP_TCP=1"/>
-									<listOptionValue builtIn="false" value="McuWatchdog_CONFIG_USE_WATCHDOG=1"/>
 									<listOptionValue builtIn="false" value="McuLib_CONFIG_SDK_VERSION_USED=McuLib_CONFIG_SDK_RPI_PICO"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1984849194" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
@@ -108,6 +103,7 @@
 					</folderInfo>
 				</configuration>
 			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
