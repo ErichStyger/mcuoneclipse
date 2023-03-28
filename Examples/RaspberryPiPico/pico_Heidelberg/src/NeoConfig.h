@@ -24,7 +24,7 @@
 #elif PL_CONFIG_IS_APP_LED_COUNTER /* full LED counter app */
   #define NEOC_NOF_LEDS_IN_LANE   (2+16+8) /* number of LEDs in a lane for counter app */
 #else
-  #define NEOC_NOF_LEDS_IN_LANE   (2) /* number of LEDs in a lane */
+  #define NEOC_NOF_LEDS_IN_LANE   (4) /* number of LEDs in a lane */
 #endif
 
 #ifndef NEOC_NOF_COLORS
