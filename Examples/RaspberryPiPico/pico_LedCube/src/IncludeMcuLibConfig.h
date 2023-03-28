@@ -53,11 +53,3 @@
 #define McuLog_CONFIG_USE_COLOR                 (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* ---------------------------------------------------------------------------------------*/
-/* LittlevGL */
-#define LV_CONFIG_DPI                  (25)
-#define LV_CONF_INCLUDE_SIMPLE   /* use lv_conf.h inside src folder */
-#define LV_CONF_SUPPRESS_DEFINE_CHECK  /* avoid bogus warning with gcc about including lv_conf.h */
-#if !__ASSEMBLER__ /* set if file is included by GNU as (assembler). Do not include normal C header files if running the assembler for example to assemble the pico startup code */
-  #include "lv_conf.h"
-#endif /* !__ASSEMBLER__ */
-/* ---------------------------------------------------------------------------------------*/

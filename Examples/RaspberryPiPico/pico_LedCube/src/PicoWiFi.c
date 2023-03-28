@@ -7,7 +7,9 @@
 #include "app_platform.h"
 #if PL_CONFIG_USE_PICO_W
 #include "pico/cyw43_arch.h"
-#include "lwip/ip4_addr.h"
+#if PL_CONFIG_USE_WIFI
+  #include "lwip/ip4_addr.h"
+#endif
 #include "PicoWiFi.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"

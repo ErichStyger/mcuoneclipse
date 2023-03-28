@@ -25,8 +25,8 @@ pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
 
 # add component directories to the list
-add_subdirectory(./McuLib)
-add_subdirectory(./src)
+add_subdirectory(../McuLib  build/McuLib)
+add_subdirectory(./src      build/src)
 
 # generate extra files (map/bin/hex/uf2)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})

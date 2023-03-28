@@ -15,7 +15,7 @@
    * a) enable 'library pico_cyw43_arch_lwip_sys_freertos' in CMakeLists.txt of src folder
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
-#define PL_CONFIG_USE_WIFI            (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
+#define PL_CONFIG_USE_WIFI              (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 
 #define PL_CONFIG_USE_USB_CDC           (1) /* caution, because issues while debugging! In Termite, need to connect with RTS/CTS! Putty works fine */
 #define PL_CONFIG_USE_RTT               (1) /* if using SEGGER RTT */

@@ -5,8 +5,3 @@ rmdir /S /Q build pioasm generated elf2uf2 pico-sdk CMakeFiles cmake_install.cma
 del src\*.a 
 del src\Makefile src\cmake_install.cmake
 rmdir /S /Q src\CMakeFiles
-
-del McuLib\*.a
-del McuLib\Makefile McuLib\cmake_install.cmake
-rmdir /S /Q McuLib\CMakeFiles
-
