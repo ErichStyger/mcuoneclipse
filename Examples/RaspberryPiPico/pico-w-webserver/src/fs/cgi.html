@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head> <title>Pico W CGI-PAGE</title> </head>
+    <body> <h1>Pico W</h1>
+    <h3>CGI-PAGE</h3>
+
+	<span>
+	This page allows you to control four leds: LED1, LED2, LED3 and LED4 connected to GPIO18 - 21<br><br>
+	To turn a led on/off check/uncheck its corresponding checkbox.<br>
+	Then click on the "Send" button to submit the changes.<br>
+	</span>
+	<br>
+	<form method="get" action="/leds.cgi">
+		<input value="1" name="led" type="checkbox">LED1<br>
+		<input value="2" name="led" type="checkbox">LED2<br>
+		<input value="3" name="led" type="checkbox">LED3<br>
+		<input value="4" name="led" type="checkbox">LED4<br>
+		<br>
+		<input value="Send" type="submit">
+	</form>
+	<br>
+	<br>
+    <a href="/index.html">Back</a>
+	</body>
+</html>
