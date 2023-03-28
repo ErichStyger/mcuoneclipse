@@ -20,6 +20,11 @@ add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 
 add_executable(${CMAKE_PROJECT_NAME})
 
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+  COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"
+  COMMENT "Printing code and data size"
+)
+  
 # enable USB CDC and disable UART:
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
