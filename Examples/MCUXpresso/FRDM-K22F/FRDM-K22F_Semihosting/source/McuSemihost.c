@@ -321,10 +321,13 @@ int McuSemihost_SysException(McuSemihost_Exception_e exception) {
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_EXCEPTION, &param);
 }
 
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
+/* SEGGER: ERROR: Semi hosting error: SYS_TICKFREQ is not supported by GDB Server. */
 int McuSemihost_SysTickFreq(void) {
   int32_t param = 0; /* must be zero */
   return McuSemihost_HostRequest(McuSemihost_Op_SYS_TICKFREQ, &param);
 }
+#endif
 
 int McuSemihost_WriteString(const unsigned char *str) {
   McuShell_SendStr(str, McuSemihost_stdio.stdOut); /* buffer it, then write to a file during flush */
@@ -767,6 +770,7 @@ int McuSemiHost_Test(void) {
       McuSemihost_WriteString((unsigned char*)"SYS_HEAPINFO success!\n");
     }
   }
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
   {
     int freq = McuSemihost_SysTickFreq();
     if (freq==-1) {
@@ -775,14 +779,16 @@ int McuSemiHost_Test(void) {
       McuSemihost_printf("McuSemihost SYS_TICKFREQ: %d\n", freq);
     }
   }
-
+#endif
+#if McuSemihost_CONFIG_DEBUG_CONNECTION!=McuSemihost_DEBUG_CONNECTION_SEGGER
+  /* not supported by SEGGER */
   {
     int32_t val = McuSemihost_SysEnterSVC();
     if (val!=0) {
       McuSemihost_WriteString((unsigned char*)"McuSemihost ENTER_SVC failed?!\n");
     }
   }
-
+#endif
 
   if (result!=0) {
     McuSemihost_WriteString((unsigned char*)"McuSemihost test FAILED!\n");
