@@ -42,6 +42,7 @@ target_link_libraries(
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
   SrcLib
   McuLib
+  lvglLib
   SrcLib  # again because of FreeRTOShooks.c
   pico_stdlib
   hardware_pio # PIO for WS2812B

@@ -31,6 +31,7 @@ pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
 
 # add component directories to the list
 add_subdirectory(../McuLib build/McuLib)
+#add_subdirectory(../McuLib/LittlevGL  build/McuLib/LittlevGL)
 add_subdirectory(./src build/src)
 
 # generate extra files (map/bin/hex/uf2)

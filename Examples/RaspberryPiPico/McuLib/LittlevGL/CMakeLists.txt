@@ -22,5 +22,6 @@ target_include_directories(
   lvglLib 
   PUBLIC
   ./
+  ./lvgl
  )
  

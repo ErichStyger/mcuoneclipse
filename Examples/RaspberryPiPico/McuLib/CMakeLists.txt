@@ -115,7 +115,7 @@ add_library(McuLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   McuLib
-  lvglLib
+#  lvglLib
   pico_stdlib
   pico_unique_id
   hardware_pio 
