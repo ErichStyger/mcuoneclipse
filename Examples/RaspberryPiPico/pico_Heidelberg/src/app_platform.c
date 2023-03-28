@@ -5,6 +5,11 @@
  */
 
 #include "app_platform.h"
+#if PL_CONFIG_USE_WIFI
+  #include "PicoWiFi.h"
+#elif PL_CONFIG_USE_PICO_W
+  #include "pico/cyw43_arch.h" /* must be first, otherwise conflict with lwIP ERR_OK */
+#endif
 #if PL_CONFIG_USE_USB_CDC
   #include "pico/stdlib.h"
 #endif
@@ -66,9 +71,6 @@
 #endif
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
-#endif
-#if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT
   #include "ntp_client.h"
@@ -157,9 +159,9 @@ void PL_InitWatchdogReportTable(void) {
 #endif
 
 void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
-#if 1 /*original version */
+#if 1 /* original version */
   pico_get_unique_board_id_string(id_out, len); /* default */
-#else
+#else /* use same USB serial number for all boards, so sharing the same COM interface */
   McuUtility_strcpy(id_out, len, "mySerialNumber");
 #endif
 }
@@ -230,8 +232,6 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
-#elif PL_CONFIG_USE_WIFI
-  cyw43_arch_init(); /* need to init for accessing LEDs and other pins */
 #endif
 #if PL_CONFIG_USE_NTP_CLIENT
   NtpClient_Init();

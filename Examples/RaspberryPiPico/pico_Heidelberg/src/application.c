@@ -7,6 +7,7 @@
 #include "app_platform.h"
 #if PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h"
+  #include "PicoWiFi.h"
 #endif
 #include "application.h"
 #include "McuRTOS.h"
@@ -168,6 +169,15 @@ static void AppTask(void *pv) {
   int32_t sensorUpdateCntrSec = 0;
 #endif
 
+#if !PL_CONFIG_USE_WIFI && PL_CONFIG_USE_PICO_W
+  if (cyw43_arch_init()==0)  { /* need to init for accessing LEDs and other pins */
+    PicoWiFi_SetArchIsInitialized(true);
+  } else {
+    McuLog_fatal("failed initializing CYW43");
+    for(;;){}
+  }
+#endif
+
 #if APP_HAS_ONBOARD_GREEN_LED
   /* only for pico boards which have an on-board green LED */
   McuLED_Config_t config;
@@ -181,6 +191,8 @@ static void AppTask(void *pv) {
     McuLog_fatal("failed initializing LED");
     for(;;){}
   }
+#elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
+  bool ledIsOn = false;
 #endif
 #if PL_CONFIG_HAS_LITTLE_FS
   McuLog_info("Mounting litteFS volume.");
@@ -216,6 +228,9 @@ static void AppTask(void *pv) {
   for(;;) {
   #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);
+  #elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
+    ledIsOn = !ledIsOn;
   #endif
   #if PL_CONFIG_USE_ADC && ANALOG_CONFIG_HAS_ADC_BAT
     currBatteryCharge = Power_GetBatteryChargeLevel();

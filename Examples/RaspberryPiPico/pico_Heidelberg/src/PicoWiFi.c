@@ -89,6 +89,10 @@ bool PicoWiFi_ArchIsInit(void) {
   return wifi.isInitialized;
 }
 
+void PicoWiFi_SetArchIsInitialized(bool isInitialized) {
+  wifi.isInitialized = isInitialized;
+}
+
 static void WiFiTask(void *pv) {
   int res;
   bool ledIsOn = false;
