@@ -23,7 +23,7 @@
 #include "pico/sem.h"
 
 /* see https://www.raspberrypi.com/news/how-to-power-loads-of-leds-with-a-single-raspberry-pi-pico/ */
-#define WS2812_USE_MULTIPLE_LANES (0 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
+#define WS2812_USE_MULTIPLE_LANES (1 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
 
 static int sm = 0; /* state machine index. \todo should find a free SM */
 
@@ -105,20 +105,36 @@ const uint32_t pixel0[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
     0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
 };
 
-const uint32_t pixel_g[] = { /* grbw order: bytes are processed LSB to MSB */
-    0x00000000, 0x01000000, /* g */
-    0x0, 0x00, /* r */
-    0x0, 0x00, /* b */
-    0x0, 0x00, /* w */
+uint32_t pixel_r[] = { /* grbw order: bytes are processed LSB to MSB */
+    0x00000000, 0x00000000, /* g */
+    0x00000000, 0x01000000, /* r */
+    0x00000000, 0x00000000, /* b */
+    0x00000000, 0x00000000, /* w */
 };
+
+uint32_t pixel_g[] = { /* grbw order: bytes are processed LSB to MSB */
+    0x00000000, 0x01000000, /* g */
+    0x00000000, 0x00000000, /* r */
+    0x00000000, 0x00000000, /* b */
+    0x00000000, 0x00000000, /* w */
+};
+
 
 int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 #if WS2812_USE_MULTIPLE_LANES
-
+#if 0
   //pio_sm_put_blocking(pio0, sm, 0x11223311);
   for(int i=0; i<8; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel_g[i]);
+    pio_sm_put_blocking(pio0, sm, pixel_r[i]);
   }
+  vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+#endif
+  uint32_t *p = (uint32_t*)address;
+  for(int i=0; i<nofBytes/4; i++) { /* without DMA: writing one after each other */
+    pio_sm_put_blocking(pio0, sm, *p);
+    p++;
+  }
+  vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
 #if 0
   for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
     pio_sm_put_blocking(pio0, sm, pixel[i]);
