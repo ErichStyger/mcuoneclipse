@@ -22,21 +22,20 @@
 #include "hardware/irq.h"
 #include "pico/sem.h"
 
-/* see https://www.raspberrypi.com/news/how-to-power-loads-of-leds-with-a-single-raspberry-pi-pico/ */
-#define WS2812_USE_MULTIPLE_LANES (1 || NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
-#define WS2812_USE_DMA            (1) /* if using DMA, otherwise data is sent directly */
-
-static int sm = 0; /* state machine index. \todo should find a free SM */
-
-#if WS2812_USE_DMA
-
-#define DMA_CHANNEL         (0) /* bit plane content DMA channel */
-#define DMA_CHANNEL_MASK    (1u<<DMA_CHANNEL)
-
 /* timing (+/-150ns):
  * 0: 400ns high, followed by 850ns low
  * 1: 850ns low,  followed by 400ns low
  */
+
+#define WS2812_USE_MULTIPLE_LANES     (NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
+
+static int sm = 0; /* state machine index. \todo should find a free SM */
+
+#if NEOC_USE_DMA
+
+#define DMA_CHANNEL         (0) /* bit plane content DMA channel */
+#define DMA_CHANNEL_MASK    (1u<<DMA_CHANNEL)
+
 #define RESET_TIME_US       (60)  /* RES time, specification says it needs at least 50 us. Need to pause bit stream for this time at the end to latch the values into the LED */
 
 static struct semaphore reset_delay_complete_sem; /* semaphore used to make a delay at the end of the transfer. Posted when it is safe to output a new set of values */
@@ -69,13 +68,17 @@ static void dma_init(PIO pio, uint sm) {
                         &channel_config,
                         &pio->txf[sm], /* write address: write to PIO FIFO */
                         NULL, /* don't provide a read address yet */
-                        NEOC_NOF_LEDS_IN_LANE*2*NEOC_NOF_COLORS,/* number of transfers */
+                    #if WS2812_USE_MULTIPLE_LANES
+                        NEOC_NOF_LEDS_IN_LANE*2*NEOC_NOF_COLORS, /* number of transfers */
+                    #else
+                        NEOC_NOF_LEDS_IN_LANE, /* number of transfers */
+                    #endif
                         false); /* don't start yet */
   irq_set_exclusive_handler(DMA_IRQ_0, dma_complete_handler); /* after DMA all data, raise an interrupt */
   dma_channel_set_irq0_enabled(DMA_CHANNEL, true); /* map DMA channel to interrupt */
   irq_set_enabled(DMA_IRQ_0, true); /* enable interrupt */
 }
-#endif /* WS2812_USE_DMA */
+#endif /* NEOC_USE_DMA */
 
 #if !WS2812_USE_MULTIPLE_LANES
 static inline void put_pixel_rgb(uint32_t pixel_grb) {
@@ -95,78 +98,29 @@ static inline uint32_t uwrgb_u32(uint8_t w, uint8_t r, uint8_t g, uint8_t b) {
 }
 #endif
 
-const uint32_t pixel[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
-    /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
-    0x2, 0x2, 0x2, 0x2, 0x0, 0x0, 0x0, 0x1, /* g */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, /* r */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x1, /* b */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, /* w */
-};
-const uint32_t pixel0[NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL] = {
-    /* each value is a 32bit (max 32 lanes) of pixel values put out by the PIO */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* g */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* r */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* b */
-    0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, /* w */
-};
-
-uint32_t pixel_r[] = { /* grbw order: bytes are processed LSB to MSB */
-    0x00000000, 0x00000000, /* g */
-    0x00000000, 0x01000000, /* r */
-    0x00000000, 0x00000000, /* b */
-    0x00000000, 0x00000000, /* w */
-};
-
-uint32_t pixel_g[] = { /* grbw order: bytes are processed LSB to MSB */
-    0x00000000, 0x01000000, /* g */
-    0x00000000, 0x00000000, /* r */
-    0x00000000, 0x00000000, /* b */
-    0x00000000, 0x00000000, /* w */
-};
-
-
 int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 #if WS2812_USE_MULTIPLE_LANES
-#if WS2812_USE_DMA
-  sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
-  dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
+  #if NEOC_USE_DMA
+    sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
+    dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
+  #else
+    uint32_t *p = (uint32_t*)address;
+    for(int i=0; i<nofBytes/sizeof(uint32_t); i++) { /* without DMA: writing one after each other */
+      pio_sm_put_blocking(pio0, sm, *p);
+      p++;
+    }
+    vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+  #endif
 #else
-  uint32_t *p = (uint32_t*)address;
-  for(int i=0; i<nofBytes/sizeof(uint32_t); i++) { /* without DMA: writing one after each other */
-    pio_sm_put_blocking(pio0, sm, *p);
-    p++;
-  }
-  vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
-#endif
-
-#if 0
-  //pio_sm_put_blocking(pio0, sm, 0x11223311);
-  for(int i=0; i<8; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel_r[i]);
-  }
-  vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
-#endif
-#if 0
-  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel[i]);
-  }
-#endif
-#if 0
-  for(int i=0; i<NEOC_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL; i++) {
-    pio_sm_put_blocking(pio0, sm, pixel[i]);
-  }
-#endif
-#if 0
-  sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
-  dma_channel_set_read_addr(DMA_CHANNEL, pixel0, true); /* trigger DMA transfer */
-  sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
-  dma_channel_set_read_addr(DMA_CHANNEL, pixel, true); /* trigger DMA transfer */
-#endif
-#else
-  for(int i=0; i<NEOC_NOF_PIXEL; i++) { /* without DMA: writing one after each other */
-    put_pixel_wrgb(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
-  }
-  vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+  #if NEOC_USE_DMA
+    sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
+    dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
+  #else
+    for(int i=0; i<NEOC_NOF_PIXEL; i++) { /* without DMA: writing one after each other */
+      put_pixel_wrgb(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
+    }
+    vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+  #endif
 #endif
   return 0; /* ok */
 }
@@ -181,7 +135,7 @@ void WS2812_Init(void) {
   uint offset = pio_add_program(pio, &ws2812_program);
   ws2812_program_init(pio, sm, offset, NEOC_PIN_START, 800000, NEOC_NOF_COLORS==4);
 #endif
-#if WS2812_USE_DMA
+#if NEOC_USE_DMA
   sem_init(&reset_delay_complete_sem, 1, 1); /* semaphore initially posted so we don't block first time */
   dma_init(pio, sm);
 #endif

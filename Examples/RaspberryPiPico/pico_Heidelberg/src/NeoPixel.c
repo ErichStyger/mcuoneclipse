@@ -5,17 +5,14 @@
  */
 
 #include "app_platform.h"
+#include "McuLib.h"
 #include <stdbool.h>
 #include "NeoPixel.h"
 #include "McuUtility.h"
-#if NEOC_USE_DMA
-  #include "PixelDMA.h"
-#else
+#if McuLib_CONFIG_CPU_IS_RPxxxx
   #include "ws2812.h"
-#endif
-#if PL_CONFIG_USE_MINI
-  #include "minIni/McuMinINI.h"
-  #include "MinIniKeys.h"
+#else
+  #include "PixelDMA.h"
 #endif
 
 static const uint8_t gamma8[] = {
@@ -568,11 +565,11 @@ uint8_t NEO_SetAllPixelColor(uint32_t color) {
 }
 
 uint8_t NEO_TransferPixels(void) {
-#if NEOC_USE_DMA
-  return PIXDMA_Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
-#else
+#if McuLib_CONFIG_CPU_IS_RPxxxx
   return WS2812_Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
-#endif
+#else
+  return PIXDMA_Transfer((uint32_t)&transmitBuf[0], sizeof(transmitBuf));
+ #endif
 }
 
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {

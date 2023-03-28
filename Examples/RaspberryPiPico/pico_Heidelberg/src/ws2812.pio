@@ -52,9 +52,9 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
 
 .program ws2812_parallel
 
-.define public T1 5          ; Timing until end of 0 bit
-.define public T2 4          ; plus timing end of 1 bit
-.define public T3 1          ; plus timing end of cycle 
+.define public T1 4          ; Timing until end of 0 bit
+.define public T2 3          ; plus timing end of 1 bit
+.define public T3 3          ; plus timing end of cycle 
 
 .wrap_target
     mov x, null           ; [1] clear X scratch register
