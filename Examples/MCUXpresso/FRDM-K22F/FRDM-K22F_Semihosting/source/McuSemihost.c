@@ -654,9 +654,11 @@ static int ConsoleInputOutput(void) {
   McuSemihost_WriteString((unsigned char*)"You typed: ");
   McuSemihost_WriteChar(c);
   McuSemihost_WriteChar('\n');
+#if McuSemihost_CONFIG_INIT_STDIO_HANDLES
+  unsigned char dummy[16]; /* the input is buffered and delivered only if the user presses enter. So there might be more characters in the stream: read them */
+  (void)McuSemihost_SysFileRead(McuSemihost_tty_handles[McuSemihost_STDIN], dummy, sizeof(dummy));
+#endif
 
-  char dummy[16]; /* the input is buffered and delivered only if the user presses enter. So there might be more characters in the stream: read them */
-  (void)McuSemihost_FileRead(McuSemihost_tty_handles[McuSemihost_STDIN], dummy, sizeof(dummy));
 #endif
   return res;
 }
