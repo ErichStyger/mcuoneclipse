@@ -22,9 +22,9 @@
 static const uint16_t ws2812_program_instructions[] = {
             //     .wrap_target
     0x6221, //  0: out    x, 1            side 0 [2] 
-    0x1123, //  1: jmp    !x, 3           side 1 [1] 
-    0x1400, //  2: jmp    0               side 1 [4] 
-    0xa442, //  3: nop                    side 0 [4] 
+    0x1223, //  1: jmp    !x, 3           side 1 [2] 
+    0x1300, //  2: jmp    0               side 1 [3] 
+    0xa342, //  3: nop                    side 0 [3] 
             //     .wrap
 };
 
