@@ -1,1 +1,0 @@
-gcc -IC:/Raspy/pico/pico-sdk/lib/lwip/src/include -I. -IC:\Raspy\pico\pico-sdk\lib\lwip\contrib\ports\win32\include -IC:\Raspy\pico\pico-sdk\lib\lwip\src\apps\http\makefsdata makefsdata.c -o makefsdata.exe
