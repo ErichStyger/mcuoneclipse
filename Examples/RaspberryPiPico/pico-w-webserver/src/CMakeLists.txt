@@ -1,44 +1,52 @@
-set(PROGRAM_NAME pico_w_webserver)
+# file: Collect all files that need to be compiled. 
+# You can use a GLOB function as shown here, or explicitly mention the specific files
+#file(GLOB FILES *.c *.h)
 
-set(MAKE_FS_DATA_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/external/makefsdata)
+file(GLOB FILES
+  main.c
+  ssi.c
+  cgi.c
+)
 
-if (NOT EXISTS ${MAKE_FS_DATA_SCRIPT})
-        file(DOWNLOAD
-                https://raw.githubusercontent.com/krzmaz/lwip/e15654409d14a238aec5ed4bd5516063938c9345/src/apps/http/makefsdata/makefsdata
-                ${MAKE_FS_DATA_SCRIPT}
-                )
-endif()
-message("Running makefsdata script")
-execute_process(COMMAND
-        makefsdata/makefsdata.exe
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-        ECHO_OUTPUT_VARIABLE
-        ECHO_ERROR_VARIABLE
-        )
-file(RENAME fsdata.c my_fsdata.c)
+# add_library: With this declaration, you express the intent to build a library. 
+# The first argument is the name of the library, 
+# the second argument are the files that will be compiled to create your library.
+add_library(SrcLib ${FILES})
 
-add_executable(${PROGRAM_NAME}
-        main.cpp
-        ssi.cpp
-        cgi.cpp
-        )
-target_compile_definitions(${PROGRAM_NAME} PRIVATE
-        WIFI_SSID=\"${WIFI_SSID}\"
-        WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
-        )
-target_include_directories(${PROGRAM_NAME} PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
-        )
-target_link_libraries(${PROGRAM_NAME}
-        #cyw43_driver_base
-        pico_cyw43_arch_lwip_threadsafe_background
-        pico_lwip_http
-        pico_stdlib
-        hardware_adc
-        )
+# target_link_libraries: If you link with other libraries, list them here
+target_link_libraries(
+  SrcLib 
+  McuLib 
+  pico_stdlib
+  pico_lwip_http
+  hardware_adc
+#  hardware_pio  # WS2812B
+#  hardware_rtc  # RTC for sleep.c
+#  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
+#  # pico_cyw43_arch_lwip_poll
+ pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
+#  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
+)
 
-pico_enable_stdio_usb(${PROGRAM_NAME} TRUE)
-pico_enable_stdio_uart(${PROGRAM_NAME} TRUE)
-suppress_tinyusb_warnings()
+# target_include_directories: Libraries need to publish their header files 
+# so that you can import them in source code. This statement expresses where to find the files 
+# - typically in an include directory of your projects.
+target_include_directories(SrcLib PUBLIC .)
 
-pico_add_extra_outputs(${PROGRAM_NAME})
+#set(MAKE_FS_DATA_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/external/makefsdata)
+
+#if (NOT EXISTS ${MAKE_FS_DATA_SCRIPT})
+#        file(DOWNLOAD
+#                https://raw.githubusercontent.com/krzmaz/lwip/e15654409d14a238aec5ed4bd5516063938c9345/src/apps/http/makefsdata/makefsdata
+#                ${MAKE_FS_DATA_SCRIPT}
+#                )
+#endif()
+#message("Running makefsdata script")
+#execute_process(COMMAND
+#        makefsdata/makefsdata.exe
+#        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+#        ECHO_OUTPUT_VARIABLE
+#        ECHO_ERROR_VARIABLE
+#        )
+#file(RENAME fsdata.c my_fsdata.c)
+

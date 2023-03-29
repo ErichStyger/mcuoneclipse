@@ -1,44 +1,46 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.13)
 
-find_package(Perl)
-if(NOT PERL_FOUND)
-    message(FATAL_ERROR "Perl is needed for generating the fsdata.c file")
-endif()
+# set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
 
-set(PICO_BOARD pico_w)
-include(cmake/utils.cmake)
-
-get_pico_sdk_import_cmake()
-# initialize pico-sdk from GIT
-# (note this can come from environment, CMake cache etc)
-set(PICO_SDK_FETCH_FROM_GIT on)
-# pico_sdk_import.cmake is a single file copied from this SDK
+# initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
-include(cmake/pico_sdk_import.cmake)
+include(pico_sdk_import.cmake)
 
-
-if(EXISTS cmake/credentials.cmake)
-    # copy it over from cmake/credentials.cmake.example
-    include(cmake/credentials.cmake)
-else()
-    message(WARNING "Credentials file not found, using default values!")
-    set(WIFI_SSID "SSID" CACHE INTERNAL "WiFi SSID for examples")
-    set(WIFI_PASSWORD "password" CACHE INTERNAL "WiFi password for examples")
-endif()
-
-project(pico_w_webserver C CXX ASM)
-set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+project(picoWebserver C CXX ASM)  # sets ${CMAKE_PROJECT_NAME}
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(
-        -Wall
-        -Werror
-        )
+set(PICO_BOARD pico_w)  # needed for Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
 
-
-# initialize the Raspberry Pi Pico SDK
+# [Platfrom specific command] Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 
-add_subdirectory(src)
+add_executable(${CMAKE_PROJECT_NAME})
+
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+  COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"
+  COMMENT "Printing code and data size"
+)
+  
+# enable USB CDC and disable UART:
+pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
+pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
+
+# add component directories to the list
+add_subdirectory(../McuLib  build/McuLib)
+add_subdirectory(./src      build/src)
+
+# generate extra files (map/bin/hex/uf2)
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
+
+target_link_libraries(
+  ${CMAKE_PROJECT_NAME}
+  # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
+  SrcLib
+  McuLib
+  SrcLib  # again because of FreeRTOShooks.c
+  pico_stdlib
+)
