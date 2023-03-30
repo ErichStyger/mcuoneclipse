@@ -26,9 +26,6 @@
  * 0: 400ns high, followed by 850ns low
  * 1: 850ns low,  followed by 400ns low
  */
-
-#define WS2812_USE_MULTIPLE_LANES     (NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
-
 static int sm = 0; /* state machine index. \todo should find a free SM */
 
 #if NEOC_USE_DMA
@@ -68,7 +65,7 @@ static void dma_init(PIO pio, uint sm) {
                         &channel_config,
                         &pio->txf[sm], /* write address: write to PIO FIFO */
                         NULL, /* don't provide a read address yet */
-                    #if WS2812_USE_MULTIPLE_LANES
+                    #if NEOC_NOF_LANES>1
                         NEOC_NOF_LEDS_IN_LANE*2*NEOC_NOF_COLORS, /* number of transfers */
                     #else
                         NEOC_NOF_LEDS_IN_LANE, /* number of transfers */
@@ -80,7 +77,7 @@ static void dma_init(PIO pio, uint sm) {
 }
 #endif /* NEOC_USE_DMA */
 
-#if !WS2812_USE_MULTIPLE_LANES
+#if NEOC_NOF_LANES==1
 static inline void put_pixel_rgb(uint32_t pixel_grb) {
   pio_sm_put_blocking(pio0, sm, pixel_grb<<8u);
 }
@@ -99,7 +96,7 @@ static inline uint32_t uwrgb_u32(uint8_t w, uint8_t r, uint8_t g, uint8_t b) {
 #endif
 
 int WS2812_Transfer(uint32_t address, size_t nofBytes) {
-#if WS2812_USE_MULTIPLE_LANES
+#if NEOC_NOF_LANES>1
   #if NEOC_USE_DMA
     sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
     dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
@@ -111,13 +108,13 @@ int WS2812_Transfer(uint32_t address, size_t nofBytes) {
     }
     vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
   #endif
-#else
+#else /* single lane */
   #if NEOC_USE_DMA
     sem_acquire_blocking(&reset_delay_complete_sem); /* get semaphore */
     dma_channel_set_read_addr(DMA_CHANNEL, (void*)address, true); /* trigger DMA transfer */
   #else
-    for(int i=0; i<NEOC_NOF_PIXEL; i++) { /* without DMA: writing one after each other */
-      put_pixel_wrgb(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
+    for(int i=0; i<NEOC_NOF_LEDS_IN_LANE; i++) { /* without DMA: writing one after each other */
+      pio_sm_put_blocking(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
     }
     vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
   #endif
@@ -128,7 +125,7 @@ int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 void WS2812_Init(void) {
   PIO pio = pio0; /* the PIO used. \todo: find free PIO */
   sm = 0; /* could be local? */
-#if WS2812_USE_MULTIPLE_LANES
+#if NEOC_NOF_LANES>1
   uint offset = pio_add_program(pio, &ws2812_parallel_program);
   ws2812_parallel_program_init(pio, sm, offset, NEOC_PIN_START, NEOC_NOF_LANES, 800000);
 #else /* single lane */

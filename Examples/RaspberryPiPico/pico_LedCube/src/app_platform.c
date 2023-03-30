@@ -41,6 +41,7 @@
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
 #endif
+#include "cube.h"
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
@@ -57,10 +58,10 @@ uint32_t SystemCoreClock = 120000000;
 #endif
 
 void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
-#if 1 /* original version */
+#if 0 /* original version */
   pico_get_unique_board_id_string(id_out, len); /* default */
 #else /* use same USB serial number for all boards, so sharing the same COM interface */
-  McuUtility_strcpy(id_out, len, "mySerialNumber");
+  McuUtility_strcpy(id_out, len, "PicoWS2812B");
 #endif
 }
 
@@ -98,4 +99,5 @@ void PL_Init(void) {
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
 #endif
+  Cube_Init();
 }

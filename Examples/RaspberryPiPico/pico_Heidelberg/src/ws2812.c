@@ -27,7 +27,7 @@
  * 1: 850ns low,  followed by 400ns low
  */
 
-#define WS2812_USE_MULTIPLE_LANES     (NECO_NOF_LANES>1) /* if using multiple lanes or single lane */
+#define WS2812_USE_MULTIPLE_LANES     (NEOC_NOF_LANES>1) /* if using multiple lanes or single lane */
 
 static int sm = 0; /* state machine index. \todo should find a free SM */
 

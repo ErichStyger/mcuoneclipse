@@ -10,7 +10,7 @@ project(picoLedCube C CXX ASM)  # sets ${CMAKE_PROJECT_NAME}
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-set(PICO_BOARD pico_w)  # needed for Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
+#set(PICO_BOARD pico_w)  # needed for Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
 
 # [Platfrom specific command] Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()

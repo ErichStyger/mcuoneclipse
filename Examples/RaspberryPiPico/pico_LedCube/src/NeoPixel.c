@@ -115,7 +115,6 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
 #define VAL0          0  /* 0 Bit: 0.396 us (need: 0.4 us low) */
 #define VAL1          1  /* 1 Bit: 0.792 us (need: 0.8 us high */
 
-#define NEO_DMA_NOF_BYTES   sizeof(transmitBuf)
 #if NEOC_PIO_32BIT_PIXELS
   #if NEO_NOF_LANES==1
     /* the pixels are organized in rows, in order 'grb' or 'grbw', each color part as a byte. For rgb the w part is zero.
@@ -138,7 +137,7 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
      * */
     static uint32_t transmitBuf[NEO_NOF_LEDS_IN_LANE*NEO_NOF_BITS_PIXEL/4]; /* we put 4x8 bits into a 32bit word */
   #endif
-#else
+#else /* e.g. Kinetis DMA */
 /* transmitBuf: Each bit in the byte is a lane/channel (X coordinate). Need 24bytes for RGB and 32 bytes for RGBW.
  * The Pixel(0,0) is at transmitBuf[0], Pixel (0,1) at transmitBuf[24] (RGB) or at transmitBuf[32] for RGBW.
  * For the Kinetis DMA, the data lines are organized in bytes: each byte corresponds to to a data to the GPIO output register (e.g. PTD7 to PTD0):
@@ -185,8 +184,42 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint
 #if NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES==1
   transmitBuf[pos] = ((uint32_t)(green)<<24) | ((uint32_t)(red)<< 16) | ((uint32_t)(blue)<<8);
 #elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
-  /* \todo */
-#else
+  int idx;
+  uint8_t *p;
+
+  idx = pos*NEOC_NOF_COLORS*2;
+  p = (uint8_t*)&transmitBuf[idx];
+  /* green */
+  for(int i=0;i<8;i++) {
+    if (green&0x80) {
+      *p |= (VAL1<<lane); /* set bit */
+    } else {
+      *p &= ~(VAL1<<lane); /* clear bit */
+    }
+    green <<= 1; /* next bit */
+    p++;
+  }
+  /* red */
+  for(int i=0;i<8;i++) {
+    if (red&0x80) {
+      *p |= (VAL1<<lane); /* set bit */
+    } else {
+      *p &= ~(VAL1<<lane); /* clear bit */
+    }
+    red <<= 1; /* next bit */
+    p++;
+  }
+  /* blue */
+  for(int i=0;i<8;i++) {
+    if (blue&0x80) {
+      *p |= (VAL1<<lane); /* set bit */
+    } else {
+      *p &= ~(VAL1<<lane); /* clear bit */
+    }
+    blue <<= 1; /* next bit */
+    p++;
+  }
+#else /* e.g. Kinetis */
   NEO_PixelIdxT idx;
   int i;
 
@@ -233,11 +266,10 @@ uint8_t NEO_SetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t white, u
 #if NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES==1
   transmitBuf[pos] = ((uint32_t)(green)<<24) | ((uint32_t)(red)<< 16) | ((uint32_t)(blue)<<8) | (uint32_t)(white);
 #elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
-
   int idx;
+  uint8_t *p;
 
   idx = pos*NEOC_NOF_COLORS*2;
-  uint8_t *p;
   p = (uint8_t*)&transmitBuf[idx];
   /* green */
   for(int i=0;i<8;i++) {
@@ -279,8 +311,7 @@ uint8_t NEO_SetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t white, u
     white <<= 1; /* next bit */
     p++;
   }
-
-#else
+#else /* e.g. for Kinetis */
   NEO_PixelIdxT idx;
   int i;
 
@@ -346,7 +377,39 @@ uint8_t NEO_GetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *redP, ui
   red = (val>>16)&0xff;
   green = (val>>24)&0xff;
 #elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
-  /* \todo */
+  NEO_PixelIdxT idx;
+  int i;
+  uint8_t *p;
+
+  idx = pos*NEOC_NOF_COLORS*2;
+  p = (uint8_t*)&transmitBuf[idx];
+  /* green */
+  for(i=0;i<8;i++) {
+    green <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      green |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
+  /* red */
+  for(i=0;i<8;i++) {
+    red <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      red |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
+  /* blue */
+  for(i=0;i<8;i++) {
+    blue <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      blue |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
 #else
   NEO_PixelIdxT idx;
   int i;
@@ -400,7 +463,48 @@ uint8_t NEO_GetPixelWRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t *whiteP,
   red = (val>>16)&0xff;
   green = (val>>24)&0xff;
 #elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
-  /* \todo */
+  NEO_PixelIdxT idx;
+  int i;
+  uint8_t *p;
+
+  idx = pos*NEOC_NOF_COLORS*2;
+  p = (uint8_t*)&transmitBuf[idx];
+  /* green */
+  for(i=0;i<8;i++) {
+    green <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      green |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
+  /* red */
+  for(i=0;i<8;i++) {
+    red <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      red |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
+  /* blue */
+  for(i=0;i<8;i++) {
+    blue <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      blue |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
+  /* white */
+  for(i=0;i<8;i++) {
+    white <<= 1;
+    if ((*p)&(VAL1<<lane)) {
+      white |= 1;
+    }
+    idx++; /* next bit */
+    p++;
+  }
 #else
   NEO_PixelIdxT idx;
   int i;
@@ -452,13 +556,11 @@ uint32_t NEO_GetPixel32bitForPIO(NEO_PixelIdxT lane, NEO_PixelIdxT pos) {
 
 #if NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES==1
   val = transmitBuf[pos]; /* bytes are already in correct order in memory */
-#elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
-  val = 0; /* \todo */
-#elif NEOC_NOF_COLORS==3
+ #elif NEOC_NOF_COLORS==3
   uint8_t r, g, b;
 
   NEO_GetPixelRGB(lane, pos, &r, &g, &b);
-  val = ((uint32_t)(g)<<24) | ((uint32_t)(r)<<16) | ((uint32_t)(b)<<8);
+  val = ((uint32_t)(g)<<24) | ((uint32_t)(r)<<16) | ((uint32_t)(b)<<8); /* PIO uses 32bits, lower 8bit are zero */
 #elif NEOC_NOF_COLORS==4
   uint8_t r, g, b, w;
 

@@ -12,6 +12,7 @@ file(GLOB FILES
   Shell.c
   FreeRTOShooks.c
   PicoWiFi.c
+  cube.c
  )
 
 # generate PIO header "ws2812.pio.h" inside the src directory
@@ -28,8 +29,8 @@ target_link_libraries(
   McuLib 
   pico_stdlib
   hardware_pio  # WS2812B
-  hardware_rtc  # RTC for sleep.c
-  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
+  hardware_dma
+#  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
 # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
 #  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h

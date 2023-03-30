@@ -20,8 +20,6 @@ target_link_libraries(
   pico_stdlib
   pico_lwip_http
   hardware_adc
-#  hardware_pio  # WS2812B
-#  hardware_rtc  # RTC for sleep.c
 #  pico_cyw43_arch_none     # we need CYW43 to access the GPIO, but we don't need anything else
 #  # pico_cyw43_arch_lwip_poll
  pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
@@ -35,18 +33,12 @@ target_include_directories(SrcLib PUBLIC .)
 
 #set(MAKE_FS_DATA_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/external/makefsdata)
 
-#if (NOT EXISTS ${MAKE_FS_DATA_SCRIPT})
-#        file(DOWNLOAD
-#                https://raw.githubusercontent.com/krzmaz/lwip/e15654409d14a238aec5ed4bd5516063938c9345/src/apps/http/makefsdata/makefsdata
-#                ${MAKE_FS_DATA_SCRIPT}
-#                )
-#endif()
-#message("Running makefsdata script")
-#execute_process(COMMAND
-#        makefsdata/makefsdata.exe
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-#        ECHO_OUTPUT_VARIABLE
-#        ECHO_ERROR_VARIABLE
-#        )
-#file(RENAME fsdata.c my_fsdata.c)
+message("Running makefsdata")
+execute_process(COMMAND
+        makefsdata/makefsdata.exe
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+        ECHO_OUTPUT_VARIABLE
+        ECHO_ERROR_VARIABLE
+        )
+file(RENAME fsdata.c my_fsdata.c)
 
