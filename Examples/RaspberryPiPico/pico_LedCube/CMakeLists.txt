@@ -10,7 +10,14 @@ project(picoLedCube C CXX ASM)  # sets ${CMAKE_PROJECT_NAME}
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+# To make sure build folder doesn't get cluttered
+set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)  # folder for UF2 file
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+
 #set(PICO_BOARD pico_w)  # needed for Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
+set(PICO_BOARD pico)  # set the 'Pico' as board
 
 # [Platfrom specific command] Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -21,7 +28,7 @@ add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 add_executable(${CMAKE_PROJECT_NAME})
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-  COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"
+  COMMAND arm-none-eabi-size "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_PROJECT_NAME}.elf"
   COMMENT "Printing code and data size"
 )
   
@@ -35,7 +42,10 @@ add_subdirectory(../McuLib build/McuLib)
 add_subdirectory(./src build/src)
 
 # generate extra files (map/bin/hex/uf2)
-pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
+#pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
+pico_add_uf2_output(${CMAKE_PROJECT_NAME}) # generate UF2 file
+#pico_add_hex_output(${CMAKE_PROJECT_NAME}) # generate hex file
+#pico_add_bin_output(${CMAKE_PROJECT_NAME}) # generate bin file
 
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}
