@@ -8,8 +8,11 @@
 #define CUBE_H_
 
 #include "McuShell.h"
+#include <stdint.h>
 
 uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+
+void Cube_SetPixelColorDual(int x, int y, int z, uint32_t color0, uint32_t color1);
 
 bool Cube_RequestUpdateLEDsFromISR(void);
 void Cube_RequestUpdateLEDs(void);

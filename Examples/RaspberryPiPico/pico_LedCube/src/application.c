@@ -61,7 +61,6 @@ static void AppTask(void *pv) {
 #elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
   bool ledIsOn = false;
 #endif
-  vTaskDelay(pdMS_TO_TICKS(15*100));
   for(;;) {
   #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);

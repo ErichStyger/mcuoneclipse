@@ -62,7 +62,7 @@
 #define NeoCounter_MIN_BRIGHTNESS   (15)
 #define NeoColor_DEFAULT            (0xff000000) /* warm white default color */
 
-typedef enum {
+typedef enum NeoCounter_Mode_e {
   MODE_NORMAL, /* normal on with warm light */
   MODE_FADE,   /* fading color from 0 to brightness */
   MODE_RANDOM_COLOR,   /* using random color (one for all) */
