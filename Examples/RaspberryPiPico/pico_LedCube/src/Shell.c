@@ -27,6 +27,7 @@
 #endif
 #include "application.h"
 #include "cube.h"
+#include "cubeAnim.h"
 
 typedef struct {
   McuShell_ConstStdIOType *stdio;
@@ -97,6 +98,7 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   PicoWiFi_ParseCommand,
 #endif
   Cube_ParseCommand,
+  CubeAnim_ParseCommand,
   App_ParseCommand,
   NULL /* Sentinel */
 };

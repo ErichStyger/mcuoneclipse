@@ -6,17 +6,13 @@
 
 #include "app_platform.h"
 #include "cube.h"
+#include "cubeAnim.h"
 #include "McuRTOS.h"
 #if PL_CONFIG_USE_NEO_PIXEL_HW
   #include "NeoPixel.h"
 #endif
 #include "McuLog.h"
 #include "McuUtility.h"
-
-/* coordinate dimension of cube */
-#define CUBE_DIM_X  (NEOC_NOF_LANES) /* number of horizontal lanes */
-#define CUBE_DIM_Y  (8) /* number of 'rods' in lane */
-#define CUBE_DIM_Z  (8) /* height of each LED rod. Note there are two LEDs for each point */
 
 /* number of LEDs in each dimension */
 #define CUBE_LED_DIM_X  (1) /* lane gives X */
@@ -93,8 +89,6 @@ static void cubeTask(void *pv) {
 #if PL_CONFIG_USE_NEO_PIXEL_HW
     res = xSemaphoreTake(semNeoUpdate, portMAX_DELAY); /* block until we get a request to update */
     if (res==pdTRUE) { /* received the signal */
-      NEO_ClearAllPixel();
-      /* do matrix demo here */
       NEO_TransferPixels();
     }
 #else
@@ -110,7 +104,6 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t buf[24];
 
   McuShell_SendStatusStr((unsigned char*)"cube", (const unsigned char*)"Status of cube module\r\n", io->stdOut);
-
   McuUtility_Num32uToStr(buf, sizeof(buf), CUBE_DIM_X);
   McuUtility_strcat(buf, sizeof(buf), (uint8_t*)" * ");
   McuUtility_strcatNum32u(buf, sizeof(buf), CUBE_DIM_Y);
@@ -142,7 +135,7 @@ uint8_t Cube_ParseCommand(const unsigned char *cmd, bool *handled, const McuShel
     return PrintStatus(io);
   } else if (McuUtility_strncmp((char*)cmd, "cube set ", sizeof("cube set ")-1)==0) {
     *handled = TRUE;
-    p = cmd+sizeof("neo set ")-1;
+    p = cmd+sizeof("cube set ")-1;
     res = McuUtility_xatoi(&p, &x); /* read x */
     if (res==ERR_OK && x<CUBE_DIM_X) {
       res = McuUtility_xatoi(&p, &y); /* read y */
@@ -176,8 +169,10 @@ void Cube_Init(void) {
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
-    ) != pdPASS) {
-     for(;;){} /* error! probably out of memory */
+    ) != pdPASS)
+  {
+    McuLog_fatal("failed creating task");
+    for(;;){} /* error! probably out of memory */
   }
   semNeoUpdate = xSemaphoreCreateBinary();
   if (semNeoUpdate==NULL) {
