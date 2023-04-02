@@ -9,9 +9,7 @@
 .program ws2812
 .side_set 1
 
-.define public T1 4
-.define public T2 3
-.define public T3 3
+.define public NOF_CYCLES_FOR_1_BIT  (3+2+5)
 
 .lang_opt python sideset_init = pico.PIO.OUT_HIGH
 .lang_opt python out_init     = pico.PIO.OUT_HIGH
@@ -28,20 +26,19 @@ do_zero:
 .wrap
 
 % c-sdk {
-#include "hardware/clocks.h"
+#include "hardware/clocks.h" 
 
 static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, float freq, bool rgbw) {
-  pio_gpio_init(pio, pin);
+  pio_gpio_init(pio, pin); /* initialize pin for usage with the PIO */
   pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true); /* set pin direction. 1: number of pins. true: as output pin */
 
-  pio_sm_config c = ws2812_program_get_default_config(offset);
+  pio_sm_config c = ws2812_program_get_default_config(offset); /* get default configuration */
   sm_config_set_sideset_pins(&c, pin); /* use pin as side set */
   sm_config_set_out_shift(&c, false, true, rgbw ? 32 : 24); /* false: shift left. true: auto-pull. Number of bits based on rgb or rgbw */
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   
   /* calculate state machine clocking based on protocol needs */
-  int cycles_per_bit = ws2812_T1 + ws2812_T2 + ws2812_T3;
-  float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
   sm_config_set_clkdiv(&c, div);
 
   /* initialize PIO and start it */
@@ -52,9 +49,7 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
 
 .program ws2812_parallel
 
-.define public T1 4          ; Timing until end of 0 bit
-.define public T2 3          ; plus timing end of 1 bit
-.define public T3 3          ; plus timing end of cycle 
+.define public NOF_CYCLES_FOR_1_BIT (1+1+3+4+1)
 
 .wrap_target
     mov x, null           ; [1] clear X scratch register
@@ -80,8 +75,7 @@ static inline void ws2812_parallel_program_init(PIO pio, uint sm, uint offset, u
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   
   /* calculate state machine clocking based on protocol needs */
-  int cycles_per_bit = ws2812_parallel_T1 + ws2812_parallel_T2 + ws2812_parallel_T3;
-  float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+  float div = clock_get_hz(clk_sys) / (freq * NOF_CYCLES_FOR_1_BIT);
   sm_config_set_clkdiv(&c, div);
 
   /* initialize PIO and start it */

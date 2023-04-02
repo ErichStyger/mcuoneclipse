@@ -26,7 +26,7 @@
  * 0: 400ns high, followed by 850ns low
  * 1: 850ns low,  followed by 400ns low
  */
-static int sm = 0; /* state machine index. \todo should find a free SM */
+static unsigned int WS2812_sm = 0; /* state machine index. \todo should find a free SM */
 
 #if NEOC_USE_DMA
 
@@ -44,18 +44,18 @@ static int64_t reset_delay_complete(alarm_id_t id, void *user_data) {
   return 0; /* no repeat */
 }
 
-void /*__isr*/ dma_complete_handler(void) {
-  if (dma_hw->ints0 & DMA_CHANNEL_MASK) {
+void dma_complete_handler(void) {
+  if (dma_hw->ints0 & DMA_CHANNEL_MASK) { /* are we called for our DMA channel? */
     dma_hw->ints0 = DMA_CHANNEL_MASK; /* clear IRQ */
-    /* when the DMA is complete we start the reset delay timer */
-    if (reset_delay_alarm_id) {
-      cancel_alarm(reset_delay_alarm_id);
+    if (reset_delay_alarm_id!=0) { /* safety check: is there somehow an alarm already running? */
+      cancel_alarm(reset_delay_alarm_id); /* cancel it */
     }
+    /* setup alarm to wait for the required latch-in time for the LES at the end of the transfer */
     reset_delay_alarm_id = add_alarm_in_us(RESET_TIME_US, reset_delay_complete, NULL, true);
   }
 }
 
-static void dma_init(PIO pio, uint sm) {
+static void dma_init(PIO pio, unsigned int sm) {
   dma_claim_mask(DMA_CHANNEL_MASK); /* check that the DMA channel we want is available */
   dma_channel_config channel_config = dma_channel_get_default_config(DMA_CHANNEL); /* get default configuration */
   channel_config_set_dreq(&channel_config, pio_get_dreq(pio, sm, true)); /* configure data request. true: sending data to the PIO state machine */
@@ -77,24 +77,6 @@ static void dma_init(PIO pio, uint sm) {
 }
 #endif /* NEOC_USE_DMA */
 
-#if NEOC_NOF_LANES==1
-static inline void put_pixel_rgb(uint32_t pixel_grb) {
-  pio_sm_put_blocking(pio0, sm, pixel_grb<<8u);
-}
-
-static inline void put_pixel_wrgb(uint32_t pixel_grbw) { /* data is sent grbw */
-  pio_sm_put_blocking(pio0, sm, pixel_grbw);
-}
-
-static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) { /* data is sent grb */
-  return (((uint32_t)(g)<<16) | (uint32_t)(r)<<8) | (uint32_t)(b);
-}
-
-static inline uint32_t uwrgb_u32(uint8_t w, uint8_t r, uint8_t g, uint8_t b) {
-  return ((uint32_t)(g) << 24) | ((uint32_t)(r) << 16) | ((uint32_t)(b)<<8) | (uint32_t)(w);
-}
-#endif
-
 int WS2812_Transfer(uint32_t address, size_t nofBytes) {
 #if NEOC_NOF_LANES>1
   #if NEOC_USE_DMA
@@ -103,10 +85,10 @@ int WS2812_Transfer(uint32_t address, size_t nofBytes) {
   #else
     uint32_t *p = (uint32_t*)address;
     for(int i=0; i<nofBytes/sizeof(uint32_t); i++) { /* without DMA: writing one after each other */
-      pio_sm_put_blocking(pio0, sm, *p);
+      pio_sm_put_blocking(pio0, WS2812_sm, *p);
       p++;
     }
-    vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+    vTaskDelay(pdMS_TO_TICKS(1)); /* latch */
   #endif
 #else /* single lane */
   #if NEOC_USE_DMA
@@ -116,25 +98,25 @@ int WS2812_Transfer(uint32_t address, size_t nofBytes) {
     for(int i=0; i<NEOC_NOF_LEDS_IN_LANE; i++) { /* without DMA: writing one after each other */
       pio_sm_put_blocking(NEO_GetPixel32bitForPIO(NEOC_LANE_START, i));
     }
-    vTaskDelay(pdMS_TO_TICKS(10)); /* latch */
+    vTaskDelay(pdMS_TO_TICKS(1)); /* latch */
   #endif
 #endif
   return 0; /* ok */
 }
 
 void WS2812_Init(void) {
-  PIO pio = pio0; /* the PIO used. \todo: find free PIO */
-  sm = 0; /* could be local? */
+  PIO pio = pio0; /* the PIO used */
+  WS2812_sm = 0; /* state machine used */
 #if NEOC_NOF_LANES>1
-  uint offset = pio_add_program(pio, &ws2812_parallel_program);
-  ws2812_parallel_program_init(pio, sm, offset, NEOC_PIN_START, NEOC_NOF_LANES, 800000);
-#else /* single lane */
+  uint offset = pio_add_program(pio, &ws2812_parallel_program); /* add program and get offset */
+  ws2812_parallel_program_init(pio, WS2812_sm, offset, NEOC_PIN_START, NEOC_NOF_LANES, 800000); /* initialize it for 800 kHz */
+#else /* multiple lanes */
   uint offset = pio_add_program(pio, &ws2812_program);
-  ws2812_program_init(pio, sm, offset, NEOC_PIN_START, 800000, NEOC_NOF_COLORS==4);
+  ws2812_program_init(pio, WS2812_sm, offset, NEOC_PIN_START, 800000, NEOC_NOF_COLORS==4); /* initialize it for 800 kHz */
 #endif
 #if NEOC_USE_DMA
   sem_init(&reset_delay_complete_sem, 1, 1); /* semaphore initially posted so we don't block first time */
-  dma_init(pio, sm);
+  dma_init(pio, WS2812_sm);
 #endif
 }
 

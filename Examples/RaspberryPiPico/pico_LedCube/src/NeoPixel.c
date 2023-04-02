@@ -124,7 +124,7 @@ NEO_PixelColor NEO_BrightnessFactorColor(NEO_PixelColor color, uint8_t factor) {
     static uint32_t transmitBuf[NEO_NOF_LEDS_IN_LANE];
   #else
     /* the pixel data is organized in 'lanes', with up to 8 lanes. The bits get shifted out in 8bit chunks, below from 'left' to 'right'
-     * For example, if the first two 32bit values are 0x00000000, 0x01000000, then this forms the green color for all 8 lanes, with line zero just haveing the lowest green bit set.
+     * For example, if the first two 32bit values are 0x00000000, 0x01000000, then this forms the green color for all 8 lanes, with line zero just having the lowest green bit set.
      * transmitBuf[0]: 4x 8bit:    gg gg gg gg gg
      * transmitBuf[1]: 4x 8bit:    gg gg gg gg gg
      * transmitBuf[2]: 4x 8bit:    rr rr rr rr rr
@@ -182,7 +182,7 @@ uint8_t NEO_SetPixelRGB(NEO_PixelIdxT lane, NEO_PixelIdxT pos, uint8_t red, uint
     return ERR_RANGE; /* error, out of range */
   }
 #if NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES==1
-  transmitBuf[pos] = ((uint32_t)(green)<<24) | ((uint32_t)(red)<< 16) | ((uint32_t)(blue)<<8);
+  transmitBuf[pos] = ((uint32_t)(green)<<24) | ((uint32_t)(red)<<16) | ((uint32_t)(blue)<<8);
 #elif NEOC_PIO_32BIT_PIXELS && NEO_NOF_LANES>1
   int idx;
   uint8_t *p;

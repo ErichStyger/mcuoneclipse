@@ -15,8 +15,9 @@ file(GLOB FILES
   cubeAnim.c
  )
 
-# generate PIO header "ws2812.pio.h" inside the src directory
+# generate PIO header "ws2812.pio.h" inside the src directory 
 pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
+file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/ws2812.pio.h ws2812.pio.h)  # copy file from the build folder to the src folder
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 

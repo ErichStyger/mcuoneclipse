@@ -15,9 +15,7 @@
 #define ws2812_wrap_target 0
 #define ws2812_wrap 3
 
-#define ws2812_T1 4
-#define ws2812_T2 3
-#define ws2812_T3 3
+#define ws2812_NOF_CYCLES_FOR_1_BIT 10
 
 static const uint16_t ws2812_program_instructions[] = {
             //     .wrap_target
@@ -42,17 +40,17 @@ static inline pio_sm_config ws2812_program_get_default_config(uint offset) {
     return c;
 }
 
-#include "hardware/clocks.h"
+#include "hardware/clocks.h" 
 static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, float freq, bool rgbw) {
-  pio_gpio_init(pio, pin);
+  pio_gpio_init(pio, pin); /* initialize pin for usage with the PIO */
   pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true); /* set pin direction. 1: number of pins. true: as output pin */
-  pio_sm_config c = ws2812_program_get_default_config(offset);
+  pio_sm_config c = ws2812_program_get_default_config(offset); /* get default configuration */
   sm_config_set_sideset_pins(&c, pin); /* use pin as side set */
   sm_config_set_out_shift(&c, false, true, rgbw ? 32 : 24); /* false: shift left. true: auto-pull. Number of bits based on rgb or rgbw */
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   /* calculate state machine clocking based on protocol needs */
-  int cycles_per_bit = ws2812_T1 + ws2812_T2 + ws2812_T3;
-  float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+  int cycles_per_bit = ws2812_NOF_CYCLES_FOR_1_BIT;
+  float div = clock_get_hz(clk_sys) / (freq*cycles_per_bit);
   sm_config_set_clkdiv(&c, div);
   /* initialize PIO and start it */
   pio_sm_init(pio, sm, offset, &c);
