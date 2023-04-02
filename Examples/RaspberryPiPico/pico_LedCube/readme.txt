@@ -8,7 +8,7 @@ Files needed: (besides this readme.txt)
 ./pico_sdk_import.cmake
 ./CMakeLists.txt
 ./src folder
-./McuLib folder
+../McuLib folder
 ./.gitignore
 
 
