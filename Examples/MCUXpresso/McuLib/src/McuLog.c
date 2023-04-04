@@ -53,8 +53,10 @@ static struct {
 #if McuLog_CONFIG_USE_MUTEX
   SemaphoreHandle_t McuLog_Mutex; /* built-in FreeRTOS mutex used for lock below */
 #endif
+#if McuLog_CONFIG_USE_MUTEX
   log_LockFn lock; /* user mutex for synchronization */
   void *udata;  /* optional data for lock */
+#endif
   McuShell_ConstStdIOType *consoleIo[McuLog_CONFIG_NOF_CONSOLE_LOGGER]; /* I/O for console logging */
   bool quiet; /* if console logging is silent/quiet */
 #if McuLog_CONFIG_USE_COLOR
@@ -84,30 +86,38 @@ static const char *const level_colors[] = { /* color codes for messages */
 };
 #endif
 
+#if McuLog_CONFIG_USE_MUTEX
 static void lock(void)   {
   if (McuLog_ConfigData.lock!=NULL) {
     McuLog_ConfigData.lock(McuLog_ConfigData.udata, true);
   }
 }
+#endif
 
+#if McuLog_CONFIG_USE_MUTEX
 static void unlock(void) {
   if (McuLog_ConfigData.lock!=NULL) {
     McuLog_ConfigData.lock(McuLog_ConfigData.udata, false);
   }
 }
+#endif
 
 void McuLog_set_console(McuShell_ConstStdIOType *io, uint8_t index) {
   assert(index<McuLog_CONFIG_NOF_CONSOLE_LOGGER);
   McuLog_ConfigData.consoleIo[index] = io;
 }
 
+#if McuLog_CONFIG_USE_MUTEX
 void McuLog_set_udata(void *udata) {
   McuLog_ConfigData.udata = udata;
 }
+#endif
 
+#if McuLog_CONFIG_USE_MUTEX
 void McuLog_set_lock(log_LockFn fn) {
   McuLog_ConfigData.lock = fn;
 }
+#endif
 
 #if McuLog_CONFIG_USE_FILE
 void McuLog_set_fp(McuFatFS_FIL *fp) {
@@ -251,7 +261,7 @@ static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool 
   }
   OutString(p, outchar, param);
 #else
-  OutString(file, outchar, param);
+  OutString((unsigned char*)file, outchar, param);
 #endif
 
   /* line number */
@@ -262,6 +272,7 @@ static void LogHeader(DATEREC *date, TIMEREC *time, McuLog_Levels_e level, bool 
   OutString(buf, outchar, param);
 }
 
+#if McuLog_CONFIG_USE_PRINTF_STYLE
 void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *fmt, ...) {
 #if McuLog_CONFIG_LOG_TIMESTAMP_DATE
   DATEREC date;
@@ -280,19 +291,21 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
   if (level < McuLog_ConfigData.level) {
     return;
   }
+#if McuLog_CONFIG_USE_MUTEX
   lock(); /* Acquire lock */
+#endif
 #if McuLog_CONFIG_LOG_TIMESTAMP_DATE || McuLog_CONFIG_LOG_TIMESTAMP_TIME
   (void)McuTimeDate_GetTimeDate(TIME_PTR, DATE_PTR); /* Get current date and time */
 #endif
   if (!McuLog_ConfigData.quiet) {
     for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
       if(McuLog_ConfigData.consoleIo[i]!=NULL) { /* log to console */
-        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdOut);
+        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
         /* open argument list */
         va_start(list, fmt);
         McuXFormat_xvformat(OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr, fmt, list);
         va_end(list);
-        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdOut);
+        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
       }
     } /* for */
   }
@@ -321,8 +334,66 @@ void McuLog_log(McuLog_Levels_e level, const char *file, int line, const char *f
     f_sync(McuLog_ConfigData.fp);
   }
 #endif
-  /* Release lock */
-  unlock();
+#if McuLog_CONFIG_USE_MUTEX
+  unlock(); /* Release lock */
+#endif
+}
+#endif
+
+void McuLog_logString(McuLog_Levels_e level, const char *file, int line, const char *str) {
+#if McuLog_CONFIG_LOG_TIMESTAMP_DATE
+  DATEREC date;
+  #define DATE_PTR  &date
+#else
+  #define DATE_PTR  NULL
+#endif
+#if McuLog_CONFIG_LOG_TIMESTAMP_TIME
+  TIMEREC time;
+  #define TIME_PTR  &time
+#else
+  #define TIME_PTR  NULL
+#endif
+
+  if (level < McuLog_ConfigData.level) {
+    return;
+  }
+#if McuLog_CONFIG_USE_MUTEX
+  lock(); /* Acquire lock */
+#endif
+#if McuLog_CONFIG_LOG_TIMESTAMP_DATE || McuLog_CONFIG_LOG_TIMESTAMP_TIME
+  (void)McuTimeDate_GetTimeDate(TIME_PTR, DATE_PTR); /* Get current date and time */
+#endif
+  if (!McuLog_ConfigData.quiet) {
+    for(int i=0; i<McuLog_CONFIG_NOF_CONSOLE_LOGGER; i++) {
+      if(McuLog_ConfigData.consoleIo[i]!=NULL) { /* log to console */
+        LogHeader(DATE_PTR, TIME_PTR, level, true, file, line, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        OutString((unsigned char *)str, OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+        OutString((unsigned char *)"\n", OutputCharFctConsole, McuLog_ConfigData.consoleIo[i]->stdErr);
+      }
+    } /* for */
+  }
+
+#if McuLog_CONFIG_USE_RTT_DATA_LOGGER
+  /* log to RTT Data Logger */
+  if (McuLog_ConfigData.rttDataLogger) {
+    LogHeader(DATE_PTR, TIME_PTR, level, false, file, line, OutputCharRttLoggerFct, NULL);
+    OutString((unsigned char *)str, OutputCharRttLoggerFct, NULL);
+    OutString((unsigned char *)"\n", OutputCharRttLoggerFct, NULL);
+  }
+#endif
+
+#if McuLog_CONFIG_USE_FILE
+  /* Log to file */
+  if (McuLog_ConfigData.fp) {
+    LogHeader(DATE_PTR, &time, level, false, file, line, OutputCharFctFile, McuLog_ConfigData.fp);
+    OutString((unsigned char *)str, OutputCharFctFile, McuLog_ConfigData.fp);
+    OutString((unsigned char *)"\n", OutputCharFctFile, McuLog_ConfigData.fp);
+    f_sync(McuLog_ConfigData.fp);
+  }
+#endif
+#if McuLog_CONFIG_USE_MUTEX
+  unlock(); /* Release lock */
+#endif
 }
 
 #if McuLog_CONFIG_USE_MUTEX
@@ -350,7 +421,9 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 #if McuLog_CONFIG_USE_RTT_DATA_LOGGER
   McuShell_SendStatusStr((unsigned char*)"  rttlogger", McuLog_ConfigData.rttDataLogger?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
 #endif
+#if McuLog_CONFIG_USE_MUTEX
   McuShell_SendStatusStr((unsigned char*)"  lock", McuLog_ConfigData.lock!=NULL?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
+#endif
   McuShell_SendStatusStr((unsigned char*)"  level", (unsigned char*)level_names[McuLog_ConfigData.level], io->stdOut);
   McuShell_SendStr((unsigned char*)" (", io->stdOut);
   McuShell_SendNum8u(McuLog_ConfigData.level, io->stdOut);

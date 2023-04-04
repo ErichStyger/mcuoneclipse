@@ -29,6 +29,11 @@
     /*!< 1: use use ANSI color for terminal, 0: do not use color */
 #endif
 
+#ifndef McuLog_CONFIG_USE_PRINTF_STYLE
+  #define McuLog_CONFIG_USE_PRINTF_STYLE      (1)
+    /*!< 1: use printf open argument list for printing */
+#endif
+
 #ifndef McuLog_CONFIG_USE_FILE
   #define McuLog_CONFIG_USE_FILE              (0)
     /*!< 1: use use file for logging, 0: do not use file */
