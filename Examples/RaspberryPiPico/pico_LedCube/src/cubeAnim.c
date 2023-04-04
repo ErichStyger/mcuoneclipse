@@ -11,7 +11,7 @@
 #include "McuRTOS.h"
 #include "McuLog.h"
 
-static bool CubeAnimIsEnabled = false;
+static bool CubeAnimIsEnabled = true;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
@@ -40,13 +40,25 @@ static void AnimationHorizontalUpDown(void) {
   uint32_t color;
   uint8_t r, g, b;
 
-  r = McuUtility_random(0, 3);
-  g = McuUtility_random(0, 3);
-  b = McuUtility_random(0, 3);
+
+  r = McuUtility_random(0, 2);
+  if (r==0) {
+    r = 0xff;
+    g = 0;
+    b = 0;
+  } else if (r==1) {
+    g = 0xff;
+    r = 0;
+    b = 0;
+  } else {
+    b = 0xff;
+    r = 0;
+    g = 0;
+  }
   color = NEO_COMBINE_RGB(r,g,b);
 
   NEO_ClearAllPixel();
-  for (int i=0; i<5; i++) { /* number of demo iterations */
+  for (int i=0; i<1; i++) { /* number of demo iterations */
     /* going up */
     for (int z=0; z<CUBE_DIM_Z; z++) {
       if (z>0) { /* clear previous plane */
@@ -140,7 +152,7 @@ uint8_t CubeAnim_ParseCommand(const unsigned char *cmd, bool *handled, const Mcu
     McuShell_SendHelpStr((unsigned char*)"  help|status", (const unsigned char*)"Print help or status information\r\n", io->stdOut);
     McuShell_SendHelpStr((unsigned char*)"  on|off", (const unsigned char*)"Turn animation on or off\r\n", io->stdOut);
     return ERR_OK;
-  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "cube status")==0)) {
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "anim status")==0)) {
     *handled = TRUE;
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, "anim on")==0) {
