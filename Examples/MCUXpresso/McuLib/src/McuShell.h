@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : Shell
-**     Version     : Component 01.111, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.113, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-12-13, 20:30, # CodeGen: 757
+**     Date/Time   : 2023-04-05, 06:34, # CodeGen: 802
 **     Abstract    :
 **         Module implementing a command line shell.
 **     Settings    :
@@ -69,7 +69,7 @@
 **         Init                            - void McuShell_Init(void);
 **         Deinit                          - void McuShell_Deinit(void);
 **
-** * Copyright (c) 2014-2021, Erich Styger
+** * Copyright (c) 2014-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -114,6 +114,8 @@
 /* MODULE McuShell. */
 #include "McuLib.h" /* SDK and API used */
 #include "McuShellconfig.h" /* configuration */
+#include <stdint.h>
+#include <stdbool.h>
 
 
 #ifndef __BWUserType_McuShell_StdIO_OutErr_FctType
