@@ -15,8 +15,8 @@
 #include "fsl_clock.h"
 
 void PL_Init(void) {
-    CLOCK_EnableClock(kCLOCK_PortA);
-    CLOCK_EnableClock(kCLOCK_PortD);
+  CLOCK_EnableClock(kCLOCK_PortA);
+  CLOCK_EnableClock(kCLOCK_PortD);
 
 	McuLib_Init();
 	McuGPIO_Init();

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
-    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink801011549"/>
+    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink621000000"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <booleanAttribute key="com.crt.ctrlcenter.saveState" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 801011549"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 621000000"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
     <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="2"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="SEGGER"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link EDU Mini"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link OpenSDA"/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.nickname" value=""/>
     <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB"/>
     <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.base.address" value="0x0"/>
     <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.executable" value="hex"/>
     <booleanAttribute key="com.nxp.mcuxpresso.jlink.flash.halt.target" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.jlink.flash.reset.target" value="true"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.SettingsFile" value="${ProjDirPath}/${ConfigName}/${LaunchConfigName} SettingsFile.jlink"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.auto.startup" value="auto"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.device" value="MK22FN512xxx12"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.endian" value="little"/>
@@ -28,10 +28,10 @@
     <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="true;GDBServer/RTOSPlugin_FreeRTOS"/>
-    <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=801011549"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=621000000"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
-    <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="auto"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="fixed 4000"/>
     <intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2332"/>
     <intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2333"/>
     <stringAttribute key="com.nxp.mcuxpresso.segger.verify" value="-vd"/>
@@ -71,7 +71,6 @@
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
-    <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\FRDM-K22F_FreeRTOS.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="FRDM-K22F_FreeRTOS"/>
