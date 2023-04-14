@@ -75,7 +75,7 @@ static inline void ws2812_parallel_program_init(PIO pio, uint sm, uint offset, u
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   
   /* calculate state machine clocking based on protocol needs */
-  float div = clock_get_hz(clk_sys) / (freq * NOF_CYCLES_FOR_1_BIT);
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
   sm_config_set_clkdiv(&c, div);
 
   /* initialize PIO and start it */

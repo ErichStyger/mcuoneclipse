@@ -49,8 +49,7 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
   sm_config_set_out_shift(&c, false, true, rgbw ? 32 : 24); /* false: shift left. true: auto-pull. Number of bits based on rgb or rgbw */
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   /* calculate state machine clocking based on protocol needs */
-  int cycles_per_bit = ws2812_NOF_CYCLES_FOR_1_BIT;
-  float div = clock_get_hz(clk_sys) / (freq*cycles_per_bit);
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
   sm_config_set_clkdiv(&c, div);
   /* initialize PIO and start it */
   pio_sm_init(pio, sm, offset, &c);
@@ -66,9 +65,7 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
 #define ws2812_parallel_wrap_target 0
 #define ws2812_parallel_wrap 4
 
-#define ws2812_parallel_T1 4
-#define ws2812_parallel_T2 3
-#define ws2812_parallel_T3 3
+#define ws2812_parallel_NOF_CYCLES_FOR_1_BIT 10
 
 static const uint16_t ws2812_parallel_program_instructions[] = {
             //     .wrap_target
@@ -105,8 +102,7 @@ static inline void ws2812_parallel_program_init(PIO pio, uint sm, uint offset, u
   sm_config_set_set_pins(&c, pin_base, pin_count); /* set the 'set' pins */
   sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
   /* calculate state machine clocking based on protocol needs */
-  int cycles_per_bit = ws2812_parallel_T1 + ws2812_parallel_T2 + ws2812_parallel_T3;
-  float div = clock_get_hz(clk_sys) / (freq * cycles_per_bit);
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
   sm_config_set_clkdiv(&c, div);
   /* initialize PIO and start it */
   pio_sm_init(pio, sm, offset, &c);
