@@ -25,6 +25,9 @@ pico_sdk_init()
 set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
 
+# to avoid that it shows up as 'Reset' USB device, see https://forums.raspberrypi.com/viewtopic.php?t=324909
+add_compile_options(-DPICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE=0)
+
 add_executable(${CMAKE_PROJECT_NAME})
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
