@@ -282,7 +282,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.2026485910" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1397874647" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.manage.1356394762" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.862903209" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="MK22F51212_Project_CMake_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.862903209" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="FRDM-K22F_SDK_CMake_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1282192896" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.2014323820" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.555340184" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -604,7 +604,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1775318320" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.1507826499" name="Floating point" superClass="com.crt.advproject.link.fpu" value="com.crt.advproject.link.fpu.fpv4.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.1690875049" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1226450821" name="Linker script" superClass="com.crt.advproject.link.script" value="MK22F51212_Project_CMake_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1226450821" name="Linker script" superClass="com.crt.advproject.link.script" value="FRDM-K22F_SDK_CMake_Release.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.940988397" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.404412841" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.2034517772" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -715,12 +715,20 @@
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 		<buildTargets>
 			<target name="ninja" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments>-r -j12</buildArguments>
-				<buildTarget>ninja</buildTarget>
+				<buildCommand>ninja</buildCommand>
+				<buildArguments>-C ../build</buildArguments>
+				<buildTarget/>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
+				<runAllBuilders>false</runAllBuilders>
+			</target>
+			<target name="make" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>-C ../build</buildArguments>
+				<buildTarget/>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>false</runAllBuilders>
 			</target>
 		</buildTargets>
 	</storageModule>

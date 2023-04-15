@@ -11,13 +11,14 @@ cmake_minimum_required(VERSION 3.15.3)
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # To make sure build folder doesn't get cluttered
-set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)  # folder for UF2 file
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+#set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)  # place CMakeFiles folder into the build folder
+#set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR}/build)
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
 # enable export of compiler commands to compile_commands.json
-set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Path to toolchain file. This one has to be before 'project()' below
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/arm-none-eabi-gcc.cmake)

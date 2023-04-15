@@ -1,1 +1,1 @@
-cmake -G"Ninja" .
+cmake -G"Ninja" .  -B build
