@@ -1,21 +1,7 @@
-# CMake template file
-# Use this file with
-# mkdir build
-# cd build
-# cmake -G "Eclipse CDT4" -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_ECLIPSE_VERSION="4.5" -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE -DCMAKE_ECLIPSE_MAKE_ARGUMENTS=-j8 -DCMAKE_ECLIPSE_EXECUTABLE="C:\NXP\MCUXpressoIDE_11.6.0_8187\ide\mcuxpressoide.exe" ../src 
-#
-
 cmake_minimum_required(VERSION 3.15.3)
 
 # Optional: print out extra messages to see what is going on. Comment it to have less verbose messages
-#set(CMAKE_VERBOSE_MAKEFILE ON)
-
-# To make sure build folder doesn't get cluttered
-#set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)  # place CMakeFiles folder into the build folder
-#set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR}/build)
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # enable export of compiler commands to compile_commands.json
 #set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -40,22 +26,13 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 
 # List of source files
 set(SRC_FILES
-        source/main.c
-        startup/startup_mk22f51212.c
-        device/system_MK22F51212.c
-        )
+  source/main.c
+  startup/startup_mk22f51212.c
+  device/system_MK22F51212.c
+)
 
 # Build the executable based on the source files
 add_executable(${EXECUTABLE} ${SRC_FILES})
-
-target_link_libraries(
-  ${EXECUTABLE}
-  # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
-  board
-  drivers
-  utilities
-  component
-)
 
 # List of compiler defines, prefix with -D compiler option. Copy from the project settings
 add_compile_options(
@@ -102,20 +79,6 @@ target_compile_definitions(${EXECUTABLE} PRIVATE
   -D__NEWLIB__
 )
 
-# List of includ directories
-target_include_directories(${EXECUTABLE} PRIVATE
-    . 
-    CMSIS
-    board
-    component/serial_manager
-    component/uart
-    component/lists
-    device
-    drivers
-    startup
-    utilities
-)
-
 # Compiler options
 target_compile_options(${EXECUTABLE} PRIVATE
    -O0 
@@ -157,16 +120,24 @@ add_subdirectory(./drivers   build/drivers)
 add_subdirectory(./utilities build/utilities)
 add_subdirectory(./component build/component)
 
+target_link_libraries(
+  ${EXECUTABLE}
+  board
+  drivers
+  utilities
+  component
+)
 
 # Optional: Print executable size as part of the post build process
 add_custom_command(TARGET ${EXECUTABLE}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE})
+  POST_BUILD
+  COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}
+)
 
 # Optional: Create hex, bin and S-Record files after the build
 add_custom_command(TARGET ${EXECUTABLE}
-        POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.s19"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex"
-        COMMAND ${CMAKE_OBJCOPY} -O binary "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.bin" 
-        )
+  POST_BUILD
+  COMMAND ${CMAKE_OBJCOPY} -O srec --srec-len=64 "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.s19"
+  COMMAND ${CMAKE_OBJCOPY} -O ihex "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex"
+  COMMAND ${CMAKE_OBJCOPY} -O binary "${EXECUTABLE_OUTPUT_PATH}/${EXECUTABLE}" "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.bin" 
+)
