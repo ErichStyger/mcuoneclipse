@@ -4,14 +4,14 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : FreeRTOS
-**     Version     : Component 01.583, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.585, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2021-11-25, 06:25, # CodeGen: 749
+**     Date/Time   : 2023-04-09, 12:57, # CodeGen: 804
 **     Abstract    :
 **          This component implements the FreeRTOS Realtime Operating System
 **     Settings    :
 **          Component name                                 : McuRTOS
-**          RTOS Version                                   : V10.4.1
+**          RTOS Version                                   : V10.5.1
 **          SDK                                            : McuLib
 **          Kinetis SDK                                    : Disabled
 **          Custom Port                                    : Custom port settings
@@ -230,10 +230,10 @@
 **         Deinit                               - void McuRTOS_Deinit(void);
 **         Init                                 - void McuRTOS_Init(void);
 **
-** * FreeRTOS (c) Copyright 2003-2021 Richard Barry/Amazon, http: www.FreeRTOS.org
+** * FreeRTOS (c) Copyright 2003-2023 Richard Barry/Amazon, http: www.FreeRTOS.org
 **  * See separate FreeRTOS licensing terms.
 **  *
-**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2021
+**  * FreeRTOS Processor Expert Component: (c) Copyright Erich Styger, 2013-2023
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -299,11 +299,13 @@
    * ``-Wl,--undefined=uxTopUsedPriority'' when using gcc for final
    * linking) to your LDFLAGS; same with all the other symbols you need.
    */
+#if 0 /* FreeRTOS V10.5.1 has it re-added to the kernel */
   const int
   #ifdef __GNUC__
   __attribute__((used))
   #endif
   uxTopUsedPriority = configMAX_PRIORITIES-1;
+#endif
 #endif
 
 #if configUSE_SHELL

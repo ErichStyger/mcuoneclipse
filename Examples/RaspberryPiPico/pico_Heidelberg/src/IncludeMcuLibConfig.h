@@ -47,7 +47,7 @@
 #endif
 #define MCUI2CLIB_CONFIG_ADD_DELAY_US      (0)
 #define MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US   (1000)
-  /* -------------------------------------------------*/
+/* -------------------------------------------------*/
 /* McuGenericI2C */
 #define McuGenericI2C_CONFIG_USE_ON_ERROR_EVENT       (0)
 #define McuGenericI2C_CONFIG_USE_ON_RELEASE_BUS_EVENT (0)

@@ -36,7 +36,7 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
   #include "fsl_usart.h"
 
   #ifndef McuUart485_CONFIG_UART_PARITY
-    #define McuUart485_CONFIG_UART_PARITY                 kUART_ParityDisabled /* or kUART_ParityEven or kUART_ParityOdd */
+    #define McuUart485_CONFIG_UART_PARITY                 kUSART_ParityDisabled /* or kUSART_ParityEven or kUSART_ParityOdd */
   #endif
 
   #define McuUart485_CONFIG_UART_DEVICE                   USART1

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2021 NXP
+ * Copyright 2016-2022 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -54,12 +54,12 @@
 
    @endverbatim
  */
-#define MAKE_VERSION(major, minor, bugfix) (((major) * 65536L) + ((minor) * 256L) + (bugfix))
+#define MAKE_VERSION(major, minor, bugfix) (((major)*65536L) + ((minor)*256L) + (bugfix))
 
 /*! @name Driver version */
 /*@{*/
 /*! @brief common driver version. */
-#define FSL_COMMON_DRIVER_VERSION (MAKE_VERSION(2, 3, 1))
+#define FSL_COMMON_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
 /*@}*/
 
 /* Debug console type definition. */
@@ -155,6 +155,7 @@ enum _status_groups
     kStatusGroup_SPC                   = 104, /*!< Group number for SPC status codes. */
     kStatusGroup_PUF                   = 105, /*!< Group number for PUF status codes. */
     kStatusGroup_TOUCH_PANEL           = 106, /*!< Group number for touch panel status codes */
+    kStatusGroup_VBAT                  = 107, /*!< Group number for VBAT status codes */
 
     kStatusGroup_HAL_GPIO       = 121, /*!< Group number for HAL GPIO status codes. */
     kStatusGroup_HAL_UART       = 122, /*!< Group number for HAL UART status codes. */
@@ -190,6 +191,12 @@ enum _status_groups
     kStatusGroup_SNT            = 157, /*!< Group number for SNT status codes. */
     kStatusGroup_QUEUEDSPI      = 158, /*!< Group number for QSPI status codes. */
     kStatusGroup_POWER_MANAGER  = 159, /*!< Group number for POWER_MANAGER status codes. */
+    kStatusGroup_IPED           = 160, /*!< Group number for IPED status codes. */
+    kStatusGroup_CSS_PKC        = 161, /*!< Group number for CSS PKC status codes. */
+    kStatusGroup_HOSTIF         = 162, /*!< Group number for HOSTIF status codes. */
+    kStatusGroup_CLIF           = 163, /*!< Group number for CLIF status codes. */
+    kStatusGroup_BMA            = 164, /*!< Group number for BMA status codes. */
+    kStatusGroup_NETC           = 165, /*!< Group number for NETC status codes. */
 };
 
 /*! \public
@@ -264,6 +271,7 @@ typedef int32_t status_t;
 extern "C" {
 #endif
 
+#if !((defined(__DSC__) && defined(__CW__)))
 /*!
  * @brief Allocate memory with given alignment and aligned size.
  *
@@ -281,6 +289,7 @@ void *SDK_Malloc(size_t size, size_t alignbytes);
  * @param ptr The memory to be release.
  */
 void SDK_Free(void *ptr);
+#endif
 
 /*!
  * @brief Delay at least for some time.

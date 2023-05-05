@@ -3,8 +3,10 @@
 #include "FreeRTOSConfig.h"
 #if !defined(configUSE_HEAP_SCHEME) || (configUSE_HEAP_SCHEME==1 && configSUPPORT_DYNAMIC_ALLOCATION==1)
 /*
- * FreeRTOS Kernel V10.4.1
- * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.5.1
+ * Copyright (C) 2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ *
+ * SPDX-License-Identifier: MIT
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +28,6 @@
  * https://www.FreeRTOS.org
  * https://github.com/FreeRTOS
  *
- * 1 tab == 4 spaces!
  */
 
 
@@ -66,7 +67,7 @@
   #pragma language=extended
   #pragma location = configHEAP_SECTION_NAME_STRING
   static uint8_t ucHeap[configTOTAL_HEAP_SIZE] @ configHEAP_SECTION_NAME_STRING; 
-#elif configUSE_HEAP_SECTION_NAME
+#elif configUSE_HEAP_SECTION_NAME /* << EST */
   static uint8_t __attribute__((section (configHEAP_SECTION_NAME_STRING))) ucHeap[configTOTAL_HEAP_SIZE];
 #else
     static uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
@@ -83,27 +84,35 @@ void * pvPortMalloc( size_t xWantedSize )
     void * pvReturn = NULL;
 //static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
 
-    /* Ensure that blocks are always aligned to the required number of bytes. */
+    /* Ensure that blocks are always aligned. */
     #if ( portBYTE_ALIGNMENT != 1 )
+    {
+        if( xWantedSize & portBYTE_ALIGNMENT_MASK )
         {
-            if( xWantedSize & portBYTE_ALIGNMENT_MASK )
+            /* Byte alignment required. Check for overflow. */
+            if( ( xWantedSize + ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) ) ) > xWantedSize )
             {
-                /* Byte alignment required. */
                 xWantedSize += ( portBYTE_ALIGNMENT - ( xWantedSize & portBYTE_ALIGNMENT_MASK ) );
             }
+            else
+            {
+                xWantedSize = 0;
+            }
         }
-    #endif
+    }
+    #endif /* if ( portBYTE_ALIGNMENT != 1 ) */
 
     vTaskSuspendAll();
     {
         if( pucAlignedHeap == NULL )
         {
             /* Ensure the heap starts on a correctly aligned boundary. */
-            pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) & ucHeap[ portBYTE_ALIGNMENT ] ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
+            pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) & ucHeap[ portBYTE_ALIGNMENT - 1 ] ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
         }
 
-        /* Check there is enough room left for the allocation. */
-        if( ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
+        /* Check there is enough room left for the allocation and. */
+        if( ( xWantedSize > 0 ) &&                                /* valid size */
+            ( ( xNextFreeByte + xWantedSize ) < configADJUSTED_HEAP_SIZE ) &&
             ( ( xNextFreeByte + xWantedSize ) > xNextFreeByte ) ) /* Check for overflow. */
         {
             /* Return the next free byte then increment the index past this
@@ -117,14 +126,12 @@ void * pvPortMalloc( size_t xWantedSize )
     ( void ) xTaskResumeAll();
 
     #if ( configUSE_MALLOC_FAILED_HOOK == 1 )
+    {
+        if( pvReturn == NULL )
         {
-            if( pvReturn == NULL )
-            {
-                /* EST: Using configuration macro name for hook */
-		     	extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
-      configUSE_MALLOC_FAILED_HOOK_NAME();
-            }
+            vApplicationMallocFailedHook();
         }
+    }
     #endif
 
     return pvReturn;
@@ -154,6 +161,7 @@ size_t xPortGetFreeHeapSize( void )
 {
     return( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+
 #if 1 /* << EST */
 void vPortInitializeHeap(void) {
   xNextFreeByte = 0;

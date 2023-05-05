@@ -9,6 +9,7 @@
 #define SUMO_H_
 
 #include "Platform.h"
+#include <stdbool.h>
 
 void SUMO_StartTurnLeft(void);
 void SUMO_StartTurnRight(void);

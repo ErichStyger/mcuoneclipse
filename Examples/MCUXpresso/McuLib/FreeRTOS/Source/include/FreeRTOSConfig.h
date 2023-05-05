@@ -98,7 +98,7 @@
 #ifndef configTICK_RATE_HZ
   #define configTICK_RATE_HZ                      (1000) /* frequency of tick interrupt */
 #endif
-#define portTICK_RATE_MS                          (1000/configTICK_RATE_HZ) /* used for legacy drivers and modules like lwIP */
+#define portTICK_RATE_MS                          (1000/configTICK_RATE_HZ) /* needed for legacy drivers and modules like lwIP */
 #ifndef configSYSTICK_USE_LOW_POWER_TIMER
   #define configSYSTICK_USE_LOW_POWER_TIMER       0 /* If using Kinetis Low Power Timer (LPTMR) instead of SysTick timer */
 #endif
@@ -122,6 +122,15 @@
 #define configSYSTICK_CLOCK_HZ                    ((configCPU_CLOCK_HZ)/configSYSTICK_CLOCK_DIVIDER) /* frequency of system tick counter */
 #ifndef configMINIMAL_STACK_SIZE
   #define configMINIMAL_STACK_SIZE                (200) /* stack size in addressable stack units */
+#endif
+
+#ifndef configUSE_MINI_LIST_ITEM
+	#define configUSE_MINI_LIST_ITEM (1)
+	/*!< MiniListItem_t is used for start and end marker nodes in a FreeRTOS list and ListItem_t is used for all other nodes in a FreeRTOS list.
+	 * When configUSE_MINI_LIST_ITEM is set to 0, MiniListItem_t and ListItem_t are both the same. When configUSE_MINI_LIST_ITEM is set to 1,
+	 * MiniListItem_t contains 3 fewer fields than ListItem_t which saves some RAM at the cost of violating strict aliasing rules which some compilers
+	 * depend on for optimization. If left undefined, configUSE_MINI_LIST_ITEM defaults to 1 for backward compatibility.
+	 */
 #endif
 /*----------------------------------------------------------*/
 /* Heap Memory */
@@ -374,4 +383,5 @@ point support. */
 
 
 #endif /* FREERTOS_CONFIG_H */
+
 

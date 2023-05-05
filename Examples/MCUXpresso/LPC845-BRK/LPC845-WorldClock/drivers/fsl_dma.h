@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2022 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -24,7 +24,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief DMA driver version */
-#define FSL_DMA_DRIVER_VERSION (MAKE_VERSION(2, 4, 3)) /*!< Version 2.4.3. */
+#define FSL_DMA_DRIVER_VERSION (MAKE_VERSION(2, 5, 0)) /*!< Version 2.5.0. */
 /*@}*/
 
 /*! @brief DMA max transfer size */
@@ -75,10 +75,10 @@
     AT_NONCACHEABLE_SECTION_ALIGN(dma_descriptor_t name[number], FSL_FEATURE_DMA_LINK_DESCRIPTOR_ALIGN_SIZE)
 /*! @brief DMA transfer buffer address need to align with the transfer width */
 #define DMA_ALLOCATE_DATA_TRANSFER_BUFFER(name, width) SDK_ALIGN(name, width)
-/* Channel group consists of 32 channels. channel_group = (channel / 32) */
+/* Channel group consists of 32 channels. channel_group = 0 */
 #define DMA_CHANNEL_GROUP(channel) (((uint8_t)(channel)) >> 5U)
-/* Channel index in channel group. channel_index = (channel % 32) */
-#define DMA_CHANNEL_INDEX(channel) (((uint8_t)(channel)) & 0x1FU)
+/* Channel index in channel group. channel_index = (channel % (channel number per instance)) */
+#define DMA_CHANNEL_INDEX(base, channel) (((uint8_t)(channel)) & 0x1FU)
 /*! @brief DMA linked descriptor address algin size */
 #define DMA_COMMON_REG_GET(base, channel, reg) \
     (((volatile uint32_t *)(&((base)->COMMON[0].reg)))[DMA_CHANNEL_GROUP(channel)])
@@ -96,23 +96,8 @@
 #define DMA_DESCRIPTOR_END_ADDRESS(start, inc, bytes, width) \
     ((uint32_t *)((uint32_t)(start) + (inc) * (bytes) - (inc) * (width)))
 
-/*! @brief DMA channel transfer configurations macro
- * @param reload true is reload link descriptor after current exhaust, false is not
- * @param clrTrig true is clear trigger status, wait software trigger, false is not
- * @param intA enable interruptA
- * @param intB enable interruptB
- * @param width transfer width
- * @param srcInc source address interleave size
- * @param dstInc destination address interleave size
- * @param bytes transfer bytes
- */
-#define DMA_CHANNEL_XFER(reload, clrTrig, intA, intB, width, srcInc, dstInc, bytes)                                 \
-    DMA_CHANNEL_XFERCFG_CFGVALID_MASK | DMA_CHANNEL_XFERCFG_RELOAD(reload) | DMA_CHANNEL_XFERCFG_CLRTRIG(clrTrig) | \
-        DMA_CHANNEL_XFERCFG_SETINTA(intA) | DMA_CHANNEL_XFERCFG_SETINTB(intB) |                                     \
-        DMA_CHANNEL_XFERCFG_WIDTH(width == 4UL ? 2UL : (width - 1UL)) |                                             \
-        DMA_CHANNEL_XFERCFG_SRCINC(srcInc == (uint32_t)kDMA_AddressInterleave4xWidth ? (srcInc - 1UL) : srcInc) |   \
-        DMA_CHANNEL_XFERCFG_DSTINC(dstInc == (uint32_t)kDMA_AddressInterleave4xWidth ? (dstInc - 1UL) : dstInc) |   \
-        DMA_CHANNEL_XFERCFG_XFERCOUNT(bytes / width - 1UL)
+#define DMA_CHANNEL_XFER(reload, clrTrig, intA, intB, width, srcInc, dstInc, bytes) \
+    (DMA_SetChannelXferConfig(reload, clrTrig, intA, intB, width, srcInc, dstInc, bytes))
 
 /*! @brief _dma_transfer_status DMA transfer status */
 enum
@@ -364,8 +349,10 @@ void DMA_InstallDescriptorMemory(DMA_Type *base, void *addr);
  */
 static inline bool DMA_ChannelIsActive(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    return (DMA_COMMON_CONST_REG_GET(base, channel, ACTIVE) & (1UL << DMA_CHANNEL_INDEX(channel))) != 0UL;
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+
+    return (DMA_COMMON_CONST_REG_GET(base, channel, ACTIVE) & (1UL << DMA_CHANNEL_INDEX(base, channel))) != 0UL;
 }
 
 /*!
@@ -377,8 +364,10 @@ static inline bool DMA_ChannelIsActive(DMA_Type *base, uint32_t channel)
  */
 static inline bool DMA_ChannelIsBusy(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    return (DMA_COMMON_CONST_REG_GET(base, channel, BUSY) & (1UL << DMA_CHANNEL_INDEX(channel))) != 0UL;
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+
+    return (DMA_COMMON_CONST_REG_GET(base, channel, BUSY) & (1UL << DMA_CHANNEL_INDEX(base, channel))) != 0UL;
 }
 
 /*!
@@ -389,8 +378,9 @@ static inline bool DMA_ChannelIsBusy(DMA_Type *base, uint32_t channel)
  */
 static inline void DMA_EnableChannelInterrupts(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    DMA_COMMON_REG_GET(base, channel, INTENSET) |= 1UL << DMA_CHANNEL_INDEX(channel);
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+    DMA_COMMON_REG_GET(base, channel, INTENSET) |= 1UL << DMA_CHANNEL_INDEX(base, channel);
 }
 
 /*!
@@ -401,8 +391,9 @@ static inline void DMA_EnableChannelInterrupts(DMA_Type *base, uint32_t channel)
  */
 static inline void DMA_DisableChannelInterrupts(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    DMA_COMMON_REG_GET(base, channel, INTENCLR) |= 1UL << DMA_CHANNEL_INDEX(channel);
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+    DMA_COMMON_REG_GET(base, channel, INTENCLR) |= 1UL << DMA_CHANNEL_INDEX(base, channel);
 }
 
 /*!
@@ -413,8 +404,9 @@ static inline void DMA_DisableChannelInterrupts(DMA_Type *base, uint32_t channel
  */
 static inline void DMA_EnableChannel(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    DMA_COMMON_REG_GET(base, channel, ENABLESET) |= 1UL << DMA_CHANNEL_INDEX(channel);
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+    DMA_COMMON_REG_GET(base, channel, ENABLESET) |= 1UL << DMA_CHANNEL_INDEX(base, channel);
 }
 
 /*!
@@ -425,8 +417,9 @@ static inline void DMA_EnableChannel(DMA_Type *base, uint32_t channel)
  */
 static inline void DMA_DisableChannel(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
-    DMA_COMMON_REG_GET(base, channel, ENABLECLR) |= 1UL << DMA_CHANNEL_INDEX(channel);
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
+    DMA_COMMON_REG_GET(base, channel, ENABLECLR) |= 1UL << DMA_CHANNEL_INDEX(base, channel);
 }
 
 /*!
@@ -437,7 +430,8 @@ static inline void DMA_DisableChannel(DMA_Type *base, uint32_t channel)
  */
 static inline void DMA_EnableChannelPeriphRq(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
     base->CHANNEL[channel].CFG |= DMA_CHANNEL_CFG_PERIPHREQEN_MASK;
 }
 
@@ -450,7 +444,8 @@ static inline void DMA_EnableChannelPeriphRq(DMA_Type *base, uint32_t channel)
  */
 static inline void DMA_DisableChannelPeriphRq(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
     base->CHANNEL[channel].CFG &= ~DMA_CHANNEL_CFG_PERIPHREQEN_MASK;
 }
 
@@ -476,6 +471,30 @@ void DMA_ConfigureChannelTrigger(DMA_Type *base, uint32_t channel, dma_channel_t
  */
 void DMA_SetChannelConfig(DMA_Type *base, uint32_t channel, dma_channel_trigger_t *trigger, bool isPeriph);
 
+/*! @brief DMA channel xfer transfer configurations
+ *
+ * @param reload true is reload link descriptor after current exhaust, false is not
+ * @param clrTrig true is clear trigger status, wait software trigger, false is not
+ * @param intA enable interruptA
+ * @param intB enable interruptB
+ * @param width transfer width
+ * @param srcInc source address interleave size
+ * @param dstInc destination address interleave size
+ * @param bytes transfer bytes
+ * @return The vaule of xfer config
+ */
+static inline uint32_t DMA_SetChannelXferConfig(
+    bool reload, bool clrTrig, bool intA, bool intB, uint8_t width, uint8_t srcInc, uint8_t dstInc, uint32_t bytes)
+{
+    return (DMA_CHANNEL_XFERCFG_CFGVALID_MASK | DMA_CHANNEL_XFERCFG_RELOAD(reload) |
+            DMA_CHANNEL_XFERCFG_CLRTRIG(clrTrig) | DMA_CHANNEL_XFERCFG_SETINTA(intA) |
+            DMA_CHANNEL_XFERCFG_SETINTB(intB) |
+            DMA_CHANNEL_XFERCFG_WIDTH((uint32_t)width == 4UL ? 2UL : ((uint32_t)width - 1UL)) |
+            DMA_CHANNEL_XFERCFG_SRCINC((uint32_t)srcInc == 4UL ? ((uint32_t)srcInc - 1UL) : (uint32_t)srcInc) |
+            DMA_CHANNEL_XFERCFG_DSTINC((uint32_t)dstInc == 4UL ? ((uint32_t)dstInc - 1UL) : (uint32_t)dstInc) |
+            DMA_CHANNEL_XFERCFG_XFERCOUNT((uint32_t)bytes / (uint32_t)width - 1UL));
+}
+
 /*!
  * @brief Gets the remaining bytes of the current DMA descriptor transfer.
  *
@@ -494,7 +513,8 @@ uint32_t DMA_GetRemainingBytes(DMA_Type *base, uint32_t channel);
  */
 static inline void DMA_SetChannelPriority(DMA_Type *base, uint32_t channel, dma_priority_t priority)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
     base->CHANNEL[channel].CFG =
         (base->CHANNEL[channel].CFG & (~(DMA_CHANNEL_CFG_CHPRIORITY_MASK))) | DMA_CHANNEL_CFG_CHPRIORITY(priority);
 }
@@ -508,7 +528,8 @@ static inline void DMA_SetChannelPriority(DMA_Type *base, uint32_t channel, dma_
  */
 static inline dma_priority_t DMA_GetChannelPriority(DMA_Type *base, uint32_t channel)
 {
-    assert(channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base));
+    assert((FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base) != -1) &&
+           (channel < (uint32_t)FSL_FEATURE_DMA_NUMBER_OF_CHANNELSn(base)));
     return (dma_priority_t)(uint8_t)((base->CHANNEL[channel].CFG & DMA_CHANNEL_CFG_CHPRIORITY_MASK) >>
                                      DMA_CHANNEL_CFG_CHPRIORITY_SHIFT);
 }

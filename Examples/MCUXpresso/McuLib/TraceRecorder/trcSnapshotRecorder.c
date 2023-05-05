@@ -161,7 +161,7 @@ static uint32_t prvTraceGetParam(uint32_t, uint32_t);
  * in trcConfig.h. This allows for allocating the data on the heap, instead of
  * using a static declaration.
  ******************************************************************************/
-static void prvTraceInitTraceData(void);
+void prvTraceInitTraceData(void);
 
 /*******************************************************************************
  * prvTracePortGetTimeStamp

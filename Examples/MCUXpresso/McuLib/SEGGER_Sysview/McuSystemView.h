@@ -6,12 +6,12 @@
 **     Component   : SeggerSystemView
 **     Version     : Component 01.071, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-10-11, 10:32, # CodeGen: 699
+**     Date/Time   : 2023-04-09, 18:36, # CodeGen: 806
 **     Abstract    :
 **          This component implements and integrates the SEGGER Systemview library for FreeRTOS.
 **     Settings    :
 **          Component name                                 : McuSystemView
-**          Version                                        : V3.12
+**          Version                                        : V3.50a
 **          Application Name                               : "Demo Application"
 **          Device Name                                    : "Cortex"
 **          RAM Base                                       : 0x20000000

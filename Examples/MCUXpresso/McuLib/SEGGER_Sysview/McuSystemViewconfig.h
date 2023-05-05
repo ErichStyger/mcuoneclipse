@@ -49,5 +49,8 @@
     /*!< RTT channel to be used (default 1) */
 #endif
 
+#ifndef McuSystemView_CONFIG_SYSVIEW_RAM_BASE
+  #define McuSystemView_CONFIG_SYSVIEW_RAM_BASE (0x20000000)
+#endif
 
 #endif /* __McuSystemView_CONFIG_H */

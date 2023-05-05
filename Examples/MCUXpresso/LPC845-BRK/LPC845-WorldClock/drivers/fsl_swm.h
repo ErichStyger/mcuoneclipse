@@ -1,5 +1,5 @@
 /*
- * Copyright  2017-2020 NXP
+ * Copyright  2017-2022 NXP
  * All rights reserved.
  *
  *
@@ -23,7 +23,8 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SWM_DRIVER_VERSION (MAKE_VERSION(2, 0, 2)) /*!< Version 2.0.2 */
+/*! @brief LPC SWM driver version. */
+#define FSL_SWM_DRIVER_VERSION (MAKE_VERSION(2, 1, 1))
 /*@}*/
 
 /*******************************************************************************
@@ -72,6 +73,20 @@ void SWM_SetFixedMovablePinSelect(SWM_Type *base,
  * @param enable enable or disable.
  */
 void SWM_SetFixedPinSelect(SWM_Type *base, swm_select_fixed_pin_t func, bool enable);
+
+#if (defined(FSL_FEATURE_SWM_HAS_FLEXTIMER_PINASSIGN_REGISTER) && \
+     (FSL_FEATURE_SWM_HAS_FLEXTIMER_PINASSIGN_REGISTER == 1))
+/*!
+ * @brief Enable the flextimer function.
+ *
+ * This function will enables a flextimer function in FTM_PINASSIGN0 or FTM_PINASSIGN1.
+ *
+ * @param base SWM peripheral base address.
+ * @param func any function name that is flextimer.
+ * @param selection flextimer pin selection.
+ */
+void SWM_SetFlextimerPinSelect(SWM_Type *base, swm_flextimer_pin_func_t func, swm_flextimer_pin_sel_t selection);
+#endif /* FSL_FEATURE_SWM_HAS_PINASSIGNFIXED0_REGISTER */
 
 #if defined(__cplusplus)
 }

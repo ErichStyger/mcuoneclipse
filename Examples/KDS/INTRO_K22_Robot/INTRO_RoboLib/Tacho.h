@@ -10,6 +10,9 @@
 #include "Platform.h"
 
 #if PL_HAS_MOTOR_TACHO
+#include <stdbool.h>
+#include <stdint.h>
+
 /*!
  * \brief Returns the previously calculated speed of the motor.
  * \param isLeft TRUE for left speed, FALSE for right speed.

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2022 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -23,7 +23,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_CTIMER_DRIVER_VERSION (MAKE_VERSION(2, 2, 1)) /*!< Version 2.2.1 */
+#define FSL_CTIMER_DRIVER_VERSION (MAKE_VERSION(2, 3, 1)) /*!< Version 2.3.1 */
 /*@}*/
 
 /*! @brief List of Timer capture channels */
@@ -59,10 +59,10 @@ typedef enum _ctimer_match
 /*! @brief List of external match */
 typedef enum _ctimer_external_match
 {
-    kCTIMER_External_Match_0 = (1U << 0), /*!< External match 0 */
-    kCTIMER_External_Match_1 = (1U << 1), /*!< External match 1 */
-    kCTIMER_External_Match_2 = (1U << 2), /*!< External match 2 */
-    kCTIMER_External_Match_3 = (1U << 3)  /*!< External match 3 */
+    kCTIMER_External_Match_0 = (1UL << 0), /*!< External match 0 */
+    kCTIMER_External_Match_1 = (1UL << 1), /*!< External match 1 */
+    kCTIMER_External_Match_2 = (1UL << 2), /*!< External match 2 */
+    kCTIMER_External_Match_3 = (1UL << 3)  /*!< External match 3 */
 } ctimer_external_match_t;
 
 /*! @brief List of output control options */
@@ -523,6 +523,155 @@ static inline void CTIMER_Reset(CTIMER_Type *base)
     base->TCR |= CTIMER_TCR_CRST_MASK;
     base->TCR &= ~CTIMER_TCR_CRST_MASK;
 }
+
+/*!
+ * @brief Setup the timer prescale value.
+ *
+ * Specifies the maximum value for the Prescale Counter.
+ *
+ * @param base Ctimer peripheral base address
+ * @param prescale Prescale value
+ */
+static inline void CTIMER_SetPrescale(CTIMER_Type *base, uint32_t prescale)
+{
+    base->PR = CTIMER_PR_PRVAL(prescale);
+}
+
+/*!
+ * @brief Get capture channel value.
+ *
+ * Get the counter/timer value on the corresponding capture channel.
+ *
+ * @param base Ctimer peripheral base address
+ * @param capture Select capture channel
+ *
+ * @return The timer count capture value.
+ */
+static inline uint32_t CTIMER_GetCaptureValue(CTIMER_Type *base, ctimer_capture_channel_t capture)
+{
+    return base->CR[capture];
+}
+
+/*!
+ * @brief Enable reset match channel.
+ *
+ * Set the specified match channel reset operation.
+ *
+ * @param base Ctimer peripheral base address
+ * @param match match channel used
+ * @param enable Enable match channel reset operation.
+ */
+static inline void CTIMER_EnableResetMatchChannel(CTIMER_Type *base, ctimer_match_t match, bool enable)
+{
+    if (enable)
+    {
+        base->MCR |= (1UL << (CTIMER_MCR_MR0R_SHIFT + ((uint32_t)match * 3U)));
+    }
+    else
+    {
+        base->MCR &= ~(1UL << (CTIMER_MCR_MR0R_SHIFT + ((uint32_t)match * 3U)));
+    }
+}
+
+/*!
+ * @brief Enable stop match channel.
+ *
+ * Set the specified match channel stop operation.
+ *
+ * @param base Ctimer peripheral base address.
+ * @param match match channel used.
+ * @param enable Enable match channel stop operation.
+ */
+static inline void CTIMER_EnableStopMatchChannel(CTIMER_Type *base, ctimer_match_t match, bool enable)
+{
+    if (enable)
+    {
+        base->MCR |= (1UL << (CTIMER_MCR_MR0S_SHIFT + ((uint32_t)match * 3U)));
+    }
+    else
+    {
+        base->MCR &= ~(1UL << (CTIMER_MCR_MR0S_SHIFT + ((uint32_t)match * 3U)));
+    }
+}
+
+#if (defined(FSL_FEATURE_CTIMER_HAS_MSR) && (FSL_FEATURE_CTIMER_HAS_MSR))
+/*!
+ * @brief Enable reload channel falling edge.
+ *
+ * Enable the specified match channel reload match shadow value.
+ *
+ * @param base Ctimer peripheral base address.
+ * @param match match channel used.
+ * @param enable Enable .
+ */
+static inline void CTIMER_EnableMatchChannelReload(CTIMER_Type *base, ctimer_match_t match, bool enable)
+{
+    if (enable)
+    {
+        base->MCR |= (1UL << (CTIMER_MCR_MR0RL_SHIFT + (uint32_t)match));
+    }
+    else
+    {
+        base->MCR &= ~(1UL << (CTIMER_MCR_MR0RL_SHIFT + (uint32_t)match));
+    }
+}
+#endif /* FSL_FEATURE_CTIMER_HAS_MSR */
+
+/*!
+ * @brief Enable capture channel rising edge.
+ *
+ * Sets the specified capture channel for rising edge capture.
+ *
+ * @param base Ctimer peripheral base address.
+ * @param capture capture channel used.
+ * @param enable Enable rising edge capture.
+ */
+static inline void CTIMER_EnableRisingEdgeCapture(CTIMER_Type *base, ctimer_capture_channel_t capture, bool enable)
+{
+    if (enable)
+    {
+        base->CCR |= (1UL << (CTIMER_CCR_CAP0RE_SHIFT + ((uint32_t)capture * 3U)));
+    }
+    else
+    {
+        base->CCR &= ~(1UL << (CTIMER_CCR_CAP0RE_SHIFT + ((uint32_t)capture * 3U)));
+    }
+}
+
+/*!
+ * @brief Enable capture channel falling edge.
+ *
+ * Sets the specified capture channel for falling edge capture.
+ *
+ * @param base Ctimer peripheral base address.
+ * @param capture capture channel used.
+ * @param enable Enable falling edge capture.
+ */
+static inline void CTIMER_EnableFallingEdgeCapture(CTIMER_Type *base, ctimer_capture_channel_t capture, bool enable)
+{
+    if (enable)
+    {
+        base->CCR |= (1UL << (CTIMER_CCR_CAP0FE_SHIFT + ((uint32_t)capture * 3U)));
+    }
+    else
+    {
+        base->CCR &= ~(1UL << (CTIMER_CCR_CAP0FE_SHIFT + ((uint32_t)capture * 3U)));
+    }
+}
+
+#if (defined(FSL_FEATURE_CTIMER_HAS_MSR) && (FSL_FEATURE_CTIMER_HAS_MSR))
+/*!
+ * @brief Set the specified match shadow channel.
+ *
+ * @param base Ctimer peripheral base address.
+ * @param match match channel used.
+ * @param matchvalue Reload the value of the corresponding match register.
+ */
+static inline void CTIMER_SetShadowValue(CTIMER_Type *base, ctimer_match_t match, uint32_t matchvalue)
+{
+    base->MSR[match] = matchvalue;
+}
+#endif /* FSL_FEATURE_CTIMER_HAS_MSR */
 
 #if defined(__cplusplus)
 }

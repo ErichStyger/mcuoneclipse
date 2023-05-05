@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 NXP
+ * Copyright 2017-2022 NXP
  * All rights reserved.
  *
  *
@@ -210,6 +210,10 @@ status_t USART_Init(USART_Type *base, const usart_config_t *config, uint32_t src
 {
     /* Check arguments */
     assert(!((NULL == base) || (NULL == config) || (0U == srcClock_Hz)));
+#if defined(FSL_FEATURE_USART_HAS_RXIDLETO_CHECK) && FSL_FEATURE_USART_HAS_RXIDLETO_CHECK
+    assert(8U > config->rxIdleTimeout);
+#endif
+
     status_t status = kStatus_Success;
 
     uint32_t instance = USART_GetInstance(base);
@@ -230,7 +234,9 @@ status_t USART_Init(USART_Type *base, const usart_config_t *config, uint32_t src
                 USART_CFG_DATALEN((uint8_t)config->bitCountPerChar) | USART_CFG_LOOP(config->loopback) |
                 USART_CFG_SYNCMST(config->syncMode) | USART_CFG_CLKPOL(config->clockPolarity) |
                 USART_CFG_CTSEN(config->enableHardwareFlowControl) | USART_CFG_ENABLE_MASK;
-
+#if defined(FSL_FEATURE_USART_HAS_RXIDLETO_CHECK) && FSL_FEATURE_USART_HAS_RXIDLETO_CHECK
+    base->CTL |= USART_CTL_RXIDLETOCFG(config->rxIdleTimeout);
+#endif
 #if defined(FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE) && (FSL_SDK_USART_DRIVER_ENABLE_BAUDRATE_AUTO_GENERATE)
     if (0U != config->baudRate_Bps)
     {
@@ -319,6 +325,9 @@ void USART_GetDefaultConfig(usart_config_t *config)
     config->enableContinuousSCLK      = false;
     config->clockPolarity             = kUSART_RxSampleOnFallingEdge;
     config->enableHardwareFlowControl = false;
+#if defined(FSL_FEATURE_USART_HAS_RXIDLETO_CHECK) && FSL_FEATURE_USART_HAS_RXIDLETO_CHECK
+    config->rxIdleTimeout = 0U;
+#endif
 }
 
 /*!
@@ -897,7 +906,19 @@ void USART_TransferHandleIRQ(USART_Type *base, usart_handle_t *handle)
             handle->callback(base, handle, kStatus_USART_RxError, handle->userData);
         }
     }
-
+#if defined(FSL_FEATURE_USART_HAS_RXIDLETO_CHECK) && FSL_FEATURE_USART_HAS_RXIDLETO_CHECK
+    /* If RX idle time out */
+    if (((uint32_t)kUSART_RxIdleTimeoutFlag & status) != 0U)
+    {
+        /* Clear rx error state. */
+        base->STAT |= USART_STAT_RXIDLETO_MASK;
+        /* Trigger callback. */
+        if (handle->callback != NULL)
+        {
+            handle->callback(base, handle, kStatus_USART_RxIdleTimeout, handle->userData);
+        }
+    }
+#endif
     /* Receive data */
     if ((receiveEnabled) && (((uint32_t)kUSART_RxReady & status) != 0U))
     {

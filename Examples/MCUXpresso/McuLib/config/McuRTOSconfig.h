@@ -166,6 +166,11 @@
   #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS    0 /* 1: Segger System Viewer hooks, 0: not using Segger System Viewer hooks */
 #endif
 
+#ifndef configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS
+  #define configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS (1 && configUSE_SEGGER_SYSTEM_VIEWER_HOOKS)
+    /*!< 1: Generate heap events for Segger SystemView, 0: not generate heap events */
+#endif
+
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_PERCEPIO_TRACE_HOOKS
   #error "only one trace method can be active!"
 #endif

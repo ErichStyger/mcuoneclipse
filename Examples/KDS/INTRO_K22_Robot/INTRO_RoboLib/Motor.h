@@ -11,6 +11,8 @@
 
 #include "Platform.h"
 #if PL_CONFIG_HAS_MOTOR
+#include <stdbool.h>
+#include <stdint.h>
 
 #define MOTOR_HAS_INVERT 1  /* if we support motor revert at runtime */
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019, 2020 NXP
+ * Copyright 2017-2020,2022 NXP
  * All rights reserved.
  *
  *
@@ -464,8 +464,7 @@ status_t SPI_MasterTransferBlocking(SPI_Type *base, spi_transfer_t *xfer)
 
     remainingBytes = xfer->dataSize;
     /* Read datawidth and ssel info from TXCTL. */
-    tx_ctrl   = base->TXCTL & (SPI_TXCTL_LEN_MASK | SPI_TXCTL_RXIGNORE_MASK | SPI_TXCTL_EOF_MASK | SPI_TXCTL_EOT_MASK |
-                             (uint32_t)kSPI_SselDeAssertAll);
+    tx_ctrl   = base->TXCTL & (SPI_TXCTL_LEN_MASK | (uint32_t)kSPI_SselDeAssertAll);
     dataWidth = ((tx_ctrl & SPI_TXCTL_LEN_MASK) >> SPI_TXCTL_LEN_SHIFT);
 
     /* Set end of frame configuration. */

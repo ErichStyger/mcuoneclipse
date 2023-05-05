@@ -65,15 +65,15 @@ static McuDbnc_Desc_t data =
 static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
   switch(event) {
     case MCUDBNC_EVENT_PRESSED:
-      SEGGER_printf("pressed: %d\r\n", buttons);
+      McuRTT_printf(0, "pressed: %d\r\n", buttons);
       break;
 
     case MCUDBNC_EVENT_PRESSED_REPEAT:
-      SEGGER_printf("repeat: %d\r\n", buttons);
+      McuRTT_printf(0, "repeat: %d\r\n", buttons);
       break;
 
     case MCUDBNC_EVENT_LONG_PRESSED:
-      SEGGER_printf("long pressed: %d\r\n", buttons);
+      McuRTT_printf(0, "long pressed: %d\r\n", buttons);
     #if PL_CONFIG_USE_GUI
       if (buttons&BTN_UP) {
         LV_ButtonEvent(LV_BTN_MASK_UP, LV_MASK_PRESSED_LONG);
@@ -94,11 +94,11 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
       break;
 
     case MCUDBNC_EVENT_LONG_PRESSED_REPEAT:
-      SEGGER_printf("long repeat: %d\r\n", buttons);
+      McuRTT_printf(0, "long repeat: %d\r\n", buttons);
       break;
 
     case MCUDBNC_EVENT_RELEASED:
-      SEGGER_printf("released: %d\r\n", buttons);
+      McuRTT_printf(0, "released: %d\r\n", buttons);
     #if PL_CONFIG_USE_RASPY_UART
       RASPYU_OnJoystickEvent(0);
     #endif
@@ -124,7 +124,7 @@ static void OnDebounceEvent(McuDbnc_EventKinds event, uint32_t buttons) {
     default:
     case MCUDBNC_EVENT_END:
       (void)xTimerStop(data.timer, pdMS_TO_TICKS(100)); /* stop timer */
-      SEGGER_printf("end: %d\r\n", buttons);
+      McuRTT_printf(0, "end: %d\r\n", buttons);
       break;
   }
 }
@@ -136,7 +136,6 @@ static void vTimerCallbackDebounce(TimerHandle_t pxTimer) {
 }
 
 static void StartDebounce(uint32_t buttons, bool fromISR) {
-  BaseType_t res;
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
   if (data.state==MCUDBMC_STATE_IDLE) {
@@ -144,11 +143,10 @@ static void StartDebounce(uint32_t buttons, bool fromISR) {
     data.state = MCUDBMC_STATE_START;
     McuDbnc_Process(&data);
     if (fromISR) {
-      res = xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
+      (void)xTimerStartFromISR(data.timer, &xHigherPriorityTaskWoken);
     } else {
-      res = xTimerStart(data.timer, pdMS_TO_TICKS(100));
+      (void)xTimerStart(data.timer, pdMS_TO_TICKS(100));
     }
-    assert(res==pdPASS);
     if (fromISR) {
       portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }

@@ -4,7 +4,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2023 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -43,7 +43,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: V3.12                                    *
+*       SystemView version: 3.50a                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
@@ -128,7 +128,7 @@ extern const SEGGER_SYSVIEW_OS_API SYSVIEW_X_OS_TraceAPI;
 #define SYSVIEW_TIMESTAMP_FREQ  (configSYSTICK_CLOCK_HZ>>SEGGER_SYSVIEW_TIMESTAMP_SHIFT) /* use FreeRTOS Systick frequency value, as this might depend on prescalers */
 
 // The lowest RAM address used for IDs (pointers)
-#define SYSVIEW_RAM_BASE        (0x20000000) /* RAM base, configured in properties */
+#define SYSVIEW_RAM_BASE        (McuSystemView_CONFIG_SYSVIEW_RAM_BASE) /* RAM base, configured in properties */
 
 #if 1 /* << EST */
 #define portNVIC_SYSTICK_LOAD_REG           (*((volatile unsigned long *)0xe000e014)) /* SYST_RVR, SysTick reload value register */
@@ -245,6 +245,7 @@ static void _cbSendSystemDesc(void) {
   SEGGER_SYSVIEW_SendSysDesc("I#15=SysTick");
 }
 #endif
+
 /*********************************************************************
 *
 *       Global functions

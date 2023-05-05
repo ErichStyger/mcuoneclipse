@@ -394,6 +394,8 @@ uint8_t McuPCF85063A_SetDateInfo(uint16_t Year, uint8_t Month, uint8_t Day) {
     tdate.year = (uint8_t)(Year-2000);
   } else if (Year>=1900) {
     tdate.year = (uint8_t)(Year-1900);
+  } else {
+    tdate.year = Year%100;
   }
   tdate.month = Month;
   tdate.day = Day;

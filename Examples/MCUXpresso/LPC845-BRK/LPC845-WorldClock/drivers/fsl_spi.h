@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 NXP
+ * Copyright 2017-2020,2022 NXP
  * All rights reserved.
  *
  *
@@ -25,7 +25,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief SPI driver version. */
-#define FSL_SPI_DRIVER_VERSION (MAKE_VERSION(2, 0, 4))
+#define FSL_SPI_DRIVER_VERSION (MAKE_VERSION(2, 0, 5))
 /*@}*/
 
 #ifndef SPI_DUMMYDATA
@@ -49,8 +49,9 @@ extern volatile uint16_t s_dummyData[];
 /*! @brief SPI transfer option.*/
 enum _spi_xfer_option
 {
-    kSPI_EndOfFrame    = (SPI_TXDATCTL_EOF_MASK),      /*!< Data is treated as the end of a frame. */
-    kSPI_EndOfTransfer = (SPI_TXDATCTL_EOT_MASK),      /*!< Data is treated as the end of a transfer. */
+    kSPI_EndOfFrame = (SPI_TXDATCTL_EOF_MASK), /*!< Add delay at the end of each frame(the last clk edge). */
+    kSPI_EndOfTransfer =
+        (SPI_TXDATCTL_EOT_MASK), /*!< Re-assert the CS signal after transfer finishes to deselect slave. */
     kSPI_ReceiveIgnore = (SPI_TXDATCTL_RXIGNORE_MASK), /*!< Ignore the receive data. */
 };
 
@@ -488,7 +489,8 @@ static inline void SPI_WriteData(SPI_Type *base, uint16_t data)
  */
 static inline void SPI_WriteConfigFlags(SPI_Type *base, uint32_t configFlags)
 {
-    base->TXCTL |= (configFlags & (SPI_TXCTL_EOT_MASK | SPI_TXCTL_EOF_MASK | SPI_TXCTL_RXIGNORE_MASK));
+    base->TXCTL = (base->TXCTL & ~(SPI_TXCTL_EOT_MASK | SPI_TXCTL_EOF_MASK | SPI_TXCTL_RXIGNORE_MASK)) |
+                  (configFlags & (SPI_TXCTL_EOT_MASK | SPI_TXCTL_EOF_MASK | SPI_TXCTL_RXIGNORE_MASK));
 }
 
 /*!

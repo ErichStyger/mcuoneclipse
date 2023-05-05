@@ -10,6 +10,9 @@
 #include "Platform.h"
 
 #if PL_HAS_ACCEL
+#include <stdint.h>
+#include <stdbool.h>
+
 /*!
  * \brief Returns the current accelerometer sensor values
  * \param[out] x X value

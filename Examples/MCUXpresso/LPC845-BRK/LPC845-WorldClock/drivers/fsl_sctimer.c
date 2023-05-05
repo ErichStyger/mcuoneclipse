@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2022 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -296,24 +296,14 @@ status_t SCTIMER_SetupPwm(SCT_Type *base,
             period = sctClock / (pwmFreq_Hz * 2U);
         }
 
-        /* Calculate pulse width and period match value:
-         * For EdgeAlignedPwm, "pulsePeriod = 0" results in 0% dutycyle, "pulsePeriod = period - 1U" results in 100%
-         * dutycyle. For CenterAlignedPwm, , "pulsePeriod = 0" results in 0% dutycyle, "pulsePeriod = period + 2U"
-         * results in 100% dutycyle.
-         */
-
-        pulsePeriod = (uint32_t)(((uint64_t)period * pwmParams->dutyCyclePercent) / 100U);
-
+        /* For 100% dutycyle, make pulse period greater than period so the event will never occur */
         if (pwmParams->dutyCyclePercent >= 100U)
         {
-            if (mode == kSCTIMER_EdgeAlignedPwm)
-            {
-                pulsePeriod = period + 2U;
-            }
-            else
-            {
-                pulsePeriod = period - 1U;
-            }
+            pulsePeriod = period + 2U;
+        }
+        else
+        {
+            pulsePeriod = (uint32_t)(((uint64_t)period * pwmParams->dutyCyclePercent) / 100U);
         }
 
         /* Schedule an event when we reach the PWM period */
@@ -335,11 +325,10 @@ status_t SCTIMER_SetupPwm(SCT_Type *base,
             /* For high-true level */
             if ((uint32_t)pwmParams->level == (uint32_t)kSCTIMER_HighTrue)
             {
-                /* Set the initial output level to low which is the inactive state */
-                base->OUTPUT &= ~(1UL << (uint32_t)pwmParams->output);
-
                 if (mode == kSCTIMER_EdgeAlignedPwm)
                 {
+                    /* Set the initial output level to low which is the inactive state */
+                    base->OUTPUT &= ~(1UL << (uint32_t)pwmParams->output);
                     /* Set the output when we reach the PWM period */
                     SCTIMER_SetupOutputSetAction(base, (uint32_t)pwmParams->output, periodEvent);
                     /* Clear the output when we reach the PWM pulse value */
@@ -347,6 +336,8 @@ status_t SCTIMER_SetupPwm(SCT_Type *base,
                 }
                 else
                 {
+                    /* Set the initial output level to high which is the active state */
+                    base->OUTPUT |= (1UL << (uint32_t)pwmParams->output);
                     /* Clear the output when we reach the PWM pulse event */
                     SCTIMER_SetupOutputClearAction(base, (uint32_t)pwmParams->output, pulseEvent);
                     /* Reverse output when down counting */
@@ -359,11 +350,10 @@ status_t SCTIMER_SetupPwm(SCT_Type *base,
             /* For low-true level */
             else
             {
-                /* Set the initial output level to high which is the inactive state */
-                base->OUTPUT |= (1UL << (uint32_t)pwmParams->output);
-
                 if (mode == kSCTIMER_EdgeAlignedPwm)
                 {
+                    /* Set the initial output level to high which is the inactive state */
+                    base->OUTPUT |= (1UL << (uint32_t)pwmParams->output);
                     /* Clear the output when we reach the PWM period */
                     SCTIMER_SetupOutputClearAction(base, (uint32_t)pwmParams->output, periodEvent);
                     /* Set the output when we reach the PWM pulse value */
@@ -371,6 +361,8 @@ status_t SCTIMER_SetupPwm(SCT_Type *base,
                 }
                 else
                 {
+                    /* Set the initial output level to low which is the active state */
+                    base->OUTPUT &= ~(1UL << (uint32_t)pwmParams->output);
                     /* Set the output when we reach the PWM pulse event */
                     SCTIMER_SetupOutputSetAction(base, (uint32_t)pwmParams->output, pulseEvent);
                     /* Reverse output when down counting */
@@ -410,6 +402,7 @@ void SCTIMER_UpdatePwmDutycycle(SCT_Type *base, sctimer_out_t output, uint8_t du
 
     uint32_t periodMatchReg, pulseMatchReg;
     uint32_t pulsePeriod = 0, period;
+    bool isHighTrue      = (0U != (base->OUT[output].CLR & (1UL << (event + 1U))));
 
     /* Retrieve the match register number for the PWM period */
     periodMatchReg = base->EV[event].CTRL & SCT_EV_CTRL_MATCHSEL_MASK;
@@ -419,31 +412,32 @@ void SCTIMER_UpdatePwmDutycycle(SCT_Type *base, sctimer_out_t output, uint8_t du
 
     period = base->MATCH[periodMatchReg];
 
-    /* Calculate pulse width and period match value:
-     * For EdgeAlignedPwm, "pulsePeriod = 0" results in 0% dutycyle, "pulsePeriod = period - 1U" results in 100%
-     * dutycyle. For CenterAlignedPwm, , "pulsePeriod = 0" results in 0% dutycyle, "pulsePeriod = period + 2U"
-     * results in 100% dutycyle.
-     */
-    pulsePeriod = (uint32_t)(((uint64_t)period * dutyCyclePercent) / 100U);
-
-    if (dutyCyclePercent == 100U)
-    {
-        if (0U == (base->CTRL & SCT_CTRL_BIDIR_L_MASK))
-        {
-            pulsePeriod = period + 2U;
-        }
-        else
-        {
-            pulsePeriod = period - 1U;
-        }
-    }
-
     /* Stop the counter before updating match register */
     SCTIMER_StopTimer(base, (uint32_t)kSCTIMER_Counter_U);
 
+    /* For 100% dutycyle, make pulse period greater than period so the event will never occur */
+    if (dutyCyclePercent >= 100U)
+    {
+        pulsePeriod = period + 2U;
+
+        /* Set the initial output level base on output mode */
+        if (isHighTrue)
+        {
+            base->OUTPUT |= (1UL << (uint32_t)output);
+        }
+        else
+        {
+            base->OUTPUT &= ~(1UL << (uint32_t)output);
+        }
+    }
+    else
+    {
+        pulsePeriod = (uint32_t)(((uint64_t)period * dutyCyclePercent) / 100U);
+    }
+
     /* Update dutycycle */
-    base->MATCH[pulseMatchReg]    = SCT_MATCH_MATCHn_L(pulsePeriod);
-    base->MATCHREL[pulseMatchReg] = SCT_MATCHREL_RELOADn_L(pulsePeriod);
+    base->MATCH[pulseMatchReg]    = pulsePeriod;
+    base->MATCHREL[pulseMatchReg] = pulsePeriod;
 
     /* Restart the counter */
     SCTIMER_StartTimer(base, (uint32_t)kSCTIMER_Counter_U);
@@ -482,6 +476,7 @@ status_t SCTIMER_CreateAndScheduleEvent(SCT_Type *base,
     uint32_t combMode       = (((uint32_t)howToMonitor & SCT_EV_CTRL_COMBMODE_MASK) >> SCT_EV_CTRL_COMBMODE_SHIFT);
     uint32_t currentCtrlVal = (uint32_t)howToMonitor;
     status_t status         = kStatus_Success;
+    uint32_t temp           = 0;
 
     if (s_currentEvent < (uint32_t)FSL_FEATURE_SCT_NUMBER_OF_EVENTS)
     {
@@ -524,8 +519,10 @@ status_t SCTIMER_CreateAndScheduleEvent(SCT_Type *base,
 
                     /* Use Counter_H bits if user wants to setup the High counter */
                     currentCtrlVal |= SCT_EV_CTRL_HEVENT(1U);
-                    base->MATCH_ACCESS16BIT[s_currentMatchhigh].MATCHH       = (uint16_t)matchValue;
-                    base->MATCHREL_ACCESS16BIT[s_currentMatchhigh].MATCHRELH = (uint16_t)matchValue;
+                    temp                               = base->MATCH_ACCESS16BIT[s_currentMatchhigh].MATCHL;
+                    base->MATCH[s_currentMatchhigh]    = temp | (matchValue << 16U);
+                    temp                               = base->MATCHREL_ACCESS16BIT[s_currentMatchhigh].MATCHRELL;
+                    base->MATCHREL[s_currentMatchhigh] = temp | (matchValue << 16U);
 
                     base->EV[s_currentEvent].CTRL = currentCtrlVal;
                     /* Increment the match register number */
@@ -690,6 +687,7 @@ status_t SCTIMER_SetupCaptureAction(SCT_Type *base,
                                     uint32_t event)
 {
     status_t status;
+    uint32_t temp = 0;
 
     if ((kSCTIMER_Counter_L == whichCounter) || (kSCTIMER_Counter_U == whichCounter))
     {
@@ -720,10 +718,11 @@ status_t SCTIMER_SetupCaptureAction(SCT_Type *base,
         if (s_currentMatchhigh < (uint32_t)FSL_FEATURE_SCT_NUMBER_OF_MATCH_CAPTURE)
         {
             /* Set bit to enable event */
-            base->CAPCTRL_ACCESS16BIT[s_currentMatchhigh].CAPCTRLH |= SCT_CAPCTRLL_CAPCTRLL(1UL << event);
-
+            temp                              = base->CAPCTRL_ACCESS16BIT[s_currentMatchhigh].CAPCTRLL;
+            base->CAPCTRL[s_currentMatchhigh] = temp | ((uint32_t)((uint32_t)(1UL << event) << 16U) & 0xFFFF000U);
             /* Set this resource to be a capture rather than match */
-            base->REGMODE_ACCESS16BIT.REGMODEH |= SCT_REGMODEL_REGMODEL(1UL << s_currentMatchhigh);
+            temp          = base->REGMODE_ACCESS16BIT.REGMODEL;
+            base->REGMODE = temp | ((uint32_t)((uint32_t)(1UL << s_currentMatchhigh) << 16U) & 0xFFFF000U);
 
             /* Return the match register number */
             *captureRegister = s_currentMatchhigh;

@@ -10,6 +10,7 @@ set(CMAKE_SYSTEM_PROCESSOR ARM)
 # point ARM_TOOLCHAIN_BIN_DIR to things like
 # "C:/Program Files (x86)/GNU Arm Embedded Toolchain/10 2020-q4-major/bin")
 # "C:/NXP/MCUXpressoIDE_11.7.0_9198/ide/tools/bin")
+# on the system level, or have it defined here.
 set(ARM_TOOLCHAIN_DIR ${ARM_TOOLCHAIN_BIN_DIR})
 set(BINUTILS_PATH ${ARM_TOOLCHAIN_DIR}) 
 

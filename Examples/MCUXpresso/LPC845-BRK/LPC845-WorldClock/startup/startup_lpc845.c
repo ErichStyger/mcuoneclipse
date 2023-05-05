@@ -1,10 +1,11 @@
 //*****************************************************************************
 // LPC845 startup code for use with MCUXpresso IDE
 //
-// Version : 020818
+// Version : 160420
 //*****************************************************************************
 //
-// Copyright 2016-2018 NXP
+// Copyright 2016-2020 NXP
+// All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
 //*****************************************************************************
@@ -45,6 +46,7 @@ extern "C" {
 //*****************************************************************************
 #include <NXP/crp.h>
 __CRP const unsigned int CRP_WORD = CRP_NO_CRP ;
+
 //*****************************************************************************
 // Declaration of external SystemInit function
 //*****************************************************************************
@@ -52,19 +54,14 @@ __CRP const unsigned int CRP_WORD = CRP_NO_CRP ;
 extern void SystemInit(void);
 #endif // (__USE_CMSIS)
 
-// Patch the AEABI integer divide functions to use MCU's romdivide library
-#if defined(__USE_ROMDIVIDE)
-// Location in memory that holds the address of the ROM Driver table
-#define PTR_ROM_DRIVER_TABLE ((unsigned int *)(0x0F001FF8))
-// Variables to store addresses of idiv and udiv functions within MCU ROM
-unsigned int *pDivRom_idiv;
-unsigned int *pDivRom_uidiv;
-#endif
-
 //*****************************************************************************
 // Forward declaration of the core exception handlers.
 // When the application defines a handler (with the same name), this will
-// automatically take precedence over these weak definitions
+// automatically take precedence over these weak definitions.
+// If your application is a C++ one, then any interrupt handlers defined
+// in C++ files within in your main application will need to have C linkage
+// rather than C++ linkage. To do this, make sure that you are using extern "C"
+// { .... } around the interrupt handler within your main application code.
 //*****************************************************************************
      void ResetISR(void);
 WEAK void NMI_Handler(void);
@@ -171,6 +168,7 @@ extern void _vStackTop(void);
 WEAK extern void __valid_user_code_checksum();
 
 //*****************************************************************************
+//*****************************************************************************
 #if defined (__cplusplus)
 } // extern "C"
 #endif
@@ -178,6 +176,9 @@ WEAK extern void __valid_user_code_checksum();
 // The vector table.
 // This relies on the linker script to place at correct location in memory.
 //*****************************************************************************
+
+
+
 extern void (* const g_pfnVectors[])(void);
 extern void * __Vectors __attribute__ ((alias ("g_pfnVectors")));
 
@@ -234,6 +235,8 @@ void (* const g_pfnVectors[])(void) = {
     PIN_INT5_DAC1_IRQHandler,    // 45: Pin interrupt 5 or pattern match engine slice 5 interrupt or DAC1 interrupt
     PIN_INT6_USART3_IRQHandler,  // 46: Pin interrupt 6 or pattern match engine slice 6 interrupt or UART3 interrupt
     PIN_INT7_USART4_IRQHandler,  // 47: Pin interrupt 7 or pattern match engine slice 7 interrupt or UART4 interrupt
+
+
 }; /* End of g_pfnVectors */
 
 //*****************************************************************************
@@ -276,13 +279,17 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
-__attribute__ ((section(".after_vectors.reset")))
+__attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
 
     // Disable interrupts
     __asm volatile ("cpsid i");
 
-    
+
+    // Enable SRAM clock used by Stack
+    __asm volatile ("LDR R0, =0x40000220\n\t"
+                    "MOV R1, #56\n\t"
+                    "STR R1, [R0]");
 
 #if defined (__USE_CMSIS)
 // If __USE_CMSIS defined, then call CMSIS SystemInit code
@@ -315,15 +322,6 @@ void ResetISR(void) {
         bss_init(ExeAddr, SectionLen);
     }
 
-    // Patch the AEABI integer divide functions to use MCU's romdivide library
-#if defined(__USE_ROMDIVIDE)
-    // Get address of Integer division routines function table in ROM
-    unsigned int *div_ptr = (unsigned int *)((unsigned int *)*(PTR_ROM_DRIVER_TABLE))[4];
-    // Get addresses of integer divide routines in ROM
-    // These address are then used by the code in aeabi_romdiv_patch.s
-    pDivRom_idiv = (unsigned int *)div_ptr[0];
-    pDivRom_uidiv = (unsigned int *)div_ptr[1];
-#endif    
 
 #if !defined (__USE_CMSIS)
 // Assume that if __USE_CMSIS defined, then CMSIS SystemInit code
@@ -338,7 +336,6 @@ void ResetISR(void) {
         *pSCB_VTOR = (unsigned int)g_pfnVectors;
     }
 #endif // (__USE_CMSIS)
-
 #if defined (__cplusplus)
     //
     // Call C++ library initialisation
