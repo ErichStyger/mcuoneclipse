@@ -140,9 +140,6 @@ static void Lights_Task(void *pv) {
   currLights.color = LIGHTS_DEFAULT_COLOR;
   currLights.brightness = LIGHTS_DEFAULT_BRIGHTNESS;
 #endif
-
-  Lights_Suspend();
-
   /* indicate power-on with a short blink */
   Lights_SetLed(0x1100); /* green */
 #if PL_CONFIG_USE_WATCHDOG
