@@ -69,6 +69,9 @@
   #error "only one application shall be active"
 #endif
 
+/*!
+ * \brief Module initialization
+ */
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */

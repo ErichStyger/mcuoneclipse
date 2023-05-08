@@ -30,21 +30,25 @@
 #if PL_CONFIG_USE_WATCHDOG
   #include "McuWatchdog.h"
 #endif
+#if PL_CONFIG_USE_BLE
+  #include "ble_client.h"
+  #include "ble_server.h"
+#endif
 
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
 
 typedef enum WiFi_PasswordMethod_e {
   WIFI_PASSWORD_METHOD_PSK,
-  WIFI_PASSWORD_METHOD_WPA2,
+  WIFI_PASSWORD_METHOD_WPA2,  /* not supported yet */
 } WiFi_PasswordMethod_e;
 
 #define CONFIG_USE_EEE   (0) /* EDUROAM does not yet work with the Pico W! */
 
 #if CONFIG_USE_EEE
-static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_WPA2;
+  static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_WPA2;
 #else
-static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
+  static const WiFi_PasswordMethod_e networkMode = WIFI_PASSWORD_METHOD_PSK;
 #endif
 
 /* default values for network */
@@ -106,10 +110,19 @@ static void WiFiTask(void *pv) {
 #endif
 
   McuLog_info("started WiFi task");
+  /* initialize CYW43 architecture
+      - will enable BT if CYW43_ENABLE_BLUETOOTH == 1
+      - will enable lwIP if CYW43_LWIP == 1
+   */
   if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
     McuLog_error("failed setting country code");
     for(;;) {}
   }
+#if PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_SERVER
+  BleServer_SetupBLE();
+#elif PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_CLIENT
+  BleClient_SetupBLE();
+#endif
   wifi.isInitialized = true;
 #if PL_CONFIG_USE_WIFI
   McuLog_info("enabling STA mode");

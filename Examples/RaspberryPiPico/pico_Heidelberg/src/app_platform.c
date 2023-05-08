@@ -82,6 +82,9 @@
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server.h"
 #endif
+#if PL_CONFIG_USE_TCP_SERVER
+  #include "tcp_server.h"
+#endif
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
@@ -238,6 +241,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
   UdpServer_Init();
+#endif
+#if PL_CONFIG_USE_TCP_SERVER
+  TcpServer_Init();
 #endif
 #if PL_CONFIG_USE_MQTT_CLIENT
   MqttClient_Init();

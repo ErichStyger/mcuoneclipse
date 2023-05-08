@@ -1,15 +1,6 @@
 # file: Collect all files that need to be compiled. 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  Shell.c
-  FreeRTOShooks.c
-  ble_client.c
-  ble_server.c
-  PicoWiFi.c
-  ntp_client.c
-  dns_resolver.c
+  *.c
 )
 
 # add_library: With this declaration, you express the intent to build a library. 

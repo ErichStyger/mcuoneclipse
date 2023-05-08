@@ -5,9 +5,11 @@
  */
 
 #include "app_platform.h"
-#if PL_CONFIG_USE_WIFI
+#if PL_CONFIG_USE_PICO_W
 #include "pico/cyw43_arch.h"
-#include "lwip/ip4_addr.h"
+#if PL_CONFIG_USE_WIFI
+  #include "lwip/ip4_addr.h"
+#endif
 #include "PicoWiFi.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
@@ -21,9 +23,18 @@
 #if PL_CONFIG_USE_MQTT_CLIENT
   #include "mqtt_client.h"
 #endif
+#if PL_CONFIG_USE_TCP_SERVER
+  #include "tcp_server.h"
+#endif
+#if PL_CONFIG_USE_UDP_SERVER
+  #include "udp_server.h"
+#endif
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
+#endif
+#if PL_CONFIG_USE_WATCHDOG
+  #include "McuWatchdog.h"
 #endif
 #if PL_CONFIG_USE_BLE
   #include "ble_client.h"
@@ -33,7 +44,7 @@
 #define EAP_PEAP 1  /* WPA2 Enterprise with password and no certificate */
 #define EAP_TTLS 2  /* TLS method */
 
-typedef enum {
+typedef enum WiFi_PasswordMethod_e {
   WIFI_PASSWORD_METHOD_PSK,
   WIFI_PASSWORD_METHOD_WPA2,  /* not supported yet */
 } WiFi_PasswordMethod_e;
@@ -90,6 +101,10 @@ bool PicoWiFi_ArchIsInit(void) {
   return wifi.isInitialized;
 }
 
+void PicoWiFi_SetArchIsInitialized(bool isInitialized) {
+  wifi.isInitialized = isInitialized;
+}
+
 static void WiFiTask(void *pv) {
   int res;
   bool ledIsOn = false;
@@ -130,14 +145,26 @@ static void WiFiTask(void *pv) {
   McuLog_info("setting hostname: %s", wifi.hostname);
   netif_set_hostname(&cyw43_state.netif[0], wifi.hostname);
 
-  vTaskDelay(pdMS_TO_TICKS(1000)); /* give network tasks time to start up */
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 10, 100);
+#else
+  vTaskDelay(pdMS_TO_TICKS(10*100)); /* give network tasks time to start up */
+#endif
 
   McuLog_info("connecting to SSID '%s'...", wifi.ssid);
-  res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 20000);
+#if PL_CONFIG_USE_WATCHDOG
+  TickType_t tickCount = McuWatchdog_ReportTimeStart();
+  McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
+#endif
+  res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 5000); /* can take 1000-3500 ms */
+#if PL_CONFIG_USE_WATCHDOG
+  McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
+  McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);
+#endif
   if (res!=0) {
     for(;;) {
       McuLog_error("connection failed after timeout! code %d", res);
-      vTaskDelay(pdMS_TO_TICKS(30000));
+      vTaskDelay(pdMS_TO_TICKS(30000)); /* limit message output */
     }
   } else {
     McuLog_info("success!");
@@ -148,14 +175,28 @@ static void WiFiTask(void *pv) {
   #if PL_CONFIG_USE_MQTT_CLIENT
     MqttClient_Connect();
   #endif
+  #if PL_CONFIG_USE_TCP_SERVER
+    TcpServer_TaskResume();
+  #endif
+  #if PL_CONFIG_USE_UDP_SERVER
+    UdpServer_TaskResume();
+  #endif
   }
   for(;;) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
     if (wifi.isConnected) {
-      vTaskDelay(pdMS_TO_TICKS(1000));
+    #if PL_CONFIG_USE_WATCHDOG
+      McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 10, 100);
+    #else
+      vTaskDelay(pdMS_TO_TICKS(10*100));
+    #endif
     } else {
+    #if PL_CONFIG_USE_WATCHDOG
+      McuWatchdog_DelayAndReport(McuWatchdog_REPORT_ID_TASK_WIFI, 1, 50);
+    #else
       vTaskDelay(pdMS_TO_TICKS(50));
+    #endif
     }
   }
 #else /* not using WiFi */
