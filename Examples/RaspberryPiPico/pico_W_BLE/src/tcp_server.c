@@ -237,11 +237,15 @@ static void TcpServerTask(void *pv) {
 }
 
 void TcpServer_TaskSuspend(void) {
-  vTaskSuspend(serverTaskHandle);
+  if (serverTaskHandle!=NULL) {
+    vTaskSuspend(serverTaskHandle);
+  }
 }
 
 void TcpServer_TaskResume(void) {
-  vTaskResume(serverTaskHandle);
+  if (serverTaskHandle!=NULL) {
+    vTaskResume(serverTaskHandle);
+  }
 }
 
 void TcpServer_Init(void) {
