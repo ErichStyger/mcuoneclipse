@@ -52,6 +52,9 @@
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server.h"
 #endif
+#if PL_CONFIG_USE_UDP_CLIENT
+  #include "udp_client.h"
+#endif
 #if PL_CONFIG_USE_TCP_SERVER
   #include "tcp_server.h"
 #endif
@@ -152,6 +155,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
   UDP_Server_Init();
+#endif
+#if PL_CONFIG_USE_UDP_CLIENT
+  UDP_Client_Init();
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
   TcpServer_Init();

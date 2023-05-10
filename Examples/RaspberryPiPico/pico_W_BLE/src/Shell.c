@@ -30,6 +30,9 @@
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server_shell.h"
 #endif
+#if PL_CONFIG_USE_UDP_CLIENT
+  #include "udp_client.h"
+#endif
 
 typedef struct {
   McuShell_ConstStdIOType *stdio;
@@ -105,6 +108,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
   UDP_Server_ParseCommand,
+#endif
+#if PL_CONFIG_USE_UDP_CLIENT
+  UDP_Client_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

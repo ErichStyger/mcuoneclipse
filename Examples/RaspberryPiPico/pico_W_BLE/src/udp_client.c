@@ -8,17 +8,9 @@
 */
 #include "platform.h"
 #if PL_CONFIG_USE_UDP_CLIENT
+
 #include <string.h>
 #include <sys/param.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-#include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
-#include "esp_log.h"
-#include "nvs_flash.h"
-#include "esp_netif.h"
 #include "lwip/err.h"
 #include "lwip/sockets.h"
 #include "lwip/sys.h"
@@ -29,6 +21,18 @@
 #include "McuShell.h"
 #include "McuUtility.h"
 #include "McuLog.h"
+#include "McuRTOS.h"
+
+#include "McuLib.h"
+
+#if McuLib_CONFIG_CPU_IS_ESP32 /* \todo cleanup */
+  #include "esp_system.h"
+  #include "esp_wifi.h"
+  #include "esp_event.h"
+  #include "esp_log.h"
+  #include "nvs_flash.h"
+  #include "esp_netif.h"
+#endif
 
 #define CONFIG_EXAMPLE_IPV4
 
@@ -42,7 +46,6 @@
 static uint16_t udp_client_destination_port = PORT;
 static unsigned char udp_client_destination_host[48] = HOST_IP_ADDR;
 
-static const char *TAG = "udp_client";
 static TaskHandle_t taskHandle = NULL; /* udp client task handle */
 
 #if 0
@@ -186,11 +189,11 @@ static uint8_t udp_client_send(const unsigned char *host, uint16_t port, const u
 
   for(;;) { /* breaks in in case of error */
     if (sock < 0) {
-      ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+      McuLog_error("Unable to create socket: errno %d", errno);
       res = ERR_FAILED;
       break;
     }
-    ESP_LOGI(TAG, "Socket created, sending to %s:%d", host, port);
+    McuLog_info("Socket created, sending to %s:%d", host, port);
 
     /* set a timeout for the socket */
     struct timeval to;
@@ -198,38 +201,38 @@ static uint8_t udp_client_send(const unsigned char *host, uint16_t port, const u
     to.tv_sec = 5; /* socket receive timeout */
     to.tv_usec = 0;
     if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &to, sizeof(to)) < 0) {
-      ESP_LOGE(TAG, "setting socket timeout failed");
+      McuLog_error("setting socket timeout failed");
       res = ERR_FAILED;
       break;
     }
 
     int err = sendto(sock, msg, strlen((char*)msg), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
     if (err < 0) {
-      ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
+      McuLog_error("Error occurred during sending: errno %d", errno);
       res = ERR_FAILED;
       break;
     }
-    ESP_LOGI(TAG, "Message sent");
+    McuLog_info("Message sent");
 
-    ESP_LOGI(TAG, "Waiting for response");
+    McuLog_info("Waiting for response");
     struct sockaddr_in source_addr; /* Large enough for both IPv4 or IPv6 */
     socklen_t socklen = sizeof(source_addr);
     int len = recvfrom(sock, rxBuffer, rxBufferSize-1, 0, (struct sockaddr *)&source_addr, &socklen);
 
     /* Error occurred during receiving */
     if (len < 0) {
-      ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
+      McuLog_error("recvfrom failed: errno %d", errno);
       res = ERR_FAILED;
       break;
     } else { /* Data received */
       rxBuffer[len] = '\0'; /* Null-terminate whatever we received and treat like a string */
-      ESP_LOGI(TAG, "Received %d bytes from %s:", len, addr_str);
-      ESP_LOGI(TAG, "%s", rxBuffer);
+      McuLog_info("Received %d bytes from %s:", len, addr_str);
+      McuLog_info("%s", rxBuffer);
     }
     break;
   } /* for */
   if (sock != -1) {
-    ESP_LOGE(TAG, "Shutting down socket");
+    McuLog_error("Shutting down socket");
     shutdown(sock, 0);
     close(sock);
   }
