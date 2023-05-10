@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2019, 2020, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#ifndef UDP_CLIENT_H_
+#define UDP_CLIENT_H_
+
+#include "platform.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if PL_CONFIG_USE_SHELL
+  #include "McuShell.h"
+
+  /*!
+   * \brief Command line and shell handler
+   * \param cmd The command to be parsed
+   * \param handled If command has been recognized and handled
+   * \param io I/O handler to be used
+   * \return error code, otherwise ERR_OK
+   */
+  uint8_t UDP_Client_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
+#endif
+
+void UDP_Client_Start(void);
+void UDP_Client_Stop(void);
+
+/*! \brief Module initialization */
+void UDP_Client_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
+#endif /* UDP_CLIENT_H_ */

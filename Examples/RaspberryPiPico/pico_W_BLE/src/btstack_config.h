@@ -5,7 +5,7 @@
   #error Please link to pico_btstack_ble
 #endif
 
-#include "app_platform.h"
+#include "platform.h"
 
 // BTstack features that can be enabled
 #define ENABLE_LE_PERIPHERAL

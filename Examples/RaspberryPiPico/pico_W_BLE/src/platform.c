@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
+  #include "wifi.h"
 #elif PL_CONFIG_USE_PICO_W
   #include "pico/cyw43_arch.h" /* must be first, otherwise conflict with lwIP ERR_OK */
 #endif
@@ -41,7 +41,7 @@
   #include "minIni/McuMinINI.h"
 #endif
 #if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
+  #include "wifi.h"
 #endif
 #if McuLog_CONFIG_IS_ENABLED
   #include "McuLog.h"
@@ -151,7 +151,7 @@ void PL_Init(void) {
   NtpClient_Init();
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
-  UdpServer_Init();
+  UDP_Server_Init();
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
   TcpServer_Init();

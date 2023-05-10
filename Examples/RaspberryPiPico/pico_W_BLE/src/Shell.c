@@ -6,7 +6,7 @@
  * This module implements the front to the console/shell functionality.
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #include "Shell.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
@@ -25,7 +25,10 @@
   #include "pico/stdlib.h"
 #endif
 #if PL_CONFIG_USE_WIFI
-  #include "PicoWiFi.h"
+  #include "wifi.h"
+#endif
+#if PL_CONFIG_USE_UDP_SERVER
+  #include "udp_server_shell.h"
 #endif
 
 typedef struct {
@@ -99,6 +102,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_ParseCommand,
+#endif
+#if PL_CONFIG_USE_UDP_SERVER
+  UDP_Server_ParseCommand,
 #endif
   NULL /* Sentinel */
 };

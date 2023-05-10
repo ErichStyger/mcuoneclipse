@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_PICO_W
 #include "pico/cyw43_arch.h"
 #if PL_CONFIG_USE_WIFI
   #include "lwip/ip4_addr.h"
 #endif
-#include "PicoWiFi.h"
+#include "wifi.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
@@ -179,7 +179,7 @@ static void WiFiTask(void *pv) {
     TcpServer_TaskResume();
   #endif
   #if PL_CONFIG_USE_UDP_SERVER
-    UdpServer_TaskResume();
+    UDP_Server_Start();
   #endif
   }
   for(;;) {

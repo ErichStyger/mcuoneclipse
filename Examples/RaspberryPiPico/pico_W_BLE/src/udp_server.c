@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_UDP_SERVER
+#include "udp_server.h"
 
 #include <string.h>
-#include <stdlib.h>
 
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
@@ -21,20 +21,59 @@
 #include "lwip/netdb.h"
 #include "lwip/inet.h"
 
+#include "McuLib.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
 #include "McuUtility.h"
 
 #define CONFIG_EXAMPLE_IPV4
-#define UDP_SERVER_PORT    (1234) /*!< default UDP server port */
 
-static TaskHandle_t serverTaskHandle = NULL;
+static TaskHandle_t taskHandle = NULL; /* udp server task handle */
 
 static int SendToSocket(int sock, const char *msg, const struct sockaddr *to, socklen_t tolen) {
   return sendto(sock, msg, McuUtility_strlen((char*)msg), 0, to, tolen);
 }
 
-static void UdpServerTask(void *pv) {
+#if 1 && McuLib_CONFIG_CPU_IS_ESP32
+static void HandleIncomingUdpMessage(const char *rxMsg, int sock, struct sockaddr *source_addr_p, socklen_t source_addr_len) {
+#if 0
+  unsigned char response[128];
+#else
+  static unsigned char response[10*1024] = ""; // larger buffer for response
+  unsigned char msg[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* buffer for message */
+  #define MSG_ESP_PREFIX_STR   "@esp:"
+#endif
+  int err;
+
+  McuLog_info("handling incoming udp message '%s'", rxMsg);
+  McuUtility_strcpy(response, sizeof(response), (unsigned char*)"OK"); /* default response */
+  /* check framing */
+  if (McuUtility_strncmp(rxMsg, MSG_ESP_PREFIX_STR, sizeof(MSG_ESP_PREFIX_STR)-1)==0) { /* check prefix */
+    size_t strLen = McuUtility_strlen(rxMsg);
+    if (rxMsg[strLen-1]=='!') {
+      /* send to ESP32 shell */
+#if 0
+      SHELL_SendToESPAndGetResponse((unsigned char*)"led status", response, sizeof(response));
+#else
+      /* copy first command */
+      McuUtility_strcpy(msg, sizeof(msg), (unsigned char*)(rxMsg+strlen(MSG_ESP_PREFIX_STR)));
+      msg[McuUtility_strlen((char*)msg)-1] = '\0'; /* replace '!' at the end */
+      SHELL_SendToESPAndGetResponse(msg, response, sizeof(response));
+#endif
+    } else {
+      McuUtility_strcpy(response, sizeof(response), (unsigned char*)"'!' missing!");
+    }
+  }
+  /* send back response */
+  McuLog_info("Sending back response");
+  err = SendToSocket(sock, (const char*)response, source_addr_p, source_addr_len);
+  if (err < 0) {
+    McuLog_error("Error occurred during sending: errno %d", errno);
+  }
+}
+#endif
+
+static void udp_server_task(void *pvParameters) {
 #if 0
   char rx_buffer[128];
 #else
@@ -138,26 +177,26 @@ static void UdpServerTask(void *pv) {
   vTaskDelete(NULL);
 }
 
-void UdpServer_TaskSuspend(void) {
-  if (serverTaskHandle!=NULL) {
-    vTaskSuspend(serverTaskHandle);
+void UDP_Server_Start(void) {
+  if (taskHandle!=NULL) {
+    vTaskResume(taskHandle);
   }
 }
 
-void UdpServer_TaskResume(void) {
-  if (serverTaskHandle!=NULL) {
-    vTaskResume(serverTaskHandle);
+void UDP_Server_Stop(void) {
+  if (taskHandle!=NULL) {
+    vTaskSuspend(taskHandle);
   }
 }
 
-void UdpServer_Init(void) {
+void UDP_Server_Init(void) {
   if (xTaskCreate(
-      UdpServerTask,  /* pointer to the task */
+      udp_server_task,  /* pointer to the task */
       "UdpServer", /* task name for kernel awareness debugging */
-      4096/sizeof(StackType_t), /* task stack size */
+      (8*1024)/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+3,  /* initial priority */
-      &serverTaskHandle /* optional task handle to create */
+      &taskHandle /* optional task handle to create */
     ) != pdPASS)
   {
     McuLog_fatal("failed creating task");
@@ -165,4 +204,3 @@ void UdpServer_Init(void) {
   }
 }
 #endif /* PL_CONFIG_USE_UDP_SERVER */
-

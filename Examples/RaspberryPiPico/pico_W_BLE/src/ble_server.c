@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_STANDALONE_BLE_SERVER
 #include "ble_server.h"
 #include "pico/cyw43_arch.h"

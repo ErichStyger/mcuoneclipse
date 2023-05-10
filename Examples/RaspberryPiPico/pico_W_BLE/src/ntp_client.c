@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_NTP_CLIENT
 #include "ntp_client.h"
 #include "pico/stdlib.h"
