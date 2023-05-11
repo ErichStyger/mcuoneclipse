@@ -1,11 +1,9 @@
-/* BSD Socket API Example
+/*
+ * Copyright (c) 2023, Erich Styger
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include "platform.h"
 #if PL_CONFIG_USE_UDP_CLIENT
 
@@ -45,8 +43,6 @@
 
 static uint16_t udp_client_destination_port = PORT;
 static unsigned char udp_client_destination_host[48] = HOST_IP_ADDR;
-
-static TaskHandle_t taskHandle = NULL; /* udp client task handle */
 
 #if 0
 static const char *payload = "Message from ESP32 ";
@@ -239,31 +235,6 @@ static uint8_t udp_client_send(const unsigned char *host, uint16_t port, const u
   return res;
 }
 
-void UDP_Client_Start(void) {
-  if (taskHandle!=NULL) {
-    vTaskResume(taskHandle);
-  }
-}
-
-void UDP_Client_Stop(void) {
-  if (taskHandle!=NULL) {
-    vTaskSuspend(taskHandle);
-  }
-}
-
-void UDP_Client_Init(void) {
-#if 0
-  BaseType_t res;
-
-  res = xTaskCreate(udp_client_task, "udp_client", 16*1024/sizeof(StackType_t), NULL, 5, &taskHandle);
-  if (res==pdPASS) {
-    ESP_LOGI(TAG, "created UDP client task");
-  } else {
-    ESP_LOGE(TAG, "failed creating UDP client task!");
-  }
-#endif
-}
-
 #if PL_CONFIG_USE_SHELL
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[64];
@@ -288,7 +259,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   return ERR_OK;
 }
 
-uint8_t UDP_Client_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+uint8_t UdpClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
   const unsigned char *p;
   unsigned char rxBuf[128];
 
@@ -340,5 +311,9 @@ uint8_t UDP_Client_ParseCommand(const unsigned char* cmd, bool *handled, const M
 }
 
 #endif /* PL_CONFIG_USE_SHELL */
+
+void UdpClient_Init(void) {
+  /* nothing needed */
+}
 
 #endif /* PL_CONFIG_USE_UDP_CLIENT */

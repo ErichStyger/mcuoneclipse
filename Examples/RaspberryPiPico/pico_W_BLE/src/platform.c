@@ -154,10 +154,10 @@ void PL_Init(void) {
   NtpClient_Init();
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
-  UDP_Server_Init();
+  UdpServer_Init();
 #endif
 #if PL_CONFIG_USE_UDP_CLIENT
-  UDP_Client_Init();
+  UdpClient_Init();
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
   TcpServer_Init();

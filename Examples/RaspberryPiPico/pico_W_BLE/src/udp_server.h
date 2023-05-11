@@ -13,14 +13,14 @@ extern "C" {
 
 #define UDP_SERVER_PORT    (1234) /*!< default UDP server port */
 
-/*! \brief start the UDP server */
-void UDP_Server_Start(void);
+/*! \brief Resume the UDP server */
+void UdpServer_Resume(void);
 
 /*! \brief stop the UDP server */
-void UDP_Server_Stop(void);
+void UdpServer_Suspend(void);
 
 /*! \brief Module initialization */
-void UDP_Server_Init(void);
+void UdpServer_Init(void);
 
 #ifdef __cplusplus
 }  /* extern "C" */

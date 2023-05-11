@@ -15,12 +15,13 @@
 #include "lwip/pbuf.h"
 #include "lwip/tcp.h"
 
+#include "tcp_server.h"
 #include "McuRTOS.h"
+#include "McuUtility.h"
 #include "McuLog.h"
 
 static TaskHandle_t serverTaskHandle = NULL;
 
-#define TCP_PORT            1234
 #define BUF_SIZE            8
 #define TEST_ITERATIONS     10
 #define POLL_TIME_S         5
@@ -181,14 +182,14 @@ static err_t tcp_server_accept(void *arg, struct tcp_pcb *client_pcb, err_t err)
 
 static bool tcp_server_open(void *arg) {
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
-  McuLog_info("Starting server at %s on port %u", ip4addr_ntoa(netif_ip4_addr(netif_list)), TCP_PORT);
+  McuLog_info("Starting server at %s on port %u", ip4addr_ntoa(netif_ip4_addr(netif_list)), TCP_SERVER_PORT);
 
   struct tcp_pcb *pcb = tcp_new_ip_type(IPADDR_TYPE_ANY);
   if (!pcb) {
     McuLog_error("failed to create pcb");
     return false;
   }
-  err_t err = tcp_bind(pcb, NULL, TCP_PORT);
+  err_t err = tcp_bind(pcb, NULL, TCP_SERVER_PORT);
   if (err) {
     McuLog_error("failed to bind to port %d\n");
     return false;
@@ -236,17 +237,46 @@ static void TcpServerTask(void *pv) {
   }
 }
 
-void TcpServer_TaskSuspend(void) {
+void TcpServer_Suspend(void) {
   if (serverTaskHandle!=NULL) {
     vTaskSuspend(serverTaskHandle);
   }
 }
 
-void TcpServer_TaskResume(void) {
+void TcpServer_Resume(void) {
   if (serverTaskHandle!=NULL) {
     vTaskResume(serverTaskHandle);
   }
 }
+
+#if PL_CONFIG_USE_SHELL
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  unsigned char buf[32];
+
+  McuShell_SendStatusStr((unsigned char*)"tcps", (unsigned char*)"TCP server status\r\n", io->stdOut);
+  McuUtility_Num32sToStr(buf, sizeof(buf), TCP_SERVER_PORT);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  port", buf, io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"tcps", (unsigned char*)"Group of TCP server commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows udp server help or status\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t TcpServer_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+  if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, (char*)"tcps help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_STATUS)==0 || McuUtility_strcmp((char*)cmd, (char*)"tcps status")==0) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  }
+  return ERR_OK;
+}
+#endif
 
 void TcpServer_Init(void) {
   if (xTaskCreate(

@@ -26,12 +26,12 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 }
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
-  McuShell_SendHelpStr((unsigned char*)"udps", (unsigned char*)"Group of udp server commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"udps", (unsigned char*)"Group of UDP server commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows udp server help or status\r\n", io->stdOut);
   return ERR_OK;
 }
 
-uint8_t UDP_Server_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
+uint8_t UdpServer_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io) {
   if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, (char*)"udps help")==0) {
     *handled = TRUE;
     return PrintHelp(io);

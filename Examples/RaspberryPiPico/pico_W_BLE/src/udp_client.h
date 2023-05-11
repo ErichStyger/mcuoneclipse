@@ -23,14 +23,11 @@ extern "C" {
    * \param io I/O handler to be used
    * \return error code, otherwise ERR_OK
    */
-  uint8_t UDP_Client_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
+  uint8_t UdpClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
-void UDP_Client_Start(void);
-void UDP_Client_Stop(void);
-
 /*! \brief Module initialization */
-void UDP_Client_Init(void);
+void UdpClient_Init(void);
 
 #ifdef __cplusplus
 }  /* extern "C" */

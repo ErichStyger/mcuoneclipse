@@ -176,19 +176,19 @@ static void udp_server_task(void *pvParameters) {
   vTaskDelete(NULL);
 }
 
-void UDP_Server_Start(void) {
+void UdpServer_Resume(void) {
   if (taskHandle!=NULL) {
     vTaskResume(taskHandle);
   }
 }
 
-void UDP_Server_Stop(void) {
+void UdpServer_Suspend(void) {
   if (taskHandle!=NULL) {
     vTaskSuspend(taskHandle);
   }
 }
 
-void UDP_Server_Init(void) {
+void UdpServer_Init(void) {
   if (xTaskCreate(
       udp_server_task,  /* pointer to the task */
       "UdpServer", /* task name for kernel awareness debugging */

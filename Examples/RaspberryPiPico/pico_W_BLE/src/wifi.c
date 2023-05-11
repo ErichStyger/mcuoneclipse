@@ -176,10 +176,10 @@ static void WiFiTask(void *pv) {
     MqttClient_Connect();
   #endif
   #if PL_CONFIG_USE_TCP_SERVER
-    TcpServer_TaskResume();
+    TcpServer_Resume();
   #endif
   #if PL_CONFIG_USE_UDP_SERVER
-    UDP_Server_Start();
+    UdpServer_Resume();
   #endif
   }
   for(;;) {
