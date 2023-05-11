@@ -27,6 +27,9 @@
 #if PL_CONFIG_USE_WIFI
   #include "wifi.h"
 #endif
+#if PL_CONFIG_USE_TCP_SERVER
+  #include "tcp_server.h"
+#endif
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server_shell.h"
 #endif
@@ -106,11 +109,14 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_ParseCommand,
 #endif
+#if PL_CONFIG_USE_TCP_SERVER
+  TcpServer_ParseCommand,
+#endif
 #if PL_CONFIG_USE_UDP_SERVER
-  UDP_Server_ParseCommand,
+  UdpServer_ParseCommand,
 #endif
 #if PL_CONFIG_USE_UDP_CLIENT
-  UDP_Client_ParseCommand,
+  UdpClient_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
