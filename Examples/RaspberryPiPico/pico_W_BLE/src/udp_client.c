@@ -34,12 +34,12 @@
   #include "esp_netif.h"
 #endif
 
-#define CONFIG_EXAMPLE_IPV4
+#define CONFIG_EXAMPLE_IPV4  (1) /* 0: use IPV6; 1: use IPV4 */
 
-#ifdef CONFIG_EXAMPLE_IPV4
+#if CONFIG_EXAMPLE_IPV4
   #define HOST_IP_ADDR    "10.180.254.51" /*"ADISRobotR44.simple.eee.intern"*/ /* \todo only IP addresses supported so far inside EEE network? */
 #else
-  #define HOST_IP_ADDR    "FE80::30AD:E57B:C212:68AD" /*CONFIG_EXAMPLE_IPV6_ADDR*/
+  #define HOST_IP_ADDR    "FE80::30AD:E57B:C212:68AD"
 #endif
 #define PORT            1234 /* default port number */
 
@@ -59,7 +59,7 @@ static void udp_client_task(void *pvParameters) {
 
   vTaskSuspend(NULL); /* UDP_Client_Start() will wake me up */
   for(;;) {
-#ifdef CONFIG_EXAMPLE_IPV4
+#if CONFIG_EXAMPLE_IPV4
     struct sockaddr_in dest_addr;
     dest_addr.sin_addr.s_addr = inet_addr(HOST_IP_ADDR);
     dest_addr.sin_family = AF_INET;
@@ -167,7 +167,7 @@ static uint8_t udp_client_send(const unsigned char *host, uint16_t port, const u
   }
 #endif
   
-#ifdef CONFIG_EXAMPLE_IPV4
+#if CONFIG_EXAMPLE_IPV4
   struct sockaddr_in dest_addr;
   dest_addr.sin_addr.s_addr = inet_addr((const char*)host);
   dest_addr.sin_family = AF_INET;

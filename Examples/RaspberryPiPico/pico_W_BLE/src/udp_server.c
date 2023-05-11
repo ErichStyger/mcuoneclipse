@@ -15,7 +15,7 @@
 #include "McuLog.h"
 #include "McuUtility.h"
 
-#define CONFIG_EXAMPLE_IPV4
+#define CONFIG_EXAMPLE_IPV4  (1) /* 0: use IPV6; 1: use IPV4 */
 
 static TaskHandle_t taskHandle = NULL; /* udp server task handle */
 
@@ -74,7 +74,7 @@ static void udp_server_task(void *pvParameters) {
 
   vTaskSuspend(NULL); /* UDP_Server_Start() will wake me up */
   for(;;) {
-#ifdef CONFIG_EXAMPLE_IPV4
+#if CONFIG_EXAMPLE_IPV4
     struct sockaddr_in dest_addr;
 
     dest_addr.sin_addr.s_addr = htonl(INADDR_ANY); /** 0.0.0.0 */
@@ -117,7 +117,11 @@ static void udp_server_task(void *pvParameters) {
     McuLog_info("Socket bound, port %d", UDP_SERVER_PORT);
     while (1) {
       McuLog_info("Waiting for data on port %d", UDP_SERVER_PORT);
-      struct sockaddr/*_in6*/ source_addr; /* Large enough for both IPv4 or IPv6 */
+    #if CONFIG_EXAMPLE_IPV4
+      struct sockaddr source_addr; /* Large enough for both IPv4 or IPv6 */
+    #else
+      struct sockaddr_in6 source_addr; /* Large enough for IPv4 */
+    #endif
       socklen_t socklen = sizeof(source_addr);
 
       /* receive data (blocking): */
@@ -129,11 +133,17 @@ static void udp_server_task(void *pvParameters) {
         break;
       } else { /* Data received */
         /* Get the sender's ip address as string */
-        if (source_addr.sa_family/*.sin6_family*/ == PF_INET) {
+      #if CONFIG_EXAMPLE_IPV4
+        if (source_addr.sa_family == PF_INET) {
           inet_ntoa_r(((struct sockaddr_in *)&source_addr)->sin_addr.s_addr, addr_str, sizeof(addr_str) - 1);
-   //     } else if (source_addr.sin6_family == PF_INET6) {
-   //       inet6_ntoa_r(source_addr.sin6_addr, addr_str, sizeof(addr_str) - 1);
         }
+      #else
+        if (source_addr.sin6_family == PF_INET) {
+          inet_ntoa_r(((struct sockaddr_in *)&source_addr)->sin_addr.s_addr, addr_str, sizeof(addr_str) - 1);
+        } else if (source_addr.sin6_family == PF_INET6) {
+          inet6_ntoa_r(source_addr.sin6_addr, addr_str, sizeof(addr_str) - 1);
+        }
+      #endif
         rx_buffer[len] = '\0'; /* Null-terminate whatever we received and treat like a string... */
         McuLog_info("Received %d bytes from %s:\n%s", len, addr_str, rx_buffer);
 
