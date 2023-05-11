@@ -22,8 +22,8 @@
 
 static TaskHandle_t serverTaskHandle = NULL;
 
-#define BUF_SIZE            8
-#define TEST_ITERATIONS     10
+#define BUF_SIZE            32 /* number of bytes for send and receive buffer */
+#define TEST_ITERATIONS     3  /* number of iterations to receive the full buffer */
 #define POLL_TIME_S         5
 
 typedef struct TCP_SERVER_T_ {
@@ -32,12 +32,13 @@ typedef struct TCP_SERVER_T_ {
   bool complete;
   uint8_t buffer_sent[BUF_SIZE];
   uint8_t buffer_recv[BUF_SIZE];
-  int sent_len;
-  int recv_len;
+  int sent_len; /* number of bytes sent */
+  int recv_len; /* number of bytes received */
   int run_count;
 } TCP_SERVER_T;
 
 static TCP_SERVER_T *tcp_server_init(void) {
+  McuLog_trace("tcp_server_init");
   TCP_SERVER_T *state = calloc(1, sizeof(TCP_SERVER_T));
   if (!state) {
     McuLog_error("failed to allocate state");
@@ -47,6 +48,7 @@ static TCP_SERVER_T *tcp_server_init(void) {
 }
 
 static err_t tcp_server_close(void *arg) {
+  McuLog_trace("tcp_server_close");
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
   err_t err = ERR_OK;
   if (state->client_pcb != NULL) {
@@ -72,6 +74,7 @@ static err_t tcp_server_close(void *arg) {
 }
 
 static err_t tcp_server_result(void *arg, int status) {
+  McuLog_trace("tcp_server_result: %d", status);
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
   if (status == 0) {
     McuLog_info("test success");
@@ -87,18 +90,17 @@ static err_t tcp_server_sent(void *arg, struct tcp_pcb *tpcb, u16_t len) {
   McuLog_info("tcp_server_sent %u bytes", len);
   state->sent_len += len;
   if (state->sent_len >= BUF_SIZE) {
-    // We should get the data back from the client
+    /* We should get the data back from the client */
     state->recv_len = 0;
     McuLog_info("Waiting for buffer from client");
   }
   return ERR_OK;
 }
 
-err_t tcp_server_send_data(void *arg, struct tcp_pcb *tpcb) {
+static err_t tcp_server_send_data(void *arg, struct tcp_pcb *tpcb) {
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
-  for(int i=0; i< BUF_SIZE; i++) {
-    state->buffer_sent[i] = '0'+i /*rand()*/;
-  }
+
+  McuUtility_strcpy(state->buffer_sent, sizeof(state->buffer_sent), "Hello from TCP Server!\n");
   state->sent_len = 0;
   McuLog_info("Writing %ld bytes to client", BUF_SIZE);
   // this method is callback from lwIP, so cyw43_arch_lwip_begin is not required, however you
@@ -115,7 +117,7 @@ err_t tcp_server_send_data(void *arg, struct tcp_pcb *tpcb) {
 
 err_t tcp_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
-  if (!p) {
+  if (p==NULL) {
     return tcp_server_result(arg, -1);
   }
   // this method is callback from lwIP, so cyw43_arch_lwip_begin is not required, however you
@@ -123,20 +125,20 @@ err_t tcp_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err
   // cyw43_arch_lwip_begin IS needed
   cyw43_arch_lwip_check();
   if (p->tot_len > 0) {
-    McuLog_info("tcp_server_recv %d/%d err %d", p->tot_len, state->recv_len, err);
-    // Receive the buffer
+    McuLog_info("tcp_server_recv tot_len:%d, recv_len: %d, err %d", p->tot_len, state->recv_len, err);
+    /* Receive the buffer */
     const uint16_t buffer_left = BUF_SIZE - state->recv_len;
     state->recv_len += pbuf_copy_partial(p, state->buffer_recv + state->recv_len,
                                          p->tot_len > buffer_left ? buffer_left : p->tot_len, 0);
     tcp_recved(tpcb, p->tot_len);
   }
   pbuf_free(p);
-  // Have we have received the whole buffer
+  /* Have we have received the whole buffer? */
   if (state->recv_len == BUF_SIZE) {
     // check it matches
     if (memcmp(state->buffer_sent, state->buffer_recv, BUF_SIZE) != 0) {
       McuLog_fatal("buffer mismatch\n");
-        return tcp_server_result(arg, -1);
+      return tcp_server_result(arg, -1);
     }
     McuLog_info("tcp_server_recv buffer ok");
     // Test complete?
@@ -152,11 +154,12 @@ err_t tcp_server_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err
 }
 
 static err_t tcp_server_poll(void *arg, struct tcp_pcb *tpcb) {
-  McuLog_info("tcp_server_poll_fn");
-  return tcp_server_result(arg, -1); /* no response is an error? */
+  McuLog_trace("tcp_server_poll_fn");
+  return tcp_server_result(arg, -1); /* no response is an error */
 }
 
 static void tcp_server_err(void *arg, err_t err) {
+  McuLog_trace("tcp_server_err");
   if (err != ERR_ABRT) {
     McuLog_error("tcp_client_err_fn %d", err);
     tcp_server_result(arg, err);
@@ -164,13 +167,13 @@ static void tcp_server_err(void *arg, err_t err) {
 }
 
 static err_t tcp_server_accept(void *arg, struct tcp_pcb *client_pcb, err_t err) {
+  McuLog_trace("tcp_server_accept");
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
   if (err != ERR_OK || client_pcb == NULL) {
     McuLog_error("Failure in accept");
     tcp_server_result(arg, err);
     return ERR_VAL;
   }
-  McuLog_info("Client connected");
   state->client_pcb = client_pcb;
   tcp_arg(client_pcb, state);
   tcp_sent(client_pcb, tcp_server_sent);
@@ -182,16 +185,16 @@ static err_t tcp_server_accept(void *arg, struct tcp_pcb *client_pcb, err_t err)
 
 static bool tcp_server_open(void *arg) {
   TCP_SERVER_T *state = (TCP_SERVER_T*)arg;
-  McuLog_info("Starting server at %s on port %u", ip4addr_ntoa(netif_ip4_addr(netif_list)), TCP_SERVER_PORT);
+  McuLog_trace("Starting server at %s on port %u", ip4addr_ntoa(netif_ip4_addr(netif_list)), TCP_SERVER_PORT);
 
   struct tcp_pcb *pcb = tcp_new_ip_type(IPADDR_TYPE_ANY);
-  if (!pcb) {
+  if (pcb==NULL) {
     McuLog_error("failed to create pcb");
     return false;
   }
   err_t err = tcp_bind(pcb, NULL, TCP_SERVER_PORT);
   if (err) {
-    McuLog_error("failed to bind to port %d\n");
+    McuLog_error("failed to bind to port %d\n", TCP_SERVER_PORT);
     return false;
   }
   state->server_pcb = tcp_listen_with_backlog(pcb, 1);
@@ -207,34 +210,91 @@ static bool tcp_server_open(void *arg) {
   return true;
 }
 
+#if LWIP_NETCONN /* must be set in lwipopts.h */
+#include "lwip/sys.h"
+#include "lwip/api.h"
+#endif
+
 static void TcpServerTask(void *pv) {
+#if 0
   TCP_SERVER_T *state = tcp_server_init();
 
   vTaskSuspend(NULL); /* suspend ourselves, will get resumed by WiFi task after connection is complete */
-  state = tcp_server_init();
-  if (!state) {
-    McuLog_fatal("failed to initialize TCP server");
-    for(;;) {
-      vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-  }
-  if (!tcp_server_open(state)) {
-    McuLog_fatal("failed to open TCP server");
-    tcp_server_result(state, -1);
-    for(;;) {
-      vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-  }
-  while(!state->complete) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
-  if (state!=NULL) {
-    free(state);
-    state = NULL;
-  }
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(100));
+    state = tcp_server_init(); /* initialize session */
+    if (state==NULL) {
+      for(;;) {
+        McuLog_fatal("failed to initialize TCP server");
+        vTaskDelay(pdMS_TO_TICKS(5000));
+      }
+    }
+    if (!tcp_server_open(state)) { /* open socket */
+      tcp_server_result(state, -1);
+      for(;;) {
+        McuLog_fatal("failed to open TCP server");
+        vTaskDelay(pdMS_TO_TICKS(5000));
+      }
+    }
+    while(!state->complete) { /* wait for connection and transfer */
+      vTaskDelay(pdMS_TO_TICKS(50));
+    }
+    free(state); /* free memory and start new connection */
+  } /* for */
+#else
+  struct netconn *conn, *newconn;
+  err_t err;
+
+  vTaskSuspend(NULL); /* suspend ourselves, will get resumed by WiFi task after connection is complete */
+  /* Create a new connection identifier. */
+  /* Bind connection to port number. */
+#if LWIP_IPV6
+  conn = netconn_new(NETCONN_TCP_IPV6);
+#else /* LWIP_IPV6 */
+  conn = netconn_new(NETCONN_TCP);
+#endif /* LWIP_IPV6 */
+  if (conn==NULL) {
+    McuLog_fatal("failed creating binding");
+    for(;;) {}
   }
+#if LWIP_IPV6
+  netconn_bind(conn, IP6_ADDR_ANY, TCP_SERVER_PORT);
+#else
+  netconn_bind(conn, IP_ADDR_ANY, TCP_SERVER_PORT);
+#endif
+  //LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
+
+  /* Tell connection to go into listening mode. */
+  netconn_listen(conn);
+  for(;;) {
+    /* Grab new connection. */
+    err = netconn_accept(conn, &newconn);
+    /*printf("accepted new connection %p\n", newconn);*/
+    /* Process the new connection. */
+    if (err == ERR_OK) {
+      struct netbuf *buf;
+      void *data;
+      u16_t len;
+
+      while ((err = netconn_recv(newconn, &buf)) == ERR_OK) {
+        /*printf("Recved\n");*/
+        do {
+             netbuf_data(buf, &data, &len);
+             err = netconn_write(newconn, data, len, NETCONN_COPY);
+#if 0
+            if (err != ERR_OK) {
+              printf("tcpecho: netconn_write: error \"%s\"\n", lwip_strerr(err));
+            }
+#endif
+        } while (netbuf_next(buf) >= 0);
+        netbuf_delete(buf);
+      }
+      /*printf("Got EOF, looping\n");*/
+      /* Close connection and discard connection identifier. */
+      netconn_close(newconn);
+      netconn_delete(newconn);
+    }
+  }
+#endif
 }
 
 void TcpServer_Suspend(void) {
@@ -254,6 +314,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[32];
 
   McuShell_SendStatusStr((unsigned char*)"tcps", (unsigned char*)"TCP server status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  suspended", eTaskGetState(serverTaskHandle)==eSuspended?(unsigned char*)"yes\r\n":(unsigned char*)"no\r\n", io->stdOut);
   McuUtility_Num32sToStr(buf, sizeof(buf), TCP_SERVER_PORT);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  port", buf, io->stdOut);

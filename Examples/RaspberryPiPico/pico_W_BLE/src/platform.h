@@ -22,7 +22,7 @@
 
 /* Combination of WiFi and BLE is possible: */
 #define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
-#define PL_CONFIG_USE_BLE             (1 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
+#define PL_CONFIG_USE_BLE             (0 && PL_CONFIG_USE_PICO_W) /* if using BLE functionality */
 
 #define PL_CONFIG_USE_SHELL           (1) /* if using a command line shell */
 #define PL_CONFIG_USE_RTT             (1 && PL_CONFIG_USE_SHELL) /* if using SEGGER RTT with J-Link */
@@ -34,8 +34,8 @@
 /* WiFi configuration items */
 #define PL_CONFIG_USE_PING            (0 && PL_CONFIG_USE_WIFI)   /* using ping application */
 #define PL_CONFIG_USE_NTP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* using ntp application */
-#define PL_CONFIG_USE_UDP_SERVER      (1 && PL_CONFIG_USE_WIFI)   /* using udp server application */
-#define PL_CONFIG_USE_UDP_CLIENT      (1 && PL_CONFIG_USE_WIFI)   /* if using udp client */
+#define PL_CONFIG_USE_UDP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* using udp server application */
+#define PL_CONFIG_USE_UDP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* if using udp client */
 #define PL_CONFIG_USE_TCP_SERVER      (1 && PL_CONFIG_USE_WIFI)   /* if running TCP server */
 #define PL_CONFIG_USE_TCP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* if running TCP client */
 #define PL_CONFIG_USE_MQTT_CLIENT     (0 && PL_CONFIG_USE_WIFI)   /* if running MQTT client */
