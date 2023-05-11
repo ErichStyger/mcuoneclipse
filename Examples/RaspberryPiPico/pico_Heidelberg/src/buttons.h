@@ -7,7 +7,7 @@
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_BUTTONS
 #include <stdbool.h>
 #include <stdint.h>

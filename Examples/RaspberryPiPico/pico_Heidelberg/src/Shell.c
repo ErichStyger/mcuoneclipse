@@ -6,7 +6,7 @@
  * This module implements the front to the console/shell functionality.
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_SHELL
 #include "Shell.h"
 #include "McuShell.h"

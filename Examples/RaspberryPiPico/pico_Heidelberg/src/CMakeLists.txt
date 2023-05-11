@@ -3,36 +3,8 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  ws2812.c
-  NeoPixel.c
-  NeoCounter.c
-  lights.c
-  Shell.c
-  buttons.c
-  debounce.c
-  FreeRTOShooks.c
-  sleep.c  # taken from pico-extras: https://github.com/raspberrypi/pico-extras
-  rosc.c # dito
-  PicoWiFi.c
-  ntp_client.c
-  udp_server.c
-  mqtt.c
-  mqtt_client.c
-  ping.c
-  dns_resolver.c
-  
-  # files for GUI with lvgl:
-  lv.c
-  gui.c
-  guiGroup.c
-  lcd.c
-  image/customSymbols_12.c
-  power.c
-  rs485.c
-  McuWatchdog.c
+  *.c
+  image/*.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory

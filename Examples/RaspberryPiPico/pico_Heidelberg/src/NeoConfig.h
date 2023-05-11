@@ -7,7 +7,7 @@
 #ifndef NEOCONFIG_H_
 #define NEOCONFIG_H_
 
-#include "app_platform.h"
+#include "platform.h"
 
 #if PL_CONFIG_USE_NEO_PIXEL_HW
 

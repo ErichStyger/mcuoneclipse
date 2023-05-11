@@ -7,7 +7,7 @@
 #ifndef GUIGROUP_H_
 #define GUIGROUP_H_
 
-#include "app_platform.h"
+#include "platform.h"
 #include "gui.h"
 
 #define LV_USE_GROUP  (1)

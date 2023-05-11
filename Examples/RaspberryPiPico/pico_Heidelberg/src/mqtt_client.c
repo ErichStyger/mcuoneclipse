@@ -6,7 +6,7 @@
  * Useful read: https://github.com/particle-iot/lwip/blob/master/doc/mqtt_client.txt
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_MQTT_CLIENT
 
 #include "pico/cyw43_arch.h"

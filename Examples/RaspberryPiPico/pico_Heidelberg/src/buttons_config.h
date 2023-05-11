@@ -7,7 +7,7 @@
 #ifndef BUTTONS_CONFIG_H_
 #define BUTTONS_CONFIG_H_
 
-#include "app_platform.h"
+#include "platform.h"
 
 #if PL_CONFIG_USE_BUTTONS
 

@@ -9,7 +9,7 @@
 
 /* strings and names used in minINI configuration file */
 
-#include "app_platform.h"
+#include "platform.h"
 
 #define NVMC_MININI_FILE_NAME       "settings.ini" /* 'file' name used */
 

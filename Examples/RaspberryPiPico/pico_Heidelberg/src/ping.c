@@ -38,7 +38,7 @@
  *
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_PING
 #include "lwip/opt.h"
 

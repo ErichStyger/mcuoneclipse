@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #include "McuLib.h"
 #include <stdbool.h>
 #include "NeoPixel.h"

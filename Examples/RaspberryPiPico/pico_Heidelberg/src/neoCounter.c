@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_IS_APP_LED_COUNTER
 #include "NeoPixel.h"
 #include "neoCounter.h"

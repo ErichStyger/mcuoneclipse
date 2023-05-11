@@ -7,7 +7,7 @@
 #ifndef POWER_CONFIG_H_
 #define POWER_CONFIG_H_
 
-#include "app_platform.h"
+#include "platform.h"
 
 #if PL_CONFIG_USE_POWER
   #define POWER_BATTERY_LEVEL_TURN_OFF    (10) /* turn system off below this % number */

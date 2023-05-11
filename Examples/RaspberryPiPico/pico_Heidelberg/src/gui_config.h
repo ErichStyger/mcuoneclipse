@@ -7,7 +7,7 @@
 #ifndef GUI_CONFIG_H_
 #define GUI_CONFIG_H_
 
-#include "app_platform.h"
+#include "platform.h"
 
 #define GUI_CONFIG_USE_SCREENSAVER         (1)
   /*!< if using a screensaver or not */

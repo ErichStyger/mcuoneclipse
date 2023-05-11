@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "app_platform.h"
+#include "platform.h"
 #if PL_CONFIG_USE_PICO_W
 #include "pico/cyw43_arch.h"
 #if PL_CONFIG_USE_WIFI
