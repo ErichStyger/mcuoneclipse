@@ -27,7 +27,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"udps", (unsigned char*)"Group of UDP server commands\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows udp server help or status\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows UDP server help or status\r\n", io->stdOut);
   return ERR_OK;
 }
 

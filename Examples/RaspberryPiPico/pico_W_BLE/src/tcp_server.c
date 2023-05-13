@@ -41,47 +41,43 @@ static void TcpServerTask(void *pv) {
   conn = netconn_new(NETCONN_TCP);
 #endif /* LWIP_IPV6 */
   if (conn==NULL) {
-    McuLog_fatal("failed creating binding");
+    McuLog_fatal("failed creating new connection");
     for(;;) {}
   }
+  McuLog_fatal("binding connection to port %d", TCP_SERVER_PORT);
 #if LWIP_IPV6
   netconn_bind(conn, IP6_ADDR_ANY, TCP_SERVER_PORT);
 #else
   netconn_bind(conn, IP_ADDR_ANY, TCP_SERVER_PORT);
 #endif
-  //LWIP_ERROR("tcpecho: invalid conn", (conn != NULL), return;);
-
-  /* Tell connection to go into listening mode. */
-  netconn_listen(conn);
+  netconn_listen(conn); /* tell connection to go into listening mode */
   for(;;) {
     /* Grab new connection. */
     err = netconn_accept(conn, &newconn);
-    /*printf("accepted new connection %p\n", newconn);*/
+    McuLog_trace("accepted new connection");
     /* Process the new connection. */
     if (err == ERR_OK) {
       struct netbuf *buf;
       void *data;
       u16_t len;
 
-      while ((err = netconn_recv(newconn, &buf)) == ERR_OK) {
-        /*printf("Recved\n");*/
+      while ((err=netconn_recv(newconn, &buf)) == ERR_OK) {
+        McuLog_trace("received data");
         do {
-             netbuf_data(buf, &data, &len);
-             err = netconn_write(newconn, data, len, NETCONN_COPY);
-#if 0
-            if (err != ERR_OK) {
-              printf("tcpecho: netconn_write: error \"%s\"\n", lwip_strerr(err));
-            }
-#endif
+           netbuf_data(buf, &data, &len);
+           err = netconn_write(newconn, data, len, NETCONN_COPY); /* write back data (echo) */
+           if (err != ERR_OK) {
+             McuLog_trace("tcpecho: netconn_write: error '%s'", lwip_strerr(err));
+          }
         } while (netbuf_next(buf) >= 0);
         netbuf_delete(buf);
-      }
-      /*printf("Got EOF, looping\n");*/
+      } /* while */
       /* Close connection and discard connection identifier. */
+      McuLog_trace("got EOF, closing connection");
       netconn_close(newconn);
       netconn_delete(newconn);
     }
-  }
+  } /* for */
 }
 
 void TcpServer_Suspend(void) {
@@ -110,7 +106,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
 
 static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"tcps", (unsigned char*)"Group of TCP server commands\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows udp server help or status\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows TCP server help or status\r\n", io->stdOut);
   return ERR_OK;
 }
 

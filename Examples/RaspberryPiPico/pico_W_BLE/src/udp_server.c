@@ -34,7 +34,7 @@ static void HandleIncomingUdpMessage(const char *rxMsg, int sock, struct sockadd
 #endif
   int err;
 
-  McuLog_info("handling incoming udp message '%s'", rxMsg);
+  McuLog_info("handling incoming UDP message '%s'", rxMsg);
   McuUtility_strcpy(response, sizeof(response), (unsigned char*)"OK"); /* default response */
   /* check framing */
   if (McuUtility_strncmp(rxMsg, MSG_ESP_PREFIX_STR, sizeof(MSG_ESP_PREFIX_STR)-1)==0) { /* check prefix */

@@ -30,6 +30,9 @@
 #if PL_CONFIG_USE_TCP_SERVER
   #include "tcp_server.h"
 #endif
+#if PL_CONFIG_USE_TCP_CLIENT
+  #include "tcp_client.h"
+#endif
 #if PL_CONFIG_USE_UDP_SERVER
   #include "udp_server_shell.h"
 #endif
@@ -111,6 +114,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
   TcpServer_ParseCommand,
+#endif
+#if PL_CONFIG_USE_TCP_CLIENT
+  TcpClient_ParseCommand,
 #endif
 #if PL_CONFIG_USE_UDP_SERVER
   UdpServer_ParseCommand,

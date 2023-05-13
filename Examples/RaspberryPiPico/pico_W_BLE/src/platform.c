@@ -58,6 +58,9 @@
 #if PL_CONFIG_USE_TCP_SERVER
   #include "tcp_server.h"
 #endif
+#if PL_CONFIG_USE_TCP_CLIENT
+  #include "tcp_client.h"
+#endif
 #if PL_CONFIG_USE_BLE
   #include "ble_server.h"
   #include "ble_client.h"
@@ -161,6 +164,9 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_TCP_SERVER
   TcpServer_Init();
+#endif
+#if PL_CONFIG_USE_TCP_CLIENT
+  TcpClient_Init();
 #endif
 #if PL_CONFIG_USE_BLE
 #if PL_CONFIG_STANDALONE_BLE_CLIENT

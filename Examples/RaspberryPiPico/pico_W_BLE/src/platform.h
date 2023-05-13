@@ -37,7 +37,7 @@
 #define PL_CONFIG_USE_UDP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* using udp server application */
 #define PL_CONFIG_USE_UDP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* if using udp client */
 #define PL_CONFIG_USE_TCP_SERVER      (1 && PL_CONFIG_USE_WIFI)   /* if running TCP server */
-#define PL_CONFIG_USE_TCP_CLIENT      (0 && PL_CONFIG_USE_WIFI)   /* if running TCP client */
+#define PL_CONFIG_USE_TCP_CLIENT      (1 && PL_CONFIG_USE_WIFI)   /* if running TCP client */
 #define PL_CONFIG_USE_MQTT_CLIENT     (0 && PL_CONFIG_USE_WIFI)   /* if running MQTT client */
 
 /*!
