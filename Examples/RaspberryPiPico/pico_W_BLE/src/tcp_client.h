@@ -26,6 +26,10 @@ extern "C" {
   uint8_t TcpClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
+void TcpClient_Suspend(void);
+
+void TcpClient_Resume(void);
+
 /*! \brief Module initialization */
 void TcpClient_Init(void);
 
