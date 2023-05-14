@@ -179,35 +179,29 @@ static void tcpClient_thread(void *arg) {
           tcpClient_connection.server = command.u.connect.server;
           tcpClient_connection.port = command.u.connect.port;
           tcpClient_connection.conn = netconn_new(NETCONN_TCP);
-          if (tcpClient_connection.conn!=NULL) {
-            err = netconn_bind(tcpClient_connection.conn, IP_ADDR_ANY, 7); /* Bind connection to the port number 7 (port of the Client) */
-            if (err==ERR_OK) {
-              while (DnsResolver_ResolveName(tcpClient_connection.server, &tcpClient_connection.dns, 5*1000)!=0) {
-                McuLog_error("dns request for '%s' failed", tcpClient_connection.server);
-                vTaskDelay(pdMS_TO_TICKS(30*1000));
-              } /* retry until success */
-              McuLog_trace("connecting to TCP server %s, port %d ...", tcpClient_connection.server, tcpClient_connection.port);
-              err = netconn_connect(tcpClient_connection.conn, &tcpClient_connection.dns.resolved_addr, tcpClient_connection.port);
-              if (err==ERR_OK) { /* connection established, otherwise delete connection */
-                McuLog_trace("connected to the TCP server %s! waiting for data ...", tcpClient_connection.server);
-                if (xTaskCreate(
-                    tcpClient_RxThread,  /* pointer to the task */
-                    "TcpClientRx", /* task name for kernel awareness debugging */
-                    4096/sizeof(StackType_t), /* task stack size */
-                    (void*)&tcpClient_connection, /* optional task startup argument */
-                    tskIDLE_PRIORITY+1,  /* initial priority */
-                    &clientRxTaskHandle /* optional task handle to create */
-                  ) != pdPASS)
-                {
-                  McuLog_fatal("failed creating Rx task");
-                  for(;;){} /* error! probably out of memory? */
-                }
-              } else { /* close connection because it has failed */
-                McuLog_error("failed to connect to TCP server %s, closing connection", tcpClient_connection.server);
-                TcpClient_SendDisconnect();
+          if (tcpClient_connection.conn!=NULL) { /* creating connection was successful */
+            while (DnsResolver_ResolveName(tcpClient_connection.server, &tcpClient_connection.dns, 5*1000)!=0) {
+              McuLog_error("dns request for '%s' failed", tcpClient_connection.server);
+              vTaskDelay(pdMS_TO_TICKS(30*1000));
+            } /* retry until success */
+            McuLog_trace("connecting to TCP server %s, port %d ...", tcpClient_connection.server, tcpClient_connection.port);
+            err = netconn_connect(tcpClient_connection.conn, &tcpClient_connection.dns.resolved_addr, tcpClient_connection.port);
+            if (err==ERR_OK) { /* connection established, otherwise delete connection */
+              McuLog_trace("connected to the TCP server %s! waiting for data ...", tcpClient_connection.server);
+              if (xTaskCreate(
+                  tcpClient_RxThread,  /* pointer to the task */
+                  "TcpClientRx", /* task name for kernel awareness debugging */
+                  4096/sizeof(StackType_t), /* task stack size */
+                  (void*)&tcpClient_connection, /* optional task startup argument */
+                  tskIDLE_PRIORITY+1,  /* initial priority */
+                  &clientRxTaskHandle /* optional task handle to create */
+                ) != pdPASS)
+              {
+                McuLog_fatal("failed creating Rx task");
+                for(;;){} /* error! probably out of memory? */
               }
-            } else {
-              McuLog_error("failed to bind connection, closing connection");
+            } else { /* close connection because it has failed */
+              McuLog_error("failed to connect to TCP server %s, closing connection", tcpClient_connection.server);
               TcpClient_SendDisconnect();
             }
           } else {
@@ -217,9 +211,13 @@ static void tcpClient_thread(void *arg) {
           break;
 
         case TCP_msg_kind_sendData:
-          McuLog_trace("sending data, nofBytes %d", command.u.data.dataSize);
-          if (tcpClient_SendData(&tcpClient_connection, command.u.data.data, command.u.data.dataSize)!=ERR_OK) {
-            McuLog_error("failed to send data");
+          if (tcpClient_connection.conn!=NULL) {
+            McuLog_trace("sending data, nofBytes %d", command.u.data.dataSize);
+            if (tcpClient_SendData(&tcpClient_connection, command.u.data.data, command.u.data.dataSize)!=ERR_OK) {
+              McuLog_error("failed to send data");
+            }
+          } else {
+            McuLog_error("no connection, connect first");
           }
           break;
 
