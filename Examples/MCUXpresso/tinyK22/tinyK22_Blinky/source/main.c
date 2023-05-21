@@ -42,6 +42,46 @@
 #include "fsl_gpio.h"
 /* TODO: insert other definitions and declarations here. */
 
+// LPC845:
+// :100400 00 94320010C046BD4602B080BD309B0000 53
+
+#if 1 /* startup/safe version */
+__attribute__ ((used,section(".FlashConfig"))) const struct {
+    unsigned int word1;
+    unsigned int word2;
+    unsigned int word3;
+    unsigned int word4;
+} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFE
+};
+// :10
+//  0400
+//  00
+//  FF FF FF FF   FF FF FF FF   FF FF FF FF   FE FF FF FF    FD
+#elif 1
+__attribute__ ((used,section(".FlashConfig"))) const struct {
+    unsigned int word1;
+    unsigned int word2;
+    unsigned int word3;
+    unsigned int word4;
+} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFF00
+    | NV_FSEC_KEYEN(0b11) /* 0b11: backdoor key enabled */
+    | NV_FSEC_MEEN(0b11) /* 0b11: mass erase enabled */
+    | NV_FSEC_FSLACC(0b11) /* factory access enabled */
+    | NV_FSEC_SEC(0b11)  /* 0b11: secure, 0b10 unsecure  */
+};
+#else
+/* 16 bytes at address 0x400 */
+__attribute__((used, section(".FlashConfig"))) const uint32_t FOPTConfig[4] = {
+  0xFFFFFFFF,
+  0xFFFFFFFF,
+  0xFFFFFFFF,
+ // 0xFFFF3DFE // boot from FLASH
+  0xFFFFBDFE   // boot from ROM, means this will kick in the bootloader by default
+};
+#endif
+
 #define BOARD_LED_BLUE_GPIO   GPIOC
 #define BOARD_LED_BLUE_PORT   PORTC
 #define BOARD_LED_BLUE_PIN    2U

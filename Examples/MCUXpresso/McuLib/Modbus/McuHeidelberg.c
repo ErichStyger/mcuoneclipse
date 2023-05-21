@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLib.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+
 #include "McuHeidelberg.h"
 #include "McuHeidelberg_config.h"
 #include "McuShell.h"
@@ -590,6 +593,7 @@ static void McuHeidelberg_UpdateCurrChargerPower(void) {
   }
 }
 
+#if McuLib_CONFIG_SDK_USE_FREERTOS
 static void wallboxTask(void *pv) {
   uint8_t res;
   uint16_t prevHWchargerState = 0;
@@ -813,6 +817,7 @@ static void wallboxTask(void *pv) {
     } /* switch */
   }
 }
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[96];
@@ -1226,6 +1231,7 @@ void McuHeidelberg_Deinit(void) {
 }
 
 void McuHeidelberg_Init(void) {
+#if McuLib_CONFIG_SDK_USE_FREERTOS
   if (xTaskCreate(
        wallboxTask,  /* pointer to the task */
        "wallbox", /* task name for kernel awareness debugging */
@@ -1238,5 +1244,7 @@ void McuHeidelberg_Init(void) {
      McuLog_fatal("Failed creating task");
      for(;;){} /* error! probably out of memory */
    }
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 }
 
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */

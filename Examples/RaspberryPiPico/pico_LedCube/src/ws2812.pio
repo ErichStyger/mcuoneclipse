@@ -55,8 +55,8 @@ static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, 
     mov x, null           ; [1] clear X scratch register
     out x, 8              ; [1] copy 8bits from OSR to X
     mov pins, !null [2]   ; [3] T1: set all pins HIGH (!NULL)
-    mov pins, x     [3]   ; [4] T2: pulse width: keep pins high (for 1 bits) or pull low (for 0 bits)
-    mov pins, null        ; [1] T3: pull all pins low
+    mov pins, x     [1]   ; [4]->[3]->[2] T2: pulse width: keep pins high (for 1 bits) or pull low (for 0 bits)
+    mov pins, null  [2]   ; [1]->[2]->[3] T3: pull all pins low 
  .wrap
  
 % c-sdk {

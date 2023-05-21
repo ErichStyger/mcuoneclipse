@@ -17,9 +17,9 @@ add_library(SrcLib ${FILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
-  SrcLib 
-  McuLib 
-  pico_stdlib
+  SrcLib                # this library
+  McuLib                # we need the McuLib
+  pico_stdlib           # pico standard library
   hardware_pio  # WS2812B
   hardware_rtc  # RTC for sleep.c
 #  #pico_cyw43_arch_none     # we need Wifi to access the GPIO, but we don't need anything else

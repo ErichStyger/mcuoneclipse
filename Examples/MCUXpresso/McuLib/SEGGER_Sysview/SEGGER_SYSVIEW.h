@@ -224,7 +224,10 @@ typedef void (SEGGER_SYSVIEW_SEND_SYS_DESC_FUNC)(void);
 *
 **********************************************************************
 */
-
+#if 1 /* << EST */
+  extern unsigned int SEGGER_SYSVIEW_TickCnt;
+  extern unsigned int SEGGER_SYSVIEW_InterruptId;
+#else
 #ifdef   EXTERN
   #undef EXTERN
 #endif
@@ -239,6 +242,8 @@ EXTERN unsigned int SEGGER_SYSVIEW_TickCnt;
 EXTERN unsigned int SEGGER_SYSVIEW_InterruptId;
 
 #undef EXTERN
+
+#endif /* << EST */
 
 /*********************************************************************
 *

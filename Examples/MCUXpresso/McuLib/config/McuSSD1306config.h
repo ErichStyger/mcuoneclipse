@@ -50,12 +50,12 @@
 #endif
 
 #ifndef McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US
-  #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US    (100)
+  #define McuSSD1306_CONFIG_SSD1306_I2C_DELAY_US    (0)
     /*!< I2C transaction delay in us */
 #endif
 
 #ifndef McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION
-  #define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION (1)
+  #define McuSSD1306_CONFIG_DYNAMIC_DISPLAY_ORIENTATION (0)
   /*!< 1: Use SetDisplayOrientation() to change display orientation at runtime; 0: fixed display orientation */
 #endif
 

@@ -11,7 +11,7 @@
 #include "McuRTOS.h"
 #include "McuLog.h"
 
-static bool CubeAnimIsEnabled = true;
+static bool CubeAnimIsEnabled = false;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */

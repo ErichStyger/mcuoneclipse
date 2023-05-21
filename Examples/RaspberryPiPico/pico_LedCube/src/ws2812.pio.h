@@ -72,8 +72,8 @@ static const uint16_t ws2812_parallel_program_instructions[] = {
     0xa023, //  0: mov    x, null                    
     0x6028, //  1: out    x, 8                       
     0xa20b, //  2: mov    pins, !null            [2] 
-    0xa201, //  3: mov    pins, x                [2] 
-    0xa103, //  4: mov    pins, null             [1] 
+    0xa101, //  3: mov    pins, x                [1] 
+    0xa203, //  4: mov    pins, null             [2] 
             //     .wrap
 };
 

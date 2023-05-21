@@ -34,7 +34,7 @@
 #endif
 
 #if !defined(McuGenericI2C_CONFIG_USE_MUTEX)
-  #define McuGenericI2C_CONFIG_USE_MUTEX             (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
+  #define McuGenericI2C_CONFIG_USE_MUTEX             (0 && McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: Use a mutex to protect access to the bus; 0: no mutex used */
 #endif
 

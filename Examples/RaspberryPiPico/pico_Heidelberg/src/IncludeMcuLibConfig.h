@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -26,7 +26,7 @@
 #define McuLib_CONFIG_CPU_IS_RPxxxx                 (1)
 #define McuLib_CONFIG_CPU_VARIANT                   McuLib_CONFIG_CPU_VARIANT_RP2040
 #define McuLib_CONFIG_SDK_VERSION_USED              McuLib_CONFIG_SDK_RPI_PICO
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------------------*/
 /* FreeRTOS */
 #define McuLib_CONFIG_SDK_USE_FREERTOS              (1)
 #define configMINIMAL_STACK_SIZE                    (500)

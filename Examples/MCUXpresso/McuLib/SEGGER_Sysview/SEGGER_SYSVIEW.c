@@ -139,7 +139,9 @@ Additional information:
 **********************************************************************
 */
 
+#if 0 /* << EST */
 #define SEGGER_SYSVIEW_C  // For EXTERN statements in SEGGER_SYSVIEW.h
+#endif
 
 #include <string.h>
 #include <stdlib.h>
@@ -148,6 +150,11 @@ Additional information:
 #include "SEGGER_RTT.h"
 
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS /* << EST: added check, otherwise compiler might complain about calling RTT init with out-of-bound RTT channel index */
+
+#if 1 /* << EST */
+  unsigned int SEGGER_SYSVIEW_InterruptId;
+#endif
+
 
 /*********************************************************************
 *

@@ -19,7 +19,7 @@
    * McuMinINI write settings.ini WiFi ssid YOUR_SSID
    * McuMinINI write settings.ini WiFi pass YOUR_PASSWORD
    */
-  #define NVMC_MININI_SECTION_WIFI              "WiFih"
+  #define NVMC_MININI_SECTION_WIFI              "WiFi"
   #define NVMC_MININI_KEY_WIFI_SSID                "ssid"     /* SSID of network */
   #define NVMC_MININI_KEY_WIFI_PASS                "pass"     /* pass */
   #define NVMC_MININI_KEY_WIFI_HOSTNAME            "hostname" /* hostname to be used */
