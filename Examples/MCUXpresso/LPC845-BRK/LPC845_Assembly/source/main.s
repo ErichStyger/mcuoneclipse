@@ -14,7 +14,7 @@ main:
 /* ----------- Reset ------------------------------*/
 .text
 .global ResetISR,
-.section .after_vectors
+.section .text
 
 ResetISR:
   nop  @ just do something....
