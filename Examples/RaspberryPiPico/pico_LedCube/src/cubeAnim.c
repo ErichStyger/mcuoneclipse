@@ -11,7 +11,7 @@
 #include "McuRTOS.h"
 #include "McuLog.h"
 
-static bool CubeAnimIsEnabled = false;
+static bool CubeAnimIsEnabled = true;
 
 static void AnimationRandomPixels(void) {
   /* assign a random color to each pixel */
@@ -39,26 +39,51 @@ static void AnimationHorizontalUpDown(void) {
   /* fill horizontal plane with color and move it up and down */
   uint32_t color;
   uint8_t r, g, b;
+  uint32_t cnt = 0;
 
 
-  r = McuUtility_random(0, 2);
-  if (r==0) {
-    r = 0xff;
-    g = 0;
-    b = 0;
-  } else if (r==1) {
-    g = 0xff;
-    r = 0;
-    b = 0;
-  } else {
-    b = 0xff;
-    r = 0;
-    g = 0;
+  color = 0xFF0000;
+  for(int i=0; i<3; i++) {
+    NEO_ClearAllPixel();
+    Cube_RequestUpdateLEDs();
+    NEO_SetAllPixelColor(color);
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    color >>= 8;
   }
-  color = NEO_COMBINE_RGB(r,g,b);
+  NEO_ClearAllPixel();
+  NEO_SetAllPixelColor(0xffffff);
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(1000));
+
 
   NEO_ClearAllPixel();
-  for (int i=0; i<1; i++) { /* number of demo iterations */
+  Cube_RequestUpdateLEDs();
+  vTaskDelay(pdMS_TO_TICKS(500));
+  for (int i=0; i<4; i++) { /* number of demo iterations */
+    //r = McuUtility_random(0, 2);
+    if (cnt==0) {
+      r = 0xff;
+      g = 0;
+      b = 0;
+      cnt++;
+    } else if (cnt==1) {
+      g = 0xff;
+      r = 0;
+      b = 0;
+      cnt++;
+    } else if (cnt==2) {
+      b = 0xff;
+      r = 0;
+      g = 0;
+      cnt++;
+    } else {
+      b = 0xff;
+      r = 0xff;
+      g = 0xff;
+      cnt = 0;
+    }
+    color = NEO_COMBINE_RGB(r,g,b);
+    NEO_ClearAllPixel();
     /* going up */
     for (int z=0; z<CUBE_DIM_Z; z++) {
       if (z>0) { /* clear previous plane */
@@ -77,6 +102,7 @@ static void AnimationHorizontalUpDown(void) {
       Cube_RequestUpdateLEDs();
       vTaskDelay(pdMS_TO_TICKS(500));
     }
+#if 0
     /* going down */
      for (int z=CUBE_DIM_Z; z>=0; z--) {
        if (z<CUBE_DIM_Z) { /* clear previous plane */
@@ -95,6 +121,7 @@ static void AnimationHorizontalUpDown(void) {
        Cube_RequestUpdateLEDs();
        vTaskDelay(pdMS_TO_TICKS(500));
      }
+#endif
   } /* number of demos */
 }
 
@@ -103,7 +130,7 @@ typedef void (*Animationfp)(void); /* animation function pointer */
 static const Animationfp animations[] = /* list of animation */
 {
     AnimationHorizontalUpDown,
-    AnimationRandomPixels,
+ //   AnimationRandomPixels,
 };
 
 #define NOF_ANIMATION   (sizeof(animations)/sizeof(animations[0]))

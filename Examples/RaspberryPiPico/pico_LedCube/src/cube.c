@@ -82,6 +82,7 @@ static void cubeTask(void *pv) {
   McuLog_trace("starting cube task");
   NEO_ClearAllPixel();
   NEO_TransferPixels();
+  vTaskDelay(pdMS_TO_TICKS(200));
 #if TEST_MODE
   TestMode();
 #endif
