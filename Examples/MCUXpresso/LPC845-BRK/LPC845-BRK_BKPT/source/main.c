@@ -6,13 +6,21 @@
 #include "LPC845.h"
 #include "fsl_debug_console.h"
 
+#ifdef DEBUG
+  #define BREAK_1 __asm("bkpt #1")
+  #define BREAK_2 __asm("bkpt #2")
+#else
+  #define BREAK_1 /* empty */
+  #define BREAK_2 /* empty */
+#endif
+
 static int test1(void) {
-  __asm("bkpt #1"); /* will hit breakpoint and move PC to next line */
+  BREAK_1; /* hit breakpoint and move PC to next line */
   return 1;
 }
 
 static int test2(void) {
-  __asm("bkpt #2"); /* will hit breakpoint and continue */
+  BREAK_2; /* hit breakpoint and continue */
   return 1;
 }
 
