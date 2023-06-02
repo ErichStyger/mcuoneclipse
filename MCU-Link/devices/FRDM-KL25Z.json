@@ -1,0 +1,38 @@
+{
+  "version": "0.0.1",
+  "vendor": "NXP",
+  "devices": [
+    {
+      "board": "FRDM-KL25Z",
+      "device": {
+        "name": "MKL25Z128xxx4",
+        "family": "KL2x",
+        "memory": [
+          {
+            "location": "0x00000000",
+            "size": "0x00020000",
+            "type": "Flash",
+            "flash-driver": "FTFA_1K.cfx"
+          },
+          {
+            "location": "0x1ffff000",
+            "size": "0x00004000",
+            "type": "RAM"
+          }
+        ],
+        "cores": [
+          {
+            "type": "cm0plus",
+            "name": "cm0plus"
+          }
+        ]
+      },
+      "debug": {
+        "protocol": "swd",
+        "swo": false,
+        "connect-script": "kinetisconnect.scp",
+        "masserase-script": "kinetismasserase.scp"
+      }
+    }
+  ]
+}
