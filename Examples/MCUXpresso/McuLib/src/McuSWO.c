@@ -60,6 +60,7 @@ static inline bool SWO_WriteChar(char c, uint8_t portNo) {
   return true;
 }
 
+#if McuSWO_CONFIG_RETARGET_STDIO
 static void SWO_WriteBuf(char *buf, size_t count, uint8_t portNo) {
   while(count>0) {
     SWO_WriteChar(*buf, portNo);
@@ -67,6 +68,7 @@ static void SWO_WriteBuf(char *buf, size_t count, uint8_t portNo) {
     count--;
   }
 }
+#endif
 
 static inline bool SWO_Enabled(uint8_t portNo) {
   /* Check if Trace Control Register (ITM->TCR at 0xE0000E80) is set */
