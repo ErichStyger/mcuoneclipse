@@ -7,6 +7,7 @@
 #ifndef MCULITTLEFS_H_
 #define MCULITTLEFS_H_
 
+#include "littleFS/McuLittleFSBlockDeviceconfig.h"
 #include "McuShell.h"
 #include "littleFS/lfs.h"
 #include "McuRTOS.h"
