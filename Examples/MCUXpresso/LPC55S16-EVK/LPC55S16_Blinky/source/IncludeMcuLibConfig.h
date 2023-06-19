@@ -68,10 +68,22 @@ Instructions:
 /* ------------------- McuSPI --------------------------*/
 #define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
+/* ---------------------------------------------------------------------------------------*/
+/* McuFlash */
+#define McuFlash_CONFIG_IS_ENABLED                    (1)
+#define McuFlash_CONFIG_NOF_BLOCKS                    (32)
+#define McuFlash_CONFIG_MEM_START                     (((0+244*1024)-((McuFlash_CONFIG_NOF_BLOCKS)*McuFlash_CONFIG_FLASH_BLOCK_SIZE)))
 /* ------------------- McuLittleFS --------------------------*/
 #define MCUW28Q128_CONFIG_ENABLED                     (1)
 #define LITTLEFS_CONFIG_ENABLED                       (1)
-#define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+#if 0 /* using Winbond external flash */
+  #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+#else /* using internal flash with McuFlash */
+  #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_MCU_FLASH
+  #define McuLittleFS_CONFIG_BLOCK_SIZE                 (McuFlash_CONFIG_FLASH_BLOCK_SIZE)
+  #define McuLittleFS_CONFIG_BLOCK_COUNT                (McuFlash_CONFIG_NOF_BLOCKS)
+  #define McuLittleFS_CONFIG_BLOCK_OFFSET               ((McuFlash_CONFIG_MEM_START)/(McuFlash_CONFIG_FLASH_BLOCK_SIZE))
+#endif
 /* ------------------- FatFS ---------------------------*/
 #define McuLib_CONFIG_USE_FAT_FS                      (0)
 #define McuFatFS_CONFIG_HAS_CARD_DETECT_PIN           (0)

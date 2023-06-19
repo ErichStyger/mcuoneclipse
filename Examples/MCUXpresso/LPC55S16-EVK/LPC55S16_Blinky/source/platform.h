@@ -23,24 +23,28 @@
 
 #define PL_CONFIG_USE_I2C         (1 || PL_CONFIG_USE_LORA_SHIELD) /* if I2C peripherals are used */
 #define PL_CONFIG_USE_HW_I2C      (USE_HW_I2C && PL_CONFIG_USE_I2C) /* USE_HW_I2C defined in IncludeMcuLibConfig.h */
-#define PL_CONFIG_USE_OLED        (1 && PL_CONFIG_USE_I2C)
+#define PL_CONFIG_USE_OLED        (0 && PL_CONFIG_USE_I2C) /* GUI and OLED */
 
 #define PL_CONFIG_USE_NVMC        (0) /* if flash non-volatile memory is used to store data */
-
 
 #if PL_CONFIG_USE_LORA_SHIELD
   /* NOTE: this requires the JP9 on the LPC55S16-EVN to be *installed*, otherwise the SPI signals are driven by the debug interface.
    * But JP9 installed means it is not possible to use the UART over the LinkServer USB connection: RTT has to be used instead */
   #define PL_CONFIG_HAS_USER_BUTTON    (0) /* pin connected on DIO5 of the transceiver */
   #define PL_CONFIG_HAS_HW_RTC         (1 && PL_CONFIG_USE_I2C) /* D3232MZ+ */
-  #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with */
+  #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with Winbond */
   #define PL_CONFIG_HAS_SHT31          (1 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #else
   #define PL_CONFIG_HAS_USER_BUTTON    (1)
   #define PL_CONFIG_HAS_HW_RTC         (0 && PL_CONFIG_USE_I2C)
-  #define PL_CONFIG_HAS_LITTLE_FS      (0)
+  #define PL_CONFIG_HAS_LITTLE_FS      (1) /* littleFS with internal FLASH */
   #define PL_CONFIG_HAS_SHT31          (0 && PL_CONFIG_USE_I2C) /* Sensirion SHT31 */
 #endif
+
+/* flash memory for McuFlash */
+#define PL_CONFIG_FLASH_NVM_ADDR_START      (McuFlash_CONFIG_MEM_START) /* last block in FLASH, start address of configuration data in flash */
+#define PL_CONFIG_FLASH_NVM_BLOCK_SIZE      (McuFlash_CONFIG_FLASH_BLOCK_SIZE)   /* must match FLASH_GetProperty(&s_flashDriver, kFLASH_PropertyPflash0SectorSize, &pflashSectorSize) */
+#define PL_CONFIG_FLASH_NVM_NOF_BLOCKS      (McuFlash_CONFIG_NOF_BLOCKS) /* number of flash blocks! */
 
 /*!
  * \brief Module initialization

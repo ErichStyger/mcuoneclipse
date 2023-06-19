@@ -53,6 +53,7 @@
   #include "littleFS/McuLittleFS.h"
   #include "McuW25Q128.h"
 #endif
+#include "McuFlash.h"
 
 void PL_Init(void) {
   CLOCK_EnableClock(kCLOCK_Iocon); /* ungate clock for IOCON */
@@ -108,9 +109,15 @@ void PL_Init(void) {
 #if PL_CONFIG_HAS_SHT31
   McuSHT31_Init();
 #endif
+#if McuFlash_CONFIG_IS_ENABLED
+  McuFlash_Init();
+  McuFlash_RegisterMemory((const void*)PL_CONFIG_FLASH_NVM_ADDR_START, PL_CONFIG_FLASH_NVM_NOF_BLOCKS*PL_CONFIG_FLASH_NVM_BLOCK_SIZE);
+#endif
 #if PL_CONFIG_HAS_LITTLE_FS
+  #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
   McuSPI_Init();
   McuW25_Init();
+  #endif
   McuLFS_Init();
 #endif
 

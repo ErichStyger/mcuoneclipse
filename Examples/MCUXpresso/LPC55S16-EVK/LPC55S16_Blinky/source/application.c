@@ -122,37 +122,38 @@ static void vTimerCallback(TimerHandle_t pxTimer) {
 
 void APP_Run(void) {
   PL_Init(); /* init modules */
-
+#if 0 /* simple blinky */
   for(int i=0;i<2;i++) {
-  for(;;) {
-#if PL_CONFIG_USE_SWO
-    McuSWO_SendStr((unsigned char*)"Hello World using ITM console.\n");
-#endif
-    LEDS_On(LEDS_RED);
-    McuWait_Waitms(100);
-    LEDS_Off(LEDS_RED);
-    McuWait_Waitms(100);
-    LEDS_On(LEDS_GREEN);
-    McuWait_Waitms(100);
-    LEDS_Off(LEDS_GREEN);
-    McuWait_Waitms(100);
-    LEDS_On(LEDS_BLUE);
-    McuWait_Waitms(100);
-    LEDS_Off(LEDS_BLUE);
-    McuWait_Waitms(100);
-#if PL_CONFIG_HAS_USER_BUTTON
-    if (BTN_IsPressed(BTN_USER)) {
+    for(;;) {
+  #if PL_CONFIG_USE_SWO
+      McuSWO_SendStr((unsigned char*)"Hello World using ITM console.\n");
+  #endif
       LEDS_On(LEDS_RED);
       McuWait_Waitms(100);
       LEDS_Off(LEDS_RED);
+      McuWait_Waitms(100);
+      LEDS_On(LEDS_GREEN);
+      McuWait_Waitms(100);
+      LEDS_Off(LEDS_GREEN);
+      McuWait_Waitms(100);
+      LEDS_On(LEDS_BLUE);
+      McuWait_Waitms(100);
+      LEDS_Off(LEDS_BLUE);
+      McuWait_Waitms(100);
+  #if PL_CONFIG_HAS_USER_BUTTON
+      if (BTN_IsPressed(BTN_USER)) {
+        LEDS_On(LEDS_RED);
+        McuWait_Waitms(100);
+        LEDS_Off(LEDS_RED);
+      }
+  #endif
     }
-#endif
-  }
   } /* for */
+#endif
   if (xTaskCreate(
       AppTask,  /* pointer to the task */
       "App", /* task name for kernel awareness debugging */
-      700/sizeof(StackType_t), /* task stack size */
+      1000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */

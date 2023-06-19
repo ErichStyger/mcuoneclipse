@@ -13,6 +13,7 @@
 #include "McuLog.h"
 #include "McuTimeDate.h"
 #include "McuShellUart.h"
+#include "McuFlash.h"
 #if PL_CONFIG_USE_MININI
   #include "McuMinINI.h"
 #endif
@@ -37,7 +38,11 @@
 #endif
 #if PL_CONFIG_HAS_LITTLE_FS
   #include "littleFS/McuLittleFS.h"
-  #include "McuW25Q128.h"
+  #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+    #include "McuW25Q128.h"
+  #elif McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_MCU_FLASH
+    #include "McuFlash.h"
+  #endif
 #endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
@@ -72,7 +77,16 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_HAS_LITTLE_FS
   McuLFS_ParseCommand,
+#endif
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_
+#error
+#endif
+#if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
+#error
   McuW25_ParseCommand,
+#endif
+#if McuFlash_CONFIG_IS_ENABLED
+  McuFlash_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -131,7 +145,7 @@ void SHELL_Init(void) {
   if (xTaskCreate(
       ShellTask,  /* pointer to the task */
       "Shell", /* task name for kernel awareness debugging */
-      3000/sizeof(StackType_t), /* task stack size */
+      4000/sizeof(StackType_t), /* task stack size */
       (void*)NULL, /* optional task startup argument */
       tskIDLE_PRIORITY+2,  /* initial priority */
       (TaskHandle_t*)NULL /* optional task handle to create */
