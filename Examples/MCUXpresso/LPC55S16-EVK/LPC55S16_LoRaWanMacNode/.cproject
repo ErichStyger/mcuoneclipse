@@ -754,7 +754,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1659688829" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.fpu.931051831" name="Floating point" superClass="com.crt.advproject.link.fpu" useByScannerDiscovery="false" value="com.crt.advproject.link.fpu.fpv5sp.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.590781782" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.812044153" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaMacNode_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.812044153" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaWanMacNode_LPC55S16-EVK-SX1261-Ping-Pong.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1882806165" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.crpenable.1469353810" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.776254192" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -1157,7 +1157,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.1692424711" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1716476969" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.manage.1583324499" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.680073762" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaMacNode_LPC55S16-EVK-SX1261-PeriodicUplink.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.680073762" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaWanMacNode_LPC55S16-EVK-SX1276_RFM96-PeriodicUplink.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.151787986" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="&quot;${LoRaSrc}/boards/Tardigrade/cmsis/arm-gcc&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.1905336439" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.557345610" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -1557,7 +1557,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1920651661" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.fpu.990495445" name="Floating point" superClass="com.crt.advproject.link.fpu" useByScannerDiscovery="false" value="com.crt.advproject.link.fpu.fpv5sp.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.2096720076" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.559742761" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaMacNode_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.559742761" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC55S16_LoRaWanMacNode_LPC55S16-EVK-SX1276_RFM-PingPong.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.484454130" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.crpenable.2055622070" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1415030606" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -1629,7 +1629,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso55S16</sdkName>
-		<sdkVersion>2.11.0</sdkVersion>
+		<sdkVersion>2.13.0</sdkVersion>
 		<sdkComponents>platform.drivers.power.LPC55S16;platform.drivers.flexcomm.LPC55S16;platform.drivers.flexcomm_usart.LPC55S16;platform.drivers.clock.LPC55S16;platform.drivers.lpc_iocon.LPC55S16;platform.drivers.common.LPC55S16;platform.drivers.flexcomm_i2c.LPC55S16;platform.drivers.lpc_gpio.LPC55S16;platform.drivers.reset.LPC55S16;component.serial_manager.LPC55S16;component.serial_manager_uart.LPC55S16;utility.debug_console.LPC55S16;component.usart_adapter.LPC55S16;component.lists.LPC55S16;device.LPC55S16_startup.LPC55S16;CMSIS_Include_core_cm.LPC55S16;device.LPC55S16_CMSIS.LPC55S16;device.LPC55S16_system.LPC55S16;project_template.lpcxpresso55s16.LPC55S16;platform.drivers.iap1.LPC55S16;platform.drivers.lpadc.LPC55S16;platform.drivers.inputmux.LPC55S16;platform.drivers.inputmux_connections.LPC55S16;platform.drivers.wwdt.LPC55S16;platform.drivers.utick.LPC55S16;platform.drivers.flexcomm_usart_dma.LPC55S16;platform.drivers.lpc_dma.LPC55S16;platform.drivers.sysctl.LPC55S16;platform.drivers.flexcomm_spi.LPC55S16;platform.drivers.flexcomm_spi_dma.LPC55S16;platform.drivers.rng_1.LPC55S16;platform.drivers.sctimer.LPC55S16;platform.drivers.lpc_crc.LPC55S16;platform.drivers.lpc_rtc.LPC55S16;platform.drivers.mcan.LPC55S16;platform.drivers.anactrl.LPC55S16;platform.drivers.casper.LPC55S16;platform.drivers.cdog.LPC55S16;platform.drivers.cmp_1.LPC55S16;platform.drivers.ctimer.LPC55S16;platform.drivers.flexcomm_i2c_dma.LPC55S16;platform.drivers.flexcomm_i2s.LPC55S16;platform.drivers.flexcomm_i2s_dma.LPC55S16;platform.drivers.fro_calib.LPC55S16;platform.drivers.gint.LPC55S16;platform.drivers.hashcrypt.LPC55S16;platform.drivers.mrt.LPC55S16;platform.drivers.ostimer.LPC55S16;platform.drivers.pint.LPC55S16;platform.drivers.plu.LPC55S16;platform.drivers.power_s.LPC55S16;platform.drivers.prince.LPC55S16;platform.drivers.puf.LPC55S16;platform.utilities.assert_lite.LPC55S16;utility.debug_console_lite.LPC55S16;platform.utilities.assert.LPC55S16;</sdkComponents>
 		<boardId>lpcxpresso55s16</boardId>
 		<package>LPC55S16JBD100</package>
@@ -1646,7 +1646,7 @@
 &lt;name&gt;LPC55S16&lt;/name&gt;&#13;
 &lt;family&gt;LPC551x_S1x&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
-&lt;memory can_program="true" id="Flash" is_ro="true" size="246" type="Flash"/&gt;&#13;
+&lt;memory can_program="true" id="Flash" is_ro="true" size="224" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="96" type="RAM"/&gt;&#13;
 &lt;memoryInstance derived_from="Flash" driver="LPC551x.cfx" edited="true" id="PROGRAM_FLASH" location="0x0" size="0x3c000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="SRAM" location="0x20000000" size="0x10000"/&gt;&#13;

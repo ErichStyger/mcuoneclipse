@@ -12,7 +12,8 @@
 #include "McuWait.h"
 #include "McuUtility.h"
 
-static void SimpleAdder(void) {
+#if 0
+void SimpleAdder(void) {
   unsigned char buf[32];
   const unsigned char *p;
   int32_t a, b;
@@ -27,6 +28,7 @@ static void SimpleAdder(void) {
   McuUtility_xatoi(&p, &b);
 //  McuSWO_printf("The result of %d + %d is %d\n", a, b, a+b);
 }
+#endif
 
 static void ReadLineTimeout(void) {
   unsigned char buf[32], res;
