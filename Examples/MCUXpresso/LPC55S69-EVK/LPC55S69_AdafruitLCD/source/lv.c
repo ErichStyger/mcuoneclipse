@@ -41,7 +41,7 @@ static void vTimerCallbackLCDExpired(TimerHandle_t pxTimer) {
 }
 #endif
 
-#if PL_CONFIG_USE_GUI_SCREEN_SAVER
+#if PL_CONFIG_USE_GUI_SCREEN_SAVER && PL_CONFIG_USE_GUI_TOUCH_NAV
 static void KeyPressForLCD(void) {
   /* called for each key press. It turns on the LCD if it is dormant or resets the LCD backlight timeout timer */
   if (xTimerIsTimerActive(timerHndlLcdTimeout)==pdFALSE) {
