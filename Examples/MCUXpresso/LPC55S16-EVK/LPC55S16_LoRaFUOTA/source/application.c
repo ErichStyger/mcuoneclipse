@@ -55,7 +55,7 @@ DATEREC dateSync;
 #define FILESYSTEM_LOOKAHEAD_SIZE 256 //128
 #define FILESYSTEM_CACHE_SIZE 256
 
-
+#if 0
 /* configuration of the file system is provided by this struct */
 static const struct lfs_config JANPATCH_cfg = {
   /* block device operations */
@@ -76,7 +76,7 @@ static const struct lfs_config JANPATCH_cfg = {
   .unlock = NULL,
 #endif
 };
-
+#endif
 
 static SemaphoreHandle_t mutex;
 
@@ -390,11 +390,11 @@ static void AppTask(void *pv) {
 
     }
     if (BTN_IsPressed(BTN_UP)) {
-    	int result;
+    	//int result;
       McuLog_info("User Up pressed.");
       LEDS_Neg(LEDS_BLUE);
 
-      int res;
+      //int res;
       JANPATCH_LFS_lfs = McuLFS_GetFileSystem();
 //
 //

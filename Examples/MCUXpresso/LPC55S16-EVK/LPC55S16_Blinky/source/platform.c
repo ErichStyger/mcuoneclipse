@@ -120,7 +120,9 @@ void PL_Init(void) {
   #endif
   McuLFS_Init();
 #endif
-
+#if PL_CONFIG_USE_MININI
+  McuMinINI_Init();
+#endif
 #if PL_CONFIG_USE_NVMC
   NVMC_Init();
 #endif

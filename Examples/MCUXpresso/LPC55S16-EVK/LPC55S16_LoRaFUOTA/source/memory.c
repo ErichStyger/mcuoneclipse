@@ -308,7 +308,7 @@ int memory_init(void)
 
 int memory_erase(uint32_t addr, uint32_t len)
 {
-    status_t ret;
+    //status_t ret;
     uint32_t status;
     
     /* for LPC55xx, safe protect, do not erase last sector */
@@ -343,7 +343,7 @@ int memory_erase(uint32_t addr, uint32_t len)
 int memory_write(uint32_t start_addr, uint8_t *buf, uint32_t len)
 {
 	uint32_t failedAddress, failedData;
-    status_t ret;
+    //status_t ret;
     uint32_t status;
     ALIGN(512) static uint8_t  tmp_buf[512];
     

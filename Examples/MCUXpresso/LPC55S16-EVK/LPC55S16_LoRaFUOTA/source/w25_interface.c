@@ -10,7 +10,6 @@
 
 uint8_t W25_read_block_for_SHA(lfs_t *lfs, lfs_file_t* file, size_t nofBytes,  void *outputHASH) {
 	struct Sha_256 sha_256;
-	uint8_t hash[32];
 	sha_256_init(&sha_256, outputHASH);
 
 	static int32_t filePos;
