@@ -535,7 +535,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1792098280" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.1192196266" name="Floating point" superClass="com.crt.advproject.link.fpu" value="com.crt.advproject.link.fpu.fpv5sp.hard" valueType="enumerated"/>
 								<option id="com.crt.advproject.link.manage.1221269876" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1246042646" name="Linker script" superClass="com.crt.advproject.link.script" value="lpcxpresso55s69_hello_world_ns_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1246042646" name="Linker script" superClass="com.crt.advproject.link.script" value="LPC55S69_hello_world_ns_Release.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.942531836" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.1063000733" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1127912706" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -597,7 +597,7 @@
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPCXpresso55S69</sdkName>
 		<sdkExample>lpcxpresso55s69_hello_world_ns</sdkExample>
-		<sdkVersion>2.9.1</sdkVersion>
+		<sdkVersion>2.13.0</sdkVersion>
 		<sdkComponents>platform.drivers.lpc_iocon.LPC55S69;platform.Include_common.LPC55S69;platform.Include_core_cm33.LPC55S69;platform.devices.LPC55S69_CMSIS.LPC55S69;platform.drivers.clock.LPC55S69;platform.drivers.common.LPC55S69;platform.drivers.power.LPC55S69;platform.drivers.reset.LPC55S69;platform.devices.LPC55S69_startup.LPC55S69;platform.drivers.flexcomm_usart.LPC55S69;platform.drivers.flexcomm.LPC55S69;platform.drivers.lpc_gpio.LPC55S69;platform.utilities.assert.LPC55S69;component.serial_manager.LPC55S69;utility.debug_console.LPC55S69;component.usart_adapter.LPC55S69;component.serial_manager_uart.LPC55S69;component.lists.LPC55S69;lpcxpresso55s69_hello_world_ns;</sdkComponents>
 		<boardId>lpcxpresso55s69</boardId>
 		<package>LPC55S69JBD100</package>
@@ -607,14 +607,14 @@
 	<storageModule moduleId="com.crt.config">
 		<projectStorage>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#13;
 &lt;TargetConfig&gt;&#13;
-&lt;Properties property_0="Master" property_3="NXP" property_4="LPC55S69" property_count="5" version="100300"/&gt;&#13;
+&lt;Properties property_3="NXP" property_4="LPC55S69" property_count="5" version="100300"/&gt;&#13;
 &lt;infoList vendor="NXP"&gt;&#13;
 &lt;info chip="LPC55S69" name="LPC55S69"&gt;&#13;
 &lt;chip&gt;&#13;
 &lt;name&gt;LPC55S69&lt;/name&gt;&#13;
-&lt;family&gt;LPC55xx&lt;/family&gt;&#13;
+&lt;family&gt;LPC55S6x&lt;/family&gt;&#13;
 &lt;vendor&gt;NXP&lt;/vendor&gt;&#13;
-&lt;memory can_program="true" id="Flash" is_ro="true" size="608" type="Flash"/&gt;&#13;
+&lt;memory can_program="true" id="Flash" is_ro="true" size="630" type="Flash"/&gt;&#13;
 &lt;memory id="RAM" size="304" type="RAM"/&gt;&#13;
 &lt;memoryInstance derived_from="Flash" driver="LPC55xx.cfx" edited="true" id="PROGRAM_FLASH" location="0x10000" size="0x72000"/&gt;&#13;
 &lt;memoryInstance derived_from="RAM" edited="true" id="Ram0" location="0x20008000" size="0x2b000"/&gt;&#13;
