@@ -1107,7 +1107,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" not allowed (no charging possible)\r\n");
     } else {
-      McuUtility_strcatNum16u(buf, sizeof(buf), value16u/10);
+      McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u/10, ' ', 2);
       McuUtility_chcat(buf, sizeof(buf), '.');
       McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u%10, '0', 1);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
@@ -1125,7 +1125,7 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" not allowed (no charging possible)\r\n");
     } else {
-      McuUtility_strcatNum16u(buf, sizeof(buf), value16u/10);
+      McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u/10, ' ', 2);
       McuUtility_chcat(buf, sizeof(buf), '.');
       McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u%10, '0', 1);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
