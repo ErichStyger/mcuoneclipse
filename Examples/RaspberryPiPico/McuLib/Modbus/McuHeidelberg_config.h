@@ -8,7 +8,7 @@
 #define MODBUS_MCUHEIDELBERG_CONFIG_H_
 
 #ifndef McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
-  #define McuHeidelberg_CONFIG_USE_MOCK_WALLBOX   (1) /*!< if using testing mocks for wallbox state and phase values instead of real state */
+  #define McuHeidelberg_CONFIG_USE_MOCK_WALLBOX   (0) /*!< if using testing mocks for wallbox state and phase values instead of real state. Note this cannot be used with a real vehicle! */
 #endif
 
 #ifndef McuHeidelberg_CONFIG_USE_MOCK_SOLAR

@@ -9,8 +9,8 @@
 
 #include "platform.h"
 
-#define GUI_CONFIG_USE_SCREENSAVER         (1)
-  /*!< if using a screensaver or not */
+#define GUI_CONFIG_USE_SCREENSAVER         (0)
+  /*!< if using a screen saver or not */
 
 #if GUI_CONFIG_USE_SCREENSAVER
   #define GUI_CONFIG_TIMEOUT_USER_ACTION_SEC      (10*60)

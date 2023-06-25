@@ -124,6 +124,8 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
     } else if(mqtt.in_pub_ID == Topic_ID_Grid_Power) {
       GetDataString(buf, sizeof(buf), data, len);
       McuLog_trace("gridP: %s", buf);
+      watt = scanWattValue(buf);
+      McuHeidelberg_SetGridPowerWatt(watt);
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Power) {
       GetDataString(buf, sizeof(buf), data, len);
       McuLog_trace("battP: %s", buf);
@@ -232,6 +234,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 
 void MqttClient_Connect(void) {
 #if LWIP_TCP
+  int nofRetry;
   mqtt.mqtt_client = mqtt_client_new(); /* create client handle */
 
   /* setup connection information */
@@ -246,9 +249,17 @@ void MqttClient_Connect(void) {
   McuUtility_strcpy(mqtt.client_pass, sizeof(mqtt.client_pass), MQTT_DEFAULT_PASS);
 #endif
 
-  /* resolve hostname to IP address: */
-  if (DnsResolver_ResolveName(mqtt.broker, &mqtt.addr, 1000)!=0) { /* use DNS to resolve name to IP address */
-    McuLog_error("failed to resolve broker name %s", mqtt.broker);
+  /* resolve host name to IP address: */
+  for (nofRetry=5; nofRetry>=0; nofRetry--) {
+    if (DnsResolver_ResolveName(mqtt.broker, &mqtt.addr, 1000)!=0) { /* use DNS to resolve name to IP address */
+      McuLog_error("failed to resolve broker name %s, retry ...", mqtt.broker);
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    } else {
+      break; /* success! leaving loop */
+    }
+  }
+  if (nofRetry<0) {
+    McuLog_fatal("failed to resolve broker name %s, giving up", mqtt.broker);
     return;
   }
   /* setup callbacks for incoming data: */

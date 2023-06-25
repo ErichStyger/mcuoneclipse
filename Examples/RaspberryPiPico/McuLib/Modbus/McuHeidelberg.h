@@ -17,8 +17,8 @@ typedef enum McuHeidelberg_Event_e {
   McuHeidelberg_Event_ChargingSetCurrent_Changed, /* current in the charger has changed */
   McuHeidelberg_Event_SolarPower_Changed,         /* produced solar power has changed */
   McuHeidelberg_Event_SitePower_Changed,          /* used power by site has changed */
-  McuHeidelberg_Event_CarMaxPower_Changed,        /* maximum power for charging the car */
-  McuHeidelberg_Event_CurrChargerPower_Changed,   /* current power charging the car */
+  McuHeidelberg_Event_ChargerPower_Changed,       /* charging value of car changed */
+  McuHeidelberg_Event_GridPower_Changed,          /* grid power value changed */
 } McuHeidelberg_Event_e;
 
 typedef void (*McuHeidelberg_EventCallback)(McuHeidelberg_Event_e);
@@ -66,7 +66,11 @@ void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW);
 uint32_t McuHeidelberg_GetSitePowerWatt(void);
 void McuHeidelberg_SetSitePowerWatt(uint32_t powerW);
 
+int32_t McuHeidelberg_GetGridPowerWatt(void);
+void McuHeidelberg_SetGridPowerWatt(int32_t powerW);
+
 uint32_t McuHeidelberg_GetMaxCarPower(void);
+
 uint32_t McuHeidelberg_GetCurrChargerPower(void);
 
 uint8_t McuHeidelberg_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);

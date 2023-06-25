@@ -35,6 +35,10 @@ typedef struct ntp_desc_t {
 #define NTP_PERIOD_TIME_MS  (30*60*1000)    /* period in ms between ntp requests */
 #define NTP_TIMEOUT_TIME_MS (10*1000)       /* timeout time in ms if there is no ntp response */
 
+static unsigned int AddDaylightSavingHourOffset(uint8_t day, uint8_t month) {
+  return 2; /* \todo */
+}
+
 /* Called with results of operation */
 static void ntp_result(ntp_desc_t *state, int status, time_t *result) {
   if (status == 0 && result!=NULL) {
@@ -43,7 +47,7 @@ static void ntp_result(ntp_desc_t *state, int status, time_t *result) {
         utc->tm_mday, utc->tm_mon + 1, utc->tm_year + 1900,
         utc->tm_hour, utc->tm_min, utc->tm_sec);
     McuTimeDate_SetDate(utc->tm_year+1900, utc->tm_mon+1, utc->tm_mday);
-    McuTimeDate_SetTime(utc->tm_hour, utc->tm_min, utc->tm_sec, 0);
+    McuTimeDate_SetTime(utc->tm_hour+AddDaylightSavingHourOffset(utc->tm_mday, utc->tm_mday), utc->tm_min, utc->tm_sec, 0);
   }
   if (state->ntp_timeout_alarm > 0) { /* cancel timeout pending alarm, as we have received a response */
     cancel_alarm(state->ntp_timeout_alarm);

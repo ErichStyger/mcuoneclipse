@@ -65,9 +65,9 @@ static struct guiObjects {
   lv_obj_t *dropdown_user_charging_mode; /* drop down for the user charging mode: fast, slow, ... */
   lv_obj_t *label_charger_status; /* label/text for the charger hardware status: A1, A2, B1, .. */
   lv_obj_t *label_solar_watt; /* label/text for the available solar power */
-  lv_obj_t *label_site_watt; /* label/text for the available solar power */
-  lv_obj_t *label_car_set_watt; /* label/text for the desired car charging power */
-  lv_obj_t *label_charger_power; /* label/text for the actual charging power */
+  lv_obj_t *label_site_watt; /* label/text for the power consumed by site (without charger) */
+  lv_obj_t *label_charger_watt; /* label/text for the actual charging power */
+  lv_obj_t *label_grid_watt; /* label/text for the grid power */
 } guiObjects;
 
 /*
@@ -181,9 +181,12 @@ static void event_handler_charger_status(lv_event_t *e) {
   }
 }
 
-static void strCatKiloWatt(unsigned char *buf, size_t bufSize, uint32_t watt) {
-  McuUtility_strcatNum32uFormatted(buf, bufSize, watt/1000, ' ', 2);
+static void strCatKiloWatt(unsigned char *buf, size_t bufSize, int32_t watt) {
+  McuUtility_strcatNum32sFormatted(buf, bufSize, watt/1000, ' ', 2);
   McuUtility_chcat(buf, bufSize, '.');
+  if (watt<0) { /* care about modulo for negative number */
+    watt = - watt;
+  }
   McuUtility_strcatNum32u(buf, bufSize, (watt%1000)/100);
   McuUtility_chcat(buf, bufSize, 'k');
 }
@@ -206,7 +209,7 @@ static void event_handler_site_power(lv_event_t *e) {
   lv_obj_t *label = lv_event_get_target(e);
   if (code==LV_EVENT_VALUE_CHANGED) {
     uint8_t buf[16];
-    uint32_t watt = McuHeidelberg_GetSitePowerWatt();
+    uint32_t watt = McuHeidelberg_GetSitePowerWatt()-McuHeidelberg_GetCurrChargerPower();
 
     buf[0] = '\0';
     strCatKiloWatt(buf, sizeof(buf), watt);
@@ -219,7 +222,7 @@ static void event_handler_car_set_power(lv_event_t *e) {
   lv_obj_t *label = lv_event_get_target(e);
   if (code==LV_EVENT_VALUE_CHANGED) {
     uint8_t buf[16];
-    uint32_t watt = McuHeidelberg_GetMaxCarPower();
+    uint32_t watt = McuHeidelberg_GetCurrChargerPower();
 
     buf[0] = '\0';
     strCatKiloWatt(buf, sizeof(buf), watt);
@@ -227,12 +230,12 @@ static void event_handler_car_set_power(lv_event_t *e) {
   }
 }
 
-static void event_handler_charger_power(lv_event_t *e) {
+static void event_handler_grid_power(lv_event_t *e) {
   lv_event_code_t code = lv_event_get_code(e);
   lv_obj_t *label = lv_event_get_target(e);
   if (code==LV_EVENT_VALUE_CHANGED) {
     uint8_t buf[16];
-    uint32_t watt = McuHeidelberg_GetCurrChargerPower();
+    uint32_t watt = McuHeidelberg_GetGridPowerWatt();
 
     buf[0] = '\0';
     strCatKiloWatt(buf, sizeof(buf), watt);
@@ -294,7 +297,7 @@ static void createGUI(void) {
     lv_obj_add_event_cb(guiObjects.label_charger_status, event_handler_charger_status, LV_EVENT_VALUE_CHANGED, NULL);
     lv_event_send(guiObjects.label_charger_status, LV_EVENT_VALUE_CHANGED, NULL); /* force update */
 
-    /* symbols for the different wattage */
+    /* symbols for the different watt values */
     lv_obj_t *symbol_sun, *symbol_site, *symbol_car, *symbol_charger;
 
     symbol_sun = lv_label_create(panel_charger);
@@ -305,7 +308,7 @@ static void createGUI(void) {
     symbol_site = lv_label_create(panel_charger);
     lv_label_set_text(symbol_site, LV_SYMBOL_HOME);
     lv_obj_add_style(symbol_site, &guiObjects.style_customFont, LV_PART_MAIN);
-    lv_obj_align_to(symbol_site, symbol_sun, LV_ALIGN_OUT_LEFT_MID, 73, 0);
+    lv_obj_align_to(symbol_site, symbol_sun, LV_ALIGN_OUT_LEFT_MID, 68, 0);
 
     symbol_car = lv_label_create(panel_charger);
     lv_label_set_text(symbol_car, MY_SYMBOL_CAR);
@@ -315,7 +318,7 @@ static void createGUI(void) {
     symbol_charger = lv_label_create(panel_charger);
     lv_label_set_text(symbol_charger, LV_SYMBOL_CHARGE);
     lv_obj_add_style(symbol_charger, &guiObjects.style_customFont, LV_PART_MAIN);
-    lv_obj_align_to(symbol_charger, symbol_car, LV_ALIGN_OUT_LEFT_MID, 73, 0);
+    lv_obj_align_to(symbol_charger, symbol_car, LV_ALIGN_OUT_LEFT_MID, 68, 0);
 
     /* label for the solar power status */
     {
@@ -337,54 +340,53 @@ static void createGUI(void) {
     /* label for the site power status */
     {
       uint8_t buf[16];
-      uint32_t watt = McuHeidelberg_GetSitePowerWatt();
+      uint32_t watt = McuHeidelberg_GetSitePowerWatt()-McuHeidelberg_GetCurrChargerPower();
 
       guiObjects.label_site_watt = lv_label_create(panel_charger);
       buf[0] = '\0';
       strCatKiloWatt(buf, sizeof(buf), watt);
       lv_label_set_text(guiObjects.label_site_watt, buf);
       lv_label_set_long_mode(guiObjects.label_site_watt, LV_LABEL_LONG_CLIP);
-      lv_obj_set_width(guiObjects.label_site_watt, 35);
+      lv_obj_set_width(guiObjects.label_site_watt, 40);
       lv_obj_set_style_text_align(guiObjects.label_site_watt, LV_TEXT_ALIGN_RIGHT, 0);
       lv_obj_add_style(guiObjects.label_site_watt, &guiObjects.style_customFont, LV_PART_MAIN);
       lv_obj_align_to(guiObjects.label_site_watt, symbol_site, LV_ALIGN_OUT_RIGHT_MID, 0, 2);
       lv_obj_add_event_cb(guiObjects.label_site_watt, event_handler_site_power, LV_EVENT_VALUE_CHANGED, NULL);
     }
 
-    /* label for the car set power target status */
-    {
-      uint8_t buf[16];
-      uint32_t watt = McuHeidelberg_GetMaxCarPower();
-
-      guiObjects.label_car_set_watt = lv_label_create(panel_charger);
-      buf[0] = '\0';
-      strCatKiloWatt(buf, sizeof(buf), watt);
-      lv_label_set_text(guiObjects.label_car_set_watt, buf);
-      lv_label_set_long_mode(guiObjects.label_car_set_watt, LV_LABEL_LONG_CLIP);
-      lv_obj_set_width(guiObjects.label_car_set_watt, 35);
-      lv_obj_set_style_text_align(guiObjects.label_car_set_watt, LV_TEXT_ALIGN_RIGHT, 0);
-      lv_obj_add_style(guiObjects.label_car_set_watt, &guiObjects.style_customFont, LV_PART_MAIN);
-      lv_obj_align_to(guiObjects.label_car_set_watt, symbol_car, LV_ALIGN_OUT_RIGHT_MID, 0, 2);
-      lv_obj_add_event_cb(guiObjects.label_car_set_watt, event_handler_car_set_power, LV_EVENT_VALUE_CHANGED, NULL);
-    }
-
-    /* label for the actual power to the car */
+    /* label for the car charging watt */
     {
       uint8_t buf[16];
       uint32_t watt = McuHeidelberg_GetCurrChargerPower();
 
-      guiObjects.label_charger_power = lv_label_create(panel_charger);
+      guiObjects.label_charger_watt = lv_label_create(panel_charger);
       buf[0] = '\0';
       strCatKiloWatt(buf, sizeof(buf), watt);
-      lv_label_set_text(guiObjects.label_charger_power, buf);
-      lv_label_set_long_mode(guiObjects.label_solar_watt, LV_LABEL_LONG_CLIP);
-      lv_obj_set_width(guiObjects.label_charger_power, 35);
-      lv_obj_set_style_text_align(guiObjects.label_charger_power, LV_TEXT_ALIGN_RIGHT, 0);
-      lv_obj_add_style(guiObjects.label_charger_power, &guiObjects.style_customFont, LV_PART_MAIN);
-      lv_obj_align_to(guiObjects.label_charger_power, symbol_charger, LV_ALIGN_OUT_RIGHT_MID, 0, 2);
-      lv_obj_add_event_cb(guiObjects.label_charger_power, event_handler_charger_power, LV_EVENT_VALUE_CHANGED, NULL);
+      lv_label_set_text(guiObjects.label_charger_watt, buf);
+      lv_label_set_long_mode(guiObjects.label_charger_watt, LV_LABEL_LONG_CLIP);
+      lv_obj_set_width(guiObjects.label_charger_watt, 35);
+      lv_obj_set_style_text_align(guiObjects.label_charger_watt, LV_TEXT_ALIGN_RIGHT, 0);
+      lv_obj_add_style(guiObjects.label_charger_watt, &guiObjects.style_customFont, LV_PART_MAIN);
+      lv_obj_align_to(guiObjects.label_charger_watt, symbol_car, LV_ALIGN_OUT_RIGHT_MID, 0, 2);
+      lv_obj_add_event_cb(guiObjects.label_charger_watt, event_handler_car_set_power, LV_EVENT_VALUE_CHANGED, NULL);
+    }
 
-      lv_obj_add_flag(guiObjects.label_charger_power, LV_OBJ_FLAG_SCROLL_ON_FOCUS|LV_OBJ_FLAG_EVENT_BUBBLE|LV_OBJ_FLAG_CLICKABLE|LV_OBJ_FLAG_CLICK_FOCUSABLE);
+    /* label for the grid power */
+    {
+      uint8_t buf[16];
+      int32_t watt = McuHeidelberg_GetGridPowerWatt();
+
+      guiObjects.label_grid_watt = lv_label_create(panel_charger);
+      buf[0] = '\0';
+      strCatKiloWatt(buf, sizeof(buf), watt);
+      lv_label_set_text(guiObjects.label_grid_watt, buf);
+      lv_label_set_long_mode(guiObjects.label_solar_watt, LV_LABEL_LONG_CLIP);
+      lv_obj_set_width(guiObjects.label_grid_watt, 40);
+      lv_obj_set_style_text_align(guiObjects.label_grid_watt, LV_TEXT_ALIGN_RIGHT, 0);
+      lv_obj_add_style(guiObjects.label_grid_watt, &guiObjects.style_customFont, LV_PART_MAIN);
+      lv_obj_align_to(guiObjects.label_grid_watt, symbol_charger, LV_ALIGN_OUT_RIGHT_MID, 0, 2);
+      lv_obj_add_event_cb(guiObjects.label_grid_watt, event_handler_grid_power, LV_EVENT_VALUE_CHANGED, NULL);
+      lv_obj_add_flag(guiObjects.label_grid_watt, LV_OBJ_FLAG_SCROLL_ON_FOCUS|LV_OBJ_FLAG_EVENT_BUBBLE|LV_OBJ_FLAG_CLICKABLE|LV_OBJ_FLAG_CLICK_FOCUSABLE);
     }
   }
 }
@@ -413,14 +415,14 @@ static void WallboxEventCallback(McuHeidelberg_Event_e event) {
         lv_event_send(guiObjects.label_site_watt, LV_EVENT_VALUE_CHANGED, NULL);
       }
       break;
-    case McuHeidelberg_Event_CarMaxPower_Changed:
-      if (guiObjects.label_car_set_watt!=NULL) {
-        lv_event_send(guiObjects.label_car_set_watt, LV_EVENT_VALUE_CHANGED, NULL);
+    case McuHeidelberg_Event_ChargerPower_Changed:
+      if (guiObjects.label_charger_watt!=NULL) {
+        lv_event_send(guiObjects.label_charger_watt, LV_EVENT_VALUE_CHANGED, NULL);
       }
       break;
-    case McuHeidelberg_Event_CurrChargerPower_Changed:
-      if (guiObjects.label_charger_power!=NULL) {
-        lv_event_send(guiObjects.label_charger_power, LV_EVENT_VALUE_CHANGED, NULL);
+    case McuHeidelberg_Event_GridPower_Changed:
+      if (guiObjects.label_grid_watt!=NULL) {
+        lv_event_send(guiObjects.label_grid_watt, LV_EVENT_VALUE_CHANGED, NULL);
       }
       break;
     default:
