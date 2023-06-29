@@ -209,7 +209,7 @@ static void event_handler_site_power(lv_event_t *e) {
   lv_obj_t *label = lv_event_get_target(e);
   if (code==LV_EVENT_VALUE_CHANGED) {
     uint8_t buf[16];
-    uint32_t watt = McuHeidelberg_GetSitePowerWatt()-McuHeidelberg_GetCurrChargerPower();
+    uint32_t watt = McuHeidelberg_GetSiteWithoutChargerPowerWatt();
 
     buf[0] = '\0';
     strCatKiloWatt(buf, sizeof(buf), watt);
@@ -757,9 +757,12 @@ void GUI_SendEvent(Gui_Event_e event) {
       }
       break;
 #endif
+
+#if PL_CONFIG_IS_APP_VHS
     case Gui_Event_Road_Changed:
        /* \todo */
       break;
+#endif
 
     default:
       break;

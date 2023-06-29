@@ -145,31 +145,32 @@ static void WiFiTask(void *pv) {
   vTaskDelay(pdMS_TO_TICKS(10*100)); /* give network tasks time to start up */
 #endif
 
-  McuLog_info("connecting to SSID '%s'...", wifi.ssid);
-#if PL_CONFIG_USE_WATCHDOG
-  TickType_t tickCount = McuWatchdog_ReportTimeStart();
-  McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
-#endif
-  res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 5000); /* can take 1000-3500 ms */
-#if PL_CONFIG_USE_WATCHDOG
-  McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
-  McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);
-#endif
-  if (res!=0) {
-    for(;;) {
+  for(;;) { /* retries connection if it faileed, breaks loop if sucess */
+    McuLog_info("connecting to SSID '%s'...", wifi.ssid);
+  #if PL_CONFIG_USE_WATCHDOG
+    TickType_t tickCount = McuWatchdog_ReportTimeStart();
+    McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
+  #endif
+    res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 5000); /* can take 1000-3500 ms */
+  #if PL_CONFIG_USE_WATCHDOG
+    McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
+    McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);
+  #endif
+    if (res!=0) {
       McuLog_error("connection failed after timeout! code %d", res);
-      vTaskDelay(pdMS_TO_TICKS(30000)); /* limit message output */
+      vTaskDelay(pdMS_TO_TICKS(5000)); /* limit message output */
+    } else {
+      McuLog_info("success!");
+      wifi.isConnected = true;
+    #if PL_CONFIG_USE_NTP_CLIENT
+      NtpClient_TaskResume();
+    #endif
+    #if PL_CONFIG_USE_MQTT_CLIENT
+      MqttClient_Connect();
+    #endif
+      break; /* break for loop */
     }
-  } else {
-    McuLog_info("success!");
-    wifi.isConnected = true;
-  #if PL_CONFIG_USE_NTP_CLIENT
-    NtpClient_TaskResume();
-  #endif
-  #if PL_CONFIG_USE_MQTT_CLIENT
-    MqttClient_Connect();
-  #endif
-  }
+  } /* for */
   for(;;) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;

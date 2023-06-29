@@ -43,6 +43,7 @@
 #endif
 #include "cube.h"
 #include "cubeAnim.h"
+#include "picoTool.h"
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
@@ -102,4 +103,5 @@ void PL_Init(void) {
 #endif
   Cube_Init();
   CubeAnim_Init();
+  PicoTool_Init();
 }

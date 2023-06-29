@@ -59,6 +59,7 @@ typedef struct mqtt_t {
 } mqtt_t;
 
 static mqtt_t mqtt; /* information used for MQTT connection */
+static bool mqtt_doLogging = true; /* if it shall write log messages */
 
 static const struct mqtt_connect_client_info_t mqtt_client_info = {
   mqtt.client_id, /* client ID */
@@ -81,7 +82,7 @@ static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, 
   }
 }
 
-static int32_t scanWattValue(unsigned char *str) {
+static int32_t scanWattValue(const unsigned char *str) {
   /* string in in kW and it returns the number in Watt, so for example:
    * "1" => 1000, * "1.2" => 1200, "3.025" = 3025, "-1.002" = -1002
    */
@@ -109,29 +110,39 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
     /* Last fragment of payload received (or whole part if payload fits receive buffer. See MQTT_VAR_HEADER_BUFFER_LEN)  */
     if(mqtt.in_pub_ID == Topic_ID_Solar_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("solarP: %s", buf);
+      if (mqtt_doLogging) {
+        McuLog_trace("solarP: %s kW", buf);
+      }
       watt = scanWattValue(buf);
       if (watt>=0) { /* can only be positive */
         McuHeidelberg_SetSolarPowerWatt(watt);
       }
     } else if(mqtt.in_pub_ID == Topic_ID_Site_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("siteP: %s", buf);
+      if (mqtt_doLogging) {
+        McuLog_trace("siteP: %s kW", buf);
+      }
       watt = scanWattValue(buf);
       if (watt>=0) { /* can only be positive */
         McuHeidelberg_SetSitePowerWatt(watt);
       }
     } else if(mqtt.in_pub_ID == Topic_ID_Grid_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("gridP: %s", buf);
+      if (mqtt_doLogging) {
+        McuLog_trace("gridP: %s kW", buf);
+      }
       watt = scanWattValue(buf);
       McuHeidelberg_SetGridPowerWatt(watt);
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("battP: %s", buf);
+      if (mqtt_doLogging) {
+        McuLog_trace("battP: %s, kW", buf);
+      }
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Percentage) {
       GetDataString(buf, sizeof(buf), data, len);
-      McuLog_trace("bat : %s%%", buf);
+      if (mqtt_doLogging) {
+        McuLog_trace("bat%%: %s%%", buf);
+      }
     } else {
       McuLog_trace("mqtt_incoming_data_cb: Ignoring payload...");
     }
@@ -280,6 +291,41 @@ void MqttClient_Connect(void) {
       );
   cyw43_arch_lwip_end(); /* end section accessing lwIP */
 #endif /* LWIP_TCP */
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  McuShell_SendStatusStr((unsigned char*)"mqttclient", (unsigned char*)"mqttclient status\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  log", mqtt_doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"mqttclient", (unsigned char*)"Group of mqttclient commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  log on|off", (unsigned char*)"Turn logging on or off\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t MqttClient_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  const unsigned char *p;
+  uint16_t val16u;
+
+  if (McuUtility_strcmp((char*)cmd, McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, "mqttclient help")==0) {
+    *handled = true;
+    return PrintHelp(io);
+  } else if ((McuUtility_strcmp((char*)cmd, McuShell_CMD_STATUS)==0) || (McuUtility_strcmp((char*)cmd, "mqttclient status")==0)) {
+    *handled = true;
+    return PrintStatus(io);
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient log on")==0) {
+    *handled = true;
+    mqtt_doLogging = true;
+    return ERR_OK;
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient log off")==0) {
+    *handled = true;
+    mqtt_doLogging = false;
+    return ERR_OK;
+  }
+  return ERR_OK;
 }
 
 void MqttClient_Deinit(void) {

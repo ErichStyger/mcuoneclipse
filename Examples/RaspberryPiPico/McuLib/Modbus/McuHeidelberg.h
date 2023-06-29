@@ -65,6 +65,7 @@ void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW);
 
 uint32_t McuHeidelberg_GetSitePowerWatt(void);
 void McuHeidelberg_SetSitePowerWatt(uint32_t powerW);
+uint32_t McuHeidelberg_GetSiteWithoutChargerPowerWatt(void);
 
 int32_t McuHeidelberg_GetGridPowerWatt(void);
 void McuHeidelberg_SetGridPowerWatt(int32_t powerW);

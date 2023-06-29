@@ -82,6 +82,9 @@
 #if PL_CONFIG_USE_WATCHDOG
   #include "McuWatchdog.h"
 #endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  #include "mqtt_client.h"
+#endif
 #include "application.h"
 
 typedef struct {
@@ -206,6 +209,9 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
 #endif
 #if PL_CONFIG_USE_UNIT_TESTS
   UnitTest_ParseCommand,
+#endif
+#if PL_CONFIG_USE_MQTT_CLIENT
+  MqttClient_ParseCommand,
 #endif
   App_ParseCommand,
   NULL /* Sentinel */

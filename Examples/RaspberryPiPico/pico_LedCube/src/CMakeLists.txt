@@ -3,16 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  ws2812.c
-  NeoPixel.c
-  Shell.c
-  FreeRTOShooks.c
-  PicoWiFi.c
-  cube.c
-  cubeAnim.c
+  *.c
  )
 
 # generate PIO header "ws2812.pio.h" inside the src directory 
