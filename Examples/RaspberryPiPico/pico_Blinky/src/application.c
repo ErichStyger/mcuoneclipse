@@ -17,11 +17,8 @@
   #define LED_PIN   (25) /* GPIO 25 */
 #endif
 
-
 static void AppTask(void *pv) {
   #define APP_HAS_ONBOARD_GREEN_LED   (!PL_CONFIG_USE_PICO_W)
-  uint8_t prevBatteryCharge=200, currBatteryCharge;
-
 #if !PL_CONFIG_USE_WIFI && PL_CONFIG_USE_PICO_W
   if (cyw43_arch_init()==0)  { /* need to init for accessing LEDs and other pins */
     PicoWiFi_SetArchIsInitialized(true);
@@ -46,7 +43,6 @@ static void AppTask(void *pv) {
 #elif PL_CONFIG_USE_PICO_W && !PL_CONFIG_USE_WIFI
   bool ledIsOn = false;
 #endif
-  vTaskDelay(pdMS_TO_TICKS(15*100));
   for(;;) {
   #if APP_HAS_ONBOARD_GREEN_LED
     McuLED_Toggle(led);
@@ -54,7 +50,7 @@ static void AppTask(void *pv) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
   #endif
-  vTaskDelay(pdMS_TO_TICKS(10*100));
+    vTaskDelay(pdMS_TO_TICKS(10*100));
   }
 }
 
