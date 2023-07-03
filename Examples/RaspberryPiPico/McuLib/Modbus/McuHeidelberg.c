@@ -91,6 +91,8 @@ static struct McuHeidelbergInfo_s {
   } hw;
 } McuHeidelbergInfo;
 
+static SemaphoreHandle_t semNewSolarValue; /* binary semaphore to notify task about new solar PV value */
+
 #if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
 static struct mock {
   uint16_t hwChargerState; /* mock value of wallbox charging state */
@@ -438,14 +440,18 @@ static uint32_t calculateAvailableSolarPower(void) {
   uint32_t solar, siteOnly, charger, available;
 
   solar = McuHeidelberg_GetSolarPowerWatt(); /* power produced by the solar panels */
+#if McuHeidelberg_CONFIG_SITE_BASE_POWER!=0
+  siteOnly = McuHeidelberg_CONFIG_SITE_BASE_POWER;
+#else
   siteOnly = McuHeidelberg_GetSiteWithoutChargerPowerWatt(); /* power used by site *without* the charger */
+#endif
   /* calculate how much we have available for charging */
   if (solar>siteOnly) { /* more solar power available than currently used? */
     available = solar-siteOnly; /* return difference as surplus */
   } else {
     available = 0;
   }
-  McuLog_info("solar: %d, site: %d, site only: %d charger: %d, available: %d", solar, McuHeidelberg_GetSitePowerWatt(), siteOnly, McuHeidelberg_GetCurrChargerPower(), available);
+  McuLog_info("solar: %d, site: %d, site only: %d, charger: %d, available: %d", solar, McuHeidelberg_GetSitePowerWatt(), siteOnly, McuHeidelberg_GetCurrChargerPower(), available);
   return available;
 }
 
@@ -538,6 +544,7 @@ void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW) {
   if (McuHeidelbergInfo.solarPowerW!=powerW) {
     McuHeidelbergInfo.solarPowerW = powerW;
     CallEventCallback(McuHeidelberg_Event_SolarPower_Changed);
+    (void)xSemaphoreGive(semNewSolarValue); /* notify task */
   }
 }
 
@@ -673,7 +680,9 @@ static void wallboxTask(void *pv) {
  * To stop the charging, write 0 to register 261 (McuHeidelberg_Addr_MaxCurrentCommand).
  */
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(200)); /* standard delay time */
+    if (xSemaphoreTake(semNewSolarValue, pdMS_TO_TICKS(1000))==pdTRUE) { /* standard delay time, or notification received */
+      McuLog_trace("new solar value received");
+    }
 
     if (McuHeidelbergInfo.state!=Wallbox_TaskState_None) { /* as soon as we have a connection, check the wallbox state for changes */
       uint16_t HWchargerState;
@@ -698,7 +707,6 @@ static void wallboxTask(void *pv) {
           McuLog_info("connected with charger");
           McuHeidelbergInfo.isActive = true;
           McuHeidelbergInfo.state = Wallbox_TaskState_Connected;
-          McuHeidelberg_SetMaxCarPower(0); /* set initial charger current to zero */
           /* read static values from wallbox */
           if (McuHeidelberg_ReadHardwareMinCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.minCurrent)!=ERR_OK) {
             McuLog_error("failed reading min current");
@@ -735,6 +743,7 @@ static void wallboxTask(void *pv) {
           }
           /* determine the number of active phases */
           McuHeidelbergInfo.nofPhases = calculateNofActivePhases();
+          McuHeidelberg_SetMaxCarPower(calculateMinWallboxPower()); /* set initial charging value */
         } else {
           McuLog_error("communication failed, charger in standby? Retry in 30 seconds...");
           vTaskDelay(pdMS_TO_TICKS(30000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
@@ -1328,4 +1337,10 @@ void McuHeidelberg_Init(void) {
      McuLog_fatal("Failed creating task");
      for(;;){} /* error! probably out of memory */
    }
+  semNewSolarValue = xSemaphoreCreateBinary();
+  if (semNewSolarValue==NULL) {
+    McuLog_fatal("Failed creating semaphore");
+    for(;;){} /* error! probably out of memory */
+  }
+  vQueueAddToRegistry(semNewSolarValue, "semNewSolarValue");
 }

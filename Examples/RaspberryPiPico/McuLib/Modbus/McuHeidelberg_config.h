@@ -22,4 +22,9 @@
     /*!< if using MCU watchdog functionality. Currently not implemented */
 #endif
 
+#ifndef McuHeidelberg_CONFIG_SITE_BASE_POWER
+  #define McuHeidelberg_CONFIG_SITE_BASE_POWER    (500)
+    /*! If non-zero, use this value as the site base power */
+#endif
+
 #endif /* MODBUS_MCUHEIDELBERG_CONFIG_H_ */
