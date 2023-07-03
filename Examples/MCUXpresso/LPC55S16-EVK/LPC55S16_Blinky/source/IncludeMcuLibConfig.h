@@ -70,12 +70,11 @@ Instructions:
 #define MCUSPI_CONFIG_TRANSFER_BAUDRATE         (4*500000U)
 /* ---------------------------------------------------------------------------------------*/
 /* McuFlash */
-#define McuFlash_CONFIG_IS_ENABLED                    (1)
-#define McuFlash_CONFIG_NOF_BLOCKS                    (32)
+#define McuFlash_CONFIG_IS_ENABLED                    (1) /* enable McuFlash module */
+#define McuFlash_CONFIG_NOF_BLOCKS                    (32) /* number of flash blocks */
 #define McuFlash_CONFIG_MEM_START                     (((0+244*1024)-((McuFlash_CONFIG_NOF_BLOCKS)*McuFlash_CONFIG_FLASH_BLOCK_SIZE)))
 /* ------------------- McuLittleFS --------------------------*/
-#define MCUW28Q128_CONFIG_ENABLED                     (1)
-#define LITTLEFS_CONFIG_ENABLED                       (1)
+#define LITTLEFS_CONFIG_ENABLED                       (1) /* enable the LittleFS file system */
 #if 0 /* using Winbond external flash */
   #define McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE     McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
 #else /* using internal flash with McuFlash */

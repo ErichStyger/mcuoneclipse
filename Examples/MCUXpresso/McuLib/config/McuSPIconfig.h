@@ -17,6 +17,11 @@
 
 /* NOTE: Pin muxing for the MISO/MOSI/CLK has to be done in the pins tool! */
 
+#ifndef MCUSPI_CONFIG_USE_CS
+  #define MCUSPI_CONFIG_USE_CS     (1)
+    /*!< 1: use and initialize CS pin; 0: CS pin is handled by the application */
+#endif
+
 #ifndef MCUSPI_CONFIG_HW_TEMPLATE
   #define MCUSPI_CONFIG_HW_TEMPLATE   MCUSPI_CONFIG_HW_TEMPLATE_NONE
 #endif
@@ -32,8 +37,10 @@
   #define MCUSPI_CONFIG_HW_CS_PORT   PORTD
   #define MCUSPI_CONFIG_HW_CS_PIN    4
 
-  #define MCUSPI_CONFIG_HW_CS_INIT() \
-    CLOCK_EnableClock(kCLOCK_PortD);
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT() \
+      CLOCK_EnableClock(kCLOCK_PortD);
+  #endif
 
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1
   #define MCUSPI_CONFIG_HW_SPI_MASTER                     SPI1
@@ -46,8 +53,10 @@
   #define MCUSPI_CONFIG_HW_CS_PORT   PORTB
   #define MCUSPI_CONFIG_HW_CS_PIN    18
 
-  #define MCUSPI_CONFIG_HW_CS_INIT() \
-    CLOCK_EnableClock(kCLOCK_PortB);
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT() \
+      CLOCK_EnableClock(kCLOCK_PortB);
+  #endif
 
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_LPC55S16_FC3
   /* FC3_SPI_SCK,   P0_6
@@ -70,7 +79,9 @@
   #define MCUSPI_CONFIG_HW_CS_PORT   0
   #define MCUSPI_CONFIG_HW_CS_PIN    4
 
-  #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #endif
 
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_LPC55S59_FC8
   #define MCUSPI_CONFIG_HW_SPI_MASTER          SPI8
@@ -88,7 +99,9 @@
   #define MCUSPI_CONFIG_HW_CS_PORT   0
   #define MCUSPI_CONFIG_HW_CS_PIN    4
 
-  #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #endif
 
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
   #define MCUSPI_CONFIG_HW_SCLK_PIN (10)  /* SPI1_SCK */
@@ -98,8 +111,9 @@
 
   #define MCUSPI_CONFIG_HW_SPI_INIT() /* nothing */
 
-  #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
-
+  #ifndef MCUSPI_CONFIG_HW_CS_INIT
+    #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
+  #endif
 #endif /* MCUSPI_CONFIG_HW_TEMPLATE */
 
 #ifndef MCUSPI_CONFIG_TRANSFER_BAUDRATE

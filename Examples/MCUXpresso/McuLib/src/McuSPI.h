@@ -23,6 +23,8 @@ int McuSPI_SendReceiveByte(unsigned char ch, unsigned char *chp);
 
 int McuSPI_ReceiveByte(unsigned char *chp);
 
+int McuSPI_SetBaudRate(uint32_t baud);
+
 void McuSPI_Init(void);
 
 #endif /* MCUSPI_H_ */

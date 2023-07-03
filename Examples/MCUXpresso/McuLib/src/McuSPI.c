@@ -7,6 +7,7 @@
 #include "McuSPI.h"
 #if MCUSPI_CONFIG_HW_TEMPLATE!=MCUSPI_CONFIG_HW_TEMPLATE_NONE
 #include "McuLib.h"
+#include "McuLog.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_dspi.h"
 #elif McuLib_CONFIG_CPU_IS_LPC55xx
@@ -16,7 +17,9 @@
 #endif
 #include "McuGPIO.h"
 
-static McuGPIO_Handle_t McuSPI_CSpin;
+#if MCUSPI_CONFIG_USE_CS
+  static McuGPIO_Handle_t McuSPI_CSpin;
+#endif
 #if McuLib_CONFIG_CPU_IS_RPxxxx
   static spi_inst_t *spiHandle;
 #endif
@@ -76,15 +79,28 @@ int McuSPI_ReceiveByte(unsigned char *chp) {
   return McuSPI_SendReceiveBlock(NULL, chp, 1);
 }
 
+int McuSPI_SetBaudRate(uint32_t baud) {
+#if (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI0) || (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1)
+  uint32_t bestBaud;
+
+  bestBaud = DSPI_MasterSetBaudRate(MCUSPI_CONFIG_HW_SPI_MASTER, kDSPI_Ctar0, baud, MCUSPI_CONFIG_HW_SPI_MASTER_CLK_FREQ);
+  return bestBaud!=0;
+#else
+  return ERR_FAILED;
+#endif
+}
+
 #if 0 /* for testing only */
 static void McuSPI_Test(void) {
   uint8_t tx = 'A';
   uint8_t rx;
   int res;
 
+#if MCUSPI_CONFIG_USE_CS
   /* testing CS toggling */
   McuGPIO_SetLow(McuSPI_CSpin);
   McuGPIO_SetHigh(McuSPI_CSpin);
+#endif
   /* testing a transfer */
   res = McuSPI_SendReceiveBlock(&tx, &rx, sizeof(tx));
   if (res!=0) {
@@ -93,14 +109,19 @@ static void McuSPI_Test(void) {
 }
 #endif
 
+#if MCUSPI_CONFIG_USE_CS
 void McuSPI_SetCS_Low(void) {
   McuGPIO_SetLow(McuSPI_CSpin);
 }
+#endif
 
+#if MCUSPI_CONFIG_USE_CS
 void McuSPI_SetCS_High(void) {
   McuGPIO_SetHigh(McuSPI_CSpin);
 }
+#endif
 
+#if MCUSPI_CONFIG_USE_CS
 static void McuSPI_InitCS(void) {
   McuGPIO_Config_t config;
 
@@ -116,12 +137,16 @@ static void McuSPI_InitCS(void) {
 
   McuSPI_CSpin = McuGPIO_InitGPIO(&config);
   if (McuSPI_CSpin==NULL) {
+    McuLog_fatal("failed initializing SPI CS pin");
     for(;;) {} /* error */
   }
 }
+#endif /* MCUSPI_CONFIG_USE_CS */
 
 void McuSPI_Init(void) {
+#if MCUSPI_CONFIG_USE_CS
   McuSPI_InitCS();
+#endif
 #if (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI0) || (MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_KINETIS_K22_SPI1)
   dspi_master_config_t masterConfig;
   uint32_t srcClock_Hz;

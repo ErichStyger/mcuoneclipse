@@ -111,7 +111,7 @@ void PL_Init(void) {
 #endif
 #if McuFlash_CONFIG_IS_ENABLED
   McuFlash_Init();
-  McuFlash_RegisterMemory((const void*)PL_CONFIG_FLASH_NVM_ADDR_START, PL_CONFIG_FLASH_NVM_NOF_BLOCKS*PL_CONFIG_FLASH_NVM_BLOCK_SIZE);
+  McuFlash_RegisterMemory((const void*)McuFlash_CONFIG_MEM_START, McuFlash_CONFIG_NOF_BLOCKS*McuFlash_CONFIG_FLASH_BLOCK_SIZE);
 #endif
 #if PL_CONFIG_HAS_LITTLE_FS
   #if McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE==McuLittleFSBlockDevice_CONFIG_MEMORY_TYPE_WINBOND_W25Q128
