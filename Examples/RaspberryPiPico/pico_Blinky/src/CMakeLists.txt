@@ -3,11 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  FreeRTOShooks.c
-  PicoWiFi.c
+  *.c
  )
 
 # add_library: With this declaration, you express the intent to build a library. 

@@ -3,11 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  FreeRTOShooks.c
-  PicoWiFi.c
+  *.c
  )
 
 # add_library: With this declaration, you express the intent to build a library. 
@@ -24,6 +20,11 @@ target_link_libraries(
 #  # pico_cyw43_arch_lwip_poll
 # pico_cyw43_arch_lwip_threadsafe_background  # RAW lwIP with NO_SYS=1 in lwipopts.h
 #  pico_cyw43_arch_lwip_sys_freertos  # full lwIP including blocking sockets, with NO_SYS=0 in lwipopts.h
+  hardware_pio  # NEC IR protocol
+  hardware_adc  # internal temperature and ADC
+  hardware_rtc  # RTC for sleep.c
+  hardware_pwm
+  hardware_spi
 )
 
 # target_include_directories: Libraries need to publish their header files 

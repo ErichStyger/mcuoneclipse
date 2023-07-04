@@ -1,13 +1,23 @@
 /*
- * Copyright (c) 2023, Erich Styger
+ * Hue Apple IR Remote
+ * Author: 	Joshua Wyss
+ * Date: 	24.11.2022
  *
- * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#include "application.h"
+#include "hardware/gpio.h"
+#include "pico/stdlib.h"
+#include "MyPlatform.h"
+#include "McuRTOS.h"
 
 int main(void) {
-  APP_Run();
-  for(;;) {}
-  return 0;
+    MyPL_Init(); //Initialize everything
+    //main action happens in MainTask.c
+    vTaskStartScheduler(); //Start the scheduler
+    //code never cums here
+    return 0;
 }
+
+// file end
+//=================================================================================
+

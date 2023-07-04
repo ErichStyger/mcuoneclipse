@@ -10,7 +10,6 @@
 #include "McuLibconfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "McuTimeDate.h"
 
 /*
 ** ===================================================================
@@ -88,7 +87,7 @@ void McuRTOS_vApplicationMallocFailedHook(void)
 */
 void McuRTOS_vApplicationTickHook(void)
 {
-  McuTimeDate_AddTick();
+  /* Hook called for every RTOS tick. */
 }
 
 /*
@@ -107,7 +106,7 @@ void McuRTOS_vApplicationIdleHook(void)
 {
   /* Called whenever the RTOS is idle (from the IDLE task).
      Here would be a good place to put the CPU into low power mode. */
-  //__asm volatile("wfi");
+  __asm("wfi");
 }
 
 
