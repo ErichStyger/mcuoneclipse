@@ -17,6 +17,7 @@ file(GLOB FILES
   src/McuEE24.c
   src/McuEvents.c
   src/McuExtRTC.c
+  src/McuFlash.c
   src/McuFontDisplay.c
 
   src/McuGDisplaySSD1306.c
@@ -94,7 +95,6 @@ file(GLOB FILES
    
   # MinINI
   minIni/McuMinINI.c
-  minIni/McuFlash.c
   minIni/minIni.c
   minIni/minGlue-FatSs.c
   minIni/minGlue-Flash.c

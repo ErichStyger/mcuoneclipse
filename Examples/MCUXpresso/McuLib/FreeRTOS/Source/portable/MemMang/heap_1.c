@@ -47,6 +47,10 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  #include "SEGGER_SYSVIEW_Conf.h"
+  #include "SEGGER_SYSVIEW.h"
+#endif
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -77,12 +81,12 @@
 static size_t xNextFreeByte = ( size_t ) 0;
 
 /*-----------------------------------------------------------*/
-static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
+static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global, so it can be re-initialized */
 
-void * pvPortMalloc( size_t xWantedSize )
+void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
 {
     void * pvReturn = NULL;
-//static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global os it can be re-initialized */
+//static uint8_t *pucAlignedHeap = NULL; /* << EST: make it global so it can be re-initialized */
 
     /* Ensure that blocks are always aligned. */
     #if ( portBYTE_ALIGNMENT != 1 )
@@ -106,6 +110,10 @@ void * pvPortMalloc( size_t xWantedSize )
     {
         if( pucAlignedHeap == NULL )
         {
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  SEGGER_SYSVIEW_HeapDefine(ucHeap, ucHeap, sizeof(ucHeap), 0);
+  SEGGER_SYSVIEW_NameResource((uint32_t)ucHeap, "heap1");
+#endif
             /* Ensure the heap starts on a correctly aligned boundary. */
             pucAlignedHeap = ( uint8_t * ) ( ( ( portPOINTER_SIZE_TYPE ) & ucHeap[ portBYTE_ALIGNMENT - 1 ] ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
         }
@@ -121,7 +129,15 @@ void * pvPortMalloc( size_t xWantedSize )
             xNextFreeByte += xWantedSize;
         }
 
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+        if (heapTag!=-1) {
+            SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
+        } else {
+            SEGGER_SYSVIEW_HeapAlloc(ucHeap, pvReturn, xWantedSize);
+        }
+#else
         traceMALLOC( pvReturn, xWantedSize );
+#endif
     }
     ( void ) xTaskResumeAll();
 
@@ -129,12 +145,22 @@ void * pvPortMalloc( size_t xWantedSize )
     {
         if( pvReturn == NULL )
         {
-            vApplicationMallocFailedHook();
+	#if 1/* << EST: Using configuration macro name for hook */
+    extern void configUSE_MALLOC_FAILED_HOOK_NAME( void );
+	configUSE_MALLOC_FAILED_HOOK_NAME();
+	#else /* << EST */
+	vApplicationMallocFailedHook();
+	#endif
         }
     }
     #endif
 
     return pvReturn;
+}
+/*-----------------------------------------------------------*/
+
+void *pvPortMalloc(size_t xWantedSize) { /* << EST */
+  return pvPortMallocExt(xWantedSize, -1);
 }
 /*-----------------------------------------------------------*/
 
@@ -161,6 +187,7 @@ size_t xPortGetFreeHeapSize( void )
 {
     return( configADJUSTED_HEAP_SIZE - xNextFreeByte );
 }
+/*-----------------------------------------------------------*/
 
 #if 1 /* << EST */
 void vPortInitializeHeap(void) {

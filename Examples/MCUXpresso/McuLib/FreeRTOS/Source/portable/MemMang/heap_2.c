@@ -50,6 +50,10 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  #include "SEGGER_SYSVIEW_Conf.h"
+  #include "SEGGER_SYSVIEW.h"
+#endif
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -160,14 +164,14 @@ static void prvHeapInit( void ) PRIVILEGED_FUNCTION;
         pxIterator->pxNextFreeBlock = pxBlockToInsert;                                                                              \
     }
 /*-----------------------------------------------------------*/
-static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
+static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global, so it can be re-initialized */
 
-void * pvPortMalloc( size_t xWantedSize )
+void * pvPortMallocExt( size_t xWantedSize, unsigned int heapTag) /* << EST */
 {
     BlockLink_t * pxBlock;
     BlockLink_t * pxPreviousBlock;
     BlockLink_t * pxNewBlockLink;
-//  PRIVILEGED_DATA static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global os it can be re-initialized */
+//  PRIVILEGED_DATA static BaseType_t xHeapHasBeenInitialised = pdFALSE; /* << EST: make it global so it can be re-initialized */
     void * pvReturn = NULL;
     size_t xAdditionalRequiredSize;
 
@@ -254,8 +258,15 @@ void * pvPortMalloc( size_t xWantedSize )
                 }
             }
         }
-
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+        if (heapTag!=-1) {
+            SEGGER_SYSVIEW_HeapAllocEx(ucHeap, pvReturn, xWantedSize, heapTag);
+        } else {
+            SEGGER_SYSVIEW_HeapAlloc(ucHeap, pvReturn, xWantedSize);
+        }
+#else
         traceMALLOC( pvReturn, xWantedSize );
+#endif
     }
     ( void ) xTaskResumeAll();
 
@@ -274,6 +285,11 @@ void * pvPortMalloc( size_t xWantedSize )
     #endif
 
     return pvReturn;
+}
+/*-----------------------------------------------------------*/
+
+void *pvPortMalloc(size_t xWantedSize) { /* << EST */
+  return pvPortMallocExt(xWantedSize, -1);
 }
 /*-----------------------------------------------------------*/
 
@@ -313,7 +329,11 @@ void vPortFree( void * pv )
                     /* Add this block to the list of free blocks. */
                     prvInsertBlockIntoFreeList( ( ( BlockLink_t * ) pxLink ) );
                     xFreeBytesRemaining += pxLink->xBlockSize;
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+                    SEGGER_SYSVIEW_HeapFree(ucHeap, pv);
+#else
                     traceFREE( pv, pxLink->xBlockSize );
+#endif
                 }
                 ( void ) xTaskResumeAll();
             }
@@ -375,6 +395,10 @@ static void prvHeapInit( void ) /* PRIVILEGED_FUNCTION */
     pxFirstFreeBlock = ( BlockLink_t * ) pucAlignedHeap;
     pxFirstFreeBlock->xBlockSize = configADJUSTED_HEAP_SIZE;
     pxFirstFreeBlock->pxNextFreeBlock = &xEnd;
+#if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS && configUSE_SEGGER_SYSTEM_VIEWER_HEAP_EVENTS /* << EST */
+  SEGGER_SYSVIEW_HeapDefine(ucHeap, ucHeap, sizeof(ucHeap), sizeof(BlockLink_t));
+  SEGGER_SYSVIEW_NameResource((uint32_t)ucHeap, "heap2");
+#endif
 }
 /*-----------------------------------------------------------*/
 #if 1 /* << EST */
