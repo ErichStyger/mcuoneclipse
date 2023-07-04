@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RNWK.h"
@@ -128,3 +129,4 @@ void RNWK_Init(void) {
   RNWK_AppOnRxCallback = NULL;
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RMSG.h"
 #include "McuRTOS.h"
 #include "RPHY.h"
@@ -190,3 +191,4 @@ void RMSG_Init(void) {
 #endif
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

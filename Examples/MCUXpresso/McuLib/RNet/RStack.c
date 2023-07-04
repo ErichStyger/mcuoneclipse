@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RStack.h"
 #include "Radio.h"
 #include "RMSG.h"
@@ -41,3 +42,4 @@ void RSTACK_Deinit(void) {
   /*lint -restore */
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

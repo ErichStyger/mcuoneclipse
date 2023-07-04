@@ -39,7 +39,7 @@
   #include "analog.h"
 #endif
 #if McuFlash_CONFIG_IS_ENABLED
-  #include "MinINI/McuFlash.h"
+  #include "McuFlash.h"
 #endif
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"

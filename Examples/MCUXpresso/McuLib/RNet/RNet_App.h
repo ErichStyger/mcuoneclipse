@@ -8,6 +8,8 @@
 #ifndef RNETAPP_H_
 #define RNETAPP_H_
 
+#include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "platform.h"
 #include "RNWK.h"
 #include "RApp.h"
@@ -39,5 +41,6 @@ void RNETA_Deinit(void);
 
 /*! \brief Driver initialization */
 void RNETA_Init(void);
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RNETAPP_H_ */

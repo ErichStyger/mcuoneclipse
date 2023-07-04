@@ -7,6 +7,8 @@
  * This module implements the application part of the program.
  */
 
+#include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "Platform.h"
 #if PL_HAS_RADIO
 #include "RNet_App.h"
@@ -346,5 +348,7 @@ uint8_t RNETA_ParseCommand(const unsigned char *cmd, bool *handled, const McuShe
   return res;
 }
 #endif /* PL_CONFIG_USE_SHELL */
+
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* PL_HAS_RADIO */

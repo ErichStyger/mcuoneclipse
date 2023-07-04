@@ -82,7 +82,8 @@
 
 /* MODULE McuRNet. */
 
-//#include "Events.h"
+#include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "McuRNet.h"
 #include "RStack.h"
 #include "Radio.h"
@@ -227,6 +228,7 @@ void McuRNet_OnRadioEvent(McuRNet_RadioEvent event)
 }
 #endif
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 /* END McuRNet. */
 

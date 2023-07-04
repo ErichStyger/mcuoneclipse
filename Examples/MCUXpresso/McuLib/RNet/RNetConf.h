@@ -11,6 +11,8 @@
 #ifndef RNETCONF_H_
 #define RNETCONF_H_
 
+#include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "McuRNet.h"  /* component main header file */
 #include "RNet_AppConfig.h" /* User application configuration file */
 #include "McuRNetconfig.h"  /* configuration file */
@@ -83,6 +85,7 @@
   /*!< 1 for remote stdio over radio enabled, 0 for disabled. */
 #endif
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RNETCONF_H_ */
 

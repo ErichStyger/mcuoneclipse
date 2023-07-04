@@ -206,7 +206,7 @@ uint8_t McuLFS_Mount(McuShell_ConstStdIOType *io) {
     return ERR_OK;
   } else {
     if (io != NULL) {
-      McuShell_SendStr((const uint8_t *)" FAILED! Did you format the device already?\r\n", io->stdErr);
+      McuShell_SendStr((const uint8_t *)" FAILED! Did you format the device?\r\n", io->stdErr);
     }
     return ERR_FAILED;
   }

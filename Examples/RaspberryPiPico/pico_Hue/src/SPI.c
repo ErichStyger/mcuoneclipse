@@ -5,7 +5,7 @@
  *
  * Description:
  * This Module reads the current from the Lamp.
- * It provides a bool weather the Lamp is on or off.
+ * It provides a bool if the Lamp is on or off.
  *
  */
 

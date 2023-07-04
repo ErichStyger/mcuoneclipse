@@ -11,6 +11,7 @@
 #define RADIOMESSAGE_H_
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 
 #include "McuShell.h"
@@ -114,3 +115,4 @@ void RMSG_Deinit(void);
 
 #endif /* RADIOMESSAGE_H_ */
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

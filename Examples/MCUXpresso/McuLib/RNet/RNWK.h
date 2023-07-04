@@ -11,6 +11,7 @@
 #define RNWK_H_
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RMAC.h"
 #include "RPHY.h"
 
@@ -113,6 +114,8 @@ void RNWK_Init(void);
 
 /*! \brief Deinitializes the module */
 void RNWK_Deinit(void);
+
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RNWK_H_ */
 

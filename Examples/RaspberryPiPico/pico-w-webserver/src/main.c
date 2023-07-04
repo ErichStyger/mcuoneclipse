@@ -69,7 +69,7 @@ int main(void) {
     printf("Connected.\n");
 
     extern cyw43_t cyw43_state;
-    auto ip_addr = cyw43_state.netif[CYW43_ITF_STA].ip_addr.addr;
+    int ip_addr = cyw43_state.netif[CYW43_ITF_STA].ip_addr.addr;
     printf("IP Address: %lu.%lu.%lu.%lu\n", ip_addr & 0xFF, (ip_addr >> 8) & 0xFF, (ip_addr >> 16) & 0xFF, ip_addr >> 24);
   }
   // turn on LED to signal connected

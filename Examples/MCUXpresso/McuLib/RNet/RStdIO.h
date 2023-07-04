@@ -11,6 +11,7 @@
 #define RSTDIO_C_
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "McuRTOS.h"
 #include "RPHY.h"
 #include "RNWK.h"
@@ -116,6 +117,8 @@ void RSTDIO_Init(void);
 /*! \brief Deinitializes the module */
 void RSTDIO_Deinit(void);
 
+
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RSTDIO_C_ */
 

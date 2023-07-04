@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "Radio.h"
 #include "RadioNRF24.h"
 #include "McuNRF24L01.h"
@@ -842,3 +843,4 @@ void RADIO_Init(void) {
   RADIO_CurrChannel = RADIO_CHANNEL_DEFAULT;
 }
   
+#endif /* McuRNET_CONFIG_IS_ENABLED */

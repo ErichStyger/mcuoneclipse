@@ -1,6 +1,6 @@
 /*
  * Hue Apple IR Remote
- * Autor: 	Joshua Wyss
+ * Author: 	Joshua Wyss
  * Date: 	24.11.2022
  *
  * Description:

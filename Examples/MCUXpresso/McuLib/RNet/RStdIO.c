@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RStdIO.h"
 #include "McuRTOS.h"
 #include "McuUtility.h"
@@ -459,3 +460,4 @@ void RSTDIO_Init(void) {
 #endif
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

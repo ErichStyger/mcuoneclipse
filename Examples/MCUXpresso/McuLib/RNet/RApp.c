@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RApp.h"
 #include "RNWK.h"
 #include "McuUtility.h"
@@ -175,3 +176,4 @@ void RAPP_Init(void) {
   RAPP_MsgHandlerTable = NULL;
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

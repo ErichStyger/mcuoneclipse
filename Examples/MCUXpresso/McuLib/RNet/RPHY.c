@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 #include "RMAC.h"
 #include "RMSG.h"
@@ -45,3 +46,4 @@ void RPHY_Init(void) {
   /* nothing needed */
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

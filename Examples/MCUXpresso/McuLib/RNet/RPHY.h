@@ -11,6 +11,8 @@
 #define RPHY_H_
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
+
 /* payload format is:
  * PHY: <flags><size><phy payload>
  * MAC:              <type><seq#><mac payload> 
@@ -96,6 +98,8 @@ void RPHY_Init(void);
 
 /*! \brief Deinitializes the module */
 void RPHY_Deinit(void);
+
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RPHY_H_ */
 

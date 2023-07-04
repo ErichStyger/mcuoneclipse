@@ -2,7 +2,14 @@
 # You can use a GLOB function as shown here, or explicitly mention the specific files
 #file(GLOB FILES *.c *.h)
 
-add_subdirectory(LittlevGL)
+# add_subdirectory(LittlevGL)
+# LittlevGL is *not* added here. Instead, add it to the main CMakeLists.txt
+# add_subdirectory(../McuLib/LittlevGL  build/McuLib/LittlevGL)
+# and add it to the target_link_libraries 
+#  ...
+#  McuLib
+#  lvglLib # LittlevGL library inside the McuLib
+
 
 file(GLOB FILES
   fonts/*.c
@@ -115,7 +122,7 @@ add_library(McuLib ${FILES})
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
   McuLib
-  lvglLib
+  # lvglLib   # see note above
   pico_stdlib
   pico_unique_id
   hardware_pio 

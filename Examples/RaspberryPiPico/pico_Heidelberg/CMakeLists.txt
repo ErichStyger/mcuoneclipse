@@ -30,8 +30,8 @@ pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
 
 # add component directories to the list
-add_subdirectory(../McuLib  build/McuLib)
-add_subdirectory(../McuLib/LittlevGL  build/McuLib/LittlevGL)
+add_subdirectory(../../MCUXpresso/McuLib  build/McuLib)
+add_subdirectory(../../MCUXpresso/McuLib/LittlevGL  build/McuLib/LittlevGL)
 add_subdirectory(./src      build/src)
 
 # generate extra files (map/bin/hex/uf2)
@@ -42,7 +42,7 @@ target_link_libraries(
   # might have circular library dependencies, see https://stackoverflow.com/questions/45135/why-does-the-order-in-which-libraries-are-linked-sometimes-cause-errors-in-gcc
   SrcLib
   McuLib
-  lvglLib
+  lvglLib # LittlevGL library inside the McuLib
   SrcLib  # again because of FreeRTOShooks.c
   pico_stdlib
   hardware_pio # PIO for WS2812B

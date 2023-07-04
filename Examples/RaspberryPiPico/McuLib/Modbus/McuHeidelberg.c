@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "McuLib.h"
+#if McuLib_CONFIG_SDK_USE_FREERTOS
+
 #include "McuHeidelberg.h"
 #include "McuHeidelberg_config.h"
 #include "McuShell.h"
@@ -1344,3 +1347,5 @@ void McuHeidelberg_Init(void) {
   }
   vQueueAddToRegistry(semNewSolarValue, "semNewSolarValue");
 }
+
+#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */

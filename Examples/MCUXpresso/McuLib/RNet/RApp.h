@@ -10,9 +10,11 @@
 #ifndef RAPP_H_
 #define RAPP_H_
 
-#include "RNet/RNetConf.h"
-#include "RNet/RNWK.h"
-#include "RNet/RPHY.h"
+#include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
+#include "RNetConf.h"
+#include "RNWK.h"
+#include "RPHY.h"
 
 /* payload format is:
  * <type><size><data>
@@ -79,6 +81,7 @@ void RAPP_Init(void);
 
 /*! \brief Deinitializes the module */
 void RAPP_Deinit(void);
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RAPP_H_ */
 

@@ -8,6 +8,7 @@
  */
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RMAC.h"
 #include "RPHY.h"
 #include "RNWK.h"
@@ -94,3 +95,4 @@ void RMAC_Init(void) {
   RMAC_ExpectedAckSeqNr = 0;
 }
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */

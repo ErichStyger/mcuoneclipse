@@ -70,27 +70,31 @@ typedef enum WallboxTaskState_e {
 } WallboxTaskState_e;
 
 static struct McuHeidelbergInfo_s {
-  WallboxTaskState_e state;                           /* state of the wallbox task */
-  McuHeidelberg_UserChargingMode_e userChargingMode;  /* selected usercharging mode */
-  uint32_t solarPowerW;                               /* produced solar power in Watt */
-  uint32_t sitePowerW;                                /* used power by the building or site */
-  uint32_t maxCarPowerW;                              /* maximum charge power in Watt */
-  uint8_t nofPhases;                                  /* number of active phases */
   bool isActive;                                      /* if unit is in standby or not */
+  WallboxTaskState_e state;                           /* state of the wallbox task */
+  McuHeidelberg_UserChargingMode_e userChargingMode;  /* selected user charging mode */
+  uint32_t solarPowerW;                               /* produced solar power in Watt */
+  uint32_t sitePowerW;                                /* used power by the building or site, including charger */
+  int32_t gridPowerW;                                 /* (positive) power from or to the grid (negative) */
+  uint32_t maxCarPowerW;                              /* maximum charge power in Watt: used for charger 'I max' command */
+  uint8_t nofPhases;                                  /* number of active phases detected on the charger */
   McuHeidelberg_EventCallback eventCallback;          /* registered callback for events */
-  struct hw {
-    uint16_t version;             /* register layout version */
-    uint16_t chargerState;        /* wallbox charging state */
-    uint16_t minCurrent;          /* minimal current, as configured by the hardware switch, 6 A up to 16 A */
-    uint16_t maxCurrent;          /* maximal current, as configured by the hardware switch, 6 A up to 16 A */
-    uint16_t current[3];          /* RMS current of the three phases, in 0.1 A units */
-    int16_t  temperature;          /* PCB temperature, in 0.1 degree C */
-    uint16_t voltage[3];          /* RMS voltage of the three phases, in 0.1 A units */
-    uint16_t lockState;           /* external lock */
-    uint16_t power;               /* sum of power of all three phases */
-    uint32_t energySincePowerOn;  /* energy since last standby or power-off */
+  struct hw { /* wallbox hardware register values */
+    uint16_t version;                 /* register layout version */
+    uint16_t chargerState;            /* wallbox charging state */
+    uint16_t minCurrent;              /* minimal current, as configured by the hardware switch, 6 A up to 16 A */
+    uint16_t maxCurrent;              /* maximal current, as configured by the hardware switch, 6 A up to 16 A */
+    uint16_t current[3];              /* RMS current of the three phases, in 0.1 A units */
+    int16_t  temperature;             /* PCB temperature, in 0.1 degree C */
+    uint16_t voltage[3];              /* RMS voltage of the three phases, in 0.1 A units */
+    uint16_t lockState;               /* external lock */
+    uint16_t power;                   /* sum of power of all three phases */
+    uint32_t energySincePowerOn;      /* energy since last standby or power-off */
+    uint32_t energySinceInstallation; /* energy since installation */
   } hw;
 } McuHeidelbergInfo;
+
+static SemaphoreHandle_t semNewSolarValue; /* binary semaphore to notify task about new solar PV value */
 
 #if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
 static struct mock {
@@ -198,12 +202,12 @@ uint8_t McuHeidelberg_ReadCurrent(uint8_t id, uint16_t current[3]) {
     return ERR_FAILED;
   }
   if (McuModbus_ReadInputRegisters(McuHeidelberg_deviceID, McuHeidelberg_Addr_Current_L2, 1, &value)==ERR_OK) {
-    current[0] = value;
+    current[1] = value;
   } else {
     return ERR_FAILED;
   }
   if (McuModbus_ReadInputRegisters(McuHeidelberg_deviceID, McuHeidelberg_Addr_Current_L3, 1, &value)==ERR_OK) {
-    current[0] = value;
+    current[2] = value;
   } else {
     return ERR_FAILED;
   }
@@ -427,41 +431,53 @@ static uint16_t calculatePowerToChargerDeciAmpere(uint32_t power) {
   return power*10/230/McuHeidelbergInfo.nofPhases;
 }
 
-static uint32_t calculateMinimalWallboxPower(void) {
-  return McuHeidelbergInfo.hw.minCurrent*230*McuHeidelbergInfo.nofPhases; /* minimal power setting possible */
+static uint32_t calculateMinWallboxPower(void) {
+  return McuHeidelbergInfo.hw.minCurrent*230*McuHeidelbergInfo.nofPhases; /* minimum power setting possible */
+}
+
+static uint32_t calculateMaxWallboxPower(void) {
+  return McuHeidelbergInfo.hw.maxCurrent*230*McuHeidelbergInfo.nofPhases; /* maximum power setting possible */
 }
 
 static uint32_t calculateAvailableSolarPower(void) {
-  uint32_t solar, site;
+  uint32_t solar, siteOnly, available;
 
-  solar = McuHeidelberg_GetSolarPowerWatt();
-  site = McuHeidelberg_GetSitePowerWatt();
-  if (solar>site) { /* more solar power than currently used? */
-    return solar-site; /* return difference as surplus */
+  solar = McuHeidelberg_GetSolarPowerWatt(); /* power produced by the solar panels */
+#if McuHeidelberg_CONFIG_SITE_BASE_POWER!=0
+  siteOnly = McuHeidelberg_CONFIG_SITE_BASE_POWER;
+#else
+  siteOnly = McuHeidelberg_GetSiteWithoutChargerPowerWatt(); /* power used by site *without* the charger */
+#endif
+  /* calculate how much we have available for charging */
+  if (solar>siteOnly) { /* more solar power available than currently used? */
+    available = solar-siteOnly; /* return difference as surplus */
+  } else {
+    available = 0;
   }
-  return 0; /* nothing available */
+  McuLog_info("solar: %d, site: %d, site only: %d, charger: %d, available: %d", solar, McuHeidelberg_GetSitePowerWatt(), siteOnly, McuHeidelberg_GetCurrChargerPower(), available);
+  return available;
 }
 
 static uint32_t calculateChargingWatt(void) {
   uint32_t watt = 0;
   McuHeidelberg_UserChargingMode_e mode = McuHeidelberg_GetUserChargingMode();
 
-  if (mode==McuHeidelberg_User_ChargingMode_Stop) {
+  if (mode==McuHeidelberg_User_ChargingMode_Stop) { /* stop charging */
     watt = 0;
-  } else if (mode==McuHeidelberg_User_ChargingMode_Slow) {
-    watt = McuHeidelbergInfo.hw.minCurrent * McuHeidelbergInfo.nofPhases * 230;
-  } else if (mode==McuHeidelberg_User_ChargingMode_Fast) {
-    watt = McuHeidelbergInfo.hw.maxCurrent * McuHeidelbergInfo.nofPhases * 230;
-  } else if (mode==McuHeidelberg_User_ChargingMode_SlowPlusPV) {
-    int minPower = calculateMinimalWallboxPower();
+  } else if (mode==McuHeidelberg_User_ChargingMode_Slow) { /* only charge with lowest power, slow */
+    watt = calculateMinWallboxPower();
+  } else if (mode==McuHeidelberg_User_ChargingMode_Fast) { /* only charge with maximum power, fast */
+    watt = calculateMaxWallboxPower();
+  } else if (mode==McuHeidelberg_User_ChargingMode_SlowPlusPV) { /* charge slow, but increase if solar is available */
+    int minPower = calculateMinWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>minPower) { /* more solar power available than the minimal amount: use that extra power to charge the vehicle faster */
       watt = availableSolarP;
     } else {
       watt = minPower; /* keep it at the base and minimal level */
     }
-  } else if (mode==McuHeidelberg_User_ChargingMode_OnlyPV) {
-    int power = calculateMinimalWallboxPower();
+  } else if (mode==McuHeidelberg_User_ChargingMode_OnlyPV) { /* only using available solar power */
+    int power = calculateMinWallboxPower();
     int availableSolarP = calculateAvailableSolarPower();
     if (availableSolarP>=power) {
       watt = availableSolarP; /* charge with what we have available */
@@ -470,10 +486,10 @@ static uint32_t calculateChargingWatt(void) {
     }
   }
   /* check current boundaries */
-  if (watt < McuHeidelbergInfo.hw.minCurrent * McuHeidelbergInfo.nofPhases * 230) { /* below minimal possible setting */
+  if (watt < calculateMinWallboxPower()) { /* below minimal possible setting */
     watt = 0;
-  } else if (watt > McuHeidelbergInfo.hw.maxCurrent * McuHeidelbergInfo.nofPhases * 230) { /* above maximum setting */
-    watt = McuHeidelbergInfo.hw.maxCurrent * McuHeidelbergInfo.nofPhases * 230;
+  } else if (watt > calculateMaxWallboxPower()) { /* above maximum setting */
+    watt = calculateMaxWallboxPower();
   }
   return watt;
 }
@@ -531,9 +547,22 @@ void McuHeidelberg_SetSolarPowerWatt(uint32_t powerW) {
   if (McuHeidelbergInfo.solarPowerW!=powerW) {
     McuHeidelbergInfo.solarPowerW = powerW;
     CallEventCallback(McuHeidelberg_Event_SolarPower_Changed);
+    (void)xSemaphoreGive(semNewSolarValue); /* notify task */
   }
 }
 
+/* -------------------------------------------- */
+/* Setter and Getter for grid power  */
+int32_t McuHeidelberg_GetGridPowerWatt(void) {
+  return McuHeidelbergInfo.gridPowerW;
+}
+
+void McuHeidelberg_SetGridPowerWatt(int32_t powerW) {
+  if (McuHeidelbergInfo.gridPowerW!=powerW) {
+    McuHeidelbergInfo.gridPowerW = powerW;
+    CallEventCallback(McuHeidelberg_Event_GridPower_Changed);
+  }
+}
 /* -------------------------------------------- */
 /* Setter and Getter for power used by site  */
 uint32_t McuHeidelberg_GetSitePowerWatt(void) {
@@ -547,17 +576,19 @@ void McuHeidelberg_SetSitePowerWatt(uint32_t powerW) {
   }
 }
 
-/* -------------------------------------------- */
-/* Setter and Getter for user charging mode     */
-McuHeidelberg_UserChargingMode_e McuHeidelberg_GetUserChargingMode(void) {
-  return McuHeidelbergInfo.userChargingMode;
-}
+uint32_t McuHeidelberg_GetSiteWithoutChargerPowerWatt(void) {
+  uint32_t chargerW = McuHeidelberg_GetCurrChargerPower();
+  uint32_t siteW = McuHeidelberg_GetSitePowerWatt();
+  uint32_t power;
 
-void McuHeidelberg_SetUserChargingMode(McuHeidelberg_UserChargingMode_e mode) {
-  if (McuHeidelbergInfo.userChargingMode!=mode) {
-    McuHeidelbergInfo.userChargingMode = mode;
-    CallEventCallback(McuHeidelberg_Event_UserChargingMode_Changed);
+  if (chargerW==0) { /* charger not active */
+    power = siteW;
+  } else if (siteW>chargerW) { /* normal charging */
+    power = siteW-chargerW;
+  } else { /* the value from MQTT does not sum up? Maybe charger watts have not been included in site yet */
+    power = siteW; /* assuming what we have as site watt */
   }
+  return power;
 }
 
 /* -------------------------------------------- */
@@ -567,6 +598,7 @@ uint32_t McuHeidelberg_GetMaxCarPower(void) {
 }
 
 static void McuHeidelberg_SetMaxCarPower(uint32_t power) {
+  /* sets the maximum current to be provided by the charger */
   if (McuHeidelbergInfo.maxCarPowerW!=power) {
     uint16_t dA = calculatePowerToChargerDeciAmpere(power);
     if (McuHeidelberg_WriteMaxCurrentCmd(McuHeidelberg_deviceID, dA)!=ERR_OK) {
@@ -574,7 +606,6 @@ static void McuHeidelberg_SetMaxCarPower(uint32_t power) {
       power = 0;
     }
     McuHeidelbergInfo.maxCarPowerW = power;
-    CallEventCallback(McuHeidelberg_Event_CarMaxPower_Changed);
   }
 }
 
@@ -589,11 +620,50 @@ static void McuHeidelberg_UpdateCurrChargerPower(void) {
     McuLog_error("failed reading charger power");
   } else if (power != McuHeidelbergInfo.hw.power) {
     McuHeidelbergInfo.hw.power = power;
-    CallEventCallback(McuHeidelberg_Event_CurrChargerPower_Changed);
+    CallEventCallback(McuHeidelberg_Event_ChargerPower_Changed);
   }
 }
 
-#if McuLib_CONFIG_SDK_USE_FREERTOS
+static void readStatusRegisters(void) {
+  if (McuHeidelberg_ReadCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.current[0])!=ERR_OK) {
+    McuLog_error("failed reading current");
+  }
+  if (McuHeidelberg_ReadTemperature(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.temperature)!=ERR_OK) {
+    McuLog_error("failed reading temperature");
+  }
+  if (McuHeidelberg_ReadVoltage(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.voltage[0])!=ERR_OK) {
+    McuLog_error("failed reading voltage");
+  }
+  if (McuHeidelberg_ReadLockstate(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.lockState)!=ERR_OK) {
+    McuLog_error("failed reading lockstate");
+  }
+  if (McuHeidelberg_ReadPower(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.power)!=ERR_OK) {
+    McuLog_error("failed reading power");
+  }
+  if (McuHeidelberg_ReadEnergySincePowerOn(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.energySincePowerOn)!=ERR_OK) {
+    McuLog_error("failed reading energy since power-on");
+  }
+  if (McuHeidelberg_ReadEnergySinceInstallation(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.energySinceInstallation)!=ERR_OK) {
+    McuLog_error("failed reading energy since installation");
+  }
+  calculateNofActivePhases();
+}
+
+/* -------------------------------------------- */
+/* Setter and Getter for user charging mode     */
+McuHeidelberg_UserChargingMode_e McuHeidelberg_GetUserChargingMode(void) {
+  return McuHeidelbergInfo.userChargingMode;
+}
+
+void McuHeidelberg_SetUserChargingMode(McuHeidelberg_UserChargingMode_e mode) {
+  if (McuHeidelbergInfo.userChargingMode!=mode) {
+    McuHeidelberg_SetMaxCarPower(0); /* set initial charger current to zero */
+    readStatusRegisters(); /* read in again the status register to have a good and clean state */
+    McuHeidelbergInfo.userChargingMode = mode;
+    CallEventCallback(McuHeidelberg_Event_UserChargingMode_Changed);
+  }
+}
+
 static void wallboxTask(void *pv) {
   uint8_t res;
   uint16_t prevHWchargerState = 0;
@@ -613,7 +683,9 @@ static void wallboxTask(void *pv) {
  * To stop the charging, write 0 to register 261 (McuHeidelberg_Addr_MaxCurrentCommand).
  */
   for(;;) {
-    vTaskDelay(pdMS_TO_TICKS(200)); /* standard delay time */
+    if (xSemaphoreTake(semNewSolarValue, pdMS_TO_TICKS(1000))==pdTRUE) { /* standard delay time, or notification received */
+      McuLog_trace("new solar value received");
+    }
 
     if (McuHeidelbergInfo.state!=Wallbox_TaskState_None) { /* as soon as we have a connection, check the wallbox state for changes */
       uint16_t HWchargerState;
@@ -638,8 +710,6 @@ static void wallboxTask(void *pv) {
           McuLog_info("connected with charger");
           McuHeidelbergInfo.isActive = true;
           McuHeidelbergInfo.state = Wallbox_TaskState_Connected;
-          /* set initial charger current to zero */
-          McuHeidelberg_SetMaxCarPower(0);
           /* read static values from wallbox */
           if (McuHeidelberg_ReadHardwareMinCurrent(McuHeidelberg_deviceID, &McuHeidelbergInfo.hw.minCurrent)!=ERR_OK) {
             McuLog_error("failed reading min current");
@@ -676,9 +746,10 @@ static void wallboxTask(void *pv) {
           }
           /* determine the number of active phases */
           McuHeidelbergInfo.nofPhases = calculateNofActivePhases();
+          McuHeidelberg_SetMaxCarPower(calculateMinWallboxPower()); /* set initial charging value */
         } else {
-          McuLog_error("communication failed, charger in standby? Retry in 10 seconds...");
-          vTaskDelay(pdMS_TO_TICKS(10000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
+          McuLog_error("communication failed, charger in standby? Retry in 30 seconds...");
+          vTaskDelay(pdMS_TO_TICKS(30000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
         }
         break;
 
@@ -722,7 +793,7 @@ static void wallboxTask(void *pv) {
               McuHeidelberg_SetMaxCarPower(currChargingWatt);
               prevChargingWatt = currChargingWatt;
             }
-            vTaskDelay(pdMS_TO_TICKS(2000));
+            vTaskDelay(pdMS_TO_TICKS(5000));
             break;
 
           case McuHeidelberg_ChargerState_B2: /* plugged, no charging request, charging possible */
@@ -774,8 +845,8 @@ static void wallboxTask(void *pv) {
           case McuHeidelberg_ChargerState_C1:
           case McuHeidelberg_ChargerState_C2:
             /* vehicle plugged, with charging request: stay in this state */
-            McuHeidelberg_UpdateCurrChargerPower();
-            vTaskDelay(pdMS_TO_TICKS(1000));
+            McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
+            vTaskDelay(pdMS_TO_TICKS(1000)); /* control loop delay */
             break;
 
           case McuHeidelberg_ChargerState_Derating:
@@ -789,13 +860,19 @@ static void wallboxTask(void *pv) {
             McuHeidelbergInfo.state = Wallbox_TaskState_Error; /* error case */
             break;
         } /* switch */
-        if (McuHeidelbergInfo.hw.chargerState==McuHeidelberg_ChargerState_C2) {
-          /* calculate charging current */
-          currChargingWatt = calculateChargingWatt();
-          if (currChargingWatt!=prevChargingWatt) {
-            McuLog_info("changing charging power from %d W to %d W", prevChargingWatt, currChargingWatt);
-            McuHeidelberg_SetMaxCarPower(currChargingWatt);
-            prevChargingWatt = currChargingWatt;
+        if (McuHeidelbergInfo.hw.chargerState==McuHeidelberg_ChargerState_C2) { /* in active charging state? */
+          static TickType_t lastTicksCount = 0;
+          TickType_t currTicksCount = xTaskGetTickCount();
+          if (currTicksCount >= lastTicksCount+30*pdMS_TO_TICKS(1000)) { /* only do new calculation every 30 seconds */
+            lastTicksCount = currTicksCount;
+            /* calculate possible charging level */
+            McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
+            currChargingWatt = calculateChargingWatt();
+            if (currChargingWatt!=prevChargingWatt) {
+              McuLog_info("changing charging power from %d W to %d W", prevChargingWatt, currChargingWatt);
+              McuHeidelberg_SetMaxCarPower(currChargingWatt); /* tell hardware to change charging */
+              prevChargingWatt = currChargingWatt;
+            }
           }
         }
         break;
@@ -817,18 +894,23 @@ static void wallboxTask(void *pv) {
     } /* switch */
   }
 }
-#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   unsigned char buf[96];
-  uint32_t value32u;
   uint16_t value16u;
 
-  McuShell_SendStatusStr((unsigned char*)"McuHeidelberg", (unsigned char*)"Heidelberg wallbox settings\r\n", io->stdOut);
+  readStatusRegisters(); /* read hardware registers into McuHeidelbergInfo.hw so we can use them below */
+  McuShell_SendStatusStr((unsigned char*)"McuHeidelberg", (unsigned char*)"Heidelberg wallbox status\r\n", io->stdOut);
+
+  McuShell_SendStatusStr((unsigned char*)"  wallbox", McuHeidelbergInfo.isActive?(unsigned char*)"active\r\n":(unsigned char*)"standby or powered off\r\n", io->stdOut);
+
+  McuUtility_Num8uToStr(buf, sizeof(buf), McuHeidelberg_deviceID);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  Modbus addr", buf, io->stdOut);
 
   McuUtility_strcpy(buf, sizeof(buf), McuHeidelberg_GetStateString(McuHeidelbergInfo.state));
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  task state", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  state", buf, io->stdOut);
 
   McuHeidelberg_UserChargingMode_e mode = McuHeidelberg_GetUserChargingMode();
   McuUtility_Num16uToStr(buf, sizeof(buf), mode);
@@ -837,193 +919,205 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   McuShell_SendStatusStr((unsigned char*)"  user mode", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelbergInfo.nofPhases);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuUtility_Num8uToStr(buf, sizeof(buf), McuHeidelbergInfo.nofPhases);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (detected)\r\n");
   McuShell_SendStatusStr((unsigned char*)"  nof phases", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelberg_GetSolarPowerWatt());
+  McuUtility_Num32sToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetGridPowerWatt(), ' ', 6);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  solar power", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  grid", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelberg_GetSitePowerWatt());
+  McuUtility_Num32uToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetSolarPowerWatt(), ' ', 6);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  site power", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  solar", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelberg_GetMaxCarPower());
+  McuUtility_Num32uToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetSitePowerWatt(), ' ', 6);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W, without charger: ");
+
+  McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelberg_GetSiteWithoutChargerPowerWatt());
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  max power", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  site", buf, io->stdOut);
 
-  McuUtility_Num32uToStr(buf, sizeof(buf), McuHeidelberg_GetCurrChargerPower());
+  uint32_t powerW = McuHeidelberg_GetMaxCarPower();
+  uint16_t dA = calculatePowerToChargerDeciAmpere(powerW);
+  McuUtility_Num32uToStrFormatted(buf, sizeof(buf), powerW, ' ', 6);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W, max ");
+  McuUtility_strcatNum16uFormatted(buf, sizeof(buf), dA/10, ' ', 2);
+  McuUtility_chcat(buf, sizeof(buf), '.');
+  McuUtility_strcatNum16uFormatted(buf, sizeof(buf), dA%10, '0', 1);
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
+  McuShell_SendStatusStr((unsigned char*)"  charge max", buf, io->stdOut);
+
+  McuUtility_Num32sToStrFormatted(buf, sizeof(buf), McuHeidelberg_GetCurrChargerPower(), ' ', 6);
   McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  curr power", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  charge curr", buf, io->stdOut);
 
-  McuShell_SendStatusStr((unsigned char*)"  wallbox", McuHeidelbergInfo.isActive?(unsigned char*)"active\r\n":(unsigned char*)"standby or powered off\r\n", io->stdOut);
-
-  McuUtility_Num8uToStr(buf, sizeof(buf), McuHeidelberg_deviceID);
-  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
-  McuShell_SendStatusStr((unsigned char*)"  Modbus ID", buf, io->stdOut);
-
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  4] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum16Hex(buf, sizeof(buf), McuHeidelbergInfo.hw.version);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
-  McuShell_SendStatusStr((unsigned char*)"  version", buf, io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  HW version", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  5] ");
   if (McuHeidelbergInfo.isActive) {
     McuHeidelbergChargerState_e chargerState = McuHeidelberg_GetHWChargerState();
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum16Hex(buf, sizeof(buf), chargerState);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" ");
     McuUtility_strcat(buf, sizeof(buf), McuHeidelberg_GetHWChargerStateString(chargerState));
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  HW state", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  6] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]/10);
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]/10, ' ', 2);
     McuUtility_chcat(buf, sizeof(buf), '.');
     McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[0]%10, '0', 1);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A, [ 10] ");
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[0]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  L1", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  7] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]/10);
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]/10, ' ', 2);
     McuUtility_chcat(buf, sizeof(buf), '.');
     McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[1]%10, '0', 1);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A, [ 11] ");
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[1]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  L2", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  8] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]/10);
+    McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]/10, ' ', 2);
     McuUtility_chcat(buf, sizeof(buf), '.');
     McuUtility_strcatNum16uFormatted(buf, sizeof(buf), McuHeidelbergInfo.hw.current[2]%10, '0', 1);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A rms\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A, [ 12] ");
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[2]);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  L3", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[  9] ");
   if (McuHeidelbergInfo.isActive) {
     int16_t val = McuHeidelbergInfo.hw.temperature;
-    McuUtility_Num16sToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.temperature/10);
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.temperature/10);
     McuUtility_chcat(buf, sizeof(buf), '.');
     if (val<0) {
       val = -val;
     }
     McuUtility_chcat(buf, sizeof(buf), '0'+(val%10));
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" C\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" C (PCB)\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  temperature", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[ 13] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[0]);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
-  }
-  McuShell_SendStatusStr((unsigned char*)"  L1", buf, io->stdOut);
-
-  if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[1]);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
-  }
-  McuShell_SendStatusStr((unsigned char*)"  L2", buf, io->stdOut);
-
-  if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.voltage[2]);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" V rms\r\n");
-  } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
-  }
-  McuShell_SendStatusStr((unsigned char*)"  L3", buf, io->stdOut);
-
-  if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.lockState);
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.lockState);
     if (McuHeidelbergInfo.hw.lockState==0) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system locked\r\n");
     } else {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)": system unlocked\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  lock", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[ 14] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.power);
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.power);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" W (sum of all phases)\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  power", buf, io->stdOut);
 
-  if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadEnergySinceInstallation(McuHeidelberg_deviceID, &value32u)==ERR_OK) {
-    McuUtility_Num32uToStr(buf, sizeof(buf), value32u);
-    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" Wh (since installation)\r\n");
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[ 15] ");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelbergInfo.hw.energySincePowerOn);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" Wh (since power-on)\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  energy", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[ 17] ");
   if (McuHeidelbergInfo.isActive) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), McuHeidelbergInfo.hw.minCurrent);
+    McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelbergInfo.hw.energySinceInstallation);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" Wh (since installation)\r\n");
+  } else {
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+  }
+  McuShell_SendStatusStr((unsigned char*)"  energy", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[100] ");
+  if (McuHeidelbergInfo.isActive) {
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.minCurrent);
     McuUtility_chcat(buf, sizeof(buf), '-');
-    McuUtility_strcatNum32u(buf, sizeof(buf), McuHeidelbergInfo.hw.maxCurrent);
+    McuUtility_strcatNum16u(buf, sizeof(buf), McuHeidelbergInfo.hw.maxCurrent);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  I min-max", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[200] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadHardwareVariant(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum16Hex(buf, sizeof(buf), value16u);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  HW variant", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[203] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadApplicationSoftwareRevision(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0x");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0x");
     McuUtility_strcatNum16Hex(buf, sizeof(buf), value16u);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  SW revision", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[257] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadWatchDogTimeOut(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
     if (value16u==0) {
-      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0 (disabled Modbus timeout)\r\n");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0 (disabled Modbus timeout)\r\n");
     } else {
-      McuUtility_Num16uToStr(buf, sizeof(buf), value16u/1000);
+      McuUtility_strcatNum16u(buf, sizeof(buf), value16u/1000);
       McuUtility_chcat(buf, sizeof(buf), '.');
       McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u%1000, '0', 3);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" s Modbus timeout\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  WDT timeout", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[258] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadStandbyFunctionControl(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), value16u);
+    McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
     if (value16u==0) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (enabled, power saving if no car is connected)\r\n");
     } else if (value16u==4) {
@@ -1032,12 +1126,13 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (illegal value)\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  standby", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[259] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadRemoteLock(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
-    McuUtility_Num16uToStr(buf, sizeof(buf), value16u);
+    McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
     if (value16u==0) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (locked)\r\n");
     } else if (value16u==1) {
@@ -1046,44 +1141,45 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io) {
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" (illegal value)\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  remote lock", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[261] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadMaxCurrentCmd(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
     if (value16u==0) {
-      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0 A (no charging possible)\r\n");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0 A (no charging possible)\r\n");
     } else if (value16u<60) {
-      McuUtility_Num16uToStr(buf, sizeof(buf), value16u);
+      McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" not allowed (no charging possible)\r\n");
     } else {
-      McuUtility_Num16uToStr(buf, sizeof(buf), value16u/10);
+      McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u/10, ' ', 2);
       McuUtility_chcat(buf, sizeof(buf), '.');
       McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u%10, '0', 1);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  I max cmd", buf, io->stdOut);
 
+  McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"[262] ");
   if (McuHeidelbergInfo.isActive && McuHeidelberg_ReadFailSafeCurrent(McuHeidelberg_deviceID, &value16u)==ERR_OK) {
     if (value16u==0) {
-      McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"0 A (no charging possible)\r\n");
+      McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"0 A (no charging possible)\r\n");
     } else if (value16u<60) {
-      McuUtility_Num16uToStr(buf, sizeof(buf), value16u);
+      McuUtility_strcatNum16u(buf, sizeof(buf), value16u);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" not allowed (no charging possible)\r\n");
     } else {
-      McuUtility_Num16uToStr(buf, sizeof(buf), value16u/10);
+      McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u/10, ' ', 2);
       McuUtility_chcat(buf, sizeof(buf), '.');
       McuUtility_strcatNum16uFormatted(buf, sizeof(buf), value16u%10, '0', 1);
       McuUtility_strcat(buf, sizeof(buf), (unsigned char*)" A\r\n");
     }
   } else {
-    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"(standby)\r\n");
   }
   McuShell_SendStatusStr((unsigned char*)"  I failsafe", buf, io->stdOut);
-
   return ERR_OK;
 }
 
@@ -1095,7 +1191,7 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"  show diagnostic", (unsigned char*)"Show support diagnostic data\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  set timeout <ms>", (unsigned char*)"Set WDT standby timeout\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  set Imax <dA>", (unsigned char*)"Set max charging current in deci-amps (0 or 60-160), e.g. 60 for 6.0 A\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  set Ifail <dA>", (unsigned char*)"Set failsafe current in deci-amps (0 or 60-160), e.g. 60 for 6.0 A\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  set Ifail <dA>", (unsigned char*)"Set failsafe current in case of comm lost, in deci-amps (0 or 60-160), e.g. 60 for 6.0 A\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  set charge mode <m>", (unsigned char*)"Set user charge mode: 0 (stop), 1 (PV only), 2 (slow), 3 (slow+PV), 4 (fast) \r\n", io->stdOut);
 #if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
   McuShell_SendHelpStr((unsigned char*)"  setmock state <value>", (unsigned char*)"Set mock hardware state register value (2-11)\r\n", io->stdOut);
@@ -1231,11 +1327,10 @@ void McuHeidelberg_Deinit(void) {
 }
 
 void McuHeidelberg_Init(void) {
-#if McuLib_CONFIG_SDK_USE_FREERTOS
   if (xTaskCreate(
        wallboxTask,  /* pointer to the task */
        "wallbox", /* task name for kernel awareness debugging */
-       600/sizeof(StackType_t), /* task stack size */
+       800/sizeof(StackType_t), /* task stack size */
        (void*)NULL, /* optional task startup argument */
        tskIDLE_PRIORITY+4,  /* initial priority */
        (TaskHandle_t*)NULL /* optional task handle to create */
@@ -1244,7 +1339,12 @@ void McuHeidelberg_Init(void) {
      McuLog_fatal("Failed creating task");
      for(;;){} /* error! probably out of memory */
    }
-#endif /* McuLib_CONFIG_SDK_USE_FREERTOS */
+  semNewSolarValue = xSemaphoreCreateBinary();
+  if (semNewSolarValue==NULL) {
+    McuLog_fatal("Failed creating semaphore");
+    for(;;){} /* error! probably out of memory */
+  }
+  vQueueAddToRegistry(semNewSolarValue, "semNewSolarValue");
 }
 
 #endif /* McuLib_CONFIG_SDK_USE_FREERTOS */

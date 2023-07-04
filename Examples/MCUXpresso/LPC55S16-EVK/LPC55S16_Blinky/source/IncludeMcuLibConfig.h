@@ -72,7 +72,7 @@ Instructions:
 /* McuFlash */
 #define McuFlash_CONFIG_IS_ENABLED                    (1) /* enable McuFlash module */
 #define McuFlash_CONFIG_NOF_BLOCKS                    (32) /* number of flash blocks */
-#define McuFlash_CONFIG_MEM_START                     (((0+244*1024)-((McuFlash_CONFIG_NOF_BLOCKS)*McuFlash_CONFIG_FLASH_BLOCK_SIZE)))
+#define McuFlash_CONFIG_MEM_START                     (((0+244*1024)-((McuFlash_CONFIG_NOF_BLOCKS)*(McuFlash_CONFIG_FLASH_BLOCK_SIZE))))
 /* ------------------- McuLittleFS --------------------------*/
 #define LITTLEFS_CONFIG_ENABLED                       (1) /* enable the LittleFS file system */
 #if 0 /* using Winbond external flash */

@@ -61,7 +61,7 @@
   #include "debounce.h"
 #endif
 #if PL_CONFIG_USE_MCUFLASH
-  #include "minIni/McuFlash.h"
+  #include "McuFlash.h"
 #endif
 #if PL_CONFIG_USE_MINI
   #include "minIni/McuMinINI.h"

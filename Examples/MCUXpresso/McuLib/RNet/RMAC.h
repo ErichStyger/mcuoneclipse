@@ -11,6 +11,7 @@
 #define RMAC_H_
 
 #include "RNetConf.h"
+#if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 
 typedef enum RMAC_MsgType {
@@ -102,6 +103,8 @@ void RMAC_Init(void);
 
 /*! \brief Deinitializes the module */
 void RMAC_Deinit(void);
+
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* RMAC_H_ */
 
