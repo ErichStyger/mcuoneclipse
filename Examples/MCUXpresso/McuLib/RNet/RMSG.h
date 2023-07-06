@@ -10,7 +10,7 @@
 #ifndef RADIOMESSAGE_H_
 #define RADIOMESSAGE_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 

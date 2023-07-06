@@ -7,7 +7,7 @@
  * This module uses queues for remote/radio standard I/O handling.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RStdIO.h"
 #include "McuRTOS.h"

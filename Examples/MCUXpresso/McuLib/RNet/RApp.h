@@ -10,11 +10,12 @@
 #ifndef RAPP_H_
 #define RAPP_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
-#include "RNetConf.h"
+#include McuRNet_CONFIG_APPLICATION_HEADER_FILE
 #include "RNWK.h"
 #include "RPHY.h"
+#include "RAPP.h"
 
 /* payload format is:
  * <type><size><data>

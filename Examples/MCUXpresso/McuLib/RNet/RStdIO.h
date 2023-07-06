@@ -10,12 +10,13 @@
 #ifndef RSTDIO_C_
 #define RSTDIO_C_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
-#include "McuRTOS.h"
+#include "RApp.h"
 #include "RPHY.h"
 #include "RNWK.h"
 #include "McuShell.h"
+#include "McuRTOS.h"
 
 typedef enum RSTDIO_QueueType {
   /* Rx stdio queues: */

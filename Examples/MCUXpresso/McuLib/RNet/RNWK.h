@@ -10,7 +10,7 @@
 #ifndef RNWK_H_
 #define RNWK_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RMAC.h"
 #include "RPHY.h"

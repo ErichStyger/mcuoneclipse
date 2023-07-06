@@ -10,7 +10,7 @@
 #ifndef RMAC_H_
 #define RMAC_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 

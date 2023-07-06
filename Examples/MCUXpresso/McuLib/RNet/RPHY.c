@@ -7,7 +7,7 @@
  * This module is used to process the raw payload packets.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 #include "RMAC.h"

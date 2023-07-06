@@ -8,6 +8,8 @@
 #ifndef __McuNRF24L01_CONFIG_H
 #define __McuNRF24L01_CONFIG_H
 
+#include "McuLib.h"
+
 #ifndef McuNRF24L01_CONFIG_IS_ENABLED
   #define McuNRF24L01_CONFIG_IS_ENABLED  (0)
     /*!< 1: enable driver/module; 0: module is not enabled */
@@ -41,9 +43,44 @@
     /*!< 1: Call Init() during startup, 0: Do not call Init() */
 #endif
 
-
-#ifndef McuNRF24L01_CONFIG_CS_PIN_PORT
-
+#ifndef McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT
+  #if McuLib_CONFIG_CPU_IS_RPxxxx
+    #define McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT() /* nothing needed */
+  #elif McuLib_CONFIG_CPU_IS_KINETIS
+    #define McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT()  CLOCK_EnableClock(kCLOCK_PortB)
+      /*!< Optional hardware initialization for CS Pin */
+  #endif
 #endif
+
+#ifndef McuNRF24L01_CONFIG_CE_PIN_GPIO
+  #define McuNRF24L01_CONFIG_CE_PIN_GPIO   GPIOB
+    /*!< GPIO for CE Pin */
+#endif
+
+  #ifndef McuNRF24L01_CONFIG_CE_PIN_PORT
+  #define McuNRF24L01_CONFIG_CE_PIN_PORT   PORTB
+    /*!< PORT for CE Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_CE_PIN_NUMBER
+  #define McuNRF24L01_CONFIG_CE_PIN_NUMBER   10
+    /*!< Pin number of the CE Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_CSN_PIN_GPIO
+  #define McuNRF24L01_CONFIG_CSN_PIN_GPIO   GPIOB
+    /*!< GPIO for CE Pin */
+#endif
+
+  #ifndef McuNRF24L01_CONFIG_CSN_PIN_PORT
+  #define McuNRF24L01_CONFIG_CSN_PIN_PORT   PORTB
+    /*!< PORT for CE Pin */
+#endif
+
+#ifndef McuNRF24L01_CONFIG_CSN_PIN_NUMBER
+  #define McuNRF24L01_CONFIG_CSN_PIN_NUMBER   0
+    /*!< Pin number of the CE Pin */
+#endif
+
 
 #endif /* __McuNRF24L01_CONFIG_H */

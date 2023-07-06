@@ -7,7 +7,7 @@
  * This module deals with the low level functions of the transceiver.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "Radio.h"
 #include "RadioNRF24.h"

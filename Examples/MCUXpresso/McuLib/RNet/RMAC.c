@@ -7,7 +7,7 @@
  * This module encapsulates the Media Access of network stack.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RMAC.h"
 #include "RPHY.h"

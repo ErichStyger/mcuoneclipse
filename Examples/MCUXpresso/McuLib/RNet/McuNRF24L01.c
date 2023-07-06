@@ -326,14 +326,19 @@ static void InitCS(void) {
   /* CE: PTB10, CSN: PTB0 */
   McuGPIO_Config_t config;
 
-  CLOCK_EnableClock(kCLOCK_PortB);
-
+  McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT();
   McuGPIO_GetDefaultConfig(&config);
 
   /* CE: PTB10 */
-  config.hw.gpio = GPIOB;
-  config.hw.port = PORTB;
-  config.hw.pin = 10;
+#if McuLib_CONFIG_CPU_IS_ESP32
+  config.hw.pin = McuNRF24L01_CONFIG_CE_PIN_NUMBER;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  config.hw.pin   = McuNRF24L01_CONFIG_CE_PIN_NUMBER;
+#else
+  config.hw.gpio  = McuNRF24L01_CONFIG_CE_PIN_GPIO;
+  config.hw.port  = McuNRF24L01_CONFIG_CE_PIN_PORT;
+  config.hw.pin   = McuNRF24L01_CONFIG_CE_PIN_NUMBER;
+#endif
   config.isInput = false;
   config.isHighOnInit = false; /* CE is HIGH active */
 
@@ -344,9 +349,15 @@ static void InitCS(void) {
   }
 
   /* CSN: PTB0 */
-  config.hw.gpio = GPIOB;
-  config.hw.port = PORTB;
-  config.hw.pin = 0;
+#if McuLib_CONFIG_CPU_IS_ESP32
+  config.hw.pin = McuNRF24L01_CONFIG_CSN_PIN_NUMBER;
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
+  config.hw.pin   = McuNRF24L01_CONFIG_CSN_PIN_NUMBER;
+#else
+  config.hw.gpio  = McuNRF24L01_CONFIG_CSN_PIN_GPIO;
+  config.hw.port  = McuNRF24L01_CONFIG_CSN_PIN_PORT;
+  config.hw.pin   = McuNRF24L01_CONFIG_CSN_PIN_NUMBER;
+#endif
   config.isInput = false;
   config.isHighOnInit = true; /* CS is LOW active */
 

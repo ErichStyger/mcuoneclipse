@@ -10,7 +10,7 @@
 #ifndef RADIO_H_
 #define RADIO_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 
 #include "McuShell.h"
 /*!

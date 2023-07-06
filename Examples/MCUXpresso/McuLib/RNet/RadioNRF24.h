@@ -10,7 +10,7 @@
 #ifndef RADIO_NRF24_H_
 #define RADIO_NRF24_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #include "Radio.h"
 
 void RADIO_OnInterrupt(void);

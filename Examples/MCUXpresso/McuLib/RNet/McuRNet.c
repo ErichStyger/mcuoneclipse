@@ -82,13 +82,14 @@
 
 /* MODULE McuRNet. */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "McuRNet.h"
 #include "RStack.h"
 #include "Radio.h"
 #include "RNWK.h"
 #include "RMSG.h"
+#include "RApp.h"
 #include "RStdIO.h"
 
 

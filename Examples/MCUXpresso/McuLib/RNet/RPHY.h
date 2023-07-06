@@ -10,7 +10,7 @@
 #ifndef RPHY_H_
 #define RPHY_H_
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 
 /* payload format is:

@@ -7,7 +7,7 @@
  * This module provides application services of the network stack.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RApp.h"
 #include "RNWK.h"

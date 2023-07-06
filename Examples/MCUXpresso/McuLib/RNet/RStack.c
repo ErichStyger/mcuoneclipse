@@ -7,7 +7,7 @@
  * This module is used to simplify stack initialization.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RStack.h"
 #include "Radio.h"

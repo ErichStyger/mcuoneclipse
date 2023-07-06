@@ -7,7 +7,7 @@
  * This module uses queues to retrieve and store radio messages.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RMSG.h"
 #include "McuRTOS.h"

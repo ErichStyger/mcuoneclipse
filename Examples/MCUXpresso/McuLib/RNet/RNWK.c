@@ -7,7 +7,7 @@
  * This module implements the NWK (Network) of the radio network stack.
  */
 
-#include "RNetConf.h"
+#include "McuRNetConfig.h"
 #if McuRNET_CONFIG_IS_ENABLED
 #include "RPHY.h"
 #include "RMAC.h"
