@@ -11,6 +11,9 @@
 #ifndef __McuRNet_CONFIG_H
 #define __McuRNet_CONFIG_H
 
+#include "McuRNetConfig.h"
+#if McuRNET_CONFIG_IS_ENABLED
+
 #ifndef McuRNet_CONFIG_APPLICATION_HEADER_FILE
   #define McuRNet_CONFIG_APPLICATION_HEADER_FILE    "RNet_AppConfig.h"
     /*!< Header file to be used for the RNet application configuration */
@@ -39,31 +42,30 @@
   /*!< Transceiver type used */
 
 #if RNET_CONFIG_TRANSCEIVER_TYPE==RNET_CONFIG_TRANSCEIVER_NRF24
-/* nRF24L01+ specific settings */
-#ifndef RNET_CONFIG_NRF24_DATA_RATE
-  #define RNET_CONFIG_NRF24_DATA_RATE  (McuNRF24L01_RF_SETUP_RF_DR_2000)
-    /*!< default transceiver data rate */
-#endif
-
+  /* nRF24L01+ specific settings */
+  #ifndef RNET_CONFIG_NRF24_DATA_RATE
+    #define RNET_CONFIG_NRF24_DATA_RATE  (McuNRF24L01_RF_SETUP_RF_DR_2000)
+      /*!< default transceiver data rate */
+  #endif
 #endif /* RNET_CONFIG_TRANSCEIVER_TYPE==RNET_CONFIG_TRANSCEIVER_NRF24 */
 
 #if RNET_CONFIG_TRANSCEIVER_TYPE==RNET_CONFIG_TRANSCEIVER_MC13201
-/* MC1320x specific settings */
-#ifndef RNET_CONFIG_SMAC_OUPTUT_POWER
-#define RNET_CONFIG_SMAC_OUPTUT_POWER  (McuNRF24L01_RF_SETUP_RF_DR_2000)
-  /*!< default transceiver data rate */
+  /* MC1320x specific settings */
+  #ifndef RNET_CONFIG_SMAC_OUPTUT_POWER
+  #define RNET_CONFIG_SMAC_OUPTUT_POWER  (McuNRF24L01_RF_SETUP_RF_DR_2000)
+    /*!< default transceiver data rate */
 #endif
 
 #endif /* RNET_CONFIG_TRANSCEIVER_TYPE==RNET_CONFIG_TRANSCEIVER_MC13201 */
 
 #ifndef RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE
-#define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  (32)
-  /*!< Size of the physical transceiver payload (bytes), max 32 bytes for nRF24L01+, max 128 bytes for MC1320x */
+  #define RNET_CONFIG_TRANSCEIVER_PAYLOAD_SIZE  (32)
+    /*!< Size of the physical transceiver payload (bytes), max 32 bytes for nRF24L01+, max 128 bytes for MC1320x */
 #endif
 
 #ifndef RNET_CONFIG_TRANSCEIVER_CHANNEL
-#define RNET_CONFIG_TRANSCEIVER_CHANNEL  (81)
-  /*!< default radio channel of transceiver */
+  #define RNET_CONFIG_TRANSCEIVER_CHANNEL  (81)
+    /*!< default radio channel of transceiver */
 #endif
 
 #ifndef RNET_CONFIG_SHORT_ADDR_SIZE
@@ -72,30 +74,31 @@
 #endif
 
 #ifndef RNET_CONFIG_SEND_RETRY_CNT
-#define RNET_CONFIG_SEND_RETRY_CNT    (3)
-  /*!< Number of retries if message sending failed. Set to zero to disable retry. */
+  #define RNET_CONFIG_SEND_RETRY_CNT    (3)
+    /*!< Number of retries if message sending failed. Set to zero to disable retry. */
 #endif
 
 /* Configuration for Rx and Tx queues */
 #ifndef RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS
-#define RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS        (15)
-  /*!< Number items in the Rx message queue. The higher, the more items can be buffered. */
+  #define RNET_CONFIG_MSG_QUEUE_NOF_RX_ITEMS        (15)
+    /*!< Number items in the Rx message queue. The higher, the more items can be buffered. */
 #endif
 
 #ifndef RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS
-#define RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS        (15)
-  /*!< Number items in the Tx message queue. The higher, the more items can be buffered. */
+  #define RNET_CONFIG_MSG_QUEUE_NOF_TX_ITEMS        (15)
+    /*!< Number items in the Tx message queue. The higher, the more items can be buffered. */
 #endif
 
 #ifndef RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS
-#define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS   (200/portTICK_PERIOD_MS)
-  /*!< Blocking time for putting items into the message queue before timeout. Use portMAX_DELAY for blocking. */
+  #define RNET_CONFIG_MSG_QUEUE_PUT_BLOCK_TIME_MS   (200/portTICK_PERIOD_MS)
+    /*!< Blocking time for putting items into the message queue before timeout. Use portMAX_DELAY for blocking. */
 #endif
 
 #ifndef RNET_CONFIG_REMOTE_STDIO
-#define RNET_CONFIG_REMOTE_STDIO        (1)
-  /*!< 1 for remote stdio over radio enabled, 0 for disabled. */
+  #define RNET_CONFIG_REMOTE_STDIO        (1)
+    /*!< 1 for remote stdio over radio enabled, 0 for disabled. */
 #endif
 
+#endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* __McuRNet_CONFIG_H */
