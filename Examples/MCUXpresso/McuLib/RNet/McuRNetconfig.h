@@ -67,8 +67,8 @@
 #endif
 
 #ifndef RNET_CONFIG_SHORT_ADDR_SIZE
-#define RNET_CONFIG_SHORT_ADDR_SIZE   (1)
-  /*!< size of short address type. Either 1 or 2 */
+  #define RNET_CONFIG_SHORT_ADDR_SIZE   (1)
+    /*!< size of short address type. Either 1 or 2 */
 #endif
 
 #ifndef RNET_CONFIG_SEND_RETRY_CNT

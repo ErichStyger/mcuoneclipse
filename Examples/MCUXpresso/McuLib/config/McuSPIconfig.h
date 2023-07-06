@@ -104,13 +104,21 @@
   #endif
 
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
-  #define MCUSPI_CONFIG_HW_SCLK_PIN (10)  /* SPI1_SCK */
-  #define MCUSPI_CONFIG_HW_MOSI_PIN (11)  /* SPI1_TX  */
-  #define MCUSPI_CONFIG_HW_MISO_PIN (12)  /* SPI1_RX  */
-  #define MCUSPI_CONFIG_HW_CS_PIN   (13)  /* SPI1_CSn */
-
-  #define MCUSPI_CONFIG_HW_SPI_INIT() /* nothing */
-
+  #ifndef MCUSPI_CONFIG_HW_SCLK_PIN
+    #define MCUSPI_CONFIG_HW_SCLK_PIN (10)  /* SPI1_SCK */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_MOSI_PIN
+    #define MCUSPI_CONFIG_HW_MOSI_PIN (11)  /* SPI1_TX  */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_MISO_PIN
+    #define MCUSPI_CONFIG_HW_MISO_PIN (12)  /* SPI1_RX  */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_CS_PIN
+    #define MCUSPI_CONFIG_HW_CS_PIN   (13)  /* SPI1_CSn */
+  #endif
+  #ifndef MCUSPI_CONFIG_HW_SPI_INIT
+    #define MCUSPI_CONFIG_HW_SPI_INIT() /* nothing */
+  #endif
   #ifndef MCUSPI_CONFIG_HW_CS_INIT
     #define MCUSPI_CONFIG_HW_CS_INIT()  /* nothing */
   #endif
