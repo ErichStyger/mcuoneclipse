@@ -7,7 +7,7 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include "app_platform.h"
+#include "platform.h"
 #include "McuShell.h"
 
 #if PL_CONFIG_USE_BUTTONS
