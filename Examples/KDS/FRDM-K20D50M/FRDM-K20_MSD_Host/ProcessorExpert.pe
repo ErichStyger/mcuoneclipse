@@ -3,7 +3,7 @@
   <Header>
     <Name>FRDM-K20_MSD_Host</Name>
     <SavedBy>tastyger</SavedBy>
-    <ModificationStamp>20</ModificationStamp>
+    <ModificationStamp>22</ModificationStamp>
     <Date>2015-04-28</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -5538,7 +5538,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.581</BeanVersion>
+    <BeanVersion>01.585</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -5552,7 +5552,7 @@
         <ItemSymbol>FreeRTOSVersion</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>V10.4.1</Value>
+        <Value>V10.5.1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>KinetisSDK</ItemSymbol>
@@ -8055,10 +8055,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTaskGetCurrentTaskHandle</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -8066,10 +8066,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>xTaskGetIdleTaskHandle</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -11722,7 +11722,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.164</BeanVersion>
+    <BeanVersion>01.171</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -11741,139 +11741,6 @@
       </ItemState>
     </Properties>
     <Methods>
-      <ItemState>
-        <ItemSymbol>chcat</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>chcat</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num8sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num8sToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num8uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num8uToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num16sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num16sToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num16uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num16uToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num32uToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num32uToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num32sToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num32sToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>NumFloatToStr</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>NumFloatToStr</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num16sToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num16sToStrFormatted</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num16uToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num16uToStrFormatted</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num32uToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num32uToStrFormatted</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Num32sToStrFormatted</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Num32sToStrFormatted</UsrMethodName>
-      </ItemState>
       <ItemState>
         <ItemSymbol>strcatNum8u</ItemSymbol>
         <ReadOnly>false</ReadOnly>
@@ -12287,6 +12154,18 @@
         <UsrMethodName>ScanRGB</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>ScanWRGB</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanWRGB</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>ScanRGB32</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -12297,6 +12176,18 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ScanRGB32</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>ScanWRGB32</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>ScanWRGB32</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>strcmp</ItemSymbol>
@@ -12565,6 +12456,139 @@
         <LastSelection>true</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>strcatPad</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>chcat</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>chcat</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num8sToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num8sToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num8uToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num8uToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num16sToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num16sToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num16uToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num16uToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num32uToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num32uToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num32sToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num32sToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>NumFloatToStr</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>NumFloatToStr</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num16sToStrFormatted</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num16sToStrFormatted</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num16uToStrFormatted</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num16uToStrFormatted</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num32uToStrFormatted</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num32uToStrFormatted</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>Num32sToStrFormatted</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Num32sToStrFormatted</UsrMethodName>
       </ItemState>
     </Methods>
     <Events />
@@ -14964,7 +14988,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.089</BeanVersion>
+    <BeanVersion>01.091</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -18040,7 +18064,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.110</BeanVersion>
+    <BeanVersion>01.113</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -20541,7 +20565,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.211</BeanVersion>
+    <BeanVersion>01.214</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -21319,6 +21343,17 @@
         <UsrMethodName>ParseCommand</UsrMethodName>
       </ItemState>
       <ItemState>
+        <ItemSymbol>StrToDriveNumber</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>StrToDriveNumber</UsrMethodName>
+      </ItemState>
+      <ItemState>
         <ItemSymbol>CheckCardPresence</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
@@ -21573,7 +21608,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.064</BeanVersion>
+    <BeanVersion>01.068</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -22127,15 +22162,15 @@
         <UsrMethodName>ParseCommand</UsrMethodName>
       </ItemState>
       <ItemState>
-        <ItemSymbol>DeInit</ItemSymbol>
+        <ItemSymbol>Deinit</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>always</LastUserSel>
-        <UsrMethodName>DeInit</UsrMethodName>
+        <LastSelection>true</LastSelection>
+        <LastUserSel>yes</LastUserSel>
+        <UsrMethodName>Deinit</UsrMethodName>
       </ItemState>
       <ItemState>
         <ItemSymbol>Init</ItemSymbol>
@@ -22147,6 +22182,17 @@
         <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>Init</UsrMethodName>
+      </ItemState>
+      <ItemState>
+        <ItemSymbol>DeInit</ItemSymbol>
+        <ReadOnly>false</ReadOnly>
+        <UserReadOnly>false</UserReadOnly>
+        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
+        <Index>0</Index>
+        <Value>true</Value>
+        <LastSelection>false</LastSelection>
+        <LastUserSel>always</LastUserSel>
+        <UsrMethodName>DeInit</UsrMethodName>
       </ItemState>
     </Methods>
     <Events>
@@ -22386,7 +22432,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.023</BeanVersion>
+    <BeanVersion>01.024</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -22466,7 +22512,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.014</BeanVersion>
+    <BeanVersion>01.015</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Repository>file:/${ProcessorExpertPath:user}</Repository>
     <Properties>
@@ -22686,7 +22732,7 @@
     <UserFolderName />
     <Comment lines_count="0" />
     <Template />
-    <BeanVersion>01.015</BeanVersion>
+    <BeanVersion>01.017</BeanVersion>
     <LightErrorsIgnored>false</LightErrorsIgnored>
     <Properties>
       <ItemState>
