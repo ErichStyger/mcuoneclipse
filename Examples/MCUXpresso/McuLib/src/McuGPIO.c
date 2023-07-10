@@ -160,7 +160,7 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
     HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, isHighOnInit?GPIO_PIN_SET:GPIO_PIN_RESET);
   }
 #elif McuLib_CONFIG_CPU_IS_ESP32
-  gpio_pad_select_gpio(pin->hw.pin);
+  gpio_reset_pin(pin->hw.pin);
   if (isInput) {
     gpio_set_direction(pin->hw.pin, GPIO_MODE_INPUT);
   } else {

@@ -11,6 +11,8 @@
 #include "McuI2cLib.h"
 #include "McuGPIO.h"
 #include "McuWait.h"
+#include "McuRTOS.h"
+#include "McuLog.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS
   #include "fsl_port.h"
   #include "fsl_i2c.h"
@@ -20,6 +22,8 @@
   #include "fsl_i2c.h"
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   #include "hardware/i2c.h"
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  #include "driver/i2c.h"
 #endif
 #if McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   #include "fsl_swm.h"
@@ -43,6 +47,8 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   /* nothing needed */
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  /* nothing needed */
 #endif
 
 #if MCUI2CLIB_CONFIG_ADD_DELAY
@@ -55,13 +61,20 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   int nofBytesWritten;
-#if MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US==0
-  nofBytesWritten = i2c_write_blocking(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false);
-#else
-  nofBytesWritten = i2c_write_timeout_us(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false, Siz*MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US);
-#endif
+  #if MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US==0
+    nofBytesWritten = i2c_write_blocking(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false);
+  #else
+    nofBytesWritten = i2c_write_timeout_us(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, (uint8_t*)Ptr, Siz, false, Siz*MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US);
+  #endif
   if (nofBytesWritten!=Siz) {
     *Snt = nofBytesWritten;
+    return ERR_FAILED;
+  }
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  esp_err_t ret;
+
+  ret = i2c_master_write_to_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
+  if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
 #endif
@@ -92,6 +105,13 @@ uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
     *Rcv = nofBytesRead;
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  esp_err_t ret;
+
+  ret = i2c_master_read_from_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, sizeof(Siz), pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
+  if (ret!=ESP_OK) {
+    return ERR_FAILED;
+  }
 #endif
   *Rcv = Siz;
   return ERR_OK;
@@ -107,8 +127,11 @@ uint8_t McuI2cLib_SendStop(void) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   return ERR_OK; /* not required for RP2040 */
-#endif
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  return ERR_OK; /* not required for ESP32 */
+#else
   return ERR_OK;
+#endif
 }
 
 uint8_t McuI2cLib_SelectSlave(uint8_t Slv) {
@@ -116,6 +139,7 @@ uint8_t McuI2cLib_SelectSlave(uint8_t Slv) {
   return ERR_OK;
 }
 
+#if MCUI2CLIB_CONFIG_I2C_RELEASE_BUS
 static void McuI2cLib_ReleaseBus(void) {
   McuGPIO_Handle_t sdaPin, sclPin;
   McuGPIO_Config_t config;
@@ -168,6 +192,7 @@ static void McuI2cLib_ReleaseBus(void) {
   sdaPin = McuGPIO_DeinitGPIO(sdaPin);
   sclPin = McuGPIO_DeinitGPIO(sclPin);
 }
+#endif /* MCUI2CLIB_CONFIG_I2C_RELEASE_BUS */
 
 /* mux as I2C pins */
 static void McuI2cLib_ConfigureI2cPins(void) {
@@ -181,16 +206,37 @@ static void McuI2cLib_ConfigureI2cPins(void) {
   gpio_set_function(MCUI2CLIB_CONFIG_SCL_GPIO_PIN, GPIO_FUNC_I2C);
   gpio_pull_up(MCUI2CLIB_CONFIG_SDA_GPIO_PIN);
   gpio_pull_up(MCUI2CLIB_CONFIG_SCL_GPIO_PIN);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  /* nothing needed */
 #else
   #error "unknown configuration and MCU"
 #endif
 }
 
 void McuI2cLib_Deinit(void) {
+  /* nothing implemented */
 }
 
+#if McuLib_CONFIG_CPU_IS_ESP32
+static esp_err_t esp32_master_init(void) {
+  i2c_config_t conf = {
+      .mode = I2C_MODE_MASTER,
+      .sda_io_num = MCUI2CLIB_CONFIG_SDA_GPIO_PIN,
+      .scl_io_num = MCUI2CLIB_CONFIG_SCL_GPIO_PIN,
+      .sda_pullup_en = GPIO_PULLUP_ENABLE,
+      .scl_pullup_en = GPIO_PULLUP_ENABLE,
+      .master.clk_speed = MCUI2CLIB_CONFIG_I2C_BAUDRATE,
+      .clk_flags = 0,                          /* optional; you can use I2C_SCLK_SRC_FLAG_* flags to choose i2c source clock here */
+  };
+  i2c_param_config(MCUI2CLIB_CONFIG_I2C_DEVICE, &conf);
+  return i2c_driver_install(MCUI2CLIB_CONFIG_I2C_DEVICE, conf.mode, MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE, MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE, 0);
+}
+#endif /* McuLib_CONFIG_CPU_IS_ESP32 */
+
 void McuI2cLib_Init(void) {
+#if MCUI2CLIB_CONFIG_I2C_RELEASE_BUS
   McuI2cLib_ReleaseBus();
+#endif
 #if McuLib_CONFIG_CPU_IS_KINETIS \
      || McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S16 \
      || McuLib_CONFIG_CPU_IS_LPC55xx && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69 \
@@ -198,6 +244,10 @@ void McuI2cLib_Init(void) {
   MCUI2CLIB_CONFIG_CLOCK_SELECT();
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   i2c_init(MCUI2CLIB_CONFIG_I2C_DEVICE, MCUI2CLIB_CONFIG_I2C_BAUDRATE);
+#elif McuLib_CONFIG_CPU_IS_ESP32
+  if (esp32_master_init()!=ESP_OK) {
+    McuLog_fatal("failed initializing I2C");
+  }
 #else
   #error "unknown configuration and MCU"
 #endif
@@ -218,6 +268,8 @@ void McuI2cLib_Init(void) {
   sourceClock = MCUI2CLIB_CONFIG_I2C_MASTER_CLK_FREQ;
   I2C_MasterInit(MCUI2CLIB_CONFIG_I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
+  /* nothing needed */
+#elif McuLib_CONFIG_CPU_IS_ESP32
   /* nothing needed */
 #endif
 }

@@ -220,6 +220,32 @@
     #define MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US (10000)
   #endif
 
+#elif McuLib_CONFIG_CPU_IS_ESP32
+
+ #ifndef MCUI2CLIB_CONFIG_I2C_DEVICE
+    #define MCUI2CLIB_CONFIG_I2C_DEVICE       I2C_NUM_0
+  #endif
+  #ifndef MCUI2CLIB_CONFIG_SDA_GPIO_PIN
+    #define MCUI2CLIB_CONFIG_SDA_GPIO_PIN     18u
+  #endif
+  #ifndef MCUI2CLIB_CONFIG_SCL_GPIO_PIN
+    #define MCUI2CLIB_CONFIG_SCL_GPIO_PIN     19u
+  #endif
+
+  #ifndef MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US
+    #define MCUI2CLIB_CONFIG_TIMEOUT_BYTE_US (10000)
+  #endif
+
+  #ifndef MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE
+    #define MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE   0                          /*!< I2C master doesn't need buffer */
+  #endif
+  #ifndef MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE
+    #define MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE   0                          /*!< I2C master doesn't need buffer */
+  #endif
+  #ifndef MCUI2CLIB_I2C_MASTER_TIMEOUT_MS
+    #define MCUI2CLIB_I2C_MASTER_TIMEOUT_MS       1000
+  #endif
+
 #elif McuLib_CONFIG_CPU_IS_KINETIS /* K22FN512 */
   /* set of predefined pin configurations for Kinetis devices: only one can be active! */
   #ifndef MCUI2CLIB_CONFIG_USE_PORTB_B0_B1
@@ -311,7 +337,12 @@
     #define MCUI2CLIB_CONFIG_CLOCK_SELECT()    /* NOTE: needs to be done in clocks tool or outside in the platform code */
   #endif
 
-#endif /* Kinetis or LPC */
+#endif /* which CPU used */
+
+#ifndef MCUI2CLIB_CONFIG_I2C_RELEASE_BUS
+  #define MCUI2CLIB_CONFIG_I2C_RELEASE_BUS  (1 && !McuLib_CONFIG_CPU_IS_ESP32)
+    /*!< if I2C Bus release shall be implemented and done at bus initialization. Not yet implemented for ESP32 */
+#endif
 
 #ifndef MCUI2CLIB_CONFIG_I2C_BAUDRATE
   #define MCUI2CLIB_CONFIG_I2C_BAUDRATE       400000U /* the desired I2C SCL clock frequency */
