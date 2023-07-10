@@ -18,6 +18,9 @@
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   #include "McuRTOS.h"
 #endif
+#if PL_CONFIG_PULL_NAV
+  #include "nav.h"
+#endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
@@ -31,5 +34,8 @@ void PL_Init(void) {
   McuLED_Init();
 #if PL_CONFIG_USE_WIFI
   PicoWiFi_Init();
+#endif
+#if PL_CONFIG_PULL_NAV
+  Nav_Init();
 #endif
 }

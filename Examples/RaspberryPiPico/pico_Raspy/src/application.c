@@ -50,7 +50,7 @@ static void AppTask(void *pv) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
   #endif
-    vTaskDelay(pdMS_TO_TICKS(10*100));
+    vTaskDelay(pdMS_TO_TICKS(5*100));
   }
 }
 

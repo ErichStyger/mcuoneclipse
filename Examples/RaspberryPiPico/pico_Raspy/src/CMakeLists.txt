@@ -3,7 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  *.c
+  *.c 
  )
 
 # add_library: With this declaration, you express the intent to build a library. 

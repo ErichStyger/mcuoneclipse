@@ -17,6 +17,8 @@
    */
 #define PL_CONFIG_USE_WIFI              (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 
+#define PL_CONFIG_PULL_NAV              (1) /* if the navigation switch pins shall be pulled high */
+
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */
