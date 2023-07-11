@@ -1,0 +1,85 @@
+;
+; Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+;
+; SPDX-License-Identifier: BSD-3-Clause
+;
+; useful information: https://www.heise.de/blog/I-O-on-Steroids-PIO-die-programmierbare-Ein-Ausgabe-des-Raspberry-Pi-Pico-6018818.html
+; See the PIO simulator here: https://rp2040pio-docs.readthedocs.io/en/latest/index.html
+
+.program ws2812
+.side_set 1
+
+.define public NOF_CYCLES_FOR_1_BIT  (3+2+5)
+
+.lang_opt python sideset_init = pico.PIO.OUT_HIGH
+.lang_opt python out_init     = pico.PIO.OUT_HIGH
+.lang_opt python out_shiftdir = 1
+
+.wrap_target
+bitloop:
+    out x, 1       side 0 [2]   ; [3] Side-set still takes place when instruction stalls
+    jmp !x do_zero side 1 [2]   ; [2] Branch on the bit we shifted out. Positive pulse
+do_one:
+    jmp  bitloop   side 1 [3]   ; [5] Continue driving high, for a long pulse
+do_zero:
+    nop            side 0 [3]   ; [5] Or drive low, for a short pulse
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h" 
+
+static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, float freq, bool rgbw) {
+  pio_gpio_init(pio, pin); /* initialize pin for usage with the PIO */
+  pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true); /* set pin direction. 1: number of pins. true: as output pin */
+
+  pio_sm_config c = ws2812_program_get_default_config(offset); /* get default configuration */
+  sm_config_set_sideset_pins(&c, pin); /* use pin as side set */
+  sm_config_set_out_shift(&c, false, true, rgbw ? 32 : 24); /* false: shift left. true: auto-pull. Number of bits based on rgb or rgbw */
+  sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
+  
+  /* calculate state machine clocking based on protocol needs */
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
+  sm_config_set_clkdiv(&c, div);
+
+  /* initialize PIO and start it */
+  pio_sm_init(pio, sm, offset, &c);
+  pio_sm_set_enabled(pio, sm, true); /* true: enable pio */
+}
+%}
+
+.program ws2812_parallel
+
+.define public NOF_CYCLES_FOR_1_BIT (1+1+3+4+1)
+
+.wrap_target
+    mov x, null           ; [1] clear X scratch register
+    out x, 8              ; [1] copy 8bits from OSR to X
+    mov pins, !null [2]   ; [3] T1: set all pins HIGH (!NULL)
+    mov pins, x     [3]   ; [4] T2: pulse width: keep pins high (for 1 bits) or pull low (for 0 bits)
+    mov pins, null        ; [1] T3: pull all pins low
+ .wrap
+ 
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void ws2812_parallel_program_init(PIO pio, uint sm, uint offset, uint pin_base, uint pin_count, float freq) {
+  for(uint i=pin_base; i<pin_base+pin_count; i++) {
+    pio_gpio_init(pio, i);
+  }
+  pio_sm_set_consecutive_pindirs(pio, sm, pin_base, pin_count, true); /* configure number of pins. true: as output pin */
+
+  pio_sm_config c = ws2812_parallel_program_get_default_config(offset);
+  sm_config_set_out_shift(&c, true, true, 32); /* true: shift left. true: auto-pull. 32: number of bits */
+  sm_config_set_out_pins(&c, pin_base, pin_count); /* set the 'out' pins */
+  sm_config_set_set_pins(&c, pin_base, pin_count); /* set the 'set' pins */
+  sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); /* combine both FIFOs as TX_FIFO, so we have a bigger FIFO */
+  
+  /* calculate state machine clocking based on protocol needs */
+  float div = clock_get_hz(clk_sys) / (freq * ws2812_NOF_CYCLES_FOR_1_BIT);
+  sm_config_set_clkdiv(&c, div);
+
+  /* initialize PIO and start it */
+  pio_sm_init(pio, sm, offset, &c);
+  pio_sm_set_enabled(pio, sm, true); /* true: enable pio */
+}
+%}

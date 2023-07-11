@@ -18,6 +18,9 @@
 #define PL_CONFIG_USE_WIFI              (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 
 #define PL_CONFIG_PULL_NAV              (1) /* if the navigation switch pins shall be pulled high */
+#define PL_CONFIG_USE_NEO_PIXEL_HW      (1) /* if using NeoPixels */
+#define PL_CONFIG_USE_UART              (1) /* if using Uart gateway to Raspy */
+#define PL_CONFIG_USE_USB_CDC           (1)
 
 void PL_Init(void);
 
