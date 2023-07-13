@@ -5,6 +5,9 @@
  */
 
 #include "platform.h"
+#if PL_CONFIG_USE_USB_CDC
+  #include "pico/stdlib.h"
+#endif
 #if PL_CONFIG_USE_WIFI
   #include "PicoWiFi.h"
 #elif PL_CONFIG_USE_PICO_W
