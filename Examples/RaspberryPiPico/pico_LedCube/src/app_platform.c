@@ -29,7 +29,7 @@
 #endif
 #include "McuLog.h"
 #if PL_CONFIG_USE_SHELL
-  #include "Shell.h"
+  #include "shell.h"
 #endif
 #if McuLib_CONFIG_SDK_USE_FREERTOS
   #include "McuRTOS.h"

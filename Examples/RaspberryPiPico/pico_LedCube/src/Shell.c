@@ -8,7 +8,7 @@
 
 #include "app_platform.h"
 #if PL_CONFIG_USE_SHELL
-#include "Shell.h"
+#include "shell.h"
 #include "McuShell.h"
 #include "McuRTOS.h"
 #include "McuRTT.h"
