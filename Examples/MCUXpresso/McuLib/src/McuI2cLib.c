@@ -125,12 +125,13 @@ uint8_t McuI2cLib_SendStop(void) {
   if (status!=kStatus_Success) {
     return ERR_FAILED;
   }
+  return ERR_OK;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   return ERR_OK; /* not required for RP2040 */
 #elif McuLib_CONFIG_CPU_IS_ESP32
   return ERR_OK; /* not required for ESP32 */
 #else
-  return ERR_OK;
+  return ERR_FAILED;
 #endif
 }
 
@@ -219,6 +220,8 @@ void McuI2cLib_Deinit(void) {
 
 #if McuLib_CONFIG_CPU_IS_ESP32
 static esp_err_t esp32_master_init(void) {
+  esp_err_t err;
+
   i2c_config_t conf = {
       .mode = I2C_MODE_MASTER,
       .sda_io_num = MCUI2CLIB_CONFIG_SDA_GPIO_PIN,
@@ -228,8 +231,15 @@ static esp_err_t esp32_master_init(void) {
       .master.clk_speed = MCUI2CLIB_CONFIG_I2C_BAUDRATE,
       .clk_flags = 0,                          /* optional; you can use I2C_SCLK_SRC_FLAG_* flags to choose i2c source clock here */
   };
-  i2c_param_config(MCUI2CLIB_CONFIG_I2C_DEVICE, &conf);
-  return i2c_driver_install(MCUI2CLIB_CONFIG_I2C_DEVICE, conf.mode, MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE, MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE, 0);
+  err = i2c_param_config(MCUI2CLIB_CONFIG_I2C_DEVICE, &conf);
+  if (err!=ESP_OK) {
+    McuLog_fatal("failed configuring I2C");
+  }
+  err = i2c_driver_install(MCUI2CLIB_CONFIG_I2C_DEVICE, conf.mode, MCUI2CLIB_I2C_MASTER_RX_BUF_DISABLE, MCUI2CLIB_I2C_MASTER_TX_BUF_DISABLE, 0);
+  if (err!=ESP_OK) {
+    McuLog_fatal("failed installing I2C driver");
+  }
+  return err;
 }
 #endif /* McuLib_CONFIG_CPU_IS_ESP32 */
 
