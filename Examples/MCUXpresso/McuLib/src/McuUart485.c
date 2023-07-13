@@ -20,7 +20,7 @@
 
 #if !McuUart485_CONFIG_USE_HW_OE_RTS
 
-static McuGPIO_Handle_t RS485_TxEn;
+static McuGPIO_Handle_t RS485_TxEn; /* LOW: Rx, HIGH: Tx */
 
 void McuUart485_GPIO_RxEnable(void) {
   McuGPIO_SetLow(RS485_TxEn);
