@@ -34,6 +34,7 @@ else ()
               "src/McuArmTools.c"
               "src/McuButton.c"
               "src/McuCriticalSection.c"
+              "src/McuDebounce.c"
               "src/McuFontDisplay.c"
               "src/McuGenericI2C.c"
               "src/McuGDisplaySSD1306.c"
