@@ -4,7 +4,7 @@ if (DEFINED PICO_BOARD)
     INCLUDE (RP2040_CMakeLists.txt)
 else ()
     message(STATUS "McuLib for ESP32")
-   
+
     idf_component_register(
           SRCS 
               "fonts/McuFontCour08Bold.c"

@@ -10,8 +10,7 @@
 #  McuLib
 #  lvglLib # LittlevGL library inside the McuLib
 
-
-file(GLOB FILES
+file(GLOB MCULIBFILES
   RNet/*.c
   fonts/*.c
 
@@ -113,12 +112,10 @@ file(GLOB FILES
   Modbus/McuModbus.c
 )
 
-# add_compile_options(-include "../src/IncludeMcuLibConfig.h")
-
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
 # the second argument are the files that will be compiled to create your library.
-add_library(McuLib ${FILES})
+add_library(McuLib ${MCULIBFILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
