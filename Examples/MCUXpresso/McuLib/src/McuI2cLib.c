@@ -108,7 +108,7 @@ uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
 #elif McuLib_CONFIG_CPU_IS_ESP32
   esp_err_t ret;
 
-  ret = i2c_master_read_from_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, sizeof(Siz), pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
+  ret = i2c_master_read_from_device(MCUI2CLIB_CONFIG_I2C_DEVICE, i2cSlaveDeviceAddr, Ptr, Siz, pdMS_TO_TICKS(MCUI2CLIB_I2C_MASTER_TIMEOUT_MS));
   if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
