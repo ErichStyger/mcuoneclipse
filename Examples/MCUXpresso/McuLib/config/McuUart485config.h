@@ -114,11 +114,21 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
 
 #elif McuLib_CONFIG_CPU_IS_ESP32
   #include "driver/uart.h"
-  #define McuUart485_CONFIG_UART_DEVICE                    UART_NUM_2
-  #define McuUart485_CONFIG_TXD_PIN                        GPIO_NUM_4
-  #define McuUart485_CONFIG_RXD_PIN                        GPIO_NUM_5
-  #define McuUart485_CONFIG_RTS_PIN                       (GPIO_NUM_23) /* RTS, ~RE for RS485, managed by UART */
-  #define McuUart485_CONFIG_CTS_PIN                       (/*GPIO_NUM_26*//*not used*/) /* CTS, DE for RS485, but not used! RE/DE must be wired together on the hardware */
+  #ifndef McuUart485_CONFIG_UART_DEVICE
+    #define McuUart485_CONFIG_UART_DEVICE                    UART_NUM_2
+  #endif
+  #ifndef McuUart485_CONFIG_TXD_PIN
+    #define McuUart485_CONFIG_TXD_PIN                        GPIO_NUM_4
+  #endif
+  #ifndef McuUart485_CONFIG_RXD_PIN
+    #define McuUart485_CONFIG_RXD_PIN                        GPIO_NUM_5
+  #endif
+  #ifndef McuUart485_CONFIG_RTS_PIN
+    #define McuUart485_CONFIG_RTS_PIN                        GPIO_NUM_23 /* RTS, ~RE for RS485, managed by UART */
+  #endif
+  #ifndef McuUart485_CONFIG_CTS_PIN
+    #define McuUart485_CONFIG_CTS_PIN                       (/*GPIO_NUM_26*//*not used*/) /* CTS, DE for RS485, but not used! RE/DE must be wired together on the hardware */
+  #endif
 
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   #include "hardware/uart.h"
