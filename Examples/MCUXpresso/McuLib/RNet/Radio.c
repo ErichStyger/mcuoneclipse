@@ -20,8 +20,6 @@
 
 extern void McuRNet_OnRadioEvent(McuRNet_RadioEvent event);
 
-//#include "Events.h" /* for event handler interface */
-
 #define NRF24_DYNAMIC_PAYLOAD     1 /* if set to one, use dynamic payload size */
 #define NRF24_AUTO_ACKNOWLEDGE    1 /* if set to one, the transceiver is configured to use auto acknowledge */
 #define RADIO_CHANNEL_DEFAULT     RNET_CONFIG_TRANSCEIVER_CHANNEL  /* default communication channel */

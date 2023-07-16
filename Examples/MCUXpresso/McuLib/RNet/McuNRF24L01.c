@@ -329,7 +329,6 @@ static void InitCS(void) {
   McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT();
   McuGPIO_GetDefaultConfig(&config);
 
-  /* CE: PTB10 */
 #if McuLib_CONFIG_CPU_IS_ESP32
   config.hw.pin = McuNRF24L01_CONFIG_CE_PIN_NUMBER;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
@@ -348,7 +347,6 @@ static void InitCS(void) {
     for(;;) {} /* error */
   }
 
-  /* CSN: PTB0 */
 #if McuLib_CONFIG_CPU_IS_ESP32
   config.hw.pin = McuNRF24L01_CONFIG_CSN_PIN_NUMBER;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
@@ -359,7 +357,7 @@ static void InitCS(void) {
   config.hw.pin   = McuNRF24L01_CONFIG_CSN_PIN_NUMBER;
 #endif
   config.isInput = false;
-  config.isHighOnInit = true; /* CS is LOW active */
+  config.isHighOnInit = true; /* CSN is LOW active */
 
   csnPin = McuGPIO_InitGPIO(&config);
   if (csnPin==NULL) {

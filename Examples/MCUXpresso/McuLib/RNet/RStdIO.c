@@ -274,10 +274,13 @@ static bool RSTDIO_RxStdInKeyPressed(void) {
 }
 
 McuShell_ConstStdIOType RSTDIO_stdio = {
-  (McuShell_StdIO_In_FctType)RSTDIO_RxStdInReadChar, /* stdin */
-  (McuShell_StdIO_OutErr_FctType)RSTDIO_TxStdOut, /* stdout */
-  (McuShell_StdIO_OutErr_FctType)RSTDIO_TxStdErr, /* stderr */
-  RSTDIO_RxStdInKeyPressed /* if input is not empty */
+  .stdIn = (McuShell_StdIO_In_FctType)RSTDIO_RxStdInReadChar, /* stdin */
+  .stdOut = (McuShell_StdIO_OutErr_FctType)RSTDIO_TxStdOut, /* stdout */
+  .stdErr = (McuShell_StdIO_OutErr_FctType)RSTDIO_TxStdErr, /* stderr */
+  .keyPressed = RSTDIO_RxStdInKeyPressed, /* if input is not empty */
+#if McuShell_CONFIG_ECHO_ENABLED
+  .echoEnabled = false,
+#endif
 };
 
 McuShell_ConstStdIOTypePtr RSTDIO_GetStdio(void) {

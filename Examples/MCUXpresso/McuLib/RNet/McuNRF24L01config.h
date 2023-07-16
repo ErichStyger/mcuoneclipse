@@ -46,6 +46,8 @@
 #ifndef McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT
   #if McuLib_CONFIG_CPU_IS_RPxxxx
     #define McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT() /* nothing needed */
+  #elif McuLib_CONFIG_CPU_IS_ESP32
+    #define McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT() /* nothing needed */
   #elif McuLib_CONFIG_CPU_IS_KINETIS
     #define McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT()  CLOCK_EnableClock(kCLOCK_PortB)
       /*!< Optional hardware initialization for CS Pin */
@@ -72,7 +74,7 @@
     /*!< GPIO for CE Pin */
 #endif
 
-  #ifndef McuNRF24L01_CONFIG_CSN_PIN_PORT
+#ifndef McuNRF24L01_CONFIG_CSN_PIN_PORT
   #define McuNRF24L01_CONFIG_CSN_PIN_PORT   PORTB
     /*!< PORT for CE Pin */
 #endif
@@ -81,6 +83,5 @@
   #define McuNRF24L01_CONFIG_CSN_PIN_NUMBER   0
     /*!< Pin number of the CE Pin */
 #endif
-
 
 #endif /* __McuNRF24L01_CONFIG_H */

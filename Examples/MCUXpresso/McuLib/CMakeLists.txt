@@ -31,6 +31,18 @@ else ()
               "fonts/McuFontHelv18Normal.c"
               "fonts/McuFontHelv24Bold.c"
               "fonts/McuFontHelv24Normal.c"
+              
+              "RNet/McuNRF24L01.c"
+              "RNet/McuRNet.c"
+              "RNet/Radio.c"
+              "RNet/RApp.c"
+              "RNet/RMAC.c"
+              "RNet/RMSG.c"
+              "RNet/RNWK.c"
+              "RNet/RPHY.c"
+              "RNet/RStack.c"
+              "RNet/RStdio.c"
+              
               "src/McuArmTools.c"
               "src/McuButton.c"
               "src/McuCriticalSection.c"
@@ -58,7 +70,8 @@ else ()
               "src/McuUtility.c"
               "src/McuWait.c"
               "src/McuXFormat.c"
-          INCLUDE_DIRS 
+          INCLUDE_DIRS
+              "./"
               "./config"
               "./src"
               "./fonts"
