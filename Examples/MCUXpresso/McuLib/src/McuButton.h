@@ -38,6 +38,8 @@ void McuBtn_EnablePullResistor(McuBtn_Handle_t btn);
 
 bool McuBtn_IsOn(McuBtn_Handle_t btn);
 
+void McuBtn_GetPinStatusString(McuBtn_Handle_t btn, unsigned char *buf, size_t bufSize);
+
 void McuBtn_Deinit(void);
 
 void McuBtn_Init(void);

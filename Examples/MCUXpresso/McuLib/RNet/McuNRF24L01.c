@@ -95,12 +95,13 @@
 #include "McuSPI.h"
 #include "McuGPIO.h"
 #include "McuLog.h"
+#include "McuUtility.h"
 
-static McuGPIO_Handle_t cePin, csnPin;
+static McuGPIO_Handle_t cePin;  /* CE pin, HIGH active, if active, device is in RX/TX mode */
+static McuGPIO_Handle_t csnPin; /* CSN pin, LOW active, used to select device (chip select) to send commands */
 
 /* Macros to hide low level functionality */
 #define McuNRF24L01_WAIT_US(x)  McuWait_Waitus(x)          /* wait for the given number of micro-seconds */
-#define McuNRF24L01_WAIT_MS(x)  McuWait_Waitms(x)          /* wait for the given number of milli-seconds */
 #define McuNRF24L01_CE_LOW()    McuGPIO_SetLow(cePin)      /* put CE LOW */
 #define McuNRF24L01_CE_HIGH()   McuGPIO_SetHigh(cePin)     /* put CE HIGH */
 #define McuNRF24L01_CSN_LOW()   McuGPIO_SetLow(csnPin)     /* put CSN LOW, activate bus */
@@ -1413,6 +1414,41 @@ uint8_t McuNRF24L01_GetRxAddress(uint8_t pipe, uint8_t *address, uint8_t nofAddr
   }
   return ERR_OK;
 }
+
+static uint8_t PrintHelp(const McuShell_StdIOType *io) {
+  McuShell_SendHelpStr((unsigned char*)"McuNRF", (unsigned char*)"Group of nRF24L01+ commands\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows help or status\r\n", io->stdOut);
+  return ERR_OK;
+}
+
+static uint8_t PrintStatus(const McuShell_StdIOType *io) {
+  uint8_t buf[64];
+
+  McuShell_SendStatusStr((unsigned char*)"McuNRF", (unsigned char*)"nRF24L01+ status\r\n", io->stdOut);
+
+  McuGPIO_GetPinStatusString(cePin, buf, sizeof(buf));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  CE", (const unsigned char*)buf, io->stdOut);
+
+  McuGPIO_GetPinStatusString(csnPin, buf, sizeof(buf));
+  McuUtility_strcat(buf, sizeof(buf), (unsigned char*)"\r\n");
+  McuShell_SendStatusStr((const unsigned char*)"  CSN", (const unsigned char*)buf, io->stdOut);
+  return ERR_OK;
+}
+
+uint8_t McuNRF24L01_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io) {
+  uint8_t res = ERR_OK;
+
+  if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_HELP)==0 || McuUtility_strcmp((char*)cmd, (char*)"McuNRF help")==0) {
+    *handled = TRUE;
+    return PrintHelp(io);
+  } else if (McuUtility_strcmp((char*)cmd, (char*)McuShell_CMD_STATUS)==0 || McuUtility_strcmp((char*)cmd, (char*)"McuNRF status")==0) {
+    *handled = TRUE;
+    return PrintStatus(io);
+  }
+  return res;
+}
+
 #endif /* McuNRF24L01_CONFIG_IS_ENABLED */
 
 /* END McuNRF24L01. */

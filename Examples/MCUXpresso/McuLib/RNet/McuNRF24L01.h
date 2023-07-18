@@ -1008,6 +1008,16 @@ uint8_t McuNRF24L01_GetRxAddress(uint8_t pipe, uint8_t *address, uint8_t nofAddr
 ** ===================================================================
 */
 
+#include "McuShell.h"
+/*!
+ * \brief Parses a command
+ * \param cmd Command string to be parsed
+ * \param handled Sets this variable to TRUE if command was handled
+ * \param io I/O stream to be used for input/output
+ * \return Error code, ERR_OK if everything was fine
+ */
+uint8_t McuNRF24L01_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
+
 /* END McuNRF24L01. */
 
 #endif

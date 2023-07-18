@@ -72,6 +72,9 @@
 /* MODULE McuWait. */
 #include "McuLib.h" /* SDK and API used */
 #include "McuWaitconfig.h" /* configuration */
+#if McuLib_CONFIG_CPU_IS_ESP32
+  #include "rom/ets_sys.h"
+#endif
 
 /* other includes needed */
 #if McuWait_CONFIG_USE_RTOS_WAIT
@@ -162,7 +165,10 @@ void McuWait_Waitms(uint32_t ms);
 */
 
 /* we are having a static clock configuration: implement as macro/inlined version */
-#define McuWait_Waitus(us)  \
+#if McuLib_CONFIG_CPU_IS_ESP32
+  #define McuWait_Waitus(us)  esp_rom_delay_us(us)
+#else
+  #define McuWait_Waitus(us)  \
         /*lint -save -e(505,506,522) Constant value Boolean, Redundant left argument to comma. */\
        (  ((McuWait_NofCyclesUs((us),McuWait_INSTR_CLOCK_HZ)==0)||(us)==0) ? \
           (void)0 : \
@@ -171,6 +177,7 @@ void McuWait_Waitms(uint32_t ms);
             McuWait_WAIT_C(McuWait_NofCyclesUs(((us)%1000), McuWait_INSTR_CLOCK_HZ)) \
        /*lint -restore */\
        )
+#endif
 /*
 ** ===================================================================
 **     Method      :  Waitus (component Wait)

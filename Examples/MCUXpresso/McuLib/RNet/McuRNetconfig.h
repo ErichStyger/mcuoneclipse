@@ -99,6 +99,10 @@
     /*!< 1 for remote stdio over radio enabled, 0 for disabled. */
 #endif
 
+#ifndef RNET_RADIO_WAITNG_TIMEOUT_MS
+  #define RNET_RADIO_WAITNG_TIMEOUT_MS   250 /* timeout value in milliseconds, used for RADIO_WAITING_DATA_SENT */
+#endif
+
 #endif /* McuRNET_CONFIG_IS_ENABLED */
 
 #endif /* __McuRNet_CONFIG_H */

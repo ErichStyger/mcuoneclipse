@@ -91,7 +91,7 @@
 #include "RMSG.h"
 #include "RApp.h"
 #include "RStdIO.h"
-
+#include "McuNRF24L01.h"
 
 /*
 ** ===================================================================
@@ -216,6 +216,7 @@ uint8_t McuRNet_ParseCommand(const unsigned char *cmd, bool *handled, const McuS
     RSTDIO_ParseCommand,
     #endif
   #endif
+    McuNRF24L01_ParseCommand,
     NULL /* sentinel */
   };
   return McuShell_IterateTable(cmd, handled, io, CmdParserTable);

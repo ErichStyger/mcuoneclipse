@@ -126,16 +126,16 @@
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_ESP32_SPI3
   /* SPI3, commonly referred as VSPI */
   #ifndef MCUSPI_CONFIG_HW_SCLK_PIN
-    #define MCUSPI_CONFIG_HW_SCLK_PIN (18)  /* VSPI, IO18 */
+    #define MCUSPI_CONFIG_HW_SCLK_PIN (GPIO_NUM_18)  /* VSPI, IO18 */
   #endif
   #ifndef MCUSPI_CONFIG_HW_MOSI_PIN
-    #define MCUSPI_CONFIG_HW_MOSI_PIN (23)  /* VSPI, IO23  */
+    #define MCUSPI_CONFIG_HW_MOSI_PIN (GPIO_NUM_23)  /* VSPI, IO23  */
   #endif
   #ifndef MCUSPI_CONFIG_HW_MISO_PIN
-    #define MCUSPI_CONFIG_HW_MISO_PIN (19)  /* VSPI, IO19  */
+    #define MCUSPI_CONFIG_HW_MISO_PIN (GPIO_NUM_19)  /* VSPI, IO19  */
   #endif
   #ifndef MCUSPI_CONFIG_HW_CS_PIN
-    #define MCUSPI_CONFIG_HW_CS_PIN   (5)  /* VSPI, IO5 */
+    #define MCUSPI_CONFIG_HW_CS_PIN   (GPIO_NUM_5)  /* VSPI, IO5 */
   #endif
   #ifndef MCUSPI_CONFIG_HW_SPI_INIT
     #define MCUSPI_CONFIG_HW_SPI_INIT() /* nothing */

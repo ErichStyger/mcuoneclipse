@@ -215,7 +215,6 @@ void McuSPI_Init(void) {
   gpio_set_function(MCUSPI_CONFIG_HW_MOSI_PIN, GPIO_FUNC_SPI);
   gpio_set_function(MCUSPI_CONFIG_HW_SCLK_PIN, GPIO_FUNC_SPI);
 #elif MCUSPI_CONFIG_HW_TEMPLATE==MCUSPI_CONFIG_HW_TEMPLATE_ESP32_SPI3
-  /* \todo */
   esp_err_t ret;
 
   /* Configuration for the SPI bus */
@@ -233,8 +232,12 @@ void McuSPI_Init(void) {
      .clock_speed_hz=MCUSPI_CONFIG_TRANSFER_BAUDRATE,
      .duty_cycle_pos=128,        /* 50% duty cycle */
      .mode=0,
-     .spics_io_num=MCUSPI_CONFIG_HW_CS_PIN, /* \todo */
-     .cs_ena_posttrans=3,        //Keep the CS low 3 cycles after transaction, to stop slave from missing the last bit when CS has less propagation delay than CLK
+#if MCUSPI_CONFIG_HW_CS_INIT
+     .spics_io_num=MCUSPI_CONFIG_HW_CS_PIN,
+#else
+     .spics_io_num=GPIO_NUM_NC, /* not using CS pin, setting it to 'not connected' */
+#endif
+     .cs_ena_posttrans=3,        /* Keep the CS low 3 cycles after transaction, to stop slave from missing the last bit when CS has less propagation delay than CLK */
      .queue_size=3
    };
 
@@ -251,7 +254,7 @@ void McuSPI_Init(void) {
 #else
   #error "SPI target not supported"
 #endif
-#if 0
+#if 0 /* for testing only */
   McuSPI_Test();
 #endif
 }

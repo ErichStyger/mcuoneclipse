@@ -17,13 +17,13 @@
 #include "RPHY.h"
 #include "McuUtility.h"
 #include "McuRNet.h"
+#include "McuLog.h"
 
 extern void McuRNet_OnRadioEvent(McuRNet_RadioEvent event);
 
 #define NRF24_DYNAMIC_PAYLOAD     1 /* if set to one, use dynamic payload size */
 #define NRF24_AUTO_ACKNOWLEDGE    1 /* if set to one, the transceiver is configured to use auto acknowledge */
 #define RADIO_CHANNEL_DEFAULT     RNET_CONFIG_TRANSCEIVER_CHANNEL  /* default communication channel */
-#define RADIO_WAITNG_TIMEOUT_MS   250 /* timeout value in milliseconds, used for RADIO_WAITING_DATA_SENT */
 
 /* macros to configure device either for RX or TX operation */
 #define McuNRF24L01_CONFIG_SETTINGS  (McuNRF24L01_EN_CRC|McuNRF24L01_CRCO)
@@ -64,10 +64,6 @@ static uint8_t RADIO_CurrChannel = RADIO_CHANNEL_DEFAULT;
 
 /* need to have this in case RF device is still added to project */
 static volatile bool RADIO_isrFlag; /* flag set by ISR */
-
-static void Err(unsigned char *msg) {
-  McuShell_SendStr(msg, McuShell_GetStdio()->stdErr);
-}
 
 /* callback called from radio driver */
 void RADIO_OnInterrupt(void) {
@@ -223,9 +219,9 @@ static uint8_t CheckRx(void) {
     res = RMSG_QueueRxMsg(packet.phyData, packet.phySize, RPHY_BUF_SIZE(packet.phyData), packet.flags);
     if (res!=ERR_OK) {
       if (res==ERR_OVERFLOW) {
-        Err((unsigned char*)"ERR: Rx queue overflow!\r\n");
+        McuLog_error("Rx queue overflow!");
       } else {
-        Err((unsigned char*)"ERR: Rx Queue full?\r\n");
+        McuLog_error("Rx Queue full?");
       }
     }
   } else {
@@ -243,7 +239,7 @@ static void WaitRandomTime(void) {
 }
 
 static void RADIO_HandleStateMachine(void) {
-#if RADIO_WAITNG_TIMEOUT_MS>0
+#if RNET_RADIO_WAITNG_TIMEOUT_MS>0
   static TickType_t sentTimeTickCntr = 0; /* used for timeout */
 #endif
   uint8_t status, res;
@@ -304,7 +300,7 @@ static void RADIO_HandleStateMachine(void) {
       case RADIO_CHECK_TX:
         res = CheckTx();
         if (res==ERR_OK) { /* there was data and it has been sent */
-          #if RADIO_WAITNG_TIMEOUT_MS>0
+          #if RNET_RADIO_WAITNG_TIMEOUT_MS>0
           sentTimeTickCntr = xTaskGetTickCount(); /* remember time when it was sent, used for timeout */
           #endif
           RADIO_AppStatus = RADIO_WAITING_DATA_SENT;
@@ -344,8 +340,8 @@ static void RADIO_HandleStateMachine(void) {
           }
           break; /* process switch again */
         }
-      #if RADIO_WAITNG_TIMEOUT_MS>0
-        if (pdMS_TO_TICKS((xTaskGetTickCount()-sentTimeTickCntr))>RADIO_WAITNG_TIMEOUT_MS) {
+      #if RNET_RADIO_WAITNG_TIMEOUT_MS>0
+        if (pdMS_TO_TICKS((xTaskGetTickCount()-sentTimeTickCntr))>pdMS_TO_TICKS(RNET_RADIO_WAITNG_TIMEOUT_MS)) {
           RADIO_AppStatus = RADIO_TIMEOUT; /* timeout */
         }
       #endif
@@ -354,7 +350,7 @@ static void RADIO_HandleStateMachine(void) {
       case RADIO_TIMEOUT:
 #if RNET_CONFIG_SEND_RETRY_CNT>0
         if (RADIO_RetryCnt<RNET_CONFIG_SEND_RETRY_CNT) {
-          Err((unsigned char*)"ERR: Retry\r\n");
+          McuLog_error("Retry");
   #if McuRNet_CREATE_EVENTS
           /*lint -save -e522 function lacks side effect  */
           McuRNet_OnRadioEvent(McuRNet_RADIO_RETRY);
@@ -365,7 +361,7 @@ static void RADIO_HandleStateMachine(void) {
             RADIO_AppStatus = RADIO_CHECK_TX; /* resend packet */
             return; /* iterate state machine next time */
           } else {
-            Err((unsigned char*)"ERR: PutRetryTxMsg failed!\r\n");
+            McuLog_error("PutRetryTxMsg failed!");
   #if McuRNet_CREATE_EVENTS
             /*lint -save -e522 function lacks side effect  */
             McuRNet_OnRadioEvent(McuRNet_RADIO_RETRY_MSG_FAILED);
@@ -374,7 +370,7 @@ static void RADIO_HandleStateMachine(void) {
           }
         }
 #endif
-        Err((unsigned char*)"ERR: Timeout\r\n");
+        McuLog_error("Timeout");
 #if McuRNet_CREATE_EVENTS
         /*lint -save -e522 function lacks side effect  */
         McuRNet_OnRadioEvent(McuRNet_RADIO_TIMEOUT);
@@ -526,7 +522,7 @@ static void RADIO_PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"radio", (unsigned char*)"Group of radio commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Shows radio help or status\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  channel <number>", (unsigned char*)"Switches to the given channel (0..127)\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  datarate <rate>", (unsigned char*)"Changes the datareate (250, 1000, 2000)\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  datarate <rate>", (unsigned char*)"Changes the data rate (250, 1000, 2000)\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  txaddr <addr>", (unsigned char*)"Set TX address, <addr> of up to 5 hex bytes, separated by space\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  rxaddr <pipe> <addr>", (unsigned char*)"Set RX pipe address for pipe (0-5), <addr> of up to 5 hex bytes, separated by space\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  power <number>", (unsigned char*)"Changes output power (0, -10, -12, -18)\r\n", io->stdOut);

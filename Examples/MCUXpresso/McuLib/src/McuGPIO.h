@@ -35,19 +35,17 @@
 extern "C" {
 #endif
 
-typedef enum {
+typedef enum McuGPIO_PullType {
   McuGPIO_PULL_DISABLE,
   McuGPIO_PULL_UP,
   McuGPIO_PULL_DOWN,
 } McuGPIO_PullType;
 
-
 typedef struct McuGPIO_Dummy_s { int dummy; } McuGPIO_Dummy_s; /*!< using a pointer to a struct instead a pointer to void for handle, used for handle type 'safety' only */
 
 typedef McuGPIO_Dummy_s *McuGPIO_Handle_t; /*!< GPIO handle type */
 
-
-typedef struct {
+typedef struct McuGPIO_HwPin_t {
 #if McuLib_CONFIG_NXP_SDK_USED && !McuLib_CONFIG_IS_KINETIS_KE
   GPIO_Type *gpio; /* pointer to GPIO */
 #elif McuLib_CONFIG_CPU_IS_STM32
@@ -82,7 +80,7 @@ typedef struct {
   McuGPIO_PullType pull; /* pull resistor configuration */
 } McuGPIO_HwPin_t;
 
-typedef struct {
+typedef struct McuGPIO_Config_t {
   bool isInput;
   bool isHighOnInit;
   McuGPIO_HwPin_t hw;

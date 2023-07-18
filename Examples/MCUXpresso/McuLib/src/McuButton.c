@@ -7,6 +7,7 @@
 
 #include "McuLibconfig.h"
 #include "McuButton.h"
+#include "McuUtility.h"
 #include <stdlib.h> /* memcpy */
 #include <string.h> /* memset */
 #include <assert.h>
@@ -74,6 +75,19 @@ bool McuBtn_IsOn(McuBtn_Handle_t btn) {
     return McuGPIO_IsLow(button->gpio);
   } else {
     return McuGPIO_IsHigh(button->gpio);
+  }
+}
+
+void McuBtn_GetPinStatusString(McuBtn_Handle_t btn, unsigned char *buf, size_t bufSize) {
+  McuBtn_t *button;
+
+  button = (McuBtn_t*)btn;
+  buf[0] = '\0';
+  McuGPIO_GetPinStatusString(button->gpio, buf, bufSize);
+  if (button->isLowActive) {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)" active:L");
+  } else {
+    McuUtility_strcat(buf, bufSize, (unsigned char*)" active:H");
   }
 }
 
