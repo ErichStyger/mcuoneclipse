@@ -121,6 +121,13 @@ static void UsbRxTask(void *pv) {
 
   (void)pv; /* not used */
   for(;;) {
+    for(;;) {
+      cdc_StdIOSendChar('a');
+      cdc_StdIOSendChar('b');
+      cdc_StdIOSendChar('c');
+      cdc_StdIOSendChar('\n');
+      vTaskDelay(pdMS_TO_TICKS(500));
+    }
     workToDo = false;
     do {
       res = xQueueReceive(uartTxQueue, &ch, 0); /* poll queue */

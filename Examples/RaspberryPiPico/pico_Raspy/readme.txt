@@ -1,4 +1,6 @@
 Project for the Raspberry Pi Pico as interface to a Raspberry Pi (buttons, LEDs and UART).
+It does pull-up the nav switch buttons, as the Pi is not able to enable internal pull-ups.
+It offers as well a console interface to the Linux using the UART.
 
 Files needed: (besides this readme.txt)
 
