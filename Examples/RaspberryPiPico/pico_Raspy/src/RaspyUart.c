@@ -50,7 +50,7 @@ static McuShell_ConstStdIOType cdc_stdio = {
 static uint8_t cdc_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 #endif
 
-#define UART_ID uart0
+#define UART_ID   uart1
 #define BAUD_RATE 115200
 #define DATA_BITS 8
 #define STOP_BITS 1
@@ -67,6 +67,7 @@ static QueueHandle_t uartTxQueue;  /* Tx to Raspy */
 /* RX interrupt handler */
 void on_uart_rx(void) {
   BaseType_t xHigherPriorityTaskWoken;
+
   while (uart_is_readable(UART_ID)) {
     uint8_t ch = uart_getc(UART_ID);
     (void)xQueueSendFromISR(uartRxQueue, &ch, &xHigherPriorityTaskWoken);
@@ -109,8 +110,13 @@ static void initUart(void) {
 }
 
 static void UartPutc(unsigned char ch) {
-  if (uart_is_writable(UART_ID)) {
-    uart_putc(UART_ID, ch);
+  for(;;) { /* breaks */
+    if (uart_is_writable(UART_ID)) {
+      uart_putc_raw(UART_ID, ch);
+      break;
+    } else {
+      vTaskDelay(0);
+    }
   }
 }
 
@@ -120,14 +126,12 @@ static void UsbRxTask(void *pv) {
   bool workToDo;
 
   (void)pv; /* not used */
+  cdc_StdIOSendChar('U');
+  cdc_StdIOSendChar('S');
+  cdc_StdIOSendChar('B');
+  cdc_StdIOSendChar('\n');
+  vTaskDelay(pdMS_TO_TICKS(500));
   for(;;) {
-    for(;;) {
-      cdc_StdIOSendChar('a');
-      cdc_StdIOSendChar('b');
-      cdc_StdIOSendChar('c');
-      cdc_StdIOSendChar('\n');
-      vTaskDelay(pdMS_TO_TICKS(500));
-    }
     workToDo = false;
     do {
       res = xQueueReceive(uartTxQueue, &ch, 0); /* poll queue */
@@ -141,6 +145,10 @@ static void UsbRxTask(void *pv) {
       cdc_StdIOReadChar(&ch); /* read byte */
       if (ch!='\0') {
         workToDo = true;
+        cdc_StdIOSendChar('U');
+        cdc_StdIOSendChar(':');
+        cdc_StdIOSendChar(ch);
+        cdc_StdIOSendChar('\n');
         UartPutc(ch);
       } else {
         break; /* get out of loop, as no more data */
@@ -157,9 +165,20 @@ static void UartRxTask(void *pv) {
   BaseType_t res;
 
   (void)pv; /* not used */
+  UartPutc('u');
+  UartPutc('a');
+  UartPutc('r');
+  UartPutc('t');
+  UartPutc('\r');
+  UartPutc('\n');
+  vTaskDelay(pdMS_TO_TICKS(500));
+
   for(;;) {
     res = xQueueReceive(uartRxQueue, &ch, portMAX_DELAY);
     if (res==pdPASS) { /* forward to host over USB-CDC */
+      UartPutc('A');
+      UartPutc(':');
+      UartPutc(ch);
   #if PL_CONFIG_USE_USB_CDC
       cdc_StdIOSendChar(ch);
   #endif

@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "platform.h"
+#if PL_CONFIG_USE_NEO_PIXEL_HW
+
 #include "cubeAnim.h"
 #include "cube.h"
-#include "platform.h"
 #include "McuUtility.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
@@ -211,3 +213,4 @@ void CubeAnim_Init(void) {
     for(;;){} /* error! probably out of memory */
   }
 }
+#endif /* #if PL_CONFIG_USE_NEO_PIXEL_HW */
