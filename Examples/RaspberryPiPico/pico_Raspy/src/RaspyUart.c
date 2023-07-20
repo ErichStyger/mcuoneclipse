@@ -47,7 +47,6 @@ static McuShell_ConstStdIOType cdc_stdio = {
     .echoEnabled = false,
   #endif
   };
-static uint8_t cdc_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 #endif
 
 #define UART_ID   uart1
@@ -120,16 +119,20 @@ static void UartPutc(unsigned char ch) {
   }
 }
 
+static void Uart_SendStr(const unsigned char *str) {
+  while(*str!='\0') {
+    UartPutc(*str);
+    str++;
+  }
+}
+
 static void UsbRxTask(void *pv) {
   BaseType_t res;
   unsigned char ch;
   bool workToDo;
 
   (void)pv; /* not used */
-  cdc_StdIOSendChar('U');
-  cdc_StdIOSendChar('S');
-  cdc_StdIOSendChar('B');
-  cdc_StdIOSendChar('\n');
+  McuShell_SendStr("\r\n*********************\r\n* USB-2-UART Bridge *\r\n*********************\r\n", cdc_stdio.stdOut);
   vTaskDelay(pdMS_TO_TICKS(500));
   for(;;) {
     workToDo = false;
@@ -145,10 +148,6 @@ static void UsbRxTask(void *pv) {
       cdc_StdIOReadChar(&ch); /* read byte */
       if (ch!='\0') {
         workToDo = true;
-        cdc_StdIOSendChar('U');
-        cdc_StdIOSendChar(':');
-        cdc_StdIOSendChar(ch);
-        cdc_StdIOSendChar('\n');
         UartPutc(ch);
       } else {
         break; /* get out of loop, as no more data */
@@ -165,20 +164,10 @@ static void UartRxTask(void *pv) {
   BaseType_t res;
 
   (void)pv; /* not used */
-  UartPutc('u');
-  UartPutc('a');
-  UartPutc('r');
-  UartPutc('t');
-  UartPutc('\r');
-  UartPutc('\n');
-  vTaskDelay(pdMS_TO_TICKS(500));
-
+  Uart_SendStr("\r\n*********************\r\n* UART-2-USB Bridge *\r\n*********************\r\n");
   for(;;) {
     res = xQueueReceive(uartRxQueue, &ch, portMAX_DELAY);
     if (res==pdPASS) { /* forward to host over USB-CDC */
-      UartPutc('A');
-      UartPutc(':');
-      UartPutc(ch);
   #if PL_CONFIG_USE_USB_CDC
       cdc_StdIOSendChar(ch);
   #endif

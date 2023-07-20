@@ -95,3 +95,6 @@
 #define McuLog_CONFIG_USE_COLOR                 (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* ---------------------------------------------------------------------------------------*/
+/* McuShellUart */
+#define McuShellUart_CONFIG_UART                McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5
+/* ---------------------------------------------------------------------------------------*/

@@ -30,7 +30,7 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
   
 # enable USB CDC and disable UART:
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
-pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
+pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
 
 # add component directories to the list
 add_subdirectory(../../MCUXpresso/McuLib build/McuLib)

@@ -34,9 +34,39 @@
 #if PL_CONFIG_USE_UART
   #include "RaspyUart.h"
 #endif
+#if PL_CONFIG_USE_I2C
+  #include "McuGenericI2C.h"
+  #include "McuGenericSWI2C.h"
+  #include "McuI2cLib.h"
+#endif
+#if PL_CONFIG_USE_OLED
+  #include "McuSSD1306.h"
+  #include "oled.h"
+#endif
 
 /* \todo need to have it globally defined, as not present anywhere else */
 uint32_t SystemCoreClock = 120000000;
+
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+/* https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c, around line 147
+ * change call of pico_get_unique_board_id_string() to the following:  */
+#if 0
+  #if 1 /* << EST */
+      extern void pico_usb_get_unique_board_id_string(char *id_out, uint len);
+      pico_usb_get_unique_board_id_string(usbd_serial_str, sizeof(usbd_serial_str));
+  #else
+        pico_get_unique_board_id_string(usbd_serial_str, sizeof(usbd_serial_str));
+  #endif
+#endif
+
+void pico_usb_get_unique_board_id_string(char *id_out, uint len) {
+#if 0 /* original version */
+  pico_get_unique_board_id_string(id_out, len); /* default */
+#else /* use same USB serial number for all boards, so sharing the same COM interface */
+  McuUtility_strcpy(id_out, len, "PicoRaspy");
+#endif
+}
+#endif /* McuLib_CONFIG_CPU_IS_RPxxxx */
 
 void PL_Init(void) {
 #if PL_CONFIG_USE_USB_CDC
@@ -63,5 +93,16 @@ void PL_Init(void) {
 #endif
 #if PL_CONFIG_USE_UART
   RaspyUart_Init();
+#endif
+#if PL_CONFIG_USE_I2C
+  #if CONFIG_USE_HW_I2C
+    McuI2cLib_Init();
+  #else
+    McuGenericSWI2C_Init();
+  #endif
+  McuGenericI2C_Init();
+#endif
+#if PL_CONFIG_USE_OLED
+  OLED_Init();
 #endif
 }

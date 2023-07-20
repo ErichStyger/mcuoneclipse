@@ -21,6 +21,8 @@
 /* LPC55S16 */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART0          (7) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART2          (8) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
+/* RP2040 */
+#define McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5 (9) /* UART1 with Tx on GPIO4 and Rx on GPIO5 */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
@@ -199,6 +201,18 @@
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            LPUART_ClearStatusFlags
   #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
   #define McuShellUart_CONFIG_HAS_FIFO                      (0)
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         /* nothing needed */
+  #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           RP_WriteBlocking
+
+  #define McuShellUart_CONFIG_UART_DEVICE   uart1
+  #define McuShellUart_CONFIG_DATA_BITS     8
+  #define McuShellUart_CONFIG_STOP_BITS     1
+  #define McuShellUart_CONFIG_PARITY        UART_PARITY_NONE
+
+  #define McuShellUart_CONFIG_UART_TX_PIN   4
+  #define McuShellUart_CONFIG_UART_RX_PIN   5
+
 #else
   /* you have to put your configuration here */
 #endif

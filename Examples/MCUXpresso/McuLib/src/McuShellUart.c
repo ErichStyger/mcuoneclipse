@@ -13,6 +13,11 @@
 #else
   #include "McuRB.h"
 #endif
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+  #include "hardware/uart.h"
+  #include "hardware/irq.h"
+  #include "hardware/gpio.h"
+#endif
 
 #if McuShellUart_CONFIG_USE_FREERTOS
   static QueueHandle_t uartRxQueue;
@@ -65,6 +70,10 @@ McuShell_ConstStdIOType McuShellUart_stdio = {
 
 uint8_t McuShellUart_DefaultShellBuffer[McuShell_DEFAULT_SHELL_BUFFER_SIZE]; /* default buffer which can be used by the application */
 /*********************************************************************************************************/
+
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+
+#else
 void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
   uint8_t data;
   uint32_t flags;
@@ -109,6 +118,7 @@ void McuShellUart_CONFIG_UART_IRQ_HANDLER(void) {
   __DSB();
 #endif
 }
+#endif
 
 void McuShellUart_MuxUartPins(int uart) {
   switch(uart) {
@@ -241,6 +251,11 @@ void McuShellUart_MuxUartPins(int uart) {
                     | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
       break;
 #endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
+
+    case McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5:
+      gpio_set_function(McuShellUart_CONFIG_UART_TX_PIN, GPIO_FUNC_UART);
+      gpio_set_function(McuShellUart_CONFIG_UART_RX_PIN, GPIO_FUNC_UART);
+      break;
     default:
       for(;;) { /* error */ }
   } /* switch */
@@ -391,6 +406,9 @@ static void InitUartMuxing(void) {
 #endif /* McuShellUart_CONFIG_DO_PIN_MUXING */
 
 static void InitUart(void) {
+#if McuLib_CONFIG_CPU_IS_RPxxxx
+
+#else
   McuShellUart_CONFIG_UART_CONFIG_STRUCT config;
   status_t status;
 
@@ -413,6 +431,7 @@ static void InitUart(void) {
   NVIC_SetPriority(McuShellUart_CONFIG_UART_IRQ_NUMBER, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 #endif
   EnableIRQ(McuShellUart_CONFIG_UART_IRQ_NUMBER);
+#endif
 }
 
 void McuShellUart_Deinit(void) {
