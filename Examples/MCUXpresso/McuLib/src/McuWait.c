@@ -69,6 +69,9 @@
 /* MODULE McuWait. */
 
 #include "McuWait.h"
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  #include <unistd.h> /* for sleep */
+#endif
 
 
 /*
@@ -324,6 +327,9 @@ void McuWait_WaitLongCycles(uint32_t cycles)
 */
 void McuWait_Waitms(uint32_t ms)
 {
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  usleep(ms*1000);
+#else
   /*lint -save -e522 function lacks side effect. */
   uint32_t msCycles; /* cycles for 1 ms */
 
@@ -334,6 +340,7 @@ void McuWait_Waitms(uint32_t ms)
     ms--;
   }
   /*lint -restore */
+#endif
 }
 /*
 ** ===================================================================

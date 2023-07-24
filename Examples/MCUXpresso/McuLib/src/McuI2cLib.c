@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022, Erich Styger
+ * Copyright (c) 2019-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,7 +9,9 @@
 #if McuLib_CONFIG_MCUI2CLIB_ENABLED
 #include "McuLib.h"
 #include "McuI2cLib.h"
-#include "McuGPIO.h"
+#if MCUI2CLIB_CONFIG_I2C_RELEASE_BUS
+  #include "McuGPIO.h"
+#endif
 #include "McuWait.h"
 #include "McuRTOS.h"
 #include "McuLog.h"
@@ -29,8 +31,19 @@
   #include "fsl_swm.h"
   #include "fsl_i2c.h"
 #endif
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  #include <linux/i2c-dev.h>
+  #include <sys/ioctl.h>
+  #include <fcntl.h>
+#endif
 
-static uint8_t i2cSlaveDeviceAddr; /* used to store the current I2C device address used */
+#if McuLib_CONFIG_SDK_VERSION_USED!=McuLib_CONFIG_SDK_LINUX
+  static uint8_t i2cSlaveDeviceAddr; /* used to store the current I2C device address used */
+#endif
+
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  static int i2cBusHandle; /* file handle of I2C bus */
+#endif
 
 uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
 #if McuLib_CONFIG_CPU_IS_KINETIS  || McuLib_CONFIG_CPU_IS_LPC
@@ -77,6 +90,10 @@ uint8_t McuI2cLib_SendBlock(void *Ptr, uint16_t Siz, uint16_t *Snt) {
   if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  if (write(i2cBusHandle, Ptr, Siz)<0) {
+    return ERR_FAILED;
+  }
 #endif
   *Snt = Siz;
   return ERR_OK;
@@ -112,6 +129,10 @@ uint8_t McuI2cLib_RecvBlock(void *Ptr, uint16_t Siz, uint16_t *Rcv) {
   if (ret!=ESP_OK) {
     return ERR_FAILED;
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  if (read(i2cBusHandle, Ptr, Siz)!=Siz) {
+    return ERR_FAILED;
+  }
 #endif
   *Rcv = Siz;
   return ERR_OK;
@@ -130,13 +151,21 @@ uint8_t McuI2cLib_SendStop(void) {
   return ERR_OK; /* not required for RP2040 */
 #elif McuLib_CONFIG_CPU_IS_ESP32
   return ERR_OK; /* not required for ESP32 */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  return ERR_OK; /* not required for Linux */
 #else
   return ERR_FAILED;
 #endif
 }
 
 uint8_t McuI2cLib_SelectSlave(uint8_t Slv) {
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  if (ioctl(i2cBusHandle, I2C_SLAVE, Slv)<0) { /* select the device */
+    return ERR_FAILED;
+  }
+#else
   i2cSlaveDeviceAddr = Slv;
+#endif
   return ERR_OK;
 }
 
@@ -209,6 +238,8 @@ static void McuI2cLib_ConfigureI2cPins(void) {
   gpio_pull_up(MCUI2CLIB_CONFIG_SCL_GPIO_PIN);
 #elif McuLib_CONFIG_CPU_IS_ESP32
   /* nothing needed */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  /* nothing needed */
 #else
   #error "unknown configuration and MCU"
 #endif
@@ -258,6 +289,11 @@ void McuI2cLib_Init(void) {
   if (esp32_master_init()!=ESP_OK) {
     McuLog_fatal("failed initializing I2C");
   }
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  i2cBusHandle = open(MCUI2CLIB_CONFIG_I2C_DEVICE, O_RDWR); /* device is something like "/dev/i2c-1" */
+  if(i2cBusHandle<0) { /* open bus */
+    McuLog_fatal("Failed to open I2C bus!\n");
+  }
 #else
   #error "unknown configuration and MCU"
 #endif
@@ -280,6 +316,8 @@ void McuI2cLib_Init(void) {
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   /* nothing needed */
 #elif McuLib_CONFIG_CPU_IS_ESP32
+  /* nothing needed */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
   /* nothing needed */
 #endif
 }

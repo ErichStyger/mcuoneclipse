@@ -250,12 +250,12 @@ void McuShellUart_MuxUartPins(int uart) {
                     /* UART 1 transmit data source select: UART1_TX pin. */
                     | SIM_SOPT5_UART1TXSRC(SOPT5_UART1TXSRC_UART_TX));
       break;
-#endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
-
+#elif McuLib_CONFIG_CPU_IS_RPxxxx
     case McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5:
       gpio_set_function(McuShellUart_CONFIG_UART_TX_PIN, GPIO_FUNC_UART);
       gpio_set_function(McuShellUart_CONFIG_UART_RX_PIN, GPIO_FUNC_UART);
       break;
+#endif /* McuLib_CONFIG_CPU_VARIANT_NXP_K22FN */
     default:
       for(;;) { /* error */ }
   } /* switch */

@@ -148,6 +148,8 @@
   /*!< Nordic nRF5 SDK */
 #define McuLib_CONFIG_SDK_RPI_PICO            (7)
   /*!< Raspberry Pi Pico SDK */
+#define McuLib_CONFIG_SDK_LINUX               (8)
+  /*!< Linux SDK, e.g. Raspberry Pi */
 
 #ifndef McuLib_CONFIG_SDK_VERSION_MAJOR
   #define McuLib_CONFIG_SDK_VERSION_MAJOR   (2)

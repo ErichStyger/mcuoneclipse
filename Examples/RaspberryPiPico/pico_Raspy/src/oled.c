@@ -66,8 +66,6 @@ static void Show2Liner(const unsigned char *text0, const unsigned char *text1) {
 #endif
 }
 
-static bool volatile wait = false;
-
 #if PL_CONFIG_USE_SENSOR
 static void ShowSensorValues(void) {
   float t, h;
@@ -87,13 +85,6 @@ static void ShowSensorValues(void) {
 #endif
 
 static void OledTask(void *pv) {
-  unsigned char buf[16];
-  uint32_t counter = 0;
-
-  while(wait) {
-    vTaskDelay(pdMS_TO_TICKS(5000));
-    McuLog_info("waiting for debugger");
-  }
   McuSSD1306_Clear();
   Show2Liner((unsigned char*)"Welcome", (unsigned char*)"to");
   vTaskDelay(pdMS_TO_TICKS(3000));

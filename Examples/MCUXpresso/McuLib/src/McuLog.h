@@ -13,6 +13,10 @@
 #define MCULOG_H
 
 #include "McuLogconfig.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if McuLog_CONFIG_IS_ENABLED
 
 #include <stdio.h>
@@ -21,10 +25,6 @@
 #include "McuShell.h"
 #if McuLog_CONFIG_USE_FILE
   #include "McuFatFS.h"
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 #define McuLog_VERSION "0.1.2"
@@ -117,6 +117,6 @@ void McuLog_Deinit(void);
 }  /* extern "C" */
 #endif
 
-#endif /* McuLog_CONFIG_IS_ENABLED */
+#endif /* MCULOG_H */
 
 
