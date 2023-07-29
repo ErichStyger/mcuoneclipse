@@ -11,8 +11,9 @@
 #include <math.h>
 
 /* defines to control the output to the console */
-#define CONFIG_LOG_DATA_TO_CONSOLE        (0)
-#define CONFIG_LOG_SUMMARY_TO_CONSOLE     (0)
+#define CONFIG_LOG_TIME_TO_CONSOLE        (0) /* if timestamp items are printed to the console, useful for debugging */
+#define CONFIG_LOG_DATA_TO_CONSOLE        (0) /* if data items are printed to the console, useful for debugging */
+#define CONFIG_LOG_SUMMARY_TO_CONSOLE     (0) /* if summary items are printed to the console, useful for debugging */
 
 #define ERROR_CODE_END_REACHED (1)
 
@@ -21,7 +22,7 @@ static const uint32_t unitMul = 3;
 static const uint32_t unitDiv = 393216000;
 
 typedef struct dataItem_t { /* data structure representing the raw data from the file */
-  double timeStamp; /* time stamp (8 bytes): the time stamp associated with a value (timestamp 1 corresponds to the first value). This value is in microseconds. Example: 2.0358867E7 [us]. The first two timestamps can be used to calculate the sampling period. The other timestamp values are calculated based on the sampling period.  */
+  double timeStamp; /* time stamp (8 bytes): the time stamp associated with a value (time stamp 1 corresponds to the first value). This value is in microseconds. Example: 2.0358867E7 [us]. The first two timestamps can be used to calculate the sampling period. The other timestamp values are calculated based on the sampling period.  */
   uint32_t value; /* value (4 bytes): the value reported by ADC. Example: 4095. This value is further processed according to the used probe, see Data processing for more details.  */
   struct summary { /* summary values (16 bytes): Sequences of [min, avg, max] values. The summary values are calculated for each i-th value in the sequence, if “i” is a multiple of “base”. The number of summary values is adjusted logarithmically according to the number of values registered so far. */
     uint32_t min; /* minimal value of the previous items */
@@ -290,7 +291,9 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
       return -1;
     }
     us = Convert_double_to_us(data.timeStamp);
+#if CONFIG_LOG_TIME_TO_CONSOLE
     printf("filepos: 0x%x\ntimestamp: %f us\n", ftell(fp), us);
+#endif
     for(int i=0; i<base; i++) {
       if (read32u(fp, &data.value) != 0) {
         printf("failed reading value\n");
@@ -440,7 +443,7 @@ static void printArgs(int argc, char *argv[]) {
 }
 
 static void printhelp(void) {
-  printf("Use one of the following: \n");
+  printf("Use one of the following options:\n");
   printf("  -h             : prints this help\n");
   printf("  -f <file>      : input file, default \"rawData.bin\"\n");
   printf("  -o <file>      : output file, default \"data.csv\"\n");
@@ -467,11 +470,11 @@ int main(int argc, char *argv[]) {
   char outFileName[256];
 
   //testLog();
-  printf("Program to read and convert to CVS a NXP power measurement data file.\n");
+  printf("Program to read NXP power measurement binary data file and convert it to CSV.\n");
 
   memset(inFileName, 0, sizeof(inFileName));
   memset(outFileName, 0, sizeof(outFileName));
-  printArgs(argc, argv);
+  //printArgs(argc, argv);
   for(;;) { /* breaks */
     if (argc==1) {
       /* no arguments, using default values */
