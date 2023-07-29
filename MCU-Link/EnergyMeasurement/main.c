@@ -11,8 +11,10 @@
 #include <math.h>
 
 /* defines to control the output to the console */
-#define CONFIG_LOG_DATA_TO_CONSOLE        (1)
-#define CONFIG_LOG_SUMMARY_TO_CONSOLE     (1)
+#define CONFIG_LOG_DATA_TO_CONSOLE        (0)
+#define CONFIG_LOG_SUMMARY_TO_CONSOLE     (0)
+
+#define ERROR_CODE_END_REACHED (1)
 
 /* values from the Excel file: */
 static const uint32_t unitMul = 3;
@@ -220,7 +222,7 @@ static uint32_t powi32(uint32_t base, unsigned int nof) {
 }
 
 static int getNofSummaryItems(int dataItemIdx, int base) {
-  /* every number of 'base' data items there is a summary item, for example with base 16:
+  /* After a number of 'base' data items, there is a summary item. For example for a base of 16:
    *    data1 - data16 (base)
    *    summary (of last 16 (base) items)
    *    data17 - data32
@@ -248,7 +250,7 @@ static int getNofSummaryItems(int dataItemIdx, int base) {
    *    data529 -..
    *
    * This goes on, until we hit the next level (base^3): here we get an extra summary item:
-   *    data4081 - data4096:
+   *    data4081 - data4096
    *    summary of base items
    *    summary of base^2 items
    *    summary of base^3 items
@@ -288,7 +290,7 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
       return -1;
     }
     us = Convert_double_to_us(data.timeStamp);
-    printf("pos: 0x%x, timestamp: %f us\n", ftell(fp), us);
+    printf("filepos: 0x%x\ntimestamp: %f us\n", ftell(fp), us);
     for(int i=0; i<base; i++) {
       if (read32u(fp, &data.value) != 0) {
         printf("failed reading value\n");
@@ -301,14 +303,13 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
 #endif
       fprintf(outFile, "%f,%f\n", us, mA);
     }
-    long filePos = ftell(fp);
     if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
       printf("reached END\n");
-      break;
+      return ERROR_CODE_END_REACHED;
     }
     /* read summary items */
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
-    printf("%d, 0x%x: ----------------------------\n", nofItems, ftell(fp));
+    printf("%d: 0x%x: ----------------------------\n", nofItems, ftell(fp));
 #endif
     nofSummaries = getNofSummaryItems(nofItems, base);
     for(int s=0; s<nofSummaries; s++) {
@@ -321,7 +322,7 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
 #endif
       if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
         printf("reached END\n");
-        break;
+        return ERROR_CODE_END_REACHED;
       }
       if (readFloat64(fp, &data.summary.avg) != 0) {
         printf("failed reading avg\n");
@@ -343,8 +344,8 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
 #endif
       if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
         printf("reached END\n");
-        break;
-      }
+        return ERROR_CODE_END_REACHED;
+     }
     } /* for nofSummaries */
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
     printf("--------------------------------\n");
@@ -371,7 +372,7 @@ static int convertDataFile(const char *inFileName, const char *outFileName) {
   }
   fseek(inFile, 0L, SEEK_END);
   fileSize = ftell(inFile);
-  printf("input file size: %l\n", fileSize);
+  printf("input file size: %d bytes\n", fileSize);
   fseek(inFile, 0L, SEEK_SET); /* rewind to the start */
 
   printf("open output file '%s'\n", outFileName);
@@ -409,7 +410,11 @@ static int convertDataFile(const char *inFileName, const char *outFileName) {
       res = -1;
       break;
     }
-    if (readDataItems(inFile, data.base, outFile, fileSize)!=0) {
+    res = readDataItems(inFile, data.base, outFile, fileSize);
+    if (res==ERROR_CODE_END_REACHED) {
+      res = 0;
+      break;
+    } else {
       printf("failed reading data item(s)\n");
       res = -1;
       break;
