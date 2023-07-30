@@ -11,7 +11,7 @@
 #include <math.h>
 
 /* defines to control the output to the console */
-#define CONFIG_LOG_TIME_TO_CONSOLE        (0) /* if timestamp items are printed to the console, useful for debugging */
+#define CONFIG_LOG_TIME_TO_CONSOLE        (0) /* if time stamp items are printed to the console, useful for debugging */
 #define CONFIG_LOG_DATA_TO_CONSOLE        (0) /* if data items are printed to the console, useful for debugging */
 #define CONFIG_LOG_SUMMARY_TO_CONSOLE     (0) /* if summary items are printed to the console, useful for debugging */
 
@@ -284,7 +284,9 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
   int nofSummaries; /* number of summaries to read */
   uint32_t nofItems = 0; /* counting number of data items read */
   double us;
+  double time_us; /* total time in us */
 
+  time_us = 0.0;
   for(;;) { /* breaks */
     if (readFloat64(fp, &data.timeStamp) != 0) {
       printf("failed reading time stamp\n");
@@ -300,12 +302,13 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
         return -1;
       }
       nofItems++;
+      time_us += us;
       double mA = Convert_to_mA(data.value);
 #if CONFIG_LOG_DATA_TO_CONSOLE
       printf("%d: 0x%x, %f mA\n", nofItems, data.value, mA);
 #endif
-      fprintf(outFile, "%f,%f\n", us, mA);
-    }
+      fprintf(outFile, "%f,%f\n", time_us, mA);
+    } /* all data items */
     if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
       printf("reached END\n");
       return ERROR_CODE_END_REACHED;
@@ -470,7 +473,7 @@ int main(int argc, char *argv[]) {
   char outFileName[256];
 
   //testLog();
-  printf("Program to read NXP power measurement binary data file and convert it to CSV.\n");
+  printf("Read NXP power measurement binary data file and convert it to CSV.\n");
 
   memset(inFileName, 0, sizeof(inFileName));
   memset(outFileName, 0, sizeof(outFileName));
@@ -505,9 +508,9 @@ int main(int argc, char *argv[]) {
     strncpy(outFileName, "data.csv", sizeof(outFileName)-1);
   }
   if (convertDataFile(inFileName, outFileName)!=0) {
-    printf("failed reading data file\n");
+    printf("failed converting data file\n");
     return -1;
   }
-  printf("finished reading data file\n");
+  printf("finished converting data file\n");
   return 0;
 }
