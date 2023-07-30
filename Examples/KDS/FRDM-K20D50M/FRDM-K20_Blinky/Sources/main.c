@@ -64,15 +64,18 @@ int main(void)
 
   /* Write your code here */
   for(;;) {
+#if 0
 	  LEDR_On();
 	  WAIT1_Waitms(100);
 	  LEDR_Off();
 	  LEDG_On();
 	  WAIT1_Waitms(100);
 	  LEDG_Off();
+#else
 	  LEDB_On();
 	  WAIT1_Waitms(100);
 	  LEDB_Off();
+#endif
 	  WAIT1_Waitms(100);
   }
 
