@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "vendor": "NXP",
+  "devices": [
+    {
+      "board": "FRDM-K20D50M",
+      "device": {
+        "name": "MK20DX128VLH5",
+        "family": "K2x",
+        "memory": [
+          {
+            "location": "0x00000000",
+            "size": "0x00020000",
+            "type": "Flash",
+            "flash-driver": "FTFA_2K.cfx"
+          },
+          {
+            "location": "0x20000000",
+            "size": "0x00002000",
+            "type": "RAM"
+          },
+          {
+            "location": "0x1ffff000",
+            "size": "0x00002000",
+            "type": "RAM"
+          }
+        ],
+        "cores": [
+          {
+            "type": "cm4",
+            "name": "cm4"
+          }
+        ]
+      },
+      "debug": {
+        "protocol": "swd",
+        "swo": false,
+        "connect-script": "kinetisconnect.scp",
+        "masserase-script": "kinetismasserase.scp"
+      }
+    }
+  ]
+}

@@ -8,6 +8,8 @@ https://mcuoneclipse.com/2023/05/14/linkserver-for-microcontrollers/
 
 
 Cheat-Sheet:
-linkserver flash K20:FRDM-K20 load c:\tmp\FRDM-K20_Blinky.elf 
+linkserver flash K20:FRDM-K20 erase
+linkserver flash K20:FRDM-K20 load c:\tmp\FRDM-K20_Blinky.elf
+linkserver flash K20:FRDM-K20 load c:\tmp\FRDM-K20_BlinkyRed.bin --addr 0
 
 
