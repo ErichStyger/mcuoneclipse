@@ -1,7 +1,7 @@
 default: all
 
 CC = g++
-LINK_TARGET = $(OBJ_DIR)app
+LINK_TARGET = $(OBJ_DIR)convert
 DEPEND_OPTS = -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)"
 SRC_DIR = ./
 OBJ_DIR = ./
