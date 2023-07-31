@@ -17,22 +17,23 @@
 
 #define ERROR_CODE_END_REACHED (1)
 
-/* values from the Excel file: */
+/* values from the exported csv file: \todo read them from the .csv file */
 static const uint32_t unitMul = 3;
 static const uint32_t unitDiv = 393216000;
 
 typedef struct dataItem_t { /* data structure representing the raw data from the file */
-  double timeStamp; /* time stamp (8 bytes): the time stamp associated with a value (time stamp 1 corresponds to the first value). This value is in microseconds. Example: 2.0358867E7 [us]. The first two timestamps can be used to calculate the sampling period. The other timestamp values are calculated based on the sampling period.  */
-  uint32_t value; /* value (4 bytes): the value reported by ADC. Example: 4095. This value is further processed according to the used probe, see Data processing for more details.  */
-  struct summary { /* summary values (16 bytes): Sequences of [min, avg, max] values. The summary values are calculated for each i-th value in the sequence, if “i” is a multiple of “base”. The number of summary values is adjusted logarithmically according to the number of values registered so far. */
-    uint32_t min; /* minimal value of the previous items */
-    double avg;   /* average value of the previous items */
-    uint32_t max; /* maximum value of the previous items */
-  } summary;
+  double timeStamp; /* time stamp (8 bytes, double) in us: the time stamp associated with a value (time stamp 1 corresponds to the first value). This value is in microseconds. Example: 2.0358867E7 [us]. The first two timestamps can be used to calculate the sampling period. The other timestamp values are calculated based on the sampling period.  */
+  uint32_t value; /* value (4 bytes): the value reported by ADC. Example: 4095, value needs to be processed with mul/div  */
 } dataItem_t;
 
+typedef struct summaryItem_t { /* summary values (16 bytes): Sequences of [min, avg, max] values. The summary values are calculated for each i-th value in the sequence, if “i” is a multiple of “base”. The number of summary values is adjusted logarithmically according to the number of values registered so far. */
+  uint32_t min; /* minimal value of the previous items: value needs to be processed with mul/div */
+  double avg;   /* average value of the previous items. Same data format as time stamp, but needs to be processed with mul/div */
+  uint32_t max; /* maximum value of the previous items: value needs to be processed with mul/div */
+} summaryItem_t;
+
 typedef struct dataHeaderItem_t {
-  uint32_t magicNumber;   /* file format identifier: "$EMF" as char sequence */
+  uint32_t magicNumber;   /* file format identifier: "$EMF" as character sequence */
   uint16_t version;       /* version number, currently 0x0001 */
   uint32_t base;          /* number of data values in sequence, e.g. 0x10 */
   uint64_t step;          /* number of values used for summary value */
@@ -49,8 +50,8 @@ static int readBytes(FILE *fp, unsigned char *buf, size_t nofBytes) {
 static uint64_t swap64(unsigned char buf[8]) {
   uint32_t vh, vl;
 
-  vh = (buf[0]<<24) + (buf[1]<<16) + (buf[2]<<8) + buf[3];
-  vl = (buf[4]<<24) + (buf[5]<<16) + (buf[6]<<8) + buf[7];
+  vh = (buf[7]<<24) + (buf[6]<<16) + (buf[5]<<8) + buf[4];
+  vl = (buf[3]<<24) + (buf[2]<<16) + (buf[1]<<8) + buf[0];
   return (((uint64_t)vh)<<32) + vl;
 }
 
@@ -69,6 +70,21 @@ static uint32_t swap32(unsigned char buf[4]) {
 
 static uint16_t swap16(unsigned char buf[2]) {
   return (buf[0]<<8) + buf[1];
+}
+
+static int read64u_noSwap(FILE *fp, uint64_t *val) {
+  unsigned char buf[sizeof(uint64_t)];
+  uint64_t val64;
+  uint32_t vh32, vl32;
+
+  if (fread(buf, 1, sizeof(uint64_t), fp)!=sizeof(uint64_t)) {
+    return -1;
+  }
+  vh32 = (buf[0]<<24) + (buf[1]<<16) + (buf[2]<<8) + buf[3];
+  vl32 = (buf[4]<<24) + (buf[5]<<16) + (buf[6]<<8) + buf[7];
+  val64 = (((uint64_t)vh32)<<32) + vl32;
+  *val = val64;
+  return 0; /* ok */
 }
 
 static int read64u(FILE *fp, uint64_t *val) {
@@ -102,12 +118,20 @@ static int read16u(FILE *fp, uint16_t *val) {
 }
 
 static int readFloat64(FILE *fp, double *val) {
-  unsigned char buf[sizeof(double)];
+  union {
+    unsigned char buf[sizeof(double)];
+    double d;
+  } u;
+  unsigned char tmp;
 
-  if (fread(buf, 1, sizeof(buf), fp)!=sizeof(buf)) {
+  if (fread(u.buf, 1, sizeof(u.buf), fp)!=sizeof(u.buf)) {
     return -1;
   }
-  *val = swap64f(buf);
+  tmp = u.buf[0]; u.buf[0] = u.buf[7]; u.buf[7] = tmp;
+  tmp = u.buf[1]; u.buf[1] = u.buf[6]; u.buf[6] = tmp;
+  tmp = u.buf[2]; u.buf[2] = u.buf[5]; u.buf[5] = tmp;
+  tmp = u.buf[3]; u.buf[3] = u.buf[4]; u.buf[4] = tmp;
+  *val = u.d;
   return 0; /* ok */
 }
 
@@ -119,7 +143,7 @@ static int readMagicNumber(FILE *fp, uint32_t *pmagic) {
     printf("failed reading magic number\n");
     return -1;
   }
-  printf("magic number: 0x%x\n", magic);
+  printf("magic number: 0x%08x\n", magic);
   /* check for "$EMF": 0x24454D46 */
   if (magic!=0x24454D46) {
     printf("wrong magic number: 0x%x\n", magic);
@@ -137,7 +161,7 @@ static int readVersionNumber(FILE *fp, uint16_t *pversion) {
     printf("failed reading version number\n");
     return -1;
   }
-  printf("version: 0x%x\n", version);
+  printf("version: 0x%04x\n", version);
   if (version!=0x0001) {
     printf("wrong version number: 0x%x\n", version);
     return -1;
@@ -154,7 +178,7 @@ static int readBase(FILE *fp, uint32_t *pbase) {
     printf("failed reading base\n");
     return -1;
   }
-  printf("base: 0x%x\n", base);
+  printf("base: 0x%08x\n", base);
   *pbase = base;
   return 0; /* ok */
 }
@@ -163,7 +187,7 @@ static int readStep(FILE *fp, uint64_t *pstep) {
   /* Step (8 bytes): the number of samples used to calculate a summary value. */
   uint64_t step;
 
-  if (read64u(fp, &step) != 0) {
+  if (read64u_noSwap(fp, &step) != 0) {
     printf("failed reading version number\n");
     return -1;
   }
@@ -181,21 +205,13 @@ static int readSourceID(FILE *fp, uint32_t *pID) {
     printf("failed reading sourceID\n");
     return -1;
   }
-  printf("sourceID: 0x%x\n", id);
+  printf("sourceID: 0x%08x\n", id);
   *pID = id;
   return 0; /* ok */
 }
 
-static double Convert_to_mA(uint32_t adc)  {
-  return ((double)(adc*1000*unitMul))/unitDiv;
-}
-
-static double Convert_double_to_mA(double val)  {
-  return ((double)(val*1000.0*unitMul))/unitDiv;
-}
-
-static double Convert_double_to_us(double val)  {
-  return ((double)(val*unitMul))/unitDiv;
+static double ConvertData_to_mA(uint32_t adc)  {
+  return ((double)((uint64_t)adc*1000*unitMul))/unitDiv;
 }
 
 static uint32_t log_a_to_base_b(uint32_t a, uint32_t b) {
@@ -280,76 +296,107 @@ static int getNofSummaryItems(int dataItemIdx, int base) {
 }
 
 static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) {
-  dataItem_t data;
+  summaryItem_t summary;
   int nofSummaries; /* number of summaries to read */
   uint32_t nofItems = 0; /* counting number of data items read */
-  double us;
-  double time_us; /* total time in us */
+  dataItem_t *data;
+  double timeStamp = 0.0, prevTimeStamp = 0.0;
 
-  time_us = 0.0;
+  data = (dataItem_t*)malloc(base*sizeof(dataItem_t));
+  if (data==NULL) {
+    return -1;
+  }
   for(;;) { /* breaks */
-    if (readFloat64(fp, &data.timeStamp) != 0) {
+    prevTimeStamp = timeStamp;
+    if (readFloat64(fp, &timeStamp) != 0) {
       printf("failed reading time stamp\n");
+      free(data);
       return -1;
     }
-    us = Convert_double_to_us(data.timeStamp);
+
 #if CONFIG_LOG_TIME_TO_CONSOLE
-    printf("filepos: 0x%x\ntimestamp: %f us\n", ftell(fp), us);
+    printf("filepos: 0x%08x timestamp: %f us\n", ftell(fp), timeStamp);
 #endif
+    if (prevTimeStamp!=0) { /* second time we read a time stamp. Now we can update the previous data stamps and write it to the file */
+      double delta = (timeStamp-prevTimeStamp)/base; /* calculate time stamp increment */
+
+      for(int i=1; i<base; i++) { /* update time stamps with delta */
+        data[i].timeStamp = data[i-1].timeStamp + delta;
+      } /* all data items */
+
+      for(int i=0; i<base; i++) { /* write data items to file */
+        double mA = ConvertData_to_mA(data[i].value);
+    #if CONFIG_LOG_DATA_TO_CONSOLE
+        printf("%d: 0x%x, %f mA, %f us\n", nofItems-base+i, data[i].value, mA, data[i].timeStamp);
+    #endif
+        fprintf(outFile, "%f,%f\n", data[i].timeStamp, mA);
+      }
+    }
+
+    /* read in all data items with a default current time stamp. The time stamp will be updated later */
     for(int i=0; i<base; i++) {
-      if (read32u(fp, &data.value) != 0) {
+      if (read32u(fp, &data[i].value) != 0) {
         printf("failed reading value\n");
+        free(data);
         return -1;
       }
+      data[i].timeStamp = timeStamp;
       nofItems++;
-      time_us += us;
-      double mA = Convert_to_mA(data.value);
-#if CONFIG_LOG_DATA_TO_CONSOLE
-      printf("%d: 0x%x, %f mA\n", nofItems, data.value, mA);
-#endif
-      fprintf(outFile, "%f,%f\n", time_us, mA);
     } /* all data items */
+
     if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
       printf("reached END\n");
+      free(data);
       return ERROR_CODE_END_REACHED;
     }
-    /* read summary items */
+
+    /* read summary item(s) */
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
     printf("%d: 0x%x: ----------------------------\n", nofItems, ftell(fp));
 #endif
     nofSummaries = getNofSummaryItems(nofItems, base);
     for(int s=0; s<nofSummaries; s++) {
-      if (read32u(fp, &data.summary.min) != 0) {
+      if (read32u(fp, &summary.min) != 0) {
         printf("failed reading min\n");
+        free(data);
         return -1;
       }
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
-      printf("==> min: 0x%x, %f mA\n", data.summary.min, Convert_to_mA(data.summary.min));
+      printf("==> min: 0x%x, %f mA\n", summary.min, ConvertData_to_mA(summary.min));
 #endif
       if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
         printf("reached END\n");
+        free(data);
         return ERROR_CODE_END_REACHED;
       }
-      if (readFloat64(fp, &data.summary.avg) != 0) {
+      if (readFloat64(fp, &summary.avg) != 0) {
         printf("failed reading avg\n");
+        free(data);
         return -1;
       }
+      /* summary values need the mul/div handling */
+      summary.avg *= unitMul;
+      summary.avg /= unitDiv;
+      summary.avg *= 1000;
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
-      printf("==> avg: %f mA\n", Convert_double_to_mA(data.summary.avg));
+      printf("==> avg: %f mA\n", summary.avg);
 #endif
       if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
         printf("reached END\n");
-        break;
+        free(data);
+        return ERROR_CODE_END_REACHED;
       }
-      if (read32u(fp, &data.summary.max) != 0) {
+      if (read32u(fp, &summary.max) != 0) {
         printf("failed reading max\n");
+        free(data);
         return -1;
       }
 #if CONFIG_LOG_SUMMARY_TO_CONSOLE
-      printf("==> max: 0x%x, %f mA\n", data.summary.max, Convert_to_mA(data.summary.max));
+      printf("==> max: 0x%x, %f mA\n", summary.max, ConvertData_to_mA(summary.max));
 #endif
       if (ftell(fp)==fileSize) { /* the end of the file is without a summary */
         printf("reached END\n");
+        free(data);
         return ERROR_CODE_END_REACHED;
      }
     } /* for nofSummaries */
@@ -357,6 +404,7 @@ static int readDataItems(FILE *fp, uint32_t base, FILE *outFile, long fileSize) 
     printf("--------------------------------\n");
 #endif
   }
+  free(data);
   return 0;
 }
 
@@ -452,6 +500,7 @@ static void printhelp(void) {
   printf("  -o <file>      : output file, default \"data.csv\"\n");
 }
 
+#if 0 /* testing only */
 static void testLog(void) {
   /* function to test the log function to determine the number of summaries in the data stream */
   int base = 16;
@@ -467,17 +516,18 @@ static void testLog(void) {
     }
   }
 }
+#endif
 
 int main(int argc, char *argv[]) {
   char inFileName[256];
   char outFileName[256];
 
-  //testLog();
+  /* testLog(); */
   printf("Read NXP power measurement binary data file and convert it to CSV.\n");
 
   memset(inFileName, 0, sizeof(inFileName));
   memset(outFileName, 0, sizeof(outFileName));
-  //printArgs(argc, argv);
+  /* printArgs(argc, argv); */ /* testing only */
   for(;;) { /* breaks */
     if (argc==1) {
       /* no arguments, using default values */
