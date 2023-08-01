@@ -21,8 +21,10 @@
 /* LPC55S16 */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART0          (7) /* FlexComm0, pin 92 (Rx) and pin 94 (Tx) */
 #define McuShellUart_CONFIG_UART_LPC55S16_USART2          (8) /* FlexComm2, pin  3 (Rx) and pin 27 (Tx) */
+/* LPC55S69 */
+#define McuShellUart_CONFIG_UART_LPC55S69_USART0          (9) /* FlexComm0, P0_29, pin92 (Rx) and P0_30, pin94 (Tx) */
 /* RP2040 */
-#define McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5 (9) /* UART1 with Tx on GPIO4 and Rx on GPIO5 */
+#define McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5 (10) /* UART1 with Tx on GPIO4 and Rx on GPIO5 */
 
 /* default UART used */
 #ifndef McuShellUart_CONFIG_UART
@@ -101,6 +103,28 @@
     #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_Fro12M
   #endif
   #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM2_IRQHandler
+  #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+  #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
+  #define McuShellUart_CONFIG_HAS_FIFO                      (0) /* not sure? */
+#elif McuShellUart_CONFIG_UART==McuShellUart_CONFIG_UART_LPC55S69_USART0
+  #include "fsl_usart.h"
+  #include "fsl_iocon.h"
+  #define McuShellUart_CONFIG_UART_DEVICE                   USART0
+  #define McuShellUart_CONFIG_UART_SET_UART_CLOCK()         CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0)
+  #define McuShellUart_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking
+  #define McuShellUart_CONFIG_UART_GET_FLAGS                USART_GetStatusFlags
+  #define McuShellUart_CONFIG_UART_HW_RX_READY_FLAGS        (kUSART_RxFifoNotEmptyFlag | kUSART_RxError)
+  #define McuShellUart_CONFIG_UART_READ_BYTE                USART_ReadByte
+  #define McuShellUart_CONFIG_UART_CONFIG_STRUCT            usart_config_t
+  #define McuShellUart_CONFIG_UART_GET_DEFAULT_CONFIG       USART_GetDefaultConfig
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPTS        USART_EnableInterrupts
+  #define McuShellUart_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUSART_RxLevelInterruptEnable | kUSART_RxErrorInterruptEnable)
+  #define McuShellUart_CONFIG_UART_IRQ_NUMBER               FLEXCOMM0_IRQn
+  #define McuShellUart_CONFIG_UART_INIT                     USART_Init
+  #ifndef McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT
+    #define McuShellUart_CONFIG_UART_GET_CLOCK_FREQ_SELECT  kCLOCK_Fro12M
+  #endif
+  #define McuShellUart_CONFIG_UART_IRQ_HANDLER              FLEXCOMM0_IRQHandler
   #define McuShellUART_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
   #define McuShellUART_CONFIG_CLEAR_EXTRA_STATUS_FLAGS      (0) /* no extra flags to clear */
   #define McuShellUart_CONFIG_HAS_FIFO                      (0) /* not sure? */

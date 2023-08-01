@@ -24,7 +24,9 @@
 #define McuShell_CONFIG_PROJECT_NAME_STRING              "LPC55S59"
 #define McuShell_CONFIG_ECHO_ENABLED                     (1)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE        (96)
-#define McuShellUart_CONFIG_UART                         McuShellUart_CONFIG_UART_LPC55S16_USART0
+/* ---------------------------------------------------------------------------------------*/
+/* McuShellUart */
+#define McuShellUart_CONFIG_UART  McuShellUart_CONFIG_UART_LPC55S69_USART0
 /* -----------------------------------------------------*/
 /* RTT */
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP          (1*1024)
@@ -38,6 +40,12 @@
 #define McuLog_CONFIG_NOF_CONSOLE_LOGGER        (2)
 #define McuLog_CONFIG_USE_COLOR                 (0)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
+/* ---------------------------------------------------------------------------------------*/
+/* McuUart485 */
+#define McuUart485_CONFIG_USE_RS_485          (1)
+#define McuUart485_CONFIG_USE_MODBUS          (0)
+#define McuUart485_CONFIG_USE_LOGGER          (1)
+#define McuUart485_CONFIG_UART_BAUDRATE       (115200)
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

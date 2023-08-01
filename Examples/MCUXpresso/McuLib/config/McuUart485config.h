@@ -54,6 +54,30 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
   #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_MainClk
   #define McuUart485_CONFIG_UART_IRQ_HANDLER              USART1_IRQHandler
   #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  #include "fsl_usart.h"
+
+  #ifndef McuUart485_CONFIG_UART_PARITY
+    #define McuUart485_CONFIG_UART_PARITY                 kUSART_ParityDisabled /* or kUSART_ParityEven or kUSART_ParityOdd */
+  #endif
+
+  #define McuUart485_CONFIG_UART_DEVICE                   USART1
+  #define McuUart485_CONFIG_UART_SET_UART_CLOCK()         CLOCK_AttachClk(kFRO12M_to_FLEXCOMM1)
+  #define McuUart485_CONFIG_UART_WRITE_BLOCKING           USART_WriteBlocking
+  #define McuUart485_CONFIG_UART_GET_FLAGS                USART_GetStatusFlags
+  #define McuUart485_CONFIG_UART_HW_RX_READY_FLAGS        (kUSART_RxFifoNotEmptyFlag | kUSART_RxError)
+  #define McuUart485_CONFIG_UART_READ_BYTE                USART_ReadByte
+  #define McuUart485_CONFIG_UART_CONFIG_STRUCT            usart_config_t
+  #define McuUart485_CONFIG_UART_GET_DEFAULT_CONFIG       USART_GetDefaultConfig
+  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPTS        USART_EnableInterrupts
+  #define McuUart485_CONFIG_UART_ENABLE_INTERRUPT_FLAGS   (kUSART_RxLevelInterruptEnable | kUSART_RxErrorInterruptEnable)
+  #define McuUart485_CONFIG_UART_IRQ_NUMBER               FLEXCOMM1_IRQn
+  #define McuUart485_CONFIG_UART_INIT                     USART_Init
+  #define McuUart485_CONFIG_UART_GET_CLOCK_FREQ_SELECT    kCLOCK_Fro12M
+  #define McuUart485_CONFIG_UART_IRQ_HANDLER              FLEXCOMM1_IRQHandler
+  #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
+
 #elif McuLib_CONFIG_CPU_IS_KINETIS
   #ifndef McuUart485_CONFIG_UART_PARITY
     #define McuUart485_CONFIG_UART_PARITY                 kUART_ParityDisabled /* or kUART_ParityEven or kUART_ParityOdd */
@@ -187,6 +211,8 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
   #elif McuLib_CONFIG_CPU_IS_ESP32
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* on ESP32, the transceiver is controlled by the UART directly with the RTS pin */
+  #elif McuLib_CONFIG_CPU_IS_LPC55xx
+    #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)
   #elif McuLib_CONFIG_CPU_IS_RPxxxx
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)  /* on RP2040, need to control RE/DE pin manually */
   #endif
@@ -203,6 +229,16 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
     #endif
     #ifndef McuUart485_CONFIG_TX_EN_PIN
       #define McuUart485_CONFIG_TX_EN_PIN        2U
+    #endif
+  #elif McuLib_CONFIG_CPU_IS_LPC55xx
+    #ifndef McuUart485_CONFIG_TX_EN_GPIO
+      #define McuUart485_CONFIG_TX_EN_GPIO       GPIO
+    #endif
+    #ifndef McuUart485_CONFIG_TX_EN_PORT
+      #define McuUart485_CONFIG_TX_EN_PORT       1
+    #endif
+    #ifndef McuUart485_CONFIG_TX_EN_PIN
+      #define McuUart485_CONFIG_TX_EN_PIN        6U
     #endif
   #elif McuLib_CONFIG_CPU_IS_ESP32 /* default for ESP32 */
     #ifndef McuUart485_CONFIG_RE_PIN

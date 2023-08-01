@@ -489,7 +489,7 @@ static void DecodeUARTFlags(uint32_t flags, const McuShell_StdIOType *io) {
     McuShell_SendStatusStr((unsigned char*)"", (unsigned char*)"kUART_RxFifoOverflowFlag\r\n", io->stdOut);
   }
 #endif
-#elif McuLib_CONFIG_CPU_IS_LPC
+#elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
   if (flags&kUSART_RxReady) {
     McuShell_SendStatusStr((unsigned char*)"", (unsigned char*)"kUSART_RxReady\r\n", io->stdOut);
   }
