@@ -1,3 +1,5 @@
+# run this file with
+# gnuplot -p csv.gnulot
 set datafile separator ','			# CSV with comma as separator
 
 set key autotitle columnhead 			# use the first line as title
