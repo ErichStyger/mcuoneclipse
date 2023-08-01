@@ -13,6 +13,11 @@ package_id: LPC55S69JBD100
 mcu_data: ksdk2_0
 processor_version: 14.0.0
 board: LPCXpresso55S69
+pin_labels:
+- {pin_num: '72', pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14, label: 'P19[11]/P19[12]/U2[D6]/P20[6]/FC1_I2C_SCL',
+  identifier: RS485_RTS}
+- {pin_num: '40', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, label: 'P18[3]/PIO1_10_GPIO_ARD', identifier: RS458_RX;RS485_RX}
+- {pin_num: '93', pin_signal: PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS, label: 'P17[6]/PIO1_11_GPIO_ARD', identifier: RS458_TX;RS485_TX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -43,6 +48,9 @@ BOARD_InitDEBUG_UARTPins:
     mode: inactive, slew_rate: standard, invert: disabled, open_drain: disabled}
   - {pin_num: '94', peripheral: FLEXCOMM0, signal: TXD_SCL_MISO_WS, pin_signal: PIO0_30/FC0_TXD_SCL_MISO_WS/SD1_D3/CTIMER0_MAT0/SCT0_OUT9/SECURE_GPIO0_30, mode: inactive,
     slew_rate: standard, invert: disabled, open_drain: disabled}
+  - {pin_num: '40', peripheral: FLEXCOMM1, signal: RXD_SDA_MOSI_DATA, pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, identifier: RS485_RX}
+  - {pin_num: '93', peripheral: FLEXCOMM1, signal: TXD_SCL_MISO_WS, pin_signal: PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS, identifier: RS485_TX}
+  - {pin_num: '72', peripheral: FLEXCOMM1, signal: RTS_SCL_SSEL1, pin_signal: PIO0_14/FC1_RTS_SCL_SSEL1/UTICK_CAP1/CT_INP1/SCT_GPI1/FC1_TXD_SCL_MISO_WS/PLU_IN1/SECURE_GPIO0_14}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -58,6 +66,19 @@ void BOARD_InitDEBUG_UARTPins(void)
 {
     /* Enables the clock for the I/O controller.: Enable Clock. */
     CLOCK_EnableClock(kCLOCK_Iocon);
+
+    IOCON->PIO[0][14] = ((IOCON->PIO[0][14] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT014 (pin 72) is configured as FC1_RTS_SCL_SSEL1. */
+                         | IOCON_PIO_FUNC(PIO0_14_FUNC_ALT1)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_14_DIGIMODE_DIGITAL));
 
     const uint32_t DEBUG_UART_RX = (/* Pin is configured as FC0_RXD_SDA_MOSI_DATA */
                                     IOCON_PIO_FUNC1 |
@@ -88,6 +109,32 @@ void BOARD_InitDEBUG_UARTPins(void)
                                     IOCON_PIO_OPENDRAIN_DI);
     /* PORT0 PIN30 (coords: 94) is configured as FC0_TXD_SCL_MISO_WS */
     IOCON_PinMuxSet(IOCON, BOARD_INITDEBUG_UARTPINS_DEBUG_UART_TX_PORT, BOARD_INITDEBUG_UARTPINS_DEBUG_UART_TX_PIN, DEBUG_UART_TX);
+
+    IOCON->PIO[1][10] = ((IOCON->PIO[1][10] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT110 (pin 40) is configured as FC1_RXD_SDA_MOSI_DATA. */
+                         | IOCON_PIO_FUNC(PIO1_10_FUNC_ALT2)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_10_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[1][11] = ((IOCON->PIO[1][11] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT111 (pin 93) is configured as FC1_TXD_SCL_MISO_WS. */
+                         | IOCON_PIO_FUNC(PIO1_11_FUNC_ALT2)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO1_11_DIGIMODE_DIGITAL));
 }
 
 /* clang-format off */

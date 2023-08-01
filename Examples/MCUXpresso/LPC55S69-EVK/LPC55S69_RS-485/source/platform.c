@@ -17,8 +17,8 @@
 #if PL_CONFIG_USE_RTT
   #include "McuRTT.h"
 #endif
-#if PL_CONFIG_USE_RS458
-  #include "McuUart485.h"
+#if PL_CONFIG_USE_RS485
+  #include "rs485.h"
 #endif
 #if PL_CONFIG_USE_SHELL_UART
   #include "McuShellUart.h"
@@ -31,8 +31,8 @@ void PL_Init(void) {
   McuLED_Init();
   McuRTOS_Init();
   LEDS_Init();
-#if PL_CONFIG_USE_RS458
-  McuUart485_Init();
+#if PL_CONFIG_USE_RS485
+  RS485_Init();
 #endif
 #if PL_CONFIG_USE_SHELL_UART
   McuShellUart_Init();

@@ -46,6 +46,7 @@
 #define McuUart485_CONFIG_USE_MODBUS          (0)
 #define McuUart485_CONFIG_USE_LOGGER          (1)
 #define McuUart485_CONFIG_UART_BAUDRATE       (115200)
+#define McuUart485_CONFIG_USE_HW_OE_RTS       (1)
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

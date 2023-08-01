@@ -350,7 +350,7 @@ static void InitUart(void) {
   #if McuLib_CONFIG_CPU_IS_KINETIS /* Kinetis K22FN512 */
   McuUart485_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSPOL(1); /* TXRTSPOL: 1: transmitter RTS polarity is active high */
   McuUart485_CONFIG_UART_DEVICE->MODEM |= UART_MODEM_TXRTSE(1);   /* TXRTSE: Transmitter request-to-send enable, 1: RTS asserted before start bit is transmitted and deasserted after stop bit */
-  #elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 */
+  #elif McuLib_CONFIG_CPU_IS_LPC /* LPC845 or LPC55S69 */
   McuUart485_CONFIG_UART_DEVICE->CFG |= USART_CFG_OESEL(1); /* if enabled, use RTS signal for RS-485 transceiver */
   McuUart485_CONFIG_UART_DEVICE->CFG |= USART_CFG_OEPOL(1); /* 1: the output enable signal is high active */
   McuUart485_CONFIG_UART_DEVICE->CFG |= USART_CFG_OETA(1); /* output enable turnaround time: if set, the output enable signal remains asserted for 1 char time after the end of the last bit */

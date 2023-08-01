@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Erich Styger
+ * Copyright (c) 2019-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -13,6 +13,10 @@
 #if PL_CONFIG_USE_SHELL_UART
   #include "McuShellUart.h"
 #endif
+#if PL_CONFIG_USE_RS485
+  #include "McuUart485.h"
+  #include "rs485.h"
+#endif
 
 static const McuShell_ParseCommandCallback CmdParserTable[] =
 {
@@ -20,6 +24,10 @@ static const McuShell_ParseCommandCallback CmdParserTable[] =
   McuRTOS_ParseCommand,
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED
   McuArmTools_ParseCommand,
+#endif
+#if PL_CONFIG_USE_RS485
+  McuUart485_ParseCommand,
+  RS485_ParseCommand,
 #endif
   NULL /* Sentinel */
 };
@@ -49,11 +57,31 @@ void SHELL_SendChar(unsigned char ch) {
   }
 }
 
+void SHELL_SendStringToIO(const unsigned char *str, McuShell_ConstStdIOType *io) {
+  McuShell_SendStr(str, io->stdOut);
+}
+
 void SHELL_SendString(unsigned char *str) {
   for(int i=0;i<sizeof(ios)/sizeof(ios[0]);i++) {
     McuShell_SendStr(str, ios[i].stdio->stdOut);
   }
 }
+
+uint8_t SHELL_ParseCommandIO(const unsigned char *command, McuShell_ConstStdIOType *io, bool silent) {
+  if (io==NULL) { /* use a default */
+#if PL_CONFIG_USE_SHELL_UART
+    io = &McuShellUart_stdio;
+#elif PL_CONFIG_USE_USB_CDC
+    io = &cdc_stdio;
+#elif PL_CONFIG_USE_RTT
+    io = &McuRTT_stdio;
+#else
+  #error "no shell std IO?"
+#endif
+  }
+  return McuShell_ParseWithCommandTableExt(command, io, CmdParserTable, silent);
+}
+
 
 static void ShellTask(void *pv) {
   int i;

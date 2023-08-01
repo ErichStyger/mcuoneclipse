@@ -56,6 +56,7 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
   #define McuUart485_CONFIG_CLEAR_STATUS_FLAGS            USART_ClearStatusFlags
 
 #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC55S69
+  /* using FlexComm1, on LPC55S69-EVK this is on pin 40 (Rx, FC1_RXD_SDA_MOSI_DATA, PIO1_10) and pin 93 (Rx, FC1_TXD_SCL_MISO_WS, PIO1_11) */
   #include "fsl_usart.h"
 
   #ifndef McuUart485_CONFIG_UART_PARITY
@@ -207,12 +208,14 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
 #endif
 
 #ifndef McuUart485_CONFIG_USE_HW_OE_RTS
-  #if McuLib_CONFIG_CPU_IS_KINETIS || (McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845)
+  #if McuLib_CONFIG_CPU_IS_KINETIS
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
   #elif McuLib_CONFIG_CPU_IS_ESP32
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* on ESP32, the transceiver is controlled by the UART directly with the RTS pin */
+  #elif McuLib_CONFIG_CPU_IS_LPC && McuLib_CONFIG_CPU_VARIANT==McuLib_CONFIG_CPU_VARIANT_NXP_LPC845
+    #define McuUart485_CONFIG_USE_HW_OE_RTS  (1)  /* 1: Use e.g. on LPC845 OESEL (Output Enable Selection) feature. Note that the pin has to be configured in the PinMuxing as RTS! */
   #elif McuLib_CONFIG_CPU_IS_LPC55xx
-    #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)
+    #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)  /* if using the RTS function of the UART or not */
   #elif McuLib_CONFIG_CPU_IS_RPxxxx
     #define McuUart485_CONFIG_USE_HW_OE_RTS  (0)  /* on RP2040, need to control RE/DE pin manually */
   #endif
@@ -231,14 +234,15 @@ extern uint8_t McuUart485_CONFIG_LOGGER_CALLBACK_NAME(uint8_t ch); /* prototype 
       #define McuUart485_CONFIG_TX_EN_PIN        2U
     #endif
   #elif McuLib_CONFIG_CPU_IS_LPC55xx
+    /* default: pin 92 on LPC55S69-EVK, routed as FC1_I2C_SCL */
     #ifndef McuUart485_CONFIG_TX_EN_GPIO
       #define McuUart485_CONFIG_TX_EN_GPIO       GPIO
     #endif
     #ifndef McuUart485_CONFIG_TX_EN_PORT
-      #define McuUart485_CONFIG_TX_EN_PORT       1
+      #define McuUart485_CONFIG_TX_EN_PORT       0
     #endif
     #ifndef McuUart485_CONFIG_TX_EN_PIN
-      #define McuUart485_CONFIG_TX_EN_PIN        6U
+      #define McuUart485_CONFIG_TX_EN_PIN        14U
     #endif
   #elif McuLib_CONFIG_CPU_IS_ESP32 /* default for ESP32 */
     #ifndef McuUart485_CONFIG_RE_PIN

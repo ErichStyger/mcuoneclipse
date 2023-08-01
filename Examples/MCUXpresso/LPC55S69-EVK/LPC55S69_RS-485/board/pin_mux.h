@@ -25,12 +25,42 @@ extern "C" {
  */
 void BOARD_InitBootPins(void);
 
-#define IOCON_PIO_DIGITAL_EN 0x0100u  /*!<@brief Enables digital function */
-#define IOCON_PIO_FUNC1 0x01u         /*!<@brief Selects pin function 1 */
-#define IOCON_PIO_INV_DI 0x00u        /*!<@brief Input function is not inverted */
-#define IOCON_PIO_MODE_INACT 0x00u    /*!<@brief No addition pin function */
-#define IOCON_PIO_OPENDRAIN_DI 0x00u  /*!<@brief Open drain is disabled */
-#define IOCON_PIO_SLEW_STANDARD 0x00u /*!<@brief Standard mode, output slew rate control is enabled */
+/*!
+ * @brief Enables digital function */
+#define IOCON_PIO_DIGITAL_EN 0x0100u
+/*!
+ * @brief Selects pin function 1 */
+#define IOCON_PIO_FUNC1 0x01u
+/*!
+ * @brief Input function is not inverted */
+#define IOCON_PIO_INV_DI 0x00u
+/*!
+ * @brief No addition pin function */
+#define IOCON_PIO_MODE_INACT 0x00u
+/*!
+ * @brief Open drain is disabled */
+#define IOCON_PIO_OPENDRAIN_DI 0x00u
+/*!
+ * @brief Standard mode, output slew rate control is enabled */
+#define IOCON_PIO_SLEW_STANDARD 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_14_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO0_14_FUNC_ALT1 0x01u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_10_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 2. */
+#define PIO1_10_FUNC_ALT2 0x02u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_11_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 2. */
+#define PIO1_11_FUNC_ALT2 0x02u
 
 /*! @name PIO0_29 (number 92), P8[2]/U6[13]/FC0_USART_RXD
   @{ */
@@ -57,6 +87,27 @@ void BOARD_InitBootPins(void);
  * @brief PORT pin mask */
 #define BOARD_INITDEBUG_UARTPINS_DEBUG_UART_TX_PIN_MASK (1U << 30U)
 /* @} */
+
+/*! @name PIO1_10 (number 40), P18[3]/PIO1_10_GPIO_ARD
+  @{ */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RX_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RX_PIN 10U                   /*!<@brief PORT pin number */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RX_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+                                                                    /* @} */
+
+/*! @name PIO1_11 (number 93), P17[6]/PIO1_11_GPIO_ARD
+  @{ */
+#define BOARD_INITDEBUG_UARTPINS_RS485_TX_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITDEBUG_UARTPINS_RS485_TX_PIN 11U                   /*!<@brief PORT pin number */
+#define BOARD_INITDEBUG_UARTPINS_RS485_TX_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
+                                                                    /* @} */
+
+/*! @name PIO0_14 (number 72), P19[11]/P19[12]/U2[D6]/P20[6]/FC1_I2C_SCL
+  @{ */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RTS_PORT 0U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RTS_PIN 14U                   /*!<@brief PORT pin number */
+#define BOARD_INITDEBUG_UARTPINS_RS485_RTS_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
+                                                                     /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
