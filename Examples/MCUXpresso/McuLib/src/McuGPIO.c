@@ -72,6 +72,8 @@ static const McuGPIO_Config_t defaultConfig =
         .gpio = NULL,
       #elif McuLib_CONFIG_CPU_IS_STM32
         .gpio = NULL,
+      #elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+        .name = "",
       #endif
     #if McuLib_CONFIG_CPU_IS_KINETIS
       .port = 0,
@@ -98,6 +100,10 @@ typedef struct McuGPIO_t {
 #if McuLib_CONFIG_CPU_IS_ESP32
   bool isHigh; /* status of output pin, because we cannot toggle pin and we cannot read pin status if it is output pin */
 #endif
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  struct gpiod_line *line; /* will be requested with gpiod_chip_get_line() */
+  bool isHigh; /* status of output pin, because we cannot toggle pin and we cannot read pin status if it is output pin */
+#endif
   bool isInput;
   McuGPIO_HwPin_t hw;
 } McuGPIO_t;
@@ -113,31 +119,31 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
 
   memset(&pin_config, 0, sizeof(pin_config)); /* init all fields */
   if (isInput) {
-#if McuLib_CONFIG_CPU_IS_IMXRT
+  #if McuLib_CONFIG_CPU_IS_IMXRT
     pin_config.direction = kGPIO_DigitalInput;
-#else
+  #else
     pin_config.pinDirection = kGPIO_DigitalInput;
-#endif
+  #endif
   } else {
-#if McuLib_CONFIG_CPU_IS_IMXRT
+  #if McuLib_CONFIG_CPU_IS_IMXRT
     pin_config.direction = kGPIO_DigitalOutput;
-#else
+  #else
     pin_config.pinDirection = kGPIO_DigitalOutput;
-#endif
+  #endif
   }
-#if McuLib_CONFIG_CPU_IS_IMXRT
+  #if McuLib_CONFIG_CPU_IS_IMXRT
   pin_config.interruptMode = kGPIO_NoIntmode; /* no interrupts */
-#endif
+  #endif
   pin_config.outputLogic = isHighOnInit;
-#if McuLib_CONFIG_IS_KINETIS_KE
+  #if McuLib_CONFIG_IS_KINETIS_KE
   GPIO_PinInit(pin->hw.portNum, pin->hw.pin, &pin_config);
-#elif McuLib_CONFIG_CPU_IS_KINETIS
+  #elif McuLib_CONFIG_CPU_IS_KINETIS
   GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
-#elif McuLib_CONFIG_CPU_IS_LPC
+  #elif McuLib_CONFIG_CPU_IS_LPC
   GPIO_PinInit(pin->hw.gpio, pin->hw.port, pin->hw.pin, &pin_config);
-#elif McuLib_CONFIG_CPU_IS_IMXRT
+  #elif McuLib_CONFIG_CPU_IS_IMXRT
   GPIO_PinInit(pin->hw.gpio, pin->hw.pin, &pin_config);
-#endif
+  #endif
 #elif McuLib_CONFIG_CPU_IS_STM32
   GPIO_InitTypeDef config;
 
@@ -186,6 +192,17 @@ static void McuGPIO_ConfigurePin(McuGPIO_t *pin, bool isInput, bool isHighOnInit
     gpio_set_dir(pin->hw.pin, GPIO_IN);
   } else {
     gpio_set_dir(pin->hw.pin, GPIO_OUT);
+  }
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  pin->line = gpiod_chip_get_line(pin->hw.chip, pin->hw.pin);
+  if (isInput) {
+    gpiod_line_request_input(pin->line, pin->hw.name);
+  } else {
+    gpiod_line_request_output(pin->line, pin->hw.name, isHighOnInit);
+  }
+  if (!isInput) {
+    gpiod_line_set_value(pin->line, isHighOnInit?1:0);
+    pin->isHigh = isHighOnInit;
   }
 #endif
 }
@@ -247,6 +264,7 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
 #endif
   McuGPIO_ConfigurePin(handle, config->isInput, config->isHighOnInit);
   McuGPIO_SetPullResistor((McuGPIO_Handle_t)handle, config->hw.pull); /* GPIO muxing might be done with setting the pull registers, e.g. for LPC845 */
+
   /* do the pin muxing */
 #if McuLib_CONFIG_IS_KINETIS_KE
   /* no pin muxing needed */
@@ -314,12 +332,18 @@ McuGPIO_Handle_t McuGPIO_InitGPIO(McuGPIO_Config_t *config) {
  /* no muxing needed */
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   /* no muxing needed */
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  /* no muxing needed */
 #endif
   return (McuGPIO_Handle_t)handle;
 }
 
 McuGPIO_Handle_t McuGPIO_DeinitGPIO(McuGPIO_Handle_t gpio) {
   assert(gpio!=NULL);
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  McuGPIO_t *pin = (McuGPIO_t*)gpio;
+  gpiod_line_release(pin->line);
+#endif
 #if MCUGPIO_CONFIG_USE_FREERTOS_HEAP
   vPortFree(gpio);
 #else
@@ -351,6 +375,9 @@ void McuGPIO_SetLow(McuGPIO_Handle_t gpio) {
   pin->isHigh = false;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   gpio_put(pin->hw.pin, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  gpiod_line_set_value(pin->line, 0);
+  pin->isHigh = false;
 #endif
 }
 
@@ -377,6 +404,9 @@ void McuGPIO_SetHigh(McuGPIO_Handle_t gpio) {
   pin->isHigh = true;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   gpio_put(pin->hw.pin, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  gpiod_line_set_value(pin->line, 1);
+  pin->isHigh = true;
 #endif
 }
 
@@ -408,6 +438,14 @@ void McuGPIO_Toggle(McuGPIO_Handle_t gpio) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   gpio_xor_mask(1<<pin->hw.pin);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  if (pin->isHigh) {
+    gpiod_line_set_value(pin->line, 0);
+    pin->isHigh = false;
+  } else {
+    gpiod_line_set_value(pin->line, 1);
+    pin->isHigh = true;
+  }
 #endif
 }
 
@@ -435,6 +473,9 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
   pin->isHigh = true;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   gpio_put(pin->hw.pin, 1);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  gpiod_line_set_value(pin->line, 0);
+  pin->isHigh = false;
 #endif
   } else { /* set to LOW */
 #if McuLib_CONFIG_CPU_IS_KINETIS
@@ -446,9 +487,9 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
     GPIO_PortClear(pin->hw.gpio, (1<<pin->hw.pin));
   #endif
 #elif McuLib_CONFIG_CPU_IS_LPC
-    GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
+  GPIO_PortClear(pin->hw.gpio, pin->hw.port, (1<<pin->hw.pin));
 #elif McuLib_CONFIG_CPU_IS_IMXRT
-    GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
+  GPIO_PinWrite(pin->hw.gpio, pin->hw.pin, 1U);
 #elif McuLib_CONFIG_CPU_IS_STM32
   HAL_GPIO_WritePin(pin->hw.gpio, pin->hw.pin, GPIO_PIN_SET);
 #elif McuLib_CONFIG_CPU_IS_ESP32
@@ -456,6 +497,9 @@ void McuGPIO_SetValue(McuGPIO_Handle_t gpio, bool val) {
   pin->isHigh = false;
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   gpio_put(pin->hw.pin, 0);
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  gpiod_line_set_value(pin->line, 1);
+  pin->isHigh = true;
 #endif
   }
 }
@@ -490,6 +534,8 @@ bool McuGPIO_IsHigh(McuGPIO_Handle_t gpio) {
   }
 #elif McuLib_CONFIG_CPU_IS_RPxxxx
   return gpio_get(pin->hw.pin)!=0;
+#elif McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_LINUX
+  return gpiod_line_get_value(pin->line)!=0;
 #endif
   return false;
 }
