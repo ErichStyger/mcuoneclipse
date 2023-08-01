@@ -405,7 +405,6 @@ uint8_t McuGenericSWI2C_GetDeviceID(uint8_t deviceAddr, uint32_t *pId) {
    */
   uint16_t Trial;
   bool Acknowledge;
-  uint16_t timeout;
   uint8_t id[3];
   const uint8_t reserved = 0b11111000;
 
