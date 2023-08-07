@@ -12,6 +12,7 @@
 #include "application.h"
 #include "McuRTOS.h"
 #include "McuLED.h"
+#include "McuLog.h"
 
 #if !PL_CONFIG_USE_PICO_W
   #define LED_PIN   (25) /* GPIO 25 */
