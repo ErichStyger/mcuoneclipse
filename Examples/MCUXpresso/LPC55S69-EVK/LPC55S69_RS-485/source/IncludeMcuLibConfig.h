@@ -42,11 +42,10 @@
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (0)
 /* ---------------------------------------------------------------------------------------*/
 /* McuUart485 */
-#define McuUart485_CONFIG_USE_RS_485          (1)
-#define McuUart485_CONFIG_USE_MODBUS          (0)
-#define McuUart485_CONFIG_USE_LOGGER          (1)
-#define McuUart485_CONFIG_UART_BAUDRATE       (115200)
-#define McuUart485_CONFIG_USE_HW_OE_RTS       (1)
+#define McuUart485_CONFIG_USE_RS_485          (1) /* enable RS-458 driver */
+#define McuUart485_CONFIG_USE_LOGGER          (1) /* add ability to log data to the console */
+#define McuUart485_CONFIG_UART_BAUDRATE       (115200) /* baud rate */
+#define McuUart485_CONFIG_USE_HW_OE_RTS       (1) /* use UART hardware RTS pin */
 /* -----------------------------------------------------*/
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

@@ -27,24 +27,26 @@
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.lib.debug.1779578207" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.lib.debug"/>
 							<builder buildPath="${workspace_loc:/lpc_chip_82x}/Debug" id="com.crt.advproject.builder.lib.debug.390300724" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.crt.advproject.builder.lib.debug"/>
 							<tool id="com.crt.advproject.cpp.lib.debug.758994761" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.lib.debug">
-								<option id="com.crt.advproject.cpp.hdrlib.221907858" superClass="com.crt.advproject.cpp.hdrlib"/>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.619770577" superClass="gnu.cpp.compiler.option.preprocessor.def"/>
+								<option id="com.crt.advproject.cpp.hdrlib.221907858" superClass="com.crt.advproject.cpp.hdrlib" useByScannerDiscovery="false"/>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.619770577" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false"/>
+								<option id="com.crt.advproject.cpp.fpu.441136526" superClass="com.crt.advproject.cpp.fpu" useByScannerDiscovery="true"/>
 							</tool>
 							<tool id="com.crt.advproject.gcc.lib.debug.553411599" name="MCU C Compiler" superClass="com.crt.advproject.gcc.lib.debug">
-								<option id="com.crt.advproject.gcc.arch.325842783" name="Architecture" superClass="com.crt.advproject.gcc.arch" value="com.crt.advproject.gcc.target.cm0" valueType="enumerated"/>
-								<option id="com.crt.advproject.gcc.thumb.1237931726" name="Thumb mode" superClass="com.crt.advproject.gcc.thumb" value="true" valueType="boolean"/>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.501181688" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+								<option id="com.crt.advproject.gcc.arch.325842783" name="Architecture" superClass="com.crt.advproject.gcc.arch" useByScannerDiscovery="true" value="com.crt.advproject.gcc.target.cm0" valueType="enumerated"/>
+								<option id="com.crt.advproject.gcc.thumb.1237931726" name="Thumb mode" superClass="com.crt.advproject.gcc.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.501181688" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__REDLIB__"/>
 									<listOptionValue builtIn="false" value="DEBUG"/>
 									<listOptionValue builtIn="false" value="__CODE_RED"/>
 									<listOptionValue builtIn="false" value="__USE_LPCOPEN"/>
 									<listOptionValue builtIn="false" value="CORE_M0PLUS"/>
 								</option>
-								<option id="gnu.c.compiler.option.misc.other.317740272" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections" valueType="string"/>
-								<option id="gnu.c.compiler.option.include.paths.495888351" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.misc.other.317740272" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections" valueType="string"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.495888351" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/inc}&quot;"/>
 								</option>
-								<option id="com.crt.advproject.gcc.hdrlib.1328559945" name="Library headers" superClass="com.crt.advproject.gcc.hdrlib" value="Redlib" valueType="enumerated"/>
+								<option id="com.crt.advproject.gcc.hdrlib.1328559945" name="Library headers" superClass="com.crt.advproject.gcc.hdrlib" useByScannerDiscovery="false" value="Redlib" valueType="enumerated"/>
+								<option id="com.crt.advproject.gcc.fpu.88498985" superClass="com.crt.advproject.gcc.fpu" useByScannerDiscovery="true"/>
 								<inputType id="com.crt.advproject.compiler.input.1714708807" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.lib.debug.148198437" name="MCU Assembler" superClass="com.crt.advproject.gas.lib.debug">
@@ -52,6 +54,7 @@
 								<option id="com.crt.advproject.gas.thumb.2089611118" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" value="true" valueType="boolean"/>
 								<option id="gnu.both.asm.option.flags.crt.1450892544" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__REDLIB__ -DDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.1081615079" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" value="Redlib" valueType="enumerated"/>
+								<option id="com.crt.advproject.gas.fpu.1520927920" superClass="com.crt.advproject.gas.fpu"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.2019029217" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1681101550" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 							</tool>
