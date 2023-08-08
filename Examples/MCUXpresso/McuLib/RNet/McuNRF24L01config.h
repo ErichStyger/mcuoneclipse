@@ -71,17 +71,17 @@
 
 #ifndef McuNRF24L01_CONFIG_CSN_PIN_GPIO
   #define McuNRF24L01_CONFIG_CSN_PIN_GPIO   GPIOB
-    /*!< GPIO for CE Pin */
+    /*!< GPIO for CSN Pin */
 #endif
 
 #ifndef McuNRF24L01_CONFIG_CSN_PIN_PORT
   #define McuNRF24L01_CONFIG_CSN_PIN_PORT   PORTB
-    /*!< PORT for CE Pin */
+    /*!< PORT for CSN Pin */
 #endif
 
 #ifndef McuNRF24L01_CONFIG_CSN_PIN_NUMBER
   #define McuNRF24L01_CONFIG_CSN_PIN_NUMBER   0
-    /*!< Pin number of the CE Pin */
+    /*!< Pin number of the CSN Pin */
 #endif
 
 #endif /* __McuNRF24L01_CONFIG_H */

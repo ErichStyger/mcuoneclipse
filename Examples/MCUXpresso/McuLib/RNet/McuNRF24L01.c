@@ -324,7 +324,6 @@ void McuNRF24L01_Deinit(void)
 ** ===================================================================
 */
 static void InitCS(void) {
-  /* CE: PTB10, CSN: PTB0 */
   McuGPIO_Config_t config;
 
   McuNRF24L01_CONFIG_CE_CSN_PIN_PRE_INIT();
