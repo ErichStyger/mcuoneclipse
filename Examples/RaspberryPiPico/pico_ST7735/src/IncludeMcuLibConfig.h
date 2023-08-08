@@ -53,3 +53,15 @@
 #define McuLog_CONFIG_USE_COLOR                 (1)
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* ---------------------------------------------------------------------------------------*/
+/* McuSPI */
+/* RP2040: SPI1, GP12 (MISO), GP11 (MOSI), GP10 (CLK) */
+#define MCUSPI_CONFIG_HW_TEMPLATE               MCUSPI_CONFIG_HW_TEMPLATE_RP2040_SPI1
+#define MCUSPI_CONFIG_USE_CS                    (0) /* do not initialize CS pin */
+#define MCUSPI_CONFIG_TRANSFER_BAUDRATE         10000000U
+/* ---------------------------------------------------------------------------------------*/
+/* McuST7735 */
+#define McuST7735_CONFIG_IS_ENABLED             (1)
+#define McuST7735_CONFIG_CS_PIN_NUMBER          (13)
+#define McuST7735_CONFIG_RESET_PIN_NUMBER       (14)
+#define McuST7735_CONFIG_DC_PIN_NUMBER          (15)
+/* ---------------------------------------------------------------------------------------*/

@@ -1,4 +1,4 @@
-Project for the Raspberry Pi Pico (W or non-W) using a display with the ST7735 controller (SPI)
+Project for the Raspberry Pi Pico (W or non-W) using a display with the Sitronics ST7735 controller (SPI)
 
 Files needed: (besides this readme.txt)
 

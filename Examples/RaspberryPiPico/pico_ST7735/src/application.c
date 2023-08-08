@@ -11,12 +11,38 @@
 #endif
 #include "application.h"
 #include "McuRTOS.h"
+#include "McuUtility.h"
 #include "McuLED.h"
 #include "McuLog.h"
+#include "McuST7735.h"
 
 #if !PL_CONFIG_USE_PICO_W
   #define LED_PIN   (25) /* GPIO 25 */
 #endif
+
+static void TestDisplay(void) {
+  uint16_t w, h;
+
+  w = McuST7735_GetWidth();
+  h = McuST7735_GetHeight();
+  McuST7735_FillRectangle(0, 0, w, h, McuST7735_COLOR_BLACK);
+ // McuST7735_DrawPixel(10, 10, McuST7735_COLOR_RED);
+ // McuST7735_DrawPixel(10, 15, McuST7735_COLOR_BLUE);
+  McuST7735_FillRectangle(20, 20, 15, 20, McuST7735_COLOR_RED);
+  McuST7735_FillRectangle(40, 40, 15, 20, McuST7735_COLOR_GREEN);
+  McuST7735_FillRectangle(60, 60, 15, 20, McuST7735_COLOR_BLUE);
+  McuST7735_FillRectangle(0, 0, McuST7735_GetWidth(), McuST7735_GetHeight(), McuST7735_COLOR_RED);
+  McuST7735_FillRectangle(0, 0, McuST7735_GetWidth(), McuST7735_GetHeight(), McuST7735_COLOR_GREEN);
+  McuST7735_FillRectangle(0, 0, McuST7735_GetWidth(), McuST7735_GetHeight(), McuST7735_COLOR_BLUE);
+
+  uint16_t x, y, color;
+  for(int i=0; i<100; i++) {
+    x = McuUtility_random(0, w-20);
+    y = McuUtility_random(0, h-20);
+    color = McuUtility_random(0x10, 0xffff);
+    McuST7735_FillRectangle(x, y, 20, 20, color);
+  }
+}
 
 static void AppTask(void *pv) {
   #define APP_HAS_ONBOARD_GREEN_LED   (!PL_CONFIG_USE_PICO_W)
@@ -51,6 +77,7 @@ static void AppTask(void *pv) {
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
   #endif
+    TestDisplay();
     vTaskDelay(pdMS_TO_TICKS(10*100));
   }
 }

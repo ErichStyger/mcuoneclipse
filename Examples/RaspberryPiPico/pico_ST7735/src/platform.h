@@ -17,6 +17,9 @@
    */
 #define PL_CONFIG_USE_WIFI              (0 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
 
+
+#define PL_CONFIG_USE_DISPLAY_ST7735    (1)
+
 void PL_Init(void);
 
 #endif /* APP_PLATFORM_H_ */
