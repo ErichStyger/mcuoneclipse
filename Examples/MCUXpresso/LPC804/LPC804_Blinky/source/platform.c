@@ -61,8 +61,8 @@ void PL_Init(void) {
 
   /* application modules */
   LEDS_Init();
-  NEO_Init();
 #if PL_CONFIG_USE_WS2812B
+  NEO_Init();
   WSPinInit();
   WS2812B_Init();
 #endif

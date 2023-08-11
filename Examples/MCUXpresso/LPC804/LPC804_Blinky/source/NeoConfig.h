@@ -7,7 +7,7 @@
 #ifndef NEOCONFIG_H_
 #define NEOCONFIG_H_
 
-#define NEOC_NOF_LEDS          (8) /* number of LEDs  */
+#define NEOC_NOF_LEDS          (16) /* number of LEDs  */
 #define NEOC_NOF_COLORS        (4)  /* 3 for RGB, 4 for RGBW */
 
 #if (NEOC_NOF_LANES>8)

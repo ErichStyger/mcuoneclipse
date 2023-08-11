@@ -53,9 +53,9 @@ Instructions:
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS (0)
 #define configUSE_HEAP_SCHEME                (4)
-#define configTOTAL_HEAP_SIZE                (3*1024)
+#define configTOTAL_HEAP_SIZE                (2750)
 #define configSUPPORT_STATIC_ALLOCATION      (0)
-#define configCHECK_FOR_STACK_OVERFLOW       (1)
+#define configCHECK_FOR_STACK_OVERFLOW       (0)
 #define configUSE_TIMERS                     (0)
 #define INCLUDE_xTimerPendFunctionCall       (0)
 #define configUSE_TICKLESS_IDLE              (0)
@@ -66,7 +66,7 @@ Instructions:
 #define McuShellUart_CONFIG_UART              McuShellUart_CONFIG_UART_NONE
 #define McuShell_CONFIG_PROJECT_NAME_STRING  "LPC804"
 #define McuShell_CONFIG_PROMPT_STRING        "lpc> "
-#define McuShell_CONFIG_ECHO_ENABLED         (1)
+#define McuShell_CONFIG_ECHO_ENABLED         (0)
 #define McuShell_CONFIG_HISTORY_ENABLED      (1)
 #define McuShell_CONFIG_HISTORY_NOF_ITEMS    (3)
 /* ---------------------------------------------------------------------------------------*/

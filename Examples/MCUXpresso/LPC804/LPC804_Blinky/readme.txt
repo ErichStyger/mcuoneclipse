@@ -1,6 +1,6 @@
 readme.txt
 ----------
-Project for the LPC804 using driving two on-board LEDs (red and green) plus a WS2812B LEDs, connected to PIO0_8.
+Project for the LPC804 using driving two on-board LEDs (red and green) plus WS2812B LEDs, connected to PIO0_8.
 For the WS2812B the PLU of the LPC804 is used. For this the PLU code from olikraus
 (https://github.com/olikraus/lpc804_plu/tree/master/lpc804) has been used for the PLU tables,
 and everything has been ported to the MCUXpresso SDK and the NXP PLU tool

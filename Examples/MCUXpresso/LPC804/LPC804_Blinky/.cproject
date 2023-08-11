@@ -301,7 +301,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.1635061522" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.1972242194" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.manage.332737560" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.753401081" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="&quot;LPC804_Blinky_Debug.ld&quot;" valueType="string"/>
+								<option id="com.crt.advproject.link.script.753401081" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="LPC804_Blinky_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1522177318" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.475543421" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.link.flashconfigenable.2053034223" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -373,7 +373,7 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="com.nxp.mcuxpresso.core.datamodels">
 		<sdkName>SDK_2.x_LPC804</sdkName>
-		<sdkVersion>2.11.0</sdkVersion>
+		<sdkVersion>2.13.0</sdkVersion>
 		<sdkComponents>utility.debug_console_lite.LPC804;component.miniusart_adapter.LPC804;middleware.baremetal.LPC804;platform.drivers.clock.LPC804;platform.drivers.reset.LPC804;platform.drivers.power_no_lib.LPC804;platform.drivers.common.LPC804;platform.drivers.rom_api.LPC804;platform.drivers.pint.LPC804;platform.drivers.lpc_miniusart.LPC804;platform.drivers.syscon.LPC804;platform.drivers.syscon_connections.LPC804;platform.drivers.lpc_minispi.LPC804;platform.drivers.lpc_adc.LPC804;platform.drivers.capt.LPC804;platform.drivers.ctimer.LPC804;platform.drivers.lpc_dac.LPC804;platform.drivers.lpc_gpio.LPC804;platform.drivers.lpc_i2c.LPC804;platform.drivers.iap.LPC804;platform.drivers.lpc_iocon_lite.LPC804;platform.drivers.lpc_acomp.LPC804;platform.drivers.lpc_crc.LPC804;platform.drivers.mrt.LPC804;platform.drivers.plu.LPC804;platform.drivers.swm_connections.LPC804;platform.drivers.swm.LPC804;platform.drivers.wkt.LPC804;platform.drivers.wwdt.LPC804;device.LPC804_startup.LPC804;platform.Include_common.LPC804;platform.Include_core_cm0plus.LPC804;platform.Include_dsp.LPC804;device.LPC804_CMSIS.LPC804;device.LPC804_system.LPC804;project_template.LPC804.LPC804;</sdkComponents>
 		<package>LPC804M101JDH20</package>
 		<core>cm0plus</core>
@@ -412,4 +412,5 @@
 			<resource resourceType="PROJECT" workspacePath="/LPC804_Blinky"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="openCmsis"/>
 </cproject>
