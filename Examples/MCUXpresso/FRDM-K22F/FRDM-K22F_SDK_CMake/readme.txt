@@ -5,8 +5,8 @@ Project to show how a MCUXpresso IDE/SDK project can be used with CMake and make
 
 To create the build system
 - Open a command prompt in the project directory
-- execute 'cmake init make.bat' for building using Make files
-- exeucte 'cmake init ninja.bat' for building using ninja (building around 10x faster than with make!)
+- run 'cmake init make.bat' for building using Make files
+- run 'cmake init ninja.bat' for building using ninja (building around 10x faster than with make!)
 
 'cd' into the build folder, then you can execute either
 ninja
