@@ -131,7 +131,7 @@
 #endif
 #define McuShell_CONFIG_PROMPT_STRING               "pico> "
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
-#define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
+#define McuShell_CONFIG_MULTI_CMD_SIZE              (128)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE   (128)
 /* ---------------------------------------------------------------------- */
 /* McuFlash */

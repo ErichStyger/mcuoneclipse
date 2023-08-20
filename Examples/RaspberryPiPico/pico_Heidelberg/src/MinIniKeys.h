@@ -46,7 +46,7 @@
   #define NVMC_MININI_KEY_WIFI_HOSTNAME            "hostname" /* hostname to be used */
 #endif
 
-#if PL_CONFIG_IS_APP_EVCC
+#if PL_CONFIG_USE_MQTT_CLIENT
   /* section for MQTT settings */
   #define NVMC_MININI_SECTION_MQTT              "MQTT"
   #define NVMC_MININI_KEY_MQTT_BROKER              "broker"   /* broker IP */

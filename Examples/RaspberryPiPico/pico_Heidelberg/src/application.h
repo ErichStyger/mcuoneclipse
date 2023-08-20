@@ -8,6 +8,11 @@
 #define __APPLICATION_H__
 
 #include "platform.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "McuShell.h"
 
 #if PL_CONFIG_USE_BUTTONS
@@ -24,5 +29,9 @@ uint8_t App_GetSensorValues(float *temperature, float *humidity);
 uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell_StdIOType *io);
 
 void APP_Run(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* __APPLICATION_H__ */

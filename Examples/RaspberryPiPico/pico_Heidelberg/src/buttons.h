@@ -1,11 +1,15 @@
 /*
- * Copyright (c) 2021, Erich Styger
+ * Copyright (c) 2021-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #ifndef BUTTONS_H_
 #define BUTTONS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "platform.h"
 #if PL_CONFIG_USE_BUTTONS
@@ -37,5 +41,9 @@ void BTN_Deinit(void);
 void BTN_Init(void);
 
 #endif /* PL_CONFIG_USE_BUTTONS */
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* BUTTONS_H_ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2022-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -9,6 +9,10 @@
 
 #include <stdint.h>
 #include "McuRTOS.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*!
  * \brief Start debouncing with a set of buttons. Do not call this method from an interrupt.
@@ -33,5 +37,9 @@ void Debounce_Deinit(void);
  * \brief Module initialization
  */
 void Debounce_Init(void);
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* DEBOUNCE_H_ */
