@@ -31,26 +31,26 @@ Instructions:
 #define McuLib_CONFIG_SDK_VERSION_USED  McuLib_CONFIG_SDK_MCUXPRESSO_2_0
 #define McuLib_CONFIG_CPU_IS_KINETIS    (0)  /* default CPU is NXP Kinetis */
 #define McuLib_CONFIG_CPU_IS_IMXRT      (1)
-#define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064
+//#define McuLib_CONFIG_CPU_VARIANT       McuLib_CONFIG_CPU_VARIANT_NXP_IMXRT1064
 
 /* ------------------- RTOS ---------------------------*/
 #define McuLib_CONFIG_SDK_USE_FREERTOS       (1)
 #define configTOTAL_HEAP_SIZE                (24*1024)
-#define configUSE_HEAP_SCHEME                (6)  /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
+#define configUSE_HEAP_SCHEME                (4)  /* either 1 (only alloc), 2 (alloc/free), 3 (malloc), 4 (coalesc blocks), 5 (multiple blocks), 6 (newlib) */
 //#define configUSE_HEAP_SECTION_NAME                 (1)
 //#define configHEAP_SECTION_NAME_STRING              ".bss.$SRAM_LOWER.FreeRTOS"
 
 /* performance counter: see https://mcuoneclipse.com/2018/08/02/tutorial-using-runtime-statistics-with-amazon-freertos-v10/ */
-#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (0)
+#define configGENERATE_RUN_TIME_STATS_USE_TICKS     (1)
 
 /* Segger SystemViewer: */
-#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (1)
-#define SYSVIEW_APP_NAME                            "i.MX RT1064 with FreeRTOS"
-#define SYSVIEW_DEVICE_NAME                         "NXP i.MX RT1064"
+#define configUSE_SEGGER_SYSTEM_VIEWER_HOOKS        (0)
+#define SYSVIEW_APP_NAME                            "i.MX RT1010 with FreeRTOS"
+#define SYSVIEW_DEVICE_NAME                         "NXP i.MX RT1010"
 
 /* -------------------------------------------------*/
 /* Shell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING           "i.MX RT1064 with FreeRTOS"
+#define McuShell_CONFIG_PROJECT_NAME_STRING           "i.MX RT1010 with FreeRTOS"
 #define McuShell_MULTI_CMD_ENABLED                    (0)
 #define McuShell_CONFIG_DEFAULT_SHELL_BUFFER_SIZE     (96)
 

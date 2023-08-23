@@ -59,7 +59,7 @@
   #define McuLib_CONFIG_CPU_IS_RISC_V_RV32M1_RI5CY      (1 && McuLib_CONFIG_CPU_IS_RISC_V)
     /*!< 1: VEGA Board: RISC-V RV32M1 RI5CY, 0: other core */
 #endif
-#ifndef McuLib_CONFIG_CPU_IS_ESP32
+#if !defined(McuLib_CONFIG_CPU_IS_ESP32) && !defined(McuLib_CONFIG_CPU_IS_IMXRT) /* i.MX could check on __XTENSA__ in fsl_common.h */
   #ifndef __XTENSA__
     #define __XTENSA__ 0
   #endif
