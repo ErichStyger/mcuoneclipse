@@ -4,7 +4,7 @@
 
 file(GLOB FILES
   *.c
- )
+)
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 

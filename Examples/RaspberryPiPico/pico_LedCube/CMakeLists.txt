@@ -1,54 +1,66 @@
 cmake_minimum_required(VERSION 3.13)
 
-# set(CMAKE_VERBOSE_MAKEFILE ON) # for verbose output
+# Required for McuLib, to know the target system
+set(
+  MCULIB_TARGET RP2040 CACHE STRING 
+  "Select McuLib target: MCUXPRESSO, RP2040 or ESP32"
+)
+
+# turn variable on for verbose output, useful for makefile debugging
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# settings for the board and hardware used
+set(PICO_PLATFORM rp2040)
+set(PICO_BOARD pico) # pico or pico_w
+
+# set build type. Without 'Debug', it won't generate line information if using build subfolders.
+set(CMAKE_BUILD_TYPE Debug)
 
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
-include(pico_sdk_import.cmake)
+# Include build functions from Pico SDK
+include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 
-project(picoLedCube C CXX ASM)  # sets ${CMAKE_PROJECT_NAME}
+# set project name ${CMAKE_PROJECT_NAME}
+project(picoLedCube
+  C CXX ASM
+)
+
+# set C and C++ standard to be used
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-
-# To make sure build folder doesn't get cluttered
-set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)  # folder for UF2 file
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
-
-#set(PICO_BOARD pico_w)  # needed for Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
-set(PICO_BOARD pico)  # set the 'Pico' as board
 
 # [Platfrom specific command] Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# add options for McuLib usage
 set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 add_compile_options(-include "${PROJECT_ROOT_DIR}/src/IncludeMcuLibConfig.h")
+add_compile_options(-I "${PROJECT_ROOT_DIR}/src") # McuLib to find our local header files
 
 # to avoid that it shows up as 'Reset' USB device, see https://forums.raspberrypi.com/viewtopic.php?t=324909
 add_compile_options(-DPICO_STDIO_USB_ENABLE_RESET_VIA_VENDOR_INTERFACE=0)
 
-add_executable(${CMAKE_PROJECT_NAME})
+add_executable(${CMAKE_PROJECT_NAME}
+ # add additional source files here
+)
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-  COMMAND arm-none-eabi-size "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_PROJECT_NAME}.elf"
+  COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"
   COMMENT "Printing code and data size"
 )
-  
+
 # enable USB CDC and disable UART:
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 0)
 
 # add component directories to the list
-add_subdirectory(../../MCUXpresso/McuLib build/McuLib)
-#add_subdirectory(../../MCUXpresso/McuLib/LittlevGL  build/McuLib/LittlevGL)
+add_subdirectory(../../McuLib build/McuLib)
+#add_subdirectory(../../McuLib/LittlevGL  build/McuLib/LittlevGL)
 add_subdirectory(./src build/src)
 
 # generate extra files (map/bin/hex/uf2)
-#pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
-pico_add_uf2_output(${CMAKE_PROJECT_NAME}) # generate UF2 file
-#pico_add_hex_output(${CMAKE_PROJECT_NAME}) # generate hex file
-#pico_add_bin_output(${CMAKE_PROJECT_NAME}) # generate bin file
+pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
 
 target_link_libraries(
   ${CMAKE_PROJECT_NAME}

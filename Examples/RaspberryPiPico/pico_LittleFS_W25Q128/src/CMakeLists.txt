@@ -3,11 +3,7 @@
 #file(GLOB FILES *.c *.h)
 
 file(GLOB FILES
-  main.c
-  app_platform.c
-  application.c
-  Shell.c
-  FreeRTOShooks.c
+  *.c
 )
 
 # generate PIO header "ws2812.pio.h" inside the src directory
