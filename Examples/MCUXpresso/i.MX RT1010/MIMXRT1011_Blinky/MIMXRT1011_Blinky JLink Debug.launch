@@ -1,62 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="com.crt.dsfdebug.crtmcu.launchType">
-    <stringAttribute key=".gdbinit" value=""/>
-    <booleanAttribute key="attach" value="false"/>
-    <booleanAttribute key="boot.config.enable" value="false"/>
-    <stringAttribute key="boot.configuration.control" value=""/>
-    <stringAttribute key="bootrom.stall" value=""/>
-    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="LinkServer"/>
-    <booleanAttribute key="com.crt.ctrlcenter.crtInit" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.currentWireType" value="SWD"/>
+<launchConfiguration type="com.nxp.mcuxpresso.core.debug.support.segger.launchConfigurationType">
+    <stringAttribute key="com.crt.ctrlcenter.OFSemuDetails" value="JLink801011549"/>
     <booleanAttribute key="com.crt.ctrlcenter.mainBreakIsHardware" value="true"/>
-    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="LinkServerARMCMSIS-DAP022700001713b13900000000000000000000000097969905"/>
+    <stringAttribute key="com.crt.ctrlcenter.serialNumber" value="USB 801011549"/>
     <mapAttribute key="com.crt.ctrlcenter.symbolsGroupSettings"/>
-    <intAttribute key="com.crt.ctrlcenter.version" value="6"/>
-    <stringAttribute key="com.nxp.mcuxpresso.flash.base.address" value="0x60000000"/>
+    <intAttribute key="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler.version" value="2"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.clear.console" value="true"/>
     <booleanAttribute key="com.nxp.mcuxpresso.flash.confirm" value="false"/>
-    <stringAttribute key="com.nxp.mcuxpresso.flash.erase.algorithm" value="Mass erase"/>
-    <stringAttribute key="com.nxp.mcuxpresso.flash.executable" value="axf"/>
-    <stringAttribute key="com.nxp.mcuxpresso.flash.program.action" value="Program"/>
-    <booleanAttribute key="com.nxp.mcuxpresso.flash.reset.target" value="true"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="ARM"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="CMSIS-DAP"/>
-    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="LinkServer"/>
-    <stringAttribute key="debug.level" value="2"/>
-    <stringAttribute key="emu.speed" value=""/>
-    <stringAttribute key="flash.driver.reset" value=""/>
-    <stringAttribute key="gdbserver.host" value="localhost"/>
-    <stringAttribute key="gdbserver.port" value="10989"/>
-    <booleanAttribute key="gdbserver.start" value="true"/>
-    <booleanAttribute key="internal.attach.slave" value="false"/>
-    <booleanAttribute key="internal.cache" value="false"/>
-    <stringAttribute key="internal.connect.script" value="RT1010_connect.scp"/>
-    <stringAttribute key="internal.core.index" value=""/>
-    <booleanAttribute key="internal.has_swo" value="false"/>
-    <booleanAttribute key="internal.multi.swd" value="true"/>
-    <stringAttribute key="internal.prelaunch.command" value=""/>
-    <stringAttribute key="internal.reset.script" value=""/>
-    <stringAttribute key="internal.resethandling" value=""/>
-    <stringAttribute key="internal.semihost" value="On"/>
-    <stringAttribute key="internal.wirespeed" value=""/>
-    <stringAttribute key="internal.wiretype" value="SWD"/>
-    <stringAttribute key="isp.control" value="xxxx"/>
-    <stringAttribute key="launch.config.handler" value="com.crt.ctrlcenter.launch.CRTLaunchConfigHandler"/>
-    <booleanAttribute key="mem.access" value="false"/>
-    <stringAttribute key="misc.options" value="--no-packed"/>
-    <stringAttribute key="ondisconnect" value="cont"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.manufacturer" value="SEGGER"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.name" value="J-Link EDU Mini"/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.nickname" value=""/>
+    <stringAttribute key="com.nxp.mcuxpresso.ide.probe.type" value="USB"/>
+    <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.base.address" value="0x60000000"/>
+    <stringAttribute key="com.nxp.mcuxpresso.jlink.flash.executable" value="hex"/>
+    <booleanAttribute key="com.nxp.mcuxpresso.jlink.flash.halt.target" value="true"/>
+    <booleanAttribute key="com.nxp.mcuxpresso.jlink.flash.reset.target" value="true"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.SettingsFile" value="${ProjDirPath}/${ConfigName}/${LaunchConfigName} SettingsFile.jlink"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.auto.startup" value="auto"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.device" value="MIMXRT1011DAE5A"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.endian" value="little"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.halt.target" value="-halt"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.if" value="SWD"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.init.register" value="-noir"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.jlinkscriptfile" value=""/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.options" value=""/>
+    <intAttribute key="com.nxp.mcuxpresso.segger.port" value="2331"/>
+    <booleanAttribute key="com.nxp.mcuxpresso.segger.powertarget 50" value="false"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.reset" value="true;"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.rtos" value="false;GDBServer/RTOSPlugin_FreeRTOS"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.select" value="USB=801011549"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.silent" value="-nosilent"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.singlerun" value="-singlerun"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.speed" value="fixed 4000"/>
+    <intAttribute key="com.nxp.mcuxpresso.segger.swoport" value="2332"/>
+    <intAttribute key="com.nxp.mcuxpresso.segger.telnetport" value="2333"/>
+    <stringAttribute key="com.nxp.mcuxpresso.segger.verify" value="-vd"/>
+    <stringAttribute key="disconnect" value="Run"/>
+    <stringAttribute key="launch.config.handler" value="com.nxp.mcuxpresso.core.debug.support.segger.launches.JLinkLaunchConfigHandler"/>
     <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.delay" value="0"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="set non-stop on&#10;set pagination off&#10;set mi-async&#10;set remotetimeout 60000&#10;##target_extended_remote##&#10;set mem inaccessible-by-default ${mem.access}&#10;mon ondisconnect ${ondisconnect}&#10;set arm force-mode thumb&#10;${load}"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value="monitor reset"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDeviceId" value="org.eclipse.cdt.debug.gdbjtag.core.jtagdevice.genericDevice"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
-    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="10989"/>
-    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value="${run}"/>
+    <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="2331"/>
+    <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
@@ -67,23 +60,22 @@
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useFileForSymbols" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForImage" value="true"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useProjBinaryForSymbols" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.useRemoteTarget" value="true"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="arm-none-eabi-gdb"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_ON_FORK" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.EXTERNAL_CONSOLE" value="false"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.GDB_INIT" value=""/>
-    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE" value="false"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.REVERSE_MODE" value="UseSoftTrace"/>
     <stringAttribute key="org.eclipse.cdt.dsf.gdb.TRACEPOINT_MODE" value="TP_NORMAL_ONLY"/>
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
-    <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_ID" value="gdb"/>
     <stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\MIMXRT1011_Blinky.axf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="MIMXRT1011_Blinky"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.crt.advproject.config.exe.debug.1801801544"/>
-    <booleanAttribute key="org.eclipse.cdt.launch.use_terminal" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/MIMXRT1011_Blinky"/>
     </listAttribute>
@@ -91,13 +83,10 @@
         <listEntry value="4"/>
     </listAttribute>
     <mapAttribute key="org.eclipse.debug.core.preferred_launchers">
-        <mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.linkserver.launch.LinkServerGdbLaunch"/>
+        <mapEntry key="[debug]" value="com.nxp.mcuxpresso.core.debug.support.segger.dsfLaunchDelegate"/>
     </mapAttribute>
     <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;memoryBlockExpressionList context=&quot;reserved-for-future-use&quot;/&gt;"/>
     <stringAttribute key="process_factory_id" value="com.nxp.mcuxpresso.core.debug.override.MCXProcessFactory"/>
-    <booleanAttribute key="redlink.disable.preconnect.script" value="false"/>
-    <booleanAttribute key="redlink.enable.flashhashing" value="true"/>
-    <booleanAttribute key="redlink.enable.rangestepping" value="true"/>
-    <stringAttribute key="run" value="cont"/>
-    <booleanAttribute key="vector.catch" value="false"/>
+    <booleanAttribute key="semihost" value="true"/>
+    <stringAttribute key="start.server" value="true"/>
 </launchConfiguration>
