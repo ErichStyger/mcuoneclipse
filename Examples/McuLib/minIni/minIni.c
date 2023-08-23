@@ -276,7 +276,7 @@ static int getkeystring(INI_FILETYPE *fp, const TCHAR *Section, const TCHAR *Key
   idx = -1;
   do {
     if (mark != NULL)
-      ini_tell(fp, mark);   /* optionally keep the mark to the start of the line */
+      (void)ini_tell(fp, mark);   /* optionally keep the mark to the start of the line */
     if (!ini_read(LocalBuffer,INI_BUFFERSIZE,fp) || *(sp = skipleading(LocalBuffer)) == '[')
       return 0;
     sp = skipleading(LocalBuffer);
@@ -652,7 +652,7 @@ static int cache_flush(TCHAR *buffer, int *size,
     buffer[pos] = '\0'; /* force zero-termination (may be left unterminated in the above while loop) */
     (void)ini_write(buffer, wfp);
   }
-  ini_tell(rfp, mark);  /* update mark */
+  (void)ini_tell(rfp, mark);  /* update mark */
   *size = 0;
   /* return whether the buffer ended with a line termination */
   return (pos > terminator_len) && (_tcscmp(buffer + pos - terminator_len, INI_LINETERM) == 0);
@@ -721,7 +721,7 @@ int ini_puts(const TCHAR *Section, const TCHAR *Key, const TCHAR *Value, const T
       #if defined ini_openrewrite || defined INI_OPENREWRITE
         INI_FILEPOS tail;
        /* we already have the start of the (raw) line, get the end too */
-        ini_tell(&rfp, &tail);
+        (void)ini_tell(&rfp, &tail);
         /* create new buffer (without writing it to file) */
         writekey(LocalBuffer, Key, Value, NULL);
         if (_tcslen(LocalBuffer) == (size_t)(tail - head)) {

@@ -1032,7 +1032,7 @@ uint8_t McuNRF24L01_ConstantCarrierWave(bool turnOn)
 **         Sets the output power
 **     Parameters  :
 **         NAME            - DESCRIPTION
-**         power           - Ouput power in dBm, either 0, -10, -12
+**         power           - Output power in dBm, either 0, -10, -12
 **                           or -18
 **     Returns     :
 **         ---             - Error code

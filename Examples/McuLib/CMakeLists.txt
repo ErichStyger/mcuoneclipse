@@ -2,9 +2,12 @@
 if (DEFINED PICO_BOARD) 
     message(STATUS "McuLib for RP2040")
     INCLUDE (RP2040_CMakeLists.txt)
+elseif ( MCULIB_TARGET STREQUAL "MCUXPRESSO" )
+    message(STATUS "McuLib for MCUXpresso SDK")
+    INCLUDE (MCUXpresso_CMakeLists.txt)
 else ()
     message(STATUS "McuLib for ESP32")
-
+    # Espressif IDF CMake files are special: cannot include sub file here.
     idf_component_register(
           SRCS 
               "fonts/McuFontCour08Bold.c"
@@ -87,7 +90,7 @@ endif ()
 # MCULIB_TARGET needs to be set in main CMakeList.txt, for example:
 #set(
 #    MCULIB_TARGET RP2040 CACHE STRING 
-#    "Select McuLib target: RP2040 or ESP32"
+#    "Select McuLib target: RP2040, MCUXPRESSO or ESP32"
 #)
 #
 ######################################################
