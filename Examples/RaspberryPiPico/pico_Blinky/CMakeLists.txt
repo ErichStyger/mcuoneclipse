@@ -9,9 +9,11 @@ set(
 # turn variable on for verbose output, useful for makefile debugging
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
+# settings for the board and hardware used
 set(PICO_PLATFORM rp2040)
-# set variable in case of Pico-W, otherwise #include "pico/cyw43_arch.h" won't be found
-set(PICO_BOARD pico_w)
+# set board type (w or non-w). Check CMakeLists.txt in src folder about library
+set(PICO_BOARD pico)  # set the 'Pico' as board
+#set(PICO_BOARD pico_w) # set the 'Pico-W' as board
 
 # set build type. Without 'Debug', it won't generate line information if using build subfolders.
 set(CMAKE_BUILD_TYPE Debug)
@@ -69,5 +71,4 @@ target_link_libraries(
   McuLib
   SrcLib  # again because of FreeRTOShooks.c
   pico_stdlib
-  #hardware_pio # PIO for WS2812B
 )
