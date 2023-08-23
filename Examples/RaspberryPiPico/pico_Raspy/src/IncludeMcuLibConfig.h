@@ -70,7 +70,7 @@
 #define McuRTT_CONFIG_RTT_BUFFER_SIZE_UP              (1024)
 /* ---------------------------------------------------------------------- */
 /* McuShell */
-#define McuShell_CONFIG_PROJECT_NAME_STRING         "picoADIS"
+#define McuShell_CONFIG_PROJECT_NAME_STRING         "picoRaspy"
 #define McuShell_CONFIG_PROMPT_STRING               "pico> "
 #define McuShell_CONFIG_MULTI_CMD_ENABLED           (1)
 #define McuShell_CONFIG_MULTI_CMD_SIZE              (96)
@@ -96,5 +96,5 @@
 #define McuLog_CONFIG_LOG_TIMESTAMP_DATE        (1)
 /* ---------------------------------------------------------------------------------------*/
 /* McuShellUart */
-#define McuShellUart_CONFIG_UART                McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5
+// #define McuShellUart_CONFIG_UART                McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5
 /* ---------------------------------------------------------------------------------------*/

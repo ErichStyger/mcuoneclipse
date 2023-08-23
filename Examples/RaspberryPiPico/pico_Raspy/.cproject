@@ -1,74 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" moduleId="org.eclipse.cdt.core.settings" name="Build (GNU)">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.Cygwin_PE64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
-					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404" name="/" resourcePath="">
-						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.358299006" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
-							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.1869843812" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder command="ninja" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1310919831" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.591550585" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
-								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.185897364" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" valueType="string"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.635761367" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.preprocessor.def.symbols.17235602" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_KINETIS=0"/>
-									<listOptionValue builtIn="false" value="McuLib_CONFIG_CPU_IS_RPxxxx=1"/>
-									<listOptionValue builtIn="false" value="LWIP_TCP=1"/>
-									<listOptionValue builtIn="false" value="McuLib_CONFIG_SDK_VERSION_USED=McuLib_CONFIG_SDK_RPI_PICO"/>
-									<listOptionValue builtIn="false" value="McuShellUart_CONFIG_UART=McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5"/>
-								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1984849194" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/common/pico_time/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/common/pico_stdlib/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_pwm/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_irq/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_gpio/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_adc/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_uart/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/lib/lwip/src/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/pico_cyw43_arch/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_i2c/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_watchdog/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_pio/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/common/pico_sync/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_dma/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_clocks/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/pico_unique_id/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib/config&quot;"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1244234135" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1308784689" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.76157511" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-					<sourceEntries>
-						<entry excluding="src|McuLib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-					</sourceEntries>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-			<storageModule moduleId="ilg.gnumcueclipse.managedbuild.packs"/>
-		</cconfiguration>
 		<cconfiguration id="0.1735248685">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1735248685" moduleId="org.eclipse.cdt.core.settings" name="Default">
 				<externalSettings/>
@@ -86,9 +18,10 @@
 					<folderInfo id="0.1735248685." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.10225977" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.10225977.1412969286" name=""/>
-							<builder id="org.eclipse.cdt.build.core.settings.default.builder.1808595645" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<builder arguments="--build build" cleanBuildTarget="--target clean" command="cmake" id="org.eclipse.cdt.build.core.settings.default.builder.1808595645" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1282610475" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.527290707" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.undef.symbols.1072459307" name="Undefined Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.undef.symbols"/>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.706289518" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1938652909" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
@@ -98,6 +31,9 @@
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1785820799" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1833958157" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="org.eclipse.cdt.build.core.settings.holder.symbols.730567594" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="McuShellUart_CONFIG_UART=McuShellUart_CONFIG_UART_RP2040_UART1_GPIO4_GPIO5"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.738277407" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 						</toolChain>
@@ -105,6 +41,7 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="ilg.gnumcueclipse.managedbuild.packs"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -113,13 +50,20 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Build (GNU)">
-			<resource resourceType="PROJECT" workspacePath="/pico_Heidelberg"/>
+			<resource resourceType="PROJECT" workspacePath="/pico_Raspy"/>
 		</configuration>
-		<configuration configurationName="Default"/>
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/pico_Raspy"/>
+		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="openCmsis"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="0.1735248685">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683;org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.872784115;cdt.managedbuild.tool.gnu.c.compiler.input.1244234135">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
@@ -127,6 +71,4 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-	<storageModule moduleId="openCmsis"/>
 </cproject>
