@@ -2,7 +2,7 @@
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" moduleId="org.eclipse.cdt.core.settings" name="Build (GNU)">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" moduleId="org.eclipse.cdt.core.settings" name="default">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -14,11 +14,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" name="default" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683.1455620404" name="/" resourcePath="">
 						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.358299006" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
 							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.1869843812" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1310919831" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
+							<builder arguments="--build build" cleanBuildTarget="--target clean" command="cmake" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1310919831" incrementalBuildTarget=" " keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.591550585" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
 								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.185897364" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.toolChain.2096381683" valueType="string"/>
 							</tool>
@@ -52,9 +52,9 @@
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_dma/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/hardware_clocks/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${PICO_SDK_PATH}/src/rp2_common/pico_unique_id/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib/src&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../MCUXpresso/McuLib/config&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../McuLib/config&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1244234135" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -78,6 +78,9 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="default">
+			<resource resourceType="PROJECT" workspacePath="/pico_Heidelberg"/>
+		</configuration>
 		<configuration configurationName="Build (GNU)">
 			<resource resourceType="PROJECT" workspacePath="/pico_Heidelberg"/>
 		</configuration>
