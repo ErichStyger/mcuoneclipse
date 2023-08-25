@@ -13,7 +13,7 @@
 #include "McuRTOS.h"
 #include "McuUtility.h"
 #include "McuLog.h"
-#include "Shell.h"
+#include "shell.h"
 #if McuLib_CONFIG_CPU_IS_KINETIS || McuLib_CONFIG_CPU_IS_LPC
   #include "nvmc.h"
 #endif
