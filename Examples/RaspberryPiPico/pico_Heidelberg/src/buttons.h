@@ -25,8 +25,8 @@ extern "C" {
 bool BTN_IsPressed(BTN_Buttons_e btn);
 
 /*!
- * \brief Read directly the button status from the pins (polling)
- * \return Bitset of buttons pressed, e.g. BTN_BIT_NAV_UP, see buttons_config.h
+ * \brief Read the button status from the pins and build a bitmask
+ * \return Bitmask of buttons pressed, e.g. BTN_BIT_NAV_UP, see buttons_config.h
  */
 uint32_t BTN_GetButtons(void);
 

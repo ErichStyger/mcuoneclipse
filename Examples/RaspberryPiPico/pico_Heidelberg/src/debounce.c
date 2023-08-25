@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2022, Erich Styger
+ * Copyright (c) 2022-2023, Erich Styger
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
 #include "platform.h"
 #if PL_CONFIG_USE_BUTTONS
-#include "application.h"
+
 #include "debounce.h"
 #include "McuDebounce.h"
 #include "McuRTOS.h"
 #include "buttons.h"
+#include "application.h"
 #if configUSE_SEGGER_SYSTEM_VIEWER_HOOKS
   #include "McuSystemView.h"
 #endif
@@ -24,9 +25,9 @@ static McuDbnc_Desc_t data =
   .state = MCUDBMC_STATE_IDLE,  /* state of state machine */
   .timerPeriodMs = TIMER_PERIOD_MS, /* timer period for debouncing */
   .timer = NULL, /* FreeRTOS timer handle */
-  .debounceTimeMs = 200, /* debouncing time */
-  .repeatTimeMs   = 150, /* time for repeated button events */
-  .longKeyTimeMs  = 3000, /* time for a long key press */
+  .debounceTimeMs = 100, /* debouncing time */
+  .repeatTimeMs   = 200, /* time for repeated button events */
+  .longKeyTimeMs  = 1000, /* time for a long key press */
   .getButtons = BTN_GetButtons, /* callback to get bitset of buttons */
   .onDebounceEvent = OnDebounceEvent, /* debounce event handler */
 };
