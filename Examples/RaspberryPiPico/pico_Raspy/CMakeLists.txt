@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 # Required for McuLib, to know the target system
 set(
-  MCULIB_TARGET RP2040 CACHE STRING 
+  MCULIB_TARGET RP2040 CACHE STRING
   "Select McuLib target: MCUXPRESSO, RP2040 or ESP32"
 )
 
@@ -11,9 +11,7 @@ set(
 
 # settings for the board and hardware used
 set(PICO_PLATFORM rp2040)
-# set board type (w or non-w). Check CMakeLists.txt in src folder about library
-set(PICO_BOARD pico)  # set the 'Pico' as board
-#set(PICO_BOARD pico_w) # set the 'Pico-W' as board
+set(PICO_BOARD pico) # pico or pico_w
 
 # set build type. Without 'Debug', it won't generate line information if using build subfolders.
 set(CMAKE_BUILD_TYPE Debug)
@@ -51,14 +49,13 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
   COMMAND arm-none-eabi-size "${CMAKE_PROJECT_NAME}.elf"
   COMMENT "Printing code and data size"
 )
-  
+
 # enable USB CDC and disable UART:
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
 pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
 
 # add component directories to the list
 add_subdirectory(../../McuLib build/McuLib)
-# add_subdirectory(../../McuLib/LittlevGL  build/McuLib/LittlevGL)
 add_subdirectory(./src build/src)
 
 # generate extra files (map/bin/hex/uf2)
