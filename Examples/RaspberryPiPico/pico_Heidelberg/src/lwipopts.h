@@ -17,7 +17,6 @@
 #else
   // MEM_LIBC_MALLOC is incompatible with non polling versions
   #define MEM_LIBC_MALLOC             0
-  //#define MEMP_MEM_MALLOC (1)
 #endif
 #define MEM_ALIGNMENT               4
 #define MEM_SIZE                    16000
@@ -27,7 +26,7 @@
 #define LWIP_ARP                    1
 #define LWIP_ETHERNET               1
 #define LWIP_ICMP                   1
-#define LWIP_RAW                    0
+#define LWIP_RAW                    1
 #define TCP_WND                     (8 * TCP_MSS)
 #define TCP_MSS                     1460
 #define TCP_SND_BUF                 (8 * TCP_MSS)

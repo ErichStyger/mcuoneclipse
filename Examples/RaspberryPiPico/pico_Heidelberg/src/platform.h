@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-#ifndef APP_PLATFORM_H_
-#define APP_PLATFORM_H_
+#ifndef PLATFORM_H_
+#define PLATFORM_H_
 
 #include "IncludeMcuLibConfig.h"
 /* following items need to be configured in IncludeMcuLibConfig.h:
@@ -21,7 +21,7 @@
    * b) Enable set(PICO_BOARD pico_w) in CMakeLists.txt in project root
    */
 #define PL_CONFIG_USE_WIFI            (1 && PL_CONFIG_USE_PICO_W) /* if using WiFi functionality */
-#define PL_CONFIG_USE_PING            (0 && PL_CONFIG_USE_WIFI)   /* using ping application */
+#define PL_CONFIG_USE_PING            (0 && PL_CONFIG_USE_WIFI)   /* using ping application, not working yet */
 #define PL_CONFIG_USE_NTP_CLIENT      (1 && PL_CONFIG_USE_WIFI)   /* using ntp application */
 #define PL_CONFIG_USE_UDP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* using udp server application */
 #define PL_CONFIG_USE_TCP_SERVER      (0 && PL_CONFIG_USE_WIFI)   /* if running TCP server */
@@ -69,9 +69,7 @@
   #error "only one application shall be active"
 #endif
 
-/*!
- * \brief Module initialization
- */
+/*! \brief Module and platform initialization */
 void PL_Init(void);
 
-#endif /* APP_PLATFORM_H_ */
+#endif /* PLATFORM_H_ */

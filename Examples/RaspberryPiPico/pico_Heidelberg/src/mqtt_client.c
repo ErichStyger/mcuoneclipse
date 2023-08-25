@@ -9,6 +9,9 @@
 #include "platform.h"
 #if PL_CONFIG_USE_MQTT_CLIENT
 
+#define MQTT_IS_EV_CHARGER    (1)
+#define MQTT_IS_SENSOR        (0)
+
 #include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
 #include "lwip/dns.h"
@@ -20,26 +23,38 @@
   #include "minIni/McuMinINI.h"
   #include "MinIniKeys.h"
 #endif
-#include "Modbus/McuHeidelberg.h"
+#if MQTT_IS_EV_CHARGER
+  #include "Modbus/McuHeidelberg.h"
+#endif
 
 #if LWIP_TCP
 
 #define MQTT_EXTRA_LOGS       (0)  /* set to 1 to produce extra log output */
 
-/* HomeAssistant Tesla Powerwall topics */
-#define TOPIC_NAME_SOLAR_POWER          "homeassistant/sensor/powerwall_solar_now/state"
-#define TOPIC_NAME_SITE_POWER           "homeassistant/sensor/powerwall_load_now/state"
-#define TOPIC_NAME_GRID_POWER           "homeassistant/sensor/powerwall_site_now/state"
-#define TOPIC_NAME_BATTERY_POWER        "homeassistant/sensor/powerwall_battery_now/state"
-#define TOPIC_NAME_BATTERY_PERCENTAGE   "homeassistant/sensor/powerwall_charge/state"
+#if MQTT_IS_EV_CHARGER
+  /* HomeAssistant Tesla Powerwall topics */
+  #define TOPIC_NAME_SOLAR_POWER          "homeassistant/sensor/powerwall_solar_now/state"
+  #define TOPIC_NAME_SITE_POWER           "homeassistant/sensor/powerwall_load_now/state"
+  #define TOPIC_NAME_GRID_POWER           "homeassistant/sensor/powerwall_site_now/state"
+  #define TOPIC_NAME_BATTERY_POWER        "homeassistant/sensor/powerwall_battery_now/state"
+  #define TOPIC_NAME_BATTERY_PERCENTAGE   "homeassistant/sensor/powerwall_charge/state"
+#elif MQTT_IS_SENSOR
+  #define TOPIC_NAME_SENSOR_TEMPERATURE   "home/roof/temperature"
+  #define TOPIC_NAME_SENSOR_HUMIDITY      "home/roof/humidity"
+#endif
 
 typedef enum topic_ID_e {
   Topic_ID_None,
+#if MQTT_IS_EV_CHARGER
   Topic_ID_Solar_Power,       /* power from PV panels */
   Topic_ID_Site_Power,        /* power to the house/site */
   Topic_ID_Grid_Power,        /* power from/to grid */
   Topic_ID_Battery_Power,     /* power from/to battery */
   Topic_ID_Battery_Percentage,/* battery level percentage */
+#elif MQTT_IS_SENSOR
+  Topic_ID_Sensor_Temperature,
+  Topic_ID_Sensor_Humidity,
+#endif
 } topic_ID_e;
 
 /* default entries for the MQTT broker connection */
@@ -75,6 +90,45 @@ static const struct mqtt_connect_client_info_t mqtt_client_info = {
 #endif
 };
 
+#if MQTT_IS_SENSOR
+static void mqtt_publish_request_cb(void *arg, err_t err) {
+#if 0 && MQTT_EXTRA_LOGS
+  const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
+  McuLog_trace("MQTT client \"%s\" publish request cb: err %d", client_info->client_id, (int)err);
+#endif
+}
+#endif
+
+#if MQTT_IS_SENSOR
+int MqttClient_Publish_SensorValues(float temperature, float humidity) {
+  err_t res;
+  uint8_t buf[64];
+  const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
+  const uint8_t retain = 0;
+
+  if (mqtt.mqtt_client!=NULL) { /* connected? */
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"{\"temperature\": ");
+    McuUtility_strcatNumFloat(buf, sizeof(buf), temperature, 2);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"°C\"}");
+    res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_TEMPERATURE, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
+    if (res!=ERR_OK) {
+      return res;
+    }
+
+    McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"{\"humidity\": ");
+    McuUtility_strcatNumFloat(buf, sizeof(buf), humidity, 2);
+    McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"%\"}");
+    res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_HUMIDITY, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
+    if (res!=ERR_OK) {
+      return res;
+    }
+    return ERR_OK;
+  } else {
+    return ERR_FAILED;
+  }
+}
+#endif
+
 static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, u16_t len) {
   buf[0] = '\0';
   for(int i=0; i<len; i++){
@@ -82,6 +136,7 @@ static void GetDataString(unsigned char *buf, size_t bufSize, const u8_t *data, 
   }
 }
 
+#if MQTT_IS_EV_CHARGER
 static int32_t scanWattValue(const unsigned char *str) {
   /* string in in kW and it returns the number in Watt, so for example:
    * "1" => 1000, * "1.2" => 1200, "3.025" = 3025, "-1.002" = -1002
@@ -96,6 +151,7 @@ static int32_t scanWattValue(const unsigned char *str) {
   watt = (int)(f*1000.0f);
   return watt;
 }
+#endif
 
 static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
@@ -108,7 +164,8 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
 #endif
   if(flags & MQTT_DATA_FLAG_LAST) {
     /* Last fragment of payload received (or whole part if payload fits receive buffer. See MQTT_VAR_HEADER_BUFFER_LEN)  */
-    if(mqtt.in_pub_ID == Topic_ID_Solar_Power) {
+#if MQTT_IS_EV_CHARGER
+    if (mqtt.in_pub_ID == Topic_ID_Solar_Power) {
       GetDataString(buf, sizeof(buf), data, len);
       if (mqtt_doLogging) {
         McuLog_trace("solarP: %s kW", buf);
@@ -143,6 +200,12 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
       if (mqtt_doLogging) {
         McuLog_trace("bat%%: %s%%", buf);
       }
+#elif MQTT_IS_SENSOR
+    if (mqtt.in_pub_ID == Topic_ID_Sensor_Temperature) {
+      McuLog_trace("Temperature");
+    } else if (mqtt.in_pub_ID == Topic_ID_Sensor_Humidity) {
+      McuLog_trace("Humidity");
+#endif
     } else {
       McuLog_trace("mqtt_incoming_data_cb: Ignoring payload...");
     }
@@ -155,6 +218,7 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
 static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len) {
   const struct mqtt_connect_client_info_t *client_info = (const struct mqtt_connect_client_info_t*)arg;
 
+#if MQTT_IS_EV_CHARGER
   if (McuUtility_strcmp(topic, TOPIC_NAME_SOLAR_POWER)==0) {
     mqtt.in_pub_ID = Topic_ID_Solar_Power;
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_SITE_POWER)==0) {
@@ -165,6 +229,12 @@ static void mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len
     mqtt.in_pub_ID = Topic_ID_Battery_Power;
   } else if (McuUtility_strcmp(topic, TOPIC_NAME_BATTERY_PERCENTAGE)==0) {
     mqtt.in_pub_ID = Topic_ID_Battery_Percentage;
+#elif MQTT_IS_SENSOR
+  if (McuUtility_strcmp(topic, TOPIC_NAME_SENSOR_TEMPERATURE)==0) {
+    mqtt.in_pub_ID = Topic_ID_Sensor_Temperature;
+  } else if (McuUtility_strcmp(topic, TOPIC_NAME_SENSOR_HUMIDITY)==0) {
+    mqtt.in_pub_ID = Topic_ID_Sensor_Humidity;
+#endif
   } else { /* unknown */
     McuLog_trace("MQTT client \"%s\" publish cb: topic %s, len %d", client_info->client_id, topic, (int)tot_len);
     mqtt.in_pub_ID = Topic_ID_None;
@@ -192,6 +262,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   /* subscribe to topics */
   if (status == MQTT_CONNECT_ACCEPTED) {
     McuLog_trace("MQTT connect accepted");
+#if MQTT_IS_EV_CHARGER
     err = mqtt_sub_unsub(client,
             TOPIC_NAME_SOLAR_POWER, /* solar P in kW */
             1, /* quos: 0: fire&forget, 1: at least once */
@@ -237,6 +308,9 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     if (err!=ERR_OK) {
       McuLog_error("failed subscribing, err %d", err);
     }
+#elif MQTT_IS_SENSOR
+  	/* no subscriptions */
+#endif
   } else if (status==MQTT_CONNECT_DISCONNECTED) {
     McuLog_trace("MQTT connect disconnect");
   }
@@ -296,6 +370,12 @@ void MqttClient_Connect(void) {
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"mqttclient", (unsigned char*)"mqttclient status\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  log", mqtt_doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  broker", mqtt.broker, io->stdOut);
+  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  client ID", mqtt.client_id, io->stdOut);
+  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  client user", mqtt.client_user, io->stdOut);
+  McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   return ERR_OK;
 }
 

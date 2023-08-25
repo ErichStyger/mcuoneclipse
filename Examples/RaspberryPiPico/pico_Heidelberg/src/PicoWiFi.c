@@ -86,7 +86,7 @@ static void ping_setup(const char *host) {
 
   if (wifi.isConnected) {
     ip4_addr_set_u32(&ping_addr, ipaddr_addr(host));
-    ping_init(&ping_addr);
+    Ping_InitAddress(&ping_addr);
   }
 }
 #endif
@@ -97,6 +97,23 @@ bool PicoWiFi_ArchIsInit(void) {
 
 void PicoWiFi_SetArchIsInitialized(bool isInitialized) {
   wifi.isInitialized = isInitialized;
+}
+
+static const unsigned char *getLinkStatusString(int linkStatus) {
+  /* return a string for the value returned by cyw43_tcpip_link_status() */
+  const unsigned char *statusStr;
+
+  switch(linkStatus) {
+    case CYW43_LINK_DOWN:     statusStr = "WiFi down"; break;
+    case CYW43_LINK_JOIN:     statusStr = "Connected to WiFi"; break;
+    case CYW43_LINK_NOIP:     statusStr = "Connected to WiFi, but no IP address "; break;
+    case CYW43_LINK_UP:       statusStr = "Connect to WiFi with an IP address "; break;
+    case CYW43_LINK_FAIL:     statusStr = "Connection failed "; break;
+    case CYW43_LINK_NONET:    statusStr = "No matching SSID found "; break;
+    case CYW43_LINK_BADAUTH:  statusStr = "Authentication failure"; break;
+    default:                  statusStr = "<unknown>"; break;
+  } /* switch */
+  return statusStr;
 }
 
 static void WiFiTask(void *pv) {
@@ -115,15 +132,17 @@ static void WiFiTask(void *pv) {
       - will enable lwIP if CYW43_LWIP == 1
    */
   if (cyw43_arch_init_with_country(CYW43_COUNTRY_SWITZERLAND)!=0) {
-    McuLog_error("failed setting country code");
-    for(;;) {}
+    for(;;) {
+      McuLog_error("failed setting country code");
+      vTaskDelay(pdMS_TO_TICKS(5000));
+    }
   }
 #if PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_SERVER
   BleServer_SetupBLE();
 #elif PL_CONFIG_USE_BLE && PL_CONFIG_STANDALONE_BLE_CLIENT
   BleClient_SetupBLE();
 #endif
-  wifi.isInitialized = true;
+  PicoWiFi_SetArchIsInitialized(true);
 #if PL_CONFIG_USE_WIFI
   McuLog_info("enabling STA mode");
   cyw43_arch_enable_sta_mode();
@@ -145,7 +164,7 @@ static void WiFiTask(void *pv) {
   vTaskDelay(pdMS_TO_TICKS(10*100)); /* give network tasks time to start up */
 #endif
 
-  for(;;) { /* retries connection if it faileed, breaks loop if sucess */
+  for(;;) { /* retries connection if it failed, breaks loop if success */
     McuLog_info("connecting to SSID '%s'...", wifi.ssid);
   #if PL_CONFIG_USE_WATCHDOG
     TickType_t tickCount = McuWatchdog_ReportTimeStart();
@@ -223,7 +242,7 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
       default: McuUtility_strcpy(buf, sizeof(buf), "ERR\r\n"); break;
     }
   }
-  McuShell_SendStatusStr((uint8_t*)"  link", buf, io->stdOut);
+  McuShell_SendStatusStr((uint8_t*)"  wifi link", buf, io->stdOut);
 #endif
   if (GetMAC(mac, macStr, sizeof(macStr))==ERR_OK) {
     McuUtility_strcat(macStr, sizeof(macStr), "\r\n");

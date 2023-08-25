@@ -20,8 +20,10 @@
   uint8_t MqttClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
-  /*!
- *
+int MqttClient_Publish_SensorValues(float temperature, float humidity);
+
+ /*!
+ * Connect as client to the server
  */
 void MqttClient_Connect(void);
 

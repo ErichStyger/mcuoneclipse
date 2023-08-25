@@ -120,11 +120,8 @@ static void printIPAddress(const ip_addr_t *addr) {
   }
 }
 
-
 /** Prepare a echo ICMP request */
-static void
-ping_prepare_echo( struct icmp_echo_hdr *iecho, u16_t len)
-{
+static void ping_prepare_echo( struct icmp_echo_hdr *iecho, u16_t len) {
   size_t i;
   size_t data_len = len - sizeof(struct icmp_echo_hdr);
 
@@ -145,9 +142,7 @@ ping_prepare_echo( struct icmp_echo_hdr *iecho, u16_t len)
 #if PING_USE_SOCKETS
 
 /* Ping using the socket ip */
-static err_t
-ping_send(int s, const ip_addr_t *addr)
-{
+static err_t ping_send(int s, const ip_addr_t *addr) {
   int err;
   struct icmp_echo_hdr *iecho;
   struct sockaddr_storage to;
@@ -156,7 +151,7 @@ ping_send(int s, const ip_addr_t *addr)
 
 #if LWIP_IPV6
   if(IP_IS_V6(addr) && !ip6_addr_isipv4mappedipv6(ip_2_ip6(addr))) {
-    /* todo: support ICMP6 echo */
+    /* \todo: support ICMP6 echo */
     return ERR_VAL;
   }
 #endif /* LWIP_IPV6 */
@@ -193,9 +188,7 @@ ping_send(int s, const ip_addr_t *addr)
   return (err ? ERR_OK : ERR_VAL);
 }
 
-static void
-ping_recv(int s)
-{
+static void ping_recv(int s) {
   char buf[64];
   int len;
   struct sockaddr_storage from;
@@ -254,9 +247,7 @@ ping_recv(int s)
   PING_RESULT(0);
 }
 
-static void
-ping_thread(void *arg)
-{
+static void ping_thread(void *arg) {
   int s;
   int ret;
 
@@ -311,9 +302,7 @@ ping_thread(void *arg)
 #else /* PING_USE_SOCKETS */
 
 /* Ping using the raw ip */
-static u8_t
-ping_recv(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_addr_t *addr)
-{
+static u8_t ping_recv(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_addr_t *addr) {
   struct icmp_echo_hdr *iecho;
   LWIP_UNUSED_ARG(arg);
   LWIP_UNUSED_ARG(pcb);
@@ -341,9 +330,7 @@ ping_recv(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_addr_t *addr)
   return 0; /* don't eat the packet */
 }
 
-static void
-ping_send(struct raw_pcb *raw, const ip_addr_t *addr)
-{
+static void ping_send(struct raw_pcb *raw, const ip_addr_t *addr) {
   struct pbuf *p;
   struct icmp_echo_hdr *iecho;
   size_t ping_size = sizeof(struct icmp_echo_hdr) + PING_DATA_SIZE;
@@ -370,9 +357,7 @@ ping_send(struct raw_pcb *raw, const ip_addr_t *addr)
   pbuf_free(p);
 }
 
-static void
-ping_timeout(void *arg)
-{
+static void ping_timeout(void *arg) {
   struct raw_pcb *pcb = (struct raw_pcb*)arg;
 
   LWIP_ASSERT("ping_timeout: no pcb given!", pcb != NULL);
@@ -385,9 +370,7 @@ ping_timeout(void *arg)
   }
 }
 
-static void
-ping_raw_init(void)
-{
+static void ping_raw_init(void) {
   ping_pcb = raw_new(IP_PROTO_ICMP);
   LWIP_ASSERT("ping_pcb != NULL", ping_pcb != NULL);
 
@@ -396,18 +379,16 @@ ping_raw_init(void)
   sys_timeout(PING_DELAY, ping_timeout, ping_pcb);
 }
 
-void
-ping_send_now(void)
-{
+void Ping_SendNow(void) {
   LWIP_ASSERT("ping_pcb != NULL", ping_pcb != NULL);
   ping_send(ping_pcb, ping_target);
 }
 
 #endif /* PING_USE_SOCKETS */
 
-void
-ping_init(const ip_addr_t* ping_addr)
-{
+#endif /* LWIP_RAW */
+
+void Ping_InitAddress(const ip_addr_t* ping_addr) {
   ping_target = ping_addr;
 
   ping_counter = PING_NOF_PING;
@@ -418,6 +399,7 @@ ping_init(const ip_addr_t* ping_addr)
 #endif /* PING_USE_SOCKETS */
 }
 
-#endif /* LWIP_RAW */
+void Ping_Init(void) {
+}
 
 #endif /* PL_CONFIG_USE_PING */

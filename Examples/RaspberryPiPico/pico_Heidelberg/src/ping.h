@@ -10,10 +10,12 @@
   #define PING_USE_SOCKETS    LWIP_SOCKET
 #endif
 
-void ping_init(const ip_addr_t* ping_addr);
+void Ping_InitAddress(const ip_addr_t* ping_addr);
 
 #if !PING_USE_SOCKETS
-  void ping_send_now(void);
+  void Ping_SendNow(void);
 #endif /* !PING_USE_SOCKETS */
+
+void Ping_Init(void);
 
 #endif /* LWIP_PING_H */

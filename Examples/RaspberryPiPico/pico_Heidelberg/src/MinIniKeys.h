@@ -13,25 +13,12 @@
 
 #define NVMC_MININI_FILE_NAME       "settings.ini" /* 'file' name used */
 
-/* section for the application settings */
-#define NVMC_MININI_SECTION_APPLICATION       "App"
-#define NVMC_MININI_APPLICATION_VERSION         "v" /* version number, not use yet */
-
 #if PL_CONFIG_USE_LIGHTS
   /* section for the light/LED settings */
   #define NVMC_MININI_SECTION_LIGHT             "Light"
   #define NVMC_MININI_KEY_LIGHT_ON                "on"      /* 0: light off, 1: light on */
   #define NVMC_MININI_KEY_LIGHT_COLOR             "color"   /* 32bit RGB value */
   #define NVMC_MININI_KEY_LIGHT_BRIGHTNESS        "bright"  /* brightness: 0..255  */
-#endif
-
-#if PL_CONFIG_USE_ROAD
-  /* section for vehicle/car settings */
-  #define NVMC_MININI_SECTION_CAR               "Car"
-  #define NVMC_MININI_KEY_CAR_ON                  "on"            /* 0: stopped, 1: on (not stored, always off at reboot to save power) */
-  #define NVMC_MININI_KEY_CAR_SPEED               "speed"         /* 0..100 (%) */
-  #define NVMC_MININI_KEY_CAR_MODE                "mode"          /* 0: fw, 1: bw, 2: auto */
-  #define NVMC_MININI_KEY_CAR_SWITCH_SEG          "switchSeg"     /* 1: switch segments (saves power); 0: no segment switching */
 #endif
 
 #if PL_CONFIG_USE_WIFI
