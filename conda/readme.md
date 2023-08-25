@@ -27,7 +27,10 @@ Update:
 ```
 conda update conda
 ```
-
+Or from a non-base environment:
+```
+conda update -n base -c defaults conda
+```
 ## List environment
 ```
 conda env list
@@ -97,7 +100,10 @@ Note: powershell: conda-build, normal shell: conda build
 conda deactivate
 conda create -n test
 conda activate test
-conda install -c C:\Users\erich\miniconda3\envs\build\conda-bld ninja
+```
+Install from build environment:
+```
+conda install -c C:\Users\erich\miniconda3\envs\build\conda-bld ninja gcc-arm* 
 ```
 Or (if package is built in same environment):
 ```

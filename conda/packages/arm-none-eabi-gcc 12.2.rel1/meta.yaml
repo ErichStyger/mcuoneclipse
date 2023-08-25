@@ -1,0 +1,22 @@
+package:
+  name: gcc-arm-none-eabi
+  version: "12.2.rel1"
+
+source:
+  url: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.zip # [win]
+  sha256: ad1427496cde9bbe7604bc448ec6e115c6538e04af1c8275795ebb1c2b7b2830 # [win]]
+  url: https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz # [linux64]
+  sha256: 84be93d0f9e96a15addd490b…df90e7610a628007fc96867 # [linux64]
+  
+build:
+  string: '0'
+
+test:
+  commands:
+    - arm-none-eabi-gcc --version
+
+about:
+  home: https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain
+  license: GPL
+  summary: Toolchain for Arm Architecture with libc, Newlib, and GDB
+  
