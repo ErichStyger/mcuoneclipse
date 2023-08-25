@@ -1,19 +1,17 @@
 package:
-  name: nxp fixelf
-  version: "12.2.rel1"
+  name: nxp_fixelf
+  version: "0.1"
 
 source:
-  url: https://www.nxp.com/lgfiles/updates/mcuxpresso/AdditionalCLibs-12.2.1-win32.zip # [win]
-  sha256: a733135708418bda29bcd4f5e3247fea83c4012d4a3c2704fc966696b99a1b4f # [win]]
-  url: https://www.nxp.com/lgfiles/updates/mcuxpresso/AdditionalCLibs-12.2.1-linux.tar.xz # [linux64]
-  sha256: fbf00b2ede5e230f2d8cecb13545fb501aec62eb5e813294e9dbdff194745b2b # [linux64]
-  
+  url: https://www.nxp.com/lgfiles/updates/mcuxpresso/MCUX-fixelf-windows.zip # [win]
+  sha256: 7e8220b202463db910d856076a6d269d11cd23ba996cdda8c0ef6e9714d4e08e # [win]]
+  url: https://www.nxp.com/lgfiles/updates/mcuxpresso/MCUX-fixelf-linux.tar.xz # [linux64]
+  sha256: eb7c2c949d217f922aeea4a5a64d1374c0d9899ba4343ed11a22492ab6d8d9b9 # [linux64]
+  url: https://www.nxp.com/lgfiles/updates/mcuxpresso/MCUX-fixelf-macos.tar.xz # [macos]
+  sha256: eb7c2c949d217f922aeea4a5a64d1374c0d9899ba4343ed11a22492ab6d8d9b9 # [macos]
+ 
 build:
   string: '0'
-
-test:
-  commands:
-    - arm-none-eabi-gcc --version
 
 about:
   home: https://www.nxp.com

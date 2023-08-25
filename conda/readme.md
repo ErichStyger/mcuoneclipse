@@ -65,16 +65,18 @@ conda list
 ``` 
 
 ## Install/uninstall packages
+Install packages:
 ```
 conda install cmake
 conda install cmake=3.26.4
 ``` 
+Uninstall packgages:
 ```
 conda uninstall cmake
 ``` 
-
+To install or update an envrionment from a file:
 ```
-conda env update -f environment.yml
+conda env update -f requirements.yml
 ```
 ## Creating packages
 Do it in a dedicated environment!
