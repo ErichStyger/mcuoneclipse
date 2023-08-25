@@ -329,7 +329,7 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
-void APP_Run(void) {
+void App_Run(void) {
   PL_Init();
 #if PL_CONFIG_USE_POWER /* check battery level */
   Power_WaitForSufficientBatteryChargeAtStartup();

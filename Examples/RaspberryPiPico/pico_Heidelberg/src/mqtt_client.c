@@ -15,6 +15,7 @@
 #include "pico/cyw43_arch.h"
 #include "lwip/apps/mqtt.h"
 #include "lwip/dns.h"
+#include "mqtt_client.h"
 #include "dns_resolver.h"
 #include "McuLog.h"
 #include "McuUtility.h"
@@ -71,10 +72,12 @@ typedef struct mqtt_t {
   unsigned char client_user[32];    /* client user name used for connection */
   unsigned char client_pass[96];    /* client user password */
   topic_ID_e in_pub_ID;             /* incoming published ID, set in the incoming_publish_cb and used in the incoming_data_cb */
+  /* configuration settings */
+  bool doLogging; /* if it shall write log messages */
+  bool doPublishing; /* if it publish messages */
 } mqtt_t;
 
 static mqtt_t mqtt; /* information used for MQTT connection */
-static bool mqtt_doLogging = true; /* if it shall write log messages */
 
 static const struct mqtt_connect_client_info_t mqtt_client_info = {
   mqtt.client_id, /* client ID */
@@ -106,12 +109,22 @@ int MqttClient_Publish_SensorValues(float temperature, float humidity) {
   const uint8_t qos = 0; /* quos: 0: fire&forget, 1: at least once */
   const uint8_t retain = 0;
 
+  if (!mqtt.doPublishing) {
+    return ERR_DISABLED;
+  }
+
   if (mqtt.mqtt_client!=NULL) { /* connected? */
+    if (mqtt.doLogging) {
+      McuLog_trace("publish t:%f h:%f", temperature, humidity);
+    }
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"{\"temperature\": ");
     McuUtility_strcatNumFloat(buf, sizeof(buf), temperature, 2);
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"°C\"}");
     res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_TEMPERATURE, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
+      McuLog_fatal("Failed temperature mqtt_publish: %d", res);
+      (void)MqttClient_Disconnect(); /* try disconnect and connect again */
+      (void)MqttClient_Connect();
       return res;
     }
 
@@ -120,6 +133,9 @@ int MqttClient_Publish_SensorValues(float temperature, float humidity) {
     McuUtility_strcat(buf, sizeof(buf), (unsigned char*)", \"unit\": \"%\"}");
     res = mqtt_publish(mqtt.mqtt_client, TOPIC_NAME_SENSOR_HUMIDITY, buf, strlen(buf), qos, retain, mqtt_publish_request_cb, NULL);
     if (res!=ERR_OK) {
+      McuLog_fatal("Failed humidity mqtt_publish: %d", res);
+      (void)MqttClient_Disconnect(); /* try disconnect and connect again */
+      (void)MqttClient_Connect();
       return res;
     }
     return ERR_OK;
@@ -167,7 +183,7 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
 #if MQTT_IS_EV_CHARGER
     if (mqtt.in_pub_ID == Topic_ID_Solar_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging) {
+      if (mqtt.doLogging) {
         McuLog_trace("solarP: %s kW", buf);
       }
       watt = scanWattValue(buf);
@@ -176,7 +192,7 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
       }
     } else if(mqtt.in_pub_ID == Topic_ID_Site_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging) {
+      if (mqtt.doLogging) {
         McuLog_trace("siteP: %s kW", buf);
       }
       watt = scanWattValue(buf);
@@ -185,19 +201,19 @@ static void mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t f
       }
     } else if(mqtt.in_pub_ID == Topic_ID_Grid_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging) {
+      if (mqtt.doLogging) {
         McuLog_trace("gridP: %s kW", buf);
       }
       watt = scanWattValue(buf);
       McuHeidelberg_SetGridPowerWatt(watt);
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Power) {
       GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging) {
+      if (mqtt.doLogging) {
         McuLog_trace("battP: %s, kW", buf);
       }
     } else if(mqtt.in_pub_ID == Topic_ID_Battery_Percentage) {
       GetDataString(buf, sizeof(buf), data, len);
-      if (mqtt_doLogging) {
+      if (mqtt.doLogging) {
         McuLog_trace("bat%%: %s%%", buf);
       }
 #elif MQTT_IS_SENSOR
@@ -317,10 +333,11 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
 }
 #endif /* LWIP_TCP */
 
-void MqttClient_Connect(void) {
+uint8_t MqttClient_Connect(void) {
 #if LWIP_TCP
   int nofRetry;
   mqtt.mqtt_client = mqtt_client_new(); /* create client handle */
+  err_t err;
 
   /* setup connection information */
 #if PL_CONFIG_USE_MINI
@@ -345,7 +362,7 @@ void MqttClient_Connect(void) {
   }
   if (nofRetry<0) {
     McuLog_fatal("failed to resolve broker name %s, giving up", mqtt.broker);
-    return;
+    return ERR_FAILED;
   }
   /* setup callbacks for incoming data: */
   mqtt_set_inpub_callback(
@@ -356,7 +373,7 @@ void MqttClient_Connect(void) {
       );
   /* connect to broker */
   cyw43_arch_lwip_begin(); /* start section for to lwIP access */
-  mqtt_client_connect(
+  err = mqtt_client_connect(
       mqtt.mqtt_client, /* client handle */
       &mqtt.addr.resolved_addr, /* broker IP address */
       MQTT_PORT, /* port to be used */
@@ -364,12 +381,33 @@ void MqttClient_Connect(void) {
       &mqtt_client_info /* client information */
       );
   cyw43_arch_lwip_end(); /* end section accessing lwIP */
+  if (err!=ERR_OK) {
+    McuLog_error("failed connecting client to server");
+  } else {
+    McuLog_trace("client connecting");
+  }
+  return err;
+#else
+  return ERR_FAILED;
 #endif /* LWIP_TCP */
+}
+
+uint8_t MqttClient_Disconnect(void) {
+  if (mqtt.mqtt_client!=NULL) {
+    McuLog_trace("disconnecting client");
+    cyw43_arch_lwip_begin(); /* start section for to lwIP access */
+    mqtt_disconnect(mqtt.mqtt_client);
+    cyw43_arch_lwip_end(); /* end section accessing lwIP */
+    mqtt.mqtt_client = NULL;
+  }
+  return ERR_OK;
 }
 
 static uint8_t PrintStatus(const McuShell_StdIOType *io) {
   McuShell_SendStatusStr((unsigned char*)"mqttclient", (unsigned char*)"mqttclient status\r\n", io->stdOut);
-  McuShell_SendStatusStr((unsigned char*)"  log", mqtt_doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  log", mqtt.doLogging?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  publish", mqtt.doPublishing?(unsigned char*)"on\r\n":(unsigned char*)"off\r\n", io->stdOut);
+  McuShell_SendStatusStr((unsigned char*)"  client", mqtt.mqtt_client==NULL?(unsigned char*)"diconnected\r\n":(unsigned char*)"connected\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  broker", mqtt.broker, io->stdOut);
   McuShell_SendStr((unsigned char*)"\r\n", io->stdOut);
   McuShell_SendStatusStr((unsigned char*)"  client ID", mqtt.client_id, io->stdOut);
@@ -383,6 +421,8 @@ static uint8_t PrintHelp(const McuShell_StdIOType *io) {
   McuShell_SendHelpStr((unsigned char*)"mqttclient", (unsigned char*)"Group of mqttclient commands\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  log on|off", (unsigned char*)"Turn logging on or off\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  publish on|off", (unsigned char*)"Publishing on or off\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  connect|disconnect", (unsigned char*)"Connect or disconnect from server\r\n", io->stdOut);
   return ERR_OK;
 }
 
@@ -398,22 +438,33 @@ uint8_t MqttClient_ParseCommand(const unsigned char *cmd, bool *handled, const M
     return PrintStatus(io);
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient log on")==0) {
     *handled = true;
-    mqtt_doLogging = true;
-    return ERR_OK;
+    mqtt.doLogging = true;
   } else if (McuUtility_strcmp((char*)cmd, "mqttclient log off")==0) {
     *handled = true;
-    mqtt_doLogging = false;
-    return ERR_OK;
+    mqtt.doLogging = false;
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient publish on")==0) {
+    *handled = true;
+    mqtt.doPublishing = true;
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient publish off")==0) {
+    *handled = true;
+    mqtt.doPublishing = false;
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient connect")==0) {
+    *handled = true;
+    MqttClient_Connect();
+  } else if (McuUtility_strcmp((char*)cmd, "mqttclient disconnect")==0) {
+    *handled = true;
+    MqttClient_Disconnect();
   }
   return ERR_OK;
 }
 
 void MqttClient_Deinit(void) {
-  /* nothing needed */
+  MqttClient_Disconnect();
 }
 
 void MqttClient_Init(void) {
-  /* nothing needed */
+  mqtt.doLogging = false;
+  mqtt.doPublishing = true;
 }
 
 #endif /* PL_CONFIG_USE_MQTT_CLIENT */

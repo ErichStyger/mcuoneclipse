@@ -99,18 +99,18 @@ void PicoWiFi_SetArchIsInitialized(bool isInitialized) {
   wifi.isInitialized = isInitialized;
 }
 
-static const unsigned char *getLinkStatusString(int linkStatus) {
+static const unsigned char *getTcpIpLinkStatusString(int linkStatus) {
   /* return a string for the value returned by cyw43_tcpip_link_status() */
   const unsigned char *statusStr;
 
   switch(linkStatus) {
-    case CYW43_LINK_DOWN:     statusStr = "WiFi down"; break;
-    case CYW43_LINK_JOIN:     statusStr = "Connected to WiFi"; break;
-    case CYW43_LINK_NOIP:     statusStr = "Connected to WiFi, but no IP address "; break;
-    case CYW43_LINK_UP:       statusStr = "Connect to WiFi with an IP address "; break;
-    case CYW43_LINK_FAIL:     statusStr = "Connection failed "; break;
-    case CYW43_LINK_NONET:    statusStr = "No matching SSID found "; break;
-    case CYW43_LINK_BADAUTH:  statusStr = "Authentication failure"; break;
+    case CYW43_LINK_DOWN:     statusStr = "LINK_DOWN, WiFi down"; break;
+    case CYW43_LINK_JOIN:     statusStr = "LINK_JOIN, connected to WiFi"; break;
+    case CYW43_LINK_NOIP:     statusStr = "LINK_NOIP, connected to WiFi, but no IP address "; break;
+    case CYW43_LINK_UP:       statusStr = "LINK_UP, connect to WiFi with an IP address "; break;
+    case CYW43_LINK_FAIL:     statusStr = "LINK_FAIL, connection failed "; break;
+    case CYW43_LINK_NONET:    statusStr = "LINK_NONET, no matching SSID found "; break;
+    case CYW43_LINK_BADAUTH:  statusStr = "LINK_BADAUTH, authentication failure"; break;
     default:                  statusStr = "<unknown>"; break;
   } /* switch */
   return statusStr;
@@ -191,6 +191,19 @@ static void WiFiTask(void *pv) {
     }
   } /* for */
   for(;;) {
+    {
+      // see https://forums.raspberrypi.com/viewtopic.php?t=347706
+      int linkStatus;
+      static int oldLinkStatus = -1;
+      const unsigned char *statusStr;
+
+      linkStatus = cyw43_tcpip_link_status(&cyw43_state, CYW43_ITF_STA);
+      if (linkStatus!=oldLinkStatus) {
+        oldLinkStatus = linkStatus;
+        McuLog_trace("new TCP/IP link status: %s", getTcpIpLinkStatusString(linkStatus));
+      }
+    }
+
     cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, ledIsOn);
     ledIsOn = !ledIsOn;
     if (wifi.isConnected) {
@@ -220,7 +233,7 @@ static void WiFiTask(void *pv) {
 static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
   uint8_t mac[6];
   uint8_t macStr[] = "00:00:00:00:00:00\r\n";
-  uint8_t buf[48];
+  uint8_t buf[64];
   int val;
 
   McuShell_SendStatusStr((unsigned char*)"wifi", (const unsigned char*)"Status of WiFi\r\n", io->stdOut);
@@ -243,6 +256,10 @@ static uint8_t PrintStatus(McuShell_ConstStdIOType *io) {
     }
   }
   McuShell_SendStatusStr((uint8_t*)"  wifi link", buf, io->stdOut);
+
+  McuUtility_strcpy(buf, sizeof(buf), getTcpIpLinkStatusString(cyw43_tcpip_link_status(&cyw43_state, CYW43_ITF_STA)));
+  McuUtility_strcat(buf, sizeof(buf), "\r\n");
+  McuShell_SendStatusStr((uint8_t*)"  tcp link", buf, io->stdOut);
 #endif
   if (GetMAC(mac, macStr, sizeof(macStr))==ERR_OK) {
     McuUtility_strcat(macStr, sizeof(macStr), "\r\n");

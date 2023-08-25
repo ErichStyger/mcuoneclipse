@@ -22,10 +22,17 @@
 
 int MqttClient_Publish_SensorValues(float temperature, float humidity);
 
- /*!
- * Connect as client to the server
+/*!
+ * \brief Connect as client to the server
+ * \return error code, otherwise ERR_OK
  */
-void MqttClient_Connect(void);
+uint8_t MqttClient_Connect(void);
+
+/*!
+ * \brief Disconnect from the server
+ * \return error code, otherwise ERR_OK
+ */
+uint8_t MqttClient_Disconnect(void);
 
 /*!
  * \brief Module de-initialization
