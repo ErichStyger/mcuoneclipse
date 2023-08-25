@@ -1,0 +1,20 @@
+package:
+  name: cmake
+  version: "3.24.2"
+
+source:
+  url:  https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-windows-x86_64.zip # [win]
+  sha256: 6af30354eecbb7113b0f0142…bdcddaf88df1f9ca1bc4d6f # [win]
+
+build:
+  string: "0"
+
+test:
+  commands:
+    - ninja --version
+
+about:
+  home: https://ninja-build.org/
+  license: Apache-2.0
+  summary: Ninja
+  
