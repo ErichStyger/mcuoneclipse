@@ -31,6 +31,9 @@
   #include "McuWatchdog.h"
 #endif
 #include "Modbus/McuHeidelberg.h"
+#if PL_CONFIG_USE_MQTT_CLIENT
+  #include "mqtt_client.h"
+#endif
 
 static TaskHandle_t GUI_TaskHndl; /* GUI task handle */
 #if GUI_CONFIG_USE_SCREENSAVER
@@ -419,6 +422,20 @@ static void WallboxEventCallback(McuHeidelberg_Event_e event) {
       if (guiObjects.label_charger_watt!=NULL) {
         lv_event_send(guiObjects.label_charger_watt, LV_EVENT_VALUE_CHANGED, NULL);
       }
+    #if PL_CONFIG_USE_MQTT_CLIENT
+      static uint32_t prevChargingPower = 0;
+      uint32_t power = McuHeidelberg_GetCurrChargerPower();
+      int32_t diff;
+      if (power>prevChargingPower) {
+        diff = power-prevChargingPower;
+      } else {
+        diff = prevChargingPower-power;
+      }
+      if (diff>100 || power==0) { /* only report values larger than threshold */
+        prevChargingPower = power;
+        MqttClient_Publish_ChargingPower(power);
+      }
+    #endif
       break;
     case McuHeidelberg_Event_GridPower_Changed:
       if (guiObjects.label_grid_watt!=NULL) {

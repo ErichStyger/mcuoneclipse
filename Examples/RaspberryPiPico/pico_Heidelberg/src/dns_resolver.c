@@ -43,8 +43,8 @@ int DnsResolver_ResolveName(const char *name, DnsResolver_info_t *info, int32_t 
       return -1; /* failed */
     }
     while(timeoutMs>0 && !info->dns_response_received) {
-      vTaskDelay(pdMS_TO_TICKS(10)); /* wait for response */
-      timeoutMs -= 10;
+      vTaskDelay(pdMS_TO_TICKS(100)); /* wait for response */
+      timeoutMs -= 100;
     }
     if (timeoutMs<=0) {
       McuLog_error("dns request timeout");

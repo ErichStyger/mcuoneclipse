@@ -170,7 +170,7 @@ static void WiFiTask(void *pv) {
     TickType_t tickCount = McuWatchdog_ReportTimeStart();
     McuWatchdog_SuspendCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
   #endif
-    res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 5000); /* can take 1000-3500 ms */
+    res = cyw43_arch_wifi_connect_timeout_ms(wifi.ssid, wifi.pass, CYW43_AUTH_WPA2_AES_PSK, 10000); /* can take 1000-3500 ms */
   #if PL_CONFIG_USE_WATCHDOG
     McuWatchdog_ResumeCheck(McuWatchdog_REPORT_ID_TASK_WIFI);
     McuWatchdog_ReportTimeEnd(McuWatchdog_REPORT_ID_TASK_WIFI, tickCount);

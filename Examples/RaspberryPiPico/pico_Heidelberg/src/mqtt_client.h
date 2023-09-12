@@ -7,6 +7,10 @@
 #ifndef SRC_MQTT_CLIENT_H_
 #define SRC_MQTT_CLIENT_H_
 
+/* which topics to use: choose only one: */
+#define MQTT_CLIENT_IS_EV_CHARGER    (1)
+#define MQTT_CLIENT_IS_SENSOR        (0)
+
 #if PL_CONFIG_USE_SHELL
   #include "McuShell.h"
 
@@ -20,7 +24,13 @@
   uint8_t MqttClient_ParseCommand(const unsigned char* cmd, bool *handled, const McuShell_StdIOType *io);
 #endif
 
-int MqttClient_Publish_SensorValues(float temperature, float humidity);
+#if MQTT_CLIENT_IS_SENSOR
+  int MqttClient_Publish_SensorValues(float temperature, float humidity);
+#endif
+
+#if MQTT_CLIENT_IS_EV_CHARGER
+  int MqttClient_Publish_ChargingPower(uint32_t powerW);
+#endif
 
 /*!
  * \brief Connect as client to the server
