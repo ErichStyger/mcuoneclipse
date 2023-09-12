@@ -2,5 +2,8 @@ name: nxp
 channels:
   - defaults
 dependencies:
-  #- cmake
-  - -c C:\Users\erich\miniconda3\envs\build\conda-bld ninja
+  - cmake=3.26.4cond
+  - ninja=1.11.11
+  - arm-none-eabi-gcc=12.2.rel1
+  - nxp_additional_clibs=12.2.rel1
+  - nxp_fixelf
