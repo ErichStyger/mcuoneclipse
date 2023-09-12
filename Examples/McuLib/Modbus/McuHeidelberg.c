@@ -672,6 +672,7 @@ static void wallboxTask(void *pv) {
 
   McuHeidelbergInfo.isActive = false;
   McuHeidelbergInfo.state = Wallbox_TaskState_None;
+  //McuHeidelbergInfo.userChargingMode = McuHeidelberg_User_ChargingMode_Slow;
   McuHeidelbergInfo.userChargingMode = McuHeidelberg_User_ChargingMode_OnlyPV;
 #if McuHeidelberg_CONFIG_USE_MOCK_WALLBOX
   mock.hwChargerState = McuHeidelberg_ChargerState_A1;
@@ -869,9 +870,20 @@ static void wallboxTask(void *pv) {
             McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
             currChargingWatt = calculateChargingWatt();
             if (currChargingWatt!=prevChargingWatt) {
-              McuLog_info("changing charging power from %d W to %d W", prevChargingWatt, currChargingWatt);
-              McuHeidelberg_SetMaxCarPower(currChargingWatt); /* tell hardware to change charging */
-              prevChargingWatt = currChargingWatt;
+              int diff;
+
+              if (currChargingWatt>prevChargingWatt) {
+                diff = currChargingWatt-prevChargingWatt;
+              } else {
+                diff = prevChargingWatt-currChargingWatt;
+              }
+              #define MIN_DIFF_POWER_W  (500)
+
+              if (diff>=MIN_DIFF_POWER_W || currChargingWatt==0) {
+                McuLog_info("diff > %d W, changing charging power from %d W to %d W", MIN_DIFF_POWER_W, prevChargingWatt, currChargingWatt);
+                McuHeidelberg_SetMaxCarPower(currChargingWatt); /* tell hardware to change charging */
+                prevChargingWatt = currChargingWatt;
+              }
             }
           }
         }
@@ -1330,7 +1342,7 @@ void McuHeidelberg_Init(void) {
   if (xTaskCreate(
        wallboxTask,  /* pointer to the task */
        "wallbox", /* task name for kernel awareness debugging */
-       800/sizeof(StackType_t), /* task stack size */
+       1500/sizeof(StackType_t), /* task stack size */
        (void*)NULL, /* optional task startup argument */
        tskIDLE_PRIORITY+4,  /* initial priority */
        (TaskHandle_t*)NULL /* optional task handle to create */

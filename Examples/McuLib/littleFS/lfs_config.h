@@ -16,7 +16,7 @@
 #endif
 
 #ifndef LITTLEFS_CONFIG_THREAD_SAFE
-  #define LITTLEFS_CONFIG_THREAD_SAFE  (1)
+  #define LITTLEFS_CONFIG_THREAD_SAFE  (1 && McuLib_CONFIG_SDK_USE_FREERTOS)
     /*!< 1: make littleFS thread safe; 0: littleFS is not thread safe */
 #endif
 

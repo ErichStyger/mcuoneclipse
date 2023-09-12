@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-02-19, 14:19, # CodeGen: 791
+**     Date/Time   : 2023-08-27, 06:29, # CodeGen: 819
 **     Abstract    :
 **
 **     Settings    :
@@ -86,6 +86,7 @@
 #include "McuArmToolsconfig.h" /* configuration */
 #if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
   #include "pico/unique_id.h" /* for UID */
+  #include "pico/bootrom.h"   /* for entering bootloader */
 #endif
 #include <stddef.h> /* for size_t */
 #if McuArmTools_CONFIG_PARSE_COMMAND_ENABLED

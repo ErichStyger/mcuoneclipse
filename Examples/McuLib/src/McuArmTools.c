@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : KinetisTools
-**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.054, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2023-02-19, 14:17, # CodeGen: 790
+**     Date/Time   : 2023-08-27, 06:29, # CodeGen: 819
 **     Abstract    :
 **
 **     Settings    :
@@ -196,8 +196,11 @@ static uint8_t PrintStatus(const McuShell_StdIOType *io)
 static uint8_t PrintHelp(const McuShell_StdIOType *io)
 {
   McuShell_SendHelpStr((unsigned char*)"McuArmTools", (unsigned char*)"Group of McuArmTools commands\r\n", io->stdOut);
-  McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
   McuShell_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
+  McuShell_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Performs a software reset\r\n", io->stdOut);
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  McuShell_SendHelpStr((unsigned char*)"  bootloader", (unsigned char*)"Enter bootloader mode\r\n", io->stdOut);
+#endif
   return ERR_OK;
 }
 #endif
@@ -529,6 +532,11 @@ uint8_t McuArmTools_ParseCommand(const unsigned char* cmd, bool *handled, const 
   } else if (McuUtility_strcmp((char*)cmd, "McuArmTools reset") == 0) {
     *handled = TRUE;
     McuArmTools_SoftwareReset(); /* will perform RESET and does NOT return here! */
+#if McuLib_CONFIG_SDK_VERSION_USED==McuLib_CONFIG_SDK_RPI_PICO
+  } else if (McuUtility_strcmp((char*)cmd, "McuArmTools bootloader") == 0) {
+    *handled = TRUE;
+    reset_usb_boot(0, 0); /* call MSD bootloader, does not return! */
+#endif
   }
   return res;
 }

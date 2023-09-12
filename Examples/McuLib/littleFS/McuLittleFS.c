@@ -915,16 +915,21 @@ uint8_t McuLFS_ParseCommand(const unsigned char* cmd, bool *handled,const McuShe
   return ERR_OK;
 }
 
+#if LITTLEFS_CONFIG_THREAD_SAFE
 void McuLFS_GetFileAccessSemaphore(SemaphoreHandle_t *mutex) {
   *mutex = fileSystemAccessMutex;
 }
+#endif
 
 void McuLFS_Deinit(void) {
+#if LITTLEFS_CONFIG_THREAD_SAFE
   vSemaphoreDelete(fileSystemAccessMutex);
   fileSystemAccessMutex = NULL;
+#endif
 }
 
 void McuLFS_Init(void) {
+#if LITTLEFS_CONFIG_THREAD_SAFE
   fileSystemAccessMutex = xSemaphoreCreateRecursiveMutex();
   if (fileSystemAccessMutex == NULL) {
     for(;;) {} /* Error */
@@ -934,4 +939,5 @@ void McuLFS_Init(void) {
   if (McuLittleFS_block_device_init() != ERR_OK) {
     for(;;) {} /* Error */
   }
+#endif
 }
