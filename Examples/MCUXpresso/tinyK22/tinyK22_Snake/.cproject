@@ -4,7 +4,7 @@
 		<cconfiguration id="com.crt.advproject.config.exe.debug.1013123228">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.1013123228" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../../McuLib"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -277,7 +277,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.2015209914" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.582745621" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.manage.477732029" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.376558752" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="tinyK22_Zork_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.376558752" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="tinyK22_Snake_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.51282065" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.crpenable.892801421" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1719289950" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -309,16 +309,6 @@
 								<option id="com.crt.advproject.debugger.security.nonsecureimageenable.1411503836" name="Enable pre-programming of Non-Secure Image" superClass="com.crt.advproject.debugger.security.nonsecureimageenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimage.1512639449" name="Non-Secure Project" superClass="com.crt.advproject.debugger.security.nonsecureimage" useByScannerDiscovery="false"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.1013123228.881672915" name="/" resourcePath="McuLib/fonts">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.847625622" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<tool id="com.crt.advproject.cpp.exe.debug.16120314" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.2024040009"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.2003134818" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.1352320053"/>
-							<tool id="com.crt.advproject.gas.exe.debug.961194902" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1514518544"/>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.1231745372" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.318014606"/>
-							<tool id="com.crt.advproject.link.exe.debug.182571982" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.758930043"/>
-							<tool id="com.crt.advproject.tool.debug.debug.1260151879" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug.1103054846"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
@@ -392,4 +382,5 @@
 			<resource resourceType="PROJECT" workspacePath="/tinyK22_Snake"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="openCmsis"/>
 </cproject>

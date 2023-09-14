@@ -4,7 +4,7 @@
 		<cconfiguration id="com.crt.advproject.config.exe.debug.1652255002">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.exe.debug.1652255002" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../McuLib"/>
+					<stringMacro name="MCULIB" type="VALUE_PATH_DIR" value="../../../../McuLib"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
@@ -271,7 +271,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.1550319821" name="Enable Link-time optimization (-flto)" superClass="com.crt.advproject.link.gcc.lto" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.2054807237" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.manage.846336878" name="Manage linker script" superClass="com.crt.advproject.link.manage" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1593827416" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="tinyK22_Master_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1593827416" name="Linker script" superClass="com.crt.advproject.link.script" useByScannerDiscovery="false" value="tinyK22_HanoverFlipDot_Debug.ld" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.973263338" name="Script path" superClass="com.crt.advproject.link.scriptdir" useByScannerDiscovery="false" value="" valueType="string"/>
 								<option id="com.crt.advproject.link.crpenable.622592568" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.link.flashconfigenable.73771391" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" useByScannerDiscovery="false" value="true" valueType="boolean"/>
@@ -383,4 +383,5 @@
 			<resource resourceType="PROJECT" workspacePath="/tinyK22_WS2812B_Ring"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="openCmsis"/>
 </cproject>
