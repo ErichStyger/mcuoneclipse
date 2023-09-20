@@ -66,6 +66,10 @@
 #if PL_CONFIG_USE_WATCHDOG
   #include "McuWatchdog.h"
 #endif
+#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
+  #include "mqtt_client.h"
+  #include "Modbus/McuHeidelberg.h"
+#endif
 
 #define APP_CONFIG_TEST_WATCHDOG  (0 && PL_CONFIG_USE_WATCHDOG)
 
@@ -329,6 +333,32 @@ uint8_t App_ParseCommand(const unsigned char *cmd, bool *handled, const McuShell
   return ERR_OK;
 }
 
+#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
+  #define MQTT_PROGRESS_TIMER_PERIOD_MS    (30*1000)
+  static TimerHandle_t mqttTimer; /* timer to advance game */
+
+  static void vTimerCallbackMQTT(TimerHandle_t pxTimer) {
+    MqttClient_Publish_ChargingPower(McuHeidelberg_GetCurrChargerPower());
+  }
+
+  static void InitTimer(void) {
+    mqttTimer = xTimerCreate(
+          "mqtt", /* name */
+          pdMS_TO_TICKS(MQTT_PROGRESS_TIMER_PERIOD_MS), /* period/time */
+          pdTRUE, /* auto reload */
+          (void*)0, /* timer ID */
+          vTimerCallbackMQTT); /* callback */
+    if (mqttTimer==NULL) {
+      McuLog_fatal("failed creating timer");
+      for(;;); /* failure! */
+    }
+    if (xTimerStart(mqttTimer, pdMS_TO_TICKS(100))!=pdTRUE) {
+      McuLog_fatal("failed starting timer");
+    }
+  }
+#endif
+
+
 void App_Run(void) {
   PL_Init();
 #if PL_CONFIG_USE_POWER /* check battery level */
@@ -350,6 +380,9 @@ void App_Run(void) {
   for(int i=0;i<50; i++) {
     McuWait_Waitms(100);
   }
+#endif
+#if PL_CONFIG_IS_APP_EVCC && PL_CONFIG_USE_MQTT_CLIENT
+  InitTimer();
 #endif
   vTaskStartScheduler();
   for(;;) {

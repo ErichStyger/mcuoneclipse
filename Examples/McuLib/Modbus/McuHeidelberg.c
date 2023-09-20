@@ -618,10 +618,11 @@ static void McuHeidelberg_UpdateCurrChargerPower(void) {
 
   if (McuHeidelberg_ReadPower(McuHeidelberg_deviceID, &power)!=ERR_OK) {
     McuLog_error("failed reading charger power");
+    McuHeidelbergInfo.hw.power = 0;
   } else if (power != McuHeidelbergInfo.hw.power) {
     McuHeidelbergInfo.hw.power = power;
-    CallEventCallback(McuHeidelberg_Event_ChargerPower_Changed);
   }
+  CallEventCallback(McuHeidelberg_Event_ChargerPower_Changed);
 }
 
 static void readStatusRegisters(void) {
@@ -647,6 +648,19 @@ static void readStatusRegisters(void) {
     McuLog_error("failed reading energy since installation");
   }
   calculateNofActivePhases();
+}
+
+static void resetHardwareDataValues(void) {
+  McuHeidelbergInfo.hw.current[0] = 0;
+  McuHeidelbergInfo.hw.current[1] = 0;
+  McuHeidelbergInfo.hw.current[2] = 0;
+  McuHeidelbergInfo.hw.temperature = 0;
+  McuHeidelbergInfo.hw.voltage[0] = 0;
+  McuHeidelbergInfo.hw.voltage[1] = 0;
+  McuHeidelbergInfo.hw.voltage[2] = 0;
+
+  McuHeidelbergInfo.hw.power = 0;
+  McuHeidelberg_UpdateCurrChargerPower();
 }
 
 /* -------------------------------------------- */
@@ -694,6 +708,7 @@ static void wallboxTask(void *pv) {
         McuHeidelberg_SetHWChargerState(HWchargerState); /* store state we got */
         if (prevHWchargerState != HWchargerState) { /* state changed? */
           McuLog_trace("wallbox state changed from %s (%d) to %s (%d)", McuHeidelberg_GetShortHWChargerStateString(prevHWchargerState), prevHWchargerState, McuHeidelberg_GetShortHWChargerStateString(HWchargerState), HWchargerState);
+          McuHeidelberg_UpdateCurrChargerPower(); /* update values, as state has changed */
           prevHWchargerState = HWchargerState;
         }
       } else {
@@ -749,6 +764,7 @@ static void wallboxTask(void *pv) {
           McuHeidelbergInfo.nofPhases = calculateNofActivePhases();
           McuHeidelberg_SetMaxCarPower(calculateMinWallboxPower()); /* set initial charging value */
         } else {
+          resetHardwareDataValues();
           McuLog_error("communication failed, charger in standby? Retry in 30 seconds...");
           vTaskDelay(pdMS_TO_TICKS(30000)); /* need to poll the device on a regular base, otherwise it goes into communication error state */
         }
@@ -835,12 +851,16 @@ static void wallboxTask(void *pv) {
           case McuHeidelberg_ChargerState_A2:
             McuLog_trace("vehicle not plugged any more");
             McuHeidelbergInfo.state = Wallbox_TaskState_Connected;
+            McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
+            vTaskDelay(pdMS_TO_TICKS(1000)); /* control loop delay */
             break;
 
           case McuHeidelberg_ChargerState_B1:
           case McuHeidelberg_ChargerState_B2:
             McuLog_trace("vehicle plugged, but dropped charging request");
             McuHeidelbergInfo.state = Wallbox_TaskState_Connected;
+            McuHeidelberg_UpdateCurrChargerPower(); /* update current charging power from hardware */
+            vTaskDelay(pdMS_TO_TICKS(1000)); /* control loop delay */
             break;
 
           case McuHeidelberg_ChargerState_C1:
@@ -851,7 +871,7 @@ static void wallboxTask(void *pv) {
             break;
 
           case McuHeidelberg_ChargerState_Derating:
-            McuLog_trace("derating while charging, waiting 5 seconds");
+            McuLog_trace("de-rating while charging, waiting 5 seconds");
             vTaskDelay(pdMS_TO_TICKS(5000));
             break;
           case McuHeidelberg_ChargerState_E:

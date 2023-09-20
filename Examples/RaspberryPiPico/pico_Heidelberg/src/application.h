@@ -18,7 +18,7 @@ extern "C" {
   #include "buttons.h"
   #include "McuDebounce.h"
 
-  void App_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind);
+  void APP_OnButtonEvent(BTN_Buttons_e button, McuDbnc_EventKinds kind);
 #endif
 
 #define APP_VERSION_STR  "v1.0b"

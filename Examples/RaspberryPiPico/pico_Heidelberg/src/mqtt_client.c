@@ -155,7 +155,7 @@ int MqttClient_Publish_ChargingPower(uint32_t powerW) {
 
   if (mqtt.mqtt_client!=NULL) { /* connected? */
     if (mqtt.doLogging) {
-      McuLog_trace("publish P:%d", powerW);
+      McuLog_trace("publish P: %d W", powerW);
     }
     McuUtility_strcpy(buf, sizeof(buf), (unsigned char*)"{\"chargeP\": ");
     McuUtility_strcatNum32u(buf, sizeof(buf), powerW);
@@ -494,7 +494,7 @@ void MqttClient_Deinit(void) {
 }
 
 void MqttClient_Init(void) {
-  mqtt.doLogging = false;
+  mqtt.doLogging = true;
   mqtt.doPublishing = true;
 }
 
