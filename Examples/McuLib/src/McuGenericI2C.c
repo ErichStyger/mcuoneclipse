@@ -4,9 +4,9 @@
 **     Project     : FRDM-K64F_Generator
 **     Processor   : MK64FN1M0VLL12
 **     Component   : GenericI2C
-**     Version     : Component 01.049, Driver 01.00, CPU db: 3.00.000
+**     Version     : Component 01.051, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2020-05-18, 08:17, # CodeGen: 608
+**     Date/Time   : 2023-09-23, 15:43, # CodeGen: 824
 **     Abstract    :
 **         This component implements a generic I2C driver wrapper to work both with LDD and non-LDD I2C components.
 **     Settings    :
@@ -19,7 +19,7 @@
 **          LDD I2C                                        : Disabled
 **          RTOS                                           : Enabled
 **            RTOS                                         : McuRTOS
-**            Semaphore                                    : yes
+**            Semaphore                                    : no
 **          Init() on startup                              : yes
 **     Contents    :
 **         SelectSlave       - uint8_t McuGenericI2C_SelectSlave(uint8_t i2cAddr);
@@ -44,7 +44,7 @@
 **         Deinit            - void McuGenericI2C_Deinit(void);
 **         Init              - void McuGenericI2C_Init(void);
 **
-** * Copyright (c) 2013-2020, Erich Styger
+** * Copyright (c) 2013-2023, Erich Styger
 **  * Web:         https://mcuoneclipse.com
 **  * SourceForge: https://sourceforge.net/projects/mcuoneclipse
 **  * Git:         https://github.com/ErichStyger/McuOnEclipse_PEx
@@ -95,6 +95,16 @@
 #ifndef NULL
   #define NULL 0L
 #endif /* NULL */
+
+#if McuGenericI2C_CONFIG_USE_TIMEOUT
+  #define TIMEOUT_COUNTER_HANDLE                        McuTimeout_CounterHandle
+  #define TIMEOUT_GET_COUNTER                           McuTimeout_GetCounter
+  #define TIMEOUT_LEAVE_COUNTER                         McuTimeout_LeaveCounter
+  #define TIMEOUT_COUNTER_EXPIRED                       McuTimeout_CounterExpired
+  #define TIMEOUT_OUT_OF_HANDLE                         McuTimeout_OUT_OF_HANDLE
+  #define McuGenericI2C_TIMEOUT_NOF_TICKS(factor)      ((McuGenericI2C_CONFIG_TIMEOUT_US*(factor))/1000/McuTimeout_TICK_PERIOD_MS)
+  #define McuGenericI2C_TIMEOUT_TICKS(factor)          (McuGenericI2C_TIMEOUT_NOF_TICKS(factor)>0?McuGenericI2C_TIMEOUT_NOF_TICKS(factor):1)  /* at least one tick */
+#endif
 
 
 #if McuGenericI2C_CONFIG_USE_MUTEX
@@ -298,10 +308,6 @@ uint8_t McuGenericI2C_ReadBlock(void* data, uint16_t dataSize, McuGenericI2C_Enu
 uint8_t McuGenericI2C_WriteBlock(void* data, uint16_t dataSize, McuGenericI2C_EnumSendFlags flags)
 {
   uint16_t nof;
-#if McuGenericI2C_CONFIG_USE_TIMEOUT
-  TIMEOUT_COUNTER_HANDLE timeout;
-  bool isTimeout=FALSE;
-#endif
   uint8_t res = ERR_OK;
 
   for(;;) { /* breaks */
@@ -459,10 +465,6 @@ uint8_t McuGenericI2C_WriteAddress(uint8_t i2cAddr, uint8_t *memAddr, uint8_t me
   uint8_t *p;
   uint16_t i;
   uint16_t nof;
-#if McuGenericI2C_CONFIG_USE_TIMEOUT
-  TIMEOUT_COUNTER_HANDLE timeout;
-  bool isTimeout=FALSE;
-#endif
   uint8_t res = ERR_OK;
 
   if (McuGenericI2C_SelectSlave(i2cAddr)!=ERR_OK) {
