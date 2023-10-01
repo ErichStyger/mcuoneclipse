@@ -59,19 +59,14 @@ extern serial_handle_t g_serialHandle; /*!< serial manager handle */
  *  if SDK_DEBUGCONSOLE defined to 2,it represents disable debugconsole function.
  */
 #if SDK_DEBUGCONSOLE == DEBUGCONSOLE_DISABLE /* Disable debug console */
-#define PRINTF(...) \
-    do              \
-    {               \
-    } while (0)
-#define SCANF(...) \
-    do             \
-    {              \
-    } while (0)
-#define PUTCHAR(...) \
-    do               \
-    {                \
-    } while (0)
-#define GETCHAR() -1
+static inline int DbgConsole_Disabled(void)
+{
+    return -1;
+}
+#define PRINTF(...)  DbgConsole_Disabled()
+#define SCANF(...)   DbgConsole_Disabled()
+#define PUTCHAR(...) DbgConsole_Disabled()
+#define GETCHAR()    DbgConsole_Disabled()
 #elif SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK /* Select printf, scanf, putchar, getchar of SDK version. */
 #define PRINTF  DbgConsole_Printf
 #define SCANF   DbgConsole_Scanf

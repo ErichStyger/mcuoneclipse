@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -728,8 +728,8 @@ status_t USART_TransferSendNonBlocking(USART_Type *base, usart_handle_t *handle,
         return kStatus_InvalidArgument;
     }
     /* Check xfer members */
-    assert(!((0U == xfer->dataSize) || (NULL == xfer->data)));
-    if ((0U == xfer->dataSize) || (NULL == xfer->data))
+    assert(!((0U == xfer->dataSize) || (NULL == xfer->txData)));
+    if ((0U == xfer->dataSize) || (NULL == xfer->txData))
     {
         return kStatus_InvalidArgument;
     }
@@ -745,7 +745,7 @@ status_t USART_TransferSendNonBlocking(USART_Type *base, usart_handle_t *handle,
          * handle value. */
         uint32_t interruptMask = USART_GetEnabledInterrupts(base);
         USART_DisableInterrupts(base, interruptMask);
-        handle->txData        = xfer->data;
+        handle->txData        = xfer->txData;
         handle->txDataSize    = xfer->dataSize;
         handle->txDataSizeAll = xfer->dataSize;
         handle->txState       = (uint8_t)kUSART_TxBusy;
@@ -852,8 +852,8 @@ status_t USART_TransferReceiveNonBlocking(USART_Type *base,
         return kStatus_InvalidArgument;
     }
     /* Check xfer members */
-    assert(!((0U == xfer->dataSize) || (NULL == xfer->data)));
-    if ((0U == xfer->dataSize) || (NULL == xfer->data))
+    assert(!((0U == xfer->dataSize) || (NULL == xfer->rxData)));
+    if ((0U == xfer->dataSize) || (NULL == xfer->rxData))
     {
         return kStatus_InvalidArgument;
     }
@@ -897,7 +897,7 @@ status_t USART_TransferReceiveNonBlocking(USART_Type *base,
                 /* Copy data from ring buffer to user memory. */
                 for (i = 0U; i < bytesToCopy; i++)
                 {
-                    xfer->data[bytesCurrentReceived++] = handle->rxRingBuffer[handle->rxRingBufferTail];
+                    xfer->rxData[bytesCurrentReceived++] = handle->rxRingBuffer[handle->rxRingBufferTail];
                     /* Wrap to 0. Not use modulo (%) because it might be large and slow. */
                     if ((size_t)handle->rxRingBufferTail + 1U == handle->rxRingBufferSize)
                     {
@@ -913,9 +913,9 @@ status_t USART_TransferReceiveNonBlocking(USART_Type *base,
             if (bytesToReceive != 0U)
             {
                 /* No data in ring buffer, save the request to UART handle. */
-                handle->rxData        = xfer->data + bytesCurrentReceived;
+                handle->rxData        = xfer->rxData + bytesCurrentReceived;
                 handle->rxDataSize    = bytesToReceive;
-                handle->rxDataSizeAll = bytesToReceive;
+                handle->rxDataSizeAll = xfer->dataSize;
                 handle->rxState       = (uint8_t)kUSART_RxBusy;
             }
             /* Re-enable IRQ. */
@@ -936,7 +936,7 @@ status_t USART_TransferReceiveNonBlocking(USART_Type *base,
              * the handle value. */
             interruptMask = USART_GetEnabledInterrupts(base);
             USART_DisableInterrupts(base, interruptMask);
-            handle->rxData        = xfer->data + bytesCurrentReceived;
+            handle->rxData        = xfer->rxData + bytesCurrentReceived;
             handle->rxDataSize    = bytesToReceive;
             handle->rxDataSizeAll = bytesToReceive;
             handle->rxState       = (uint8_t)kUSART_RxBusy;

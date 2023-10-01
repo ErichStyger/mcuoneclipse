@@ -548,6 +548,10 @@ static int32_t ConvertRadixNumToString(char *numstr, void *nump, int32_t neg, in
     nstrp    = numstr;
     *nstrp++ = '\0';
 
+#if !(PRINTF_ADVANCED_ENABLE > 0)
+    neg = 0;
+#endif
+
     if (0 != neg)
     {
 #if PRINTF_ADVANCED_ENABLE

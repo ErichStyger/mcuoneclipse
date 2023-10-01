@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Freescale Semiconductor, Inc.
+ * Copyright (c) 2020-2021, Freescale Semiconductor, Inc.
  * All rights reserved.
  *
  *
@@ -18,6 +18,22 @@
 /*******************************************************************************
  * Definitions
  *******************************************************************************/
+
+/*! @brief ROM API status group number */
+#define kStatusGroup_RomApi (108U)
+
+/*! @brief ROM API status codes. */
+enum
+{
+    kStatus_RomApiExecuteCompleted = kStatus_Success, /*!< ROM successfully process the whole sb file/boot image.*/
+    kStatus_RomApiNeedMoreData =
+        MAKE_STATUS(kStatusGroup_RomApi, 1), /*!< ROM needs more data to continue processing the boot image.*/
+    kStatus_RomApiBufferSizeNotEnough =
+        MAKE_STATUS(kStatusGroup_RomApi,
+                    2), /*!< The user buffer is not enough for use by Kboot during execution of the operation.*/
+    kStatus_RomApiInvalidBuffer =
+        MAKE_STATUS(kStatusGroup_RomApi, 3), /*!< The user buffer is not ok for sbloader or authentication.*/
+};
 
 /*!
  *  @brief Details of the operation to be performed by the ROM.
@@ -172,6 +188,16 @@ extern "C" {
  *
  * Inits the ROM API based on the options provided by the application in the second
  * argument. Every call to rom_init() should be paired with a call to rom_deinit().
+ *
+ * @retval #kStatus_Success API was executed successfully.
+ * @retval #kStatus_InvalidArgument An invalid argument is provided.
+ * @retval #kStatus_RomApiBufferSizeNotEnough The user buffer is not enough for use by Kboot during execution of the
+ * operation.
+ * @retval #kStatus_RomApiInvalidBuffer The user buffer is not ok for sbloader or authentication.
+ * @retval #kStatus_SKBOOT_Fail Return the failed status of secure boot.
+ * @retval #kStatus_SKBOOT_KeyStoreMarkerInvalid The key code for the particular PRINCE region is not present in the
+ * keystore
+ * @retval #kStatus_SKBOOT_Success Return the successful status of secure boot.
  */
 status_t kb_init(kb_session_ref_t **session, const kb_options_t *options);
 
@@ -180,6 +206,8 @@ status_t kb_init(kb_session_ref_t **session, const kb_options_t *options);
  *
  * After this call, the context parameter can be reused for another operation
  * by calling rom_init() again.
+ *
+ * @retval #kStatus_Success API was executed successfully
  */
 status_t kb_deinit(kb_session_ref_t *session);
 
@@ -196,15 +224,13 @@ status_t kb_deinit(kb_session_ref_t *session);
  * @param data Buffer of boot image data provided to the ROM by the application.
  * @param dataLength Length in bytes of the data in the buffer provided to the ROM.
  *
- * @retval kStatus_RomApiExecuteSuccess ROM successfully process the part of sb file/boot image.
- * @retval kStatus_RomApiExecuteCompleted ROM successfully process the whole sb file/boot image.
- * @retval kStatus_Fail An error occurred while executing the operation.
- * @retval kStatus_RomApiNeedMoreData No error occurred, but the ROM needs more data to
- *     continue processing the boot image.
- * @retval kStatus_RomApiBufferSizeNotEnough user buffer is not enough for
- *     use by Kboot during execution of the operation.
- * @retval kStatus_RomApiBufferNotOkForArena user buffer does't meet the requirement
- *     of arena memory.
+ * @retval #kStatus_Success ROM successfully process the part of sb file/boot image.
+ * @retval #kStatus_RomApiExecuteCompleted ROM successfully process the whole sb file/boot image.
+ * @retval #kStatus_Fail An error occurred while executing the operation.
+ * @retval #kStatus_RomApiNeedMoreData No error occurred, but the ROM needs more data to
+ * continue processing the boot image.
+ * @retval #kStatus_RomApiBufferSizeNotEnough user buffer is not enough for
+ * use by Kboot during execution of the operation.
  */
 status_t kb_execute(kb_session_ref_t *session, const uint8_t *data, uint32_t dataLength);
 

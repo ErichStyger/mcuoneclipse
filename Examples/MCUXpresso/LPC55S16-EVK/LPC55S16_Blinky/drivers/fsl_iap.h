@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 NXP
+ * Copyright 2018-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -30,7 +30,7 @@
 #endif
 
 /*! @brief Flash driver version for SDK*/
-#define FSL_FLASH_DRIVER_VERSION (MAKE_VERSION(2, 1, 1)) /*!< Version 2.1.1. */
+#define FSL_FLASH_DRIVER_VERSION (MAKE_VERSION(2, 1, 3)) /*!< Version 2.1.3. */
 
 /*! @brief Flash driver version for ROM*/
 enum _flash_driver_version_constants
@@ -38,7 +38,7 @@ enum _flash_driver_version_constants
     kFLASH_DriverVersionName   = 'F', /*!< Flash driver version name.*/
     kFLASH_DriverVersionMajor  = 2,   /*!< Major flash driver version.*/
     kFLASH_DriverVersionMinor  = 1,   /*!< Minor flash driver version.*/
-    kFLASH_DriverVersionBugfix = 1    /*!< Bugfix for flash driver version.*/
+    kFLASH_DriverVersionBugfix = 3    /*!< Bugfix for flash driver version.*/
 };
 
 /*@}*/

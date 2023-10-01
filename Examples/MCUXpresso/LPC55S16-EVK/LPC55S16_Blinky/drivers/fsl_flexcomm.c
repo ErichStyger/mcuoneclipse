@@ -40,17 +40,17 @@ static bool FLEXCOMM_PeripheralIsPresent(FLEXCOMM_Type *base, FLEXCOMM_PERIPH_T 
  * Variables
  ******************************************************************************/
 
+/*! @brief Array to map FLEXCOMM instance number to base address. */
+static const uint32_t s_flexcommBaseAddrs[] = FLEXCOMM_BASE_ADDRS;
+
 /*! @brief Pointers to real IRQ handlers installed by drivers for each instance. */
-static flexcomm_irq_handler_t s_flexcommIrqHandler[FSL_FEATURE_SOC_FLEXCOMM_COUNT];
+static flexcomm_irq_handler_t s_flexcommIrqHandler[ARRAY_SIZE(s_flexcommBaseAddrs)];
 
 /*! @brief Pointers to handles for each instance to provide context to interrupt routines */
-static void *s_flexcommHandle[FSL_FEATURE_SOC_FLEXCOMM_COUNT];
+static void *s_flexcommHandle[ARRAY_SIZE(s_flexcommBaseAddrs)];
 
 /*! @brief Array to map FLEXCOMM instance number to IRQ number. */
 IRQn_Type const kFlexcommIrqs[] = FLEXCOMM_IRQS;
-
-/*! @brief Array to map FLEXCOMM instance number to base address. */
-static const uint32_t s_flexcommBaseAddrs[FSL_FEATURE_SOC_FLEXCOMM_COUNT] = FLEXCOMM_BASE_ADDRS;
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
 /*! @brief IDs of clock for each FLEXCOMM module */
@@ -176,8 +176,12 @@ void FLEXCOMM_SetIRQHandler(void *base, flexcomm_irq_handler_t handler, void *fl
 void FLEXCOMM0_DriverIRQHandler(void);
 void FLEXCOMM0_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[0]);
-    s_flexcommIrqHandler[0]((uint32_t *)s_flexcommBaseAddrs[0], s_flexcommHandle[0]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM0);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -186,8 +190,12 @@ void FLEXCOMM0_DriverIRQHandler(void)
 void FLEXCOMM1_DriverIRQHandler(void);
 void FLEXCOMM1_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[1]);
-    s_flexcommIrqHandler[1]((uint32_t *)s_flexcommBaseAddrs[1], s_flexcommHandle[1]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM1);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -196,8 +204,12 @@ void FLEXCOMM1_DriverIRQHandler(void)
 void FLEXCOMM2_DriverIRQHandler(void);
 void FLEXCOMM2_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[2]);
-    s_flexcommIrqHandler[2]((uint32_t *)s_flexcommBaseAddrs[2], s_flexcommHandle[2]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM2);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -206,8 +218,12 @@ void FLEXCOMM2_DriverIRQHandler(void)
 void FLEXCOMM3_DriverIRQHandler(void);
 void FLEXCOMM3_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[3]);
-    s_flexcommIrqHandler[3]((uint32_t *)s_flexcommBaseAddrs[3], s_flexcommHandle[3]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM3);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -216,8 +232,12 @@ void FLEXCOMM3_DriverIRQHandler(void)
 void FLEXCOMM4_DriverIRQHandler(void);
 void FLEXCOMM4_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[4]);
-    s_flexcommIrqHandler[4]((uint32_t *)s_flexcommBaseAddrs[4], s_flexcommHandle[4]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM4);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 
@@ -227,8 +247,12 @@ void FLEXCOMM4_DriverIRQHandler(void)
 void FLEXCOMM5_DriverIRQHandler(void);
 void FLEXCOMM5_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[5]);
-    s_flexcommIrqHandler[5]((uint32_t *)s_flexcommBaseAddrs[5], s_flexcommHandle[5]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM5);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -237,8 +261,12 @@ void FLEXCOMM5_DriverIRQHandler(void)
 void FLEXCOMM6_DriverIRQHandler(void);
 void FLEXCOMM6_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[6]);
-    s_flexcommIrqHandler[6]((uint32_t *)s_flexcommBaseAddrs[6], s_flexcommHandle[6]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM6);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -247,8 +275,12 @@ void FLEXCOMM6_DriverIRQHandler(void)
 void FLEXCOMM7_DriverIRQHandler(void);
 void FLEXCOMM7_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[7]);
-    s_flexcommIrqHandler[7]((uint32_t *)s_flexcommBaseAddrs[7], s_flexcommHandle[7]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM7);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -257,8 +289,12 @@ void FLEXCOMM7_DriverIRQHandler(void)
 void FLEXCOMM8_DriverIRQHandler(void);
 void FLEXCOMM8_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[8]);
-    s_flexcommIrqHandler[8]((uint32_t *)s_flexcommBaseAddrs[8], s_flexcommHandle[8]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM8);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -267,8 +303,12 @@ void FLEXCOMM8_DriverIRQHandler(void)
 void FLEXCOMM9_DriverIRQHandler(void);
 void FLEXCOMM9_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[9]);
-    s_flexcommIrqHandler[9]((uint32_t *)s_flexcommBaseAddrs[9], s_flexcommHandle[9]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM9);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -277,8 +317,12 @@ void FLEXCOMM9_DriverIRQHandler(void)
 void FLEXCOMM10_DriverIRQHandler(void);
 void FLEXCOMM10_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[10]);
-    s_flexcommIrqHandler[10]((uint32_t *)s_flexcommBaseAddrs[10], s_flexcommHandle[10]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM10);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -287,8 +331,12 @@ void FLEXCOMM10_DriverIRQHandler(void)
 void FLEXCOMM11_DriverIRQHandler(void);
 void FLEXCOMM11_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[11]);
-    s_flexcommIrqHandler[11]((uint32_t *)s_flexcommBaseAddrs[11], s_flexcommHandle[11]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM11);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -297,8 +345,12 @@ void FLEXCOMM11_DriverIRQHandler(void)
 void FLEXCOMM12_DriverIRQHandler(void);
 void FLEXCOMM12_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[12]);
-    s_flexcommIrqHandler[12]((uint32_t *)s_flexcommBaseAddrs[12], s_flexcommHandle[12]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM12);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -307,8 +359,12 @@ void FLEXCOMM12_DriverIRQHandler(void)
 void FLEXCOMM13_DriverIRQHandler(void);
 void FLEXCOMM13_DriverIRQHandler(void)
 {
-    assert(s_flexcommIrqHandler[13]);
-    s_flexcommIrqHandler[13]((uint32_t *)s_flexcommBaseAddrs[13], s_flexcommHandle[13]);
+    uint32_t instance;
+
+    /* Look up instance number */
+    instance = FLEXCOMM_GetInstance(FLEXCOMM13);
+    assert(s_flexcommIrqHandler[instance] != NULL);
+    s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
 #endif
@@ -321,7 +377,7 @@ void FLEXCOMM14_DriverIRQHandler(void)
 
     /* Look up instance number */
     instance = FLEXCOMM_GetInstance(FLEXCOMM14);
-    assert(s_flexcommIrqHandler[instance]);
+    assert(s_flexcommIrqHandler[instance] != NULL);
     s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
@@ -335,7 +391,7 @@ void FLEXCOMM15_DriverIRQHandler(void)
 
     /* Look up instance number */
     instance = FLEXCOMM_GetInstance(FLEXCOMM15);
-    assert(s_flexcommIrqHandler[instance]);
+    assert(s_flexcommIrqHandler[instance] != NULL);
     s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }
@@ -349,7 +405,7 @@ void FLEXCOMM16_DriverIRQHandler(void)
 
     /* Look up instance number */
     instance = FLEXCOMM_GetInstance(FLEXCOMM16);
-    assert(s_flexcommIrqHandler[instance]);
+    assert(s_flexcommIrqHandler[instance] != NULL);
     s_flexcommIrqHandler[instance]((uint32_t *)s_flexcommBaseAddrs[instance], s_flexcommHandle[instance]);
     SDK_ISR_EXIT_BARRIER;
 }

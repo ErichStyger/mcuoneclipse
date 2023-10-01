@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 NXP
+ * Copyright 2018-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -11,13 +11,17 @@
 #include "fsl_iap_kbp.h"
 #include "fsl_iap_skboot_authenticate.h"
 #include "fsl_device_registers.h"
+/*******************************************************************************
+ * Definitions
+ ******************************************************************************/
 /* Component ID definition, used by tools. */
 #ifndef FSL_COMPONENT_ID
 #define FSL_COMPONENT_ID "platform.drivers.iap1"
 #endif
 
 #if (defined(LPC5512_SERIES) || defined(LPC5514_SERIES) || defined(LPC55S14_SERIES) || defined(LPC5516_SERIES) || \
-     defined(LPC55S16_SERIES) || defined(LPC5524_SERIES))
+     defined(LPC55S16_SERIES) || defined(LPC5524_SERIES) || defined(LPC5502_SERIES) || defined(LPC5504_SERIES) || \
+     defined(LPC5506_SERIES) || defined(LPC55S04_SERIES) || defined(LPC55S06_SERIES))
 
 #define BOOTLOADER_API_TREE_POINTER ((bootloader_tree_t *)0x1301fe00U)
 
@@ -31,6 +35,11 @@
 #error "No valid CPU defined!"
 
 #endif
+
+/*******************************************************************************
+ * Prototypes
+ ******************************************************************************/
+static status_t get_cfpa_higher_version(flash_config_t *config);
 
 /*!
  * @name flash and ffr Structure
@@ -357,20 +366,69 @@ status_t FLASH_GetProperty(flash_config_t *config, flash_property_tag_t whichPro
  * fsl iap ffr CODE
  *******************************************************************************/
 
+static status_t get_cfpa_higher_version(flash_config_t *config)
+{
+    uint32_t pageData[FLASH_FFR_MAX_PAGE_SIZE / sizeof(uint32_t)];
+    uint32_t versionPing = 0U;
+    uint32_t versionPong = 0U;
+
+    /* Get the CFPA ping page data and the corresponding version */
+    config->ffrConfig.cfpaPageOffset = 1U;
+    status_t status = FFR_GetCustomerInfieldData(config, (uint8_t *)pageData, 0U, FLASH_FFR_MAX_PAGE_SIZE);
+    if (status != (int32_t)kStatus_FLASH_Success)
+    {
+        return status;
+    }
+    versionPing = pageData[1];
+
+    /* Get the CFPA pong page data and the corresponding version */
+    config->ffrConfig.cfpaPageOffset = 2U;
+    status = FFR_GetCustomerInfieldData(config, (uint8_t *)pageData, 0U, FLASH_FFR_MAX_PAGE_SIZE);
+    if (status != (int32_t)kStatus_FLASH_Success)
+    {
+        return status;
+    }
+    versionPong = pageData[1];
+
+    /* Compare the CFPA ping version and pong version and set it correctly in flash_config structure */
+    if (versionPing > versionPong)
+    {
+        config->ffrConfig.cfpaPageVersion = versionPing;
+        config->ffrConfig.cfpaPageOffset  = 1U;
+    }
+    else
+    {
+        config->ffrConfig.cfpaPageVersion = versionPong;
+        config->ffrConfig.cfpaPageOffset  = 2U;
+    }
+    return (int32_t)kStatus_FLASH_Success;
+}
+
 /*!
  * Initializes the global FFR properties structure members.
  */
 status_t FFR_Init(flash_config_t *config)
 {
+    status_t status;
     if (get_rom_api_version() == 0u)
     {
         assert(VERSION0_FLASH_API_TREE);
-        return VERSION0_FLASH_API_TREE->ffr_init(config);
+        status = VERSION0_FLASH_API_TREE->ffr_init(config);
+        if (status != kStatus_FLASH_Success)
+        {
+            return status;
+        }
+        return get_cfpa_higher_version(config);
     }
     else
     {
         assert(VERSION1_FLASH_API_TREE);
-        return VERSION1_FLASH_API_TREE->ffr_init(config);
+        status = VERSION1_FLASH_API_TREE->ffr_init(config);
+        if (status != kStatus_FLASH_Success)
+        {
+            return status;
+        }
+        return get_cfpa_higher_version(config);
     }
 }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -22,7 +22,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief USART driver version. */
-#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
+#define FSL_USART_DRIVER_VERSION (MAKE_VERSION(2, 5, 1))
 /*@}*/
 
 #define USART_FIFOTRIG_TXLVL_GET(base) (((base)->FIFOTRIG & USART_FIFOTRIG_TXLVL_MASK) >> USART_FIFOTRIG_TXLVL_SHIFT)
@@ -162,7 +162,16 @@ typedef struct _usart_config
 /*! @brief USART transfer structure. */
 typedef struct _usart_transfer
 {
-    uint8_t *data;   /*!< The buffer of data to be transfer.*/
+    /*
+     * Use separate TX and RX data pointer, because TX data is const data.
+     * The member data is kept for backward compatibility.
+     */
+    union
+    {
+        uint8_t *data;         /*!< The buffer of data to be transfer.*/
+        uint8_t *rxData;       /*!< The buffer to receive data. */
+        const uint8_t *txData; /*!< The buffer of data to be sent. */
+    };
     size_t dataSize; /*!< The byte count to be transfer. */
 } usart_transfer_t;
 
@@ -175,12 +184,12 @@ typedef void (*usart_transfer_callback_t)(USART_Type *base, usart_handle_t *hand
 /*! @brief USART handle structure. */
 struct _usart_handle
 {
-    uint8_t *volatile txData;   /*!< Address of remaining data to send. */
-    volatile size_t txDataSize; /*!< Size of the remaining data to send. */
-    size_t txDataSizeAll;       /*!< Size of the data to send out. */
-    uint8_t *volatile rxData;   /*!< Address of remaining data to receive. */
-    volatile size_t rxDataSize; /*!< Size of the remaining data to receive. */
-    size_t rxDataSizeAll;       /*!< Size of the data to receive. */
+    const uint8_t *volatile txData; /*!< Address of remaining data to send. */
+    volatile size_t txDataSize;     /*!< Size of the remaining data to send. */
+    size_t txDataSizeAll;           /*!< Size of the data to send out. */
+    uint8_t *volatile rxData;       /*!< Address of remaining data to receive. */
+    volatile size_t rxDataSize;     /*!< Size of the remaining data to receive. */
+    size_t rxDataSizeAll;           /*!< Size of the data to receive. */
 
     uint8_t *rxRingBuffer;              /*!< Start address of the receiver ring buffer. */
     size_t rxRingBufferSize;            /*!< Size of the ring buffer. */
@@ -548,6 +557,30 @@ static inline void USART_EnableAutoClearSCLK(USART_Type *base, bool enable)
         base->CTL &= ~USART_CTL_CLRCCONRX_MASK;
     }
 }
+
+/*!
+ * @brief Sets the rx FIFO watermark.
+ *
+ * @param base USART peripheral base address.
+ * @param water Rx FIFO watermark.
+ */
+static inline void USART_SetRxFifoWatermark(USART_Type *base, uint8_t water)
+{
+    assert(water <= (USART_FIFOTRIG_RXLVL_MASK >> USART_FIFOTRIG_RXLVL_SHIFT));
+    base->FIFOTRIG = (base->FIFOTRIG & ~USART_FIFOTRIG_RXLVL_MASK) | USART_FIFOTRIG_RXLVL(water);
+}
+
+/*!
+ * @brief Sets the tx FIFO watermark.
+ *
+ * @param base USART peripheral base address.
+ * @param water Tx FIFO watermark.
+ */
+static inline void USART_SetTxFifoWatermark(USART_Type *base, uint8_t water)
+{
+    assert(water <= (USART_FIFOTRIG_TXLVL_MASK >> USART_FIFOTRIG_TXLVL_SHIFT));
+    base->FIFOTRIG = (base->FIFOTRIG & ~USART_FIFOTRIG_TXLVL_MASK) | USART_FIFOTRIG_TXLVL(water);
+}
 /* @} */
 
 /*!
@@ -581,6 +614,28 @@ static inline void USART_WriteByte(USART_Type *base, uint8_t data)
 static inline uint8_t USART_ReadByte(USART_Type *base)
 {
     return (uint8_t)base->FIFORD;
+}
+
+/*!
+ * @brief Gets the rx FIFO data count.
+ *
+ * @param base USART peripheral base address.
+ * @return rx FIFO data count.
+ */
+static inline uint8_t USART_GetRxFifoCount(USART_Type *base)
+{
+    return (uint8_t)((base->FIFOSTAT & USART_FIFOSTAT_RXLVL_MASK) >> USART_FIFOSTAT_RXLVL_SHIFT);
+}
+
+/*!
+ * @brief Gets the tx FIFO data count.
+ *
+ * @param base USART peripheral base address.
+ * @return tx FIFO data count.
+ */
+static inline uint8_t USART_GetTxFifoCount(USART_Type *base)
+{
+    return (uint8_t)((base->FIFOSTAT & USART_FIFOSTAT_TXLVL_MASK) >> USART_FIFOSTAT_TXLVL_SHIFT);
 }
 
 /*!

@@ -1,10 +1,10 @@
 //*****************************************************************************
 // LPC55S16 startup code for use with MCUXpresso IDE
 //
-// Version : 210220
+// Version : 010621
 //*****************************************************************************
 //
-// Copyright 2016-2020 NXP
+// Copyright 2016-2021 NXP
 // All rights reserved.
 //
 // SPDX-License-Identifier: BSD-3-Clause
@@ -44,6 +44,7 @@ extern "C" {
 // by the linker when "Enable Code Read Protect" selected.
 // See crp.h header for more information
 //*****************************************************************************
+
 //*****************************************************************************
 // Declaration of external SystemInit function
 //*****************************************************************************
@@ -138,7 +139,7 @@ WEAK void PUF_IRQHandler(void);
 WEAK void Reserved73_IRQHandler(void);
 WEAK void DMA1_IRQHandler(void);
 WEAK void FLEXCOMM8_IRQHandler(void);
-WEAK void CodeWDG_IRQHandler(void);
+WEAK void CDOG_IRQHandler(void);
 
 //*****************************************************************************
 // Forward declaration of the driver IRQ handlers. These are aliased
@@ -206,7 +207,7 @@ void PUF_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void Reserved73_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void DMA1_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 void FLEXCOMM8_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
-void CodeWDG_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
+void CDOG_DriverIRQHandler(void) ALIAS(IntDefaultHandler);
 
 //*****************************************************************************
 // The entry point for the application.
@@ -226,6 +227,7 @@ extern void _vStackTop(void);
 // External declaration for LPC MCU vector table checksum from  Linker Script
 //*****************************************************************************
 WEAK extern void __valid_user_code_checksum();
+extern void _vStackBase(void);
 
 //*****************************************************************************
 //*****************************************************************************
@@ -323,7 +325,7 @@ void (* const g_pfnVectors[])(void) = {
     Reserved73_IRQHandler,           // 73: Reserved interrupt
     DMA1_IRQHandler,                 // 74: DMA1 interrupt
     FLEXCOMM8_IRQHandler,            // 75: Flexcomm Interface 8 (SPI, , FLEXCOMM)
-    CodeWDG_IRQHandler,              // 76: CodeWDG interrupt
+    CDOG_IRQHandler,                 // 76: CDOG interrupt
 
 
 }; /* End of g_pfnVectors */
@@ -368,11 +370,23 @@ extern unsigned int __bss_section_table_end;
 // Sets up a simple runtime environment and initializes the C/C++
 // library.
 //*****************************************************************************
-__attribute__ ((section(".after_vectors.reset")))
+__attribute__ ((naked, section(".after_vectors.reset")))
 void ResetISR(void) {
+
 
     // Disable interrupts
     __asm volatile ("cpsid i");
+
+    // Config VTOR & MSPLIM register
+    __asm volatile ("LDR R0, =0xE000ED08  \n"
+                    "STR %0, [R0]         \n"
+                    "LDR R1, [%0]         \n"
+                    "MSR MSP, R1          \n"
+                    "MSR MSPLIM, %1       \n"
+                    :
+                    : "r"(g_pfnVectors), "r"(_vStackBase)
+                    : "r0", "r1");
+
 
 
 
@@ -744,8 +758,8 @@ WEAK void FLEXCOMM8_IRQHandler(void)
 {   FLEXCOMM8_DriverIRQHandler();
 }
 
-WEAK void CodeWDG_IRQHandler(void)
-{   CodeWDG_DriverIRQHandler();
+WEAK void CDOG_IRQHandler(void)
+{   CDOG_DriverIRQHandler();
 }
 
 //*****************************************************************************

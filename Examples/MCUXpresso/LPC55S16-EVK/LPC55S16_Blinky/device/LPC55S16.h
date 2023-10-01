@@ -11,7 +11,7 @@
 **
 **     Reference manual:    LPC55S1x/LPC551x User manual Rev.0.6  15 November 2019
 **     Version:             rev. 1.1, 2019-12-03
-**     Build:               b200311
+**     Build:               b201207
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for LPC55S16
@@ -142,7 +142,7 @@ typedef enum IRQn {
   Reserved73_IRQn              = 57,               /**< Reserved interrupt */
   DMA1_IRQn                    = 58,               /**< DMA1 interrupt */
   FLEXCOMM8_IRQn               = 59,               /**< Flexcomm Interface 8 (SPI, , FLEXCOMM) */
-  CodeWDG_IRQn                 = 60                /**< CodeWDG interrupt */
+  CDOG_IRQn                    = 60                /**< CDOG interrupt */
 } IRQn_Type;
 
 /*!
@@ -5442,6 +5442,8 @@ typedef struct {
   /** Array initializer of CASPER peripheral base pointers */
   #define CASPER_BASE_PTRS                         { CASPER }
 #endif
+/** Interrupt vectors for the CASPER peripheral type */
+#define CASPER_IRQS                              { CASER_IRQn }
 
 /*!
  * @}
@@ -5804,6 +5806,8 @@ typedef struct {
   /** Array initializer of CDOG peripheral base pointers */
   #define CDOG_BASE_PTRS                           { CDOG }
 #endif
+/** Interrupt vectors for the CDOG peripheral type */
+#define CDOG_IRQS                                { CDOG_IRQn }
 
 /*!
  * @}
@@ -7585,6 +7589,11 @@ typedef struct {
 /*! RoTK2_EN - RoT Key 2 enable. 00 - Invalid 01 - Enabled 10, 11 - Key revoked
  */
 #define FLASH_CFPA_ROTKH_REVOKE_RoTK2_EN(x)      (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_ROTKH_REVOKE_RoTK2_EN_SHIFT)) & FLASH_CFPA_ROTKH_REVOKE_RoTK2_EN_MASK)
+#define FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_MASK    (0xC0U)
+#define FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_SHIFT   (6U)
+/*! RoTK3_EN - RoT Key 3 enable. 00 - Invalid 01 - Enabled 10, 11 - Key revoked
+ */
+#define FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN(x)      (((uint32_t)(((uint32_t)(x)) << FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_SHIFT)) & FLASH_CFPA_ROTKH_REVOKE_RoTK3_EN_MASK)
 /*! @} */
 
 /*! @name VENDOR_USAGE - . */
@@ -16161,7 +16170,7 @@ typedef struct {
 #define PMC_OSTIMER_SOFTRESET(x)                 (((uint32_t)(((uint32_t)(x)) << PMC_OSTIMER_SOFTRESET_SHIFT)) & PMC_OSTIMER_SOFTRESET_MASK)
 #define PMC_OSTIMER_CLOCKENABLE_MASK             (0x2U)
 #define PMC_OSTIMER_CLOCKENABLE_SHIFT            (1U)
-/*! CLOCKENABLE - Enable OSTIMER 32 KHz clock.
+/*! CLOCKENABLE - Enable OS event timer clock.
  */
 #define PMC_OSTIMER_CLOCKENABLE(x)               (((uint32_t)(((uint32_t)(x)) << PMC_OSTIMER_CLOCKENABLE_SHIFT)) & PMC_OSTIMER_CLOCKENABLE_MASK)
 #define PMC_OSTIMER_DPDWAKEUPENABLE_MASK         (0x4U)
@@ -21006,13 +21015,13 @@ typedef struct {
  *  0b0..Bloc is not reset.
  */
 #define SYSCON_PRESETCTRL2_FREQME_RST(x)         (((uint32_t)(((uint32_t)(x)) << SYSCON_PRESETCTRL2_FREQME_RST_SHIFT)) & SYSCON_PRESETCTRL2_FREQME_RST_MASK)
-#define SYSCON_PRESETCTRL2_CWT_RST_MASK          (0x800U)
-#define SYSCON_PRESETCTRL2_CWT_RST_SHIFT         (11U)
-/*! CWT_RST - Code Watchdog reset control.
+#define SYSCON_PRESETCTRL2_CDOG_RST_MASK         (0x800U)
+#define SYSCON_PRESETCTRL2_CDOG_RST_SHIFT        (11U)
+/*! CDOG_RST - Code Watchdog reset control.
  *  0b1..Bloc is reset.
  *  0b0..Bloc is not reset.
  */
-#define SYSCON_PRESETCTRL2_CWT_RST(x)            (((uint32_t)(((uint32_t)(x)) << SYSCON_PRESETCTRL2_CWT_RST_SHIFT)) & SYSCON_PRESETCTRL2_CWT_RST_MASK)
+#define SYSCON_PRESETCTRL2_CDOG_RST(x)           (((uint32_t)(((uint32_t)(x)) << SYSCON_PRESETCTRL2_CDOG_RST_SHIFT)) & SYSCON_PRESETCTRL2_CDOG_RST_MASK)
 #define SYSCON_PRESETCTRL2_RNG_RST_MASK          (0x2000U)
 #define SYSCON_PRESETCTRL2_RNG_RST_SHIFT         (13U)
 /*! RNG_RST - RNG reset control.
@@ -21457,13 +21466,13 @@ typedef struct {
  *  0b0..Disable Clock.
  */
 #define SYSCON_AHBCLKCTRL2_FREQME(x)             (((uint32_t)(((uint32_t)(x)) << SYSCON_AHBCLKCTRL2_FREQME_SHIFT)) & SYSCON_AHBCLKCTRL2_FREQME_MASK)
-#define SYSCON_AHBCLKCTRL2_CWT_MASK              (0x800U)
-#define SYSCON_AHBCLKCTRL2_CWT_SHIFT             (11U)
-/*! CWT - Enables the clock for the code watchdog.
+#define SYSCON_AHBCLKCTRL2_CDOG_MASK             (0x800U)
+#define SYSCON_AHBCLKCTRL2_CDOG_SHIFT            (11U)
+/*! CDOG - Enables the clock for the code watchdog.
  *  0b1..Enable Clock.
  *  0b0..Disable Clock.
  */
-#define SYSCON_AHBCLKCTRL2_CWT(x)                (((uint32_t)(((uint32_t)(x)) << SYSCON_AHBCLKCTRL2_CWT_SHIFT)) & SYSCON_AHBCLKCTRL2_CWT_MASK)
+#define SYSCON_AHBCLKCTRL2_CDOG(x)               (((uint32_t)(((uint32_t)(x)) << SYSCON_AHBCLKCTRL2_CDOG_SHIFT)) & SYSCON_AHBCLKCTRL2_CDOG_MASK)
 #define SYSCON_AHBCLKCTRL2_RNG_MASK              (0x2000U)
 #define SYSCON_AHBCLKCTRL2_RNG_SHIFT             (13U)
 /*! RNG - Enables the clock for the RNG.

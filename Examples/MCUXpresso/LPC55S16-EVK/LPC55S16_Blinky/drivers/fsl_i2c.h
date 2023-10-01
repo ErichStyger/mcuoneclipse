@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2020 NXP
+ * Copyright 2016-2021 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -28,7 +28,7 @@
 /*! @name Driver version */
 /*@{*/
 /*! @brief I2C driver version. */
-#define FSL_I2C_DRIVER_VERSION (MAKE_VERSION(2, 1, 0))
+#define FSL_I2C_DRIVER_VERSION (MAKE_VERSION(2, 3, 0))
 /*@}*/
 
 /*! @brief Retry times for waiting flag. */
@@ -67,33 +67,112 @@ enum
     kStatus_I2C_ArbitrationLost = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 5), /*!< Arbitration lost error. */
     kStatus_I2C_NoTransferInProgress =
         MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 6), /*!< Attempt to abort a transfer when one is not in progress. */
-    kStatus_I2C_DmaRequestFail  = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 7),  /*!< DMA request failed. */
-    kStatus_I2C_StartStopError  = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 8),  /*!< Start and stop error. */
-    kStatus_I2C_UnexpectedState = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 9),  /*!< Unexpected state. */
-    kStatus_I2C_Timeout         = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 10), /*!< Timeout polling status flags. */
-    kStatus_I2C_Addr_Nak        = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 11), /*!< NAK received for Address */
+    kStatus_I2C_DmaRequestFail  = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 7), /*!< DMA request failed. */
+    kStatus_I2C_StartStopError  = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 8), /*!< Start and stop error. */
+    kStatus_I2C_UnexpectedState = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 9), /*!< Unexpected state. */
+    kStatus_I2C_Timeout =
+        MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C,
+                    10), /*!< Timeout when waiting for I2C master/slave pending status to set to continue transfer. */
+    kStatus_I2C_Addr_Nak      = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 11), /*!< NAK received for Address */
+    kStatus_I2C_EventTimeout  = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 12), /*!< Timeout waiting for bus event. */
+    kStatus_I2C_SclLowTimeout = MAKE_STATUS(kStatusGroup_FLEXCOMM_I2C, 13), /*!< Timeout SCL signal remains low. */
 };
 
+/*! @} */
+
+/*!
+ * @addtogroup i2c_driver
+ * @{
+ */
+
+/*!
+ * @brief I2C status flags.
+ *
+ * @note These enums are meant to be OR'd together to form a bit mask.
+ */
+enum _i2c_status_flags
+{
+    kI2C_MasterPendingFlag = I2C_STAT_MSTPENDING_MASK, /*!< The I2C module is waiting for software interaction. bit 0 */
+    kI2C_MasterArbitrationLostFlag =
+        I2C_STAT_MSTARBLOSS_MASK, /*!< The arbitration of the bus was lost. There was collision on the bus. bit 4*/
+    kI2C_MasterStartStopErrorFlag =
+        I2C_STAT_MSTSTSTPERR_MASK,       /*!< There was an error during start or stop phase of the transaction. bit 6 */
+    kI2C_MasterIdleFlag     = 1UL << 5U, /*!< The I2C master idle status. bit 5 */
+    kI2C_MasterRxReadyFlag  = 1UL << I2C_STAT_MSTSTATE_SHIFT,        /*!< The I2C master rx ready status. bit 1 */
+    kI2C_MasterTxReadyFlag  = 1UL << (I2C_STAT_MSTSTATE_SHIFT + 1U), /*!< The I2C master tx ready status. bit 2 */
+    kI2C_MasterAddrNackFlag = 1UL << 7U,                             /*!< The I2C master address nack status. bit 7 */
+    kI2C_MasterDataNackFlag = 1UL << (I2C_STAT_MSTSTATE_SHIFT + 2U), /*!< The I2C master data nack status. bit 3 */
+    kI2C_SlavePendingFlag = I2C_STAT_SLVPENDING_MASK,  /*!< The I2C module is waiting for software interaction. bit 8 */
+    kI2C_SlaveNotStretching = I2C_STAT_SLVNOTSTR_MASK, /*!< Indicates whether the slave is currently stretching clock (0
+                                                          = yes, 1 = no). bit 11 */
+    kI2C_SlaveSelected =
+        I2C_STAT_SLVSEL_MASK, /*!< Indicates whether the slave is selected by an address match. bit 14 */
+    kI2C_SaveDeselected = I2C_STAT_SLVDESEL_MASK, /*!< Indicates that slave was previously deselected (deselect event
+                                                     took place, w1c). bit 15 */
+    kI2C_SlaveAddressedFlag     = 1UL << 22U,     /*!< One of the I2C slave's 4 addresses is matched. bit 22 */
+    kI2C_SlaveReceiveFlag       = 1UL << I2C_STAT_SLVSTATE_SHIFT,        /*!< Slave receive data available. bit 9 */
+    kI2C_SlaveTransmitFlag      = 1UL << (I2C_STAT_SLVSTATE_SHIFT + 1U), /*!< Slave data can be transmitted. bit 10 */
+    kI2C_SlaveAddress0MatchFlag = 1UL << 20U,                            /*!< Slave address0 match. bit 20 */
+    kI2C_SlaveAddress1MatchFlag = 1UL << I2C_STAT_SLVIDX_SHIFT,          /*!< Slave address1 match. bit 12 */
+    kI2C_SlaveAddress2MatchFlag = 1UL << (I2C_STAT_SLVIDX_SHIFT + 1U),   /*!< Slave address2 match. bit 13 */
+    kI2C_SlaveAddress3MatchFlag = 1UL << 21U,                            /*!< Slave address3 match. bit 21 */
+    kI2C_MonitorReadyFlag       = I2C_STAT_MONRDY_MASK,                  /*!< The I2C monitor ready interrupt. bit 16 */
+    kI2C_MonitorOverflowFlag    = I2C_STAT_MONOV_MASK,        /*!< The monitor data overrun interrupt. bit 17 */
+    kI2C_MonitorActiveFlag      = I2C_STAT_MONACTIVE_MASK,    /*!< The monitor is active. bit 18 */
+    kI2C_MonitorIdleFlag        = I2C_STAT_MONIDLE_MASK,      /*!< The monitor idle interrupt. bit 19 */
+    kI2C_EventTimeoutFlag       = I2C_STAT_EVENTTIMEOUT_MASK, /*!< The bus event timeout interrupt. bit 24 */
+    kI2C_SclTimeoutFlag         = I2C_STAT_SCLTIMEOUT_MASK,   /*!< The SCL timeout interrupt. bit 25 */
+
+    /* All master flags that can be cleared by software */
+    kI2C_MasterAllClearFlags = kI2C_MasterArbitrationLostFlag | kI2C_MasterStartStopErrorFlag,
+    /* All slave flags that can be cleared by software */
+    kI2C_SlaveAllClearFlags = kI2C_SaveDeselected,
+    /* All common flags that can be cleared by software */
+    kI2C_CommonAllClearFlags =
+        kI2C_MonitorOverflowFlag | kI2C_MonitorIdleFlag | kI2C_EventTimeoutFlag | kI2C_SclTimeoutFlag,
+};
+
+/*!
+ * @brief I2C interrupt enable.
+ *
+ * @note These enums are meant to be OR'd together to form a bit mask.
+ */
+enum _i2c_interrupt_enable
+{
+    kI2C_MasterPendingInterruptEnable =
+        I2C_STAT_MSTPENDING_MASK, /*!< The I2C master communication pending interrupt. */
+    kI2C_MasterArbitrationLostInterruptEnable =
+        I2C_STAT_MSTARBLOSS_MASK, /*!< The I2C master arbitration lost interrupt. */
+    kI2C_MasterStartStopErrorInterruptEnable =
+        I2C_STAT_MSTSTSTPERR_MASK, /*!< The I2C master start/stop timing error interrupt. */
+    kI2C_SlavePendingInterruptEnable = I2C_STAT_SLVPENDING_MASK, /*!< The I2C slave communication pending interrupt. */
+    kI2C_SlaveNotStretchingInterruptEnable =
+        I2C_STAT_SLVNOTSTR_MASK, /*!< The I2C slave not streching interrupt, deep-sleep mode can be entered only when
+                                    this interrupt occurs. */
+    kI2C_SlaveDeselectedInterruptEnable = I2C_STAT_SLVDESEL_MASK,     /*!< The I2C slave deselection interrupt. */
+    kI2C_MonitorReadyInterruptEnable    = I2C_STAT_MONRDY_MASK,       /*!< The I2C monitor ready interrupt. */
+    kI2C_MonitorOverflowInterruptEnable = I2C_STAT_MONOV_MASK,        /*!< The monitor data overrun interrupt. */
+    kI2C_MonitorIdleInterruptEnable     = I2C_STAT_MONIDLE_MASK,      /*!< The monitor idle interrupt. */
+    kI2C_EventTimeoutInterruptEnable    = I2C_STAT_EVENTTIMEOUT_MASK, /*!< The bus event timeout interrupt. */
+    kI2C_SclTimeoutInterruptEnable      = I2C_STAT_SCLTIMEOUT_MASK,   /*!< The SCL timeout interrupt. */
+
+    /* All master interrupt sources */
+    kI2C_MasterAllInterruptEnable = kI2C_MasterPendingInterruptEnable | kI2C_MasterArbitrationLostInterruptEnable |
+                                    kI2C_MasterStartStopErrorInterruptEnable,
+    /* All slave interrupt sources */
+    kI2C_SlaveAllInterruptEnable =
+        kI2C_SlavePendingInterruptEnable | kI2C_SlaveNotStretchingInterruptEnable | kI2C_SlaveDeselectedInterruptEnable,
+    /* All common interrupt sources */
+    kI2C_CommonAllInterruptEnable = kI2C_MonitorReadyInterruptEnable | kI2C_MonitorOverflowInterruptEnable |
+                                    kI2C_MonitorIdleInterruptEnable | kI2C_EventTimeoutInterruptEnable |
+                                    kI2C_SclTimeoutInterruptEnable,
+};
 /*! @} */
 
 /*!
  * @addtogroup i2c_master_driver
  * @{
  */
-
-/*!
- * @brief I2C master peripheral flags.
- *
- * @note These enums are meant to be OR'd together to form a bit mask.
- */
-enum _i2c_master_flags
-{
-    kI2C_MasterPendingFlag = I2C_STAT_MSTPENDING_MASK, /*!< The I2C module is waiting for software interaction. */
-    kI2C_MasterArbitrationLostFlag =
-        I2C_STAT_MSTARBLOSS_MASK, /*!< The arbitration of the bus was lost. There was collision on the bus */
-    kI2C_MasterStartStopErrorFlag =
-        I2C_STAT_MSTSTSTPERR_MASK /*!< There was an error during start or stop phase of the transaction. */
-};
 
 /*! @brief Direction of master and slave transfers. */
 typedef enum _i2c_direction
@@ -116,6 +195,7 @@ typedef struct _i2c_master_config
     bool enableMaster;     /*!< Whether to enable master mode. */
     uint32_t baudRate_Bps; /*!< Desired baud rate in bits per second. */
     bool enableTimeout;    /*!< Enable internal timeout function. */
+    uint8_t timeout_Ms;    /*!< Event timeout and SCL low timeout value. */
 } i2c_master_config_t;
 
 /* Forward declaration of the transfer descriptor and handle typedefs. */
@@ -209,22 +289,6 @@ struct _i2c_master_handle
  * @addtogroup i2c_slave_driver
  * @{
  */
-
-/*!
- * @brief I2C slave peripheral flags.
- *
- * @note These enums are meant to be OR'd together to form a bit mask.
- */
-enum _i2c_slave_flags
-{
-    kI2C_SlavePendingFlag = I2C_STAT_SLVPENDING_MASK, /*!< The I2C module is waiting for software interaction. */
-    kI2C_SlaveNotStretching =
-        I2C_STAT_SLVNOTSTR_MASK, /*!< Indicates whether the slave is currently stretching clock (0 = yes, 1 = no). */
-    kI2C_SlaveSelected = I2C_STAT_SLVSEL_MASK, /*!< Indicates whether the slave is selected by an address match. */
-    kI2C_SaveDeselected =
-        I2C_STAT_SLVDESEL_MASK /*!< Indicates that slave was previously deselected (deselect event took place, w1c). */
-};
-
 /*! @brief I2C slave address register. */
 typedef enum _i2c_slave_address_register
 {
@@ -476,7 +540,6 @@ static inline void I2C_MasterEnable(I2C_Type *base, bool enable)
 
 /*! @name Status */
 /*@{*/
-
 /*!
  * @brief Gets the I2C status flags.
  *
@@ -487,16 +550,33 @@ static inline void I2C_MasterEnable(I2C_Type *base, bool enable)
  * @return State of the status flags:
  *         - 1: related status flag is set.
  *         - 0: related status flag is not set.
- * @see _i2c_master_flags
+ * @see @ref _i2c_status_flags.
  */
-static inline uint32_t I2C_GetStatusFlags(I2C_Type *base)
+uint32_t I2C_GetStatusFlags(I2C_Type *base);
+
+/*!
+ * @brief Clears the I2C status flag state.
+ *
+ * Refer to kI2C_CommonAllClearStatusFlags, kI2C_MasterAllClearStatusFlags and kI2C_SlaveAllClearStatusFlags to see
+ * the clearable flags. Attempts to clear other flags has no effect.
+ *
+ * @param base The I2C peripheral base address.
+ * @param statusMask A bitmask of status flags that are to be cleared. The mask is composed of the members in
+ *  kI2C_CommonAllClearStatusFlags, kI2C_MasterAllClearStatusFlags and kI2C_SlaveAllClearStatusFlags. You may pass
+ *  the result of a previous call to I2C_GetStatusFlags().
+ * @see #_i2c_status_flags, _i2c_master_status_flags and _i2c_slave_status_flags.
+ */
+static inline void I2C_ClearStatusFlags(I2C_Type *base, uint32_t statusMask)
 {
-    return base->STAT;
+    /* Only deal with the clearable flags */
+    statusMask &=
+        ((uint32_t)kI2C_CommonAllClearFlags | (uint32_t)kI2C_MasterAllClearFlags | (uint32_t)kI2C_SlaveAllClearFlags);
+    base->STAT = statusMask;
 }
 
 /*!
  * @brief Clears the I2C master status flag state.
- *
+ * @deprecated Do not use this function. It has been superceded by @ref I2C_ClearStatusFlags
  * The following status register flags can be cleared:
  * - #kI2C_MasterArbitrationLostFlag
  * - #kI2C_MasterStartStopErrorFlag
@@ -505,9 +585,9 @@ static inline uint32_t I2C_GetStatusFlags(I2C_Type *base)
  *
  * @param base The I2C peripheral base address.
  * @param statusMask A bitmask of status flags that are to be cleared. The mask is composed of
- *  #_i2c_master_flags enumerators OR'd together. You may pass the result of a previous call to
+ *  #_i2c_status_flags enumerators OR'd together. You may pass the result of a previous call to
  *  I2C_GetStatusFlags().
- * @see _i2c_master_flags.
+ * @see _i2c_status_flags.
  */
 static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMask)
 {
@@ -521,10 +601,10 @@ static inline void I2C_MasterClearStatusFlags(I2C_Type *base, uint32_t statusMas
 /*@{*/
 
 /*!
- * @brief Enables the I2C master interrupt requests.
+ * @brief Enables the I2C interrupt requests.
  *
  * @param base The I2C peripheral base address.
- * @param interruptMask Bit mask of interrupts to enable. See #_i2c_master_flags for the set
+ * @param interruptMask Bit mask of interrupts to enable. See #_i2c_interrupt_enable for the set
  *      of constants that should be OR'd together to form the bit mask.
  */
 static inline void I2C_EnableInterrupts(I2C_Type *base, uint32_t interruptMask)
@@ -533,10 +613,10 @@ static inline void I2C_EnableInterrupts(I2C_Type *base, uint32_t interruptMask)
 }
 
 /*!
- * @brief Disables the I2C master interrupt requests.
+ * @brief Disables the I2C interrupt requests.
  *
  * @param base The I2C peripheral base address.
- * @param interruptMask Bit mask of interrupts to disable. See #_i2c_master_flags for the set
+ * @param interruptMask Bit mask of interrupts to disable. See #_i2c_interrupt_enable for the set
  *      of constants that should be OR'd together to form the bit mask.
  */
 static inline void I2C_DisableInterrupts(I2C_Type *base, uint32_t interruptMask)
@@ -545,10 +625,10 @@ static inline void I2C_DisableInterrupts(I2C_Type *base, uint32_t interruptMask)
 }
 
 /*!
- * @brief Returns the set of currently enabled I2C master interrupt requests.
+ * @brief Returns the set of currently enabled I2C interrupt requests.
  *
  * @param base The I2C peripheral base address.
- * @return A bitmask composed of #_i2c_master_flags enumerators OR'd together to indicate the
+ * @return A bitmask composed of #_i2c_interrupt_enable enumerators OR'd together to indicate the
  *      set of enabled interrupts.
  */
 static inline uint32_t I2C_GetEnabledInterrupts(I2C_Type *base)
@@ -572,6 +652,18 @@ static inline uint32_t I2C_GetEnabledInterrupts(I2C_Type *base)
  * @param baudRate_Bps Requested bus frequency in bits per second.
  */
 void I2C_MasterSetBaudRate(I2C_Type *base, uint32_t baudRate_Bps, uint32_t srcClock_Hz);
+
+/*!
+ * @brief Sets the I2C bus timeout value.
+ *
+ * If the SCL signal remains low or bus does not have event longer than the timeout value, kI2C_SclTimeoutFlag or
+ * kI2C_EventTimeoutFlag is set. This can indicete the bus is held by slave or any fault occurs to the I2C module.
+ *
+ * @param base The I2C peripheral base address.
+ * @param timeout_Ms Timeout value in millisecond.
+ * @param srcClock_Hz I2C functional clock frequency in Hertz.
+ */
+void I2C_MasterSetTimeoutValue(I2C_Type *base, uint8_t timeout_Ms, uint32_t srcClock_Hz);
 
 /*!
  * @brief Returns whether the bus is idle.
@@ -849,7 +941,7 @@ static inline void I2C_SlaveEnable(I2C_Type *base, bool enable)
  *
  * @param base The I2C peripheral base address.
  * @param statusMask A bitmask of status flags that are to be cleared. The mask is composed of
- *  #_i2c_slave_flags enumerators OR'd together. You may pass the result of a previous call to
+ *  _i2c_slave_flags enumerators OR'd together. You may pass the result of a previous call to
  *  I2C_SlaveGetStatusFlags().
  * @see _i2c_slave_flags.
  */
