@@ -1,0 +1,153 @@
+# file: Collect all files that need to be compiled. 
+# You can use a GLOB function as shown here, or explicitly mention the specific files
+#file(GLOB FILES *.c *.h)
+
+# add_subdirectory(LittlevGL)
+# LittlevGL is *not* added here. Instead, add it to the main CMakeLists.txt
+# add_subdirectory(../McuLib/LittlevGL  build/McuLib/LittlevGL)
+# and add it to the target_link_libraries 
+#  ...
+#  McuLib
+#  lvglLib # LittlevGL library inside the McuLib
+
+file(GLOB MCULIBFILES
+  RNet/*.c
+  fonts/*.c
+
+  src/McuArmTools.c
+  src/McuButton.c
+  src/McuCRC_CreateTable.c
+  src/McuCRC_Generator.c
+  src/McuCriticalSection.c
+  src/McuDebounce.c
+
+  src/McuEE24.c
+  src/McuEvents.c
+  src/McuExtRTC.c
+  src/McuFlash.c
+  src/McuFontDisplay.c
+
+  src/McuGDisplaySSD1306.c
+  src/McuGenericI2C.c
+  src/McuGenericSWI2C.c
+  src/SDA1.c
+  src/SCL1.c
+  src/McuGFont.c
+  src/McuGPIO.c
+  src/McuHardFault.c
+  src/McuI2cLib.c
+  src/McuI2cSpy.c
+  src/McuLED.c
+  src/McuLib.c
+  src/McuPCF85063A.c
+  src/McuLog.c
+  src/McuRB.c
+  src/McuRingBuffer.c
+  src/McuRTOS.c
+  src/McuRTT.c
+  
+  # SEGGER RTT
+  SEGGER_RTT/RTT_Syscalls_GCC.c
+  SEGGER_RTT/SEGGER_RTT_printf.c
+  SEGGER_RTT/SEGGER_RTT.c
+  
+  # SEGGER SystemView
+  SEGGER_SysView/McuSystemView.c
+  SEGGER_SysView/SEGGER_SYSVIEW.c
+  SEGGER_SysView/SEGGER_SYSVIEW_Config_FreeRTOS.c
+  SEGGER_SysView/SEGGER_SYSVIEW_FreeRTOS.c
+  
+  src/McuSemihost.c
+  src/McuShell.c
+  src/McuShellUart.c
+  src/McuSHT31.c
+  src/McuSHT40.c
+  src/McuSPI.c
+  src/McuSSD1306.c
+  src/McuST7735.c
+  src/McuTimeDate.c
+  src/McuTimeout.c
+  src/McuTrigger.c
+  src/McuUart485.c
+  src/McuULN2003.c
+  src/McuUtility.c
+  src/McuW25Q128.c
+  src/McuWait.c
+  src/McuWatchdog.c
+  src/McuX12_017.c
+  src/McuXFormat.c
+  
+  # FreeRTOS
+  # FreeRTOS/FreeRTOShooks.c  # You need to have this one part of the application sources
+  FreeRTOS/Source/croutine.c
+  FreeRTOS/Source/event_groups.c
+  FreeRTOS/Source/list.c
+  FreeRTOS/Source/queue.c
+  FreeRTOS/Source/stream_buffer.c
+  FreeRTOS/Source/tasks.c
+  FreeRTOS/Source/timers.c
+  FreeRTOS/Source/portable/Common/mpu_wrappers.c
+  FreeRTOS/Source/portable/MemMang/heap_1.c
+  FreeRTOS/Source/portable/MemMang/heap_2.c
+  FreeRTOS/Source/portable/MemMang/heap_3.c
+  FreeRTOS/Source/portable/MemMang/heap_4.c
+  FreeRTOS/Source/portable/MemMang/heap_5.c
+  FreeRTOS/Source/portable/MemMang/heap_useNewlib.c
+  FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c
+  
+  # littleFS
+  littleFS/lfs_util.c
+  littleFS/lfs.c
+  littleFS/McuLittleFS.c
+  littleFS/McuLittleFSBlockDevice.c
+   
+  # MinINI
+  minIni/McuMinINI.c
+  minIni/minIni.c
+  minIni/minGlue-FatSs.c
+  minIni/minGlue-Flash.c
+  minIni/minGlue-LittleFS.c
+  
+  # Modbus
+  Modbus/McuHeidelberg.c
+  Modbus/McuModbus.c
+)
+
+# add_library: With this declaration, you express the intent to build a library. 
+# The first argument is the name of the library, 
+# the second argument are the files that will be compiled to create your library.
+add_library(McuLib ${MCULIBFILES})
+
+# target_link_libraries: If you link with other libraries, list them here
+target_link_libraries(
+  McuLib
+  # lvglLib   # see note above
+  pico_stdlib
+  pico_unique_id
+  hardware_pio 
+  hardware_flash
+  hardware_spi
+  hardware_sync
+  hardware_i2c
+)
+
+# target_include_directories: Libraries need to publish their header files 
+# so that you can import them in source code. This statement expresses where to find the files 
+# - typically in an include directory of your projects.
+target_include_directories(
+  McuLib 
+  PUBLIC
+  ./
+  ./src/ 
+  ./config/ 
+  ./FreeRTOS/Source/include/
+  ./FreeRTOS/Source/portable/GCC/ARM_CM4F/
+  ./fonts/
+  ./config/fonts/
+  ./SEGGER_RTT/
+  ./SEGGER_Sysview/
+  ./MinIni
+  ./LittlevGL
+  ./Modbus
+  ./RNet
+ )
