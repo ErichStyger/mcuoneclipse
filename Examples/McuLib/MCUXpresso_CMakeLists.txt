@@ -24,6 +24,7 @@ file(GLOB MCULIBFILES
   src/McuEE24.c
   src/McuEvents.c
   src/McuExtRTC.c
+  src/McuESP32.c
   src/McuFlash.c
   src/McuFontDisplay.c
 
@@ -116,7 +117,7 @@ file(GLOB MCULIBFILES
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument is the name of the library, 
 # the second argument are the files that will be compiled to create your library.
-add_library(McuLib ${MCULIBFILES})
+add_library(McuLib OBJECT ${MCULIBFILES})
 
 # target_link_libraries: If you link with other libraries, list them here
 target_link_libraries(
