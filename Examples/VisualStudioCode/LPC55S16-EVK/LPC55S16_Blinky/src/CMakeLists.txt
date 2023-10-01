@@ -17,6 +17,7 @@ add_library(${THIS_LIBRARY_NAME} OBJECT ${SRC_FILES})
 target_link_libraries(
   ${THIS_LIBRARY_NAME}
   McuLib
+  sdkLib
 )
 
 # target_include_directories: Libraries need to publish their header files 
@@ -26,10 +27,10 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  ../device
-  ../board
-  ../drivers
-  ../CMSIS
+  ./sdk/device
+  ./sdk/board
+  ./sdk/drivers
+  ./sdk/CMSIS
   ./McuLib
   ./McuLib/config
   ./McuLib/src

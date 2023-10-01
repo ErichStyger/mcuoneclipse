@@ -26,8 +26,8 @@ target_include_directories(
   ${THIS_LIBRARY_NAME}  
   PUBLIC
   .
-  ../device
-  ../board
-  ../drivers
-  ../CMSIS
+  ./device
+  ./board
+  ./drivers
+  ./CMSIS
 )

@@ -1,10 +1,10 @@
-# ADIS tinyK22 Blinky
+# LPC55S16-EVK Blinky
 
-Project for the tinyK22 using CMake and Ninja, blinking the blue onboard LED.
+Project for the LPC55S16-EVK, using VS Code with CMake and Ninja, blinking the blue onboard LED.
 
 ## Environment
 The root folder contains several batch files as helper.
-In order to have compiler and J-Link not hardcoded in the project itself, rund the setenv.bat.
+In order to have compiler and J-Link not hardcoded in the project itself, rund the setenv script file.
 
 setenv:
 ```

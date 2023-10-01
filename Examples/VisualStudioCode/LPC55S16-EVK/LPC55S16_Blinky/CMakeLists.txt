@@ -26,7 +26,7 @@ project(LPC55S16_Blinky)
 
 set(EXECUTABLE ${PROJECT_NAME}.elf)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
-set(LINKER_FILE "../device/linker.ld")
+set(LINKER_FILE "../sdk/device/linker.ld")
 
 enable_language(C ASM)
 set(CMAKE_C_STANDARD 99)
@@ -40,8 +40,8 @@ message(STATUS "CMAKE_TOOLCHAIN_FILE is: ${CMAKE_TOOLCHAIN_FILE}")
 
 # List of source files
 set(SRC_FILES
-  startup/startup_lpc55s16.c
-  device/system_LPC55S16.c
+  ./sdk/startup/startup_lpc55s16.c
+  ./sdk/device/system_LPC55S16.c
 )
 
 # Build the executable based on the source files
@@ -102,21 +102,22 @@ target_link_options(${EXECUTABLE} PRIVATE
 )
 
 # McuLib to find our local header files
-add_compile_options(-I${PROJECT_ROOT_DIR}/src -I${PROJECT_ROOT_DIR}/drivers)
+add_compile_options(-I${PROJECT_ROOT_DIR}/src -I${PROJECT_ROOT_DIR}/sdk/drivers)
 
-# RNET to find SDK header files, to be improved
-add_compile_options(-I${PROJECT_ROOT_DIR}/device -I${PROJECT_ROOT_DIR}/CMSIS -I${PROJECT_ROOT_DIR}/board) 
+# RNET to find SDK header files
+add_compile_options(-I${PROJECT_ROOT_DIR}/sdk/device -I${PROJECT_ROOT_DIR}/sdk/CMSIS -I${PROJECT_ROOT_DIR}/sdk/board) 
 
-add_subdirectory(./sdk       build/sdk) 
-add_subdirectory(./src       build/src)
-add_subdirectory(./board     build/board)
-add_subdirectory(./drivers   build/drivers)
-add_subdirectory(./utilities build/utilities)
-add_subdirectory(./component build/component)
-add_subdirectory(./McuLib    build/McuLib)
+add_subdirectory(./sdk            build/sdk) 
+add_subdirectory(./src            build/src)
+add_subdirectory(./McuLib         build/McuLib)
+add_subdirectory(./sdk/board      build/sdk/board)
+add_subdirectory(./sdk/drivers    build/sdk/drivers)
+add_subdirectory(./sdk/utilities  build/sdk/utilities)
+add_subdirectory(./sdk/component  build/sdk/component)
 
 target_link_libraries(
   ${EXECUTABLE}
+  sdkLib
   componentLib
   McuLib
   boardLib
