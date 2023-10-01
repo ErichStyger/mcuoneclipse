@@ -6,7 +6,7 @@ set(THIS_LIBRARY_NAME srcLib)
 
 file(GLOB SRC_FILES
   *.c 
- ) 
+ )
 
 # add_library: With this declaration, you express the intent to build a library. 
 # The first argument, here its pico-shift-register, is the name of the library, 
