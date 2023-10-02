@@ -87,7 +87,7 @@
 
 /* MODULE McuRNet. */
 #include "Mculib.h" /* SDK and API used */
-#include "McuRNetconfig.h" /* configuration */
+#include "McuRNetConfig.h" /* configuration */
 
 /* Include inherited components */
 #include "McuNRF24L01.h"
