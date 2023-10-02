@@ -86,7 +86,7 @@
 #endif
 
 #ifndef McuSSD1306_CONFIG_INIT_DELAY_MS
-  #define McuSSD1306_CONFIG_INIT_DELAY_MS (5)
+  #define McuSSD1306_CONFIG_INIT_DELAY_MS (100)
   /*!< Additional delay (milliseconds) in Init(). Use zero for no delay. */
 #endif
 
