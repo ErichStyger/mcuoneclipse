@@ -50,6 +50,7 @@ else ()
               "src/McuButton.c"
               "src/McuCriticalSection.c"
               "src/McuDebounce.c"
+              "src/McuFXOS8700.c"
               "src/McuFontDisplay.c"
               "src/McuGenericI2C.c"
               "src/McuGDisplaySSD1306.c"
