@@ -247,11 +247,13 @@
 #define McuShell_CONFIG_PROJECT_NAME_STRING "Raspberry Pi UPS and Gateway"
 /* -------------------------------------------------*/
 /* LittlevGL */
-#define LV_CONFIG_DISPLAY_WIDTH        (128)
-#define LV_CONFIG_DISPLAY_HEIGHT       (64)
-#define LV_CONFIG_COLOR_DEPTH          (1)
 #define LV_CONFIG_DPI                  (25)
-#define LV_USE_THEME_MONO              (1)
+#define LV_CONF_INCLUDE_SIMPLE   /* use lv_conf.h inside src folder */
+#define LV_CONF_SUPPRESS_DEFINE_CHECK  /* avoid bogus warning with gcc about including lv_conf.h */
+#if !__ASSEMBLER__ /* set if file is included by GNU as (assembler). Do not include normal C header files if running the assembler for example to assemble the pico startup code */
+  #include "lv_conf.h"
+#endif /* !__ASSEMBLER__ */
+/* -------------------------------------------------*/
 
 
 #endif /* INCLUDEMCULIBCONFIG_H_ */

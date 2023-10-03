@@ -28,6 +28,8 @@ lv_indev_t *LV_GetInputDevice(void);
 
 void LV_ButtonEvent(uint8_t key, uint16_t eventMask);
 
+void LV_ClearButtonEventQueue(void);
+
 void LV_Task(void);
 
 void LV_Init(void);
