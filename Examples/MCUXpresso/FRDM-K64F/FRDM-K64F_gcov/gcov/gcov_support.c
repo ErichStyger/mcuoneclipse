@@ -38,9 +38,6 @@
   #include "tcov.h"
 #endif
 
-
-void __gcov_flush(void); /* internal gcov function to write data */
-
 int gcov_check(void) {
 #if GCOV_DO_COVERAGE
   FILE *file = NULL;
@@ -66,7 +63,11 @@ void gcov_write(void) {
 
   gcov_exit();
 #elif GCOV_DO_COVERAGE
-  __gcov_flush();
+  #if __GNUC__ < 11
+    __gcov_flush(); /* __gcov_flush() has been removed in the libraries for GCC11, use */
+  #else
+    __gcov_dump(); /* from GCC11 on, use __gcov_dump() */
+  #endif
 #endif
 }
 
