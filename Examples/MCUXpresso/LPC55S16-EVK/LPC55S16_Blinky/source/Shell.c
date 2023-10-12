@@ -5,6 +5,7 @@
  */
 
 #include "platform.h"
+#include "Shell.h"
 #if PL_CONFIG_USE_SHELL
 #include "McuShell.h"
 #include "McuRTOS.h"
