@@ -70,7 +70,6 @@
 #define GCOV_USE_GCOV_4_7              (0 && !GCOV_USE_STANDARD_GCOV_LIB)
   /*<! 1: Use gcc 4.7 port (experimental!) (do *not* add --coverage to the linker flags!); 0: to disable it */
 
-
 #if GCOV_USE_GCOV_EMBEDDED
   #define ENABLE_LIBGCOV_PORT  (1)
 #else
