@@ -114,7 +114,8 @@ int main(void) {
 #endif
     /* here we have ended the scheduler so we can write the coverage data */
 #if GCOV_DO_COVERAGE
-    gcov_write(); /* write coverage files, might take a while depending how many files are covered */
+    /* write coverage files, might take a while depending how many files are covered */
+    gcov_write_files();
 #endif
     for(;;) { /* do not leave main */
       __asm("nop");

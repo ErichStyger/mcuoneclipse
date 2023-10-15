@@ -228,7 +228,7 @@
 								<option id="gnu.c.link.option.nostdlibs.1796519698" name="No startup or default libs (-nostdlib)" superClass="gnu.c.link.option.nostdlibs" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="gnu.c.link.option.strip.7568109" name="Omit all symbol information (-s)" superClass="gnu.c.link.option.strip" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.noshared.639595294" name="No shared libraries (-static)" superClass="gnu.c.link.option.noshared" useByScannerDiscovery="false"/>
-								<option id="gnu.c.link.option.libs.1596990374" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="gnu.c.link.option.libs.1596990374" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs"/>
 								<option id="gnu.c.link.option.paths.256852122" name="Library search path (-L)" superClass="gnu.c.link.option.paths" useByScannerDiscovery="false"/>
 								<option id="gnu.c.link.option.ldflags.240065267" name="Linker flags" superClass="gnu.c.link.option.ldflags" useByScannerDiscovery="false" value="--coverage" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.other.1621625" name="Other options (-Xlinker [option])" superClass="gnu.c.link.option.other" useByScannerDiscovery="false" valueType="stringList">
@@ -277,23 +277,18 @@
 							<tool id="com.crt.advproject.tool.debug.debug.241711003" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.crt.advproject.config.exe.debug.429593313.80960096" name="/" resourcePath="source">
-						<toolChain id="com.crt.advproject.toolchain.exe.debug.843377764" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug" unusedChildren="">
-							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
-							<tool id="com.crt.advproject.cpp.exe.debug.1328687482" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug.443183737"/>
-							<tool id="com.crt.advproject.gcc.exe.debug.676024775" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
-								<option id="gnu.c.compiler.option.misc.other.1503753782" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections --coverage" valueType="string"/>
-								<inputType id="com.crt.advproject.compiler.input.2002496462" superClass="com.crt.advproject.compiler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.gas.exe.debug.165960377" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.debug.1864451332">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1046250229" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-								<inputType id="com.crt.advproject.assembler.input.1276811171" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
-							</tool>
-							<tool id="com.crt.advproject.link.cpp.exe.debug.415173916" name="MCU C++ Linker" superClass="com.crt.advproject.link.cpp.exe.debug.817415322"/>
-							<tool id="com.crt.advproject.link.exe.debug.630781867" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug.1767961511"/>
-							<tool id="com.crt.advproject.tool.debug.debug.297836081" name="MCU Debugger" superClass="com.crt.advproject.tool.debug.debug"/>
-						</toolChain>
-					</folderInfo>
+					<fileInfo id="com.crt.advproject.config.exe.debug.429593313.1082402298" name="main.c" rcbsApplicability="disable" resourcePath="source/main.c" toolsToInvoke="com.crt.advproject.gcc.exe.debug.954122534.904503765">
+						<tool id="com.crt.advproject.gcc.exe.debug.954122534.904503765" name="MCU C Compiler" superClass="com.crt.advproject.gcc.exe.debug.954122534">
+							<option id="gnu.c.compiler.option.misc.other.1157806958" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections --coverage" valueType="string"/>
+							<inputType id="com.crt.advproject.compiler.input.1125662683" superClass="com.crt.advproject.compiler.input"/>
+						</tool>
+						<tool customBuildStep="true" id="org.eclipse.cdt.managedbuilder.ui.rcbs.1915853715" name="Resource Custom Build Step">
+							<inputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.inputtype.746696883" name="Resource Custom Build Step Input Type">
+								<additionalInput kind="additionalinputdependency" paths=""/>
+							</inputType>
+							<outputType id="org.eclipse.cdt.managedbuilder.ui.rcbs.outputtype.2105279897" name="Resource Custom Build Step Output Type"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry excluding="FreeRTOS/Source/portable/GCC/RISC-V|FreeRTOS/Source/portable/GCC/ARM_CM33|TraceRecorder|SEGGER_Sysview|SEGGER_RTT|minIni|LittlevGL|HD44780|fonts|FatFS" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="McuLib"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
@@ -363,4 +358,5 @@
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="openCmsis"/>
 </cproject>

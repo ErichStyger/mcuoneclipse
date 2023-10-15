@@ -66,7 +66,7 @@ int gcov_check(void) {
 #endif
 }
 
-void gcov_write(void) {
+void gcov_write_files(void) {
 #if GCOV_USE_TCOV
   tcov_print_all(); /* print coverage information */
 #elif GCOV_USE_GCOV_EMBEDDED

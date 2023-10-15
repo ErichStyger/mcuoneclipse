@@ -21,6 +21,10 @@ Which gcov implementation is used is configured in gcov_support.h
 
 Note that with FreeRTOS you should end the scheduler first with INCLUDE_vTaskEndScheduler before writing the coverage data.
 
+Note that the GNU toolchain in MCUXpresso IDE 11.8.0 comes with an 'empty' libgcov.a library, implementing empty functions.
+You need to use a toolchain with gcov library support enabled for example the xpack-arm-none-eabi-gcc-12.2.1-1.2-win32-x64
+from https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+
 See:
 - https://mcuoneclipse.com/2017/06/18/adding-gnu-coverage-tools-to-eclipse/
 - https://mcuoneclipse.com/2017/06/19/gnu-code-coverage-on-embedded-target-with-eclipse-neon-and-arm-gcc-5/

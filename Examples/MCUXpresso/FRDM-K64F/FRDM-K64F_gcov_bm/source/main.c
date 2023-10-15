@@ -60,7 +60,7 @@ int main(void) {
 
   PRINTF("Hello World\n");
 
-  gcov_write(); /* write coverage files, might take a while depending how many files are covered */
+  gcov_write_files(); /* write coverage files, might take a while depending how many files are covered */
 
   while(1) {
       __asm volatile ("nop");
