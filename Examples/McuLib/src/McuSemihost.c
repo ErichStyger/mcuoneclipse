@@ -800,7 +800,7 @@ int McuSemiHost_Test(void) {
   McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_EXCEPTION does not work with LinkServer\n");
 #else
   McuSemihost_WriteString((unsigned char*)"McuSemihost: SYS_EXCEPTION, going to exit debugger!\n");
-  McuSemihost_SysException(ADP_Stopped_ApplicationExit); /* note: will exit application! */
+  McuSemihost_SysException(McuSemihost_ADP_Stopped_ApplicationExit); /* note: will exit application! */
 #endif
   return result;
 }

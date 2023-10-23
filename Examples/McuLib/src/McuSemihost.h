@@ -202,7 +202,7 @@ int McuSemihost_SysHeapInfo(McuSemihost_HeapInfo_t *heapInfo);
 int McuSemihost_SysEnterSVC(void);
 
 typedef enum McuSemihost_Exception_e {
-  ADP_Stopped_ApplicationExit = 0x20026, /* exit target application */
+  McuSemihost_ADP_Stopped_ApplicationExit = 0x20026, /* exit target application */
 } McuSemihost_Exception_e;
 
 /*!
