@@ -48,7 +48,7 @@
 int main(void) {
   gcov_init();  /* initialize library */
   gcov_check();
-
+#if 1
   /* Init board hardware. */
   BOARD_InitBootPins();
   BOARD_InitBootClocks();
@@ -65,5 +65,6 @@ int main(void) {
   while(1) {
       __asm volatile ("nop");
   }
+#endif
   return 0 ;
 }
