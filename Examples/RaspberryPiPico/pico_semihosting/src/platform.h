@@ -21,7 +21,7 @@
 #define PL_CONFIG_USE_LEDS              (1) /* if using LEDs */
 #define PL_CONFIG_USE_UART              (0) /* if using UART for stdandard I/O */
 #define PL_CONFIG_USE_USB_CDC           (0) /* if using USB-CDC for standard I/O */
-#define PL_CONFIG_USE_SEMIHOSTING       (0) /* if using semihosting for standard I/O */
+#define PL_CONFIG_USE_SEMIHOSTING       (1) /* if using semihosting for standard I/O */
 
 /*! \brief Module and platform initialization */
 void PL_Init(void);
