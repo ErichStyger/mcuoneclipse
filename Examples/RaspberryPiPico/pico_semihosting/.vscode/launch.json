@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
-            "name": "TSM_PicoW_Sensor J-Link Cortex-Debug",
+            "name": "pico_semihosting J-Link Cortex-Debug",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
@@ -38,98 +38,9 @@
             },
             "showDevDebugOutput": "none",
         },
-        {
-            "name": "TSM_PicoW_Sensor J-Link cppdbg",
-            "type": "cppdbg",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "program": "${workspaceFolder}/build/TSM_PicoW_Sensor.elf",
-            "MIMode": "gdb",
-            "miDebuggerPath": "${env:PICO_TOOLCHAIN_PATH}/arm-none-eabi-gdb.exe",
-            "miDebuggerServerAddress": "localhost:3333",
-            "debugServerPath": "\"${env:PICO_SEGGER_PATH}/JLinkGDBServerCL.exe\"",
-            "debugServerArgs": "-if swd -speed 4000 -endian little -port 3333 -device RP2040_M0_0 -x \"${workspaceFolder}/.vscode/reset.gdb\"",
-            "serverStarted": "Connected to target",
-            "filterStdout": true,
-            "stopAtConnect": true,
-            "stopAtEntry": false,
-            // There is no need for hardware breakpoint limits with J-Link probes because they support unlimited flash breakpoints.
-            // However, if desired, uncomment below to force use of hardware breakpoints only:
-            // "hardwareBreakpoints": {
-            //     "require": true,
-            //     "limit": 8
-            // },
-            // "preLaunchTask": "Flash",  // See tasks.json
-            "svdPath": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-            "useExtendedRemote": true,
-            "postRemoteConnectCommands": [
-                //{
-                //    "text": "monitor flash breakpoints = 1", // default on
-                //    "ignoreFailures": false
-                //},
-                {
-                    "text": "monitor flash download = 1",
-                    "ignoreFailures": false
-                },
-                {
-                    "description": "reset target",
-                    "text": "monitor reset",
-                    "ignoreFailures": false
-                },
-                {
-                    "description": "load application",
-                    "text": "load",
-                    "ignoreFailures": false
-                },
-                {
-                    "description": "Set temporary breakpoint",
-                    "text": "tbreak main",
-                    "ignoreFailures": false
-                },
-                {
-                    "description": "Enable semihosting",
-                    "text": "monitor semihosting enable",
-                    "ignoreFailures": false
-                },
-                {
-                    "description": "Use gdbclient (1<<2) and telnet (1<<1) for semihosting",
-                    "text": "monitor semihosting ioclient 3",
-                    "ignoreFailures": false
-                },
-               // {
-               //     "description": "continue running",
-               //     "text": "continue",
-               //     "ignoreFailures": false
-               // },
-                //{
-                //    "description": "reset target",
-                //    "text": "monitor reset",
-                //    "ignoreFailures": false
-                //},
-                //{
-                //    "description": "halt target",
-                //    "text": "monitor halt",
-                //    "ignoreFailures": false
-                //},
-                
-               // {
-               //     "text": "monitor go", // does not work?
-               //     "ignoreFailures": false
-               // },
-
-            ],
-            "logging": {
-                "engineLogging": false,
-                "trace": false,
-                "traceResponse": false,
-                "exceptions": false,
-                "programOutput": false,
-                "moduleLoad": false,
-                "natvisDiagnostics": "error"
-            }
-        },
+        
         { // see https://github.com/Marus/cortex-debug/blob/master/debug_attributes.md
-        "name": "TSM_PicoW_Sensor CMSIS-DAP Cortex-Debug",
+        "name": "pico_semihosting CMSIS-DAP Cortex-Debug",
         "type": "cortex-debug",
         "request": "launch",
         "servertype": "openocd",
